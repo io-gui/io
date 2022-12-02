@@ -1,6 +1,8 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { Change } from '../../core/internals/changeQueue.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
+import { Property } from '../../core/internals/property.js';
 import './io-menu-item.js';
 
 // TODO: fix tab-out without collapse
@@ -53,33 +55,34 @@ export class IoOptionMenu extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: {
-        reflect: 'attr',
-      },
-      options: {
-        type: MenuOptions,
-        reflect: 'attr'
-      },
-      role: 'button',
-    };
-  }
+
+  @Property({value: undefined, reflect: 'attr'})
+  declare value: any;
+
+  @Property({type: MenuOptions, reflect: 'attr'})
+  declare options: MenuOptions;
+
+  @Property('button')
+  declare role: string;
+
   get _label() {
     const valueText = (this.value !== undefined) ? String(this.value) : '';
     return this.label || valueText || '';
   }
-  _onPathChanged(event: CustomEvent) {
-    // TODO: Fix MenuPath convering values to string type.
-    if (event.detail.leaf !== undefined) {
-      try {
-        this.inputValue(JSON.parse(event.detail.leaf));
-      } catch (error) {
-        this.inputValue(event.detail.leaf);
-      }
+  _onLeafChanged(event: CustomEvent) {
+    this.inputValue(event.detail.value);
+  }
+  optionsChanged(change: Change) {
+    if (change.oldValue) {
+      change.oldValue.removeEventListener('leaf-changed', this._onLeafChanged);
+    }
+    if (change.value) {
+      change.value.addEventListener('leaf-changed', this._onLeafChanged);
     }
   }
   changed() {
+
+    // TODO: find label deeper in options
     let valueText = '';
     if (this.options.length) {
       const option = this.options.find((option: MenuItem) => {return option.value === this.value;});
@@ -98,27 +101,10 @@ export class IoOptionMenu extends IoElement {
       valueText = this.icon + '  ' + valueText;
     }
 
-    // TODO: Clean up binding of value to menu model.
-    this.options.selectByPath([this.value]);
-    for (let i = 0; i < this.options.length; i++) {
-      const option = this.options[i];
-      if (option.value === this.value) {
-        option.selected = true;
-      }
-    }
-
-    const option = new MenuItem({
-      label: valueText,
-      options: this.options,
-      // TODO: this causes _onPathChanged to trigger initially
-      'on-path-changed': this._onPathChanged,
-    });
+    const item = new MenuItem({label: valueText,options: this.options});
 
     this.template([
-      ['io-menu-item', {
-        option: option,
-        direction: 'down',
-      }]
+      ['io-menu-item', {item: item, direction: 'down'}]
     ]);
   }
 }

@@ -229,13 +229,8 @@
       ]},
       {label: 'Tests', value: 'tests'},
     ], {
-      string: $({key: 'path', storage: 'hash', value: 'home'}),
+      path: $({key: 'path', storage: 'hash', value: 'About'}),
     });
-
-    console.log(OPTIONS.path);
-    console.log(OPTIONS[1].label, OPTIONS[1].selected);
-    console.log(OPTIONS[1].options[1].label, OPTIONS[1].options[1].selected);
-    console.log(OPTIONS[1].options[1].options[0].label, OPTIONS[1].options[1].options[0].selected);
 
     export class IoMainPage extends IoSelectorTabs {
       static get Properties() {
@@ -245,7 +240,6 @@
           cache: true,
           horizontal: true,
           options: OPTIONS,
-          selected: OPTIONS.bind('root'),
           depth: 1,
           elements: [
             ['io-md-view', {
@@ -253,7 +247,6 @@
               src: './README.md'}],
             ['io-selector', {
               name: 'docs',
-              selected: OPTIONS.getItem('docs').options.bind('root'),
               options: OPTIONS.getItem('docs').options,
               elements: [
                 ['io-md-view', {name: 'development-notes', src: './docs/development-notes.md'}],
@@ -261,14 +254,14 @@
                   name: 'getting-started',
                   src: './docs/getting-started.md',
                   sanitize: false,
-                  anchor: OPTIONS.getItem('docs').getSubitem('getting-started').options.bind('string'),
+                  anchor: OPTIONS.getItem('docs').getSubitem('getting-started').options.bind('path'),
                   options: OPTIONS.getItem('docs').getSubitem('getting-started').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'learn-more',
                   sanitize: false,
                   src: './docs/learn-more.md',
-                  anchor: OPTIONS.getItem('docs').getSubitem('learn-more').options.bind('string'),
+                  anchor: OPTIONS.getItem('docs').getSubitem('learn-more').options.bind('path'),
                   options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
                 }],
                 ['io-md-view-selector', {
@@ -280,12 +273,16 @@
                 }],
               ]
             }],
-            ['io-selector', {name: 'demos', selected: OPTIONS.getItem('demos').options.bind('root'), elements: [
-              ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
-              ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
-              ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
-              ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
-            ]}],
+            ['io-selector', {
+              name: 'demos',
+              options: OPTIONS.getItem('demos').options,
+              elements: [
+                ['io-demo-elements', {name: 'elements', import: './demos/elements.js'}],
+                ['io-demo-theme-editor', {name: 'theme', import: './demos/theme-editor.js'}],
+                ['io-demo-menu', {name: 'menu', import: './demos/menu.js'}],
+                ['iframe', {name: 'todo', title: 'TODO MVC', src: './demos/todomvc/index.html'}],
+              ]
+            }],
             ['io-gui-test-page', {name: 'tests', title: 'Tests', import: './build/iogui.test.js'}],
           ]
         };

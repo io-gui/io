@@ -1,5 +1,6 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { IoElement, RegisterIoElement, VDOMArray, IoElementArgs } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
+import { Property } from '../../core/internals/property.js';
 
 /**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
@@ -59,60 +60,24 @@ export class IoSelector extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      options: {
-        type: MenuOptions,
-        observe: true,
-      },
-      elements: {
-        type: Array,
-        observe: true,
-      },
-      selected: {
-        reflect: 'prop',
-      },
-      cache: Boolean,
-      _caches: Object,
-      _selectedID: {
-        type: String,
-        notify: false,
-      },
-      lazy: true // TODO: reconsider
-    };
+
+  @Property({type: MenuOptions, observe: true})
+  declare options: MenuOptions;
+
+  @Property(Array)
+  declare elements: VDOMArray[];
+
+  @Property(false)
+  declare cache: boolean;
+
+  @Property(Object)
+  declare _caches: Record<string, HTMLElement>;
+
+  init() {
+    this.changed();
   }
-  constructor(props?: any) {
-    super(props);
-    this.optionsChanged();
-  }
-  _selectDefault() {
-    // setTimeout(()=> {
-      if (!this.selected && this.options[0]) {
-        this.selected = this.options[0].value;
-      }
-    // }, 100);
-  }
-  selectedChanged() {
-    this._selectDefault();
-    this.updateScroll();
-  }
-  optionsChanged() {
-    this._selectDefault();
-    this.updateScroll();
-  }
-  elementsChanged() {
-    this.updateScroll();
-  }
-  updateScroll() {
-    if (!this.selected) return;
-    const oldSelectedID = this._selectedID;
-    this._selectedID = this.selected.split('#')[0] || '';
-    if (this._selectedID !== oldSelectedID) {
-      this.update();
-    }
-  }
-  getSlotted(): any {
-    return null;
+  getTemplate(): any {
+    return [['div', {id: 'content', class: 'io-content'}]];
   }
   importModule(path: string) {
     const importPath = new URL(path, String(window.location)).href;
@@ -128,23 +93,22 @@ export class IoSelector extends IoElement {
       }
     });
   }
-  update() {
-    const selected = this._selectedID;
+  changed() {
+    const selected = this.options.root;
 
-    let element = this.elements.find((element: any) => {return element[1].name === selected;});
+    let element = this.elements.find((element: any) => {return element[1].name === selected;}) as VDOMArray;
+
     if (!element) {
       console.warn(`Could not find element with name:${selected}!`);
       element = ['span', `Could not find element with name:${selected}!`];
     }
-    if (typeof element[1] !== 'object') element.splice(1, 0, {});
 
-    const explicitlyCache = element[1].cache === true;
-    const explicitlyDontCache = element[1].cache === false;
+    const args: IoElementArgs = typeof element[1] !== 'object' ? {} : element[1] as IoElementArgs;
 
-    this.template([
-      this.getSlotted(),
-      ['div', {id: 'content', class: 'io-content'}],
-    ]);
+    const explicitlyCache = args.cache === true;
+    const explicitlyDontCache = args.cache === false;
+
+    this.template(this.getTemplate());
 
     if (this.$.content) {
       this.$.content.textContent = '';
@@ -153,10 +117,10 @@ export class IoSelector extends IoElement {
         this.$.content.appendChild(this._caches[selected]);
         this.$.content.classList.toggle('io-loading', false);
       } else {
-        const _import = element[1].import;
-        delete element[1].import;
+        const _import = args.import;
+        delete args.import;
         void this.importModule(_import).then(() => {
-          if (element[1].name === this.selected.split('#')[0]) {
+          if (args.name === selected) {
             this.$.content.classList.toggle('io-loading', false);
             this.template([element], this.$.content as HTMLElement);
             this._caches[selected] = this.$.content.childNodes[0];

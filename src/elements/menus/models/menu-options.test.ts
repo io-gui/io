@@ -158,6 +158,11 @@ export default class {
         chai.expect(options.path).to.be.equal('3');
 
         options[1].selected = false;
+        chai.expect(options.path).to.be.equal('3');
+        chai.expect(options[2].selected).to.be.equal(true);
+        chai.expect(options.root).to.be.equal(3);
+        chai.expect(options.leaf).to.be.equal(3);
+
         options.root = 2;
         chai.expect(options.path).to.be.equal('3');
         chai.expect(options[2].selected).to.be.equal(true);
@@ -378,6 +383,41 @@ export default class {
         chai.expect(options[2].options.leaf).to.be.equal(null);
         chai.expect(options[2].options[2].options.root).to.be.equal(null);
         chai.expect(options[2].options[2].options.leaf).to.be.equal(null);
+      });
+      it('Should update `path`, `root` and `leaf` on initialization when selected items are provided.', () => {
+        const testOptions = [
+          {value: 1, options: [
+            {value: 'foo', options: [null, undefined, NaN]},
+            {value: 'bar', options: [null, undefined, NaN]},
+            {value: 'buzz', options: [null, undefined, NaN]},
+          ]},
+          {value: 2, options: [
+            {value: 'foo', options: [null, undefined, NaN]},
+            {value: 'bar', options: [null, undefined, NaN]},
+            {value: 'buzz', options: [{value: null, selected: true}, undefined, NaN]},
+          ]},
+          {value: 3, options: [
+            {value: 'foo', options: [null, undefined, NaN]},
+            {value: 'bar', options: [null, undefined, NaN]},
+            {value: 'buzz', options: [null, undefined, NaN]},
+          ]},
+        ];
+        const options = new MenuOptions(testOptions);
+
+        chai.expect(options[1].selected).to.be.equal(true);
+        chai.expect(options.path).to.be.equal('2,buzz,null');
+        chai.expect(options.root).to.be.equal(2);
+        chai.expect(options.leaf).to.be.equal(null);
+
+        chai.expect(options[1].options[2].selected).to.be.equal(true);
+        chai.expect(options[1].options.path).to.be.equal('buzz,null');
+        chai.expect(options[1].options.root).to.be.equal('buzz');
+        chai.expect(options[1].options.leaf).to.be.equal(null);
+
+        chai.expect(options[1].options[2].options[0].selected).to.be.equal(true);
+        chai.expect(options[1].options[2].options.path).to.be.equal('null');
+        chai.expect(options[1].options[2].options.root).to.be.equal(null);
+        chai.expect(options[1].options[2].options.leaf).to.be.equal(null);
       });
       it('Should update `path`, `root` and `leaf` properties in correct order and only when necessary.', () => {
         const options = new MenuOptions(testOptions);

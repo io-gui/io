@@ -30,11 +30,11 @@ export class IoSelectorTabs extends IoSelector {
     return /* css */`
     :host > io-menu-options {
       flex: 0 0 auto;
-      border: none;
-      border-radius: 0;
-      background-color: var(--io-background-color-dark);
-      border: var(--io-border);
-      border-width: 0 0 var(--io-border-width) 0;
+      /* border: none; */
+      /* border-radius: 0; */
+      /* background-color: red !important; */
+      /* border: var(--io-border); */
+      /* border-width: 0 0 var(--io-border-width) 0; */
     }
     `;
   }
@@ -47,15 +47,18 @@ export class IoSelectorTabs extends IoSelector {
       depth: Infinity,
     };
   }
-  getSlotted(): any {
-    return ['io-menu-options', {
-      role: 'navigation',
-      horizontal: true,
-      // value: this.bind('selected'), // TODO: Does not exist
-      options: this.options,
-      depth: this.depth,
-      slotted: this.slotted,
-      // selectable: true, // TODO: Does not exist
-    }];
+  getTemplate(): any {
+    return [
+      ['io-menu-options', {
+        role: 'navigation',
+        horizontal: true,
+        // value: this.bind('selected'), // TODO: Does not exist
+        options: this.options,
+        depth: this.depth,
+        slotted: this.slotted,
+        // selectable: true, // TODO: Does not exist
+      }],
+      ['div', {id: 'content', class: 'io-content'}]
+    ];
   }
 }

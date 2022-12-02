@@ -58,7 +58,7 @@ export class IoMenuItem extends IoField {
   @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
-  @Property({value: 'left', reflect: 'prop'})
+  @Property({value: 'right', reflect: 'prop'})
   declare direction: string;
 
   @Property(Infinity)
@@ -114,8 +114,8 @@ export class IoMenuItem extends IoField {
         item.action.apply(null, [item.value]);
       }
       if (item.select === 'pick') {
-        if (item.hasmore && this.depth <= 0) {
-          item.items.selectDefault();
+        if (item.hasmore && item.options && this.depth <= 0) {
+          item.options.selectDefault();
         } else {
           item.selected = true;
         }

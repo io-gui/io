@@ -23,8 +23,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(',')
   declare delimiter: string;
 
-  debug = false;
-
   getItem(value: any) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
@@ -35,6 +33,12 @@ export class MenuOptions extends IoNodeMixin(Array) {
   constructor(args: MenuItemArgsWeak[] = [], properties: IoNodeArgs = {}) {
     super(properties);
     this._addItems(args);
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].selected && this[i].select === 'pick') {
+        this.updatePaths(this[i]);
+        continue;
+      }
+    }
   }
 
   protected _addItems(items: MenuItemArgsWeak[]) {
@@ -95,9 +99,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
       const item = this.find((item: MenuItem) => ((item.value === this.root && item.select === 'pick') || (_isNaN(item.value) && _isNaN(this.root))));
       if (item) {
         item.selected = true;
-      } else {
-        for (let i = 0; i < this.length; i++) {
-          if (this[i].select === 'pick') this[i].selected = false;
+      }
+      debug: {
+        if (item === undefined) {
+          console.warn(`MenuOptions.rootChanged: cannot find pickable item for specified root value "${this.root}"!`);
         }
       }
     } else {
@@ -159,7 +164,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   _onItemSelectedChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    if (this.debug) console.log(item);
     if (item.select === 'pick') {
       if (item.selected) {
         for (let i = 0; i < this.length; i++) {
