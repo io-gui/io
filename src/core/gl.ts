@@ -57,8 +57,8 @@ export class IoGl extends IoElement {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--io-color-focus);
-        outline: 1px solid var(--io-color-focus);
+        border-color: var(--io-background-color-focus);
+        outline: 1px solid var(--io-background-color-focus);
       }
     `;
   }

@@ -13,6 +13,7 @@ export class IoSwitch extends IoBoolean {
       :host {
         position: relative;
         width: calc(1.5 * var(--io-field-height));
+        background-color: transparent;
       }
       :host:before {
         display: inline-block;
@@ -27,7 +28,6 @@ export class IoSwitch extends IoBoolean {
         border: var(--io-border);
         border-color: var(--io-color-border-inset);
         background-color: var(--io-background-color);
-        box-shadow: var(--io-shadow-inset);
         transition: background-color 0.4s;
       }
       :host:after {
@@ -59,10 +59,10 @@ export class IoSwitch extends IoBoolean {
       }
       :host:focus:before,
       :host:focus:after {
-        border-color: var(--io-color-focus);
+        border-color: var(--io-background-color-focus);
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
+        outline: 1px solid var(--io-background-color-focus);
       }
     `;
   }

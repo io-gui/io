@@ -12,17 +12,10 @@ export class IoString extends IoField {
   static get Style() {
     return /* css */`
       :host {
-        @apply --io-field;
         cursor: text;
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
-        min-width: var(--io-line-height);
-        border-color: var(--io-color-border-inset);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
-        flex-basis: var(--io-line-height4);
       }
       :host:before,
       :host:after {
@@ -30,28 +23,22 @@ export class IoString extends IoField {
         white-space: pre;
         visibility: hidden;
       }
-      :host[placeholder]:empty:before {
-        content: attr(placeholder);
-        color: #555; 
-        padding: 0.25em;
-        visibility: visible;
-      }
     `;
   }
   @Property(false)
   declare live: boolean;
 
   @Property('')
-  declare value: string;
-
-  @Property({value: '', reflect: 'both'})
-  declare placeholder: string;
+  declare value: string | number | boolean;
 
   @Property(true)
   declare contenteditable: boolean;
 
   @Property('textbox')
   declare role: string;
+
+  @Property({value: 'inset', reflect: 'prop'})
+  declare border: 'flush' | 'inset' | 'outset';
 
   _setFromTextNode() {
     const textNode = this.textNode;
@@ -76,25 +63,17 @@ export class IoString extends IoField {
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
-  _onPointerdown() {
+  _onPointerdown(event: PointerEvent) {
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
   }
-  _onPointermove() {}
-  _onPointerup() {
+  _onPointermove(event: PointerEvent) {}
+  _onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     if (document.activeElement !== this as unknown as Element) {
       this.focus();
       this.setCaretPosition(this.textNode.length);
-    }
-  }
-  _onKeyup(event: KeyboardEvent) {
-    super._onKeyup(event);
-    if (this.live) {
-      const carretPosition = this.getCaretPosition();
-      this._setFromTextNode();
-      this.setCaretPosition(carretPosition);
     }
   }
   _onKeydown(event: KeyboardEvent) {
@@ -131,6 +110,14 @@ export class IoString extends IoField {
         event.preventDefault();
         this.focusTo('down');
       }
+    }
+  }
+  _onKeyup(event: KeyboardEvent) {
+    super._onKeyup(event);
+    if (this.live) {
+      const carretPosition = this.getCaretPosition();
+      this._setFromTextNode();
+      this.setCaretPosition(carretPosition);
     }
   }
   changed() {

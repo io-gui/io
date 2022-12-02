@@ -17,6 +17,8 @@ export class IoField extends IoElement {
       --io-field: {
         display: inline-block;
         cursor: pointer;
+        user-select: none;
+        -webkit-touch-callout: none;
 
         overflow: hidden;
         text-overflow: ellipsis;
@@ -30,32 +32,44 @@ export class IoField extends IoElement {
         border-radius: var(--io-border-radius);
         border: var(--io-border);
         border-color: transparent;
-        color: var(--io-color);
-        background-color: transparent;
-        background-image: none;
-        padding: calc(var(--io-spacing) - var(--io-border-width));
+
+        color: var(--io-color-field);
+        background-color: var(--io-background-color-field);
+
+        padding: var(--io-spacing);
         transition: background-color 0.25s;
       }
       :host {
         @apply --io-field;
         display: flex;
       }
+      :host[border=inset] {
+        border-color: var(--io-color-border-inset);
+      }
+      :host[border=outset] {
+        border-color: var(--io-color-border-outset);
+        background-image: var(--io-gradient-outset);
+      }
       :host[aria-invalid] {
         border: var(--io-border-error);
       }
-      :host[reverse] {
-        flex-flow: row-reverse;
-      }
       :host[selected] {
-        color: var(--io-color-link);
-        background-color: var(--io-background-color-light);
+        color: var(--io-color-field-selected);
+        background-color: var(--io-background-color-field-selected);
       }
       :host:focus {
         z-index: 200;
         position: relative;
         text-overflow: inherit;
-        border-color: var(--io-color-focus);
-        outline: 1px solid var(--io-color-focus);
+        border-color: var(--io-background-color);
+        outline: 1px solid var(--io-background-color-focus);
+      }
+      :host[placeholder]:empty:before {
+        content: attr(placeholder);
+        visibility: visible;
+        color: var(--io-color-field);
+        padding: 0 calc(var(--io-spacing) + var(--io-border-width));
+        opacity: 0.5;
       }
     `;
   }
@@ -66,17 +80,20 @@ export class IoField extends IoElement {
   @Property(undefined)
   declare value: any;
 
-  @Property('')
+  @Property({value: '', reflect: 'prop'})
   declare icon: string;
 
-  @Property({value: false})
+  @Property({value: 'flush', reflect: 'prop'})
+  declare border: 'flush' | 'inset' | 'outset';
+
+  @Property({value: false, reflect: 'prop'})
   declare stroke: boolean;
 
   @Property({value: false, reflect: 'prop'})
-  declare reverse: boolean;
-
-  @Property({value: false, reflect: 'prop'})
   declare selected: boolean;
+
+  @Property({value: '', reflect: 'both'})
+  declare placeholder: string;
 
   static get Listeners() {
     return {

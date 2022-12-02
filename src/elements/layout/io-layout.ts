@@ -113,9 +113,9 @@ export class IoLayout extends IoElement {
   //   let spliceIndex = $blocks.indexOf(srcBlock);
   //   let divideIndex = -1;
   //
-  //   if ((hor && target == 'right') || (ver && target == 'bottom')) spliceIndex += 1;
-  //   else if ((hor && target == 'top') || (ver && target == 'left')) divideIndex = 0;
-  //   else if ((hor && target == 'bottom') || (ver && target == 'right')) divideIndex = 1;
+  //   if ((hor && target == 'right') || (ver && target == 'down')) spliceIndex += 1;
+  //   else if ((hor && target == 'up') || (ver && target == 'left')) divideIndex = 0;
+  //   else if ((hor && target == 'down') || (ver && target == 'right')) divideIndex = 1;
   //
   //   let newBlock = ['io-layout', {'tabs': [elementID], 'selected': 0}];
   //   if (divideIndex !== -1) {
@@ -221,7 +221,7 @@ export class IoLayoutDivider extends IoElement {
       transition: background-color 0.4s;
     }
     :host:hover {
-      background-color: var(--io-color-focus);
+      background-color: var(--io-background-color-focus);
     }
     :host[orientation=horizontal] {
       cursor: col-resize;

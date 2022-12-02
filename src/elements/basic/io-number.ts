@@ -28,28 +28,12 @@ export class IoNumber extends IoField {
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
-        min-width: var(--io-field-height);
-        border-color: var(--io-color-border-inset);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
-        flex-basis: var(--io-field-height4);
       }
       :host:before,
       :host:after {
         content: ' ';
         white-space: pre;
         visibility: hidden;
-      }
-      :host:before {
-        content: '-';
-      }
-      :host:not([positive]):before {
-        content: ' ';
-      }
-      :host[placeholder]:empty:before {
-        content: attr(placeholder);
-        color: #555; 
       }
     `;
   }
@@ -90,12 +74,22 @@ export class IoNumber extends IoField {
   @Property({value: 'false', reflect: 'prop'})
   declare spellcheck: string;
 
-  @Property({value: '', reflect: 'both'})
-  declare placeholder: string;
+  @Property({value: 'inset', reflect: 'prop'})
+  declare border: 'flush' | 'inset' | 'outset';
 
-  constructor(properties: Record<string, any> = {}) {
-    super(properties);
-    Object.defineProperty(this, '_pointer', {enumerable: false, writable: true, value: 'touch'});
+  private _pointer = '';
+
+  _onBlur(event: FocusEvent) {
+    super._onBlur(event);
+    this._setFromTextNode();
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+    // TODO: unhack race condition
+    setTimeout(() => {
+      if ((document.activeElement as Element).parentElement !== IoNumberLadderSingleton as unknown as Element) {
+        IoNumberLadderSingleton.expanded = false;
+      }
+    });
   }
   _onPointerdown(event: PointerEvent) {
     if (this._pointer === 'touch') event.preventDefault();
@@ -130,18 +124,6 @@ export class IoNumber extends IoField {
     if (this._pointer === 'touch') {
       IoNumberLadderSingleton.expanded = false;
     }
-  }
-  _onBlur(event: FocusEvent) {
-    super._onBlur(event);
-    this._setFromTextNode();
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
-    // TODO: unhack race condition
-    setTimeout(() => {
-      if ((document.activeElement as Element).parentElement !== IoNumberLadderSingleton as unknown as Element) {
-        IoNumberLadderSingleton.expanded = false;
-      }
-    });
   }
   _expandLadder() {
     IoNumberLadderSingleton.src = this;
@@ -438,7 +420,7 @@ export class IoNumberLadder extends IoElement {
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
         background-color: var(--io-background-color-light);
-        border-color: var(--io-color-focus);
+        border-color: var(--io-background-color-focus);
         transition: opacity 0.2s;
         opacity: 1;
       }

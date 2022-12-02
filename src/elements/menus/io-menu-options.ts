@@ -20,12 +20,14 @@ export class IoMenuOptions extends IoElement {
       align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
+      position: relative;
     }
 
     :host[inlayer] {
       min-width: 8em;
       box-shadow: var(--io-shadow);
       overflow-y: auto !important;
+      position: absolute;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
@@ -104,7 +106,7 @@ export class IoMenuOptions extends IoElement {
       right: var(--io-spacing2);
       padding: var(--io-spacing);
     }
-    :host > .hamburger:after {
+    :host > .hamburger > .hasmore {
       display: none;
     }
     `;
@@ -188,8 +190,8 @@ export class IoMenuOptions extends IoElement {
     this._overflownItems.length = 0;
     if (this.horizontal) {
       const hamburger = this.querySelector('.hamburger');
-      let hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
-      let end = this.getBoundingClientRect().right - (IoThemeSingleton.ioBorderWidth + IoThemeSingleton.ioSpacing);
+      const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
+      const end = this.getBoundingClientRect().right - (IoThemeSingleton.ioBorderWidth + IoThemeSingleton.ioSpacing);
       let last = Infinity;
       let hasOwerflown = false;
 

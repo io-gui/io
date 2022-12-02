@@ -17,16 +17,12 @@ export class IoButton extends IoField {
         border: var(--io-border);
         border-color: var(--io-color-border-outset);
         background-color: var(--io-background-color-dark);
-        background-image: var(--io-gradient-button);
+        background-image: var(--io-gradient-outset);
         padding-left: calc(2 * var(--io-spacing));
         padding-right: calc(2 * var(--io-spacing));
       }
       :host[pressed] {
-        border: var(--io-border);
         border-color: var(--io-color-border-inset);
-      }
-      :host > io-label {
-        vertical-align: top;
       }
     `;
   }

@@ -38,19 +38,31 @@ type Variables = {
   ioBorderRadius2: number;
   ioBorderWidth: number;
   ioBorderWidth2: number;
+
   ioBackgroundColor: Color;
+  ioBackgroundColorFocus: Color;
+
   ioBackgroundColorLight: Color;
   ioBackgroundColorDark: Color;
+
   ioBackgroundColorField: Color;
+  ioBackgroundColorFieldSelected: Color;
+
   ioColor: Color;
   ioColorError: Color;
   ioColorLink: Color;
   ioColorFocus: Color;
+
   ioColorField: Color;
+  ioColorFieldSelected: Color;
+
   ioColorNumber: Color;
   ioColorString: Color;
   ioColorBoolean: Color;
+
   ioColorBorder: Color;
+  ioColorBorderSelected: Color;
+
   ioColorBorderLight: Color;
   ioColorBorderDark: Color;
   ioColorGradientStart: Color;
@@ -80,19 +92,31 @@ const defaultThemes: Themes = {
     ioBorderRadius2: 4,
     ioBorderWidth: 1,
     ioBorderWidth2: 2,
+
     ioBackgroundColor: new Color(1, 1, 1, 1),
+    ioBackgroundColorFocus: new Color(0.3, 0.6, 1, 1),
+
     ioBackgroundColorLight: new Color(0.6, 0.6, 0.6, 1),
     ioBackgroundColorDark: new Color(0.84, 0.84, 0.84, 1),
+
     ioBackgroundColorField: new Color(0.92, 0.92, 0.92, 1),
+    ioBackgroundColorFieldSelected: new Color(0.3, 0.6, 1, 1),
+
     ioColor: new Color(0, 0, 0, 1),
     ioColorError: new Color(0.91, 0.5, 0.5, 1),
     ioColorLink: new Color(0.2, 0.75, 0.2, 1),
-    ioColorFocus: new Color(0.3, 0.6, 1, 1),
+    ioColorFocus: new Color(1, 1, 1, 1),
+
     ioColorField: new Color(0, 0, 0, 1),
+    ioColorFieldSelected: new Color(1, 1, 1, 1),
+
     ioColorNumber: new Color(0.12, 0.64, 1, 1),
     ioColorString: new Color(0.95, 0.25, 0.1, 1),
     ioColorBoolean: new Color(0.82, 0.35, 0.75, 1),
+
     ioColorBorder: new Color(0.7, 0.7, 0.7, 1),
+    ioColorBorderSelected: new Color(1, 1, 1, 1),
+
     ioColorBorderLight: new Color(1, 1, 1, 1),
     ioColorBorderDark: new Color(0.6, 0.6, 0.6, 1),
     ioColorGradientStart: new Color(0.9, 0.9, 0.9, 1),
@@ -118,19 +142,31 @@ const defaultThemes: Themes = {
     ioBorderRadius2: 4,
     ioBorderWidth: 1,
     ioBorderWidth2: 2,
+
     ioBackgroundColor: new Color(0.065, 0.065, 0.065, 1),
+    ioBackgroundColorFocus: new Color(0.065, 0.065, 0.065, 1),
+
     ioBackgroundColorLight: new Color(0.3, 0.3, 0.3, 1),
     ioBackgroundColorDark: new Color(0.5, 0.5, 0.5, 1),
+
     ioBackgroundColorField: new Color(0.137, 0.137, 0.137, 1),
+    ioBackgroundColorFieldSelected: new Color(0.137, 0.137, 0.137, 1),
+
     ioColor: new Color(1, 1, 1, 1),
     ioColorError: new Color(1, 0.376, 0.062, 1),
     ioColorLink: new Color(0.75, 0.9, 0.59, 1),
     ioColorFocus: new Color(0.3, 0.82, 1.4, 1),
+
     ioColorField: new Color(0.75, 0.75, 0.75, 1),
+    ioColorFieldSelected: new Color(0.75, 0.75, 0.75, 1),
+
     ioColorNumber: new Color(0.125, 0.64, 1, 1),
     ioColorString: new Color(0.94, 0.25, 0.086, 1),
     ioColorBoolean: new Color(0.82, 0.35, 0.75, 1),
+
     ioColorBorder: new Color(0.3, 0.3, 0.3, 1),
+    ioColorBorderSelected: new Color(0.3, 0.3, 0.3, 1),
+
     ioColorBorderLight: new Color(0.4, 0.4, 0.4, 1),
     ioColorBorderDark: new Color(0, 0, 0, 1),
     ioColorGradientStart: new Color(1, 1, 1, 0.1),
@@ -201,10 +237,9 @@ const compositeVariables = /* css */`
     --io-border-error: var(--io-border-width) solid var(--io-color-error);
     --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
     --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
-    --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
+    --io-gradient-outset: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
+    --io-gradient-inset: linear-gradient(0deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 150%);
     --io-shadow: 2px 2px 6px var(--io-color-shadow), 1px 1px 1px var(--io-color-shadow);
-    --io-shadow-inset: 1px 1px 2px inset var(--io-color-shadow);
-    --io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
   }
 `;
 

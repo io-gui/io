@@ -15,8 +15,8 @@ export class IoColorPicker extends IoElement {
         overflow: hidden;
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
-        border-color: var(--io-color-focus);
+        outline: 1px solid var(--io-background-color-focus);
+        border-color: var(--io-background-color-focus);
       }
     `;
   }
@@ -72,7 +72,7 @@ export class IoColorPicker extends IoElement {
   expand() {
     IoColorPanelSingleton.value = this.value;
     IoColorPanelSingleton.expanded = true;
-    IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'down', this.getBoundingClientRect());
     // hook up 'value-input' event dispatch
     IoColorPanelSingleton.addEventListener('value-input', this._onValueSet);
     IoColorPanelSingleton._targetValueSetHandler = this._onValueSet;

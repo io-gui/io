@@ -33,7 +33,6 @@ export class IoElementDemo extends IoElement {
       border: var(--io-border);
       border-color: var(--io-color-border-inset);
       padding: var(--io-spacing);
-      box-shadow: var(--io-shadow-inset);
       color: var(--io-color);
       background-color: var(--io-background-color);
       background-image: none;

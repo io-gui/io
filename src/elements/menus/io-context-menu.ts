@@ -16,7 +16,7 @@ import {getMenuDescendants, IoMenuItem} from './io-menu-item.js';
  *   "position": "pointer",
  *   "selectable": false
  * }' config='{
- *   "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object"]
+ *   "position": ["io-option-menu", {"options": ["pointer", "up", "right", "down", "left"]}], "type:object": ["io-object"]
  * }'></io-element-demo>
  **/
 @RegisterIoElement

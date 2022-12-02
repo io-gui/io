@@ -102,10 +102,10 @@ export class IoLayoutBlock extends IoElement {
     if (ay < 1 && ax < 1 && (ay > 0.9 || ax > 0.9)) {
       if (y < -ax) {
         // TODO: improve UX wit h tabs
-        // this.setDropTarget('top');
+        // this.setDropTarget('up');
         // return;
       } else if (y > +ax) {
-        this.setDropTarget('bottom');
+        this.setDropTarget('down');
         return;
       } else if (x < -ay) {
         this.setDropTarget('left');

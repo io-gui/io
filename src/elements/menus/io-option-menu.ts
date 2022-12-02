@@ -38,15 +38,15 @@ export class IoOptionMenu extends IoElement {
       border: var(--io-border);
       border-color: var(--io-color-border-outset);
       background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-button);
+      background-image: var(--io-gradient-outset);
       padding-left: calc(2 * var(--io-spacing));
       padding-right: calc(2 * var(--io-spacing));
       text-align: left;
     }
     :host > io-menu-item {
       margin: calc(-1 * var(--io-border-width));
-      background-color: transparent !important;
-      border-color: transparent !important;
+      /* background-color: transparent !important; */
+      /* border-color: transparent !important; */
     }
     :host > io-menu-item[selected] {
       color: var(--io-color);
@@ -117,7 +117,7 @@ export class IoOptionMenu extends IoElement {
     this.template([
       ['io-menu-item', {
         option: option,
-        direction: 'bottom',
+        direction: 'down',
       }]
     ]);
   }

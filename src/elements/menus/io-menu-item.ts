@@ -17,7 +17,6 @@ export class IoMenuItem extends IoField {
     :host {
       background-color: var(--io-background-color-dark);
       user-select: none;
-      /* position: relative; */
     }
     :host > * {
       pointer-events: none;
@@ -42,13 +41,13 @@ export class IoMenuItem extends IoField {
       opacity: 0.5;
       line-height: initial;
     }
-    :host[selected][direction="top"],
-    :host[selected][direction="bottom"] {
-      border-bottom-color: var(--io-color-link);
+    :host[selected][direction="up"],
+    :host[selected][direction="down"] {
+      border-bottom-color: var(--io-color-border-selected);
     }
     :host[selected][direction="right"],
     :host[selected][direction="left"] {
-      border-left-color: var(--io-color-link);
+      border-left-color: var(--io-color-border-selected);
     }
     `;
   }
@@ -59,11 +58,8 @@ export class IoMenuItem extends IoField {
   @Property({value: false, reflect: 'prop'})
   declare expanded: boolean;
 
-  @Property({value: 'bottom', reflect: 'prop'})
+  @Property({value: 'left', reflect: 'prop'})
   declare direction: string;
-
-  @Property({value: '', reflect: 'prop'})
-  declare icon: string;
 
   @Property(Infinity)
   declare depth: number;
@@ -341,6 +337,7 @@ export class IoMenuItem extends IoField {
     const icon = this.icon || this.item.icon;
     this.setAttribute('selected', this.item.selected);
     this.setAttribute('hasmore', this.hasmore);
+    this.disabled = this.item.disabled; // TODO: reconsider this
     this.template([
       this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
       this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
