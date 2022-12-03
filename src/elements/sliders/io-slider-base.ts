@@ -156,6 +156,7 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('touchend', this._onTouchend);
   }
   _onPointerdown(event: PointerEvent) {
+    this._rect = this.getBoundingClientRect();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
