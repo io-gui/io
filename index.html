@@ -101,9 +101,6 @@
         width: 100%;
         height: 100%;
       }
-      .main > io-menu-options {
-        background-color: var(--io-background-color);
-      }
       io-sidebar:not([collapsed]) {
         flex-basis: 11em !important;
       }
@@ -262,7 +259,7 @@
                   sanitize: false,
                   src: './docs/learn-more.md',
                   anchor: OPTIONS.getItem('docs').getSubitem('learn-more').options.bind('path'),
-                  options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
+                  // options: OPTIONS.getItem('docs').getSubitem('learn-more').options,
                 }],
                 ['io-md-view-selector', {
                   name: 'reference',

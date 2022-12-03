@@ -80,7 +80,7 @@ export class IoMenuItem extends IoField {
     return this.item.hasmore && this.depth > 0;
   }
   get inlayer() {
-    return this.$parent && this.$parent.inlayer;
+    return  !!this.$parent && !!this.$parent.inlayer;
   }
   get $parent() {
     return this.parentElement;
@@ -94,8 +94,8 @@ export class IoMenuItem extends IoField {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options as unknown as HTMLElement);
-    Layer.removeEventListener('pointermove', this._onLayerPointermove);
-    Layer.removeEventListener('pointerup', this._onLayerPointerup);
+    if (!this.inlayer) Layer.removeEventListener('pointermove', this._onLayerPointermove);
+    if (!this.inlayer) Layer.removeEventListener('pointerup', this._onLayerPointerup);
   }
   _onLayerPointermove(event: PointerEvent) {
     if (this.expanded) this._onPointermove(event);

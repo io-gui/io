@@ -33,7 +33,7 @@ export async function afterHashChange(): Promise<void> {
 
 function runTests() {
   if (!testCompleted) {
-    // new CoreTests().run();
+    new CoreTests().run();
     new ElementsTests().run();
     mocha.checkLeaks();
     mocha.run();

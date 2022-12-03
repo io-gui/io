@@ -21,6 +21,8 @@ export class IoMenuOptions extends IoElement {
       user-select: none;
       transition: opacity 0.25s;
       position: relative;
+      min-width: calc(var(--io-field-height) + calc(var(--io-spacing2) + var(--io-border-width2)));
+      min-height: calc(var(--io-field-height) + calc(var(--io-spacing2) + var(--io-border-width2)));
     }
 
     :host[inlayer] {
@@ -42,10 +44,9 @@ export class IoMenuOptions extends IoElement {
 
     :host[horizontal] {
       flex-direction: row;
-      align-self: stretch;
-      justify-self: stretch;
-      overflow-x: hidden;
-      min-height: calc(var(--io-field-height) + calc(var(--io-spacing2) + var(--io-border-width2)));
+      /* align-self: stretch; */
+      /* justify-self: stretch; */
+      /* overflow-x: hidden; */
     }
 
     /* Item spacing */
@@ -345,6 +346,7 @@ export class IoMenuOptions extends IoElement {
         depth: this.depth + 1,
         role: 'navigation',
         class: 'hamburger',
+        direction: 'down',
         item: new MenuItem({
           label: '',
           icon: 'icons:hamburger',

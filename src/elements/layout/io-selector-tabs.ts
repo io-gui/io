@@ -1,62 +1,42 @@
-import { RegisterIoElement } from '../../core/element.js';
-import {IoSelector} from './io-selector.js';
+import { RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { IoSelector } from './io-selector.js';
+import { Property } from '../../core/internals/property.js';
 
 /**
- * Element selector with selectable tabs interfce.
- *
- * <io-element-demo element="io-selector-tabs"
- *     properties='{
- *         "elements": [
- *             ["div", {"name": "first"}, "First content"],
- *             ["div", {"name": "second"}, "Second content"],
- *             ["div", {"name": "third"}, "Third content"],
- *             ["div", {"name": "fourth"}, "Fourth content"],
- *             ["div", {"name": "fifth"}, "Fifth content"],
- *             ["div", {"name": "sixth"}, "Sixth content"]],
- *         "selected": "first",
- *         "cache": false,
- *         "options": [
- *             "first",
- *             "second",
- *             "third",
- *             "fourth",
- *             {"label" : "more", "options": ["fifth", "sixth"]}]}'
- *     config='{"options": ["io-properties"]}'>
- * </io-element-demo>
+ * Element selector with selectable tabs.
  **/
 @RegisterIoElement
 export class IoSelectorTabs extends IoSelector {
   static get Style() {
     return /* css */`
-    :host > io-menu-options {
-      flex: 0 0 auto;
-      /* border: none; */
-      /* border-radius: 0; */
-      /* background-color: red !important; */
-      /* border: var(--io-border); */
-      /* border-width: 0 0 var(--io-border-width) 0; */
-    }
+      :host > io-menu-options {
+        flex: 0 0 auto;
+        align-self: stretch;
+        border-radius: 0;
+        padding: 0;
+        border-width: 0 0 var(--io-border-width) 0;
+        min-height: calc(var(--io-field-height) - var(--io-border-width));
+      }
+      :host > io-menu-options > io-menu-item {
+        border-radius: 0;
+      }
     `;
   }
-  static get Properties(): any {
-    return {
-      slotted: {
-        type: Array,
-        observe: true,
-      },
-      depth: Infinity,
-    };
-  }
+
+  @Property(Array)
+  declare slotted: VDOMArray[];
+
+  @Property(Infinity)
+  declare depth: number;
+
   getTemplate(): any {
     return [
       ['io-menu-options', {
         role: 'navigation',
         horizontal: true,
-        // value: this.bind('selected'), // TODO: Does not exist
         options: this.options,
         depth: this.depth,
         slotted: this.slotted,
-        // selectable: true, // TODO: Does not exist
       }],
       ['div', {id: 'content', class: 'io-content'}]
     ];

@@ -65,6 +65,8 @@ export class IoOptionMenu extends IoElement {
   @Property('button')
   declare role: string;
 
+  private _item: MenuItem | undefined;
+
   get _label() {
     const valueText = (this.value !== undefined) ? String(this.value) : '';
     return this.label || valueText || '';
@@ -79,8 +81,6 @@ export class IoOptionMenu extends IoElement {
     if (change.value) {
       change.value.addEventListener('leaf-changed', this._onLeafChanged);
     }
-  }
-  changed() {
 
     // TODO: find label deeper in options
     let valueText = '';
@@ -100,11 +100,9 @@ export class IoOptionMenu extends IoElement {
     if (this.icon) {
       valueText = this.icon + '  ' + valueText;
     }
-
-    const item = new MenuItem({label: valueText,options: this.options});
-
-    this.template([
-      ['io-menu-item', {item: item, direction: 'down'}]
-    ]);
+    this._item = new MenuItem({label: valueText, options: this.options});
+  }
+  changed() {
+    this.template([['io-menu-item', {item: this._item, direction: 'down'}]]);
   }
 }

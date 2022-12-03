@@ -246,76 +246,76 @@ export class IoDemoElements extends IoElement {
       //     ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
       //   ]],
       // ]],
-      ['div', [
-        ['io-label', {label: 'Color Editors'}],
-        ['div', [
-          ['io-label', {label: 'color-rgba'}],
-          ['io-color-rgba', {value: this.rgba}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-rgba [rgb]'}],
-          ['io-color-rgba', {value: this.rgb}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [red]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'r'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [green]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'g'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [blue]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'b'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [alpha]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'a'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [h]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'h'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [s]'}],
-          ['io-color-slider', {value: this.rgba, channel: 's'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [v]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'v'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [l]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'l'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [c]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'c'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [m]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'm'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [y]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'y'}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'color-slider [k]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'k'}],
-        ]],
-        ['div', {class: 'tall'}, [
-          ['io-label', {label: 'slider-2d + [vert]'}],
-          ['io-color-slider', {value: this.rgba, channel: 'hs'}],
-          ['io-color-slider', {value: this.rgba, channel: 'sv'}],
-          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
-          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
-        ]],
-        ['div', {class: 'tall'}, [
-          ['io-label', {label: 'color-panel'}],
-          ['io-color-panel', {expanded: true, value: this.rgba}]
-        ]],
-      ]],
+      // ['div', [
+      //   ['io-label', {label: 'Color Editors'}],
+      //   ['div', [
+      //     ['io-label', {label: 'color-rgba'}],
+      //     ['io-color-rgba', {value: this.rgba}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-rgba [rgb]'}],
+      //     ['io-color-rgba', {value: this.rgb}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [red]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'r'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [green]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'g'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [blue]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'b'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [alpha]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'a'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [h]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'h'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [s]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 's'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [v]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'v'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [l]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'l'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [c]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'c'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [m]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'm'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [y]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'y'}],
+      //   ]],
+      //   ['div', [
+      //     ['io-label', {label: 'color-slider [k]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'k'}],
+      //   ]],
+      //   ['div', {class: 'tall'}, [
+      //     ['io-label', {label: 'slider-2d + [vert]'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'hs'}],
+      //     ['io-color-slider', {value: this.rgba, channel: 'sv'}],
+      //     ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
+      //     ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
+      //   ]],
+      //   ['div', {class: 'tall'}, [
+      //     ['io-label', {label: 'color-panel'}],
+      //     ['io-color-panel', {expanded: true, value: this.rgba}]
+      //   ]],
+      // ]],
       // ['div', [
       //   ['io-label', {label: 'Vector Editors'}],
       //   ['div', [
@@ -420,106 +420,106 @@ export class IoDemoElements extends IoElement {
       //   ]],
       // ]],
       ['div', [
-        ['io-label', {label: 'Menus'}],
-        ['div', [
-          ['io-label', {label: 'menu-item'}],
-          ['io-menu-item', {label: 'menu item', item: new MenuItem({
-            selected: this.bind('boolean'),
-            value: 'value',
-            hint: 'hint',
-            label: 'menu item',
-            icon: '💚',
-          })}],
-        ]],
-        ['div', [
-          ['io-label', {label: 'menu-options'}],
-          ['io-menu-options', {
-            searchable: true,
-            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
-              root: this.bind('menuRoot')
-            }),
-          }],
-          ['io-menu-options', {
-            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'].reverse(), {
-              root: this.bind('menuRoot')
-            }),
-          }],
-          ['io-menu-options', {
-            options: new MenuOptions([
-              {value: 'zero', hint: 'Number(0)', icon: 'icons:film'},
-              {value: 'one', hint: 'Number(1)', icon: 'icons:layers'},
-              {value: 'two', hint: 'Number(2)', icon: 'icons:box'},
-              {value: 'three', hint: 'Number(3)', icon: 'icons:check'},
-              {value: 'four', hint: 'Number(4)', icon: 'icons:code'},
-            ], {
-              root: this.bind('menuRoot')
-            }),
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: '[horizontal]'}],
-          ['io-menu-options', {
-            horizontal: true,
-            searchable: true,
-            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
-              root: this.bind('menuRoot')
-            }),
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: '[noPartialCollapse]'}],
-          ['io-menu-options', {
-            horizontal: true,
-            noPartialCollapse: true,
-            options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
-              root: this.bind('menuRoot')
-            }),
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: '[suboptions]'}],
-          ['io-menu-options', {
-            options: new MenuOptions([
-              {value: 'zero', options: new MenuOptions(['1', '2', '3', {value: '4', disabled: true}])},
-              {value: 'one', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'two', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'three', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'four', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'five', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'six', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'seven', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'eight', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'nine', options: new MenuOptions(['1', '2', '3'])},
-            ], {
-              // TODO: when binding two menu trees with both `root` and `path` properties, it is important that `MenuOptions.updatePaths > setProperties`
-              // updates the `path` property before the `root`. Otherwise, the menu binding will be broken!
-              // TODO: create a test for this edge-case.
-              path: this.bind('menuPath'),
-              root: this.bind('menuRoot'),
-            }),
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: '[suboptions][horiz.]'}],
-          ['io-menu-options', {
-            horizontal: true,
-            options: new MenuOptions([
-              {value: 'zero', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'one', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'two', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'three', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'four', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'five', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'six', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'seven', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'eight', options: new MenuOptions(['1', '2', '3'])},
-              {value: 'nine', options: new MenuOptions(['1', '2', '3'])},
-            ], {
-              path: this.bind('menuPath'),
-              root: this.bind('menuRoot'),
-            }),
-          }],
-        ]],
+        // ['io-label', {label: 'Menus'}],
+        // ['div', [
+        //   ['io-label', {label: 'menu-item'}],
+        //   ['io-menu-item', {label: 'menu item', item: new MenuItem({
+        //     selected: this.bind('boolean'),
+        //     value: 'value',
+        //     hint: 'hint',
+        //     label: 'menu item',
+        //     icon: '💚',
+        //   })}],
+        // ]],
+        // ['div', [
+        //   ['io-label', {label: 'menu-options'}],
+        //   ['io-menu-options', {
+        //     searchable: true,
+        //     options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+        //       root: this.bind('menuRoot')
+        //     }),
+        //   }],
+        //   ['io-menu-options', {
+        //     options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'].reverse(), {
+        //       root: this.bind('menuRoot')
+        //     }),
+        //   }],
+        //   ['io-menu-options', {
+        //     options: new MenuOptions([
+        //       {value: 'zero', hint: 'Number(0)', icon: 'icons:film'},
+        //       {value: 'one', hint: 'Number(1)', icon: 'icons:layers'},
+        //       {value: 'two', hint: 'Number(2)', icon: 'icons:box'},
+        //       {value: 'three', hint: 'Number(3)', icon: 'icons:check'},
+        //       {value: 'four', hint: 'Number(4)', icon: 'icons:code'},
+        //     ], {
+        //       root: this.bind('menuRoot')
+        //     }),
+        //   }],
+        // ]],
+        // ['div', [
+        //   ['io-label', {label: '[horizontal]'}],
+        //   ['io-menu-options', {
+        //     horizontal: true,
+        //     searchable: true,
+        //     options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+        //       root: this.bind('menuRoot')
+        //     }),
+        //   }],
+        // ]],
+        // ['div', [
+        //   ['io-label', {label: '[noPartialCollapse]'}],
+        //   ['io-menu-options', {
+        //     horizontal: true,
+        //     noPartialCollapse: true,
+        //     options: new MenuOptions(['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'], {
+        //       root: this.bind('menuRoot')
+        //     }),
+        //   }],
+        // ]],
+        // ['div', [
+        //   ['io-label', {label: '[suboptions]'}],
+        //   ['io-menu-options', {
+        //     options: new MenuOptions([
+        //       {value: 'zero', options: new MenuOptions(['1', '2', '3', {value: '4', disabled: true}])},
+        //       {value: 'one', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'two', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'three', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'four', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'five', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'six', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'seven', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'eight', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'nine', options: new MenuOptions(['1', '2', '3'])},
+        //     ], {
+        //       // TODO: when binding two menu trees with both `root` and `path` properties, it is important that `MenuOptions.updatePaths > setProperties`
+        //       // updates the `path` property before the `root`. Otherwise, the menu binding will be broken!
+        //       // TODO: create a test for this edge-case.
+        //       path: this.bind('menuPath'),
+        //       root: this.bind('menuRoot'),
+        //     }),
+        //   }],
+        // ]],
+        // ['div', [
+        //   ['io-label', {label: '[suboptions][horiz.]'}],
+        //   ['io-menu-options', {
+        //     horizontal: true,
+        //     options: new MenuOptions([
+        //       {value: 'zero', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'one', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'two', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'three', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'four', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'five', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'six', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'seven', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'eight', options: new MenuOptions(['1', '2', '3'])},
+        //       {value: 'nine', options: new MenuOptions(['1', '2', '3'])},
+        //     ], {
+        //       path: this.bind('menuPath'),
+        //       root: this.bind('menuRoot'),
+        //     }),
+        //   }],
+        // ]],
         // ['div', [
         //   ['io-label', {label: 'option-menu'}],
         //   ['io-option-menu', {

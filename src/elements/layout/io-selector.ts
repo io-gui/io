@@ -4,24 +4,6 @@ import { Property } from '../../core/internals/property.js';
 
 /**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
- *
- * <io-element-demo element="io-selector"
- *     properties='{
- *         "elements": [
- *             ["div", {"name": "first"}, "First content"],
- *             ["div", {"name": "second"}, "Second content"],
- *             ["div", {"name": "third"}, "Third content"],
- *             ["div", {"name": "fourth"}, "Fourth content"]],
- *         "selected": "first",
- *         "cache": false}'
- *     config='{
- *         "selected": ["io-option-menu", {"options": [
- *             "first",
- *             "second",
- *             "third",
- *             "fourth"]}]}'>
- * </io-element-demo>
- *
  * If `cache` property is set to `true`, a reference to the element will be kept fo later use.
  **/
 
@@ -33,8 +15,8 @@ export class IoSelector extends IoElement {
     return /* css */`
     :host {
       @apply --io-content;
-      color: var(--io-color);
-      background-color: var(--io-background-color);
+      /* color: var(--io-color); */
+      /* background-color: var(--io-background-color); */
     }
 
     @keyframes io-selector-spinner {
@@ -74,6 +56,7 @@ export class IoSelector extends IoElement {
   declare _caches: Record<string, HTMLElement>;
 
   init() {
+    this.template(this.getTemplate());
     this.changed();
   }
   getTemplate(): any {
@@ -96,6 +79,8 @@ export class IoSelector extends IoElement {
   changed() {
     const selected = this.options.root;
 
+    if (selected === undefined) return;
+
     let element = this.elements.find((element: any) => {return element[1].name === selected;}) as VDOMArray;
 
     if (!element) {
@@ -108,14 +93,14 @@ export class IoSelector extends IoElement {
     const explicitlyCache = args.cache === true;
     const explicitlyDontCache = args.cache === false;
 
-    this.template(this.getTemplate());
-
     if (this.$.content) {
       this.$.content.textContent = '';
       this.$.content.classList.toggle('io-loading', true);
       if (!explicitlyDontCache && (this.cache || explicitlyCache) && this._caches[selected]) {
-        this.$.content.appendChild(this._caches[selected]);
-        this.$.content.classList.toggle('io-loading', false);
+        if (this._caches[selected].parentElement !== this.$.content) {
+          this.$.content.appendChild(this._caches[selected]);
+          this.$.content.classList.toggle('io-loading', false);
+        }
       } else {
         const _import = args.import;
         delete args.import;
