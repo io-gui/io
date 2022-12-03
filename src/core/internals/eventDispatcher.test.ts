@@ -136,6 +136,33 @@ export default class {
         eventDispatcher.removeEventListener('event1');
         chai.expect(eventDispatcher.addedListeners).to.be.eql({});
       });
+      it('Should not add listeners if already added', () => {
+        const node = new IoNode2();
+        const eventDispatcher = new EventDispatcher(node);
+        const listener1 = () => {};
+        const listener2 = () => {};
+        eventDispatcher.addEventListener('event1', listener1);
+        eventDispatcher.addEventListener('event1', listener1);
+        eventDispatcher.addEventListener('event1', listener2, {capture: true});
+        eventDispatcher.addEventListener('event1', listener2, {capture: true});
+        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+          event1:[[listener1],[listener2, {capture:true}]]
+        });
+      });
+      it('Should remove correct listener', () => {
+        const node = new IoNode2();
+        const eventDispatcher = new EventDispatcher(node);
+        const listener1 = () => {};
+        const listener2 = () => {};
+        eventDispatcher.addEventListener('event1', listener1);
+        eventDispatcher.addEventListener('event1', listener2, {capture: true});
+        eventDispatcher.removeEventListener('event1', listener2);
+        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+          event1:[[listener1]]
+        });
+        eventDispatcher.removeEventListener('event1', listener2);
+        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+      });
       it('Should dispatch added events', () => {
         const node = new IoNode2();
         const eventDispatcher = new EventDispatcher(node);

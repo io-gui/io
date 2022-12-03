@@ -156,8 +156,8 @@ export class EventDispatcher {
    */
   addEventListener(name: string, listener: CustomEventListener, options?: AddEventListenerOptions) {
     this.addedListeners[name] = this.addedListeners[name] || [];
+    const l = this.addedListeners[name].findIndex(l => l[0] === listener);
     debug: {
-      const l = this.addedListeners[name].findIndex(l => l[0] === listener);
       if (l !== -1) console.warn(`EventDispatcher.addEventListener: Listener ${name} already added!`);
       if (typeof listener !== 'function') console.warn('EventDispatcher.addEventListener: Invalid listener type!');
       if (options) {
@@ -165,9 +165,12 @@ export class EventDispatcher {
         else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) console.warn('EventDispatcher.addEventListener: Invalid listener options type');
       }
     }
-    this.addedListeners[name].push(options ? [listener, options] : [listener]);
-    if (this.isEventTarget) {
-      EventTarget.prototype.addEventListener.call(this.node, name, listener as EventListener, options);
+
+    if (l === -1)  {
+      this.addedListeners[name].push(options ? [listener, options] : [listener]);
+      if (this.isEventTarget) {
+        EventTarget.prototype.addEventListener.call(this.node, name, listener as EventListener, options);
+      }
     }
   }
   /**
@@ -199,7 +202,7 @@ export class EventDispatcher {
       }
       this.addedListeners[name].length = 0;
     } else {
-      const l = this.addedListeners[name].findIndex(item => item[0] = listener);
+      const l = this.addedListeners[name].findIndex(item => item[0] === listener);
       debug: {
         if (l === -1) console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
       }
