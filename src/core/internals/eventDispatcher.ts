@@ -204,11 +204,15 @@ export class EventDispatcher {
     } else {
       const l = this.addedListeners[name].findIndex(item => item[0] === listener);
       debug: {
-        if (l === -1) console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
+        if (l === -1) {
+          console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
+        }
       }
-      this.addedListeners[name].splice(l, 1);
-      if (this.isEventTarget) {
-        EventTarget.prototype.removeEventListener.call(this.node, name, listener as EventListener, options);
+      if (l !== -1) {
+        this.addedListeners[name].splice(l, 1);
+        if (this.isEventTarget) {
+          EventTarget.prototype.removeEventListener.call(this.node, name, listener as EventListener, options);
+        }
       }
     }
     if (this.addedListeners[name].length === 0) {

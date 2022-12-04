@@ -160,7 +160,7 @@ export default class {
         chai.expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1]]
         });
-        eventDispatcher.removeEventListener('event1', listener2);
+        eventDispatcher.removeEventListener('event1', listener1);
         chai.expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should dispatch added events', () => {
