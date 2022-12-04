@@ -133,10 +133,10 @@ export class IoContextMenu extends IoElement {
         Layer.appendChild(this.$options);
       }
       this.$options.setProperties({
-        value: this.bind('value'),
+        // value: this.bind('value'),
         expanded: this.bind('expanded'),
         options: this.options,
-        selectable: this.selectable,
+        // selectable: this.selectable,
         position: this.position,
       });
     } else {

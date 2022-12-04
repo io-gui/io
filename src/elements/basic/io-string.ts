@@ -4,8 +4,6 @@ import { IoField } from './io-field.js';
 
 /**
  * Input element for `String` data type.
- *
- * <io-element-demo element="io-string" properties='{"value": "hello world"}'></io-element-demo>
  **/
 @RegisterIoElement
 export class IoString extends IoField {
@@ -16,12 +14,6 @@ export class IoString extends IoField {
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
-      }
-      :host:before,
-      :host:after {
-        content: ' ';
-        white-space: pre;
-        visibility: hidden;
       }
     `;
   }
@@ -38,7 +30,7 @@ export class IoString extends IoField {
   declare role: string;
 
   @Property({value: 'inset', reflect: 'prop'})
-  declare border: 'flush' | 'inset' | 'outset';
+  declare appearance: 'flush' | 'inset' | 'outset';
 
   _setFromTextNode() {
     const textNode = this.textNode;

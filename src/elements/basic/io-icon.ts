@@ -5,8 +5,6 @@ import { IoIconsetSingleton } from './io-iconset.js';
 /**
  * SVG icon element.
  * It displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
- *
- * <io-element-demo element="io-icon" properties='{"icon": "icons:link", "stroke": false}' config='{"icon": ["io-option-menu", {"options": ["icons:link", "icons:unlink", "icons:check", "icons:uncheck"]}]}'></io-element-demo>
  **/
 @RegisterIoElement
 export class IoIcon extends IoElement {
@@ -15,13 +13,14 @@ export class IoIcon extends IoElement {
       --io-icon: {
         display: inline-block;
         height: var(--io-line-height);
-        line-height: var(--io-field-height);
+        min-width: var(--io-line-height);
+        line-height: var(--io-line-height);
         font-size: var(--io-font-size);
         text-align: center;
+        fill: currentcolor;
       }
       :host {
         @apply --io-icon;
-        fill: currentcolor;
       }
       :host:not([icon]) {
         display: none;

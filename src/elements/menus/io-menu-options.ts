@@ -305,8 +305,8 @@ export class IoMenuOptions extends IoElement {
     for (const key in options) {
       const item = options[key];
       if (predicateFn(item) && result.indexOf(item) === -1) result.push(item);
-      if (typeof item === 'object') {
-        const results = this._filterOptions(item, search, _depth, _chain, _i);
+      if (item instanceof MenuItem && item.options) {
+        const results = this._filterOptions(item.options, search, _depth, _chain, _i);
         for (let i = 0; i < results.length; i++) {
           if (result.indexOf(results[i]) === -1) result.push(results[i]);
         }
@@ -314,6 +314,7 @@ export class IoMenuOptions extends IoElement {
     }
     return result;
   }
+
   changed() {
     const elements: VDOMArray[] = [...this.slotted];
     let options = this.options;

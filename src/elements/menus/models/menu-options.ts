@@ -23,25 +23,68 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(',')
   declare delimiter: string;
 
-  getItem(value: any) {
+  // @Property(true)
+  // declare lazy: boolean;
+
+  push(...items: MenuItem[]) {
+    console.log(items);
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      debug: {
+        if (!(item instanceof MenuItem)) {
+          console.warn('MenuOptions.push: item is not a MenuItem!');
+        }
+      }
+      if (item instanceof MenuItem) {
+        debug: {
+          if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
+            console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+          }
+        }
+        item.addEventListener('selected-changed', this._onItemSelectedChanged);
+        item.addEventListener('path-changed', this._onSubOptionsPathChanged);
+        super.push(item);
+      }
+    }
+  }
+
+  getItem(value: any, deep = false) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
+      if (deep && this[i].options) {
+        const item = this[i].options.getItem(value, deep);
+        if (item) return item;
+      }
     }
     return null;
   }
 
-  constructor(args: MenuItemArgsWeak[] = [], properties: IoNodeArgs = {}) {
-    super(properties);
-    this._addItems(args);
+  constructor(args: MenuItem[] = [], properties: IoNodeArgs = {}) {
+    super(properties, ...args);
+    if (this.path !== '') this.pathChanged();
+    if (this.root !== undefined) this.rootChanged();
     for (let i = 0; i < this.length; i++) {
-      if (this[i].selected && this[i].select === 'pick') {
-        this.updatePaths(this[i]);
+      const item = this[i];
+      debug: {
+        if (!(item instanceof MenuItem)) {
+          console.warn('MenuOptions.constructor: item is not a MenuItem!');
+        }
+        // TODO check if same item is at other index
+        if (this.find((otherItem: MenuItem) => otherItem !== item && otherItem.label === item.label)) {
+          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+        }
+      }
+      item.addEventListener('selected-changed', this._onItemSelectedChanged);
+      item.addEventListener('path-changed', this._onSubOptionsPathChanged);
+      if (item.selected && item.select === 'pick') {
+        this.updatePaths(item);
         continue;
       }
     }
   }
 
-  protected _addItems(items: MenuItemArgsWeak[]) {
+  // TODO: consider preventing built-in Array functions like push, pop, etc.
+  protected addItems(items: MenuItemArgsWeak[]) {
     for (let i = 0; i < items.length; i++) {
       let item: MenuItem;
       if (items[i] instanceof MenuItem) {
@@ -51,15 +94,13 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
       debug: {
         if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
-          console.warn(`MenuOptions._addItems: duplicate label "${item.label}"`);
+          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
         }
       }
       this.push(item);
       item.addEventListener('selected-changed', this._onItemSelectedChanged);
       item.addEventListener('path-changed', this._onSubOptionsPathChanged);
     }
-    if (this.root) this.rootChanged();
-    if (this.path) this.pathChanged();
   }
 
   pathChanged() {

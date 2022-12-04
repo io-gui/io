@@ -66,7 +66,7 @@ export class IoSlider2d extends IoSliderBase {
       // Colors
       vec3 finalCol = ioBackgroundColorField.rgb;
       vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
-      vec3 axisCol = mix(ioColorFocus.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 axisCol = mix(ioColorActive.rgb, ioBackgroundColorField.rgb, 0.75);
       vec3 sliderCol = ioColorLink.rgb;
 
       // // Sizes

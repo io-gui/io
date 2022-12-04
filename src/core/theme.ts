@@ -8,8 +8,6 @@ const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
 document.head.appendChild(styleElement);
 
-// type Color = [number, number, number, number];
-
 export class Color {
   constructor(public r: number, public g: number, public b: number, public a: number) {
     this.r = r;
@@ -32,12 +30,12 @@ type Variables = {
   ioFieldHeight2: number;
   ioFieldHeight3: number;
   ioFieldHeight4: number;
-  ioFontSize: number;
   ioStrokeWidth: number;
   ioBorderRadius: number;
   ioBorderRadius2: number;
   ioBorderWidth: number;
   ioBorderWidth2: number;
+  ioFontSize: number;
 
   ioBackgroundColor: Color;
   ioBackgroundColorFocus: Color;
@@ -51,8 +49,7 @@ type Variables = {
   ioColor: Color;
   ioColorError: Color;
   ioColorLink: Color;
-  ioColorFocus: Color;
-
+  ioColorActive: Color;
   ioColorField: Color;
   ioColorFieldSelected: Color;
 
@@ -86,12 +83,12 @@ const defaultThemes: Themes = {
     ioFieldHeight2: 56,
     ioFieldHeight3: 112,
     ioFieldHeight4: 168,
-    ioFontSize: 14,
     ioStrokeWidth: 1,
     ioBorderRadius: 2,
     ioBorderRadius2: 4,
     ioBorderWidth: 1,
     ioBorderWidth2: 2,
+    ioFontSize: 14,
 
     ioBackgroundColor: new Color(1, 1, 1, 1),
     ioBackgroundColorFocus: new Color(0.3, 0.6, 1, 1),
@@ -105,7 +102,7 @@ const defaultThemes: Themes = {
     ioColor: new Color(0, 0, 0, 1),
     ioColorError: new Color(0.91, 0.5, 0.5, 1),
     ioColorLink: new Color(0.2, 0.75, 0.2, 1),
-    ioColorFocus: new Color(1, 1, 1, 1),
+    ioColorActive: new Color(1, 1, 1, 1),
 
     ioColorField: new Color(0, 0, 0, 1),
     ioColorFieldSelected: new Color(1, 1, 1, 1),
@@ -136,12 +133,12 @@ const defaultThemes: Themes = {
     ioFieldHeight2: 56,
     ioFieldHeight3: 112,
     ioFieldHeight4: 168,
-    ioFontSize: 14,
     ioStrokeWidth: 1,
     ioBorderRadius: 2,
     ioBorderRadius2: 4,
     ioBorderWidth: 1,
     ioBorderWidth2: 2,
+    ioFontSize: 14,
 
     ioBackgroundColor: new Color(0.065, 0.065, 0.065, 1),
     ioBackgroundColorFocus: new Color(0.065, 0.065, 0.065, 1),
@@ -155,7 +152,7 @@ const defaultThemes: Themes = {
     ioColor: new Color(1, 1, 1, 1),
     ioColorError: new Color(1, 0.376, 0.062, 1),
     ioColorLink: new Color(0.75, 0.9, 0.59, 1),
-    ioColorFocus: new Color(0.3, 0.82, 1.4, 1),
+    ioColorActive: new Color(0.3, 0.82, 1.4, 1),
 
     ioColorField: new Color(0.75, 0.75, 0.75, 1),
     ioColorFieldSelected: new Color(0.75, 0.75, 0.75, 1),
@@ -240,6 +237,8 @@ const compositeVariables = /* css */`
     --io-gradient-outset: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
     --io-gradient-inset: linear-gradient(0deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 150%);
     --io-shadow: 2px 2px 6px var(--io-color-shadow), 1px 1px 1px var(--io-color-shadow);
+    --io-shadow-inset: 1px 1px 1px inset var(--io-color-shadow);
+    --io-shadow-outset: 1px 1px 2px var(--io-color-shadow);
   }
 `;
 

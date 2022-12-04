@@ -14,10 +14,6 @@ export class IoButton extends IoField {
     return /* css */`
       :host {
         text-align: center;
-        border: var(--io-border);
-        border-color: var(--io-color-border-outset);
-        background-color: var(--io-background-color-dark);
-        background-image: var(--io-gradient-outset);
         padding-left: calc(2 * var(--io-spacing));
         padding-right: calc(2 * var(--io-spacing));
       }
@@ -32,6 +28,9 @@ export class IoButton extends IoField {
 
   @Property(undefined)
   declare value: any;
+
+  @Property({value: 'outset', reflect: 'prop'})
+  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
 
   @Property({value: false, reflect: 'prop'})
   declare pressed: boolean;

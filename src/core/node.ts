@@ -55,6 +55,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     declare readonly _bindings: Map<string, Binding>;
     declare readonly _changeQueue: ChangeQueue;
     declare readonly _eventDispatcher: EventDispatcher;
+
+    d = true;
      /**
      * Creates a class instance and initializes the internals.
      * @param {Object} properties - Initial property values.
@@ -112,6 +114,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         });
       }
       this.applyProperties(properties);
+      this.d = false;
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
@@ -234,6 +237,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         this.setProperty(p, props[p], true);
       }
+
       this.dispatchQueue();
     }
     /**

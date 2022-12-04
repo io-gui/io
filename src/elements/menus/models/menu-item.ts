@@ -74,7 +74,11 @@ export class MenuItem extends IoNode {
       item.value = args.value;
       if (args.label === undefined) {
         if (typeof item.value === 'object') {
-          item.label = item.value?.constructor.name || 'null';
+          if (item.value === null) {
+            item.label = 'null';
+          } else {
+            item.label = `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
+          }
         } else {
           item.label = String(item.value);
         }
@@ -87,14 +91,7 @@ export class MenuItem extends IoNode {
       if (args.action !== undefined) item.action = args.action;
       if (args.select !== undefined) item.select = args.select;
       if (args.selected !== undefined) item.selected = args.selected;
-
-      if (args.options) {
-        if (args.options instanceof MenuOptions) {
-          item.options = args.options;
-        } else {
-          item.options = new MenuOptions(args.options);
-        }
-      }
+      if (args.options !== undefined) item.options = args.options;
 
       if (item.selected === undefined && (args.select === 'pick' || args.select === undefined) && item.options) {
         item.selected = !!item.options.find((item: MenuItem) => item.selected && item.select === 'pick');
@@ -127,6 +124,13 @@ export class MenuItem extends IoNode {
 
   _onOptionsPathChanged(event: CustomEvent) {
     this.dispatchEvent('path-changed', event.detail);
+  }
+
+  optionsChanged() {
+    // TODO test this behavior and look for regressions
+    if (this.options?.root !== undefined && this.select === 'pick') {
+      this.selected = true;
+    }
   }
 
   selectedChanged() {

@@ -15,7 +15,6 @@ export class IoField extends IoElement {
   static get Style() {
     return /* css */`
       --io-field: {
-        display: inline-block;
         cursor: pointer;
         user-select: none;
         -webkit-touch-callout: none;
@@ -29,28 +28,29 @@ export class IoField extends IoElement {
         line-height: var(--io-line-height);
 
         font-size: var(--io-font-size);
-        border-radius: var(--io-border-radius);
         border: var(--io-border);
+        border-radius: var(--io-border-radius);
         border-color: transparent;
-
         color: var(--io-color-field);
         background-color: var(--io-background-color-field);
-
-        padding: var(--io-spacing);
+        padding: var(--io-spacing) calc(var(--io-spacing) + 0.5em);
         transition: background-color 0.25s;
       }
       :host {
         @apply --io-field;
-        display: flex;
       }
-      :host[border=inset] {
+      :host[appearance=neutral] {
+        background-color: transparent;
+      }
+      :host[appearance=inset] {
         border-color: var(--io-color-border-inset);
       }
-      :host[border=outset] {
+      :host[appearance=outset] {
         border-color: var(--io-color-border-outset);
         background-image: var(--io-gradient-outset);
       }
-      :host[aria-invalid] {
+      :host[invalid] {
+        color: var(--io-color-error);
         border: var(--io-border-error);
       }
       :host[selected] {
@@ -84,7 +84,7 @@ export class IoField extends IoElement {
   declare icon: string;
 
   @Property({value: 'flush', reflect: 'prop'})
-  declare border: 'flush' | 'inset' | 'outset';
+  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
 
   @Property({value: false, reflect: 'prop'})
   declare stroke: boolean;
@@ -92,7 +92,10 @@ export class IoField extends IoElement {
   @Property({value: false, reflect: 'prop'})
   declare selected: boolean;
 
-  @Property({value: '', reflect: 'both'})
+  @Property({value: false, reflect: 'prop'})
+  declare invalid: boolean;
+
+  @Property({value: '', reflect: 'prop'})
   declare placeholder: string;
 
   static get Listeners() {

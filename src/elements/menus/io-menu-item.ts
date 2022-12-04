@@ -80,28 +80,30 @@ export class IoMenuItem extends IoField {
     return this.item.hasmore && this.depth > 0;
   }
   get inlayer() {
-    return  !!this.$parent && !!this.$parent.inlayer;
+    return !!this.$parent && !!this.$parent.inlayer;
   }
   get $parent() {
     return this.parentElement;
   }
+
   connectedCallback() {
     super.connectedCallback();
+    // TODO: remove event listeners and find a better way to handle this.
+    Layer.addEventListener('pointermove', this._onLayerPointermove);
+    Layer.addEventListener('pointerup', this._onLayerPointerup);
     if (this.$options) Layer.appendChild(this.$options as unknown as HTMLElement);
-    if (!this.inlayer) Layer.addEventListener('pointermove', this._onLayerPointermove);
-    if (!this.inlayer) Layer.addEventListener('pointerup', this._onLayerPointerup);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
+    Layer.removeEventListener('pointermove', this._onLayerPointermove);
+    Layer.removeEventListener('pointerup', this._onLayerPointerup);
     if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options as unknown as HTMLElement);
-    if (!this.inlayer) Layer.removeEventListener('pointermove', this._onLayerPointermove);
-    if (!this.inlayer) Layer.removeEventListener('pointerup', this._onLayerPointerup);
   }
   _onLayerPointermove(event: PointerEvent) {
-    if (this.expanded) this._onPointermove(event);
+    if (!this.inlayer && this.expanded) this._onPointermove(event);
   }
   _onLayerPointerup(event: PointerEvent) {
-    if (this.expanded) this._onPointerupAction(event);
+    if (!this.inlayer && this.expanded) this._onPointerupAction(event);
   }
   _onClick() {
     const item = this.item;

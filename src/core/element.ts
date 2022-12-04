@@ -215,6 +215,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): string {
     return /* css */`
       :host {
+        display: flex;
         box-sizing: border-box;
       }
       :host[hidden] {
