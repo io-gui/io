@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../build/iogui.js';
+import { IoElement, MenuItem, RegisterIoElement } from '../build/iogui.js';
 import { IoThemeSingleton, MenuOptions } from '../build/iogui.js';
 
 export class IoDemoThemeEditor extends IoElement {
@@ -18,7 +18,10 @@ export class IoDemoThemeEditor extends IoElement {
       ['io-field', {label: 'Reset Current Theme:'}],
       ['io-button', {label: 'Reset', action: () => IoThemeSingleton.reset() }],
       ['io-field', {label: 'Choose theme:'}],
-      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new MenuOptions([{label: 'Light Theme', value: 'light'}, {label: 'Dark Theme', value: 'dark'}])}],
+      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new MenuOptions([
+        {label: 'Light Theme', value: 'light'},
+        {label: 'Dark Theme', value: 'dark'},
+      ])}],
       ['io-field', {label: 'ioSpacing'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('ioSpacing'), min: 0, max: 20, step: 1}],
       ['io-field', {label: 'ioBorderRadius'}],

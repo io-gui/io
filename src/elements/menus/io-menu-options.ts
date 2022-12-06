@@ -8,6 +8,7 @@ import { IoMenuItem } from './io-menu-item.js';
 
 const rects = new WeakMap();
 
+const noMatchOptions = new MenuOptions([{select: 'none', label: 'No matches'}]);
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/
@@ -330,7 +331,7 @@ export class IoMenuOptions extends IoElement {
     }
     if (this.search) {
       options = this._filterOptions(this.options, this.search.toLowerCase());
-      options = options.length ? options : new MenuOptions([new MenuItem({select: 'none', label: 'No matches'})]);
+      options = options.length ? options : noMatchOptions;
     }
 
     for (let i = 0; i < options.length; i++) {

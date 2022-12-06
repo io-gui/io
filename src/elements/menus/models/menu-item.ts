@@ -91,7 +91,13 @@ export class MenuItem extends IoNode {
       if (args.action !== undefined) item.action = args.action;
       if (args.select !== undefined) item.select = args.select;
       if (args.selected !== undefined) item.selected = args.selected;
-      if (args.options !== undefined) item.options = args.options;
+      if (args.options !== undefined) {
+        if (args.options instanceof MenuOptions) {
+          item.options = args.options;
+        } else {
+          item.options = new MenuOptions(args.options);
+        }
+      }
 
       if (item.selected === undefined && (args.select === 'pick' || args.select === undefined) && item.options) {
         item.selected = !!item.options.find((item: MenuItem) => item.selected && item.select === 'pick');

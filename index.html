@@ -124,107 +124,107 @@
     import { MenuOptions, MenuItem, RegisterIoElement, IoSelectorTabs, IoStorage as $ } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
-    new MenuItem({label: 'About', value: 'home', icon: 'icons:io_logo'}),
-        new MenuItem({label: 'Docs', value: 'docs', options: new MenuOptions([
-          new MenuItem({label: 'Getting Started', value: 'getting-started', options: new MenuOptions([
-            new MenuItem({label: 'Usage', value: 'usage'}),
-            new MenuItem({label: 'Simple App Example', value: 'simple-app-example'}),
-            new MenuItem({label: 'Style', value: 'style'}),
-            new MenuItem({label: 'Properties', value: 'properties'}),
-            new MenuItem({label: 'Listeners', value: 'listeners'}),
-            new MenuItem({label: 'Change Functions', value: 'change-functions'}),
-            new MenuItem({label: 'Simple App Recap', value: 'simple-app-recap'}),
-          ])}),
-          new MenuItem({label: 'Learn More', value: 'learn-more', options: new MenuOptions([
-            new MenuItem({label: 'Creating Elements', value: 'creating-elements'}),
-            new MenuItem({label: 'Properties', value: 'properties'}),
-            new MenuItem({label: 'Property Configuration', value: 'property-configuration'}),
-            new MenuItem({label: 'Functions', value: 'functions'}),
-            new MenuItem({label: 'Events', value: 'events'}),
-            new MenuItem({label: 'Virtual DOM Arrays', value: 'virtual-dom-arrays'}),
-            new MenuItem({label: 'Data Binding', value: 'data-binding'}),
-            new MenuItem({label: 'Data Flow', value: 'data-flow'}),
-          ])}),
-          new MenuItem({label: 'Contribution Guide', select: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'}),
-          new MenuItem({label: 'Development Notes', value: 'development-notes'}),
-          new MenuItem({label: 'Reference', value: 'reference', options: new MenuOptions([
+    {label: 'About', value: 'home', icon: 'icons:io_logo'},
+        {label: 'Docs', value: 'docs', options: [
+          {label: 'Getting Started', value: 'getting-started', options: [
+            {label: 'Usage', value: 'usage'},
+            {label: 'Simple App Example', value: 'simple-app-example'},
+            {label: 'Style', value: 'style'},
+            {label: 'Properties', value: 'properties'},
+            {label: 'Listeners', value: 'listeners'},
+            {label: 'Change Functions', value: 'change-functions'},
+            {label: 'Simple App Recap', value: 'simple-app-recap'},
+          ]},
+          {label: 'Learn More', value: 'learn-more', options: [
+            {label: 'Creating Elements', value: 'creating-elements'},
+            {label: 'Properties', value: 'properties'},
+            {label: 'Property Configuration', value: 'property-configuration'},
+            {label: 'Functions', value: 'functions'},
+            {label: 'Events', value: 'events'},
+            {label: 'Virtual DOM Arrays', value: 'virtual-dom-arrays'},
+            {label: 'Data Binding', value: 'data-binding'},
+            {label: 'Data Flow', value: 'data-flow'},
+          ]},
+          {label: 'Contribution Guide', select: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
+          {label: 'Development Notes', value: 'development-notes'},
+          {label: 'Reference', value: 'reference', options: [
             // Core Internals
-            new MenuItem({label: 'Binding', value: './docs/tsdoc/classes/Binding.md'}),
-            new MenuItem({label: 'ChangeQueue', value: './docs/tsdoc/classes/ChangeQueue.md'}),
-            new MenuItem({label: 'EventDispatcher', value: './docs/tsdoc/classes/EventDispatcher.md'}),
-            new MenuItem({label: 'ProtoProperty', value: './docs/tsdoc/classes/ProtoProperty.md'}),
-            new MenuItem({label: 'PropertyInstance', value: './docs/tsdoc/classes/PropertyInstance.md'}),
-            new MenuItem({label: 'ProtoChain', value: './docs/tsdoc/classes/ProtoChain.md'}),
+            {label: 'Binding', value: './docs/tsdoc/classes/Binding.md'},
+            {label: 'ChangeQueue', value: './docs/tsdoc/classes/ChangeQueue.md'},
+            {label: 'EventDispatcher', value: './docs/tsdoc/classes/EventDispatcher.md'},
+            {label: 'ProtoProperty', value: './docs/tsdoc/classes/ProtoProperty.md'},
+            {label: 'PropertyInstance', value: './docs/tsdoc/classes/PropertyInstance.md'},
+            {label: 'ProtoChain', value: './docs/tsdoc/classes/ProtoChain.md'},
             // Core Components
-            new MenuItem({label: 'IoNode', value: './docs/tsdoc/classes/IoNode.md'}),
-            new MenuItem({label: 'IoElement', value: './docs/tsdoc/classes/IoElement.md'}),
-            new MenuItem({label: 'IoGl', value: './docs/tsdoc/classes/IoGl.md'}),
-            new MenuItem({label: 'IoLayer', value: './docs/tsdoc/classes/IoLayer.md'}), // TODO: singleton
-            new MenuItem({label: 'IoTheme', value: './docs/tsdoc/classes/IoTheme.md'}), // TODO: singleton
-            new MenuItem({label: 'IoStorage', value: './docs/tsdoc/modules/IoStorage.md'}), // TODO: modules?
+            {label: 'IoNode', value: './docs/tsdoc/classes/IoNode.md'},
+            {label: 'IoElement', value: './docs/tsdoc/classes/IoElement.md'},
+            {label: 'IoGl', value: './docs/tsdoc/classes/IoGl.md'},
+            {label: 'IoLayer', value: './docs/tsdoc/classes/IoLayer.md'}, // TODO: singleton
+            {label: 'IoTheme', value: './docs/tsdoc/classes/IoTheme.md'}, // TODO: singleton
+            {label: 'IoStorage', value: './docs/tsdoc/modules/IoStorage.md'}, // TODO: module?
             // Basic Editors
-            new MenuItem({label: 'IoBoolean', value: './docs/tsdoc/classes/IoBoolean.md'}),
-            new MenuItem({label: 'IoButton', value: './docs/tsdoc/classes/IoButton.md'}),
-            new MenuItem({label: 'IoField', value: './docs/tsdoc/classes/IoField.md'}),
-            new MenuItem({label: 'IoIcon', value: './docs/tsdoc/classes/IoIcon.md'}),
-            new MenuItem({label: 'IoIconset', value: './docs/tsdoc/classes/IoIconset.md'}), // TODO: singleton
-            new MenuItem({label: 'IoLabel', value: './docs/tsdoc/classes/IoLabel.md'}),
-            new MenuItem({label: 'IoNumber', value: './docs/tsdoc/classes/IoNumber.md'}),
-            new MenuItem({label: 'IoNumberLadder', value: './docs/tsdoc/classes/IoNumberLadder.md'}), // TODO: singleton
-            new MenuItem({label: 'IoString', value: './docs/tsdoc/classes/IoString.md'}),
-            new MenuItem({label: 'IoSwitch', value: './docs/tsdoc/classes/IoSwitch.md'}),
+            {label: 'IoBoolean', value: './docs/tsdoc/classes/IoBoolean.md'},
+            {label: 'IoButton', value: './docs/tsdoc/classes/IoButton.md'},
+            {label: 'IoField', value: './docs/tsdoc/classes/IoField.md'},
+            {label: 'IoIcon', value: './docs/tsdoc/classes/IoIcon.md'},
+            {label: 'IoIconset', value: './docs/tsdoc/classes/IoIconset.md'}, // TODO: singleton
+            {label: 'IoLabel', value: './docs/tsdoc/classes/IoLabel.md'},
+            {label: 'IoNumber', value: './docs/tsdoc/classes/IoNumber.md'},
+            {label: 'IoNumberLadder', value: './docs/tsdoc/classes/IoNumberLadder.md'}, // TODO: singleton
+            {label: 'IoString', value: './docs/tsdoc/classes/IoString.md'},
+            {label: 'IoSwitch', value: './docs/tsdoc/classes/IoSwitch.md'},
             // Sliders
-            new MenuItem({label: 'IoSlider', value: './docs/tsdoc/classes/IoSlider.md'}),
-            new MenuItem({label: 'IoNumberSlider', value: './docs/tsdoc/classes/IoNumberSlider.md'}),
-            new MenuItem({label: 'IoSliderRange', value: './docs/tsdoc/classes/IoSliderRange.md'}),
-            new MenuItem({label: 'IoNumberSliderRange', value: './docs/tsdoc/classes/IoNumberSliderRange.md'}),
-            new MenuItem({label: 'IoSlider2d', value: './docs/tsdoc/classes/IoSlider2d.md'}),
+            {label: 'IoSlider', value: './docs/tsdoc/classes/IoSlider.md'},
+            {label: 'IoNumberSlider', value: './docs/tsdoc/classes/IoNumberSlider.md'},
+            {label: 'IoSliderRange', value: './docs/tsdoc/classes/IoSliderRange.md'},
+            {label: 'IoNumberSliderRange', value: './docs/tsdoc/classes/IoNumberSliderRange.md'},
+            {label: 'IoSlider2d', value: './docs/tsdoc/classes/IoSlider2d.md'},
             // Color Editors
             // TODO: lib/Convert
-            new MenuItem({label: 'IoColorBase', value: './docs/tsdoc/classes/IoColorBase.md'}),
-            new MenuItem({label: 'IoColorSliderBase', value: './docs/tsdoc/classes/IoColorSliderBase.md'}),
-            new MenuItem({label: 'IoColorSlider2dBase', value: './docs/tsdoc/classes/IoColorSlider2dBase.md'}),
-            new MenuItem({label: 'IoColorPanel', value: './docs/tsdoc/classes/IoColorPanel.md'}),
-            new MenuItem({label: 'IoColorPicker', value: './docs/tsdoc/classes/IoColorPicker.md'}),
-            new MenuItem({label: 'IoColorRgba', value: './docs/tsdoc/classes/IoColorRgba.md'}),
-            new MenuItem({label: 'IoColorSlider', value: './docs/tsdoc/classes/IoColorSlider.md'}),
-            new MenuItem({label: 'IoColorSwatch', value: './docs/tsdoc/classes/IoColorSwatch.md'}),
+            {label: 'IoColorBase', value: './docs/tsdoc/classes/IoColorBase.md'},
+            {label: 'IoColorSliderBase', value: './docs/tsdoc/classes/IoColorSliderBase.md'},
+            {label: 'IoColorSlider2dBase', value: './docs/tsdoc/classes/IoColorSlider2dBase.md'},
+            {label: 'IoColorPanel', value: './docs/tsdoc/classes/IoColorPanel.md'},
+            {label: 'IoColorPicker', value: './docs/tsdoc/classes/IoColorPicker.md'},
+            {label: 'IoColorRgba', value: './docs/tsdoc/classes/IoColorRgba.md'},
+            {label: 'IoColorSlider', value: './docs/tsdoc/classes/IoColorSlider.md'},
+            {label: 'IoColorSwatch', value: './docs/tsdoc/classes/IoColorSwatch.md'},
             // Vector Editors
-            new MenuItem({label: 'IoVector', value: './docs/tsdoc/classes/IoVector.md'}),
-            new MenuItem({label: 'IoMatrix', value: './docs/tsdoc/classes/IoMatrix.md'}),
+            {label: 'IoVector', value: './docs/tsdoc/classes/IoVector.md'},
+            {label: 'IoMatrix', value: './docs/tsdoc/classes/IoMatrix.md'},
             // Menus
-            new MenuItem({label: 'IoMenuItem', value: './build/elements/menus/menu-item.md'}),
-            new MenuItem({label: 'IoMenuOptions', value: './build/elements/menus/menu-options.md'}),
-            new MenuItem({label: 'IoOptionMenu', value: './build/elements/menus/option-menu.md'}),
-            new MenuItem({label: 'IoContextMenu', value: './build/elements/menus/context-menu.md'}),
+            {label: 'IoMenuItem', value: './build/elements/menus/menu-item.md'},
+            {label: 'IoMenuOptions', value: './build/elements/menus/menu-options.md'},
+            {label: 'IoOptionMenu', value: './build/elements/menus/option-menu.md'},
+            {label: 'IoContextMenu', value: './build/elements/menus/context-menu.md'},
             // Object Editors
-            new MenuItem({label: 'IoProperties', value: './build/elements/object/properties.md'}),
-            new MenuItem({label: 'IoObject', value: './build/elements/object/object.md'}),
-            new MenuItem({label: 'IoInspector', value: './build/elements/object/inspector.md'}),
-            new MenuItem({label: 'IoBreadcrumbs', value: './build/elements/object/breadcrumbs.md'}),
-            new MenuItem({label: 'ObjectConfig', value: './build/elements/object/models/object-config.md'}),
-            new MenuItem({label: 'ObjectGroups', value: './build/elements/object/models/object-groups.md'}),
-            new MenuItem({label: 'ObjectWidgets', value: './build/elements/object/models/object-widgets.md'}),
+            {label: 'IoProperties', value: './build/elements/object/properties.md'},
+            {label: 'IoObject', value: './build/elements/object/object.md'},
+            {label: 'IoInspector', value: './build/elements/object/inspector.md'},
+            {label: 'IoBreadcrumbs', value: './build/elements/object/breadcrumbs.md'},
+            {label: 'ObjectConfig', value: './build/elements/object/models/object-config.md'},
+            {label: 'ObjectGroups', value: './build/elements/object/models/object-groups.md'},
+            {label: 'ObjectWidgets', value: './build/elements/object/models/object-widgets.md'},
             // Layout
-            new MenuItem({label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'}),
-            new MenuItem({label: 'IoSelector', value: './build/elements/layout/selector.md'}),
-            new MenuItem({label: 'IoSelectorTabs', value: './build/elements/layout/selector-tabs.md'}),
-            new MenuItem({label: 'IoSelectorSidebar', value: './build/elements/layout/selector-sidebar.md'}),
-            new MenuItem({label: 'IoSidebar', value: './build/elements/layout/sidebar.md'}),
-            new MenuItem({label: 'IoLayout', value: './build/elements/layout/layout.md'}),
+            {label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'},
+            {label: 'IoSelector', value: './build/elements/layout/selector.md'},
+            {label: 'IoSelectorTabs', value: './build/elements/layout/selector-tabs.md'},
+            {label: 'IoSelectorSidebar', value: './build/elements/layout/selector-sidebar.md'},
+            {label: 'IoSidebar', value: './build/elements/layout/sidebar.md'},
+            {label: 'IoLayout', value: './build/elements/layout/layout.md'},
             // Extras
-            new MenuItem({label: 'io-md-view', value: './build/elements/extras/md-view.md'}), // TODO: md-view-selector
-            new MenuItem({label: 'io-service-loader', value: './build/elements/extras/service-loader.md'}),
-          ])}),
-        ])}),
-        new MenuItem({label: 'Demos', value: 'demos', options: new MenuOptions([
-          new MenuItem({label: 'Elements', value: 'elements'}),
-          new MenuItem({label: 'Theme', value: 'theme'}),
-          new MenuItem({label: 'Todo App', value: 'todo'}),
-          // new MenuItem({label: 'Three.js', value: 'three'}),
-          new MenuItem({label: 'Menu', value: 'menu'}),
-        ])}),
-        new MenuItem({label: 'Tests', value: 'tests'}),
+            {label: 'io-md-view', value: './build/elements/extras/md-view.md'}, // TODO: md-view-selector
+            {label: 'io-service-loader', value: './build/elements/extras/service-loader.md'},
+          ]},
+        ]},
+        {label: 'Demos', value: 'demos', options: [
+          {label: 'Elements', value: 'elements'},
+          {label: 'Theme', value: 'theme'},
+          {label: 'Todo App', value: 'todo'},
+          // {label: 'Three.js', value: 'three'},
+          {label: 'Menu', value: 'menu'},
+        ]},
+        {label: 'Tests', value: 'tests'},
       ], {
         path: $({key: 'path', storage: 'hash', value: 'About'}),
       });

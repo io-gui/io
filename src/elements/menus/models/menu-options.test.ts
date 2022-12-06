@@ -2,57 +2,21 @@ import { MenuItem } from './menu-item.js';
 import { MenuOptions } from './menu-options.js';
 
 const testOptions = [
-  new MenuItem({value: 1, options: new MenuOptions([
-    new MenuItem({value: 'foo', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-    new MenuItem({value: 'bar', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-    new MenuItem({value: 'buzz', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-  ])}),
-  new MenuItem({value: 2, options: new MenuOptions([
-    new MenuItem({value: 'foo', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-    new MenuItem({value: 'bar', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-    new MenuItem({value: 'buzz', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-  ])}),
-  new MenuItem({value: 3, options: new MenuOptions([
-    new MenuItem({value: 'foo', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-    new MenuItem({value: 'bar', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-    new MenuItem({value: 'buzz', options: new MenuOptions([
-      new MenuItem(null),
-      new MenuItem(undefined),
-      new MenuItem(NaN),
-    ])}),
-  ])}),
+  {value: 1, options: [
+    {value: 'foo', options: [null, undefined, NaN]},
+    {value: 'bar', options: [null, undefined, NaN]},
+    {value: 'buzz', options: [null, undefined, NaN]},
+  ]},
+  {value: 2, options: [
+    {value: 'foo', options: [null, undefined, NaN]},
+    {value: 'bar', options: [null, undefined, NaN]},
+    {value: 'buzz', options: [null, undefined, NaN]},
+  ]},
+  {value: 3, options: [
+    {value: 'foo', options: [null, undefined, NaN]},
+    {value: 'bar', options: [null, undefined, NaN]},
+    {value: 'buzz', options: [null, undefined, NaN]},
+  ]},
 ];
 
 const eventStack: string[] = [];
@@ -69,11 +33,7 @@ export default class {
         chai.expect(options.length).to.be.equal(0);
       });
       it('Should initialize correctly from constructor arguments', () => {
-        let options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem('2'),
-          new MenuItem(null),
-        ]);
+        let options = new MenuOptions([1,'2',null]);
         chai.expect(options.path).to.be.eql('');
         chai.expect(options.root).to.be.equal(undefined);
         chai.expect(options.leaf).to.be.equal(undefined);
@@ -86,12 +46,12 @@ export default class {
         chai.expect(options[2].value).to.be.equal(null);
         chai.expect(options[2].label).to.be.equal('null');
 
-        options = new MenuOptions([new MenuItem({value: '2',  label: 'two'})]);
+        options = new MenuOptions([{value: '2',  label: 'two'}]);
         chai.expect(options.length).to.be.equal(1);
         chai.expect(options[0].value).to.be.equal('2');
         chai.expect(options[0].label).to.be.equal('two');
 
-        options = new MenuOptions([new MenuItem(1), new MenuItem({value: '2',  label: 'two'})]);
+        options = new MenuOptions([1, {value: '2',  label: 'two'}]);
         chai.expect(options.length).to.be.equal(2);
         chai.expect(options[0].value).to.be.equal(1);
         chai.expect(options[0].label).to.be.equal('1');
@@ -99,30 +59,18 @@ export default class {
         chai.expect(options[1].label).to.be.equal('two');
       });
       it('Should initialize correctly from constructor arguments including root, or path propetty', () => {
-        let options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem('2'),
-          new MenuItem(null),
-        ], {root: '2'} as any);
+        let options = new MenuOptions([1, '2', null], {root: '2'} as any);
         chai.expect(options.path).to.be.equal('2');
         chai.expect(options.leaf).to.be.equal('2');
         chai.expect(options[1].selected).to.be.eql(true);
 
-        options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem('2'),
-          new MenuItem(null),
-        ], {path: '1'} as any);
+        options = new MenuOptions([1, '2', null], {path: '1'} as any);
         chai.expect(options.root).to.be.equal(1);
         chai.expect(options.leaf).to.be.equal(1);
         chai.expect(options[0].selected).to.be.eql(true);
       });
       it('Should initialize suboptions from constructor arguments', () => {
-        const options = new MenuOptions([new MenuItem({options: new MenuOptions([
-          new MenuItem(1),
-          new MenuItem('2'),
-          new MenuItem(null),
-        ])})]);
+        const options = new MenuOptions([{options: [1, '2', null]}]);
         chai.expect(options.length).to.be.equal(1);
         chai.expect(options[0].hasmore).to.be.equal(true);
         chai.expect(options[0].options.length).to.be.equal(3);
@@ -138,11 +86,7 @@ export default class {
         chai.expect(options.getItem(2)).to.be.equal(subItem2);
       });
       it('Should update `path`, `root` and `leaf` properties when items are selected', () => {
-        const options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem(2),
-          new MenuItem(3),
-        ]);
+        const options = new MenuOptions([1, 2, 3]);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
         chai.expect(options.root).to.be.equal(1);
@@ -162,11 +106,7 @@ export default class {
         chai.expect(options.leaf).to.be.equal(3);
       });
       it('Should update `root`, `leaf` and items\' `selected` properties when `path` property is set', () => {
-        const options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem({value: 2, label: 'two'}),
-          new MenuItem(3),
-        ]);
+        const options = new MenuOptions([1, {value: 2, label: 'two'}, 3]);
         options.path = '1';
         chai.expect(options[0].selected).to.be.equal(true);
         chai.expect(options.root).to.be.equal(1);
@@ -186,11 +126,7 @@ export default class {
         chai.expect(options.leaf).to.be.equal(3);
       });
       it('Should update `leaf`, `path` and items\' `selected` properties when `root` property is set', () => {
-        const options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem({value: 2, label: 'two'}),
-          new MenuItem(3),
-        ]);
+        const options = new MenuOptions([1, {value: 2, label: 'two'}, 3]);
         options.root = 1;
         chai.expect(options.path).to.be.equal('1');
         chai.expect(options[0].selected).to.be.equal(true);
@@ -213,11 +149,7 @@ export default class {
         chai.expect(options.leaf).to.be.equal(3);
       });
       it('Should update `root`, `leaf`, `path` properties only when items with `select="pick"` are selected', () => {
-        const options = new MenuOptions([
-          new MenuItem(1),
-          new MenuItem({value: 2, select: 'toggle'}),
-          new MenuItem(3),
-        ]);
+        const options = new MenuOptions([1, {value: 2, select: 'toggle'}, 3]);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
         chai.expect(options.root).to.be.equal(1);
@@ -462,60 +394,10 @@ export default class {
         chai.expect(options[2].options[2].options.leaf).to.be.equal(null);
       });
       it('Should update `path`, `root` and `leaf` on initialization when selected items are provided.', () => {
-        const testOptions = [
-          new MenuItem({value: 1, options: new MenuOptions([
-            new MenuItem({value: 'foo', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-            new MenuItem({value: 'bar', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-            new MenuItem({value: 'buzz', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-          ])}),
-          new MenuItem({value: 2, options: new MenuOptions([
-            new MenuItem({value: 'foo', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-            new MenuItem({value: 'bar', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-            new MenuItem({value: 'buzz', options: new MenuOptions([
-              new MenuItem({value: null, selected: true}),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-          ])}),
-          new MenuItem({value: 3, options: new MenuOptions([
-            new MenuItem({value: 'foo', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-            new MenuItem({value: 'bar', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-            new MenuItem({value: 'buzz', options: new MenuOptions([
-              new MenuItem(null),
-              new MenuItem(undefined),
-              new MenuItem(NaN),
-            ])}),
-          ])}),
-        ];
-        const options = new MenuOptions(testOptions);
+        const testOptionsSelected = JSON.parse(JSON.stringify(testOptions));
+        testOptionsSelected[1].options[2].options[0] = {value: null, selected: true};
+
+        const options = new MenuOptions(testOptionsSelected);
 
         chai.expect(options[1].selected).to.be.equal(true);
         chai.expect(options.path).to.be.equal('2,buzz,null');

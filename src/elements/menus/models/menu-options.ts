@@ -59,8 +59,17 @@ export class MenuOptions extends IoNodeMixin(Array) {
     return null;
   }
 
-  constructor(args: MenuItem[] = [], properties: IoNodeArgs = {}) {
-    super(properties, ...args);
+  constructor(args: MenuItemArgsWeak[] = [], properties: IoNodeArgs = {}) {
+    const _args: MenuItem[] = [];
+    for (let i = 0; i < args.length; i++) {
+      if (args[i] instanceof MenuItem) {
+        _args.push(args[i] as MenuItem);
+      } else {
+        _args.push(new MenuItem(args[i]));
+      }
+    }
+    super(properties, ..._args);
+
     if (this.path !== '') this.pathChanged();
     if (this.root !== undefined) this.rootChanged();
     for (let i = 0; i < this.length; i++) {
