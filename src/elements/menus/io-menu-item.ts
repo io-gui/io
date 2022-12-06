@@ -43,11 +43,11 @@ export class IoMenuItem extends IoField {
     }
     :host[selected][direction="up"],
     :host[selected][direction="down"] {
-      border-bottom-color: var(--io-color-border-selected);
+      border-bottom-color: var(--io-border-color-selected);
     }
     :host[selected][direction="right"],
     :host[selected][direction="left"] {
-      border-left-color: var(--io-color-border-selected);
+      border-left-color: var(--io-border-color-selected);
     }
     `;
   }

@@ -45,9 +45,14 @@ function runTests() {
 export class IoGuiTestPage extends IoElement {
   static get Style() {
     return /* css */`
+      :host {
+        background: var(--io-background-color);
+        color: var(--io-color);
+      }
       :host #mocha {
         margin: 0;
         position: relative;
+        justify-self: stretch;
       }
       :host #mocha-report {
         margin: 2em 1em;

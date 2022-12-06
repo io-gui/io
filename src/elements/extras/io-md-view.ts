@@ -140,7 +140,7 @@ export class IoMdView extends IoContent {
           return (window as any).hljs ? (window as any).hljs.highlightAuto(code).value : null;
         },
       });
-      // this.loading = false;
+      this.loading = false;
       if (this.sanitize) {
         this.innerHTML = purify.sanitize(marked(markdown));
       } else {
@@ -151,7 +151,7 @@ export class IoMdView extends IoContent {
   }
 
   srcChanged() {
-    // this.loading = true;
+    this.loading = true;
     void fetch(this.src)
       .then(response => response.text())
       .then(text => { this._parseMarkdown(text); });

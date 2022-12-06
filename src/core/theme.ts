@@ -38,33 +38,28 @@ type Variables = {
   ioFontSize: number;
 
   ioBackgroundColor: Color;
-  ioBackgroundColorFocus: Color;
-
   ioBackgroundColorLight: Color;
   ioBackgroundColorDark: Color;
 
   ioBackgroundColorField: Color;
-  ioBackgroundColorFieldSelected: Color;
+  ioBackgroundColorSelected: Color;
 
   ioColor: Color;
   ioColorError: Color;
   ioColorLink: Color;
-  ioColorActive: Color;
   ioColorField: Color;
   ioColorFieldSelected: Color;
 
-  ioColorNumber: Color;
-  ioColorString: Color;
-  ioColorBoolean: Color;
+  ioBorderColor: Color;
+  ioBorderColorLight: Color;
+  ioBorderColorDark: Color;
+  ioBorderColorSelected: Color;
+  ioBorderColorFocus: Color;
 
-  ioColorBorder: Color;
-  ioColorBorderSelected: Color;
+  ioGradientColorStart: Color;
+  ioGradientColorEnd: Color;
 
-  ioColorBorderLight: Color;
-  ioColorBorderDark: Color;
-  ioColorGradientStart: Color;
-  ioColorGradientEnd: Color;
-  ioColorShadow: Color;
+  ioShadowColor: Color;
 }
 
 type Themes = Record<string, Variables>;
@@ -91,34 +86,29 @@ const defaultThemes: Themes = {
     ioFontSize: 14,
 
     ioBackgroundColor: new Color(1, 1, 1, 1),
-    ioBackgroundColorFocus: new Color(0.3, 0.6, 1, 1),
-
     ioBackgroundColorLight: new Color(0.6, 0.6, 0.6, 1),
     ioBackgroundColorDark: new Color(0.84, 0.84, 0.84, 1),
 
     ioBackgroundColorField: new Color(0.92, 0.92, 0.92, 1),
-    ioBackgroundColorFieldSelected: new Color(0.3, 0.6, 1, 1),
+    ioBackgroundColorSelected: new Color(0.3, 0.6, 1, 1),
 
     ioColor: new Color(0, 0, 0, 1),
     ioColorError: new Color(0.91, 0.5, 0.5, 1),
     ioColorLink: new Color(0.2, 0.75, 0.2, 1),
-    ioColorActive: new Color(1, 1, 1, 1),
 
     ioColorField: new Color(0, 0, 0, 1),
     ioColorFieldSelected: new Color(1, 1, 1, 1),
 
-    ioColorNumber: new Color(0.12, 0.64, 1, 1),
-    ioColorString: new Color(0.95, 0.25, 0.1, 1),
-    ioColorBoolean: new Color(0.82, 0.35, 0.75, 1),
+    ioBorderColor: new Color(0.7, 0.7, 0.7, 1),
+    ioBorderColorLight: new Color(1, 1, 1, 1),
+    ioBorderColorDark: new Color(1, 1, 1, 1),
+    ioBorderColorSelected: new Color(1, 1, 1, 1),
+    ioBorderColorFocus: new Color(0.3, 0.3, 1, 1),
 
-    ioColorBorder: new Color(0.7, 0.7, 0.7, 1),
-    ioColorBorderSelected: new Color(1, 1, 1, 1),
+    ioGradientColorStart: new Color(0.9, 0.9, 0.9, 1),
+    ioGradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
 
-    ioColorBorderLight: new Color(1, 1, 1, 1),
-    ioColorBorderDark: new Color(0.6, 0.6, 0.6, 1),
-    ioColorGradientStart: new Color(0.9, 0.9, 0.9, 1),
-    ioColorGradientEnd: new Color(0.75, 0.75, 0.75, 1),
-    ioColorShadow: new Color(0, 0, 0, 0.2),
+    ioShadowColor: new Color(0, 0, 0, 0.2),
   },
   dark: {
     ioSpacing: 2,
@@ -140,35 +130,30 @@ const defaultThemes: Themes = {
     ioBorderWidth2: 2,
     ioFontSize: 14,
 
-    ioBackgroundColor: new Color(0.065, 0.065, 0.065, 1),
-    ioBackgroundColorFocus: new Color(0.065, 0.065, 0.065, 1),
-
+    ioBackgroundColor: new Color(0.2, 0.2, 0.2, 1),
     ioBackgroundColorLight: new Color(0.3, 0.3, 0.3, 1),
     ioBackgroundColorDark: new Color(0.5, 0.5, 0.5, 1),
 
     ioBackgroundColorField: new Color(0.137, 0.137, 0.137, 1),
-    ioBackgroundColorFieldSelected: new Color(0.137, 0.137, 0.137, 1),
+    ioBackgroundColorSelected: new Color(0.1, 0.3, 0.85, 1),
 
     ioColor: new Color(1, 1, 1, 1),
     ioColorError: new Color(1, 0.376, 0.062, 1),
     ioColorLink: new Color(0.75, 0.9, 0.59, 1),
-    ioColorActive: new Color(0.3, 0.82, 1.4, 1),
 
     ioColorField: new Color(0.75, 0.75, 0.75, 1),
-    ioColorFieldSelected: new Color(0.75, 0.75, 0.75, 1),
+    ioColorFieldSelected: new Color(1, 1, 1, 1),
 
-    ioColorNumber: new Color(0.125, 0.64, 1, 1),
-    ioColorString: new Color(0.94, 0.25, 0.086, 1),
-    ioColorBoolean: new Color(0.82, 0.35, 0.75, 1),
+    ioBorderColor: new Color(0.3, 0.3, 0.3, 1),
+    ioBorderColorLight: new Color(0.4, 0.4, 0.4, 1),
+    ioBorderColorDark: new Color(0.1, 0.1, 0.1, 1),
+    ioBorderColorSelected: new Color(0.3, 0.3, 1, 1),
+    ioBorderColorFocus: new Color(0.5, 0.9, 1, 1),
 
-    ioColorBorder: new Color(0.3, 0.3, 0.3, 1),
-    ioColorBorderSelected: new Color(0.3, 0.3, 0.3, 1),
+    ioGradientColorStart: new Color(1, 1, 1, 0.1),
+    ioGradientColorEnd: new Color(0, 0, 0, 0.2),
 
-    ioColorBorderLight: new Color(0.4, 0.4, 0.4, 1),
-    ioColorBorderDark: new Color(0, 0, 0, 1),
-    ioColorGradientStart: new Color(1, 1, 1, 0.1),
-    ioColorGradientEnd: new Color(0, 0, 0, 0.2),
-    ioColorShadow: new Color(0, 0, 0, 0.2),
+    ioShadowColor: new Color(0, 0, 0, 0.2),
   },
 };
 
@@ -201,7 +186,7 @@ const mixins = /* css */`
     justify-self: stretch;
     border-radius: var(--io-border-radius);
     border: var(--io-border);
-    border-color: var(--io-color-border-outset);
+    border-color: var(--io-border-color-outset);
     color: var(--io-color-field);
     background-color: var(--io-background-color-dark);
     padding: var(--io-spacing);
@@ -230,15 +215,15 @@ const mixins = /* css */`
 
 const compositeVariables = /* css */`
   body {
-    --io-border: var(--io-border-width) solid var(--io-color-border);
+    --io-border: var(--io-border-width) solid var(--io-border-color);
     --io-border-error: var(--io-border-width) solid var(--io-color-error);
-    --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
-    --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
-    --io-gradient-outset: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
-    --io-gradient-inset: linear-gradient(0deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 150%);
-    --io-shadow: 2px 2px 6px var(--io-color-shadow), 1px 1px 1px var(--io-color-shadow);
-    --io-shadow-inset: 1px 1px 1px inset var(--io-color-shadow);
-    --io-shadow-outset: 1px 1px 2px var(--io-color-shadow);
+    --io-border-color-inset: var(--io-border-color-dark) var(--io-border-color-light) var(--io-border-color-light) var(--io-border-color-dark);
+    --io-border-color-outset: var(--io-border-color-light) var(--io-border-color-dark) var(--io-border-color-dark) var(--io-border-color-light);
+    --io-gradient-outset: linear-gradient(180deg, var(--io-gradient-color-start), var(--io-gradient-color-end) 100%);
+    --io-gradient-inset: linear-gradient(0deg, var(--io-gradient-color-start), var(--io-gradient-color-end) 150%);
+    --io-shadow: 2px 2px 6px var(--io-shadow-color), 1px 1px 1px var(--io-shadow-color);
+    --io-shadow-inset: 1px 1px 1px inset var(--io-shadow-color);
+    --io-shadow-outset: 1px 1px 2px var(--io-shadow-color);
   }
 `;
 

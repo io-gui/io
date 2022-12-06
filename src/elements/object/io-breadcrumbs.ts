@@ -19,7 +19,7 @@ export class IoBreadcrumbs extends IoElement {
       justify-self: stretch;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
-      border-color: var(--io-color-border-inset);
+      border-color: var(--io-border-color-inset);
       padding: var(--io-spacing);
       color: var(--io-color-field);
       background-color: var(--io-background-color-field);

@@ -43,10 +43,10 @@ export class IoField extends IoElement {
         background-color: transparent;
       }
       :host[appearance=inset] {
-        border-color: var(--io-color-border-inset);
+        border-color: var(--io-border-color-inset);
       }
       :host[appearance=outset] {
-        border-color: var(--io-color-border-outset);
+        border-color: var(--io-border-color-outset);
         background-image: var(--io-gradient-outset);
       }
       :host[invalid] {
@@ -55,14 +55,14 @@ export class IoField extends IoElement {
       }
       :host[selected] {
         color: var(--io-color-field-selected);
-        background-color: var(--io-background-color-field-selected);
+        background-color: var(--io-background-color-selected);
       }
       :host:focus {
         z-index: 200;
         position: relative;
         text-overflow: inherit;
         border-color: var(--io-background-color);
-        outline: 1px solid var(--io-background-color-focus);
+        outline: 1px solid var(--io-border-color-focus);
       }
       :host[placeholder]:empty:before {
         content: attr(placeholder);

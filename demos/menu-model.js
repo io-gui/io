@@ -26,7 +26,7 @@ class IoOptionsDemoView extends IoElement {
         color: var(--io-color-link);
       }
       :host io-field.leaf {
-        color: var(--io-color-active);
+        color: var(--io-color-field-selected);
       }
     `;
   }

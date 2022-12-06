@@ -216,12 +216,12 @@ export class IoLayoutDivider extends IoElement {
       display: flex;
       flex: none;
       border: var(--io-border);
-      border-color: var(--io-color-border-outset);
+      border-color: var(--io-border-color-outset);
       user-select: none;
       transition: background-color 0.4s;
     }
     :host:hover {
-      background-color: var(--io-background-color-focus);
+
     }
     :host[orientation=horizontal] {
       cursor: col-resize;

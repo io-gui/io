@@ -405,7 +405,7 @@ export class IoNumberLadder extends IoElement {
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
         background-color: var(--io-background-color-light);
-        border-color: var(--io-background-color-focus);
+        border-color: var(--io-border-color-focus);
         transition: opacity 0.2s;
         opacity: 1;
       }

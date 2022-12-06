@@ -98,11 +98,11 @@ export class IoSlider extends IoSliderBase {
       }
 
       // Line
-      vec3 lineCol = mix(ioColorActive.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 lineCol = mix(ioColorFieldSelected.rgb, ioBackgroundColorField.rgb, 0.75);
       finalCol = paintHorizontalLine(finalCol, position, lineCol);
 
       // Slider
-      finalCol = paintSlider(finalCol, position, size, ioColorActive.rgb, ioColorLink.rgb);
+      finalCol = paintSlider(finalCol, position, size, ioColorFieldSelected.rgb, ioColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

@@ -15,8 +15,8 @@ export class IoColorPicker extends IoElement {
         overflow: hidden;
       }
       :host:focus {
-        outline: 1px solid var(--io-background-color-focus);
-        border-color: var(--io-background-color-focus);
+        outline: 1px solid var(--io-border-color-focus);
+        border-color: var(--io-border-color-focus);
       }
     `;
   }

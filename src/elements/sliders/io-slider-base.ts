@@ -12,7 +12,7 @@ export class IoSliderBase extends IoGl {
         cursor: ew-resize;
         border: var(--io-border);
         border-radius: var(--io-border-radius);
-        border-color: var(--io-color-border-inset);
+        border-color: var(--io-border-color-inset);
         flex-basis: calc(var(--io-field-height) * 10);
         min-width: var(--io-field-height);
         min-height: var(--io-field-height);

@@ -44,6 +44,7 @@ export class IoContent extends IoElement {
   private _elements: HTMLElement[] = [];
 
   init() {
+    console.log('i');
     this._observer = new MutationObserver(this._onMutation);
     this._observer.observe(this as unknown as HTMLElement, {attributes: false, childList: true, subtree: false});
   }
@@ -59,12 +60,14 @@ export class IoContent extends IoElement {
   }
 
   anchorChanged() {
+    console.log('cc', this.anchor);
     this._scrollTo(this.anchor, true);
   }
 
   protected _onMutation() {
     this._elements = [...this.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]')];
-    this._scrollTo(this.anchor, false);
+    // this._scrollTo(this.anchor, false);
+    console.log('asd');
   }
 
   protected _onScroll() {
@@ -98,9 +101,10 @@ export class IoContent extends IoElement {
     this._scrollToThrottle = setTimeout(() => {
       delete this._scrollToThrottle;
       if (anchor === '') {
+        console.log('asd');
         this.scrollTo(0, 0);
       } else {
-        const elem = this.querySelector('#' + anchor.toLowerCase());
+        const elem = this.querySelector('#' + anchor);
         elem?.scrollIntoView({behavior: smooth ? 'smooth' : 'auto'});
       }
     });

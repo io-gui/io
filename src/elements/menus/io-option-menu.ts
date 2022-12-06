@@ -38,7 +38,7 @@ export class IoOptionMenu extends IoElement {
       text-align: center;
       border-radius: var(--io-border-radius);
       border: var(--io-border);
-      border-color: var(--io-color-border-outset);
+      border-color: var(--io-border-color-outset);
       background-color: var(--io-background-color-dark);
       background-image: var(--io-gradient-outset);
       /* padding-left: calc(2 * var(--io-spacing)); */

@@ -31,7 +31,7 @@ export class IoElementDemo extends IoElement {
     :host > .io-content {
       border-radius: var(--io-border-radius);
       border: var(--io-border);
-      border-color: var(--io-color-border-inset);
+      border-color: var(--io-border-color-inset);
       padding: var(--io-spacing);
       color: var(--io-color);
       background-color: var(--io-background-color);

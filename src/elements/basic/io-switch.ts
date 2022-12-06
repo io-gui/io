@@ -26,7 +26,7 @@ export class IoSwitch extends IoBoolean {
         height: var(--io-line-height);
         border-radius: var(--io-line-height);
         border: var(--io-border);
-        border-color: var(--io-color-border-inset);
+        border-color: var(--io-border-color-inset);
         background-color: var(--io-background-color-field);
         box-shadow: var(--io-shadow-inset);
         transition: background-color 0.4s;
@@ -43,21 +43,21 @@ export class IoSwitch extends IoBoolean {
         background-color: var(--io-background-color-dark);
         box-shadow: var(--io-shadow-outset);
         border: var(--io-border);
-        border-color: var(--io-color-border-outset);
+        border-color: var(--io-border-color-outset);
         border-radius: var(--io-line-height);
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
       }
       :host[value]:after {
-        background-color: var(--io-background-color-field-selected);
+        background-color: var(--io-background-color-selected);
         left: calc(100% - var(--io-line-height));
       }
       :host:focus:before,
       :host:focus:after {
-        /* border-color: var(--io-background-color-focus); */
+        /* border-color: var(--io-border-color-focus); */
       }
       :host:focus {
-        /* outline: 1px solid var(--io-background-color-focus); */
+        /* outline: 1px solid var(--io-border-color-focus); */
       }
     `;
   }

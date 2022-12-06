@@ -10,7 +10,7 @@ export class IoSlider2d extends IoSliderBase {
         cursor: crosshair;
         border: var(--io-border);
         border-radius: var(--io-border-radius);
-        border-color: var(--io-color-border-inset);
+        border-color: var(--io-border-color-inset);
         min-width: var(--io-field-height4);
         min-height: var(--io-field-height4);
         flex-basis: var(--io-field-height4);
@@ -66,7 +66,7 @@ export class IoSlider2d extends IoSliderBase {
       // Colors
       vec3 finalCol = ioBackgroundColorField.rgb;
       vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
-      vec3 axisCol = mix(ioColorActive.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 axisCol = mix(ioColorFieldSelected.rgb, ioBackgroundColorField.rgb, 0.75);
       vec3 sliderCol = ioColorLink.rgb;
 
       // // Sizes

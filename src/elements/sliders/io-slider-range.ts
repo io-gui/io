@@ -135,11 +135,11 @@ export class IoSliderRange extends IoSliderBase {
       }
 
       // Line
-      vec3 lineCol = mix(ioColorActive.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 lineCol = mix(ioColorFieldSelected.rgb, ioBackgroundColorField.rgb, 0.75);
       finalCol = paintHorizontalLine(finalCol, gridPosition, lineCol);
 
       // Slider
-      finalCol = paintSliderRange(finalCol, position, size, ioColorActive.rgb, ioColorLink.rgb);
+      finalCol = paintSliderRange(finalCol, position, size, ioColorFieldSelected.rgb, ioColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }

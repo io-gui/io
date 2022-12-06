@@ -18,7 +18,7 @@ export class IoButton extends IoField {
         padding-right: calc(2 * var(--io-spacing));
       }
       :host[pressed] {
-        border-color: var(--io-color-border-inset);
+        border-color: var(--io-border-color-inset);
       }
     `;
   }

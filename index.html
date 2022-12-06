@@ -127,13 +127,13 @@
       {value: 'About', icon: 'icons:io_logo'},
       {value: 'Docs', options: [
         {value: 'Getting Started', options: [
-          'Usage',
-          'Simple App Example',
-          'Style',
-          'Properties',
-          'Listeners',
-          'Change Functions',
-          'Simple App Recap',
+          {label: 'Usage', value: 'usage'},
+          {label: 'Simple App Example', value: 'simple-app-example'},
+          {label: 'Style', value: 'style'},
+          {label: 'Properties', value: 'properties'},
+          {label: 'Listeners', value: 'listeners'},
+          {label: 'Change Functions', value: 'change-functions'},
+          {label: 'Simple App Recap', value: 'simple-app-recap'},
         ]},
         {value: 'Learn More', options: [
           'Creating Elements',
@@ -250,7 +250,7 @@
                   name: 'Getting Started',
                   src: './docs/getting-started.md',
                   sanitize: false,
-                  anchor: OPTIONS.getItem('Docs').getSubitem('Getting Started').options.bind('path'),
+                  anchor: OPTIONS.getItem('Docs').getSubitem('Getting Started').options.bind('root'),
                   options: OPTIONS.getItem('Docs').getSubitem('Getting Started').options,
                 }],
                 ['io-md-view-selector', {

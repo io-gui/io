@@ -63,7 +63,7 @@ export class IoInspector extends IoElement {
       border-radius: var(--io-border-radius);
       background-color: var(--io-background-color) !important;
       border: var(--io-border);
-      border-color: var(--io-color-border-inset);
+      border-color: var(--io-border-color-inset);
       padding: var(--io-spacing);
       overflow: hidden;
     }
