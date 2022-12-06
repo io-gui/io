@@ -75,7 +75,7 @@ export class IoSidebar extends IoElement {
       },
       collapsed: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
       role: 'navigation',
     };

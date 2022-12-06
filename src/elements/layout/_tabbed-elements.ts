@@ -58,7 +58,7 @@ export class IoSelectorTabs extends IoElement {
       cache: true,
       editable: Boolean,
       role: {
-        reflect: 'none',
+        reflect: false,
       },
     };
   }
@@ -301,11 +301,11 @@ export class IoTabs extends IoElement {
       selected: String,
       editable: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
       overflow: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
       dropIndex: -1,
       role: 'navigation',

@@ -43,11 +43,11 @@ export class IoObject extends IoElement {
       config: Object,
       labeled: true,
       label: {
-        reflect: 'prop',
+        reflect: true,
       },
       expanded: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
       slotted: Array,
       role: 'region',

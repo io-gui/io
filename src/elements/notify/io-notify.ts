@@ -52,7 +52,7 @@ export class IoNotify extends IoElement {
     return {
       expanded: {
         value: true,
-        reflect: 'prop',
+        reflect: true,
       }
     };
   }

@@ -54,10 +54,10 @@ export class IoColorPanel extends IoColorBase {
     `;
   }
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare vertical: boolean;
 
   static get Listeners() {

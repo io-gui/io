@@ -82,11 +82,15 @@ class IoItemDemoView extends IoElement {
     };
   }
   changed() {
+    let selectElement = null;
+    if ( this.item.select === 'toggle') {
+      selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
+    } else if ( this.item.select === 'pick') {
+      selectElement = ['io-switch', {value: this.item.bind('selected')}];
+    }
     this.template([
       ['div', [
-        this.item.select === 'toggle'
-            ? ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}]
-            : ['io-switch', {value: this.item.bind('selected')}],
+        selectElement,
         ['io-field', {value: this.item.label}],
       ]],
       this.item.hasmore ? ['io-options-demo-view', {options: this.item.options}] : null
@@ -96,7 +100,7 @@ class IoItemDemoView extends IoElement {
 
 RegisterIoElement(IoItemDemoView);
 
-export class IoDemoMenu extends IoOptionsDemoView {
+export class IoDemoMenuModel extends IoOptionsDemoView {
   static get Properties() {
     return {
       options: {value: new MenuOptions([
@@ -116,7 +120,7 @@ export class IoDemoMenu extends IoOptionsDemoView {
         {value: 'mixed', options: [
           {value: 'selectable1'},
           {value: 'selecrable2'},
-          {value: 'togglables', options: [
+          {value: 'togglables', select: 'none', options: [
             {value: 'toggle1', select: 'toggle'},
             {value: 'toggle2', select: 'toggle'},
             {value: 'toggle3', select: 'toggle'},
@@ -132,4 +136,4 @@ export class IoDemoMenu extends IoOptionsDemoView {
   }
 }
 
-RegisterIoElement(IoDemoMenu);
+RegisterIoElement(IoDemoMenuModel);

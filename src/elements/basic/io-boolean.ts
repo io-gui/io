@@ -18,7 +18,7 @@ export class IoBoolean extends IoField {
     `;
   }
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare value: boolean;
 
   @Property('true')

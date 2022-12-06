@@ -31,7 +31,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Array,
             value: [0, 0],
           });
@@ -40,7 +40,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: true,
-            reflect: 'none',
+            reflect: false,
             type: Array,
             value: [0, 0, 0, 0],
           });
@@ -49,7 +49,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: 1,
           });
@@ -58,7 +58,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: true,
-            reflect: 'none',
+            reflect: false,
             type: IoTheme,
             value: IoThemeSingleton,
           });

@@ -33,7 +33,7 @@ export async function afterHashChange(): Promise<void> {
 
 function runTests() {
   if (!testCompleted) {
-    // new CoreTests().run();
+    new CoreTests().run();
     new ElementsTests().run();
     mocha.checkLeaks();
     mocha.run();
@@ -54,8 +54,7 @@ export class IoGuiTestPage extends IoElement {
       }
       :host #mocha-stats {
         position: absolute;
-        top: -2em;
-        right: 2em;
+        left: var(--io-spacing2);
         font-size: 12px;
         margin: 0;
       }

@@ -1,8 +1,6 @@
 import {Constructor, IoNode} from '../node.js';
 import {Binding} from './binding.js';
 
-type Reflect = 'attr' | 'none' | 'prop' | 'both';
-
 /**
  * Declares default value, type and reactive behavior of the property.
  */
@@ -10,7 +8,7 @@ export type PropertyDeclaration = {
   value?: any;
   type?: Constructor | Constructor[]; // TODO: fix error with io-object
   binding?: Binding;
-  reflect?: Reflect;
+  reflect?: boolean;
   notify?: boolean;
   observe?: boolean;
 };
@@ -28,7 +26,7 @@ export class ProtoProperty {
   value?: any;
   type?: Constructor | Constructor[];
   binding?: Binding;
-  reflect?: Reflect;
+  reflect?: boolean;
   notify?: boolean;
   observe?: boolean;
   /**
@@ -85,7 +83,7 @@ export class PropertyInstance {
   // Binding object.
   binding?: Binding;
   // Reflects to/from HTML attribute ['attr', 'none', 'prop' or 'both']
-  reflect: Reflect = 'none';
+  reflect = false;
   // Enables change handlers and events.
   notify = true;
   // Observe object mutations for this property.
@@ -109,9 +107,7 @@ export class PropertyInstance {
         } else if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       }
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
-      if (propDef.reflect !== undefined && (['attr', 'none', 'prop', 'both']).indexOf(propDef.reflect) === -1) {
-        console.error(`Invalid reflect field ${propDef.reflect}!`);
-      }
+      if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
       if (propDef.notify !== undefined && typeof propDef.notify !== 'boolean') console.warn('Incorrect type for "notify" field');
       if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
     }

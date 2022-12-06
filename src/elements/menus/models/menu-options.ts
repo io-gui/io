@@ -23,9 +23,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(',')
   declare delimiter: string;
 
-  // @Property(true)
-  // declare lazy: boolean;
-
   push(...items: MenuItem[]) {
     console.log(items);
     for (let i = 0; i < items.length; i++) {
@@ -47,6 +44,11 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
     }
   }
+
+  // TODO: implement!
+  // toJSON() {
+  //   return this.map((item: MenuItem) => item.toJSON());
+  // }
 
   getItem(value: any, deep = false) {
     for (let i = 0; i < this.length; i++) {

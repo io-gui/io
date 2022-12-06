@@ -40,7 +40,7 @@ export class IoSliderBase extends IoGl {
   @Property(1)
   declare exponent: number;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare vertical: boolean;
 
   @Property({value: [0, 0, 0, 0]})

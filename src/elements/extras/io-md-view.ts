@@ -123,10 +123,10 @@ export class IoMdView extends IoContent {
   @Property('document')
   declare role: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare src: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare loading: boolean;
 
   @Property(true)
@@ -140,18 +140,18 @@ export class IoMdView extends IoContent {
           return (window as any).hljs ? (window as any).hljs.highlightAuto(code).value : null;
         },
       });
-      this.loading = false;
+      // this.loading = false;
       if (this.sanitize) {
         this.innerHTML = purify.sanitize(marked(markdown));
       } else {
         this.innerHTML = marked(markdown);
       }
-      // this._scrollTo(this.anchor, true);
+      this._scrollTo(this.anchor, true);
     }
   }
 
   srcChanged() {
-    this.loading = true;
+    // this.loading = true;
     void fetch(this.src)
       .then(response => response.text())
       .then(text => { this._parseMarkdown(text); });

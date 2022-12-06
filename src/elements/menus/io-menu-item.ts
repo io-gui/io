@@ -55,10 +55,10 @@ export class IoMenuItem extends IoField {
   @Property({observe: true, type: MenuItem})
   declare item: MenuItem;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: 'right', reflect: 'prop'})
+  @Property({value: 'right', reflect: true})
   declare direction: string;
 
   @Property(Infinity)

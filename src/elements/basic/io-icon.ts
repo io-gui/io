@@ -37,10 +37,10 @@ export class IoIcon extends IoElement {
       }
     `;
   }
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare icon: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare stroke: boolean;
 
   iconChanged() {

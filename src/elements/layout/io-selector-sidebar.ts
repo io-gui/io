@@ -57,33 +57,23 @@ export class IoSelectorSidebar extends IoSelector {
       collapseWidth: 410,
       collapsed: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
       right: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
     };
   }
-  // onResized() {
-  //   this.collapsed = this.getBoundingClientRect().width < this.collapseWidth;
-  // }
-  // collapsedChanged() { this.update(); }
-  getSlotted() {
-    // return ['io-sidebar', {
-    //   selected: this.bind('selected'),
-    //   options: this.options,
-    //   collapsed: this.collapsed,
-    // }];
-
-    return ['io-menu-options', {
-      role: 'navigation',
-      // horizontal: true,
-      // value: this.bind('selected'), // TODO: Does not exist
-      options: this.options,
-      // depth: this.depth,
-      // slotted: this.slotted,
-      // selectable: true, // TODO: Does not exist
-    }];
+  getTemplate(): any {
+    return [
+      ['io-menu-options', {
+        role: 'navigation',
+        options: this.options,
+        // depth: this.depth,
+        // slotted: this.slotted,
+      }],
+      ['div', {id: 'content', class: 'io-content'}]
+    ];
   }
 }

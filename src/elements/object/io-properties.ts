@@ -72,7 +72,7 @@ export class IoProperties extends IoElement {
     return {
       labeled: {
         value: true,
-        reflect: 'prop',
+        reflect: true,
       },
       value: {
         type: Object,

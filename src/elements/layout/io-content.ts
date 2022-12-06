@@ -34,7 +34,7 @@ export class IoContent extends IoElement {
   @Property('')
   declare anchor: string;
 
-  @Property({value: true, reflect: 'prop'})
+  @Property({value: true, reflect: true})
   declare visible: boolean;
 
   declare private _observer: MutationObserver;

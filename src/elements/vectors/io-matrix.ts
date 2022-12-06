@@ -38,7 +38,7 @@ export class IoMatrix extends IoVector {
   @Property({value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
   declare value: number[];
 
-  @Property({value: 4, reflect: 'prop'})
+  @Property({value: 4, reflect: true})
   declare columns: number;
 
   _onNumberValueInput(event: CustomEvent) {

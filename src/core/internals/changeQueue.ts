@@ -6,7 +6,7 @@ import {IoNode} from '../node.js';
  */
 export class ChangeQueue {
   declare private readonly node: IoNode;
-  readonly changes: Array<Change> = [];
+  declare readonly changes: Array<Change>;
   hasChanged = false;
   dispatching = false;
   /**
@@ -28,6 +28,10 @@ export class ChangeQueue {
     debug: {
       if (value === oldValue) console.warn('ChangeQueue: queuing change with same value and oldValue!');
     }
+    // if (this.changes === undefined) {
+    //   console.warn('ChangeQueue: queue is disposed!', this.node);
+    //   return;
+    // }
     const i = this.changes.findIndex(change => change.property === property);
     if (i === -1) {
       this.changes.push({property, value, oldValue});

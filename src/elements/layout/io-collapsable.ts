@@ -48,11 +48,11 @@ export class IoCollapsable extends IoElement {
     return {
       elements: Array,
       label: {
-        reflect: 'prop',
+        reflect: true,
       },
       expanded: {
         type: Boolean,
-        reflect: 'prop',
+        reflect: true,
       },
       role: 'region',
     };

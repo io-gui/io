@@ -57,7 +57,7 @@ export class IoLayer extends IoElement {
       }
     `;
   }
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare expanded: boolean;
 
   @Property({value: false})

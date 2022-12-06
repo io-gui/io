@@ -124,6 +124,17 @@ export class MenuItem extends IoNode {
     }
   }
 
+  // TODO: implement!
+  // toJSON() {
+  //   return {
+  //     value: this.value,
+  //     label: this.label,
+  //     icon: this.icon,
+  //     hint: this.hint,
+  //     disabled: this.disabled,
+  //   };
+  // }
+
   _onSubItemSelected() {
     this.selected = true;
   }

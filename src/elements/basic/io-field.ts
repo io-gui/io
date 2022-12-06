@@ -80,22 +80,22 @@ export class IoField extends IoElement {
   @Property(undefined)
   declare value: any;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare icon: string;
 
-  @Property({value: 'flush', reflect: 'prop'})
+  @Property({value: 'flush', reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare stroke: boolean;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare selected: boolean;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare invalid: boolean;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare placeholder: string;
 
   static get Listeners() {

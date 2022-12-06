@@ -24,7 +24,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: undefined,
             value: undefined,
           });
@@ -32,7 +32,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Boolean,
             value: false,
           });
@@ -40,7 +40,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });
@@ -48,7 +48,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });

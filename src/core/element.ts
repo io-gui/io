@@ -231,62 +231,36 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   @Property({type: Object, notify: false})
   declare $: Record<string, any>; // TODO: Add type safety.
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare tabindex: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare contenteditable: boolean;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare class: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare role: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare label: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare name: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare title: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare id: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare hidden: boolean;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare disabled: boolean;
 
-  static get observedAttributes() {
-    const observed = [];
-    for (const prop in this.prototype._protochain.properties) {
-      const r  = this.prototype._protochain.properties[prop].reflect;
-      if (r === 'attr' || r === 'both') {
-        observed.push(prop);
-      }
-    }
-    return observed;
-  }
-
-  attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this._properties.get(prop)!.type;
-    if (type === Boolean) {
-      if (newValue === null) this[prop] = false;
-      else if (newValue === '') this[prop] = true;
-    } else if (type === Number || type === String) {
-      this[prop] =(type as any)(newValue);
-    } else if (type === Object || type === Array) {
-      this[prop] = JSON.parse(newValue);
-    } else if (typeof type === 'function') {
-      this[prop] = new type(JSON.parse(newValue));
-    } else {
-      this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
-    }
-  }
   /**
   * Add resize listener if `onResized()` is defined in subclass.
   */

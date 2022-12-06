@@ -114,13 +114,13 @@ export class IoMenuOptions extends IoElement {
     `;
   }
 
-  @Property({observe: true, type: MenuOptions})
+  @Property({observe: true, type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare horizontal: boolean;
 
   @Property(false)
@@ -129,7 +129,7 @@ export class IoMenuOptions extends IoElement {
   @Property('')
   declare search: string;
 
-  @Property({value: 'right', reflect: 'prop'})
+  @Property({value: 'right', reflect: true})
   declare position: NudgeDirection;
 
   @Property(Infinity)
@@ -138,10 +138,10 @@ export class IoMenuOptions extends IoElement {
   @Property(false)
   declare noPartialCollapse: boolean;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare overflow: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare inlayer: boolean;
 
   @Property({type: Array})

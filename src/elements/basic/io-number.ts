@@ -47,19 +47,19 @@ export class IoNumber extends IoField {
   @Property(true)
   declare contenteditable: boolean;
 
-  @Property({value: 'number', reflect: 'prop'})
+  @Property({value: 'number', reflect: true})
   declare type: string;
 
-  @Property({value: 'pattern="[0-9]*"', reflect: 'prop'})
+  @Property({value: 'pattern="[0-9]*"', reflect: true})
   declare pattern: string;
 
-  @Property({value: 'numeric', reflect: 'prop'})
+  @Property({value: 'numeric', reflect: true})
   declare inputmode: string;
 
-  @Property({value: 'false', reflect: 'prop'})
+  @Property({value: 'false', reflect: true})
   declare spellcheck: string;
 
-  @Property({value: 'inset', reflect: 'prop'})
+  @Property({value: 'inset', reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset';
 
   private _pointer = '';
@@ -267,7 +267,7 @@ export class IoNumberLadderStep extends IoField {
   @Property(1)
   declare value: number;
 
-  @Property({value: 'number', reflect: 'prop'})
+  @Property({value: 'number', reflect: true})
   declare type: string;
 
   @Property('spinbutton')
@@ -424,7 +424,7 @@ export class IoNumberLadder extends IoElement {
   @Property(undefined)
   declare src?: IoNumber;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare expanded: boolean;
 
   static get Listeners() {

@@ -29,7 +29,7 @@ export class IoString extends IoField {
   @Property('textbox')
   declare role: string;
 
-  @Property({value: 'inset', reflect: 'prop'})
+  @Property({value: 'inset', reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset';
 
   _setFromTextNode() {

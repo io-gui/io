@@ -16,16 +16,6 @@ menu.value = "one";
 document.body.appendChild(menu);
 ```
 
-Alternatively, you can create the `<io-option-menu>` element declaratively in HTML. But keep in mind that some properties may not be settable via attributes.
-
-```html
-<io-option-menu value="one" options='["one", "two", "three"]'></io-option-menu>
-```
-
-Result:
-
-<io-option-menu value="one" options='["one", "two", "three"]'></io-option-menu>
-
 ## Simple App Example
 
 You can extend `IoElement` to create anything from simple elements to complex applications.

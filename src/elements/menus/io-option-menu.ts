@@ -56,10 +56,10 @@ export class IoOptionMenu extends IoElement {
     `;
   }
 
-  @Property(undefined)
+  @Property({value: undefined, reflect: true})
   declare value: any;
 
-  @Property(MenuOptions)
+  @Property({observe: true, type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
   @Property('button')

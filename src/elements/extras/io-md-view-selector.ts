@@ -11,10 +11,18 @@ export class IoMdViewSelector extends IoSelectorSidebar  {
       src: '',
     };
   }
+  getTemplate(): any {
+    return [
+      ['io-menu-options', {
+        role: 'navigation',
+        options: this.options,
+        // depth: this.depth,
+        // slotted: this.slotted,
+      }],
+      ['io-md-view', {id: 'content', sanitize: this.sanitize, src: this.src, anchor: this.anchor}]
+    ];
+  }
   changed() {
-    this.template([
-      this.getSlotted(),
-      ['io-md-view', {id: 'content', sanitize: this.sanitize, src: this.src, anchor: this.anchor}],
-    ]);
+
   }
 }

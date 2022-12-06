@@ -28,7 +28,7 @@ export class IoColorSlider extends IoColorBase {
   @Property('')
   declare channel: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare vertical: boolean;
 
   _onValueInput(event: CustomEvent) {

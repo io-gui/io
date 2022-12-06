@@ -33,7 +33,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: 1,
           });
@@ -41,7 +41,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: 0.0001,
           });
@@ -49,7 +49,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: -Infinity,
           });
@@ -57,7 +57,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: Infinity,
           });
@@ -65,7 +65,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: 'number',
           });
@@ -73,7 +73,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: 'pattern="[0-9]*"',
           });
@@ -81,7 +81,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: 'numeric',
           });
@@ -89,7 +89,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: 'false',
           });
@@ -215,7 +215,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: 'number',
           });
@@ -259,7 +259,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: undefined,
             value: element,
           });
@@ -267,7 +267,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });

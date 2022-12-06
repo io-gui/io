@@ -46,7 +46,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         lazy: {
           value: false,
           notify: false,
-          reflect: 'attr'
+          reflect: true
         }
       };
     }
@@ -74,13 +74,21 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._protochain.autobindFunctions(this);
 
+      Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
-      Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
       for (const name in this._protochain.properties) {
         const property = new PropertyInstance(this._protochain.properties[name]);
+        this._properties.set(name, property);
+
+        const value = property.value;
+        if (value !== undefined && value !== null) {
+          if (property.reflect && this._isIoElement) {
+            this.setAttribute(name, value);
+          }
+        }
 
         debug: {
           if (property.value === undefined && typeof property.type === 'function') {
@@ -91,14 +99,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
 
-        this._properties.set(name, property);
-        const value = property.value;
-        if (value !== undefined && value !== null) {
-          if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
-            // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
-            this.setAttribute(name, value);
-          }
-        }
         if (property.binding) property.binding.addTarget(this, name);
       }
 
@@ -198,7 +198,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             this.dispatchQueue();
           }
         }
-        if ((prop.reflect === 'prop' || prop.reflect === 'both') && this._isIoElement) this.setAttribute(name, value);
+        if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
       }
     }
     /**
