@@ -25,7 +25,7 @@ Creates change queue for the specified owner instance of `IoNode`.
 
 ### changes
 
- `Readonly` **changes**: [`Change`](../interfaces/Change.md)[] = `[]`
+ `Readonly` **changes**: [`Change`](../interfaces/Change.md)[]
 
 #### Defined in
 
@@ -70,7 +70,7 @@ After all changes are dispatched it invokes `.changed()` functions od the owner 
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:46](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L46)
+[src/core/internals/changeQueue.ts:50](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L50)
 
 ___
 
@@ -87,7 +87,7 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:67](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L67)
+[src/core/internals/changeQueue.ts:71](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L71)
 
 ___
 

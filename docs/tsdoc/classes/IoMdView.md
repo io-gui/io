@@ -1,10 +1,10 @@
 # Class: IoMdView
 
-Core `IoElement` class.
+This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
 
 ## Hierarchy
 
-- [`IoElement`](IoElement.md)
+- [`IoContent`](IoContent.md)
 
   ↳ **`IoMdView`**
 
@@ -12,24 +12,23 @@ Core `IoElement` class.
 
 ### constructor
 
-**new IoMdView**(`properties?`, ...`args`)
+**new IoMdView**(...`args`)
 
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `...args` | `any`[] |
 
 #### Inherited from
 
-[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
+[IoContent](IoContent.md).[constructor](IoContent.md#constructor)
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:64](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L64)
 
 ## Properties
 
@@ -39,11 +38,11 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[$](IoElement.md#$)
+[IoContent](IoContent.md).[$](IoContent.md#$)
 
 #### Defined in
 
-[src/core/element.ts:211](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L211)
+[src/core/element.ts:232](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L232)
 
 ___
 
@@ -53,11 +52,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
+[IoContent](IoContent.md).[_bindings](IoContent.md#_bindings)
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L48)
+[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -67,11 +66,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
+[IoContent](IoContent.md).[_changeQueue](IoContent.md#_changequeue)
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L49)
+[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -81,11 +80,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
+[IoContent](IoContent.md).[_eventDispatcher](IoContent.md#_eventdispatcher)
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L50)
+[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -95,11 +94,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
+[IoContent](IoContent.md).[_properties](IoContent.md#_properties)
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L47)
+[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -109,11 +108,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
+[IoContent](IoContent.md).[_protochain](IoContent.md#_protochain)
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L46)
+[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
+
+___
+
+### anchor
+
+ **anchor**: `string`
+
+#### Inherited from
+
+[IoContent](IoContent.md).[anchor](IoContent.md#anchor)
+
+#### Defined in
+
+[src/elements/layout/io-content.ts:35](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L35)
 
 ___
 
@@ -123,11 +136,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[class](IoElement.md#class)
+[IoContent](IoContent.md).[class](IoContent.md#class)
 
 #### Defined in
 
-[src/core/element.ts:220](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L220)
+[src/core/element.ts:241](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L241)
 
 ___
 
@@ -137,11 +150,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
+[IoContent](IoContent.md).[contenteditable](IoContent.md#contenteditable)
 
 #### Defined in
 
-[src/core/element.ts:217](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L217)
+[src/core/element.ts:238](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L238)
+
+___
+
+### d
+
+ **d**: `boolean` = `true`
+
+#### Inherited from
+
+[IoContent](IoContent.md).[d](IoContent.md#d)
+
+#### Defined in
+
+[src/core/node.ts:59](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L59)
 
 ___
 
@@ -151,11 +178,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
+[IoContent](IoContent.md).[disabled](IoContent.md#disabled)
 
 #### Defined in
 
-[src/core/element.ts:241](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L241)
+[src/core/element.ts:262](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L262)
 
 ___
 
@@ -165,11 +192,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
+[IoContent](IoContent.md).[hidden](IoContent.md#hidden)
 
 #### Defined in
 
-[src/core/element.ts:238](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L238)
+[src/core/element.ts:259](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L259)
 
 ___
 
@@ -179,11 +206,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[id](IoElement.md#id)
+[IoContent](IoContent.md).[id](IoContent.md#id)
 
 #### Defined in
 
-[src/core/element.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L235)
+[src/core/element.ts:256](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L256)
 
 ___
 
@@ -193,11 +220,21 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[label](IoElement.md#label)
+[IoContent](IoContent.md).[label](IoContent.md#label)
 
 #### Defined in
 
-[src/core/element.ts:226](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L226)
+[src/core/element.ts:247](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L247)
+
+___
+
+### loading
+
+ **loading**: `boolean`
+
+#### Defined in
+
+[src/elements/extras/io-md-view.ts:130](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L130)
 
 ___
 
@@ -207,11 +244,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[name](IoElement.md#name)
+[IoContent](IoContent.md).[name](IoContent.md#name)
 
 #### Defined in
 
-[src/core/element.ts:229](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L229)
+[src/core/element.ts:250](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L250)
 
 ___
 
@@ -219,13 +256,33 @@ ___
 
  **role**: `string`
 
-#### Inherited from
+#### Overrides
 
-[IoElement](IoElement.md).[role](IoElement.md#role)
+[IoContent](IoContent.md).[role](IoContent.md#role)
 
 #### Defined in
 
-[src/core/element.ts:223](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L223)
+[src/elements/extras/io-md-view.ts:124](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L124)
+
+___
+
+### sanitize
+
+ **sanitize**: `boolean`
+
+#### Defined in
+
+[src/elements/extras/io-md-view.ts:133](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L133)
+
+___
+
+### src
+
+ **src**: `string`
+
+#### Defined in
+
+[src/elements/extras/io-md-view.ts:127](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L127)
 
 ___
 
@@ -235,11 +292,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
+[IoContent](IoContent.md).[tabindex](IoContent.md#tabindex)
 
 #### Defined in
 
-[src/core/element.ts:214](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L214)
+[src/core/element.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L235)
 
 ___
 
@@ -249,11 +306,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[title](IoElement.md#title)
+[IoContent](IoContent.md).[title](IoContent.md#title)
 
 #### Defined in
 
-[src/core/element.ts:232](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L232)
+[src/core/element.ts:253](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L253)
+
+___
+
+### visible
+
+ **visible**: `boolean`
+
+#### Inherited from
+
+[IoContent](IoContent.md).[visible](IoContent.md#visible)
+
+#### Defined in
+
+[src/elements/layout/io-content.ts:38](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L38)
 
 ## Accessors
 
@@ -267,11 +338,11 @@ ___
 
 #### Inherited from
 
-IoElement.textNode
+IoContent.textNode
 
 #### Defined in
 
-[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L392)
+[src/core/element.ts:388](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L388)
 
 `set` **textNode**(`value`): `void`
 
@@ -287,29 +358,51 @@ IoElement.textNode
 
 #### Inherited from
 
-IoElement.textNode
+IoContent.textNode
 
 #### Defined in
 
-[src/core/element.ts:396](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L396)
+[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L392)
+
+___
+
+### Listeners
+
+`Static` `get` **Listeners**(): `Object`
+
+#### Returns
+
+`Object`
+
+| Name | Type |
+| :------ | :------ |
+| `scroll` | (`string` \| { `capture`: `boolean` = true; `passive`: `boolean` = true })[] |
+
+#### Inherited from
+
+IoContent.Listeners
+
+#### Defined in
+
+[src/elements/layout/io-content.ts:28](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L28)
 
 ___
 
 ### Properties
 
-`Static` `get` **Properties**(): `any`
+`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
-`any`
+[`PropertyDeclarations`](../README.md#propertydeclarations)
 
-#### Overrides
+#### Inherited from
 
-IoElement.Properties
+IoContent.Properties
 
 #### Defined in
 
-[src/elements/extras/io-md-view.ts:131](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L131)
+[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
 
 ___
 
@@ -323,29 +416,11 @@ ___
 
 #### Overrides
 
-IoElement.Style
+IoContent.Style
 
 #### Defined in
 
-[src/elements/extras/io-md-view.ts:10](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L10)
-
-___
-
-### observedAttributes
-
-`Static` `get` **observedAttributes**(): `string`[]
-
-#### Returns
-
-`string`[]
-
-#### Inherited from
-
-IoElement.observedAttributes
-
-#### Defined in
-
-[src/core/element.ts:243](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L243)
+[src/elements/extras/io-md-view.ts:12](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L12)
 
 ## Methods
 
@@ -368,11 +443,11 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_flattenTextNode](IoElement.md#_flattentextnode)
+[IoContent](IoContent.md).[_flattenTextNode](IoContent.md#_flattentextnode)
 
 #### Defined in
 
-[src/core/element.ts:375](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L375)
+[src/core/element.ts:371](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L371)
 
 ___
 
@@ -396,11 +471,29 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
+[IoContent](IoContent.md).[addEventListener](IoContent.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:337](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L337)
+[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
+
+___
+
+### anchorChanged
+
+**anchorChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoContent](IoContent.md).[anchorChanged](IoContent.md#anchorchanged)
+
+#### Defined in
+
+[src/elements/layout/io-content.ts:61](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L61)
 
 ___
 
@@ -420,37 +513,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
+[IoContent](IoContent.md).[applyProperties](IoContent.md#applyproperties)
 
 #### Defined in
 
-[src/core/element.ts:400](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L400)
-
-___
-
-### attributeChangedCallback
-
-**attributeChangedCallback**(`prop`, `oldValue`, `newValue`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prop` | `string` |
-| `oldValue` | `any` |
-| `newValue` | `any` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
-
-#### Defined in
-
-[src/core/element.ts:253](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L253)
+[src/core/element.ts:396](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L396)
 
 ___
 
@@ -474,11 +541,11 @@ Binding object.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[bind](IoElement.md#bind)
+[IoContent](IoContent.md).[bind](IoContent.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:306](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L306)
+[src/core/node.ts:331](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L331)
 
 ___
 
@@ -493,13 +560,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Inherited from
+#### Overrides
 
-[IoElement](IoElement.md).[changed](IoElement.md#changed)
+[IoContent](IoContent.md).[changed](IoContent.md#changed)
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
+[src/elements/extras/io-md-view.ts:160](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L160)
 
 ___
 
@@ -515,11 +582,11 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
+[IoContent](IoContent.md).[connectedCallback](IoContent.md#connectedcallback)
 
 #### Defined in
 
-[src/core/element.ts:271](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L271)
+[src/elements/layout/io-content.ts:56](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L56)
 
 ___
 
@@ -533,11 +600,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
+[IoContent](IoContent.md).[disabledChanged](IoContent.md#disabledchanged)
 
 #### Defined in
 
-[src/core/element.ts:429](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L429)
+[src/core/element.ts:425](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L425)
 
 ___
 
@@ -553,11 +620,11 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
+[IoContent](IoContent.md).[disconnectedCallback](IoContent.md#disconnectedcallback)
 
 #### Defined in
 
-[src/core/element.ts:279](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L279)
+[src/core/element.ts:275](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L275)
 
 ___
 
@@ -582,11 +649,11 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
+[IoContent](IoContent.md).[dispatchEvent](IoContent.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
+[src/core/node.ts:387](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L387)
 
 ___
 
@@ -602,11 +669,11 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
+[IoContent](IoContent.md).[dispatchQueue](IoContent.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
+[src/core/node.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L273)
 
 ___
 
@@ -622,11 +689,11 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
+[IoContent](IoContent.md).[dispatchQueueSync](IoContent.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:283](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L283)
 
 ___
 
@@ -643,11 +710,11 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
+[IoContent](IoContent.md).[dispose](IoContent.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:369](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L369)
+[src/elements/layout/io-content.ts:51](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L51)
 
 ___
 
@@ -668,11 +735,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disposeDeep](IoElement.md#disposedeep)
+[IoContent](IoContent.md).[disposeDeep](IoContent.md#disposedeep)
 
 #### Defined in
 
-[src/core/element.ts:295](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L295)
+[src/core/element.ts:291](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L291)
 
 ___
 
@@ -686,11 +753,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[init](IoElement.md#init)
+[IoContent](IoContent.md).[init](IoContent.md#init)
 
 #### Defined in
 
-[src/core/node.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L235)
+[src/elements/layout/io-content.ts:46](https://github.com/io-gui/iogui/blob/main/src/elements/layout/io-content.ts#L46)
 
 ___
 
@@ -713,11 +780,11 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
+[IoContent](IoContent.md).[inputValue](IoContent.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:223](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L223)
+[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -731,11 +798,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
+[IoContent](IoContent.md).[labelChanged](IoContent.md#labelchanged)
 
 #### Defined in
 
-[src/core/element.ts:422](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L422)
+[src/core/element.ts:418](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L418)
 
 ___
 
@@ -758,11 +825,11 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
+[IoContent](IoContent.md).[objectMutated](IoContent.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:297](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L297)
+[src/core/node.ts:322](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L322)
 
 ___
 
@@ -785,59 +852,11 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
+[IoContent](IoContent.md).[onObjectMutated](IoContent.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:276](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L276)
-
-___
-
-### onResized
-
-**onResized**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/extras/io-md-view.ts:141](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L141)
-
-___
-
-### parseMarkdown
-
-**parseMarkdown**(`markdown`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `markdown` | `string` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/extras/io-md-view.ts:146](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L146)
-
-___
-
-### pathChanged
-
-**pathChanged**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/extras/io-md-view.ts:164](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L164)
+[src/core/node.ts:301](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L301)
 
 ___
 
@@ -861,11 +880,11 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[queue](IoElement.md#queue)
+[IoContent](IoContent.md).[queue](IoContent.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L242)
+[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -889,11 +908,11 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
+[IoContent](IoContent.md).[removeEventListener](IoContent.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:377](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L377)
 
 ___
 
@@ -916,11 +935,11 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
+[IoContent](IoContent.md).[setAttribute](IoContent.md#setattribute)
 
 #### Defined in
 
-[src/core/element.ts:413](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L413)
+[src/core/element.ts:409](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L409)
 
 ___
 
@@ -943,11 +962,11 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
+[IoContent](IoContent.md).[setProperties](IoContent.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:206](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L206)
+[src/core/node.ts:230](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L230)
 
 ___
 
@@ -971,11 +990,25 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
+[IoContent](IoContent.md).[setProperty](IoContent.md#setproperty)
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L109)
+[src/core/node.ts:131](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L131)
+
+___
+
+### srcChanged
+
+**srcChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/extras/io-md-view.ts:153](https://github.com/io-gui/iogui/blob/main/src/elements/extras/io-md-view.ts#L153)
 
 ___
 
@@ -998,11 +1031,11 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[template](IoElement.md#template)
+[IoContent](IoContent.md).[template](IoContent.md#template)
 
 #### Defined in
 
-[src/core/element.ts:289](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L289)
+[src/core/element.ts:285](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L285)
 
 ___
 
@@ -1026,11 +1059,11 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
+[IoContent](IoContent.md).[throttle](IoContent.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
+[src/core/node.ts:292](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L292)
 
 ___
 
@@ -1054,11 +1087,11 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
+[IoContent](IoContent.md).[traverse](IoContent.md#traverse)
 
 #### Defined in
 
-[src/core/element.ts:319](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L319)
+[src/core/element.ts:315](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L315)
 
 ___
 
@@ -1080,8 +1113,8 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
+[IoContent](IoContent.md).[unbind](IoContent.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:321](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L321)
+[src/core/node.ts:346](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L346)

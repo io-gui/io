@@ -22,16 +22,15 @@ const icon = IoIconsetSingleton.getIcon('custom:myicon');
 
 ### constructor
 
-**new IoIconset**(`properties?`, ...`args`)
+**new IoIconset**(...`args`)
 
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `...args` | `any`[] |
 
 #### Inherited from
 
@@ -39,7 +38,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:64](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L64)
 
 ## Properties
 
@@ -53,7 +52,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L48)
+[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -67,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L49)
+[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -81,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L50)
+[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -95,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L47)
+[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -109,7 +108,21 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L46)
+[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
+
+___
+
+### d
+
+ **d**: `boolean` = `true`
+
+#### Inherited from
+
+[IoNode](IoNode.md).[d](IoNode.md#d)
+
+#### Defined in
+
+[src/core/node.ts:59](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L59)
 
 ## Accessors
 
@@ -127,7 +140,7 @@ IoNode.Properties
 
 #### Defined in
 
-[src/core/node.ts:37](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L37)
+[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
 
 ## Methods
 
@@ -155,7 +168,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:337](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L337)
+[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -182,7 +195,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:185](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L185)
+[src/core/node.ts:209](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L209)
 
 ___
 
@@ -210,7 +223,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:306](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L306)
+[src/core/node.ts:331](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L331)
 
 ___
 
@@ -231,7 +244,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:259](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L259)
 
 ___
 
@@ -260,7 +273,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
+[src/core/node.ts:387](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L387)
 
 ___
 
@@ -280,7 +293,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
+[src/core/node.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L273)
 
 ___
 
@@ -300,7 +313,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:283](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L283)
 
 ___
 
@@ -321,7 +334,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:369](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L369)
+[src/core/node.ts:394](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L394)
 
 ___
 
@@ -359,7 +372,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L235)
+[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L260)
 
 ___
 
@@ -386,7 +399,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:223](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L223)
+[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -413,7 +426,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:297](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L297)
+[src/core/node.ts:322](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L322)
 
 ___
 
@@ -440,7 +453,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:276](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L276)
+[src/core/node.ts:301](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L301)
 
 ___
 
@@ -468,7 +481,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L242)
+[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -517,7 +530,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:377](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L377)
 
 ___
 
@@ -544,7 +557,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:206](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L206)
+[src/core/node.ts:230](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L230)
 
 ___
 
@@ -572,7 +585,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L109)
+[src/core/node.ts:131](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L131)
 
 ___
 
@@ -600,7 +613,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
+[src/core/node.ts:292](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L292)
 
 ___
 
@@ -626,4 +639,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:321](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L321)
+[src/core/node.ts:346](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L346)
