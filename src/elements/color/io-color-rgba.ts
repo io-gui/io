@@ -12,7 +12,7 @@ export class IoColorRgba extends IoColorBase {
         display: flex;
         flex-direction: row;
         flex: 0 1;
-        flex-basis: calc(var(--ioFieldHeight) * 10);
+        flex-basis: calc(var(--iotFieldHeight) * 10);
       }
       :host > io-number {
         flex: 1 0 0;
@@ -22,7 +22,7 @@ export class IoColorRgba extends IoColorBase {
         flex-shrink: 0;
       }
       :host > *:not(:last-child) {
-        margin-right: var(--ioSpacing);
+        margin-right: var(--iotSpacing);
       }
     `;
   }

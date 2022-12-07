@@ -33,7 +33,7 @@ export class IoSidebar extends IoElement {
       flex-wrap: nowrap;
       overflow-x: hidden;
       overflow-y: auto;
-      padding: var(--ioSpacing);
+      padding: var(--iotSpacing);
       flex-direction: column;
       -webkit-overflow-scrolling: touch;
     }

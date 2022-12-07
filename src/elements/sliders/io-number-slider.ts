@@ -18,11 +18,11 @@ export class IoNumberSlider extends IoElement {
       display: flex;
       align-self: stretch;
       justify-self: stretch;
-      flex-basis: calc(var(--ioFieldHeight) * 10);
+      flex-basis: calc(var(--iotFieldHeight) * 10);
     }
     :host > io-number {
       flex: 0 0 3.25em;
-      margin-right: var(--ioSpacing);
+      margin-right: var(--iotSpacing);
     }
     :host > io-slider {
       flex: 1 1 3em;

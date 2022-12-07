@@ -42,16 +42,16 @@ export class IoSlider extends IoSliderBase {
         vec2 pCenter = (pStart + pEnd) / 2.0;
         float slotHalfWidth = abs(pStart.x - pEnd.x) / 2.0;
 
-        float slotThickness = ioFieldHeight * 0.125;
+        float slotThickness = iotFieldHeight * 0.125;
 
         float strokeShape = min(
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth + ioStrokeWidth)),
-          circle(pEnd, 1.5 * slotThickness + ioStrokeWidth + ioStrokeWidth)
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + iotStrokeWidth + iotStrokeWidth)),
+          circle(pEnd, 1.5 * slotThickness + iotStrokeWidth + iotStrokeWidth)
         );
 
         float fillShape   = min(
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth)),
-          circle(pEnd, 1.5 * slotThickness + ioStrokeWidth)
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + iotStrokeWidth)),
+          circle(pEnd, 1.5 * slotThickness + iotStrokeWidth)
         );
         float colorShape  = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness)),
@@ -59,11 +59,11 @@ export class IoSlider extends IoSliderBase {
         );
 
         float grad = (p.x - start.x) / (end.x - start.x);
-        vec3 slotGradient = mix(colorStart, colorEnd, saturate(grad));
+        vec3 sloiotGradient = mix(colorStart, colorEnd, saturate(grad));
 
-        finalCol = mix(ioColor, finalCol, strokeShape);
-        finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
-        finalCol = mix(vec4(slotGradient, 1.0), finalCol, colorShape);
+        finalCol = mix(iotColor, finalCol, strokeShape);
+        finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
+        finalCol = mix(vec4(sloiotGradient, 1.0), finalCol, colorShape);
 
         return compose(dstCol, finalCol);
       }
@@ -80,12 +80,12 @@ export class IoSlider extends IoSliderBase {
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
       vec2 position = size * (uv - vec2(0.0, 0.5));
 
-      vec3 finalCol = ioBackgroundColorField.rgb;
+      vec3 finalCol = iotBackgroundColorField.rgb;
 
       // Sizes
 
       // Grid
-      float gridThickness = ioStrokeWidth;
+      float gridThickness = iotStrokeWidth;
       float gridSize = size.x / abs((uMax - uMin) / uStep);
       float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
       vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y - 0.5);
@@ -93,16 +93,16 @@ export class IoSlider extends IoSliderBase {
       float gridShape = grid2d(gridPosition, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
 
       if (gridSize > gridThickness * 2.0) {
-        vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.85);
+        vec3 gridCol = mix(iotColor.rgb, iotBackgroundColorField.rgb, 0.85);
         finalCol = compose(finalCol, vec4(gridCol, gridShape));
       }
 
       // Line
-      vec3 lineCol = mix(ioColorFieldSelected.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 lineCol = mix(iotColorFieldSelected.rgb, iotBackgroundColorField.rgb, 0.75);
       finalCol = paintHorizontalLine(finalCol, position, lineCol);
 
       // Slider
-      finalCol = paintSlider(finalCol, position, size, ioColorFieldSelected.rgb, ioColorLink.rgb);
+      finalCol = paintSlider(finalCol, position, size, iotColorFieldSelected.rgb, iotColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

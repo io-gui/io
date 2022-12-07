@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:58](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L58)
+[src/elements/color/io-color-panel.ts:72](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L72)
 
 ___
 
@@ -374,7 +374,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:61](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L61)
+[src/elements/color/io-color-panel.ts:75](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L75)
 
 ## Accessors
 
@@ -430,7 +430,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:63](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L63)
+[src/elements/color/io-color-panel.ts:77](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L77)
 
 ___
 
@@ -513,7 +513,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:68](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L68)
+[src/elements/color/io-color-panel.ts:82](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L82)
 
 ___
 
@@ -614,7 +614,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:77](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L77)
+[src/elements/color/io-color-panel.ts:91](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L91)
 
 ___
 
@@ -918,7 +918,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:74](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L74)
+[src/elements/color/io-color-panel.ts:88](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L88)
 
 ___
 

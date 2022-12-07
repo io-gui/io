@@ -245,8 +245,8 @@ export class IoNumberLadderStep extends IoField {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--ioBackgroundColorLight);
-        color: var(--ioColor);
+        background-color: var(--iotBackgroundColorLight);
+        color: var(--iotColor);
         align-self: stretch;
         touch-action: none;
         width: 6em;
@@ -373,22 +373,22 @@ export class IoNumberLadder extends IoElement {
         transition: opacity 0.2s, transform 0.2s;
       }
       :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--ioFieldHeight)));
+        transform: translateY(calc(3 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--ioFieldHeight)));
+        transform: translateY(calc(2 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--ioFieldHeight)));
+        transform: translateY(calc(1 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--ioFieldHeight)));
+        transform: translateY(calc(-1 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--ioFieldHeight)));
+        transform: translateY(calc(-2 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--ioFieldHeight)));
+        transform: translateY(calc(-3 * var(--iotFieldHeight)));
       }
       :host > .io-up3,
       :host > .io-down3 {
@@ -404,16 +404,16 @@ export class IoNumberLadder extends IoElement {
       }
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
-        background-color: var(--ioBackgroundColorLight);
-        border-color: var(--ioBorderColorFocus);
+        background-color: var(--iotBackgroundColorLight);
+        border-color: var(--iotBorderColorFocus);
         transition: opacity 0.2s;
         opacity: 1;
       }
       :host > .io-number-ladder-empty {
-        height: var(--ioFieldHeight);
+        height: var(--iotFieldHeight);
       }
       :host > .io-number-ladder-center {
-        height: calc(1.5 * var(--ioFieldHeight));
+        height: calc(1.5 * var(--iotFieldHeight));
       }
     `;
   }
@@ -490,7 +490,7 @@ export class IoNumberLadder extends IoElement {
         const layerRect = IoLayerSingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
-        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.ioLineHeight / 2 + IoThemeSingleton.ioSpacing) + 'px';
+        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.iotLineHeight / 2 + IoThemeSingleton.iotSpacing) + 'px';
       } else {
         this.removeAttribute('style');
       }

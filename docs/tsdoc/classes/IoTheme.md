@@ -7,7 +7,7 @@ CSS Variables are grouped in different themes and can be collectively switched b
 IoThemeSingleton.theme = 'dark';
 ```
 
-CSS color variables such as `'--ioColor'` and `'--ioBackgroundColor'` are mapped to numeric properties `ioColor` and `ioBackgroundColor`.
+CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
 
 ## Hierarchy
 
@@ -227,7 +227,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:286](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L286)
+[src/core/theme.ts:206](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L206)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:289](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L289)
+[src/core/theme.ts:209](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L209)
 
 ___
 
@@ -289,7 +289,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:292](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L292)
+[src/core/theme.ts:212](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L212)
 
 ___
 
@@ -359,7 +359,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/core/theme.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L273)
+[src/core/theme.ts:193](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L193)
 
 ___
 
@@ -371,13 +371,13 @@ ___
 
 `string`
 
-#### Overrides
+#### Inherited from
 
 IoElement.Style
 
 #### Defined in
 
-[src/core/theme.ts:269](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L269)
+[src/core/element.ts:215](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L215)
 
 ## Methods
 
@@ -424,7 +424,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:301](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L301)
+[src/core/theme.ts:221](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L221)
 
 ___
 
@@ -525,7 +525,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/theme.ts:324](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L324)
+[src/core/theme.ts:244](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L244)
 
 ___
 
@@ -716,7 +716,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:294](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L294)
+[src/core/theme.ts:214](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L214)
 
 ___
 
@@ -885,7 +885,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:311](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L311)
+[src/core/theme.ts:231](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L231)
 
 ___
 
@@ -1008,7 +1008,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:315](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L315)
+[src/core/theme.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L235)
 
 ___
 

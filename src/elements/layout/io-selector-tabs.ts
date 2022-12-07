@@ -14,8 +14,8 @@ export class IoSelectorTabs extends IoSelector {
         align-self: stretch;
         border-radius: 0;
         padding: 0;
-        border-width: 0 0 var(--ioBorderWidth) 0;
-        min-height: calc(var(--ioFieldHeight) - var(--ioBorderWidth));
+        border-width: 0 0 var(--iotBorderWidth) 0;
+        min-height: calc(var(--iotFieldHeight) - var(--iotBorderWidth));
       }
       :host > io-menu-options > io-menu-item {
         border-radius: 0;

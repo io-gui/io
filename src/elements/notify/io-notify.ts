@@ -14,23 +14,23 @@ export class IoNotify extends IoElement {
       top: 0;
       left: 0;
       box-sizing: border-box;
-      background-color: var(--ioBackgroundColorDark);
-      border: var(--ioBorder);
-      border-color: var(--ioColorError);
+      background-color: var(--iotBackgroundColorDark);
+      border: var(--iotBorder);
+      border-color: var(--iotColorError);
       width: 100%;
       opacity: 1;
       font-weight: bold;
       align-items: center;
       justify-content: center;
-      padding: 0 var(--ioSpacing);
+      padding: 0 var(--iotSpacing);
     }
     :host > span {
       cursor: default;
       box-sizing: border-box;
-      line-height: var(--ioLineHeight);
-      font-size: var(--ioFontSize);
-      color: var(--ioColor);
-      padding: 0 var(--ioSpacing);
+      line-height: var(--iotLineHeight);
+      font-size: var(--iotFontSize);
+      color: var(--iotColor);
+      padding: 0 var(--iotSpacing);
     }
     :host > :nth-child(n+2) {
       flex-shrink: 0;

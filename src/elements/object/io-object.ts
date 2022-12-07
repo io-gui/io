@@ -19,12 +19,12 @@ export class IoObject extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      border-radius: var(--ioBorderRadius);
-      border: var(--ioBorder);
-      border-color: var(--ioBorderColorOutset);
-      color: var(--ioColorField);
-      background-color: var(--ioBackgroundColorDark);
-      padding: var(--ioSpacing);
+      border-radius: var(--iotBorderRadius);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorOutset);
+      color: var(--iotColorField);
+      background-color: var(--iotBackgroundColorDark);
+      padding: var(--iotSpacing);
       /*  */
       display: flex;
       flex: 1 1 auto;
@@ -33,7 +33,7 @@ export class IoObject extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      flex: 0 1 calc(var(--ioLineHeight) * 17.5);
+      flex: 0 1 calc(var(--iotLineHeight) * 17.5);
     }
     :host io-properties {
       flex-basis: auto;
@@ -50,7 +50,7 @@ export class IoObject extends IoElement {
       content: "▾";
     }
     :host > :nth-child(n+2) {
-      margin-top: var(--ioSpacing);
+      margin-top: var(--iotSpacing);
     }
     `;
   }

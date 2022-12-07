@@ -39,16 +39,16 @@ export class IoSelectorSidebar extends IoSelector {
     }
     :host > io-menu-options {
       flex: 0 0 auto;
-      background-color: var(--ioBackgroundColorDark);
-      border: var(--ioBorder);
-      border-width: 0 var(--ioBorderWidth) 0 0;
+      background-color: var(--iotBackgroundColorDark);
+      border: var(--iotBorder);
+      border-width: 0 var(--iotBorderWidth) 0 0;
     }
     :host[right] > io-menu-options {
-      border-width: 0 0 0 var(--ioBorderWidth);
+      border-width: 0 0 0 var(--iotBorderWidth);
     }
     :host[collapsed] > io-menu-options {
       flex: 0 0 auto;
-      border-width: 0 0 var(--ioBorderWidth) 0;
+      border-width: 0 0 var(--iotBorderWidth) 0;
     }
     `;
   }

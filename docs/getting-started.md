@@ -77,12 +77,12 @@ CSS selectors starting with `--` and ending with `:` are treated as mixins (CSS 
 ```javascript
 static get Style() {
   return /* css */`
-    --io-field: {
+    --ioField: {
       display: flex;
       flex-direction: column;
     }
     :host {
-      @apply --io-field;
+      @apply --ioField;
     }
   `;
 }

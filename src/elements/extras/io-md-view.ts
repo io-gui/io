@@ -12,7 +12,7 @@ export class IoMdView extends IoContent {
   static get Style() {
     return /* css */`
       :host {
-        padding: var(--ioLineHeight) var(--ioLineHeight2);
+        padding: var(--iotLineHeight) var(--iotLineHeight2);
       }
       :host > :first-child {
         margin-top: 0;
@@ -26,12 +26,12 @@ export class IoMdView extends IoContent {
       }
       :host a {
         text-decoration: underline;
-        color: var(--ioColorLink);
+        color: var(--iotColorLink);
       }
       :host h1, :host h2, :host h3, :host h4 {
         margin: 0.5em 0;
-        border: var(--ioBorder);
-        border-width: 0 0 var(--ioBorderWidth) 0;
+        border: var(--iotBorder);
+        border-width: 0 0 var(--iotBorderWidth) 0;
       }
       :host h1 {
         padding: 0.5em 0;
@@ -51,13 +51,13 @@ export class IoMdView extends IoContent {
         font-family: monospace, monospace;
         -webkit-font-smoothing: auto;
         overflow: auto;
-        color: var(--ioColorLink);
+        color: var(--iotColorLink);
       }
       :host strong code {
-        background: var(--ioBackgroundColorLight);
+        background: var(--iotBackgroundColorLight);
       }
       :host pre > code {
-        background: var(--ioBackgroundColorLight);
+        background: var(--iotBackgroundColorLight);
         color: inherit;
         line-height: 1.6em;
       }
@@ -113,7 +113,7 @@ export class IoMdView extends IoContent {
         margin-top: -20px;
         margin-left: -20px;
         border-radius: 50%;
-        border: var(--ioBorder);
+        border: var(--iotBorder);
         border-top-color: #000;
         animation: spinner .6s linear infinite;
       }

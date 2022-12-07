@@ -324,7 +324,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/elements/object/io-object.ts:37](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-object.ts#L37)
+[src/elements/object/io-object.ts:57](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-object.ts#L57)
 
 ___
 
@@ -470,7 +470,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/object/io-object.ts:56](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-object.ts#L56)
+[src/elements/object/io-object.ts:76](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-object.ts#L76)
 
 ___
 

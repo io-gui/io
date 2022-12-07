@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:154](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L154)
+[src/elements/menus/io-menu-options.ts:168](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L168)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:136](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L136)
+[src/elements/menus/io-menu-options.ts:150](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L150)
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:121](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L121)
+[src/elements/menus/io-menu-options.ts:135](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L135)
 
 ___
 
@@ -222,7 +222,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:124](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L124)
+[src/elements/menus/io-menu-options.ts:138](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L138)
 
 ___
 
@@ -246,7 +246,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:145](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L145)
+[src/elements/menus/io-menu-options.ts:159](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L159)
 
 ___
 
@@ -284,7 +284,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:139](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L139)
+[src/elements/menus/io-menu-options.ts:153](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L153)
 
 ___
 
@@ -294,7 +294,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:118](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L118)
+[src/elements/menus/io-menu-options.ts:132](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L132)
 
 ___
 
@@ -304,7 +304,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:142](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L142)
+[src/elements/menus/io-menu-options.ts:156](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L156)
 
 ___
 
@@ -314,7 +314,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:133](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L133)
+[src/elements/menus/io-menu-options.ts:147](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L147)
 
 ___
 
@@ -328,7 +328,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:151](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L151)
+[src/elements/menus/io-menu-options.ts:165](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L165)
 
 ___
 
@@ -338,7 +338,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:130](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L130)
+[src/elements/menus/io-menu-options.ts:144](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L144)
 
 ___
 
@@ -348,7 +348,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:127](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L127)
+[src/elements/menus/io-menu-options.ts:141](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L141)
 
 ___
 
@@ -358,7 +358,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:148](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L148)
+[src/elements/menus/io-menu-options.ts:162](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L162)
 
 ___
 
@@ -443,7 +443,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:159](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L159)
+[src/elements/menus/io-menu-options.ts:173](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L173)
 
 ___
 
@@ -503,7 +503,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:293](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L293)
+[src/elements/menus/io-menu-options.ts:307](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L307)
 
 ___
 
@@ -544,7 +544,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:273](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L273)
+[src/elements/menus/io-menu-options.ts:287](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L287)
 
 ___
 
@@ -558,7 +558,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:233](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L233)
+[src/elements/menus/io-menu-options.ts:247](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L247)
 
 ___
 
@@ -572,7 +572,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:260](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L260)
+[src/elements/menus/io-menu-options.ts:274](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L274)
 
 ___
 
@@ -592,7 +592,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:166](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L166)
+[src/elements/menus/io-menu-options.ts:180](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L180)
 
 ___
 
@@ -606,7 +606,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:190](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L190)
+[src/elements/menus/io-menu-options.ts:204](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L204)
 
 ___
 
@@ -626,7 +626,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:179](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L179)
+[src/elements/menus/io-menu-options.ts:193](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L193)
 
 ___
 
@@ -727,7 +727,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:319](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L319)
+[src/elements/menus/io-menu-options.ts:333](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L333)
 
 ___
 
@@ -914,7 +914,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:241](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L241)
+[src/elements/menus/io-menu-options.ts:255](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L255)
 
 ___
 
@@ -932,7 +932,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:183](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L183)
+[src/elements/menus/io-menu-options.ts:197](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L197)
 
 ___
 
@@ -1045,7 +1045,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:186](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L186)
+[src/elements/menus/io-menu-options.ts:200](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L200)
 
 ___
 
@@ -1115,7 +1115,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:254](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L254)
+[src/elements/menus/io-menu-options.ts:268](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L268)
 
 ___
 

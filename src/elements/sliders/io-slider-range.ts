@@ -75,19 +75,19 @@ export class IoSliderRange extends IoSliderBase {
         vec2 pCenter = (pStart + pEnd) / 2.0;
         float slotHalfWidth = abs(pStart.x - pEnd.x) / 2.0;
 
-        float slotThickness = ioFieldHeight * 0.125;
-        float knobRadius = ioFieldHeight * 0.25;
+        float slotThickness = iotFieldHeight * 0.125;
+        float knobRadius = iotFieldHeight * 0.25;
 
         float strokeShape = min(min(
-          circle(pStart, knobRadius + ioStrokeWidth + ioStrokeWidth),
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth + ioStrokeWidth))),
-          circle(pEnd, knobRadius + ioStrokeWidth + ioStrokeWidth)
+          circle(pStart, knobRadius + iotStrokeWidth + iotStrokeWidth),
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + iotStrokeWidth + iotStrokeWidth))),
+          circle(pEnd, knobRadius + iotStrokeWidth + iotStrokeWidth)
         );
 
         float fillShape   = min(min(
-          circle(pStart, knobRadius + ioStrokeWidth),
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + ioStrokeWidth))),
-          circle(pEnd, knobRadius + ioStrokeWidth)
+          circle(pStart, knobRadius + iotStrokeWidth),
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + iotStrokeWidth))),
+          circle(pEnd, knobRadius + iotStrokeWidth)
         );
         float colorShape  = min(min(
           circle(pStart, knobRadius),
@@ -96,11 +96,11 @@ export class IoSliderRange extends IoSliderBase {
         );
 
         float grad = (p.x - start.x) / (end.x - start.x);
-        vec3 slotGradient = mix(colorStart, colorEnd, saturate(grad));
+        vec3 sloiotGradient = mix(colorStart, colorEnd, saturate(grad));
 
-        finalCol = mix(ioColor, finalCol, strokeShape);
-        finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
-        finalCol = mix(vec4(slotGradient, 1.0), finalCol, colorShape);
+        finalCol = mix(iotColor, finalCol, strokeShape);
+        finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
+        finalCol = mix(vec4(sloiotGradient, 1.0), finalCol, colorShape);
 
         return compose(dstCol, finalCol);
       }
@@ -117,11 +117,11 @@ export class IoSliderRange extends IoSliderBase {
       vec2 position = size * uv;
 
       // Colors
-      vec3 finalCol = ioBackgroundColorField.rgb;
-      vec4 gridCol = mix(ioColor, ioBackgroundColorField, 0.85);
+      vec3 finalCol = iotBackgroundColorField.rgb;
+      vec4 gridCol = mix(iotColor, iotBackgroundColorField, 0.85);
 
       // Sizes
-      float gridThickness = ioStrokeWidth;
+      float gridThickness = iotStrokeWidth;
       float gridSize = size.x / abs((uMax - uMin) / uStep);
       float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
 
@@ -135,11 +135,11 @@ export class IoSliderRange extends IoSliderBase {
       }
 
       // Line
-      vec3 lineCol = mix(ioColorFieldSelected.rgb, ioBackgroundColorField.rgb, 0.75);
+      vec3 lineCol = mix(iotColorFieldSelected.rgb, iotBackgroundColorField.rgb, 0.75);
       finalCol = paintHorizontalLine(finalCol, gridPosition, lineCol);
 
       // Slider
-      finalCol = paintSliderRange(finalCol, position, size, ioColorFieldSelected.rgb, ioColorLink.rgb);
+      finalCol = paintSliderRange(finalCol, position, size, iotColorFieldSelected.rgb, iotColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }

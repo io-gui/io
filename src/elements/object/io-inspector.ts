@@ -23,20 +23,20 @@ export class IoInspector extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      flex: 0 1 calc(var(--ioLineHeight) * 17.5);
+      flex: 0 1 calc(var(--iotLineHeight) * 17.5);
     }
     :host > * {
       flex-shrink: 0;
     }
     :host > .inspector-header {
-      margin-bottom: var(--ioSpacing);
+      margin-bottom: var(--iotSpacing);
       flex-grow: 0;
     }
     :host > .inspector-header > io-breadcrumbs {
       flex: 1 1;
     }
     :host > .inspector-header > io-boolean {
-      width: calc(var(--ioSpacing) + var(--ioLineHeight));
+      width: calc(var(--iotSpacing) + var(--iotLineHeight));
       align-self: stretch;
       height: auto;
     }
@@ -44,8 +44,8 @@ export class IoInspector extends IoElement {
       opacity: 0.25;
     }
     :host > .inspector-header > io-string {
-      margin: 0 var(--ioSpacing);
-      padding: calc(2 * var(--ioSpacing));
+      margin: 0 var(--iotSpacing);
+      padding: calc(2 * var(--iotSpacing));
       align-self: stretch;
       height: auto;
     }
@@ -66,11 +66,11 @@ export class IoInspector extends IoElement {
       flex-basis: auto !important;
     }
     :host > io-object > io-properties {
-      border-radius: var(--ioBorderRadius);
-      background-color: var(--ioBackgroundColor) !important;
-      border: var(--ioBorder);
-      border-color: var(--ioBorderColorInset);
-      padding: var(--ioSpacing);
+      border-radius: var(--iotBorderRadius);
+      background-color: var(--iotBackgroundColor) !important;
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorInset);
+      padding: var(--iotSpacing);
       overflow: hidden;
     }
     :host > io-object > io-properties:not([horizontal])[labeled] {
@@ -80,7 +80,7 @@ export class IoInspector extends IoElement {
       text-align: right;
     }
     :host io-properties > io-field.select {
-      color: var(--ioColorLink);
+      color: var(--iotColorLink);
     }
     :host io-properties > io-field.select:hover {
       text-decoration: underline;

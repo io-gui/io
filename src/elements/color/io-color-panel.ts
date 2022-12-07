@@ -30,18 +30,18 @@ export class IoColorPanel extends IoColorBase {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      border-radius: var(--ioBorderRadius);
-      border: var(--ioBorder);
-      border-color: var(--ioBorderColorOutset);
-      color: var(--ioColorField);
-      background-color: var(--ioBackgroundColorDark);
-      padding: var(--ioSpacing);
+      border-radius: var(--iotBorderRadius);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorOutset);
+      color: var(--iotColorField);
+      background-color: var(--iotBackgroundColorDark);
+      padding: var(--iotSpacing);
       /*  */
       cursor: move;
       align-items: stretch;
       flex-grow: 0;
-      min-width: var(--ioLineHeight);
-      min-height: calc(var(--ioLineHeight) * 5.5);
+      min-width: var(--iotLineHeight);
+      min-height: calc(var(--iotLineHeight) * 5.5);
       flex-direction: row;
     }
     :host:not([expanded]) {
@@ -51,7 +51,7 @@ export class IoColorPanel extends IoColorBase {
       flex-direction: column;
     }
     :host > * {
-      border-radius: calc(var(--ioBorderRadius) - var(--ioBorderWidth));
+      border-radius: calc(var(--iotBorderRadius) - var(--iotBorderWidth));
     }
     :host > :first-child {
       flex: 1 0 auto;
@@ -60,10 +60,10 @@ export class IoColorPanel extends IoColorBase {
       flex: 0 0 auto;
     }
     :host > *:not(:last-child) {
-      margin: 0 0 var(--ioSpacing) 0;
+      margin: 0 0 var(--iotSpacing) 0;
     }
     :host:not([vertical]) > * {
-      margin: 0 var(--ioSpacing) 0 0;
+      margin: 0 var(--iotSpacing) 0 0;
     }
     `;
   }

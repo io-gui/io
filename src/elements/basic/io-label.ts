@@ -4,15 +4,15 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 export class IoLabel extends IoElement {
   static get Style() {
     return /* css */`
-      --io-label: {
+      --ioLabel: {
         display: inline-block;
-        height: var(--ioLineHeight);
-        line-height: var(--ioLineHeight);
-        font-size: var(--ioFontSize);
-        padding: 0 var(--ioSpacing);
+        height: var(--iotLineHeight);
+        line-height: var(--iotLineHeight);
+        font-size: var(--iotFontSize);
+        padding: 0 var(--iotSpacing);
       }
       :host {
-        @apply --io-label;
+        @apply --ioLabel;
       }
       :host:not([label]) {
         display: none;

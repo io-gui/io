@@ -33,20 +33,20 @@ export class IoSelectorTabs extends IoElement {
     }
     :host > io-tabs {
       z-index: 1;
-      margin: var(--ioSpacing);
+      margin: var(--iotSpacing);
       margin-bottom: 0;
       flex-shrink: 0;
     }
     :host > io-selector {
-      color: var(--ioColor);
-      background: var(--ioBackgroundColor);
+      color: var(--iotColor);
+      background: var(--iotBackgroundColor);
       display: flex;
       flex-direction: column;
       flex: 1 1 auto;
       overflow: auto;
-      padding: var(--ioSpacing);
-      border: var(--ioBorder);
-      border-radius: var(--ioBorderRadius);
+      padding: var(--iotSpacing);
+      border: var(--iotBorder);
+      border-radius: var(--iotBorderRadius);
     }
     `;
   }
@@ -234,7 +234,7 @@ export class IoTabs extends IoElement {
     }
     :host > * {
       flex: 0 0 auto;
-      margin-right: var(--ioSpacing);
+      margin-right: var(--iotSpacing);
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
       border-bottom: none;
@@ -252,32 +252,32 @@ export class IoTabs extends IoElement {
       border-bottom: none;
     }
     :host > io-button.io-selected-tab {
-      border-bottom-color: var(--ioBackgroundColor);
+      border-bottom-color: var(--iotBackgroundColor);
       border-bottom-style: solid;
-      background: var(--ioBackgroundColor);
-      color: var(--ioColorLink);
+      background: var(--iotBackgroundColor);
+      color: var(--iotColorLink);
       margin-bottom: -1px;
       background-image: none;
     }
     :host > io-button.io-tab-insert-before {
       background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                        linear-gradient(90deg, var(--ioBackgroundColorSelected) 0.3em, transparent 0.31em);
+                        linear-gradient(90deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
     }
     :host > io-button.io-tab-insert-after {
       background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                        linear-gradient(270deg, var(--ioBackgroundColorSelected) 0.3em, transparent 0.31em);
+                        linear-gradient(270deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
     }
     :host > io-button.io-selected-tab.io-tab-insert-before {
-      background-image: linear-gradient(90deg, var(--ioBackgroundColorSelected) 0.3em, transparent 0.31em);
+      background-image: linear-gradient(90deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
     }
     :host > io-button.io-selected-tab.io-tab-insert-after {
-      background-image: linear-gradient(270deg, var(--ioBackgroundColorSelected) 0.3em, transparent 0.31em);
+      background-image: linear-gradient(270deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
     }
     :host > io-option-menu {
       background: none !important;
       border: none;
-      padding-left: calc(2 * var(--ioSpacing));
-      padding-right: calc(2 * var(--ioSpacing));
+      padding-left: calc(2 * var(--iotSpacing));
+      padding-right: calc(2 * var(--iotSpacing));
     }
     :host > .edit-spacer {
       flex: 0 0 3.5em;
@@ -488,13 +488,13 @@ export class IoTabDragicon extends IoElement {
       overflow: hidden;
       text-overflow: ellipsis;
       user-select: none;
-      border: var(--ioBorder);
-      border-radius: var(--ioBorderRadius);
-      padding: var(--ioSpacing);
-      padding-left: calc(2 * var(--ioSpacing));
-      padding-right: calc(2 * var(--ioSpacing));
-      background: var(--ioBackgroundColor);
-      color: var(--ioColor);
+      border: var(--iotBorder);
+      border-radius: var(--iotBorderRadius);
+      padding: var(--iotSpacing);
+      padding-left: calc(2 * var(--iotSpacing));
+      padding-right: calc(2 * var(--iotSpacing));
+      background: var(--iotBackgroundColor);
+      color: var(--iotColor);
       transform: translateZ(0);
       position: absolute;
       top: 0;
@@ -516,8 +516,8 @@ export class IoTabDropzone extends IoElement {
       pointer-events: none;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
-      border: 4px solid var(--ioBorderColorFocus);
-      border-radius: var(--ioBorderRadius);
+      border: 4px solid var(--iotBorderColorFocus);
+      border-radius: var(--iotBorderRadius);
       transform: translateZ(0);
       position: fixed;
       top: 0;

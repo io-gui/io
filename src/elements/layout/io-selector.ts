@@ -14,9 +14,9 @@ export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-content;
-      color: var(--ioColor);
-      background-color: var(--ioBackgroundColor);
+      @apply --ioContent;
+      color: var(--iotColor);
+      background-color: var(--iotBackgroundColor);
     }
 
     @keyframes io-selector-spinner {
@@ -36,7 +36,7 @@ export class IoSelector extends IoElement {
       margin-top: -20px;
       margin-left: -20px;
       border-radius: 50%;
-      border: var(--ioBorder);
+      border: var(--iotBorder);
       border-top-color: #000;
       animation: io-selector-spinner .6s linear infinite;
     }

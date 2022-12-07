@@ -28,7 +28,7 @@ Object property editor. It displays a set of labeled property editors for the `v
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:107](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L107)
+[src/elements/object/io-inspector.ts:113](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L113)
 
 ## Properties
 
@@ -290,7 +290,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:222](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L222)
+[src/elements/object/io-inspector.ts:227](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L227)
 
 ___
 
@@ -314,7 +314,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:223](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L223)
+[src/elements/object/io-inspector.ts:228](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L228)
 
 ___
 
@@ -338,7 +338,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:224](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L224)
+[src/elements/object/io-inspector.ts:229](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L229)
 
 ## Accessors
 
@@ -394,7 +394,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:102](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L102)
+[src/elements/object/io-inspector.ts:108](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L108)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:198](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L198)
+[src/elements/object/io-inspector.ts:203](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L203)
 
 ___
 
@@ -436,7 +436,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:204](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L204)
+[src/elements/object/io-inspector.ts:209](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L209)
 
 ___
 
@@ -450,7 +450,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:215](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L215)
+[src/elements/object/io-inspector.ts:220](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L220)
 
 ___
 
@@ -468,7 +468,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:84](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L84)
+[src/elements/object/io-inspector.ts:90](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L90)
 
 ___
 
@@ -527,7 +527,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:140](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L140)
+[src/elements/object/io-inspector.ts:146](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L146)
 
 ___
 
@@ -541,7 +541,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:131](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L131)
+[src/elements/object/io-inspector.ts:137](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L137)
 
 ___
 
@@ -555,7 +555,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:134](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L134)
+[src/elements/object/io-inspector.ts:140](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L140)
 
 ___
 
@@ -569,7 +569,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:137](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L137)
+[src/elements/object/io-inspector.ts:143](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L143)
 
 ___
 
@@ -583,7 +583,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:157](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L157)
+[src/elements/object/io-inspector.ts:163](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L163)
 
 ___
 
@@ -603,7 +603,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:111](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L111)
+[src/elements/object/io-inspector.ts:117](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L117)
 
 ___
 
@@ -617,7 +617,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:154](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L154)
+[src/elements/object/io-inspector.ts:160](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L160)
 
 ___
 
@@ -659,7 +659,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:122](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L122)
+[src/elements/object/io-inspector.ts:128](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L128)
 
 ___
 
@@ -732,7 +732,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:150](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L150)
+[src/elements/object/io-inspector.ts:156](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L156)
 
 ___
 
@@ -1092,7 +1092,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:125](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L125)
+[src/elements/object/io-inspector.ts:131](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L131)
 
 ___
 
@@ -1297,7 +1297,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:119](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L119)
+[src/elements/object/io-inspector.ts:125](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L125)
 
 ___
 
@@ -1311,4 +1311,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-inspector.ts:225](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L225)
+[src/elements/object/io-inspector.ts:230](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-inspector.ts#L230)

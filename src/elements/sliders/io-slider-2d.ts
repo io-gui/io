@@ -8,12 +8,12 @@ export class IoSlider2d extends IoSliderBase {
     return /* css */`
       :host {
         cursor: crosshair;
-        border: var(--ioBorder);
-        border-radius: var(--ioBorderRadius);
-        border-color: var(--ioBorderColorInset);
-        min-width: var(--ioFieldHeight4);
-        min-height: var(--ioFieldHeight4);
-        flex-basis: var(--ioFieldHeight4);
+        border: var(--iotBorder);
+        border-radius: var(--iotBorderRadius);
+        border-color: var(--iotBorderColorInset);
+        min-width: var(--iotFieldHeight4);
+        min-height: var(--iotFieldHeight4);
+        flex-basis: var(--iotFieldHeight4);
         flex-grow: 0;
       }
       :host[horizontal] {
@@ -42,12 +42,12 @@ export class IoSlider2d extends IoSliderBase {
       vec3 paintKnob(vec3 dstCol, vec2 p, vec2 center, vec3 color) {
         vec4 finalCol = vec4(0.0);
         vec2 pCenter = translate(p, center);
-        float radius = ioFieldHeight * 0.25;
-        float strokeShape = circle(pCenter, radius + ioStrokeWidth + ioStrokeWidth);
-        float fillShape   = circle(pCenter, radius + ioStrokeWidth);
+        float radius = iotFieldHeight * 0.25;
+        float strokeShape = circle(pCenter, radius + iotStrokeWidth + iotStrokeWidth);
+        float fillShape   = circle(pCenter, radius + iotStrokeWidth);
         float colorShape  = circle(pCenter, radius);
-        finalCol = mix(ioColor, finalCol, strokeShape);
-        finalCol = mix(vec4(ioBackgroundColor.rgb, 1.0), finalCol, fillShape);
+        finalCol = mix(iotColor, finalCol, strokeShape);
+        finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
         finalCol = mix(vec4(color, 1.0), finalCol, colorShape);
         return compose(dstCol, finalCol);
       }
@@ -64,13 +64,13 @@ export class IoSlider2d extends IoSliderBase {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = ioBackgroundColorField.rgb;
-      vec3 gridCol = mix(ioColor.rgb, ioBackgroundColorField.rgb, 0.95);
-      vec3 axisCol = mix(ioColorFieldSelected.rgb, ioBackgroundColorField.rgb, 0.75);
-      vec3 sliderCol = ioColorLink.rgb;
+      vec3 finalCol = iotBackgroundColorField.rgb;
+      vec3 gridCol = mix(iotColor.rgb, iotBackgroundColorField.rgb, 0.95);
+      vec3 axisCol = mix(iotColorFieldSelected.rgb, iotBackgroundColorField.rgb, 0.75);
+      vec3 sliderCol = iotColorLink.rgb;
 
       // // Sizes
-      float gridThickness = ioStrokeWidth;
+      float gridThickness = iotStrokeWidth;
       vec2  gridSize = size / abs((uMax - uMin) / uStep);
       vec2  gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
 

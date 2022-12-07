@@ -471,7 +471,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:88](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L88)
+[src/elements/color/io-color-panel.ts:102](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L102)
 
 ___
 
@@ -511,7 +511,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:360](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L360)
+[src/core/theme.ts:279](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L279)
 
 ___
 

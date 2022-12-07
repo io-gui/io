@@ -46,19 +46,19 @@ export class IoGl extends IoElement {
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: calc(var(--ioBorderRadius) - var(--ioBorderWidth));
+        border-radius: calc(var(--iotBorderRadius) - var(--iotBorderWidth));
         pointer-events: none;
         image-rendering: pixelated;
       }
       :host[aria-invalid] {
-        border: var(--ioBorderError);
+        border: var(--iotBorderError);
       }
       :host[aria-invalid] > canvas {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--ioBorderColorFocus);
-        outline: 1px solid var(--ioBorderColorFocus);
+        border-color: var(--iotBorderColorFocus);
+        outline: 1px solid var(--iotBorderColorFocus);
       }
     `;
   }
@@ -171,7 +171,7 @@ export class IoGl extends IoElement {
       }
       // Painter Functions
       vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
-        float lineShape = lineHorizontal(p, ioStrokeWidth);
+        float lineShape = lineHorizontal(p, iotStrokeWidth);
         return compose(dstCol, vec4(color, lineShape));
       }
     `;

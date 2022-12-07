@@ -10,24 +10,24 @@ import { IoIconsetSingleton } from './io-iconset.js';
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`
-      --io-icon: {
+      --ioIcon: {
         display: inline-block;
-        height: var(--ioLineHeight);
-        min-width: var(--ioLineHeight);
-        line-height: var(--ioLineHeight);
-        font-size: var(--ioFontSize);
+        height: var(--iotLineHeight);
+        min-width: var(--iotLineHeight);
+        line-height: var(--iotLineHeight);
+        font-size: var(--iotFontSize);
         text-align: center;
         fill: currentcolor;
       }
       :host {
-        @apply --io-icon;
+        @apply --ioIcon;
       }
       :host:not([icon]) {
         display: none;
       }
       :host[stroke] {
         stroke: currentcolor;
-        stroke-width: var(--ioStrokeWidth);
+        stroke-width: var(--iotStrokeWidth);
       }
       :host > svg {
         height: 100%;

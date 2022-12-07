@@ -290,7 +290,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:162](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L162)
+[src/elements/object/io-properties.ts:169](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L169)
 
 ## Accessors
 
@@ -351,7 +351,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:86](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L86)
+[src/elements/object/io-properties.ts:93](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L93)
 
 ___
 
@@ -369,7 +369,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:71](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L71)
+[src/elements/object/io-properties.ts:78](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L78)
 
 ___
 
@@ -401,7 +401,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:128](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L128)
+[src/elements/object/io-properties.ts:135](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L135)
 
 ___
 
@@ -442,7 +442,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:111](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L111)
+[src/elements/object/io-properties.ts:118](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L118)
 
 ___
 
@@ -456,7 +456,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:131](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L131)
+[src/elements/object/io-properties.ts:138](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L138)
 
 ___
 
@@ -476,7 +476,7 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:96](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L96)
+[src/elements/object/io-properties.ts:103](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L103)
 
 ___
 
@@ -577,7 +577,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:125](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L125)
+[src/elements/object/io-properties.ts:132](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L132)
 
 ___
 
@@ -1128,4 +1128,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-properties.ts:122](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L122)
+[src/elements/object/io-properties.ts:129](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-properties.ts#L129)

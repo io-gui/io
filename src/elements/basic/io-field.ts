@@ -14,7 +14,7 @@ import { Property } from '../../core/internals/property.js';
 export class IoField extends IoElement {
   static get Style() {
     return /* css */`
-      --io-field: {
+      --ioField: {
         cursor: pointer;
         user-select: none;
         -webkit-touch-callout: none;
@@ -24,51 +24,51 @@ export class IoField extends IoElement {
         flex-wrap: nowrap;
         white-space: nowrap;
 
-        height: var(--ioFieldHeight);
-        line-height: var(--ioLineHeight);
+        height: var(--iotFieldHeight);
+        line-height: var(--iotLineHeight);
 
-        font-size: var(--ioFontSize);
-        border: var(--ioBorder);
-        border-radius: var(--ioBorderRadius);
+        font-size: var(--iotFontSize);
+        border: var(--iotBorder);
+        border-radius: var(--iotBorderRadius);
         border-color: transparent;
-        color: var(--ioColorField);
-        background-color: var(--ioBackgroundColorField);
-        padding: var(--ioSpacing) calc(var(--ioSpacing) + 0.5em);
+        color: var(--iotColorField);
+        background-color: var(--iotBackgroundColorField);
+        padding: var(--iotSpacing) calc(var(--iotSpacing) + 0.5em);
         transition: background-color 0.25s;
       }
       :host {
-        @apply --io-field;
+        @apply --ioField;
       }
       :host[appearance=neutral] {
         background-color: transparent;
       }
       :host[appearance=inset] {
-        border-color: var(--ioBorderColorInset);
+        border-color: var(--iotBorderColorInset);
       }
       :host[appearance=outset] {
-        border-color: var(--ioBorderColorOutset);
-        background-image: var(--ioGradientOutset);
+        border-color: var(--iotBorderColorOutset);
+        background-image: var(--iotGradientOutset);
       }
       :host[invalid] {
-        color: var(--ioColorError);
-        border: var(--ioBorderError);
+        color: var(--iotColorError);
+        border: var(--iotBorderError);
       }
       :host[selected] {
-        color: var(--ioColorFieldSelected);
-        background-color: var(--ioBackgroundColorSelected);
+        color: var(--iotColorFieldSelected);
+        background-color: var(--iotBackgroundColorSelected);
       }
       :host:focus {
         z-index: 200;
         position: relative;
         text-overflow: inherit;
-        border-color: var(--ioBackgroundColor);
-        outline: 1px solid var(--ioBorderColorFocus);
+        border-color: var(--iotBackgroundColor);
+        outline: 1px solid var(--iotBorderColorFocus);
       }
       :host[placeholder]:empty:before {
         content: attr(placeholder);
         visibility: visible;
-        color: var(--ioColorField);
-        padding: 0 calc(var(--ioSpacing) + var(--ioBorderWidth));
+        color: var(--iotColorField);
+        padding: 0 calc(var(--iotSpacing) + var(--iotBorderWidth));
         opacity: 0.5;
       }
     `;

@@ -210,13 +210,13 @@ export class IoLayoutDivider extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      background: var(--ioBackgroundColor);
-      color: var(--ioColor);
+      background: var(--iotBackgroundColor);
+      color: var(--iotColor);
       z-index: 1;
       display: flex;
       flex: none;
-      border: var(--ioBorder);
-      border-color: var(--ioBorderColorOutset);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorOutset);
       user-select: none;
       transition: background-color 0.4s;
     }
@@ -225,13 +225,13 @@ export class IoLayoutDivider extends IoElement {
     }
     :host[orientation=horizontal] {
       cursor: col-resize;
-      width: var(--ioSpacing);
+      width: var(--iotSpacing);
       border-top: 0;
       border-bottom: 0;
     }
     :host[orientation=vertical] {
       cursor: row-resize;
-      height: var(--ioSpacing);
+      height: var(--iotSpacing);
       border-left: 0;
       border-right: 0;
     }

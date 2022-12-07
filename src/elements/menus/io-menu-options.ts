@@ -25,24 +25,24 @@ export class IoMenuOptions extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      border-radius: var(--ioBorderRadius);
-      border: var(--ioBorder);
-      border-color: var(--ioBorderColorOutset);
-      color: var(--ioColorField);
-      background-color: var(--ioBackgroundColorDark);
-      padding: var(--ioSpacing);
+      border-radius: var(--iotBorderRadius);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorOutset);
+      color: var(--iotColorField);
+      background-color: var(--iotBackgroundColorDark);
+      padding: var(--iotSpacing);
       /*  */
       align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
       position: relative;
-      min-width: calc(var(--ioFieldHeight) + calc(var(--ioSpacing2) + var(--ioBorderWidth2)));
-      min-height: calc(var(--ioFieldHeight) + calc(var(--ioSpacing2) + var(--ioBorderWidth2)));
+      min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
+      min-height: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
     }
 
     :host[inlayer] {
       min-width: 8em;
-      box-shadow: var(--ioShadow);
+      box-shadow: var(--iotShadow);
       overflow-y: auto !important;
       position: absolute;
     }
@@ -66,14 +66,14 @@ export class IoMenuOptions extends IoElement {
 
     /* Item spacing */
     :host:not([horizontal]) > .item {
-      margin-bottom: var(--ioBorderWidth);
+      margin-bottom: var(--iotBorderWidth);
     }
     :host:not([horizontal]) > .item:first-of-type {
-      margin-top: var(--ioSpacing);
+      margin-top: var(--iotSpacing);
     }
     :host[horizontal] > .item {
-      margin-left: var(--ioBorderWidth);
-      padding: var(--ioSpacing) calc(0.75 * var(--ioLineHeight));
+      margin-left: var(--iotBorderWidth);
+      padding: var(--iotSpacing) calc(0.75 * var(--iotLineHeight));
     }
 
     /* Item divider */
@@ -85,16 +85,16 @@ export class IoMenuOptions extends IoElement {
     }
     :host:not([horizontal]) > .item:not(:last-of-type)::before {
       right: 0;
-      bottom: calc(var(--ioBorderWidth) * -2);
-      border-bottom: var(--ioBorder);
-      border-bottom-color: var(--ioColor);
+      bottom: calc(var(--iotBorderWidth) * -2);
+      border-bottom: var(--iotBorder);
+      border-bottom-color: var(--iotColor);
       opacity: 0.05;
     }
     :host[horizontal] > .item:not(:last-of-type)::before {
       top: 0;
-      right: calc(var(--ioBorderWidth) * -2);
-      border-right: var(--ioBorder);
-      border-right-color: var(--ioColor);
+      right: calc(var(--iotBorderWidth) * -2);
+      border-right: var(--iotBorder);
+      border-right-color: var(--iotColor);
       opacity: 0.25;
     }
 
@@ -109,7 +109,7 @@ export class IoMenuOptions extends IoElement {
       flex: 0 0 auto;
     }
     :host[horizontal] > .search {
-      margin-left: var(--ioBorderWidth);
+      margin-left: var(--iotBorderWidth);
       flex: 0 0 8em;
     }
 
@@ -119,8 +119,8 @@ export class IoMenuOptions extends IoElement {
     }
     :host[horizontal] > .hamburger {
       position: absolute;
-      right: var(--ioSpacing2);
-      padding: var(--ioSpacing);
+      right: var(--iotSpacing2);
+      padding: var(--iotSpacing);
     }
     :host > .hamburger > .hasmore {
       display: none;
@@ -207,7 +207,7 @@ export class IoMenuOptions extends IoElement {
     if (this.horizontal) {
       const hamburger = this.querySelector('.hamburger');
       const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
-      const end = this.getBoundingClientRect().right - (IoThemeSingleton.ioBorderWidth + IoThemeSingleton.ioSpacing);
+      const end = this.getBoundingClientRect().right - (IoThemeSingleton.iotBorderWidth + IoThemeSingleton.iotSpacing);
       let last = Infinity;
       let hasOwerflown = false;
 
