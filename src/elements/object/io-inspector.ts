@@ -16,21 +16,27 @@ export class IoInspector extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-column;
-      flex: 0 1 calc(var(--io-line-height) * 17.5);
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      flex: 0 1 calc(var(--ioLineHeight) * 17.5);
     }
     :host > * {
       flex-shrink: 0;
     }
     :host > .inspector-header {
-      margin-bottom: var(--io-spacing);
+      margin-bottom: var(--ioSpacing);
       flex-grow: 0;
     }
     :host > .inspector-header > io-breadcrumbs {
       flex: 1 1;
     }
     :host > .inspector-header > io-boolean {
-      width: calc(var(--io-spacing) + var(--io-line-height));
+      width: calc(var(--ioSpacing) + var(--ioLineHeight));
       align-self: stretch;
       height: auto;
     }
@@ -38,8 +44,8 @@ export class IoInspector extends IoElement {
       opacity: 0.25;
     }
     :host > .inspector-header > io-string {
-      margin: 0 var(--io-spacing);
-      padding: calc(2 * var(--io-spacing));
+      margin: 0 var(--ioSpacing);
+      padding: calc(2 * var(--ioSpacing));
       align-self: stretch;
       height: auto;
     }
@@ -60,11 +66,11 @@ export class IoInspector extends IoElement {
       flex-basis: auto !important;
     }
     :host > io-object > io-properties {
-      border-radius: var(--io-border-radius);
-      background-color: var(--io-background-color) !important;
-      border: var(--io-border);
-      border-color: var(--io-border-color-inset);
-      padding: var(--io-spacing);
+      border-radius: var(--ioBorderRadius);
+      background-color: var(--ioBackgroundColor) !important;
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorInset);
+      padding: var(--ioSpacing);
       overflow: hidden;
     }
     :host > io-object > io-properties:not([horizontal])[labeled] {
@@ -74,7 +80,7 @@ export class IoInspector extends IoElement {
       text-align: right;
     }
     :host io-properties > io-field.select {
-      color: var(--io-color-link);
+      color: var(--ioColorLink);
     }
     :host io-properties > io-field.select:hover {
       text-decoration: underline;
@@ -174,7 +180,6 @@ export class IoInspector extends IoElement {
             label: group,
             expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
             elements: [this._widgets.groups[group]],
-            class: 'io-panel',
           }]
         );
       }

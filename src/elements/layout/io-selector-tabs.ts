@@ -14,8 +14,8 @@ export class IoSelectorTabs extends IoSelector {
         align-self: stretch;
         border-radius: 0;
         padding: 0;
-        border-width: 0 0 var(--io-border-width) 0;
-        min-height: calc(var(--io-field-height) - var(--io-border-width));
+        border-width: 0 0 var(--ioBorderWidth) 0;
+        min-height: calc(var(--ioFieldHeight) - var(--ioBorderWidth));
       }
       :host > io-menu-options > io-menu-item {
         border-radius: 0;
@@ -38,7 +38,7 @@ export class IoSelectorTabs extends IoSelector {
         depth: this.depth,
         slotted: this.slotted,
       }],
-      ['div', {id: 'content', class: 'io-content'}]
+      ['div', {id: 'content'}]
     ];
   }
 }

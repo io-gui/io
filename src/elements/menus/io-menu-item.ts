@@ -15,7 +15,7 @@ export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
     :host {
-      background-color: var(--io-background-color-dark);
+      background-color: var(--ioBackgroundColorDark);
       user-select: none;
     }
     :host > * {
@@ -25,17 +25,17 @@ export class IoMenuItem extends IoField {
       display: none;
     }
     :host > io-icon:not(.hasmore) {
-      width: var(--io-line-height);
-      height: var(--io-line-height);
+      width: var(--ioLineHeight);
+      height: var(--ioLineHeight);
     }
     :host > .label {
       flex: 1 1 auto;
       text-overflow: ellipsis;
-      padding: 0 var(--io-spacing2);
+      padding: 0 var(--ioSpacing2);
     }
     :host > .hint {
       opacity: 0.25;
-      margin: 0 var(--io-spacing4);
+      margin: 0 var(--ioSpacing4);
     }
     :host > io-icon.hasmore {
       opacity: 0.5;
@@ -43,11 +43,11 @@ export class IoMenuItem extends IoField {
     }
     :host[selected][direction="up"],
     :host[selected][direction="down"] {
-      border-bottom-color: var(--io-border-color-selected);
+      border-bottom-color: var(--ioBorderColorSelected);
     }
     :host[selected][direction="right"],
     :host[selected][direction="left"] {
-      border-left-color: var(--io-border-color-selected);
+      border-left-color: var(--ioBorderColorSelected);
     }
     `;
   }

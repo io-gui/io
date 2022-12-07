@@ -12,7 +12,7 @@ export class IoSwitch extends IoBoolean {
     return /* css */`
       :host {
         position: relative;
-        width: calc(1.5 * var(--io-field-height));
+        width: calc(1.5 * var(--ioFieldHeight));
         
       }
       :host:before {
@@ -20,15 +20,15 @@ export class IoSwitch extends IoBoolean {
         box-sizing: border-box;
         position: absolute;
         visibility: visible;
-        top: var(--io-spacing);
+        top: var(--ioSpacing);
         left: 0;
         width: 100%;
-        height: var(--io-line-height);
-        border-radius: var(--io-line-height);
-        border: var(--io-border);
-        border-color: var(--io-border-color-inset);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
+        height: var(--ioLineHeight);
+        border-radius: var(--ioLineHeight);
+        border: var(--ioBorder);
+        border-color: var(--ioBorderColorInset);
+        background-color: var(--ioBackgroundColorField);
+        box-shadow: var(--ioShadowInset);
         transition: background-color 0.4s;
       }
       :host:after {
@@ -36,28 +36,28 @@ export class IoSwitch extends IoBoolean {
         box-sizing: border-box;
         position: absolute;
         visibility: visible;
-        top: calc(var(--io-border-width) + var(--io-spacing));
-        left: var(--io-border-width);
-        height: calc(var(--io-line-height) - calc(2 * var(--io-border-width)));
-        width: calc(var(--io-line-height) - calc(2 * var(--io-border-width)));
-        background-color: var(--io-background-color-dark);
-        box-shadow: var(--io-shadow-outset);
-        border: var(--io-border);
-        border-color: var(--io-border-color-outset);
-        border-radius: var(--io-line-height);
+        top: calc(var(--ioBorderWidth) + var(--ioSpacing));
+        left: var(--ioBorderWidth);
+        height: calc(var(--ioLineHeight) - calc(2 * var(--ioBorderWidth)));
+        width: calc(var(--ioLineHeight) - calc(2 * var(--ioBorderWidth)));
+        background-color: var(--ioBackgroundColorDark);
+        box-shadow: var(--ioShadowOutset);
+        border: var(--ioBorder);
+        border-color: var(--ioBorderColorOutset);
+        border-radius: var(--ioLineHeight);
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
       }
       :host[value]:after {
-        background-color: var(--io-background-color-selected);
-        left: calc(100% - var(--io-line-height));
+        background-color: var(--ioBackgroundColorSelected);
+        left: calc(100% - var(--ioLineHeight));
       }
       :host:focus:before,
       :host:focus:after {
-        /* border-color: var(--io-border-color-focus); */
+        /* border-color: var(--ioBorderColorFocus); */
       }
       :host:focus {
-        /* outline: 1px solid var(--io-border-color-focus); */
+        /* outline: 1px solid var(--ioBorderColorFocus); */
       }
     `;
   }

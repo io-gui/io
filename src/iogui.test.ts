@@ -46,8 +46,8 @@ export class IoGuiTestPage extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        background: var(--io-background-color);
-        color: var(--io-color);
+        background: var(--ioBackgroundColor);
+        color: var(--ioColor);
       }
       :host #mocha {
         margin: 0;
@@ -59,12 +59,12 @@ export class IoGuiTestPage extends IoElement {
       }
       :host #mocha-stats {
         position: absolute;
-        left: var(--io-spacing2);
+        left: var(--ioSpacing2);
         font-size: 12px;
         margin: 0;
       }
       :host #mocha-stats em {
-        color: var(--io-color);
+        color: var(--ioColor);
       }
       :host #mocha-stats li {
         padding: 0;

@@ -9,14 +9,14 @@ export class IoColorPicker extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        height: var(--io-field-height);
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
+        height: var(--ioFieldHeight);
+        border: var(--ioBorder);
+        border-radius: var(--ioBorderRadius);
         overflow: hidden;
       }
       :host:focus {
-        outline: 1px solid var(--io-border-color-focus);
-        border-color: var(--io-border-color-focus);
+        outline: 1px solid var(--ioBorderColorFocus);
+        border-color: var(--ioBorderColorFocus);
       }
     `;
   }

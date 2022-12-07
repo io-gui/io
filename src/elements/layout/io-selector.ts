@@ -15,8 +15,8 @@ export class IoSelector extends IoElement {
     return /* css */`
     :host {
       @apply --io-content;
-      color: var(--io-color);
-      background-color: var(--io-background-color);
+      color: var(--ioColor);
+      background-color: var(--ioBackgroundColor);
     }
 
     @keyframes io-selector-spinner {
@@ -36,7 +36,7 @@ export class IoSelector extends IoElement {
       margin-top: -20px;
       margin-left: -20px;
       border-radius: 50%;
-      border: var(--io-border);
+      border: var(--ioBorder);
       border-top-color: #000;
       animation: io-selector-spinner .6s linear infinite;
     }
@@ -60,7 +60,7 @@ export class IoSelector extends IoElement {
     this.changed();
   }
   getTemplate(): any {
-    return [['div', {id: 'content', class: 'io-content'}]];
+    return [['div', {id: 'content'}]];
   }
   importModule(path: string) {
     const importPath = new URL(path, String(window.location)).href;

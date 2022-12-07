@@ -39,16 +39,16 @@ export class IoSelectorSidebar extends IoSelector {
     }
     :host > io-menu-options {
       flex: 0 0 auto;
-      background-color: var(--io-background-color-dark);
-      border: var(--io-border);
-      border-width: 0 var(--io-border-width) 0 0;
+      background-color: var(--ioBackgroundColorDark);
+      border: var(--ioBorder);
+      border-width: 0 var(--ioBorderWidth) 0 0;
     }
     :host[right] > io-menu-options {
-      border-width: 0 0 0 var(--io-border-width);
+      border-width: 0 0 0 var(--ioBorderWidth);
     }
     :host[collapsed] > io-menu-options {
       flex: 0 0 auto;
-      border-width: 0 0 var(--io-border-width) 0;
+      border-width: 0 0 var(--ioBorderWidth) 0;
     }
     `;
   }
@@ -73,7 +73,7 @@ export class IoSelectorSidebar extends IoSelector {
         // depth: this.depth,
         // slotted: this.slotted,
       }],
-      ['div', {id: 'content', class: 'io-content'}]
+      ['div', {id: 'content'}]
     ];
   }
 }

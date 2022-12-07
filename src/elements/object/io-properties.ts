@@ -47,20 +47,27 @@ export class IoProperties extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      flex: 0 1 calc(var(--io-line-height) * 17.5);
+      flex: 0 1 calc(var(--ioLineHeight) * 17.5);
     }
     :host > .io-row:first-of-type {
-      margin-top: var(--io-spacing);
+      margin-top: var(--ioSpacing);
     }
     :host > .io-row {
+      /* --io-row */
+      display: flex;
+      flex: 1 1;
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+      /*  */
       white-space: nowrap;
-      margin-bottom: var(--io-spacing);
+      margin-bottom: var(--ioSpacing);
     }
     :host > .io-row > io-label {
-      margin-top: var(--io-spacing);
+      margin-top: var(--ioSpacing);
       text-align: right;
-      margin-right: var(--io-spacing);
-      flex: 0 0 calc(var(--io-line-height) * 4);
+      margin-right: var(--ioSpacing);
+      flex: 0 0 calc(var(--ioLineHeight) * 4);
     }
     :host > .io-row > io-label:after {
       display: inline-block;

@@ -17,12 +17,12 @@ export class IoBreadcrumbs extends IoElement {
       flex-direction: row;
       align-self: stretch;
       justify-self: stretch;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-border-color-inset);
-      padding: var(--io-spacing);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-field);
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorInset);
+      padding: var(--ioSpacing);
+      color: var(--ioColorField);
+      background-color: var(--ioBackgroundColorField);
       overflow-x: hidden;
     }
     :host > io-field:hover {
@@ -31,17 +31,17 @@ export class IoBreadcrumbs extends IoElement {
     :host > io-field:first-of-type {
       overflow: visible;
       text-overflow: clip;
-      margin-left: var(--io-spacing);
+      margin-left: var(--ioSpacing);
     }
     :host > io-field:last-of-type {
       overflow: visible;
       text-overflow: clip;
-      margin-right: var(--io-spacing);
+      margin-right: var(--ioSpacing);
     }
     :host > io-field:not(:first-of-type):before {
       content: '>';
-      margin: 0 var(--io-spacing);
-      padding: 0 var(--io-spacing) 0 0;
+      margin: 0 var(--ioSpacing);
+      padding: 0 var(--ioSpacing) 0 0;
       opacity: 0.25;
     }
     `;

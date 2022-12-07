@@ -5,40 +5,60 @@ export class IoElementDemo extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-panel;
-      @apply --io-column;
+      /* Panel */
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorOutset);
+      color: var(--ioColorField);
+      background-color: var(--ioBackgroundColorDark);
+      padding: var(--ioSpacing);
+      /*  */
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
       position: relative;
     }
     :host > io-boolean {
       z-index: 2;
       position: absolute !important;
-      top: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
-      right: calc(calc(2 * var(--io-spacing)) + var(--io-border-width));
+      top: calc(calc(2 * var(--ioSpacing)) + var(--ioBorderWidth));
+      right: calc(calc(2 * var(--ioSpacing)) + var(--ioBorderWidth));
     }
     :host > io-boolean:not([value]):not(:hover) {
       opacity: 0.5;
     }
     :host > io-properties {
       align-self: stretch;
-      padding: var(--io-spacing) 0;
-      margin: var(--io-border-width);
-      margin-right: var(--io-spacing);
-      margin-bottom: calc(2 * var(--io-spacing));
+      padding: var(--ioSpacing) 0;
+      margin: var(--ioBorderWidth);
+      margin-right: var(--ioSpacing);
+      margin-bottom: calc(2 * var(--ioSpacing));
     }
     :host > io-properties > :nth-child(3) {
-      margin-right: calc(var(--io-field-height) + var(--io-spacing));
+      margin-right: calc(var(--ioFieldHeight) + var(--ioSpacing));
     }
     :host > .io-content {
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-border-color-inset);
-      padding: var(--io-spacing);
-      color: var(--io-color);
-      background-color: var(--io-background-color);
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorInset);
+      padding: var(--ioSpacing);
+      color: var(--ioColor);
+      background-color: var(--ioBackgroundColor);
       background-image: none;
     }
     :host:not([expanded]) > .io-content {
-      margin-right: calc(var(--io-field-height) + calc(3 * var(--io-spacing)));
+      margin-right: calc(var(--ioFieldHeight) + calc(3 * var(--ioSpacing)));
     }
     `;
   }
@@ -97,7 +117,7 @@ export class IoElementDemo extends IoElement {
         }, this.config)}
       ]);
     }
-    elements.push(['div', {class: 'io-content'}, [
+    elements.push(['div', [
       [this.element, Object.assign({'id': 'demo-element'}, properties)],
     ]]);
     this.template(elements);

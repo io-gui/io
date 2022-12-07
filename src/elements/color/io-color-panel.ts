@@ -22,12 +22,26 @@ export class IoColorPanel extends IoColorBase {
     return /* css */`
     :host {
       display: flex;
-      @apply --io-panel;
+      /* Panel */
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorOutset);
+      color: var(--ioColorField);
+      background-color: var(--ioBackgroundColorDark);
+      padding: var(--ioSpacing);
+      /*  */
       cursor: move;
       align-items: stretch;
       flex-grow: 0;
-      min-width: var(--io-line-height);
-      min-height: calc(var(--io-line-height) * 5.5);
+      min-width: var(--ioLineHeight);
+      min-height: calc(var(--ioLineHeight) * 5.5);
       flex-direction: row;
     }
     :host:not([expanded]) {
@@ -37,7 +51,7 @@ export class IoColorPanel extends IoColorBase {
       flex-direction: column;
     }
     :host > * {
-      border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+      border-radius: calc(var(--ioBorderRadius) - var(--ioBorderWidth));
     }
     :host > :first-child {
       flex: 1 0 auto;
@@ -46,10 +60,10 @@ export class IoColorPanel extends IoColorBase {
       flex: 0 0 auto;
     }
     :host > *:not(:last-child) {
-      margin: 0 0 var(--io-spacing) 0;
+      margin: 0 0 var(--ioSpacing) 0;
     }
     :host:not([vertical]) > * {
-      margin: 0 var(--io-spacing) 0 0;
+      margin: 0 var(--ioSpacing) 0 0;
     }
     `;
   }

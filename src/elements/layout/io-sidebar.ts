@@ -33,7 +33,7 @@ export class IoSidebar extends IoElement {
       flex-wrap: nowrap;
       overflow-x: hidden;
       overflow-y: auto;
-      padding: var(--io-spacing);
+      padding: var(--ioSpacing);
       flex-direction: column;
       -webkit-overflow-scrolling: touch;
     }
@@ -131,7 +131,6 @@ export class IoSidebar extends IoElement {
         icon: '☰',
         selectable: true,
         title: 'select tab',
-        class: 'io-field',
       }]]);
     } else {
       this.template([...this._addOptions(this.options)]);

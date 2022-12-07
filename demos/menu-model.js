@@ -11,7 +11,7 @@ class IoOptionsDemoView extends IoElement {
         border: 1px solid gray;
       }
       :host > div {
-        background-color: var(--io-background-color-dark);
+        background-color: var(--ioBackgroundColorDark);
         display: flex;
       }
       :host io-item-demo-view {
@@ -23,10 +23,10 @@ class IoOptionsDemoView extends IoElement {
         background-color: transparent;
       }
       :host io-field.root {
-        color: var(--io-color-link);
+        color: var(--ioColorLink);
       }
       :host io-field.leaf {
-        color: var(--io-color-field-selected);
+        color: var(--ioColorFieldSelected);
       }
     `;
   }

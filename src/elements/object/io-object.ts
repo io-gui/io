@@ -11,9 +11,29 @@ export class IoObject extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-panel;
-      @apply --io-column;
-      flex: 0 1 calc(var(--io-line-height) * 17.5);
+      /* Panel */
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorOutset);
+      color: var(--ioColorField);
+      background-color: var(--ioBackgroundColorDark);
+      padding: var(--ioSpacing);
+      /*  */
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      flex: 0 1 calc(var(--ioLineHeight) * 17.5);
     }
     :host io-properties {
       flex-basis: auto;
@@ -30,7 +50,7 @@ export class IoObject extends IoElement {
       content: "▾";
     }
     :host > :nth-child(n+2) {
-      margin-top: var(--io-spacing);
+      margin-top: var(--ioSpacing);
     }
     `;
   }

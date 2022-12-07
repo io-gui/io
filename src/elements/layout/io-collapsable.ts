@@ -29,7 +29,7 @@ export class IoCollapsable extends IoElement {
       align-self: stretch;
       width: auto;
       border-radius: 0;
-      background-color: var(--io-background-color-dark);
+      background-color: var(--ioBackgroundColorDark);
     }
     :host > io-boolean:before {
       display: inline-block;
@@ -40,7 +40,7 @@ export class IoCollapsable extends IoElement {
       content: "▾";
     }
     :host > :nth-child(n+2) {
-      margin-top: var(--io-spacing);
+      margin-top: var(--ioSpacing);
     }
     `;
   }

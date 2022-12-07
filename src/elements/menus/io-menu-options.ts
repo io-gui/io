@@ -17,18 +17,32 @@ export class IoMenuOptions extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-panel;
+      /* Panel */
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorOutset);
+      color: var(--ioColorField);
+      background-color: var(--ioBackgroundColorDark);
+      padding: var(--ioSpacing);
+      /*  */
       align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
       position: relative;
-      min-width: calc(var(--io-field-height) + calc(var(--io-spacing2) + var(--io-border-width2)));
-      min-height: calc(var(--io-field-height) + calc(var(--io-spacing2) + var(--io-border-width2)));
+      min-width: calc(var(--ioFieldHeight) + calc(var(--ioSpacing2) + var(--ioBorderWidth2)));
+      min-height: calc(var(--ioFieldHeight) + calc(var(--ioSpacing2) + var(--ioBorderWidth2)));
     }
 
     :host[inlayer] {
       min-width: 8em;
-      box-shadow: var(--io-shadow);
+      box-shadow: var(--ioShadow);
       overflow-y: auto !important;
       position: absolute;
     }
@@ -52,14 +66,14 @@ export class IoMenuOptions extends IoElement {
 
     /* Item spacing */
     :host:not([horizontal]) > .item {
-      margin-bottom: var(--io-border-width);
+      margin-bottom: var(--ioBorderWidth);
     }
     :host:not([horizontal]) > .item:first-of-type {
-      margin-top: var(--io-spacing);
+      margin-top: var(--ioSpacing);
     }
     :host[horizontal] > .item {
-      margin-left: var(--io-border-width);
-      padding: var(--io-spacing) calc(0.75 * var(--io-line-height));
+      margin-left: var(--ioBorderWidth);
+      padding: var(--ioSpacing) calc(0.75 * var(--ioLineHeight));
     }
 
     /* Item divider */
@@ -71,16 +85,16 @@ export class IoMenuOptions extends IoElement {
     }
     :host:not([horizontal]) > .item:not(:last-of-type)::before {
       right: 0;
-      bottom: calc(var(--io-border-width) * -2);
-      border-bottom: var(--io-border);
-      border-bottom-color: var(--io-color);
+      bottom: calc(var(--ioBorderWidth) * -2);
+      border-bottom: var(--ioBorder);
+      border-bottom-color: var(--ioColor);
       opacity: 0.05;
     }
     :host[horizontal] > .item:not(:last-of-type)::before {
       top: 0;
-      right: calc(var(--io-border-width) * -2);
-      border-right: var(--io-border);
-      border-right-color: var(--io-color);
+      right: calc(var(--ioBorderWidth) * -2);
+      border-right: var(--ioBorder);
+      border-right-color: var(--ioColor);
       opacity: 0.25;
     }
 
@@ -95,7 +109,7 @@ export class IoMenuOptions extends IoElement {
       flex: 0 0 auto;
     }
     :host[horizontal] > .search {
-      margin-left: var(--io-border-width);
+      margin-left: var(--ioBorderWidth);
       flex: 0 0 8em;
     }
 
@@ -105,8 +119,8 @@ export class IoMenuOptions extends IoElement {
     }
     :host[horizontal] > .hamburger {
       position: absolute;
-      right: var(--io-spacing2);
-      padding: var(--io-spacing);
+      right: var(--ioSpacing2);
+      padding: var(--ioSpacing);
     }
     :host > .hamburger > .hasmore {
       display: none;

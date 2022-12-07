@@ -7,7 +7,7 @@ CSS Variables are grouped in different themes and can be collectively switched b
 IoThemeSingleton.theme = 'dark';
 ```
 
-CSS color variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `ioColor` and `ioBackgroundColor`.
+CSS color variables such as `'--ioColor'` and `'--ioBackgroundColor'` are mapped to numeric properties `ioColor` and `ioBackgroundColor`.
 
 ## Hierarchy
 

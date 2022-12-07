@@ -245,8 +245,8 @@ export class IoNumberLadderStep extends IoField {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--io-background-color-light);
-        color: var(--io-color);
+        background-color: var(--ioBackgroundColorLight);
+        color: var(--ioColor);
         align-self: stretch;
         touch-action: none;
         width: 6em;
@@ -373,22 +373,22 @@ export class IoNumberLadder extends IoElement {
         transition: opacity 0.2s, transform 0.2s;
       }
       :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--io-field-height)));
+        transform: translateY(calc(3 * var(--ioFieldHeight)));
       }
       :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--io-field-height)));
+        transform: translateY(calc(2 * var(--ioFieldHeight)));
       }
       :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--io-field-height)));
+        transform: translateY(calc(1 * var(--ioFieldHeight)));
       }
       :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--io-field-height)));
+        transform: translateY(calc(-1 * var(--ioFieldHeight)));
       }
       :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--io-field-height)));
+        transform: translateY(calc(-2 * var(--ioFieldHeight)));
       }
       :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--io-field-height)));
+        transform: translateY(calc(-3 * var(--ioFieldHeight)));
       }
       :host > .io-up3,
       :host > .io-down3 {
@@ -404,16 +404,16 @@ export class IoNumberLadder extends IoElement {
       }
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
-        background-color: var(--io-background-color-light);
-        border-color: var(--io-border-color-focus);
+        background-color: var(--ioBackgroundColorLight);
+        border-color: var(--ioBorderColorFocus);
         transition: opacity 0.2s;
         opacity: 1;
       }
       :host > .io-number-ladder-empty {
-        height: var(--io-field-height);
+        height: var(--ioFieldHeight);
       }
       :host > .io-number-ladder-center {
-        height: calc(1.5 * var(--io-field-height));
+        height: calc(1.5 * var(--ioFieldHeight));
       }
     `;
   }

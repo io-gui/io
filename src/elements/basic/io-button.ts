@@ -14,11 +14,11 @@ export class IoButton extends IoField {
     return /* css */`
       :host {
         text-align: center;
-        padding-left: calc(2 * var(--io-spacing));
-        padding-right: calc(2 * var(--io-spacing));
+        padding-left: calc(2 * var(--ioSpacing));
+        padding-right: calc(2 * var(--ioSpacing));
       }
       :host[pressed] {
-        border-color: var(--io-border-color-inset);
+        border-color: var(--ioBorderColorInset);
       }
     `;
   }

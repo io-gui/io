@@ -5,11 +5,13 @@ export class IoDemoThemeEditor extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-grid2;
-      background: var(--io-background-color);
-      color: var(--io-color);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: var(--ioSpacing);
+      background: var(--ioBackgroundColor);
+      color: var(--ioColor);
       max-width: 32em;
-      padding: var(--io-spacing);
+      padding: var(--ioSpacing);
       grid-template-columns: auto 1fr !important;
     }
     `;

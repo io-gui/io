@@ -17,13 +17,13 @@ export class IoVector extends IoElement {
         display: flex;
         flex-direction: row;
         flex: 0 1;
-        flex-basis: calc(var(--io-field-height) * 10);
+        flex-basis: calc(var(--ioFieldHeight) * 10);
       }
       :host > io-number {
         flex-grow: 1;
       }
       :host > *:not(:last-child) {
-        margin-right: var(--io-spacing);
+        margin-right: var(--ioSpacing);
       }
       :host > io-boolean {
         flex-shrink: 0;

@@ -52,37 +52,37 @@ export class IoDemoElementsShowcase extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        background: var(--io-background-color);
-        color: var(--io-color);
+        background: var(--ioBackgroundColor);
+        color: var(--ioColor);
       }
       :host > div > io-label {
         display: block;
-        background: var(--io-background-color-light);
-        padding: var(--io-spacing);
+        background: var(--ioBackgroundColorLight);
+        padding: var(--ioSpacing);
         height: auto;
       }
       :host > div > div {
         display: flex;
         /* width: 425px; */
-        margin: var(--io-spacing) 0;
-        padding: var(--io-spacing) 0;
-        border: var(--io-border);
+        margin: var(--ioSpacing) 0;
+        padding: var(--ioSpacing) 0;
+        border: var(--ioBorder);
         border-color: rgba(128, 128, 128, .125);
       }
       :host > div > div.tall {
-        height: var(--io-field-height4);
+        height: var(--ioFieldHeight4);
       }
       :host > div > div > :nth-child(1) {
         flex: 0 0 160px;
         text-align: right;
-        margin-right: var(--io-spacing);
+        margin-right: var(--ioSpacing);
       }
       :host > div > div > * {
-        margin-left: var(--io-spacing);
+        margin-left: var(--ioSpacing);
       }
       :host > div > div > io-label,
       :host > div > div > io-icon {
-        margin-top: var(--io-spacing);
+        margin-top: var(--ioSpacing);
       }
       :host > div > div > io-menu-options:not([horizontal]) {
         flex: 0 1 auto;

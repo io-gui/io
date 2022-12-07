@@ -24,16 +24,16 @@ export class IoField extends IoElement {
         flex-wrap: nowrap;
         white-space: nowrap;
 
-        height: var(--io-field-height);
-        line-height: var(--io-line-height);
+        height: var(--ioFieldHeight);
+        line-height: var(--ioLineHeight);
 
-        font-size: var(--io-font-size);
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
+        font-size: var(--ioFontSize);
+        border: var(--ioBorder);
+        border-radius: var(--ioBorderRadius);
         border-color: transparent;
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        padding: var(--io-spacing) calc(var(--io-spacing) + 0.5em);
+        color: var(--ioColorField);
+        background-color: var(--ioBackgroundColorField);
+        padding: var(--ioSpacing) calc(var(--ioSpacing) + 0.5em);
         transition: background-color 0.25s;
       }
       :host {
@@ -43,32 +43,32 @@ export class IoField extends IoElement {
         background-color: transparent;
       }
       :host[appearance=inset] {
-        border-color: var(--io-border-color-inset);
+        border-color: var(--ioBorderColorInset);
       }
       :host[appearance=outset] {
-        border-color: var(--io-border-color-outset);
-        background-image: var(--io-gradient-outset);
+        border-color: var(--ioBorderColorOutset);
+        background-image: var(--ioGradientOutset);
       }
       :host[invalid] {
-        color: var(--io-color-error);
-        border: var(--io-border-error);
+        color: var(--ioColorError);
+        border: var(--ioBorderError);
       }
       :host[selected] {
-        color: var(--io-color-field-selected);
-        background-color: var(--io-background-color-selected);
+        color: var(--ioColorFieldSelected);
+        background-color: var(--ioBackgroundColorSelected);
       }
       :host:focus {
         z-index: 200;
         position: relative;
         text-overflow: inherit;
-        border-color: var(--io-background-color);
-        outline: 1px solid var(--io-border-color-focus);
+        border-color: var(--ioBackgroundColor);
+        outline: 1px solid var(--ioBorderColorFocus);
       }
       :host[placeholder]:empty:before {
         content: attr(placeholder);
         visibility: visible;
-        color: var(--io-color-field);
-        padding: 0 calc(var(--io-spacing) + var(--io-border-width));
+        color: var(--ioColorField);
+        padding: 0 calc(var(--ioSpacing) + var(--ioBorderWidth));
         opacity: 0.5;
       }
     `;

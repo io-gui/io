@@ -36,22 +36,22 @@ export class IoOptionMenu extends IoElement {
     :host {
       display: inline-block;
       text-align: center;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-border-color-outset);
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-outset);
-      /* padding-left: calc(2 * var(--io-spacing)); */
-      /* padding-right: calc(2 * var(--io-spacing)); */
+      border-radius: var(--ioBorderRadius);
+      border: var(--ioBorder);
+      border-color: var(--ioBorderColorOutset);
+      background-color: var(--ioBackgroundColorDark);
+      background-image: var(--ioGradientOutset);
+      /* padding-left: calc(2 * var(--ioSpacing)); */
+      /* padding-right: calc(2 * var(--ioSpacing)); */
       text-align: left;
     }
     :host > io-menu-item {
-      margin: calc(-1 * var(--io-border-width));
+      margin: calc(-1 * var(--ioBorderWidth));
       background-color: transparent !important;
       border-color: transparent !important;
     }
     :host > io-menu-item[selected] {
-      color: var(--io-color);
+      color: var(--ioColor);
     }
     `;
   }

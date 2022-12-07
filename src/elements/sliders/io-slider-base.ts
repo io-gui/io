@@ -10,16 +10,16 @@ export class IoSliderBase extends IoGl {
     return /* css */`
       :host {
         cursor: ew-resize;
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
-        border-color: var(--io-border-color-inset);
-        flex-basis: calc(var(--io-field-height) * 10);
-        min-width: var(--io-field-height);
-        min-height: var(--io-field-height);
+        border: var(--ioBorder);
+        border-radius: var(--ioBorderRadius);
+        border-color: var(--ioBorderColorInset);
+        flex-basis: calc(var(--ioFieldHeight) * 10);
+        min-width: var(--ioFieldHeight);
+        min-height: var(--ioFieldHeight);
       }
       :host[vertical] {
         cursor: ns-resize;
-        flex-basis: var(--io-field-height);
+        flex-basis: var(--ioFieldHeight);
         flex-grow: 0;
       }
     `;

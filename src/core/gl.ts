@@ -46,19 +46,19 @@ export class IoGl extends IoElement {
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+        border-radius: calc(var(--ioBorderRadius) - var(--ioBorderWidth));
         pointer-events: none;
         image-rendering: pixelated;
       }
       :host[aria-invalid] {
-        border: var(--io-border-error);
+        border: var(--ioBorderError);
       }
       :host[aria-invalid] > canvas {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--io-border-color-focus);
-        outline: 1px solid var(--io-border-color-focus);
+        border-color: var(--ioBorderColorFocus);
+        outline: 1px solid var(--ioBorderColorFocus);
       }
     `;
   }

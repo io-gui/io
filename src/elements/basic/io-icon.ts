@@ -12,10 +12,10 @@ export class IoIcon extends IoElement {
     return /* css */`
       --io-icon: {
         display: inline-block;
-        height: var(--io-line-height);
-        min-width: var(--io-line-height);
-        line-height: var(--io-line-height);
-        font-size: var(--io-font-size);
+        height: var(--ioLineHeight);
+        min-width: var(--ioLineHeight);
+        line-height: var(--ioLineHeight);
+        font-size: var(--ioFontSize);
         text-align: center;
         fill: currentcolor;
       }
@@ -27,7 +27,7 @@ export class IoIcon extends IoElement {
       }
       :host[stroke] {
         stroke: currentcolor;
-        stroke-width: var(--io-stroke-width);
+        stroke-width: var(--ioStrokeWidth);
       }
       :host > svg {
         height: 100%;
