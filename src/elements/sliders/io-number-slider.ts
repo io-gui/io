@@ -16,9 +16,8 @@ export class IoNumberSlider extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      align-self: stretch;
-      justify-self: stretch;
-      flex-basis: calc(var(--iotFieldHeight) * 10);
+      min-width: var(--iotFieldHeight4);
+      width: var(--iotFieldHeight8);
     }
     :host > io-number {
       flex: 0 0 3.25em;
@@ -64,7 +63,7 @@ export class IoNumberSlider extends IoElement {
   changed() {
     this.template([
       ['io-number', {
-        id: 'number',
+        $: 'number',
         value: this.value,
         step: this.step,
         conversion: this.conversion,
@@ -72,7 +71,7 @@ export class IoNumberSlider extends IoElement {
         'on-value-input': this._onNumberSet,
       }],
       ['io-slider', {
-        id: 'slider',
+        $: 'slider',
         value: this.value * this.conversion,
         step: this.step * this.conversion,
         min: this.min * this.conversion,

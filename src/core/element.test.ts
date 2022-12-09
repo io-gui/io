@@ -212,7 +212,7 @@ export default class {
             }
             constructor(...initProps: any[]) {
               super(...initProps);
-              this.template([['test-subelement', {id: 'subelement',
+              this.template([['test-subelement', {$: 'subelement',
                 prop0: this.bind('prop0'),
                 prop1: this.bind('prop1'),
               }]]);
@@ -318,7 +318,7 @@ export default class {
               };
             }
             changed() {
-              this.template([['test-subelement', {id: 'subelement',
+              this.template([['test-subelement', {$: 'subelement',
                 prop0: this.bind('prop0'),
                 prop1: this.bind('prop1'),
               }]]);
@@ -565,7 +565,7 @@ export default class {
         const element = new TestIoElement1();
         const node = new TestIoNode1();
         element.template([
-          ['test-io-element-1', {id: 'subelement', prop0: element.bind('prop0')}]
+          ['test-io-element-1', {$: 'subelement', prop0: element.bind('prop0')}]
         ]);
         it('Should update bound values correctly', () => {
           element.prop0 = Infinity;

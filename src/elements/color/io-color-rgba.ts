@@ -9,10 +9,9 @@ export class IoColorRgba extends IoColorBase {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
-        flex-direction: row;
-        flex: 0 1;
-        flex-basis: calc(var(--iotFieldHeight) * 10);
+        flex: 0 1 auto;
+        min-width: var(--iotFieldHeight4);
+        width: var(--iotFieldHeight8);
       }
       :host > io-number {
         flex: 1 0 0;
@@ -40,11 +39,11 @@ export class IoColorRgba extends IoColorBase {
 
   changed() {
     this.template([
-      ['io-number', {id: 'r', value: this.value.r, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}],
-      ['io-number', {id: 'g', value: this.value.g, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}],
-      ['io-number', {id: 'b', value: this.value.b, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}],
-      this.value.a !== undefined ? ['io-number', {id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}] : null,
-      ['io-color-picker', {id: 'swatch', value: this.value}],
+      ['io-number', {$: 'r', value: this.value.r, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}],
+      ['io-number', {$: 'g', value: this.value.g, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}],
+      ['io-number', {$: 'b', value: this.value.b, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}],
+      this.value.a !== undefined ? ['io-number', {$: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, 'on-value-input': this._onValueInput}] : null,
+      ['io-color-picker', {$: 'swatch', value: this.value}],
     ]);
   }
 }

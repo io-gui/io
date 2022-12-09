@@ -13,12 +13,16 @@ export class IoSliderBase extends IoGl {
         border: var(--iotBorder);
         border-radius: var(--iotBorderRadius);
         border-color: var(--iotBorderColorInset);
-        flex-basis: calc(var(--iotFieldHeight) * 10);
-        min-width: var(--iotFieldHeight);
         min-height: var(--iotFieldHeight);
+        min-width: var(--iotFieldHeight);
+      }
+      :host:not([vertical]) {
+        width: var(--iotFieldHeight8);
       }
       :host[vertical] {
         cursor: ns-resize;
+        height: var(--iotFieldHeight4);
+        min-height: var(--iotFieldHeight4);
         flex-basis: var(--iotFieldHeight);
         flex-grow: 0;
       }

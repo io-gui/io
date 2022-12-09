@@ -33,7 +33,7 @@ export class TodoNewItem extends IoElement {
   }
   changed() {
     this.template([
-      ['input', {id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', 'on-keyup': this.onInputKey, autofocus: true}],
+      ['input', {$: 'input', class: 'new-todo', placeholder: 'What needs to be done?', 'on-keyup': this.onInputKey, autofocus: true}],
     ]);
   }
 }

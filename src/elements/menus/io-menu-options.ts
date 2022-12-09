@@ -5,10 +5,10 @@ import { MenuItem } from './models/menu-item.js';
 import { IoLayerSingleton, NudgeDirection } from '../../core/layer.js';
 import { IoThemeSingleton } from '../../core/theme.js';
 import { IoMenuItem } from './io-menu-item.js';
+import { filterOptions } from './io-menu-tree.js';
 
 const rects = new WeakMap();
 
-const noMatchOptions = new MenuOptions([{select: 'none', label: 'No matches'}]);
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/
@@ -19,7 +19,7 @@ export class IoMenuOptions extends IoElement {
     :host {
       /* Panel */
       display: flex;
-      flex: 1 1 auto;
+      flex: 0 1 auto;
       flex-direction: column;
       flex-wrap: nowrap;
       align-self: stretch;
@@ -31,8 +31,6 @@ export class IoMenuOptions extends IoElement {
       color: var(--iotColorField);
       background-color: var(--iotBackgroundColorDark);
       padding: var(--iotSpacing);
-      /*  */
-      align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
       position: relative;
@@ -59,9 +57,6 @@ export class IoMenuOptions extends IoElement {
 
     :host[horizontal] {
       flex-direction: row;
-      /* align-self: stretch; */
-      /* justify-self: stretch; */
-      /* overflow-x: hidden; */
     }
 
     /* Item spacing */
@@ -143,8 +138,8 @@ export class IoMenuOptions extends IoElement {
   @Property('')
   declare search: string;
 
-  @Property({value: 'right', reflect: true})
-  declare position: NudgeDirection;
+  @Property({value: 'none', reflect: true})
+  declare direction: NudgeDirection;
 
   @Property(Infinity)
   declare depth: number;
@@ -280,7 +275,7 @@ export class IoMenuOptions extends IoElement {
     }
     if (this.$parent) {
       const pRect = this.$parent.getBoundingClientRect();
-      IoLayerSingleton.setElementPosition(this as unknown as HTMLElement, this.position, pRect);
+      IoLayerSingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
       this._onClipHeight();
     }
   }
@@ -304,38 +299,13 @@ export class IoMenuOptions extends IoElement {
       this.style.touchAction = null;
     }
   }
-  _filterOptions(options: any, search: string, _depth = 5, _chain: any[] = [], _i = 0): any {
-    function predicateFn(o: any) {
-      if (!!o.value || !!o.action) {
-        if (String(o.value).toLowerCase().indexOf(search) !== -1) return true;
-        if (o.label && o.label.toLowerCase().indexOf(search) !== -1) return true;
-        if (o.hint && o.hint.toLowerCase().indexOf(search) !== -1) return true;
-      }
-      return false;
-    }
-    const result: any[] = [];
-    if (_chain.indexOf(options) !== -1) return result; _chain.push(options);
-    if (_i > _depth) return result; _i++;
-    if (predicateFn(options) && result.indexOf(options) === -1) result.push(options);
-    for (const key in options) {
-      const item = options[key];
-      if (predicateFn(item) && result.indexOf(item) === -1) result.push(item);
-      if (item instanceof MenuItem && item.options) {
-        const results = this._filterOptions(item.options, search, _depth, _chain, _i);
-        for (let i = 0; i < results.length; i++) {
-          if (result.indexOf(results[i]) === -1) result.push(results[i]);
-        }
-      }
-    }
-    return result;
-  }
 
   changed() {
     const elements: VDOMArray[] = [...this.slotted];
-    let options = this.options;
+
     if (this.searchable) {
       elements.push(['io-string', {
-        id: 'search',
+        $: 'search',
         role: 'search',
         class: 'search',
         value: this.bind('search'),
@@ -343,18 +313,26 @@ export class IoMenuOptions extends IoElement {
         live: true
       }]);
     }
-    if (this.search) {
-      options = this._filterOptions(this.options, this.search.toLowerCase());
-      options = options.length ? options : noMatchOptions;
-    }
 
-    for (let i = 0; i < options.length; i++) {
-      elements.push(['io-menu-item', {
-        item: options[i],
-        class: 'item',
-        direction: this.horizontal ? 'down' : 'right',
-        depth: this.depth
-      }]);
+    if (this.search) {
+      const len = elements.length;
+      filterOptions(this.options, this.search, this.depth, elements);
+      if (len === elements.length) {
+        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', select: 'none'})}]);
+      }
+    } else {
+      let direction = this.horizontal ? 'down' : 'right';
+      if (this.horizontal && this.direction === 'up') {
+        direction = 'up';
+      }
+      for (let i = 0; i < this.options.length; i++) {
+        elements.push(['io-menu-item', {
+          item: this.options[i],
+          class: 'item',
+          direction: direction,
+          depth: this.depth
+        }]);
+      }
     }
 
     if (this.overflow) {

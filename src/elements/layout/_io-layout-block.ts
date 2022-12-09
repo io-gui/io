@@ -60,7 +60,7 @@ export class IoLayoutBlock extends IoElement {
   }
   changed() {
     this.template([
-      ['io-layout-tabs', {id: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}],
+      ['io-layout-tabs', {$: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}],
       this.elements[this.tabs[this.selected]]
     ]);
   }

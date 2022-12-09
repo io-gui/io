@@ -14,13 +14,12 @@ export class IoVector extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
-        flex-direction: row;
-        flex: 0 1;
-        flex-basis: calc(var(--iotFieldHeight) * 10);
+        flex: 0 1 auto;
+        min-width: var(--iotFieldHeight4);
+        width: var(--iotFieldHeight8);
       }
       :host > io-number {
-        flex-grow: 1;
+        flex: 1 1 100%;
       }
       :host > *:not(:last-child) {
         margin-right: var(--iotSpacing);

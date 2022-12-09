@@ -28,10 +28,6 @@ export class ChangeQueue {
     debug: {
       if (value === oldValue) console.warn('ChangeQueue: queuing change with same value and oldValue!');
     }
-    // if (this.changes === undefined) {
-    //   console.warn('ChangeQueue: queue is disposed!', this.node);
-    //   return;
-    // }
     const i = this.changes.findIndex(change => change.property === property);
     if (i === -1) {
       this.changes.push({property, value, oldValue});

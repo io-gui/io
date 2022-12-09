@@ -2,7 +2,7 @@ import { IoElement, RegisterIoElement } from './element.js';
 import { Property, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
-const THEME_VERSION = 'v0.6';
+const THEME_VERSION = 'v0.7';
 
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
@@ -26,10 +26,12 @@ type Variables = {
   iotLineHeight2: number;
   iotLineHeight3: number;
   iotLineHeight4: number;
+  iotLineHeight8: number;
   iotFieldHeight: number;
   iotFieldHeight2: number;
   iotFieldHeight3: number;
   iotFieldHeight4: number;
+  iotFieldHeight8: number;
   iotStrokeWidth: number;
   iotBorderRadius: number;
   iotBorderRadius2: number;
@@ -73,10 +75,12 @@ const defaultThemes: Themes = {
     iotLineHeight2: 40,
     iotLineHeight3: 60,
     iotLineHeight4: 80,
+    iotLineHeight8: 160,
     iotFieldHeight: 28,
     iotFieldHeight2: 56,
     iotFieldHeight3: 112,
     iotFieldHeight4: 168,
+    iotFieldHeight8: 236,
     iotStrokeWidth: 1,
     iotBorderRadius: 2,
     iotBorderRadius2: 4,
@@ -116,10 +120,12 @@ const defaultThemes: Themes = {
     iotLineHeight2: 40,
     iotLineHeight3: 60,
     iotLineHeight4: 80,
+    iotLineHeight8: 160,
     iotFieldHeight: 28,
     iotFieldHeight2: 56,
     iotFieldHeight3: 112,
     iotFieldHeight4: 168,
+    iotFieldHeight8: 236,
     iotStrokeWidth: 1,
     iotBorderRadius: 2,
     iotBorderRadius2: 4,
@@ -246,9 +252,11 @@ export class IoTheme extends IoElement {
     this.iotFieldHeight2 = this.iotFieldHeight * 2;
     this.iotFieldHeight3 = this.iotFieldHeight * 3;
     this.iotFieldHeight4 = this.iotFieldHeight * 4;
+    this.iotFieldHeight8 = this.iotFieldHeight * 8;
     this.iotLineHeight2 = this.iotLineHeight * 2;
     this.iotLineHeight3 = this.iotLineHeight * 3;
     this.iotLineHeight4 = this.iotLineHeight * 4;
+    this.iotLineHeight8 = this.iotLineHeight * 8;
     this.iotSpacing2 = this.iotSpacing * 2;
     this.iotSpacing3 = this.iotSpacing * 3;
     this.iotSpacing4 = this.iotSpacing * 4;

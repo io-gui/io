@@ -198,7 +198,7 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
       element.setAttribute(p.substr(1), prop);
     } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else if (p !== 'id') (element as any)[p] = prop;
+    else if (p === 'id') (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop);
   }
   if (!(element as any)._eventDispatcher) {
@@ -350,7 +350,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
       const child = children[i] as HTMLElement | IoElement;
-      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = child;
+      if (vChildren[i].props.$) {
+        this.$[vChildren[i].props.$] = child;
+      }
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.

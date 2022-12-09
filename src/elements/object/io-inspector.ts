@@ -166,7 +166,7 @@ export class IoInspector extends IoElement {
     const elements = [
       ['div', {class: 'inspector-header io-row io-panel'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
-        ['io-string', {id: 'search', value: this.bind('search'), live: true}],
+        ['io-string', {$: 'search', value: this.bind('search'), live: true}],
         ['io-boolean', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
       this._widgets.main ? this._widgets.main : null

@@ -61,7 +61,7 @@ export class IoMenuItem extends IoField {
   @Property({value: 'right', reflect: true})
   declare direction: string;
 
-  @Property(Infinity)
+  @Property({value: Infinity, reflect: true})
   declare depth: number;
 
   @Property(undefined)
@@ -303,7 +303,7 @@ export class IoMenuItem extends IoField {
           expanded: this.bind('expanded'),
           depth: this.depth - 1,
           options: this.item.options,
-          position: this.direction,
+          direction: this.direction,
           inlayer: true,
           $parent: this,
         });

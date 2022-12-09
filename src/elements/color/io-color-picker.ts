@@ -82,6 +82,6 @@ export class IoColorPicker extends IoElement {
     IoColorPanelSingleton.expanded = false;
   }
   changed() {
-    this.template([['io-color-swatch', {id: 'swatch', value: this.value}]]);
+    this.template([['io-color-swatch', {$: 'swatch', value: this.value}]]);
   }
 }

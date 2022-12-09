@@ -11,12 +11,14 @@ export class IoSlider2d extends IoSliderBase {
         border: var(--iotBorder);
         border-radius: var(--iotBorderRadius);
         border-color: var(--iotBorderColorInset);
-        min-width: var(--iotFieldHeight4);
-        min-height: var(--iotFieldHeight4);
-        flex-basis: var(--iotFieldHeight4);
         flex-grow: 0;
       }
-      :host[horizontal] {
+      :host:not([vertical]),
+      :host[vertical] {
+        width: var(--iotFieldHeight4);
+        height: var(--iotFieldHeight4);
+        min-width: var(--iotFieldHeight4);
+        min-height: var(--iotFieldHeight4);
         cursor: crosshair;
       }
     `;

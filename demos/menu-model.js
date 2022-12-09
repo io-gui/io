@@ -2,7 +2,7 @@ import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/io
 
 // TODO: improve this test-demo
 
-class IoOptionsDemoView extends IoElement {
+export class IoOptionsDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -57,7 +57,7 @@ class IoOptionsDemoView extends IoElement {
 
 RegisterIoElement(IoOptionsDemoView);
 
-class IoItemDemoView extends IoElement {
+export class IoItemDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {

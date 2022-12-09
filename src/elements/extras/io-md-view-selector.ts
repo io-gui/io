@@ -19,7 +19,7 @@ export class IoMdViewSelector extends IoSelectorSidebar  {
         // depth: this.depth,
         // slotted: this.slotted,
       }],
-      ['io-md-view', {id: 'content', sanitize: this.sanitize, src: this.src, anchor: this.anchor}]
+      ['io-md-view', {$: 'content', sanitize: this.sanitize, src: this.src, anchor: this.anchor}]
     ];
   }
   changed() {

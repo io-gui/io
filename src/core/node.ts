@@ -211,7 +211,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         if (!this._properties.has(p)) {
           debug: {
             // TODO: consider converting style and config to properties
-            if (!p.startsWith('on-') && p !== 'style' && p !== 'config') {
+            // TODO: document!
+            if (!p.startsWith('on-') && p !== 'style' && p !== 'config' && p !== '$') {
               console.warn(`Property "${p}" is not defined`, this);
             }
           }
