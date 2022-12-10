@@ -166,7 +166,7 @@ export class IoMenuOptions extends IoElement {
   static get Listeners() {
     return {
       'item-clicked': '_onItemClicked',
-      'touchstart': '_stopPropagation',
+      'touchstart': ['_stopPropagation', {passive: false}],
     };
   }
 

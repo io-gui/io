@@ -28,11 +28,9 @@ export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
 }
 
 function matchItem(item: MenuItem, search: string) {
-  if (!!item.value || !!item.action) {
-    if (String(item.value).toLowerCase().indexOf(search) !== -1) return true;
-    if (item.label && item.label.toLowerCase().indexOf(search) !== -1) return true;
-    if (item.hint && item.hint.toLowerCase().indexOf(search) !== -1) return true;
-  }
+  if (item.value !== undefined && String(item.value).toLowerCase().indexOf(search) !== -1) return true;
+  if (item.label && item.label.toLowerCase().indexOf(search) !== -1) return true;
+  if (item.hint && item.hint.toLowerCase().indexOf(search) !== -1) return true;
   return false;
 }
 
@@ -100,6 +98,7 @@ export class IoMenuTree extends IoElement {
     :host io-menu-item {
       background-color: transparent;
       flex: 0 0 auto;
+      align-self: stretch;
       border-radius: 0;
       position: relative;
       overflow: visible;
@@ -177,7 +176,6 @@ export class IoMenuTree extends IoElement {
   static get Listeners() {
     return {
       'item-clicked': '_onItemClicked',
-      'touchstart': '_stopPropagation',
     };
   }
 
