@@ -43,7 +43,7 @@ export class IoSliderRange extends IoSliderBase {
     this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1;
   }
   _onPointermoveThrottled(event: PointerEvent) {
-    if (this._active === true) {
+    if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus();
       const value = this._value;
       const coord = this._getPointerCoord(event);

@@ -64,7 +64,7 @@ export class IoSliderBase extends IoGl {
 
   _startX = 0;
   _startY = 0;
-  _active = false;
+  _active = -1;
   _rect: DOMRect | null = null;
 
   get _min(): [number, number] {
@@ -116,7 +116,7 @@ export class IoSliderBase extends IoGl {
       'focus': '_onFocus',
       'contextmenu': '_onContextmenu',
       'pointerdown': '_onPointerdown',
-      'touchstart': '_onTouchstart',
+      'touchstart': ['_onTouchstart', {passive: false}],
     };
   }
   _onFocus() {
@@ -136,24 +136,25 @@ export class IoSliderBase extends IoGl {
     this.addEventListener('touchend', this._onTouchend);
     this._startX = event.changedTouches[0].clientX;
     this._startY = event.changedTouches[0].clientY;
-    this._active = this.noscroll ? true : false;
+    this._active = this.noscroll ? 1 : -1;
   }
   _onTouchmove(event: TouchEvent) {
     const dx = Math.abs(this._startX - event.changedTouches[0].clientX);
     const dy = Math.abs(this._startY - event.changedTouches[0].clientY);
-    if (this._active === false) {
+    if (this._active === -1) {
       if (this.vertical) {
-        if (dy > 3 && dy > dx) {
-          this._active = (dy > dx && dx < 10) ? true : false;
+        if (dy > 5 && dy > dx) {
+          this._active = (dy > dx && dx < 10) ? 1 : 0;
         }
       } else {
-        if (dx > 3 && dx > dy) {
-          this._active = (dx > dy && dy < 10) ? true : false;
+        if (dx > 5 && dx > dy) {
+          this._active = (dx > dy && dy < 10) ? 1 : 0;
         }
       }
     }
-    if (this._active === false) return;
-    event.preventDefault();
+    if (this._active === 1) {
+      event.preventDefault();
+    }
   }
   _onTouchend() {
     this.removeEventListener('touchmove', this._onTouchmove);
@@ -167,7 +168,7 @@ export class IoSliderBase extends IoGl {
     this.addEventListener('pointercancel', this._onPointerup);
   }
   _onPointermove(event: PointerEvent) {
-    if (event.pointerType !== 'touch') this._active = true;
+    if (event.pointerType !== 'touch') this._active = 1;
     this.throttle(this._onPointermoveThrottled, event);
   }
   _onPointerup(event: PointerEvent) {
@@ -175,7 +176,7 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     this.removeEventListener('pointercancel', this._onPointerup);
-    this._active = false;
+    this._active = -1;
   }
   _getPointerCoord(event: PointerEvent): [number, number] {
     const rect = this._rect || this.getBoundingClientRect();
@@ -194,7 +195,7 @@ export class IoSliderBase extends IoGl {
     return value;
   }
   _onPointermoveThrottled(event: PointerEvent) {
-    if (this._active === true) {
+    if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus();
       const coord = this._getPointerCoord(event);
       const value = this._getValueFromCoord(coord);
