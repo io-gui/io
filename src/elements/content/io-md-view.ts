@@ -1,5 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
-import { IoContent } from '../layout/io-content.js';
+import { RegisterIoElement, IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { marked } from 'marked';
 import purify from 'dompurify';
@@ -8,10 +7,21 @@ import purify from 'dompurify';
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 @RegisterIoElement
-export class IoMdView extends IoContent {
+export class IoMdView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        justify-self: stretch;
+        flex: 1 1 auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        -webkit-tap-highlight-color: transparent;
+
         padding: var(--iotLineHeight) var(--iotLineHeight2);
       }
       :host > :first-child {
@@ -146,7 +156,6 @@ export class IoMdView extends IoContent {
       } else {
         this.innerHTML = marked(markdown);
       }
-      this._scrollTo(this.anchor, true);
     }
   }
 

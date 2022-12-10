@@ -22,9 +22,6 @@ export class IoMenuOptions extends IoElement {
       flex: 0 1 auto;
       flex-direction: column;
       flex-wrap: nowrap;
-      align-self: stretch;
-      align-items: stretch;
-      justify-self: stretch;
       border-radius: var(--iotBorderRadius);
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
@@ -57,6 +54,7 @@ export class IoMenuOptions extends IoElement {
 
     :host[horizontal] {
       flex-direction: row;
+      align-self: stretch;
     }
 
     /* Item spacing */

@@ -121,7 +121,7 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, RegisterIoElement, IoSelectorTabs, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, MenuItem, RegisterIoElement, IoNavigator, IoStorage as $ } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
@@ -147,142 +147,124 @@
         ]},
         {label: 'Contribution Guide', select: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
         {label: 'Development Notes', value: 'development-notes'},
-        {label: 'Reference', value: 'reference', options: [
-          // Core Internals
-          {label: 'Binding', value: './docs/tsdoc/classes/Binding.md'},
-          {label: 'ChangeQueue', value: './docs/tsdoc/classes/ChangeQueue.md'},
-          {label: 'EventDispatcher', value: './docs/tsdoc/classes/EventDispatcher.md'},
-          {label: 'ProtoProperty', value: './docs/tsdoc/classes/ProtoProperty.md'},
-          {label: 'PropertyInstance', value: './docs/tsdoc/classes/PropertyInstance.md'},
-          {label: 'ProtoChain', value: './docs/tsdoc/classes/ProtoChain.md'},
-          // Core Components
-          {label: 'IoNode', value: './docs/tsdoc/classes/IoNode.md'},
-          {label: 'IoElement', value: './docs/tsdoc/classes/IoElement.md'},
-          {label: 'IoGl', value: './docs/tsdoc/classes/IoGl.md'},
-          {label: 'IoLayer', value: './docs/tsdoc/classes/IoLayer.md'}, // TODO: singleton
-          {label: 'IoTheme', value: './docs/tsdoc/classes/IoTheme.md'}, // TODO: singleton
-          {label: 'IoStorage', value: './docs/tsdoc/modules/IoStorage.md'}, // TODO: module?
-          // Basic Editors
-          {label: 'IoBoolean', value: './docs/tsdoc/classes/IoBoolean.md'},
-          {label: 'IoButton', value: './docs/tsdoc/classes/IoButton.md'},
-          {label: 'IoField', value: './docs/tsdoc/classes/IoField.md'},
-          {label: 'IoIcon', value: './docs/tsdoc/classes/IoIcon.md'},
-          {label: 'IoIconset', value: './docs/tsdoc/classes/IoIconset.md'}, // TODO: singleton
-          {label: 'IoLabel', value: './docs/tsdoc/classes/IoLabel.md'},
-          {label: 'IoNumber', value: './docs/tsdoc/classes/IoNumber.md'},
-          {label: 'IoNumberLadder', value: './docs/tsdoc/classes/IoNumberLadder.md'}, // TODO: singleton
-          {label: 'IoString', value: './docs/tsdoc/classes/IoString.md'},
-          {label: 'IoSwitch', value: './docs/tsdoc/classes/IoSwitch.md'},
-          // Sliders
-          {label: 'IoSlider', value: './docs/tsdoc/classes/IoSlider.md'},
-          {label: 'IoNumberSlider', value: './docs/tsdoc/classes/IoNumberSlider.md'},
-          {label: 'IoSliderRange', value: './docs/tsdoc/classes/IoSliderRange.md'},
-          {label: 'IoNumberSliderRange', value: './docs/tsdoc/classes/IoNumberSliderRange.md'},
-          {label: 'IoSlider2d', value: './docs/tsdoc/classes/IoSlider2d.md'},
-          // Color Editors
-          // TODO: lib/Convert
-          {label: 'IoColorBase', value: './docs/tsdoc/classes/IoColorBase.md'},
-          {label: 'IoColorSliderBase', value: './docs/tsdoc/classes/IoColorSliderBase.md'},
-          {label: 'IoColorSlider2dBase', value: './docs/tsdoc/classes/IoColorSlider2dBase.md'},
-          {label: 'IoColorPanel', value: './docs/tsdoc/classes/IoColorPanel.md'},
-          {label: 'IoColorPicker', value: './docs/tsdoc/classes/IoColorPicker.md'},
-          {label: 'IoColorRgba', value: './docs/tsdoc/classes/IoColorRgba.md'},
-          {label: 'IoColorSlider', value: './docs/tsdoc/classes/IoColorSlider.md'},
-          {label: 'IoColorSwatch', value: './docs/tsdoc/classes/IoColorSwatch.md'},
-          // Vector Editors
-          {label: 'IoVector', value: './docs/tsdoc/classes/IoVector.md'},
-          {label: 'IoMatrix', value: './docs/tsdoc/classes/IoMatrix.md'},
-          // Menus
-          {label: 'IoMenuItem', value: './build/elements/menus/menu-item.md'},
-          {label: 'IoMenuOptions', value: './build/elements/menus/menu-options.md'},
-          {label: 'IoOptionMenu', value: './build/elements/menus/option-menu.md'},
-          {label: 'IoContextMenu', value: './build/elements/menus/context-menu.md'},
-          // Object Editors
-          {label: 'IoProperties', value: './build/elements/object/properties.md'},
-          {label: 'IoObject', value: './build/elements/object/object.md'},
-          {label: 'IoInspector', value: './build/elements/object/inspector.md'},
-          {label: 'IoBreadcrumbs', value: './build/elements/object/breadcrumbs.md'},
-          {label: 'ObjectConfig', value: './build/elements/object/models/object-config.md'},
-          {label: 'ObjectGroups', value: './build/elements/object/models/object-groups.md'},
-          {label: 'ObjectWidgets', value: './build/elements/object/models/object-widgets.md'},
-          // Layout
-          {label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'},
-          {label: 'IoSelector', value: './build/elements/layout/selector.md'},
-          {label: 'IoSelectorTabs', value: './build/elements/layout/selector-tabs.md'},
-          {label: 'IoSelectorSidebar', value: './build/elements/layout/selector-sidebar.md'},
-          {label: 'IoSidebar', value: './build/elements/layout/sidebar.md'},
-          {label: 'IoLayout', value: './build/elements/layout/layout.md'},
-          // Extras
-          {label: 'io-md-view', value: './build/elements/extras/md-view.md'}, // TODO: md-view-selector
-          {label: 'io-service-loader', value: './build/elements/extras/service-loader.md'},
-        ]},
+      ]},
+      {value: 'Reference', options: [
+        // Core Internals
+        {label: 'Binding', value: './docs/tsdoc/classes/Binding.md'},
+        {label: 'ChangeQueue', value: './docs/tsdoc/classes/ChangeQueue.md'},
+        {label: 'EventDispatcher', value: './docs/tsdoc/classes/EventDispatcher.md'},
+        {label: 'ProtoProperty', value: './docs/tsdoc/classes/ProtoProperty.md'},
+        {label: 'PropertyInstance', value: './docs/tsdoc/classes/PropertyInstance.md'},
+        {label: 'ProtoChain', value: './docs/tsdoc/classes/ProtoChain.md'},
+        // Core Components
+        {label: 'IoNode', value: './docs/tsdoc/classes/IoNode.md'},
+        {label: 'IoElement', value: './docs/tsdoc/classes/IoElement.md'},
+        {label: 'IoGl', value: './docs/tsdoc/classes/IoGl.md'},
+        {label: 'IoLayer', value: './docs/tsdoc/classes/IoLayer.md'}, // TODO: singleton
+        {label: 'IoTheme', value: './docs/tsdoc/classes/IoTheme.md'}, // TODO: singleton
+        {label: 'IoStorage', value: './docs/tsdoc/modules/IoStorage.md'}, // TODO: module?
+        // Basic Editors
+        {label: 'IoBoolean', value: './docs/tsdoc/classes/IoBoolean.md'},
+        {label: 'IoButton', value: './docs/tsdoc/classes/IoButton.md'},
+        {label: 'IoField', value: './docs/tsdoc/classes/IoField.md'},
+        {label: 'IoIcon', value: './docs/tsdoc/classes/IoIcon.md'},
+        {label: 'IoIconset', value: './docs/tsdoc/classes/IoIconset.md'}, // TODO: singleton
+        {label: 'IoLabel', value: './docs/tsdoc/classes/IoLabel.md'},
+        {label: 'IoNumber', value: './docs/tsdoc/classes/IoNumber.md'},
+        {label: 'IoNumberLadder', value: './docs/tsdoc/classes/IoNumberLadder.md'}, // TODO: singleton
+        {label: 'IoString', value: './docs/tsdoc/classes/IoString.md'},
+        {label: 'IoSwitch', value: './docs/tsdoc/classes/IoSwitch.md'},
+        // Sliders
+        {label: 'IoSlider', value: './docs/tsdoc/classes/IoSlider.md'},
+        {label: 'IoNumberSlider', value: './docs/tsdoc/classes/IoNumberSlider.md'},
+        {label: 'IoSliderRange', value: './docs/tsdoc/classes/IoSliderRange.md'},
+        {label: 'IoNumberSliderRange', value: './docs/tsdoc/classes/IoNumberSliderRange.md'},
+        {label: 'IoSlider2d', value: './docs/tsdoc/classes/IoSlider2d.md'},
+        // Color Editors
+        // TODO: lib/Convert
+        {label: 'IoColorBase', value: './docs/tsdoc/classes/IoColorBase.md'},
+        {label: 'IoColorSliderBase', value: './docs/tsdoc/classes/IoColorSliderBase.md'},
+        {label: 'IoColorSlider2dBase', value: './docs/tsdoc/classes/IoColorSlider2dBase.md'},
+        {label: 'IoColorPanel', value: './docs/tsdoc/classes/IoColorPanel.md'},
+        {label: 'IoColorPicker', value: './docs/tsdoc/classes/IoColorPicker.md'},
+        {label: 'IoColorRgba', value: './docs/tsdoc/classes/IoColorRgba.md'},
+        {label: 'IoColorSlider', value: './docs/tsdoc/classes/IoColorSlider.md'},
+        {label: 'IoColorSwatch', value: './docs/tsdoc/classes/IoColorSwatch.md'},
+        // Vector Editors
+        {label: 'IoVector', value: './docs/tsdoc/classes/IoVector.md'},
+        {label: 'IoMatrix', value: './docs/tsdoc/classes/IoMatrix.md'},
+        // Menus
+        {label: 'IoMenuItem', value: './build/elements/menus/menu-item.md'},
+        {label: 'IoMenuOptions', value: './build/elements/menus/menu-options.md'},
+        {label: 'IoOptionMenu', value: './build/elements/menus/option-menu.md'},
+        {label: 'IoContextMenu', value: './build/elements/menus/context-menu.md'},
+        // Object Editors
+        {label: 'IoProperties', value: './build/elements/object/properties.md'},
+        {label: 'IoObject', value: './build/elements/object/object.md'},
+        {label: 'IoInspector', value: './build/elements/object/inspector.md'},
+        {label: 'IoBreadcrumbs', value: './build/elements/object/breadcrumbs.md'},
+        {label: 'ObjectConfig', value: './build/elements/object/models/object-config.md'},
+        {label: 'ObjectGroups', value: './build/elements/object/models/object-groups.md'},
+        {label: 'ObjectWidgets', value: './build/elements/object/models/object-widgets.md'},
+        // Layout
+        {label: 'IoCollapsable', value: './build/elements/layout/collapsable.md'},
+        {label: 'IoSelector', value: './build/elements/layout/selector.md'},
+        {label: 'IoSelectorTabs', value: './build/elements/layout/selector-tabs.md'},
+        {label: 'IoSelectorSidebar', value: './build/elements/layout/selector-sidebar.md'},
+        {label: 'IoSidebar', value: './build/elements/layout/sidebar.md'},
+        {label: 'IoLayout', value: './build/elements/layout/layout.md'},
+        // Extras
+        {label: 'io-md-view', value: './build/elements/extras/md-view.md'}, // TODO: md-view-selector
+        {label: 'io-service-loader', value: './build/elements/extras/service-loader.md'},
       ]},
       {value: 'Demos', options: [
         'Elements Showcase',
         'Theme Editor',
         'TODO MVC App',
-        // 'Three.js',
         'Menu Model',
       ]},
       {value: 'Tests'},
     ], {
-      path: $({key: 'path', storage: 'hash', value: 'About'}),
+      path: $({key: 'path', storage: 'hash', value: 'Tests'}),
     });
 
-    export class IoMainPage extends IoSelectorTabs {
+    export class IoMainPage extends IoNavigator {
       static get Properties() {
         return {
           role: 'main',
           class: 'main',
           cache: true,
-          horizontal: true,
+          menu: 'top',
           options: OPTIONS,
-          depth: 2,
+          depth: 1,
           elements: [
-            ['io-md-view', {
-              name: 'About',
-              src: './README.md'}],
-            ['io-selector', {
-              name: 'Docs',
+            ['io-md-view', {id: 'About', src: './README.md'}],
+            ['io-navigator', {id: 'Docs', menu: 'left', mode: 'select-scroll',
               options: OPTIONS.getItem('Docs').options,
               elements: [
-                ['io-md-view-selector', {
-                  name: 'Getting Started',
-                  sanitize: false,
-                  src: './docs/getting-started.md',
-                  anchor: OPTIONS.getItem('Docs').getSubitem('Getting Started').options.bind('root'),
-                  options: OPTIONS.getItem('Docs').getSubitem('Getting Started').options,
-                }],
-                ['io-md-view-selector', {
-                  name: 'Learn More',
-                  sanitize: false,
-                  src: './docs/learn-more.md',
-                  anchor: OPTIONS.getItem('Docs').getSubitem('Learn More').options.bind('root'),
-                  options: OPTIONS.getItem('Docs').getSubitem('Learn More').options,
-                }],
-                ['io-md-view-selector', {
-                  name: 'reference',
-                  sanitize: false,
-                  // search: true, // TODO: implement
-                  src: OPTIONS.getItem('Docs').getSubitem('reference').options.bind('root'),
-                  options: OPTIONS.getItem('Docs').getSubitem('reference').options,
-                }],
-                ['io-md-view', {name: 'development-notes', src: './docs/development-notes.md'}],
+                ['io-md-view', {id: 'Getting Started', sanitize: false, src: './docs/getting-started.md'}],
+                ['io-md-view', {id: 'Learn More', sanitize: false, src: './docs/learn-more.md'}],
+                ['io-md-view', {id: 'development-notes', src: './docs/development-notes.md'}],
               ]
             }],
-            ['io-selector', {
-              name: 'Demos',
+            ['io-md-navigator', {id: 'Reference', menu: 'left', mode: 'select',
+              options: OPTIONS.getItem('Reference').options,
+            }],
+            ['io-selector', {id: 'Demos',
               options: OPTIONS.getItem('Demos').options,
               elements: [
-                ['io-demo-elements-showcase', {name: 'Elements Showcase', import: './demos/elements-showcase.js'}],
-                ['io-demo-theme-editor', {name: 'Theme Editor', import: './demos/theme-editor.js'}],
-                ['io-demo-menu-model', {name: 'Menu Model', import: './demos/menu-model.js'}],
-                ['iframe', {name: 'TODO MVC App', title: 'TODO MVC App', src: './demos/todomvc/index.html'}],
+                ['io-demo-elements-showcase', {id: 'Elements Showcase', import: './demos/elements-showcase.js'}],
+                ['io-demo-theme-editor', {id: 'Theme Editor', import: './demos/theme-editor.js'}],
+                ['io-demo-menu-model', {id: 'Menu Model', import: './demos/menu-model.js'}],
+                ['iframe', {id: 'TODO MVC App', title: 'TODO MVC App', src: './demos/todomvc/index.html'}],
               ]
             }],
-            ['io-gui-test-page', {name: 'Tests', title: 'Tests', import: './build/iogui.test.js'}],
+            ['io-gui-test-page', {id: 'Tests', title: 'Tests', import: './build/iogui.test.js'}],
           ]
         };
+      }
+      init() {
+        this.changed();
       }
     }
     RegisterIoElement(IoMainPage);

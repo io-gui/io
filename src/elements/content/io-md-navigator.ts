@@ -4,10 +4,8 @@ import { Property } from '../../core/internals/property.js';
 import './io-selector.js';
 import './io-scroller.js';
 
-const noOptions = new MenuOptions();
-
 @RegisterIoElement
-export class IoNavigator extends IoElement {
+export class IoMdNavigator extends IoElement {
 
   static get Style() {
     return /* css */`
@@ -54,20 +52,17 @@ export class IoNavigator extends IoElement {
   @Property(Array)
   declare slotted: VDOMArray[];
 
-  @Property(Array)
-  declare elements: VDOMArray[];
-
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
 
   @Property({value: 'none', reflect: true})
   declare menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
 
-  @Property({value: 'select'})
-  declare mode: 'select' | 'scroll' | 'select-scroll';
+//   @Property({value: 'select'})
+//   declare mode: 'select' | 'scroll' | 'select-scroll';
 
-  @Property({value: 'root'})
-  declare select: 'root' | 'leaf';
+//   @Property({value: 'root'})
+//   declare select: 'root' | 'leaf';
 
   @Property(Infinity)
   declare depth: number;
@@ -79,33 +74,17 @@ export class IoNavigator extends IoElement {
   // declare collapseWidth: number;
 
   changed() {
-    let scrollOptions = noOptions;
-    if (this.options.root) {
-      const subOptions = this.options.getItem(this.options.root)?.options;
-      if (subOptions) scrollOptions = subOptions;
-    }
-
     const sharedMenuConfig = {
       options: this.options,
       slotted: this.slotted,
       depth: this.depth
     };
 
-    let contentNavigation: VDOMArray | null = null;
-    if (this.mode === 'select') {
-      contentNavigation = ['io-selector', {options: this.options, elements: this.elements, select: this.select}];
-    } else if (this.mode === 'scroll') {
-      contentNavigation = ['io-scroller', {options: this.options}, this.elements];
-    } else if (this.mode === 'select-scroll') {
-      contentNavigation = ['io-scroller', {options: scrollOptions}, [
-        ['io-selector', {options: this.options, elements: this.elements, select: 'root'}],
-      ]];
-    }
 
     this.template([
       this.menu === 'top' ? ['io-menu-options', {horizontal: true, ...sharedMenuConfig}] : null,
       this.menu === 'left' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
-      contentNavigation,
+      ['io-md-view', {src: this.options.leaf}],
       this.menu === 'right' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
       this.menu === 'bottom' ? ['io-menu-options', {horizontal: true, direction: 'up', ...sharedMenuConfig}] : null,
     ]);

@@ -104,6 +104,7 @@ export class IoSelector extends IoElement {
       const explicitlyCache = args.cache === true;
       const explicitlyDontCache = args.cache === false;
       const importPath = args.import;
+      delete args.import;
 
       this.textContent = '';
 

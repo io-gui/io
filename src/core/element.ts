@@ -200,6 +200,7 @@ const applyNativeElementProps = function(element: HTMLElement, props: any) {
     else if (p === 'class') element['className'] = prop;
     else if (p === 'id') (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop);
+    if (p === 'src') element.setAttribute('src', prop);
   }
   if (!(element as any)._eventDispatcher) {
     Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoNode)});
