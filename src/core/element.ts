@@ -172,6 +172,18 @@ const constructElement = function(vDOMElement: VDOMElement) {
   return element;
 };
 
+export const disposeElementDeep = function(element: IoElement) {
+  const elements = [...(element.querySelectorAll('*')), element] as IoElement[];
+  for (let i = elements.length; i--;) {
+    if (typeof elements[i].dispose === 'function') {
+      elements[i].dispose();
+    } else if (elements[i]._eventDispatcher) {
+      elements[i]._eventDispatcher.dispose();
+      delete (elements[i] as any)._eventDispatcher;
+    }
+  }
+};
+
 const superCreateElement = document.createElement;
 document.createElement = function(tagName: string, options?: ElementCreationOptions) {
   if (tagName.startsWith('io-')) {
@@ -278,46 +290,33 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       resizeObserver.unobserve(this as unknown as HTMLElement);
     }
   }
+  // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**
    * Renders DOM from virtual DOM arrays.
    * @param {Array} vDOM - Array of vDOM children.
    * @param {HTMLElement} [host] - Optional template target.
+   * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  template(vDOM: Array<any>, host?: HTMLElement) {
+  template(vDOM: Array<any>, host?: HTMLElement, cache?: boolean) {
     const vChildren = buildTree()(['root', vDOM]).children;
     host = (host || this) as any;
     if (host === (this as any)) this.setProperty('$', {});
-    this.traverse(vChildren, host as HTMLElement);
-  }
-  disposeDeep(host: HTMLElement, child: any) {
-    host.removeChild(child);
-    const nodes = Array.from(child.querySelectorAll('*')) as IoElement[];
-    for (let i = nodes.length; i--;) {
-      if (nodes[i].dispose!) {
-        nodes[i].dispose();
-      } else if (nodes[i]._eventDispatcher) {
-        nodes[i]._eventDispatcher.dispose();
-        delete (nodes[i] as any)._eventDispatcher;
-      }
-    }
-    if ((child).dispose!) {
-      (child).dispose();
-    } else if (child._eventDispatcher) {
-      child._eventDispatcher.dispose();
-      delete child._eventDispatcher;
-    }
+    this.traverse(vChildren, host as HTMLElement, cache);
   }
   /**
    * Recurively traverses vDOM.
    * TODO: test element.traverse() function!
    * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
    * @param {HTMLElement} [host] - Optional template target.
+   * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  traverse(vChildren: Array<any>, host: HTMLElement) {
+  traverse(vChildren: Array<any>, host: HTMLElement, cache?: boolean) {
     const children = host.children;
     // remove trailing elements
     while (children.length > vChildren.length) {
-      this.disposeDeep(host, children[children.length - 1]);
+      const child = children[children.length - 1];
+      host.removeChild(child);
+      if (!cache) disposeElementDeep(child as unknown as IoElement);
     }
     // create new elements after existing
     if (children.length < vChildren.length) {
@@ -328,14 +327,15 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
       host.appendChild(frag);
     }
-    // replace existing elements
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
-      if (child.localName !== vChildren[i].name) {
-        const oldElement = child as IoElement;
+      // replace existing elements
+      if (child.localName !== vChildren[i].name || cache) {
+        const oldElement = child as unknown as HTMLElement;
         const element = constructElement(vChildren[i]);
-        host.insertBefore(element, oldElement as unknown as HTMLElement);
-        this.disposeDeep(host, oldElement);
+        host.insertBefore(element, oldElement);
+        host.removeChild(oldElement);
+        if (!cache) disposeElementDeep(oldElement as unknown as IoElement);
       // update existing elements
       } else {
         child.removeAttribute('className');
@@ -361,7 +361,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           (child as any)._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
-          this.traverse(vChildren[i].children, child as HTMLElement);
+          this.traverse(vChildren[i].children, child as HTMLElement, cache);
         }
       }
     }

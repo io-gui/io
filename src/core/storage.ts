@@ -99,6 +99,15 @@ interface StorageProps {
   storage?: 'hash' | 'local' | 'none',
 }
 
+export function genObjectStorageID(object: Record<string, any>) {
+  const string = JSON.stringify(object);
+  let hash = 0;
+  for (let i = 0; i < string.length; i++) {
+    hash = Math.imul(31, hash) + string.charCodeAt(i) | 0;
+  }
+  return 'io-local-state-' + String(hash);
+}
+
 @RegisterIoNode
 export class IoStorageNode extends IoNode {
 
