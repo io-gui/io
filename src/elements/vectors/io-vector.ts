@@ -98,7 +98,7 @@ export class IoVector extends IoElement {
     for (const k of this.keys) {
       if (this.value[k] !== undefined) {
         elements.push(['io-number', {
-          id: k,
+          id: k, // Consider removing global id collisions
           value: this.value[k],
           conversion: this.conversion,
           step: this.step,

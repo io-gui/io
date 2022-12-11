@@ -132,7 +132,7 @@ export class IoSliderBase extends IoGl {
   }
   _onTouchstart(event: TouchEvent) {
     this._rect = this.getBoundingClientRect();
-    this.addEventListener('touchmove', this._onTouchmove);
+    this.addEventListener('touchmove', this._onTouchmove, {passive: false});
     this.addEventListener('touchend', this._onTouchend);
     this._startX = event.changedTouches[0].clientX;
     this._startY = event.changedTouches[0].clientY;
@@ -144,15 +144,15 @@ export class IoSliderBase extends IoGl {
     if (this._active === -1) {
       if (this.vertical) {
         if (dy > 5 && dy > dx) {
-          this._active = (dy > dx && dx < 10) ? 1 : 0;
+          this._active = (dy > dx && dx < 5) ? 1 : 0;
         }
       } else {
         if (dx > 5 && dx > dy) {
-          this._active = (dx > dy && dy < 10) ? 1 : 0;
+          this._active = (dx > dy && dy < 5) ? 1 : 0;
         }
       }
     }
-    if (this._active === 1) {
+    if (this._active === 1 && event.cancelable) {
       event.preventDefault();
     }
   }
