@@ -3,18 +3,18 @@ import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuItem } from './io-menu-item.js';
-import { IoStorage as $ } from '../../core/storage.js';
+import { IoStorage as $, genObjectStorageID } from '../../core/storage.js';
 
 export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
   const elements: VDOMArray[] = [];
   if (d <= depth) for (let i = 0; i < options.length; i++) {
     const item = options[i];
     if (item.options?.length) {
-      const collapsableState = $({value: false, storage: 'local', key: genUUID(options, i)});
+      const collapsableState = $({value: item.selected, storage: 'local', key: genObjectStorageID(item)});
       elements.push(['io-collapsable', {
         label: item.label,
         icon: item.icon,
-        expanded: item.selected || collapsableState,
+        expanded: collapsableState,
         elements: [...addMenuOptions(item.options, depth, d + 1)]
       }]);
     } else {
@@ -49,21 +49,13 @@ export function filterOptions(options: MenuOptions, search: string, depth = 5, e
   }
 }
 
-function genUUID(options: any, i: number) {
-  const option = options[i];
-  let UUID = 'io-sidebar-collapse-state-' + i + '-' + options.length;
-  if (option.label) UUID += '-' + option.label;
-  if (option.options.length) UUID += '(' + option.options.length + ')';
-  return UUID;
-}
-
 @RegisterIoElement
 export class IoMenuTree extends IoElement {
   static get Style() {
     return /* css */`
     :host {
       display: flex;
-      flex: 0 1 auto;
+      flex: 0 0 auto;
       flex-direction: column;
       flex-wrap: nowrap;
       align-self: stretch;

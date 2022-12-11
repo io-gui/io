@@ -24,7 +24,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
   declare delimiter: string;
 
   push(...items: MenuItem[]) {
-    console.log(items);
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       debug: {
@@ -44,11 +43,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
     }
   }
-
-  // TODO: implement!
-  // toJSON() {
-  //   return this.map((item: MenuItem) => item.toJSON());
-  // }
 
   getItem(value: any, deep = false) {
     for (let i = 0; i < this.length; i++) {
@@ -70,6 +64,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
         _args.push(new MenuItem(args[i]));
       }
     }
+
     super(properties, ..._args);
 
     if (this.path !== '') this.pathChanged();
