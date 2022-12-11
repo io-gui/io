@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement, VDOMArray, IoElementArgs } from '../../core/element.js';
+import { IoElement, RegisterIoElement, VDOMArray, IoElementArgs, disposeElementDeep } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
 
@@ -74,6 +74,14 @@ export class IoSelector extends IoElement {
     });
   }
 
+  dispose() {
+    // TODO: check for garbage collection!
+    for (const key in this._caches) {
+      disposeElementDeep(this._caches[key] as unknown as IoElement);
+    }
+    super.dispose();
+  }
+
   changed() {
     const selected = this.select === 'root' ? this.options.root : this.options.leaf;
 
@@ -91,6 +99,8 @@ export class IoSelector extends IoElement {
 
     } else {
 
+      if (this.childNodes[0]?.id === selected) return;
+
       let element = this.elements.find((element: any) => {return element[1].id === selected;}) as VDOMArray;
 
       if (!element) {
@@ -106,23 +116,24 @@ export class IoSelector extends IoElement {
       const importPath = args.import;
       delete args.import;
 
-      this.textContent = '';
+      const cache = !explicitlyDontCache && (this.cache || explicitlyCache);
 
       // TODO: test this!
-      if (!explicitlyDontCache && (this.cache || explicitlyCache) && this._caches[selected]) {
+      if (cache && this._caches[selected]) {
         if (this._caches[selected].parentElement !== this as unknown as HTMLElement) {
+          this.removeChild(this.firstChild);
           this.appendChild(this._caches[selected]);
           this.loading = false;
         }
       } else if (!importPath) {
-        this.template([element]);
+        this.template([element], this as unknown as HTMLElement, cache);
         this._caches[selected] = this.childNodes[0];
         this.loading = false;
       } else {
         this.loading = true;
         void this.importModule(importPath).then(() => {
           if (this.loading) {
-            this.template([element]);
+            this.template([element], this as unknown as HTMLElement, cache);
             this._caches[selected] = this.childNodes[0];
           }
           this.loading = false;

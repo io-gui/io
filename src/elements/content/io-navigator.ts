@@ -32,9 +32,7 @@ export class IoNavigator extends IoElement {
         min-height: calc(var(--iotFieldHeight) - var(--iotBorderWidth));
       }
       :host > io-menu-tree {
-        flex: 1 0 auto;
-        min-width: 8em;
-        overflow-y: auto;
+        min-width: 10em;
       }
       :host[menu=top] > io-menu-options {
         border-width: 0 0 var(--iotBorderWidth) 0;
@@ -72,6 +70,9 @@ export class IoNavigator extends IoElement {
   @Property(Infinity)
   declare depth: number;
 
+  @Property(false)
+  declare cache: boolean;
+
   // TODO: implement
   // @Property(false)
   // declare collapsed: boolean;
@@ -93,12 +94,12 @@ export class IoNavigator extends IoElement {
 
     let contentNavigation: VDOMArray | null = null;
     if (this.mode === 'select') {
-      contentNavigation = ['io-selector', {options: this.options, elements: this.elements, select: this.select}];
+      contentNavigation = ['io-selector', {options: this.options, cache: this.cache, elements: this.elements, select: this.select}];
     } else if (this.mode === 'scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
     } else if (this.mode === 'select-scroll') {
       contentNavigation = ['io-scroller', {options: scrollOptions}, [
-        ['io-selector', {options: this.options, elements: this.elements, select: 'root'}],
+        ['io-selector', {options: this.options, cache: this.cache, elements: this.elements, select: 'root'}],
       ]];
     }
 

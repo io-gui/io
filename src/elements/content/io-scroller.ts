@@ -36,7 +36,7 @@ export class IoScroller extends IoElement {
 
   init() {
     this._observer = new MutationObserver(this._onDomMutation);
-    this._observer.observe(this as unknown as HTMLElement, {attributes: false, childList: true, subtree: false});
+    this._observer.observe(this as unknown as HTMLElement, {attributes: false, childList: true, subtree: true});
   }
 
   connectedCallback() {
@@ -45,6 +45,9 @@ export class IoScroller extends IoElement {
   }
 
   protected _onDomMutation() {
+    this.throttle(this._onDomMutationThrottled);
+  }
+  protected _onDomMutationThrottled() {
     this.changed();
   }
 

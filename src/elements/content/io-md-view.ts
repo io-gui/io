@@ -11,7 +11,6 @@ export class IoMdView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-
         display: flex;
         flex-direction: column;
         align-self: stretch;
@@ -21,7 +20,6 @@ export class IoMdView extends IoElement {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
-
         padding: var(--iotLineHeight) var(--iotLineHeight2);
       }
       :host > :first-child {
