@@ -6,6 +6,7 @@ export class IoOptionsDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        align-self: stretch;
         display: flex;
         flex-direction: column;
         border: 1px solid gray;

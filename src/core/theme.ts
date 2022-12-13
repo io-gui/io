@@ -32,6 +32,8 @@ type Variables = {
   iotFieldHeight3: number;
   iotFieldHeight4: number;
   iotFieldHeight8: number;
+  iotFieldHeight10: number;
+  iotFieldHeight12: number;
   iotStrokeWidth: number;
   iotBorderRadius: number;
   iotBorderRadius2: number;
@@ -81,6 +83,8 @@ const defaultThemes: Themes = {
     iotFieldHeight3: 112,
     iotFieldHeight4: 168,
     iotFieldHeight8: 236,
+    iotFieldHeight10: 280,
+    iotFieldHeight12: 336,
     iotStrokeWidth: 1,
     iotBorderRadius: 2,
     iotBorderRadius2: 4,
@@ -126,6 +130,8 @@ const defaultThemes: Themes = {
     iotFieldHeight3: 112,
     iotFieldHeight4: 168,
     iotFieldHeight8: 236,
+    iotFieldHeight10: 280,
+    iotFieldHeight12: 336,
     iotStrokeWidth: 1,
     iotBorderRadius: 2,
     iotBorderRadius2: 4,
@@ -151,8 +157,8 @@ const defaultThemes: Themes = {
     iotBorderColorSelected: new Color(0.3, 0.3, 1, 1),
     iotBorderColorFocus: new Color(0.5, 0.9, 1, 1),
 
-    iotGradientColorStart: new Color(1, 1, 1, 0.1),
-    iotGradientColorEnd: new Color(0, 0, 0, 0.2),
+    iotGradientColorStart: new Color(0.7, 0.7, 0.7, 1),
+    iotGradientColorEnd: new Color(0.3, 0.3, 0.3, 1),
 
     iotShadowColor: new Color(0, 0, 0, 0.2),
   },
@@ -253,6 +259,8 @@ export class IoTheme extends IoElement {
     this.iotFieldHeight3 = this.iotFieldHeight * 3;
     this.iotFieldHeight4 = this.iotFieldHeight * 4;
     this.iotFieldHeight8 = this.iotFieldHeight * 8;
+    this.iotFieldHeight10 = this.iotFieldHeight * 10;
+    this.iotFieldHeight12 = this.iotFieldHeight * 12;
     this.iotLineHeight2 = this.iotLineHeight * 2;
     this.iotLineHeight3 = this.iotLineHeight * 3;
     this.iotLineHeight4 = this.iotLineHeight * 4;

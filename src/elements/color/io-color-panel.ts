@@ -74,6 +74,9 @@ export class IoColorPanel extends IoColorBase {
   @Property({value: false, reflect: true})
   declare vertical: boolean;
 
+  @Property({value: false, reflect: true})
+  declare inlayer: boolean;
+
   static get Listeners() {
     return {
       'keydown': '_onKeydown',
@@ -99,5 +102,5 @@ export class IoColorPanel extends IoColorBase {
   }
 }
 
-export const IoColorPanelSingleton = new IoColorPanel();
+export const IoColorPanelSingleton = new IoColorPanel({inlayer: true});
 IoLayerSingleton.appendChild(IoColorPanelSingleton as unknown as HTMLElement);

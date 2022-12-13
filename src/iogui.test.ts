@@ -50,9 +50,8 @@ export class IoGuiTestPage extends IoElement {
         color: var(--iotColor);
       }
       :host #mocha {
-        margin: 0;
+        margin: 0 var(--iotLineHeight);
         position: relative;
-        justify-self: stretch;
       }
       :host #mocha-report {
         margin: 2em 1em;
@@ -92,6 +91,7 @@ export class IoGuiTestPage extends IoElement {
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
     runTests();
+    console.log(this);
     // setTimeout(() => {
     //   const failElement = this.parentElement.querySelector('.fail');
     //   failElement.parentElement.parentElement.parentElement.scrollIntoView({

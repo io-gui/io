@@ -203,14 +203,14 @@ document.createElement = function(tagName: string, options?: ElementCreationOpti
  * @param {HTMLElement} element - Element to set properties on.
  * @param {Object} props - Element properties.
  */
-const applyNativeElementProps = function(element: HTMLElement, props: any) {
+export const applyNativeElementProps = function(element: HTMLElement, props: any) {
   for (const p in props) {
     const prop = props[p];
     if (p.startsWith('@')) {
       element.setAttribute(p.substr(1), prop);
     } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else if (p === 'id') (element as any)[p] = prop;
+    else (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop);
     if (p === 'src') element.setAttribute('src', prop);
   }
@@ -318,15 +318,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       host.removeChild(child);
       if (!cache) disposeElementDeep(child as unknown as IoElement);
     }
-    // create new elements after existing
-    if (children.length < vChildren.length) {
-      const frag = document.createDocumentFragment();
-      for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructElement(vChildren[i]);
-        frag.appendChild(element);
-      }
-      host.appendChild(frag);
-    }
+    // replace elements
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
       // replace existing elements
@@ -347,6 +339,16 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           applyNativeElementProps(child as HTMLElement, vChildren[i].props);
         }
       }
+    }
+    // TODO: doing this before "replace elements" cached elements to be created twice. Consider making a unit test for this.
+    // create new elements after existing
+    if (children.length < vChildren.length) {
+      const frag = document.createDocumentFragment();
+      for (let i = children.length; i < vChildren.length; i++) {
+        const element = constructElement(vChildren[i]);
+        frag.appendChild(element);
+      }
+      host.appendChild(frag);
     }
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.

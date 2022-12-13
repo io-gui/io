@@ -12,7 +12,6 @@ export default class {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           chai.expect(element.template).to.be.a('function');
-          chai.expect(element.disposeDeep).to.be.a('function');
           chai.expect(element.traverse).to.be.a('function');
           chai.expect(element.setAttribute).to.be.a('function');
         });

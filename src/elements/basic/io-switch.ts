@@ -50,14 +50,14 @@ export class IoSwitch extends IoBoolean {
       }
       :host[value]:after {
         background-color: var(--iotBackgroundColorSelected);
-        left: calc(100% - var(--iotLineHeight));
+        left: calc(100% - calc(var(--iotLineHeight) - var(--iotBorderWidth)));
       }
       :host:focus:before,
       :host:focus:after {
-        /* border-color: var(--iotBorderColorFocus); */
+        border-color: var(--iotBorderColorFocus);
       }
       :host:focus {
-        /* outline: 1px solid var(--iotBorderColorFocus); */
+        outline: 0;
       }
     `;
   }

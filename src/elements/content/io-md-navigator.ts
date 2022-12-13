@@ -11,6 +11,8 @@ export class IoMdNavigator extends IoElement {
     return /* css */`
       :host {
         flex-direction: column;
+        flex: 1 1 auto;
+        align-items: stretch;
         align-self: stretch;
         overflow: auto;
       }
@@ -30,8 +32,8 @@ export class IoMdNavigator extends IoElement {
         min-height: calc(var(--iotFieldHeight) - var(--iotBorderWidth));
       }
       :host > io-menu-tree {
-        flex: 1 0 auto;
-        min-width: 8em;
+        flex: 0 0 auto;
+        min-width: 10em;
         overflow-y: auto;
       }
       :host[menu=top] > io-menu-options {
@@ -84,7 +86,7 @@ export class IoMdNavigator extends IoElement {
     this.template([
       this.menu === 'top' ? ['io-menu-options', {horizontal: true, ...sharedMenuConfig}] : null,
       this.menu === 'left' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
-      ['io-md-view', {src: this.options.leaf}],
+      this.options.leaf ? ['io-md-view', {src: this.options.leaf}] : null,
       this.menu === 'right' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
       this.menu === 'bottom' ? ['io-menu-options', {horizontal: true, direction: 'up', ...sharedMenuConfig}] : null,
     ]);

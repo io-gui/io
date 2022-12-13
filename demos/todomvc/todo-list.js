@@ -3,6 +3,13 @@ import {TodoModel} from './todo-model.js';
 import './todo-item.js';
 
 export class TodoList extends IoElement {
+  static get Style() {
+    return /* CSS */`
+      :host {
+        flex-direction: column;
+      }
+    `;
+  }
   static get Properties() {
     return {
       model: {

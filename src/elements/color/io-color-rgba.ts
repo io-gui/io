@@ -11,7 +11,7 @@ export class IoColorRgba extends IoColorBase {
       :host {
         flex: 0 1 auto;
         min-width: var(--iotFieldHeight4);
-        width: var(--iotFieldHeight8);
+        width: var(--iotFieldHeight10);
       }
       :host > io-number {
         flex: 1 0 0;

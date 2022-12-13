@@ -13,7 +13,7 @@ export class IoCollapsable extends IoElement {
     :host {
       flex-direction: column;
       flex-shrink: 0;
-      justify-self: stretch;
+      align-self: stretch;
       box-sizing: content-box;
       align-items: stretch;
       align-self: stretch;

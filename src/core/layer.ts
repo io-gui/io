@@ -52,8 +52,9 @@ export class IoLayer extends IoElement {
         background: rgba(0,0,0,0.2);
       }
       :host > * {
-        position: absolute;
+        position: absolute !important;
         touch-action: none;
+        box-shadow: var(--iotShadow);
       }
     `;
   }

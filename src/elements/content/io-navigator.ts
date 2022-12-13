@@ -13,6 +13,8 @@ export class IoNavigator extends IoElement {
     return /* css */`
       :host {
         flex-direction: column;
+        flex: 1 1 auto;
+        align-items: stretch;
         align-self: stretch;
         overflow: auto;
       }
@@ -32,7 +34,9 @@ export class IoNavigator extends IoElement {
         min-height: calc(var(--iotFieldHeight) - var(--iotBorderWidth));
       }
       :host > io-menu-tree {
+        flex: 0 0 auto;
         min-width: 10em;
+        overflow-y: auto;
       }
       :host[menu=top] > io-menu-options {
         border-width: 0 0 var(--iotBorderWidth) 0;
@@ -44,6 +48,9 @@ export class IoNavigator extends IoElement {
         border-radius: 0;
       }
       :host > io-scroller {
+        flex: 1 1 auto;
+      }
+      :host > io-selector {
         flex: 1 1 auto;
       }
     `;

@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement, VDOMArray, IoElementArgs, disposeElementDeep } from '../../core/element.js';
+import { IoElement, RegisterIoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
 
@@ -14,8 +14,12 @@ export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        align-items: flex-start;
+        flex-direction: column;
         overflow-y: auto;
+        position: relative;
+      }
+      :host > * {
+        align-self: stretch;
       }
       @keyframes io-loading-spinner {
         to {
@@ -95,6 +99,7 @@ export class IoSelector extends IoElement {
 
     if (!selected) {
 
+      console.log('template', null);
       this.template([]);
 
     } else {
@@ -120,9 +125,20 @@ export class IoSelector extends IoElement {
 
       // TODO: test this!
       if (cache && this._caches[selected]) {
+        const cachedElement = this._caches[selected] as unknown as IoElement;
         if (this._caches[selected].parentElement !== this as unknown as HTMLElement) {
           this.removeChild(this.firstChild);
-          this.appendChild(this._caches[selected]);
+          this.appendChild(cachedElement);
+          // Update properties
+          cachedElement.removeAttribute('className');
+          if (cachedElement._isIoElement) {
+            // Set IoElement element properties
+            cachedElement.applyProperties(args);
+          } else {
+            // Set native HTML element properties
+            applyNativeElementProps(cachedElement as unknown as HTMLElement, args);
+          }
+
           this.loading = false;
         }
       } else if (!importPath) {

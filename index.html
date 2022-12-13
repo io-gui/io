@@ -96,17 +96,17 @@
         display: flex;
         flex-direction: column;
         height: 100%;
+        background-color: var(--iotBackgroundColor);
       }
-      io-main-page iframe {
-        width: 100%;
-        height: 100%;
+      io-main-page io-selector#Demos {
+        flex: 1 1 auto;
       }
       io-sidebar:not([collapsed]) {
         flex-basis: 11em !important;
       }
       io-main-page iframe {
         border: none;
-        flex: 1 1;
+        flex: 1 1 auto;
       }
       @media (max-width: 860px) {
         io-sidebar {
@@ -225,7 +225,7 @@
       ]},
       {value: 'Tests'},
     ], {
-      path: $({key: 'path', storage: 'hash', value: 'Tests'}),
+      path: $({key: 'path', storage: 'hash', value: 'About'}),
     });
 
     export class IoMainPage extends IoNavigator {
@@ -258,10 +258,10 @@
                 ['io-demo-elements-showcase', {id: 'Elements Showcase', import: './demos/elements-showcase.js'}],
                 ['io-demo-theme-editor', {id: 'Theme Editor', import: './demos/theme-editor.js'}],
                 ['io-demo-menu-model', {id: 'Menu Model', import: './demos/menu-model.js'}],
-                ['iframe', {id: 'TODO MVC App', title: 'TODO MVC App', src: './demos/todomvc/index.html'}],
+                ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],
               ]
             }],
-            ['io-gui-test-page', {id: 'Tests', title: 'Tests', import: './build/iogui.test.js'}],
+            ['io-gui-test-page', {id: 'Tests', import: './build/iogui.test.js'}],
           ]
         };
       }

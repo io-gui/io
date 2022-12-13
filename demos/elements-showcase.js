@@ -1,4 +1,9 @@
-import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/iogui.js';
+import { RegisterIoElement, IoElement, IoStorage, MenuOptions, MenuItem } from '../build/iogui.js';
+import './menu-model.js';
+
+function $(key) {
+  return new IoStorage({key: key, value: false, storage: 'local'})
+}
 
 const numberItems = [
   {value: 0, label: 'zero'},
@@ -46,56 +51,91 @@ for (let i = 0; i < 100; i++) {
   longOptions.push(new MenuItem({icon: h, label: r1 + ' ' + r2 + ' ' + i, value: r1 + ' ' + r2, hint: r3}));
 }
 
+const contentOptions = new MenuOptions([
+  {value: 'devs', options: ['dev1', 'dev2', 'dev3', 'dev4', 'dev5', 'dev6', 'dev7']},
+  {value: 'foos', options: ['foo1', 'foo2', 'foo3', 'foo4', 'foo5', 'foo6', 'foo7']},
+  {value: 'bazs', options: ['baz1', 'baz2', 'baz3', 'baz4', 'baz5', 'baz6', 'baz7']},
+  {value: 'bars', options: ['bar1', 'bar2', 'bar3', 'bar4', 'bar5', 'bar6', 'bar7']},
+]);
+contentOptions[0].selected = true;
+contentOptions[0].options[3].selected = true;
+
+const elements = [
+  ['div', {id: 'devs'}, [
+    ['span', {id: 'dev1'}, 'io-dev 1'],
+    ['span', {id: 'dev2'}, 'io-dev 2'],
+    ['span', {id: 'dev3'}, 'io-dev 3'],
+    ['span', {id: 'dev4'}, 'io-dev 4'],
+    ['span', {id: 'dev5'}, 'io-dev 5'],
+    ['span', {id: 'dev6'}, 'io-dev 6'],
+    ['span', {id: 'dev7'}, 'io-dev 7'],
+  ]],
+  ['div', {id: 'foos'}, [
+    ['span', {id: 'foo1'}, 'io-foo 1'],
+    ['span', {id: 'foo2'}, 'io-foo 2'],
+    ['span', {id: 'foo3'}, 'io-foo 3'],
+    ['span', {id: 'foo4'}, 'io-foo 4'],
+    ['span', {id: 'foo5'}, 'io-foo 5'],
+    ['span', {id: 'foo6'}, 'io-foo 6'],
+    ['span', {id: 'foo7'}, 'io-foo 7'],
+  ]],
+  ['div', {id: 'bazs'}, [
+    ['span', {id: 'baz1'}, 'io-baz 1'],
+    ['span', {id: 'baz2'}, 'io-baz 2'],
+    ['span', {id: 'baz3'}, 'io-baz 3'],
+    ['span', {id: 'baz4'}, 'io-baz 4'],
+    ['span', {id: 'baz5'}, 'io-baz 5'],
+    ['span', {id: 'baz6'}, 'io-baz 6'],
+    ['span', {id: 'baz7'}, 'io-baz 7'],
+  ]],
+  ['div', {id: 'bars'}, [
+    ['span', {id: 'bar1'}, 'io-bar 1'],
+    ['span', {id: 'bar2'}, 'io-bar 2'],
+    ['span', {id: 'bar3'}, 'io-bar 3'],
+    ['span', {id: 'bar4'}, 'io-bar 4'],
+    ['span', {id: 'bar5'}, 'io-bar 5'],
+    ['span', {id: 'bar6'}, 'io-bar 6'],
+    ['span', {id: 'bar7'}, 'io-bar 7'],
+  ]],
+];
+
 export class IoDemoElementsShowcase extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
         flex-direction: column;
-        background: var(--iotBackgroundColor);
-        color: var(--iotColor);
+        width: 100%;
+        height: 100%;
+        flex: 0 0 auto;
       }
-      :host > div > io-label {
+      :host io-collapsable {
+
+      }
+      :host io-collapsable.overflow > div {
+        max-height: 20rem;
+      }
+      :host io-collapsable.row > div {
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: hidden;
+      }
+      :host io-collapsable > div > io-collapsable {
+        padding-left: var(--iotFieldHeight);
+      }
+      :host > io-collapsable[expanded] {
+        /* flex-basis: 100%; */
+      }
+      :host span {
         display: block;
-        background: var(--iotBackgroundColorLight);
-        padding: var(--iotSpacing);
-        height: auto;
-      }
-      :host > div > div {
-        display: flex;
-        /* width: 425px; */
-        margin: var(--iotSpacing) 0;
-        padding: var(--iotSpacing) 0;
-        border: var(--iotBorder);
-        border-color: rgba(128, 128, 128, .125);
-      }
-      :host > div > div.tall {
-        height: var(--iotFieldHeight4);
-      }
-      :host > div > div > :nth-child(1) {
-        flex: 0 0 160px;
-        text-align: right;
-        margin-right: var(--iotSpacing);
-      }
-      :host > div > div > * {
-        margin-left: var(--iotSpacing);
-      }
-      :host > div > div > io-label,
-      :host > div > div > io-icon {
-        margin-top: var(--iotSpacing);
-      }
-      :host > div > div > io-menu-options:not([horizontal]) {
-        flex: 0 1 auto;
+        padding-bottom: 10em;
       }
     `;
   }
   static get Properties() {
     return {
       string: 'zero',
-
       menuPath: '',
       menuRoot: 0,
-
       string: 'Hello!',
       number: 1,
       boolean: true,
@@ -128,293 +168,233 @@ export class IoDemoElementsShowcase extends IoElement {
       }}
     };
   }
-  constructor(props) {
-    super(props);
+  init() {
     this.template([
-      ['div', [
-        ['io-label', {label: 'Basic Editors'}],
-        ['div', [
-          ['io-label', {label: '<io-icon>'}],
-          ['io-icon', {icon: 'icons:io'}],
-          ['io-icon', {icon: 'icons:io', stroke: true}],
-          ['io-icon', {icon: 'ℹ️'}],
-          ['io-icon', {icon: '❤️'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-field>'}],
-          ['io-field', {value: this.bind('string'), appearance: 'outset'}],
-          ['io-field', {value: this.bind('string'), appearance: 'inset'}],
-          ['io-field', {value: this.bind('string')}],
-          ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
-          ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
-          ['io-field', {value: this.bind('string'), invalid: true}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-string>'}],
-          ['io-string', {value: this.bind('string')}],
-          ['io-string', {value: this.bind('string'), live: true}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-number>'}],
-          ['io-number', {value: this.bind('number')}],
-          ['io-number', {ladder: true, value: this.bind('number')}],
-          ['io-number', {conversion: 2, value: this.bind('number')}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-boolean>'}],
-          ['io-boolean', {value: this.bind('boolean')}],
-          ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-switch>'}],
-          ['io-switch', {value: this.bind('boolean')}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-button>'}],
-          ['io-button', {label: 'Button', icon: 'icons:check'}],
-          ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'inset'}],
-          ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'flush'}],
-          ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'neutral'}],
-        ]],
-      ]],
-      ['div', [
-        ['io-label', {label: 'Sliders'}],
-        ['div', [
-          ['io-label', {label: '<io-slider>'}],
-          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
-          ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
-          ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
-          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
-          ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
-          ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<number-slider>'}],
-          ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<slider-range>'}],
+      ['io-collapsable', {label: 'Basic Elements', expanded: $('expanded-demo-basic'), elements: [
+        ['io-collapsable', {label: 'io-icon', class: 'row', expanded: $('expanded-demo-basic-1'),
+          elements: [
+            ['io-icon', {icon: 'icons:io'}],
+            ['io-icon', {icon: 'icons:io', stroke: true}],
+            ['io-icon', {icon: 'ℹ️'}],
+            ['io-icon', {icon: '❤️'}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-field', class: 'row', expanded: $('expanded-demo-basic-2'),
+          elements: [
+            ['io-field', {value: this.bind('string'), appearance: 'outset'}],
+            ['io-field', {value: this.bind('string'), appearance: 'inset'}],
+            ['io-field', {value: this.bind('string')}],
+            ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
+            ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
+            ['io-field', {value: this.bind('string'), invalid: true}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-string', class: 'row', expanded: $('expanded-demo-basic-3'),
+          elements: [
+            ['io-string', {value: this.bind('string')}],
+            ['io-string', {value: this.bind('string'), live: true}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-number', class: 'row', expanded: $('expanded-demo-basic-4'),
+          elements: [
+            ['io-number', {value: this.bind('number')}],
+            ['io-number', {ladder: true, value: this.bind('number')}],
+            ['io-number', {conversion: 2, value: this.bind('number')}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-boolean', class: 'row', expanded: $('expanded-demo-basic-5'),
+          elements: [
+            ['io-boolean', {value: this.bind('boolean')}],
+            ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-switch', expanded: $('expanded-demo-basic-6'),
+          elements: [
+            ['io-switch', {value: this.bind('boolean')}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-button', class: 'row', expanded: $('expanded-demo-basic-7'),
+            elements: [
+              ['io-button', {label: 'Button', icon: 'icons:check'}],
+              ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'inset'}],
+              ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'flush'}],
+              ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'neutral'}],
+            ]
+          }],
+      ]}],
+      ['io-collapsable', {label: 'Basic Sliders', expanded: $('expanded-sliders-basic'), elements: [
+        ['io-collapsable', {label: 'io-slider', expanded: $('expanded-sliders-basic-1'),
+          elements: [
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
+            ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
+            ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-slider-range', expanded: $('expanded-sliders-basic-2'), elements: [
           ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
           ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 3}],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
           ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 0.3}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<number-slider-range>'}],
+        ]}],
+        ['io-collapsable', {label: 'io-number-slider and io-number-slider-range', expanded: $('expanded-sliders-basic-3'), elements: [
+          ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
           ['io-number-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
-        ]],
-        ['div', {class: 'tall'}, [
-          ['io-label', {label: '<io-slider-2d>'}],
+        ]}],
+        ['io-collapsable', {label: 'io-slider-2d and io-slider[vertical]', class: 'row', expanded: $('expanded-sliders-basic-4'), elements: [
           ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
           ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
           ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
           ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
-        ]],
-        ['div', {class: 'tall'}, [
-          ['io-label', {label: ' '}],
           ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
           ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
           ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
           ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
-        ]],
-      ]],
-      ['div', [
-        ['io-label', {label: 'Color Editors'}],
-        ['div', [
-          ['io-label', {label: '<color-rgba>'}],
+        ]}],
+      ]}],
+      ['io-collapsable', {label: 'Color Sliders', expanded: $('expanded-demo-color'), elements: [
+        ['io-collapsable', {label: 'io-color-slider', expanded: $('expanded-demo-color-1'), elements: [
           ['io-color-rgba', {value: this.rgba}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-rgba> [rgb]'}],
           ['io-color-rgba', {value: this.rgb}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [r]'}],
           ['io-color-slider', {value: this.rgba, channel: 'r'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [g]'}],
           ['io-color-slider', {value: this.rgba, channel: 'g'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [b]'}],
           ['io-color-slider', {value: this.rgba, channel: 'b'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [a]'}],
           ['io-color-slider', {value: this.rgba, channel: 'a'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [h]'}],
           ['io-color-slider', {value: this.rgba, channel: 'h'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [s]'}],
           ['io-color-slider', {value: this.rgba, channel: 's'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [v]'}],
           ['io-color-slider', {value: this.rgba, channel: 'v'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [l]'}],
           ['io-color-slider', {value: this.rgba, channel: 'l'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [c]'}],
           ['io-color-slider', {value: this.rgba, channel: 'c'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [m]'}],
           ['io-color-slider', {value: this.rgba, channel: 'm'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [y]'}],
           ['io-color-slider', {value: this.rgba, channel: 'y'}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<color-slider> [k]'}],
           ['io-color-slider', {value: this.rgba, channel: 'k'}],
-        ]],
-        ['div', {class: 'tall'}, [
-          ['io-label', {label: 'slider-2d + [vert]'}],
+        ]}],
+        ['io-collapsable', {label: 'io-color-slider (2D and vertical)', class: 'row', expanded: $('expanded-demo-color-2'), elements: [
           ['io-color-slider', {value: this.rgba, channel: 'hs'}],
           ['io-color-slider', {value: this.rgba, channel: 'sv'}],
           ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
           ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
-        ]],
-        ['div', {class: 'tall'}, [
-          ['io-label', {label: '<color-panel>'}],
           ['io-color-panel', {expanded: true, value: this.rgba}]
-        ]],
-      ]],
-      ['div', [
-        ['io-label', {label: 'Vector Editors'}],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
+        ]}],
+      ]}],
+      ['io-collapsable', {label: 'Vector Editors', expanded: $('expanded-demo-vector'), elements: [
+        ['io-collapsable', {label: 'io-vector', expanded: $('expanded-demo-vector-1'), elements: [
           ['io-vector', {value: this.array2}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.array3}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.array3, linkable: true}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.array4}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.vector2}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.vector3}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.vector3, linkable: true}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.vector4}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.rgb}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-vector>'}],
           ['io-vector', {value: this.rgba}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-matrix>'}],
+        ]}],
+        ['io-collapsable', {label: 'io-matrix', expanded: $('expanded-demo-vector-2'), elements: [
           ['io-matrix', {value: this.matrix2}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-matrix>'}],
           ['io-matrix', {value: this.matrix3}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-matrix>'}],
           ['io-matrix', {value: this.matrix4}],
-        ]],
-      ]],
-      ['div', [
-        ['io-label', {label: 'Object Editors'}],
-        ['div', [
-          ['io-label', {label: 'properties'}],
-          ['io-properties', {
-            value: this.object,
-            // properties: ['number', 'string', 'boolean'],
-            config: {'number': ['io-slider', {step: 0.1}]}
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: 'object [filtered]'}],
-          ['io-object', {
-            value: this.object,
-            expanded: true,
-            slotted: ['io-field', {label: 'Slotted Element'}],
-            properties: ['number', 'string', 'boolean'],
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: 'object [configured]'}],
-          ['io-object', {
-            value: this.object,
-            expanded: true,
-            properties: ['number'],
-            config: {'number': ['io-slider', {step: 0.1}]}
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: 'inspector'}],
-          ['io-inspector', {
-            value: this.object,
-            groups: {
-              'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
-              'Object|vectors and matrices': [/vector/i, /matrix/i],
-            },
-            config: {
-              'vector2': ['io-vector', {linkable: true}],
-              'vector3': ['io-vector', {linkable: true}],
-              'vector4': ['io-vector', {linkable: true}],
-              'matrix2': ['io-matrix'],
-              'matrix3': ['io-matrix'],
-              'matrix4': ['io-matrix'],
-              'number': ['io-slider', {step: 0.1}],
-            },
-          }],
-        ]],
-      ]],
-      ['div', [
-        ['io-label', {label: 'Menus'}],
-        ['div', [
-          ['io-label', {label: '<io-menu-item>'}],
+        ]}],
+      ]}],
+      ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
+        ['io-collapsable', {label: 'io-navigator with mode="select-scroll "and menu="left"', class: 'overflow', expanded: $('expanded-demo-content-1'), elements: [
+          ['io-navigator', {
+            menu: 'left',
+            mode: 'select-scroll',
+            elements: elements,
+            options: contentOptions,
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-navigator with mode="scroll" and with menu="right"', class: 'overflow', expanded: $('expanded-demo-content-2'), elements: [
+          ['io-navigator', {
+            menu: 'right',
+            mode: 'scroll',
+            options: contentOptions[0].options,
+            elements: [elements[0]]
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-navigator with mode="select", select="root" and with menu="top"', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
+          ['io-navigator', {
+            menu: 'top',
+            mode: 'select',
+            select: 'root',
+            depth: 0,
+            options: contentOptions,
+            elements: elements
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-selector with select="root"', class: 'overflow', expanded: $('expanded-demo-content-4'), elements: [
+          ['io-selector', {
+            select: 'root',
+            elements: elements,
+            options: contentOptions,
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-scroller', class: 'overflow', expanded: $('expanded-demo-content-5'), elements: [['io-scroller', {
+            select: 'root',
+            options: contentOptions[0].options,
+          }, [elements[0]]]]
+        }],
+        ['io-collapsable', {label: 'scrollable content', class: 'overflow', expanded: $('expanded-demo-content-6'), elements: [elements[0]] }],
+      ]}],
+      ['io-collapsable', {label: 'Object Editors', expanded: $('expanded-demo-objects'), elements: [
+          ['io-collapsable', {label: 'io-properties', expanded: $('expanded-demo-objects-1'), elements: [
+            ['io-properties', {
+              value: this.object,
+              // properties: ['number', 'string', 'boolean'],
+              config: {'number': ['io-slider', {step: 0.1}]}
+            }],
+          ]}],
+          ['io-collapsable', {label: 'io-object', expanded: $('expanded-demo-objects-2'), elements: [
+            ['io-object', {
+              value: this.object,
+              expanded: true,
+              slotted: ['io-field', {label: 'Slotted Element'}],
+              properties: ['number', 'string', 'boolean'],
+            }],
+          ]}],
+          ['io-collapsable', {label: 'io-object', expanded: $('expanded-demo-objects-3'), elements: [
+            ['io-object', {
+              value: this.object,
+              expanded: true,
+              properties: ['number'],
+              config: {'number': ['io-slider', {step: 0.1}]}
+            }],
+          ]}],
+          ['io-collapsable', {label: 'io-inspector', expanded: $('expanded-demo-objects-4'), elements: [
+            ['io-inspector', {
+              value: this.object,
+              groups: {
+                'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
+                'Object|vectors and matrices': [/vector/i, /matrix/i],
+              },
+              config: {
+                'vector2': ['io-vector', {linkable: true}],
+                'vector3': ['io-vector', {linkable: true}],
+                'vector4': ['io-vector', {linkable: true}],
+                'matrix2': ['io-matrix'],
+                'matrix3': ['io-matrix'],
+                'matrix4': ['io-matrix'],
+                'number': ['io-slider', {step: 0.1}],
+              },
+            }],
+          ]}],
+        ]
+      }],
+      ['io-collapsable', {label: 'Menu Models', expanded: $('expanded-demo-models'), elements: [
+        ['io-collapsable', {label: 'MenuOptions and MenuItem select demo', expanded: $('expanded-demo-models-1'), elements: [
+          // TODO: implement import
+          ['io-demo-menu-model', {name: 'Menu Model', import: './demos/menu-model.js'}],
+        ]}],             
+      ]}],
+      ['io-collapsable', {label: 'Menu Elements', expanded: $('expanded-demo-menus'), elements: [
+        ['io-collapsable', {label: 'io-menu-tree', expanded: $('expanded-demo-menus-1'), elements: [
+          ['io-menu-tree', {
+            options: options,
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-menu-item', expanded: $('expanded-demo-menus-2'), elements: [
           ['io-menu-item', {label: 'menu item', item: new MenuItem({
             selected: this.bind('boolean'),
             value: 'value',
@@ -422,9 +402,8 @@ export class IoDemoElementsShowcase extends IoElement {
             label: 'menu item label',
             icon: '💚',
           })}],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-menu-options>'}],
+        ]}],
+        ['io-collapsable', {label: 'io-menu-options', class: 'row', expanded: $('expanded-demo-menus-3'), elements: [
           ['io-menu-options', {
             searchable: true,
             options: new MenuOptions(numberItems, {
@@ -446,9 +425,8 @@ export class IoDemoElementsShowcase extends IoElement {
               root: this.bind('menuRoot')
             }),
           }],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
+        ]}],
+        ['io-collapsable', {label: 'io-menu-options [horizontal]', expanded: $('expanded-demo-menus-4'), elements: [
           ['io-menu-options', {
             horizontal: true,
             searchable: true,
@@ -456,9 +434,6 @@ export class IoDemoElementsShowcase extends IoElement {
               root: this.bind('menuRoot')
             }),
           }],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
           ['io-menu-options', {
             horizontal: true,
             noPartialCollapse: true,
@@ -466,47 +441,8 @@ export class IoDemoElementsShowcase extends IoElement {
               root: this.bind('menuRoot')
             }),
           }],
-        ]],
-        ['div', [
-          ['io-label', {label: ' '}],
-          ['io-menu-options', {
-            options: new MenuOptions([
-              new MenuItem({value: 'Numbers', sellect: 'none', options: new MenuOptions(numberItems)}),
-              // TODO: Selecting children of "Words" should not deselect children of "Numbers"
-              new MenuItem({value: 'Words', options: new MenuOptions(longOptions)}),
-              new MenuItem({value: 'Suboptions', options: new MenuOptions(options)}),
-            ], {
-              // TODO: when binding two menu trees with both `root` and `path` properties, it is important that `MenuOptions.updatePaths > setProperties`
-              // updates the `path` property before the `root`. Otherwise, the menu binding will be broken!
-              // TODO: create a test for this edge-case.
-              path: this.bind('menuPath'),
-              // root: this.bind('menuRoot'),
-            }),
-          }],
-        ]],
-        ['div', [
-          ['io-label', {label: '<io-option-menu>'}],
-          ['io-option-menu', {
-            options: new MenuOptions([
-              {label: 'negative one', value: -1},
-              ...numberItems,
-              {label: 'leet', value: 1337},
-            ]),
-            value: this.bind('menuRoot')
-          }],
-          ['io-option-menu', {options: new MenuOptions([ -1, 0, 0.5, 1, 2, 3, 4, 1337]), value: this.bind('menuRoot')}],
-        ]],
-        // ['div', [
-        //   ['io-label', {label: '<io-context-menu>'}],
-        //   ['span', 'click for menu'],
-        //   ['io-context-menu', {options: menuoptions, position: 'pointer', button: 0}],
-        // ]],
-        // ['div', [
-        //   ['io-label', {label: ' '}],
-        //   ['span', 'right-click for menu'],
-        //   ['io-context-menu', {options: menuoptions, position: 'pointer', button: 2}],
-        // ]],
-      ]],
+        ]}],
+      ]}],
     ]);
   }
 }

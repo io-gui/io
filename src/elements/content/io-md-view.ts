@@ -21,6 +21,8 @@ export class IoMdView extends IoElement {
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
         padding: var(--iotLineHeight) var(--iotLineHeight2);
+        color: var(--iotColor);
+        background-color: var(--iotBackgroundColor);
       }
       :host > :first-child {
         margin-top: 0;

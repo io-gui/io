@@ -37,9 +37,7 @@ export class IoMenuOptions extends IoElement {
 
     :host[inlayer] {
       min-width: 8em;
-      box-shadow: var(--iotShadow);
       overflow-y: auto !important;
-      position: absolute;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
