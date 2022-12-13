@@ -131,7 +131,7 @@ const elements = [
   ]],
 ];
 
-export class IoDemoElementsShowcase extends IoElement {
+export class IoDemoElementsDev extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -482,4 +482,4 @@ export class IoDemoElementsShowcase extends IoElement {
   }
 }
 
-RegisterIoElement(IoDemoElementsShowcase);
+RegisterIoElement(IoDemoElementsDev);

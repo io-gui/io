@@ -55,11 +55,14 @@ export class IoString extends IoField {
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onPointerdown(event: PointerEvent) {
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onPointermove(event: PointerEvent) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);

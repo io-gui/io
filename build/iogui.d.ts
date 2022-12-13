@@ -288,7 +288,6 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
-		d: boolean;
 		/**
 		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 		 * @param {string} name Property name to set value of.
@@ -410,7 +409,6 @@ declare const IoNode_base: {
 		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
-		d: boolean;
 		/**
 		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 		 * @param {string} name Property name to set value of.
@@ -604,6 +602,13 @@ export declare const buildTree: () => (node: VDOMArray) => any;
  * @param {IoElement} elementConstructor - Element class to register.
  */
 export declare function RegisterIoElement(elementConstructor: typeof IoElement): void;
+export declare const disposeElementDeep: (element: IoElement) => void;
+/**
+ * Sets element properties.
+ * @param {HTMLElement} element - Element to set properties on.
+ * @param {Object} props - Element properties.
+ */
+export declare const applyNativeElementProps: (element: HTMLElement, props: any) => void;
 declare const IoElement_base: {
 	new (...args: any[]): {
 		[x: string]: any;
@@ -612,7 +617,6 @@ declare const IoElement_base: {
 		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
-		d: boolean;
 		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
 		applyProperties(props: any): void;
 		setProperties(props: any): void;
@@ -663,16 +667,17 @@ export declare class IoElement extends IoElement_base {
 	 * Renders DOM from virtual DOM arrays.
 	 * @param {Array} vDOM - Array of vDOM children.
 	 * @param {HTMLElement} [host] - Optional template target.
+	 * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
 	 */
-	template(vDOM: Array<any>, host?: HTMLElement): void;
-	disposeDeep(host: HTMLElement, child: any): void;
+	template(vDOM: Array<any>, host?: HTMLElement, cache?: boolean): void;
 	/**
 	 * Recurively traverses vDOM.
 	 * TODO: test element.traverse() function!
 	 * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
 	 * @param {HTMLElement} [host] - Optional template target.
+	 * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
 	 */
-	traverse(vChildren: Array<any>, host: HTMLElement): void;
+	traverse(vChildren: Array<any>, host: HTMLElement, cache?: boolean): void;
 	/**
 	* Helper function to flatten textContent into a single TextNode.
 	* Update textContent via TextNode is better for layout performance.
@@ -697,6 +702,7 @@ export interface StorageProps {
 	default?: any;
 	storage?: "hash" | "local" | "none";
 }
+export declare function genObjectStorageID(object: Record<string, any>): string;
 export declare class IoStorageNode extends IoNode {
 	key: string;
 	value: any;
@@ -731,10 +737,9 @@ export declare class Color {
  * IoThemeSingleton.theme = 'dark';
  * ```
  *
- * CSS color variables such as `'--io-color'` and `'--io-background-color'` are mapped to numeric properties `ioColor` and `ioBackgroundColor`.
+ * CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
  */
 export declare class IoTheme extends IoElement {
-	static get Style(): string;
 	static get Properties(): PropertyDeclarations;
 	lazy: boolean;
 	persist: boolean;
@@ -778,7 +783,7 @@ export declare class IoGl extends IoElement {
 	updateThemeUniforms(): void;
 	setUniform(name: string, value: any): void;
 }
-export type NudgeDirection = "pointer" | "up" | "left" | "down" | "right";
+export type NudgeDirection = "none" | "pointer" | "up" | "left" | "down" | "right";
 /**
  * This element is designed to be used as a singleton `IoLayerSingleton`.
  * It is a pointer-blocking element covering the entire window at a very high z-index.
@@ -795,12 +800,18 @@ export declare class IoLayer extends IoElement {
 		contextmenu: string;
 		focusin: string;
 		scroll: string;
-		wheel: string;
+		wheel: (string | {
+			passive: boolean;
+		})[];
 		mousedown: string;
 		mouseup: string;
 		mousemove: string;
-		touchstart: string;
-		touchmove: string;
+		touchstart: (string | {
+			passive: boolean;
+		})[];
+		touchmove: (string | {
+			passive: boolean;
+		})[];
 		touchend: string;
 		keydown: string;
 		keyup: string;
@@ -834,7 +845,6 @@ declare const MenuOptions_base: {
 		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
-		d: boolean;
 		setProperty(name: string, value: any, skipDispatch?: boolean | undefined): void;
 		applyProperties(props: any): void;
 		setProperties(props: any): void;
@@ -902,6 +912,7 @@ export declare class MenuItem extends IoNode {
 	get hasmore(): boolean;
 	getSubitem(value: any): any;
 	constructor(args?: MenuItemArgsWeak);
+	toJSON(): Record<string, any>;
 	_onSubItemSelected(): void;
 	_onOptionsPathChanged(event: CustomEvent): void;
 	optionsChanged(): void;
@@ -1202,7 +1213,7 @@ declare class IoSliderBase extends IoGl {
 	lazy: boolean;
 	_startX: number;
 	_startY: number;
-	_active: boolean;
+	_active: number;
 	_rect: DOMRect | null;
 	get _min(): [
 		number,
@@ -1224,7 +1235,9 @@ declare class IoSliderBase extends IoGl {
 		focus: string;
 		contextmenu: string;
 		pointerdown: string;
-		touchstart: string;
+		touchstart: (string | {
+			passive: boolean;
+		})[];
 	};
 	_onFocus(): void;
 	_onBlur(): void;
@@ -1441,6 +1454,7 @@ export declare class IoColorPanel extends IoColorBase {
 	static get Style(): string;
 	expanded: boolean;
 	vertical: boolean;
+	inlayer: boolean;
 	static get Listeners(): {
 		keydown: string;
 	};
@@ -1485,36 +1499,70 @@ export declare class IoColorPicker extends IoElement {
  **/
 export declare class IoColorRgba extends IoColorBase {
 	static get Style(): string;
-	_onValueInput(event: CustomEvent): void;
+	_onNumberValueInput(event: CustomEvent): void;
 	changed(): void;
 }
-export declare class IoContent extends IoElement {
+/**
+ * An element with collapsable content.
+ * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ **/
+export declare class IoCollapsable extends IoElement {
 	static get Style(): string;
+	elements: VDOMArray[];
+	label: string;
+	icon: string;
+	expanded: boolean;
+	role: string;
+	changed(): void;
+}
+export declare class IoSelector extends IoElement {
+	static get Style(): string;
+	options: MenuOptions;
+	select: "root" | "leaf";
+	elements: VDOMArray[];
+	cache: boolean;
+	loading: boolean;
+	private _caches;
+	importModule(path: string): Promise<unknown>;
+	dispose(): void;
+	changed(): void;
+}
+export declare class IoScroller extends IoElement {
+	static get Style(): string;
+	options: MenuOptions;
+	select: "root" | "leaf";
+	private _observer;
+	private _scrollThrottle?;
+	private _scrollToThrottle?;
+	private _pauseScroll;
 	static get Listeners(): {
 		scroll: (string | {
 			capture: boolean;
 			passive: boolean;
 		})[];
 	};
-	anchor: string;
-	visible: boolean;
-	private _observer;
-	private _scrollThrottle?;
-	private _scrollToThrottle?;
-	private _pauseScroll;
-	private _elements;
 	init(): void;
-	dispose(): void;
 	connectedCallback(): void;
-	anchorChanged(): void;
-	protected _onMutation(): void;
+	protected _onDomMutation(): void;
+	protected _onDomMutationThrottled(): void;
 	protected _onScroll(): void;
-	protected _scrollTo(anchor: string, smooth?: boolean): void;
+	protected _scrollTo(element?: HTMLElement, smooth?: boolean): void;
+	protected _scrollToSelected(smooth?: boolean): void;
+	changed(): void;
+	dispose(): void;
+}
+export declare class IoMdNavigator extends IoElement {
+	static get Style(): string;
+	slotted: VDOMArray[];
+	options: MenuOptions;
+	menu: "none" | "top" | "left" | "bottom" | "right";
+	depth: number;
+	changed(): void;
 }
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-export declare class IoMdView extends IoContent {
+export declare class IoMdView extends IoElement {
 	static get Style(): string;
 	role: string;
 	src: string;
@@ -1524,141 +1572,17 @@ export declare class IoMdView extends IoContent {
 	srcChanged(): void;
 	changed(): void;
 }
-export declare class IoSelector extends IoElement {
-	static get Style(): string;
-	options: MenuOptions;
-	elements: VDOMArray[];
-	cache: boolean;
-	_caches: Record<string, HTMLElement>;
-	init(): void;
-	getTemplate(): any;
-	importModule(path: string): Promise<unknown>;
-	changed(): void;
-}
-/**
- * Labeled tabs for selection.
- *
- * <io-element-demo element="io-sidebar"
- *     properties='{
- *         "selected": 1,
- *         "options": [1,2,3],
- *         "collapsed": false}'
- *     config='{"options": ["io-properties"]}'>
- * </io-element-demo>
- *
- * <io-element-demo element="io-sidebar"
- *     properties='{
- *         "selected": 1,
- *         "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}],
- *         "collapsed": false}'
- *     config='{"type:object": ["io-properties"]}'>
- * </io-element-demo>
- *
- * When tabs are clicked, `selected` value is set.
- **/
-export declare class IoSidebar extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	_filterObject(object: any, predicate: (object: any) => boolean, _depth?: number, _chain?: any[], _i?: number): any;
-	_onSelect(id: string): void;
-	_addOptions(options: any): any;
-	changed(): void;
-}
-/**
- * Element selector with selectable sidebar interfce.
- *
- * <io-element-demo element="io-selector-sidebar"
- *     properties='{
- *         "elements": [
- *             ["div", {"name": "first"}, "First content"],
- *             ["div", {"name": "second"}, "Second content"],
- *             ["div", {"name": "third"}, "Third content"],
- *             ["div", {"name": "fourth"}, "Fourth content"]],
- *         "selected": "first",
- *         "cache": false,
- *         "options": [
- *             "first",
- *             "second",
- *             "third",
- *             "fourth"],
- *         "right": false,
- *         "collapseWidth": 410}'
- *     config='{"options": ["io-properties"]}'>
- * </io-element-demo>
- **/
-export declare class IoSelectorSidebar extends IoSelector {
-	static get Style(): string;
-	static get Properties(): any;
-	getTemplate(): any;
-}
-export declare class IoMdViewSelector extends IoSelectorSidebar {
-	static get Properties(): any;
-	getTemplate(): any;
-	changed(): void;
-}
-export declare class IoServiceLoader extends IoNode {
-	static get Properties(): any;
-	constructor(props?: any);
-	activate(): Promise<void>;
-	serviceWorkerChanged(): void;
-	subscribe(): void;
-	requestNotification(): Promise<void>;
-	onServiceWorkerMessage(message: any): void;
-}
-export declare class IoElementDemo extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	objectMutated: (prop: string) => void;
-	changed(): void;
-}
-export declare class IoLayout extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	static get Listeners(): {
-		"io-layout-divider-move": string;
-		"io-layout-tab-insert": string;
-	};
-	_onSelectedChanged(): void;
-	changed(): void;
-	_onLayoutTabInsert(event: CustomEvent): void;
-	_onDividerMove(event: CustomEvent): void;
-}
-export declare class IoLayoutDivider extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	static get Listeners(): {
-		pointermove: string;
-	};
-	_onPointermove(event: PointerEvent): void;
-	changed(): void;
-}
-/**
- * An element with collapsable content.
- *
- * Extends `IoElement`. Implements `IoBoolean` and `IoContent`.
- *
- * <io-element-demo element="io-collapsable"
- *     properties='{
- *         "elements": [["div", "Content"]],
- *         "label": "Collapsable",
- *         "expanded": true}'>
- * </io-element-demo>
- *
- * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
- **/
-export declare class IoCollapsable extends IoElement {
-	static get Style(): string;
-	static get Properties(): any;
-	changed(): void;
-}
-/**
- * Element selector with selectable tabs.
- **/
-export declare class IoSelectorTabs extends IoSelector {
+export declare class IoNavigator extends IoElement {
 	static get Style(): string;
 	slotted: VDOMArray[];
+	elements: VDOMArray[];
+	options: MenuOptions;
+	menu: "none" | "top" | "left" | "bottom" | "right";
+	mode: "select" | "scroll" | "select-scroll";
+	select: "root" | "leaf";
 	depth: number;
-	getTemplate(): any;
+	cache: boolean;
+	changed(): void;
 }
 /**
  * Input element for vector arrays and objects.
@@ -1716,7 +1640,7 @@ export declare class IoMenuOptions extends IoElement {
 	horizontal: boolean;
 	searchable: boolean;
 	search: string;
-	position: NudgeDirection;
+	direction: NudgeDirection;
 	depth: number;
 	noPartialCollapse: boolean;
 	overflow: string;
@@ -1727,7 +1651,9 @@ export declare class IoMenuOptions extends IoElement {
 	private _overflownItems;
 	static get Listeners(): {
 		"item-clicked": string;
-		touchstart: string;
+		touchstart: (string | {
+			passive: boolean;
+		})[];
 	};
 	_onItemClicked(event: CustomEvent): void;
 	_stopPropagation(event: MouseEvent): void;
@@ -1739,7 +1665,6 @@ export declare class IoMenuOptions extends IoElement {
 	searchChanged(): void;
 	_onExpandInLayer(): void;
 	_onClipHeight(): void;
-	_filterOptions(options: any, search: string, _depth?: number, _chain?: any[], _i?: number): any;
 	changed(): void;
 }
 /**
@@ -1777,8 +1702,26 @@ export declare class IoMenuItem extends IoField {
 }
 export type IoMenuElementType = IoMenuItem | IoMenuOptions;
 export declare function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[];
-export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuOptions | IoMenuItem)[];
+export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuItem | IoMenuOptions)[];
 export declare function getMenuRoot(element: IoMenuElementType): IoMenuElementType;
+export declare function addMenuOptions(options: MenuOptions, depth: number, d?: number): VDOMArray[];
+export declare function filterOptions(options: MenuOptions, search: string, depth?: number, elements?: VDOMArray[], d?: number): any;
+export declare class IoMenuTree extends IoElement {
+	static get Style(): string;
+	options: MenuOptions;
+	searchable: boolean;
+	search: string;
+	depth: number;
+	slotted: VDOMArray[];
+	role: string;
+	$parent?: IoMenuItem;
+	static get Listeners(): {
+		"item-clicked": string;
+	};
+	_onItemClicked(event: CustomEvent): void;
+	_onCollapse(): void;
+	changed(): void;
+}
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
  *
