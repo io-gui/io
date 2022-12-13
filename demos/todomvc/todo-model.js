@@ -4,18 +4,18 @@ export class TodoModel extends IoNode {
   static get Properties() {
     return {
       items: Array,
-      filters: function () {
-        return {
-          all: function () {
-            return true;
-          },
-          active: function(item) {
-            return !item.completed;
-          },
-          completed: function(item) {
-            return item.completed;
-          }
-        };
+    };
+  }
+  get filters() {
+    return {
+      all: function () {
+        return true;
+      },
+      active: function(item) {
+        return !item.completed;
+      },
+      completed: function(item) {
+        return item.completed;
       }
     };
   }

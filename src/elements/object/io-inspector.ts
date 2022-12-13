@@ -16,21 +16,27 @@ export class IoInspector extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-column;
-      flex: 0 1 calc(var(--io-line-height) * 17.5);
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-self: stretch;
+      align-items: stretch;
+      justify-self: stretch;
+      flex: 0 1 calc(var(--iotLineHeight) * 17.5);
     }
     :host > * {
       flex-shrink: 0;
     }
     :host > .inspector-header {
-      margin-bottom: var(--io-spacing);
+      margin-bottom: var(--iotSpacing);
       flex-grow: 0;
     }
     :host > .inspector-header > io-breadcrumbs {
       flex: 1 1;
     }
     :host > .inspector-header > io-boolean {
-      width: calc(var(--io-spacing) + var(--io-line-height));
+      width: calc(var(--iotSpacing) + var(--iotLineHeight));
       align-self: stretch;
       height: auto;
     }
@@ -38,8 +44,8 @@ export class IoInspector extends IoElement {
       opacity: 0.25;
     }
     :host > .inspector-header > io-string {
-      margin: 0 var(--io-spacing);
-      padding: calc(2 * var(--io-spacing));
+      margin: 0 var(--iotSpacing);
+      padding: calc(2 * var(--iotSpacing));
       align-self: stretch;
       height: auto;
     }
@@ -60,12 +66,11 @@ export class IoInspector extends IoElement {
       flex-basis: auto !important;
     }
     :host > io-object > io-properties {
-      border-radius: var(--io-border-radius);
-      background-color: var(--io-background-color) !important;
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-      box-shadow: var(--io-shadow-inset);
-      padding: var(--io-spacing);
+      border-radius: var(--iotBorderRadius);
+      background-color: var(--iotBackgroundColor) !important;
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorInset);
+      padding: var(--iotSpacing);
       overflow: hidden;
     }
     :host > io-object > io-properties:not([horizontal])[labeled] {
@@ -75,7 +80,7 @@ export class IoInspector extends IoElement {
       text-align: right;
     }
     :host io-properties > io-field.select {
-      color: var(--io-color-link);
+      color: var(--iotColorLink);
     }
     :host io-properties > io-field.select:hover {
       text-decoration: underline;
@@ -161,7 +166,7 @@ export class IoInspector extends IoElement {
     const elements = [
       ['div', {class: 'inspector-header io-row io-panel'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
-        ['io-string', {id: 'search', value: this.bind('search'), live: true}],
+        ['io-string', {$: 'search', value: this.bind('search'), live: true}],
         ['io-boolean', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
       this._widgets.main ? this._widgets.main : null
@@ -175,7 +180,6 @@ export class IoInspector extends IoElement {
             label: group,
             expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
             elements: [this._widgets.groups[group]],
-            class: 'io-panel',
           }]
         );
       }

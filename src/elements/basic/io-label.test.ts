@@ -14,7 +14,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });

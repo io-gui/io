@@ -14,16 +14,15 @@ export class IoVector extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
-        flex-direction: row;
-        flex: 0 1;
-        flex-basis: calc(var(--io-field-height) * 10);
+        flex: 0 1 auto;
+        min-width: var(--iotFieldHeight4);
+        width: var(--iotFieldHeight8);
       }
       :host > io-number {
-        flex-grow: 1;
+        flex: 1 1 100%;
       }
       :host > *:not(:last-child) {
-        margin-right: var(--io-spacing);
+        margin-right: var(--iotSpacing);
       }
       :host > io-boolean {
         flex-shrink: 0;
@@ -99,7 +98,7 @@ export class IoVector extends IoElement {
     for (const k of this.keys) {
       if (this.value[k] !== undefined) {
         elements.push(['io-number', {
-          id: k,
+          id: k, // Consider removing global id collisions
           value: this.value[k],
           conversion: this.conversion,
           step: this.step,

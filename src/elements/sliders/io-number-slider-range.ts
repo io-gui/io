@@ -14,16 +14,15 @@ export class IoNumberSliderRange extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      align-self: stretch;
-      justify-self: stretch;
-      flex-basis: calc(var(--io-field-height) * 10);
+      min-width: var(--iotFieldHeight4);
+      width: var(--iotFieldHeight8);
     }
     :host > io-number {
       flex: 0 0 3.25em;
     }
     :host > io-slider-range {
-      margin-left: var(--io-spacing);
-      margin-right: var(--io-spacing);
+      margin-left: var(--iotSpacing);
+      margin-right: var(--iotSpacing);
       flex: 1 1 3.25em;
       min-width: 3.25em;
     }
@@ -67,7 +66,7 @@ export class IoNumberSliderRange extends IoElement {
   changed() {
     this.template([
       ['io-number', {
-        id: 'number0',
+        $: 'number0',
         value: this.value[0],
         step: this.step,
         conversion: this.conversion,
@@ -75,7 +74,7 @@ export class IoNumberSliderRange extends IoElement {
         'on-value-input': this._onNumberSet,
       }],
       ['io-slider-range', {
-        id: 'slider',
+        $: 'slider',
         value: this.value,
         step: this.step,
         min: this.min,
@@ -85,7 +84,7 @@ export class IoNumberSliderRange extends IoElement {
         'on-value-input': this._onSliderSet,
       }],
       ['io-number', {
-        id: 'number1',
+        $: 'number1',
         value: this.value[1],
         step: this.step,
         conversion: this.conversion,

@@ -15,8 +15,8 @@ export class IoColorSwatch extends IoColorBase {
     return /* css */`
       :host {
         display: inline-block;
-        min-width: var(--io-field-height);
-        height: var(--io-field-height);
+        min-width: var(--iotFieldHeight);
+        height: var(--iotFieldHeight);
         background-color: white;
         background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
         background-size: 12px 12px;

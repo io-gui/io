@@ -18,7 +18,7 @@ export class IoMatrix extends IoVector {
         display: grid;
         align-self: stretch;
         justify-self: stretch;
-        grid-gap: var(--io-spacing);
+        grid-gap: var(--iotSpacing);
       }
       :host > *:not(:last-child) {
         margin-right: 0;
@@ -38,7 +38,7 @@ export class IoMatrix extends IoVector {
   @Property({value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
   declare value: number[];
 
-  @Property({value: 4, reflect: 'prop'})
+  @Property({value: 4, reflect: true})
   declare columns: number;
 
   _onNumberValueInput(event: CustomEvent) {

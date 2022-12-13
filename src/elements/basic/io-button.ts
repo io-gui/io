@@ -14,19 +14,11 @@ export class IoButton extends IoField {
     return /* css */`
       :host {
         text-align: center;
-        border: var(--io-border);
-        border-color: var(--io-color-border-outset);
-        background-color: var(--io-background-color-dark);
-        background-image: var(--io-gradient-button);
-        padding-left: calc(2 * var(--io-spacing));
-        padding-right: calc(2 * var(--io-spacing));
+        padding-left: calc(2 * var(--iotSpacing));
+        padding-right: calc(2 * var(--iotSpacing));
       }
       :host[pressed] {
-        border: var(--io-border);
-        border-color: var(--io-color-border-inset);
-      }
-      :host > io-label {
-        vertical-align: top;
+        border-color: var(--iotBorderColorInset);
       }
     `;
   }
@@ -37,7 +29,10 @@ export class IoButton extends IoField {
   @Property(undefined)
   declare value: any;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: 'outset', reflect: true})
+  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
+
+  @Property({value: false, reflect: true})
   declare pressed: boolean;
 
   @Property('button')

@@ -1,5 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
-import { IoContent } from '../layout/io-content.js';
+import { RegisterIoElement, IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { marked } from 'marked';
 import purify from 'dompurify';
@@ -8,11 +7,22 @@ import purify from 'dompurify';
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 @RegisterIoElement
-export class IoMdView extends IoContent {
+export class IoMdView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        padding: var(--io-line-height) var(--io-line-height2);
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        justify-self: stretch;
+        flex: 1 1 auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        -webkit-tap-highlight-color: transparent;
+        padding: var(--iotLineHeight) var(--iotLineHeight2);
+        color: var(--iotColor);
+        background-color: var(--iotBackgroundColor);
       }
       :host > :first-child {
         margin-top: 0;
@@ -26,12 +36,12 @@ export class IoMdView extends IoContent {
       }
       :host a {
         text-decoration: underline;
-        color: var(--io-color-link);
+        color: var(--iotColorLink);
       }
       :host h1, :host h2, :host h3, :host h4 {
         margin: 0.5em 0;
-        border: var(--io-border);
-        border-width: 0 0 var(--io-border-width) 0;
+        border: var(--iotBorder);
+        border-width: 0 0 var(--iotBorderWidth) 0;
       }
       :host h1 {
         padding: 0.5em 0;
@@ -51,13 +61,13 @@ export class IoMdView extends IoContent {
         font-family: monospace, monospace;
         -webkit-font-smoothing: auto;
         overflow: auto;
-        color: var(--io-color-link);
+        color: var(--iotColorLink);
       }
       :host strong code {
-        background: var(--io-background-color-light);
+        background: var(--iotBackgroundColorLight);
       }
       :host pre > code {
-        background: var(--io-background-color-light);
+        background: var(--iotBackgroundColorLight);
         color: inherit;
         line-height: 1.6em;
       }
@@ -113,7 +123,7 @@ export class IoMdView extends IoContent {
         margin-top: -20px;
         margin-left: -20px;
         border-radius: 50%;
-        border: var(--io-border);
+        border: var(--iotBorder);
         border-top-color: #000;
         animation: spinner .6s linear infinite;
       }
@@ -123,10 +133,10 @@ export class IoMdView extends IoContent {
   @Property('document')
   declare role: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare src: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare loading: boolean;
 
   @Property(true)
@@ -146,7 +156,6 @@ export class IoMdView extends IoContent {
       } else {
         this.innerHTML = marked(markdown);
       }
-      // this._scrollTo(this.anchor, true);
     }
   }
 

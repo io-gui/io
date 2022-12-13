@@ -8,6 +8,7 @@
 
 - [Binding](classes/Binding.md)
 - [ChangeQueue](classes/ChangeQueue.md)
+- [Color](classes/Color.md)
 - [EventDispatcher](classes/EventDispatcher.md)
 - [IoBoolean](classes/IoBoolean.md)
 - [IoButton](classes/IoButton.md)
@@ -78,7 +79,6 @@
 - [IoVector](classes/IoVector.md)
 - [MenuItem](classes/MenuItem.md)
 - [MenuOptions](classes/MenuOptions.md)
-- [MenuPath](classes/MenuPath.md)
 - [ObjectConfig](classes/ObjectConfig.md)
 - [ObjectGroups](classes/ObjectGroups.md)
 - [ObjectWidgets](classes/ObjectWidgets.md)
@@ -196,6 +196,36 @@ ___
 
 ___
 
+### IoElementArgs
+
+ **IoElementArgs**: [`IoNodeArgs`](README.md#ionodeargs) & { `[key: string]`: `any`; `cache?`: `boolean` ; `class?`: `string` ; `contenteditable?`: `boolean` ; `disabled?`: `boolean` ; `hidden?`: `boolean` ; `id?`: `string` ; `label?`: `string` ; `name?`: `string` ; `role?`: `string` ; `tabindex?`: `string` ; `title?`: `string`  }
+
+#### Defined in
+
+[src/core/element.ts:20](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L20)
+
+___
+
+### IoNodeArgs
+
+ **IoNodeArgs**: `Object`
+
+#### Index signature
+
+▪ [key: `prefix`<`string`, ``"on-"``\>]: `string` \| (`event`: `CustomEvent`<`any`\>) => `void`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `lazy?` | `boolean` |
+
+#### Defined in
+
+[src/core/node.ts:32](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L32)
+
+___
+
 ### KeyboardEventListener
 
  **KeyboardEventListener**: (`event`: `KeyboardEvent`) => `void`
@@ -274,6 +304,46 @@ ___
 
 ___
 
+### MenuItemArgs
+
+ **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & { `action?`: () => `void` ; `hint?`: `string` ; `icon?`: `string` ; `options?`: [`MenuItemArgsWeak`](README.md#menuitemargsweak)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `select?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `selected?`: `boolean` ; `value?`: `any`  }
+
+#### Defined in
+
+[src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L10)
+
+___
+
+### MenuItemArgsWeak
+
+ **MenuItemArgsWeak**: `undefined` \| ``null`` \| `string` \| `number` \| [`MenuItemArgs`](README.md#menuitemargs)
+
+#### Defined in
+
+[src/elements/menus/models/menu-item.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L8)
+
+___
+
+### MenuItemSelectType
+
+ **MenuItemSelectType**: ``"pick"`` \| ``"toggle"`` \| ``"link"`` \| ``"none"``
+
+#### Defined in
+
+[src/elements/menus/models/menu-item.ts:6](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L6)
+
+___
+
+### NudgeDirection
+
+ **NudgeDirection**: ``"pointer"`` \| ``"up"`` \| ``"left"`` \| ``"down"`` \| ``"right"``
+
+#### Defined in
+
+[src/core/layer.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/layer.ts#L18)
+
+___
+
 ### PointerEventListener
 
  **PointerEventListener**: (`event`: `PointerEvent`) => `void`
@@ -311,13 +381,13 @@ Declares default value, type and reactive behavior of the property.
 | `binding?` | [`Binding`](classes/Binding.md) |
 | `notify?` | `boolean` |
 | `observe?` | `boolean` |
-| `reflect?` | `Reflect` |
+| `reflect?` | `boolean` |
 | `type?` | [`Constructor`](README.md#constructor) \| [`Constructor`](README.md#constructor)[] |
 | `value?` | `any` |
 
 #### Defined in
 
-[src/core/internals/property.ts:9](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L9)
+[src/core/internals/property.ts:7](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L7)
 
 ___
 
@@ -329,7 +399,7 @@ Allows weak declaration of properties by specifying only partial declarations su
 
 #### Defined in
 
-[src/core/internals/property.ts:21](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L21)
+[src/core/internals/property.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L19)
 
 ___
 
@@ -339,7 +409,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:143](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L143)
+[src/core/internals/property.ts:138](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L138)
 
 ___
 
@@ -365,6 +435,34 @@ ___
 
 [src/core/node.ts:22](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L22)
 
+___
+
+### VDOMArray
+
+ **VDOMArray**: [`string`, [`IoElementArgs`](README.md#ioelementargs) \| `string` \| [`VDOMArray`](README.md#vdomarray)[]] \| [`string`, [`IoElementArgs`](README.md#ioelementargs) \| `string`, [`VDOMArray`](README.md#vdomarray)[] \| `string`]
+
+#### Defined in
+
+[src/core/element.ts:39](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L39)
+
+___
+
+### VDOMElement
+
+ **VDOMElement**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `children` | [`VDOMElement`](README.md#vdomelement)[] |
+| `name` | `string` |
+| `props` | [`IoElementArgs`](README.md#ioelementargs) |
+
+#### Defined in
+
+[src/core/element.ts:43](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L43)
+
 ## Variables
 
 ### IoColorPanelSingleton
@@ -373,7 +471,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:88](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L88)
+[src/elements/color/io-color-panel.ts:102](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L102)
 
 ___
 
@@ -393,7 +491,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:223](https://github.com/io-gui/iogui/blob/main/src/core/layer.ts#L223)
+[src/core/layer.ts:226](https://github.com/io-gui/iogui/blob/main/src/core/layer.ts#L226)
 
 ___
 
@@ -403,7 +501,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:586](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-number.ts#L586)
+[src/elements/basic/io-number.ts:560](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-number.ts#L560)
 
 ___
 
@@ -413,7 +511,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L267)
+[src/core/theme.ts:279](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L279)
 
 ___
 
@@ -447,7 +545,7 @@ THE SOFTWARE.
 
 #### Defined in
 
-[src/iogui.ts:29](https://github.com/io-gui/iogui/blob/main/src/iogui.ts#L29)
+[src/iogui.ts:33](https://github.com/io-gui/iogui/blob/main/src/iogui.ts#L33)
 
 ___
 
@@ -457,7 +555,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:145](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L145)
+[src/core/internals/property.ts:140](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L140)
 
 ## Functions
 
@@ -487,7 +585,7 @@ typeof `__class`
 
 #### Defined in
 
-[src/core/node.ts:35](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L35)
+[src/core/node.ts:42](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L42)
 
 ___
 
@@ -544,7 +642,7 @@ Property decorator function.
 
 #### Defined in
 
-[src/core/internals/property.ts:152](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L152)
+[src/core/internals/property.ts:147](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L147)
 
 ___
 
@@ -566,7 +664,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[src/core/element.ts:70](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L70)
+[src/core/element.ts:89](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L89)
 
 ___
 
@@ -588,7 +686,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:394](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L394)
+[src/core/node.ts:419](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L419)
 
 ___
 
@@ -617,7 +715,7 @@ ___
 
 ### buildTree
 
-**buildTree**(): (`node`: `VDOMArray`) => `any`
+**buildTree**(): (`node`: [`VDOMArray`](README.md#vdomarray)) => `any`
 
 #### Returns
 
@@ -629,7 +727,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `node` | `VDOMArray` |
+| `node` | [`VDOMArray`](README.md#vdomarray) |
 
 ##### Returns
 
@@ -637,23 +735,63 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:60](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L60)
+[src/core/element.ts:79](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L79)
 
 ___
 
-### getElementDescendants
+### getMenuAncestors
 
-**getElementDescendants**(`element`): `any`
+**getMenuAncestors**(`element`): ([`IoMenuOptions`](classes/IoMenuOptions.md) \| [`IoMenuItem`](classes/IoMenuItem.md))[]
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `element` | [`IoMenuItem`](classes/IoMenuItem.md) |
+| `element` | `IoMenuElementType` |
 
 #### Returns
 
-`any`
+([`IoMenuOptions`](classes/IoMenuOptions.md) \| [`IoMenuItem`](classes/IoMenuItem.md))[]
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:378](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L378)
+
+___
+
+### getMenuDescendants
+
+**getMenuDescendants**(`element`): `IoMenuElementType`[]
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `element` | `IoMenuElementType` |
+
+#### Returns
+
+`IoMenuElementType`[]
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:357](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L357)
+
+___
+
+### getMenuRoot
+
+**getMenuRoot**(`element`): `IoMenuElementType`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `element` | `IoMenuElementType` |
+
+#### Returns
+
+`IoMenuElementType`
 
 #### Defined in
 

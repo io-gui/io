@@ -5,9 +5,11 @@ export class IoDemoThemeEditor extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-grid2;
-      max-width: 32em;
-      padding: var(--io-spacing);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: var(--iotSpacing);
+      background-color: var(--iotBackgroundColor);
+      padding: var(--iotSpacing);
       grid-template-columns: auto 1fr !important;
     }
     `;
@@ -15,59 +17,64 @@ export class IoDemoThemeEditor extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['io-field', {label: 'Reset Current Theme:'}],
+      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new MenuOptions([
+        {label: 'Light Theme', value: 'light'},
+        {label: 'Dark Theme', value: 'dark'},
+      ])}],
       ['io-button', {label: 'Reset', action: () => IoThemeSingleton.reset() }],
-      ['io-field', {label: 'Choose theme:'}],
-      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new MenuOptions(['light', 'dark'])}],
-      ['io-field', {label: 'ioSpacing'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('ioSpacing'), min: 0, max: 20, step: 1}],
-      ['io-field', {label: 'ioBorderRadius'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('ioBorderRadius'), min: 0, max: 20}],
-      ['io-field', {label: 'ioBorderWidth'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('ioBorderWidth'), min: 0, max: 5, step: 1}],
-      ['io-field', {label: 'ioStrokeWidth'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('ioStrokeWidth'), min: 1, max: 20, step: 1}],
-      ['io-field', {label: 'ioLineHeight'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('ioLineHeight'), min: 10, max: 50, step: 1}],
-      ['io-field', {label: 'ioFontSize'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('ioFontSize'), min: 5, max: 20}],
-      ['io-field', {label: 'ioBackgroundColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioBackgroundColor')}],
-      ['io-field', {label: 'ioBackgroundColorLight'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioBackgroundColorLight')}],
-      ['io-field', {label: 'ioBackgroundColorDark'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioBackgroundColorDark')}],
-      ['io-field', {label: 'ioBackgroundColorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioBackgroundColorField')}],
-      ['io-field', {label: 'ioColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColor')}],
-      ['io-field', {label: 'ioColorError'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorError')}],
-      ['io-field', {label: 'ioColorLink'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorLink')}],
-      ['io-field', {label: 'ioColorFocus'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorFocus')}],
-      ['io-field', {label: 'ioColorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorField')}],
-      ['io-field', {label: 'ioColorNumber'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorNumber')}],
-      ['io-field', {label: 'ioColorString'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorString')}],
-      ['io-field', {label: 'ioColorBoolean'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorBoolean')}],
-      ['io-field', {label: 'ioColorBorder'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorBorder')}],
-      ['io-field', {label: 'ioColorBorderLight'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorBorderLight')}],
-      ['io-field', {label: 'ioColorBorderDark'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorBorderDark')}],
-      ['io-field', {label: 'ioColorGradientStart'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorGradientStart')}],
-      ['io-field', {label: 'ioColorGradientEnd'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorGradientEnd')}],
-      ['io-field', {label: 'ioColorShadow'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('ioColorShadow')}],
+      ['io-field', {appearance: 'neutral', label: 'iotSpacing'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotSpacing'), min: 0, max: 20, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderRadius'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderRadius'), min: 0, max: 20}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderWidth'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderWidth'), min: 0, max: 5, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'iotStrokeWidth'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotStrokeWidth'), min: 1, max: 20, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'iotLineHeight'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotLineHeight'), min: 10, max: 50, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'iotFontSize'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotFontSize'), min: 5, max: 20}],
 
+      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColor')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorLight'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorLight')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorDark'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorDark')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorField'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorField')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorSelected'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorSelected')}],
+
+      ['io-field', {appearance: 'neutral', label: 'iotColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColor')}],
+      ['io-field', {appearance: 'neutral', label: 'iotColorError'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorError')}],
+      ['io-field', {appearance: 'neutral', label: 'iotColorLink'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorLink')}],
+      ['io-field', {appearance: 'neutral', label: 'iotColorField'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorField')}],
+      ['io-field', {appearance: 'neutral', label: 'iotColorFieldSelected'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorFieldSelected')}],
+
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColor')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColorLight'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorLight')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColorDark'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorDark')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColorSelected'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorSelected')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColorFocus'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorFocus')}],
+
+      ['io-field', {appearance: 'neutral', label: 'iotGradientColorStart'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotGradientColorStart')}],
+      ['io-field', {appearance: 'neutral', label: 'iotGradientColorEnd'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotGradientColorEnd')}],
+
+      ['io-field', {appearance: 'neutral', label: 'iotShadowColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotShadowColor')}],
     ]);
   }
 }

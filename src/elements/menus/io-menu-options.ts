@@ -1,148 +1,173 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
-import { Binding } from '../../core/internals/binding.js';
+import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
-import {IoLayerSingleton as Layer} from '../../core/layer.js';
-import {IoMenuItem} from './io-menu-item.js';
+import { IoLayerSingleton, NudgeDirection } from '../../core/layer.js';
+import { IoThemeSingleton } from '../../core/theme.js';
+import { IoMenuItem } from './io-menu-item.js';
+import { filterOptions } from './io-menu-tree.js';
 
-// const rects = new WeakMap();
+const rects = new WeakMap();
 
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
- *
- * <io-element-demo element="io-menu-options" properties='{
- *   "value": "hello world",
- *   "selectable": true,
- *   "searchable": true,
- *   "search": "",
- *   "expanded": false,
- *   "horizontal": false,
- *   "options": ["one", "two", "three"]
- * }' config='{
- *   "type:object": ["io-object"]
- * }'></io-element-demo>
  **/
 @RegisterIoElement
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      @apply --io-panel;
-      @apply --io-column;
-      align-self: flex-start;
-      align-items: stretch;
-      white-space: nowrap;
-      user-select: none;
-      background-image: none;
-      opacity: 1;
-      transition: opacity 0.25s;
-      overflow-y: auto !important;
+      /* Panel */
+      display: flex;
       flex: 0 1 auto;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      border-radius: var(--iotBorderRadius);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorOutset);
+      color: var(--iotColorField);
+      background-color: var(--iotBackgroundColorDark);
+      padding: var(--iotSpacing);
+      user-select: none;
+      transition: opacity 0.25s;
+      position: relative;
+      min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
+      min-height: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
     }
-    :host > io-menu-item {
-      align-self: stretch;
-      flex: 0 0 auto;
-    }
+
     :host[inlayer] {
-      box-shadow: var(--io-shadow);
+      min-width: 8em;
+      overflow-y: auto !important;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
     }
+
+    :host > .item {
+      border-radius: 0;
+      position: relative;
+      overflow: visible;
+    }
+
     :host[horizontal] {
       flex-direction: row;
       align-self: stretch;
-      justify-self: stretch;
-      flex-wrap: nowrap;
-      padding: 0 var(--io-spacing);
     }
-    :host[horizontal] > io-menu-item {
-      padding: var(--io-spacing) calc(0.5 * var(--io-line-height));
+
+    /* Item spacing */
+    :host:not([horizontal]) > .item {
+      margin-bottom: var(--iotBorderWidth);
     }
-    :host[horizontal] > io-menu-item {
-      border-right:1px solid var(--io-color-border);
+    :host:not([horizontal]) > .item:first-of-type {
+      margin-top: var(--iotSpacing);
     }
-    :host:not([horizontal]) > io-menu-item > * {
-      min-width: 0.5em;
-      padding: 0 var(--io-spacing);
+    :host[horizontal] > .item {
+      margin-left: var(--iotBorderWidth);
+      padding: var(--iotSpacing) calc(0.75 * var(--iotLineHeight));
     }
-    :host[horizontal] > io-menu-item > .io-menu-hint,
-    :host[horizontal] > io-menu-item > .io-menu-more {
-      display: none;
-    }
-    :host[horizontal] > io-menu-item.io-hamburger {
-      margin-left: auto;
-    }
-    :host[horizontal] > io-menu-item.io-hamburger:after {
+
+    /* Item divider */
+    :host > .item:not(:last-of-type)::before {
       content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    :host:not([horizontal]) > .item:not(:last-of-type)::before {
+      right: 0;
+      bottom: calc(var(--iotBorderWidth) * -2);
+      border-bottom: var(--iotBorder);
+      border-bottom-color: var(--iotColor);
+      opacity: 0.05;
+    }
+    :host[horizontal] > .item:not(:last-of-type)::before {
+      top: 0;
+      right: calc(var(--iotBorderWidth) * -2);
+      border-right: var(--iotBorder);
+      border-right-color: var(--iotColor);
+      opacity: 0.25;
+    }
+
+    /* Remove hints from horizontal menu */
+    :host[horizontal] > .item > .hint {
       display: none;
     }
-    :host[horizontal] > io-menu-item.io-hamburger[hidden] {
-      display: inline-block;
-      width: 0;
-      padding: 0;
-      border: 0;
-      overflow: hidden;
-      visibility: hidden;
-    }
-    :host > io-string {
-      align-self: stretch;
+
+    /* Search field */
+    :host > .search {
+      border-radius: 0;
       flex: 0 0 auto;
-      min-width: 8em;
     }
-    :host > io-string:empty:before {
-      content: '\\1F50D';
-      white-space: pre;
-      padding: 0 0.25em;
-      visibility: visible;
-      opacity: 0.33;
+    :host[horizontal] > .search {
+      margin-left: var(--iotBorderWidth);
+      flex: 0 0 8em;
+    }
+
+    /* Hamburger menu for overflow items */
+    :host > .hamburger {
+      border-color: transparent !important; 
+    }
+    :host[horizontal] > .hamburger {
+      position: absolute;
+      right: var(--iotSpacing2);
+      padding: var(--iotSpacing);
+    }
+    :host > .hamburger > .hasmore {
+      display: none;
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      options: {
-        type: MenuOptions,
-        observe: true,
-      },
-      value: null,
-      expanded: {
-        value: false,
-        reflect: 'prop',
-      },
-      horizontal: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      position: 'right',
-      depth: Infinity,
-      searchable: Boolean,
-      search: String,
-      overflow: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      inlayer: {
-        type: Boolean,
-        reflect: 'prop',
-      },
-      slotted: Array,
-      $parent: null,
-      _rects: Array,
-      role: 'listbox',
-    };
-  }
+
+  @Property({observe: true, type: MenuOptions, reflect: true})
+  declare options: MenuOptions;
+
+  @Property({value: false, reflect: true})
+  declare expanded: boolean;
+
+  @Property({value: false, reflect: true})
+  declare horizontal: boolean;
+
+  @Property(false)
+  declare searchable: boolean;
+
+  @Property('')
+  declare search: string;
+
+  @Property({value: 'none', reflect: true})
+  declare direction: NudgeDirection;
+
+  @Property(100)
+  declare depth: number;
+
+  @Property(false)
+  declare noPartialCollapse: boolean;
+
+  @Property({value: '', reflect: true})
+  declare overflow: string;
+
+  @Property({value: false, reflect: true})
+  declare inlayer: boolean;
+
+  @Property({type: Array})
+  declare slotted: VDOMArray[];
+
+  @Property('listbox')
+  declare role: string;
+
+  @Property(undefined)
+  declare $parent?: IoMenuItem;
+
+  @Property({type: Array})
+  declare private _overflownItems: MenuItem[];
+
   static get Listeners() {
     return {
       'item-clicked': '_onItemClicked',
-      'touchstart': '_stopPropagation',
+      'touchstart': ['_stopPropagation', {passive: false}],
     };
   }
-  connectedCallback() {
-    super.connectedCallback();
-    this.inlayer = this.parentElement === Layer;
-  }
+
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
     const d = event.detail as MenuItem;
@@ -152,67 +177,64 @@ export class IoMenuOptions extends IoElement {
     }
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.inputValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.throttle(this._onCollapse);
     }
   }
-  // Prevents IoLayer from stopping scroll in clipped options
   _stopPropagation(event: MouseEvent) {
+    // Prevents IoLayer from stopping scroll in clipped options
     event.stopPropagation();
   }
-  // onResized() {
-  //   this.throttle(this._onSetOverflow);
-  // }
-  // _onSetOverflow() {
-  //   const buttons = this.querySelectorAll('io-menu-item:not(.io-hamburger)');
-  //   if (this.horizontal) {
-  //     const hamburger = this.querySelector('.io-hamburger');
-  //     if (!buttons.length) return;
+  init() {
+    this.throttle(this._onSetOverflow);
+  }
+  onResized() {
+    this.throttle(this._onSetOverflow);
+  }
 
-  //     let end = this.getBoundingClientRect().right;
-  //     let overflow = false;
-  //     let last = Infinity;
-  //     hamburger.hidden = true;
-  //     // const hamburgerOptions = [];
+  _onSetOverflow() {
+    const items = this.querySelectorAll('.item');
+    this._overflownItems.length = 0;
+    if (this.horizontal) {
+      const hamburger = this.querySelector('.hamburger');
+      const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
+      const end = this.getBoundingClientRect().right - (IoThemeSingleton.iotBorderWidth + IoThemeSingleton.iotSpacing);
+      let last = Infinity;
+      let hasOwerflown = false;
 
-  //     for (let i = buttons.length; i--;) {
-  //       const r = buttons[i].getBoundingClientRect();
-  //       const rect = rects.get(buttons[i]) || {right: 0, width: 0};
-  //       if (r.right !== 0 && r.width !== 0)  {
-  //         rect.right = r.right;
-  //         rect.width = r.width;
-  //         rects.set(buttons[i], rect);
-  //       }
+      for (let i = items.length; i--;) {
+        const r = items[i].getBoundingClientRect();
+        const rect = rects.get(items[i].item) || {right: 0, width: 0};
+        if (r.right !== 0 && r.width !== 0)  {
+          rect.right = r.right;
+          rect.width = r.width;
+          rects.set(items[i].item, rect);
+        }
 
-  //       if (hamburger.hidden && overflow) {
-  //         hamburger.hidden = false;
-  //         end -= hamburger.getBoundingClientRect().width;
-  //       }
+        last = Math.min(last, rect.right);
+        if (this.noPartialCollapse && hasOwerflown) {
+          items[i].hidden = true;
+          this._overflownItems.push(items[i].item);
+        } else if (i === (items.length - 1) && last < end) {
+          items[i].hidden = false;
+        } else if (last < (end - hamburgetWidth * 1.5)) {
+          items[i].hidden = false;
+        } else {
+          hasOwerflown = true;
+          items[i].hidden = true;
+          this._overflownItems.push(items[i].item);
+        }
+      }
 
-  //       if (buttons[i].selected) {
-  //         end -= rect.width;
-  //         buttons[i].hidden = false;
-  //         continue;
-  //       }
-
-  //       last = Math.min(last, rect.right);
-  //       if (last < end) {
-  //         buttons[i].hidden = false;
-  //       } else {
-  //         buttons[i].hidden = true;
-  //         // hamburgerOptions.push(buttons[i].option);
-  //         overflow = true;
-  //       }
-  //     }
-  //     // hamburger._properties.props.option.value = new MenuItem({options: new MenuOptions(hamburgerOptions)});
-  //     this.overflow = overflow;
-  //   } else {
-  //     for (let i = buttons.length; i--;) {
-  //       buttons[i].hidden = false;
-  //     }
-  //   }
-  // }
+      if (this._overflownItems.length) {
+        this.overflow = JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label));
+      } else {
+        this.overflow = '';
+      }
+    } else {
+      this.overflow = '';
+    }
+  }
   _onCollapse() {
     const focusSearch = this.selectable && !!this.search && !this.inlayer;
     this.setProperties({
@@ -223,11 +245,8 @@ export class IoMenuOptions extends IoElement {
   }
   expandedChanged() {
     if (this.expanded) {
-      this.inlayer = this.parentElement === Layer;
-      if (this.inlayer && this.$parent) {
-        this._onExpandedChangedLazy();
-        // TODO: unhack incorrect this.rect on first expand.
-        this.throttle(this._onExpandedChangedLazy);
+      if (this.inlayer) {
+        this.throttle(this._onExpandInLayer);
       }
     } else {
       this.style.top = null;
@@ -239,16 +258,24 @@ export class IoMenuOptions extends IoElement {
   }
   searchChanged() {
     if (this.inlayer && this.$parent) {
-      this.throttle(this._clipHeight);
+      this.throttle(this._onClipHeight);
+    }
+    this.throttle(this._onSetOverflow);
+  }
+  _onExpandInLayer() {
+    debug: {
+      if (!this.$parent) {
+        console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoLayerSingleton`.');
+        console.log(this);
+      }
+    }
+    if (this.$parent) {
+      const pRect = this.$parent.getBoundingClientRect();
+      IoLayerSingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
+      this._onClipHeight();
     }
   }
-  _onExpandedChangedLazy() {
-    const pRect = this.$parent.getBoundingClientRect();
-    Layer.setElementPosition(this as unknown as HTMLElement, this.position, pRect);
-    this._clipHeight();
-    this.searchable = !!this.style.height;
-  }
-  _clipHeight() {
+  _onClipHeight() {
     this.scrollTop = 0;
     if (!this.firstChild) return;
 
@@ -268,71 +295,55 @@ export class IoMenuOptions extends IoElement {
       this.style.touchAction = null;
     }
   }
-  _filterOptions(object: any, predicate: (object: any) => boolean, _depth = 5, _chain: any[] = [], _i = 0): any {
-    const result: any[] = [];
-    if (_chain.indexOf(object) !== -1) return result; _chain.push(object);
-    if (_i > _depth) return result; _i++;
-    if (predicate(object) && result.indexOf(object) === -1) result.push(object);
-    for (const key in object) {
-      const value = object[key] instanceof Binding ? object[key].value : object[key];
-      if (predicate(value) && result.indexOf(value) === -1) result.push(value);
-      if (typeof value === 'object') {
-        const results = this._filterOptions(value, predicate, _depth, _chain, _i);
-        for (let i = 0; i < results.length; i++) {
-          if (result.indexOf(results[i]) === -1) result.push(results[i]);
-        }
+
+  changed() {
+    const elements: VDOMArray[] = [...this.slotted];
+
+    if (this.searchable) {
+      elements.push(['io-string', {
+        $: 'search',
+        role: 'search',
+        class: 'search',
+        value: this.bind('search'),
+        placeholder: 'Search',
+        live: true
+      }]);
+    }
+
+    if (this.search) {
+      const len = elements.length;
+      filterOptions(this.options, this.search, this.depth, elements);
+      if (len === elements.length) {
+        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', select: 'none'})}]);
+      }
+    } else {
+      let direction = this.horizontal ? 'down' : 'right';
+      if (this.horizontal && this.direction === 'up') {
+        direction = 'up';
+      }
+      for (let i = 0; i < this.options.length; i++) {
+        elements.push(['io-menu-item', {
+          item: this.options[i],
+          class: 'item',
+          direction: direction,
+          depth: this.depth
+        }]);
       }
     }
-    return result;
-  }
-  get _options() {
-    if (this.search) {
-      const s = this.search.toLowerCase();
-      const options = this._filterOptions(this.options, o => {
-        if (!!o.value || !!o.action) {
-          if (String(o.value).toLowerCase().search(s) !== -1) return true;
-          if (o.label && o.label.toLowerCase().search(s) !== -1) return true;
-          if (o.hint && o.hint.toLowerCase().search(s) !== -1) return true;
-        }
-        return false;
-      });
-      return options.length ? options : new MenuOptions([new MenuItem({label: 'No matches'})]);
-    }
-    return this.options;
-  }
-  changed() {
-    const itemDirection = this.horizontal ? 'bottom' : 'right';
-    const elements = [];
-    if (this.searchable) {
-      elements.push(['io-string', {id: 'search', value: this.bind('search'), live: true}]);
-    }
-    if (this._options) {
-      elements.push(...[this._options.map((option: any) => {
-        return ['io-menu-item', {
-            $parent: this,
-            option: option,
-            direction: itemDirection,
-            depth: this.depth,
-            lazy: false,
-          }];
-        }
-      )]);
-    }
-    if (this.horizontal) {
-      elements.splice(0, 0, ...this.slotted);
-      // elements.push(['io-menu-item', {
-      //   label: '\u2630',
-      //   icon: '\u2630',
-      //   title: 'select tab',
-      //   depth: this.depth + 1,
-      //   class: 'io-hamburger',
-      //   option: new MenuItem({
-      //     options: this._options
-      //   }),
-      //   lazy: false,
-      // }]);
+
+    if (this.overflow) {
+      elements.push(['io-menu-item', {
+        depth: this.depth + 1,
+        role: 'navigation',
+        class: 'hamburger',
+        direction: 'down',
+        item: new MenuItem({
+          label: '',
+          icon: 'icons:hamburger',
+          options: new MenuOptions(this._overflownItems),
+        })
+      }]);
     }
     this.template(elements);
-    // this.throttle(this._onSetOverflow);
   }
 }

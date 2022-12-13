@@ -1,4 +1,4 @@
-import { IoGl, IoThemeSingleton } from '../iogui.js';
+import { IoGl, IoTheme, IoThemeSingleton } from '../iogui.js';
 
 const element = new IoGl();
 element.size = [0, 0];
@@ -31,7 +31,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Array,
             value: [0, 0],
           });
@@ -40,7 +40,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: true,
-            reflect: 'none',
+            reflect: false,
             type: Array,
             value: [0, 0, 0, 0],
           });
@@ -49,7 +49,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: 1,
           });
@@ -58,14 +58,14 @@ export default class {
             binding: undefined,
             notify: true,
             observe: true,
-            reflect: 'none',
-            type: Object,
+            reflect: false,
+            type: IoTheme,
             value: IoThemeSingleton,
           });
         });
         it('has <canvas> element', () => {
           chai.expect(element.children[0].localName).to.equal('canvas');
-          chai.expect(element.$.canvas.localName).to.equal('canvas');
+          chai.expect((element as any)._canvas.localName).to.equal('canvas');
         });
       });
       describe('Reactivity', () => {
@@ -79,11 +79,11 @@ export default class {
           chai.expect(element.pxRatio).to.equal(window.devicePixelRatio);
         });
         it('has correct color', () => {
-          let color = element.$.canvas.ctx.getImageData(0, 0, 1, 1).data;
+          let color = (element as any)._ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
           element.color = [1, 0.5, 0.25, 1];
           element._onRender();
-          color = element.$.canvas.ctx.getImageData(0, 0, 1, 1).data;
+          color = (element as any)._ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
         });
       });

@@ -35,17 +35,17 @@ class IoNode3 extends IoNode1 {
     return {
       prop1: {
         notify: true,
-        reflect: 'prop'
+        reflect: true
       }
     };
   }
   @Property({notify: true, observe: true})
   declare prop1: any;
 
-  @Property({value: 'foo', reflect: 'none'})
+  @Property({value: 'foo', reflect: false})
   declare prop2: any;
 
-  @Property({reflect: 'attr'})
+  @Property({reflect: true})
   declare prop3: any;
 }
 
@@ -165,24 +165,24 @@ export default class {
         let protoChain = new ProtoChain(IoNode1);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         chai.expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: true, observe: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, notify: false, reflect: undefined, observe: undefined},
           prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: true},
         });
         protoChain = new ProtoChain(IoNode3);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1', 'prop3']);
         chai.expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: 'prop', observe: true},
-          prop2:{value: 'foo', type: String, binding: undefined, notify: undefined, reflect: 'none', observe: true},
-          prop3:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: 'attr', observe: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: true, observe: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: true, observe: true},
+          prop2:{value: 'foo', type: String, binding: undefined, notify: undefined, reflect: false, observe: true},
+          prop3:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: true, observe: undefined},
         });
       });
       it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
         const protoChain = new ProtoChain(IoNode4);
         chai.expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         chai.expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: 'attr', observe: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, notify: false, reflect: true, observe: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, notify: true, reflect: undefined, observe: undefined},
           prop2:{value: undefined, type: undefined, binding: undefined, notify: undefined, reflect: undefined, observe: false},
         });

@@ -1,7 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import {IoLayerSingleton as Layer} from '../../core/layer.js';
 import {IoMenuOptions} from './io-menu-options.js';
-import {getElementDescendants, IoMenuItem} from './io-menu-item.js';
+import {getMenuDescendants, IoMenuItem} from './io-menu-item.js';
 
 /**
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
@@ -16,7 +16,7 @@ import {getElementDescendants, IoMenuItem} from './io-menu-item.js';
  *   "position": "pointer",
  *   "selectable": false
  * }' config='{
- *   "position": ["io-option-menu", {"options": ["pointer", "top", "right", "bottom", "left"]}], "type:object": ["io-object"]
+ *   "position": ["io-option-menu", {"options": ["pointer", "up", "right", "down", "left"]}], "type:object": ["io-object"]
  * }'></io-element-demo>
  **/
 @RegisterIoElement
@@ -133,14 +133,14 @@ export class IoContextMenu extends IoElement {
         Layer.appendChild(this.$options);
       }
       this.$options.setProperties({
-        value: this.bind('value'),
+        // value: this.bind('value'),
         expanded: this.bind('expanded'),
         options: this.options,
-        selectable: this.selectable,
+        // selectable: this.selectable,
         position: this.position,
       });
     } else {
-      const descendants = getElementDescendants(this as unknown as IoMenuItem); // TODO fix
+      const descendants = getMenuDescendants(this as unknown as IoMenuItem); // TODO fix
       for (let i = descendants.length; i--;) {
         descendants[i].expanded = false;
       }

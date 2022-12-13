@@ -14,23 +14,23 @@ export class IoNotify extends IoElement {
       top: 0;
       left: 0;
       box-sizing: border-box;
-      background-color: var(--io-background-color-dark);
-      border: var(--io-border);
-      border-color: var(--io-color-error);
+      background-color: var(--iotBackgroundColorDark);
+      border: var(--iotBorder);
+      border-color: var(--iotColorError);
       width: 100%;
       opacity: 1;
       font-weight: bold;
       align-items: center;
       justify-content: center;
-      padding: 0 var(--io-spacing);
+      padding: 0 var(--iotSpacing);
     }
     :host > span {
       cursor: default;
       box-sizing: border-box;
-      line-height: var(--io-line-height);
-      font-size: var(--io-font-size);
-      color: var(--io-color);
-      padding: 0 var(--io-spacing);
+      line-height: var(--iotLineHeight);
+      font-size: var(--iotFontSize);
+      color: var(--iotColor);
+      padding: 0 var(--iotSpacing);
     }
     :host > :nth-child(n+2) {
       flex-shrink: 0;
@@ -52,7 +52,7 @@ export class IoNotify extends IoElement {
     return {
       expanded: {
         value: true,
-        reflect: 'prop',
+        reflect: true,
       }
     };
   }

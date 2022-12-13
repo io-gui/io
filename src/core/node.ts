@@ -27,6 +27,13 @@ export type AnyEventListener = EventListener |
                         FocusEventListener |
                         TouchEventListener;
 
+type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+
+export type IoNodeArgs = {
+  lazy?: boolean;
+  [key: prefix<string, 'on-'>]: string | ((event: CustomEvent<any>) => void)
+}
+
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -39,7 +46,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         lazy: {
           value: false,
           notify: false,
-          reflect: 'attr'
+          reflect: true
         }
       };
     }
@@ -48,11 +55,13 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     declare readonly _bindings: Map<string, Binding>;
     declare readonly _changeQueue: ChangeQueue;
     declare readonly _eventDispatcher: EventDispatcher;
+
      /**
      * Creates a class instance and initializes the internals.
      * @param {Object} properties - Initial property values.
      */
-    constructor(properties: Record<string, any> = {}, ...args: any[]) {
+    constructor(...args: any[]); // TODO: reconsider?
+    constructor(properties: IoNodeArgs = {}, ...args: any[]) {
       super(...args);
 
       debug: {
@@ -64,25 +73,31 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._protochain.autobindFunctions(this);
 
+      Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
-      Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
-
-      if (this._protochain.observedObjectProperties.length) {
-        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
-      }
 
       for (const name in this._protochain.properties) {
         const property = new PropertyInstance(this._protochain.properties[name]);
         this._properties.set(name, property);
+
         const value = property.value;
         if (value !== undefined && value !== null) {
-          if ((property.reflect === 'prop' || property.reflect === 'both') && this._isIoElement) {
-            // TODO: Resolve bi-directional reflection when attributes are set in html (role, etc...)
+          if (property.reflect && this._isIoElement) {
             this.setAttribute(name, value);
           }
         }
+
+        debug: {
+          if (property.value === undefined && typeof property.type === 'function') {
+            const propArg = properties[name as any];
+            if (!(propArg && propArg.constructor === property.type)) {
+              console.warn(`IoNode: property "${name}" of type "${property.type.name}" is specified but no initial value is provided!`);
+            }
+          }
+        }
+
         if (property.binding) property.binding.addTarget(this, name);
       }
 
@@ -98,6 +113,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         });
       }
       this.applyProperties(properties);
+
+      if (this._protochain.observedObjectProperties.length) {
+        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
+      }
+
       this.init();
     }
     /**
@@ -118,8 +138,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             if (oldBinding) {
               oldBinding.removeTarget(this, name);
             }
+            // TODO: check for regressions.
+            // binding.addTarget will invoke setProperty again, so maybe we can skip the rest of the logic.
             binding.addTarget(this, name);
-            value = binding.value;
+            return;
           } else {
             // NOTE: Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings, it causes
             // all but one of those properties to be reset to original value once parents's change event happens.
@@ -174,7 +196,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             this.dispatchQueue();
           }
         }
-        if ((prop.reflect === 'prop' || prop.reflect === 'both') && this._isIoElement) this.setAttribute(name, value);
+        if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
       }
     }
     /**
@@ -187,7 +209,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         if (!this._properties.has(p)) {
           debug: {
             // TODO: consider converting style and config to properties
-            if (!p.startsWith('on-') && p !== 'style' && p !== 'config') {
+            // TODO: document!
+            if (!p.startsWith('on-') && p !== 'style' && p !== 'config' && p !== '$') {
               console.warn(`Property "${p}" is not defined`, this);
             }
           }
@@ -213,6 +236,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         this.setProperty(p, props[p], true);
       }
+
       this.dispatchQueue();
     }
     /**

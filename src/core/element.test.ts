@@ -12,7 +12,6 @@ export default class {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           chai.expect(element.template).to.be.a('function');
-          chai.expect(element.disposeDeep).to.be.a('function');
           chai.expect(element.traverse).to.be.a('function');
           chai.expect(element.setAttribute).to.be.a('function');
         });
@@ -34,7 +33,7 @@ export default class {
             binding: undefined,
             notify: false,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Object,
             value: {},
           });
@@ -42,7 +41,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -50,7 +49,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });
@@ -58,7 +57,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -66,7 +65,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -74,7 +73,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -82,7 +81,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -90,7 +89,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -98,7 +97,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: String,
             value: '',
           });
@@ -106,7 +105,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });
@@ -114,7 +113,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });
@@ -212,7 +211,7 @@ export default class {
             }
             constructor(...initProps: any[]) {
               super(...initProps);
-              this.template([['test-subelement', {id: 'subelement',
+              this.template([['test-subelement', {$: 'subelement',
                 prop0: this.bind('prop0'),
                 prop1: this.bind('prop1'),
               }]]);
@@ -231,7 +230,7 @@ export default class {
               this._prop0Change = change;
             }
             prop1Changed(change: Change) {
-              eventStack.push('TestElement1: prop1Changed' + this.prop1);
+              eventStack.push('TestElement1: prop1Changed ' + this.prop1);
               this._prop1counter++;
               this._prop1Change = change;
             }
@@ -294,8 +293,8 @@ export default class {
           chai.expect(element.subnode.prop1).to.equal('buzz');
           chai.expect(element.$.subelement.prop1).to.equal('buzz');
 
-          // NOTE: element.subnode.setProperties on 2 bound properties causes change() event twice.
-          // TODO: Consider fixing // chai.expect(element._counter).to.equal(3);
+          // // NOTE: element.subnode.setProperties on 2 bound properties causes change() event on element twice.
+          // // TODO: Consider fixing // chai.expect(element._counter).to.equal(3);
           chai.expect(element._counter).to.equal(4);
 
           chai.expect(element._prop0counter).to.equal(3);
@@ -303,7 +302,8 @@ export default class {
           chai.expect(element._prop1counter).to.equal(2);
           chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'buzz', oldValue: 'foo'});
 
-          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: changed', 'TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changedfoo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changedbuzz', 'TestElement1: changed', 'TestNode: changed']);
+          // console.log(eventStack);
+          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changed foo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changed buzz', 'TestElement1: changed', 'TestNode: changed']);
 
           eventStack.length = 0;
 
@@ -317,7 +317,7 @@ export default class {
               };
             }
             changed() {
-              this.template([['test-subelement', {id: 'subelement',
+              this.template([['test-subelement', {$: 'subelement',
                 prop0: this.bind('prop0'),
                 prop1: this.bind('prop1'),
               }]]);
@@ -439,7 +439,7 @@ export default class {
             prop0: {
               value: 0,
               notify: false,
-              reflect: 'prop'
+              reflect: true
             },
             prop1: 0,
           };
@@ -461,7 +461,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: -1,
           });
@@ -469,7 +469,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: String,
             value: 'default',
           });
@@ -478,7 +478,7 @@ export default class {
             binding: undefined,
             notify: false,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Number,
             value: 0,
           });
@@ -486,7 +486,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Number,
             value: 0,
           });
@@ -564,7 +564,7 @@ export default class {
         const element = new TestIoElement1();
         const node = new TestIoNode1();
         element.template([
-          ['test-io-element-1', {id: 'subelement', prop0: element.bind('prop0')}]
+          ['test-io-element-1', {$: 'subelement', prop0: element.bind('prop0')}]
         ]);
         it('Should update bound values correctly', () => {
           element.prop0 = Infinity;

@@ -25,7 +25,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: String,
             value: 'test',
           });
@@ -34,7 +34,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: undefined,
             value: 'foo',
           });
@@ -43,7 +43,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: undefined,
             value: 'foo',
           });
@@ -52,7 +52,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: String,
             value: 'none',
           });

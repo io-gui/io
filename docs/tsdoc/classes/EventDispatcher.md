@@ -147,7 +147,7 @@ Shorthand for custom event dispatch.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:221](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L221)
+[src/core/internals/eventDispatcher.ts:229](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L229)
 
 ___
 
@@ -164,7 +164,7 @@ Use this when node is discarded.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L248)
+[src/core/internals/eventDispatcher.ts:256](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L256)
 
 ___
 
@@ -190,7 +190,7 @@ If `listener` is not specified it removes all listeners for specified `type`.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:181](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L181)
+[src/core/internals/eventDispatcher.ts:184](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L184)
 
 ___
 

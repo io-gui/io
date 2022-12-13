@@ -14,48 +14,61 @@ import { Property } from '../../core/internals/property.js';
 export class IoField extends IoElement {
   static get Style() {
     return /* css */`
-      --io-field: {
-        display: inline-block;
+      --ioField: {
         cursor: pointer;
+        user-select: none;
+        -webkit-touch-callout: none;
 
         overflow: hidden;
         text-overflow: ellipsis;
         flex-wrap: nowrap;
         white-space: nowrap;
 
-        height: var(--io-field-height);
-        line-height: var(--io-line-height);
+        height: var(--iotFieldHeight);
+        line-height: var(--iotLineHeight);
 
-        font-size: var(--io-font-size);
-        border-radius: var(--io-border-radius);
-        border: var(--io-border);
+        font-size: var(--iotFontSize);
+        border: var(--iotBorder);
+        border-radius: var(--iotBorderRadius);
         border-color: transparent;
-        color: var(--io-color);
-        background-color: transparent;
-        background-image: none;
-        padding: calc(var(--io-spacing) - var(--io-border-width));
+        color: var(--iotColorField);
+        background-color: var(--iotBackgroundColorField);
+        padding: var(--iotSpacing) calc(var(--iotSpacing) + 0.5em);
         transition: background-color 0.25s;
       }
       :host {
-        @apply --io-field;
-        display: flex;
+        @apply --ioField;
       }
-      :host[aria-invalid] {
-        border: var(--io-border-error);
+      :host[appearance=neutral] {
+        background-color: transparent;
       }
-      :host[reverse] {
-        flex-flow: row-reverse;
+      :host[appearance=inset] {
+        border-color: var(--iotBorderColorInset);
+      }
+      :host[appearance=outset] {
+        border-color: var(--iotBorderColorOutset);
+        background-image: var(--iotGradientOutset);
+      }
+      :host[invalid] {
+        color: var(--iotColorError);
+        border: var(--iotBorderError);
       }
       :host[selected] {
-        color: var(--io-color-link);
-        background-color: var(--io-background-color-light);
+        color: var(--iotColorFieldSelected);
+        background-color: var(--iotBackgroundColorSelected);
       }
       :host:focus {
-        z-index: 200;
         position: relative;
         text-overflow: inherit;
-        border-color: var(--io-color-focus);
-        outline: 1px solid var(--io-color-focus);
+        border-color: var(--iotBackgroundColor);
+        outline: 1px solid var(--iotBorderColorFocus);
+      }
+      :host[placeholder]:empty:before {
+        content: attr(placeholder);
+        visibility: visible;
+        color: var(--iotColorField);
+        padding: 0 calc(var(--iotSpacing) + var(--iotBorderWidth));
+        opacity: 0.5;
       }
     `;
   }
@@ -66,17 +79,23 @@ export class IoField extends IoElement {
   @Property(undefined)
   declare value: any;
 
-  @Property('')
+  @Property({value: '', reflect: true})
   declare icon: string;
 
-  @Property({value: false})
+  @Property({value: 'flush', reflect: true})
+  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
+
+  @Property({value: false, reflect: true})
   declare stroke: boolean;
 
-  @Property({value: false, reflect: 'prop'})
-  declare reverse: boolean;
-
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare selected: boolean;
+
+  @Property({value: false, reflect: true})
+  declare invalid: boolean;
+
+  @Property({value: '', reflect: true})
+  declare placeholder: string;
 
   static get Listeners() {
     return {

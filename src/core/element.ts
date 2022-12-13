@@ -1,5 +1,5 @@
 import { EventDispatcher } from './internals/eventDispatcher.js';
-import { IoNode, IoNodeMixin, RegisterIoNode } from './node.js';
+import { IoNode, IoNodeMixin, RegisterIoNode, IoNodeArgs } from './node.js';
 import { Property } from './internals/property.js';
 
 // Global mixin record
@@ -17,13 +17,32 @@ const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-type VDOMArray =
-  [string, Record<string, any> | string | VDOMArray[] ] |
-  [string, Record<string, any> | string, VDOMArray[] | string ];
+export type IoElementArgs = IoNodeArgs & {
+  tabindex?: string;
+  contenteditable?: boolean;
+  class?: string;
+  role?: string;
+  label?: string;
+  name?: string;
+  title?: string;
+  id?: string;
+  hidden?: boolean;
+  disabled?: boolean;
+  cache?: boolean;
+  [key: string]: any, // TODO: remove and make specific types
+}
 
-type VDOMElement = {
+// export type VDOMArray<T = Record<never, never>> =
+//   [string, Partial<T> & IoElementArgs | string | VDOMArray<T>[] ] |
+//   [string, Partial<T> & IoElementArgs | string, VDOMArray<T>[] | string ];
+
+export type VDOMArray =
+  [string, IoElementArgs | string | VDOMArray[] ] |
+  [string, IoElementArgs | string, VDOMArray[] | string ];
+
+export type VDOMElement = {
   name: string,
-  props: Record<string, any>,
+  props: IoElementArgs,
   children: VDOMElement[]
 }
 
@@ -153,6 +172,18 @@ const constructElement = function(vDOMElement: VDOMElement) {
   return element;
 };
 
+export const disposeElementDeep = function(element: IoElement) {
+  const elements = [...(element.querySelectorAll('*')), element] as IoElement[];
+  for (let i = elements.length; i--;) {
+    if (typeof elements[i].dispose === 'function') {
+      elements[i].dispose();
+    } else if (elements[i]._eventDispatcher) {
+      elements[i]._eventDispatcher.dispose();
+      delete (elements[i] as any)._eventDispatcher;
+    }
+  }
+};
+
 const superCreateElement = document.createElement;
 document.createElement = function(tagName: string, options?: ElementCreationOptions) {
   if (tagName.startsWith('io-')) {
@@ -172,15 +203,16 @@ document.createElement = function(tagName: string, options?: ElementCreationOpti
  * @param {HTMLElement} element - Element to set properties on.
  * @param {Object} props - Element properties.
  */
-const applyNativeElementProps = function(element: HTMLElement, props: any) {
+export const applyNativeElementProps = function(element: HTMLElement, props: any) {
   for (const p in props) {
     const prop = props[p];
     if (p.startsWith('@')) {
       element.setAttribute(p.substr(1), prop);
     } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else if (p !== 'id') (element as any)[p] = prop;
+    else (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop);
+    if (p === 'src') element.setAttribute('src', prop);
   }
   if (!(element as any)._eventDispatcher) {
     Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoNode)});
@@ -196,75 +228,52 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): string {
     return /* css */`
       :host {
+        display: flex;
         box-sizing: border-box;
       }
       :host[hidden] {
         display: none;
       }
       :host[disabled] {
-        pointer-events: none; opacity: 0.5;
+        pointer-events: none;
+        opacity: 0.5;
       }
     `;
   }
 
   @Property({type: Object, notify: false})
-  declare $: Record<string, any>;
+  declare $: Record<string, any>; // TODO: Add type safety.
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare tabindex: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare contenteditable: boolean;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare class: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare role: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare label: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare name: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare title: string;
 
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare id: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare hidden: boolean;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare disabled: boolean;
 
-  static get observedAttributes() {
-    const observed = [];
-    for (const prop in this.prototype._protochain.properties) {
-      const r  = this.prototype._protochain.properties[prop].reflect;
-      if (r === 'attr' || r === 'both') {
-        observed.push(prop);
-      }
-    }
-    return observed;
-  }
-  attributeChangedCallback(prop: string, oldValue: any, newValue: any) {
-    const type = this._properties.get(prop)!.type;
-    if (type === Boolean) {
-      if (newValue === null) this[prop] = false;
-      else if (newValue === '') this[prop] = true;
-    } else if (type === Number || type === String) {
-      this[prop] =(type as any)(newValue);
-    } else if (type === Object || type === Array) {
-      this[prop] = JSON.parse(newValue);
-    } else if (typeof type === 'function') {
-      this[prop] = new type(JSON.parse(newValue));
-    } else {
-      this[prop] = isNaN(Number(newValue)) ? newValue : Number(newValue);
-    }
-  }
   /**
   * Add resize listener if `onResized()` is defined in subclass.
   */
@@ -281,64 +290,44 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       resizeObserver.unobserve(this as unknown as HTMLElement);
     }
   }
+  // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**
    * Renders DOM from virtual DOM arrays.
    * @param {Array} vDOM - Array of vDOM children.
    * @param {HTMLElement} [host] - Optional template target.
+   * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  template(vDOM: Array<any>, host?: HTMLElement) {
+  template(vDOM: Array<any>, host?: HTMLElement, cache?: boolean) {
     const vChildren = buildTree()(['root', vDOM]).children;
     host = (host || this) as any;
     if (host === (this as any)) this.setProperty('$', {});
-    this.traverse(vChildren, host as HTMLElement);
-  }
-  disposeDeep(host: HTMLElement, child: any) {
-    host.removeChild(child);
-    const nodes = Array.from(child.querySelectorAll('*')) as IoElement[];
-    for (let i = nodes.length; i--;) {
-      if (nodes[i].dispose!) {
-        nodes[i].dispose();
-      } else if (nodes[i]._eventDispatcher) {
-        nodes[i]._eventDispatcher.dispose();
-        delete (nodes[i] as any)._eventDispatcher;
-      }
-    }
-    if ((child).dispose!) {
-      (child).dispose();
-    } else if (child._eventDispatcher) {
-      child._eventDispatcher.dispose();
-      delete child._eventDispatcher;
-    }
+    this.traverse(vChildren, host as HTMLElement, cache);
   }
   /**
    * Recurively traverses vDOM.
    * TODO: test element.traverse() function!
    * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
    * @param {HTMLElement} [host] - Optional template target.
+   * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  traverse(vChildren: Array<any>, host: HTMLElement) {
+  traverse(vChildren: Array<any>, host: HTMLElement, cache?: boolean) {
     const children = host.children;
     // remove trailing elements
     while (children.length > vChildren.length) {
-      this.disposeDeep(host, children[children.length - 1]);
+      const child = children[children.length - 1];
+      host.removeChild(child);
+      if (!cache) disposeElementDeep(child as unknown as IoElement);
     }
-    // create new elements after existing
-    if (children.length < vChildren.length) {
-      const frag = document.createDocumentFragment();
-      for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructElement(vChildren[i]);
-        frag.appendChild(element);
-      }
-      host.appendChild(frag);
-    }
-    // replace existing elements
+    // replace elements
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
-      if (child.localName !== vChildren[i].name) {
-        const oldElement = child as IoElement;
+      // replace existing elements
+      if (child.localName !== vChildren[i].name || cache) {
+        const oldElement = child as unknown as HTMLElement;
         const element = constructElement(vChildren[i]);
-        host.insertBefore(element, oldElement as unknown as HTMLElement);
-        this.disposeDeep(host, oldElement);
+        host.insertBefore(element, oldElement);
+        host.removeChild(oldElement);
+        if (!cache) disposeElementDeep(oldElement as unknown as IoElement);
       // update existing elements
       } else {
         child.removeAttribute('className');
@@ -351,10 +340,22 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         }
       }
     }
+    // TODO: doing this before "replace elements" cached elements to be created twice. Consider making a unit test for this.
+    // create new elements after existing
+    if (children.length < vChildren.length) {
+      const frag = document.createDocumentFragment();
+      for (let i = children.length; i < vChildren.length; i++) {
+        const element = constructElement(vChildren[i]);
+        frag.appendChild(element);
+      }
+      host.appendChild(frag);
+    }
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
       const child = children[i] as HTMLElement | IoElement;
-      if (vChildren[i].props.id) this.$[vChildren[i].props.id] = child;
+      if (vChildren[i].props.$) {
+        this.$[vChildren[i].props.$] = child;
+      }
       if (vChildren[i].children !== undefined) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
@@ -362,7 +363,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           (child as any)._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
-          this.traverse(vChildren[i].children, child as HTMLElement);
+          this.traverse(vChildren[i].children, child as HTMLElement, cache);
         }
       }
     }
