@@ -340,9 +340,9 @@ export class IoMenuItem extends IoField {
     if (this.$options) {
       if (this.expanded) {
         if (this.$options.parentElement !== Layer) Layer.appendChild(this.$options as unknown as HTMLElement);
-        this.$options?.addEventListener('item-clicked', this._onItemClicked);
+        this.$options.addEventListener('item-clicked', this._onItemClicked);
       } else {
-        this.$options?.removeEventListener('item-clicked', this._onItemClicked);
+        this.$options.removeEventListener('item-clicked', this._onItemClicked);
       }
       const $descendants = getMenuDescendants(this.$options);
       for (let i = $descendants.length; i--;) $descendants[i].expanded = false;

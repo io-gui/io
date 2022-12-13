@@ -38,18 +38,18 @@ const options = new MenuOptions([
   ]},
 ]);
 
-const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
-  'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
-  'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
-const hearts = ['❤️', '💚', '💙', '💜', '🧡', '💔', '💖', '🖤', '💗', '💘'];
-const longOptions = [];
-for (let i = 0; i < 100; i++) {
-  const r1 = words[Math.floor(Math.random() * 20)];
-  const r2 = words[Math.floor(Math.random() * 20)];
-  const r3 = words[Math.floor(Math.random() * 20)];
-  const h = hearts[Math.floor(Math.random() * 10)] || '';
-  longOptions.push(new MenuItem({icon: h, label: r1 + ' ' + r2 + ' ' + i, value: r1 + ' ' + r2, hint: r3}));
-}
+// const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'ac', 'libero',
+//   'vitae', 'magna', 'tellus', 'nisl', 'wisi', 'lacinia', 'curae', 'mauris',
+//   'fusce', 'interdum', 'vestibulum', 'nunc', 'velit'];
+// const hearts = ['❤️', '💚', '💙', '💜', '🧡', '💔', '💖', '🖤', '💗', '💘'];
+// const longOptions = [];
+// for (let i = 0; i < 100; i++) {
+//   const r1 = words[Math.floor(Math.random() * 20)];
+//   const r2 = words[Math.floor(Math.random() * 20)];
+//   const r3 = words[Math.floor(Math.random() * 20)];
+//   const h = hearts[Math.floor(Math.random() * 10)] || '';
+//   longOptions.push(new MenuItem({icon: h, label: r1 + ' ' + r2 + ' ' + i, value: r1 + ' ' + r2, hint: r3}));
+// }
 
 const contentOptions = new MenuOptions([
   {value: 'devs', options: ['dev1', 'dev2', 'dev3', 'dev4', 'dev5', 'dev6', 'dev7']},
@@ -165,7 +165,6 @@ export class IoDemoElementsDev extends IoElement {
   }
   static get Properties() {
     return {
-      string: 'zero',
       menuPath: '',
       menuRoot: 0,
       string: 'Hello!',

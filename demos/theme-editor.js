@@ -1,4 +1,4 @@
-import { IoElement, MenuItem, RegisterIoElement } from '../build/iogui.js';
+import { IoElement, RegisterIoElement } from '../build/iogui.js';
 import { IoThemeSingleton, MenuOptions } from '../build/iogui.js';
 
 export class IoDemoThemeEditor extends IoElement {
