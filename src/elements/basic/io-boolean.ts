@@ -2,10 +2,23 @@ import { RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
 
+/**
+ * Input element for `Boolean` data type displayed as text.
+ * It can be configured to display custom `true` or `false` string or icon depending on its `value`.
+ *
+ * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoBoolean extends IoField {
+  static get Style() {
+    return /* css */`
+      :host {
+        background-color: transparent;
+      }
+    `;
+  }
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare value: boolean;
 
   @Property('true')

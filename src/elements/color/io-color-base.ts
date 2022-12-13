@@ -7,8 +7,8 @@ export class IoColorBase extends IoElement {
   @Property({value: {r: 1, g: 1, b: 1, a: 1}, observe: true})
   declare value: {r: number, g: number, b: number, a?: number};
 
-  @Property({value: [1, 1, 1]})
-  declare rgb: [number, number, number];
+  @Property({value: [1, 1, 1, 1]})
+  declare rgba: [number, number, number, number];
 
   @Property({value: [1, 1, 1]})
   declare hsv: [number, number, number];
@@ -33,9 +33,9 @@ export class IoColorBase extends IoElement {
       this.hsv[1] * 100,
       this.hsv[2] * 100,
     ]);
-    this.rgb[0] = rgb[0] / 255;
-    this.rgb[1] = rgb[1] / 255;
-    this.rgb[2] = rgb[2] / 255;
+    this.rgba[0] = rgb[0] / 255;
+    this.rgba[1] = rgb[1] / 255;
+    this.rgba[2] = rgb[2] / 255;
   }
   rgbFromHsl() {
     const rgb = convert.hsl.rgb([
@@ -43,9 +43,9 @@ export class IoColorBase extends IoElement {
       this.hsl[1] * 100,
       this.hsl[2] * 100,
     ]);
-    this.rgb[0] = rgb[0] / 255;
-    this.rgb[1] = rgb[1] / 255;
-    this.rgb[2] = rgb[2] / 255;
+    this.rgba[0] = rgb[0] / 255;
+    this.rgba[1] = rgb[1] / 255;
+    this.rgba[2] = rgb[2] / 255;
   }
   rgbFromCmyk() {
     const rgb = convert.cmyk.rgb([
@@ -54,14 +54,14 @@ export class IoColorBase extends IoElement {
       this.cmyk[2] * 100,
       this.cmyk[3] * 100,
     ]);
-    this.rgb[0] = rgb[0] / 255;
-    this.rgb[1] = rgb[1] / 255;
-    this.rgb[2] = rgb[2] / 255;
+    this.rgba[0] = rgb[0] / 255;
+    this.rgba[1] = rgb[1] / 255;
+    this.rgba[2] = rgb[2] / 255;
   }
   valueFromRgb() {
-    this.value.r = this.rgb[0];
-    this.value.g = this.rgb[1];
-    this.value.b = this.rgb[2];
+    this.value.r = this.rgba[0];
+    this.value.g = this.rgba[1];
+    this.value.b = this.rgba[2];
   }
 
   valueChanged() {
@@ -93,7 +93,7 @@ export class IoColorBase extends IoElement {
     }
 
     this.setProperties({
-      rgb: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255],
+      rgba: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, this.value.a ?? 1],
       hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],
       hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
       cmyk: [cmyk[0] / 100, cmyk[1] / 100, cmyk[2] / 100, cmyk[3] / 100],

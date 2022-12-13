@@ -1,8 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 
-/*
- * Extends `IoElement`. Implements `IoButton`.
- *
+/**
  * Breadcrumbs select element. When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value. Optionally, it can trim the `options` array to selected option index.
  *
  * <io-element-demo element="io-breadcrumbs" properties='{"value": 1, "options": [1,2,3], "trim": false}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
@@ -19,12 +17,12 @@ export class IoBreadcrumbs extends IoElement {
       flex-direction: row;
       align-self: stretch;
       justify-self: stretch;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-color-border-inset);
-      padding: var(--io-spacing);
-      color: var(--io-color-field);
-      background-color: var(--io-background-color-field);
+      border-radius: var(--iotBorderRadius);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorInset);
+      padding: var(--iotSpacing);
+      color: var(--iotColorField);
+      background-color: var(--iotBackgroundColorField);
       overflow-x: hidden;
     }
     :host > io-field:hover {
@@ -33,17 +31,17 @@ export class IoBreadcrumbs extends IoElement {
     :host > io-field:first-of-type {
       overflow: visible;
       text-overflow: clip;
-      margin-left: var(--io-spacing);
+      margin-left: var(--iotSpacing);
     }
     :host > io-field:last-of-type {
       overflow: visible;
       text-overflow: clip;
-      margin-right: var(--io-spacing);
+      margin-right: var(--iotSpacing);
     }
     :host > io-field:not(:first-of-type):before {
       content: '>';
-      margin: 0 var(--io-spacing);
-      padding: 0 var(--io-spacing) 0 0;
+      margin: 0 var(--iotSpacing);
+      padding: 0 var(--iotSpacing) 0 0;
       opacity: 0.25;
     }
     `;
@@ -63,13 +61,16 @@ export class IoBreadcrumbs extends IoElement {
   }
   valueChanged() {
     this.options.length = 0;
+    // TODO: check for memory leaks
     this.options.push(this.value);
   }
   selectedChanged() {
     const index = this.options.indexOf(this.selected);
     if (index !== -1) {
+      // TODO: check for memory leaks
       this.options.length = index + 1;
     } else {
+      // TODO: check for memory leaks
       this.options.push(this.selected);
     }
   }

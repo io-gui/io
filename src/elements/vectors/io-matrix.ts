@@ -1,9 +1,7 @@
 import { RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoVector } from './io-vector.js';
-/*
- * Extends `IoElement`. Implements `IoNumber`.
- *
+/**
  * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
  *
  * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
@@ -20,7 +18,7 @@ export class IoMatrix extends IoVector {
         display: grid;
         align-self: stretch;
         justify-self: stretch;
-        grid-gap: var(--io-spacing);
+        grid-gap: var(--iotSpacing);
       }
       :host > *:not(:last-child) {
         margin-right: 0;
@@ -40,7 +38,7 @@ export class IoMatrix extends IoVector {
   @Property({value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
   declare value: number[];
 
-  @Property({value: 4, reflect: 'prop'})
+  @Property({value: 4, reflect: true})
   declare columns: number;
 
   _onNumberValueInput(event: CustomEvent) {

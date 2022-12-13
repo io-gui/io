@@ -2,26 +2,32 @@ import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoIconsetSingleton } from './io-iconset.js';
 
+/**
+ * SVG icon element.
+ * It displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
+ **/
 @RegisterIoElement
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`
-      --io-icon: {
+      --ioIcon: {
         display: inline-block;
-        height: var(--io-line-height);
-        line-height: var(--io-line-height);
-        font-size: var(--io-font-size);
+        height: var(--iotLineHeight);
+        min-width: var(--iotLineHeight);
+        line-height: var(--iotLineHeight);
+        font-size: var(--iotFontSize);
+        text-align: center;
+        fill: currentcolor;
       }
       :host {
-        @apply --io-icon;
-        fill: currentcolor;
+        @apply --ioIcon;
       }
       :host:not([icon]) {
         display: none;
       }
       :host[stroke] {
         stroke: currentcolor;
-        stroke-width: var(--io-stroke-width);
+        stroke-width: var(--iotStrokeWidth);
       }
       :host > svg {
         height: 100%;
@@ -31,10 +37,10 @@ export class IoIcon extends IoElement {
       }
     `;
   }
-  @Property({value: '', reflect: 'prop'})
+  @Property({value: '', reflect: true})
   declare icon: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare stroke: boolean;
 
   iconChanged() {

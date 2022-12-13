@@ -1,13 +1,13 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { Change } from '../../core/internals/changeQueue.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
+import { Property } from '../../core/internals/property.js';
 import './io-menu-item.js';
 
 // TODO: fix tab-out without collapse
 
-/*
- * Extends `IoMenuItem`
- *
+/**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
  *
  * <io-element-demo element="io-option-menu" properties='{
@@ -36,91 +36,59 @@ export class IoOptionMenu extends IoElement {
     :host {
       display: inline-block;
       text-align: center;
-      border-radius: var(--io-border-radius);
-      border: var(--io-border);
-      border-color: var(--io-color-border-outset);
-      background-color: var(--io-background-color-dark);
-      background-image: var(--io-gradient-button);
-      padding-left: calc(2 * var(--io-spacing));
-      padding-right: calc(2 * var(--io-spacing));
+      border-radius: var(--iotBorderRadius);
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorOutset);
+      background-color: var(--iotBackgroundColorDark);
+      background-image: var(--iotGradientOutset);
+      /* padding-left: calc(2 * var(--iotSpacing)); */
+      /* padding-right: calc(2 * var(--iotSpacing)); */
       text-align: left;
     }
     :host > io-menu-item {
-      margin: calc(-1 * var(--io-border-width));
+      margin: calc(-1 * var(--iotBorderWidth));
       background-color: transparent !important;
       border-color: transparent !important;
     }
     :host > io-menu-item[selected] {
-      color: var(--io-color);
+      color: var(--iotColor);
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: {
-        reflect: 'attr',
-      },
-      options: {
-        type: MenuOptions,
-        reflect: 'attr'
-      },
-      role: 'button',
-    };
+
+  @Property({value: undefined, reflect: true})
+  declare value: any;
+
+  @Property({observe: true, type: MenuOptions, reflect: true})
+  declare options: MenuOptions;
+
+  @Property('button')
+  declare role: string;
+
+  private _item: MenuItem | undefined;
+
+  _onLeafChanged(event: CustomEvent) {
+    this.inputValue(event.detail.value);
   }
-  get _label() {
-    const valueText = (this.value !== undefined) ? String(this.value) : '';
-    return this.label || valueText || '';
-  }
-  _onPathChanged(event: CustomEvent) {
-    // TODO: Fix MenuPath convering values to string type.
-    if (event.detail.leaf !== undefined) {
-      try {
-        this.inputValue(JSON.parse(event.detail.leaf));
-      } catch (error) {
-        this.inputValue(event.detail.leaf);
-      }
+
+  optionsChanged(change: Change) {
+    if (change.oldValue) {
+      change.oldValue.removeEventListener('leaf-changed', this._onLeafChanged);
     }
+    if (change.value) {
+      change.value.addEventListener('leaf-changed', this._onLeafChanged);
+    }
+    const selectedItem = this.options.getItem(this.value);
+    if (selectedItem) selectedItem.selected = true;
   }
   changed() {
-    let valueText = '';
-    if (this.options.length) {
-      const option = this.options.find((option: MenuItem) => {return option.value === this.value;});
-      if (option) {
-        if (option.label) {
-          valueText = option.label;
-        } else if (typeof option.value === 'object') {
-          valueText = `${option.value.constructor.name}` + (option.value instanceof Array ? `(${option.value.length})` : '');
-        } else {
-          valueText = String(option.value);
-        }
-      }
-    }
-    if (!valueText) valueText = this._label;
-    if (this.icon) {
-      valueText = this.icon + '  ' + valueText;
-    }
+    const selectedItem = this.options.getItem(this.value);
 
-    // TODO: Clean up binding of value to menu model.
-    this.options.setSelectedPath([this.value]);
-    for (let i = 0; i < this.options.length; i++) {
-      const option = this.options[i];
-      if (option.value === this.value) {
-        option.selected = true;
-      }
-    }
+    this._item = this._item || new MenuItem({});
+    this._item.label = selectedItem?.label || String(this.value);
+    this._item.options = this.options;
+    this._item.icon = this.icon || '';
 
-    const option = new MenuItem({
-      label: valueText,
-      options: this.options,
-      // TODO: this causes _onPathChanged to trigger initially
-      'on-path-changed': this._onPathChanged,
-    });
-
-    this.template([
-      ['io-menu-item', {
-        option: option,
-        direction: 'bottom',
-      }]
-    ]);
+    this.template([['io-menu-item', {item: this._item, direction: 'down'}]]);
   }
 }

@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[src/elements/object/models/object-config.ts:10](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L10)
+[src/elements/object/models/object-config.ts:10](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-config.ts#L10)
 
 ## Methods
 
@@ -35,7 +35,7 @@
 
 #### Defined in
 
-[src/elements/object/models/object-config.ts:22](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L22)
+[src/elements/object/models/object-config.ts:22](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-config.ts#L22)
 
 ___
 
@@ -55,4 +55,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/models/object-config.ts:15](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L15)
+[src/elements/object/models/object-config.ts:15](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-config.ts#L15)

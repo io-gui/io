@@ -1,9 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { ObjectConfig } from './models/object-config.js';
 
-/*
- * Extends `IoElement`.
- *
+/**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  *
  * <io-element-demo element="io-properties" properties='{
@@ -49,20 +47,27 @@ export class IoProperties extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      flex: 0 1 calc(var(--io-line-height) * 17.5);
+      flex: 0 1 calc(var(--iotLineHeight) * 17.5);
     }
     :host > .io-row:first-of-type {
-      margin-top: var(--io-spacing);
+      margin-top: var(--iotSpacing);
     }
     :host > .io-row {
+      /* --io-row */
+      display: flex;
+      flex: 1 1;
+      flex-direction: row;
+      align-self: stretch;
+      justify-self: stretch;
+      /*  */
       white-space: nowrap;
-      margin-bottom: var(--io-spacing);
+      margin-bottom: var(--iotSpacing);
     }
     :host > .io-row > io-label {
-      margin-top: var(--io-spacing);
+      margin-top: var(--iotSpacing);
       text-align: right;
-      margin-right: var(--io-spacing);
-      flex: 0 0 calc(var(--io-line-height) * 4);
+      margin-right: var(--iotSpacing);
+      flex: 0 0 calc(var(--iotLineHeight) * 4);
     }
     :host > .io-row > io-label:after {
       display: inline-block;
@@ -74,7 +79,7 @@ export class IoProperties extends IoElement {
     return {
       labeled: {
         value: true,
-        reflect: 'prop',
+        reflect: true,
       },
       value: {
         type: Object,

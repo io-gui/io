@@ -1,121 +1,236 @@
-import { IoNodeMixin, RegisterIoNode } from '../../../core/node.js';
-import { MenuItem } from './menu-item.js';
-import { MenuPath } from './menu-path.js';
+import { IoNodeMixin, RegisterIoNode, IoNodeArgs } from '../../../core/node.js';
+import { MenuItem, MenuItemArgsWeak } from './menu-item.js';
 import { Property } from '../../../core/internals/property.js';
 
-// TODO: document and test!
-// TODO: consider menu model mutations.
+// TODO: document!
+
+function _isNaN(value: any) {
+  return typeof value === 'number' && isNaN(value);
+}
+
 @RegisterIoNode
 export class MenuOptions extends IoNodeMixin(Array) {
 
-  @Property(Array)
-  declare items: Array<MenuItem>;
+  @Property('')
+  declare path: string;
 
-  @Property(MenuPath)
-  declare path: MenuPath;
+  @Property(undefined)
+  declare root: any;
 
-  @Property(true) // TODO: test and recosider, investigate why this is necessary?
-  declare lazy: boolean;
+  @Property(undefined)
+  declare leaf: any;
 
-  getItem(value: any) {
+  @Property(',')
+  declare delimiter: string;
+
+  push(...items: MenuItem[]) {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      debug: {
+        if (!(item instanceof MenuItem)) {
+          console.warn('MenuOptions.push: item is not a MenuItem!');
+        }
+      }
+      if (item instanceof MenuItem) {
+        debug: {
+          if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
+            console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+          }
+        }
+        item.addEventListener('selected-changed', this._onItemSelectedChanged);
+        item.addEventListener('path-changed', this._onSubOptionsPathChanged);
+        super.push(item);
+      }
+    }
+  }
+
+  getItem(value: any, deep = false) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
+      if (deep && this[i].options) {
+        const item = this[i].options.getItem(value, deep);
+        if (item) return item;
+      }
     }
     return null;
   }
 
-  push(...items: Array<MenuItem | any>) {
-    for (let i = 0; i < items.length; i++) {
-      if (!(items[i] instanceof MenuItem)) {
-        items[i] = new MenuItem(items[i]);
+  constructor(args: MenuItemArgsWeak[] = [], properties: IoNodeArgs = {}) {
+    const _args: MenuItem[] = [];
+    for (let i = 0; i < args.length; i++) {
+      if (args[i] instanceof MenuItem) {
+        _args.push(args[i] as MenuItem);
+      } else {
+        _args.push(new MenuItem(args[i]));
       }
     }
-    super.push(...items);
+
+    super(properties, ..._args);
+
+    if (this.path !== '') this.pathChanged();
+    if (this.root !== undefined) this.rootChanged();
+    for (let i = 0; i < this.length; i++) {
+      const item = this[i];
+      debug: {
+        if (!(item instanceof MenuItem)) {
+          console.warn('MenuOptions.constructor: item is not a MenuItem!');
+        }
+        // TODO check if same item is at other index
+        if (this.find((otherItem: MenuItem) => otherItem !== item && otherItem.label === item.label)) {
+          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+        }
+      }
+      item.addEventListener('selected-changed', this._onItemSelectedChanged);
+      item.addEventListener('path-changed', this._onSubOptionsPathChanged);
+      if (item.selected && item.select === 'pick') {
+        this.updatePaths(item);
+        continue;
+      }
+    }
   }
 
-  constructor(options: Array<MenuItem | any> = [], props = {}) {
-    super(props);
-    for (let i = 0; i < options.length; i++) {
-      let option;
-      if (options[i] instanceof MenuItem) {
-        option = options[i];
-      } else if (typeof options[i] === 'object') {
-        option = new MenuItem(options[i]);
+  // TODO: consider preventing built-in Array functions like push, pop, etc.
+  protected addItems(items: MenuItemArgsWeak[]) {
+    for (let i = 0; i < items.length; i++) {
+      let item: MenuItem;
+      if (items[i] instanceof MenuItem) {
+        item = items[i] as MenuItem;
       } else {
-        option = new MenuItem({value: options[i]});
+        item = new MenuItem(items[i]);
       }
-      this.push(option);
-      option.addEventListener('selected-changed', this.onItemSelectedChanged);
-      option.addEventListener('path-changed', this.onItemSelectedPathChanged);
+      debug: {
+        if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
+          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+        }
+      }
+      this.push(item);
+      item.addEventListener('selected-changed', this._onItemSelectedChanged);
+      item.addEventListener('path-changed', this._onSubOptionsPathChanged);
     }
   }
+
   pathChanged() {
-    const path = this.path.value;
-    if (!path.length) {
-      for (let i = 0; i < this.length; i++) {
-        if (this[i].select === 'pick') {
-          this[i].setSelectedPath(false, []);
+    const path = this.path ? [...this.path.split(this.delimiter)] : [];
+    if (this.length && path.length) {
+      const first = path.shift();
+      const item = this.find((item: MenuItem) => (item.label === first));
+      if (item) {
+        debug: {
+          if (item.select !== 'pick') {
+            console.warn('MenuOptions.pathChanged: Path set to non-pickable MenuItem!');
+          }
+        }
+        if (item.select === 'pick') {
+          if (item.options) {
+            item.options.path = path.join(this.delimiter);
+          }
+          item.selected = true;
+        }
+      } else {
+        debug: {
+          console.warn(`MenuOptions.pathChanged: cannot find item for specified path "${this.path}"!`);
+        }
+        for (let i = 0; i < this.length; i++) {
+          if (this[i].select === 'pick') this[i].selected = false;
         }
       }
     } else {
-      this.setSelectedPath(path);
-      const selected = path[0];
       for (let i = 0; i < this.length; i++) {
-        if (this[i].select === 'pick' && this[i].value === selected) {
-          const nextpath = [...path];
-          nextpath.shift();
-          this[i].setSelectedPath(true, nextpath);
-          return;
+        if (this[i].select === 'pick') this[i].selected = false;
+      }
+    }
+  }
+
+  rootChanged() {
+    if (this.root !== undefined) {
+      const item = this.find((item: MenuItem) => ((item.value === this.root && item.select === 'pick') || (_isNaN(item.value) && _isNaN(this.root))));
+      if (item) {
+        item.selected = true;
+      }
+      debug: {
+        if (item === undefined) {
+          console.warn(`MenuOptions.rootChanged: cannot find pickable item for specified root value "${this.root}"!`);
+        }
+      }
+    } else {
+      for (let i = 0; i < this.length; i++) {
+        if (this[i].select === 'pick') this[i].selected = false;
+      }
+    }
+  }
+
+  leafChanged() {
+    debug: {
+      if (this.leaf !== undefined) {
+        const path = this.path ? [...this.path.split(this.delimiter)] : [];
+        if (path.length) {
+          let label = path.shift();
+          let item = this.find((item: MenuItem) => item.label === label);
+          let options = item?.options || undefined;
+          while (path.length && options) {
+            label = path.shift();
+            item = options.find((item: MenuItem) => item.label === label);
+            options = item?.options || undefined;
+          }
+          if (item === undefined) {
+            console.warn(`MenuOptions.leafChanged: cannot find item for specified leaf value "${this.leaf}"!`);
+          } else if (item.value !== this.leaf && !(_isNaN(item.value) && _isNaN(this.leaf))) {
+            // TODO: test this?
+            console.warn(`MenuOptions.leafChanged: leaf property value "${this.leaf}" diverged from item specified by path!`);
+          }
+        } else {
+          console.warn(`MenuOptions.leafChanged: leaf property value set "${this.leaf}" but path is empty!`);
         }
       }
     }
   }
-  onItemSelectedPathChanged(event: any) {
-    // console.log('OPTION PATH CHANGED');
-    const target = event.target;
-    const targetPath = target.path.value;
-    if (target.select === 'pick') {
-      if (targetPath.length) {
-        this.setSelectedPath([target.value, ...targetPath]);
-      }
+
+  updatePaths(item?: MenuItem) {
+    const path: string[] = [];
+    let walker: MenuItem | undefined = item;
+    let lastWalker: MenuItem | undefined = item;
+
+    const hasSelected = this.find((item: MenuItem) => item.select === 'pick' && item.selected);
+    if (!item && hasSelected) return;
+
+    while (walker) {
+      path.push(walker.label);
+      lastWalker = walker;
+      walker = walker.options?.find((item: MenuItem) => item.select === 'pick' && item.selected);
     }
+
+    // TODO: when binding two menu trees with both `root` and `path` properties, it is important that we
+    // update the `path` property before the `root`. Otherwise, the menu binding will be broken!
+    // TODO: create a test for this edge-case.
+    this.setProperties({
+      path: path.join(this.delimiter),
+      root: item !== undefined ? item.value : undefined,
+      leaf: lastWalker !== undefined ? lastWalker.value : undefined,
+    });
   }
-  onItemSelectedChanged(event: any) {
-    const target = event.target;
-    const targetPath = target.path.value;
-    if (target.select === 'pick') {
-      if (target.selected) {
+
+  _onItemSelectedChanged(event: CustomEvent) {
+    const item = event.target as unknown as MenuItem;
+    if (item.select === 'pick') {
+      if (item.selected) {
         for (let i = 0; i < this.length; i++) {
-          if (this[i].select === 'pick' && this[i] !== target) {
-            this[i].setSelectedPath(false, []);
+          if (this[i] !== item && this[i].select === 'pick') {
+            this[i].selected = false;
           }
         }
-        this.setSelectedPath([target.value, ...targetPath]);
+        this.updatePaths(item);
+        this.dispatchEvent('item-selected', {item: item});
       } else {
-        let hasSelected = false;
-        for (let i = 0; i < this.length; i++) {
-          if (this[i].selected) {
-            hasSelected = true;
-            continue;
-          }
-        }
-        if (!hasSelected) this.setSelectedPath([]);
+        this.updatePaths();
       }
     }
   }
-  setSelectedPath(path: any[] = []) {
-    this.path.value = path;
-    // TODO: TEMP HACK (pathChanged should not happen due to readonly)
-    if (!path.length) {
-      for (let i = 0; i < this.length; i++) {
-        if (this[i].select === 'pick') {
-          this[i].setSelectedPath(false, []);
-        }
-      }
-    }
-    this.dispatchEvent('path-changed'); // TODO: TEMP HACK
+
+  _onSubOptionsPathChanged(event: CustomEvent) {
+    const item = event.target as unknown as MenuItem;
+    item.selected ? this.updatePaths(item) : this.updatePaths();
   }
-  // TODO: test
+
   selectDefault() {
     for (let i = 0; i < this.length; i++) {
       if (this[i].select === 'pick') {
@@ -123,14 +238,32 @@ export class MenuOptions extends IoNodeMixin(Array) {
           const selected = this[i].options.selectDefault();
           if (selected) return true;
         } else {
-          this[i].setSelectedPath(true, []);
+          this[i].selected = true;
           return true;
         }
       }
     }
     return false;
   }
+
+  bind(prop: string) {
+    debug: {
+      if (prop === 'leaf') {
+        console.warn('MenuPath: Binding to `leaf` property is not recommended. Use `path` or specific `root` instead.');
+      }
+    }
+    return super.bind(prop);
+  }
+
+  dispose() {
+    for (let i = 0; i < this.length; i++) {
+      this[i].removeEventListener('selected-changed', this._onItemSelectedChanged);
+      this[i].removeEventListener('path-changed', this._onSubOptionsPathChanged);
+    }
+    super.dispose();
+  }
+
   changed() {
-    this.dispatchEvent('changed');
+    this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }

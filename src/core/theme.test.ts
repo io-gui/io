@@ -15,7 +15,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: Boolean,
             value: true,
           });
@@ -24,7 +24,7 @@ export default class {
             binding: binding,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: String,
             value: theme.theme,
           });

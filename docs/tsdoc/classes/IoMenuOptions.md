@@ -1,6 +1,6 @@
 # Class: IoMenuOptions
 
-Core `IoElement` class.
+It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
 
 ## Hierarchy
 
@@ -12,16 +12,15 @@ Core `IoElement` class.
 
 ### constructor
 
-**new IoMenuOptions**(`properties?`, ...`args`)
+**new IoMenuOptions**(...`args`)
 
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `properties` | `Record`<`string`, `any`\> | Initial property values. |
-| `...args` | `any`[] | - |
+| Name | Type |
+| :------ | :------ |
+| `...args` | `any`[] |
 
 #### Inherited from
 
@@ -29,7 +28,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:64](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L64)
 
 ## Properties
 
@@ -43,7 +42,17 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/element.ts:211](https://github.com/io-gui/io/blob/main/src/core/element.ts#L211)
+[src/core/element.ts:232](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L232)
+
+___
+
+### $parent
+
+ `Optional` **$parent**: [`IoMenuItem`](IoMenuItem.md)
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:168](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L168)
 
 ___
 
@@ -57,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:48](https://github.com/io-gui/io/blob/main/src/core/node.ts#L48)
+[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -71,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:49](https://github.com/io-gui/io/blob/main/src/core/node.ts#L49)
+[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -85,7 +94,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:50](https://github.com/io-gui/io/blob/main/src/core/node.ts#L50)
+[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -99,7 +108,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:47](https://github.com/io-gui/io/blob/main/src/core/node.ts#L47)
+[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -113,7 +122,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
+[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
 
 ___
 
@@ -127,7 +136,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:220](https://github.com/io-gui/io/blob/main/src/core/element.ts#L220)
+[src/core/element.ts:241](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L241)
 
 ___
 
@@ -141,7 +150,31 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:217](https://github.com/io-gui/io/blob/main/src/core/element.ts#L217)
+[src/core/element.ts:238](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L238)
+
+___
+
+### d
+
+ **d**: `boolean` = `true`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[d](IoElement.md#d)
+
+#### Defined in
+
+[src/core/node.ts:59](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L59)
+
+___
+
+### depth
+
+ **depth**: `number`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:150](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L150)
 
 ___
 
@@ -155,7 +188,17 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:241](https://github.com/io-gui/io/blob/main/src/core/element.ts#L241)
+[src/core/element.ts:262](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L262)
+
+___
+
+### expanded
+
+ **expanded**: `boolean`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:135](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L135)
 
 ___
 
@@ -169,7 +212,17 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:238](https://github.com/io-gui/io/blob/main/src/core/element.ts#L238)
+[src/core/element.ts:259](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L259)
+
+___
+
+### horizontal
+
+ **horizontal**: `boolean`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:138](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L138)
 
 ___
 
@@ -183,7 +236,17 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:235](https://github.com/io-gui/io/blob/main/src/core/element.ts#L235)
+[src/core/element.ts:256](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L256)
+
+___
+
+### inlayer
+
+ **inlayer**: `boolean`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:159](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L159)
 
 ___
 
@@ -197,7 +260,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:226](https://github.com/io-gui/io/blob/main/src/core/element.ts#L226)
+[src/core/element.ts:247](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L247)
 
 ___
 
@@ -211,7 +274,47 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:229](https://github.com/io-gui/io/blob/main/src/core/element.ts#L229)
+[src/core/element.ts:250](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L250)
+
+___
+
+### noPartialCollapse
+
+ **noPartialCollapse**: `boolean`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:153](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L153)
+
+___
+
+### options
+
+ **options**: [`MenuOptions`](MenuOptions.md)
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:132](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L132)
+
+___
+
+### overflow
+
+ **overflow**: `string`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:156](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L156)
+
+___
+
+### position
+
+ **position**: [`NudgeDirection`](../README.md#nudgedirection)
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:147](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L147)
 
 ___
 
@@ -219,13 +322,43 @@ ___
 
  **role**: `string`
 
-#### Inherited from
+#### Overrides
 
 [IoElement](IoElement.md).[role](IoElement.md#role)
 
 #### Defined in
 
-[src/core/element.ts:223](https://github.com/io-gui/io/blob/main/src/core/element.ts#L223)
+[src/elements/menus/io-menu-options.ts:165](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L165)
+
+___
+
+### search
+
+ **search**: `string`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:144](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L144)
+
+___
+
+### searchable
+
+ **searchable**: `boolean`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:141](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L141)
+
+___
+
+### slotted
+
+ **slotted**: [`VDOMArray`](../README.md#vdomarray)[]
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:162](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L162)
 
 ___
 
@@ -239,7 +372,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:214](https://github.com/io-gui/io/blob/main/src/core/element.ts#L214)
+[src/core/element.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L235)
 
 ___
 
@@ -253,23 +386,9 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:232](https://github.com/io-gui/io/blob/main/src/core/element.ts#L232)
+[src/core/element.ts:253](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L253)
 
 ## Accessors
-
-### \_options
-
-`get` **_options**(): `any`
-
-#### Returns
-
-`any`
-
-#### Defined in
-
-[src/elements/menus/io-menu-options.ts:290](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L290)
-
-___
 
 ### textNode
 
@@ -285,7 +404,7 @@ IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
+[src/core/element.ts:388](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L388)
 
 `set` **textNode**(`value`): `void`
 
@@ -305,7 +424,7 @@ IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
+[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L392)
 
 ___
 
@@ -324,25 +443,25 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:138](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L138)
+[src/elements/menus/io-menu-options.ts:173](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L173)
 
 ___
 
 ### Properties
 
-`Static` `get` **Properties**(): `any`
+`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
-`any`
+[`PropertyDeclarations`](../README.md#propertydeclarations)
 
-#### Overrides
+#### Inherited from
 
 IoElement.Properties
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:105](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L105)
+[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
 
 ___
 
@@ -360,52 +479,20 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:29](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L29)
-
-___
-
-### observedAttributes
-
-`Static` `get` **observedAttributes**(): `string`[]
-
-#### Returns
-
-`string`[]
-
-#### Inherited from
-
-IoElement.observedAttributes
-
-#### Defined in
-
-[src/core/element.ts:243](https://github.com/io-gui/io/blob/main/src/core/element.ts#L243)
+[src/elements/menus/io-menu-options.ts:17](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L17)
 
 ## Methods
 
-### \_clipHeight
-
-**_clipHeight**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/menus/io-menu-options.ts:253](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L253)
-
-___
-
 ### \_filterOptions
 
-**_filterOptions**(`object`, `predicate`, `_depth?`, `_chain?`, `_i?`): `any`
+**_filterOptions**(`options`, `search`, `_depth?`, `_chain?`, `_i?`): `any`
 
 #### Parameters
 
 | Name | Type | Default value |
 | :------ | :------ | :------ |
-| `object` | `any` | `undefined` |
-| `predicate` | (`object`: `any`) => `boolean` | `undefined` |
+| `options` | `any` | `undefined` |
+| `search` | `string` | `undefined` |
 | `_depth` | `number` | `5` |
 | `_chain` | `any`[] | `[]` |
 | `_i` | `number` | `0` |
@@ -416,7 +503,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:273](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L273)
+[src/elements/menus/io-menu-options.ts:307](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L307)
 
 ___
 
@@ -443,7 +530,21 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
+[src/core/element.ts:371](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L371)
+
+___
+
+### \_onClipHeight
+
+**_onClipHeight**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:287](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L287)
 
 ___
 
@@ -457,13 +558,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:218](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L218)
+[src/elements/menus/io-menu-options.ts:247](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L247)
 
 ___
 
-### \_onExpandedChangedLazy
+### \_onExpandInLayer
 
-**_onExpandedChangedLazy**(): `void`
+**_onExpandInLayer**(): `void`
 
 #### Returns
 
@@ -471,7 +572,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:247](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L247)
+[src/elements/menus/io-menu-options.ts:274](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L274)
 
 ___
 
@@ -491,7 +592,21 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:148](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L148)
+[src/elements/menus/io-menu-options.ts:180](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L180)
+
+___
+
+### \_onSetOverflow
+
+**_onSetOverflow**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:204](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L204)
 
 ___
 
@@ -511,7 +626,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:163](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L163)
+[src/elements/menus/io-menu-options.ts:193](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L193)
 
 ___
 
@@ -539,7 +654,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
+[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
 
 ___
 
@@ -563,33 +678,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
-
-___
-
-### attributeChangedCallback
-
-**attributeChangedCallback**(`prop`, `oldValue`, `newValue`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prop` | `string` |
-| `oldValue` | `any` |
-| `newValue` | `any` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoElement](IoElement.md).[attributeChangedCallback](IoElement.md#attributechangedcallback)
-
-#### Defined in
-
-[src/core/element.ts:253](https://github.com/io-gui/io/blob/main/src/core/element.ts#L253)
+[src/core/element.ts:396](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L396)
 
 ___
 
@@ -617,7 +706,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:306](https://github.com/io-gui/io/blob/main/src/core/node.ts#L306)
+[src/core/node.ts:331](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L331)
 
 ___
 
@@ -638,7 +727,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:305](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L305)
+[src/elements/menus/io-menu-options.ts:333](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L333)
 
 ___
 
@@ -652,13 +741,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 `void`
 
-#### Overrides
+#### Inherited from
 
 [IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:144](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L144)
+[src/core/element.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L267)
 
 ___
 
@@ -676,7 +765,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
+[src/core/element.ts:425](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L425)
 
 ___
 
@@ -696,7 +785,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:279](https://github.com/io-gui/io/blob/main/src/core/element.ts#L279)
+[src/core/element.ts:275](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L275)
 
 ___
 
@@ -725,7 +814,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
+[src/core/node.ts:387](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L387)
 
 ___
 
@@ -745,7 +834,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
+[src/core/node.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L273)
 
 ___
 
@@ -765,7 +854,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:283](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L283)
 
 ___
 
@@ -786,7 +875,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
+[src/core/node.ts:394](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L394)
 
 ___
 
@@ -811,7 +900,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:295](https://github.com/io-gui/io/blob/main/src/core/element.ts#L295)
+[src/core/element.ts:291](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L291)
 
 ___
 
@@ -825,7 +914,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:226](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L226)
+[src/elements/menus/io-menu-options.ts:255](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L255)
 
 ___
 
@@ -837,13 +926,13 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [IoElement](IoElement.md).[init](IoElement.md#init)
 
 #### Defined in
 
-[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
+[src/elements/menus/io-menu-options.ts:197](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L197)
 
 ___
 
@@ -870,7 +959,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:223](https://github.com/io-gui/io/blob/main/src/core/node.ts#L223)
+[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
 
 ___
 
@@ -888,7 +977,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
+[src/core/element.ts:418](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L418)
 
 ___
 
@@ -915,7 +1004,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:297](https://github.com/io-gui/io/blob/main/src/core/node.ts#L297)
+[src/core/node.ts:322](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L322)
 
 ___
 
@@ -942,7 +1031,21 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:276](https://github.com/io-gui/io/blob/main/src/core/node.ts#L276)
+[src/core/node.ts:301](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L301)
+
+___
+
+### onResized
+
+**onResized**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/menus/io-menu-options.ts:200](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L200)
 
 ___
 
@@ -970,7 +1073,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:242](https://github.com/io-gui/io/blob/main/src/core/node.ts#L242)
+[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
 
 ___
 
@@ -998,7 +1101,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:377](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L377)
 
 ___
 
@@ -1012,7 +1115,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:242](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L242)
+[src/elements/menus/io-menu-options.ts:268](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-options.ts#L268)
 
 ___
 
@@ -1039,7 +1142,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
+[src/core/element.ts:409](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L409)
 
 ___
 
@@ -1066,7 +1169,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
+[src/core/node.ts:230](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L230)
 
 ___
 
@@ -1094,7 +1197,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:109](https://github.com/io-gui/io/blob/main/src/core/node.ts#L109)
+[src/core/node.ts:131](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L131)
 
 ___
 
@@ -1121,7 +1224,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[src/core/element.ts:289](https://github.com/io-gui/io/blob/main/src/core/element.ts#L289)
+[src/core/element.ts:285](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L285)
 
 ___
 
@@ -1149,7 +1252,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:267](https://github.com/io-gui/io/blob/main/src/core/node.ts#L267)
+[src/core/node.ts:292](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L292)
 
 ___
 
@@ -1177,7 +1280,7 @@ TODO: test element.traverse() function!
 
 #### Defined in
 
-[src/core/element.ts:319](https://github.com/io-gui/io/blob/main/src/core/element.ts#L319)
+[src/core/element.ts:315](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L315)
 
 ___
 
@@ -1203,4 +1306,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
+[src/core/node.ts:346](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L346)

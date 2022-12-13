@@ -2,174 +2,174 @@ import { IoElement, RegisterIoElement } from './element.js';
 import { Property, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
-const THEME_VERSION = 'v0.4';
+const THEME_VERSION = 'v0.7';
 
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
 document.head.appendChild(styleElement);
 
-type Color = [number, number, number, number];
-
-// class Color {
-//   constructor(public r: number, public g: number, public b: number, public a: number) {
-//     this.r = r;
-//     this.g = g;
-//     this.b = b;
-//     this.a = a;
-//   }
-// }
+export class Color {
+  constructor(public r: number, public g: number, public b: number, public a: number) {}
+}
 
 type Variables = {
-  ioSpacing: number;
-  ioLineHeight: number;
-  ioFieldHeight: number;
-  ioFieldHeight2: number;
-  ioFieldHeight3: number;
-  ioFieldHeight4: number;
-  ioFontSize: number;
-  ioStrokeWidth: number;
-  ioBorderRadius: number;
-  ioBorderWidth: number;
-  ioBackgroundColor: Color;
-  ioBackgroundColorLight: Color;
-  ioBackgroundColorDark: Color;
-  ioBackgroundColorField: Color;
-  ioColor: Color;
-  ioColorError: Color;
-  ioColorLink: Color;
-  ioColorFocus: Color;
-  ioColorField: Color;
-  ioColorNumber: Color;
-  ioColorString: Color;
-  ioColorBoolean: Color;
-  ioColorBorder: Color;
-  ioColorBorderLight: Color;
-  ioColorBorderDark: Color;
-  ioColorGradientStart: Color;
-  ioColorGradientEnd: Color;
-  ioColorShadow: Color;
+  iotSpacing: number;
+  iotSpacing2: number;
+  iotSpacing3: number;
+  iotSpacing4: number;
+  iotLineHeight: number;
+  iotLineHeight2: number;
+  iotLineHeight3: number;
+  iotLineHeight4: number;
+  iotLineHeight8: number;
+  iotFieldHeight: number;
+  iotFieldHeight2: number;
+  iotFieldHeight3: number;
+  iotFieldHeight4: number;
+  iotFieldHeight8: number;
+  iotFieldHeight10: number;
+  iotFieldHeight12: number;
+  iotStrokeWidth: number;
+  iotBorderRadius: number;
+  iotBorderRadius2: number;
+  iotBorderWidth: number;
+  iotBorderWidth2: number;
+  iotFontSize: number;
+
+  iotBackgroundColor: Color;
+  iotBackgroundColorLight: Color;
+  iotBackgroundColorDark: Color;
+  iotBackgroundColorField: Color;
+  iotBackgroundColorSelected: Color;
+
+  iotColor: Color;
+  iotColorError: Color;
+  iotColorLink: Color;
+  iotColorField: Color;
+  iotColorFieldSelected: Color;
+
+  iotBorderColor: Color;
+  iotBorderColorLight: Color;
+  iotBorderColorDark: Color;
+  iotBorderColorSelected: Color;
+  iotBorderColorFocus: Color;
+
+  iotGradientColorStart: Color;
+  iotGradientColorEnd: Color;
+
+  iotShadowColor: Color;
 }
 
 type Themes = Record<string, Variables>;
 
 const defaultThemes: Themes = {
   light: {
-    ioSpacing: 2,
-    ioLineHeight: 20,
-    ioFieldHeight: 28,
-    ioFieldHeight2: 56,
-    ioFieldHeight3: 112,
-    ioFieldHeight4: 168,
-    ioFontSize: 14,
-    ioStrokeWidth: 1,
-    ioBorderRadius: 3,
-    ioBorderWidth: 1,
-    ioBackgroundColor: [1, 1, 1, 1],
-    ioBackgroundColorLight: [0.6, 0.6, 0.6, 1],
-    ioBackgroundColorDark: [0.84, 0.84, 0.84, 1],
-    ioBackgroundColorField: [0.92, 0.92, 0.92, 1],
-    ioColor: [0, 0, 0, 1],
-    ioColorError: [0.91, 0.5, 0.5, 1],
-    ioColorLink: [0.2, 0.75, 0.2, 1],
-    ioColorFocus: [0.3, 0.6, 1, 1],
-    ioColorField: [0, 0, 0, 1],
-    ioColorNumber: [0.12, 0.64, 1, 1],
-    ioColorString: [0.95, 0.25, 0.1, 1],
-    ioColorBoolean: [0.82, 0.35, 0.75, 1],
-    ioColorBorder: [0.7, 0.7, 0.7, 1],
-    ioColorBorderLight: [1, 1, 1, 1],
-    ioColorBorderDark: [0.6, 0.6, 0.6, 1],
-    ioColorGradientStart: [0.9, 0.9, 0.9, 1],
-    ioColorGradientEnd: [0.75, 0.75, 0.75, 1],
-    ioColorShadow: [0, 0, 0, 0.2],
+    iotSpacing: 2,
+    iotSpacing2: 4,
+    iotSpacing3: 6,
+    iotSpacing4: 8,
+    iotLineHeight: 20,
+    iotLineHeight2: 40,
+    iotLineHeight3: 60,
+    iotLineHeight4: 80,
+    iotLineHeight8: 160,
+    iotFieldHeight: 28,
+    iotFieldHeight2: 56,
+    iotFieldHeight3: 112,
+    iotFieldHeight4: 168,
+    iotFieldHeight8: 236,
+    iotFieldHeight10: 280,
+    iotFieldHeight12: 336,
+    iotStrokeWidth: 1,
+    iotBorderRadius: 2,
+    iotBorderRadius2: 4,
+    iotBorderWidth: 1,
+    iotBorderWidth2: 2,
+    iotFontSize: 14,
+
+    iotBackgroundColor: new Color(1, 1, 1, 1),
+    iotBackgroundColorLight: new Color(0.6, 0.6, 0.6, 1),
+    iotBackgroundColorDark: new Color(0.84, 0.84, 0.84, 1),
+    iotBackgroundColorField: new Color(0.92, 0.92, 0.92, 1),
+    iotBackgroundColorSelected: new Color(0.3, 0.6, 1, 1),
+
+    iotColor: new Color(0, 0, 0, 1),
+    iotColorError: new Color(0.91, 0.5, 0.5, 1),
+    iotColorLink: new Color(0.2, 0.75, 0.2, 1),
+    iotColorField: new Color(0, 0, 0, 1),
+    iotColorFieldSelected: new Color(1, 1, 1, 1),
+
+    iotBorderColor: new Color(0.7, 0.7, 0.7, 1),
+    iotBorderColorLight: new Color(1, 1, 1, 1),
+    iotBorderColorDark: new Color(1, 1, 1, 1),
+    iotBorderColorSelected: new Color(1, 1, 1, 1),
+    iotBorderColorFocus: new Color(0.3, 0.3, 1, 1),
+
+    iotGradientColorStart: new Color(0.9, 0.9, 0.9, 1),
+    iotGradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
+
+    iotShadowColor: new Color(0, 0, 0, 0.2),
   },
   dark: {
-    ioSpacing: 2,
-    ioLineHeight: 20,
-    ioFieldHeight: 28,
-    ioFieldHeight2: 56,
-    ioFieldHeight3: 112,
-    ioFieldHeight4: 168,
-    ioFontSize: 14,
-    ioStrokeWidth: 1,
-    ioBorderRadius: 3,
-    ioBorderWidth: 1,
-    ioBackgroundColor: [0.065, 0.065, 0.065, 1],
-    ioBackgroundColorLight: [0.3, 0.3, 0.3, 1],
-    ioBackgroundColorDark: [0.5, 0.5, 0.5, 1],
-    ioBackgroundColorField: [0.137, 0.137, 0.137, 1],
-    ioColor: [1, 1, 1, 1],
-    ioColorError: [1, 0.376, 0.062, 1],
-    ioColorLink: [0.75, 0.9, 0.59, 1],
-    ioColorFocus: [0.3, 0.82, 1.4, 1],
-    ioColorField: [0.75, 0.75, 0.75, 1],
-    ioColorNumber: [0.125, 0.64, 1, 1],
-    ioColorString: [0.94, 0.25, 0.086, 1],
-    ioColorBoolean: [0.82, 0.35, 0.75, 1],
-    ioColorBorder: [0.3, 0.3, 0.3, 1],
-    ioColorBorderLight: [0.4, 0.4, 0.4, 1],
-    ioColorBorderDark: [0, 0, 0, 1],
-    ioColorGradientStart: [1, 1, 1, 0.1],
-    ioColorGradientEnd: [0, 0, 0, 0.2],
-    ioColorShadow: [0, 0, 0, 0.2],
+    iotSpacing: 2,
+    iotSpacing2: 4,
+    iotSpacing3: 6,
+    iotSpacing4: 8,
+    iotLineHeight: 20,
+    iotLineHeight2: 40,
+    iotLineHeight3: 60,
+    iotLineHeight4: 80,
+    iotLineHeight8: 160,
+    iotFieldHeight: 28,
+    iotFieldHeight2: 56,
+    iotFieldHeight3: 112,
+    iotFieldHeight4: 168,
+    iotFieldHeight8: 236,
+    iotFieldHeight10: 280,
+    iotFieldHeight12: 336,
+    iotStrokeWidth: 1,
+    iotBorderRadius: 2,
+    iotBorderRadius2: 4,
+    iotBorderWidth: 1,
+    iotBorderWidth2: 2,
+    iotFontSize: 14,
+
+    iotBackgroundColor: new Color(0.2, 0.2, 0.2, 1),
+    iotBackgroundColorLight: new Color(0.3, 0.3, 0.3, 1),
+    iotBackgroundColorDark: new Color(0.5, 0.5, 0.5, 1),
+    iotBackgroundColorField: new Color(0.137, 0.137, 0.137, 1),
+    iotBackgroundColorSelected: new Color(0.1, 0.3, 0.85, 1),
+
+    iotColor: new Color(1, 1, 1, 1),
+    iotColorError: new Color(1, 0.376, 0.062, 1),
+    iotColorLink: new Color(0.75, 0.9, 0.59, 1),
+    iotColorField: new Color(0.75, 0.75, 0.75, 1),
+    iotColorFieldSelected: new Color(1, 1, 1, 1),
+
+    iotBorderColor: new Color(0.3, 0.3, 0.3, 1),
+    iotBorderColorLight: new Color(0.4, 0.4, 0.4, 1),
+    iotBorderColorDark: new Color(0.1, 0.1, 0.1, 1),
+    iotBorderColorSelected: new Color(0.3, 0.3, 1, 1),
+    iotBorderColorFocus: new Color(0.5, 0.9, 1, 1),
+
+    iotGradientColorStart: new Color(0.7, 0.7, 0.7, 1),
+    iotGradientColorEnd: new Color(0.3, 0.3, 0.3, 1),
+
+    iotShadowColor: new Color(0, 0, 0, 0.2),
   },
 };
 
-const mixins = /* css */`
-  --io-panel: {
-    border-radius: calc(var(--io-border-radius) + var(--io-spacing));
-    border: var(--io-border);
-    border-color: var(--io-color-border-outset);
-    color: var(--io-color-field);
-    background-color: var(--io-background-color-dark);
-    padding: var(--io-spacing);
-  }
-  --io-row: {
-    display: flex;
-    flex: 1 1;
-    flex-direction: row;
-    align-self: stretch;
-    justify-self: stretch;
-  }
-  --io-column: {
-    display: flex;
-    flex: 1 1;
-    flex-direction: column;
-    align-self: stretch;
-    justify-self: stretch;
-  }
-  --io-grid2: {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: var(--io-spacing);
-  }
-  --io-grid3: {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: var(--io-spacing);
-  }
-  --io-grid4: {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: var(--io-spacing);
-  }
-  --io-grid5: {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: var(--io-spacing);
-  }
-`;
-
 const compositeVariables = /* css */`
   body {
-    --io-border: var(--io-border-width) solid var(--io-color-border);
-    --io-border-error: var(--io-border-width) solid var(--io-color-error);
-    --io-color-border-inset: var(--io-color-border-dark) var(--io-color-border-light) var(--io-color-border-light) var(--io-color-border-dark);
-    --io-color-border-outset: var(--io-color-border-light) var(--io-color-border-dark) var(--io-color-border-dark) var(--io-color-border-light);
-    --io-gradient-button: linear-gradient(180deg, var(--io-color-gradient-start), var(--io-color-gradient-end) 100%);
-    --io-shadow: 2px 2px 6px var(--io-color-shadow), 1px 1px 1px var(--io-color-shadow);
-    --io-shadow-inset: 1px 1px 2px inset var(--io-color-shadow);
-    --io-shadow-outset: -1px -1px 2px inset var(--io-color-shadow);
+    --iotBorder: var(--iotBorderWidth) solid var(--iotBorderColor);
+    --iotBorderError: var(--iotBorderWidth) solid var(--iotColorError);
+    --iotBorderColorInset: var(--iotBorderColorDark) var(--iotBorderColorLight) var(--iotBorderColorLight) var(--iotBorderColorDark);
+    --iotBorderColorOutset: var(--iotBorderColorLight) var(--iotBorderColorDark) var(--iotBorderColorDark) var(--iotBorderColorLight);
+    --iotGradientOutset: linear-gradient(180deg, var(--iotGradientColorStart), var(--iotGradientColorEnd) 100%);
+    --iotGradientInset: linear-gradient(0deg, var(--iotGradientColorStart), var(--iotGradientColorEnd) 150%);
+    --iotShadow: 2px 2px 6px var(--iotShadowColor), 1px 1px 1px var(--iotShadowColor);
+    --iotShadowInset: 1px 1px 1px inset var(--iotShadowColor);
+    --iotShadowOutset: 1px 1px 2px var(--iotShadowColor);
   }
 `;
 
@@ -185,11 +185,29 @@ const theme = $({
   key: 'theme-' + THEME_VERSION
 });
 
+/**
+ * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
+ * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
+ *
+ * ```javascript
+ * IoThemeSingleton.theme = 'dark';
+ * ```
+ *
+ * CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
+ */
 @RegisterIoElement
 export class IoTheme extends IoElement {
-  static get Style(): string { return mixins; }
-
-  static get Properties(): PropertyDeclarations { return persistantThemes.value[theme.value]; }
+  static get Properties(): PropertyDeclarations {
+    const props: PropertyDeclarations = {};
+    for (const p in persistantThemes.value[theme.value]) {
+      if (persistantThemes.value[theme.value][p] instanceof Object) {
+        props[p] = {value: persistantThemes.value[theme.value][p], type: Color, observe: true};
+      } else {
+        props[p] = persistantThemes.value[theme.value][p];
+      }
+    }
+    return props;
+  }
 
   @Property({value: true})
   declare lazy: boolean;
@@ -202,19 +220,17 @@ export class IoTheme extends IoElement {
 
   init() {
     this._properties.forEach((property) => {
-      if (property.value === 'object') {
-        property.observe = true;
-      }
+      if (property.value === 'object') { property.observe = true; }
     });
     this.changed = this.changed.bind(this);
     this.throttle(this.changed, undefined, true);
   }
-  _toCss(rgba: number[]) {
-    const r = Math.floor(rgba[0] * 255);
-    const g = Math.floor(rgba[1] * 255);
-    const b = Math.floor(rgba[2] * 255);
-    if (rgba[3] !== undefined) {
-      return `rgba(${r}, ${g}, ${b}, ${rgba[3]})`;
+  _toCss(rgba: Color) {
+    const r = Math.floor(rgba.r * 255);
+    const g = Math.floor(rgba.g * 255);
+    const b = Math.floor(rgba.b * 255);
+    if (rgba.a !== undefined && rgba.a !== 1) {
+      return `rgba(${r}, ${g}, ${b}, ${rgba.a})`;
     } else {
       return `rgb(${r}, ${g}, ${b})`;
     }
@@ -224,26 +240,43 @@ export class IoTheme extends IoElement {
     this.themeChanged();
   }
   themeChanged() {
-    this.setProperties(persistantThemes.value[this.theme]);
+    const values = persistantThemes.value[this.theme];
+    for (const p in values) {
+      if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
+         values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a);
+      }
+    }
+    this.setProperties(values);
   }
   changed() {
-    this.ioFieldHeight = this.ioLineHeight + 2 * (this.ioSpacing + this.ioBorderWidth);
-    this.ioFieldHeight2 = this.ioFieldHeight * 2;
-    this.ioFieldHeight3 = this.ioFieldHeight * 3;
-    this.ioFieldHeight4 = this.ioFieldHeight * 4;
+    this.iotFieldHeight = this.iotLineHeight + 2 * (this.iotSpacing + this.iotBorderWidth);
+    this.iotFieldHeight2 = this.iotFieldHeight * 2;
+    this.iotFieldHeight3 = this.iotFieldHeight * 3;
+    this.iotFieldHeight4 = this.iotFieldHeight * 4;
+    this.iotFieldHeight8 = this.iotFieldHeight * 8;
+    this.iotFieldHeight10 = this.iotFieldHeight * 10;
+    this.iotFieldHeight12 = this.iotFieldHeight * 12;
+    this.iotLineHeight2 = this.iotLineHeight * 2;
+    this.iotLineHeight3 = this.iotLineHeight * 3;
+    this.iotLineHeight4 = this.iotLineHeight * 4;
+    this.iotLineHeight8 = this.iotLineHeight * 8;
+    this.iotSpacing2 = this.iotSpacing * 2;
+    this.iotSpacing3 = this.iotSpacing * 3;
+    this.iotSpacing4 = this.iotSpacing * 4;
+    this.iotBorderRadius2 = this.iotBorderRadius * 2;
+    this.iotBorderWidth2 = this.iotBorderWidth * 2;
 
     const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {
-        const cssProp = prop.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-        if (prop.startsWith('io')) {
+        if (prop.startsWith('iot')) {
           if (this.persist) {
             persistantThemes.value[theme.value][prop] = this[prop];
             persistantThemes.value = JSON.parse(JSON.stringify(persistantThemes.value));
           }
           if (typeof this[prop] === 'object') {
-            return `${result}--${cssProp}: ${this._toCss(this[prop])};\n    `;
+            return `${result}--${prop}: ${this._toCss(this[prop])};\n    `;
           } else {
-            return `${result}--${cssProp}: ${this[prop]}px;\n    `;
+            return `${result}--${prop}: ${this[prop]}px;\n    `;
           }
         }
         return '';

@@ -4,6 +4,17 @@ import { IoColorBase } from './io-color-base.js';
 import { IoSlider } from '../sliders/io-slider.js';
 import { IoSlider2d } from '../sliders/io-slider-2d.js';
 
+/**
+ * A generic color slider element.
+ * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
+ * For example, setting `channel: 'h'` will instantiate a slider for "hue" color channel and hook up necessary conversions, bindings and event callbacks.
+ *
+ * <io-element-demo element="io-color-slider-hs"
+ * width="64px" height="64px"
+ * properties='{"value": [1, 0.5, 0, 1], "horizontal": true}'
+ * config='{"value": ["io-properties"]}
+ * '></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoColorSlider extends IoColorBase {
   static get Style() {
@@ -17,7 +28,7 @@ export class IoColorSlider extends IoColorBase {
   @Property('')
   declare channel: string;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare vertical: boolean;
 
   _onValueInput(event: CustomEvent) {
@@ -117,19 +128,19 @@ export class IoColorSlider extends IoColorBase {
     switch (this.channel) {
       case 'r':
         value = this.value.r;
-        color = [...this.rgb, 1];
+        color = [...this.rgba];
         break;
       case 'g':
         value = this.value.g;
-        color = [...this.rgb, 1];
+        color = [...this.rgba];
         break;
       case 'b':
         value = this.value.b;
-        color = [...this.rgb, 1];
+        color = [...this.rgba];
         break;
       case 'a':
         value = this.value.a || 0;
-        color = [...this.rgb, this.value.a !== undefined ? this.value.a : 1];
+        color = [...this.rgba];
         break;
       case 'h':
         value = this.hsv[0];
@@ -192,12 +203,16 @@ export class IoColorSlider extends IoColorBase {
   }
 }
 
+/**
+ * A base class for 1D color slider.
+ * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
+ **/
 export class IoColorSliderBase extends IoSlider {
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
-      // vec3 getStartColor(vec2 uv) {}
+      // vec3 getStariotColor(vec2 uv) {}
       // vec3 getEndColor(vec2 uv) {}
     `;
   }
@@ -212,10 +227,10 @@ export class IoColorSliderBase extends IoSlider {
       vec2 position = size * (uv - vec2(0.0, 0.5));
 
       // Background
-      vec3 finalCol = ioBackgroundColorField.rgb;
+      vec3 finalCol = iotBackgroundColorField.rgb;
 
       // Line
-      vec3 startCol = getStartColor(uv);
+      vec3 startCol = getStariotColor(uv);
       vec3 endCol = getEndColor(uv);
       vec3 lineCol = mix(startCol, endCol, uv.x);
 
@@ -231,12 +246,16 @@ export class IoColorSliderBase extends IoSlider {
   }
 }
 
+/**
+ * A base class for 2D color slider.
+ * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
+ **/
 export class IoColorSlider2dBase extends IoSlider2d {
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
-      // vec3 getColor(vec2 uv) {}
+      // vec3 geiotColor(vec2 uv) {}
     `;
   }
   static get Frag() {
@@ -250,8 +269,8 @@ export class IoColorSlider2dBase extends IoSlider2d {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = getColor(uv);
-      vec3 sliderCol = getColor(uValue);
+      vec3 finalCol = geiotColor(uv);
+      vec3 sliderCol = geiotColor(uValue);
 
       vec2 gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
       vec2 offsetPosition = translate(position, -gridOffset);
@@ -264,11 +283,14 @@ export class IoColorSlider2dBase extends IoSlider2d {
   }
 }
 
+/**
+ * A 1D slider for "red" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderR extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return vec3(uv.x, uColor[1], uColor[2]);
       }
       vec3 getEndColor(vec2 uv) {
@@ -277,11 +299,14 @@ export class IoColorSliderR extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "green" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderG extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return vec3(uColor[0], uv.x, uColor[2]);
       }
       vec3 getEndColor(vec2 uv) {
@@ -290,11 +315,14 @@ export class IoColorSliderG extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "blue" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderB extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return vec3(uColor[0], uColor[1], uv.x);
       }
       vec3 getEndColor(vec2 uv) {
@@ -303,29 +331,35 @@ export class IoColorSliderB extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "alpha" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderA extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
         vec2 position = size * (uv - vec2(0.0, 0.5));
-        return mix(vec3(0.5), vec3(1.0), checkerX(position, ioFieldHeight / 4.0));
+        return mix(vec3(0.5), vec3(1.0), checkerX(position, iotFieldHeight / 4.0));
       }
       vec3 getEndColor(vec2 uv) {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
         vec2 position = size * (uv - vec2(0.0, 0.5));
-        vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, ioFieldHeight / 4.0));
+        vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, iotFieldHeight / 4.0));
         return mix(chkCol, uColor.rgb, uColor.a);
       }
     `;
   }
 }
+/**
+ * A 1D slider for "hue" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderH extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return hsv2rgb(vec3(uv.x, uColor[1], uColor[2]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -334,11 +368,14 @@ export class IoColorSliderH extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "saturation" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderS extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv.x, uColor[2]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -347,11 +384,14 @@ export class IoColorSliderS extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "value" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderV extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uColor[1], uv.x));
       }
       vec3 getEndColor(vec2 uv) {
@@ -360,11 +400,14 @@ export class IoColorSliderV extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "level" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderL extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uColor[1], uv.x));
       }
       vec3 getEndColor(vec2 uv) {
@@ -373,12 +416,14 @@ export class IoColorSliderL extends IoColorSliderBase {
     `;
   }
 }
-
+/**
+ * A 1D slider for "cyan" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderC extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return cmyk2rgb(vec4(uv.x, uColor[1], uColor[2], uColor[3]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -387,11 +432,14 @@ export class IoColorSliderC extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "magenta" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderM extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return cmyk2rgb(vec4(uColor[0], uv.x, uColor[2], uColor[3]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -400,11 +448,14 @@ export class IoColorSliderM extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "yellow" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderY extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return cmyk2rgb(vec4(uColor[0], uColor[1], uv.x, uColor[3]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -413,11 +464,14 @@ export class IoColorSliderY extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 1D slider for "key" color channel.
+ **/
 @RegisterIoElement
 export class IoColorSliderK extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
+      vec3 getStariotColor(vec2 uv) {
         return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
       }
       vec3 getEndColor(vec2 uv) {
@@ -426,31 +480,40 @@ export class IoColorSliderK extends IoColorSliderBase {
     `;
   }
 }
+/**
+ * A 2D slider gor "hue" and "saturation" color channels.
+ **/
 @RegisterIoElement
 export class IoColorSliderHs extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getColor(vec2 uv) {
+      vec3 geiotColor(vec2 uv) {
         return hsv2rgb(vec3(uv, uColor[2]));
       }
     `;
   }
 }
+/**
+ * A 2D slider gor "saturation" and "value" color channels.
+ **/
 @RegisterIoElement
 export class IoColorSliderSv extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getColor(vec2 uv) {
+      vec3 geiotColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv));
       }
     `;
   }
 }
+/**
+ * A 2D slider gor "saturation" and "level" color channels.
+ **/
 @RegisterIoElement
 export class IoColorSliderSL extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getColor(vec2 uv) {
+      vec3 geiotColor(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uv));
       }
     `;

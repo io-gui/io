@@ -60,7 +60,7 @@ export class IoLayoutBlock extends IoElement {
   }
   changed() {
     this.template([
-      ['io-layout-tabs', {id: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}],
+      ['io-layout-tabs', {$: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}],
       this.elements[this.tabs[this.selected]]
     ]);
   }
@@ -102,10 +102,10 @@ export class IoLayoutBlock extends IoElement {
     if (ay < 1 && ax < 1 && (ay > 0.9 || ax > 0.9)) {
       if (y < -ax) {
         // TODO: improve UX wit h tabs
-        // this.setDropTarget('top');
+        // this.setDropTarget('up');
         // return;
       } else if (y > +ax) {
-        this.setDropTarget('bottom');
+        this.setDropTarget('down');
         return;
       } else if (x < -ay) {
         this.setDropTarget('left');

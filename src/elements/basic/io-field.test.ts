@@ -17,14 +17,13 @@ export default class {
           chai.expect(element.value).to.equal(undefined);
           chai.expect(element.icon).to.equal('');
           chai.expect(element.stroke).to.equal(false);
-          chai.expect(element.reverse).to.equal(false);
           chai.expect(element.selected).to.equal(false);
 
           chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
+            reflect: false,
             type: undefined,
             value: undefined,
           });
@@ -32,15 +31,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'none',
-            type: Boolean,
-            value: false,
-          });
-          chai.expect(element._properties.get('reverse')).to.eql({
-            binding: undefined,
-            notify: true,
-            observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });
@@ -48,7 +39,7 @@ export default class {
             binding: undefined,
             notify: true,
             observe: false,
-            reflect: 'prop',
+            reflect: true,
             type: Boolean,
             value: false,
           });
@@ -58,7 +49,6 @@ export default class {
           chai.expect(element.getAttribute('icon')).to.equal(null);
           chai.expect(element.getAttribute('stroke')).to.equal(null);
           chai.expect(element.getAttribute('value')).to.equal(null);
-          chai.expect(element.getAttribute('reverse')).to.equal(null);
           chai.expect(element.getAttribute('selected')).to.equal(null);
         });
         it('has correct default innerHTML', () => {
@@ -88,10 +78,6 @@ export default class {
           chai.expect(element.innerHTML).to.equal(`<io-label label="${element.value}" aria-label="${element.value}">${element.value}</io-label>`);
         });
         it('has reactive attributes', () => {
-          chai.expect(element.getAttribute('reverse')).to.equal(null);
-          element.reverse = true;
-          chai.expect(element.getAttribute('reverse')).to.equal('');
-          element.reverse = false;
           chai.expect(element.getAttribute('selected')).to.equal(null);
           element.selected = true;
           chai.expect(element.getAttribute('selected')).to.equal('');

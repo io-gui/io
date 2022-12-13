@@ -4,6 +4,12 @@ import { IoField } from './io-field.js';
 import { IoLayerSingleton } from '../../core/layer.js';
 import { IoThemeSingleton } from '../../core/theme.js';
 
+/**
+ * Input element for `Number` data type.
+ * It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment.
+ * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
+ * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
+ **/
 @RegisterIoElement
 export class IoNumber extends IoField {
   static get Style() {
@@ -13,24 +19,6 @@ export class IoNumber extends IoField {
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
-        min-width: var(--io-field-height);
-        border-color: var(--io-color-border-inset);
-        color: var(--io-color-field);
-        background-color: var(--io-background-color-field);
-        box-shadow: var(--io-shadow-inset);
-        flex-basis: var(--io-field-height3);
-      }
-      :host:before,
-      :host:after {
-        content: ' ';
-        white-space: pre;
-        visibility: hidden;
-      }
-      :host:before {
-        content: '-';
-      }
-      :host:not([positive]):before {
-        content: ' ';
       }
     `;
   }
@@ -59,21 +47,34 @@ export class IoNumber extends IoField {
   @Property(true)
   declare contenteditable: boolean;
 
-  @Property({value: 'number', reflect: 'prop'})
+  @Property({value: 'number', reflect: true})
   declare type: string;
 
-  @Property({value: 'pattern="[0-9]*"', reflect: 'prop'})
+  @Property({value: 'pattern="[0-9]*"', reflect: true})
   declare pattern: string;
 
-  @Property({value: 'numeric', reflect: 'prop'})
+  @Property({value: 'numeric', reflect: true})
   declare inputmode: string;
 
-  @Property({value: 'false', reflect: 'prop'})
+  @Property({value: 'false', reflect: true})
   declare spellcheck: string;
 
-  constructor(properties: Record<string, any> = {}) {
-    super(properties);
-    Object.defineProperty(this, '_pointer', {enumerable: false, writable: true, value: 'touch'});
+  @Property({value: 'inset', reflect: true})
+  declare appearance: 'flush' | 'inset' | 'outset';
+
+  private _pointer = '';
+
+  _onBlur(event: FocusEvent) {
+    super._onBlur(event);
+    this._setFromTextNode();
+    this.scrollTop = 0;
+    this.scrollLeft = 0;
+    // TODO: unhack race condition
+    setTimeout(() => {
+      if ((document.activeElement as Element).parentElement !== IoNumberLadderSingleton as unknown as Element) {
+        IoNumberLadderSingleton.expanded = false;
+      }
+    });
   }
   _onPointerdown(event: PointerEvent) {
     if (this._pointer === 'touch') event.preventDefault();
@@ -108,18 +109,6 @@ export class IoNumber extends IoField {
     if (this._pointer === 'touch') {
       IoNumberLadderSingleton.expanded = false;
     }
-  }
-  _onBlur(event: FocusEvent) {
-    super._onBlur(event);
-    this._setFromTextNode();
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
-    // TODO: unhack race condition
-    setTimeout(() => {
-      if ((document.activeElement as Element).parentElement !== IoNumberLadderSingleton as unknown as Element) {
-        IoNumberLadderSingleton.expanded = false;
-      }
-    });
   }
   _expandLadder() {
     IoNumberLadderSingleton.src = this;
@@ -256,8 +245,8 @@ export class IoNumberLadderStep extends IoField {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--io-background-color-light);
-        color: var(--io-color);
+        background-color: var(--iotBackgroundColorLight);
+        color: var(--iotColor);
         align-self: stretch;
         touch-action: none;
         width: 6em;
@@ -278,7 +267,7 @@ export class IoNumberLadderStep extends IoField {
   @Property(1)
   declare value: number;
 
-  @Property({value: 'number', reflect: 'prop'})
+  @Property({value: 'number', reflect: true})
   declare type: string;
 
   @Property('spinbutton')
@@ -336,6 +325,16 @@ export class IoNumberLadderStep extends IoField {
   }
 }
 
+/**
+ * Interactive number ladder.
+ * When dragged horizontally, it changes the value in step increments.
+ * Dragging speed affects the rate of change exponentially.
+ * Up/down arrow keys change the step focus while left/right change the value in step increments.
+ * Escape key collapses the ladder and restores the focus to previously focused element.
+ * If shift key is pressed, value is rounded to the nearest step incement.
+ *
+ * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
+ **/
 @RegisterIoElement
 export class IoNumberLadder extends IoElement {
   static get Style() {
@@ -374,22 +373,22 @@ export class IoNumberLadder extends IoElement {
         transition: opacity 0.2s, transform 0.2s;
       }
       :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--io-field-height)));
+        transform: translateY(calc(3 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--io-field-height)));
+        transform: translateY(calc(2 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--io-field-height)));
+        transform: translateY(calc(1 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--io-field-height)));
+        transform: translateY(calc(-1 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--io-field-height)));
+        transform: translateY(calc(-2 * var(--iotFieldHeight)));
       }
       :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--io-field-height)));
+        transform: translateY(calc(-3 * var(--iotFieldHeight)));
       }
       :host > .io-up3,
       :host > .io-down3 {
@@ -405,16 +404,16 @@ export class IoNumberLadder extends IoElement {
       }
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
-        background-color: var(--io-background-color-light);
-        border-color: var(--io-color-focus);
+        background-color: var(--iotBackgroundColorLight);
+        border-color: var(--iotBorderColorFocus);
         transition: opacity 0.2s;
         opacity: 1;
       }
       :host > .io-number-ladder-empty {
-        height: var(--io-field-height);
+        height: var(--iotFieldHeight);
       }
       :host > .io-number-ladder-center {
-        height: calc(1.5 * var(--io-field-height));
+        height: calc(1.5 * var(--iotFieldHeight));
       }
     `;
   }
@@ -423,9 +422,9 @@ export class IoNumberLadder extends IoElement {
   declare role: string;
 
   @Property(undefined)
-  declare src: any;
+  declare src?: IoNumber;
 
-  @Property({value: false, reflect: 'prop'})
+  @Property({value: false, reflect: true})
   declare expanded: boolean;
 
   static get Listeners() {
@@ -470,7 +469,7 @@ export class IoNumberLadder extends IoElement {
   }
   _onLadderStepChange(event: CustomEvent) {
     const src = this.src;
-    if (this.src) {
+    if (src) {
       const step = event.detail.step;
       const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
       let newValue = Math.min(this.max, Math.max(this.min, value + step));
@@ -491,7 +490,7 @@ export class IoNumberLadder extends IoElement {
         const layerRect = IoLayerSingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
-        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.ioLineHeight / 2 + IoThemeSingleton.ioSpacing) + 'px';
+        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.iotLineHeight / 2 + IoThemeSingleton.iotSpacing) + 'px';
       } else {
         this.removeAttribute('style');
       }

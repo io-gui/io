@@ -6,7 +6,7 @@ import {IoNode} from '../node.js';
  */
 export class ChangeQueue {
   declare private readonly node: IoNode;
-  readonly changes: Array<Change> = [];
+  declare readonly changes: Array<Change>;
   hasChanged = false;
   dispatching = false;
   /**
@@ -71,7 +71,7 @@ export class ChangeQueue {
   }
 }
 
- export interface Change {
+export interface Change {
   property: string;
   value: any;
   oldValue: any;

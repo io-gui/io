@@ -9,14 +9,14 @@ export class IoColorPicker extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        height: var(--io-field-height);
-        border: var(--io-border);
-        border-radius: var(--io-border-radius);
+        height: var(--iotFieldHeight);
+        border: var(--iotBorder);
+        border-radius: var(--iotBorderRadius);
         overflow: hidden;
       }
       :host:focus {
-        outline: 1px solid var(--io-color-focus);
-        border-color: var(--io-color-focus);
+        outline: 1px solid var(--iotBorderColorFocus);
+        border-color: var(--iotBorderColorFocus);
       }
     `;
   }
@@ -72,7 +72,7 @@ export class IoColorPicker extends IoElement {
   expand() {
     IoColorPanelSingleton.value = this.value;
     IoColorPanelSingleton.expanded = true;
-    IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'bottom', this.getBoundingClientRect());
+    IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'down', this.getBoundingClientRect());
     // hook up 'value-input' event dispatch
     IoColorPanelSingleton.addEventListener('value-input', this._onValueSet);
     IoColorPanelSingleton._targetValueSetHandler = this._onValueSet;
@@ -82,6 +82,6 @@ export class IoColorPicker extends IoElement {
     IoColorPanelSingleton.expanded = false;
   }
   changed() {
-    this.template([['io-color-swatch', {id: 'swatch', value: this.value}]]);
+    this.template([['io-color-swatch', {$: 'swatch', value: this.value}]]);
   }
 }

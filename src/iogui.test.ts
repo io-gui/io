@@ -45,8 +45,12 @@ function runTests() {
 export class IoGuiTestPage extends IoElement {
   static get Style() {
     return /* css */`
+      :host {
+        background: var(--iotBackgroundColor);
+        color: var(--iotColor);
+      }
       :host #mocha {
-        margin: 0;
+        margin: 0 var(--iotLineHeight);
         position: relative;
       }
       :host #mocha-report {
@@ -54,13 +58,12 @@ export class IoGuiTestPage extends IoElement {
       }
       :host #mocha-stats {
         position: absolute;
-        top: -2em;
-        right: 2em;
+        left: var(--iotSpacing2);
         font-size: 12px;
         margin: 0;
       }
       :host #mocha-stats em {
-        color: var(--io-color);
+        color: var(--iotColor);
       }
       :host #mocha-stats li {
         padding: 0;
@@ -88,6 +91,7 @@ export class IoGuiTestPage extends IoElement {
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
     runTests();
+    console.log(this);
     // setTimeout(() => {
     //   const failElement = this.parentElement.querySelector('.fail');
     //   failElement.parentElement.parentElement.parentElement.scrollIntoView({

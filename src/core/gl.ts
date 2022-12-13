@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from './element.js';
 import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
-import { IoThemeSingleton } from './theme.js';
+import { IoTheme, IoThemeSingleton, Color } from './theme.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
@@ -32,8 +32,6 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
 
-type UniformTypes = BooleanConstructor | NumberConstructor | ArrayConstructor;
-
 @RegisterIoElement
 export class IoGl extends IoElement {
   static get Style() {
@@ -44,23 +42,23 @@ export class IoGl extends IoElement {
         -webkit-tap-highlight-color: transparent;
         user-select: none;
       }
-      :host > .io-gl-canvas {
+      :host > canvas {
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: calc(var(--io-border-radius) - var(--io-border-width));
+        border-radius: calc(var(--iotBorderRadius) - var(--iotBorderWidth));
         pointer-events: none;
         image-rendering: pixelated;
       }
       :host[aria-invalid] {
-        border: var(--io-border-error);
+        border: var(--iotBorderError);
       }
-      :host[aria-invalid] > .io-gl-canvas {
+      :host[aria-invalid] > canvas {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--io-color-focus);
-        outline: 1px solid var(--io-color-focus);
+        border-color: var(--iotBorderColorFocus);
+        outline: 1px solid var(--iotBorderColorFocus);
       }
     `;
   }
@@ -73,10 +71,12 @@ export class IoGl extends IoElement {
   @Property({value: 1})
   declare pxRatio: number;
 
-  @Property({observe: true, type: Object})
-  declare theme: typeof IoThemeSingleton;
+  @Property({observe: true, type: IoTheme})
+  declare theme: IoTheme;
 
   private _needsResize = false;
+  private _canvas: HTMLCanvasElement;
+  private _ctx: CanvasRenderingContext2D;
 
   static get Vert() {
     return /* glsl */`
@@ -171,7 +171,7 @@ export class IoGl extends IoElement {
       }
       // Painter Functions
       vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
-        float lineShape = lineHorizontal(p, ioStrokeWidth);
+        float lineShape = lineHorizontal(p, iotStrokeWidth);
         return compose(dstCol, vec4(color, lineShape));
       }
     `;
@@ -198,9 +198,11 @@ export class IoGl extends IoElement {
         case Array:
           this._vecLengths[name] = property.value.length;
           return 'uniform vec' + property.value.length + ' ' + name + ';\n';
+        case Color:
+          this._vecLengths[name] = 4;
+          return 'uniform vec4 ' + name + ';\n';
         default:
       }
-      // TODO: implement matrices.
     }
     return '';
   }
@@ -255,16 +257,19 @@ export class IoGl extends IoElement {
     return program;
   }
   constructor(properties: Record<string, any> = {}) {
+    properties.theme = IoThemeSingleton;
+
     super(properties);
-    this.theme = IoThemeSingleton;
 
     // TODO: improve code clarity
     this._vecLengths = {};
     this.theme._properties.forEach((property, name) => {
-      if (property.notify && property.type === Array) {
-        this._vecLengths[name] = property.value.length;
+      // TODO: consider making more type agnostic
+      if (property.notify && property.type === Color) {
+        this._vecLengths[name] = 4;
       }
     });
+
     this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       if (property.notify && property.type === Array) {
@@ -291,11 +296,9 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    // this.template([['img', {id: 'canvas'}]]);
-    // this.$.canvas.onload = () => { this.$.canvas.loading = false; };
-
-    this.template([['canvas', {id: 'canvas', class: 'io-gl-canvas'}]]);
-    this.$.canvas.ctx = this.$.canvas.getContext('2d');
+    this._canvas = document.createElement('canvas');
+    this.appendChild(this._canvas);
+    this._ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
 
     this.updateThemeUniforms();
   }
@@ -315,8 +318,8 @@ export class IoGl extends IoElement {
 
     if (hasResized) {
       // NOTE: Resizing only in inline CSS. Buffer resize postponed until `_onRender()`.`
-      this.$.canvas.style.width = Math.floor(width) + 'px';
-      this.$.canvas.style.height = Math.floor(height) + 'px';
+      this._canvas.style.width = Math.floor(width) + 'px';
+      this._canvas.style.height = Math.floor(height) + 'px';
       this._needsResize = true;
 
       this.setProperties({
@@ -355,8 +358,8 @@ export class IoGl extends IoElement {
     });
 
     if (this._needsResize) {
-      this.$.canvas.width = Math.floor(width);
-      this.$.canvas.height = Math.floor(height);
+      this._canvas.width = Math.floor(width);
+      this._canvas.height = Math.floor(height);
       this._needsResize = false;
     }
 
@@ -369,11 +372,11 @@ export class IoGl extends IoElement {
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    // this.$.canvas.src = canvas.toDataURL('image/png', 0.9);
-    // this.$.canvas.loading = true;
+    // this._canvas.src = canvas.toDataURL('image/png', 0.9);
+    // this._canvas.loading = true;
 
-    // this.$.canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.$.canvas.ctx.drawImage(canvas, 0, 0);
+    // this._ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this._ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {
     if (currentProgram !== this._shader) {
@@ -384,7 +387,7 @@ export class IoGl extends IoElement {
   updatePropertyUniform(name: string, property: PropertyInstance) {
     this.setShaderProgram();
     if (property.notify) {
-      this.setUniform(name, property.type as unknown as UniformTypes, property.value);
+      this.setUniform(name, property.value);
     }
   }
   updateThemeUniforms() {
@@ -392,19 +395,23 @@ export class IoGl extends IoElement {
       this.updatePropertyUniform(name, property);
     });
   }
-  setUniform(name: string, type: UniformTypes, value: any) {
+  setUniform(name: string, value: any) {
     const uniform = gl.getUniformLocation(this._shader, name);
+    let type: string = typeof value;
+    if (value instanceof Array) type = 'array';
     let _c;
     switch (type) {
-      case Boolean:
+      case 'boolean':
         gl.uniform1i(uniform, value ? 1 : 0);
         break;
-      case Number:
-        gl.uniform1f(uniform, value !== undefined ? value : 1);
+      case 'number':
+        gl.uniform1f(uniform, value ?? 1);
         break;
-      case Array:
+      case 'object':
+      case 'array':
         _c = [0, 1, 2, 3];
-        if (!(value instanceof Array) && typeof value === 'object') {
+        if (typeof value === 'object') {
+          // console.log(value);
           if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
           else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
           else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
@@ -417,8 +424,8 @@ export class IoGl extends IoElement {
               break;
             }
             gl.uniform2f(uniform,
-                value[_c[0]] !== undefined ? value[_c[0]] : 1,
-                value[_c[1]] !== undefined ? value[_c[1]] : 1);
+                value[_c[0]] ?? 1,
+                value[_c[1]] ?? 1);
             break;
           case 3:
             if (value === undefined) {
@@ -426,9 +433,9 @@ export class IoGl extends IoElement {
               break;
             }
             gl.uniform3f(uniform,
-                value[_c[0]] !== undefined ? value[_c[0]] : 1,
-                value[_c[1]] !== undefined ? value[_c[1]] : 1,
-                value[_c[2]] !== undefined ? value[_c[2]] : 1);
+                value[_c[0]] ?? 1,
+                value[_c[1]] ?? 1,
+                value[_c[2]] ?? 1);
             break;
           case 4:
             if (value === undefined) {
@@ -436,10 +443,10 @@ export class IoGl extends IoElement {
               break;
             }
             gl.uniform4f(uniform,
-                value[_c[0]] !== undefined ? value[_c[0]] : 1,
-                value[_c[1]] !== undefined ? value[_c[1]] : 1,
-                value[_c[2]] !== undefined ? value[_c[2]] : 1,
-                value[_c[3]] !== undefined ? value[_c[3]] : 1);
+                value[_c[0]] ?? 1,
+                value[_c[1]] ?? 1,
+                value[_c[2]] ?? 1,
+                value[_c[3]] ?? 1);
                 break;
           default:
         }

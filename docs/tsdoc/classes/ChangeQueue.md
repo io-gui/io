@@ -19,17 +19,17 @@ Creates change queue for the specified owner instance of `IoNode`.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:16](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L16)
+[src/core/internals/changeQueue.ts:16](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L16)
 
 ## Properties
 
 ### changes
 
- `Readonly` **changes**: [`Change`](../interfaces/Change.md)[] = `[]`
+ `Readonly` **changes**: [`Change`](../interfaces/Change.md)[]
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:9](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L9)
+[src/core/internals/changeQueue.ts:9](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L9)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L11)
+[src/core/internals/changeQueue.ts:11](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L11)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L10)
+[src/core/internals/changeQueue.ts:10](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L10)
 
 ## Methods
 
@@ -70,7 +70,7 @@ After all changes are dispatched it invokes `.changed()` functions od the owner 
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:46](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L46)
+[src/core/internals/changeQueue.ts:50](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L50)
 
 ___
 
@@ -87,7 +87,7 @@ Use this when node queue is no longer needed.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L67)
+[src/core/internals/changeQueue.ts:71](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L71)
 
 ___
 
@@ -112,4 +112,4 @@ If the change is already in the queue, the new value is updated in-queue.
 
 #### Defined in
 
-[src/core/internals/changeQueue.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L27)
+[src/core/internals/changeQueue.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/changeQueue.ts#L27)

@@ -97,7 +97,7 @@ export default class {
             type: Number,
             binding: undefined,
             notify: true,
-            reflect: 'none',
+            reflect: false,
             observe: false,
           });
 
@@ -107,7 +107,7 @@ export default class {
             type: Object,
             binding: undefined,
             notify: false,
-            reflect: 'none',
+            reflect: false,
             observe: true,
           });
 
@@ -116,7 +116,7 @@ export default class {
             type: undefined,
             binding: undefined,
             notify: true,
-            reflect: 'none',
+            reflect: false,
             observe: false,
           });
         });
@@ -127,7 +127,7 @@ export default class {
                 prop1: {
                   value: {},
                   notify: false,
-                  reflect: 'both',
+                  reflect: true,
                   observe: true,
                 },
               };
@@ -148,7 +148,7 @@ export default class {
           chai.expect(props.prop1.value).to.be.eql([1, 2, 3]);
           chai.expect(props.prop1.type).to.be.equal(Array);
           chai.expect(props.prop1.notify).to.be.equal(false);
-          chai.expect(props.prop1.reflect).to.be.equal('both');
+          chai.expect(props.prop1.reflect).to.be.equal(true);
           chai.expect(props.prop1.observe).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
@@ -276,7 +276,7 @@ export default class {
               return {
                 label: {
                   value: 'label1',
-                  reflect: 'prop'
+                  reflect: true
                 }
               };
             }
@@ -345,7 +345,7 @@ export default class {
           class TestNode extends IoNode {
             static get Properties(): PropertyDeclarations {
               return {
-                prop: TestSubNode
+                prop: {value: new TestSubNode}
               };
             }
           }

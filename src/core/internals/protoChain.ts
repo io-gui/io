@@ -7,27 +7,27 @@ import {ListenerDeclaration, hardenListenerDeclaration, assignListenerDeclaratio
  * Inherited information is aggregated during prototype chain traversal in `RegisterIoNode()`.
  */
 export class ProtoChain {
-  /*
+  /**
    * Array of inherited class constructors ending with `HTMLElement`, `Object` or `Array`.
    */
   readonly constructors: Array<IoNodeConstructor<any>> = [];
-  /*
+  /**
    * Array of function names that start with "on" or "_on" for auto-binding.
    */
   readonly functions: Array<string> = [];
-  /*
+  /**
    * Aggregated property declarations declared in `static get Properties()` return ojects.
    */
   readonly properties: { [property: string]: ProtoProperty } = {};
-  /*
+  /**
    * Aggregated listener declarations declared in `static get Listeners()` return ojects.
    */
   readonly listeners: { [property: string]: ListenerDeclaration[] } = {};
-  /*
+  /**
    * Aggregated CSS style declarations declared in `static get Style()` return strings.
    */
   readonly style: string = '';
-  /*
+  /**
    * Array of property names of observed object properties.
    */
   readonly observedObjectProperties: string[] = [];

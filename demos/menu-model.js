@@ -1,15 +1,18 @@
 import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/iogui.js';
 
-class IoOptionsDemoView extends IoElement {
+// TODO: improve this test-demo
+
+export class IoOptionsDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        align-self: stretch;
         display: flex;
         flex-direction: column;
         border: 1px solid gray;
       }
       :host > div {
-        background-color: var(--io-background-color-dark);
+        background-color: var(--iotBackgroundColorDark);
         display: flex;
       }
       :host io-item-demo-view {
@@ -18,15 +21,13 @@ class IoOptionsDemoView extends IoElement {
       :host io-field {
         pointer-events: none;
         margin-left: 0.5em;
+        background-color: transparent;
       }
       :host io-field.root {
-        color: var(--io-color-link);
-      }
-      :host io-options-path-demo > io-field {
-        color: var(--io-color-string);
+        color: var(--iotColorLink);
       }
       :host io-field.leaf {
-        color: var(--io-color-focus);
+        color: var(--iotColorFieldSelected);
       }
     `;
   }
@@ -35,19 +36,20 @@ class IoOptionsDemoView extends IoElement {
       options: {
         type: MenuOptions,
         strict: true,
+        observe: true,
       },
     };
   }
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
-      options.push(['io-item-demo-view', {option: this.options[i]}]);
+      options.push(['io-item-demo-view', {item: this.options[i]}]);
     }
     this.template([
       ['div', [
-        ['io-field', {value: this.options.path.bind('root'), class: 'root'}],
-        ['io-options-path-demo', {value: this.options.path.bind('value')}],
-        ['io-field', {value: this.options.path.bind('root'), class: 'leaf'}],
+        ['io-field', {value: this.options.root || '', class: 'root'}],
+        ['io-field', {value: this.options.path, class: 'path'}],
+        ['io-field', {value: this.options.leaf || '', class: 'leaf'}],
       ]],
       options
     ]);
@@ -56,7 +58,7 @@ class IoOptionsDemoView extends IoElement {
 
 RegisterIoElement(IoOptionsDemoView);
 
-class IoItemDemoView extends IoElement {
+export class IoItemDemoView extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -73,50 +75,40 @@ class IoItemDemoView extends IoElement {
   }
   static get Properties() {
     return {
-      option: {
+      item: {
         type: MenuItem,
         strict: true,
+        observe: true,
       },
     };
   }
   changed() {
+    let selectElement = null;
+    if ( this.item.select === 'toggle') {
+      selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
+    } else if ( this.item.select === 'pick') {
+      selectElement = ['io-switch', {value: this.item.bind('selected')}];
+    }
     this.template([
       ['div', [
-        this.option.select === 'toggle'
-            ? ['io-boolean', {value: this.option.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}]
-            : ['io-switch', {value: this.option.bind('selected')}],
-        ['io-field', {value: this.option.bind('value')}],
-        ['io-field', {value: this.option.path.bind('root'), class: 'root'}],
-        ['io-options-path-demo', {value: this.option.path.bind('value')}],
-        ['io-field', {value: this.option.path.bind('leaf'), class: 'leaf'}],
+        selectElement,
+        ['io-field', {value: this.item.label}],
       ]],
-      this.option.hasmore ? ['io-options-demo-view', {options: this.option.options}] : null
+      this.item.hasmore ? ['io-options-demo-view', {options: this.item.options}] : null
     ]);
   }
 }
 
 RegisterIoElement(IoItemDemoView);
 
-class IoOptionsPathDemo extends IoElement {
+export class IoDemoMenuModel extends IoOptionsDemoView {
   static get Properties() {
     return {
-      value: Array,
-    };
-  }
-  changed() {
-    this.template([['io-field', {value: (this.value && this.value.length) ? JSON.stringify(this.value) : ''}]]);
-  }
-}
-RegisterIoElement(IoOptionsPathDemo);
-
-export class IoDemoMenu extends IoOptionsDemoView {
-  static get Properties() {
-    return {
-      options: new MenuOptions([
+      options: {value: new MenuOptions([
         {value: 'home'}, 
         {value: 'food', options: [
           {value: 'fruits', options: [
-            {value: 'apples', selected: true}, // TODO: consider this as default selection
+            {value: 'apples', selected: true},
             {value: 'mangos'},
             {value: 'bannanas'},
           ]},
@@ -129,7 +121,7 @@ export class IoDemoMenu extends IoOptionsDemoView {
         {value: 'mixed', options: [
           {value: 'selectable1'},
           {value: 'selecrable2'},
-          {value: 'togglables', options: [
+          {value: 'togglables', select: 'none', options: [
             {value: 'toggle1', select: 'toggle'},
             {value: 'toggle2', select: 'toggle'},
             {value: 'toggle3', select: 'toggle'},
@@ -141,8 +133,8 @@ export class IoDemoMenu extends IoOptionsDemoView {
           ]},
         ]}
       ])
-    };
+    }};
   }
 }
 
-RegisterIoElement(IoDemoMenu);
+RegisterIoElement(IoDemoMenuModel);
