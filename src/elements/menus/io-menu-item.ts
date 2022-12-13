@@ -359,8 +359,7 @@ export class IoMenuItem extends IoField {
     this.template([
       this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
       this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
-      // icon ? ['io-icon', {icon: icon}] : null,
-      ['io-icon', {icon: icon || ' '}],
+      icon ? ['io-icon', {icon: icon}] : null,
       ['span', {class: 'label'}, this.item.label],
       ['span', {class: 'hint'}, this.item.hint],
       this.hasmore && this.direction === 'right' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_right'}] : null,
