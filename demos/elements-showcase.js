@@ -60,6 +60,38 @@ const contentOptions = new MenuOptions([
 contentOptions[0].selected = true;
 contentOptions[0].options[3].selected = true;
 
+const optionsDeep = new MenuOptions([
+  {label: 'Deep Menu', options: [
+    {value: 'Level 1 Item One'},
+    {value: 'Level 1 Item Two'},
+    {value: 'Level 1 Item Three', options: [
+      {value: 'Level 2 Item One'},
+      {value: 'Level 2 Item Two'},
+      {value: 'Level 2 Item Three', options: [
+        {value: 'Level 3 Item One'},
+        {value: 'Level 3 Item Two'},
+        {value: 'Level 3 Item Three', options: [
+          {value: 'Level 4 Item One'},
+          {value: 'Level 4 Item Two'},
+          {value: 'Level 4 Item Three', options: [
+            {value: 'Level 5 Item One'},
+            {value: 'Level 5 Item Two'},
+            {value: 'Level 5 Item Three', options: [
+              {value: 'Level 6 Item One'},
+              {value: 'Level 6 Item Two'},
+              {value: 'Level 6 Item Three', options: [
+                {value: 'Level 7 Item One'},
+                {value: 'Level 7 Item Two'},
+                {value: 'Level 7 Item Three'},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+  ]}
+]);
+
 const elements = [
   ['div', {id: 'devs'}, [
     ['span', {id: 'dev1'}, 'io-dev 1'],
@@ -382,8 +414,8 @@ export class IoDemoElementsShowcase extends IoElement {
           ]}],
         ]
       }],
-      ['io-collapsable', {label: 'Menu Models', expanded: $('expanded-demo-models'), elements: [
-        ['io-collapsable', {label: 'MenuOptions and MenuItem select demo', expanded: $('expanded-demo-models-1'), elements: [
+      ['io-collapsable', {label: 'Menu Model', expanded: $('expanded-demo-menu-model'), elements: [
+        ['io-collapsable', {label: 'MenuOptions and MenuItem select demo', expanded: $('expanded-demo-menu-model-1'), elements: [
           // TODO: implement import
           ['io-demo-menu-model', {name: 'Menu Model', import: './demos/menu-model.js'}],
         ]}],             
@@ -424,6 +456,9 @@ export class IoDemoElementsShowcase extends IoElement {
             ], {
               root: this.bind('menuRoot')
             }),
+          }],
+          ['io-menu-options', {
+            options: optionsDeep,
           }],
         ]}],
         ['io-collapsable', {label: 'io-menu-options [horizontal]', expanded: $('expanded-demo-menus-4'), elements: [

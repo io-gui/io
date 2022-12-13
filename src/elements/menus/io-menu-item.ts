@@ -61,7 +61,7 @@ export class IoMenuItem extends IoField {
   @Property({value: 'right', reflect: true})
   declare direction: string;
 
-  @Property({value: Infinity, reflect: true})
+  @Property({value: 1000, reflect: true})
   declare depth: number;
 
   @Property(undefined)
@@ -205,8 +205,17 @@ export class IoMenuItem extends IoField {
   }
   _gethovered(event: PointerEvent) {
     const items = getMenuDescendants(getMenuRoot(this));
+    const hovered: IoMenuElementType[] = [];
     for (let i = items.length; i--;) {
-      if (isPointerAboveIoMenuItem(event, items[i])) return items[i] as IoMenuElementType;
+      if (isPointerAboveIoMenuItem(event, items[i])) {
+        hovered.push(items[i]);
+      }
+    }
+    if (hovered.length) {
+      hovered.sort((a: IoMenuElementType, b: IoMenuElementType) => {
+        return a.depth < b.depth ? 1 : a.depth > b.depth ? -1 : 0;
+      });
+      return hovered[hovered.length - 1];
     }
     return undefined;
   }
@@ -221,6 +230,13 @@ export class IoMenuItem extends IoField {
           }
         }
         hovered.expanded = true;
+      }
+      if (hovered.$parent) {
+        // Collapse all sibiling io-menu-item elements
+        const items = hovered.$parent.querySelectorAll('io-menu-item, io-option-menu');
+        for (let i = items.length; i--;) {
+          if (items[i] !== hovered) items[i].expanded = false;
+        }
       }
     }
   }
@@ -343,7 +359,8 @@ export class IoMenuItem extends IoField {
     this.template([
       this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
       this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
-      icon ? ['io-icon', {icon: icon}] : null,
+      // icon ? ['io-icon', {icon: icon}] : null,
+      ['io-icon', {icon: icon || ' '}],
       ['span', {class: 'label'}, this.item.label],
       ['span', {class: 'hint'}, this.item.hint],
       this.hasmore && this.direction === 'right' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_right'}] : null,
@@ -397,10 +414,11 @@ function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementTyp
   if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
     if (!element.disabled && !element.hidden) {
       if (!element.inlayer || element.parentElement.expanded) {
+        const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
         const r = element.getBoundingClientRect();
         const x = event.clientX;
         const y = event.clientY;
-        const hovered = (r.top <= y && r.bottom >= y && r.left <= x && r.right >= x );
+        const hovered = (r.top <= y+bw && r.bottom >= y-bw && r.left <= x+bw && r.right >= x-bw );
         return hovered;
       }
     }

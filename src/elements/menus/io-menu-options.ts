@@ -137,7 +137,7 @@ export class IoMenuOptions extends IoElement {
   @Property({value: 'none', reflect: true})
   declare direction: NudgeDirection;
 
-  @Property(Infinity)
+  @Property(100)
   declare depth: number;
 
   @Property(false)
