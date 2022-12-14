@@ -140,8 +140,9 @@ export class IoDemoElementsDev extends IoElement {
         height: 100%;
         flex: 0 0 auto;
       }
-      :host io-collapsable {
-
+      :host > io-collapsable {
+        margin: var(--iotSpacing);
+        margin-bottom: 0;
       }
       :host io-collapsable.overflow > div {
         max-height: 20rem;
@@ -151,8 +152,8 @@ export class IoDemoElementsDev extends IoElement {
         flex-wrap: wrap;
         overflow: hidden;
       }
-      :host io-collapsable > div > io-collapsable {
-        padding-left: var(--iotFieldHeight);
+      :host io-collapsable > div > io-collapsable:not(:last-of-type) {
+        margin-bottom: var(--iotSpacing);
       }
       :host > io-collapsable[expanded] {
         /* flex-basis: 100%; */
@@ -235,8 +236,8 @@ export class IoDemoElementsDev extends IoElement {
         }],
         ['io-collapsable', {label: 'io-boolean', class: 'row', expanded: $('expanded-demo-basic-5'),
           elements: [
-            ['io-boolean', {value: this.bind('boolean')}],
             ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+            ['io-boolean', {value: this.bind('boolean')}],
           ]
         }],
         ['io-collapsable', {label: 'io-switch', expanded: $('expanded-demo-basic-6'),

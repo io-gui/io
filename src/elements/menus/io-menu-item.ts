@@ -412,7 +412,7 @@ export function getMenuRoot(element: IoMenuElementType) {
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
     if (!element.disabled && !element.hidden) {
-      if (!element.inlayer || element.parentElement.expanded) {
+      if (!element.inlayer || (element.parentElement.expanded && Layer.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
         const r = element.getBoundingClientRect();
         const x = event.clientX;
