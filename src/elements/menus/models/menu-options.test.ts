@@ -148,8 +148,8 @@ export default class {
         chai.expect(options.root).to.be.equal(3);
         chai.expect(options.leaf).to.be.equal(3);
       });
-      it('Should update `root`, `leaf`, `path` properties only when items with `select="pick"` are selected', () => {
-        const options = new MenuOptions([1, {value: 2, select: 'toggle'}, 3]);
+      it('Should update `root`, `leaf`, `path` properties only when items with `mode="pick"` are selected', () => {
+        const options = new MenuOptions([1, {value: 2, mode: 'toggle'}, 3]);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
         chai.expect(options.root).to.be.equal(1);

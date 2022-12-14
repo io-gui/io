@@ -84,9 +84,9 @@ export class IoItemDemoView extends IoElement {
   }
   changed() {
     let selectElement = null;
-    if ( this.item.select === 'toggle') {
+    if ( this.item.mode === 'toggle') {
       selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
-    } else if ( this.item.select === 'pick') {
+    } else if ( this.item.mode === 'select') {
       selectElement = ['io-switch', {value: this.item.bind('selected')}];
     }
     this.template([
@@ -121,14 +121,14 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
         {value: 'mixed', options: [
           {value: 'selectable1'},
           {value: 'selecrable2'},
-          {value: 'togglables', select: 'none', options: [
-            {value: 'toggle1', select: 'toggle'},
-            {value: 'toggle2', select: 'toggle'},
-            {value: 'toggle3', select: 'toggle'},
-            {value: 'toggle4', select: 'toggle'},
+          {value: 'togglables', mode: 'none', options: [
+            {value: 'toggle1', mode: 'toggle'},
+            {value: 'toggle2', mode: 'toggle'},
+            {value: 'toggle3', mode: 'toggle'},
+            {value: 'toggle4', mode: 'toggle'},
           ]},
           {value: 'nested mixed', options: [
-            {value: 'toggle', select: 'toggle'},
+            {value: 'toggle', mode: 'toggle'},
             {value: 'selectable'},
           ]},
         ]}

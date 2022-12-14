@@ -109,19 +109,19 @@ export class IoMenuItem extends IoField {
     const item = this.item;
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true;
-    } else if (item.select === 'toggle') {
+    } else if (item.mode === 'toggle') {
       item.selected = !item.selected;
     } else {
       if (item.action) {
         item.action.apply(null, [item.value]);
       }
-      if (item.select === 'pick') {
+      if (item.mode === 'select') {
         if (item.hasmore && item.options && this.depth <= 0) {
           item.options.selectDefault();
         } else {
           item.selected = true;
         }
-      } else if (item.select === 'link') {
+      } else if (item.mode === 'link') {
         window.open(item.value, '_blank');
       }
       this.dispatchEvent('item-clicked', item, true);

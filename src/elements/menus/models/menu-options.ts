@@ -82,7 +82,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
       item.addEventListener('selected-changed', this._onItemSelectedChanged);
       item.addEventListener('path-changed', this._onSubOptionsPathChanged);
-      if (item.selected && item.select === 'pick') {
+      if (item.selected && item.mode === 'select') {
         this.updatePaths(item);
         continue;
       }
@@ -116,11 +116,11 @@ export class MenuOptions extends IoNodeMixin(Array) {
       const item = this.find((item: MenuItem) => (item.label === first));
       if (item) {
         debug: {
-          if (item.select !== 'pick') {
+          if (item.mode !== 'select') {
             console.warn('MenuOptions.pathChanged: Path set to non-pickable MenuItem!');
           }
         }
-        if (item.select === 'pick') {
+        if (item.mode === 'select') {
           if (item.options) {
             item.options.path = path.join(this.delimiter);
           }
@@ -131,19 +131,19 @@ export class MenuOptions extends IoNodeMixin(Array) {
           console.warn(`MenuOptions.pathChanged: cannot find item for specified path "${this.path}"!`);
         }
         for (let i = 0; i < this.length; i++) {
-          if (this[i].select === 'pick') this[i].selected = false;
+          if (this[i].mode === 'select') this[i].selected = false;
         }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
-        if (this[i].select === 'pick') this[i].selected = false;
+        if (this[i].mode === 'select') this[i].selected = false;
       }
     }
   }
 
   rootChanged() {
     if (this.root !== undefined) {
-      const item = this.find((item: MenuItem) => ((item.value === this.root && item.select === 'pick') || (_isNaN(item.value) && _isNaN(this.root))));
+      const item = this.find((item: MenuItem) => ((item.value === this.root && item.mode === 'select') || (_isNaN(item.value) && _isNaN(this.root))));
       if (item) {
         item.selected = true;
       }
@@ -154,7 +154,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
       }
     } else {
       for (let i = 0; i < this.length; i++) {
-        if (this[i].select === 'pick') this[i].selected = false;
+        if (this[i].mode === 'select') this[i].selected = false;
       }
     }
   }
@@ -190,13 +190,13 @@ export class MenuOptions extends IoNodeMixin(Array) {
     let walker: MenuItem | undefined = item;
     let lastWalker: MenuItem | undefined = item;
 
-    const hasSelected = this.find((item: MenuItem) => item.select === 'pick' && item.selected);
+    const hasSelected = this.find((item: MenuItem) => item.mode === 'select' && item.selected);
     if (!item && hasSelected) return;
 
     while (walker) {
       path.push(walker.label);
       lastWalker = walker;
-      walker = walker.options?.find((item: MenuItem) => item.select === 'pick' && item.selected);
+      walker = walker.options?.find((item: MenuItem) => item.mode === 'select' && item.selected);
     }
 
     // TODO: when binding two menu trees with both `root` and `path` properties, it is important that we
@@ -211,10 +211,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   _onItemSelectedChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    if (item.select === 'pick') {
+    if (item.mode === 'select') {
       if (item.selected) {
         for (let i = 0; i < this.length; i++) {
-          if (this[i] !== item && this[i].select === 'pick') {
+          if (this[i] !== item && this[i].mode === 'select') {
             this[i].selected = false;
           }
         }
@@ -233,7 +233,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   selectDefault() {
     for (let i = 0; i < this.length; i++) {
-      if (this[i].select === 'pick') {
+      if (this[i].mode === 'select') {
         if (this[i].hasmore) {
           const selected = this[i].options.selectDefault();
           if (selected) return true;

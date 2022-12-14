@@ -207,7 +207,7 @@ export class IoMenuTree extends IoElement {
       const len = elements.length;
       filterOptions(this.options, this.search, this.depth, elements);
       if (len === elements.length) {
-        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', select: 'none'})}]);
+        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', mode: 'none'})}]);
       }
     } else {
       elements.push(...addMenuOptions(this.options, this.depth));
