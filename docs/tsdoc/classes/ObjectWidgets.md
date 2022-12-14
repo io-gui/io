@@ -14,7 +14,7 @@
 
 #### Defined in
 
-[src/elements/object/models/object-widgets.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-widgets.ts#L8)
+[src/elements/object/models/object-widgets.ts:8](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L8)
 
 ## Methods
 
@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/elements/object/models/object-widgets.ts:20](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-widgets.ts#L20)
+[src/elements/object/models/object-widgets.ts:20](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L20)
 
 ___
 
@@ -59,4 +59,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/models/object-widgets.ts:13](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-widgets.ts#L13)
+[src/elements/object/models/object-widgets.ts:13](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L13)

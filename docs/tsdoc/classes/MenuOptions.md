@@ -25,7 +25,7 @@ IoNodeMixin(Array).constructor
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:64](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L64)
+[src/elements/menus/models/menu-options.ts:58](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L58)
 
 ## Properties
 
@@ -39,7 +39,7 @@ IoNodeMixin(Array).\_bindings
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -53,7 +53,7 @@ IoNodeMixin(Array).\_changeQueue
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -67,7 +67,7 @@ IoNodeMixin(Array).\_eventDispatcher
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -81,7 +81,7 @@ IoNodeMixin(Array).\_properties
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -95,21 +95,7 @@ IoNodeMixin(Array).\_protochain
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
-
-___
-
-### d
-
- **d**: `boolean` = `true`
-
-#### Inherited from
-
-IoNodeMixin(Array).d
-
-#### Defined in
-
-[src/core/node.ts:59](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L59)
+[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
 ___
 
@@ -119,7 +105,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:24](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L24)
+[src/elements/menus/models/menu-options.ts:24](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L24)
 
 ___
 
@@ -129,7 +115,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:21](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L21)
+[src/elements/menus/models/menu-options.ts:21](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L21)
 
 ___
 
@@ -139,7 +125,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:15](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L15)
+[src/elements/menus/models/menu-options.ts:15](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L15)
 
 ___
 
@@ -149,7 +135,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:18](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L18)
+[src/elements/menus/models/menu-options.ts:18](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L18)
 
 ## Accessors
 
@@ -167,7 +153,7 @@ IoNodeMixin(Array).Properties
 
 #### Defined in
 
-[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
+[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
 ## Methods
 
@@ -187,7 +173,7 @@ IoNodeMixin(Array).Properties
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:217](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L217)
+[src/elements/menus/models/menu-options.ts:212](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L212)
 
 ___
 
@@ -207,7 +193,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:234](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L234)
+[src/elements/menus/models/menu-options.ts:229](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L229)
 
 ___
 
@@ -235,7 +221,7 @@ IoNodeMixin(Array).addEventListener
 
 #### Defined in
 
-[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
+[src/core/node.ts:361](https://github.com/io-gui/io/blob/main/src/core/node.ts#L361)
 
 ___
 
@@ -262,7 +248,7 @@ IoNodeMixin(Array).applyProperties
 
 #### Defined in
 
-[src/core/node.ts:209](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L209)
+[src/core/node.ts:207](https://github.com/io-gui/io/blob/main/src/core/node.ts#L207)
 
 ___
 
@@ -286,7 +272,7 @@ IoNodeMixin(Array).bind
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:254](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L254)
+[src/elements/menus/models/menu-options.ts:249](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L249)
 
 ___
 
@@ -304,7 +290,7 @@ IoNodeMixin(Array).changed
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:271](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L271)
+[src/elements/menus/models/menu-options.ts:266](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L266)
 
 ___
 
@@ -333,7 +319,7 @@ IoNodeMixin(Array).dispatchEvent
 
 #### Defined in
 
-[src/core/node.ts:387](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L387)
+[src/core/node.ts:386](https://github.com/io-gui/io/blob/main/src/core/node.ts#L386)
 
 ___
 
@@ -353,7 +339,7 @@ IoNodeMixin(Array).dispatchQueue
 
 #### Defined in
 
-[src/core/node.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L273)
+[src/core/node.ts:272](https://github.com/io-gui/io/blob/main/src/core/node.ts#L272)
 
 ___
 
@@ -373,7 +359,7 @@ IoNodeMixin(Array).dispatchQueueSync
 
 #### Defined in
 
-[src/core/node.ts:283](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L283)
+[src/core/node.ts:282](https://github.com/io-gui/io/blob/main/src/core/node.ts#L282)
 
 ___
 
@@ -391,7 +377,7 @@ IoNodeMixin(Array).dispose
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:263](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L263)
+[src/elements/menus/models/menu-options.ts:258](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L258)
 
 ___
 
@@ -412,7 +398,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:53](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L53)
+[src/elements/menus/models/menu-options.ts:47](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L47)
 
 ___
 
@@ -430,7 +416,7 @@ IoNodeMixin(Array).init
 
 #### Defined in
 
-[src/core/node.ts:260](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L260)
+[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 ___
 
@@ -457,7 +443,7 @@ IoNodeMixin(Array).inputValue
 
 #### Defined in
 
-[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
+[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
 
 ___
 
@@ -471,7 +457,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:167](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L167)
+[src/elements/menus/models/menu-options.ts:162](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L162)
 
 ___
 
@@ -498,7 +484,7 @@ IoNodeMixin(Array).objectMutated
 
 #### Defined in
 
-[src/core/node.ts:322](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L322)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
 
 ___
 
@@ -525,7 +511,7 @@ IoNodeMixin(Array).onObjectMutated
 
 #### Defined in
 
-[src/core/node.ts:301](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L301)
+[src/core/node.ts:300](https://github.com/io-gui/io/blob/main/src/core/node.ts#L300)
 
 ___
 
@@ -539,7 +525,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:117](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L117)
+[src/elements/menus/models/menu-options.ts:112](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L112)
 
 ___
 
@@ -559,7 +545,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:26](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L26)
+[src/elements/menus/models/menu-options.ts:26](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L26)
 
 ___
 
@@ -587,7 +573,7 @@ IoNodeMixin(Array).queue
 
 #### Defined in
 
-[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
+[src/core/node.ts:266](https://github.com/io-gui/io/blob/main/src/core/node.ts#L266)
 
 ___
 
@@ -615,7 +601,7 @@ IoNodeMixin(Array).removeEventListener
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:376](https://github.com/io-gui/io/blob/main/src/core/node.ts#L376)
 
 ___
 
@@ -629,7 +615,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:149](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L149)
+[src/elements/menus/models/menu-options.ts:144](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L144)
 
 ___
 
@@ -643,7 +629,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:239](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L239)
+[src/elements/menus/models/menu-options.ts:234](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L234)
 
 ___
 
@@ -670,7 +656,7 @@ IoNodeMixin(Array).setProperties
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:229](https://github.com/io-gui/io/blob/main/src/core/node.ts#L229)
 
 ___
 
@@ -698,7 +684,7 @@ IoNodeMixin(Array).setProperty
 
 #### Defined in
 
-[src/core/node.ts:131](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L131)
+[src/core/node.ts:129](https://github.com/io-gui/io/blob/main/src/core/node.ts#L129)
 
 ___
 
@@ -726,7 +712,7 @@ IoNodeMixin(Array).throttle
 
 #### Defined in
 
-[src/core/node.ts:292](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L292)
+[src/core/node.ts:291](https://github.com/io-gui/io/blob/main/src/core/node.ts#L291)
 
 ___
 
@@ -752,7 +738,7 @@ IoNodeMixin(Array).unbind
 
 #### Defined in
 
-[src/core/node.ts:346](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L346)
+[src/core/node.ts:345](https://github.com/io-gui/io/blob/main/src/core/node.ts#L345)
 
 ___
 
@@ -772,4 +758,4 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:193](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L193)
+[src/elements/menus/models/menu-options.ts:188](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L188)

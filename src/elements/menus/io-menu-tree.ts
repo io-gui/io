@@ -11,6 +11,7 @@ export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
     const item = options[i];
     if (item.options?.length) {
       const collapsableState = $({value: item.selected, storage: 'local', key: genObjectStorageID(item)});
+      if (item.selected === true) collapsableState.value = true;
       elements.push(['io-collapsable', {
         label: item.label,
         icon: item.icon,

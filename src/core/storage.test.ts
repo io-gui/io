@@ -1,14 +1,14 @@
 import { IoStorageNode, IoStorage, Binding } from '../iogui.js';
 import { afterHashChange } from '../iogui.test.js';
 
-localStorage.removeItem('io-storage:test2');
-localStorage.removeItem('io-storage:test3');
-localStorage.removeItem('io-storage:test4');
-localStorage.removeItem('io-storage:test5');
+localStorage.removeItem('IoStorage:test2');
+localStorage.removeItem('IoStorage:test3');
+localStorage.removeItem('IoStorage:test4');
+localStorage.removeItem('IoStorage:test5');
 
-const permited = localStorage.getItem('io-storage-user-permitted');
+const permited = localStorage.getItem('IoStorage:user-permitted');
 
-localStorage.setItem('io-storage-user-permitted', 'true');
+localStorage.setItem('IoStorage:user-permitted', 'true');
 
 export default class {
   run() {
@@ -59,7 +59,7 @@ export default class {
           node.dispose();
         });
         it('Should initialize property value from localStorage store if exists', () => {
-          localStorage.setItem('io-storage:test2', '"asd"');
+          localStorage.setItem('IoStorage:test2', '"asd"');
           const node = new IoStorageNode({key: 'test2', value: 'buzz', storage: 'local'});
           chai.expect(node.key).to.be.equal('test2');
           chai.expect(node.value).to.be.equal('asd');
@@ -92,13 +92,13 @@ export default class {
       describe('Reactivity', () => {
         it('Should update localStorage store when value changes', () => {
           const node = new IoStorageNode({key: 'test5', value: 'one', storage: 'local'});
-          chai.expect(localStorage.getItem('io-storage:test5')).to.be.equal('"one"');
+          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"one"');
           node.value = 'two';
-          chai.expect(localStorage.getItem('io-storage:test5')).to.be.equal('"two"');
+          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"two"');
           node.value = '2';
-          chai.expect(localStorage.getItem('io-storage:test5')).to.be.equal('"2"');
+          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"2"');
           node.value = 2;
-          chai.expect(localStorage.getItem('io-storage:test5')).to.be.equal('2');
+          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('2');
           node.dispose();
         });
         it('Should update location.hash store when value changes to non-default', async () => {
@@ -138,7 +138,7 @@ export default class {
 
           node.dispose();
 
-          if (!permited || permited === 'false') localStorage.setItem('io-storage-user-permitted', 'false');
+          if (!permited || permited === 'false') localStorage.setItem('IoStorage:user-permitted', 'false');
         });
       });
     });
