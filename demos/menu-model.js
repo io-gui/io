@@ -10,25 +10,34 @@ export class IoOptionsDemoView extends IoElement {
         display: flex;
         flex-direction: column;
         border: 1px solid gray;
+        border-radius: var(--iotBorderRadius);
       }
       :host > div {
         background-color: var(--iotBackgroundColorDark);
         display: flex;
       }
       :host io-item-demo-view {
-        margin-left: 0.5em;
+        margin-left: var(--iotSpacing);
       }
-      :host io-field {
-        pointer-events: none;
-        margin-left: 0.5em;
+      :host io-label {
         background-color: transparent;
       }
-      :host io-field.root {
+      :host io-label.root {
         color: var(--iotColorLink);
       }
-      :host io-field.leaf {
+      :host io-label.path {
+        margin-left: 0.5em;
+        color: var(--iotColorLink);
+      }
+      :host io-label.leaf {
+        margin-left: 0.5em;
         color: var(--iotColorFieldSelected);
       }
+      :host io-label.anchor {
+        margin-left: 0.5em;
+        color: var(--iotColorError);
+      }
+
     `;
   }
   static get Properties() {
@@ -47,9 +56,10 @@ export class IoOptionsDemoView extends IoElement {
     }
     this.template([
       ['div', [
-        ['io-field', {value: this.options.root || '', class: 'root'}],
-        ['io-field', {value: this.options.path, class: 'path'}],
-        ['io-field', {value: this.options.leaf || '', class: 'leaf'}],
+        this.options.root ? [['io-label', {label: 'root:', class: 'root'}], ['io-label', {label: this.options.root}]] : null,
+        this.options.path ? [['io-label', {label: 'path:', class: 'path'}], ['io-label', {label: this.options.path}]] : null,
+        this.options.leaf ? [['io-label', {label: 'leaf:', class: 'leaf'}], ['io-label', {label: this.options.leaf}]] : null,
+        this.options.anchor ? [['io-label', {label: 'anchor:', class: 'anchor'}], ['io-label', {label: this.options.anchor}]] : null,
       ]],
       options
     ]);
@@ -68,9 +78,6 @@ export class IoItemDemoView extends IoElement {
       :host > div {
         display: flex;
       }
-      :host:last-child {
-        margin-bottom: 0.5em;
-      }
     `;
   }
   static get Properties() {
@@ -84,15 +91,15 @@ export class IoItemDemoView extends IoElement {
   }
   changed() {
     let selectElement = null;
-    if ( this.item.mode === 'toggle') {
+    if (this.item.mode === 'toggle') {
       selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
-    } else if ( this.item.mode === 'select') {
-      selectElement = ['io-switch', {value: this.item.bind('selected')}];
+    } else if (this.item.mode === 'select' || this.item.mode === 'anchor') {
+      selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
     }
     this.template([
       ['div', [
         selectElement,
-        ['io-field', {value: this.item.label}],
+        ['io-field', {value: this.item.label, appearance: 'neutral'}],
       ]],
       this.item.hasmore ? ['io-options-demo-view', {options: this.item.options}] : null
     ]);
@@ -111,24 +118,24 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
             {value: 'apples', selected: true},
             {value: 'mangos'},
             {value: 'bannanas'},
-          ]},
-          {value: 'nuts', options: [
-            {value: 'chestnuts'},
-            {value: 'almonds'},
-            {value: 'cashews'},
-          ]},
+          ]}
         ]}, 
         {value: 'mixed', options: [
-          {value: 'selectable1'},
-          {value: 'selecrable2'},
+          {value: 'anchors', options: [
+            {value: 'anchor1', mode: 'anchor'},
+            {value: 'anchor2', mode: 'anchor'},
+            {value: 'anchor3', mode: 'anchor'},
+            {value: 'anchor4', mode: 'anchor'},
+          ]},
           {value: 'togglables', mode: 'none', options: [
             {value: 'toggle1', mode: 'toggle'},
             {value: 'toggle2', mode: 'toggle'},
             {value: 'toggle3', mode: 'toggle'},
             {value: 'toggle4', mode: 'toggle'},
           ]},
-          {value: 'nested mixed', options: [
+          {value: 'selectable', options: [
             {value: 'toggle', mode: 'toggle'},
+            {value: 'anchor', mode: 'anchor'},
             {value: 'selectable'},
           ]},
         ]}

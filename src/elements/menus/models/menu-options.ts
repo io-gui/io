@@ -8,17 +8,24 @@ function _isNaN(value: any) {
   return typeof value === 'number' && isNaN(value);
 }
 
+function _isSelectable(value: string) {
+  return value === 'select' || value === 'anchor';
+}
+
 @RegisterIoNode
 export class MenuOptions extends IoNodeMixin(Array) {
-
-  @Property('')
-  declare path: string;
 
   @Property(undefined)
   declare root: any;
 
   @Property(undefined)
   declare leaf: any;
+
+  @Property(undefined)
+  declare anchor: any;
+
+  @Property('')
+  declare path: string;
 
   @Property(',')
   declare delimiter: string;
@@ -116,11 +123,11 @@ export class MenuOptions extends IoNodeMixin(Array) {
       const item = this.find((item: MenuItem) => (item.label === first));
       if (item) {
         debug: {
-          if (item.mode !== 'select') {
-            console.warn('MenuOptions.pathChanged: Path set to non-pickable MenuItem!');
+          if (!_isSelectable(item.mode)) {
+            console.warn('MenuOptions.pathChanged: Path set to non-selectable MenuItem!');
           }
         }
-        if (item.mode === 'select') {
+        if (_isSelectable(item.mode)) {
           if (item.options) {
             item.options.path = path.join(this.delimiter);
           }
@@ -131,12 +138,12 @@ export class MenuOptions extends IoNodeMixin(Array) {
           console.warn(`MenuOptions.pathChanged: cannot find item for specified path "${this.path}"!`);
         }
         for (let i = 0; i < this.length; i++) {
-          if (this[i].mode === 'select') this[i].selected = false;
+          if (_isSelectable(this[i].mode)) this[i].selected = false;
         }
       }
     } else {
       for (let i = 0; i < this.length; i++) {
-        if (this[i].mode === 'select') this[i].selected = false;
+        if (_isSelectable(this[i].mode)) this[i].selected = false;
       }
     }
   }
@@ -165,18 +172,22 @@ export class MenuOptions extends IoNodeMixin(Array) {
         const path = this.path ? [...this.path.split(this.delimiter)] : [];
         if (path.length) {
           let label = path.shift();
-          let item = this.find((item: MenuItem) => item.label === label);
+          let item = this.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'anchor')));
           let options = item?.options || undefined;
           while (path.length && options) {
             label = path.shift();
-            item = options.find((item: MenuItem) => item.label === label);
+            item = options.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'anchor')));
             options = item?.options || undefined;
           }
           if (item === undefined) {
             console.warn(`MenuOptions.leafChanged: cannot find item for specified leaf value "${this.leaf}"!`);
-          } else if (item.value !== this.leaf && !(_isNaN(item.value) && _isNaN(this.leaf))) {
+          } else if (
+            (item.value !== this.leaf && !(_isNaN(item.value) && _isNaN(this.leaf))) &&
+            (item.value !== this.anchor && !(_isNaN(item.value) && _isNaN(this.anchor)))
+          ) {
             // TODO: test this?
             console.warn(`MenuOptions.leafChanged: leaf property value "${this.leaf}" diverged from item specified by path!`);
+            console.log(this.path, this.leaf);
           }
         } else {
           console.warn(`MenuOptions.leafChanged: leaf property value set "${this.leaf}" but path is empty!`);
@@ -187,34 +198,39 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   updatePaths(item?: MenuItem) {
     const path: string[] = [];
-    let walker: MenuItem | undefined = item;
-    let lastWalker: MenuItem | undefined = item;
+    let walker: MenuItem | undefined = (item?.mode === 'select' || item?.mode === 'anchor') ? item : undefined;
+    let lastSelected: MenuItem | undefined = item?.mode === 'select' ? item : undefined;
+    let lastAnchor: MenuItem | undefined = item?.mode === 'anchor' ? item : undefined;
 
     const hasSelected = this.find((item: MenuItem) => item.mode === 'select' && item.selected);
-    if (!item && hasSelected) return;
+    const hasAnchor = this.find((item: MenuItem) => item.mode === 'anchor' && item.selected);
+    if (!walker && (hasSelected || hasAnchor)) return;
 
     while (walker) {
       path.push(walker.label);
-      lastWalker = walker;
-      walker = walker.options?.find((item: MenuItem) => item.mode === 'select' && item.selected);
+      if (walker.mode === 'select') lastSelected = walker;
+      if (walker.mode === 'anchor') lastAnchor = walker;
+      walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'anchor') && item.selected);
     }
 
     // TODO: when binding two menu trees with both `root` and `path` properties, it is important that we
     // update the `path` property before the `root`. Otherwise, the menu binding will be broken!
     // TODO: create a test for this edge-case.
+    // console.log(walker?.label, walker?.mode, hasSelected);
     this.setProperties({
       path: path.join(this.delimiter),
-      root: item !== undefined ? item.value : undefined,
-      leaf: lastWalker !== undefined ? lastWalker.value : undefined,
+      root: item?.mode === 'select' ? item.value : undefined,
+      leaf: lastSelected !== undefined ? lastSelected.value : undefined,
+      anchor: lastAnchor !== undefined ? lastAnchor.value : undefined,
     });
   }
 
   _onItemSelectedChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    if (item.mode === 'select') {
+    if (_isSelectable(item.mode)) {
       if (item.selected) {
         for (let i = 0; i < this.length; i++) {
-          if (this[i] !== item && this[i].mode === 'select') {
+          if (this[i] !== item && _isSelectable(this[i].mode)) {
             this[i].selected = false;
           }
         }
@@ -248,8 +264,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   bind(prop: string) {
     debug: {
-      if (prop === 'leaf') {
-        console.warn('MenuPath: Binding to `leaf` property is not recommended. Use `path` or specific `root` instead.');
+      if (prop === 'leaf' || prop === 'anchor') {
+        console.warn('MenuPath: Binding to `leaf` or `anchor` property is not recommended!');
       }
     }
     return super.bind(prop);

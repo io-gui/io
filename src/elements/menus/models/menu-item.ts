@@ -12,7 +12,7 @@ export type MenuItemArgs = IoElementArgs & {
   icon?: string,
   hint?: string,
   action?: () => void,
-  select?: MenuItemSelectType,
+  mode?: MenuItemSelectType,
   selected?: boolean,
   options?: MenuItemArgsWeak[] | MenuOptions
 };
@@ -107,7 +107,7 @@ export class MenuItem extends IoNode {
       if (item.mode && item.mode === 'toggle' && item.options) {
         console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
       }
-      if (item.mode && ['select', 'toggle', 'link', 'none'].indexOf(item.mode as string) === -1) {
+      if (item.mode && ['select', 'toggle', 'anchor', 'link', 'none'].indexOf(item.mode as string) === -1) {
         console.warn('MenuItem: unknown `mode` property!', item.mode);
       }
       if (item.action && typeof item.action !== 'function') {
@@ -145,7 +145,7 @@ export class MenuItem extends IoNode {
 
   optionsChanged() {
     // TODO test this behavior and look for regressions
-    if (this.options?.root !== undefined && this.mode === 'select') {
+    if ((this.options?.root !== undefined || this.options?.anchor !== undefined) && this.mode === 'select') {
       this.selected = true;
     }
   }
@@ -153,7 +153,7 @@ export class MenuItem extends IoNode {
   selectedChanged() {
      if (this.mode === 'select' && this.selected === false && this.options) {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].mode === 'select') {
+        if (this.options[i].mode === 'select' || this.options[i].mode === 'anchor') {
           this.options[i].selected = false;
         }
       }

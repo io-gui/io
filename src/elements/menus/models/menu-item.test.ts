@@ -11,7 +11,7 @@ export default class {
         chai.expect(item.hint).to.be.equal('');
         chai.expect(item.disabled).to.be.equal(false);
         chai.expect(item.action).to.be.equal(undefined);
-        chai.expect(item.mode).to.be.equal('pick');
+        chai.expect(item.mode).to.be.equal('select');
         chai.expect(item.selected).to.be.equal(false);
         chai.expect(item.options).to.be.eql(undefined);
       });
@@ -23,7 +23,7 @@ export default class {
         chai.expect(item.hint).to.be.equal('');
         chai.expect(item.disabled).to.be.equal(false);
         chai.expect(item.action).to.be.equal(undefined);
-        chai.expect(item.mode).to.be.equal('pick');
+        chai.expect(item.mode).to.be.equal('select');
         chai.expect(item.selected).to.be.equal(false);
         chai.expect(item.options).to.be.eql(undefined);
         item = new MenuItem('foo');

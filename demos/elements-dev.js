@@ -416,8 +416,9 @@ export class IoDemoElementsDev extends IoElement {
       }],
       ['io-collapsable', {label: 'Menu Model', expanded: $('expanded-demo-menu-model'), elements: [
         ['io-collapsable', {label: 'MenuOptions and MenuItem select demo', expanded: $('expanded-demo-menu-model-1'), elements: [
+          ['io-demo-menu-model', {name: 'Menu Model'}],
           // TODO: implement import
-          ['io-demo-menu-model', {name: 'Menu Model', import: './demos/menu-model.js'}],
+          // ['io-demo-menu-model', {name: 'Menu Model', import: './demos/menu-model.js'}],
         ]}],             
       ]}],
       ['io-collapsable', {label: 'Menu Elements', expanded: $('expanded-demo-menus'), elements: [
