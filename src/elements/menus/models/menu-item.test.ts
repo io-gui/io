@@ -84,9 +84,9 @@ export default class {
       });
       it('Should return `options.path` from path getter', () => {
         let item = new MenuItem();
-        chai.expect(item.path).to.be.equal(undefined);
+        chai.expect(item.options).to.be.equal(undefined);
         item = new MenuItem({options: []});
-        chai.expect(item.path).to.be.eql('');
+        chai.expect(item.options?.path).to.be.eql('');
         // TODO: test longer paths
       });
       it('Should return subitem with specified value using `.getSubitem([value])`', () => {

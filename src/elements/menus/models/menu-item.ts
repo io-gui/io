@@ -3,7 +3,7 @@ import { IoElementArgs } from '../../../core/element.js';
 import { Property } from '../../../core/internals/property.js';
 import { MenuOptions } from './menu-options.js';
 
-export type MenuItemSelectType = 'select' | 'toggle' | 'anchor' | 'link' | 'none';
+export type MenuItemSelectType = 'select' | 'anchor' | 'toggle' | 'link' | 'none';
 
 export type MenuItemArgsWeak = undefined | null | string | number | MenuItemArgs;
 
@@ -48,10 +48,6 @@ export class MenuItem extends IoNode {
 
   @Property(undefined)
   declare options?: MenuOptions;
-
-  get path() {
-    return this.options?.path;
-  }
 
   get hasmore() {
     return !!(this.options?.length);
@@ -104,8 +100,11 @@ export class MenuItem extends IoNode {
     }
 
     debug: {
-      if (item.mode && item.mode === 'toggle' && item.options) {
+      if (item.mode && (item.mode === 'toggle') && item.options) {
         console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
+      }
+      if (item.mode && (item.mode === 'anchor') && item.options) {
+        console.warn('MenuItem: cannot have suboptions when `mode === "anchor"`');
       }
       if (item.mode && ['select', 'toggle', 'anchor', 'link', 'none'].indexOf(item.mode as string) === -1) {
         console.warn('MenuItem: unknown `mode` property!', item.mode);
