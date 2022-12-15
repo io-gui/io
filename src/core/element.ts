@@ -298,7 +298,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
    * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
   template(vDOM: Array<any>, host?: HTMLElement, cache?: boolean) {
-    const vChildren = buildTree()(['root', vDOM]).children;
+    const vChildren = buildTree()(['first', vDOM]).children;
     host = (host || this) as any;
     if (host === (this as any)) this.setProperty('$', {});
     this.traverse(vChildren, host as HTMLElement, cache);

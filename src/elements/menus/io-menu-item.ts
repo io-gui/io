@@ -402,11 +402,11 @@ export function getMenuAncestors(element: IoMenuElementType) {
 }
 
 export function getMenuRoot(element: IoMenuElementType) {
-  let root = element;
-  while (root && root.$parent) {
-    root = root.$parent;
+  let first = element;
+  while (first && first.$parent) {
+    first = first.$parent;
   }
-  return root;
+  return first;
 }
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {

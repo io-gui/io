@@ -22,14 +22,14 @@ export class IoOptionsDemoView extends IoElement {
       :host io-label {
         background-color: transparent;
       }
-      :host io-label.root {
+      :host io-label.first {
         color: var(--iotColorLink);
       }
       :host io-label.path {
         margin-left: 0.5em;
         color: var(--iotColorLink);
       }
-      :host io-label.leaf {
+      :host io-label.last {
         margin-left: 0.5em;
         color: var(--iotColorFieldSelected);
       }
@@ -56,10 +56,10 @@ export class IoOptionsDemoView extends IoElement {
     }
     this.template([
       ['div', [
-        this.options.root ? [['io-label', {label: 'root:', class: 'root'}], ['io-label', {label: this.options.root}]] : null,
-        this.options.path ? [['io-label', {label: 'path:', class: 'path'}], ['io-label', {label: this.options.path}]] : null,
-        this.options.leaf ? [['io-label', {label: 'leaf:', class: 'leaf'}], ['io-label', {label: this.options.leaf}]] : null,
+        this.options.first ? [['io-label', {label: 'first:', class: 'first'}], ['io-label', {label: this.options.first}]] : null,
+        this.options.last ? [['io-label', {label: 'last:', class: 'last'}], ['io-label', {label: this.options.last}]] : null,
         this.options.anchor ? [['io-label', {label: 'anchor:', class: 'anchor'}], ['io-label', {label: this.options.anchor}]] : null,
+        this.options.path ? [['io-label', {label: 'path:', class: 'path'}], ['io-label', {label: this.options.path}]] : null,
       ]],
       options
     ]);

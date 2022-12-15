@@ -145,7 +145,7 @@ export class MenuItem extends IoNode {
 
   optionsChanged() {
     // TODO test this behavior and look for regressions
-    if ((this.options?.root !== undefined || this.options?.anchor !== undefined) && this.mode === 'select') {
+    if ((this.options?.first !== undefined || this.options?.anchor !== undefined) && this.mode === 'select') {
       this.selected = true;
     }
   }

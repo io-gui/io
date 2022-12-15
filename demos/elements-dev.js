@@ -346,25 +346,25 @@ export class IoDemoElementsDev extends IoElement {
             elements: [elements[0]]
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with mode="select", select="root" and with menu="top"', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
+        ['io-collapsable', {label: 'io-navigator with mode="select", select="first" and with menu="top"', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
           ['io-navigator', {
             menu: 'top',
             mode: 'select',
-            select: 'root',
+            select: 'first',
             depth: 0,
             options: contentOptions,
             elements: elements
           }]
         ]}],
-        ['io-collapsable', {label: 'io-selector with select="root"', class: 'overflow', expanded: $('expanded-demo-content-4'), elements: [
+        ['io-collapsable', {label: 'io-selector with select="first"', class: 'overflow', expanded: $('expanded-demo-content-4'), elements: [
           ['io-selector', {
-            select: 'root',
+            select: 'first',
             elements: elements,
             options: contentOptions,
           }]
         ]}],
         ['io-collapsable', {label: 'io-scroller', class: 'overflow', expanded: $('expanded-demo-content-5'), elements: [['io-scroller', {
-            select: 'root',
+            select: 'first',
             options: contentOptions[0].options,
           }, [elements[0]]]]
         }],
@@ -414,14 +414,12 @@ export class IoDemoElementsDev extends IoElement {
           ]}],
         ]
       }],
-      ['io-collapsable', {label: 'Menu Model', expanded: $('expanded-demo-menu-model'), elements: [
-        ['io-collapsable', {label: 'MenuOptions and MenuItem select demo', expanded: $('expanded-demo-menu-model-1'), elements: [
+      ['io-collapsable', {label: 'Menus', expanded: $('expanded-demo-menus'), elements: [
+        ['io-collapsable', {label: 'MenuOptions and MenuItem select demo', expanded: $('expanded-demo-menu-model-0'), elements: [
           ['io-demo-menu-model', {name: 'Menu Model'}],
           // TODO: implement import
           // ['io-demo-menu-model', {name: 'Menu Model', import: './demos/menu-model.js'}],
         ]}],             
-      ]}],
-      ['io-collapsable', {label: 'Menu Elements', expanded: $('expanded-demo-menus'), elements: [
         ['io-collapsable', {label: 'io-menu-tree', expanded: $('expanded-demo-menus-1'), elements: [
           ['io-menu-tree', {
             options: options,
@@ -440,12 +438,12 @@ export class IoDemoElementsDev extends IoElement {
           ['io-menu-options', {
             searchable: true,
             options: new MenuOptions(numberItems, {
-              root: this.bind('menuRoot')
+              first: this.bind('menuRoot')
             }),
           }],
           ['io-menu-options', {
             options: new MenuOptions([...numberItems].reverse(), {
-              root: this.bind('menuRoot')
+              first: this.bind('menuRoot')
             }),
           }],
           ['io-menu-options', {
@@ -455,7 +453,7 @@ export class IoDemoElementsDev extends IoElement {
               new MenuItem({value: 2, label: 'two', hint: 'Number(2)', icon: 'icons:box'}),
               new MenuItem({value: 3, label: 'three', hint: 'Number(3)', icon: 'icons:film'}),
             ], {
-              root: this.bind('menuRoot')
+              first: this.bind('menuRoot')
             }),
           }],
           ['io-menu-options', {
@@ -467,14 +465,14 @@ export class IoDemoElementsDev extends IoElement {
             horizontal: true,
             searchable: true,
             options: new MenuOptions(numberItems, {
-              root: this.bind('menuRoot')
+              first: this.bind('menuRoot')
             }),
           }],
           ['io-menu-options', {
             horizontal: true,
             noPartialCollapse: true,
             options: new MenuOptions(numberItems, {
-              root: this.bind('menuRoot')
+              first: this.bind('menuRoot')
             }),
           }],
         ]}],

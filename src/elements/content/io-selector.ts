@@ -48,8 +48,8 @@ export class IoSelector extends IoElement {
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
 
-  @Property('leaf')
-  declare select: 'root' | 'leaf';
+  @Property('last')
+  declare select: 'first' | 'last';
 
   @Property(Array)
   declare elements: VDOMArray[];
@@ -87,11 +87,11 @@ export class IoSelector extends IoElement {
   }
 
   changed() {
-    const selected = this.select === 'root' ? this.options.root : this.options.leaf;
+    const selected = this.select === 'first' ? this.options.first : this.options.last;
 
     debug: {
       if (selected && typeof selected !== 'string') {
-        console.warn('IoSelector: selected option root is not a string!');
+        console.warn('IoSelector: selected option first is not a string!');
       }
     }
 

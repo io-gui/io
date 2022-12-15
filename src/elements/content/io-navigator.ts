@@ -71,8 +71,8 @@ export class IoNavigator extends IoElement {
   @Property({value: 'select'})
   declare mode: 'select' | 'scroll' | 'select-scroll';
 
-  @Property({value: 'root'})
-  declare select: 'root' | 'leaf';
+  @Property({value: 'first'})
+  declare select: 'first' | 'last';
 
   @Property(Infinity)
   declare depth: number;
@@ -88,8 +88,8 @@ export class IoNavigator extends IoElement {
 
   changed() {
     let scrollOptions = noOptions;
-    if (this.options.root) {
-      const subOptions = this.options.getItem(this.options.root)?.options;
+    if (this.options.first) {
+      const subOptions = this.options.getItem(this.options.first)?.options;
       if (subOptions) scrollOptions = subOptions;
     }
 
@@ -106,7 +106,7 @@ export class IoNavigator extends IoElement {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
     } else if (this.mode === 'select-scroll') {
       contentNavigation = ['io-scroller', {options: scrollOptions}, [
-        ['io-selector', {options: this.options, cache: this.cache, elements: this.elements, select: 'root'}],
+        ['io-selector', {options: this.options, cache: this.cache, elements: this.elements, select: 'first'}],
       ]];
     }
 

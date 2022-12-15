@@ -16,10 +16,10 @@ function _isSelectable(value: string) {
 export class MenuOptions extends IoNodeMixin(Array) {
 
   @Property(undefined)
-  declare root: any;
+  declare first: any;
 
   @Property(undefined)
-  declare leaf: any;
+  declare last: any;
 
   @Property(undefined)
   declare anchor: any;
@@ -75,7 +75,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
     super(properties, ..._args);
 
     if (this.path !== '') this.pathChanged();
-    if (this.root !== undefined) this.rootChanged();
+    if (this.first !== undefined) this.firstChanged();
     for (let i = 0; i < this.length; i++) {
       const item = this[i];
       debug: {
@@ -148,15 +148,15 @@ export class MenuOptions extends IoNodeMixin(Array) {
     }
   }
 
-  rootChanged() {
-    if (this.root !== undefined) {
-      const item = this.find((item: MenuItem) => ((item.value === this.root && item.mode === 'select') || (_isNaN(item.value) && _isNaN(this.root))));
+  firstChanged() {
+    if (this.first !== undefined) {
+      const item = this.find((item: MenuItem) => ((item.value === this.first && item.mode === 'select') || (_isNaN(item.value) && _isNaN(this.first))));
       if (item) {
         item.selected = true;
       }
       debug: {
         if (item === undefined) {
-          console.warn(`MenuOptions.rootChanged: cannot find pickable item for specified root value "${this.root}"!`);
+          console.warn(`MenuOptions.firstChanged: cannot find pickable item for specified first value "${this.first}"!`);
         }
       }
     } else {
@@ -166,9 +166,9 @@ export class MenuOptions extends IoNodeMixin(Array) {
     }
   }
 
-  leafChanged() {
+  lastChanged() {
     debug: {
-      if (this.leaf !== undefined) {
+      if (this.last !== undefined) {
         const path = this.path ? [...this.path.split(this.delimiter)] : [];
         if (path.length) {
           let label = path.shift();
@@ -180,17 +180,17 @@ export class MenuOptions extends IoNodeMixin(Array) {
             options = item?.options || undefined;
           }
           if (item === undefined) {
-            console.warn(`MenuOptions.leafChanged: cannot find item for specified leaf value "${this.leaf}"!`);
+            console.warn(`MenuOptions.lastChanged: cannot find item for specified last value "${this.last}"!`);
           } else if (
-            (item.value !== this.leaf && !(_isNaN(item.value) && _isNaN(this.leaf))) &&
+            (item.value !== this.last && !(_isNaN(item.value) && _isNaN(this.last))) &&
             (item.value !== this.anchor && !(_isNaN(item.value) && _isNaN(this.anchor)))
           ) {
             // TODO: test this?
-            console.warn(`MenuOptions.leafChanged: leaf property value "${this.leaf}" diverged from item specified by path!`);
-            console.log(this.path, this.leaf);
+            console.warn(`MenuOptions.lastChanged: last property value "${this.last}" diverged from item specified by path!`);
+            console.log(this.path, this.last);
           }
         } else {
-          console.warn(`MenuOptions.leafChanged: leaf property value set "${this.leaf}" but path is empty!`);
+          console.warn(`MenuOptions.lastChanged: last property value set "${this.last}" but path is empty!`);
         }
       }
     }
@@ -213,14 +213,14 @@ export class MenuOptions extends IoNodeMixin(Array) {
       walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'anchor') && item.selected);
     }
 
-    // TODO: when binding two menu trees with both `root` and `path` properties, it is important that we
-    // update the `path` property before the `root`. Otherwise, the menu binding will be broken!
+    // TODO: when binding two menu trees with both `first` and `path` properties, it is important that we
+    // update the `path` property before the `first`. Otherwise, the menu binding will be broken!
     // TODO: create a test for this edge-case.
     // console.log(walker?.label, walker?.mode, hasSelected);
     this.setProperties({
       path: path.join(this.delimiter),
-      root: item?.mode === 'select' ? item.value : undefined,
-      leaf: lastSelected !== undefined ? lastSelected.value : undefined,
+      first: item?.mode === 'select' ? item.value : undefined,
+      last: lastSelected !== undefined ? lastSelected.value : undefined,
       anchor: lastAnchor !== undefined ? lastAnchor.value : undefined,
     });
   }
@@ -264,8 +264,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   bind(prop: string) {
     debug: {
-      if (prop === 'leaf' || prop === 'anchor') {
-        console.warn('MenuPath: Binding to `leaf` or `anchor` property is not recommended!');
+      if (prop === 'last' || prop === 'anchor') {
+        console.warn('MenuPath: Binding to `last` or `anchor` property is not recommended!');
       }
     }
     return super.bind(prop);

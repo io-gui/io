@@ -20,8 +20,8 @@ export class IoScroller extends IoElement {
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
 
-  @Property('leaf')
-  declare select: 'root' | 'leaf';
+  @Property('last')
+  declare select: 'first' | 'last';
 
   declare private _observer: MutationObserver;
   private _scrollThrottle?: ReturnType<typeof setTimeout>;
@@ -104,11 +104,11 @@ export class IoScroller extends IoElement {
   }
 
   protected _scrollToSelected(smooth = false) {
-    const selected = this.select === 'root' ? this.options.root : this.options.leaf;
+    const selected = this.select === 'first' ? this.options.first : this.options.last;
 
     debug: {
       if (selected && typeof selected !== 'string') {
-        console.warn('IoScroller: selected option root is not a string!');
+        console.warn('IoScroller: selected option first is not a string!');
       }
     }
 
