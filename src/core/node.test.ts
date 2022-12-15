@@ -665,7 +665,7 @@ export default class {
           const node2 = new TestNode();
           const binding1 = node2.bind('prop1') as any;
           node2.dispose();
-          chai.expect(node2._bindings).to.be.eql(new Map());
+          chai.expect(node2._bindings).to.be.equal(undefined);
           chai.expect(binding1.prop1).to.be.equal(undefined);
         });
       });

@@ -44,14 +44,16 @@ export class IoSlider extends IoSliderBase {
 
         float slotThickness = iotFieldHeight * 0.125;
 
+        float stroke = iotStrokeWidth / 1.5;
+
         float strokeShape = min(
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + iotStrokeWidth + iotStrokeWidth)),
-          circle(pEnd, 1.5 * slotThickness + iotStrokeWidth + iotStrokeWidth)
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + stroke + stroke)),
+          circle(pEnd, 1.5 * slotThickness + stroke + stroke)
         );
 
         float fillShape   = min(
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + iotStrokeWidth)),
-          circle(pEnd, 1.5 * slotThickness + iotStrokeWidth)
+          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + stroke)),
+          circle(pEnd, 1.5 * slotThickness + stroke)
         );
         float colorShape  = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness)),

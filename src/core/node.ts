@@ -391,6 +391,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Use this when instance is no longer needed.
      */
     dispose() {
+      debug: {
+        if (this._properties === undefined) {
+          // TODO: figure out how to prevent redundant disposals from nested io-selectors with cache:false
+          // console.warn('IoNode.dispose(): Already disposed!', this.constructor.name);
+        }
+      }
+      if (this._properties === undefined) return;
+
       this._properties.forEach((property, key) => {
         property.binding?.removeTarget(this, key);
       });
@@ -403,9 +411,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
+
       this._changeQueue.dispose();
       // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
+
       this._eventDispatcher.dispose();
+      delete (this as any)._properties;
+      delete (this as any)._bindings;
+      delete (this as any)._protochain;
+      delete (this as any)._changeQueue;
+      delete (this as any)._eventDispatcher;
     }
   };
   return IoNodeMixinConstructor;

@@ -4,8 +4,6 @@ import { Property } from '../../core/internals/property.js';
 import './io-selector.js';
 import './io-scroller.js';
 
-const noOptions = new MenuOptions();
-
 @RegisterIoElement
 export class IoNavigator extends IoElement {
 
@@ -46,6 +44,9 @@ export class IoNavigator extends IoElement {
       }
       :host > io-menu-options > io-menu-item {
         border-radius: 0;
+      }
+      :host > io-selector {
+        overflow: auto;
       }
       :host > io-selector,
       :host > io-scroller,

@@ -98,6 +98,9 @@
         height: 100%;
         background-color: var(--iotBackgroundColor);
       }
+      io-main-page > io-selector {
+        overflow: hidden;
+      }
       io-main-page io-selector#Demos {
         flex: 1 1 auto;
       }
@@ -127,23 +130,23 @@
       {value: 'About', icon: 'icons:io_logo'},
       {value: 'Docs', options: [
         {value: 'Getting Started', options: [
-          {label: 'Usage', value: 'usage'},
-          {label: 'Simple App Example', value: 'simple-app-example'},
-          {label: 'Style', value: 'style'},
-          {label: 'Properties', value: 'properties'},
-          {label: 'Listeners', value: 'listeners'},
-          {label: 'Change Functions', value: 'change-functions'},
-          {label: 'Simple App Recap', value: 'simple-app-recap'},
+          {label: 'Usage', value: 'usage', mode: 'anchor'},
+          {label: 'Simple App Example', value: 'simple-app-example', mode: 'anchor'},
+          {label: 'Style', value: 'style', mode: 'anchor'},
+          {label: 'Properties', value: 'properties', mode: 'anchor'},
+          {label: 'Listeners', value: 'listeners', mode: 'anchor'},
+          {label: 'Change Functions', value: 'change-functions', mode: 'anchor'},
+          {label: 'Simple App Recap', value: 'simple-app-recap', mode: 'anchor'},
         ]},
         {value: 'Learn More', options: [
-          {label: 'Creating Elements', value: 'creating-elements'},
-          {label: 'Properties', value: 'properties'},
-          {label: 'Property Configuration', value: 'property-configuration'},
-          {label: 'Functions', value: 'functions'},
-          {label: 'Events', value: 'events'},
-          {label: 'Virtual DOM Arrays', value: 'virtual-dom-arrays'},
-          {label: 'Data Binding', value: 'data-binding'},
-          {label: 'Data Flow', value: 'data-flow'},
+          {label: 'Creating Elements', value: 'creating-elements', mode: 'anchor'},
+          {label: 'Properties', value: 'properties', mode: 'anchor'},
+          {label: 'Property Configuration', value: 'property-configuration', mode: 'anchor'},
+          {label: 'Functions', value: 'functions', mode: 'anchor'},
+          {label: 'Events', value: 'events', mode: 'anchor'},
+          {label: 'Virtual DOM Arrays', value: 'virtual-dom-arrays', mode: 'anchor'},
+          {label: 'Data Binding', value: 'data-binding', mode: 'anchor'},
+          {label: 'Data Flow', value: 'data-flow', mode: 'anchor'},
         ]},
         {label: 'Contribution Guide', mode: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
         {label: 'Development Notes', value: 'development-notes'},
@@ -246,6 +249,7 @@
           role: 'main',
           class: 'main',
           menu: 'top',
+          mode: 'select',
           options: OPTIONS,
           cache: true,
           depth: 1,

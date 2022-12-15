@@ -51,6 +51,8 @@ export class IoScroller extends IoElement {
   protected _onScroll() {
     clearTimeout(this._scrollThrottle);
     this._scrollThrottle = setTimeout(() => {
+      // Prevent unfinished scroll animation from detatched element to trigger menu selection.
+      if (!this.isConnected) return;
       delete this._scrollThrottle;
       const top = this.scrollTop;
       let closestID = '';
