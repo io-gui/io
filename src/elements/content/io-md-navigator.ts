@@ -60,12 +60,6 @@ export class IoMdNavigator extends IoElement {
   @Property({value: 'none', reflect: true})
   declare menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
 
-//   @Property({value: 'select'})
-//   declare mode: 'select' | 'scroll' | 'select-scroll';
-
-//   @Property({value: 'first'})
-//   declare select: 'first' | 'last';
-
   @Property(Infinity)
   declare depth: number;
 

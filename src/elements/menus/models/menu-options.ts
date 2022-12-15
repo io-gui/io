@@ -249,7 +249,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   selectDefault() {
     for (let i = 0; i < this.length; i++) {
-      if (this[i].mode === 'select') {
+      if (_isSelectable(this[i].mode)) {
         if (this[i].hasmore) {
           const selected = this[i].options.selectDefault();
           if (selected) return true;

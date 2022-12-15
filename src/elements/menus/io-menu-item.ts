@@ -121,6 +121,8 @@ export class IoMenuItem extends IoField {
         } else {
           item.selected = true;
         }
+      } else if (item.mode === 'anchor') {
+        item.selected = true;
       } else if (item.mode === 'link') {
         window.open(item.value, '_blank');
       }

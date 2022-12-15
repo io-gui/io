@@ -233,7 +233,6 @@
       ]},
       {value: 'Demos', options: [
         'Elements Dev Page',
-        'Theme Editor',
         'TODO MVC App',
       ]},
       {value: 'Tests'},
@@ -252,7 +251,7 @@
           depth: 1,
           elements: [
             ['io-md-view', {id: 'About', src: './README.md'}],
-            ['io-navigator', {id: 'Docs', menu: 'left', mode: 'select-scroll',
+            ['io-navigator', {id: 'Docs', menu: 'left',
               options: OPTIONS.getItem('Docs').options,
               cache: true,
               elements: [
@@ -269,7 +268,6 @@
               cache: true,
               elements: [
                 ['io-demo-elements-dev', {id: 'Elements Dev Page', import: './demos/elements-dev.js'}],
-                ['io-demo-theme-editor', {id: 'Theme Editor', import: './demos/theme-editor.js'}],
                 ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],
               ]
             }],

@@ -47,10 +47,9 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options > io-menu-item {
         border-radius: 0;
       }
-      :host > io-scroller {
-        flex: 1 1 auto;
-      }
-      :host > io-selector {
+      :host > io-selector,
+      :host > io-scroller,
+      :host > io-scroller > io-selector {
         flex: 1 1 auto;
       }
     `;
@@ -68,11 +67,11 @@ export class IoNavigator extends IoElement {
   @Property({value: 'none', reflect: true})
   declare menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
 
-  @Property({value: 'select'})
-  declare mode: 'select' | 'scroll' | 'select-scroll';
-
-  @Property({value: 'first'})
+  @Property('first')
   declare select: 'first' | 'last';
+
+  @Property('select-scroll')
+  declare mode: 'select-scroll' | 'select' | 'scroll';
 
   @Property(Infinity)
   declare depth: number;
@@ -87,27 +86,17 @@ export class IoNavigator extends IoElement {
   // declare collapseWidth: number;
 
   changed() {
-    let scrollOptions = noOptions;
-    if (this.options.first) {
-      const subOptions = this.options.getItem(this.options.first)?.options;
-      if (subOptions) scrollOptions = subOptions;
-    }
-
     const sharedMenuConfig = {
       options: this.options,
       slotted: this.slotted,
       depth: this.depth
     };
 
-    let contentNavigation: VDOMArray | null = null;
-    if (this.mode === 'select') {
-      contentNavigation = ['io-selector', {options: this.options, cache: this.cache, elements: this.elements, select: this.select}];
-    } else if (this.mode === 'scroll') {
+    let contentNavigation: VDOMArray = ['io-selector', {options: this.options, cache: this.cache, select: this.select, elements: this.elements}];
+    if (this.mode === 'scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
     } else if (this.mode === 'select-scroll') {
-      contentNavigation = ['io-scroller', {options: scrollOptions}, [
-        ['io-selector', {options: this.options, cache: this.cache, elements: this.elements, select: 'first'}],
-      ]];
+      contentNavigation = ['io-scroller', {options: this.options}, [contentNavigation]];
     }
 
     this.template([

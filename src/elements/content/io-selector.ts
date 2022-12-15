@@ -15,11 +15,7 @@ export class IoSelector extends IoElement {
     return /* css */`
       :host {
         flex-direction: column;
-        overflow-y: auto;
         position: relative;
-      }
-      :host > * {
-        align-self: stretch;
       }
       @keyframes io-loading-spinner {
         to {
@@ -48,7 +44,7 @@ export class IoSelector extends IoElement {
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
 
-  @Property('last')
+  @Property('first')
   declare select: 'first' | 'last';
 
   @Property(Array)

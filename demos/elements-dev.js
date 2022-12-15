@@ -1,5 +1,6 @@
 import { RegisterIoElement, IoElement, IoStorage, MenuOptions, MenuItem } from '../build/iogui.js';
 import './menu-model.js';
+import './theme-editor.js';
 
 function $(key) {
   return new IoStorage({key: key, value: false, storage: 'local'})
@@ -52,10 +53,42 @@ const options = new MenuOptions([
 // }
 
 const contentOptions = new MenuOptions([
-  {value: 'devs', options: ['dev1', 'dev2', 'dev3', 'dev4', 'dev5', 'dev6', 'dev7']},
-  {value: 'foos', options: ['foo1', 'foo2', 'foo3', 'foo4', 'foo5', 'foo6', 'foo7']},
-  {value: 'bazs', options: ['baz1', 'baz2', 'baz3', 'baz4', 'baz5', 'baz6', 'baz7']},
-  {value: 'bars', options: ['bar1', 'bar2', 'bar3', 'bar4', 'bar5', 'bar6', 'bar7']},
+  {value: 'devs', options: [
+    {value: 'dev1', mode: 'anchor'},
+    {value: 'dev2', mode: 'anchor'},
+    {value: 'dev3', mode: 'anchor'},
+    {value: 'dev4', mode: 'anchor'},
+    {value: 'dev5', mode: 'anchor'},
+    {value: 'dev6', mode: 'anchor'},
+    {value: 'dev7', mode: 'anchor'},
+  ]},
+  {value: 'foos', options: [
+    {value: 'foo1', mode: 'anchor'},
+    {value: 'foo2', mode: 'anchor'},
+    {value: 'foo3', mode: 'anchor'},
+    {value: 'foo4', mode: 'anchor'},
+    {value: 'foo5', mode: 'anchor'},
+    {value: 'foo6', mode: 'anchor'},
+    {value: 'foo7', mode: 'anchor'},
+  ]},
+  {value: 'bazs', options: [
+    {value: 'baz1', mode: 'anchor'},
+    {value: 'baz2', mode: 'anchor'},
+    {value: 'baz3', mode: 'anchor'},
+    {value: 'baz4', mode: 'anchor'},
+    {value: 'baz5', mode: 'anchor'},
+    {value: 'baz6', mode: 'anchor'},
+    {value: 'baz7', mode: 'anchor'},
+  ]},
+  {value: 'bars', options: [
+    {value: 'bar1', mode: 'anchor'},
+    {value: 'bar2', mode: 'anchor'},
+    {value: 'bar3', mode: 'anchor'},
+    {value: 'bar4', mode: 'anchor'},
+    {value: 'bar5', mode: 'anchor'},
+    {value: 'bar6', mode: 'anchor'},
+    {value: 'bar7', mode: 'anchor'},
+  ]},
 ]);
 contentOptions[0].selected = true;
 contentOptions[0].options[3].selected = true;
@@ -202,6 +235,9 @@ export class IoDemoElementsDev extends IoElement {
   }
   init() {
     this.template([
+      ['io-collapsable', {label: 'Theme Editor', expanded: $('expanded-demo-theme-editor'), elements: [
+        ['io-demo-theme-editor'],
+      ]}],
       ['io-collapsable', {label: 'Basic Elements', expanded: $('expanded-demo-basic'), elements: [
         ['io-collapsable', {label: 'io-icon', class: 'row', expanded: $('expanded-demo-basic-1'),
           elements: [
@@ -330,10 +366,9 @@ export class IoDemoElementsDev extends IoElement {
         ]}],
       ]}],
       ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
-        ['io-collapsable', {label: 'io-navigator with mode="select-scroll "and menu="left"', class: 'overflow', expanded: $('expanded-demo-content-1'), elements: [
+        ['io-collapsable', {label: 'io-navigator with menu="left"', class: 'overflow', expanded: $('expanded-demo-content-1'), elements: [
           ['io-navigator', {
             menu: 'left',
-            mode: 'select-scroll',
             elements: elements,
             options: contentOptions,
           }]
@@ -346,25 +381,21 @@ export class IoDemoElementsDev extends IoElement {
             elements: [elements[0]]
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with mode="select", select="first" and with menu="top"', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
+        ['io-collapsable', {label: 'io-navigator with with menu="top" and depth=0', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
           ['io-navigator', {
             menu: 'top',
-            mode: 'select',
-            select: 'first',
             depth: 0,
             options: contentOptions,
             elements: elements
           }]
         ]}],
-        ['io-collapsable', {label: 'io-selector with select="first"', class: 'overflow', expanded: $('expanded-demo-content-4'), elements: [
+        ['io-collapsable', {label: 'io-selector', class: 'overflow', expanded: $('expanded-demo-content-4'), elements: [
           ['io-selector', {
-            select: 'first',
             elements: elements,
             options: contentOptions,
           }]
         ]}],
         ['io-collapsable', {label: 'io-scroller', class: 'overflow', expanded: $('expanded-demo-content-5'), elements: [['io-scroller', {
-            select: 'first',
             options: contentOptions[0].options,
           }, [elements[0]]]]
         }],
