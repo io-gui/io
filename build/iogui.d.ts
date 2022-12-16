@@ -868,17 +868,18 @@ declare const MenuOptions_base: {
 	readonly Properties: PropertyDeclarations;
 };
 export declare class MenuOptions extends MenuOptions_base {
+	first: any;
+	last: any;
+	anchor: any;
 	path: string;
-	root: any;
-	leaf: any;
 	delimiter: string;
 	push(...items: MenuItem[]): void;
 	getItem(value: any, deep?: boolean): any;
 	constructor(args?: MenuItemArgsWeak[], properties?: IoNodeArgs);
 	protected addItems(items: MenuItemArgsWeak[]): void;
 	pathChanged(): void;
-	rootChanged(): void;
-	leafChanged(): void;
+	firstChanged(): void;
+	lastChanged(): void;
 	updatePaths(item?: MenuItem): void;
 	_onItemSelectedChanged(event: CustomEvent): void;
 	_onSubOptionsPathChanged(event: CustomEvent): void;
@@ -887,14 +888,14 @@ export declare class MenuOptions extends MenuOptions_base {
 	dispose(): void;
 	changed(): void;
 }
-export type MenuItemSelectType = "pick" | "toggle" | "link" | "none";
+export type MenuItemSelectType = "select" | "anchor" | "toggle" | "link" | "none";
 export type MenuItemArgsWeak = undefined | null | string | number | MenuItemArgs;
 export type MenuItemArgs = IoElementArgs & {
 	value?: any;
 	icon?: string;
 	hint?: string;
 	action?: () => void;
-	select?: MenuItemSelectType;
+	mode?: MenuItemSelectType;
 	selected?: boolean;
 	options?: MenuItemArgsWeak[] | MenuOptions;
 };
@@ -905,10 +906,9 @@ export declare class MenuItem extends IoNode {
 	hint: string;
 	disabled: boolean;
 	action?: (value?: any) => void;
-	select: MenuItemSelectType;
+	mode: MenuItemSelectType;
 	selected: boolean;
 	options?: MenuOptions;
-	get path(): string | undefined;
 	get hasmore(): boolean;
 	getSubitem(value: any): any;
 	constructor(args?: MenuItemArgsWeak);
@@ -1169,7 +1169,7 @@ export declare class IoColorBase extends IoElement {
 	valueFromRgb(): void;
 	valueChanged(): void;
 }
-declare class IoSliderBase extends IoGl {
+export declare class IoSliderBase extends IoGl {
 	static get Style(): string;
 	value: number | [
 		number,
@@ -1518,7 +1518,7 @@ export declare class IoCollapsable extends IoElement {
 export declare class IoSelector extends IoElement {
 	static get Style(): string;
 	options: MenuOptions;
-	select: "root" | "leaf";
+	select: "first" | "last";
 	elements: VDOMArray[];
 	cache: boolean;
 	loading: boolean;
@@ -1530,7 +1530,6 @@ export declare class IoSelector extends IoElement {
 export declare class IoScroller extends IoElement {
 	static get Style(): string;
 	options: MenuOptions;
-	select: "root" | "leaf";
 	private _observer;
 	private _scrollThrottle?;
 	private _scrollToThrottle?;
@@ -1547,7 +1546,7 @@ export declare class IoScroller extends IoElement {
 	protected _onDomMutationThrottled(): void;
 	protected _onScroll(): void;
 	protected _scrollTo(element?: HTMLElement, smooth?: boolean): void;
-	protected _scrollToSelected(smooth?: boolean): void;
+	protected _scrollToAnchor(smooth?: boolean): void;
 	changed(): void;
 	dispose(): void;
 }
@@ -1557,6 +1556,9 @@ export declare class IoMdNavigator extends IoElement {
 	options: MenuOptions;
 	menu: "none" | "top" | "left" | "bottom" | "right";
 	depth: number;
+	collapsed: boolean;
+	collapseWidth: number;
+	onResized(): void;
 	changed(): void;
 }
 /**
@@ -1578,10 +1580,15 @@ export declare class IoNavigator extends IoElement {
 	elements: VDOMArray[];
 	options: MenuOptions;
 	menu: "none" | "top" | "left" | "bottom" | "right";
-	mode: "select" | "scroll" | "select-scroll";
-	select: "root" | "leaf";
+	select: "first" | "last";
+	mode: "select-scroll" | "select" | "scroll";
 	depth: number;
 	cache: boolean;
+	collapsed: boolean;
+	collapseWidth: number;
+	init(): void;
+	onResized(): void;
+	_onSetCollapsed(): void;
 	changed(): void;
 }
 /**
@@ -1810,6 +1817,21 @@ export declare class ObjectWidgets {
 		main: any;
 		groups: any;
 	};
+}
+/**
+ * Breadcrumbs select element. When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value. Optionally, it can trim the `options` array to selected option index.
+ *
+ * <io-element-demo element="io-breadcrumbs" properties='{"value": 1, "options": [1,2,3], "trim": false}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
+ *
+ * <io-element-demo element="io-breadcrumbs" properties='{"value": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}], "trim": true}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
+ **/
+export declare class IoBreadcrumbs extends IoElement {
+	static get Style(): string;
+	static get Properties(): any;
+	_onClick(event: CustomEvent): void;
+	valueChanged(): void;
+	selectedChanged(): void;
+	changed(): void;
 }
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
