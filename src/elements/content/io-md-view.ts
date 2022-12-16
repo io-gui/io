@@ -143,6 +143,7 @@ export class IoMdView extends IoElement {
   declare sanitize: boolean;
 
   protected _parseMarkdown(markdown: string) {
+    // if (this._disposed) return;
     if (marked) {
       marked.setOptions({
         sanitize: false,

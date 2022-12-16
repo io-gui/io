@@ -15,6 +15,7 @@ export class IoOptionsDemoView extends IoElement {
       :host > div {
         background-color: var(--iotBackgroundColorDark);
         display: flex;
+        height: var(--iotLineHeight);
       }
       :host io-item-demo-view {
         margin-left: var(--iotSpacing);
@@ -31,11 +32,11 @@ export class IoOptionsDemoView extends IoElement {
       }
       :host io-label.last {
         margin-left: 0.5em;
-        color: var(--iotColorFieldSelected);
+        color: var(--iotColorLink);
       }
       :host io-label.anchor {
         margin-left: 0.5em;
-        color: var(--iotColorError);
+        color: var(--iotColorLink);
       }
 
     `;

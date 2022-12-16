@@ -392,35 +392,38 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     dispose() {
       debug: {
-        if (this._properties === undefined) {
+        if (this._disposed) {
           // TODO: figure out how to prevent redundant disposals from nested io-selectors with cache:false
           // console.warn('IoNode.dispose(): Already disposed!', this.constructor.name);
         }
       }
-      if (this._properties === undefined) return;
+      if (this._disposed) return;
 
-      this._properties.forEach((property, key) => {
-        property.binding?.removeTarget(this, key);
-      });
+      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
 
       this._bindings.forEach((binding, key) => {
         binding.dispose();
         this._bindings.delete(key);
       });
+      delete (this as any)._bindings;
 
       if (this._protochain.observedObjectProperties.length) {
         window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
+      delete (this as any)._protochain;
 
       this._changeQueue.dispose();
-      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
+      delete (this as any)._changeQueue;
+
+      this._properties.forEach((property, key) => {
+        property.binding?.removeTarget(this, key);
+      });
 
       this._eventDispatcher.dispose();
-      delete (this as any)._properties;
-      delete (this as any)._bindings;
-      delete (this as any)._protochain;
-      delete (this as any)._changeQueue;
       delete (this as any)._eventDispatcher;
+      delete (this as any)._properties;
+
+      Object.defineProperty(this, '_disposed', {value: true});
     }
   };
   return IoNodeMixinConstructor;
@@ -449,7 +452,11 @@ function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
   if (throttleQueueSync.indexOf(func) === -1) {
     throttleQueueSync.push(func);
     if (sync === true) {
-      func(arg);
+      try {
+        func(arg);
+      } catch (e) {
+        console.error(e);
+      }
       return;
     }
   }
@@ -468,12 +475,17 @@ function animate () {
   requestAnimationFrame(animate);
   throttleQueueSync.length = 0;
   for (let i = throttleQueue.length; i--;) {
-    const args = throttleQueueArgs.get(throttleQueue[i]);
+    const func = throttleQueue[i];
+    const args = throttleQueueArgs.get(func);
     for (let p = args.length; p--;) {
-      throttleQueue[i](args[p]);
+      try {
+        func(args[p]);
+      } catch (e) {
+        console.error(e);
+      }
       args.splice(args.indexOf(p), 1);
     }
-    throttleQueue.splice(throttleQueue.indexOf(throttleQueue[i]), 1);
+    throttleQueue.splice(throttleQueue.indexOf(func), 1);
   }
 }
 requestAnimationFrame(animate);

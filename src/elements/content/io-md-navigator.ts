@@ -64,10 +64,15 @@ export class IoMdNavigator extends IoElement {
   declare depth: number;
 
   // TODO: implement
-  // @Property(false)
-  // declare collapsed: boolean;
-  // @Property(420)
-  // declare collapseWidth: number;
+  @Property(false)
+  declare collapsed: boolean;
+
+  @Property(420)
+  declare collapseWidth: number;
+
+  onResized() {
+    this.collapsed = this.offsetWidth < this.collapseWidth;
+  }
 
   changed() {
     const sharedMenuConfig = {

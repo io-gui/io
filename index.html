@@ -250,14 +250,15 @@
           class: 'main',
           menu: 'top',
           mode: 'select',
+          collapseWidth: 320,
           options: OPTIONS,
-          cache: true,
+          // cache: false,
           depth: 1,
           elements: [
             ['io-md-view', {id: 'About', src: './README.md'}],
-            ['io-navigator', {id: 'Docs', menu: 'left',
+            ['io-navigator', {id: 'Docs', menu: 'left', collapseWidth: 640,
               options: OPTIONS.getItem('Docs').options,
-              cache: true,
+              // cache: false,
               elements: [
                 ['io-md-view', {id: 'Getting Started', sanitize: false, src: './docs/getting-started.md'}],
                 ['io-md-view', {id: 'Learn More', sanitize: false, src: './docs/learn-more.md'}],
@@ -269,7 +270,7 @@
             }],
             ['io-selector', {id: 'Demos',
               options: OPTIONS.getItem('Demos').options,
-              cache: true,
+              // cache: false,
               elements: [
                 ['io-demo-elements-dev', {id: 'Elements Dev Page', import: './demos/elements-dev.js'}],
                 ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],

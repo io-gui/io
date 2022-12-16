@@ -32,7 +32,7 @@ export class IoMenuOptions extends IoElement {
       transition: opacity 0.25s;
       position: relative;
       min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
-      min-height: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
+      min-height: calc(var(--iotFieldHeight) + var(--iotBorderWidth));
     }
 
     :host[inlayer] {
@@ -110,7 +110,7 @@ export class IoMenuOptions extends IoElement {
     }
     :host[horizontal] > .hamburger {
       position: absolute;
-      right: var(--iotSpacing2);
+      right: 0;
       padding: var(--iotSpacing);
     }
     :host > .hamburger > .hasmore {
@@ -158,7 +158,7 @@ export class IoMenuOptions extends IoElement {
   @Property(undefined)
   declare $parent?: IoMenuItem;
 
-  @Property({type: Array})
+  @Property({type: Array, notify: false})
   declare private _overflownItems: MenuItem[];
 
   static get Listeners() {
@@ -193,6 +193,7 @@ export class IoMenuOptions extends IoElement {
   }
 
   _onSetOverflow() {
+    if (this._disposed) return;
     const items = this.querySelectorAll('.item');
     this._overflownItems.length = 0;
     if (this.horizontal) {
@@ -214,7 +215,7 @@ export class IoMenuOptions extends IoElement {
         last = Math.min(last, rect.right);
         if (this.noPartialCollapse && hasOwerflown) {
           items[i].hidden = true;
-          this._overflownItems.push(items[i].item);
+          this._overflownItems.unshift(items[i].item);
         } else if (i === (items.length - 1) && last < end) {
           items[i].hidden = false;
         } else if (last < (end - hamburgetWidth * 1.5)) {
@@ -222,7 +223,7 @@ export class IoMenuOptions extends IoElement {
         } else {
           hasOwerflown = true;
           items[i].hidden = true;
-          this._overflownItems.push(items[i].item);
+          this._overflownItems.unshift(items[i].item);
         }
       }
 
