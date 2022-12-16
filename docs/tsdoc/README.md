@@ -11,6 +11,7 @@
 - [Color](classes/Color.md)
 - [EventDispatcher](classes/EventDispatcher.md)
 - [IoBoolean](classes/IoBoolean.md)
+- [IoBreadcrumbs](classes/IoBreadcrumbs.md)
 - [IoButton](classes/IoButton.md)
 - [IoCollapsable](classes/IoCollapsable.md)
 - [IoColorBase](classes/IoColorBase.md)
@@ -36,10 +37,8 @@
 - [IoColorSliderV](classes/IoColorSliderV.md)
 - [IoColorSliderY](classes/IoColorSliderY.md)
 - [IoColorSwatch](classes/IoColorSwatch.md)
-- [IoContent](classes/IoContent.md)
 - [IoContextMenu](classes/IoContextMenu.md)
 - [IoElement](classes/IoElement.md)
-- [IoElementDemo](classes/IoElementDemo.md)
 - [IoField](classes/IoField.md)
 - [IoGl](classes/IoGl.md)
 - [IoIcon](classes/IoIcon.md)
@@ -47,13 +46,13 @@
 - [IoInspector](classes/IoInspector.md)
 - [IoLabel](classes/IoLabel.md)
 - [IoLayer](classes/IoLayer.md)
-- [IoLayout](classes/IoLayout.md)
-- [IoLayoutDivider](classes/IoLayoutDivider.md)
 - [IoMatrix](classes/IoMatrix.md)
+- [IoMdNavigator](classes/IoMdNavigator.md)
 - [IoMdView](classes/IoMdView.md)
-- [IoMdViewSelector](classes/IoMdViewSelector.md)
 - [IoMenuItem](classes/IoMenuItem.md)
 - [IoMenuOptions](classes/IoMenuOptions.md)
+- [IoMenuTree](classes/IoMenuTree.md)
+- [IoNavigator](classes/IoNavigator.md)
 - [IoNode](classes/IoNode.md)
 - [IoNotify](classes/IoNotify.md)
 - [IoNumber](classes/IoNumber.md)
@@ -64,13 +63,11 @@
 - [IoObject](classes/IoObject.md)
 - [IoOptionMenu](classes/IoOptionMenu.md)
 - [IoProperties](classes/IoProperties.md)
+- [IoScroller](classes/IoScroller.md)
 - [IoSelector](classes/IoSelector.md)
-- [IoSelectorSidebar](classes/IoSelectorSidebar.md)
-- [IoSelectorTabs](classes/IoSelectorTabs.md)
-- [IoServiceLoader](classes/IoServiceLoader.md)
-- [IoSidebar](classes/IoSidebar.md)
 - [IoSlider](classes/IoSlider.md)
 - [IoSlider2d](classes/IoSlider2d.md)
+- [IoSliderBase](classes/IoSliderBase.md)
 - [IoSliderRange](classes/IoSliderRange.md)
 - [IoStorageNode](classes/IoStorageNode.md)
 - [IoString](classes/IoString.md)
@@ -100,7 +97,7 @@
 
 #### Defined in
 
-[src/core/node.ts:23](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L23)
+[src/core/node.ts:23](https://github.com/io-gui/io/blob/main/src/core/node.ts#L23)
 
 ___
 
@@ -124,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:16](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L16)
+[src/core/node.ts:16](https://github.com/io-gui/io/blob/main/src/core/node.ts#L16)
 
 ___
 
@@ -144,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:7](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L7)
+[src/core/node.ts:7](https://github.com/io-gui/io/blob/main/src/core/node.ts#L7)
 
 ___
 
@@ -168,7 +165,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:20](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L20)
+[src/core/node.ts:20](https://github.com/io-gui/io/blob/main/src/core/node.ts#L20)
 
 ___
 
@@ -192,7 +189,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:21](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L21)
+[src/core/node.ts:21](https://github.com/io-gui/io/blob/main/src/core/node.ts#L21)
 
 ___
 
@@ -202,7 +199,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:20](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L20)
+[src/core/element.ts:20](https://github.com/io-gui/io/blob/main/src/core/element.ts#L20)
 
 ___
 
@@ -222,7 +219,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:32](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L32)
+[src/core/node.ts:32](https://github.com/io-gui/io/blob/main/src/core/node.ts#L32)
 
 ___
 
@@ -246,7 +243,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L18)
+[src/core/node.ts:18](https://github.com/io-gui/io/blob/main/src/core/node.ts#L18)
 
 ___
 
@@ -256,7 +253,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L60)
+[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L60)
 
 ___
 
@@ -268,7 +265,7 @@ Declares default listeners.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L6)
+[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
@@ -280,7 +277,7 @@ Allows weak declaration of listeners by specifying only partial declarations suc
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L11)
+[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L11)
 
 ___
 
@@ -290,7 +287,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L61)
+[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L61)
 
 ___
 
@@ -300,7 +297,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L63)
+[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L63)
 
 ___
 
@@ -310,7 +307,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L10)
+[src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L10)
 
 ___
 
@@ -320,7 +317,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L8)
+[src/elements/menus/models/menu-item.ts:8](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L8)
 
 ___
 
@@ -330,17 +327,17 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:6](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L6)
+[src/elements/menus/models/menu-item.ts:6](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L6)
 
 ___
 
 ### NudgeDirection
 
- **NudgeDirection**: ``"pointer"`` \| ``"up"`` \| ``"left"`` \| ``"down"`` \| ``"right"``
+ **NudgeDirection**: ``"none"`` \| ``"pointer"`` \| ``"up"`` \| ``"left"`` \| ``"down"`` \| ``"right"``
 
 #### Defined in
 
-[src/core/layer.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/layer.ts#L18)
+[src/core/layer.ts:18](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L18)
 
 ___
 
@@ -364,7 +361,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L19)
+[src/core/node.ts:19](https://github.com/io-gui/io/blob/main/src/core/node.ts#L19)
 
 ___
 
@@ -387,7 +384,7 @@ Declares default value, type and reactive behavior of the property.
 
 #### Defined in
 
-[src/core/internals/property.ts:7](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L7)
+[src/core/internals/property.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L7)
 
 ___
 
@@ -399,7 +396,7 @@ Allows weak declaration of properties by specifying only partial declarations su
 
 #### Defined in
 
-[src/core/internals/property.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L19)
+[src/core/internals/property.ts:19](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L19)
 
 ___
 
@@ -409,7 +406,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:138](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L138)
+[src/core/internals/property.ts:138](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L138)
 
 ___
 
@@ -433,7 +430,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:22](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L22)
+[src/core/node.ts:22](https://github.com/io-gui/io/blob/main/src/core/node.ts#L22)
 
 ___
 
@@ -443,7 +440,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:39](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L39)
+[src/core/element.ts:39](https://github.com/io-gui/io/blob/main/src/core/element.ts#L39)
 
 ___
 
@@ -461,7 +458,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:43](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L43)
+[src/core/element.ts:43](https://github.com/io-gui/io/blob/main/src/core/element.ts#L43)
 
 ## Variables
 
@@ -471,7 +468,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:102](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L102)
+[src/elements/color/io-color-panel.ts:105](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-panel.ts#L105)
 
 ___
 
@@ -481,7 +478,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/io-iconset.ts:41](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-iconset.ts#L41)
+[src/elements/basic/io-iconset.ts:41](https://github.com/io-gui/io/blob/main/src/elements/basic/io-iconset.ts#L41)
 
 ___
 
@@ -491,7 +488,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:226](https://github.com/io-gui/iogui/blob/main/src/core/layer.ts#L226)
+[src/core/layer.ts:227](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L227)
 
 ___
 
@@ -501,7 +498,7 @@ ___
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:560](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-number.ts#L560)
+[src/elements/basic/io-number.ts:560](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L560)
 
 ___
 
@@ -511,7 +508,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:279](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L279)
+[src/core/theme.ts:290](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L290)
 
 ___
 
@@ -545,7 +542,7 @@ THE SOFTWARE.
 
 #### Defined in
 
-[src/iogui.ts:33](https://github.com/io-gui/iogui/blob/main/src/iogui.ts#L33)
+[src/iogui.ts:33](https://github.com/io-gui/io/blob/main/src/iogui.ts#L33)
 
 ___
 
@@ -555,7 +552,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:140](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L140)
+[src/core/internals/property.ts:140](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L140)
 
 ## Functions
 
@@ -585,7 +582,7 @@ typeof `__class`
 
 #### Defined in
 
-[src/core/node.ts:42](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L42)
+[src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)
 
 ___
 
@@ -605,7 +602,7 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:250](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L250)
+[src/core/storage.ts:255](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L255)
 
 ___
 
@@ -642,7 +639,7 @@ Property decorator function.
 
 #### Defined in
 
-[src/core/internals/property.ts:147](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L147)
+[src/core/internals/property.ts:147](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L147)
 
 ___
 
@@ -664,7 +661,7 @@ Register function for `IoElement`. Registers custom element.
 
 #### Defined in
 
-[src/core/element.ts:89](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L89)
+[src/core/element.ts:89](https://github.com/io-gui/io/blob/main/src/core/element.ts#L89)
 
 ___
 
@@ -686,7 +683,52 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:419](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L419)
+[src/core/node.ts:418](https://github.com/io-gui/io/blob/main/src/core/node.ts#L418)
+
+___
+
+### addMenuOptions
+
+**addMenuOptions**(`options`, `depth`, `d?`): [`VDOMArray`](README.md#vdomarray)[]
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `options` | [`MenuOptions`](classes/MenuOptions.md) | `undefined` |
+| `depth` | `number` | `undefined` |
+| `d` | `number` | `0` |
+
+#### Returns
+
+[`VDOMArray`](README.md#vdomarray)[]
+
+#### Defined in
+
+[src/elements/menus/io-menu-tree.ts:8](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L8)
+
+___
+
+### applyNativeElementProps
+
+**applyNativeElementProps**(`element`, `props`): `void`
+
+Sets element properties.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `element` | `HTMLElement` | Element to set properties on. |
+| `props` | `any` | Element properties. |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/element.ts:206](https://github.com/io-gui/io/blob/main/src/core/element.ts#L206)
 
 ___
 
@@ -709,7 +751,7 @@ Assigns source listener declaration to an existing array of listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L27)
+[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L27)
 
 ___
 
@@ -735,13 +777,77 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:79](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L79)
+[src/core/element.ts:79](https://github.com/io-gui/io/blob/main/src/core/element.ts#L79)
+
+___
+
+### disposeElementDeep
+
+**disposeElementDeep**(`element`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `element` | [`IoElement`](classes/IoElement.md) |
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/core/element.ts:175](https://github.com/io-gui/io/blob/main/src/core/element.ts#L175)
+
+___
+
+### filterOptions
+
+**filterOptions**(`options`, `search`, `depth?`, `elements?`, `d?`): `any`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `options` | [`MenuOptions`](classes/MenuOptions.md) | `undefined` |
+| `search` | `string` | `undefined` |
+| `depth` | `number` | `5` |
+| `elements` | [`VDOMArray`](README.md#vdomarray)[] | `[]` |
+| `d` | `number` | `0` |
+
+#### Returns
+
+`any`
+
+#### Defined in
+
+[src/elements/menus/io-menu-tree.ts:37](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L37)
+
+___
+
+### genObjectStorageID
+
+**genObjectStorageID**(`object`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `object` | `Record`<`string`, `any`\> |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[src/core/storage.ts:98](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L98)
 
 ___
 
 ### getMenuAncestors
 
-**getMenuAncestors**(`element`): ([`IoMenuOptions`](classes/IoMenuOptions.md) \| [`IoMenuItem`](classes/IoMenuItem.md))[]
+**getMenuAncestors**(`element`): ([`IoMenuItem`](classes/IoMenuItem.md) \| [`IoMenuOptions`](classes/IoMenuOptions.md))[]
 
 #### Parameters
 
@@ -751,11 +857,11 @@ ___
 
 #### Returns
 
-([`IoMenuOptions`](classes/IoMenuOptions.md) \| [`IoMenuItem`](classes/IoMenuItem.md))[]
+([`IoMenuItem`](classes/IoMenuItem.md) \| [`IoMenuOptions`](classes/IoMenuOptions.md))[]
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:378](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L378)
+[src/elements/menus/io-menu-item.ts:394](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L394)
 
 ___
 
@@ -775,7 +881,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:357](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L357)
+[src/elements/menus/io-menu-item.ts:373](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L373)
 
 ___
 
@@ -795,7 +901,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:388](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L388)
+[src/elements/menus/io-menu-item.ts:404](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L404)
 
 ___
 
@@ -819,7 +925,7 @@ Stronly typed listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L18)
+[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L18)
 
 ___
 
@@ -844,4 +950,4 @@ Listener
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L45)
+[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L45)

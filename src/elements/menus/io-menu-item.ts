@@ -109,19 +109,21 @@ export class IoMenuItem extends IoField {
     const item = this.item;
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true;
-    } else if (item.select === 'toggle') {
+    } else if (item.mode === 'toggle') {
       item.selected = !item.selected;
     } else {
       if (item.action) {
         item.action.apply(null, [item.value]);
       }
-      if (item.select === 'pick') {
+      if (item.mode === 'select') {
         if (item.hasmore && item.options && this.depth <= 0) {
           item.options.selectDefault();
         } else {
           item.selected = true;
         }
-      } else if (item.select === 'link') {
+      } else if (item.mode === 'anchor') {
+        item.selected = true;
+      } else if (item.mode === 'link') {
         window.open(item.value, '_blank');
       }
       this.dispatchEvent('item-clicked', item, true);
@@ -215,7 +217,7 @@ export class IoMenuItem extends IoField {
       hovered.sort((a: IoMenuElementType, b: IoMenuElementType) => {
         return a.depth < b.depth ? 1 : a.depth > b.depth ? -1 : 0;
       });
-      return hovered[hovered.length - 1];
+      return hovered[0];
     }
     return undefined;
   }
@@ -402,17 +404,17 @@ export function getMenuAncestors(element: IoMenuElementType) {
 }
 
 export function getMenuRoot(element: IoMenuElementType) {
-  let root = element;
-  while (root && root.$parent) {
-    root = root.$parent;
+  let first = element;
+  while (first && first.$parent) {
+    first = first.$parent;
   }
-  return root;
+  return first;
 }
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
     if (!element.disabled && !element.hidden) {
-      if (!element.inlayer || element.parentElement.expanded) {
+      if (!element.inlayer || (element.parentElement.expanded && Layer.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
         const r = element.getBoundingClientRect();
         const x = event.clientX;

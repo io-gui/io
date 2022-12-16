@@ -116,7 +116,9 @@ export class IoLayer extends IoElement {
   }
   nudgeDown(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
     x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
-    if (y + elemRect.height < window.innerHeight || force) {
+    const fits = y + elemRect.height < window.innerHeight;
+    if (fits || force) {
+      if (!fits) y = window.innerHeight - elemRect.height;
       element.style.left = x + 'px';
       element.style.top = y + 'px';
       return true;
@@ -125,7 +127,9 @@ export class IoLayer extends IoElement {
   }
   nudgeUp(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
     x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
-    if (y - elemRect.height > 0 || force) {
+    const fits = y - elemRect.height > 0;
+    if (fits || force) {
+      if (!fits) y = 0;
       element.style.left = x + 'px';
       element.style.top = y - elemRect.height + 'px';
       return true;
@@ -133,7 +137,9 @@ export class IoLayer extends IoElement {
     return false;
   }
   nudgeRight(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
-    if (x + elemRect.width < window.innerWidth || force) {
+    const fits = x + elemRect.width < window.innerWidth;
+    if (fits || force) {
+      if (!fits) x = window.innerWidth - elemRect.width;
       element.style.left = x + 'px';
       element.style.top = Math.min(y, window.innerHeight - elemRect.height) + 'px';
       return true;
@@ -141,7 +147,9 @@ export class IoLayer extends IoElement {
     return false;
   }
   nudgeLeft(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
-    if (x - elemRect.width > 0 || force) {
+    const fits = x - elemRect.width > 0;
+    if (fits || force) {
+      if (!fits) x = 0;
       element.style.left = x - elemRect.width + 'px';
       element.style.top = Math.min(y, window.innerHeight - elemRect.height) + 'px';
       return true;
@@ -185,6 +193,11 @@ export class IoLayer extends IoElement {
         break;
       case 'right':
       default:
+        // console.log(this.nudgeRight(element, right, top, elemRect));
+        // console.log(this.nudgeLeft(element, left, top, elemRect));
+        // console.log(this.nudgeRight(element, right, top, elemRect, rightToWidth > left));
+        // console.log(this.nudgeLeft(element, left, top, elemRect, rightToWidth <= left));
+
         this.nudgeRight(element, right, top, elemRect) ||
         this.nudgeLeft(element, left, top, elemRect) ||
         this.nudgeRight(element, right, top, elemRect, rightToWidth > left) ||

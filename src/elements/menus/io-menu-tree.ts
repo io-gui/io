@@ -11,6 +11,7 @@ export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
     const item = options[i];
     if (item.options?.length) {
       const collapsableState = $({value: item.selected, storage: 'local', key: genObjectStorageID(item)});
+      if (item.selected === true) collapsableState.value = true;
       elements.push(['io-collapsable', {
         label: item.label,
         icon: item.icon,
@@ -206,7 +207,7 @@ export class IoMenuTree extends IoElement {
       const len = elements.length;
       filterOptions(this.options, this.search, this.depth, elements);
       if (len === elements.length) {
-        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', select: 'none'})}]);
+        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', mode: 'none'})}]);
       }
     } else {
       elements.push(...addMenuOptions(this.options, this.depth));

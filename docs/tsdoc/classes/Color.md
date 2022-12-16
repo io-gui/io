@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ## Properties
 
@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ___
 
@@ -57,4 +57,4 @@ ___
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)

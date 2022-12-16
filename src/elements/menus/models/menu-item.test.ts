@@ -11,7 +11,7 @@ export default class {
         chai.expect(item.hint).to.be.equal('');
         chai.expect(item.disabled).to.be.equal(false);
         chai.expect(item.action).to.be.equal(undefined);
-        chai.expect(item.select).to.be.equal('pick');
+        chai.expect(item.mode).to.be.equal('select');
         chai.expect(item.selected).to.be.equal(false);
         chai.expect(item.options).to.be.eql(undefined);
       });
@@ -23,7 +23,7 @@ export default class {
         chai.expect(item.hint).to.be.equal('');
         chai.expect(item.disabled).to.be.equal(false);
         chai.expect(item.action).to.be.equal(undefined);
-        chai.expect(item.select).to.be.equal('pick');
+        chai.expect(item.mode).to.be.equal('select');
         chai.expect(item.selected).to.be.equal(false);
         chai.expect(item.options).to.be.eql(undefined);
         item = new MenuItem('foo');
@@ -45,7 +45,7 @@ export default class {
           hint: 'buzz',
           disabled: true,
           action: ()=>{},
-          select: 'toggle',
+          mode: 'toggle',
           selected: true,
         });
         chai.expect(item.value).to.be.equal('foo');
@@ -54,7 +54,7 @@ export default class {
         chai.expect(item.hint).to.be.equal('buzz');
         chai.expect(item.disabled).to.be.equal(true);
         chai.expect(typeof item.action).to.be.equal('function');
-        chai.expect(item.select).to.be.equal('toggle');
+        chai.expect(item.mode).to.be.equal('toggle');
         chai.expect(item.selected).to.be.equal(true);
         chai.expect(item.options).to.be.eql(undefined);
       });
@@ -84,9 +84,9 @@ export default class {
       });
       it('Should return `options.path` from path getter', () => {
         let item = new MenuItem();
-        chai.expect(item.path).to.be.equal(undefined);
+        chai.expect(item.options).to.be.equal(undefined);
         item = new MenuItem({options: []});
-        chai.expect(item.path).to.be.eql('');
+        chai.expect(item.options?.path).to.be.eql('');
         // TODO: test longer paths
       });
       it('Should return subitem with specified value using `.getSubitem([value])`', () => {

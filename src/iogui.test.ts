@@ -91,13 +91,6 @@ export class IoGuiTestPage extends IoElement {
     this.appendChild(mochaDiv);
     mochaDiv.style.display = 'block';
     runTests();
-    console.log(this);
-    // setTimeout(() => {
-    //   const failElement = this.parentElement.querySelector('.fail');
-    //   failElement.parentElement.parentElement.parentElement.scrollIntoView({
-    //     behavior: 'smooth'
-    //   });
-    // }, 200);
   }
   disconnectedCallback() {
     super.disconnectedCallback();

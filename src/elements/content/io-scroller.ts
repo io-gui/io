@@ -7,7 +7,7 @@ export class IoScroller extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        align-items: flex-start;
+        flex-direction: column;
         overflow-y: auto;
         position: relative;
         max-height: 100%;
@@ -19,9 +19,6 @@ export class IoScroller extends IoElement {
 
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
-
-  @Property('leaf')
-  declare select: 'root' | 'leaf';
 
   declare private _observer: MutationObserver;
   private _scrollThrottle?: ReturnType<typeof setTimeout>;
@@ -41,7 +38,7 @@ export class IoScroller extends IoElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this._scrollToSelected(false);
+    this._scrollToAnchor(false);
   }
 
   protected _onDomMutation() {
@@ -54,34 +51,31 @@ export class IoScroller extends IoElement {
   protected _onScroll() {
     clearTimeout(this._scrollThrottle);
     this._scrollThrottle = setTimeout(() => {
+      // Prevent unfinished scroll animation from detatched element to trigger menu selection.
+      if (!this.isConnected) return;
       delete this._scrollThrottle;
       const top = this.scrollTop;
-      // const bottom = top + this.getBoundingClientRect().height;
       let closestID = '';
       this._elements = [...this.querySelectorAll('[id]')];
 
       for (let i = 0; i < this._elements.length; i++) {
         const elem = this._elements[i];
         const menuItem = this.options.getItem(elem.id, true);
-        if (menuItem) {
+        if (menuItem?.mode === 'anchor') {
           const elemTop = elem.offsetTop;
-          // const elemBottom = elem.offsetTop + elem.offsetHeight;
           closestID = closestID || this._elements[i].id;
-          // TODO: this caused issues when element had more height than the parent.
-          // if (elemTop >= (top - 1) && elemBottom <= (bottom + 1)) {
           if (elemTop >= (top - 1)) {
             closestID = elem.id;
             break;
           }
         }
-
       }
 
       this._pauseScroll = true;
 
       if (closestID) {
         const menuItem = this.options.getItem(closestID, true);
-        if (menuItem) menuItem.selected = true;
+        if (menuItem?.mode === 'anchor') menuItem.selected = true;
       }
       setTimeout(() => { this._pauseScroll = false; });
     }, 500);
@@ -103,27 +97,26 @@ export class IoScroller extends IoElement {
     });
   }
 
-  protected _scrollToSelected(smooth = false) {
-    const selected = this.select === 'root' ? this.options.root : this.options.leaf;
+  protected _scrollToAnchor(smooth = false) {
+    const anchor = this.options.anchor;
 
     debug: {
-      if (selected && typeof selected !== 'string') {
-        console.warn('IoScroller: selected option root is not a string!');
+      if (anchor && typeof anchor !== 'string') {
+        console.warn('IoScroller: anchor option first is not a string!');
       }
     }
 
-    if (typeof selected !== 'string') return;
-    if (selected) {
-      const element = this.querySelector('#' + selected);
+    if (typeof anchor !== 'string') return;
+    if (anchor) {
+      const element = this.querySelector('#' + anchor);
       if (element) {
-        // this._pauseScroll = false;
         this._scrollTo(element, smooth);
       }
     }
   }
 
   changed() {
-    this._scrollToSelected(true);
+    this._scrollToAnchor(true);
   }
 
   dispose() {

@@ -3,7 +3,7 @@ import { IoElementArgs } from '../../../core/element.js';
 import { Property } from '../../../core/internals/property.js';
 import { MenuOptions } from './menu-options.js';
 
-export type MenuItemSelectType = 'pick' | 'toggle' | 'link' | 'none';
+export type MenuItemSelectType = 'select' | 'anchor' | 'toggle' | 'link' | 'none';
 
 export type MenuItemArgsWeak = undefined | null | string | number | MenuItemArgs;
 
@@ -12,7 +12,7 @@ export type MenuItemArgs = IoElementArgs & {
   icon?: string,
   hint?: string,
   action?: () => void,
-  select?: MenuItemSelectType,
+  mode?: MenuItemSelectType,
   selected?: boolean,
   options?: MenuItemArgsWeak[] | MenuOptions
 };
@@ -40,18 +40,14 @@ export class MenuItem extends IoNode {
   @Property(undefined)
   declare action?: (value?: any) => void;
 
-  @Property('pick')
-  declare select: MenuItemSelectType;
+  @Property('select')
+  declare mode: MenuItemSelectType;
 
   @Property(false)
   declare selected: boolean;
 
   @Property(undefined)
   declare options?: MenuOptions;
-
-  get path() {
-    return this.options?.path;
-  }
 
   get hasmore() {
     return !!(this.options?.length);
@@ -89,7 +85,7 @@ export class MenuItem extends IoNode {
       if (args.hint !== undefined) item.hint = args.hint;
       if (args.disabled !== undefined) item.disabled = args.disabled;
       if (args.action !== undefined) item.action = args.action;
-      if (args.select !== undefined) item.select = args.select;
+      if (args.mode !== undefined) item.mode = args.mode;
       if (args.selected !== undefined) item.selected = args.selected;
       if (args.options !== undefined) {
         if (args.options instanceof MenuOptions) {
@@ -98,17 +94,20 @@ export class MenuItem extends IoNode {
           item.options = new MenuOptions(args.options);
         }
       }
-      if (item.selected === undefined && (args.select === 'pick' || args.select === undefined) && item.options) {
-        item.selected = !!item.options.find((item: MenuItem) => item.selected && item.select === 'pick');
+      if (item.selected === undefined && (args.mode === 'select' || args.mode === undefined) && item.options) {
+        item.selected = !!item.options.find((item: MenuItem) => item.selected && item.mode === 'select');
       }
     }
 
     debug: {
-      if (item.select && item.select === 'toggle' && item.options) {
-        console.warn('MenuItem: cannot have suboptions when `select === "toggle"`');
+      if (item.mode && (item.mode === 'toggle') && item.options) {
+        console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
       }
-      if (item.select && ['pick', 'toggle', 'link', 'none'].indexOf(item.select as string) === -1) {
-        console.warn('MenuItem: unknown `select` property!', item.select);
+      if (item.mode && (item.mode === 'anchor') && item.options) {
+        console.warn('MenuItem: cannot have suboptions when `mode === "anchor"`');
+      }
+      if (item.mode && ['select', 'toggle', 'anchor', 'link', 'none'].indexOf(item.mode as string) === -1) {
+        console.warn('MenuItem: unknown `mode` property!', item.mode);
       }
       if (item.action && typeof item.action !== 'function') {
         console.warn('MenuItem: invalid type of `action` property!', typeof item.action);
@@ -145,15 +144,15 @@ export class MenuItem extends IoNode {
 
   optionsChanged() {
     // TODO test this behavior and look for regressions
-    if (this.options?.root !== undefined && this.select === 'pick') {
+    if ((this.options?.first !== undefined || this.options?.anchor !== undefined) && this.mode === 'select') {
       this.selected = true;
     }
   }
 
   selectedChanged() {
-     if (this.select === 'pick' && this.selected === false && this.options) {
+     if (this.mode === 'select' && this.selected === false && this.options) {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].select === 'pick') {
+        if (this.options[i].mode === 'select' || this.options[i].mode === 'anchor') {
           this.options[i].selected = false;
         }
       }

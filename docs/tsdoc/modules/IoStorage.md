@@ -18,7 +18,7 @@
 
 #### Defined in
 
-[src/core/storage.ts:275](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L275)
+[src/core/storage.ts:280](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L280)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:265](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L265)
+[src/core/storage.ts:270](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L270)
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:286](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L286)
+[src/core/storage.ts:291](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L291)

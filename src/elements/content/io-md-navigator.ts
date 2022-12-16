@@ -60,20 +60,19 @@ export class IoMdNavigator extends IoElement {
   @Property({value: 'none', reflect: true})
   declare menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
 
-//   @Property({value: 'select'})
-//   declare mode: 'select' | 'scroll' | 'select-scroll';
-
-//   @Property({value: 'root'})
-//   declare select: 'root' | 'leaf';
-
   @Property(Infinity)
   declare depth: number;
 
   // TODO: implement
-  // @Property(false)
-  // declare collapsed: boolean;
-  // @Property(420)
-  // declare collapseWidth: number;
+  @Property(false)
+  declare collapsed: boolean;
+
+  @Property(420)
+  declare collapseWidth: number;
+
+  onResized() {
+    this.collapsed = this.offsetWidth < this.collapseWidth;
+  }
 
   changed() {
     const sharedMenuConfig = {
@@ -86,7 +85,7 @@ export class IoMdNavigator extends IoElement {
     this.template([
       this.menu === 'top' ? ['io-menu-options', {horizontal: true, ...sharedMenuConfig}] : null,
       this.menu === 'left' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
-      this.options.leaf ? ['io-md-view', {src: this.options.leaf}] : null,
+      this.options.last ? ['io-md-view', {src: this.options.last}] : null,
       this.menu === 'right' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
       this.menu === 'bottom' ? ['io-menu-options', {horizontal: true, direction: 'up', ...sharedMenuConfig}] : null,
     ]);

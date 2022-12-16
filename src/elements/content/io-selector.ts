@@ -15,11 +15,7 @@ export class IoSelector extends IoElement {
     return /* css */`
       :host {
         flex-direction: column;
-        overflow-y: auto;
         position: relative;
-      }
-      :host > * {
-        align-self: stretch;
       }
       @keyframes io-loading-spinner {
         to {
@@ -48,8 +44,8 @@ export class IoSelector extends IoElement {
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
 
-  @Property('leaf')
-  declare select: 'root' | 'leaf';
+  @Property('first')
+  declare select: 'first' | 'last';
 
   @Property(Array)
   declare elements: VDOMArray[];
@@ -87,11 +83,11 @@ export class IoSelector extends IoElement {
   }
 
   changed() {
-    const selected = this.select === 'root' ? this.options.root : this.options.leaf;
+    const selected = this.select === 'first' ? this.options.first : this.options.last;
 
     debug: {
       if (selected && typeof selected !== 'string') {
-        console.warn('IoSelector: selected option root is not a string!');
+        console.warn('IoSelector: selected option first is not a string!');
       }
     }
 

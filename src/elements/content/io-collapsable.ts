@@ -18,17 +18,17 @@ export class IoCollapsable extends IoElement {
       align-items: stretch;
       align-self: stretch;
       border: var(--iotBorder);
+      border-radius: calc(var(--iotBorderRadius) - var(--iotSpacing));
       border-color: var(--iotBorderColorOutset);
       min-height: var(--iotFieldHeight);
+      background-color: var(--iotBackgroundColorDark);
     }
     :host > io-boolean {
       flex: 0 0 auto;
-      padding: var(--iotSpacing);
+      padding-left: 0;
+      margin: var(--iotSpacing) var(--iotSpacing2);
       border-radius: 0;
-      background-color: var(--iotBackgroundColorDark);
-    }
-    :host > io-boolean[value] {
-      border-bottom-color: var(--iotBorderColorLight);
+      background-color: transparent;
     }
     :host > io-boolean:before {
       text-align: center;
@@ -45,6 +45,12 @@ export class IoCollapsable extends IoElement {
       flex-direction: column;
       overflow: auto;
       background-color: var(--iotBackgroundColorLight);
+    }
+    :host > div.io-collapsable-content:not(:empty) {
+      margin: var(--iotSpacing);
+      margin-top: 0;
+      padding: var(--iotSpacing);
+      border-radius: var(--iotBorderRadius);
     }
     `;
   }

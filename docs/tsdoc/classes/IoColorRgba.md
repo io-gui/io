@@ -28,7 +28,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/node.ts:64](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L64)
+[src/core/node.ts:63](https://github.com/io-gui/io/blob/main/src/core/node.ts#L63)
 
 ## Properties
 
@@ -42,7 +42,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/element.ts:232](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L232)
+[src/core/element.ts:245](https://github.com/io-gui/io/blob/main/src/core/element.ts#L245)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
+[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:241](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L241)
+[src/core/element.ts:254](https://github.com/io-gui/io/blob/main/src/core/element.ts#L254)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:20](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L20)
+[src/elements/color/io-color-base.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L20)
 
 ___
 
@@ -154,21 +154,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:238](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L238)
-
-___
-
-### d
-
- **d**: `boolean` = `true`
-
-#### Inherited from
-
-[IoColorBase](IoColorBase.md).[d](IoColorBase.md#d)
-
-#### Defined in
-
-[src/core/node.ts:59](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L59)
+[src/core/element.ts:251](https://github.com/io-gui/io/blob/main/src/core/element.ts#L251)
 
 ___
 
@@ -182,7 +168,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:262](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L262)
+[src/core/element.ts:275](https://github.com/io-gui/io/blob/main/src/core/element.ts#L275)
 
 ___
 
@@ -196,7 +182,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:259](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L259)
+[src/core/element.ts:272](https://github.com/io-gui/io/blob/main/src/core/element.ts#L272)
 
 ___
 
@@ -210,7 +196,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:17](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L17)
+[src/elements/color/io-color-base.ts:17](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L17)
 
 ___
 
@@ -224,7 +210,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:14](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L14)
+[src/elements/color/io-color-base.ts:14](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L14)
 
 ___
 
@@ -238,7 +224,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:256](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L256)
+[src/core/element.ts:269](https://github.com/io-gui/io/blob/main/src/core/element.ts#L269)
 
 ___
 
@@ -252,7 +238,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:247](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L247)
+[src/core/element.ts:260](https://github.com/io-gui/io/blob/main/src/core/element.ts#L260)
 
 ___
 
@@ -266,7 +252,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:250](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L250)
+[src/core/element.ts:263](https://github.com/io-gui/io/blob/main/src/core/element.ts#L263)
 
 ___
 
@@ -280,7 +266,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:11](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L11)
+[src/elements/color/io-color-base.ts:11](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L11)
 
 ___
 
@@ -294,7 +280,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:244](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L244)
+[src/core/element.ts:257](https://github.com/io-gui/io/blob/main/src/core/element.ts#L257)
 
 ___
 
@@ -308,7 +294,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:235](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L235)
+[src/core/element.ts:248](https://github.com/io-gui/io/blob/main/src/core/element.ts#L248)
 
 ___
 
@@ -322,7 +308,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:253](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L253)
+[src/core/element.ts:266](https://github.com/io-gui/io/blob/main/src/core/element.ts#L266)
 
 ___
 
@@ -345,7 +331,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L8)
+[src/elements/color/io-color-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L8)
 
 ## Accessors
 
@@ -363,7 +349,7 @@ IoColorBase.textNode
 
 #### Defined in
 
-[src/core/element.ts:388](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L388)
+[src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src/core/element.ts#L393)
 
 `set` **textNode**(`value`): `void`
 
@@ -383,7 +369,7 @@ IoColorBase.textNode
 
 #### Defined in
 
-[src/core/element.ts:392](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L392)
+[src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
 
 ___
 
@@ -401,7 +387,7 @@ IoColorBase.Properties
 
 #### Defined in
 
-[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
+[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
 ___
 
@@ -419,7 +405,7 @@ IoColorBase.Style
 
 #### Defined in
 
-[src/elements/color/io-color-rgba.ts:9](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-rgba.ts#L9)
+[src/elements/color/io-color-rgba.ts:9](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L9)
 
 ## Methods
 
@@ -446,13 +432,13 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[src/core/element.ts:371](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L371)
+[src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
 
 ___
 
-### \_onValueInput
+### \_onNumberValueInput
 
-**_onValueInput**(`event`): `void`
+**_onNumberValueInput**(`event`): `void`
 
 #### Parameters
 
@@ -466,7 +452,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-rgba.ts:30](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-rgba.ts#L30)
+[src/elements/color/io-color-rgba.ts:29](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L29)
 
 ___
 
@@ -494,7 +480,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:362](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L362)
+[src/core/node.ts:361](https://github.com/io-gui/io/blob/main/src/core/node.ts#L361)
 
 ___
 
@@ -518,7 +504,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:396](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L396)
+[src/core/element.ts:401](https://github.com/io-gui/io/blob/main/src/core/element.ts#L401)
 
 ___
 
@@ -546,7 +532,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:331](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L331)
+[src/core/node.ts:330](https://github.com/io-gui/io/blob/main/src/core/node.ts#L330)
 
 ___
 
@@ -567,7 +553,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/color/io-color-rgba.ts:41](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-rgba.ts#L41)
+[src/elements/color/io-color-rgba.ts:41](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L41)
 
 ___
 
@@ -587,7 +573,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L267)
+[src/core/element.ts:280](https://github.com/io-gui/io/blob/main/src/core/element.ts#L280)
 
 ___
 
@@ -605,7 +591,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:425](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L425)
+[src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src/core/element.ts#L430)
 
 ___
 
@@ -625,7 +611,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:275](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L275)
+[src/core/element.ts:288](https://github.com/io-gui/io/blob/main/src/core/element.ts#L288)
 
 ___
 
@@ -654,7 +640,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:387](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L387)
+[src/core/node.ts:386](https://github.com/io-gui/io/blob/main/src/core/node.ts#L386)
 
 ___
 
@@ -674,7 +660,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L273)
+[src/core/node.ts:272](https://github.com/io-gui/io/blob/main/src/core/node.ts#L272)
 
 ___
 
@@ -694,7 +680,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:283](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L283)
+[src/core/node.ts:282](https://github.com/io-gui/io/blob/main/src/core/node.ts#L282)
 
 ___
 
@@ -715,32 +701,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:394](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L394)
-
-___
-
-### disposeDeep
-
-**disposeDeep**(`host`, `child`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `host` | `HTMLElement` |
-| `child` | `any` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[IoColorBase](IoColorBase.md).[disposeDeep](IoColorBase.md#disposedeep)
-
-#### Defined in
-
-[src/core/element.ts:291](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L291)
+[src/core/node.ts:393](https://github.com/io-gui/io/blob/main/src/core/node.ts#L393)
 
 ___
 
@@ -758,7 +719,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:22](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L22)
+[src/elements/color/io-color-base.ts:22](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L22)
 
 ___
 
@@ -785,7 +746,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:248](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L248)
+[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
 
 ___
 
@@ -803,7 +764,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:418](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L418)
+[src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src/core/element.ts#L423)
 
 ___
 
@@ -830,7 +791,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:322](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L322)
+[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
 
 ___
 
@@ -857,7 +818,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:301](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L301)
+[src/core/node.ts:300](https://github.com/io-gui/io/blob/main/src/core/node.ts#L300)
 
 ___
 
@@ -885,7 +846,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L267)
+[src/core/node.ts:266](https://github.com/io-gui/io/blob/main/src/core/node.ts#L266)
 
 ___
 
@@ -913,7 +874,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:376](https://github.com/io-gui/io/blob/main/src/core/node.ts#L376)
 
 ___
 
@@ -931,7 +892,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:50](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L50)
+[src/elements/color/io-color-base.ts:50](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L50)
 
 ___
 
@@ -949,7 +910,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:40](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L40)
+[src/elements/color/io-color-base.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L40)
 
 ___
 
@@ -967,7 +928,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:30](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L30)
+[src/elements/color/io-color-base.ts:30](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L30)
 
 ___
 
@@ -994,7 +955,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/element.ts:409](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L409)
+[src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
 
 ___
 
@@ -1021,7 +982,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:230](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L230)
+[src/core/node.ts:229](https://github.com/io-gui/io/blob/main/src/core/node.ts#L229)
 
 ___
 
@@ -1049,13 +1010,13 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:131](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L131)
+[src/core/node.ts:129](https://github.com/io-gui/io/blob/main/src/core/node.ts#L129)
 
 ___
 
 ### template
 
-**template**(`vDOM`, `host?`): `void`
+**template**(`vDOM`, `host?`, `cache?`): `void`
 
 Renders DOM from virtual DOM arrays.
 
@@ -1065,6 +1026,7 @@ Renders DOM from virtual DOM arrays.
 | :------ | :------ | :------ |
 | `vDOM` | `any`[] | Array of vDOM children. |
 | `host?` | `HTMLElement` | Optional template target. |
+| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
 
 #### Returns
 
@@ -1076,7 +1038,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[src/core/element.ts:285](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L285)
+[src/core/element.ts:300](https://github.com/io-gui/io/blob/main/src/core/element.ts#L300)
 
 ___
 
@@ -1104,13 +1066,13 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:292](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L292)
+[src/core/node.ts:291](https://github.com/io-gui/io/blob/main/src/core/node.ts#L291)
 
 ___
 
 ### traverse
 
-**traverse**(`vChildren`, `host?`): `void`
+**traverse**(`vChildren`, `host?`, `cache?`): `void`
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
@@ -1121,6 +1083,7 @@ TODO: test element.traverse() function!
 | :------ | :------ | :------ |
 | `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
 | `host?` | `HTMLElement` | Optional template target. |
+| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
 
 #### Returns
 
@@ -1132,7 +1095,7 @@ TODO: test element.traverse() function!
 
 #### Defined in
 
-[src/core/element.ts:315](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L315)
+[src/core/element.ts:313](https://github.com/io-gui/io/blob/main/src/core/element.ts#L313)
 
 ___
 
@@ -1158,7 +1121,7 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:346](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L346)
+[src/core/node.ts:345](https://github.com/io-gui/io/blob/main/src/core/node.ts#L345)
 
 ___
 
@@ -1176,7 +1139,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:67](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L67)
+[src/elements/color/io-color-base.ts:67](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L67)
 
 ___
 
@@ -1194,7 +1157,7 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:61](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L61)
+[src/elements/color/io-color-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L61)
 
 ___
 
@@ -1212,4 +1175,4 @@ ___
 
 #### Defined in
 
-[src/elements/color/io-color-base.ts:26](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-base.ts#L26)
+[src/elements/color/io-color-base.ts:26](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L26)

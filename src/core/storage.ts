@@ -12,7 +12,7 @@ class EmulatedLocalStorage {
   }
   get permited() {
     try {
-      return self.localStorage.getItem('io-storage-user-permitted') === 'true';
+      return self.localStorage.getItem('IoStorage:user-permitted') === 'true';
     } catch (error) {
       console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
     }
@@ -20,13 +20,13 @@ class EmulatedLocalStorage {
   }
   set permited(value: boolean) {
     try {
-      self.localStorage.setItem('io-storage-user-permitted', String(value));
+      self.localStorage.setItem('IoStorage:user-permitted', String(value));
       if (this.permited) {
         this.store.forEach((value: unknown, key: string) => {
           self.localStorage.setItem(key, String(value));
           this.store.delete(key);
         });
-        console.log('IoStorage: Saved localStorage state.');
+        console.log('IoStorage: localStorage permission saved.');
       }
     } catch (error) {
       console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
@@ -34,7 +34,7 @@ class EmulatedLocalStorage {
   }
   setItem(key: string, value: unknown) {
     const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
-    if (key === 'io-storage-user-permitted') {
+    if (key === 'IoStorage:user-permitted') {
       this.permited = value === 'true';
       return;
     }
@@ -42,12 +42,8 @@ class EmulatedLocalStorage {
       self.localStorage.setItem(key, strValue);
     } else {
       this.store.set(key, strValue);
-      if (!this.warned) {
-        if (!this.permited) {
-          console.warn('IoStorage: localStorage permission denied by user.');
-        } else {
-          console.warn('IoStorage: localStorage pending permission by user.');
-        }
+      if (!this.warned && !this.permited) {
+        console.warn('IoStorage: localStorage permission not set.');
         this.warned = true;
       }
     }
@@ -154,7 +150,7 @@ export class IoStorageNode extends IoNode {
           break;
         }
         case 'local': {
-          const localValue = localStorage.getItem('io-storage:' + props.key);
+          const localValue = localStorage.getItem('IoStorage:' + props.key);
           if (localValue) {
             props.value = JSON.parse(localValue);
           }
@@ -187,7 +183,7 @@ export class IoStorageNode extends IoNode {
         break;
       }
       case 'local': {
-        localStorage.removeItem('io-storage:' + this.key);
+        localStorage.removeItem('IoStorage:' + this.key);
         break;
       }
     }
@@ -202,9 +198,9 @@ export class IoStorageNode extends IoNode {
       }
       case 'local': {
         if (this.value === null || this.value === undefined) {
-          localStorage.removeItem('io-storage:' + this.key);
+          localStorage.removeItem('IoStorage:' + this.key);
         } else {
-          localStorage.setItem('io-storage:' + this.key, JSON.stringify(this.value));
+          localStorage.setItem('IoStorage:' + this.key, JSON.stringify(this.value));
         }
         break;
       }

@@ -1,4 +1,4 @@
-import { MenuItem } from './menu-item.js';
+import { MenuItem, MenuItemArgsWeak } from './menu-item.js';
 import { MenuOptions } from './menu-options.js';
 
 const testOptions = [
@@ -17,7 +17,12 @@ const testOptions = [
     {value: 'bar', options: [null, undefined, NaN]},
     {value: 'buzz', options: [null, undefined, NaN]},
   ]},
-];
+  {value: 'anchors', options: [
+    {value: 'anchor1', mode: 'anchor'},
+    {value: 'anchor2', mode: 'anchor'},
+    {value: 'anchor3', mode: 'anchor'},
+  ]},
+] as MenuItemArgsWeak[];
 
 const eventStack: string[] = [];
 
@@ -27,16 +32,16 @@ export default class {
       it('Should initialize with correct default values', () => {
         const options = new MenuOptions();
         chai.expect(options.path).to.be.eql('');
-        chai.expect(options.root).to.be.equal(undefined);
-        chai.expect(options.leaf).to.be.equal(undefined);
+        chai.expect(options.first).to.be.equal(undefined);
+        chai.expect(options.last).to.be.equal(undefined);
         chai.expect(options.delimiter).to.be.equal(',');
         chai.expect(options.length).to.be.equal(0);
       });
       it('Should initialize correctly from constructor arguments', () => {
         let options = new MenuOptions([1,'2',null]);
         chai.expect(options.path).to.be.eql('');
-        chai.expect(options.root).to.be.equal(undefined);
-        chai.expect(options.leaf).to.be.equal(undefined);
+        chai.expect(options.first).to.be.equal(undefined);
+        chai.expect(options.last).to.be.equal(undefined);
         chai.expect(options.delimiter).to.be.equal(',');
         chai.expect(options.length).to.be.equal(3);
         chai.expect(options[0].value).to.be.equal(1);
@@ -58,15 +63,15 @@ export default class {
         chai.expect(options[1].value).to.be.equal('2');
         chai.expect(options[1].label).to.be.equal('two');
       });
-      it('Should initialize correctly from constructor arguments including root, or path propetty', () => {
-        let options = new MenuOptions([1, '2', null], {root: '2'} as any);
+      it('Should initialize correctly from constructor arguments including first, or path propetty', () => {
+        let options = new MenuOptions([1, '2', null], {first: '2'} as any);
         chai.expect(options.path).to.be.equal('2');
-        chai.expect(options.leaf).to.be.equal('2');
+        chai.expect(options.last).to.be.equal('2');
         chai.expect(options[1].selected).to.be.eql(true);
 
         options = new MenuOptions([1, '2', null], {path: '1'} as any);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
         chai.expect(options[0].selected).to.be.eql(true);
       });
       it('Should initialize suboptions from constructor arguments', () => {
@@ -85,81 +90,81 @@ export default class {
         chai.expect(options.getItem(1)).to.be.equal(subItem1);
         chai.expect(options.getItem(2)).to.be.equal(subItem2);
       });
-      it('Should update `path`, `root` and `leaf` properties when items are selected', () => {
+      it('Should update `path`, `first` and `last` properties when items are selected', () => {
         const options = new MenuOptions([1, 2, 3]);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options[1].selected = true;
         chai.expect(options.path).to.be.equal('2');
         chai.expect(options[0].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal(2);
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal(2);
 
         options[2].selected = true;
         chai.expect(options.path).to.be.equal('3');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.equal(3);
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.equal(3);
       });
-      it('Should update `root`, `leaf` and items\' `selected` properties when `path` property is set', () => {
+      it('Should update `first`, `last` and items\' `selected` properties when `path` property is set', () => {
         const options = new MenuOptions([1, {value: 2, label: 'two'}, 3]);
         options.path = '1';
         chai.expect(options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options.path = 'two';
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal(2);
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal(2);
 
         options.path = '3';
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[2].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.equal(3);
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.equal(3);
       });
-      it('Should update `leaf`, `path` and items\' `selected` properties when `root` property is set', () => {
+      it('Should update `last`, `path` and items\' `selected` properties when `first` property is set', () => {
         const options = new MenuOptions([1, {value: 2, label: 'two'}, 3]);
-        options.root = 1;
+        options.first = 1;
         chai.expect(options.path).to.be.equal('1');
         chai.expect(options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
-        options.root = 2;
+        options.first = 2;
         chai.expect(options.path).to.be.equal('two');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal(2);
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal(2);
 
-        options.root = 3;
+        options.first = 3;
         chai.expect(options.path).to.be.equal('3');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[2].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.equal(3);
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.equal(3);
       });
-      it('Should update `root`, `leaf`, `path` properties only when items with `select="pick"` are selected', () => {
-        const options = new MenuOptions([1, {value: 2, select: 'toggle'}, 3]);
+      it('Should update `first`, `last`, `path` properties only when items with `mode="pick"` are selected', () => {
+        const options = new MenuOptions([1, {value: 2, mode: 'toggle'}, 3]);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options[1].selected = true;
         chai.expect(options[0].selected).to.be.equal(true);
         chai.expect(options.path).to.be.equal('1');
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options[2].selected = true;
         chai.expect(options[0].selected).to.be.equal(false);
@@ -170,50 +175,50 @@ export default class {
         options[1].selected = false;
         chai.expect(options.path).to.be.equal('3');
         chai.expect(options[2].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.equal(3);
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.equal(3);
 
-        options.root = 2;
+        options.first = 2;
         chai.expect(options.path).to.be.equal('3');
         chai.expect(options[2].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal(3);
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal(3);
 
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options.path = '2';
         chai.expect(options[0].selected).to.be.equal(true);
         chai.expect(options[1].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
       });
-      it('Should update deep `path`, `root` and `leaf` string when items are selected', () => {
+      it('Should update deep `first`, `last`, `anchor` and `path` string when items are selected', () => {
         const options = new MenuOptions(testOptions);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options[1].options[1].selected = true;
         chai.expect(options.path).to.be.equal('2,bar');
         chai.expect(options[1].options.path).to.be.equal('bar');
         chai.expect(options[0].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal('bar');
-        chai.expect(options[1].options.root).to.be.equal('bar');
-        chai.expect(options[1].options.leaf).to.be.equal('bar');
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal('bar');
+        chai.expect(options[1].options.first).to.be.equal('bar');
+        chai.expect(options[1].options.last).to.be.equal('bar');
 
         options[1].options[0].selected = true;
         chai.expect(options.path).to.be.equal('2,foo');
         chai.expect(options[1].options.path).to.be.equal('foo');
         chai.expect(options[1].options[1].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal('foo');
-        chai.expect(options[1].options.root).to.be.equal('foo');
-        chai.expect(options[1].options.leaf).to.be.equal('foo');
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal('foo');
+        chai.expect(options[1].options.first).to.be.equal('foo');
+        chai.expect(options[1].options.last).to.be.equal('foo');
 
         options[2].options[2].options[2].selected = true;
         chai.expect(options.path).to.be.equal('3,buzz,NaN');
@@ -224,12 +229,12 @@ export default class {
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.NaN;
-        chai.expect(options[2].options.root).to.be.equal('buzz');
-        chai.expect(options[2].options.leaf).to.be.NaN;
-        chai.expect(options[2].options[2].options.root).to.be.NaN;
-        chai.expect(options[2].options[2].options.leaf).to.be.NaN;
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.NaN;
+        chai.expect(options[2].options.first).to.be.equal('buzz');
+        chai.expect(options[2].options.last).to.be.NaN;
+        chai.expect(options[2].options[2].options.first).to.be.NaN;
+        chai.expect(options[2].options[2].options.last).to.be.NaN;
 
         options[2].selected = false;
         chai.expect(options[2].options[2].selected).to.be.equal(false);
@@ -237,12 +242,12 @@ export default class {
         chai.expect(options.path).to.be.equal('');
         chai.expect(options[2].options.path).to.be.equal('');
         chai.expect(options[2].options[2].options.path).to.be.equal('');
-        chai.expect(options.root).to.be.equal(undefined);
-        chai.expect(options.leaf).to.be.equal(undefined);
-        chai.expect(options[2].options.root).to.be.equal(undefined);
-        chai.expect(options[2].options.leaf).to.be.equal(undefined);
-        chai.expect(options[2].options[2].options.root).to.be.equal(undefined);
-        chai.expect(options[2].options[2].options.leaf).to.be.equal(undefined);
+        chai.expect(options.first).to.be.equal(undefined);
+        chai.expect(options.last).to.be.equal(undefined);
+        chai.expect(options[2].options.first).to.be.equal(undefined);
+        chai.expect(options[2].options.last).to.be.equal(undefined);
+        chai.expect(options[2].options[2].options.first).to.be.equal(undefined);
+        chai.expect(options[2].options[2].options.last).to.be.equal(undefined);
 
         options[0].selected = true;
         chai.expect(options[1].selected).to.be.equal(false);
@@ -254,146 +259,175 @@ export default class {
         chai.expect(options[1].options.path).to.be.equal('');
         chai.expect(options[2].options.path).to.be.equal('');
         chai.expect(options[2].options[2].options.path).to.be.equal('');
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
+
+        options[3].options[1].selected = true;
+        chai.expect(options[0].selected).to.be.equal(false);
+        chai.expect(options[3].selected).to.be.equal(true);
+        chai.expect(options.path).to.be.equal('anchors,anchor2');
+        chai.expect(options.first).to.be.equal('anchors');
+        chai.expect(options.last).to.be.equal('anchors');
+        chai.expect(options.anchor).to.be.equal('anchor2');
+        chai.expect(options[3].options.path).to.be.equal('anchor2');
+        chai.expect(options[3].options.first).to.be.equal(undefined);
+        chai.expect(options[3].options.last).to.be.equal(undefined);
+        chai.expect(options[3].options.anchor).to.be.equal('anchor2');
       });
-      it('Should update deep `root`, `leaf` and items\' `selected` properties when `path` property is set', () => {
+      it('Should update deep `first`, `last`, `anchor` and items\' `selected` properties when `path` property is set', () => {
         const options = new MenuOptions(testOptions);
         options.path = '1';
         chai.expect(options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
 
         options.path = '2,bar';
-        chai.expect(options[1].path).to.be.equal('bar');
+        chai.expect(options[1].options.path).to.be.equal('bar');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(true);
         chai.expect(options[1].options[1].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal('bar');
-        chai.expect(options[1].options.root).to.be.equal('bar');
-        chai.expect(options[1].options.leaf).to.be.equal('bar');
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal('bar');
+        chai.expect(options[1].options.first).to.be.equal('bar');
+        chai.expect(options[1].options.last).to.be.equal('bar');
 
         options.path = '1,foo';
-        chai.expect(options[1].path).to.be.equal('');
-        chai.expect(options[0].path).to.be.equal('foo');
+        chai.expect(options[1].options.path).to.be.equal('');
+        chai.expect(options[0].options.path).to.be.equal('foo');
         chai.expect(options[0].selected).to.be.equal(true);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
         chai.expect(options[0].options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal('foo');
-        chai.expect(options[1].options.root).to.be.equal(undefined);
-        chai.expect(options[1].options.leaf).to.be.equal(undefined);
-        chai.expect(options[0].options.root).to.be.equal('foo');
-        chai.expect(options[0].options.leaf).to.be.equal('foo');
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal('foo');
+        chai.expect(options[1].options.first).to.be.equal(undefined);
+        chai.expect(options[1].options.last).to.be.equal(undefined);
+        chai.expect(options[0].options.first).to.be.equal('foo');
+        chai.expect(options[0].options.last).to.be.equal('foo');
 
         options.path = '1,buzz';
-        chai.expect(options[1].path).to.be.equal('');
-        chai.expect(options[0].path).to.be.equal('buzz');
+        chai.expect(options[1].options.path).to.be.equal('');
+        chai.expect(options[0].options.path).to.be.equal('buzz');
         chai.expect(options[0].selected).to.be.equal(true);
         chai.expect(options[2].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
         chai.expect(options[0].options[2].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal('buzz');
-        chai.expect(options[0].options.root).to.be.equal('buzz');
-        chai.expect(options[0].options.leaf).to.be.equal('buzz');
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal('buzz');
+        chai.expect(options[0].options.first).to.be.equal('buzz');
+        chai.expect(options[0].options.last).to.be.equal('buzz');
 
         options.path = '';
-        chai.expect(options[0].path).to.be.equal('');
+        chai.expect(options[0].options.path).to.be.equal('');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[0].options[0].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(undefined);
-        chai.expect(options.leaf).to.be.equal(undefined);
-        chai.expect(options[0].options.root).to.be.equal(undefined);
-        chai.expect(options[0].options.leaf).to.be.equal(undefined);
+        chai.expect(options.first).to.be.equal(undefined);
+        chai.expect(options.last).to.be.equal(undefined);
+        chai.expect(options[0].options.first).to.be.equal(undefined);
+        chai.expect(options[0].options.last).to.be.equal(undefined);
 
         options.path = '3,buzz,NaN';
-        chai.expect(options[1].path).to.be.equal('');
-        chai.expect(options[2].path).to.be.equal('buzz,NaN');
-        chai.expect(options[2].options[2].path).to.be.equal('NaN');
+        chai.expect(options[1].options.path).to.be.equal('');
+        chai.expect(options[2].options.path).to.be.equal('buzz,NaN');
+        chai.expect(options[2].options[2].options.path).to.be.equal('NaN');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
         chai.expect(options[2].selected).to.be.equal(true);
         chai.expect(options[2].options[2].selected).to.be.equal(true);
         chai.expect(options[2].options[2].options[2].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.NaN;
-        chai.expect(options[1].options.root).to.be.equal(undefined);
-        chai.expect(options[1].options.leaf).to.be.equal(undefined);
-        chai.expect(options[2].options.root).to.be.equal('buzz');
-        chai.expect(options[2].options.leaf).to.be.NaN;
-        chai.expect(options[2].options[2].options.root).to.be.NaN;
-        chai.expect(options[2].options[2].options.leaf).to.be.NaN;
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.NaN;
+        chai.expect(options[1].options.first).to.be.equal(undefined);
+        chai.expect(options[1].options.last).to.be.equal(undefined);
+        chai.expect(options[2].options.first).to.be.equal('buzz');
+        chai.expect(options[2].options.last).to.be.NaN;
+        chai.expect(options[2].options[2].options.first).to.be.NaN;
+        chai.expect(options[2].options[2].options.last).to.be.NaN;
 
         options.path = '3,buzz,null';
-        chai.expect(options[1].path).to.be.equal('');
-        chai.expect(options[2].path).to.be.equal('buzz,null');
-        chai.expect(options[2].options[2].path).to.be.equal('null');
+        chai.expect(options[1].options.path).to.be.equal('');
+        chai.expect(options[2].options.path).to.be.equal('buzz,null');
+        chai.expect(options[2].options[2].options.path).to.be.equal('null');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
         chai.expect(options[2].selected).to.be.equal(true);
         chai.expect(options[2].options[2].selected).to.be.equal(true);
         chai.expect(options[2].options[2].options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.equal(null);
-        chai.expect(options[1].options.root).to.be.equal(undefined);
-        chai.expect(options[1].options.leaf).to.be.equal(undefined);
-        chai.expect(options[2].options.root).to.be.equal('buzz');
-        chai.expect(options[2].options.leaf).to.be.equal(null);
-        chai.expect(options[2].options[2].options.root).to.be.equal(null);
-        chai.expect(options[2].options[2].options.leaf).to.be.equal(null);
-      });
-      it('Should update deep `leaf`, `path` and items\' `selected` properties when `root` property is set', () => {
-        const options = new MenuOptions(testOptions);
-        options.root = 1;
-        chai.expect(options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(1);
-        chai.expect(options.leaf).to.be.equal(1);
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.equal(null);
+        chai.expect(options[1].options.first).to.be.equal(undefined);
+        chai.expect(options[1].options.last).to.be.equal(undefined);
+        chai.expect(options[2].options.first).to.be.equal('buzz');
+        chai.expect(options[2].options.last).to.be.equal(null);
+        chai.expect(options[2].options[2].options.first).to.be.equal(null);
+        chai.expect(options[2].options[2].options.last).to.be.equal(null);
 
-        options[1].options.root = 'bar';
-        chai.expect(options[1].path).to.be.equal('bar');
+        options.path = 'anchors,anchor1';
+        chai.expect(options[2].options.path).to.be.equal('');
+        chai.expect(options[2].selected).to.be.equal(false);
+        chai.expect(options[3].options.path).to.be.equal('anchor1');
+        chai.expect(options[3].options.first).to.be.equal(undefined);
+        chai.expect(options[3].options.last).to.be.equal(undefined);
+        chai.expect(options[3].options.anchor).to.be.equal('anchor1');
+        chai.expect(options[3].options[0].selected).to.be.equal(true);
+        chai.expect(options.first).to.be.equal('anchors');
+        chai.expect(options.last).to.be.equal('anchors');
+        chai.expect(options.anchor).to.be.equal('anchor1');
+
+        options.path = 'anchors';
+        chai.expect(options.first).to.be.equal('anchors');
+        chai.expect(options.last).to.be.equal('anchors');
+        chai.expect(options.anchor).to.be.equal(undefined);
+      });
+      it('Should update deep `last`, `path` and items\' `selected` properties when `first` property is set', () => {
+        const options = new MenuOptions(testOptions);
+        options.first = 1;
+        chai.expect(options[0].selected).to.be.equal(true);
+        chai.expect(options.first).to.be.equal(1);
+        chai.expect(options.last).to.be.equal(1);
+
+        options[1].options.first = 'bar';
+        chai.expect(options[1].options.path).to.be.equal('bar');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(true);
         chai.expect(options[1].options[1].selected).to.be.equal(true);
         chai.expect(options[2].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal('bar');
-        chai.expect(options[1].options.root).to.be.equal('bar');
-        chai.expect(options[1].options.leaf).to.be.equal('bar');
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal('bar');
+        chai.expect(options[1].options.first).to.be.equal('bar');
+        chai.expect(options[1].options.last).to.be.equal('bar');
 
-        options.root = undefined;
-        chai.expect(options[1].path).to.be.equal('');
+        options.first = undefined;
+        chai.expect(options[1].options.path).to.be.equal('');
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
-        chai.expect(options.root).to.be.equal(undefined);
-        chai.expect(options.leaf).to.be.equal(undefined);
-        chai.expect(options[1].options.root).to.be.equal(undefined);
-        chai.expect(options[1].options.leaf).to.be.equal(undefined);
+        chai.expect(options.first).to.be.equal(undefined);
+        chai.expect(options.last).to.be.equal(undefined);
+        chai.expect(options[1].options.first).to.be.equal(undefined);
+        chai.expect(options[1].options.last).to.be.equal(undefined);
 
-        options[2].options[2].options.root = null;
-        chai.expect(options[1].path).to.be.equal('');
-        chai.expect(options[2].path).to.be.equal('buzz,null');
-        chai.expect(options[2].options[2].path).to.be.equal('null');
+        options[2].options[2].options.first = null;
+        chai.expect(options[1].options.path).to.be.equal('');
+        chai.expect(options[2].options.path).to.be.equal('buzz,null');
+        chai.expect(options[2].options[2].options.path).to.be.equal('null');
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[1].selected).to.be.equal(false);
         chai.expect(options[1].options[1].selected).to.be.equal(false);
         chai.expect(options[2].selected).to.be.equal(true);
         chai.expect(options[2].options[2].selected).to.be.equal(true);
         chai.expect(options[2].options[2].options[0].selected).to.be.equal(true);
-        chai.expect(options.root).to.be.equal(3);
-        chai.expect(options.leaf).to.be.equal(null);
-        chai.expect(options[1].options.root).to.be.equal(undefined);
-        chai.expect(options[1].options.leaf).to.be.equal(undefined);
-        chai.expect(options[2].options.root).to.be.equal('buzz');
-        chai.expect(options[2].options.leaf).to.be.equal(null);
-        chai.expect(options[2].options[2].options.root).to.be.equal(null);
-        chai.expect(options[2].options[2].options.leaf).to.be.equal(null);
+        chai.expect(options.first).to.be.equal(3);
+        chai.expect(options.last).to.be.equal(null);
+        chai.expect(options[1].options.first).to.be.equal(undefined);
+        chai.expect(options[1].options.last).to.be.equal(undefined);
+        chai.expect(options[2].options.first).to.be.equal('buzz');
+        chai.expect(options[2].options.last).to.be.equal(null);
+        chai.expect(options[2].options[2].options.first).to.be.equal(null);
+        chai.expect(options[2].options[2].options.last).to.be.equal(null);
       });
-      it('Should update `path`, `root` and `leaf` on initialization when selected items are provided.', () => {
+      it('Should update `path`, `first` and `last` on initialization when selected items are provided.', () => {
         const testOptionsSelected = JSON.parse(JSON.stringify(testOptions));
         testOptionsSelected[1].options[2].options[0] = {value: null, selected: true};
 
@@ -401,45 +435,45 @@ export default class {
 
         chai.expect(options[1].selected).to.be.equal(true);
         chai.expect(options.path).to.be.equal('2,buzz,null');
-        chai.expect(options.root).to.be.equal(2);
-        chai.expect(options.leaf).to.be.equal(null);
+        chai.expect(options.first).to.be.equal(2);
+        chai.expect(options.last).to.be.equal(null);
 
         chai.expect(options[1].options[2].selected).to.be.equal(true);
         chai.expect(options[1].options.path).to.be.equal('buzz,null');
-        chai.expect(options[1].options.root).to.be.equal('buzz');
-        chai.expect(options[1].options.leaf).to.be.equal(null);
+        chai.expect(options[1].options.first).to.be.equal('buzz');
+        chai.expect(options[1].options.last).to.be.equal(null);
 
         chai.expect(options[1].options[2].options[0].selected).to.be.equal(true);
         chai.expect(options[1].options[2].options.path).to.be.equal('null');
-        chai.expect(options[1].options[2].options.root).to.be.equal(null);
-        chai.expect(options[1].options[2].options.leaf).to.be.equal(null);
+        chai.expect(options[1].options[2].options.first).to.be.equal(null);
+        chai.expect(options[1].options[2].options.last).to.be.equal(null);
       });
-      it('Should update `path`, `root` and `leaf` properties in correct order and only when necessary.', () => {
+      it('Should update `path`, `first` and `last` properties in correct order and only when necessary.', () => {
         const options = new MenuOptions(testOptions);
         options.addEventListener('changed', () => { eventStack.push('change'); });
         options.addEventListener('path-changed', () => { eventStack.push('path changed: ' + options.path); });
-        options.addEventListener('root-changed', () => { eventStack.push('rootChanged: ' + options.root); });
-        options.addEventListener('leaf-changed', () => { eventStack.push('leafChanged: ' + options.leaf); });
+        options.addEventListener('first-changed', () => { eventStack.push('firstChanged: ' + options.first); });
+        options.addEventListener('last-changed', () => { eventStack.push('lastChanged: ' + options.last); });
 
         eventStack.length = 0;
         options[0].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 1', 'rootChanged: 1', 'leafChanged: 1']);
+        chai.expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'lastChanged: 1']);
 
         eventStack.length = 0;
         options[1].options[1].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 2,bar', 'rootChanged: 2', 'leafChanged: bar']);
+        chai.expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'lastChanged: bar']);
 
         eventStack.length = 0;
         options[2].options[2].options[2].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'rootChanged: 3', 'leafChanged: NaN']);
+        chai.expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'lastChanged: NaN']);
 
         eventStack.length = 0;
         options[2].selected = false;
-        chai.expect(eventStack).to.be.eql(['path changed: ', 'rootChanged: undefined', 'leafChanged: undefined']);
+        chai.expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'lastChanged: undefined']);
 
         eventStack.length = 0;
         options[2].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 3', 'rootChanged: 3', 'leafChanged: 3']);
+        chai.expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'lastChanged: 3']);
       });
     });
   }

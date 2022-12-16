@@ -73,10 +73,10 @@ export class IoOptionMenu extends IoElement {
 
   optionsChanged(change: Change) {
     if (change.oldValue) {
-      change.oldValue.removeEventListener('leaf-changed', this._onLeafChanged);
+      change.oldValue.removeEventListener('last-changed', this._onLeafChanged);
     }
     if (change.value) {
-      change.value.addEventListener('leaf-changed', this._onLeafChanged);
+      change.value.addEventListener('last-changed', this._onLeafChanged);
     }
     const selectedItem = this.options.getItem(this.value);
     if (selectedItem) selectedItem.selected = true;
