@@ -12,7 +12,7 @@ Core `IoElement` class.
 
   ↳↳ [`IoGl`](IoGl.md)
 
-  ↳↳ [`IoLayer`](IoLayer.md)
+  ↳↳ [`IoOverlay`](IoOverlay.md)
 
   ↳↳ [`IoLabel`](IoLabel.md)
 

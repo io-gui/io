@@ -130,6 +130,26 @@ ___
 
 ___
 
+### collapseWidth
+
+ **collapseWidth**: `number`
+
+#### Defined in
+
+[src/elements/content/io-md-navigator.ts:71](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L71)
+
+___
+
+### collapsed
+
+ **collapsed**: `boolean`
+
+#### Defined in
+
+[src/elements/content/io-md-navigator.ts:68](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L68)
+
+___
+
 ### contenteditable
 
  **contenteditable**: `boolean`
@@ -150,7 +170,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-md-navigator.ts:70](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L70)
+[src/elements/content/io-md-navigator.ts:64](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L64)
 
 ___
 
@@ -494,7 +514,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-md-navigator.ts:78](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L78)
+[src/elements/content/io-md-navigator.ts:77](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L77)
 
 ___
 
@@ -760,6 +780,20 @@ Node should be listening for this event if it has an observed object property
 #### Defined in
 
 [src/core/node.ts:300](https://github.com/io-gui/io/blob/main/src/core/node.ts#L300)
+
+___
+
+### onResized
+
+**onResized**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/content/io-md-navigator.ts:73](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-navigator.ts#L73)
 
 ___
 

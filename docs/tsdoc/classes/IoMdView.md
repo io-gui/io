@@ -484,7 +484,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:169](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L169)
+[src/elements/content/io-md-view.ts:170](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L170)
 
 ___
 
@@ -901,7 +901,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:162](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L162)
+[src/elements/content/io-md-view.ts:163](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L163)
 
 ___
 

@@ -1,5 +1,5 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {IoLayerSingleton as Layer} from '../../core/layer.js';
+import {IoOverlaySingleton as Overlay} from '../../core/overlay.js';
 import {IoMenuOptions} from './io-menu-options.js';
 import {getMenuDescendants, IoMenuItem} from './io-menu-item.js';
 
@@ -37,7 +37,7 @@ export class IoContextMenu extends IoElement {
   }
   connectedCallback() {
     super.connectedCallback();
-    Layer.addEventListener('pointermove', this._onLayerPointermove);
+    Overlay.addEventListener('pointermove', this._onOverlayPointermove);
     this._parent = this.parentElement;
     this._parent.style.userSelect = 'none';
     this._parent.style.webkitUserSelect = 'none';
@@ -48,8 +48,8 @@ export class IoContextMenu extends IoElement {
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options && this.$options.parentElement) Layer.removeChild(this.$options);
-    Layer.removeEventListener('pointermove', this._onLayerPointermove);
+    if (this.$options && this.$options.parentElement) Overlay.removeChild(this.$options);
+    Overlay.removeEventListener('pointermove', this._onOverlayPointermove);
     this._parent.style.userSelect = null;
     this._parent.style.webkitUserSelect = null;
     this._parent.style.webkitTouchCallout = null;
@@ -77,22 +77,22 @@ export class IoContextMenu extends IoElement {
     if (this.button === 2) event.preventDefault();
   }
   _onPointerdown(event: PointerEvent) {
-    Layer.x = event.clientX;
-    Layer.y = event.clientY;
+    Overlay.x = event.clientX;
+    Overlay.y = event.clientY;
     this._parent.addEventListener('pointermove', this._onPointermove);
     this._parent.addEventListener('pointerup', this._onPointerup);
     clearTimeout(this._contextTimeout);
     if (event.pointerType !== 'touch') {
       if (event.button === this.button) {
         this.expanded = true;
-        Layer.skipCollapse = true;
+        Overlay.skipCollapse = true;
       }
     } else {
       // iOS Safari contextmenu event emulation.
       event.preventDefault();
       this._contextTimeout = setTimeout(() => {
         this.expanded = true;
-        Layer.skipCollapse = true;
+        Overlay.skipCollapse = true;
       }, 150);
     }
   }
@@ -112,7 +112,7 @@ export class IoContextMenu extends IoElement {
     this._parent.removeEventListener('pointermove', this._onPointermove);
     this._parent.removeEventListener('pointerup', this._onPointerup);
   }
-  _onLayerPointermove(event: PointerEvent) {
+  _onOverlayPointermove(event: PointerEvent) {
     if (this.expanded) this._onPointermove(event);
   }
   _onClick(event: MouseEvent) {
@@ -129,8 +129,8 @@ export class IoContextMenu extends IoElement {
           'on-item-clicked': this._onItemClicked,
         });
       }
-      if (this.$options.parentElement !== Layer) {
-        Layer.appendChild(this.$options);
+      if (this.$options.parentElement !== Overlay) {
+        Overlay.appendChild(this.$options);
       }
       this.$options.setProperties({
         // value: this.bind('value'),

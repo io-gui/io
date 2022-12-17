@@ -165,7 +165,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-collapsable.ts:53](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L53)
+[src/elements/content/io-collapsable.ts:59](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L59)
 
 ___
 
@@ -175,7 +175,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-collapsable.ts:62](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L62)
+[src/elements/content/io-collapsable.ts:68](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L68)
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-collapsable.ts:59](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L59)
+[src/elements/content/io-collapsable.ts:65](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L65)
 
 ___
 
@@ -227,7 +227,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-collapsable.ts:56](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L56)
+[src/elements/content/io-collapsable.ts:62](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L62)
 
 ___
 
@@ -255,7 +255,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-collapsable.ts:65](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L65)
+[src/elements/content/io-collapsable.ts:71](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L71)
 
 ___
 
@@ -485,7 +485,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-collapsable.ts:67](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L67)
+[src/elements/content/io-collapsable.ts:73](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L73)
 
 ___
 

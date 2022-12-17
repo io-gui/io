@@ -1,7 +1,7 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
-import { IoLayerSingleton } from '../../core/layer.js';
+import { IoOverlaySingleton } from '../../core/overlay.js';
 import { IoThemeSingleton } from '../../core/theme.js';
 
 /**
@@ -178,7 +178,7 @@ export class IoNumber extends IoField {
     if (event.which === 17) { // ctrl
       this._expandLadder();
     } else if (event.which === 27 || event.which === 13 || event.which === 32) { // esc || enter || space
-      IoLayerSingleton.expanded = false;
+      IoOverlaySingleton.expanded = false;
     }
   }
   _setFromTextNode() {
@@ -487,7 +487,7 @@ export class IoNumberLadder extends IoElement {
         const rect = src.getBoundingClientRect();
         const selfRect = this.getBoundingClientRect();
         // NOTE: layerRect fix for Safari zoom.
-        const layerRect = IoLayerSingleton.getBoundingClientRect();
+        const layerRect = IoOverlaySingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
         this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.iotLineHeight / 2 + IoThemeSingleton.iotSpacing) + 'px';
@@ -558,4 +558,4 @@ export class IoNumberLadder extends IoElement {
 }
 
 export const IoNumberLadderSingleton = new IoNumberLadder();
-IoLayerSingleton.appendChild(IoNumberLadderSingleton as unknown as HTMLElement);
+IoOverlaySingleton.appendChild(IoNumberLadderSingleton as unknown as HTMLElement);

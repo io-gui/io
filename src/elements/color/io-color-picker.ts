@@ -1,7 +1,7 @@
 import { RegisterIoElement, IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoColorPanelSingleton } from './io-color-panel.js';
-import { IoLayerSingleton } from '../../core/layer.js';
+import { IoOverlaySingleton } from '../../core/overlay.js';
 import './io-color-swatch.js';
 
 @RegisterIoElement
@@ -72,7 +72,7 @@ export class IoColorPicker extends IoElement {
   expand() {
     IoColorPanelSingleton.value = this.value;
     IoColorPanelSingleton.expanded = true;
-    IoLayerSingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'down', this.getBoundingClientRect());
+    IoOverlaySingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'down', this.getBoundingClientRect());
     // hook up 'value-input' event dispatch
     IoColorPanelSingleton.addEventListener('value-input', this._onValueSet);
     IoColorPanelSingleton._targetValueSetHandler = this._onValueSet;

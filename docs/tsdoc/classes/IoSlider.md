@@ -609,7 +609,7 @@ IoSliderBase.Frag
 
 #### Defined in
 
-[src/elements/sliders/io-slider.ts:73](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider.ts#L73)
+[src/elements/sliders/io-slider.ts:75](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider.ts#L75)
 
 ___
 

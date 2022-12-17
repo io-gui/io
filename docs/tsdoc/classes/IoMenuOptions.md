@@ -506,7 +506,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:278](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L278)
+[src/elements/menus/io-menu-options.ts:279](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L279)
 
 ___
 
@@ -520,13 +520,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:238](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L238)
+[src/elements/menus/io-menu-options.ts:239](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L239)
 
 ___
 
-### \_onExpandInLayer
+### \_onExpandInOverlay
 
-**_onExpandInLayer**(): `void`
+**_onExpandInOverlay**(): `void`
 
 #### Returns
 
@@ -534,7 +534,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:265](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L265)
+[src/elements/menus/io-menu-options.ts:266](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L266)
 
 ___
 
@@ -689,7 +689,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:299](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L299)
+[src/elements/menus/io-menu-options.ts:300](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L300)
 
 ___
 
@@ -851,7 +851,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:246](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L246)
+[src/elements/menus/io-menu-options.ts:247](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L247)
 
 ___
 
@@ -1052,7 +1052,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:259](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L259)
+[src/elements/menus/io-menu-options.ts:260](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L260)
 
 ___
 

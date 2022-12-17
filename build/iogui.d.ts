@@ -785,13 +785,13 @@ export declare class IoGl extends IoElement {
 }
 export type NudgeDirection = "none" | "pointer" | "up" | "left" | "down" | "right";
 /**
- * This element is designed to be used as a singleton `IoLayerSingleton`.
+ * This element is designed to be used as a singleton `IoOverlaySingleton`.
  * It is a pointer-blocking element covering the entire window at a very high z-index.
  * It is designed to be displayed on top all other elements and contain elements like modals, popovers, floating menus etc.
- * When clicked, IoLayer collapses all child elements by setting their `expanded` property to `false`.
+ * When clicked, IoOverlay collapses all child elements by setting their `expanded` property to `false`.
  * Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
  **/
-export declare class IoLayer extends IoElement {
+export declare class IoOverlay extends IoElement {
 	static get Style(): string;
 	expanded: boolean;
 	skipCollapse: boolean;
@@ -836,7 +836,7 @@ export declare class IoLayer extends IoElement {
 	onChildExpandedDelayed(): void;
 	expandedChanged(): void;
 }
-export declare const IoLayerSingleton: IoLayer;
+export declare const IoOverlaySingleton: IoOverlay;
 declare const MenuOptions_base: {
 	new (...args: any[]): {
 		[x: string]: any;
@@ -1670,7 +1670,7 @@ export declare class IoMenuOptions extends IoElement {
 	_onCollapse(): void;
 	expandedChanged(): void;
 	searchChanged(): void;
-	_onExpandInLayer(): void;
+	_onExpandInOverlay(): void;
 	_onClipHeight(): void;
 	changed(): void;
 }
@@ -1691,8 +1691,8 @@ export declare class IoMenuItem extends IoField {
 	get $parent(): any;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
-	_onLayerPointermove(event: PointerEvent): void;
-	_onLayerPointerup(event: PointerEvent): void;
+	_onOverlayPointermove(event: PointerEvent): void;
+	_onOverlayPointerup(event: PointerEvent): void;
 	_onClick(): void;
 	_onItemClicked(event: PointerEvent): void;
 	_onPointerdown(event: PointerEvent): void;
@@ -1787,7 +1787,7 @@ export declare class IoContextMenu extends IoElement {
 	_onPointerdown(event: PointerEvent): void;
 	_onPointermove(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
-	_onLayerPointermove(event: PointerEvent): void;
+	_onOverlayPointermove(event: PointerEvent): void;
 	_onClick(event: MouseEvent): void;
 	_onCollapse(): void;
 	expandedChanged(): void;

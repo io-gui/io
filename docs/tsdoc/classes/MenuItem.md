@@ -26,7 +26,7 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:64](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L64)
+[src/elements/menus/models/menu-item.ts:60](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L60)
 
 ## Properties
 
@@ -164,6 +164,16 @@ ___
 
 ___
 
+### mode
+
+ **mode**: [`MenuItemSelectType`](../README.md#menuitemselecttype)
+
+#### Defined in
+
+[src/elements/menus/models/menu-item.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L44)
+
+___
+
 ### options
 
  `Optional` **options**: [`MenuOptions`](MenuOptions.md)
@@ -171,16 +181,6 @@ ___
 #### Defined in
 
 [src/elements/menus/models/menu-item.ts:50](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L50)
-
-___
-
-### select
-
- **select**: [`MenuItemSelectType`](../README.md#menuitemselecttype)
-
-#### Defined in
-
-[src/elements/menus/models/menu-item.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L44)
 
 ___
 
@@ -211,20 +211,6 @@ ___
 #### Returns
 
 `boolean`
-
-#### Defined in
-
-[src/elements/menus/models/menu-item.ts:56](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L56)
-
-___
-
-### path
-
-`get` **path**(): `undefined` \| `string`
-
-#### Returns
-
-`undefined` \| `string`
 
 #### Defined in
 
@@ -266,7 +252,7 @@ IoNode.Properties
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:142](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L142)
+[src/elements/menus/models/menu-item.ts:141](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L141)
 
 ___
 
@@ -280,7 +266,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:138](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L138)
+[src/elements/menus/models/menu-item.ts:137](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L137)
 
 ___
 
@@ -384,7 +370,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:164](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L164)
+[src/elements/menus/models/menu-item.ts:163](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L163)
 
 ___
 
@@ -474,7 +460,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:168](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L168)
+[src/elements/menus/models/menu-item.ts:167](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L167)
 
 ___
 
@@ -494,7 +480,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:60](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L60)
+[src/elements/menus/models/menu-item.ts:56](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L56)
 
 ___
 
@@ -607,7 +593,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:146](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L146)
+[src/elements/menus/models/menu-item.ts:145](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L145)
 
 ___
 
@@ -677,7 +663,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:153](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L153)
+[src/elements/menus/models/menu-item.ts:152](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L152)
 
 ___
 
@@ -774,7 +760,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:126](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L126)
+[src/elements/menus/models/menu-item.ts:125](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L125)
 
 ___
 

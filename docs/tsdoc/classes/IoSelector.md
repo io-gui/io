@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:58](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L58)
+[src/elements/content/io-selector.ts:54](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L54)
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:55](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L55)
+[src/elements/content/io-selector.ts:51](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L51)
 
 ___
 
@@ -226,7 +226,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:61](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L61)
+[src/elements/content/io-selector.ts:57](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L57)
 
 ___
 
@@ -250,7 +250,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:49](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L49)
+[src/elements/content/io-selector.ts:45](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L45)
 
 ___
 
@@ -270,11 +270,11 @@ ___
 
 ### select
 
- **select**: ``"root"`` \| ``"leaf"``
+ **select**: ``"first"`` \| ``"last"``
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:52](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L52)
+[src/elements/content/io-selector.ts:48](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L48)
 
 ___
 
@@ -504,7 +504,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:89](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L89)
+[src/elements/content/io-selector.ts:85](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L85)
 
 ___
 
@@ -652,7 +652,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:81](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L81)
+[src/elements/content/io-selector.ts:77](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L77)
 
 ___
 
@@ -672,7 +672,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-selector.ts:66](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L66)
+[src/elements/content/io-selector.ts:62](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L62)
 
 ___
 

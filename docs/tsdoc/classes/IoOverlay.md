@@ -1,22 +1,22 @@
-# Class: IoLayer
+# Class: IoOverlay
 
-This element is designed to be used as a singleton `IoLayerSingleton`.
+This element is designed to be used as a singleton `IoOverlaySingleton`.
 It is a pointer-blocking element covering the entire window at a very high z-index.
 It is designed to be displayed on top all other elements and contain elements like modals, popovers, floating menus etc.
-When clicked, IoLayer collapses all child elements by setting their `expanded` property to `false`.
+When clicked, IoOverlay collapses all child elements by setting their `expanded` property to `false`.
 Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 ## Hierarchy
 
 - [`IoElement`](IoElement.md)
 
-  ↳ **`IoLayer`**
+  ↳ **`IoOverlay`**
 
 ## Constructors
 
 ### constructor
 
-**new IoLayer**(`properties?`)
+**new IoOverlay**(`properties?`)
 
 #### Parameters
 
@@ -30,7 +30,7 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 #### Defined in
 
-[src/core/layer.ts:84](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L84)
+src/core/overlay.ts:84
 
 ## Properties
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:62](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L62)
+src/core/overlay.ts:62
 
 ___
 
@@ -246,7 +246,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:65](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L65)
+src/core/overlay.ts:65
 
 ___
 
@@ -342,7 +342,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:67](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L67)
+src/core/overlay.ts:67
 
 ___
 
@@ -378,7 +378,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/core/layer.ts:29](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L29)
+src/core/overlay.ts:29
 
 ## Methods
 
@@ -419,7 +419,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:103](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L103)
+src/core/overlay.ts:103
 
 ___
 
@@ -439,7 +439,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:106](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L106)
+src/core/overlay.ts:106
 
 ___
 
@@ -459,7 +459,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:109](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L109)
+src/core/overlay.ts:109
 
 ___
 
@@ -479,7 +479,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:95](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L95)
+src/core/overlay.ts:95
 
 ___
 
@@ -499,7 +499,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:112](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L112)
+src/core/overlay.ts:112
 
 ___
 
@@ -547,7 +547,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:195](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L195)
+src/core/overlay.ts:208
 
 ___
 
@@ -782,7 +782,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:217](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L217)
+src/core/overlay.ts:230
 
 ___
 
@@ -869,7 +869,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:117](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L117)
+src/core/overlay.ts:117
 
 ___
 
@@ -893,7 +893,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:143](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L143)
+src/core/overlay.ts:149
 
 ___
 
@@ -916,7 +916,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:151](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L151)
+src/core/overlay.ts:159
 
 ___
 
@@ -940,7 +940,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:135](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L135)
+src/core/overlay.ts:139
 
 ___
 
@@ -964,7 +964,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:126](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L126)
+src/core/overlay.ts:128
 
 ___
 
@@ -1005,7 +1005,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:205](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L205)
+src/core/overlay.ts:218
 
 ___
 
@@ -1019,7 +1019,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:208](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L208)
+src/core/overlay.ts:221
 
 ___
 
@@ -1060,7 +1060,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:92](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L92)
+src/core/overlay.ts:92
 
 ___
 
@@ -1108,7 +1108,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:200](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L200)
+src/core/overlay.ts:213
 
 ___
 
@@ -1185,7 +1185,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:156](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L156)
+src/core/overlay.ts:164
 
 ___
 
@@ -1260,7 +1260,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:89](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L89)
+src/core/overlay.ts:89
 
 ___
 

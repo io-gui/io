@@ -444,9 +444,9 @@ ___
 
 ___
 
-### \_onLayerPointermove
+### \_onOverlayPointermove
 
-**_onLayerPointermove**(`event`): `void`
+**_onOverlayPointermove**(`event`): `void`
 
 #### Parameters
 

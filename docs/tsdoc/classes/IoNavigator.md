@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:81](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L81)
+[src/elements/content/io-navigator.ts:103](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L103)
 
 ___
 
@@ -137,6 +137,26 @@ ___
 #### Defined in
 
 [src/core/element.ts:254](https://github.com/io-gui/io/blob/main/src/core/element.ts#L254)
+
+___
+
+### collapseWidth
+
+ **collapseWidth**: `number`
+
+#### Defined in
+
+[src/elements/content/io-navigator.ts:109](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L109)
+
+___
+
+### collapsed
+
+ **collapsed**: `boolean`
+
+#### Defined in
+
+[src/elements/content/io-navigator.ts:106](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L106)
 
 ___
 
@@ -160,7 +180,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:78](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L78)
+[src/elements/content/io-navigator.ts:100](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L100)
 
 ___
 
@@ -184,7 +204,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:63](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L63)
+[src/elements/content/io-navigator.ts:85](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L85)
 
 ___
 
@@ -236,7 +256,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:69](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L69)
+[src/elements/content/io-navigator.ts:91](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L91)
 
 ___
 
@@ -246,7 +266,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:72](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L72)
+[src/elements/content/io-navigator.ts:97](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L97)
 
 ___
 
@@ -270,7 +290,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:66](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L66)
+[src/elements/content/io-navigator.ts:88](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L88)
 
 ___
 
@@ -290,11 +310,11 @@ ___
 
 ### select
 
- **select**: ``"root"`` \| ``"leaf"``
+ **select**: ``"first"`` \| ``"last"``
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:75](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L75)
+[src/elements/content/io-navigator.ts:94](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L94)
 
 ___
 
@@ -304,7 +324,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:60](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L60)
+[src/elements/content/io-navigator.ts:82](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L82)
 
 ___
 
@@ -406,7 +426,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:12](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L12)
+[src/elements/content/io-navigator.ts:11](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L11)
 
 ## Methods
 
@@ -434,6 +454,20 @@ Update textContent via TextNode is better for layout performance.
 #### Defined in
 
 [src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
+
+___
+
+### \_onSetCollapsed
+
+**_onSetCollapsed**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/content/io-navigator.ts:119](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L119)
 
 ___
 
@@ -534,7 +568,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-navigator.ts:89](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L89)
+[src/elements/content/io-navigator.ts:123](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L123)
 
 ___
 
@@ -694,13 +728,13 @@ ___
 
 `void`
 
-#### Inherited from
+#### Overrides
 
 [IoElement](IoElement.md).[init](IoElement.md#init)
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/elements/content/io-navigator.ts:111](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L111)
 
 ___
 
@@ -800,6 +834,20 @@ Node should be listening for this event if it has an observed object property
 #### Defined in
 
 [src/core/node.ts:300](https://github.com/io-gui/io/blob/main/src/core/node.ts#L300)
+
+___
+
+### onResized
+
+**onResized**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[src/elements/content/io-navigator.ts:114](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator.ts#L114)
 
 ___
 

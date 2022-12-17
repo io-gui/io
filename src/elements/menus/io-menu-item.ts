@@ -2,7 +2,7 @@ import { RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoField } from '../basic/io-field.js';
-import { IoLayerSingleton as Layer } from '../../core/layer.js';
+import { IoOverlaySingleton as Overlay } from '../../core/overlay.js';
 import { IoMenuOptions } from './io-menu-options.js';
 
 /**
@@ -89,20 +89,20 @@ export class IoMenuItem extends IoField {
   connectedCallback() {
     super.connectedCallback();
     // TODO: remove event listeners and find a better way to handle this.
-    Layer.addEventListener('pointermove', this._onLayerPointermove);
-    Layer.addEventListener('pointerup', this._onLayerPointerup);
-    if (this.$options) Layer.appendChild(this.$options as unknown as HTMLElement);
+    Overlay.addEventListener('pointermove', this._onOverlayPointermove);
+    Overlay.addEventListener('pointerup', this._onOverlayPointerup);
+    if (this.$options) Overlay.appendChild(this.$options as unknown as HTMLElement);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    Layer.removeEventListener('pointermove', this._onLayerPointermove);
-    Layer.removeEventListener('pointerup', this._onLayerPointerup);
-    if (this.$options && this.$options.inlayer) Layer.removeChild(this.$options as unknown as HTMLElement);
+    Overlay.removeEventListener('pointermove', this._onOverlayPointermove);
+    Overlay.removeEventListener('pointerup', this._onOverlayPointerup);
+    if (this.$options && this.$options.inlayer) Overlay.removeChild(this.$options as unknown as HTMLElement);
   }
-  _onLayerPointermove(event: PointerEvent) {
+  _onOverlayPointermove(event: PointerEvent) {
     if (!this.inlayer && this.expanded) this._onPointermove(event);
   }
-  _onLayerPointerup(event: PointerEvent) {
+  _onOverlayPointerup(event: PointerEvent) {
     if (!this.inlayer && this.expanded) this._onPointerupAction(event);
   }
   _onClick() {
@@ -171,8 +171,8 @@ export class IoMenuItem extends IoField {
     this._x = event.clientX;
     this._y = event.clientY;
 
-    Layer.x = event.clientX;
-    Layer.y = event.clientY;
+    Overlay.x = event.clientX;
+    Overlay.y = event.clientY;
     clearTimeout(this._timeoutOpen);
     hovered = this._gethovered(event);
     if (hovered) {
@@ -341,7 +341,7 @@ export class IoMenuItem extends IoField {
 
     if (this.$options) {
       if (this.expanded) {
-        if (this.$options.parentElement !== Layer) Layer.appendChild(this.$options as unknown as HTMLElement);
+        if (this.$options.parentElement !== Overlay) Overlay.appendChild(this.$options as unknown as HTMLElement);
         this.$options.addEventListener('item-clicked', this._onItemClicked);
       } else {
         this.$options.removeEventListener('item-clicked', this._onItemClicked);
@@ -414,7 +414,7 @@ export function getMenuRoot(element: IoMenuElementType) {
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
     if (!element.disabled && !element.hidden) {
-      if (!element.inlayer || (element.parentElement.expanded && Layer.expanded)) {
+      if (!element.inlayer || (element.parentElement.expanded && Overlay.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
         const r = element.getBoundingClientRect();
         const x = event.clientX;

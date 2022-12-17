@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:166](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L166)
+[src/elements/menus/io-menu-tree.ts:167](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L167)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:157](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L157)
+[src/elements/menus/io-menu-tree.ts:158](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L158)
 
 ___
 
@@ -240,7 +240,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:148](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L148)
+[src/elements/menus/io-menu-tree.ts:149](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L149)
 
 ___
 
@@ -254,7 +254,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:163](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L163)
+[src/elements/menus/io-menu-tree.ts:164](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L164)
 
 ___
 
@@ -264,7 +264,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:154](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L154)
+[src/elements/menus/io-menu-tree.ts:155](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L155)
 
 ___
 
@@ -274,7 +274,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:151](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L151)
+[src/elements/menus/io-menu-tree.ts:152](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L152)
 
 ___
 
@@ -284,7 +284,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:160](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L160)
+[src/elements/menus/io-menu-tree.ts:161](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L161)
 
 ___
 
@@ -368,7 +368,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:168](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L168)
+[src/elements/menus/io-menu-tree.ts:169](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L169)
 
 ___
 
@@ -404,7 +404,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:54](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L54)
+[src/elements/menus/io-menu-tree.ts:55](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L55)
 
 ## Methods
 
@@ -445,7 +445,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:185](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L185)
+[src/elements/menus/io-menu-tree.ts:186](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L186)
 
 ___
 
@@ -465,7 +465,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:174](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L174)
+[src/elements/menus/io-menu-tree.ts:175](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L175)
 
 ___
 
@@ -566,7 +566,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:191](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L191)
+[src/elements/menus/io-menu-tree.ts:192](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L192)
 
 ___
 

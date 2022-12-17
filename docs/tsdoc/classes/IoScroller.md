@@ -238,16 +238,6 @@ ___
 
 ___
 
-### select
-
- **select**: ``"root"`` \| ``"leaf"``
-
-#### Defined in
-
-[src/elements/content/io-scroller.ts:24](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L24)
-
-___
-
 ### tabindex
 
  **tabindex**: `string`
@@ -328,7 +318,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-scroller.ts:31](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L31)
+[src/elements/content/io-scroller.ts:28](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L28)
 
 ___
 
@@ -492,7 +482,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-scroller.ts:125](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L125)
+[src/elements/content/io-scroller.ts:118](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L118)
 
 ___
 
@@ -512,7 +502,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/elements/content/io-scroller.ts:42](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L42)
+[src/elements/content/io-scroller.ts:39](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L39)
 
 ___
 
@@ -640,7 +630,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/content/io-scroller.ts:129](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L129)
+[src/elements/content/io-scroller.ts:122](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L122)
 
 ___
 
@@ -658,7 +648,7 @@ ___
 
 #### Defined in
 
-[src/elements/content/io-scroller.ts:37](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L37)
+[src/elements/content/io-scroller.ts:34](https://github.com/io-gui/io/blob/main/src/elements/content/io-scroller.ts#L34)
 
 ___
 

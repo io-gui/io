@@ -2,7 +2,7 @@ import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
-import { IoLayerSingleton, NudgeDirection } from '../../core/layer.js';
+import { IoOverlaySingleton, NudgeDirection } from '../../core/overlay.js';
 import { IoThemeSingleton } from '../../core/theme.js';
 import { IoMenuItem } from './io-menu-item.js';
 import { filterOptions } from './io-menu-tree.js';
@@ -182,7 +182,7 @@ export class IoMenuOptions extends IoElement {
     }
   }
   _stopPropagation(event: MouseEvent) {
-    // Prevents IoLayer from stopping scroll in clipped options
+    // Prevents IoOverlay from stopping scroll in clipped options
     event.stopPropagation();
   }
   init() {
@@ -247,7 +247,7 @@ export class IoMenuOptions extends IoElement {
   expandedChanged() {
     if (this.expanded) {
       if (this.inlayer) {
-        this.throttle(this._onExpandInLayer);
+        this.throttle(this._onExpandInOverlay);
       }
     } else {
       this.style.top = null;
@@ -263,16 +263,16 @@ export class IoMenuOptions extends IoElement {
     }
     this.throttle(this._onSetOverflow);
   }
-  _onExpandInLayer() {
+  _onExpandInOverlay() {
     debug: {
       if (!this.$parent) {
-        console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoLayerSingleton`.');
+        console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoOverlaySingleton`.');
         console.log(this);
       }
     }
     if (this.$parent) {
       const pRect = this.$parent.getBoundingClientRect();
-      IoLayerSingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
+      IoOverlaySingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
       this._onClipHeight();
     }
   }

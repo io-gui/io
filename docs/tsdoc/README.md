@@ -45,7 +45,6 @@
 - [IoIconset](classes/IoIconset.md)
 - [IoInspector](classes/IoInspector.md)
 - [IoLabel](classes/IoLabel.md)
-- [IoLayer](classes/IoLayer.md)
 - [IoMatrix](classes/IoMatrix.md)
 - [IoMdNavigator](classes/IoMdNavigator.md)
 - [IoMdView](classes/IoMdView.md)
@@ -62,6 +61,7 @@
 - [IoNumberSliderRange](classes/IoNumberSliderRange.md)
 - [IoObject](classes/IoObject.md)
 - [IoOptionMenu](classes/IoOptionMenu.md)
+- [IoOverlay](classes/IoOverlay.md)
 - [IoProperties](classes/IoProperties.md)
 - [IoScroller](classes/IoScroller.md)
 - [IoSelector](classes/IoSelector.md)
@@ -303,7 +303,7 @@ ___
 
 ### MenuItemArgs
 
- **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & { `action?`: () => `void` ; `hint?`: `string` ; `icon?`: `string` ; `options?`: [`MenuItemArgsWeak`](README.md#menuitemargsweak)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `select?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `selected?`: `boolean` ; `value?`: `any`  }
+ **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & { `action?`: () => `void` ; `hint?`: `string` ; `icon?`: `string` ; `mode?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `options?`: [`MenuItemArgsWeak`](README.md#menuitemargsweak)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `selected?`: `boolean` ; `value?`: `any`  }
 
 #### Defined in
 
@@ -323,7 +323,7 @@ ___
 
 ### MenuItemSelectType
 
- **MenuItemSelectType**: ``"pick"`` \| ``"toggle"`` \| ``"link"`` \| ``"none"``
+ **MenuItemSelectType**: ``"select"`` \| ``"anchor"`` \| ``"toggle"`` \| ``"link"`` \| ``"none"``
 
 #### Defined in
 
@@ -337,7 +337,7 @@ ___
 
 #### Defined in
 
-[src/core/layer.ts:18](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L18)
+src/core/overlay.ts:18
 
 ___
 
@@ -482,16 +482,6 @@ ___
 
 ___
 
-### IoLayerSingleton
-
- `Const` **IoLayerSingleton**: [`IoLayer`](classes/IoLayer.md)
-
-#### Defined in
-
-[src/core/layer.ts:227](https://github.com/io-gui/io/blob/main/src/core/layer.ts#L227)
-
-___
-
 ### IoNumberLadderSingleton
 
  `Const` **IoNumberLadderSingleton**: [`IoNumberLadder`](classes/IoNumberLadder.md)
@@ -499,6 +489,16 @@ ___
 #### Defined in
 
 [src/elements/basic/io-number.ts:560](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L560)
+
+___
+
+### IoOverlaySingleton
+
+ `Const` **IoOverlaySingleton**: [`IoOverlay`](classes/IoOverlay.md)
+
+#### Defined in
+
+src/core/overlay.ts:240
 
 ___
 
@@ -683,7 +683,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:418](https://github.com/io-gui/io/blob/main/src/core/node.ts#L418)
+[src/core/node.ts:436](https://github.com/io-gui/io/blob/main/src/core/node.ts#L436)
 
 ___
 
@@ -821,7 +821,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:37](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L37)
+[src/elements/menus/io-menu-tree.ts:38](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L38)
 
 ___
 
@@ -861,7 +861,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:394](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L394)
+[src/elements/menus/io-menu-item.ts:396](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L396)
 
 ___
 
@@ -881,7 +881,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:373](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L373)
+[src/elements/menus/io-menu-item.ts:375](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L375)
 
 ___
 
@@ -901,7 +901,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:404](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L404)
+[src/elements/menus/io-menu-item.ts:406](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L406)
 
 ___
 

@@ -1,6 +1,6 @@
 import { RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
-import { IoLayerSingleton } from '../../core/layer.js';
+import { IoOverlaySingleton } from '../../core/overlay.js';
 import { IoColorBase } from './io-color-base.js';
 import './io-color-sliders.js';
 
@@ -103,4 +103,4 @@ export class IoColorPanel extends IoColorBase {
 }
 
 export const IoColorPanelSingleton = new IoColorPanel({inlayer: true});
-IoLayerSingleton.appendChild(IoColorPanelSingleton as unknown as HTMLElement);
+IoOverlaySingleton.appendChild(IoColorPanelSingleton as unknown as HTMLElement);

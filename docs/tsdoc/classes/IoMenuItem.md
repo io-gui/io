@@ -548,7 +548,7 @@ IoField.Style
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:222](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L222)
+[src/elements/menus/io-menu-item.ts:224](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L224)
 
 ___
 
@@ -595,7 +595,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:206](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L206)
+[src/elements/menus/io-menu-item.ts:208](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L208)
 
 ___
 
@@ -651,7 +651,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:308](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L308)
+[src/elements/menus/io-menu-item.ts:310](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L310)
 
 ___
 
@@ -665,7 +665,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:311](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L311)
+[src/elements/menus/io-menu-item.ts:313](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L313)
 
 ___
 
@@ -733,7 +733,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:131](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L131)
+[src/elements/menus/io-menu-item.ts:133](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L133)
 
 ___
 
@@ -757,7 +757,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:243](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L243)
+[src/elements/menus/io-menu-item.ts:245](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L245)
 
 ___
 
@@ -785,9 +785,9 @@ ___
 
 ___
 
-### \_onLayerPointermove
+### \_onOverlayPointermove
 
-**_onLayerPointermove**(`event`): `void`
+**_onOverlayPointermove**(`event`): `void`
 
 #### Parameters
 
@@ -805,9 +805,9 @@ ___
 
 ___
 
-### \_onLayerPointerup
+### \_onOverlayPointerup
 
-**_onLayerPointerup**(`event`): `void`
+**_onOverlayPointerup**(`event`): `void`
 
 #### Parameters
 
@@ -845,7 +845,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:139](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L139)
+[src/elements/menus/io-menu-item.ts:141](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L141)
 
 ___
 
@@ -893,7 +893,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:157](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L157)
+[src/elements/menus/io-menu-item.ts:159](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L159)
 
 ___
 
@@ -917,7 +917,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:191](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L191)
+[src/elements/menus/io-menu-item.ts:193](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L193)
 
 ___
 
@@ -937,7 +937,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:197](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L197)
+[src/elements/menus/io-menu-item.ts:199](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L199)
 
 ___
 
@@ -1038,7 +1038,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:351](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L351)
+[src/elements/menus/io-menu-item.ts:353](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L353)
 
 ___
 
@@ -1200,7 +1200,7 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:314](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L314)
+[src/elements/menus/io-menu-item.ts:316](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L316)
 
 ___
 
