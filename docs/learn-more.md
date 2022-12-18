@@ -39,12 +39,12 @@ Property configuration can be done in different ways. For your convenience, you 
 |`Object` |`{}`                   |
 |`MyClass`|`new MyClass()`        |
 
-In addition to setting `value` and `type`, you can be more specific when defining properties by providing configuration object which may include: `reflect`, `notify`, `enumerable` and `binding`.
+In addition to setting `value` and `type`, you can be more specific when defining properties by providing configuration object which may include: `reflect`, `reactive`, `enumerable` and `binding`.
 
 |Property    |Values                   |Description                    |
 |:-----------|:------------------------|:------------------------------|
 |`reflect`   |`0` \| `1` \| `-1` \| `2`|Attribute reflection direction |
-|`notify`    |`true` \| `false`        |Enables change events          |
+|`reactive`    |`true` \| `false`        |Enables change events          |
 |`enumerable`|`true` \| `false`        |Makes property enumerable      |
 |`binding`   |`Binding`                |Binding object                 |
 
@@ -57,7 +57,7 @@ myProperty: {
   value: false,
   type: Boolean,
   reflect: 0,
-  notify: true,
+  reactive: true,
   enumerable: true,
   binding: null,
 }
