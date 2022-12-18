@@ -269,11 +269,11 @@ Declares default listeners.
 
 ___
 
-### ListenerDeclarationWeak
+### ListenerDeclarationLoose
 
- **ListenerDeclarationWeak**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`ListenerDeclaration`](README.md#listenerdeclaration)
+ **ListenerDeclarationLoose**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`ListenerDeclaration`](README.md#listenerdeclaration)
 
-Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
+Allows loose declaration of listeners by specifying only partial declarations such as function or function name.
 
 #### Defined in
 
@@ -293,7 +293,7 @@ ___
 
 ### ListenersDeclaration
 
- **ListenersDeclaration**: `Record`<`string`, [`ListenerDeclarationWeak`](README.md#listenerdeclarationweak)\>
+ **ListenersDeclaration**: `Record`<`string`, [`ListenerDeclarationLoose`](README.md#listenerdeclarationloose)\>
 
 #### Defined in
 
@@ -303,7 +303,7 @@ ___
 
 ### MenuItemArgs
 
- **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & { `action?`: () => `void` ; `hint?`: `string` ; `icon?`: `string` ; `mode?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `options?`: [`MenuItemArgsWeak`](README.md#menuitemargsweak)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `selected?`: `boolean` ; `value?`: `any`  }
+ **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & { `action?`: () => `void` ; `hint?`: `string` ; `icon?`: `string` ; `mode?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `options?`: [`MenuItemArgsLoose`](README.md#menuitemargsloose)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `selected?`: `boolean` ; `value?`: `any`  }
 
 #### Defined in
 
@@ -311,9 +311,9 @@ ___
 
 ___
 
-### MenuItemArgsWeak
+### MenuItemArgsLoose
 
- **MenuItemArgsWeak**: `undefined` \| ``null`` \| `string` \| `number` \| [`MenuItemArgs`](README.md#menuitemargs)
+ **MenuItemArgsLoose**: `undefined` \| ``null`` \| `string` \| `number` \| [`MenuItemArgs`](README.md#menuitemargs)
 
 #### Defined in
 
@@ -337,7 +337,7 @@ ___
 
 #### Defined in
 
-src/core/overlay.ts:18
+[src/core/overlay.ts:18](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L18)
 
 ___
 
@@ -376,8 +376,8 @@ Declares default value, type and reactive behavior of the property.
 | Name | Type |
 | :------ | :------ |
 | `binding?` | [`Binding`](classes/Binding.md) |
-| `notify?` | `boolean` |
 | `observe?` | `boolean` |
+| `reactive?` | `boolean` |
 | `reflect?` | `boolean` |
 | `type?` | [`Constructor`](README.md#constructor) \| [`Constructor`](README.md#constructor)[] |
 | `value?` | `any` |
@@ -388,11 +388,11 @@ Declares default value, type and reactive behavior of the property.
 
 ___
 
-### PropertyDeclarationWeak
+### PropertyDeclarationLoose
 
- **PropertyDeclarationWeak**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](README.md#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](README.md#propertydeclaration)
+ **PropertyDeclarationLoose**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](README.md#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](README.md#propertydeclaration)
 
-Allows weak declaration of properties by specifying only partial declarations such as default value or type.
+Allows loose declaration of properties by specifying only partial declarations such as default value or type.
 
 #### Defined in
 
@@ -402,7 +402,7 @@ ___
 
 ### PropertyDeclarations
 
- **PropertyDeclarations**: `Record`<`string`, [`PropertyDeclarationWeak`](README.md#propertydeclarationweak)\>
+ **PropertyDeclarations**: `Record`<`string`, [`PropertyDeclarationLoose`](README.md#propertydeclarationloose)\>
 
 #### Defined in
 
@@ -498,7 +498,7 @@ ___
 
 #### Defined in
 
-src/core/overlay.ts:240
+[src/core/overlay.ts:240](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L240)
 
 ___
 
@@ -616,7 +616,7 @@ Allows property declarations using decorator pattern.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `propertyDefinition` | [`PropertyDeclarationWeak`](README.md#propertydeclarationweak) | Property declaration. |
+| `propertyDefinition` | [`PropertyDeclarationLoose`](README.md#propertydeclarationloose) | Property declaration. |
 
 #### Returns
 
@@ -683,7 +683,7 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:436](https://github.com/io-gui/io/blob/main/src/core/node.ts#L436)
+[src/core/node.ts:443](https://github.com/io-gui/io/blob/main/src/core/node.ts#L443)
 
 ___
 
@@ -909,13 +909,13 @@ ___
 
 **hardenListenerDeclaration**(`def`): [`ListenerDeclaration`](README.md#listenerdeclaration)
 
-Takes weakly typed listener declaration and returns stronly typed listener declaration.
+Takes loosely typed listener declaration and returns stronly typed listener declaration.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `def` | [`ListenerDeclarationWeak`](README.md#listenerdeclarationweak) | Weakly typed listener declaration |
+| `def` | [`ListenerDeclarationLoose`](README.md#listenerdeclarationloose) | Loosely typed listener declaration |
 
 #### Returns
 

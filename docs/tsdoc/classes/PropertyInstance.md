@@ -32,16 +32,6 @@ Creates the property configuration object and copies values from `ProtoProperty`
 
 ___
 
-### notify
-
- **notify**: `boolean` = `true`
-
-#### Defined in
-
-[src/core/internals/property.ts:88](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L88)
-
-___
-
 ### observe
 
  **observe**: `boolean` = `false`
@@ -49,6 +39,16 @@ ___
 #### Defined in
 
 [src/core/internals/property.ts:90](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L90)
+
+___
+
+### reactive
+
+ **reactive**: `boolean` = `true`
+
+#### Defined in
+
+[src/core/internals/property.ts:88](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L88)
 
 ___
 

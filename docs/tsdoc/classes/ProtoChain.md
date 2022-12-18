@@ -39,7 +39,7 @@ ___
 
  `Readonly` **functions**: `string`[] = `[]`
 
-Array of function names that start with "on" or "_on" for auto-binding.
+Array of function names that start with "on" or "_" for auto-binding.
 
 #### Defined in
 

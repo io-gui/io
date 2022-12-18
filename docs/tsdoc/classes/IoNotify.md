@@ -427,7 +427,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:361](https://github.com/io-gui/io/blob/main/src/core/node.ts#L361)
+[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
 ___
 
@@ -479,7 +479,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:330](https://github.com/io-gui/io/blob/main/src/core/node.ts#L330)
+[src/core/node.ts:335](https://github.com/io-gui/io/blob/main/src/core/node.ts#L335)
 
 ___
 
@@ -500,7 +500,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:258](https://github.com/io-gui/io/blob/main/src/core/node.ts#L258)
+[src/core/node.ts:263](https://github.com/io-gui/io/blob/main/src/core/node.ts#L263)
 
 ___
 
@@ -587,7 +587,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:386](https://github.com/io-gui/io/blob/main/src/core/node.ts#L386)
+[src/core/node.ts:393](https://github.com/io-gui/io/blob/main/src/core/node.ts#L393)
 
 ___
 
@@ -607,7 +607,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:272](https://github.com/io-gui/io/blob/main/src/core/node.ts#L272)
+[src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
 
 ___
 
@@ -627,7 +627,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:282](https://github.com/io-gui/io/blob/main/src/core/node.ts#L282)
+[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
 
 ___
 
@@ -648,7 +648,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:393](https://github.com/io-gui/io/blob/main/src/core/node.ts#L393)
+[src/core/node.ts:400](https://github.com/io-gui/io/blob/main/src/core/node.ts#L400)
 
 ___
 
@@ -666,7 +666,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/core/node.ts:264](https://github.com/io-gui/io/blob/main/src/core/node.ts#L264)
 
 ___
 
@@ -693,7 +693,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
+[src/core/node.ts:252](https://github.com/io-gui/io/blob/main/src/core/node.ts#L252)
 
 ___
 
@@ -738,7 +738,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:321](https://github.com/io-gui/io/blob/main/src/core/node.ts#L321)
+[src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
 
 ___
 
@@ -765,7 +765,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:300](https://github.com/io-gui/io/blob/main/src/core/node.ts#L300)
+[src/core/node.ts:305](https://github.com/io-gui/io/blob/main/src/core/node.ts#L305)
 
 ___
 
@@ -793,7 +793,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:266](https://github.com/io-gui/io/blob/main/src/core/node.ts#L266)
+[src/core/node.ts:271](https://github.com/io-gui/io/blob/main/src/core/node.ts#L271)
 
 ___
 
@@ -821,7 +821,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:376](https://github.com/io-gui/io/blob/main/src/core/node.ts#L376)
+[src/core/node.ts:383](https://github.com/io-gui/io/blob/main/src/core/node.ts#L383)
 
 ___
 
@@ -875,7 +875,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:229](https://github.com/io-gui/io/blob/main/src/core/node.ts#L229)
+[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
 
 ___
 
@@ -959,7 +959,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:291](https://github.com/io-gui/io/blob/main/src/core/node.ts#L291)
+[src/core/node.ts:296](https://github.com/io-gui/io/blob/main/src/core/node.ts#L296)
 
 ___
 
@@ -1014,4 +1014,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:345](https://github.com/io-gui/io/blob/main/src/core/node.ts#L345)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
