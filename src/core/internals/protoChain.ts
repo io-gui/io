@@ -12,7 +12,7 @@ export class ProtoChain {
    */
   readonly constructors: Array<IoNodeConstructor<any>> = [];
   /**
-   * Array of function names that start with "on" or "_on" for auto-binding.
+   * Array of function names that start with "on" or "_" for auto-binding.
    */
   readonly functions: Array<string> = [];
   /**
@@ -50,7 +50,7 @@ export class ProtoChain {
         const names = Object.getOwnPropertyNames(proto);
         for (let j = 0; j < names.length; j++) {
           const fn = names[j];
-          if (fn.startsWith('_on') || fn.startsWith('on')) {
+          if (fn.startsWith('_') || fn.startsWith('on')) {
             const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
             if (propDesr === undefined || propDesr.get || propDesr.set) continue;
             if (typeof proto[fn] === 'function') {

@@ -53,10 +53,10 @@ export class IoSelector extends IoElement {
   @Property(false)
   declare cache: boolean;
 
-  @Property({value: false, reflect: true, notify: false})
+  @Property({value: false, reflect: true, reactive: false})
   declare loading: boolean;
 
-  @Property({type: Object, notify: false})
+  @Property({type: Object, reactive: false})
   declare private _caches: Record<string, HTMLElement>;
 
   importModule(path: string) {

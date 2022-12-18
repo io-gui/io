@@ -29,7 +29,7 @@ export default class {
 
           chai.expect(element._properties.get('size')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Array,
@@ -38,7 +38,7 @@ export default class {
 
           chai.expect(element._properties.get('color')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: true,
             reflect: false,
             type: Array,
@@ -47,7 +47,7 @@ export default class {
 
           chai.expect(element._properties.get('pxRatio')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
@@ -56,7 +56,7 @@ export default class {
 
           chai.expect(element._properties.get('theme')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: true,
             reflect: false,
             type: IoTheme,

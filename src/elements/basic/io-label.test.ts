@@ -12,7 +12,7 @@ export default class {
           chai.expect(element.label).to.equal('');
           chai.expect(element._properties.get('label')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,

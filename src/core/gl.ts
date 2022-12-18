@@ -189,7 +189,7 @@ export class IoGl extends IoElement {
   }
   //TODO: this is possible an error. property should be PropertyDeclaration
   initPropertyUniform(name: string, property: PropertyDeclaration) {
-    if (property.notify) {
+    if (property.reactive) {
       switch (property.type) {
         case Boolean:
           return 'uniform int ' + name + ';\n';
@@ -265,14 +265,14 @@ export class IoGl extends IoElement {
     this._vecLengths = {};
     this.theme._properties.forEach((property, name) => {
       // TODO: consider making more type agnostic
-      if (property.notify && property.type === Color) {
+      if (property.reactive && property.type === Color) {
         this._vecLengths[name] = 4;
       }
     });
 
     this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
-      if (property.notify && property.type === Array) {
+      if (property.reactive && property.type === Array) {
         this._vecLengths[uname] = property.value.length;
       }
     });
@@ -386,7 +386,7 @@ export class IoGl extends IoElement {
   }
   updatePropertyUniform(name: string, property: PropertyInstance) {
     this.setShaderProgram();
-    if (property.notify) {
+    if (property.reactive) {
       this.setUniform(name, property.value);
     }
   }

@@ -5,7 +5,7 @@ import { MenuOptions } from './menu-options.js';
 
 export type MenuItemSelectType = 'select' | 'anchor' | 'toggle' | 'link' | 'none';
 
-export type MenuItemArgsWeak = undefined | null | string | number | MenuItemArgs;
+export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
 
 export type MenuItemArgs = IoElementArgs & {
   value?: any,
@@ -14,7 +14,7 @@ export type MenuItemArgs = IoElementArgs & {
   action?: () => void,
   mode?: MenuItemSelectType,
   selected?: boolean,
-  options?: MenuItemArgsWeak[] | MenuOptions
+  options?: MenuItemArgsLoose[] | MenuOptions
 };
 
 // TODO: documentation!
@@ -57,7 +57,7 @@ export class MenuItem extends IoNode {
     return this.options?.getItem(value);
   }
 
-  constructor(args?: MenuItemArgsWeak) {
+  constructor(args?: MenuItemArgsLoose) {
     const item: MenuItemArgs = {
       value: '',
       label: '',

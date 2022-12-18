@@ -18,7 +18,7 @@ export default class {
           chai.expect(element.role).to.equal('switch');
           chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -26,7 +26,7 @@ export default class {
           });
           chai.expect(element._properties.get('true')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,
@@ -34,7 +34,7 @@ export default class {
           });
           chai.expect(element._properties.get('false')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,

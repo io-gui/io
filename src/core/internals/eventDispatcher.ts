@@ -6,16 +6,16 @@ import {IoNode, CustomEventListener} from '../node.js';
 export type ListenerDeclaration = [string | CustomEventListener, AddEventListenerOptions?];
 
 /**
- * Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
+ * Allows loose declaration of listeners by specifying only partial declarations such as function or function name.
  */
-export type ListenerDeclarationWeak = string | CustomEventListener | ListenerDeclaration;
+export type ListenerDeclarationLoose = string | CustomEventListener | ListenerDeclaration;
 
 /**
- * Takes weakly typed listener declaration and returns stronly typed listener declaration.
- * @param {ListenerDeclarationWeak} def Weakly typed listener declaration
+ * Takes loosely typed listener declaration and returns stronly typed listener declaration.
+ * @param {ListenerDeclarationLoose} def Loosely typed listener declaration
  * @return {ListenerDeclaration} Stronly typed listener declaration
  */
-export const hardenListenerDeclaration = (def: ListenerDeclarationWeak): ListenerDeclaration => {
+export const hardenListenerDeclaration = (def: ListenerDeclarationLoose): ListenerDeclaration => {
   return def instanceof Array ? def : [def];
 };
 
@@ -60,7 +60,7 @@ export const listenerFromDefinition = (node: IoNode | HTMLElement, def: Listener
 export type Listener = [CustomEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
 
-export type ListenersDeclaration = Record<string, ListenerDeclarationWeak>;
+export type ListenersDeclaration = Record<string, ListenerDeclarationLoose>;
 
 /**
  * Internal utility class responsible for handling listeners and dispatching events.

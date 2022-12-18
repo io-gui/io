@@ -23,7 +23,7 @@ export default class {
 
           chai.expect(node._properties.get('key')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,
@@ -32,7 +32,7 @@ export default class {
 
           chai.expect(node._properties.get('value')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: undefined,
@@ -41,7 +41,7 @@ export default class {
 
           chai.expect(node._properties.get('default')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: undefined,
@@ -50,7 +50,7 @@ export default class {
 
           chai.expect(node._properties.get('storage')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,

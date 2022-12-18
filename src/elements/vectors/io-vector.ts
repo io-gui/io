@@ -54,7 +54,7 @@ export class IoVector extends IoElement {
   @Property(true)
   declare ladder: boolean;
 
-  @Property({notify: false})
+  @Property({reactive: false})
   declare keys: Array<keyof typeof this.value>;
 
   private _ratios: Record<string, number> = {};

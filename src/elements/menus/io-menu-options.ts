@@ -158,7 +158,7 @@ export class IoMenuOptions extends IoElement {
   @Property(undefined)
   declare $parent?: IoMenuItem;
 
-  @Property({type: Array, notify: false})
+  @Property({type: Array, reactive: false})
   declare private _overflownItems: MenuItem[];
 
   static get Listeners() {

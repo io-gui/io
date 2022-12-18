@@ -13,7 +13,7 @@ export default class {
 
           chai.expect(theme._properties.get('persist')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Boolean,
@@ -22,7 +22,7 @@ export default class {
 
           chai.expect(theme._properties.get('theme')).to.eql({
             binding: binding,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,

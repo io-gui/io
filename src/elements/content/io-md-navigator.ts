@@ -81,7 +81,6 @@ export class IoMdNavigator extends IoElement {
       depth: this.depth
     };
 
-
     this.template([
       this.menu === 'top' ? ['io-menu-options', {horizontal: true, ...sharedMenuConfig}] : null,
       this.menu === 'left' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
