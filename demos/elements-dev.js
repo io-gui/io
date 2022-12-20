@@ -272,7 +272,7 @@ export class IoDemoElementsDev extends IoElement {
         }],
         ['io-collapsable', {label: 'io-boolean', class: 'row', expanded: $('expanded-demo-basic-5'),
           elements: [
-            ['io-boolean', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+            ['io-boolicon', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
             ['io-boolean', {value: this.bind('boolean')}],
           ]
         }],
@@ -366,14 +366,15 @@ export class IoDemoElementsDev extends IoElement {
         ]}],
       ]}],
       ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
-        ['io-collapsable', {label: 'io-navigator with menu="left"', class: 'overflow', expanded: $('expanded-demo-content-1'), elements: [
+        ['io-collapsable', {label: 'io-navigator with menu:"left" mode:"select-and-anchor"', class: 'overflow', expanded: $('expanded-demo-content-1'), elements: [
           ['io-navigator', {
             menu: 'left',
+            mode: 'select-and-anchor',
             elements: elements,
             options: contentOptions,
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with mode="scroll" and with menu="right"', class: 'overflow', expanded: $('expanded-demo-content-2'), elements: [
+        ['io-collapsable', {label: 'io-navigator with mode:"scroll" and with menu:"right"', class: 'overflow', expanded: $('expanded-demo-content-2'), elements: [
           ['io-navigator', {
             menu: 'right',
             mode: 'scroll',
@@ -381,7 +382,7 @@ export class IoDemoElementsDev extends IoElement {
             elements: [elements[0]]
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with with menu="top" and depth=0', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
+        ['io-collapsable', {label: 'io-navigator with with menu:"top" and depth=0', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
           ['io-navigator', {
             menu: 'top',
             depth: 0,

@@ -53,6 +53,6 @@ To contribute to this project please read [code of conduct](https://github.com/i
 [mastodon]: https://mastodon.gamedev.place/web/@aki
 [threejs]: https://threejs.org
 
-[quick start]: https://iogui.dev/#path=Docs,Quick%20Start,Usage
-[deep dive]: https://iogui.dev/#path=Docs,Deep%20Dive,Nodes%20and%20Elements
-[element demos]: https://iogui.dev/#path=Demos,Elements%20Dev%20Page
+[quick start]: #path=Docs,Quick%20Start,Usage
+[deep dive]: #path=Docs,Deep%20Dive,Nodes%20and%20Elements
+[element demos]: #path=Demos,Elements%20Dev%20Page

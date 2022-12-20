@@ -3,7 +3,6 @@ import { MenuOptions } from '../menus/models/menu-options.js';
 import { MenuItem } from '../menus/models/menu-item.js';
 import { Property } from '../../core/internals/property.js';
 import './io-selector.js';
-import './io-scroller.js';
 
 @RegisterIoElement
 export class IoNavigator extends IoElement {
@@ -70,7 +69,7 @@ export class IoNavigator extends IoElement {
       :host > io-selector {
         overflow: auto;
       }
-      :host > io-selector,
+      /* :host > io-selector, */
       :host > io-scroller,
       :host > io-scroller > io-selector {
         flex: 1 1 auto;
@@ -93,8 +92,8 @@ export class IoNavigator extends IoElement {
   @Property('first')
   declare select: 'first' | 'last';
 
-  @Property('select-scroll')
-  declare mode: 'select-scroll' | 'select' | 'scroll';
+  @Property('select')
+  declare mode: 'select' | 'scroll' | 'select-and-anchor';
 
   @Property(Infinity)
   declare depth: number;
@@ -112,7 +111,6 @@ export class IoNavigator extends IoElement {
     this.throttle(this._onSetCollapsed);
   }
   onResized() {
-    // console.log('res', this);
     this.throttle(this._onSetCollapsed);
   }
 
@@ -130,7 +128,7 @@ export class IoNavigator extends IoElement {
     let contentNavigation: VDOMArray = ['io-selector', {options: this.options, cache: this.cache, select: this.select, elements: this.elements}];
     if (this.mode === 'scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
-    } else if (this.mode === 'select-scroll') {
+    } else if (this.mode === 'select-and-anchor') {
       contentNavigation = ['io-scroller', {options: this.options}, [contentNavigation]];
     }
 

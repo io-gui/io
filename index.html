@@ -129,7 +129,7 @@
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
       {value: 'Docs', options: [
-        {value: 'Getting Started', options: [
+        {value: 'Quick Start', options: [
           {label: 'Usage', value: 'usage', mode: 'anchor'},
           {label: 'Simple App Example', value: 'simple-app-example', mode: 'anchor'},
           {label: 'Style', value: 'style', mode: 'anchor'},
@@ -138,18 +138,17 @@
           {label: 'Change Functions', value: 'change-functions', mode: 'anchor'},
           {label: 'Simple App Recap', value: 'simple-app-recap', mode: 'anchor'},
         ]},
-        {value: 'Learn More', options: [
-          {label: 'Creating Elements', value: 'creating-elements', mode: 'anchor'},
+        {value: 'Deep Dive', options: [
+          {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'anchor'},
           {label: 'Properties', value: 'properties', mode: 'anchor'},
-          {label: 'Property Configuration', value: 'property-configuration', mode: 'anchor'},
-          {label: 'Functions', value: 'functions', mode: 'anchor'},
-          {label: 'Events', value: 'events', mode: 'anchor'},
-          {label: 'Virtual DOM Arrays', value: 'virtual-dom-arrays', mode: 'anchor'},
+          {label: 'Styling', value: 'styling', mode: 'anchor'},
+          {label: 'Listeners', value: 'listeners', mode: 'anchor'},
+          {label: 'Reactivity', value: 'reactivity', mode: 'anchor'},
           {label: 'Data Binding', value: 'data-binding', mode: 'anchor'},
-          {label: 'Data Flow', value: 'data-flow', mode: 'anchor'},
+          {label: 'Tamplate Syntax', value: 'tamplate-syntax', mode: 'anchor'},
+          {label: 'Helper Methods', value: 'helper-methods', mode: 'anchor'},
         ]},
         {label: 'Contribution Guide', mode: 'link', icon: 'icons:link', value: 'https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md'},
-        {label: 'Development Notes', value: 'development-notes'},
       ]},
       {value: 'Reference', options: [
         {value: 'Core Internals', options: [
@@ -235,7 +234,7 @@
         ]},
       ]},
       {value: 'Demos', options: [
-        'Elements Dev Page',
+        'Elements',
         'TODO MVC App',
       ]},
       {value: 'Tests'},
@@ -249,20 +248,20 @@
           role: 'main',
           class: 'main',
           menu: 'top',
-          mode: 'select',
           collapseWidth: 320,
           options: OPTIONS,
-          // cache: false,
+          cache: true,
           depth: 1,
           elements: [
-            ['io-md-view', {id: 'About', src: './README.md'}],
+            ['io-md-view', {id: 'About', src: './docs/about.md'}],
             ['io-navigator', {id: 'Docs', menu: 'left', collapseWidth: 640,
               options: OPTIONS.getItem('Docs').options,
-              // cache: false,
+              cache: true,
+              mode: 'select-and-anchor',
               elements: [
-                ['io-md-view', {id: 'Getting Started', sanitize: false, src: './docs/getting-started.md'}],
-                ['io-md-view', {id: 'Learn More', sanitize: false, src: './docs/learn-more.md'}],
-                ['io-md-view', {id: 'development-notes', src: './docs/development-notes.md'}],
+                ['io-md-view', {id: 'Quick Start', sanitize: false, src: './docs/quick-start.md'}],
+                ['io-md-view', {id: 'Deep Dive', sanitize: false, src: './docs/deep-dive.md'}],
+                ['io-md-view', {id: 'Development Notes', src: './docs/development-notes.md'}],
               ]
             }],
             ['io-md-navigator', {id: 'Reference', menu: 'left',
@@ -270,9 +269,9 @@
             }],
             ['io-selector', {id: 'Demos',
               options: OPTIONS.getItem('Demos').options,
-              // cache: false,
+              cache: true,
               elements: [
-                ['io-demo-elements-dev', {id: 'Elements Dev Page', import: './demos/elements-dev.js'}],
+                ['io-demo-elements-dev', {id: 'Elements', import: './demos/elements-dev.js'}],
                 ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],
               ]
             }],

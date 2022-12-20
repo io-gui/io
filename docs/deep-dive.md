@@ -177,7 +177,7 @@ class MyElement extends IoElement {
 }
 ```
 
-# Element Style
+# Styling
 
 Custom element styles are defined inside `static get Style()` template literal string. To get proper CSS syntax highlighting you can add `/* css */` comment just before the string and use code editor plugin such as [comment-tagged-templates for VSCode](https://marketplace.visualstudio.com/items?itemName=bierner.comment-tagged-templates).
 

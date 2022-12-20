@@ -1,4 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
+import '../objct/io-properties.js';
+import '../basic/io-boolicon.js';
 
 @RegisterIoElement
 export class IoElementDemo extends IoElement {
@@ -107,7 +109,7 @@ export class IoElementDemo extends IoElement {
   };
   changed() {
     const properties = this.properties;
-    const elements: any = [['io-boolean', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
+    const elements: any = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
     if (this.expanded) {
       elements.push(['io-properties', {
         value: properties,

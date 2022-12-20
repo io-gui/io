@@ -2,7 +2,6 @@ import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
 import './io-selector.js';
-import './io-scroller.js';
 
 @RegisterIoElement
 export class IoMdNavigator extends IoElement {
@@ -44,9 +43,6 @@ export class IoMdNavigator extends IoElement {
       }
       :host > io-menu-options > io-menu-item {
         border-radius: 0;
-      }
-      :host > io-scroller {
-        flex: 1 1 auto;
       }
     `;
   }

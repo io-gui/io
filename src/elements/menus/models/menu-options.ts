@@ -213,10 +213,9 @@ export class MenuOptions extends IoNodeMixin(Array) {
       walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'anchor') && item.selected);
     }
 
-    // TODO: when binding two menu trees with both `first` and `path` properties, it is important that we
+    // TODO: when binding two menu elements to both `first` and `path` properties, it is important that we
     // update the `path` property before the `first`. Otherwise, the menu binding will be broken!
     // TODO: create a test for this edge-case.
-    // console.log(walker?.label, walker?.mode, hasSelected);
     this.setProperties({
       path: path.join(this.delimiter),
       first: item?.mode === 'select' ? item.value : undefined,
