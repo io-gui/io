@@ -1,5 +1,9 @@
 ## Usage
 
+There are many ways to use Io-Gui. You can use its core classes `IoNode` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to a complex single-page application, or you can simply import and use one of its elements in your own web architecture.
+
+You can [learn more about nodes and elements here](/#path=Docs,Nodes%20and%20Elements). To quickly import Io-Gui and get your feet wet, continue reading this article.
+
 Import Io-Gui module.
 
 ```javascript
