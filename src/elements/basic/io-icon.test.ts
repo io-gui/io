@@ -13,7 +13,7 @@ export default class {
           chai.expect(element.stroke).to.equal(false);
           chai.expect(element._properties.get('icon')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -21,7 +21,7 @@ export default class {
           });
           chai.expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,

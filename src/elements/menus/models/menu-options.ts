@@ -1,5 +1,5 @@
 import { IoNodeMixin, RegisterIoNode, IoNodeArgs } from '../../../core/node.js';
-import { MenuItem, MenuItemArgsWeak } from './menu-item.js';
+import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
 import { Property } from '../../../core/internals/property.js';
 
 // TODO: document!
@@ -62,7 +62,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
     return null;
   }
 
-  constructor(args: MenuItemArgsWeak[] = [], properties: IoNodeArgs = {}) {
+  constructor(args: MenuItemArgsLoose[] = [], properties: IoNodeArgs = {}) {
     const _args: MenuItem[] = [];
     for (let i = 0; i < args.length; i++) {
       if (args[i] instanceof MenuItem) {
@@ -97,7 +97,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   }
 
   // TODO: consider preventing built-in Array functions like push, pop, etc.
-  protected addItems(items: MenuItemArgsWeak[]) {
+  protected addItems(items: MenuItemArgsLoose[]) {
     for (let i = 0; i < items.length; i++) {
       let item: MenuItem;
       if (items[i] instanceof MenuItem) {
@@ -213,10 +213,9 @@ export class MenuOptions extends IoNodeMixin(Array) {
       walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'anchor') && item.selected);
     }
 
-    // TODO: when binding two menu trees with both `first` and `path` properties, it is important that we
+    // TODO: when binding two menu elements to both `first` and `path` properties, it is important that we
     // update the `path` property before the `first`. Otherwise, the menu binding will be broken!
     // TODO: create a test for this edge-case.
-    // console.log(walker?.label, walker?.mode, hasSelected);
     this.setProperties({
       path: path.join(this.delimiter),
       first: item?.mode === 'select' ? item.value : undefined,

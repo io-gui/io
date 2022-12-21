@@ -4,6 +4,7 @@ import { ObjectConfig } from './models/object-config.js';
 import { ObjectGroups } from './models/object-groups.js';
 import { ObjectWidgets } from './models/object-widgets.js';
 import './io-breadcrumbs.js';
+import '../basic/io-boolicon.js';
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
@@ -167,7 +168,7 @@ export class IoInspector extends IoElement {
       ['div', {class: 'inspector-header io-row io-panel'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
         ['io-string', {$: 'search', value: this.bind('search'), live: true}],
-        ['io-boolean', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
+        ['io-boolicon', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
       this._widgets.main ? this._widgets.main : null
     ];

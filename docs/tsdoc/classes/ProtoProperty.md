@@ -8,13 +8,13 @@ Finalized property definition created from property declaration.
 
 **new ProtoProperty**(`def`)
 
-Takes a weakly typed property declaration and returns full property definition with unscpecified fileds inferred.
+Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `def` | [`PropertyDeclarationWeak`](../README.md#propertydeclarationweak) | Weakly typed property definition |
+| `def` | [`PropertyDeclarationLoose`](../README.md#propertydeclarationloose) | Loosely typed property definition |
 
 #### Defined in
 
@@ -32,16 +32,6 @@ Takes a weakly typed property declaration and returns full property definition w
 
 ___
 
-### notify
-
- `Optional` **notify**: `boolean`
-
-#### Defined in
-
-[src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
-
-___
-
 ### observe
 
  `Optional` **observe**: `boolean`
@@ -49,6 +39,16 @@ ___
 #### Defined in
 
 [src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
+
+___
+
+### reactive
+
+ `Optional` **reactive**: `boolean`
+
+#### Defined in
+
+[src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
 
 ___
 

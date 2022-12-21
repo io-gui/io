@@ -31,7 +31,7 @@ export default class {
           chai.expect(element.spellcheck).to.equal('false');
           chai.expect(element._properties.get('conversion')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
@@ -39,7 +39,7 @@ export default class {
           });
           chai.expect(element._properties.get('step')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
@@ -47,7 +47,7 @@ export default class {
           });
           chai.expect(element._properties.get('min')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
@@ -55,7 +55,7 @@ export default class {
           });
           chai.expect(element._properties.get('max')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
@@ -63,7 +63,7 @@ export default class {
           });
           chai.expect(element._properties.get('type')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -71,7 +71,7 @@ export default class {
           });
           chai.expect(element._properties.get('pattern')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -79,7 +79,7 @@ export default class {
           });
           chai.expect(element._properties.get('inputmode')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -87,7 +87,7 @@ export default class {
           });
           chai.expect(element._properties.get('spellcheck')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -213,7 +213,7 @@ export default class {
           chai.expect(step.type).to.equal('number');
           chai.expect(step._properties.get('type')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -257,7 +257,7 @@ export default class {
 
           chai.expect(ladder._properties.get('src')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: undefined,
@@ -265,7 +265,7 @@ export default class {
           });
           chai.expect(ladder._properties.get('expanded')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,

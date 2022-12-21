@@ -1,6 +1,6 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
-import '../basic/io-boolean.js';
+import '../basic/io-boolicon.js';
 
 /**
  * Input element for vector arrays and objects.
@@ -54,7 +54,7 @@ export class IoVector extends IoElement {
   @Property(true)
   declare ladder: boolean;
 
-  @Property({notify: false})
+  @Property({reactive: false})
   declare keys: Array<keyof typeof this.value>;
 
   private _ratios: Record<string, number> = {};
@@ -114,6 +114,6 @@ export class IoVector extends IoElement {
     this.template(elements);
   }
   getSlotted(): Array<any> | null {
-    return this.linkable ? ['io-boolean', {value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
+    return this.linkable ? ['io-boolicon', {value: this.bind('linked'), true: 'icons:link', false: 'icons:unlink'}] : null;
   }
 }

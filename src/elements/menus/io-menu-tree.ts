@@ -66,35 +66,41 @@ export class IoMenuTree extends IoElement {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColorDark);
-      padding: var(--iotSpacing);
+      background-color: var(--iotBackgroundColorDimmed);
+      padding: var(--iotSpacing) 0;
       align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
-      position: relative;
       min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
       min-height: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
       overflow: auto;
     }
 
     :host io-collapsable {
-      overflow: hidden;
       flex: 0 0 auto;
       border-color: transparent;
+      border: 0;
+      overflow: visible;
     }
     :host io-collapsable > div.io-collapsable-content {
       background-color: transparent;
-      overflow: hidden;
       flex: 0 0 auto;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: var(--iotBackgroundColorFaint);
     }
     
+    :host io-menu-item:first-of-type {
+      margin-top: var(--iotBorderWidth);
+    }
     :host io-menu-item {
-      background-color: transparent;
+      background-color: var(--iotBackgroundColorDimmed);
       flex: 0 0 auto;
       align-self: stretch;
       border-radius: 0;
-      position: relative;
-      overflow: visible;
+      margin-left: var(--iotBorderWidth);
+      margin-right: var(--iotBorderWidth);
     }
     :host io-menu-item[depth="1"] {
       padding-left: calc(var(--iotLineHeight) * 1);
@@ -119,22 +125,16 @@ export class IoMenuTree extends IoElement {
       margin-bottom: var(--iotBorderWidth);
     }
     :host io-menu-item:first-of-type {
-      margin-top: var(--iotSpacing);
+      /* margin-top: var(--iotSpacing); */
     }
 
-    /* Item divider */
-    :host io-menu-item:not(:last-of-type)::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-    :host io-menu-item:not(:last-of-type)::before {
-      right: 0;
-      bottom: calc(var(--iotBorderWidth) * -2);
-      border-bottom: var(--iotBorder);
-      border-bottom-color: var(--iotColor);
-      opacity: 0.05;
+    /* Item dividers */
+    :host io-collapsable > io-boolean {
+      margin: 0;
+      margin-left: var(--iotBorderWidth);
+      margin-right: var(--iotBorderWidth);
+      z-index: 1;
+      overflow: visible;
     }
 
     /* Search field */

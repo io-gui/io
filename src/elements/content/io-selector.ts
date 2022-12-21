@@ -16,6 +16,10 @@ export class IoSelector extends IoElement {
       :host {
         flex-direction: column;
         position: relative;
+        /* overflow-y: auto; */
+        /* max-height: 100%; */
+        /* justify-self: stretch; */
+        /* flex: 1 1 auto; */
       }
       @keyframes io-loading-spinner {
         to {
@@ -53,11 +57,14 @@ export class IoSelector extends IoElement {
   @Property(false)
   declare cache: boolean;
 
-  @Property({value: false, reflect: true, notify: false})
+  @Property({value: false, reflect: true, reactive: false})
   declare loading: boolean;
 
-  @Property({type: Object, notify: false})
+  @Property({type: Object, reactive: false})
   declare private _caches: Record<string, HTMLElement>;
+
+  declare private _observer: MutationObserver;
+  private _selected?: any;
 
   importModule(path: string) {
     const importPath = new URL(path, String(window.location)).href;
@@ -74,16 +81,20 @@ export class IoSelector extends IoElement {
     });
   }
 
-  dispose() {
-    // TODO: check for garbage collection!
-    for (const key in this._caches) {
-      disposeElementDeep(this._caches[key] as unknown as IoElement);
-    }
-    super.dispose();
+  connectedCallback() {
+    this.optionsMutated();
   }
 
-  changed() {
+  optionsMutated() {
     const selected = this.select === 'first' ? this.options.first : this.options.last;
+    if (selected !== this._selected) {
+      this._selected = selected;
+      this._renderSelected();
+    }
+  }
+
+  protected _renderSelected() {
+    const selected = this._selected;
 
     debug: {
       if (selected && typeof selected !== 'string') {
@@ -95,12 +106,9 @@ export class IoSelector extends IoElement {
 
     if (!selected) {
 
-      console.log('template', null);
       this.template([]);
 
-    } else {
-
-      if (this.childNodes[0]?.id === selected) return;
+    } else if (this.childNodes[0]?.id !== selected) {
 
       let element = this.elements.find((element: any) => {return element[1].id === selected;}) as VDOMArray;
 
@@ -152,5 +160,13 @@ export class IoSelector extends IoElement {
         });
       }
     }
+  }
+
+  dispose() {
+    // TODO: check for garbage collection!
+    for (const key in this._caches) {
+      disposeElementDeep(this._caches[key] as unknown as IoElement);
+    }
+    super.dispose();
   }
 }

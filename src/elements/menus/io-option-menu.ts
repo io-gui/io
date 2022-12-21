@@ -39,7 +39,7 @@ export class IoOptionMenu extends IoElement {
       border-radius: var(--iotBorderRadius);
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
-      background-color: var(--iotBackgroundColorDark);
+      background-color: var(--iotBackgroundColorDimmed);
       background-image: var(--iotGradientOutset);
       /* padding-left: calc(2 * var(--iotSpacing)); */
       /* padding-right: calc(2 * var(--iotSpacing)); */

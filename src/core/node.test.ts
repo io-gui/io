@@ -1,6 +1,8 @@
 import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
+// TODO: test lazy reactivity!
+
 export default class {
   run() {
     describe('IoNode', () => {
@@ -71,11 +73,11 @@ export default class {
               return {
                 prop1: {
                   value: {},
-                  notify: false,
+                  reactive: false,
                   observe: true,
                 },
                 prop2: {
-                  notify: true,
+                  reactive: true,
                 },
                 prop3: ''
               };
@@ -96,7 +98,7 @@ export default class {
             value: 0,
             type: Number,
             binding: undefined,
-            notify: true,
+            reactive: true,
             reflect: false,
             observe: false,
           });
@@ -106,7 +108,7 @@ export default class {
             value: {},
             type: Object,
             binding: undefined,
-            notify: false,
+            reactive: false,
             reflect: false,
             observe: true,
           });
@@ -115,7 +117,7 @@ export default class {
             value: null,
             type: undefined,
             binding: undefined,
-            notify: true,
+            reactive: true,
             reflect: false,
             observe: false,
           });
@@ -126,7 +128,7 @@ export default class {
               return {
                 prop1: {
                   value: {},
-                  notify: false,
+                  reactive: false,
                   reflect: true,
                   observe: true,
                 },
@@ -147,7 +149,7 @@ export default class {
 
           chai.expect(props.prop1.value).to.be.eql([1, 2, 3]);
           chai.expect(props.prop1.type).to.be.equal(Array);
-          chai.expect(props.prop1.notify).to.be.equal(false);
+          chai.expect(props.prop1.reactive).to.be.equal(false);
           chai.expect(props.prop1.reflect).to.be.equal(true);
           chai.expect(props.prop1.observe).to.be.equal(true);
         });

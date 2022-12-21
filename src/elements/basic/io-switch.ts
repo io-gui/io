@@ -40,7 +40,7 @@ export class IoSwitch extends IoBoolean {
         left: var(--iotBorderWidth);
         height: calc(var(--iotLineHeight) - calc(2 * var(--iotBorderWidth)));
         width: calc(var(--iotLineHeight) - calc(2 * var(--iotBorderWidth)));
-        background-color: var(--iotBackgroundColorDark);
+        background-color: var(--iotBackgroundColorDimmed);
         box-shadow: var(--iotShadowOutset);
         border: var(--iotBorder);
         border-color: var(--iotBorderColorOutset);

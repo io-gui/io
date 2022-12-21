@@ -20,7 +20,8 @@ export class IoMdView extends IoElement {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
-        padding: var(--iotLineHeight) var(--iotLineHeight2);
+        padding: 0 var(--iotLineHeight);
+        padding-bottom: var(--iotLineHeight);
         color: var(--iotColor);
         background-color: var(--iotBackgroundColor);
       }
@@ -31,70 +32,82 @@ export class IoMdView extends IoElement {
         margin-top: 0;
       }
       :host p {
-        line-height: 1.4em;
-        padding: 0.5em 0;
+        line-height: 1.45em;
+        margin: 0.35em 0;
       }
       :host a {
-        text-decoration: underline;
+        text-decoration: none;
         color: var(--iotColorLink);
-      }
-      :host h1, :host h2, :host h3, :host h4 {
-        margin: 0.5em 0;
-        border: var(--iotBorder);
-        border-width: 0 0 var(--iotBorderWidth) 0;
       }
       :host h1 {
-        padding: 0.5em 0;
+        padding: 0.4em 0;
+        margin: 0.3em 0;
+        border-bottom: var(--iotBorder);
+        color: var(--iotColorStrong);
       }
       :host h2 {
-        padding: 0.4em 0;
+        margin: 0.3em 0;
+        color: var(--iotColorLink);
+        color: var(--iotColorDimmed);
       }
       :host h3 {
-        padding: 0.3em 0;
-        border: 0;
+        margin: 0.2em 0;
+        color: var(--iotColorDimmed);
       }
       :host h4 {
-        padding: 0.2em 0;
-        border: 0;
+        margin: 0.1em 0;
+        color: var(--iotColorDimmed);
       }
       :host code {
-        font-family: monospace, monospace;
-        -webkit-font-smoothing: auto;
-        overflow: auto;
-        color: var(--iotColorLink);
+        background-color: var(--iotBackgroundColorFaint);
       }
-      :host strong code {
-        background: var(--iotBackgroundColorLight);
-      }
+      :host strong code {}
       :host pre > code {
-        background: var(--iotBackgroundColorLight);
-        color: inherit;
-        line-height: 1.6em;
+        line-height: 1.3em;
       }
-
+      
       :host code[class] {
-        padding: 1em;
+        background-color: var(--iotBackgroundColorDimmed);
+        padding: var(--iotSpacing4);
         display: block;
+        white-space: pre-wrap;
+      }
+      :host blockquote code {
+        background-color: transparent;
       }
       :host blockquote {
         font-size: 0.85em;
-        opacity: 0.5;
-        margin: 0;
-        padding: 0;
+        opacity: 0.75;
+        margin: var(--iotLineHeight) 0;
+        padding: var(--iotSpacing4) var(--iotLineHeight);
+        background-color: var(--iotBackgroundColorDimmed);
+        color: var(--iotColorDimmed);
+        border-left: var(--iotBorder);
+        border-left-width: var(--iotSpacing2);
+      }
+      :host blockquote strong {
+        color: var(--iotColorStrong);
       }
       :host table  {
         width: 100% !important;
-        border: 1px solid black;
+        border: var(--iotBorder);
         border-collapse: collapse;
-        table-layout: fixed;
+        table-layout: auto;
+      }
+      :host table th {
+        background-color: var(--iotBackgroundColorDimmed);
+        color: var(--iotColorStrong);
+        font-weight: bold;
       }
       :host table td,
       :host table tr,
       :host table th {
-        border: 1px solid gray;
-        padding: 0.25em;
+        border: var(--iotBorder);
+        padding: var(--iotSpacing) var(--iotSpacing2);
         text-overflow: ellipsis;
         overflow: hidden;
+        white-space: nowrap;
+        width: auto;
       }
       :host .videocontainer {
           width: 100%;
@@ -136,11 +149,21 @@ export class IoMdView extends IoElement {
   @Property({value: '', reflect: true})
   declare src: string;
 
+  @Property({type: Array})
+  declare strip: string[];
+
   @Property({value: false, reflect: true})
   declare loading: boolean;
 
   @Property(true)
   declare sanitize: boolean;
+
+  protected _strip(innerHTML: string) {
+    for (let i = 0; i < this.strip.length; i++) {
+      innerHTML = innerHTML.replace(new RegExp(this.strip[i], 'g'),'');
+    }
+    return innerHTML;
+  }
 
   protected _parseMarkdown(markdown: string) {
     // if (this._disposed) return;
@@ -153,9 +176,9 @@ export class IoMdView extends IoElement {
       });
       this.loading = false;
       if (this.sanitize) {
-        this.innerHTML = purify.sanitize(marked(markdown));
+        this.innerHTML = this._strip(purify.sanitize(marked(markdown)));
       } else {
-        this.innerHTML = marked(markdown);
+        this.innerHTML = this._strip(marked(markdown));
       }
     }
   }

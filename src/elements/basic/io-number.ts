@@ -245,7 +245,7 @@ export class IoNumberLadderStep extends IoField {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--iotBackgroundColorLight);
+        background-color: var(--iotBackgroundColorStrong);
         color: var(--iotColor);
         align-self: stretch;
         touch-action: none;
@@ -404,7 +404,7 @@ export class IoNumberLadder extends IoElement {
       }
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
-        background-color: var(--iotBackgroundColorLight);
+        background-color: var(--iotBackgroundColorStrong);
         border-color: var(--iotBorderColorFocus);
         transition: opacity 0.2s;
         opacity: 1;

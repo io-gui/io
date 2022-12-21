@@ -26,7 +26,7 @@ export class IoMenuOptions extends IoElement {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColorDark);
+      background-color: var(--iotBackgroundColorDimmed);
       padding: var(--iotSpacing);
       user-select: none;
       transition: opacity 0.25s;
@@ -65,6 +65,7 @@ export class IoMenuOptions extends IoElement {
     :host[horizontal] > .item {
       margin-left: var(--iotBorderWidth);
       padding: var(--iotSpacing) calc(0.75 * var(--iotLineHeight));
+      border-color: transparent;
     }
 
     /* Item divider */
@@ -158,7 +159,7 @@ export class IoMenuOptions extends IoElement {
   @Property(undefined)
   declare $parent?: IoMenuItem;
 
-  @Property({type: Array, notify: false})
+  @Property({type: Array, reactive: false})
   declare private _overflownItems: MenuItem[];
 
   static get Listeners() {

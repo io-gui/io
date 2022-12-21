@@ -37,16 +37,19 @@ type Variables = {
   iotFontSize: number;
 
   iotBackgroundColor: Color;
-  iotBackgroundColorLight: Color;
-  iotBackgroundColorDark: Color;
+  iotBackgroundColorStrong: Color;
+  iotBackgroundColorDimmed: Color;
+  iotBackgroundColorFaint: Color;
   iotBackgroundColorField: Color;
   iotBackgroundColorSelected: Color;
 
   iotColor: Color;
+  iotColorStrong: Color;
+  iotColorDimmed: Color;
   iotColorError: Color;
   iotColorLink: Color;
   iotColorField: Color;
-  iotColorFieldSelected: Color;
+  iotColorSelected: Color;
 
   iotBorderColor: Color;
   iotBorderColorLight: Color;
@@ -87,23 +90,26 @@ const defaultThemes: Themes = {
     iotBorderWidth2: 2,
     iotFontSize: 14,
 
-    iotBackgroundColor: new Color(1, 1, 1, 1),
-    iotBackgroundColorLight: new Color(0.6, 0.6, 0.6, 1),
-    iotBackgroundColorDark: new Color(0.84, 0.84, 0.84, 1),
-    iotBackgroundColorField: new Color(0.92, 0.92, 0.92, 1),
-    iotBackgroundColorSelected: new Color(0.3, 0.6, 1, 1),
+    iotBackgroundColor: new Color(0.95, 0.95, 0.95, 1),
+    iotBackgroundColorStrong: new Color(0.75, 0.75, 0.75, 1),
+    iotBackgroundColorDimmed: new Color(0.85, 0.85, 0.85, 1),
+    iotBackgroundColorFaint: new Color(0.9, 0.9, 0.9, 1),
+    iotBackgroundColorField: new Color(0.85, 0.86, 0.87, 1),
+    iotBackgroundColorSelected: new Color(0.2, 0.5, 0.9, 1),
 
-    iotColor: new Color(0, 0, 0, 1),
-    iotColorError: new Color(0.91, 0.5, 0.5, 1),
-    iotColorLink: new Color(0.2, 0.75, 0.2, 1),
+    iotColor: new Color(0.25, 0.25, 0.2, 1),
+    iotColorStrong: new Color(0, 0, 0, 1),
+    iotColorDimmed: new Color(0.34, 0.34, 0.25, 1),
+    iotColorError: new Color(0.95, 0.5, 0.3, 1),
+    iotColorLink: new Color(0.4, 0.7, 0.3, 1),
     iotColorField: new Color(0, 0, 0, 1),
-    iotColorFieldSelected: new Color(1, 1, 1, 1),
+    iotColorSelected: new Color(1, 1, 1, 1),
 
-    iotBorderColor: new Color(0.7, 0.7, 0.7, 1),
+    iotBorderColor: new Color(0.8, 0.8, 0.8, 1),
     iotBorderColorLight: new Color(1, 1, 1, 1),
-    iotBorderColorDark: new Color(1, 1, 1, 1),
-    iotBorderColorSelected: new Color(1, 1, 1, 1),
-    iotBorderColorFocus: new Color(0.3, 0.3, 1, 1),
+    iotBorderColorDark: new Color(0.65, 0.65, 0.65, 1),
+    iotBorderColorSelected: new Color(0.8, 0.9, 1, 1),
+    iotBorderColorFocus: new Color(0.3, 0.65, 1, 1),
 
     iotGradientColorStart: new Color(0.9, 0.9, 0.9, 1),
     iotGradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
@@ -134,26 +140,29 @@ const defaultThemes: Themes = {
     iotBorderWidth2: 2,
     iotFontSize: 14,
 
-    iotBackgroundColor: new Color(0.2, 0.2, 0.2, 1),
-    iotBackgroundColorLight: new Color(0.3, 0.3, 0.3, 1),
-    iotBackgroundColorDark: new Color(0.5, 0.5, 0.5, 1),
-    iotBackgroundColorField: new Color(0.137, 0.137, 0.137, 1),
-    iotBackgroundColorSelected: new Color(0.1, 0.3, 0.85, 1),
+    iotBackgroundColor: new Color(0.092, 0.094, 0.093, 1),
+    iotBackgroundColorStrong: new Color(0.06, 0.06, 0.06, 1),
+    iotBackgroundColorDimmed: new Color(0.12, 0.124, 0.122, 1),
+    iotBackgroundColorFaint:  new Color(0.089, 0.09, 0.09, 1),
+    iotBackgroundColorField: new Color(0.02, 0.038, 0.03, 1),
+    iotBackgroundColorSelected: new Color(0, 0.3, 0.65, 1),
 
-    iotColor: new Color(1, 1, 1, 1),
-    iotColorError: new Color(1, 0.376, 0.062, 1),
-    iotColorLink: new Color(0.75, 0.9, 0.59, 1),
-    iotColorField: new Color(0.75, 0.75, 0.75, 1),
-    iotColorFieldSelected: new Color(1, 1, 1, 1),
+    iotColor: new Color(0.76, 0.77, 0.78, 1),
+    iotColorStrong: new Color(1, 1, 1, 1),
+    iotColorDimmed: new Color(0.6, 0.64, 0.63, 1),
+    iotColorError: new Color(0.8, 0.376, 0.062, 1),
+    iotColorLink: new Color(0.78, 0.9, 0.6, 1),
+    iotColorField: new Color(0.65, 0.7, 0.68, 1),
+    iotColorSelected: new Color(1, 1, 1, 1),
 
-    iotBorderColor: new Color(0.3, 0.3, 0.3, 1),
-    iotBorderColorLight: new Color(0.4, 0.4, 0.4, 1),
-    iotBorderColorDark: new Color(0.1, 0.1, 0.1, 1),
-    iotBorderColorSelected: new Color(0.3, 0.3, 1, 1),
-    iotBorderColorFocus: new Color(0.5, 0.9, 1, 1),
+    iotBorderColor: new Color(0.2, 0.2, 0.2, 1),
+    iotBorderColorLight: new Color(0.3, 0.3, 0.3, 1),
+    iotBorderColorDark: new Color(0.06, 0.06, 0.06, 1),
+    iotBorderColorSelected: new Color(0.6, 0.9, 1, 1),
+    iotBorderColorFocus: new Color(0.3, 0.65, 0.75, 1),
 
-    iotGradientColorStart: new Color(0.7, 0.7, 0.7, 1),
-    iotGradientColorEnd: new Color(0.3, 0.3, 0.3, 1),
+    iotGradientColorStart: new Color(0.192, 0.195, 0.194, 1),
+    iotGradientColorEnd: new Color(0.08, 0.083, 0.082, 1),
 
     iotShadowColor: new Color(0, 0, 0, 0.2),
   },
@@ -175,12 +184,13 @@ const compositeVariables = /* css */`
 
 const persistantThemes = $({
   value: JSON.parse(JSON.stringify(defaultThemes)),
-  storage: 'local',
+  // storage: 'local',
+  storage: 'none',
   key: 'io-persistantThemes-' + THEME_VERSION
 });
 
 const theme = $({
-  value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+  value: 'dark',//window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
   storage: 'local',
   key: 'theme-' + THEME_VERSION
 });

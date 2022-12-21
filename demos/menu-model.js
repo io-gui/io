@@ -13,7 +13,7 @@ export class IoOptionsDemoView extends IoElement {
         border-radius: var(--iotBorderRadius);
       }
       :host > div {
-        background-color: var(--iotBackgroundColorDark);
+        background-color: var(--iotBackgroundColorDimmed);
         display: flex;
         height: var(--iotLineHeight);
       }
@@ -22,6 +22,7 @@ export class IoOptionsDemoView extends IoElement {
       }
       :host io-label {
         background-color: transparent;
+        color: var(--iotColor);
       }
       :host io-label.first {
         color: var(--iotColorLink);
@@ -93,9 +94,9 @@ export class IoItemDemoView extends IoElement {
   changed() {
     let selectElement = null;
     if (this.item.mode === 'toggle') {
-      selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
+      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
     } else if (this.item.mode === 'select' || this.item.mode === 'anchor') {
-      selectElement = ['io-boolean', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
+      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
     }
     this.template([
       ['div', [

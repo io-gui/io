@@ -1,4 +1,4 @@
-import { MenuItem, MenuItemArgsWeak } from './menu-item.js';
+import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
 import { MenuOptions } from './menu-options.js';
 
 const testOptions = [
@@ -22,7 +22,7 @@ const testOptions = [
     {value: 'anchor2', mode: 'anchor'},
     {value: 'anchor3', mode: 'anchor'},
   ]},
-] as MenuItemArgsWeak[];
+] as MenuItemArgsLoose[];
 
 const eventStack: string[] = [];
 

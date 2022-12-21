@@ -241,7 +241,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     `;
   }
 
-  @Property({type: Object, notify: false})
+  @Property({type: Object, reactive: false})
   declare $: Record<string, any>; // TODO: Add type safety.
 
   @Property({value: '', reflect: true})

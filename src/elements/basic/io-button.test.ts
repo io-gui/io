@@ -15,7 +15,7 @@ export default class {
           chai.expect(element.role).to.equal('button');
           chai.expect(element._properties.get('action')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: undefined,
@@ -23,7 +23,7 @@ export default class {
           });
           chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: undefined,
@@ -31,7 +31,7 @@ export default class {
           });
           chai.expect(element._properties.get('pressed')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,

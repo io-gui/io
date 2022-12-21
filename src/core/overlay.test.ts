@@ -20,7 +20,7 @@ export default class {
 
           chai.expect(IoOverlaySingleton._properties.get('expanded')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -29,7 +29,7 @@ export default class {
 
           chai.expect(IoOverlaySingleton._properties.get('skipCollapse')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Boolean,

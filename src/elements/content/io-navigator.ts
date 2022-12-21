@@ -3,7 +3,6 @@ import { MenuOptions } from '../menus/models/menu-options.js';
 import { MenuItem } from '../menus/models/menu-item.js';
 import { Property } from '../../core/internals/property.js';
 import './io-selector.js';
-import './io-scroller.js';
 
 @RegisterIoElement
 export class IoNavigator extends IoElement {
@@ -25,7 +24,6 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options {
         align-self: stretch;
         border-radius: 0;
-        padding: 0;
         border-color: var(--iotBorderColorLight);
       }
       :host[collapsed] > io-menu-options {
@@ -41,18 +39,26 @@ export class IoNavigator extends IoElement {
       }
       :host > io-menu-options {
         flex: 0 0 auto;
+        padding: 0;
       }
       :host > io-menu-tree {
         flex: 0 0 auto;
         min-width: 10em;
         overflow-y: auto;
+        padding: var(--iotBorderWidth) 0;
+      }
+      :host[menu=left] > io-menu-tree {
+        border-width: 0 var(--iotBorderWidth) 0 0;
+      }
+      :host[menu=left] > io-menu-tree {
+        border-width: 0 var(--iotBorderWidth) 0 0;
       }
       :host > io-menu-item.hamburger {
         border-radius: 0;
         padding: calc(var(--iotSpacing) + 0.5em);
         height: 100%;
         flex: 0 0 auto;
-        background-color: var(--iotBackgroundColorDark);
+        background-color: var(--iotBackgroundColorDimmed);
         border-color: transparent !important;
       }
       :host > io-menu-item.hamburger > .hasmore {
@@ -70,7 +76,7 @@ export class IoNavigator extends IoElement {
       :host > io-selector {
         overflow: auto;
       }
-      :host > io-selector,
+      /* :host > io-selector, */
       :host > io-scroller,
       :host > io-scroller > io-selector {
         flex: 1 1 auto;
@@ -93,8 +99,8 @@ export class IoNavigator extends IoElement {
   @Property('first')
   declare select: 'first' | 'last';
 
-  @Property('select-scroll')
-  declare mode: 'select-scroll' | 'select' | 'scroll';
+  @Property('select')
+  declare mode: 'select' | 'scroll' | 'select-and-anchor';
 
   @Property(Infinity)
   declare depth: number;
@@ -110,9 +116,9 @@ export class IoNavigator extends IoElement {
 
   init() {
     this.throttle(this._onSetCollapsed);
+    this.changed();
   }
   onResized() {
-    // console.log('res', this);
     this.throttle(this._onSetCollapsed);
   }
 
@@ -130,7 +136,7 @@ export class IoNavigator extends IoElement {
     let contentNavigation: VDOMArray = ['io-selector', {options: this.options, cache: this.cache, select: this.select, elements: this.elements}];
     if (this.mode === 'scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
-    } else if (this.mode === 'select-scroll') {
+    } else if (this.mode === 'select-and-anchor') {
       contentNavigation = ['io-scroller', {options: this.options}, [contentNavigation]];
     }
 

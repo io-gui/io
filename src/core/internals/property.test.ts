@@ -16,7 +16,7 @@ class TestIoNode extends IoNode {
 export default class {
   run() {
     describe('Property', () => {
-      it('Should initialize correct property definitions and values from weakly typed property definitions', () => {
+      it('Should initialize correct property definitions and values from loosely typed property definitions', () => {
         let propDef, prop;
         // initialize with empty object as property definition
         propDef = new ProtoProperty({});
@@ -27,7 +27,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -35,7 +35,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with null property definition
@@ -46,7 +46,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -54,7 +54,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with undefined property definition
@@ -65,7 +65,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -73,7 +73,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with Number property definition
@@ -84,7 +84,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -92,7 +92,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with type: Number property definition
@@ -103,7 +103,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -111,7 +111,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with number property definition
@@ -122,7 +122,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -130,7 +130,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with value: number property definition
@@ -141,7 +141,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -149,7 +149,7 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with String property definition
@@ -160,7 +160,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -168,7 +168,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with type: String property definition
@@ -179,7 +179,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -187,7 +187,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with string property definition
@@ -198,7 +198,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -206,7 +206,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with value: string property definition
@@ -217,7 +217,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -225,7 +225,7 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with Boolean property definition
@@ -236,7 +236,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -244,7 +244,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with type: Boolean property definition
@@ -255,7 +255,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -263,7 +263,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with boolean property definition
@@ -274,7 +274,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -282,7 +282,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with value: boolean property definition
@@ -293,7 +293,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -301,7 +301,7 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with Object property definition
@@ -312,7 +312,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -320,7 +320,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with type: Object property definition
@@ -331,7 +331,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -339,7 +339,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         const object = {prop: true};
@@ -351,7 +351,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -359,7 +359,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         chai.expect(propDef.value).to.equal(object);
@@ -372,7 +372,7 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -380,7 +380,7 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with type: Array property definition
@@ -391,7 +391,7 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -399,7 +399,7 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with an object property definition with object value property
@@ -411,7 +411,7 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -419,7 +419,7 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         chai.expect(propDef.value).to.equal(array);
@@ -432,7 +432,7 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -440,7 +440,7 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with an object property definition with custom object1 value property
@@ -452,7 +452,7 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -460,7 +460,7 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         chai.expect(propDef.value).to.equal(object1);
@@ -473,7 +473,7 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -481,7 +481,7 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with an object property definition with multiple type properties
@@ -492,7 +492,7 @@ export default class {
           type: [Object, Object1],
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -500,13 +500,13 @@ export default class {
           type: [Object, Object1],
           binding: undefined,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         // initialize with non-default property definition
         propDef = new ProtoProperty({
           reflect: true,
-          notify: false,
+          reactive: false,
           observe: true,
         });
         prop = new PropertyInstance(propDef);
@@ -515,7 +515,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: true,
-          notify: false,
+          reactive: false,
           observe: true,
         });
       });
@@ -545,7 +545,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -553,7 +553,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
 
@@ -567,7 +567,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
@@ -575,7 +575,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: false,
-          notify: true,
+          reactive: true,
           observe: false,
         });
       });
@@ -587,7 +587,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          notify: false,
+          reactive: false,
           observe: true,
         });
         propDef1.assign(propDef2);
@@ -599,7 +599,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          notify: false,
+          reactive: false,
           observe: true,
         });
         propDef2.assign(propDef1);
@@ -608,7 +608,7 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          notify: undefined,
+          reactive: undefined,
           observe: undefined,
         });
         chai.expect(propDef2).to.be.eql({
@@ -616,13 +616,13 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          notify: false,
+          reactive: false,
           observe: true,
         });
 
         propDef1 = new ProtoProperty({
           reflect: true,
-          notify: true,
+          reactive: true,
           observe: false,
         });
         propDef2 = new ProtoProperty({
@@ -636,7 +636,7 @@ export default class {
           binding: undefined,
           type: String,
           reflect: true,
-          notify: true,
+          reactive: true,
           observe: false
         });
       });

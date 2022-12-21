@@ -54,13 +54,14 @@ export class IoField extends IoElement {
         border: var(--iotBorderError);
       }
       :host[selected] {
-        color: var(--iotColorFieldSelected);
+        color: var(--iotColorSelected);
         background-color: var(--iotBackgroundColorSelected);
+        border-color: var(--iotBorderColorSelected);
       }
       :host:focus {
         position: relative;
         text-overflow: inherit;
-        border-color: var(--iotBackgroundColor);
+        border-color: var(--iotBorderColorSelected);
         outline: 1px solid var(--iotBorderColorFocus);
       }
       :host[placeholder]:empty:before {

@@ -21,7 +21,7 @@ export default class {
 
           chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: undefined,
@@ -29,7 +29,7 @@ export default class {
           });
           chai.expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -37,7 +37,7 @@ export default class {
           });
           chai.expect(element._properties.get('selected')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,

@@ -14,7 +14,7 @@ export class IoNotify extends IoElement {
       top: 0;
       left: 0;
       box-sizing: border-box;
-      background-color: var(--iotBackgroundColorDark);
+      background-color: var(--iotBackgroundColorDimmed);
       border: var(--iotBorder);
       border-color: var(--iotColorError);
       width: 100%;

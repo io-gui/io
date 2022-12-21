@@ -18,7 +18,7 @@ export default class {
           chai.expect(element.role).to.equal('switch');
           chai.expect(element._properties.get('value')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -26,7 +26,7 @@ export default class {
           });
           chai.expect(element._properties.get('true')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,
@@ -34,7 +34,7 @@ export default class {
           });
           chai.expect(element._properties.get('false')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,
@@ -69,16 +69,6 @@ export default class {
           chai.expect(element.innerHTML).to.equal(`<io-icon icon="${element.icon}">${IoIconsetSingleton.getIcon(element.icon)}</io-icon><io-label label="false" aria-label="false">${element.false}</io-label>`);
           element.icon = '';
           chai.expect(element.innerHTML).to.equal(`<io-label label="false" aria-label="false">${element.false}</io-label>`);
-        });
-        it('should set value-icon to match value property', () => {
-          element.true = 'icons:box_fill_checked';
-          element.false = 'icons:box';
-          chai.expect(element.innerHTML).to.equal(`<io-icon icon="${element.false}">${IoIconsetSingleton.getIcon(element.false)}</io-icon>`);
-          element.toggle();
-          chai.expect(element.innerHTML).to.equal(`<io-icon icon="${element.true}">${IoIconsetSingleton.getIcon(element.true)}</io-icon>`);
-          element.toggle();
-          element.true = 'true';
-          element.false = 'false';
         });
         it('should not render innerHTML if no value string is computed', () => {
           element.true = '';

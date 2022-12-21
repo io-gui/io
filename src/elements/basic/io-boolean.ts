@@ -45,16 +45,9 @@ export class IoBoolean extends IoField {
     this.setAttribute('aria-checked', String(!!this.value));
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     const label = this.value ? this.true : this.false;
-    if (label.search(':') !== -1) {
-      this.template([
-        this.icon ? ['io-icon', {icon: this.icon, stroke: this.stroke}] : null,
-        ['io-icon', {icon: label, stroke: this.stroke}]
-      ]);
-    } else {
-      this.template([
-        this.icon ? ['io-icon', {icon: this.icon, stroke: this.stroke}] : null,
-        label ? ['io-label', {label: label}] : null
-      ]);
-    }
+    this.template([
+      this.icon ? ['io-icon', {icon: this.icon, stroke: this.stroke}] : null,
+      label ? ['io-label', {label: label}] : null
+    ]);
   }
 }

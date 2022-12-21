@@ -62,13 +62,13 @@ export type PropertyDeclaration = {
 	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect?: boolean;
-	notify?: boolean;
+	reactive?: boolean;
 	observe?: boolean;
 };
 /**
- * Allows weak declaration of properties by specifying only partial declarations such as default value or type.
+ * Allows loose declaration of properties by specifying only partial declarations such as default value or type.
  */
-export type PropertyDeclarationWeak = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
+export type PropertyDeclarationLoose = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDeclaration;
 /**
  * Finalized property definition created from property declaration.
  */
@@ -77,13 +77,13 @@ export declare class ProtoProperty {
 	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect?: boolean;
-	notify?: boolean;
+	reactive?: boolean;
 	observe?: boolean;
 	/**
-	 * Takes a weakly typed property declaration and returns full property definition with unscpecified fileds inferred.
-	 * @param {PropertyDeclarationWeak} def Weakly typed property definition
+	 * Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
+	 * @param {PropertyDeclarationLoose} def Loosely typed property definition
 	 */
-	constructor(def: PropertyDeclarationWeak);
+	constructor(def: PropertyDeclarationLoose);
 	/**
 	 * Assigns values of another ProtoProperty to itself, unless they are default values.
 	 * @param {ProtoProperty} protoProp Source ProtoProperty
@@ -98,7 +98,7 @@ export declare class PropertyInstance {
 	type?: Constructor | Constructor[];
 	binding?: Binding;
 	reflect: boolean;
-	notify: boolean;
+	reactive: boolean;
 	observe: boolean;
 	/**
 	 * Creates the property configuration object and copies values from `ProtoProperty`.
@@ -106,14 +106,14 @@ export declare class PropertyInstance {
 	 */
 	constructor(propDef: ProtoProperty);
 }
-export type PropertyDeclarations = Record<string, PropertyDeclarationWeak>;
+export type PropertyDeclarations = Record<string, PropertyDeclarationLoose>;
 export declare const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations>;
 /**
  * Allows property declarations using decorator pattern.
  * @param propertyDefinition Property declaration.
  * @return Property decorator function.
  */
-export declare const Property: (propertyDefinition: PropertyDeclarationWeak) => (target: IoNode, propertyName: string) => void;
+export declare const Property: (propertyDefinition: PropertyDeclarationLoose) => (target: IoNode, propertyName: string) => void;
 /**
  * Declares default listeners.
  */
@@ -122,15 +122,15 @@ export type ListenerDeclaration = [
 	AddEventListenerOptions?
 ];
 /**
- * Allows weak declaration of listeners by specifying only partial declarations such as function or function name.
+ * Allows loose declaration of listeners by specifying only partial declarations such as function or function name.
  */
-export type ListenerDeclarationWeak = string | CustomEventListener | ListenerDeclaration;
+export type ListenerDeclarationLoose = string | CustomEventListener | ListenerDeclaration;
 /**
- * Takes weakly typed listener declaration and returns stronly typed listener declaration.
- * @param {ListenerDeclarationWeak} def Weakly typed listener declaration
+ * Takes loosely typed listener declaration and returns stronly typed listener declaration.
+ * @param {ListenerDeclarationLoose} def Loosely typed listener declaration
  * @return {ListenerDeclaration} Stronly typed listener declaration
  */
-export declare const hardenListenerDeclaration: (def: ListenerDeclarationWeak) => ListenerDeclaration;
+export declare const hardenListenerDeclaration: (def: ListenerDeclarationLoose) => ListenerDeclaration;
 /**
  * Assigns source listener declaration to an existing array of listener declarations.
  * @param {ListenerDeclaration[]} defs Array of listener declarations
@@ -149,7 +149,7 @@ export type Listener = [
 	AddEventListenerOptions?
 ];
 export type Listeners = Record<string, Listener[]>;
-export type ListenersDeclaration = Record<string, ListenerDeclarationWeak>;
+export type ListenersDeclaration = Record<string, ListenerDeclarationLoose>;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `IoNode` class instances compatible with DOM events.
@@ -222,7 +222,7 @@ export declare class ProtoChain {
 	 */
 	readonly constructors: Array<IoNodeConstructor<any>>;
 	/**
-	 * Array of function names that start with "on" or "_on" for auto-binding.
+	 * Array of function names that start with "on" or "_" for auto-binding.
 	 */
 	readonly functions: Array<string>;
 	/**
@@ -875,8 +875,8 @@ export declare class MenuOptions extends MenuOptions_base {
 	delimiter: string;
 	push(...items: MenuItem[]): void;
 	getItem(value: any, deep?: boolean): any;
-	constructor(args?: MenuItemArgsWeak[], properties?: IoNodeArgs);
-	protected addItems(items: MenuItemArgsWeak[]): void;
+	constructor(args?: MenuItemArgsLoose[], properties?: IoNodeArgs);
+	protected addItems(items: MenuItemArgsLoose[]): void;
 	pathChanged(): void;
 	firstChanged(): void;
 	lastChanged(): void;
@@ -889,7 +889,7 @@ export declare class MenuOptions extends MenuOptions_base {
 	changed(): void;
 }
 export type MenuItemSelectType = "select" | "anchor" | "toggle" | "link" | "none";
-export type MenuItemArgsWeak = undefined | null | string | number | MenuItemArgs;
+export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
 export type MenuItemArgs = IoElementArgs & {
 	value?: any;
 	icon?: string;
@@ -897,7 +897,7 @@ export type MenuItemArgs = IoElementArgs & {
 	action?: () => void;
 	mode?: MenuItemSelectType;
 	selected?: boolean;
-	options?: MenuItemArgsWeak[] | MenuOptions;
+	options?: MenuItemArgsLoose[] | MenuOptions;
 };
 export declare class MenuItem extends IoNode {
 	value: any;
@@ -911,7 +911,7 @@ export declare class MenuItem extends IoNode {
 	options?: MenuOptions;
 	get hasmore(): boolean;
 	getSubitem(value: any): any;
-	constructor(args?: MenuItemArgsWeak);
+	constructor(args?: MenuItemArgsLoose);
 	toJSON(): Record<string, any>;
 	_onSubItemSelected(): void;
 	_onOptionsPathChanged(event: CustomEvent): void;
@@ -992,6 +992,9 @@ export declare class IoBoolean extends IoField {
 	_onClick(): void;
 	toggle(): void;
 	init(): void;
+	changed(): void;
+}
+export declare class IoBoolicon extends IoBoolean {
 	changed(): void;
 }
 /**
@@ -1326,7 +1329,6 @@ export declare class IoSlider2d extends IoSliderBase {
  * '></io-element-demo>
  **/
 export declare class IoColorSlider extends IoColorBase {
-	static get Style(): string;
 	channel: string;
 	vertical: boolean;
 	_onValueInput(event: CustomEvent): void;
@@ -1523,31 +1525,12 @@ export declare class IoSelector extends IoElement {
 	cache: boolean;
 	loading: boolean;
 	private _caches;
-	importModule(path: string): Promise<unknown>;
-	dispose(): void;
-	changed(): void;
-}
-export declare class IoScroller extends IoElement {
-	static get Style(): string;
-	options: MenuOptions;
 	private _observer;
-	private _scrollThrottle?;
-	private _scrollToThrottle?;
-	private _pauseScroll;
-	static get Listeners(): {
-		scroll: (string | {
-			capture: boolean;
-			passive: boolean;
-		})[];
-	};
-	init(): void;
+	private _selected?;
+	importModule(path: string): Promise<unknown>;
 	connectedCallback(): void;
-	protected _onDomMutation(): void;
-	protected _onDomMutationThrottled(): void;
-	protected _onScroll(): void;
-	protected _scrollTo(element?: HTMLElement, smooth?: boolean): void;
-	protected _scrollToAnchor(smooth?: boolean): void;
-	changed(): void;
+	optionsMutated(): void;
+	protected _renderSelected(): void;
 	dispose(): void;
 }
 export declare class IoMdNavigator extends IoElement {
@@ -1568,11 +1551,28 @@ export declare class IoMdView extends IoElement {
 	static get Style(): string;
 	role: string;
 	src: string;
+	strip: string[];
 	loading: boolean;
 	sanitize: boolean;
+	protected _strip(innerHTML: string): string;
 	protected _parseMarkdown(markdown: string): void;
 	srcChanged(): void;
 	changed(): void;
+}
+export declare class IoScroller extends IoElement {
+	static get Style(): string;
+	options: MenuOptions;
+	private _observer;
+	private _scrollToThrottle?;
+	private _anchor?;
+	init(): void;
+	connectedCallback(): void;
+	protected _onDomMutation(): void;
+	protected _onDomMutationThrottled(): void;
+	protected _scrollToAnchor(smooth?: boolean): void;
+	protected _scrollToElement(element?: HTMLElement, smooth?: boolean): void;
+	optionsMutated(): void;
+	dispose(): void;
 }
 export declare class IoNavigator extends IoElement {
 	static get Style(): string;
@@ -1581,7 +1581,7 @@ export declare class IoNavigator extends IoElement {
 	options: MenuOptions;
 	menu: "none" | "top" | "left" | "bottom" | "right";
 	select: "first" | "last";
-	mode: "select-scroll" | "select" | "scroll";
+	mode: "select" | "scroll" | "select-and-anchor";
 	depth: number;
 	cache: boolean;
 	collapsed: boolean;

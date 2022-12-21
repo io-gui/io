@@ -31,7 +31,7 @@ export default class {
 
           chai.expect(element._properties.get('$')).to.eql({
             binding: undefined,
-            notify: false,
+            reactive: false,
             observe: false,
             reflect: false,
             type: Object,
@@ -39,7 +39,7 @@ export default class {
           });
           chai.expect(element._properties.get('tabindex')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -47,7 +47,7 @@ export default class {
           });
           chai.expect(element._properties.get('contenteditable')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -55,7 +55,7 @@ export default class {
           });
           chai.expect(element._properties.get('class')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -63,7 +63,7 @@ export default class {
           });
           chai.expect(element._properties.get('role')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -71,7 +71,7 @@ export default class {
           });
           chai.expect(element._properties.get('label')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -79,7 +79,7 @@ export default class {
           });
           chai.expect(element._properties.get('name')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -87,7 +87,7 @@ export default class {
           });
           chai.expect(element._properties.get('title')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -95,7 +95,7 @@ export default class {
           });
           chai.expect(element._properties.get('id')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: String,
@@ -103,7 +103,7 @@ export default class {
           });
           chai.expect(element._properties.get('hidden')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -111,7 +111,7 @@ export default class {
           });
           chai.expect(element._properties.get('disabled')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: true,
             type: Boolean,
@@ -438,7 +438,7 @@ export default class {
           return {
             prop0: {
               value: 0,
-              notify: false,
+              reactive: false,
               reflect: true
             },
             prop1: 0,
@@ -459,7 +459,7 @@ export default class {
 
           chai.expect(element1._properties.get('prop0')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
@@ -467,7 +467,7 @@ export default class {
           });
           chai.expect(element1._properties.get('prop1')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: String,
@@ -476,7 +476,7 @@ export default class {
 
           chai.expect(element2._properties.get('prop0')).to.eql({
             binding: undefined,
-            notify: false,
+            reactive: false,
             observe: false,
             reflect: true,
             type: Number,
@@ -484,7 +484,7 @@ export default class {
           });
           chai.expect(element2._properties.get('prop1')).to.eql({
             binding: undefined,
-            notify: true,
+            reactive: true,
             observe: false,
             reflect: false,
             type: Number,
