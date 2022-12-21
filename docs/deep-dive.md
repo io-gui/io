@@ -147,7 +147,7 @@ class MyNode extends MySuperNode {
 Now let's get into each specific field of the PropertyDeclaration object. Note that each field is optional.
 
 | field | type | default | description |
-| ----- | ---- | ------- | ----------- |
+| :---- | :--: | :-----: | :---------- |
 | value | `any` | `undefined` | The initial value of the property |
 | type  | `any` | `undefined` | The type of the property |
 | reactive | `boolean` | `true` | Enables reactive behavior |
@@ -350,7 +350,7 @@ this.changed();
 
 ## Lazy Reactivity
 
-> **Warning!** This feature is not fully tested.
+> **Warning!** This feature is not fully tested!
 
 By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inneficiencies in complex systems where multiple properties are changing frequently.
 

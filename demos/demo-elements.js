@@ -164,7 +164,7 @@ const elements = [
   ]],
 ];
 
-export class IoDemoElementsDev extends IoElement {
+export class IoDemoElements extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -190,6 +190,9 @@ export class IoDemoElementsDev extends IoElement {
       }
       :host > io-collapsable[expanded] {
         /* flex-basis: 100%; */
+      }
+      :host io-collapsable > div.io-collapsable-content > * {
+        margin: var(--iotSpacing) !important;
       }
       :host span {
         display: block;
@@ -513,4 +516,4 @@ export class IoDemoElementsDev extends IoElement {
   }
 }
 
-RegisterIoElement(IoDemoElementsDev);
+RegisterIoElement(IoDemoElements);

@@ -15,7 +15,7 @@ export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
     :host {
-      background-color: var(--iotBackgroundColorDark);
+      background-color: var(--iotBackgroundColorDimmed);
       user-select: none;
     }
     :host > * {
@@ -41,11 +41,15 @@ export class IoMenuItem extends IoField {
       opacity: 0.5;
       line-height: initial;
     }
-    :host[selected][direction="up"],
+    :host[selected][direction="up"] {
+      border-top-color: var(--iotBorderColorSelected);
+    }
     :host[selected][direction="down"] {
       border-bottom-color: var(--iotBorderColorSelected);
     }
-    :host[selected][direction="right"],
+    :host[selected][direction="right"] {
+      border-right-color: var(--iotBorderColorSelected);
+    }
     :host[selected][direction="left"] {
       border-left-color: var(--iotBorderColorSelected);
     }

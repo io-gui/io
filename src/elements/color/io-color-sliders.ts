@@ -17,14 +17,6 @@ import { IoSlider2d } from '../sliders/io-slider-2d.js';
  **/
 @RegisterIoElement
 export class IoColorSlider extends IoColorBase {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: contents;
-      }
-    `;
-  }
-
   @Property('')
   declare channel: string;
 

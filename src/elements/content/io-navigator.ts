@@ -24,7 +24,6 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options {
         align-self: stretch;
         border-radius: 0;
-        padding: 0;
         border-color: var(--iotBorderColorLight);
       }
       :host[collapsed] > io-menu-options {
@@ -40,18 +39,26 @@ export class IoNavigator extends IoElement {
       }
       :host > io-menu-options {
         flex: 0 0 auto;
+        padding: 0;
       }
       :host > io-menu-tree {
         flex: 0 0 auto;
         min-width: 10em;
         overflow-y: auto;
+        padding: var(--iotBorderWidth) 0;
+      }
+      :host[menu=left] > io-menu-tree {
+        border-width: 0 var(--iotBorderWidth) 0 0;
+      }
+      :host[menu=left] > io-menu-tree {
+        border-width: 0 var(--iotBorderWidth) 0 0;
       }
       :host > io-menu-item.hamburger {
         border-radius: 0;
         padding: calc(var(--iotSpacing) + 0.5em);
         height: 100%;
         flex: 0 0 auto;
-        background-color: var(--iotBackgroundColorDark);
+        background-color: var(--iotBackgroundColorDimmed);
         border-color: transparent !important;
       }
       :host > io-menu-item.hamburger > .hasmore {
@@ -109,6 +116,7 @@ export class IoNavigator extends IoElement {
 
   init() {
     this.throttle(this._onSetCollapsed);
+    this.changed();
   }
   onResized() {
     this.throttle(this._onSetCollapsed);

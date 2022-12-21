@@ -70,16 +70,6 @@ export default class {
           element.icon = '';
           chai.expect(element.innerHTML).to.equal(`<io-label label="false" aria-label="false">${element.false}</io-label>`);
         });
-        it('should set value-icon to match value property', () => {
-          element.true = 'icons:box_fill_checked';
-          element.false = 'icons:box';
-          chai.expect(element.innerHTML).to.equal(`<io-icon icon="${element.false}">${IoIconsetSingleton.getIcon(element.false)}</io-icon>`);
-          element.toggle();
-          chai.expect(element.innerHTML).to.equal(`<io-icon icon="${element.true}">${IoIconsetSingleton.getIcon(element.true)}</io-icon>`);
-          element.toggle();
-          element.true = 'true';
-          element.false = 'false';
-        });
         it('should not render innerHTML if no value string is computed', () => {
           element.true = '';
           element.false = '';

@@ -131,12 +131,9 @@
       {value: 'Docs', options: [
         {value: 'Quick Start', options: [
           {label: 'Usage', value: 'usage', mode: 'anchor'},
-          {label: 'Simple App Example', value: 'simple-app-example', mode: 'anchor'},
-          {label: 'Style', value: 'style', mode: 'anchor'},
-          {label: 'Properties', value: 'properties', mode: 'anchor'},
-          {label: 'Listeners', value: 'listeners', mode: 'anchor'},
-          {label: 'Change Functions', value: 'change-functions', mode: 'anchor'},
-          {label: 'Simple App Recap', value: 'simple-app-recap', mode: 'anchor'},
+          {label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'anchor'},
+          {label: 'Making a Website', value: 'making-a-website', mode: 'anchor'},
+          {label: 'Use a Built-in Element', value: 'use-a-built-in-element', mode: 'anchor'},
         ]},
         {value: 'Deep Dive', options: [
           {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'anchor'},
@@ -242,6 +239,8 @@
       path: $({key: 'path', storage: 'hash', value: 'About'}),
     });
 
+    const siteRoot = 'https://iogui.dev/io/';
+
     export class IoMainPage extends IoNavigator {
       static get Properties() {
         return {
@@ -253,15 +252,15 @@
           cache: true,
           depth: 1,
           elements: [
-            ['io-md-view', {id: 'About', src: './docs/about.md'}],
+            ['io-md-view', {id: 'About', strip: [siteRoot], src: './README.md'}],
             ['io-navigator', {id: 'Docs', menu: 'left', collapseWidth: 640,
               options: OPTIONS.getItem('Docs').options,
               cache: true,
               mode: 'select-and-anchor',
               elements: [
-                ['io-md-view', {id: 'Quick Start', sanitize: false, src: './docs/quick-start.md'}],
-                ['io-md-view', {id: 'Deep Dive', sanitize: false, src: './docs/deep-dive.md'}],
-                ['io-md-view', {id: 'Development Notes', src: './docs/development-notes.md'}],
+                ['io-md-view', {id: 'Quick Start', strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+                ['io-md-view', {id: 'Deep Dive', strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
+                ['io-md-view', {id: 'Development Notes', strip: [siteRoot], src: './docs/development-notes.md'}],
               ]
             }],
             ['io-md-navigator', {id: 'Reference', menu: 'left',
@@ -271,16 +270,13 @@
               options: OPTIONS.getItem('Demos').options,
               cache: true,
               elements: [
-                ['io-demo-elements-dev', {id: 'Elements', import: './demos/elements-dev.js'}],
+                ['io-demo-elements', {id: 'Elements', import: './demos/demo-elements.js'}],
                 ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],
               ]
             }],
             ['io-gui-test-page', {id: 'Tests', import: './build/iogui.test.js'}],
           ]
         };
-      }
-      init() {
-        this.changed();
       }
     }
     RegisterIoElement(IoMainPage);

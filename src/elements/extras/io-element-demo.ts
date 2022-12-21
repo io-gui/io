@@ -19,7 +19,7 @@ export class IoElementDemo extends IoElement {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColorDark);
+      background-color: var(--iotBackgroundColorDimmed);
       padding: var(--iotSpacing);
       /*  */
       display: flex;

@@ -49,7 +49,7 @@ export class IoOverlay extends IoElement {
         pointer-events: all;
         visibility: visible;
         opacity: 1;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0,0,0,0.4);
       }
       :host > * {
         position: absolute !important;

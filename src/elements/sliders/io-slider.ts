@@ -100,11 +100,11 @@ export class IoSlider extends IoSliderBase {
       }
 
       // Line
-      vec3 lineCol = mix(iotColorFieldSelected.rgb, iotBackgroundColorField.rgb, 0.75);
+      vec3 lineCol = mix(iotColorSelected.rgb, iotBackgroundColorField.rgb, 0.75);
       finalCol = paintHorizontalLine(finalCol, position, lineCol);
 
       // Slider
-      finalCol = paintSlider(finalCol, position, size, iotColorFieldSelected.rgb, iotColorLink.rgb);
+      finalCol = paintSlider(finalCol, position, size, iotColorSelected.rgb, iotColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

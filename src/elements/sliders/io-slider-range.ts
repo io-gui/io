@@ -135,11 +135,11 @@ export class IoSliderRange extends IoSliderBase {
       }
 
       // Line
-      vec3 lineCol = mix(iotColorFieldSelected.rgb, iotBackgroundColorField.rgb, 0.75);
+      vec3 lineCol = mix(iotColorSelected.rgb, iotBackgroundColorField.rgb, 0.75);
       finalCol = paintHorizontalLine(finalCol, gridPosition, lineCol);
 
       // Slider
-      finalCol = paintSliderRange(finalCol, position, size, iotColorFieldSelected.rgb, iotColorLink.rgb);
+      finalCol = paintSliderRange(finalCol, position, size, iotColorSelected.rgb, iotColorLink.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }

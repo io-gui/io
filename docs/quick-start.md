@@ -1,195 +1,80 @@
-## Usage
+# Usage
 
-There are many ways to use Io-Gui. You can use its core classes `IoNode` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to a complex single-page application, or you can simply import and use one of its elements in your own web architecture.
+There are many ways to use Io-Gui. You can use its core classes `IoNode` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to complex single-page applications, or you can simply import and use one of its nodes or elements in your own web architecture. You can learn more about nodes and elements in the [deep dive] guide.
 
-You can [learn more about nodes and elements here](/#path=Docs,Nodes%20and%20Elements). To quickly import Io-Gui and get your feet wet, continue reading this article.
+ To quickly import Io-Gui and get your feet wet, continue reading this article.
 
-Import Io-Gui module.
+## Making a Simple Element
 
-```javascript
-import "io-gui";
-```
-
-In this example, we import the `<io-option-menu>` element and set its properties imperatively:
+Here is a basic example of a reaciteve element `<my-element>` with a `message` property that renders the value of the `message` property in its contents.
 
 ```javascript
-import { IoOptionMenu } from "io-gui";
-const menu = new IoOptionMenu();
-menu.options = ["one","two","three"];
-menu.value = "one";
-document.body.appendChild(menu);
-```
+import { IoElement, RegisterIoElement } from "io-gui";
 
-## Simple App Example
-
-You can extend `IoElement` to create anything from simple elements to complex applications.
-
-```javascript
-class MyApp extends IoElement {}
-RegisterIoElement(MyApp);
-```
-You should call `RegisterIoElement(MyApp)` immediately after defining the class.
-
-Element names are kebab-case derived from class names in CamelCase. For example `MyApp` class will register as `<my-app>`.
-
-Now you can use the `template()` function to add contents to your application.
-
-```javascript
-class MyApp extends IoElement {
-  changed() {
-    this.template([['p', 'Hello io!']]);
-  }
-}
-RegisterIoElement(MyApp);
-```
-
-Then, add `<my-app>` element to your document and you are done!
-
-```html
-<my-app></my-app>
-```
-
-Once the element has been connected, `change()` function will fire and template will be applied to the DOM.
-
-```html
-<my-app>
-  <!-- Automatically generated! -->
-  <p>Hello io!</p>
-</my-app>
-```
-
-## Style
-
-Styles are defined inside `static get Style()` return string. Alternatively, styles can be defined in external CSS files.
-
-Let's specify text color for the `<p>` element.
-
-```javascript
-static get Style() {
-  return /* css */`
-    :host > p {
-      color: tomato;
-    }
-  `;
-}
-```
-
-**Note:** CSS selectors have to be prefixed with `:host` in order to prevent style leakage. Template literal comment `/*css*/` is optional but recommended for correct syntax highlighting (editor plug-in required).
-
-CSS selectors starting with `--` and ending with `:` are treated as mixins (CSS property declaration lists). They can be appied using `@apply` CSS rule to any element class derived from `IoElement`.
-
-```javascript
-static get Style() {
-  return /* css */`
-    --ioField: {
-      display: flex;
-      flex-direction: column;
-    }
-    :host {
-      @apply --ioField;
-    }
-  `;
-}
-```
-
-## Properties
-
-Properties are defined inside `static get Properties()` return object. Let's define a `message` property with default value `'Hello io!'`.
-
-```javascript
-static get Properties() {
-  return {
-    message: 'Hello io!'
-  }
-}
-```
-
-Now you can use the message property inside the template.
-
-```javascript
-this.template([['p', this.message]]);
-```
-
-If you specify a property with `reflect: 1` configuration option, it will be automatically reflected to HTML attributes.
-
-For example we can use `clicked` attribute to change text color in CSS.
-
-```javascript
-static get Style() {
-  return /* css */`
-    :host[clicked] > p {
-      color: tomato;
-    }
-  `;
-}
-static get Properties() {
-  return {
-    clicked: {
-      value: false,
-      reflect: 1,
-    }
-  }
-}
-```
-
-## Listeners
-
-Listeners are defined inside `static get Listeners()` return object. Following listener will call `this.onClick(event)` handler function when `click` event is captured.
-
-```javascript
-static get Listeners() {
-  return {
-    'click': 'onClick'
-  }
-}
-```
-
-**Note:** Event handler function names should start with `on` or `_on` to get bound to class instance automatically.
-
-## Change Functions
-
-Change functions are automatically called when properties change. If `[propName]Changed(event)` function is defined, it will be called when corresponding property changes.
-
-Lastly, `changed()` function will be called **after** all of the property-specific change/mutation functions are called.
-
-## Simple App Recap
-
-Here is `MyApp` element with all of the basic concepts applied. The element should change message text and color when clicked.
-
-```javascript
-class MyApp extends IoElement {
-  static get Style() {
-    return /* css */`
-    :host[clicked] > p {
-      color: tomato;
-    }
-    `;
-  }
+class MyElement extends IoElement {
   static get Properties() {
     return {
-      message: 'Hello io!',
-      clicked: {
-        value: false,
-        reflect: 1,
-      }
-    }
+      message: ''
+    };
   }
-  static get Listeners() {
-    return {
-      'click': 'onClick'
-    }
-  }
-  onClick() {
-    this.clicked = true;
-  }
-  clickedChanged() {
-    this.message = 'Clicked!';
-  }
-  changed() {
+  messageChanged() {
     this.template([['p', this.message]]);
   }
 }
-RegisterIoElement(MyApp);
+RegisterIoElement(MyElement);
+
+const myElement = new MyElement({message: 'Hello World'});
+document.body.appendChild(myElement);
 ```
 
-<!-- > Continue reading [advanced usage](#doc=learn-more#creating-elements) or check out the [included elements](#doc=elements-core#IoItem). -->
+> **Note:** You can simply add `<my-element>` to your page but keep in mind that properties have to be set imperatively.
+
+## Making a Website
+
+Here is a quick way to make a simple website `<my-website>` with navigation and 5 pages that display content from .md files. 
+
+```javascript
+import { IoNavigator, RegisterIoElement, MenuOptions } from "io-gui";
+import { IoStorage as $ } from "io-gui";
+
+export class MyWebsite extends IoNavigator {
+  static get Properties() {
+    return {
+      menu: 'top', // This can also be 'left', 'right' or 'bottom'.
+      options: new MenuOptions(
+        ['About', 'Products', 'Services', 'Testemonials', 'Contact'], {
+          // This will store selected page in url hash.
+          path: $({key: 'page', storage: 'hash', value: 'About'}),
+        }
+      ),
+      elements: [
+        ['io-md-view', {id: 'About', src: './page/about.md'}],
+        ['io-md-view', {id: 'Products', src: './page/products.md'}],
+        ['io-md-view', {id: 'Services', src: './page/services.md'}],
+        ['io-md-view', {id: 'Testemonials', src: './page/testemonials.md'}],
+        ['io-md-view', {id: 'Contact', src: './page/contact.md'}],
+      ]
+    };
+  }
+}
+RegisterIoElement(MyWebsite);
+```
+
+
+## Use a Built-in Element
+
+Here is an example how to use `<io-slider>` element.
+
+```javascript
+import { IoSlider } from "io-gui";
+
+const slider = new IoSlider({min: -1, max: 1, step: 0.1});
+
+document.body.appendChild(slider);
+```
+
+There is a big library of [elements] to choose from. Reffer to elements demo [source code] end for usage examples.
+
+[deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive
+[elements]: https://iogui.dev/io/#path=Demos,Elements
+[source code]: https://github.com/io-gui/io/blob/main/demos/elements-dev.js

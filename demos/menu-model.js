@@ -13,7 +13,7 @@ export class IoOptionsDemoView extends IoElement {
         border-radius: var(--iotBorderRadius);
       }
       :host > div {
-        background-color: var(--iotBackgroundColorDark);
+        background-color: var(--iotBackgroundColorDimmed);
         display: flex;
         height: var(--iotLineHeight);
       }
@@ -22,6 +22,7 @@ export class IoOptionsDemoView extends IoElement {
       }
       :host io-label {
         background-color: transparent;
+        color: var(--iotColor);
       }
       :host io-label.first {
         color: var(--iotColorLink);

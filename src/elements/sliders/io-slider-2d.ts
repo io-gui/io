@@ -68,7 +68,7 @@ export class IoSlider2d extends IoSliderBase {
       // Colors
       vec3 finalCol = iotBackgroundColorField.rgb;
       vec3 gridCol = mix(iotColor.rgb, iotBackgroundColorField.rgb, 0.95);
-      vec3 axisCol = mix(iotColorFieldSelected.rgb, iotBackgroundColorField.rgb, 0.75);
+      vec3 axisCol = mix(iotColorSelected.rgb, iotBackgroundColorField.rgb, 0.75);
       vec3 sliderCol = iotColorLink.rgb;
 
       // // Sizes
