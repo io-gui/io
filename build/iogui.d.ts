@@ -994,6 +994,9 @@ export declare class IoBoolean extends IoField {
 	init(): void;
 	changed(): void;
 }
+export declare class IoBoolicon extends IoBoolean {
+	changed(): void;
+}
 /**
  * Input element for `Boolean` data type displayed as switch.
  *
@@ -1326,7 +1329,6 @@ export declare class IoSlider2d extends IoSliderBase {
  * '></io-element-demo>
  **/
 export declare class IoColorSlider extends IoColorBase {
-	static get Style(): string;
 	channel: string;
 	vertical: boolean;
 	_onValueInput(event: CustomEvent): void;
@@ -1523,31 +1525,12 @@ export declare class IoSelector extends IoElement {
 	cache: boolean;
 	loading: boolean;
 	private _caches;
-	importModule(path: string): Promise<unknown>;
-	dispose(): void;
-	changed(): void;
-}
-export declare class IoScroller extends IoElement {
-	static get Style(): string;
-	options: MenuOptions;
 	private _observer;
-	private _scrollThrottle?;
-	private _scrollToThrottle?;
-	private _pauseScroll;
-	static get Listeners(): {
-		scroll: (string | {
-			capture: boolean;
-			passive: boolean;
-		})[];
-	};
-	init(): void;
+	private _selected?;
+	importModule(path: string): Promise<unknown>;
 	connectedCallback(): void;
-	protected _onDomMutation(): void;
-	protected _onDomMutationThrottled(): void;
-	protected _onScroll(): void;
-	protected _scrollTo(element?: HTMLElement, smooth?: boolean): void;
-	protected _scrollToAnchor(smooth?: boolean): void;
-	changed(): void;
+	optionsMutated(): void;
+	protected _renderSelected(): void;
 	dispose(): void;
 }
 export declare class IoMdNavigator extends IoElement {
@@ -1568,11 +1551,28 @@ export declare class IoMdView extends IoElement {
 	static get Style(): string;
 	role: string;
 	src: string;
+	strip: string[];
 	loading: boolean;
 	sanitize: boolean;
+	protected _strip(innerHTML: string): string;
 	protected _parseMarkdown(markdown: string): void;
 	srcChanged(): void;
 	changed(): void;
+}
+export declare class IoScroller extends IoElement {
+	static get Style(): string;
+	options: MenuOptions;
+	private _observer;
+	private _scrollToThrottle?;
+	private _anchor?;
+	init(): void;
+	connectedCallback(): void;
+	protected _onDomMutation(): void;
+	protected _onDomMutationThrottled(): void;
+	protected _scrollToAnchor(smooth?: boolean): void;
+	protected _scrollToElement(element?: HTMLElement, smooth?: boolean): void;
+	optionsMutated(): void;
+	dispose(): void;
 }
 export declare class IoNavigator extends IoElement {
 	static get Style(): string;
@@ -1581,7 +1581,7 @@ export declare class IoNavigator extends IoElement {
 	options: MenuOptions;
 	menu: "none" | "top" | "left" | "bottom" | "right";
 	select: "first" | "last";
-	mode: "select-scroll" | "select" | "scroll";
+	mode: "select" | "scroll" | "select-and-anchor";
 	depth: number;
 	cache: boolean;
 	collapsed: boolean;
