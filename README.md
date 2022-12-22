@@ -9,21 +9,25 @@
 
 Io-Gui is an experimental UI framework aimed at simplicity and performance. It lets you write fast and reactive custom elements that respond to state changes, data binding events and object mutations. It can also support entire applications with routing, navigation and code splitting.
 
-The goal of this project is to provide a solid foundation for complex applications and tools such as 3D editors and debug tools for [threejs].
+The goal of this project is to provide a strong foundation for complex applications and tools such as 3D editors and debug tools for [threejs].
 
-To learn about Io-Gui, read the [quick start] or the [deep dive] guide. Also, check out built-in [elements] and the [source code]. Stay in touch on [mastodon].
+To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
+
+You can also check out the collection of built-in [elements].
+
+Stay in touch on [github] and [mastodon].
 
 ## Design system
 
-Io-Gui includes a design system built with simple and effective CSS framework that supports mixins and themes. Built-in element library includes editors for basic data types and **user input**, various types of **sliders**, **color editors**, configurable **object editors**, **menu systems**, **selectors** and **layout** elements.
+Io-Gui includes a design system built with a simple and effective CSS framework. It's built-in element library includes editors for basic data types and **user input**, various types of **sliders**, **color editors**, configurable **object editors**, **menu systems**, **selectors** and **layout** elements.
 
 ## Reactive WebGL Elements
 
-One of the unique features of Io-Gui is its ability to render custom elements in DOM using WebGL shaders. Elements such as sliders and color editors that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are automatically mapped to shader uniforms.  
+One of the unique features of Io-Gui is its ability to render custom elements in the DOM using WebGL shaders. Elements like sliders and color editors that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are automatically mapped to shader uniforms.  
 
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from typescript compiler, IoGui relies on very little tooling for development, linting and testing. In theory, you should be able to type `tsc` and off you go. But for the sake of ergonomics, it uses [nodejs] and [yarn] to run development scripts.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, IoGui relies on very little tooling for development, linting and testing. In theory, you should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [nodejs] and [yarn] to run development scripts.
 
 To download and develop Io-Gui locally:
 
@@ -47,7 +51,7 @@ To learn more Io-Gui development, please read [contributing guide](https://githu
 [license]: https://img.shields.io/github/license/io-gui/io
 [license-url]: https://github.com/io-gui/io/blob/main/LICENSE
 
-[source code]: https://github.com/io-gui/io/
+[github]: https://github.com/io-gui/io/
 [mastodon]: https://mastodon.gamedev.place/web/@aki
 [threejs]: https://threejs.org
 [nodejs]: https://nodejs.org

@@ -9,7 +9,7 @@ class IoNode extends IoNodeMixin(Object) {}
 class MyNode extends IoNode {}
 ```
 
-An element is a custom element that extends `IoElement` which is essentially `IoNodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling.
+An element is a custom element that extends `IoElement` which is essentially `IoNodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is kebab-case version from the CamelCase class name. For Example `MyElement` class name corresponds to `<my-element>` HTML tag.
 
 ```javascript
 class IoElement extends IoNodeMixin(HTMLElement) { ... }
@@ -229,9 +229,6 @@ To use the mixin in any element use `@apply` CSS rule. It is important that the 
 
 # Listeners
 
-[comment]: <Added automatically in `constructor()`>
-[comment]: <Removed automatically in `dispose()`>
-
 Listeners are defined inside `static get Listeners()` object and .Following listener will call `onClick` handler function when `"click"` event happens.
 
 ```typescript
@@ -275,13 +272,8 @@ static get Listeners() {
 # Reactivity
 
 [comment]: <`[prop]Mutated()` throttled if called multiple times per frame.>
-[comment]: <Property values can be reflected to attributes.>
-[comment]: <Nodes can be assigned as property values.>
-[comment]: <Object properties can observe object mutations.>
 [comment]: <Runtime type checking available in debug mode.>
 [comment]: <Can recieve data `Binding` objects.>
-[comment]: <Property changes can be batched with `setProperties()`.>
-[comment]: <Reactivity can be disabled per property by setting `reactive: false`.>
 
 All properties are reactive by default, meaning that changing a property value will emit change event and invoke change handler functions if they exist. Lastly, `changed()` function will be called when any one or more reactive properties change.
 
@@ -376,6 +368,20 @@ this.changed();
 
 [comment]: <Robust event-based two-way data binding that works.>
 [comment]: <Uses `[prop]-changed` events to connect source node/prop to target node(s)/prop(s).>
+
+This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
+Keep in mind that this only works with Io properties. In other words, binding to native HTML elements will not work.
+
+```javascript
+this.template([['child-element', {value: this.bind('value')}]]);
+```
+
+You can also use `this.bind()` outside template or bind to `Node` objects.
+
+```javascript
+let myNode = new MyNode({value: this.bind('value')});
+myNode.dispose();
+```
 
 # Tamplate Syntax
 
