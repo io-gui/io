@@ -794,8 +794,9 @@ export type NudgeDirection = "none" | "pointer" | "up" | "left" | "down" | "righ
 export declare class IoOverlay extends IoElement {
 	static get Style(): string;
 	expanded: boolean;
-	skipCollapse: boolean;
 	static get Listeners(): {
+		pointerdown: string;
+		pointermove: string;
 		pointerup: string;
 		contextmenu: string;
 		focusin: string;
@@ -804,8 +805,8 @@ export declare class IoOverlay extends IoElement {
 			passive: boolean;
 		})[];
 		mousedown: string;
-		mouseup: string;
 		mousemove: string;
+		mouseup: string;
 		touchstart: (string | {
 			passive: boolean;
 		})[];
@@ -1696,9 +1697,11 @@ export declare class IoMenuItem extends IoField {
 	_onClick(): void;
 	_onItemClicked(event: PointerEvent): void;
 	_onPointerdown(event: PointerEvent): void;
+	_onPointerdownAction(event: PointerEvent): void;
 	_onPointermove(event: PointerEvent): void;
+	_onPointermoveAction(event: PointerEvent): void;
 	_onPointerup(event: PointerEvent): void;
-	_onPointerupAction(event: PointerEvent): void;
+	_onPointerupAction(event: PointerEvent, skipCollapse?: boolean): void;
 	_gethovered(event: PointerEvent): IoMenuElementType | undefined;
 	_expandHovered(): void;
 	_onKeydown(event: KeyboardEvent): void;
@@ -1763,21 +1766,11 @@ export declare class IoOptionMenu extends IoElement {
 }
 /**
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
- *
- * <io-element-demo element="io-context-menu"
- *   height="256px"
- *   properties='{
- *   "value": "hello world",
- *   "button": 0,
- *   "options": ["one", "two", "three"],
- *   "expanded": false,
- *   "position": "pointer",
- *   "selectable": false
- * }' config='{
- *   "position": ["io-option-menu", {"options": ["pointer", "up", "right", "down", "left"]}], "type:object": ["io-object"]
- * }'></io-element-demo>
  **/
 export declare class IoContextMenu extends IoElement {
+	options: MenuOptions;
+	expanded: boolean;
+	button: number;
 	static get Properties(): any;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
@@ -1790,7 +1783,7 @@ export declare class IoContextMenu extends IoElement {
 	_onOverlayPointermove(event: PointerEvent): void;
 	_onClick(event: MouseEvent): void;
 	_onCollapse(): void;
-	expandedChanged(): void;
+	optionsChanged(): void;
 }
 export declare class IoNotify extends IoElement {
 	static get Style(): string;
