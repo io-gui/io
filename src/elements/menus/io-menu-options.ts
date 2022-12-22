@@ -1,10 +1,10 @@
 import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
+import { IoMenuItem } from './io-menu-item.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoOverlaySingleton, NudgeDirection } from '../../core/overlay.js';
 import { IoThemeSingleton } from '../../core/theme.js';
-import { IoMenuItem } from './io-menu-item.js';
 import { filterOptions } from './io-menu-tree.js';
 
 const rects = new WeakMap();
@@ -120,7 +120,7 @@ export class IoMenuOptions extends IoElement {
     `;
   }
 
-  @Property({observe: true, type: MenuOptions, reflect: true})
+  @Property({observe: true, type: MenuOptions})
   declare options: MenuOptions;
 
   @Property({value: false, reflect: true})
@@ -273,6 +273,7 @@ export class IoMenuOptions extends IoElement {
     }
     if (this.$parent) {
       const pRect = this.$parent.getBoundingClientRect();
+      // console.log(this.directon);
       IoOverlaySingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
       this._onClipHeight();
     }

@@ -1,37 +1,27 @@
 import { IoElement, RegisterIoElement } from '../../core/element.js';
-import {IoOverlaySingleton as Overlay} from '../../core/overlay.js';
-import {IoMenuOptions} from './io-menu-options.js';
-import {getMenuDescendants, IoMenuItem} from './io-menu-item.js';
+import { IoOverlaySingleton as Overlay } from '../../core/overlay.js';
+import { IoMenuOptions } from './io-menu-options.js';
+import { Property } from '../../core/internals/property.js';
+import { MenuOptions } from './models/menu-options.js';
+// import { getMenuDescendants, IoMenuItem } from './io-menu-item.js';
 
 /**
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
- *
- * <io-element-demo element="io-context-menu"
- *   height="256px"
- *   properties='{
- *   "value": "hello world",
- *   "button": 0,
- *   "options": ["one", "two", "three"],
- *   "expanded": false,
- *   "position": "pointer",
- *   "selectable": false
- * }' config='{
- *   "position": ["io-option-menu", {"options": ["pointer", "up", "right", "down", "left"]}], "type:object": ["io-object"]
- * }'></io-element-demo>
  **/
 @RegisterIoElement
 export class IoContextMenu extends IoElement {
+
+  @Property({observe: true, type: MenuOptions})
+  declare options: MenuOptions;
+
+  @Property({value: false, reflect: true})
+  declare expanded: boolean;
+
+  @Property(0)
+  declare button: number;
+
   static get Properties(): any {
     return {
-      value: null,
-      options: {
-        type: Array,
-        observe: true,
-      },
-      expanded: Boolean,
-      position: 'pointer',
-      button: 0,
-      selectable: false,
       $options: null,
     };
   }
@@ -39,9 +29,6 @@ export class IoContextMenu extends IoElement {
     super.connectedCallback();
     Overlay.addEventListener('pointermove', this._onOverlayPointermove);
     this._parent = this.parentElement;
-    this._parent.style.userSelect = 'none';
-    this._parent.style.webkitUserSelect = 'none';
-    this._parent.style.webkitTouchCallout = 'default';
     this._parent.addEventListener('pointerdown', this._onPointerdown);
     this._parent.addEventListener('click', this._onClick);
     this._parent.addEventListener('contextmenu', this._onContextmenu);
@@ -50,9 +37,6 @@ export class IoContextMenu extends IoElement {
     super.disconnectedCallback();
     if (this.$options && this.$options.parentElement) Overlay.removeChild(this.$options);
     Overlay.removeEventListener('pointermove', this._onOverlayPointermove);
-    this._parent.style.userSelect = null;
-    this._parent.style.webkitUserSelect = null;
-    this._parent.style.webkitTouchCallout = null;
     this._parent.removeEventListener('pointerdown', this._onPointerdown);
     this._parent.removeEventListener('contextmenu', this._onContextmenu);
     this._parent.removeEventListener('pointermove', this._onPointermove);
@@ -68,7 +52,6 @@ export class IoContextMenu extends IoElement {
     const d = event.detail;
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
-      if (d.value !== undefined && d.selectable !== false) this.inputValue(d.value);
       this.dispatchEvent('item-clicked', d, true);
       this.throttle(this._onCollapse);
     }
@@ -81,33 +64,34 @@ export class IoContextMenu extends IoElement {
     Overlay.y = event.clientY;
     this._parent.addEventListener('pointermove', this._onPointermove);
     this._parent.addEventListener('pointerup', this._onPointerup);
+
     clearTimeout(this._contextTimeout);
     if (event.pointerType !== 'touch') {
       if (event.button === this.button) {
+        this.setPointerCapture(event.pointerId);
         this.expanded = true;
-        Overlay.skipCollapse = true;
       }
     } else {
       // iOS Safari contextmenu event emulation.
       event.preventDefault();
       this._contextTimeout = setTimeout(() => {
+        this.setPointerCapture(event.pointerId);
         this.expanded = true;
-        Overlay.skipCollapse = true;
       }, 150);
     }
   }
   _onPointermove(event: PointerEvent) {
     clearTimeout(this._contextTimeout);
-    if (this.expanded && this.$options) {
-      const item = this.$options.querySelector('io-menu-item');
-      if (item) item._onPointermove(event);
+    if (this.expanded) {
+      this.$options?.querySelector('io-menu-item')?._onPointermoveAction(event);
     }
   }
   _onPointerup(event: PointerEvent) {
+    console.log('up');
     clearTimeout(this._contextTimeout);
-    if (this.expanded && this.$options) {
-      const item = this.$options.querySelector('io-menu-item');
-      if (item) item._onPointerup(event, {nocollapse: true});
+    this.releasePointerCapture(event.pointerId);
+    if (this.expanded) {
+      this.$options?.querySelector('io-menu-item')?._onPointerupAction(event, true);
     }
     this._parent.removeEventListener('pointermove', this._onPointermove);
     this._parent.removeEventListener('pointerup', this._onPointerup);
@@ -121,29 +105,28 @@ export class IoContextMenu extends IoElement {
   _onCollapse() {
     this.expanded = false;
   }
-  expandedChanged() {
-    if (this.expanded) {
-      if (!this.$options) {
-        this.$options = new IoMenuOptions({
-          $parent: this,
-          'on-item-clicked': this._onItemClicked,
-        });
-      }
-      if (this.$options.parentElement !== Overlay) {
-        Overlay.appendChild(this.$options);
-      }
-      this.$options.setProperties({
-        // value: this.bind('value'),
-        expanded: this.bind('expanded'),
-        options: this.options,
-        // selectable: this.selectable,
-        position: this.position,
-      });
-    } else {
-      const descendants = getMenuDescendants(this as unknown as IoMenuItem); // TODO fix
-      for (let i = descendants.length; i--;) {
-        descendants[i].expanded = false;
-      }
+  optionsChanged() {
+    if (this.$options) {
+      Overlay.removeChild(this.$options);
+      this.$options.template([]);
+      this.$options.dispose();
     }
+    this.$options = new IoMenuOptions({
+      expanded: this.bind('expanded'),
+      inlayer: true,
+      options: this.options,
+      direction: 'pointer',
+      $parent: this,
+      'on-item-clicked': this._onItemClicked,
+    });
+    Overlay.appendChild(this.$options);
   }
+  // expandedChanged() {
+  //   if (this.$options && !this.expanded) {
+  //     const descendants = getMenuDescendants(this.$options as unknown as IoMenuItem); // TODO fix
+  //     for (let i = descendants.length; i--;) {
+  //       descendants[i].expanded = false;
+  //     }
+  //   }
+  // }
 }

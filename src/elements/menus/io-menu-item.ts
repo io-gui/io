@@ -148,20 +148,26 @@ export class IoMenuItem extends IoField {
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
+    this._onPointerdownAction(event);
+  }
+  _onPointerdownAction(event: PointerEvent) {
     // TODO: why is this needed?
     if (this.expanded || event.pointerType === 'mouse' || this.inlayer) {
       this.focus();
       if (this.item.options) this.expanded = true;
     }
     // eslint-disable-next-line
-    hovered = this;
-    hoveredParent = this.parentElement;
+    // hovered = this;
+    // hoveredParent = this.parentElement;
     // TODO: Safari temp fix for event.movement = 0
     this._x = event.clientX;
     this._y = event.clientY;
   }
   _onPointermove(event: PointerEvent) {
     event.stopPropagation();
+    this._onPointermoveAction(event);
+  }
+  _onPointermoveAction(event: PointerEvent) {
     // TODO: why is this needed?
     if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) return;
 
@@ -182,16 +188,16 @@ export class IoMenuItem extends IoField {
     if (hovered) {
       const v = Math.abs(movementY) - Math.abs(movementX);
       const h = hovered.parentElement.horizontal;
-      if (hoveredParent !== hovered.parentElement) {
-        hoveredParent = hovered.parentElement;
+      if (prevHovered?.parentElement !== hovered.parentElement) {
         this._expandHovered();
-      } else if (h ? v < -0.5 : v > 0.5) {
+      } else if (h ? v < -0.25 : v > 0.25) {
         this._expandHovered();
       } else {
         this._timeoutOpen = setTimeout(() => {
           this._expandHovered();
         }, 100);
       }
+      prevHovered = hovered;
     }
   }
   _onPointerup(event: PointerEvent) {
@@ -200,14 +206,16 @@ export class IoMenuItem extends IoField {
     this.removeEventListener('pointerup', this._onPointerup);
     this._onPointerupAction(event);
   }
-  _onPointerupAction(event: PointerEvent) {
+  _onPointerupAction(event: PointerEvent, skipCollapse = false) {
     const item = this._gethovered(event);
     if (item) {
       item.focus();
       item._onClick(event);
-    } else {
+    } else if (!skipCollapse) {
       this.throttle(this._onCollapseRoot);
     }
+    hovered = undefined;
+    prevHovered = undefined;
   }
   _gethovered(event: PointerEvent) {
     const items = getMenuDescendants(getMenuRoot(this));
@@ -432,4 +440,4 @@ function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementTyp
 }
 
 let hovered: IoMenuElementType | undefined;
-let hoveredParent: IoMenuElementType | undefined;
+let prevHovered: IoMenuElementType | undefined;
