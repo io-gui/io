@@ -1557,6 +1557,7 @@ export declare class IoMdView extends IoElement {
 	sanitize: boolean;
 	protected _strip(innerHTML: string): string;
 	protected _parseMarkdown(markdown: string): void;
+	onResized(): void;
 	srcChanged(): void;
 	changed(): void;
 }
