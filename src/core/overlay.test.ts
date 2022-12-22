@@ -16,22 +16,12 @@ export default class {
         });
         it('Should initialize property definitions correctly', () => {
           chai.expect(IoOverlaySingleton.expanded).to.be.eql(false);
-          chai.expect(IoOverlaySingleton.skipCollapse).to.be.eql(false);
 
           chai.expect(IoOverlaySingleton._properties.get('expanded')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
             reflect: true,
-            type: Boolean,
-            value: false,
-          });
-
-          chai.expect(IoOverlaySingleton._properties.get('skipCollapse')).to.eql({
-            binding: undefined,
-            reactive: true,
-            observe: false,
-            reflect: false,
             type: Boolean,
             value: false,
           });

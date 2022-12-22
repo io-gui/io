@@ -92,13 +92,15 @@ export default class {
       describe('Reactivity', () => {
         it('Should update localStorage store when value changes', () => {
           const node = new IoStorageNode({key: 'test5', value: 'one', storage: 'local'});
-          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"one"');
+          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal(null);
           node.value = 'two';
           chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"two"');
           node.value = '2';
           chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"2"');
           node.value = 2;
           chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal('2');
+          node.value = 'one';
+          chai.expect(localStorage.getItem('IoStorage:test5')).to.be.equal(null);
           node.dispose();
         });
         it('Should update location.hash store when value changes to non-default', async () => {
