@@ -61,19 +61,18 @@ export class IoOverlay extends IoElement {
   @Property({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: false})
-  declare skipCollapse: boolean;
-
   static get Listeners() {
     return {
+      'pointerdown': 'stopPropagation',
+      'pointermove': 'stopPropagation',
       'pointerup': '_onPointerup',
       'contextmenu': '_onContextmenu',
       'focusin': '_onFocusIn',
       'scroll': '_onScroll',
       'wheel': ['_onScroll', {passive: false}],
       'mousedown': 'stopPropagation',
-      'mouseup': 'stopPropagation',
       'mousemove': 'stopPropagation',
+      'mouseup': 'stopPropagation',
       'touchstart': ['stopPropagation', {passive: false}],
       'touchmove': ['stopPropagation', {passive: false}],
       'touchend': 'stopPropagation',
@@ -94,10 +93,7 @@ export class IoOverlay extends IoElement {
   }
   _onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
-      if (!this.skipCollapse) {
-        this.throttle(this._onCollapse);
-      }
-      this.skipCollapse = false;
+      this.throttle(this._onCollapse);
     }
   }
   _onCollapse() {

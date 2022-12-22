@@ -177,8 +177,9 @@ export class IoDemoElements extends IoElement {
         margin: var(--iotSpacing);
         margin-bottom: 0;
       }
-      :host io-collapsable.overflow > div {
+      :host io-collapsable[expanded].fixed-tall > div {
         max-height: 20rem;
+        height: 20rem;
       }
       :host io-collapsable.row > div {
         flex-direction: row;
@@ -369,7 +370,7 @@ export class IoDemoElements extends IoElement {
         ]}],
       ]}],
       ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
-        ['io-collapsable', {label: 'io-navigator with menu:"left" mode:"select-and-anchor"', class: 'overflow', expanded: $('expanded-demo-content-1'), elements: [
+        ['io-collapsable', {label: 'io-navigator with menu:"left" mode:"select-and-anchor"', class: 'fixed-tall', expanded: $('expanded-demo-content-1'), elements: [
           ['io-navigator', {
             menu: 'left',
             mode: 'select-and-anchor',
@@ -377,7 +378,7 @@ export class IoDemoElements extends IoElement {
             options: contentOptions,
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with mode:"scroll" and with menu:"right"', class: 'overflow', expanded: $('expanded-demo-content-2'), elements: [
+        ['io-collapsable', {label: 'io-navigator with mode:"scroll" and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
           ['io-navigator', {
             menu: 'right',
             mode: 'scroll',
@@ -385,7 +386,7 @@ export class IoDemoElements extends IoElement {
             elements: [elements[0]]
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with with menu:"top" and depth=0', class: 'overflow', expanded: $('expanded-demo-content-3'), elements: [
+        ['io-collapsable', {label: 'io-navigator with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
           ['io-navigator', {
             menu: 'top',
             depth: 0,
@@ -393,17 +394,17 @@ export class IoDemoElements extends IoElement {
             elements: elements
           }]
         ]}],
-        ['io-collapsable', {label: 'io-selector', class: 'overflow', expanded: $('expanded-demo-content-4'), elements: [
+        ['io-collapsable', {label: 'io-selector', class: 'fixed-tall', expanded: $('expanded-demo-content-4'), elements: [
           ['io-selector', {
             elements: elements,
             options: contentOptions,
           }]
         ]}],
-        ['io-collapsable', {label: 'io-scroller', class: 'overflow', expanded: $('expanded-demo-content-5'), elements: [['io-scroller', {
+        ['io-collapsable', {label: 'io-scroller', class: 'fixed-tall', expanded: $('expanded-demo-content-5'), elements: [['io-scroller', {
             options: contentOptions[0].options,
           }, [elements[0]]]]
         }],
-        ['io-collapsable', {label: 'scrollable content', class: 'overflow', expanded: $('expanded-demo-content-6'), elements: [elements[0]] }],
+        ['io-collapsable', {label: 'scrollable content', class: 'fixed-tall', expanded: $('expanded-demo-content-6'), elements: [elements[0]] }],
       ]}],
       ['io-collapsable', {label: 'Object Editors', expanded: $('expanded-demo-objects'), elements: [
           ['io-collapsable', {label: 'io-properties', expanded: $('expanded-demo-objects-1'), elements: [
@@ -509,6 +510,19 @@ export class IoDemoElements extends IoElement {
             options: new MenuOptions(numberItems, {
               first: this.bind('menuRoot')
             }),
+          }],
+        ]}],
+        ['io-collapsable', {label: 'io-context-menu', class: 'fixed-tall', expanded: $('expanded-demo-menus-r'), elements: [
+          ['io-context-menu', {
+            options: new MenuOptions([...optionsDeep, ...numberItems, ...options]),
+          }],
+          ['io-context-menu', {
+            options: new MenuOptions([...options]),
+            button: 1,
+          }],
+          ['io-context-menu', {
+            options: new MenuOptions([...numberItems]),
+            button: 2,
           }],
         ]}],
       ]}],

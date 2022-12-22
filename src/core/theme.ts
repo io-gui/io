@@ -65,7 +65,7 @@ type Variables = {
 
 type Themes = Record<string, Variables>;
 
-const defaultThemes: Themes = {
+const defaultThemeProps: Themes = {
   light: {
     iotSpacing: 2,
     iotSpacing2: 4,
@@ -182,15 +182,14 @@ const compositeVariables = /* css */`
   }
 `;
 
-const persistantThemes = $({
-  value: JSON.parse(JSON.stringify(defaultThemes)),
-  // storage: 'local',
-  storage: 'none',
-  key: 'io-persistantThemes-' + THEME_VERSION
+const persistantThemeProps = $({
+  value: JSON.parse(JSON.stringify(defaultThemeProps)),
+  storage: 'local',
+  key: 'io-themeProps-' + THEME_VERSION
 });
 
 const theme = $({
-  value: 'dark',//window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+  value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
   storage: 'local',
   key: 'theme-' + THEME_VERSION
 });
@@ -209,11 +208,11 @@ const theme = $({
 export class IoTheme extends IoElement {
   static get Properties(): PropertyDeclarations {
     const props: PropertyDeclarations = {};
-    for (const p in persistantThemes.value[theme.value]) {
-      if (persistantThemes.value[theme.value][p] instanceof Object) {
-        props[p] = {value: persistantThemes.value[theme.value][p], type: Color, observe: true};
+    for (const p in persistantThemeProps.value[theme.value]) {
+      if (persistantThemeProps.value[theme.value][p] instanceof Object) {
+        props[p] = {value: persistantThemeProps.value[theme.value][p], type: Color, observe: true};
       } else {
-        props[p] = persistantThemes.value[theme.value][p];
+        props[p] = persistantThemeProps.value[theme.value][p];
       }
     }
     return props;
@@ -246,11 +245,11 @@ export class IoTheme extends IoElement {
     }
   }
   reset() {
-    persistantThemes.value = Object.assign({}, JSON.parse(JSON.stringify(defaultThemes)));
+    persistantThemeProps.value = Object.assign({}, JSON.parse(JSON.stringify(defaultThemeProps)));
     this.themeChanged();
   }
   themeChanged() {
-    const values = persistantThemes.value[this.theme];
+    const values = persistantThemeProps.value[this.theme];
     for (const p in values) {
       if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
          values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a);
@@ -280,8 +279,8 @@ export class IoTheme extends IoElement {
       (result, prop) => {
         if (prop.startsWith('iot')) {
           if (this.persist) {
-            persistantThemes.value[theme.value][prop] = this[prop];
-            persistantThemes.value = JSON.parse(JSON.stringify(persistantThemes.value));
+            persistantThemeProps.value[theme.value][prop] = this[prop];
+            persistantThemeProps.value = JSON.parse(JSON.stringify(persistantThemeProps.value));
           }
           if (typeof this[prop] === 'object') {
             return `${result}--${prop}: ${this._toCss(this[prop])};\n    `;

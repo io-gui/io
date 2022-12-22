@@ -24,8 +24,9 @@ export class IoVector extends IoElement {
       :host > *:not(:last-child) {
         margin-right: var(--iotSpacing);
       }
-      :host > io-boolean {
+      :host > io-boolicon {
         flex-shrink: 0;
+        padding: var(--iotSpacing);
       }
     `;
   }

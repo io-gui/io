@@ -197,7 +197,7 @@ export class IoStorageNode extends IoNode {
         break;
       }
       case 'local': {
-        if (this.value === null || this.value === undefined) {
+        if (this.value === null || this.value === undefined || this.value === this.default) {
           localStorage.removeItem('IoStorage:' + this.key);
         } else {
           localStorage.setItem('IoStorage:' + this.key, JSON.stringify(this.value));

@@ -28,10 +28,11 @@
   </head>
   <body>
     <script type="module">
+import { IoInspector } from "io-gui";
 
-      import './demos/elements-dev.js';
+const inspector = new IoInspector({value: window.location});
 
+document.body.appendChild(inspector);
       </script>
-      <io-demo-elements-dev></io-demo-elements-dev>
   </body>
 </html>
