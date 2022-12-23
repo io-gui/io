@@ -538,7 +538,7 @@ export default class {
         }
 
         it('Should corectly invoke handler functions on change', () => {
-          const element = new TestIoElement3({'on-prop0-changed': onChange});
+          const element = new TestIoElement3({'@prop0-changed': onChange});
           element.dispatchEvent('custom-event');
           element.prop0 = 1;
           element.prop1 = 'test';

@@ -81,7 +81,7 @@ export class IoBreadcrumbs extends IoElement {
         class: 'select',
         value: this.options[i],
         label: getLabel(this.options[i]),
-        'on-item-clicked': this._onClick,
+        '@item-clicked': this._onClick,
       }]);
     }
     this.template(elements);

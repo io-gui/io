@@ -117,7 +117,7 @@ export class IoContextMenu extends IoElement {
       options: this.options,
       direction: 'pointer',
       $parent: this,
-      'on-item-clicked': this._onItemClicked,
+      '@item-clicked': this._onItemClicked,
     });
     Overlay.appendChild(this.$options);
   }

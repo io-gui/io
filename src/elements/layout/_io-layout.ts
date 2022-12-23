@@ -70,7 +70,7 @@ export class IoLayout extends IoElement {
           selected: split.selected,
           editable: this.editable,
           style: style,
-          'on-selected-changed': this._onSelectedChanged
+          '@selected-changed': this._onSelectedChanged
         }]);
         // children.push(['div', {style: style}, ' ' + split.size]);
       } else if (split.splits) {
