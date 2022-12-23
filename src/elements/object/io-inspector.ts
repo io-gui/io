@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { Property } from '../../core/internals/property.js';
 import {IoStorage as $} from '../../core/storage.js';
 import { ObjectConfig } from './models/object-config.js';
 import { ObjectGroups } from './models/object-groups.js';
@@ -8,8 +9,6 @@ import '../basic/io-boolicon.js';
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
- *
- * <io-element-demo element="io-inspector" properties='{"value": {"hello": "world"}, "config": {"type:number": ["io-slider", {"step": 0.1}], "type:string": ["io-option-menu", {"options": ["hello", "goodbye"]}]}, "crumbs": []}' config='{"value": ["io-object"], "type:object": ["io-properties"]}'></io-element-demo>
  **/
 
 @RegisterIoElement
@@ -88,24 +87,32 @@ export class IoInspector extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
-    return {
-      value: {
-        type: Object,
-        observe: true,
-      },
-      selected: {
-        type: Object,
-        observe: true,
-      },
-      search: String,
-      advanced: false,
-      groups: Object,
-      config: Object,
-      widgets: Object,
-      autoExpand: ['main', 'properties'],
-    };
-  }
+
+  @Property({type: [Object, Array], observe: true})
+  declare value: Record<string, any> | [any];
+
+  @Property({type: [Object, Array], observe: true})
+  declare selected: Record<string, any> | [any];
+
+  @Property({type: Object})
+  declare config: Record<string, any>;
+
+  @Property('')
+  declare search: string;
+
+  @Property({type: Object})
+  declare groups: Record<string, any>;
+
+  @Property({type: Object})
+  declare widgets: Record<string, any>;
+
+  // TODO: deprecate!
+  @Property({type: Array, value: ['main', 'properties']})
+  declare autoExpand: [string];
+
+  // @Property({type: Array})
+  // declare slotted: VDOMArray;
+
   static get Listeners() {
     return {
       'io-field-clicked': '_onItemClicked',
@@ -139,7 +146,7 @@ export class IoInspector extends IoElement {
     this._config = this.__proto__._config.getObjectConfig(this.selected, this.config);
   }
   _getObjectGroups() {
-    this._groups = this.__proto__._groups.getObjectGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config), this.advanced);
+    this._groups = this.__proto__._groups.getObjectGroups(this.selected, this.groups, Object.getOwnPropertyNames(this._config));
   }
   _getObjectWidgets() {
     this._widgets = this.__proto__._widgets.getObjectWidgets(this.selected, this.widgets);
@@ -155,10 +162,9 @@ export class IoInspector extends IoElement {
     }
   }
   changed() {
-    this.advanced = $({value: false, storage: 'local', key: 'inspector-show-advanced'});
-    this._onhangedThrCottle();
+    this._onChangedThrottled();
   }
-  _onhangedThrCottle() {
+  _onChangedThrottled() {
     this.throttle(this._onChange);
   }
   _onChange() {
@@ -168,7 +174,6 @@ export class IoInspector extends IoElement {
       ['div', {class: 'inspector-header io-row io-panel'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
         ['io-string', {$: 'search', value: this.bind('search'), live: true}],
-        ['io-boolicon', {value: this.bind('advanced'), true: 'icons:less', false: 'icons:more'}],
       ]],
       this._widgets.main ? this._widgets.main : null
     ];

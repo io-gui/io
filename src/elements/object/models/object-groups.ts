@@ -15,7 +15,7 @@ export class ObjectGroups {
         self[g] = [...self[g], ...groups[g]];
       }
     }
-    getObjectGroups(object: any, customGroups: any, keys: any, doAdvanced = false) {
+    getObjectGroups(object: any, customGroups: any, keys: any) {
       const prototypes = [];
 
       let proto = object.__proto__;
@@ -32,7 +32,7 @@ export class ObjectGroups {
         grp[1] = grp[1].split(':');
         if (prototypes.indexOf(grp[0]) !== -1) {
           const advanced = grp[1][1] === 'advanced';
-          if (!advanced || doAdvanced) {
+          if (!advanced) {
             protoGroups[grp[1][0]] = protoGroups[grp[1][0]] || [];
             for (let j = 0; j < self[i].length; j++) {
               const propName = self[i][j];
@@ -64,7 +64,7 @@ export class ObjectGroups {
         grp[1] = grp[1].split(':');
         if (prototypes.indexOf(grp[0]) !== -1) {
           const advanced = grp[1][1] === 'advanced';
-          if (!advanced || doAdvanced) {
+          if (!advanced) {
             protoGroups[grp[1][0]] = protoGroups[grp[1][0]] || [];
             protoGroups[grp[1][0]].push(...customGroups[i]);
           }
@@ -101,12 +101,13 @@ export class ObjectGroups {
 
       if (assigned.length === 0) {
         groups['properties'] = keys;
-      } else if (doAdvanced) {
-        groups['advanced'] = groups['advanced'] || [];
-        for (let i = 0; i < keys.length; i++) {
-          if (assigned.indexOf(keys[i]) === -1) groups['advanced'].push(keys[i]);
-        }
       }
+      // else if (doAdvanced) {
+      //   groups['advanced'] = groups['advanced'] || [];
+      //   for (let i = 0; i < keys.length; i++) {
+      //     if (assigned.indexOf(keys[i]) === -1) groups['advanced'].push(keys[i]);
+      //   }
+      // }
 
       for (const group in groups) {
         if (groups[group].length === 0) delete groups[group];

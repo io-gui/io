@@ -48,7 +48,7 @@ To learn more Io-Gui development, please read [contributing guide](https://githu
 
 The Io-Gui documentation is hosted on [io-gui.dev] via github pages from the main branch of this [github] repository. The UI of the website is created using Io-Gui and the source code is contained in [index.html]. The website content is loaded from `.md` files in the `docs/` directory and `.js` files in the `demos/` directory. The website itself is the most up-to-date reference on how to build a documentation website using Io-Gui. It also contains examples on how to use different nodes and elements.
 
-The files in `docs/tsdoc` are a work in ptrogress. The files are automatically generated using typedoc and typedoc-plugin-markdown plugin.
+The files in `docs/tsdoc` are a work in progress. The files are automatically generated using typedoc and typedoc-plugin-markdown plugin.
 
 [npm]: https://img.shields.io/npm/v/io-gui
 [npm-url]: https://www.npmjs.com/package/io-gui

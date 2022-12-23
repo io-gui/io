@@ -407,22 +407,45 @@ export class IoDemoElements extends IoElement {
         ['io-collapsable', {label: 'scrollable content', class: 'fixed-tall', expanded: $('expanded-demo-content-6'), elements: [elements[0]] }],
       ]}],
       ['io-collapsable', {label: 'Object Editors', expanded: $('expanded-demo-objects'), elements: [
-          ['io-collapsable', {label: 'io-properties', expanded: $('expanded-demo-objects-1'), elements: [
+          ['io-collapsable', {label: 'io-properties', direction: 'row', expanded: $('expanded-demo-objects-1'), elements: [
             ['io-properties', {
               value: this.object,
-              // properties: ['number', 'string', 'boolean'],
-              config: {'number': ['io-slider', {step: 0.1}]}
+            }],
+            ['io-properties', {
+              value: this.object,
+              config: {
+                'number': ['io-slider', {step: 0.1}],
+                'vector2': ['io-vector'],
+                'vector3': ['io-vector'],
+                'vector4': ['io-vector'],
+                'matrix2': ['io-matrix'],
+                'matrix3': ['io-matrix'],
+                'matrix4': ['io-matrix'],
+              },
+            }],
+            ['io-properties', {
+              value: this.object,
+              properties: ['number', 'string', 'boolean'],
+              config: {
+                'boolean': ['io-switch'],
+                'number': ['io-option-menu', {options: new MenuOptions([
+                  {label: 'zero', value: 0},
+                  {label: 'half', value: 0.5},
+                  {label: 'one', value: 1},
+                ])}],
+              },
             }],
           ]}],
-          ['io-collapsable', {label: 'io-object', expanded: $('expanded-demo-objects-2'), elements: [
+          ['io-collapsable', {label: 'io-object', direction: 'row', expanded: $('expanded-demo-objects-2'), elements: [
+            ['io-object', {
+              value: this.object,
+            }],
             ['io-object', {
               value: this.object,
               expanded: true,
               slotted: ['io-field', {label: 'Slotted Element'}],
               properties: ['number', 'string', 'boolean'],
             }],
-          ]}],
-          ['io-collapsable', {label: 'io-object', expanded: $('expanded-demo-objects-3'), elements: [
             ['io-object', {
               value: this.object,
               expanded: true,
@@ -430,7 +453,7 @@ export class IoDemoElements extends IoElement {
               config: {'number': ['io-slider', {step: 0.1}]}
             }],
           ]}],
-          ['io-collapsable', {label: 'io-inspector', expanded: $('expanded-demo-objects-4'), elements: [
+          ['io-collapsable', {label: 'io-inspector', expanded: $('expanded-demo-objects-3'), elements: [
             ['io-inspector', {
               value: this.object,
               groups: {

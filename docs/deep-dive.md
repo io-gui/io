@@ -364,25 +364,6 @@ this.prop2Changed(change); // change.oldValue === 'a'
 this.changed();
 ```
 
-# Data Binding
-
-[comment]: <Robust event-based two-way data binding that works.>
-[comment]: <Uses `[prop]-changed` events to connect source node/prop to target node(s)/prop(s).>
-
-This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
-Keep in mind that this only works with Io properties. In other words, binding to native HTML elements will not work.
-
-```javascript
-this.template([['child-element', {value: this.bind('value')}]]);
-```
-
-You can also use `this.bind()` outside template or bind to `Node` objects.
-
-```javascript
-let myNode = new MyNode({value: this.bind('value')});
-myNode.dispose();
-```
-
 # Tamplate Syntax
 
 [comment]: <Uses nested array representation of (virtual) DOM.>
@@ -392,9 +373,76 @@ myNode.dispose();
 [comment]: <Inline event listeners can be added using `"on-"` (`"@"` TBD)>
 [comment]: <Element references can be created using `"$"` property.>
 
-# Helper Methods
+Io-Gui elements use hyperscript-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM chages will be performed. Template rendering also takes care of disposing unused elements and connections.
 
-[comment]: <`dispatchEvent()` shorthand for CustomEvents.>
-[comment]: <`setAttribute()` removes attribute for falsey values.>
-[comment]: <`throttle()` method.>
-[comment]: <`dispose()` method.>
+Here is a simple element expressed in the Io-Gui template syntax:
+
+```javascript
+['my-element', {prop: "propvalue"}, "Hello io!"]
+```
+
+DOM output:
+
+```html
+<my-element prop="propvalue">Hello io!</my-element>
+```
+
+The first array item is element name's, followed by **optional** properties and innerText or an array of children.
+
+Here is a slightly more complex vDOM tree with array iterator:
+
+```javascript
+this.template([
+  ['h4', 'Array indices:'],
+  ['div', [
+    this.items.map(i => ['span', {class: 'item'}, i])
+  ]]
+]);
+```
+
+DOM output:
+
+```html
+<h4>Array indices:</h4>
+<div>
+  <span class="item">1</span>
+  <span class="item">2</span>
+  <span class="item">3</span>
+  <!-- ... -->
+</div>
+```
+
+> **Note:** Io-Gui templates do not set HTML attributes - only properties are set.
+
+
+# Data Binding
+
+This is a simple yet powerful feature designed to be used with Io-Gui nodes and elements by simply invoking the `bind(propName)` method:
+
+```javascript
+// Returns a binding object to source property "value".
+this.bind('value');
+
+```
+
+To create a two-way data binding between two or more properties, simply assign a binding object to a property:
+
+```javascript
+const myNode = new MyNode();
+const slider = new IoSlider();
+slider.value = myNode.bind('value');
+```
+
+We can also assign bindings in the constructor:
+
+```javascript
+new IoSlider({value: myNode.bind('value')});
+```
+
+Or we can assign it to an element using template syntax:
+
+```javascript
+this.template([['io-slider', {value: this.bind('value')}]]);
+```
+
+The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.

@@ -46,6 +46,9 @@ export class IoCollapsable extends IoElement {
       overflow: auto;
       background-color: var(--iotBackgroundColorStrong);
     }
+    :host[direction=row] > div.io-collapsable-content {
+      flex-direction: row;
+    }
     :host > div.io-collapsable-content:not(:empty) {
       margin: var(--iotSpacing);
       margin-top: 0;
@@ -60,6 +63,9 @@ export class IoCollapsable extends IoElement {
 
   @Property('')
   declare label: string;
+
+  @Property({value: 'column', reflect: true})
+  declare direction: 'column' | 'row';
 
   @Property('')
   declare icon: string;
