@@ -142,8 +142,8 @@ const defaultThemeProps: Themes = {
 
     iotBackgroundColor: new Color(0.092, 0.094, 0.093, 1),
     iotBackgroundColorStrong: new Color(0.06, 0.06, 0.06, 1),
-    iotBackgroundColorDimmed: new Color(0.12, 0.124, 0.122, 1),
-    iotBackgroundColorFaint:  new Color(0.089, 0.09, 0.09, 1),
+    iotBackgroundColorDimmed: new Color(0.11, 0.12, 0.12, 1),
+    iotBackgroundColorFaint:  new Color(0.12, 0.14, 0.13, 1),
     iotBackgroundColorField: new Color(0.02, 0.038, 0.03, 1),
     iotBackgroundColorSelected: new Color(0, 0.3, 0.65, 1),
 

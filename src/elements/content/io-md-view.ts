@@ -40,22 +40,25 @@ export class IoMdView extends IoElement {
         color: var(--iotColorLink);
       }
       :host h1 {
-        padding: 0.4em 0;
-        margin: 0.3em 0;
+        padding: 0.7em 0;
+        margin: 0;
         border-bottom: var(--iotBorder);
         color: var(--iotColorStrong);
       }
       :host h2 {
-        margin: 0.3em 0;
+        padding: 0.6em 0;
+        margin: 0;
         color: var(--iotColorLink);
         color: var(--iotColorDimmed);
       }
       :host h3 {
-        margin: 0.2em 0;
+        padding: 0.5em 0;
+        margin: 0;
         color: var(--iotColorDimmed);
       }
       :host h4 {
-        margin: 0.1em 0;
+        padding: 0.4em 0;
+        margin: 0;
         color: var(--iotColorDimmed);
       }
       :host code {
@@ -70,7 +73,8 @@ export class IoMdView extends IoElement {
         background-color: var(--iotBackgroundColorDimmed);
         padding: var(--iotSpacing4);
         display: block;
-        white-space: pre-wrap;
+        overflow-x: auto;
+        font-size: var(--io-code-size);
       }
       :host blockquote code {
         background-color: transparent;
@@ -181,6 +185,12 @@ export class IoMdView extends IoElement {
         this.innerHTML = this._strip(marked(markdown));
       }
     }
+  }
+
+  onResized() {
+    let width = this.getBoundingClientRect().width;
+    width = Math.min(Math.max((width - 30) / 45, 11), 14);
+    this.style.setProperty('--io-code-size', width + 'px');
   }
 
   srcChanged() {
