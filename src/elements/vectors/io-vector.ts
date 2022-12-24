@@ -106,8 +106,8 @@ export class IoVector extends IoElement {
           min: this.min,
           max: this.max,
           ladder: this.ladder,
-          'on-pointerdown': this._onNumberPointerDown,
-          'on-value-input': this._onNumberValueInput,
+          '@pointerdown': this._onNumberPointerDown,
+          '@value-input': this._onNumberValueInput,
         }]);
       }
     }

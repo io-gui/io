@@ -206,9 +206,7 @@ document.createElement = function(tagName: string, options?: ElementCreationOpti
 export const applyNativeElementProps = function(element: HTMLElement, props: any) {
   for (const p in props) {
     const prop = props[p];
-    if (p.startsWith('@')) {
-      element.setAttribute(p.substr(1), prop);
-    } else if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
+    if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
     else (element as any)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop);

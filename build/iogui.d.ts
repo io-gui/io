@@ -155,7 +155,7 @@ export type ListenersDeclaration = Record<string, ListenerDeclarationLoose>;
  * It makes events of all `IoNode` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
  *  - `protoListeners` specified as `get Listeners()` class declarations.
- *  - `propListeners` specified as inline properties prefixed with "on-".
+ *  - `propListeners` specified as inline properties prefixed with "".
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export declare class EventDispatcher {
@@ -176,7 +176,7 @@ export declare class EventDispatcher {
 	 */
 	setProtoListeners(node: IoNode): void;
 	/**
-	 * Sets `propListeners` specified as inline properties prefixed with "on-".
+	 * Sets `propListeners` specified as inline properties prefixed with "".
 	 * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
 	 * @param {Record<string, any>} properties Inline properties
 	 */
@@ -273,7 +273,7 @@ export type AnyEventListener = EventListener | KeyboardEventListener | PointerEv
 export type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type IoNodeArgs = {
 	lazy?: boolean;
-	[key: prefix<string, "on-">]: string | ((event: CustomEvent<any>) => void);
+	[key: prefix<string, "@">]: string | ((event: CustomEvent<any>) => void);
 };
 /**
  * Core mixin for `Node` classes.
@@ -1513,6 +1513,7 @@ export declare class IoCollapsable extends IoElement {
 	static get Style(): string;
 	elements: VDOMArray[];
 	label: string;
+	direction: "column" | "row";
 	icon: string;
 	expanded: boolean;
 	role: string;
@@ -1557,6 +1558,7 @@ export declare class IoMdView extends IoElement {
 	sanitize: boolean;
 	protected _strip(innerHTML: string): string;
 	protected _parseMarkdown(markdown: string): void;
+	onResized(): void;
 	srcChanged(): void;
 	changed(): void;
 }
@@ -1801,7 +1803,7 @@ export declare class ObjectConfig {
 export declare class ObjectGroups {
 	constructor(prototypes: any);
 	registerObjectGroups(groups: any): void;
-	getObjectGroups(object: any, customGroups: any, keys: any, doAdvanced?: boolean): any;
+	getObjectGroups(object: any, customGroups: any, keys: any): any;
 }
 export declare class ObjectWidgets {
 	constructor(prototypes: any);
@@ -1812,11 +1814,9 @@ export declare class ObjectWidgets {
 	};
 }
 /**
- * Breadcrumbs select element. When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value. Optionally, it can trim the `options` array to selected option index.
- *
- * <io-element-demo element="io-breadcrumbs" properties='{"value": 1, "options": [1,2,3], "trim": false}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
- *
- * <io-element-demo element="io-breadcrumbs" properties='{"value": 1, "options": [{"value": 1, "label": "one"}, {"value": 2, "label": "two"}, {"value": 3, "label": "three"}], "trim": true}' config='{"options": ["io-object", {"expanded": true}]}'></io-element-demo>
+ * Breadcrumbs select element.
+ * When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value.
+ * Optionally, it can trim the `options` array to selected option index.
  **/
 export declare class IoBreadcrumbs extends IoElement {
 	static get Style(): string;
@@ -1828,12 +1828,16 @@ export declare class IoBreadcrumbs extends IoElement {
 }
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
- *
- * <io-element-demo element="io-inspector" properties='{"value": {"hello": "world"}, "config": {"type:number": ["io-slider", {"step": 0.1}], "type:string": ["io-option-menu", {"options": ["hello", "goodbye"]}]}, "crumbs": []}' config='{"value": ["io-object"], "type:object": ["io-properties"]}'></io-element-demo>
  **/
 export declare class IoInspector extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	value: Record<string, any> | any[];
+	selected: Record<string, any> | any[];
+	config: Record<string, any>;
+	search: string;
+	groups: Record<string, any>;
+	widgets: Record<string, any>;
+	autoExpand: string[];
 	static get Listeners(): {
 		"io-field-clicked": string;
 	};
@@ -1847,13 +1851,15 @@ export declare class IoInspector extends IoElement {
 	_getObjectWidgets(): void;
 	_getAll(): void;
 	changed(): void;
-	_onhangedThrCottle(): void;
+	_onChangedThrottled(): void;
 	_onChange(): void;
 	static get ObjectConfig(): {
 		"type:object": (string | {
+			appearance: string;
 			class: string;
 		})[];
 		"type:null": (string | {
+			appearance: string;
 			class: string;
 		})[];
 	};
@@ -1871,18 +1877,32 @@ export declare class IoInspector extends IoElement {
 	static RegisterObjectWidgets: (widgets: any) => void;
 	static Register(): void;
 }
+/**
+ * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
+ **/
 export declare class IoProperties extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	value: Record<string, any> | any[];
+	properties: string[];
+	config: Record<string, any>;
+	slotted: VDOMArray;
+	labeled: boolean;
 	static get ObjectConfig(): {
-		"type:string": {}[];
+		"type:string": (string | {
+			appearance: string;
+		})[];
 		"type:number": (string | {
+			appearance: string;
 			step: number;
 		})[];
-		"type:boolean": {}[];
-		"type:object": {}[];
-		"type:null": {}[];
-		"type:undefined": {}[];
+		"type:null": (string | {
+			appearance: string;
+		})[];
+		"type:undefined": (string | {
+			appearance: string;
+		})[];
+		"type:boolean": string[];
+		"type:object": string[];
 	};
 	_onValueSet(event: CustomEvent): void;
 	_getObjectConfig(): any;
@@ -1894,12 +1914,17 @@ export declare class IoProperties extends IoElement {
 }
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
- *
- * <io-element-demo element="io-object" properties='{"expanded": true, "label": "Custom Object Label", "labeled": true, "value": {"hello": "world"}}'></io-element-demo>
  **/
 export declare class IoObject extends IoElement {
 	static get Style(): string;
-	static get Properties(): any;
+	value: Record<string, any> | any[];
+	properties: string[];
+	config: Record<string, any>;
+	slotted: VDOMArray;
+	labeled: boolean;
+	label: string;
+	expanded: boolean;
+	role: string;
 	changed(): void;
 }
 /**

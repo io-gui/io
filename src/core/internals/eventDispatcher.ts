@@ -67,7 +67,7 @@ export type ListenersDeclaration = Record<string, ListenerDeclarationLoose>;
  * It makes events of all `IoNode` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
  *  - `protoListeners` specified as `get Listeners()` class declarations.
- *  - `propListeners` specified as inline properties prefixed with "on-".
+ *  - `propListeners` specified as inline properties prefixed with "".
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export class EventDispatcher {
@@ -104,15 +104,15 @@ export class EventDispatcher {
     }
   }
   /**
-   * Sets `propListeners` specified as inline properties prefixed with "on-".
+   * Sets `propListeners` specified as inline properties prefixed with "".
    * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
    * @param {Record<string, any>} properties Inline properties
    */
   applyPropListeners(properties: Record<string, any>) {
     const newPropListeners: Listeners = {};
     for (const prop in properties) {
-      if (prop.startsWith('on-')) {
-        const name = prop.slice(3, prop.length);
+      if (prop.startsWith('@')) {
+        const name = prop.slice(1, prop.length);
         const definition = hardenListenerDeclaration(properties[prop]);
         const listener = listenerFromDefinition(this.node, definition);
         newPropListeners[name] = [listener];

@@ -190,7 +190,7 @@ export class IoColorSlider extends IoColorBase {
     }
 
     this.template([
-      [sliderInputTagName, {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, 'on-value-input': this._onValueInput}],
+      [sliderInputTagName, {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput}],
     ]);
   }
 }

@@ -95,9 +95,9 @@ export class IoColorPanel extends IoColorBase {
     // TODO: fix nudge
     // TODO: fix initial change with empty channel
     this.template([
-      ['io-color-slider', {value: this.value, channel: 'sv', vertical: this.vertical, 'on-value-input': this.onValueSet}],
-      ['io-color-slider', {value: this.value, channel: 'h', vertical: !this.vertical, 'on-value-input': this.onValueSet}],
-      this.value.a !== undefined ? ['io-color-slider', {value: this.value, channel: 'a', 'on-value-input': this.onValueSet, vertical: !this.vertical}] : null,
+      ['io-color-slider', {value: this.value, channel: 'sv', vertical: this.vertical, '@value-input': this.onValueSet}],
+      ['io-color-slider', {value: this.value, channel: 'h', vertical: !this.vertical, '@value-input': this.onValueSet}],
+      this.value.a !== undefined ? ['io-color-slider', {value: this.value, channel: 'a', '@value-input': this.onValueSet, vertical: !this.vertical}] : null,
     ]);
   }
 }

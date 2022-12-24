@@ -111,7 +111,7 @@ export class IoMenuOptions extends IoElement {
     }
     :host[horizontal] > .hamburger {
       position: absolute;
-      right: 0;
+      right: var(--iotSpacing);
       padding: var(--iotSpacing);
     }
     :host > .hamburger > .hasmore {

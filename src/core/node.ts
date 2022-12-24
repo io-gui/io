@@ -31,7 +31,7 @@ type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${T
 
 export type IoNodeArgs = {
   lazy?: boolean;
-  [key: prefix<string, 'on-'>]: string | ((event: CustomEvent<any>) => void)
+  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void)
 }
 
 /**
@@ -215,7 +215,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           debug: {
             // TODO: consider converting style and config to properties
             // TODO: document!
-            if (!p.startsWith('on-') && p !== 'style' && p !== 'config' && p !== '$') {
+            if (!p.startsWith('@') && p !== 'style' && p !== 'config' && p !== '$') {
               console.warn(`Property "${p}" is not defined`, this);
             }
           }

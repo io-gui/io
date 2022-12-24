@@ -65,9 +65,9 @@ export class IoNotify extends IoElement {
     this.template([
       ['span', 'This app uses cookies for user interface customization.'],
       ['span', 'Agree'],
-      ['io-boolean', {'on-value-input': this._onAgree}],
+      ['io-boolean', {'@value-input': this._onAgree}],
       ['span', 'Disagree'],
-      ['io-boolean', {'on-value-input': this._onDisgree}],
+      ['io-boolean', {'@value-input': this._onDisgree}],
     ]);
   }
   _onAgree(event: CustomEvent) {

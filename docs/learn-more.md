@@ -154,7 +154,7 @@ If a property name is prefixed with `on-` it will be treated as a listener. Assi
 
 ## Data Binding
 
-This is a simple yet powerful feature designed to be used inside templates. You can data-bind properties to children using `this.bind([propName])` function.
+inside templates. You can data-bind properties to children using `this.bind([propName])` function.
 Keep in mind that this only works with Io properties. In other words, binding to native HTML elements will not work.
 
 ```javascript

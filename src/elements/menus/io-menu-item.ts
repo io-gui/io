@@ -229,7 +229,7 @@ export class IoMenuItem extends IoField {
       hovered.sort((a: IoMenuElementType, b: IoMenuElementType) => {
         return a.depth < b.depth ? 1 : a.depth > b.depth ? -1 : 0;
       });
-      return hovered[0];
+      return hovered[hovered.length - 1];
     }
     return undefined;
   }
