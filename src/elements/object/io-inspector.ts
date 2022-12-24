@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { IoElement, RegisterIoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import {IoStorage as $} from '../../core/storage.js';
 import { ObjectConfig } from './models/object-config.js';
@@ -29,6 +29,8 @@ export class IoInspector extends IoElement {
       flex-shrink: 0;
     }
     :host > .inspector-header {
+      display: flex;
+      flex-direction: row;
       margin-bottom: var(--iotSpacing);
       flex-grow: 0;
     }
@@ -79,20 +81,20 @@ export class IoInspector extends IoElement {
     :host > io-object > io-properties:not([horizontal])[labeled] > span.io-field {
       text-align: right;
     }
-    :host io-properties > io-field.select {
-      color: var(--iotColorLink);
+    :host io-properties io-field.select {
+      color: var(--iotColorLink) !important;
     }
-    :host io-properties > io-field.select:hover {
+    :host io-properties io-field.select:hover {
       text-decoration: underline;
     }
     `;
   }
 
   @Property({type: [Object, Array], observe: true})
-  declare value: Record<string, any> | [any];
+  declare value: Record<string, any> | any[];
 
   @Property({type: [Object, Array], observe: true})
-  declare selected: Record<string, any> | [any];
+  declare selected: Record<string, any> | any[];
 
   @Property({type: Object})
   declare config: Record<string, any>;
@@ -108,7 +110,7 @@ export class IoInspector extends IoElement {
 
   // TODO: deprecate!
   @Property({type: Array, value: ['main', 'properties']})
-  declare autoExpand: [string];
+  declare autoExpand: string[];
 
   // @Property({type: Array})
   // declare slotted: VDOMArray;
@@ -171,9 +173,9 @@ export class IoInspector extends IoElement {
     this._getAll();
     this.uuid = genUUID(this.selected);
     const elements = [
-      ['div', {class: 'inspector-header io-row io-panel'}, [
+      ['div', {class: 'inspector-header'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
-        ['io-string', {$: 'search', value: this.bind('search'), live: true}],
+        // ['io-string', {$: 'search', value: this.bind('search'), live: true}],
       ]],
       this._widgets.main ? this._widgets.main : null
     ];
@@ -208,8 +210,8 @@ export class IoInspector extends IoElement {
   }
   static get ObjectConfig() {
     return {
-      'type:object': ['io-field', {class: 'select'}],
-      'type:null': ['io-field', {class: 'select'}],
+      'type:object': ['io-field', {appearance: 'neutral', class: 'select'}],
+      'type:null': ['io-field', {appearance: 'neutral', class: 'select'}],
     };
   }
   static get ObjectGroups() {
