@@ -21,7 +21,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[src/core/internals/binding.ts:19](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L19)
+[src/core/internals/binding.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L19)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Creates a binding object for specified `node` and `property`.
 
 #### Defined in
 
-[src/core/internals/binding.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L10)
+[src/core/internals/binding.ts:10](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L10)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L11)
+[src/core/internals/binding.ts:11](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L11)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L13)
+[src/core/internals/binding.ts:13](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L13)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:12](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L12)
+[src/core/internals/binding.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L12)
 
 ## Accessors
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L27)
+[src/core/internals/binding.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L27)
 
 `set` **value**(`value`): `void`
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:24](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L24)
+[src/core/internals/binding.ts:24](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L24)
 
 ## Methods
 
@@ -114,7 +114,7 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 #### Defined in
 
-[src/core/internals/binding.ts:42](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L42)
+[src/core/internals/binding.ts:42](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L42)
 
 ___
 
@@ -131,7 +131,7 @@ Use this when node is no longer needed.
 
 #### Defined in
 
-[src/core/internals/binding.ts:147](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L147)
+[src/core/internals/binding.ts:147](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L147)
 
 ___
 
@@ -155,7 +155,7 @@ list of target property names.
 
 #### Defined in
 
-[src/core/internals/binding.ts:88](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L88)
+[src/core/internals/binding.ts:88](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L88)
 
 ___
 
@@ -177,7 +177,7 @@ Event handler that updates bound properties on target nodes when source node emi
 
 #### Defined in
 
-[src/core/internals/binding.ts:121](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L121)
+[src/core/internals/binding.ts:121](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L121)
 
 ___
 
@@ -199,7 +199,7 @@ Event handler that updates source property when one of the targets emits `[prope
 
 #### Defined in
 
-[src/core/internals/binding.ts:102](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L102)
+[src/core/internals/binding.ts:102](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L102)
 
 ___
 
@@ -223,7 +223,7 @@ If `property` is not specified, it removes all target properties.
 
 #### Defined in
 
-[src/core/internals/binding.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L67)
+[src/core/internals/binding.ts:67](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L67)
 
 ___
 
@@ -237,4 +237,4 @@ ___
 
 #### Defined in
 
-[src/core/internals/binding.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L30)
+[src/core/internals/binding.ts:30](https://github.com/io-gui/iogui/blob/main/src/core/internals/binding.ts#L30)

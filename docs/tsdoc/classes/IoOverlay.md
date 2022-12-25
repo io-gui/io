@@ -30,7 +30,7 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 #### Defined in
 
-[src/core/overlay.ts:84](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L84)
+[src/core/overlay.ts:83](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L83)
 
 ## Properties
 
@@ -44,7 +44,7 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 #### Defined in
 
-[src/core/element.ts:245](https://github.com/io-gui/io/blob/main/src/core/element.ts#L245)
+[src/core/element.ts:243](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L243)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
+[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:254](https://github.com/io-gui/io/blob/main/src/core/element.ts#L254)
+[src/core/element.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L252)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:251](https://github.com/io-gui/io/blob/main/src/core/element.ts#L251)
+[src/core/element.ts:249](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L249)
 
 ___
 
@@ -156,7 +156,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:275](https://github.com/io-gui/io/blob/main/src/core/element.ts#L275)
+[src/core/element.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L273)
 
 ___
 
@@ -166,7 +166,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:62](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L62)
+[src/core/overlay.ts:62](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L62)
 
 ___
 
@@ -180,7 +180,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:272](https://github.com/io-gui/io/blob/main/src/core/element.ts#L272)
+[src/core/element.ts:270](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L270)
 
 ___
 
@@ -194,7 +194,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:269](https://github.com/io-gui/io/blob/main/src/core/element.ts#L269)
+[src/core/element.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L267)
 
 ___
 
@@ -208,7 +208,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:260](https://github.com/io-gui/io/blob/main/src/core/element.ts#L260)
+[src/core/element.ts:258](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L258)
 
 ___
 
@@ -222,7 +222,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:263](https://github.com/io-gui/io/blob/main/src/core/element.ts#L263)
+[src/core/element.ts:261](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L261)
 
 ___
 
@@ -236,17 +236,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:257](https://github.com/io-gui/io/blob/main/src/core/element.ts#L257)
-
-___
-
-### skipCollapse
-
- **skipCollapse**: `boolean`
-
-#### Defined in
-
-[src/core/overlay.ts:65](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L65)
+[src/core/element.ts:255](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L255)
 
 ___
 
@@ -260,7 +250,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:248](https://github.com/io-gui/io/blob/main/src/core/element.ts#L248)
+[src/core/element.ts:246](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L246)
 
 ___
 
@@ -274,7 +264,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:266](https://github.com/io-gui/io/blob/main/src/core/element.ts#L266)
+[src/core/element.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L264)
 
 ## Accessors
 
@@ -292,7 +282,7 @@ IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src/core/element.ts#L393)
+[src/core/element.ts:391](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L391)
 
 `set` **textNode**(`value`): `void`
 
@@ -312,7 +302,7 @@ IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
+[src/core/element.ts:395](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L395)
 
 ___
 
@@ -333,6 +323,8 @@ ___
 | `mousedown` | `string` |
 | `mousemove` | `string` |
 | `mouseup` | `string` |
+| `pointerdown` | `string` |
+| `pointermove` | `string` |
 | `pointerup` | `string` |
 | `scroll` | `string` |
 | `touchend` | `string` |
@@ -342,7 +334,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:67](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L67)
+[src/core/overlay.ts:64](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L64)
 
 ___
 
@@ -360,7 +352,7 @@ IoElement.Properties
 
 #### Defined in
 
-[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
 
 ___
 
@@ -378,7 +370,7 @@ IoElement.Style
 
 #### Defined in
 
-[src/core/overlay.ts:29](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L29)
+[src/core/overlay.ts:29](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L29)
 
 ## Methods
 
@@ -405,7 +397,7 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
+[src/core/element.ts:374](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L374)
 
 ___
 
@@ -419,7 +411,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:103](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L103)
+[src/core/overlay.ts:99](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L99)
 
 ___
 
@@ -439,7 +431,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:106](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L106)
+[src/core/overlay.ts:102](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L102)
 
 ___
 
@@ -459,7 +451,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:109](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L109)
+[src/core/overlay.ts:105](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L105)
 
 ___
 
@@ -479,7 +471,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:95](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L95)
+[src/core/overlay.ts:94](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L94)
 
 ___
 
@@ -499,7 +491,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:112](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L112)
+[src/core/overlay.ts:108](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L108)
 
 ___
 
@@ -527,7 +519,7 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
+[src/core/node.ts:368](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L368)
 
 ___
 
@@ -547,7 +539,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:208](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L208)
+[src/core/overlay.ts:204](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L204)
 
 ___
 
@@ -571,7 +563,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:401](https://github.com/io-gui/io/blob/main/src/core/element.ts#L401)
+[src/core/element.ts:399](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L399)
 
 ___
 
@@ -599,7 +591,7 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:335](https://github.com/io-gui/io/blob/main/src/core/node.ts#L335)
+[src/core/node.ts:335](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L335)
 
 ___
 
@@ -620,7 +612,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:263](https://github.com/io-gui/io/blob/main/src/core/node.ts#L263)
+[src/core/node.ts:263](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L263)
 
 ___
 
@@ -640,7 +632,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:280](https://github.com/io-gui/io/blob/main/src/core/element.ts#L280)
+[src/core/element.ts:278](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L278)
 
 ___
 
@@ -658,7 +650,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src/core/element.ts#L430)
+[src/core/element.ts:428](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L428)
 
 ___
 
@@ -678,7 +670,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:288](https://github.com/io-gui/io/blob/main/src/core/element.ts#L288)
+[src/core/element.ts:286](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L286)
 
 ___
 
@@ -707,7 +699,7 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:393](https://github.com/io-gui/io/blob/main/src/core/node.ts#L393)
+[src/core/node.ts:393](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L393)
 
 ___
 
@@ -727,7 +719,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+[src/core/node.ts:277](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L277)
 
 ___
 
@@ -747,7 +739,7 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:287](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L287)
 
 ___
 
@@ -768,7 +760,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:400](https://github.com/io-gui/io/blob/main/src/core/node.ts#L400)
+[src/core/node.ts:400](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L400)
 
 ___
 
@@ -782,7 +774,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:230](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L230)
+[src/core/overlay.ts:226](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L226)
 
 ___
 
@@ -800,7 +792,7 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:264](https://github.com/io-gui/io/blob/main/src/core/node.ts#L264)
+[src/core/node.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L264)
 
 ___
 
@@ -827,7 +819,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:252](https://github.com/io-gui/io/blob/main/src/core/node.ts#L252)
+[src/core/node.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L252)
 
 ___
 
@@ -845,7 +837,7 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src/core/element.ts#L423)
+[src/core/element.ts:421](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L421)
 
 ___
 
@@ -869,7 +861,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:117](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L117)
+[src/core/overlay.ts:113](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L113)
 
 ___
 
@@ -893,7 +885,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:149](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L149)
+[src/core/overlay.ts:145](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L145)
 
 ___
 
@@ -916,7 +908,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:159](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L159)
+[src/core/overlay.ts:155](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L155)
 
 ___
 
@@ -940,7 +932,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:139](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L139)
+[src/core/overlay.ts:135](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L135)
 
 ___
 
@@ -964,7 +956,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:128](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L128)
+[src/core/overlay.ts:124](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L124)
 
 ___
 
@@ -991,7 +983,7 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+[src/core/node.ts:326](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L326)
 
 ___
 
@@ -1005,7 +997,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:218](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L218)
+[src/core/overlay.ts:214](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L214)
 
 ___
 
@@ -1019,7 +1011,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:221](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L221)
+[src/core/overlay.ts:217](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L217)
 
 ___
 
@@ -1046,7 +1038,7 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:305](https://github.com/io-gui/io/blob/main/src/core/node.ts#L305)
+[src/core/node.ts:305](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L305)
 
 ___
 
@@ -1060,7 +1052,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:92](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L92)
+[src/core/overlay.ts:91](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L91)
 
 ___
 
@@ -1088,7 +1080,7 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:271](https://github.com/io-gui/io/blob/main/src/core/node.ts#L271)
+[src/core/node.ts:271](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L271)
 
 ___
 
@@ -1108,7 +1100,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:213](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L213)
+[src/core/overlay.ts:209](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L209)
 
 ___
 
@@ -1136,7 +1128,7 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:383](https://github.com/io-gui/io/blob/main/src/core/node.ts#L383)
+[src/core/node.ts:383](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L383)
 
 ___
 
@@ -1163,7 +1155,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
+[src/core/element.ts:412](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L412)
 
 ___
 
@@ -1185,7 +1177,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:164](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L164)
+[src/core/overlay.ts:160](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L160)
 
 ___
 
@@ -1212,7 +1204,7 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
 
 ___
 
@@ -1240,7 +1232,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:129](https://github.com/io-gui/io/blob/main/src/core/node.ts#L129)
+[src/core/node.ts:129](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L129)
 
 ___
 
@@ -1260,7 +1252,7 @@ ___
 
 #### Defined in
 
-[src/core/overlay.ts:89](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L89)
+[src/core/overlay.ts:88](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L88)
 
 ___
 
@@ -1288,7 +1280,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[src/core/element.ts:300](https://github.com/io-gui/io/blob/main/src/core/element.ts#L300)
+[src/core/element.ts:298](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L298)
 
 ___
 
@@ -1316,7 +1308,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:296](https://github.com/io-gui/io/blob/main/src/core/node.ts#L296)
+[src/core/node.ts:296](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L296)
 
 ___
 
@@ -1345,7 +1337,7 @@ TODO: test element.traverse() function!
 
 #### Defined in
 
-[src/core/element.ts:313](https://github.com/io-gui/io/blob/main/src/core/element.ts#L313)
+[src/core/element.ts:311](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L311)
 
 ___
 
@@ -1371,4 +1363,4 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
