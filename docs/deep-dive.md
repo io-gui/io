@@ -2,14 +2,14 @@
 
 In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use features provided by the `IoNodeMixin` such as reactivity, data binding and various helper methods.
 
-A node is any `Object` that has been extended with the `IoNodeMixin` or an object that extends `IoNode`.
+A **node** is any `Object` that has been extended with the `IoNodeMixin` or an object that extends `IoNode`.
 
 ```javascript
 class IoNode extends IoNodeMixin(Object) {}
 class MyNode extends IoNode {}
 ```
 
-An element is a custom element that extends `IoElement` which is essentially `IoNodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is kebab-case version from the CamelCase class name. For Example `MyElement` class name corresponds to `<my-element>` HTML tag.
+An **element** is a custom element that extends `IoElement` which is essentially `IoNodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is automatically assigned as kebab-case version of the CamelCase class name. For Example `MyElement` class name will register with `<my-element>` HTML tagName.
 
 ```javascript
 class IoElement extends IoNodeMixin(HTMLElement) { ... }
@@ -44,7 +44,7 @@ class MyElement extends IoElement {}
 
 # Properties
 
-Properties can be defined using property declarations in the `static get Properties()` object or the `@Property({})` decorator (preffered for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
+Properties can be defined using property declarations in the `static get Properties()` object or the `@Property({})` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
 
 In the following example, we define a boolean property called `selected` by specifying only the default value `false`.
 
@@ -59,7 +59,7 @@ class MyNode extends IoNode {
 }
 ```
 
-Here we do the same using decorator syntax in typescript. Note that we use `declare` keyword to tell the compiler that this property definitly exists and has the `boolean` type. Without this keyword, typescript would override our custom property initialization logic.
+Here we do the same using decorator syntax in typescript. Note that we use `declare` keyword to tell the compiler that this property definitely exists and has the `boolean` type. Without this keyword, typescript would override our custom property initialization logic.
 
 ```typescript
 // Typescript version with `@Property({})` decorator
@@ -82,7 +82,7 @@ class MyNode extends IoNode {
 
 Just like initial property value can be inferred from type, a property type can be inferred from its initial value. This is why `@Property(Boolean)` and `@Property(false)` are effectively the same.
 
-When property type is a custom object class the initial value will NOT be inferred. Instead, the users are expected to provide the initial value in the constructor. Note that ANY initial value specified in property declaration can be overriden by a value specified in the constructor.
+When property type is a custom object class the initial value will NOT be inferred. Instead, the users are expected to provide the initial value in the constructor. Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
 class MyNode extends IoNode {
@@ -154,7 +154,7 @@ Now let's get into each specific field of the PropertyDeclaration object. Note t
 | observe | `boolean` | `false` | Enables object observer |
 | reflect | `boolean` | `false` | Reflects property to attribute |
 
-We already covered `value` and `type` in exampes above. Now lets dig into the other fields.
+We already covered `value` and `type` in examples above. Now let's dig into the other fields.
 
 **`reactive`** field is `true` by default and it enables all of the reactive callbacks and events that happen when a property value changes. You can disable it if you don't need reactivity. Disabling it will also prevent data binding to that property.
 
@@ -206,7 +206,7 @@ The above style rule is effectively the same as adding the following style block
 </style>
 ```
 
-In fact, this is automatically done by the `RegisterIoElement` decorator. Each element will have its own style block inside document head.
+In fact, this is automatically done by the `RegisterIoElement` decorator. Each element will have its own style block inside the document head.
 
 ## CSS Mixin Polyfill
 
@@ -229,7 +229,7 @@ To use the mixin in any element use `@apply` CSS rule. It is important that the 
 
 # Listeners
 
-Listeners are defined inside `static get Listeners()` object and .Following listener will call `onClick` handler function when `"click"` event happens.
+Listeners are defined inside the `static get Listeners()` object and .Following listener will call `onClick` handler function when `"click"` event happens.
 
 ```typescript
 @RegisterIoElement
@@ -245,9 +245,9 @@ class MyElement extends IoElement {
 }
 ```
 
-Listeners with handlers specified with `string` value assume that function with that name exists on the class.
+Listeners with handlers specified with `string` value assume that a function with that name exists on the class.
 
-> **Note:** Function names prefixed with `on` or `_` are automatically bound to class instance. This feature might be deprecated in the future.
+> **Note:** Function names prefixed with `on` or `_` are automatically bound to class instances. This feature might be deprecated in the future.
 
 You can also specify handlers as functions such as:
 
@@ -275,7 +275,7 @@ static get Listeners() {
 [comment]: <Runtime type checking available in debug mode.>
 [comment]: <Can recieve data `Binding` objects.>
 
-All properties are reactive by default, meaning that changing a property value will emit change event and invoke change handler functions if they exist. Lastly, `changed()` function will be called when any one or more reactive properties change.
+All properties are reactive by default, meaning that changing a property value will emit a change event and invoke change handler functions if they exist. Lastly, `changed()` function will be called when any one or more reactive properties change.
 
 Here is an example of a node fully rigged to handle changes of its `selected` property.
 
@@ -313,7 +313,7 @@ Note that change handler functions are provided with a `change` payload that inc
 
 ## Property Change Batching
 
-Since `change()` function gets invoked every time a reacitive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
+Since `change()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
 
 ```javascript
 this.prop1 = value1;
@@ -326,7 +326,7 @@ this.prop2Changed(change);
 this.changed();
 ```
 
-This sequence of invocations is fine but we can avoid executing `change()` function twice by using `setProperties()` method to set both properties at the same time.
+This sequence of invocations is fine but we can avoid executing the `change()` function twice by using the `setProperties()` method to set both properties at the same time.
 
 ```javascript
 this.setProperties({
@@ -344,9 +344,9 @@ this.changed();
 
 > **Warning!** This feature is not fully tested!
 
-By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inneficiencies in complex systems where multiple properties are changing frequently.
+By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inefficiencies in complex systems where multiple properties are changing frequently.
 
-Just like in the batching example above we can get into a scenario where change handler fuctions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `lazy` property to `true`. This will effectively change node's reactivity to lazy (asynchronous) regime.
+Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `lazy` property to `true`. This will effectively change node's reactivity to a lazy (asynchronous) regime.
 
 In lazy regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
 
@@ -364,7 +364,7 @@ this.prop2Changed(change); // change.oldValue === 'a'
 this.changed();
 ```
 
-# Tamplate Syntax
+# Template Syntax
 
 [comment]: <Uses nested array representation of (virtual) DOM.>
 [comment]: <Template function handles disposal of removed elements.>
@@ -373,7 +373,7 @@ this.changed();
 [comment]: <Inline event listeners can be added using `"on-"` (`"@"` TBD)>
 [comment]: <Element references can be created using `"$"` property.>
 
-Io-Gui elements use hyperscript-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM chages will be performed. Template rendering also takes care of disposing unused elements and connections.
+Io-Gui elements use hyperscript-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM changes will be performed. Template rendering also takes care of disposing unused elements and connections.
 
 Here is a simple element expressed in the Io-Gui template syntax:
 

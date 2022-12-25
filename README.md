@@ -5,9 +5,9 @@
 [![DeepScan][deepscan]][deepscan-url]
 [![License][license]][license-url]
 
-> ⚠️ **WARNING!** Io-Gui is an experiment currently under development. Please be advised that this code is not production ready!
+> ⚠️ **WARNING!** Io-Gui is an experiment currently under development. This code is not production ready!
 
-Io-Gui is an experimental UI framework aimed at simplicity and performance. It lets you write fast and reactive custom elements that respond to state changes, data binding events and object mutations. It can also support entire applications with routing, navigation and code splitting.
+Io-Gui is an experimental UI framework aimed at simplicity and performance. It lets you write fast and reactive custom elements that respond to state changes, data binding events and object mutations. It can support single page applications with routing, navigation and code splitting.
 
 The goal of this project is to provide a strong foundation for complex applications and tools such as 3D editors and demo tools for [threejs].
 
@@ -23,11 +23,11 @@ Io-Gui includes a design system built with a simple and effective CSS framework.
 
 ## Reactive WebGL Elements
 
-One of the unique features of Io-Gui is its ability to render custom elements in the DOM using WebGL shaders. Elements like sliders and color editors that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are automatically mapped to shader uniforms.  
+One of the unique features of Io-Gui is its ability to render custom elements using WebGL shaders. Elements that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are reactively mapped to shader uniforms.  
 
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on very little tooling for development, linting and testing. In theory, you should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [nodejs] and [yarn] to run development scripts.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on very little tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [nodejs] and [yarn] to run development scripts.
 
 To download and develop Io-Gui locally:
 

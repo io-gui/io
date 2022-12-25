@@ -1,12 +1,12 @@
 # Usage
 
-There are many ways to use Io-Gui. You can use its core classes `IoNode` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to complex single-page applications, or you can simply import and use one of its nodes or elements in your own web architecture. You can learn more about nodes and elements in the [deep dive] guide.
+There are many ways to use Io-Gui. You can use its core classes `IoNode` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to a complex single-page application, or you can simply import and use one of its nodes or elements in your own web architecture. You can learn more about nodes and elements in the [deep dive] guide.
 
 To quickly import Io-Gui and get started, continue reading this article.
 
 ## Making a Simple Element
 
-Here is a basic example of a reaciteve element `<my-element>` with a `message` property that renders the value of the `message` property in its contents.
+Here is a basic example of a reaciteve element `<my-element>` with a `message` property and a simple template.
 
 ```javascript
 import { IoElement, RegisterIoElement } from "io-gui";
@@ -27,11 +27,11 @@ const myElement = new MyElement({message: 'Hello World'});
 document.body.appendChild(myElement);
 ```
 
-> **Note:** You can also add `<my-element>` to your HTML code but keep in mind that properties have to be set imperatively. Setting HTML attributes won't work.
+> **Note:** You can add `<my-element>` to your HTML declaratively but keep in mind that properties have to be set imperatively. Setting HTML attributes won't work.
 
 ## Making a Website
 
-Here is a quick way to make a simple website `<my-website>` with navigation and pages that display contents from .md files. 
+Here is a quick way to make a simple website `<my-website>` with navigation and pages that load contents from .md files. 
 
 ```javascript
 import { IoNavigator, RegisterIoElement, MenuOptions } from "io-gui";
@@ -60,10 +60,11 @@ export class MyWebsite extends IoNavigator {
 RegisterIoElement(MyWebsite);
 ```
 
+See [index.html] of iogui.dev for more advanced example.
 
 ## Built-in Elements
 
-Here is an example how to use `IoSlider` element:
+As mentioned above, you can import and use individual Io-Gui elements in your own application architecture. For example, here is how you would use `IoSlider` element:
 
 ```javascript
 import { IoSlider } from "io-gui";
@@ -73,7 +74,7 @@ const slider = new IoSlider({value: 0, min: -1, max: 1, step: 0.1});
 document.body.appendChild(slider);
 ```
 
-In another example we use `IoContextMenu` to add an interactive context menu with actions to our page:
+In the next example we use `IoContextMenu` to add an interactive context menu to our page:
 
 ```javascript
 import { IoContextMenu, MenuOptions } from "io-gui";
@@ -108,6 +109,7 @@ To continue learning about Io-Gui, read the [deep dive] guide.
 
 Reffer to the elements demo [source code] for usage examples.
 
+[index.html]: https://github.com/io-gui/io/blob/main/index.html#L125
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive
 [elements]: https://iogui.dev/io/#path=Demos,Elements
 [source code]: https://github.com/io-gui/io/blob/main/demos/elements-dev.js
