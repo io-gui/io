@@ -18,7 +18,7 @@ Takes a loosely typed property declaration and returns full property definition 
 
 #### Defined in
 
-[src/core/internals/property.ts:36](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L36)
+[src/core/internals/property.ts:36](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L36)
 
 ## Properties
 
@@ -28,7 +28,7 @@ Takes a loosely typed property declaration and returns full property definition 
 
 #### Defined in
 
-[src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
+[src/core/internals/property.ts:28](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L28)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
+[src/core/internals/property.ts:31](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L31)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
+[src/core/internals/property.ts:30](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L30)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
+[src/core/internals/property.ts:29](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L29)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L27)
+[src/core/internals/property.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L27)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/core/internals/property.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L26)
+[src/core/internals/property.ts:26](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L26)
 
 ## Methods
 
@@ -100,4 +100,4 @@ Assigns values of another ProtoProperty to itself, unless they are default value
 
 #### Defined in
 
-[src/core/internals/property.ts:65](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L65)
+[src/core/internals/property.ts:65](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L65)

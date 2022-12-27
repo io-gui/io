@@ -400,11 +400,6 @@ export class IoDemoElements extends IoElement {
             options: contentOptions,
           }]
         ]}],
-        ['io-collapsable', {label: 'io-scroller', class: 'fixed-tall', expanded: $('expanded-demo-content-5'), elements: [['io-scroller', {
-            options: contentOptions[0].options,
-          }, [elements[0]]]]
-        }],
-        ['io-collapsable', {label: 'scrollable content', class: 'fixed-tall', expanded: $('expanded-demo-content-6'), elements: [elements[0]] }],
       ]}],
       ['io-collapsable', {label: 'Object Editors', expanded: $('expanded-demo-objects'), elements: [
           ['io-collapsable', {label: 'io-properties', direction: 'row', expanded: $('expanded-demo-objects-1'), elements: [

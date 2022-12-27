@@ -19,7 +19,7 @@ Creates an instance of `ProtoChain` for specified class constructor.
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L38)
+[src/core/internals/protoChain.ts:38](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L38)
 
 ## Properties
 
@@ -31,7 +31,7 @@ Array of inherited class constructors ending with `HTMLElement`, `Object` or `Ar
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L13)
+[src/core/internals/protoChain.ts:13](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L13)
 
 ___
 
@@ -43,7 +43,7 @@ Array of function names that start with "on" or "_" for auto-binding.
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:17](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L17)
+[src/core/internals/protoChain.ts:17](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L17)
 
 ___
 
@@ -59,7 +59,7 @@ Aggregated listener declarations declared in `static get Listeners()` return oje
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L25)
+[src/core/internals/protoChain.ts:25](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L25)
 
 ___
 
@@ -71,7 +71,7 @@ Array of property names of observed object properties.
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L33)
+[src/core/internals/protoChain.ts:33](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L33)
 
 ___
 
@@ -87,7 +87,7 @@ Aggregated property declarations declared in `static get Properties()` return oj
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:21](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L21)
+[src/core/internals/protoChain.ts:21](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L21)
 
 ___
 
@@ -99,7 +99,7 @@ Aggregated CSS style declarations declared in `static get Style()` return string
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L29)
+[src/core/internals/protoChain.ts:29](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L29)
 
 ## Methods
 
@@ -121,4 +121,4 @@ Binds all auto-binding functions from the `.functions` array to specified `IoNod
 
 #### Defined in
 
-[src/core/internals/protoChain.ts:125](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L125)
+[src/core/internals/protoChain.ts:125](https://github.com/io-gui/iogui/blob/main/src/core/internals/protoChain.ts#L125)

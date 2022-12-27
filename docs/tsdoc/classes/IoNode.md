@@ -34,7 +34,7 @@ IoNodeMixin(Object).constructor
 
 #### Defined in
 
-[src/core/node.ts:63](https://github.com/io-gui/io/blob/main/src/core/node.ts#L63)
+[src/core/node.ts:63](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L63)
 
 ## Properties
 
@@ -48,7 +48,7 @@ IoNodeMixin(Object).\_bindings
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
 
 ___
 
@@ -62,7 +62,7 @@ IoNodeMixin(Object).\_changeQueue
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
 
 ___
 
@@ -76,7 +76,7 @@ IoNodeMixin(Object).\_eventDispatcher
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
 
 ___
 
@@ -90,7 +90,7 @@ IoNodeMixin(Object).\_properties
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
 
 ___
 
@@ -104,7 +104,7 @@ IoNodeMixin(Object).\_protochain
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
+[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
 
 ## Accessors
 
@@ -122,7 +122,7 @@ IoNodeMixin(Object).Properties
 
 #### Defined in
 
-[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
 
 ## Methods
 
@@ -150,7 +150,7 @@ IoNodeMixin(Object).addEventListener
 
 #### Defined in
 
-[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
+[src/core/node.ts:368](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L368)
 
 ___
 
@@ -177,7 +177,7 @@ IoNodeMixin(Object).applyProperties
 
 #### Defined in
 
-[src/core/node.ts:212](https://github.com/io-gui/io/blob/main/src/core/node.ts#L212)
+[src/core/node.ts:212](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L212)
 
 ___
 
@@ -205,7 +205,7 @@ IoNodeMixin(Object).bind
 
 #### Defined in
 
-[src/core/node.ts:335](https://github.com/io-gui/io/blob/main/src/core/node.ts#L335)
+[src/core/node.ts:335](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L335)
 
 ___
 
@@ -226,7 +226,7 @@ IoNodeMixin(Object).changed
 
 #### Defined in
 
-[src/core/node.ts:263](https://github.com/io-gui/io/blob/main/src/core/node.ts#L263)
+[src/core/node.ts:263](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L263)
 
 ___
 
@@ -255,7 +255,7 @@ IoNodeMixin(Object).dispatchEvent
 
 #### Defined in
 
-[src/core/node.ts:393](https://github.com/io-gui/io/blob/main/src/core/node.ts#L393)
+[src/core/node.ts:393](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L393)
 
 ___
 
@@ -275,7 +275,7 @@ IoNodeMixin(Object).dispatchQueue
 
 #### Defined in
 
-[src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+[src/core/node.ts:277](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L277)
 
 ___
 
@@ -295,7 +295,7 @@ IoNodeMixin(Object).dispatchQueueSync
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:287](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L287)
 
 ___
 
@@ -316,7 +316,7 @@ IoNodeMixin(Object).dispose
 
 #### Defined in
 
-[src/core/node.ts:400](https://github.com/io-gui/io/blob/main/src/core/node.ts#L400)
+[src/core/node.ts:400](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L400)
 
 ___
 
@@ -334,7 +334,7 @@ IoNodeMixin(Object).init
 
 #### Defined in
 
-[src/core/node.ts:264](https://github.com/io-gui/io/blob/main/src/core/node.ts#L264)
+[src/core/node.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L264)
 
 ___
 
@@ -361,7 +361,7 @@ IoNodeMixin(Object).inputValue
 
 #### Defined in
 
-[src/core/node.ts:252](https://github.com/io-gui/io/blob/main/src/core/node.ts#L252)
+[src/core/node.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L252)
 
 ___
 
@@ -388,7 +388,7 @@ IoNodeMixin(Object).objectMutated
 
 #### Defined in
 
-[src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+[src/core/node.ts:326](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L326)
 
 ___
 
@@ -415,7 +415,7 @@ IoNodeMixin(Object).onObjectMutated
 
 #### Defined in
 
-[src/core/node.ts:305](https://github.com/io-gui/io/blob/main/src/core/node.ts#L305)
+[src/core/node.ts:305](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L305)
 
 ___
 
@@ -443,7 +443,7 @@ IoNodeMixin(Object).queue
 
 #### Defined in
 
-[src/core/node.ts:271](https://github.com/io-gui/io/blob/main/src/core/node.ts#L271)
+[src/core/node.ts:271](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L271)
 
 ___
 
@@ -471,7 +471,7 @@ IoNodeMixin(Object).removeEventListener
 
 #### Defined in
 
-[src/core/node.ts:383](https://github.com/io-gui/io/blob/main/src/core/node.ts#L383)
+[src/core/node.ts:383](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L383)
 
 ___
 
@@ -498,7 +498,7 @@ IoNodeMixin(Object).setProperties
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
 
 ___
 
@@ -526,7 +526,7 @@ IoNodeMixin(Object).setProperty
 
 #### Defined in
 
-[src/core/node.ts:129](https://github.com/io-gui/io/blob/main/src/core/node.ts#L129)
+[src/core/node.ts:129](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L129)
 
 ___
 
@@ -554,7 +554,7 @@ IoNodeMixin(Object).throttle
 
 #### Defined in
 
-[src/core/node.ts:296](https://github.com/io-gui/io/blob/main/src/core/node.ts#L296)
+[src/core/node.ts:296](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L296)
 
 ___
 
@@ -580,4 +580,4 @@ IoNodeMixin(Object).unbind
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
