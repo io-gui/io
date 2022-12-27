@@ -373,7 +373,7 @@ this.changed();
 [comment]: <Inline event listeners can be added using `"on-"` (`"@"` TBD)>
 [comment]: <Element references can be created using `"$"` property.>
 
-Io-Gui elements use hyperscript-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM changes will be performed. Template rendering also takes care of disposing unused elements and connections.
+Io-Gui elements use hypertext-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM changes will be performed. Template rendering also takes care of disposing unused elements and connections.
 
 Here is a simple element expressed in the Io-Gui template syntax:
 
