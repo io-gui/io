@@ -368,6 +368,7 @@ export class IoMenuItem extends IoField {
     }
     const icon = this.icon || this.item.icon;
     this.setAttribute('selected', this.item.selected);
+    this.setAttribute('hidden', this.item.hidden);
     this.setAttribute('hasmore', this.hasmore);
     this.disabled = this.item.disabled; // TODO: reconsider this
     this.template([

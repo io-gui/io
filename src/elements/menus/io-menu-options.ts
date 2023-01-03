@@ -44,7 +44,7 @@ export class IoMenuOptions extends IoElement {
       opacity: 0;
     }
 
-    :host > .item {
+    :host > io-menu-item {
       border-radius: 0;
       position: relative;
       overflow: visible;
@@ -56,33 +56,33 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Item spacing */
-    :host:not([horizontal]) > .item {
+    :host:not([horizontal]) > io-menu-item {
       margin-bottom: var(--iotBorderWidth);
     }
-    :host:not([horizontal]) > .item:first-of-type {
+    :host:not([horizontal]) > io-menu-item:first-of-type {
       margin-top: var(--iotSpacing);
     }
-    :host[horizontal] > .item {
+    :host[horizontal] > io-menu-item {
       margin-left: var(--iotBorderWidth);
       padding: var(--iotSpacing) calc(0.75 * var(--iotLineHeight));
       border-color: transparent;
     }
 
     /* Item divider */
-    :host > .item:not(:last-of-type)::before {
+    :host > io-menu-item:not(:last-of-type)::before {
       content: '';
       position: absolute;
       width: 100%;
       height: 100%;
     }
-    :host:not([horizontal]) > .item:not(:last-of-type)::before {
+    :host:not([horizontal]) > io-menu-item:not(:last-of-type)::before {
       right: 0;
       bottom: calc(var(--iotBorderWidth) * -2);
       border-bottom: var(--iotBorder);
       border-bottom-color: var(--iotColor);
       opacity: 0.05;
     }
-    :host[horizontal] > .item:not(:last-of-type)::before {
+    :host[horizontal] > io-menu-item:not(:last-of-type)::before {
       top: 0;
       right: calc(var(--iotBorderWidth) * -2);
       border-right: var(--iotBorder);
@@ -91,7 +91,7 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Remove hints from horizontal menu */
-    :host[horizontal] > .item > .hint {
+    :host[horizontal] > io-menu-item > .hint {
       display: none;
     }
 
@@ -327,7 +327,6 @@ export class IoMenuOptions extends IoElement {
       for (let i = 0; i < this.options.length; i++) {
         elements.push(['io-menu-item', {
           item: this.options[i],
-          class: 'item',
           direction: direction,
           depth: this.depth
         }]);

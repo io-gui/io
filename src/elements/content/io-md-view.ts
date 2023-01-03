@@ -25,12 +25,6 @@ export class IoMdView extends IoElement {
         color: var(--iotColor);
         background-color: var(--iotBackgroundColor);
       }
-      :host > :first-child {
-        margin-top: 0;
-      }
-      :host > :last-child {
-        margin-top: 0;
-      }
       :host p {
         line-height: 1.45em;
         margin: 0.35em 0;

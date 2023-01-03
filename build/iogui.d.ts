@@ -897,6 +897,8 @@ export type MenuItemArgs = IoElementArgs & {
 	hint?: string;
 	action?: () => void;
 	mode?: MenuItemSelectType;
+	hidden?: boolean;
+	disabled?: boolean;
 	selected?: boolean;
 	options?: MenuItemArgsLoose[] | MenuOptions;
 };
@@ -905,6 +907,7 @@ export declare class MenuItem extends IoNode {
 	label: string;
 	icon: string;
 	hint: string;
+	hidden: boolean;
 	disabled: boolean;
 	action?: (value?: any) => void;
 	mode: MenuItemSelectType;
@@ -1582,7 +1585,7 @@ export declare class IoNavigator extends IoElement {
 	slotted: VDOMArray[];
 	elements: VDOMArray[];
 	options: MenuOptions;
-	menu: "none" | "top" | "left" | "bottom" | "right";
+	menu: "top" | "left" | "bottom" | "right";
 	select: "first" | "last";
 	mode: "select" | "scroll" | "select-and-anchor";
 	depth: number;
