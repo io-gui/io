@@ -22,9 +22,10 @@ export default class {
           chai.expect(element.setUniform).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
+          element.onResized();
           chai.expect(element.size).to.be.eql([0, 0]);
           chai.expect(element.color).to.be.eql([0, 0, 0, 0]);
-          chai.expect(element.pxRatio).to.be.equal(1);
+          chai.expect(element.pxRatio).to.be.equal(window.devicePixelRatio);
           chai.expect(element.theme).to.be.equal(IoThemeSingleton);
 
           chai.expect(element._properties.get('size')).to.eql({
@@ -51,7 +52,7 @@ export default class {
             observe: false,
             reflect: false,
             type: Number,
-            value: 1,
+            value: window.devicePixelRatio,
           });
 
           chai.expect(element._properties.get('theme')).to.eql({
