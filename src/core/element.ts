@@ -173,15 +173,18 @@ const constructElement = function(vDOMElement: VDOMElement) {
 };
 
 export const disposeElementDeep = function(element: IoElement) {
-  const elements = [...(element.querySelectorAll('*')), element] as IoElement[];
-  for (let i = elements.length; i--;) {
-    if (typeof elements[i].dispose === 'function') {
-      elements[i].dispose();
-    } else if (elements[i]._eventDispatcher) {
-      elements[i]._eventDispatcher.dispose();
-      delete (elements[i] as any)._eventDispatcher;
+  // NOTE: This timeout ensures that element's change queue is emptied before disposing.
+  requestAnimationFrame(() => {
+    const elements = [...(element.querySelectorAll('*')), element] as IoElement[];
+    for (let i = elements.length; i--;) {
+      if (typeof elements[i].dispose === 'function') {
+        elements[i].dispose();
+      } else if (elements[i]._eventDispatcher) {
+        elements[i]._eventDispatcher.dispose();
+        delete (elements[i] as any)._eventDispatcher;
+      }
     }
-  }
+  });
 };
 
 const superCreateElement = document.createElement;
