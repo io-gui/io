@@ -716,11 +716,9 @@ export declare class IoStorageNode extends IoNode {
 	removeValueToHash(): void;
 	saveValueToHash(): void;
 }
-export declare const IoStorage: {
-	(props: StorageProps): Binding;
-	parseHash(hash: string): Record<string, string>;
-	getValueFromHash(key: string): any;
-	updateAllFromHash(): void;
+export declare const IoStorage: ((props: StorageProps) => Binding) & {
+	permit(): void;
+	unpermit(): void;
 };
 export declare class Color {
 	r: number;
