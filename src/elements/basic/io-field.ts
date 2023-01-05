@@ -59,7 +59,7 @@ export class IoField extends IoElement {
         border-color: var(--iotBorderColorSelected);
       }
       :host:focus {
-        position: relative;
+        /* position: relative; */
         text-overflow: inherit;
         border-color: var(--iotBorderColorSelected);
         outline: 1px solid var(--iotBorderColorFocus);
