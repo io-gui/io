@@ -294,7 +294,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {boolean} sync - execute immediately without rAF timeout.
      */
     throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
-      throttle(func, arg, sync);
+      throttle(func, arg, this, sync);
     }
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
@@ -450,22 +450,21 @@ export function RegisterIoNode(target: typeof IoNode) {
 @RegisterIoNode
 export class IoNode extends IoNodeMixin(Object) {}
 
-// TODO: Document and test. Improve argument handling. Consider edge-cases.
+// TODO: Document and test. Improve argument and node disposal handling. Consider edge-cases.
 const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
 const throttleQueueArgs = new WeakMap();
+const throttleQueueNodes = new WeakMap();
 
-function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
-  if (throttleQueueSync.indexOf(func) === -1) {
+function throttle(func: CallbackFunction, arg: any = undefined, node: IoNode, sync = false) {
+  if (sync === true && throttleQueueSync.indexOf(func) === -1) {
     throttleQueueSync.push(func);
-    if (sync === true) {
-      try {
-        func(arg);
-      } catch (e) {
-        console.error(e);
-      }
-      return;
+    try {
+      func(arg);
+    } catch (e) {
+      console.error(e);
     }
+    return;
   }
   if (throttleQueue.indexOf(func) === -1) {
     throttleQueue.push(func);
@@ -476,6 +475,9 @@ function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
   } else {
     throttleQueueArgs.set(func, [arg]);
   }
+  if (!throttleQueueNodes.has(func)) {
+    throttleQueueNodes.set(func, node);
+  }
 }
 
 function animate () {
@@ -484,9 +486,10 @@ function animate () {
   for (let i = throttleQueue.length; i--;) {
     const func = throttleQueue[i];
     const args = throttleQueueArgs.get(func);
+    const node = throttleQueueNodes.get(func);
     for (let p = args.length; p--;) {
       try {
-        func(args[p]);
+        if (!node._disposed) func(args[p]);
       } catch (e) {
         console.error(e);
       }
