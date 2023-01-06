@@ -17,7 +17,7 @@ export class IoDemoThemeEditor extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['io-option-menu', {value: IoThemeSingleton.bind('theme'), options: new MenuOptions([
+      ['io-option-menu', {value: IoThemeSingleton.bind('themeID'), options: new MenuOptions([
         {label: 'Light Theme', value: 'light'},
         {label: 'Dark Theme', value: 'dark'},
       ])}],

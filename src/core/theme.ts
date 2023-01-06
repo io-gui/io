@@ -12,7 +12,7 @@ export class Color {
   constructor(public r: number, public g: number, public b: number, public a: number) {}
 }
 
-type Variables = {
+export type Theme = {
   iotSpacing: number;
   iotSpacing2: number;
   iotSpacing3: number;
@@ -63,110 +63,119 @@ type Variables = {
   iotShadowColor: Color;
 }
 
-type Themes = Record<string, Variables>;
+export const LIGHT_THEME: Theme = {
+  iotSpacing: 2,
+  iotSpacing2: 4,
+  iotSpacing3: 6,
+  iotSpacing4: 8,
+  iotLineHeight: 20,
+  iotLineHeight2: 40,
+  iotLineHeight3: 60,
+  iotLineHeight4: 80,
+  iotLineHeight8: 160,
+  iotFieldHeight: 28,
+  iotFieldHeight2: 56,
+  iotFieldHeight3: 112,
+  iotFieldHeight4: 168,
+  iotFieldHeight8: 236,
+  iotFieldHeight10: 280,
+  iotFieldHeight12: 336,
+  iotStrokeWidth: 1,
+  iotBorderRadius: 2,
+  iotBorderRadius2: 4,
+  iotBorderWidth: 1,
+  iotBorderWidth2: 2,
+  iotFontSize: 14,
 
-const defaultThemeProps: Themes = {
-  light: {
-    iotSpacing: 2,
-    iotSpacing2: 4,
-    iotSpacing3: 6,
-    iotSpacing4: 8,
-    iotLineHeight: 20,
-    iotLineHeight2: 40,
-    iotLineHeight3: 60,
-    iotLineHeight4: 80,
-    iotLineHeight8: 160,
-    iotFieldHeight: 28,
-    iotFieldHeight2: 56,
-    iotFieldHeight3: 112,
-    iotFieldHeight4: 168,
-    iotFieldHeight8: 236,
-    iotFieldHeight10: 280,
-    iotFieldHeight12: 336,
-    iotStrokeWidth: 1,
-    iotBorderRadius: 2,
-    iotBorderRadius2: 4,
-    iotBorderWidth: 1,
-    iotBorderWidth2: 2,
-    iotFontSize: 14,
+  iotBackgroundColor: new Color(0.95, 0.95, 0.95, 1),
+  iotBackgroundColorStrong: new Color(0.75, 0.75, 0.75, 1),
+  iotBackgroundColorDimmed: new Color(0.85, 0.85, 0.85, 1),
+  iotBackgroundColorFaint: new Color(0.9, 0.9, 0.9, 1),
+  iotBackgroundColorField: new Color(0.85, 0.86, 0.87, 1),
+  iotBackgroundColorSelected: new Color(0.2, 0.5, 0.9, 1),
 
-    iotBackgroundColor: new Color(0.95, 0.95, 0.95, 1),
-    iotBackgroundColorStrong: new Color(0.75, 0.75, 0.75, 1),
-    iotBackgroundColorDimmed: new Color(0.85, 0.85, 0.85, 1),
-    iotBackgroundColorFaint: new Color(0.9, 0.9, 0.9, 1),
-    iotBackgroundColorField: new Color(0.85, 0.86, 0.87, 1),
-    iotBackgroundColorSelected: new Color(0.2, 0.5, 0.9, 1),
+  iotColor: new Color(0.25, 0.25, 0.2, 1),
+  iotColorStrong: new Color(0, 0, 0, 1),
+  iotColorDimmed: new Color(0.34, 0.34, 0.25, 1),
+  iotColorError: new Color(0.95, 0.5, 0.3, 1),
+  iotColorLink: new Color(0.4, 0.7, 0.3, 1),
+  iotColorField: new Color(0, 0, 0, 1),
+  iotColorSelected: new Color(1, 1, 1, 1),
 
-    iotColor: new Color(0.25, 0.25, 0.2, 1),
-    iotColorStrong: new Color(0, 0, 0, 1),
-    iotColorDimmed: new Color(0.34, 0.34, 0.25, 1),
-    iotColorError: new Color(0.95, 0.5, 0.3, 1),
-    iotColorLink: new Color(0.4, 0.7, 0.3, 1),
-    iotColorField: new Color(0, 0, 0, 1),
-    iotColorSelected: new Color(1, 1, 1, 1),
+  iotBorderColor: new Color(0.8, 0.8, 0.8, 1),
+  iotBorderColorLight: new Color(1, 1, 1, 1),
+  iotBorderColorDark: new Color(0.65, 0.65, 0.65, 1),
+  iotBorderColorSelected: new Color(0.8, 0.9, 1, 1),
+  iotBorderColorFocus: new Color(0.3, 0.65, 1, 1),
 
-    iotBorderColor: new Color(0.8, 0.8, 0.8, 1),
-    iotBorderColorLight: new Color(1, 1, 1, 1),
-    iotBorderColorDark: new Color(0.65, 0.65, 0.65, 1),
-    iotBorderColorSelected: new Color(0.8, 0.9, 1, 1),
-    iotBorderColorFocus: new Color(0.3, 0.65, 1, 1),
+  iotGradientColorStart: new Color(0.9, 0.9, 0.9, 1),
+  iotGradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
 
-    iotGradientColorStart: new Color(0.9, 0.9, 0.9, 1),
-    iotGradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
-
-    iotShadowColor: new Color(0, 0, 0, 0.2),
-  },
-  dark: {
-    iotSpacing: 2,
-    iotSpacing2: 4,
-    iotSpacing3: 6,
-    iotSpacing4: 8,
-    iotLineHeight: 20,
-    iotLineHeight2: 40,
-    iotLineHeight3: 60,
-    iotLineHeight4: 80,
-    iotLineHeight8: 160,
-    iotFieldHeight: 28,
-    iotFieldHeight2: 56,
-    iotFieldHeight3: 112,
-    iotFieldHeight4: 168,
-    iotFieldHeight8: 236,
-    iotFieldHeight10: 280,
-    iotFieldHeight12: 336,
-    iotStrokeWidth: 1,
-    iotBorderRadius: 2,
-    iotBorderRadius2: 4,
-    iotBorderWidth: 1,
-    iotBorderWidth2: 2,
-    iotFontSize: 14,
-
-    iotBackgroundColor: new Color(0.092, 0.094, 0.093, 1),
-    iotBackgroundColorStrong: new Color(0.06, 0.06, 0.06, 1),
-    iotBackgroundColorDimmed: new Color(0.11, 0.12, 0.12, 1),
-    iotBackgroundColorFaint:  new Color(0.12, 0.14, 0.13, 1),
-    iotBackgroundColorField: new Color(0.02, 0.038, 0.03, 1),
-    iotBackgroundColorSelected: new Color(0, 0.3, 0.65, 1),
-
-    iotColor: new Color(0.76, 0.77, 0.78, 1),
-    iotColorStrong: new Color(1, 1, 1, 1),
-    iotColorDimmed: new Color(0.6, 0.64, 0.63, 1),
-    iotColorError: new Color(0.8, 0.376, 0.062, 1),
-    iotColorLink: new Color(0.78, 0.9, 0.6, 1),
-    iotColorField: new Color(0.65, 0.7, 0.68, 1),
-    iotColorSelected: new Color(1, 1, 1, 1),
-
-    iotBorderColor: new Color(0.2, 0.2, 0.2, 1),
-    iotBorderColorLight: new Color(0.3, 0.3, 0.3, 1),
-    iotBorderColorDark: new Color(0.06, 0.06, 0.06, 1),
-    iotBorderColorSelected: new Color(0.6, 0.9, 1, 1),
-    iotBorderColorFocus: new Color(0.3, 0.65, 0.75, 1),
-
-    iotGradientColorStart: new Color(0.192, 0.195, 0.194, 1),
-    iotGradientColorEnd: new Color(0.08, 0.083, 0.082, 1),
-
-    iotShadowColor: new Color(0, 0, 0, 0.2),
-  },
+  iotShadowColor: new Color(0, 0, 0, 0.2),
 };
+
+export const DARK_THEME: Theme = {
+  iotSpacing: 2,
+  iotSpacing2: 4,
+  iotSpacing3: 6,
+  iotSpacing4: 8,
+  iotLineHeight: 20,
+  iotLineHeight2: 40,
+  iotLineHeight3: 60,
+  iotLineHeight4: 80,
+  iotLineHeight8: 160,
+  iotFieldHeight: 28,
+  iotFieldHeight2: 56,
+  iotFieldHeight3: 112,
+  iotFieldHeight4: 168,
+  iotFieldHeight8: 236,
+  iotFieldHeight10: 280,
+  iotFieldHeight12: 336,
+  iotStrokeWidth: 1,
+  iotBorderRadius: 2,
+  iotBorderRadius2: 4,
+  iotBorderWidth: 1,
+  iotBorderWidth2: 2,
+  iotFontSize: 14,
+
+  iotBackgroundColor: new Color(0.092, 0.094, 0.093, 1),
+  iotBackgroundColorStrong: new Color(0.06, 0.06, 0.06, 1),
+  iotBackgroundColorDimmed: new Color(0.11, 0.12, 0.12, 1),
+  iotBackgroundColorFaint:  new Color(0.12, 0.14, 0.13, 1),
+  iotBackgroundColorField: new Color(0.02, 0.038, 0.03, 1),
+  iotBackgroundColorSelected: new Color(0, 0.3, 0.65, 1),
+
+  iotColor: new Color(0.76, 0.77, 0.78, 1),
+  iotColorStrong: new Color(1, 1, 1, 1),
+  iotColorDimmed: new Color(0.6, 0.64, 0.63, 1),
+  iotColorError: new Color(0.8, 0.376, 0.062, 1),
+  iotColorLink: new Color(0.78, 0.9, 0.6, 1),
+  iotColorField: new Color(0.65, 0.7, 0.68, 1),
+  iotColorSelected: new Color(1, 1, 1, 1),
+
+  iotBorderColor: new Color(0.2, 0.2, 0.2, 1),
+  iotBorderColorLight: new Color(0.3, 0.3, 0.3, 1),
+  iotBorderColorDark: new Color(0.06, 0.06, 0.06, 1),
+  iotBorderColorSelected: new Color(0.6, 0.9, 1, 1),
+  iotBorderColorFocus: new Color(0.3, 0.65, 0.75, 1),
+
+  iotGradientColorStart: new Color(0.192, 0.195, 0.194, 1),
+  iotGradientColorEnd: new Color(0.08, 0.083, 0.082, 1),
+
+  iotShadowColor: new Color(0, 0, 0, 0.2),
+};
+
+const $ThemeID = $({
+  value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+  storage: 'local',
+  key: 'theme-' + THEME_VERSION
+});
+
+const $Themes = $({
+  value: {},
+  storage: 'local',
+  key: 'io-themes-' + THEME_VERSION
+});
 
 const compositeVariables = /* css */`
   body {
@@ -182,57 +191,55 @@ const compositeVariables = /* css */`
   }
 `;
 
-const themesStorage = $({
-  value: JSON.parse(JSON.stringify(defaultThemeProps)),
-  storage: 'local',
-  key: 'io-themes-' + THEME_VERSION
-});
-
-const theme = $({
-  value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-  storage: 'local',
-  key: 'theme-' + THEME_VERSION
-});
-
 /**
  * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
  * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
  *
  * ```javascript
- * IoThemeSingleton.theme = 'dark';
+ * IoThemeSingleton.themeID = 'dark';
  * ```
  *
  * CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
  */
 @RegisterIoElement
-export class IoTheme extends IoElement {
+class IoTheme extends IoElement {
   static get Properties(): PropertyDeclarations {
     const props: PropertyDeclarations = {};
-    for (const p in themesStorage.value[theme.value]) {
-      if (themesStorage.value[theme.value][p] instanceof Object) {
-        props[p] = {value: themesStorage.value[theme.value][p], type: Color, observe: true};
+    for (const p in LIGHT_THEME) {
+      const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME];
+      if (prop instanceof Object) {
+        props[p] = {value: prop, type: Color, observe: true};
       } else {
-        props[p] = themesStorage.value[theme.value][p];
+        props[p] = prop;
       }
     }
     return props;
   }
 
-  @Property({value: true})
-  declare lazy: boolean;
+  // Default themes
+  @Property({type: Object})
+  declare themes: Record<string, Theme>;
 
-  @Property({value: true})
-  declare persist: boolean;
-
-  @Property({type: String, binding: theme})
-  declare theme: string;
+  @Property({type: String, binding: $ThemeID})
+  declare themeID: string;
 
   init() {
+    // this.changed = this.changed.bind(this);
     this._properties.forEach((property) => {
       if (property.value === 'object') { property.observe = true; }
     });
-    this.changed = this.changed.bind(this);
-    this.throttle(this.changed, undefined, 0);
+    this.registerTheme('light', LIGHT_THEME);
+    this.registerTheme('dark', DARK_THEME);
+    this.themeIDChanged();
+  }
+  registerTheme(themeID: string, theme: Theme) {
+    this.themes[themeID] = theme;
+    $Themes.value[themeID] = theme;
+
+    // Save default theme
+    this.setProperty('themes', JSON.parse(JSON.stringify(this.themes)), true);
+    // Save persistand theme
+    $Themes.value = JSON.parse(JSON.stringify($Themes.value));
   }
   _toCss(rgba: Color) {
     const r = Math.floor(rgba.r * 255);
@@ -245,11 +252,12 @@ export class IoTheme extends IoElement {
     }
   }
   reset() {
-    themesStorage.value = Object.assign({}, JSON.parse(JSON.stringify(defaultThemeProps)));
-    this.themeChanged();
+    // Load persistand themes from default themes
+    $Themes.value = JSON.parse(JSON.stringify(this.themes));
+    this.themeIDChanged();
   }
-  themeChanged() {
-    const values = themesStorage.value[this.theme];
+  themeIDChanged() {
+    const values = $Themes.value[this.themeID];
     for (const p in values) {
       if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
          values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a);
@@ -278,10 +286,8 @@ export class IoTheme extends IoElement {
     const propertyVariables = Array.from(this._properties.keys()).reduce(
       (result, prop) => {
         if (prop.startsWith('iot')) {
-          if (this.persist) {
-            themesStorage.value[theme.value][prop] = this[prop];
-            themesStorage.value = JSON.parse(JSON.stringify(themesStorage.value));
-          }
+          $Themes.value[this.themeID][prop] = this[prop];
+          $Themes.value = JSON.parse(JSON.stringify($Themes.value));
           if (typeof this[prop] === 'object') {
             return `${result}--${prop}: ${this._toCss(this[prop])};\n    `;
           } else {
@@ -292,6 +298,7 @@ export class IoTheme extends IoElement {
       }, '');
 
     styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
+    // console.log(this.iotColor);
     this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }

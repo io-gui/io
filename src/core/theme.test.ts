@@ -1,32 +1,20 @@
-import { IoTheme } from '../iogui.js';
+import { IoThemeSingleton } from '../iogui.js';
 
-const theme = new IoTheme();
-const binding = theme._properties.get('theme')!.binding;
+const theme = IoThemeSingleton;
+const binding = theme._properties.get('themeID')!.binding;
 
 export default class {
   run() {
     describe('IoThemeSingleton', () => {
       describe('Initialization', () => {
         it('Should register property definitions correctly', () => {
-          chai.expect(theme.lazy).to.be.equal(true);
-          chai.expect(theme.persist).to.be.equal(true);
-
-          chai.expect(theme._properties.get('persist')).to.eql({
-            binding: undefined,
-            reactive: true,
-            observe: false,
-            reflect: false,
-            type: Boolean,
-            value: true,
-          });
-
-          chai.expect(theme._properties.get('theme')).to.eql({
+          chai.expect(theme._properties.get('themeID')).to.eql({
             binding: binding,
             reactive: true,
             observe: false,
             reflect: false,
             type: String,
-            value: theme.theme,
+            value: theme.themeID,
           });
         });
       });
