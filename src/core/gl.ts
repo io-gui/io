@@ -1,6 +1,7 @@
+import { IoNode } from './node.js';
 import { IoElement, RegisterIoElement } from './element.js';
 import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
-import { IoTheme, IoThemeSingleton, Color } from './theme.js';
+import { IoThemeSingleton, Color } from './theme.js';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
@@ -71,8 +72,8 @@ export class IoGl extends IoElement {
   @Property({value: 1})
   declare pxRatio: number;
 
-  @Property({observe: true, type: IoTheme})
-  declare theme: IoTheme;
+  @Property({observe: true, type: IoNode, value: IoThemeSingleton})
+  declare theme: typeof IoThemeSingleton;
 
   private _needsResize = false;
   private _canvas: HTMLCanvasElement;
@@ -257,8 +258,6 @@ export class IoGl extends IoElement {
     return program;
   }
   constructor(properties: Record<string, any> = {}) {
-    properties.theme = IoThemeSingleton;
-
     super(properties);
 
     // TODO: improve code clarity

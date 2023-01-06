@@ -338,9 +338,9 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 		 * @param {function} func - Function to throttle.
 		 * @param {*} arg - argument for throttled function.
-		 * @param {boolean} sync - execute immediately without rAF timeout.
+		 * @param {number} timeout - minimum delay in ms before executing the function.
 		 */
-		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
 		 * Event handler for 'object-mutated' event emitted from the `window`.
 		 * Node should be listening for this event if it has an observed object property
@@ -459,9 +459,9 @@ declare const IoNode_base: {
 		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 		 * @param {function} func - Function to throttle.
 		 * @param {*} arg - argument for throttled function.
-		 * @param {boolean} sync - execute immediately without rAF timeout.
+		 * @param {number} timeout - minimum delay in ms before executing the function.
 		 */
-		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
 		 * Event handler for 'object-mutated' event emitted from the `window`.
 		 * Node should be listening for this event if it has an observed object property
@@ -626,7 +626,7 @@ declare const IoElement_base: {
 		queue(prop: string, value: any, oldValue: any): void;
 		dispatchQueue(): void;
 		dispatchQueueSync: () => void;
-		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onObjectMutated: (event: CustomEvent<any>) => void;
 		objectMutated: (prop: string) => void;
 		bind(prop: string): Binding;
@@ -716,11 +716,9 @@ export declare class IoStorageNode extends IoNode {
 	removeValueToHash(): void;
 	saveValueToHash(): void;
 }
-export declare const IoStorage: {
-	(props: StorageProps): Binding;
-	parseHash(hash: string): Record<string, string>;
-	getValueFromHash(key: string): any;
-	updateAllFromHash(): void;
+export declare const IoStorage: ((props: StorageProps) => Binding) & {
+	permit(): void;
+	unpermit(): void;
 };
 export declare class Color {
 	r: number;
@@ -729,25 +727,62 @@ export declare class Color {
 	a: number;
 	constructor(r: number, g: number, b: number, a: number);
 }
-/**
- * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
- * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
- *
- * ```javascript
- * IoThemeSingleton.theme = 'dark';
- * ```
- *
- * CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
- */
-export declare class IoTheme extends IoElement {
+export type Theme = {
+	iotSpacing: number;
+	iotSpacing2: number;
+	iotSpacing3: number;
+	iotSpacing4: number;
+	iotLineHeight: number;
+	iotLineHeight2: number;
+	iotLineHeight3: number;
+	iotLineHeight4: number;
+	iotLineHeight8: number;
+	iotFieldHeight: number;
+	iotFieldHeight2: number;
+	iotFieldHeight3: number;
+	iotFieldHeight4: number;
+	iotFieldHeight8: number;
+	iotFieldHeight10: number;
+	iotFieldHeight12: number;
+	iotStrokeWidth: number;
+	iotBorderRadius: number;
+	iotBorderRadius2: number;
+	iotBorderWidth: number;
+	iotBorderWidth2: number;
+	iotFontSize: number;
+	iotBackgroundColor: Color;
+	iotBackgroundColorStrong: Color;
+	iotBackgroundColorDimmed: Color;
+	iotBackgroundColorFaint: Color;
+	iotBackgroundColorField: Color;
+	iotBackgroundColorSelected: Color;
+	iotColor: Color;
+	iotColorStrong: Color;
+	iotColorDimmed: Color;
+	iotColorError: Color;
+	iotColorLink: Color;
+	iotColorField: Color;
+	iotColorSelected: Color;
+	iotBorderColor: Color;
+	iotBorderColorLight: Color;
+	iotBorderColorDark: Color;
+	iotBorderColorSelected: Color;
+	iotBorderColorFocus: Color;
+	iotGradientColorStart: Color;
+	iotGradientColorEnd: Color;
+	iotShadowColor: Color;
+};
+export declare const LIGHT_THEME: Theme;
+export declare const DARK_THEME: Theme;
+declare class IoTheme extends IoElement {
 	static get Properties(): PropertyDeclarations;
-	lazy: boolean;
-	persist: boolean;
-	theme: string;
+	themes: Record<string, Theme>;
+	themeID: string;
 	init(): void;
+	registerTheme(themeID: string, theme: Theme): void;
 	_toCss(rgba: Color): string;
 	reset(): void;
-	themeChanged(): void;
+	themeIDChanged(): void;
 	changed(): void;
 }
 export declare const IoThemeSingleton: IoTheme;
@@ -764,7 +799,7 @@ export declare class IoGl extends IoElement {
 		number
 	];
 	pxRatio: number;
-	theme: IoTheme;
+	theme: typeof IoThemeSingleton;
 	private _needsResize;
 	private _canvas;
 	private _ctx;
@@ -855,7 +890,7 @@ declare const MenuOptions_base: {
 		queue(prop: string, value: any, oldValue: any): void;
 		dispatchQueue(): void;
 		dispatchQueueSync: () => void;
-		throttle(func: CallbackFunction, arg?: any, sync?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onObjectMutated: (event: CustomEvent<any>) => void;
 		objectMutated: (prop: string) => void;
 		bind(prop: string): Binding;
@@ -897,6 +932,8 @@ export type MenuItemArgs = IoElementArgs & {
 	hint?: string;
 	action?: () => void;
 	mode?: MenuItemSelectType;
+	hidden?: boolean;
+	disabled?: boolean;
 	selected?: boolean;
 	options?: MenuItemArgsLoose[] | MenuOptions;
 };
@@ -905,6 +942,7 @@ export declare class MenuItem extends IoNode {
 	label: string;
 	icon: string;
 	hint: string;
+	hidden: boolean;
 	disabled: boolean;
 	action?: (value?: any) => void;
 	mode: MenuItemSelectType;
@@ -1582,7 +1620,7 @@ export declare class IoNavigator extends IoElement {
 	slotted: VDOMArray[];
 	elements: VDOMArray[];
 	options: MenuOptions;
-	menu: "none" | "top" | "left" | "bottom" | "right";
+	menu: "top" | "left" | "bottom" | "right";
 	select: "first" | "last";
 	mode: "select" | "scroll" | "select-and-anchor";
 	depth: number;

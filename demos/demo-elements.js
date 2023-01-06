@@ -3,7 +3,7 @@ import './menu-model.js';
 import './theme-editor.js';
 
 function $(key) {
-  return new IoStorage({key: key, value: false, storage: 'local'})
+  return IoStorage({key: key, value: false, storage: 'local'})
 }
 
 const numberItems = [

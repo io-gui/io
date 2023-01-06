@@ -131,7 +131,7 @@ export class IoMenuItem extends IoField {
         window.open(item.value, '_blank');
       }
       this.dispatchEvent('item-clicked', item, true);
-      this.throttle(this._onCollapse, undefined, true);
+      this.throttle(this._onCollapse, undefined, 0);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -140,7 +140,7 @@ export class IoMenuItem extends IoField {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.throttle(this._onCollapse, undefined, true);
+    if (this.expanded) this.throttle(this._onCollapse, undefined, 0);
   }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();
@@ -368,6 +368,7 @@ export class IoMenuItem extends IoField {
     }
     const icon = this.icon || this.item.icon;
     this.setAttribute('selected', this.item.selected);
+    this.setAttribute('hidden', this.item.hidden);
     this.setAttribute('hasmore', this.hasmore);
     this.disabled = this.item.disabled; // TODO: reconsider this
     this.template([

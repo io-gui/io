@@ -75,6 +75,7 @@ export class IoNavigator extends IoElement {
       }
       :host > io-selector {
         overflow: auto;
+        flex: 1 1 auto;
       }
       /* :host > io-selector, */
       :host > io-scroller,
@@ -93,8 +94,8 @@ export class IoNavigator extends IoElement {
   @Property({type: MenuOptions, observe: true})
   declare options: MenuOptions;
 
-  @Property({value: 'none', reflect: true})
-  declare menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
+  @Property({value: 'top', reflect: true})
+  declare menu: 'top' | 'left' | 'bottom' | 'right';
 
   @Property('first')
   declare select: 'first' | 'last';

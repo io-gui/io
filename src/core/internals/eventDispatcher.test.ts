@@ -289,7 +289,7 @@ export default class {
         let path: any = null;
         let target: any = null;
         eventDispatcher2.addEventListener('event3', (event: CustomEvent) => {
-          path = (event as any).path;
+          path = (event as any).composedPath();
           target = (event as any).target;
         });
 

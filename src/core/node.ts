@@ -291,10 +291,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
      * @param {function} func - Function to throttle.
      * @param {*} arg - argument for throttled function.
-     * @param {boolean} sync - execute immediately without rAF timeout.
+     * @param {number} timeout - minimum delay in ms before executing the function.
      */
-    throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
-      throttle(func, arg, sync);
+    throttle(func: CallbackFunction, arg: any = undefined, timeout = 1) {
+      throttle(this, func, arg, timeout);
     }
     /**
      * Event handler for 'object-mutated' event emitted from the `window`.
@@ -307,7 +307,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         const prop = this._protochain.observedObjectProperties[i];
         const value = this._properties.get(prop)!.value;
         if (value === event.detail.object) {
-          this.throttle(this.objectMutated, prop, true);
+          this.throttle(this.objectMutated, prop, 0);
           return;
         }
         debug: {
@@ -450,31 +450,33 @@ export function RegisterIoNode(target: typeof IoNode) {
 @RegisterIoNode
 export class IoNode extends IoNodeMixin(Object) {}
 
-// TODO: Document and test. Improve argument handling. Consider edge-cases.
+// TODO: Document and test. Improve argument and node disposal handling. Consider edge-cases.
 const throttleQueueSync: CallbackFunction[] = [];
 const throttleQueue: CallbackFunction[] = [];
-const throttleQueueArgs = new WeakMap();
+const throttleQueueOptions = new WeakMap();
 
-function throttle(func: CallbackFunction, arg: any = undefined, sync = false) {
-  if (throttleQueueSync.indexOf(func) === -1) {
+function throttle(node: IoNode, func: CallbackFunction, arg: any = undefined, timeout = 1) {
+  if (timeout === 0 && throttleQueueSync.indexOf(func) === -1) {
     throttleQueueSync.push(func);
-    if (sync === true) {
-      try {
-        func(arg);
-      } catch (e) {
-        console.error(e);
-      }
-      return;
+    try {
+      func(arg);
+    } catch (e) {
+      console.error(e);
     }
+    return;
   }
   if (throttleQueue.indexOf(func) === -1) {
     throttleQueue.push(func);
   }
-  if (throttleQueueArgs.has(func)) {
-    const args = throttleQueueArgs.get(func);
-    if (args.indexOf(arg) === -1) args.push(arg);
+  if (!throttleQueueOptions.has(func)) {
+    throttleQueueOptions.set(func, {
+      node: node,
+      arg: arg,
+      timeout: Date.now() + timeout,
+    });
   } else {
-    throttleQueueArgs.set(func, [arg]);
+    const options = throttleQueueOptions.get(func);
+    options.arg = arg;
   }
 }
 
@@ -483,15 +485,19 @@ function animate () {
   throttleQueueSync.length = 0;
   for (let i = throttleQueue.length; i--;) {
     const func = throttleQueue[i];
-    const args = throttleQueueArgs.get(func);
-    for (let p = args.length; p--;) {
-      try {
-        func(args[p]);
-      } catch (e) {
-        console.error(e);
-      }
-      args.splice(args.indexOf(p), 1);
+    const options = throttleQueueOptions.get(func);
+    if (options.timeout > Date.now()) {
+      continue;
     }
+    try {
+      if (!options.node._disposed) {
+        if (options.arg !== undefined) func(options.arg);
+        else func();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    throttleQueueOptions.delete(func);
     throttleQueue.splice(throttleQueue.indexOf(func), 1);
   }
 }

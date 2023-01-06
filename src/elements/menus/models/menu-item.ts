@@ -13,6 +13,8 @@ export type MenuItemArgs = IoElementArgs & {
   hint?: string,
   action?: () => void,
   mode?: MenuItemSelectType,
+  hidden?: boolean,
+  disabled?: boolean,
   selected?: boolean,
   options?: MenuItemArgsLoose[] | MenuOptions
 };
@@ -33,6 +35,9 @@ export class MenuItem extends IoNode {
 
   @Property('')
   declare hint: string;
+
+  @Property(false)
+  declare hidden: boolean;
 
   @Property(false)
   declare disabled: boolean;
@@ -83,6 +88,7 @@ export class MenuItem extends IoNode {
       }
       if (args.icon !== undefined) item.icon = args.icon;
       if (args.hint !== undefined) item.hint = args.hint;
+      if (args.hidden !== undefined) item.hidden = args.hidden;
       if (args.disabled !== undefined) item.disabled = args.disabled;
       if (args.action !== undefined) item.action = args.action;
       if (args.mode !== undefined) item.mode = args.mode;
@@ -128,6 +134,7 @@ export class MenuItem extends IoNode {
       label: this.label,
       icon: this.icon,
       hint: this.hint,
+      hidden: this.hidden,
       disabled: this.disabled,
     };
     if (this.options) json.options = this.options;
