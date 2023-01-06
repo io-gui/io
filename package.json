@@ -1,6 +1,6 @@
 {
   "name": "io-gui",
-  "version": "1.4.0-rc5",
+  "version": "1.4.0-rc6",
   "description": "Io-Gui, a UI framework for web development.",
   "main": "build/iogui.js",
   "module": "build/iogui.js",
