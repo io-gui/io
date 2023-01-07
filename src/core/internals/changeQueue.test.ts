@@ -1,7 +1,6 @@
 import {ChangeQueue, Change} from '../../iogui.js';
 
 class FakeIoNode {
-  connected = true;
   prop1ChangeCounter = 0;
   prop1Change?: Change;
   prop2ChangeCounter = 0;

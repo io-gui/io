@@ -40,7 +40,6 @@ export class ChangeQueue {
    * For each property change in the queue:
    *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
    *  - It executes node's `[propName(change)` change handler function if it is defined.
-   * If owner node is not connected dispatch is aborted.
    * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
    */
   dispatch() {
