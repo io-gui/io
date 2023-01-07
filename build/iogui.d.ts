@@ -549,7 +549,6 @@ export declare class ChangeQueue {
 	 * For each property change in the queue:
 	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
 	 *  - It executes node's `[propName(change)` change handler function if it is defined.
-	 * If owner node is not connected dispatch is aborted.
 	 * After all changes are dispatched it invokes `.changed()` functions od the owner node instance.
 	 */
 	dispatch(): void;
@@ -1563,14 +1562,16 @@ export declare class IoSelector extends IoElement {
 	select: "first" | "last";
 	elements: VDOMArray[];
 	cache: boolean;
+	precache: boolean;
 	loading: boolean;
 	private _caches;
 	private _observer;
 	private _selected?;
 	importModule(path: string): Promise<unknown>;
-	connectedCallback(): void;
+	init(): void;
 	optionsMutated(): void;
 	protected _renderSelected(): void;
+	onLoadPrecache(): void;
 	dispose(): void;
 }
 export declare class IoMdNavigator extends IoElement {
@@ -1625,6 +1626,7 @@ export declare class IoNavigator extends IoElement {
 	mode: "select" | "scroll" | "select-and-anchor";
 	depth: number;
 	cache: boolean;
+	precache: boolean;
 	collapsed: boolean;
 	collapseWidth: number;
 	init(): void;
