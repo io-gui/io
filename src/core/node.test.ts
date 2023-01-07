@@ -495,7 +495,7 @@ export default class {
 
           node.dispose();
         });
-        it('should fire change events when connected', () => {
+        it('should fire change events', () => {
           @RegisterIoNode
           class TestNode extends IoNode {
             static get Properties(): any {
