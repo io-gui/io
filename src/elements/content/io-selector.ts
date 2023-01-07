@@ -2,6 +2,7 @@ import { IoElement, RegisterIoElement, VDOMArray, IoElementArgs, disposeElementD
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
 
+const dummyElement = document.createElement('div');
 /**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
  * If `cache` property is set to `true`, a reference to the element will be kept fo later use.
@@ -57,6 +58,9 @@ export class IoSelector extends IoElement {
   @Property(false)
   declare cache: boolean;
 
+  @Property(false)
+  declare precache: boolean;
+
   @Property({value: false, reflect: true, reactive: false})
   declare loading: boolean;
 
@@ -81,16 +85,19 @@ export class IoSelector extends IoElement {
     });
   }
 
-  connectedCallback() {
+  init() {
     this.optionsMutated();
   }
 
   optionsMutated() {
     const selected = this.select === 'first' ? this.options.first : this.options.last;
+
     if (selected !== this._selected) {
       this._selected = selected;
       this._renderSelected();
     }
+
+    this.throttle(this.onLoadPrecache, undefined, 1000);
   }
 
   protected _renderSelected() {
@@ -131,7 +138,7 @@ export class IoSelector extends IoElement {
       if (cache && this._caches[selected]) {
         const cachedElement = this._caches[selected] as unknown as IoElement;
         if (this._caches[selected].parentElement !== this as unknown as HTMLElement) {
-          this.removeChild(this.firstChild);
+          if (this.firstChild) this.removeChild(this.firstChild);
           this.appendChild(cachedElement);
           // Update properties
           cachedElement.removeAttribute('className');
@@ -158,6 +165,24 @@ export class IoSelector extends IoElement {
           }
           this.loading = false;
         });
+      }
+    }
+  }
+
+  onLoadPrecache() {
+    // TODO: Test this!
+    // TODO: consider precaching imports!
+    if (this.precache) {
+      for (let i = 0; i < this.elements.length; i++) {
+        const element = this.elements[i];
+        const args: IoElementArgs = typeof element[1] !== 'object' ? {} : element[1] as IoElementArgs;
+        if (!args.import && args.id && this._caches[args.id] === undefined) {
+          this.template([element], dummyElement, true);
+          this._caches[args.id] = dummyElement.childNodes[0] as HTMLElement;
+          dummyElement.removeChild(dummyElement.childNodes[0]);
+          this.throttle(this.onLoadPrecache, undefined, 1000);
+          return;
+        }
       }
     }
   }

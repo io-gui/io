@@ -109,6 +109,9 @@ export class IoNavigator extends IoElement {
   @Property(false)
   declare cache: boolean;
 
+  @Property(false)
+  declare precache: boolean;
+
   @Property({value: false, reflect: true})
   declare collapsed: boolean;
 
@@ -134,7 +137,7 @@ export class IoNavigator extends IoElement {
       depth: this.depth
     };
 
-    let contentNavigation: VDOMArray = ['io-selector', {options: this.options, cache: this.cache, select: this.select, elements: this.elements}];
+    let contentNavigation: VDOMArray = ['io-selector', {options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}];
     if (this.mode === 'scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
     } else if (this.mode === 'select-and-anchor') {
