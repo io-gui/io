@@ -101,7 +101,7 @@ export class IoNavigator extends IoElement {
   declare select: 'first' | 'last';
 
   @Property('select')
-  declare mode: 'select' | 'scroll' | 'select-and-anchor';
+  declare mode: 'select' | 'scroll' | 'select-and-scroll';
 
   @Property(Infinity)
   declare depth: number;
@@ -140,7 +140,7 @@ export class IoNavigator extends IoElement {
     let contentNavigation: VDOMArray = ['io-selector', {options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}];
     if (this.mode === 'scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, this.elements];
-    } else if (this.mode === 'select-and-anchor') {
+    } else if (this.mode === 'select-and-scroll') {
       contentNavigation = ['io-scroller', {options: this.options}, [contentNavigation]];
     }
 

@@ -35,7 +35,7 @@ export class IoOptionsDemoView extends IoElement {
         margin-left: 0.5em;
         color: var(--iotColorLink);
       }
-      :host io-label.anchor {
+      :host io-label.scroll {
         margin-left: 0.5em;
         color: var(--iotColorLink);
       }
@@ -60,7 +60,7 @@ export class IoOptionsDemoView extends IoElement {
       ['div', [
         this.options.first ? [['io-label', {label: 'first:', class: 'first'}], ['io-label', {label: this.options.first}]] : null,
         this.options.last ? [['io-label', {label: 'last:', class: 'last'}], ['io-label', {label: this.options.last}]] : null,
-        this.options.anchor ? [['io-label', {label: 'anchor:', class: 'anchor'}], ['io-label', {label: this.options.anchor}]] : null,
+        this.options.scroll ? [['io-label', {label: 'scroll:', class: 'scroll'}], ['io-label', {label: this.options.scroll}]] : null,
         this.options.path ? [['io-label', {label: 'path:', class: 'path'}], ['io-label', {label: this.options.path}]] : null,
       ]],
       options
@@ -95,7 +95,7 @@ export class IoItemDemoView extends IoElement {
     let selectElement = null;
     if (this.item.mode === 'toggle') {
       selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
-    } else if (this.item.mode === 'select' || this.item.mode === 'anchor') {
+    } else if (this.item.mode === 'select' || this.item.mode === 'scroll') {
       selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
     }
     this.template([
@@ -123,11 +123,11 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
           ]}
         ]}, 
         {value: 'mixed', options: [
-          {value: 'anchors', options: [
-            {value: 'anchor1', mode: 'anchor'},
-            {value: 'anchor2', mode: 'anchor'},
-            {value: 'anchor3', mode: 'anchor'},
-            {value: 'anchor4', mode: 'anchor'},
+          {value: 'scrolls', options: [
+            {value: 'scroll1', mode: 'scroll'},
+            {value: 'scroll2', mode: 'scroll'},
+            {value: 'scroll3', mode: 'scroll'},
+            {value: 'scroll4', mode: 'scroll'},
           ]},
           {value: 'togglables', mode: 'none', options: [
             {value: 'toggle1', mode: 'toggle'},
@@ -137,7 +137,7 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
           ]},
           {value: 'selectable', options: [
             {value: 'toggle', mode: 'toggle'},
-            {value: 'anchor', mode: 'anchor'},
+            {value: 'scroll', mode: 'scroll'},
             {value: 'selectable'},
           ]},
         ]}

@@ -23,7 +23,7 @@ export class IoScroller extends IoElement {
 
   declare private _observer: MutationObserver;
   private _scrollToThrottle?: ReturnType<typeof setTimeout>;
-  private _anchor?: string;
+  private _scroll?: string;
 
   init() {
     this._observer = new MutationObserver(this._onDomMutation);
@@ -44,17 +44,17 @@ export class IoScroller extends IoElement {
     const hasScrollbar = this.scrollHeight > this.clientHeight;
     if (!hasScrollbar) return;
 
-    const anchor = this._anchor;
+    const scroll = this._scroll;
 
     debug: {
-      if (anchor && typeof anchor !== 'string') {
-        console.warn('IoScroller: anchor option first is not a string!');
+      if (scroll && typeof scroll !== 'string') {
+        console.warn('IoScroller: scroll option first is not a string!');
       }
     }
 
-    if (typeof anchor !== 'string') return;
-    if (anchor) {
-      const element = this.querySelector('#' + anchor);
+    if (typeof scroll !== 'string') return;
+    if (scroll) {
+      const element = this.querySelector('#' + scroll);
       if (element) {
         this._scrollToElement(element, smooth);
       }
@@ -74,9 +74,9 @@ export class IoScroller extends IoElement {
   }
 
   optionsMutated() {
-    const anchor = this.options.anchor;
-    if (anchor !== this._anchor) {
-      this._anchor = anchor;
+    const scroll = this.options.scroll;
+    if (scroll !== this._scroll) {
+      this._scroll = scroll;
       this._scrollToAnchor();
     }
   }

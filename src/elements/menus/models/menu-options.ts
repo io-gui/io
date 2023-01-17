@@ -9,7 +9,7 @@ function _isNaN(value: any) {
 }
 
 function _isSelectable(value: string) {
-  return value === 'select' || value === 'anchor';
+  return value === 'select' || value === 'scroll';
 }
 
 @RegisterIoNode
@@ -22,7 +22,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   declare last: any;
 
   @Property(undefined)
-  declare anchor: any;
+  declare scroll: any;
 
   @Property('')
   declare path: string;
@@ -172,18 +172,18 @@ export class MenuOptions extends IoNodeMixin(Array) {
         const path = this.path ? [...this.path.split(this.delimiter)] : [];
         if (path.length) {
           let label = path.shift();
-          let item = this.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'anchor')));
+          let item = this.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'scroll')));
           let options = item?.options || undefined;
           while (path.length && options) {
             label = path.shift();
-            item = options.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'anchor')));
+            item = options.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'scroll')));
             options = item?.options || undefined;
           }
           if (item === undefined) {
             console.warn(`MenuOptions.lastChanged: cannot find item for specified last value "${this.last}"!`);
           } else if (
             (item.value !== this.last && !(_isNaN(item.value) && _isNaN(this.last))) &&
-            (item.value !== this.anchor && !(_isNaN(item.value) && _isNaN(this.anchor)))
+            (item.value !== this.scroll && !(_isNaN(item.value) && _isNaN(this.scroll)))
           ) {
             // TODO: test this?
             console.warn(`MenuOptions.lastChanged: last property value "${this.last}" diverged from item specified by path!`);
@@ -198,19 +198,19 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   updatePaths(item?: MenuItem) {
     const path: string[] = [];
-    let walker: MenuItem | undefined = (item?.mode === 'select' || item?.mode === 'anchor') ? item : undefined;
+    let walker: MenuItem | undefined = (item?.mode === 'select' || item?.mode === 'scroll') ? item : undefined;
     let lastSelected: MenuItem | undefined = item?.mode === 'select' ? item : undefined;
-    let lastAnchor: MenuItem | undefined = item?.mode === 'anchor' ? item : undefined;
+    let lastAnchor: MenuItem | undefined = item?.mode === 'scroll' ? item : undefined;
 
     const hasSelected = this.find((item: MenuItem) => item.mode === 'select' && item.selected);
-    const hasAnchor = this.find((item: MenuItem) => item.mode === 'anchor' && item.selected);
+    const hasAnchor = this.find((item: MenuItem) => item.mode === 'scroll' && item.selected);
     if (!walker && (hasSelected || hasAnchor)) return;
 
     while (walker) {
       path.push(walker.label);
       if (walker.mode === 'select') lastSelected = walker;
-      if (walker.mode === 'anchor') lastAnchor = walker;
-      walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'anchor') && item.selected);
+      if (walker.mode === 'scroll') lastAnchor = walker;
+      walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'scroll') && item.selected);
     }
 
     // TODO: when binding two menu elements to both `first` and `path` properties, it is important that we
@@ -220,7 +220,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
       path: path.join(this.delimiter),
       first: item?.mode === 'select' ? item.value : undefined,
       last: lastSelected !== undefined ? lastSelected.value : undefined,
-      anchor: lastAnchor !== undefined ? lastAnchor.value : undefined,
+      scroll: lastAnchor !== undefined ? lastAnchor.value : undefined,
     });
   }
 
@@ -263,8 +263,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
 
   bind(prop: string) {
     debug: {
-      if (prop === 'last' || prop === 'anchor') {
-        console.warn('MenuPath: Binding to `last` or `anchor` property is not recommended!');
+      if (prop === 'last' || prop === 'scroll') {
+        console.warn('MenuPath: Binding to `last` or `scroll` property is not recommended!');
       }
     }
     return super.bind(prop);
