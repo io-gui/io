@@ -340,14 +340,14 @@ export class IoNumberLadder extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
+        flex-direction: column;
         position: absolute;
         pointer-events: none;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
-        display: flex;
-        flex-direction: column;
       }
       :host:not([expanded]) {
         visibility: hidden;

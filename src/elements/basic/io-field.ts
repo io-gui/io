@@ -15,13 +15,14 @@ export class IoField extends IoElement {
   static get Style() {
     return /* css */`
       --ioField: {
+        display: flex;
+
         cursor: pointer;
         user-select: none;
         -webkit-touch-callout: none;
 
         overflow: hidden;
         text-overflow: ellipsis;
-        flex-wrap: nowrap;
         white-space: nowrap;
 
         height: var(--iotFieldHeight);

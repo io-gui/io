@@ -7,6 +7,7 @@ export class IoScroller extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex-direction: column;
         overflow-y: auto;
         position: relative;

@@ -23,7 +23,6 @@ export class IoColorPanel extends IoColorBase {
     :host {
       display: flex;
       /* Panel */
-      display: flex;
       flex: 1 1 auto;
       flex-direction: column;
       flex-wrap: nowrap;

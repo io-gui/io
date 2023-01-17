@@ -11,6 +11,7 @@ export class IoCollapsable extends IoElement {
   static get Style() {
     return /* css */`
     :host {
+      display: flex;
       flex-direction: column;
       flex-shrink: 0;
       align-self: stretch;

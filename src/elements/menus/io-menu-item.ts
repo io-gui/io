@@ -15,6 +15,7 @@ export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
     :host {
+      display: flex;
       background-color: var(--iotBackgroundColorDimmed);
       user-select: none;
     }

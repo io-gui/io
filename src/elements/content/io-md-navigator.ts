@@ -9,6 +9,7 @@ export class IoMdNavigator extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         align-items: stretch;

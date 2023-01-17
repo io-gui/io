@@ -10,6 +10,7 @@ export class IoNavigator extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex-direction: column;
         flex: 1 1 auto;
         align-items: stretch;
@@ -76,6 +77,7 @@ export class IoNavigator extends IoElement {
       :host > io-selector {
         overflow: auto;
         flex: 1 1 auto;
+        max-height: 100%;
       }
       /* :host > io-selector, */
       :host > io-scroller,

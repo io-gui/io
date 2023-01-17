@@ -15,6 +15,7 @@ export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex-direction: column;
         position: relative;
         /* overflow-y: auto; */
