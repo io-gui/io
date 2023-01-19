@@ -28,6 +28,7 @@ export class IoMenuItem extends IoField {
     :host > io-icon:not(.hasmore) {
       width: var(--iotLineHeight);
       height: var(--iotLineHeight);
+      line-height: initial;
     }
     :host > .label {
       flex: 1 1 auto;
@@ -36,23 +37,25 @@ export class IoMenuItem extends IoField {
     }
     :host > .hint {
       opacity: 0.25;
-      margin: 0 var(--iotSpacing4);
+      margin: 0 0 0 var(--iotSpacing2);
     }
+
     :host > io-icon.hasmore {
-      opacity: 0.5;
-      line-height: initial;
+      opacity: 0.25;
+      margin-right: calc(-0.5 * var(--iotLineHeight));
     }
+
     :host[selected][direction="up"] {
-      border-top-color: var(--iotBorderColorSelected);
+      border-color: var(--iotBorderColorSelected) transparent transparent transparent;
     }
     :host[selected][direction="down"] {
-      border-bottom-color: var(--iotBorderColorSelected);
+      border-color: transparent transparent var(--iotBorderColorSelected) transparent;
     }
     :host[selected][direction="right"] {
-      border-right-color: var(--iotBorderColorSelected);
+      border-color: transparent var(--iotBorderColorSelected) transparent transparent;
     }
     :host[selected][direction="left"] {
-      border-left-color: var(--iotBorderColorSelected);
+      border-color: transparent transparent transparent var(--iotBorderColorSelected);
     }
     `;
   }

@@ -93,28 +93,12 @@
         height: 100%;
       }
       io-main-page {
-        display: flex;
-        flex-direction: column;
         height: 100%;
         background-color: var(--iotBackgroundColor);
-      }
-      io-main-page > io-selector {
-        overflow: hidden;
-      }
-      io-main-page io-selector#Demos {
-        flex: 1 1 auto;
-      }
-      io-sidebar:not([collapsed]) {
-        flex-basis: 11em !important;
       }
       io-main-page iframe {
         border: none;
         flex: 1 1 auto;
-      }
-      @media (max-width: 860px) {
-        io-sidebar {
-          display: none !important;
-        }
       }
       .badges a {
         text-decoration: none;
@@ -124,18 +108,18 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, RegisterIoElement, IoNavigator, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, MenuItem, RegisterIoElement, IoNavigatorSelector, IoStorage as $ } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
       {value: 'Docs', options: [
-        {value: 'Quick Start', options: [
+        {label: 'Quick Start', value: './docs/quick-start.md', options: [
           {label: 'Usage', value: 'usage', mode: 'scroll'},
           {label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'},
           {label: 'Making a Website', value: 'making-a-website', mode: 'scroll'},
           {label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'},
         ]},
-        {value: 'Deep Dive', options: [
+        {label: 'Deep Dive', value: './docs/deep-dive.md', options: [
           {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'},
           {label: 'Properties', value: 'properties', mode: 'scroll'},
           {label: 'Styling', value: 'styling', mode: 'scroll'},
@@ -157,27 +141,52 @@
 
     const siteRoot = 'https://iogui.dev/io/';
 
-    export class IoMainPage extends IoNavigator {
+    export class IoMainPage extends IoNavigatorSelector {
       static get Properties() {
         return {
           role: 'main',
           class: 'main',
           menu: 'top',
-          collapseWidth: 320,
+          collapseWidth: 280,
           options: OPTIONS,
           cache: true,
           depth: 1,
           elements: [
             ['io-md-view', {id: 'About', strip: [siteRoot], src: './README.md'}],
-            ['io-navigator', {id: 'Docs', menu: 'left', collapseWidth: 640,
+
+            // ['io-navigator-md-view', {id: 'Docs',
+            //   options: OPTIONS.getItem('Docs').options,
+            //   strip: [siteRoot],
+            //   sanitize: false,
+            // }],
+
+            ['io-navigator-combined', {id: 'Docs',
               options: OPTIONS.getItem('Docs').options,
-              cache: true,
-              mode: 'select-and-scroll',
               elements: [
-                ['io-md-view', {id: 'Quick Start', strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
-                ['io-md-view', {id: 'Deep Dive', strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
+                ['io-md-view', {id: './docs/quick-start.md', strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+                ['io-md-view', {id: './docs/deep-dive.md', strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
               ]
             }],
+
+            // ['io-selector', {id: 'Docs',
+            //   options: OPTIONS.getItem('Docs').options,
+            //   cache: true,
+            //   elements: [
+            //     ['io-navigator-scroller', {id: 'Quick Start',
+            //       options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
+            //       elements: [
+            //         ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+            //       ]
+            //     }],
+            //     ['io-navigator-scroller', {id: 'Deep Dive',
+            //       options: OPTIONS.getItem('Docs').getSubitem('Deep Dive').options,
+            //       elements: [
+            //         ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
+            //       ]
+            //     }],
+            //   ]
+            // }],
+
             ['io-selector', {id: 'Demos',
               options: OPTIONS.getItem('Demos').options,
               cache: true,

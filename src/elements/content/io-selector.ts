@@ -18,10 +18,9 @@ export class IoSelector extends IoElement {
         display: flex;
         flex-direction: column;
         position: relative;
-        /* overflow-y: auto; */
-        /* max-height: 100%; */
-        /* justify-self: stretch; */
-        /* flex: 1 1 auto; */
+        overflow-y: auto !important;
+        flex: 1 1 auto;
+        justify-content: stretch;
       }
       @keyframes io-loading-spinner {
         to {
@@ -56,10 +55,10 @@ export class IoSelector extends IoElement {
   @Property(Array)
   declare elements: VDOMArray[];
 
-  @Property(false)
+  @Property({value: false, reactive: false})
   declare cache: boolean;
 
-  @Property(false)
+  @Property({value: false, reactive: false})
   declare precache: boolean;
 
   @Property({value: false, reflect: true, reactive: false})
@@ -68,8 +67,22 @@ export class IoSelector extends IoElement {
   @Property({type: Object, reactive: false})
   declare private _caches: Record<string, HTMLElement>;
 
-  declare private _observer: MutationObserver;
   private _selected?: any;
+
+  init() {
+    this.optionsMutated();
+  }
+
+  optionsMutated() {
+    const selected = this.select === 'first' ? this.options.first : this.options.last;
+
+    if (selected !== this._selected) {
+      this._selected = selected;
+      this.renderSelected();
+    }
+
+    this.throttle(this.onLoadPrecache, undefined, 1000);
+  }
 
   importModule(path: string) {
     const importPath = new URL(path, String(window.location)).href;
@@ -86,22 +99,7 @@ export class IoSelector extends IoElement {
     });
   }
 
-  init() {
-    this.optionsMutated();
-  }
-
-  optionsMutated() {
-    const selected = this.select === 'first' ? this.options.first : this.options.last;
-
-    if (selected !== this._selected) {
-      this._selected = selected;
-      this._renderSelected();
-    }
-
-    this.throttle(this.onLoadPrecache, undefined, 1000);
-  }
-
-  protected _renderSelected() {
+  protected renderSelected() {
     const selected = this._selected;
 
     debug: {

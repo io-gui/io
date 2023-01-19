@@ -19,22 +19,25 @@ export class IoMenuOptions extends IoElement {
     :host {
       /* Panel */
       display: flex;
-      flex: 0 1 auto;
       flex-direction: column;
-      flex-wrap: nowrap;
       border-radius: var(--iotBorderRadius);
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
       background-color: var(--iotBackgroundColorDimmed);
-      padding: var(--iotSpacing);
+      padding: var(--iotSpacing) 0;
       user-select: none;
       transition: opacity 0.25s;
       position: relative;
-      min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
-      min-height: calc(var(--iotFieldHeight) + var(--iotBorderWidth));
+      min-width: calc(var(--iotFieldHeight) + var(--iotBorderWidth2));
+      overflow: hidden;
     }
-
+    :host[horizontal] {
+      flex-direction: row;
+      align-self: stretch;
+      padding: 0 var(--iotSpacing);
+      min-height: calc(var(--iotFieldHeight) + var(--iotBorderWidth2));
+    }
     :host[inlayer] {
       min-width: 8em;
       overflow-y: auto !important;
@@ -45,49 +48,35 @@ export class IoMenuOptions extends IoElement {
     }
 
     :host > io-menu-item {
-      border-radius: 0;
       position: relative;
       overflow: visible;
+      border-radius: 0;
     }
-
-    :host[horizontal] {
-      flex-direction: row;
-      align-self: stretch;
-    }
-
-    /* Item spacing */
     :host:not([horizontal]) > io-menu-item {
-      margin-bottom: var(--iotBorderWidth);
-    }
-    :host:not([horizontal]) > io-menu-item:first-of-type {
-      margin-top: var(--iotSpacing);
+      border-top: none;
+      border-bottom: none;
     }
     :host[horizontal] > io-menu-item {
-      margin-left: var(--iotBorderWidth);
-      padding: var(--iotSpacing) calc(0.75 * var(--iotLineHeight));
-      border-color: transparent;
+      border-left: none;
+      border-right: none;
+      padding: var(--iotSpacing) var(--iotLineHeight);
     }
 
     /* Item divider */
-    :host > io-menu-item:not(:last-of-type)::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    :host > [hidden] ~ span.divider {
+      border-color: red;
+      display: none;
     }
-    :host:not([horizontal]) > io-menu-item:not(:last-of-type)::before {
-      right: 0;
-      bottom: calc(var(--iotBorderWidth) * -2);
-      border-bottom: var(--iotBorder);
-      border-bottom-color: var(--iotColor);
-      opacity: 0.05;
-    }
-    :host[horizontal] > io-menu-item:not(:last-of-type)::before {
-      top: 0;
-      right: calc(var(--iotBorderWidth) * -2);
-      border-right: var(--iotBorder);
-      border-right-color: var(--iotColor);
+    :host > span.divider {
+      flex: 0 0 0;
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorInset);
+      margin: var(--iotBorderWidth) var(--iotSpacing);
       opacity: 0.25;
+    }
+    :host[horizontal] > span.divider {
+      margin: var(--iotSpacing) var(--iotBorderWidth);
+      opacity: 0.5;
     }
 
     /* Remove hints from horizontal menu */
@@ -96,18 +85,18 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Search field */
-    :host > .search {
-      border-radius: 0;
-      flex: 0 0 auto;
+    :host:not([horizontal]) > .search {
+      margin-bottom: var(--iotBorderWidth);
     }
     :host[horizontal] > .search {
-      margin-left: var(--iotBorderWidth);
-      flex: 0 0 8em;
+      margin-right: var(--iotBorderWidth);
+      flex: 0 0 10em;
     }
 
     /* Hamburger menu for overflow items */
     :host > .hamburger {
-      border-color: transparent !important; 
+      border-color: transparent !important;
+      background-color: transparent !important;
     }
     :host[horizontal] > .hamburger {
       position: absolute;
@@ -326,10 +315,14 @@ export class IoMenuOptions extends IoElement {
       }
       for (let i = 0; i < this.options.length; i++) {
         elements.push(['io-menu-item', {
+          class: 'item',
           item: this.options[i],
           direction: direction,
           depth: this.depth
         }]);
+        if (i < this.options.length - 1) {
+          elements.push(['span', {class: 'divider'}]);
+        }
       }
     }
 
@@ -347,5 +340,7 @@ export class IoMenuOptions extends IoElement {
       }]);
     }
     this.template(elements);
+
+    // this.throttle(this._onSetOverflow);
   }
 }

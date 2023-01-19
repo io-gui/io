@@ -189,6 +189,7 @@ export class IoMdView extends IoElement {
 
   srcChanged() {
     this.loading = true;
+    this.innerHTML = '';
     void fetch(this.src)
       .then(response => response.text())
       .then(text => { this._parseMarkdown(text); });

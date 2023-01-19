@@ -195,7 +195,7 @@ export class IoDemoElements extends IoElement {
       :host io-collapsable > div.io-collapsable-content > * {
         margin: var(--iotSpacing) !important;
       }
-      :host span {
+      :host div > span {
         display: block;
         padding-bottom: 10em;
       }
@@ -370,24 +370,15 @@ export class IoDemoElements extends IoElement {
         ]}],
       ]}],
       ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
-        ['io-collapsable', {label: 'io-navigator with menu:"left" mode:"select-and-scroll"', class: 'fixed-tall', expanded: $('expanded-demo-content-1'), elements: [
-          ['io-navigator', {
-            menu: 'left',
-            mode: 'select-and-scroll',
-            elements: elements,
-            options: contentOptions,
-          }]
-        ]}],
-        ['io-collapsable', {label: 'io-navigator with mode:"scroll" and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
-          ['io-navigator', {
+        ['io-collapsable', {label: 'io-navigator-scroller and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
+          ['io-navigator-scroller', {
             menu: 'right',
-            mode: 'scroll',
             options: contentOptions[0].options,
             elements: [elements[0]]
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
-          ['io-navigator', {
+        ['io-collapsable', {label: 'io-navigator-selector with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
+          ['io-navigator-selector', {
             menu: 'top',
             depth: 0,
             options: contentOptions,
