@@ -41,8 +41,11 @@ export class IoMenuItem extends IoField {
     }
 
     :host > io-icon.hasmore {
+      width: var(--iotLineHeight);
+      height: var(--iotLineHeight);
       opacity: 0.25;
       margin-right: calc(-0.5 * var(--iotLineHeight));
+
     }
 
     :host[selected][direction="up"] {

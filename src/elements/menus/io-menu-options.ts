@@ -30,7 +30,7 @@ export class IoMenuOptions extends IoElement {
       transition: opacity 0.25s;
       position: relative;
       min-width: calc(var(--iotFieldHeight) + var(--iotBorderWidth2));
-      overflow: hidden;
+      overflow: visible;
     }
     :host[horizontal] {
       flex-direction: row;
@@ -40,7 +40,6 @@ export class IoMenuOptions extends IoElement {
     }
     :host[inlayer] {
       min-width: 8em;
-      overflow-y: auto !important;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
@@ -71,11 +70,11 @@ export class IoMenuOptions extends IoElement {
       flex: 0 0 0;
       border: var(--iotBorder);
       border-color: var(--iotBorderColorInset);
-      margin: var(--iotBorderWidth) var(--iotSpacing);
+      margin: var(--iotBorderWidth2) var(--iotSpacing);
       opacity: 0.25;
     }
     :host[horizontal] > span.divider {
-      margin: var(--iotSpacing) var(--iotBorderWidth);
+      margin: var(--iotSpacing) var(--iotBorderWidth2);
       opacity: 0.5;
     }
 

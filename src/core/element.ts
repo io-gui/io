@@ -9,7 +9,7 @@ const mixinRecord: Record<string, string> = {};
 const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
 const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
 const mediaQueryRegex =  new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
-const mixinRegex = new RegExp('((--[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
+const mixinRegex = new RegExp('(( --[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
 const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
 const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
 
@@ -104,11 +104,12 @@ export function RegisterIoElement(elementConstructor: typeof IoElement) {
   const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
   if (mixins) {
     for (let i = 0; i < mixins.length; i++) {
+      // TODO: improve mixing regex and string handling.
       const m = mixins[i].split(': {');
-      const name = m[0];
+      const name = m[0].replace(' --', '--');
       const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
       mixinRecord[name] = value;
-      mixinsString += mixins[i].replace('--', '.').replace(': {', ' {');
+      mixinsString += mixins[i].replace(' --', '.').replace(': {', ' {');
     }
   }
 
@@ -229,7 +230,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): string {
     return /* css */`
       :host {
-        /* display: flex; */
         box-sizing: border-box;
       }
       :host[hidden] {
@@ -238,6 +238,11 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       :host[disabled] {
         pointer-events: none;
         opacity: 0.5;
+      }
+      :host:focus {
+        border-color: var(--iotBorderColorSelected);
+        outline: 1px auto var(--iotBorderColorSelected);
+        outline: 1px auto -webkit-focus-ring-color;
       }
     `;
   }

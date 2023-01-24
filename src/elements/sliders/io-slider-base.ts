@@ -9,6 +9,7 @@ export class IoSliderBase extends IoGl {
   static get Style() {
     return /* css */`
       :host {
+        /* display: flex; */
         cursor: ew-resize;
         border: var(--iotBorder);
         border-radius: var(--iotBorderRadius);

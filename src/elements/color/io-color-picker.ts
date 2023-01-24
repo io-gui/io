@@ -14,10 +14,6 @@ export class IoColorPicker extends IoElement {
         border-radius: var(--iotBorderRadius);
         overflow: hidden;
       }
-      :host:focus {
-        outline: 1px solid var(--iotBorderColorFocus);
-        border-color: var(--iotBorderColorFocus);
-      }
     `;
   }
 
