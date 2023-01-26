@@ -12,12 +12,14 @@ export class IoIcon extends IoElement {
     return /* css */`
       --ioIcon: {
         display: inline-block;
+        width: var(--iotLineHeight);
         height: var(--iotLineHeight);
         min-width: var(--iotLineHeight);
         line-height: var(--iotLineHeight);
         font-size: var(--iotFontSize);
         text-align: center;
         fill: currentcolor;
+        /* line-height: initial; */
       }
       :host {
         @apply --ioIcon;

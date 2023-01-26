@@ -5,6 +5,8 @@ import { IoField } from '../basic/io-field.js';
 import { IoOverlaySingleton as Overlay } from '../../core/overlay.js';
 import { IoMenuOptions } from './io-menu-options.js';
 
+const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu'];
+const MenuElementTagsSelector = MenuElementTags.join(', ');
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
@@ -14,52 +16,27 @@ import { IoMenuOptions } from './io-menu-options.js';
 export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
-    :host {
-      display: flex;
-      background-color: var(--iotBackgroundColorDimmed);
-      user-select: none;
-    }
-    :host > * {
-      pointer-events: none;
-    }
-    :host > :empty {
-      display: none;
-    }
-    :host > io-icon:not(.hasmore) {
-      width: var(--iotLineHeight);
-      height: var(--iotLineHeight);
-      line-height: initial;
-    }
-    :host > .label {
-      flex: 1 1 auto;
-      text-overflow: ellipsis;
-      padding: 0 var(--iotSpacing2);
-    }
-    :host > .hint {
-      opacity: 0.25;
-      margin: 0 0 0 var(--iotSpacing2);
-    }
-
-    :host > io-icon.hasmore {
-      width: var(--iotLineHeight);
-      height: var(--iotLineHeight);
-      opacity: 0.25;
-      margin-right: calc(-0.5 * var(--iotLineHeight));
-
-    }
-
-    :host[selected][direction="up"] {
-      border-color: var(--iotBorderColorSelected) transparent transparent transparent;
-    }
-    :host[selected][direction="down"] {
-      border-color: transparent transparent var(--iotBorderColorSelected) transparent;
-    }
-    :host[selected][direction="right"] {
-      border-color: transparent var(--iotBorderColorSelected) transparent transparent;
-    }
-    :host[selected][direction="left"] {
-      border-color: transparent transparent transparent var(--iotBorderColorSelected);
-    }
+      :host {
+        display: flex;
+        user-select: none;
+      }
+      :host > * {
+        pointer-events: none;
+        text-overflow: ellipsis;
+      }
+      :host > .label {
+        flex: 1 1 auto;
+        padding: 0 var(--iotSpacing2);
+      }
+      :host > .hint {
+        flex: 0 1 auto;
+        opacity: 0.25;
+        padding: 0 var(--iotSpacing2);
+      }
+      :host > .hasmore {
+        opacity: 0.25;
+        margin-right: calc(-0.5 * var(--iotLineHeight));
+      }
     `;
   }
 
@@ -254,7 +231,7 @@ export class IoMenuItem extends IoField {
       }
       if (hovered.$parent) {
         // Collapse all sibiling io-menu-item elements
-        const items = hovered.$parent.querySelectorAll('io-menu-item, io-option-menu');
+        const items = hovered.$parent.querySelectorAll(MenuElementTagsSelector);
         for (let i = items.length; i--;) {
           if (items[i] !== hovered) items[i].expanded = false;
         }
@@ -382,8 +359,8 @@ export class IoMenuItem extends IoField {
       this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
       this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
       icon ? ['io-icon', {icon: icon}] : null,
-      ['span', {class: 'label'}, this.item.label],
-      ['span', {class: 'hint'}, this.item.hint],
+      this.item.label ? ['span', {class: 'label'}, this.item.label] : null,
+      this.item.hint ? ['span', {class: 'hint'}, this.item.hint] : null,
       this.hasmore && this.direction === 'right' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_right'}] : null,
       this.hasmore && this.direction === 'down' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_down'}] : null,
     ]);
@@ -397,14 +374,14 @@ export function getMenuDescendants(element: IoMenuElementType): IoMenuElementTyp
   if (element.$options) {
     if (element.expanded) {
       descendants.push(element.$options);
-      const items = element.$options.querySelectorAll('io-menu-item, io-option-menu');
+      const items = element.$options.querySelectorAll(MenuElementTagsSelector);
       for (let i = items.length; i--;) {
         descendants.push(items[i]);
         if (items[i].expanded) descendants.push(...getMenuDescendants(items[i]));
       }
     }
   } else {
-    const items = element.querySelectorAll('io-menu-item, io-option-menu');
+    const items = element.querySelectorAll(MenuElementTagsSelector);
     for (let i = items.length; i--;) {
       descendants.push(items[i]);
       if (items[i].expanded) descendants.push(...getMenuDescendants(items[i]));
@@ -432,7 +409,7 @@ export function getMenuRoot(element: IoMenuElementType) {
 }
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
-  if (['io-menu-item', 'io-option-menu'].indexOf(element.localName) !== -1) {
+  if (MenuElementTags.indexOf(element.localName) !== -1) {
     if (!element.disabled && !element.hidden) {
       if (!element.inlayer || (element.parentElement.expanded && Overlay.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.

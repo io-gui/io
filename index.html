@@ -113,13 +113,15 @@
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
       {value: 'Docs', options: [
-        {label: 'Quick Start', value: './docs/quick-start.md', options: [
+        {value: 'Quick Start', options: [
+        // {label: 'Quick Start', value: './docs/quick-start.md', options: [
           {label: 'Usage', value: 'usage', mode: 'scroll'},
           {label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'},
           {label: 'Making a Website', value: 'making-a-website', mode: 'scroll'},
           {label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'},
         ]},
-        {label: 'Deep Dive', value: './docs/deep-dive.md', options: [
+        {value: 'Deep Dive', options: [
+        // {label: 'Deep Dive', value: './docs/deep-dive.md', options: [
           {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'},
           {label: 'Properties', value: 'properties', mode: 'scroll'},
           {label: 'Styling', value: 'styling', mode: 'scroll'},
@@ -160,32 +162,31 @@
             //   sanitize: false,
             // }],
 
-            ['io-navigator-combined', {id: 'Docs',
-              options: OPTIONS.getItem('Docs').options,
-              elements: [
-                ['io-md-view', {id: './docs/quick-start.md', strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
-                ['io-md-view', {id: './docs/deep-dive.md', strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
-              ]
-            }],
-
-            // ['io-selector', {id: 'Docs',
+            // ['io-navigator-combined', {id: 'Docs',
             //   options: OPTIONS.getItem('Docs').options,
-            //   cache: true,
             //   elements: [
-            //     ['io-navigator-scroller', {id: 'Quick Start',
-            //       options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
-            //       elements: [
-            //         ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
-            //       ]
-            //     }],
-            //     ['io-navigator-scroller', {id: 'Deep Dive',
-            //       options: OPTIONS.getItem('Docs').getSubitem('Deep Dive').options,
-            //       elements: [
-            //         ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
-            //       ]
-            //     }],
+            //     ['io-md-view', {id: './docs/quick-start.md', strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+            //     ['io-md-view', {id: './docs/deep-dive.md', strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
             //   ]
             // }],
+            ['io-selector', {id: 'Docs',
+              options: OPTIONS.getItem('Docs').options,
+              cache: true,
+              elements: [
+                ['io-navigator-scroller', {id: 'Quick Start',
+                  options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
+                  elements: [
+                    ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+                  ]
+                }],
+                ['io-navigator-scroller', {id: 'Deep Dive',
+                  options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
+                  elements: [
+                    ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
+                  ]
+                }],
+              ]
+            }],
 
             ['io-selector', {id: 'Demos',
               options: OPTIONS.getItem('Demos').options,

@@ -471,12 +471,20 @@ export class IoDemoElements extends IoElement {
           }]
         ]}],
         ['io-collapsable', {label: 'io-menu-item', expanded: $('expanded-demo-menus-2'), elements: [
+          ['io-menu-item', {label: 'menu item', item: new MenuItem('item')}],
           ['io-menu-item', {label: 'menu item', item: new MenuItem({
-            selected: this.bind('boolean'),
+            selected: true,
             value: 'value',
-            hint: 'hint',
+            hint: 'selected',
             label: 'menu item label',
-            icon: '💚',
+            icon: 'icons:code',
+          })}],
+          ['io-menu-item', {label: 'menu item', item: new MenuItem({
+            selected: false,
+            value: 'value',
+            hint: 'not selected',
+            label: 'menu item label',
+            icon: 'icons:circle_fill_plus',
           })}],
         ]}],
         ['io-collapsable', {label: 'io-menu-options', class: 'row', expanded: $('expanded-demo-menus-3'), elements: [

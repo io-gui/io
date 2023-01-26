@@ -18,8 +18,8 @@ export class IoNavigatorBase extends IoElement {
       }
       :host > io-menu-tree,
       :host > io-menu-options {
-        /* align-self: stretch; */
-        /* border-radius: 0; */
+        align-self: stretch;
+        border-radius: 0;
         /* border-color: var(--iotBorderColorLight); */
       }
       :host[collapsed] > io-menu-options {
@@ -42,23 +42,26 @@ export class IoNavigatorBase extends IoElement {
       :host > io-menu-tree {
         z-index: 1;
         flex: 0 0 auto;
-        /* min-width: 10em; */
-        /* overflow-y: auto; */
-        /* padding: var(--iotBorderWidth) 0; */
+        min-width: 10em;
+        overflow-y: auto;
+        padding: var(--iotBorderWidth) 0;
       }
       :host[menu=left] > io-menu-tree {
-        /* border-width: 0 var(--iotBorderWidth) 0 0; */
+        border-width: 0 var(--iotBorderWidth) 0 0;
       }
       :host[menu=left] > io-menu-tree {
-        /* border-width: 0 var(--iotBorderWidth) 0 0; */
+        border-width: 0 var(--iotBorderWidth) 0 0;
       }
       :host > io-menu-item.hamburger {
         flex: 0 0 auto;
-        /* border-radius: 0; */
-        /* padding: calc(var(--iotSpacing) + 0.5em); */
-        /* height: 100%; */
-        /* background-color: var(--iotBackgroundColorDimmed); */
-        /* border-color: transparent !important; */
+        border-radius: 0;
+        padding: calc(var(--iotSpacing) + 0.5em);
+        height: 100%;
+        background-color: var(--iotBackgroundColorDimmed);
+        border-color: transparent !important;
+      }
+      :host > io-menu-item.hamburger > .hasmore {
+        display: none;
       }
       :host[menu=top] > io-menu-options {
         /* padding: 0 var(--iotSpacing); */
