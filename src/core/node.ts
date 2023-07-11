@@ -489,6 +489,10 @@ function animate () {
     if (options.timeout > Date.now()) {
       continue;
     }
+    // TODO: make test to veryfy you can add throttled function to throttle queue from itself.
+    // If we execute the function before clearing it from the queue it wont be queued again.
+    throttleQueue.splice(throttleQueue.indexOf(func), 1);
+    throttleQueueOptions.delete(func);
     try {
       if (!options.node._disposed) {
         if (options.arg !== undefined) func(options.arg);
@@ -497,8 +501,6 @@ function animate () {
     } catch (e) {
       console.error(e);
     }
-    throttleQueueOptions.delete(func);
-    throttleQueue.splice(throttleQueue.indexOf(func), 1);
   }
 }
 requestAnimationFrame(animate);

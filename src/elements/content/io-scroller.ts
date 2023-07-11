@@ -7,13 +7,17 @@ export class IoScroller extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex-direction: column;
-        overflow-y: auto;
-        position: relative;
-        max-height: 100%;
-        justify-self: stretch;
-        align-self: stretch;
         flex: 1 1 auto;
+        position: relative;
+        overflow-y: auto;
+        max-width: 100%;
+        max-height: 100%;
+        scrollbar-gutter: stable;
+      }
+      :host > * {
+        overflow: unset;
       }
     `;
   }
@@ -22,62 +26,40 @@ export class IoScroller extends IoElement {
   declare options: MenuOptions;
 
   declare private _observer: MutationObserver;
-  private _scrollToThrottle?: ReturnType<typeof setTimeout>;
-  private _anchor?: string;
 
   init() {
-    this._observer = new MutationObserver(this._onDomMutation);
+    this._observer = new MutationObserver(this._domMutated);
     this._observer.observe(this as unknown as HTMLElement, {attributes: false, childList: true, subtree: true});
   }
   connectedCallback() {
     super.connectedCallback();
     this.optionsMutated();
   }
-  protected _onDomMutation() {
-    this.throttle(this._onDomMutationThrottled);
+  _domMutated() {
+    this.throttle(this._scrollToSelected);
   }
-  protected _onDomMutationThrottled() {
-    this._scrollToAnchor();
+  optionsMutated() {
+    this.throttle(this._scrollToSelected);
   }
 
-  protected _scrollToAnchor(smooth = false) {
-    const hasScrollbar = this.scrollHeight > this.clientHeight;
-    if (!hasScrollbar) return;
+  _scrollToSelected() {
+    if (this.scrollHeight <= this.clientHeight) return;
 
-    const anchor = this._anchor;
+    const selected = this.options.scroll;
 
     debug: {
-      if (anchor && typeof anchor !== 'string') {
-        console.warn('IoScroller: anchor option first is not a string!');
+      if (selected && typeof selected !== 'string') {
+        console.warn('IoScroller: selected scroll option is not a string!');
       }
     }
 
-    if (typeof anchor !== 'string') return;
-    if (anchor) {
-      const element = this.querySelector('#' + anchor);
+    if (selected && typeof selected === 'string') {
+      const element = this.querySelector('#' + selected);
       if (element) {
-        this._scrollToElement(element, smooth);
-      }
-    }
-  }
-
-  protected _scrollToElement(element?: HTMLElement, smooth?: boolean) {
-    clearTimeout(this._scrollToThrottle);
-    this._scrollToThrottle = setTimeout(() => {
-      delete this._scrollToThrottle;
-      if (element) {
-        this.scrollTo({top: element.offsetTop, behavior: smooth ? 'smooth' : 'auto'});
+        this.scrollTo({top: element.offsetTop, behavior: 'auto'});
       } else {
         this.scrollTo(0, 0);
       }
-    });
-  }
-
-  optionsMutated() {
-    const anchor = this.options.anchor;
-    if (anchor !== this._anchor) {
-      this._anchor = anchor;
-      this._scrollToAnchor();
     }
   }
 

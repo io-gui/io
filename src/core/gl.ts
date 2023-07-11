@@ -39,8 +39,8 @@ export class IoGl extends IoElement {
     return /* css */`
       :host {
         position: relative;
-        overflow: hidden !important;
-        -webkit-tap-highlight-color: transparent;
+        /* overflow: hidden !important; */
+        /* -webkit-tap-highlight-color: transparent; */
         user-select: none;
       }
       :host > canvas {
@@ -57,9 +57,8 @@ export class IoGl extends IoElement {
       :host[aria-invalid] > canvas {
         opacity: 0.5;
       }
-      :host:focus {
-        border-color: transparent;
-        outline: 1px solid var(--iotBorderColorFocus);
+      :host:focus > canvas {
+        border-radius: 3px;
       }
     `;
   }

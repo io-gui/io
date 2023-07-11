@@ -9,6 +9,7 @@ export class IoColorRgba extends IoColorBase {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex: 0 1 auto;
         min-width: var(--iotFieldHeight4);
         width: var(--iotFieldHeight10);

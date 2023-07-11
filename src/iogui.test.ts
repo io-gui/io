@@ -58,6 +58,7 @@ export class IoGuiTestPage extends IoElement {
       }
       :host #mocha-stats {
         position: absolute;
+        top: -2em;
         left: var(--iotSpacing2);
         font-size: 12px;
         margin: 0;

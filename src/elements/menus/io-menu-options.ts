@@ -17,77 +17,73 @@ export class IoMenuOptions extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      /* Panel */
       display: flex;
-      flex: 0 1 auto;
-      flex-direction: column;
-      flex-wrap: nowrap;
       border-radius: var(--iotBorderRadius);
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorOutset);
-      color: var(--iotColorField);
       background-color: var(--iotBackgroundColorDimmed);
-      padding: var(--iotSpacing);
-      user-select: none;
-      transition: opacity 0.25s;
       position: relative;
-      min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
-      min-height: calc(var(--iotFieldHeight) + var(--iotBorderWidth));
     }
-
+    :host[horizontal] {
+      flex-direction: row;
+      align-self: stretch;
+      padding: 0 var(--iotSpacing);
+      min-height: calc(var(--iotFieldHeight) + var(--iotBorderWidth2));
+    }
+    :host:not([horizontal]) {
+      flex-direction: column;
+      padding: var(--iotSpacing) 0;
+    }
     :host[inlayer] {
       min-width: 8em;
-      overflow-y: auto !important;
     }
     :host[inlayer]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
     }
 
+    /* Menu Items */
     :host > io-menu-item {
+      background-color: transparent;
       border-radius: 0;
-      position: relative;
-      overflow: visible;
-    }
-
-    :host[horizontal] {
-      flex-direction: row;
-      align-self: stretch;
-    }
-
-    /* Item spacing */
-    :host:not([horizontal]) > io-menu-item {
-      margin-bottom: var(--iotBorderWidth);
-    }
-    :host:not([horizontal]) > io-menu-item:first-of-type {
-      margin-top: var(--iotSpacing);
     }
     :host[horizontal] > io-menu-item {
-      margin-left: var(--iotBorderWidth);
-      padding: var(--iotSpacing) calc(0.75 * var(--iotLineHeight));
-      border-color: transparent;
+      height: calc(var(--iotFieldHeight) + var(--iotSpacing2));
+      border-left: none;
+      border-right: none;
+      border-width: calc(var(--iotSpacing) + var(--iotBorderWidth)) var(--iotBorderWidth);
+    }
+    :host:not([horizontal]) > io-menu-item {
+      border-top: none;
+      border-bottom: none;
+      border-width: var(--iotBorderWidth) var(--iotSpacing);
+    }
+    :host > io-menu-item[selected][direction="up"] {
+      border-color: var(--iotBorderColorSelected) transparent transparent transparent;
+    }
+    :host > io-menu-item[selected][direction="down"] {
+      border-color: transparent transparent var(--iotBorderColorSelected) transparent;
+    }
+    :host > io-menu-item[selected][direction="right"] {
+      border-color: transparent var(--iotBorderColorSelected) transparent transparent;
+    }
+    :host > io-menu-item[selected][direction="left"] {
+      border-color: transparent transparent transparent var(--iotBorderColorSelected);
     }
 
     /* Item divider */
-    :host > io-menu-item:not(:last-of-type)::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
+    :host > [hidden] ~ span.divider {
+      border-color: red;
+      display: none;
     }
-    :host:not([horizontal]) > io-menu-item:not(:last-of-type)::before {
-      right: 0;
-      bottom: calc(var(--iotBorderWidth) * -2);
-      border-bottom: var(--iotBorder);
-      border-bottom-color: var(--iotColor);
-      opacity: 0.05;
-    }
-    :host[horizontal] > io-menu-item:not(:last-of-type)::before {
-      top: 0;
-      right: calc(var(--iotBorderWidth) * -2);
-      border-right: var(--iotBorder);
-      border-right-color: var(--iotColor);
+    :host > span.divider {
+      flex: 0 0 0;
+      border: var(--iotBorder);
+      border-color: var(--iotBorderColorInset);
+      margin: var(--iotBorderWidth2) var(--iotSpacing);
       opacity: 0.25;
+    }
+    :host[horizontal] > span.divider {
+      margin: var(--iotSpacing) var(--iotBorderWidth2);
+      opacity: 0.5;
     }
 
     /* Remove hints from horizontal menu */
@@ -96,26 +92,24 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Search field */
-    :host > .search {
-      border-radius: 0;
-      flex: 0 0 auto;
+    :host:not([horizontal]) > .search {
+      margin: var(--iotSpacing);
+      margin-top: 0;
     }
     :host[horizontal] > .search {
-      margin-left: var(--iotBorderWidth);
-      flex: 0 0 8em;
+      margin-right: var(--iotBorderWidth);
+      flex: 0 0 10em;
     }
 
     /* Hamburger menu for overflow items */
-    :host > .hamburger {
-      border-color: transparent !important; 
+    :host > io-menu-hamburger {
+      border-color: transparent !important;
+      background-color: transparent !important;
     }
-    :host[horizontal] > .hamburger {
+    :host[horizontal] > io-menu-hamburger {
       position: absolute;
       right: var(--iotSpacing);
       padding: var(--iotSpacing);
-    }
-    :host > .hamburger > .hasmore {
-      display: none;
     }
     `;
   }
@@ -198,7 +192,7 @@ export class IoMenuOptions extends IoElement {
     const items = this.querySelectorAll('.item');
     this._overflownItems.length = 0;
     if (this.horizontal) {
-      const hamburger = this.querySelector('.hamburger');
+      const hamburger = this.querySelector('io-menu-hamburger');
       const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
       const end = this.getBoundingClientRect().right - (IoThemeSingleton.iotBorderWidth + IoThemeSingleton.iotSpacing);
       let last = Infinity;
@@ -326,22 +320,23 @@ export class IoMenuOptions extends IoElement {
       }
       for (let i = 0; i < this.options.length; i++) {
         elements.push(['io-menu-item', {
+          class: 'item',
           item: this.options[i],
           direction: direction,
           depth: this.depth
         }]);
+        if (i < this.options.length - 1) {
+          elements.push(['span', {class: 'divider'}]);
+        }
       }
     }
 
     if (this.overflow) {
-      elements.push(['io-menu-item', {
+      elements.push(['io-menu-hamburger', {
         depth: this.depth + 1,
         role: 'navigation',
-        class: 'hamburger',
         direction: 'down',
         item: new MenuItem({
-          label: '',
-          icon: 'icons:hamburger',
           options: new MenuOptions(this._overflownItems),
         })
       }]);

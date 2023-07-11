@@ -15,13 +15,14 @@ export class IoField extends IoElement {
   static get Style() {
     return /* css */`
       --ioField: {
+        display: flex;
+
         cursor: pointer;
         user-select: none;
         -webkit-touch-callout: none;
 
         overflow: hidden;
         text-overflow: ellipsis;
-        flex-wrap: nowrap;
         white-space: nowrap;
 
         height: var(--iotFieldHeight);
@@ -59,10 +60,7 @@ export class IoField extends IoElement {
         border-color: var(--iotBorderColorSelected);
       }
       :host:focus {
-        /* position: relative; */
         text-overflow: inherit;
-        border-color: var(--iotBorderColorSelected);
-        outline: 1px solid var(--iotBorderColorFocus);
       }
       :host[placeholder]:empty:before {
         content: attr(placeholder);

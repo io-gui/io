@@ -54,40 +54,40 @@ const options = new MenuOptions([
 
 const contentOptions = new MenuOptions([
   {value: 'devs', options: [
-    {value: 'dev1', mode: 'anchor'},
-    {value: 'dev2', mode: 'anchor'},
-    {value: 'dev3', mode: 'anchor'},
-    {value: 'dev4', mode: 'anchor'},
-    {value: 'dev5', mode: 'anchor'},
-    {value: 'dev6', mode: 'anchor'},
-    {value: 'dev7', mode: 'anchor'},
+    {value: 'dev1', mode: 'scroll'},
+    {value: 'dev2', mode: 'scroll'},
+    {value: 'dev3', mode: 'scroll'},
+    {value: 'dev4', mode: 'scroll'},
+    {value: 'dev5', mode: 'scroll'},
+    {value: 'dev6', mode: 'scroll'},
+    {value: 'dev7', mode: 'scroll'},
   ]},
   {value: 'foos', options: [
-    {value: 'foo1', mode: 'anchor'},
-    {value: 'foo2', mode: 'anchor'},
-    {value: 'foo3', mode: 'anchor'},
-    {value: 'foo4', mode: 'anchor'},
-    {value: 'foo5', mode: 'anchor'},
-    {value: 'foo6', mode: 'anchor'},
-    {value: 'foo7', mode: 'anchor'},
+    {value: 'foo1', mode: 'scroll'},
+    {value: 'foo2', mode: 'scroll'},
+    {value: 'foo3', mode: 'scroll'},
+    {value: 'foo4', mode: 'scroll'},
+    {value: 'foo5', mode: 'scroll'},
+    {value: 'foo6', mode: 'scroll'},
+    {value: 'foo7', mode: 'scroll'},
   ]},
   {value: 'bazs', options: [
-    {value: 'baz1', mode: 'anchor'},
-    {value: 'baz2', mode: 'anchor'},
-    {value: 'baz3', mode: 'anchor'},
-    {value: 'baz4', mode: 'anchor'},
-    {value: 'baz5', mode: 'anchor'},
-    {value: 'baz6', mode: 'anchor'},
-    {value: 'baz7', mode: 'anchor'},
+    {value: 'baz1', mode: 'scroll'},
+    {value: 'baz2', mode: 'scroll'},
+    {value: 'baz3', mode: 'scroll'},
+    {value: 'baz4', mode: 'scroll'},
+    {value: 'baz5', mode: 'scroll'},
+    {value: 'baz6', mode: 'scroll'},
+    {value: 'baz7', mode: 'scroll'},
   ]},
   {value: 'bars', options: [
-    {value: 'bar1', mode: 'anchor'},
-    {value: 'bar2', mode: 'anchor'},
-    {value: 'bar3', mode: 'anchor'},
-    {value: 'bar4', mode: 'anchor'},
-    {value: 'bar5', mode: 'anchor'},
-    {value: 'bar6', mode: 'anchor'},
-    {value: 'bar7', mode: 'anchor'},
+    {value: 'bar1', mode: 'scroll'},
+    {value: 'bar2', mode: 'scroll'},
+    {value: 'bar3', mode: 'scroll'},
+    {value: 'bar4', mode: 'scroll'},
+    {value: 'bar5', mode: 'scroll'},
+    {value: 'bar6', mode: 'scroll'},
+    {value: 'bar7', mode: 'scroll'},
   ]},
 ]);
 contentOptions[0].selected = true;
@@ -195,7 +195,7 @@ export class IoDemoElements extends IoElement {
       :host io-collapsable > div.io-collapsable-content > * {
         margin: var(--iotSpacing) !important;
       }
-      :host span {
+      :host div > span {
         display: block;
         padding-bottom: 10em;
       }
@@ -370,24 +370,15 @@ export class IoDemoElements extends IoElement {
         ]}],
       ]}],
       ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
-        ['io-collapsable', {label: 'io-navigator with menu:"left" mode:"select-and-anchor"', class: 'fixed-tall', expanded: $('expanded-demo-content-1'), elements: [
-          ['io-navigator', {
-            menu: 'left',
-            mode: 'select-and-anchor',
-            elements: elements,
-            options: contentOptions,
-          }]
-        ]}],
-        ['io-collapsable', {label: 'io-navigator with mode:"scroll" and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
-          ['io-navigator', {
+        ['io-collapsable', {label: 'io-navigator-scroller and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
+          ['io-navigator-scroller', {
             menu: 'right',
-            mode: 'scroll',
             options: contentOptions[0].options,
             elements: [elements[0]]
           }]
         ]}],
-        ['io-collapsable', {label: 'io-navigator with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
-          ['io-navigator', {
+        ['io-collapsable', {label: 'io-navigator-selector with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
+          ['io-navigator-selector', {
             menu: 'top',
             depth: 0,
             options: contentOptions,
@@ -480,12 +471,20 @@ export class IoDemoElements extends IoElement {
           }]
         ]}],
         ['io-collapsable', {label: 'io-menu-item', expanded: $('expanded-demo-menus-2'), elements: [
+          ['io-menu-item', {label: 'menu item', item: new MenuItem('item')}],
           ['io-menu-item', {label: 'menu item', item: new MenuItem({
-            selected: this.bind('boolean'),
+            selected: true,
             value: 'value',
-            hint: 'hint',
+            hint: 'selected',
             label: 'menu item label',
-            icon: '💚',
+            icon: 'icons:code',
+          })}],
+          ['io-menu-item', {label: 'menu item', item: new MenuItem({
+            selected: false,
+            value: 'value',
+            hint: 'not selected',
+            label: 'menu item label',
+            icon: 'icons:circle_fill_plus',
           })}],
         ]}],
         ['io-collapsable', {label: 'io-menu-options', class: 'row', expanded: $('expanded-demo-menus-3'), elements: [

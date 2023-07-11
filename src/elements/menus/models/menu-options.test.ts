@@ -17,10 +17,10 @@ const testOptions = [
     {value: 'bar', options: [null, undefined, NaN]},
     {value: 'buzz', options: [null, undefined, NaN]},
   ]},
-  {value: 'anchors', options: [
-    {value: 'anchor1', mode: 'anchor'},
-    {value: 'anchor2', mode: 'anchor'},
-    {value: 'anchor3', mode: 'anchor'},
+  {value: 'scrolls', options: [
+    {value: 'scroll1', mode: 'scroll'},
+    {value: 'scroll2', mode: 'scroll'},
+    {value: 'scroll3', mode: 'scroll'},
   ]},
 ] as MenuItemArgsLoose[];
 
@@ -195,7 +195,7 @@ export default class {
         chai.expect(options.first).to.be.equal(1);
         chai.expect(options.last).to.be.equal(1);
       });
-      it('Should update deep `first`, `last`, `anchor` and `path` string when items are selected', () => {
+      it('Should update deep `first`, `last`, `scroll` and `path` string when items are selected', () => {
         const options = new MenuOptions(testOptions);
         options[0].selected = true;
         chai.expect(options.path).to.be.equal('1');
@@ -265,16 +265,16 @@ export default class {
         options[3].options[1].selected = true;
         chai.expect(options[0].selected).to.be.equal(false);
         chai.expect(options[3].selected).to.be.equal(true);
-        chai.expect(options.path).to.be.equal('anchors,anchor2');
-        chai.expect(options.first).to.be.equal('anchors');
-        chai.expect(options.last).to.be.equal('anchors');
-        chai.expect(options.anchor).to.be.equal('anchor2');
-        chai.expect(options[3].options.path).to.be.equal('anchor2');
+        chai.expect(options.path).to.be.equal('scrolls,scroll2');
+        chai.expect(options.first).to.be.equal('scrolls');
+        chai.expect(options.last).to.be.equal('scrolls');
+        chai.expect(options.scroll).to.be.equal('scroll2');
+        chai.expect(options[3].options.path).to.be.equal('scroll2');
         chai.expect(options[3].options.first).to.be.equal(undefined);
         chai.expect(options[3].options.last).to.be.equal(undefined);
-        chai.expect(options[3].options.anchor).to.be.equal('anchor2');
+        chai.expect(options[3].options.scroll).to.be.equal('scroll2');
       });
-      it('Should update deep `first`, `last`, `anchor` and items\' `selected` properties when `path` property is set', () => {
+      it('Should update deep `first`, `last`, `scroll` and items\' `selected` properties when `path` property is set', () => {
         const options = new MenuOptions(testOptions);
         options.path = '1';
         chai.expect(options[0].selected).to.be.equal(true);
@@ -364,22 +364,22 @@ export default class {
         chai.expect(options[2].options[2].options.first).to.be.equal(null);
         chai.expect(options[2].options[2].options.last).to.be.equal(null);
 
-        options.path = 'anchors,anchor1';
+        options.path = 'scrolls,scroll1';
         chai.expect(options[2].options.path).to.be.equal('');
         chai.expect(options[2].selected).to.be.equal(false);
-        chai.expect(options[3].options.path).to.be.equal('anchor1');
+        chai.expect(options[3].options.path).to.be.equal('scroll1');
         chai.expect(options[3].options.first).to.be.equal(undefined);
         chai.expect(options[3].options.last).to.be.equal(undefined);
-        chai.expect(options[3].options.anchor).to.be.equal('anchor1');
+        chai.expect(options[3].options.scroll).to.be.equal('scroll1');
         chai.expect(options[3].options[0].selected).to.be.equal(true);
-        chai.expect(options.first).to.be.equal('anchors');
-        chai.expect(options.last).to.be.equal('anchors');
-        chai.expect(options.anchor).to.be.equal('anchor1');
+        chai.expect(options.first).to.be.equal('scrolls');
+        chai.expect(options.last).to.be.equal('scrolls');
+        chai.expect(options.scroll).to.be.equal('scroll1');
 
-        options.path = 'anchors';
-        chai.expect(options.first).to.be.equal('anchors');
-        chai.expect(options.last).to.be.equal('anchors');
-        chai.expect(options.anchor).to.be.equal(undefined);
+        options.path = 'scrolls';
+        chai.expect(options.first).to.be.equal('scrolls');
+        chai.expect(options.last).to.be.equal('scrolls');
+        chai.expect(options.scroll).to.be.equal(undefined);
       });
       it('Should update deep `last`, `path` and items\' `selected` properties when `first` property is set', () => {
         const options = new MenuOptions(testOptions);

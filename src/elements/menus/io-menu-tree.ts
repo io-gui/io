@@ -192,6 +192,8 @@ export class IoMenuTree extends IoElement {
   changed() {
     const elements: VDOMArray[] = [...this.slotted];
 
+    // TODO: fix depth.
+
     if (this.searchable) {
       elements.push(['io-string', {
         $: 'search',
