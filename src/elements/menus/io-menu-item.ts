@@ -40,7 +40,7 @@ export class IoMenuItem extends IoField {
     `;
   }
 
-  @Property({observe: true, type: MenuItem})
+  @Property({observe: true, type: MenuItem, init: true})
   declare item: MenuItem;
 
   @Property({value: false, reflect: true})

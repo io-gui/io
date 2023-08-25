@@ -101,6 +101,7 @@ export default class {
             reactive: true,
             reflect: false,
             observe: false,
+            init: false,
           });
 
           chai.expect(protoProps2.prop1.value).to.be.eql({});
@@ -111,6 +112,7 @@ export default class {
             reactive: false,
             reflect: false,
             observe: true,
+            init: false,
           });
 
           chai.expect(node2._properties.get('prop2')).to.be.eql({
@@ -120,6 +122,7 @@ export default class {
             reactive: true,
             reflect: false,
             observe: false,
+            init: false,
           });
         });
         it('Should favor explicit property definitions over implicit', () => {
@@ -347,8 +350,7 @@ export default class {
           class TestNode extends IoNode {
             static get Properties(): PropertyDeclarations {
               return {
-                prop: TestSubNode
-                // prop: {value: new TestSubNode}
+                prop: {type: TestSubNode, init: true}
               };
             }
           }

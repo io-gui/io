@@ -64,6 +64,7 @@ export type PropertyDeclaration = {
 	reflect?: boolean;
 	reactive?: boolean;
 	observe?: boolean;
+	init?: boolean;
 };
 /**
  * Allows loose declaration of properties by specifying only partial declarations such as default value or type.
@@ -79,6 +80,7 @@ export declare class ProtoProperty {
 	reflect?: boolean;
 	reactive?: boolean;
 	observe?: boolean;
+	init?: boolean;
 	/**
 	 * Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
 	 * @param {PropertyDeclarationLoose} def Loosely typed property definition
@@ -100,6 +102,7 @@ export declare class PropertyInstance {
 	reflect: boolean;
 	reactive: boolean;
 	observe: boolean;
+	init: boolean;
 	/**
 	 * Creates the property configuration object and copies values from `ProtoProperty`.
 	 * @param propDef ProtoProperty object

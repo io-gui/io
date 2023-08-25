@@ -83,7 +83,7 @@ export class IoNavigatorBase extends IoElement {
   @Property(Array)
   declare elements: VDOMArray[];
 
-  @Property({type: MenuOptions, observe: true})
+  @Property({type: MenuOptions, init: true, observe: true})
   declare options: MenuOptions;
 
   @Property({value: 'left', reflect: true})
