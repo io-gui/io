@@ -62,10 +62,10 @@ export class IoGl extends IoElement {
       }
     `;
   }
-  @Property({value: [0, 0]})
+  @Property({type: Array, init: [0, 0]})
   declare size: [number, number];
 
-  @Property({value: [1, 1, 1, 1], observe: true})
+  @Property({type: Array, init: [1, 1, 1, 1], observe: true})
   declare color: [number, number, number, number];
 
   @Property({value: 1})

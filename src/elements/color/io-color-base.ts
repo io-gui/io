@@ -4,19 +4,19 @@ import { Property } from '../../core/internals/property.js';
 
 export class IoColorBase extends IoElement {
 
-  @Property({value: {r: 1, g: 1, b: 1, a: 1}, observe: true})
+  @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}, observe: true})
   declare value: {r: number, g: number, b: number, a?: number};
 
-  @Property({value: [1, 1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1, 1]})
   declare rgba: [number, number, number, number];
 
-  @Property({value: [1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1]})
   declare hsv: [number, number, number];
 
-  @Property({value: [1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1]})
   declare hsl: [number, number, number];
 
-  @Property({value: [1, 1, 1, 1]})
+  @Property({type: Array, init: [1, 1, 1, 1]})
   declare cmyk: [number, number, number, number];
 
   init() {

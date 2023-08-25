@@ -109,7 +109,7 @@ export class IoInspector extends IoElement {
   declare widgets: Record<string, any>;
 
   // TODO: deprecate!
-  @Property({type: Array, value: ['main', 'properties']})
+  @Property({type: Array, init: ['main', 'properties']})
   declare autoExpand: string[];
 
   // @Property({type: Array})

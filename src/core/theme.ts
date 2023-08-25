@@ -217,7 +217,7 @@ class IoTheme extends IoElement {
   }
 
   // Default themes
-  @Property({type: Object, init: true})
+  @Property(Object)
   declare themes: Record<string, Theme>;
 
   @Property({type: String, binding: $ThemeID})

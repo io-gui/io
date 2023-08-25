@@ -11,7 +11,7 @@ export type PropertyDeclaration = {
   reflect?: boolean;
   reactive?: boolean;
   observe?: boolean;
-  init?: boolean;
+  init?: any;
 };
 
 /**
@@ -30,7 +30,7 @@ export class ProtoProperty {
   reflect?: boolean;
   reactive?: boolean;
   observe?: boolean;
-  init?: boolean;
+  init?: any;
   /**
    * Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
    * @param {PropertyDeclarationLoose} def Loosely typed property definition
@@ -76,6 +76,18 @@ export class ProtoProperty {
   }
 }
 
+function decodeInitArgument(item: any, node: IoNode) {
+  if (item === 'this') {
+    return node;
+  } else if (typeof item === 'string' && item.startsWith('this.')) {
+    const key = item.split('.')[1];
+    if (key) return node[key];
+    debug: {
+      console.warn(`PropertyInstance: Invalid path ${item}`);
+    }
+  } else return item;
+}
+
 /**
  * PropertyInstance object constructed from `ProtoProperty`.
  */
@@ -92,13 +104,14 @@ export class PropertyInstance {
   reactive = true;
   // Observe object mutations for this property.
   observe = false;
-  // Initialize property value.
-  init = false;
+  // Initialize property with provided constructor arguments. `null` prevents initialization.
+  init?: any = undefined;
   /**
    * Creates the property configuration object and copies values from `ProtoProperty`.
+   * @param node owner IoNode instance
    * @param propDef ProtoProperty object
    */
-  constructor(propDef: ProtoProperty) {
+  constructor(node: IoNode, propDef: ProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'reactive', 'observe', 'init', 'binding'].indexOf(key) === -1) {
@@ -112,7 +125,6 @@ export class PropertyInstance {
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
       if (propDef.reactive !== undefined && typeof propDef.reactive !== 'boolean') console.warn('Incorrect type for "reactive" field');
       if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
-      if (propDef.init !== undefined && typeof propDef.init !== 'boolean') console.warn('Incorrect type for "init" field');
     }
 
     // TODO: Consider not allowing shared object instances as initial values.
@@ -126,16 +138,20 @@ export class PropertyInstance {
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value;
-    } else if (this.value === undefined) {
+    } else if (this.value === undefined && this.init !== null) {
       if (this.type === Boolean) this.value = false;
       else if (this.type === String) this.value = '';
       else if (this.type === Number) this.value = 0;
-      else if (this.type === Array) {
-        this.value = [];
-      } else if (this.type === Object) {
-        this.value = {};
-      } else if (typeof this.type === 'function') {
-        if (this.init) {
+      else if (typeof this.type === 'function') {
+        if (this.init !== undefined) {
+          if (this.init instanceof Array) {
+            const args = this.init.map(item => decodeInitArgument(item, node));
+            this.value = new this.type(...args);
+          } else {
+            const argument = decodeInitArgument(this.init, node);
+            this.value = new this.type(argument);
+          }
+        } else {
           this.value = new this.type();
         }
       }

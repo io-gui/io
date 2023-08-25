@@ -35,7 +35,7 @@ export class IoMatrix extends IoVector {
     `;
   }
 
-  @Property({value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
+  @Property({type: Array, init: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
   declare value: number[];
 
   @Property({value: 4, reflect: true})
@@ -43,7 +43,7 @@ export class IoMatrix extends IoVector {
 
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const id = item.id as keyof typeof this.value;
+    const id = item.id as any;
     const value = event.detail.value;
     const oldValue = event.detail.oldValue;
     this.value[id] = value;

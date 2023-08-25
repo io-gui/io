@@ -79,7 +79,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
       for (const name in this._protochain.properties) {
-        const property = new PropertyInstance(this._protochain.properties[name]);
+        const property = new PropertyInstance(this, this._protochain.properties[name]);
         this._properties.set(name, property);
 
         const value = property.value;

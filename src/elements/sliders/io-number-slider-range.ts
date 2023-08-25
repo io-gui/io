@@ -29,7 +29,7 @@ export class IoNumberSliderRange extends IoElement {
     `;
   }
 
-  @Property({value: [0, 0], observe: true})
+  @Property({type: Array, init: [0, 0], observe: true})
   declare value: [number, number];
 
   @Property(0.01)

@@ -12,7 +12,7 @@ export default class {
             binding: binding,
             reactive: true,
             observe: false,
-            init: false,
+            init: undefined,
             reflect: false,
             type: String,
             value: theme.themeID,

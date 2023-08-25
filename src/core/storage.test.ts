@@ -26,7 +26,7 @@ export default class {
             reactive: true,
             observe: false,
             reflect: false,
-            init: false,
+            init: undefined,
             type: String,
             value: 'test',
           });
@@ -36,7 +36,7 @@ export default class {
             reactive: true,
             observe: false,
             reflect: false,
-            init: false,
+            init: undefined,
             type: undefined,
             value: 'foo',
           });
@@ -46,7 +46,7 @@ export default class {
             reactive: true,
             observe: false,
             reflect: false,
-            init: false,
+            init: undefined,
             type: undefined,
             value: 'foo',
           });
@@ -56,7 +56,7 @@ export default class {
             reactive: true,
             observe: false,
             reflect: false,
-            init: false,
+            init: undefined,
             type: String,
             value: 'none',
           });

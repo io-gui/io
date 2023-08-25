@@ -24,16 +24,16 @@ export class IoSlider2d extends IoSliderBase {
     `;
   }
 
-  @Property({value: [0, 0], observe: true})
+  @Property({type: Array, init: [0, 0], observe: true})
   declare value: [number, number];
 
-  @Property({value: [0.01, 0.01]})
+  @Property({type: Array, init: [0.01, 0.01]})
   declare step: [number, number];
 
-  @Property({value: [-1, -1]})
+  @Property({type: Array, init: [-1, -1]})
   declare min: [number, number];
 
-  @Property({value: [1, 1]})
+  @Property({type: Array, init: [1, 1]})
   declare max: [number, number];
 
   @Property(true)

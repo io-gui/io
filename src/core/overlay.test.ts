@@ -21,7 +21,7 @@ export default class {
             binding: undefined,
             reactive: true,
             observe: false,
-            init: false,
+            init: undefined,
             reflect: true,
             type: Boolean,
             value: false,
