@@ -347,7 +347,8 @@ export default class {
           class TestNode extends IoNode {
             static get Properties(): PropertyDeclarations {
               return {
-                prop: {value: new TestSubNode}
+                prop: TestSubNode
+                // prop: {value: new TestSubNode}
               };
             }
           }

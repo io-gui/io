@@ -34,7 +34,7 @@ export class IoObject extends IoElement {
     `;
   }
 
-  @Property({type: [Object, Array]})
+  @Property({})
   declare value: Record<string, any> | any[];
 
   @Property({type: Array})

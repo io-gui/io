@@ -6,7 +6,7 @@ import {Binding} from './binding.js';
  */
 export type PropertyDeclaration = {
   value?: any;
-  type?: Constructor | Constructor[]; // TODO: fix error with io-object
+  type?: Constructor;
   binding?: Binding;
   reflect?: boolean;
   reactive?: boolean;
@@ -24,7 +24,7 @@ export type PropertyDeclarationLoose = string | number | boolean | Array<any> | 
  */
 export class ProtoProperty {
   value?: any;
-  type?: Constructor | Constructor[];
+  type?: Constructor;
   binding?: Binding;
   reflect?: boolean;
   reactive?: boolean;
@@ -79,10 +79,10 @@ export class PropertyInstance {
   // Property value.
   value?: any = undefined;
   // Constructor of the property value.
-  type?: Constructor | Constructor[];
+  type?: Constructor;
   // Binding object.
   binding?: Binding;
-  // Reflects to/from HTML attribute ['attr', 'none', 'prop' or 'both']
+  // Reflects to HTML attribute.
   reflect = false;
   // Enables change handlers and events.
   reactive = true;
@@ -100,11 +100,7 @@ export class PropertyInstance {
         }
       });
       if (propDef.type !== undefined) {
-        if (propDef.type instanceof Array) {
-          for (let i = 0; i < propDef.type.length; i++) {
-            if (typeof propDef.type[i] !== 'function') console.warn('Incorrect type for "type" field');
-          }
-        } else if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
+        if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       }
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
@@ -126,11 +122,7 @@ export class PropertyInstance {
       if (this.type === Boolean) this.value = false;
       else if (this.type === String) this.value = '';
       else if (this.type === Number) this.value = 0;
-      else if (this.type === Array) {
-        this.value = [];
-      } else if (this.type === Object) {
-        this.value = {};
-      }
+      else if (typeof this.type === 'function') this.value = new this.type();
     }
   }
 }

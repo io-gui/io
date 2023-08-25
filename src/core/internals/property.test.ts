@@ -436,7 +436,7 @@ export default class {
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
-          value: undefined,
+          value: new Object1(),
           type: Object1,
           binding: undefined,
           reflect: false,
@@ -455,6 +455,7 @@ export default class {
           reactive: undefined,
           observe: undefined,
         });
+        chai.expect(propDef.value).to.be.equal(object1);
         chai.expect(prop).to.be.eql({
           value: object1,
           type: Object1,
@@ -463,6 +464,7 @@ export default class {
           reactive: true,
           observe: false,
         });
+        chai.expect(prop.value).to.be.equal(object1);
         chai.expect(propDef.value).to.equal(object1);
         chai.expect(prop.value).to.equal(object1);
         // initialize with an object property definition with custom Object1 type property
@@ -477,27 +479,8 @@ export default class {
           observe: undefined,
         });
         chai.expect(prop).to.be.eql({
-          value: undefined,
+          value: new Object1(),
           type: Object1,
-          binding: undefined,
-          reflect: false,
-          reactive: true,
-          observe: false,
-        });
-        // initialize with an object property definition with multiple type properties
-        propDef = new ProtoProperty({type: [Object, Object1]});
-        prop = new PropertyInstance(propDef);
-        chai.expect(propDef).to.be.eql({
-          value: undefined,
-          type: [Object, Object1],
-          binding: undefined,
-          reflect: undefined,
-          reactive: undefined,
-          observe: undefined,
-        });
-        chai.expect(prop).to.be.eql({
-          value: undefined,
-          type: [Object, Object1],
           binding: undefined,
           reflect: false,
           reactive: true,

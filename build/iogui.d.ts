@@ -59,7 +59,7 @@ export declare class Binding {
  */
 export type PropertyDeclaration = {
 	value?: any;
-	type?: Constructor | Constructor[];
+	type?: Constructor;
 	binding?: Binding;
 	reflect?: boolean;
 	reactive?: boolean;
@@ -74,7 +74,7 @@ export type PropertyDeclarationLoose = string | number | boolean | Array<any> | 
  */
 export declare class ProtoProperty {
 	value?: any;
-	type?: Constructor | Constructor[];
+	type?: Constructor;
 	binding?: Binding;
 	reflect?: boolean;
 	reactive?: boolean;
@@ -95,7 +95,7 @@ export declare class ProtoProperty {
  */
 export declare class PropertyInstance {
 	value?: any;
-	type?: Constructor | Constructor[];
+	type?: Constructor;
 	binding?: Binding;
 	reflect: boolean;
 	reactive: boolean;
@@ -623,6 +623,9 @@ declare const IoElement_base: {
 		changed(): void;
 		init(): void;
 		queue(prop: string, value: any, oldValue: any): void;
+		/**
+		* Removes resize listener if `onResized()` is defined in subclass.
+		*/
 		dispatchQueue(): void;
 		dispatchQueueSync: () => void;
 		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;

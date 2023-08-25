@@ -89,15 +89,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
 
-        debug: {
-          if (property.value === undefined && typeof property.type === 'function') {
-            const propArg = properties[name as any];
-            if (!(propArg && propArg.constructor === property.type)) {
-              console.warn(`IoNode: property "${name}" of type "${property.type.name}" is specified but no initial value is provided!`);
-            }
-          }
-        }
-
         if (property.binding) property.binding.addTarget(this, name);
       }
 
