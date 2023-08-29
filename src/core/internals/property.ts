@@ -156,6 +156,22 @@ export class PropertyInstance {
         }
       }
     }
+
+    debug: {
+      if (this.value !== undefined && this.value !== null) {
+        if ([String, Number, Boolean].indexOf(this.type as any) !== -1) {
+          if (this.type === Boolean && typeof this.value !== 'boolean' ||
+              this.type === Number && typeof this.value !== 'number' ||
+              this.type === String && typeof this.value !== 'string') {
+            console.warn(`Property: Incorrect value ${this.value} type for property ${name}!`);
+          }
+        } else {
+          if (typeof this.type === 'function' && !(this.value instanceof this.type)) {
+            console.warn(`Property: Incorrect value ${this.value} type for property ${name}!`);
+          }
+        }
+      }
+    }
   }
 }
 

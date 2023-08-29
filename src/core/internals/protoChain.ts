@@ -104,17 +104,29 @@ export class ProtoChain {
     for (const name in this.properties) {
       if (this.properties[name].observe) {
         debug: {
-          const isNull = this.properties[name].value === null;
-          const isUndefined = this.properties[name].value === undefined;
-          const isObject = this.properties[name].value instanceof Object;
           if (
-            [String, Number, Boolean].indexOf(this.properties[name].type as any) !== -1 ||
-            (!isNull && !isUndefined && !isObject)
+            [String, Number, Boolean].indexOf(this.properties[name].type as any) !== -1
           ) {
-            console.warn('Property `observe` is only intended for object properties!');
+            console.warn(`Property "${name}" in ProtoChain: "observe" is only intended for property definitions with Object data type!`);
           }
         }
         this.observedObjectProperties.push(name);
+      }
+      debug: {
+        const prop = this.properties[name];
+        if ([String, Number, Boolean].indexOf(this.properties[name].type as any) !== -1) {
+          if (prop.type === Boolean && typeof prop.value !== 'boolean' ||
+              prop.type === Number && typeof prop.value !== 'number' ||
+              prop.type === String && typeof prop.value !== 'string') {
+            console.warn(`Property "${name}" in ProtoChain: Incorrect value type for Boolean property!`);
+          }
+        } else {
+          const isNull = this.properties[name].value === null;
+          const isUndefined = this.properties[name].value === undefined;
+          if (typeof prop.type === 'function' && !(prop.value instanceof prop.type) && !isNull && !isUndefined) {
+              console.warn(`Property "${name}" in ProtoChain: Incorrect value type for Boolean property!`);
+          }
+        }
       }
     }
   }
