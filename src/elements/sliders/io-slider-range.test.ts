@@ -1,7 +1,7 @@
 import {IoSliderRange} from '../../iogui.js';
 
 export default class {
-  element = new IoSliderRange();
+  element = new IoSliderRange({value: [0, 0]});
   constructor() {
     this.element.style.display = 'none';
     document.body.appendChild(this.element as unknown as HTMLElement);

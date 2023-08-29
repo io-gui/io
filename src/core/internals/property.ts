@@ -80,8 +80,12 @@ function decodeInitArgument(item: any, node: IoNode) {
   if (item === 'this') {
     return node;
   } else if (typeof item === 'string' && item.startsWith('this.')) {
-    const key = item.split('.')[1];
-    if (key) return node[key];
+    const keys = item.split('.');
+    let target: any = node;
+    for (let i = 1; i < keys.length; i++) {
+      target = target[keys[i]];
+    }
+    if (target) return target;
     debug: {
       console.warn(`PropertyInstance: Invalid path ${item}`);
     }
@@ -138,7 +142,7 @@ export class PropertyInstance {
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value;
-    } else if (this.value === undefined && this.init !== null) {
+    } else if ((this.value === undefined || this.value === null) && this.init !== null) {
       if (this.type === Boolean) this.value = false;
       else if (this.type === String) this.value = '';
       else if (this.type === Number) this.value = 0;
@@ -147,10 +151,17 @@ export class PropertyInstance {
           if (this.init instanceof Array) {
             const args = this.init.map(item => decodeInitArgument(item, node));
             this.value = new this.type(...args);
+          } else if (this.init instanceof Object) {
+            const args: any = {};
+            Object.keys(this.init).forEach(key => {
+              args[key] = decodeInitArgument(this.init[key], node);
+            });
+            this.value = new this.type(args);
           } else {
             const argument = decodeInitArgument(this.init, node);
             this.value = new this.type(argument);
           }
+          // TODO: Consider other ways of encoding initial values.
         } else {
           this.value = new this.type();
         }

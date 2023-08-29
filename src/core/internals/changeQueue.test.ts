@@ -23,9 +23,13 @@ class FakeIoNode {
   }
   dispatchEvent(eventName: string, change: Change) {
     this.eventDispatchCounter++;
+    this.eventRegister.push(eventName);
+    if (eventName === 'changed') return;
     this.eventName = eventName;
     this.eventChange = change;
-    this.eventRegister.push(eventName);
+  }
+  dispatchMutationEvent() {
+    // this.dispatchEvent('object-mutated', {object: this} as any);
   }
   changed() {
     this.changeCounter++;
@@ -55,7 +59,7 @@ export default class {
         chai.expect(node.eventChange?.property).to.be.equal('test');
         chai.expect(node.eventChange?.value).to.be.equal(2);
         chai.expect(node.eventChange?.oldValue).to.be.equal(0);
-        chai.expect(node.eventDispatchCounter).to.be.equal(1);
+        chai.expect(node.eventDispatchCounter).to.be.equal(2);
         chai.expect(node.changeCounter).to.be.equal(1);
         changeQueue.queue('test2', 0, -1);
         changeQueue.queue('test3', 2, 1);
@@ -66,7 +70,7 @@ export default class {
         chai.expect(node.eventChange?.property).to.be.equal('test3');
         chai.expect(node.eventChange?.value).to.be.equal(2);
         chai.expect(node.eventChange?.oldValue).to.be.equal(1);
-        chai.expect(node.eventDispatchCounter).to.be.equal(3);
+        chai.expect(node.eventDispatchCounter).to.be.equal(5);
         chai.expect(node.prop1ChangeCounter).to.be.equal(0);
         chai.expect(node.changeCounter).to.be.equal(2);
       });
@@ -90,7 +94,7 @@ export default class {
         changeQueue.queue('prop2', 2, 0);
         changeQueue.dispatch();
         chai.expect(JSON.stringify(node.changeRegister)).to.be.equal('["prop1Changed","prop2Changed"]');
-        chai.expect(JSON.stringify(node.eventRegister)).to.be.equal('["prop1-changed","prop2-changed"]');
+        chai.expect(JSON.stringify(node.eventRegister)).to.be.equal('["prop1-changed","prop2-changed","changed"]');
       });
       it('Should skip dispatch if value is same as oldValue', () => {
         const node = new FakeIoNode();

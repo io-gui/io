@@ -56,7 +56,11 @@ export class ChangeQueue {
         this.node.dispatchEvent(property + '-changed', change);
       }
     }
-    if (this.hasChanged) this.node.changed();
+    if (this.hasChanged) {
+      this.node.changed();
+      this.node.dispatchEvent('changed');
+      this.node.dispatchMutationEvent();
+    }
     this.dispatching = false;
   }
   /**

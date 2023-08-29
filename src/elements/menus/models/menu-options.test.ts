@@ -457,23 +457,23 @@ export default class {
 
         eventStack.length = 0;
         options[0].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'lastChanged: 1']);
+        chai.expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'lastChanged: 1', 'change']);
 
         eventStack.length = 0;
         options[1].options[1].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'lastChanged: bar']);
+        chai.expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'lastChanged: bar', 'change']);
 
         eventStack.length = 0;
         options[2].options[2].options[2].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'lastChanged: NaN']);
+        chai.expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'lastChanged: NaN', 'change']);
 
         eventStack.length = 0;
         options[2].selected = false;
-        chai.expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'lastChanged: undefined']);
+        chai.expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'lastChanged: undefined', 'change']);
 
         eventStack.length = 0;
         options[2].selected = true;
-        chai.expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'lastChanged: 3']);
+        chai.expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'lastChanged: 3', 'change']);
       });
     });
   }

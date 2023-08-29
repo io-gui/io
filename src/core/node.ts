@@ -78,6 +78,18 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
+      for (const p in this._protochain.properties) {
+        Object.defineProperty(this, p, {
+          get: function() {
+            return this._properties.get(p).value;
+          },
+          set: function(value) {
+            (this as IoNode).setProperty(p, value);
+          },
+          configurable: true,
+        });
+      }
+
       for (const name in this._protochain.properties) {
         const property = new PropertyInstance(this, this._protochain.properties[name]);
         this._properties.set(name, property);
@@ -92,17 +104,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         if (property.binding) property.binding.addTarget(this, name);
       }
 
-      for (const p in this._protochain.properties) {
-        Object.defineProperty(this, p, {
-          get: function() {
-            return this._properties.get(p).value;
-          },
-          set: function(value) {
-            (this as IoNode).setProperty(p, value);
-          },
-          configurable: true,
-        });
-      }
       this.applyProperties(properties);
 
       if (this._protochain.observedObjectProperties.length) {
@@ -378,7 +379,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Shorthand for dispatching `'object-mutated'` event on window.
      * @param {any} object - object which mutated.
      */
-    dispatchMutationEvent(object: any) {
+    dispatchMutationEvent(object: any = this) {
       this.dispatchEvent('object-mutated', {object: object}, true, window);
     }
     /**
