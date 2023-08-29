@@ -1,4 +1,4 @@
-import { IoGl, IoNode, IoThemeSingleton } from '../iogui.js';
+import { IoElement, IoGl, IoThemeSingleton } from '../iogui.js';
 
 const element = new IoGl();
 element.size = [0, 0];
@@ -64,7 +64,7 @@ export default class {
             observe: true,
             init: undefined,
             reflect: false,
-            type: IoNode,
+            type: IoElement,
             value: IoThemeSingleton,
           });
         });

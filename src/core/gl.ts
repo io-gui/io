@@ -1,4 +1,3 @@
-import { IoNode } from './node.js';
 import { IoElement, RegisterIoElement } from './element.js';
 import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
@@ -71,7 +70,7 @@ export class IoGl extends IoElement {
   @Property({value: 1})
   declare pxRatio: number;
 
-  @Property({observe: true, type: IoNode, value: IoThemeSingleton})
+  @Property({observe: true, type: IoElement, value: IoThemeSingleton})
   declare theme: typeof IoThemeSingleton;
 
   private _needsResize = false;
