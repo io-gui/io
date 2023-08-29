@@ -375,6 +375,13 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     /**
+     * Shorthand for dispatching `'object-mutated'` event on window.
+     * @param {any} object - object which mutated.
+     */
+    dispatchMutationEvent(object: any) {
+      this.dispatchEvent('object-mutated', {object: object}, true, window);
+    }
+    /**
      * Disposes all internals.
      * Use this when instance is no longer needed.
      */
