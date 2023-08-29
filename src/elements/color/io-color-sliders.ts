@@ -24,6 +24,10 @@ export class IoColorSlider extends IoColorBase {
       }
     `;
   }
+
+  @Property({type: Array, init: [0, 0, 0, 0]})
+  declare color: [number, number, number, number];
+
   @Property('')
   declare channel: string;
 

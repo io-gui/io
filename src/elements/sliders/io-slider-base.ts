@@ -48,9 +48,6 @@ export class IoSliderBase extends IoGl {
   @Property({value: false, reflect: true})
   declare vertical: boolean;
 
-  @Property({type: Array, init: [0, 0, 0, 0]})
-  declare color: [number, number, number, number];
-
   @Property(false)
   declare noscroll: boolean;
 
