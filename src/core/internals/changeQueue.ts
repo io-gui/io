@@ -59,7 +59,7 @@ export class ChangeQueue {
     if (this.hasChanged) {
       this.node.changed();
       this.node.dispatchEvent('changed');
-      this.node.dispatchMutationEvent();
+      this.node.dispatchMutationEvent(this.node);
     }
     this.dispatching = false;
   }

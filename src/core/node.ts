@@ -308,6 +308,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     objectMutated = (prop: string) => {
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.changed();
+      this.dispatchEvent('changed');
+      this.dispatchMutationEvent(this);
     };
     /**
      * Returns a binding to a specified property`.
@@ -379,7 +381,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Shorthand for dispatching `'object-mutated'` event on window.
      * @param {any} object - object which mutated.
      */
-    dispatchMutationEvent(object: any = this) {
+    dispatchMutationEvent(object: any) {
       this.dispatchEvent('object-mutated', {object: object}, true, window);
     }
     /**

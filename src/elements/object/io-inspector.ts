@@ -100,6 +100,9 @@ export class IoInspector extends IoElement {
   declare config: Record<string, any>;
 
   @Property('')
+  declare uuid: string;
+
+  @Property('')
   declare search: string;
 
   @Property({type: Object})
@@ -108,10 +111,6 @@ export class IoInspector extends IoElement {
   @Property({type: Object})
   declare widgets: Record<string, any>;
 
-  // TODO: deprecate!
-  @Property({type: Array, init: ['main', 'properties']})
-  declare autoExpand: string[];
-
   // @Property({type: Array})
   // declare slotted: VDOMArray;
 
@@ -119,10 +118,6 @@ export class IoInspector extends IoElement {
     return {
       'io-field-clicked': '_onItemClicked',
     };
-  }
-  constructor(props?: any) {
-    super(props);
-    Object.defineProperty(this, 'uuid', {value: null, writable: true});
   }
   _onItemClicked(event: CustomEvent) {
     event.stopPropagation();
@@ -171,7 +166,7 @@ export class IoInspector extends IoElement {
   }
   _onChange() {
     this._getAll();
-    this.uuid = genUUID(this.selected);
+    const uuid = this.uuid || genUUID(this.selected);
     const elements = [
       ['div', {class: 'inspector-header'}, [
         ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
@@ -182,11 +177,10 @@ export class IoInspector extends IoElement {
 
     for (const group in this._widgets.groups) {
       if (!this._groups[group]) {
-        const autoExpanded = this.autoExpand.indexOf(group) !== -1;
         elements.push(
           ['io-collapsable', {
             label: group,
-            expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
+            expanded: $({value: true, storage: 'local', key: uuid + '-' + group}),
             elements: [this._widgets.groups[group]],
           }]
         );
@@ -194,11 +188,10 @@ export class IoInspector extends IoElement {
     }
 
     for (const group in this._groups) {
-      const autoExpanded = this.autoExpand.indexOf(group) !== -1;
       elements.push(
         ['io-object', {
           label: group,
-          expanded: $({value: autoExpanded, storage: 'local', key: this.uuid + '-' + group}),
+          expanded: $({value: true, storage: 'local', key: this.uuid + '-' + group}),
           value: this.selected,
           properties: this._groups[group],
           config: this._config,
