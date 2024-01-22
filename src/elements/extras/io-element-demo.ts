@@ -1,8 +1,9 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement } from '../../core/element.js';
 import '../objct/io-properties.js';
 import '../basic/io-boolicon.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoElementDemo extends IoElement {
   static get Style() {
     return /* css */`

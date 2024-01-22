@@ -423,16 +423,19 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       Object.defineProperty(this, '_disposed', {value: true});
     }
+    Register(ioNodeConstructor: typeof IoNode) {
+      Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
+    }
   };
   return IoNodeMixinConstructor;
 }
 
 /**
  * Register function to be called once per class.
- * @param {IoNode} target - Node class to register.
+ * @param {IoNode} ioNodeConstructor - Node class to register.
  */
-export function RegisterIoNode(target: typeof IoNode) {
-  Object.defineProperty(target.prototype, '_protochain', {value: new ProtoChain(target)});
+export function RegisterIoNode(ioNodeConstructor: typeof IoNode) {
+  ioNodeConstructor.prototype.Register(ioNodeConstructor);
 }
 
 /**

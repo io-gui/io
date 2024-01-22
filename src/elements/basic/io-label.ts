@@ -1,6 +1,7 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement } from '../../core/element.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoLabel extends IoElement {
   static get Style() {
     return /* css */`

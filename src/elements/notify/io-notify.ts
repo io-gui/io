@@ -1,10 +1,11 @@
-import {IoElement, RegisterIoElement } from '../../core/element.js';
+import {IoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import {IoStorage} from '../../core/storage.js';
 
 /*
 
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoNotify extends IoElement {
   static get Style() {
     return /* css */`

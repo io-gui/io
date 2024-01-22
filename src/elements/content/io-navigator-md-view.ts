@@ -1,9 +1,10 @@
-import { RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { VDOMArray } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoNavigatorBase } from './io-navigator-base.js';
 import './io-md-view.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoNavigatorMdView extends IoNavigatorBase {
 
   @Property({type: Array})

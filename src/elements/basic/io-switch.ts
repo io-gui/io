@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { IoBoolean } from './io-boolean.js';
 
 /**
@@ -6,7 +6,7 @@ import { IoBoolean } from './io-boolean.js';
  *
  * <io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoSwitch extends IoBoolean {
   static get Style() {
     return /* css */`

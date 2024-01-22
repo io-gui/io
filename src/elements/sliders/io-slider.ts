@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoSliderBase } from './io-slider-base.js';
 
@@ -10,7 +10,7 @@ import { IoSliderBase } from './io-slider-base.js';
  *
  * <io-element-demo element="io-slider" properties='{"value": 0, "step": 0.01, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoSlider extends IoSliderBase {
 
   @Property(0)

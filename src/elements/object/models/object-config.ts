@@ -20,14 +20,13 @@ export class ObjectConfig {
       }
     }
     getObjectConfig(object: any, customConfig: any) {
-      const keys = Object.getOwnPropertyNames(object);
-      // const keys = Object.keys(object);
+      // const keys = Object.getOwnPropertyNames(object);
+      const keys = Object.keys(object);
       const prototypes = [];
 
       let proto = object.__proto__;
       while (proto) {
         prototypes.push(proto.constructor.name);
-        // keys.push(...Object.getOwnPropertyNames(proto));
         keys.push(...Object.keys(proto));
         proto = proto.__proto__;
       }

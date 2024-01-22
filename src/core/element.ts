@@ -37,6 +37,7 @@ export type IoElementArgs = IoNodeArgs & {
 //   [string, Partial<T> & IoElementArgs | string, VDOMArray<T>[] | string ];
 
 export type VDOMArray =
+  [string] |
   [string, IoElementArgs | string | VDOMArray[] ] |
   [string, IoElementArgs | string, VDOMArray[] | string ];
 
@@ -81,80 +82,6 @@ export const buildTree = () => (node: VDOMArray): any => isObject(node[1]) ? {
   ['props']: node[1],
   ['children']: isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2]
 } : buildTree()([node[0], {}, node[1] as VDOMArray[] | string]);
-
-/**
- * Register function for `IoElement`. Registers custom element.
- * @param {IoElement} elementConstructor - Element class to register.
- */
-export function RegisterIoElement(elementConstructor: typeof IoElement) {
-  RegisterIoNode(elementConstructor);
-
-  const localName = elementConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
-
-  Object.defineProperty(elementConstructor, 'localName', {value: localName});
-  Object.defineProperty(elementConstructor.prototype, 'localName', {value: localName});
-
-  Object.defineProperty(elementConstructor, '_isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(elementConstructor.prototype, '_isIoElement', {enumerable: false, value: true});
-  Object.defineProperty(window, elementConstructor.name, {value: elementConstructor});
-
-  window.customElements.define(localName, elementConstructor as unknown as CustomElementConstructor);
-
-  let mixinsString = '';
-  const mixins = elementConstructor.prototype._protochain.style.match(mixinRegex);
-  if (mixins) {
-    for (let i = 0; i < mixins.length; i++) {
-      // TODO: improve mixing regex and string handling.
-      const m = mixins[i].split(': {');
-      const name = m[0].replace(' --', '--');
-      const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
-      mixinRecord[name] = value;
-      mixinsString += mixins[i].replace(' --', '.').replace(': {', ' {');
-    }
-  }
-
-  // Remove mixins
-  let styleString = elementConstructor.prototype._protochain.style.replace(mixinRegex, '');
-  // Apply mixins
-  const apply = styleString.match(applyRegex);
-  if (apply) {
-    for (let i = 0; i < apply.length; i++) {
-      const name = apply[i].split('@apply ')[1].replace(';', '');
-      if (mixinRecord[name]) {
-        styleString = styleString.replace(apply[i], mixinRecord[name]);
-      } else {
-        console.warn('IoElement: cound not find mixin:', name);
-      }
-    }
-  }
-
-  debug: {
-    let styleStringStripped = styleString;
-    styleStringStripped = styleStringStripped.replace(commentsRegex, '');
-    styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
-    styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
-    const match = styleStringStripped.match(cssRegex);
-    if (match) {
-      match.map((selector: any) => {
-        selector = selector.trim();
-        if (!selector.startsWith(':host')) {
-          console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
-          console.warn(selector);
-        }
-      });
-    }
-  }
-
-  // Replace `:host` with element tag and add mixin CSS variables.
-  styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
-
-  const styleElement = document.createElement('style');
-  styleElement.innerHTML = styleString;
-  styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
-  document.head.appendChild(styleElement);
-}
-
-
 
 /**
  * Creates an element from a virtual dom object.
@@ -225,7 +152,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: any
 /**
  * Core `IoElement` class.
  */
-@RegisterIoElement
+@RegisterIoNode
 export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): string {
     return /* css */`
@@ -373,6 +300,72 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         }
       }
     }
+  }
+  Register(ioNodeConstructor: typeof IoNode) {
+    super.Register(ioNodeConstructor);
+    const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
+
+    Object.defineProperty(ioNodeConstructor, 'localName', {value: localName});
+    Object.defineProperty(ioNodeConstructor.prototype, 'localName', {value: localName});
+
+    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: true});
+    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: true});
+    Object.defineProperty(window, ioNodeConstructor.name, {value: ioNodeConstructor});
+
+    window.customElements.define(localName, ioNodeConstructor as unknown as CustomElementConstructor);
+
+    let mixinsString = '';
+    const mixins = ioNodeConstructor.prototype._protochain.style.match(mixinRegex);
+    if (mixins) {
+      for (let i = 0; i < mixins.length; i++) {
+        // TODO: improve mixing regex and string handling.
+        const m = mixins[i].split(': {');
+        const name = m[0].replace(' --', '--');
+        const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
+        mixinRecord[name] = value;
+        mixinsString += mixins[i].replace(' --', '.').replace(': {', ' {');
+      }
+    }
+
+    // Remove mixins
+    let styleString = ioNodeConstructor.prototype._protochain.style.replace(mixinRegex, '');
+    // Apply mixins
+    const apply = styleString.match(applyRegex);
+    if (apply) {
+      for (let i = 0; i < apply.length; i++) {
+        const name = apply[i].split('@apply ')[1].replace(';', '');
+        if (mixinRecord[name]) {
+          styleString = styleString.replace(apply[i], mixinRecord[name]);
+        } else {
+          console.warn('IoElement: cound not find mixin:', name);
+        }
+      }
+    }
+
+    debug: {
+      let styleStringStripped = styleString;
+      styleStringStripped = styleStringStripped.replace(commentsRegex, '');
+      styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
+      styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
+      const match = styleStringStripped.match(cssRegex);
+      if (match) {
+        match.map((selector: any) => {
+          selector = selector.trim();
+          if (!selector.startsWith(':host')) {
+            console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
+            console.warn(selector);
+          }
+        });
+      }
+    }
+
+    // Replace `:host` with element tag and add mixin CSS variables.
+    styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
+
+    const styleElement = document.createElement('style');
+    styleElement.innerHTML = styleString;
+    styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
+    document.head.appendChild(styleElement);
   }
   /**
   * Helper function to flatten textContent into a single TextNode.

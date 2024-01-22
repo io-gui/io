@@ -1,8 +1,9 @@
-import { RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { VDOMArray } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoNavigatorBase } from './io-navigator-base.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoNavigatorSelector extends IoNavigatorBase {
 
   @Property('first')

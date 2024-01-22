@@ -1,7 +1,7 @@
 import 'mocha/mocha.js';
 import 'chai/chai.js';
 
-import { IoElement, RegisterIoElement } from './iogui.js';
+import { IoElement, RegisterIoNode } from './iogui.js';
 
 import CoreTests from './core/index.test.js';
 import ElementsTests from './elements/index.test.js';
@@ -41,7 +41,7 @@ function runTests() {
   }
 }
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoGuiTestPage extends IoElement {
   static get Style() {
     return /* css */`

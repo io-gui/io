@@ -108,7 +108,7 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, RegisterIoElement, IoNavigatorSelector, IoStorage as $ } from 'io-gui';
+    import { MenuOptions, MenuItem, RegisterIoNode, IoNavigatorSelector, IoStorage as $ } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
@@ -155,20 +155,6 @@
           depth: 1,
           elements: [
             ['io-md-view', {id: 'About', strip: [siteRoot], src: './README.md'}],
-
-            // ['io-navigator-md-view', {id: 'Docs',
-            //   options: OPTIONS.getItem('Docs').options,
-            //   strip: [siteRoot],
-            //   sanitize: false,
-            // }],
-
-            // ['io-navigator-combined', {id: 'Docs',
-            //   options: OPTIONS.getItem('Docs').options,
-            //   elements: [
-            //     ['io-md-view', {id: './docs/quick-start.md', strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
-            //     ['io-md-view', {id: './docs/deep-dive.md', strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
-            //   ]
-            // }],
             ['io-selector', {id: 'Docs',
               options: OPTIONS.getItem('Docs').options,
               cache: true,
@@ -187,7 +173,6 @@
                 }],
               ]
             }],
-
             ['io-selector', {id: 'Demos',
               options: OPTIONS.getItem('Demos').options,
               cache: true,
@@ -201,7 +186,7 @@
         };
       }
     }
-    RegisterIoElement(IoMainPage);
+    RegisterIoNode(IoMainPage);
 
     </script>
     <noscript>JavaScript is required to view this page!</noscript>

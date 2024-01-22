@@ -1,8 +1,8 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoSliderBase } from './io-slider-base.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoSlider2d extends IoSliderBase {
   static get Style() {
     return /* css */`

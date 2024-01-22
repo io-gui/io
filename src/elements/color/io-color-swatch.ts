@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { IoColorBase } from './io-color-base.js';
 
 /**
@@ -9,7 +9,7 @@ import { IoColorBase } from './io-color-base.js';
  * config='{"value": ["io-properties"]}
  * '></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoColorSwatch extends IoColorBase {
   static get Style() {
     return /* css */`

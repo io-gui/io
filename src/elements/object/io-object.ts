@@ -1,11 +1,12 @@
-import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import './io-properties.js';
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoObject extends IoElement {
   static get Style() {
     return /* css */`
@@ -44,7 +45,7 @@ export class IoObject extends IoElement {
   declare config: Record<string, any>;
 
   @Property({type: Array})
-  declare slotted: VDOMArray;
+  declare widget: VDOMArray;
 
   @Property(true)
   declare labeled: boolean;
@@ -73,7 +74,7 @@ export class IoObject extends IoElement {
         properties: this.properties,
         config: this.config,
         labeled: this.labeled,
-        slotted: this.slotted,
+        widget: this.widget,
       }]);
     }
     this.template(elements);

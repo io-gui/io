@@ -1,11 +1,11 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
 
 /**
  * Input element for `String` data type.
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoString extends IoField {
   static get Style() {
     return /* css */`

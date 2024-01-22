@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { IoElement, VDOMArray } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { IoMenuItem } from './io-menu-item.js';
@@ -12,7 +13,7 @@ const rects = new WeakMap();
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoMenuOptions extends IoElement {
   static get Style() {
     return /* css */`

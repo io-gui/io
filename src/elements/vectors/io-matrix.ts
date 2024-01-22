@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoVector } from './io-vector.js';
 /**
@@ -10,7 +10,7 @@ import { IoVector } from './io-vector.js';
  *
  * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoMatrix extends IoVector {
   static get Style() {
     return /* css */`

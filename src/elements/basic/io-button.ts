@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
 
@@ -8,7 +8,7 @@ import { IoField } from './io-field.js';
  *
  * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoButton extends IoField {
   static get Style() {
     return /* css */`

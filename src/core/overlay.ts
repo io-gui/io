@@ -1,5 +1,6 @@
 import { Property } from './internals/property.js';
-import { IoElement, RegisterIoElement } from './element.js';
+import { RegisterIoNode } from './node.js';
+import { IoElement } from './element.js';
 
 let lastFocus: Element | null = null;
 
@@ -24,7 +25,7 @@ export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'righ
  * When clicked, IoOverlay collapses all child elements by setting their `expanded` property to `false`.
  * Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoOverlay extends IoElement {
   static get Style() {
     return /* css */`

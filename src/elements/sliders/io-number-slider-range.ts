@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import '../basic/io-number.js';
 import './io-slider-range.js';
@@ -8,7 +9,7 @@ import './io-slider-range.js';
  *
  * <io-element-demo element="io-number-slider-range" properties='{"value": [0, 2], "step": 0.05, "min": -1, "max": 2}'></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoNumberSliderRange extends IoElement {
   static get Style() {
     return /* css */`

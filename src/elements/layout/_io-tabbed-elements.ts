@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement } from '../../core/element.js';
 import '../content/io-selector.js';
 
 const _dragicon = document.createElement('io-tab-dragicon') as any;
@@ -21,7 +22,7 @@ const splitDirections: any = {
 /*
 
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoSelectorTabs extends IoElement {
   static get Style() {
     return /* css */`
@@ -220,7 +221,7 @@ export class IoSelectorTabs extends IoElement {
   }
 }
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoTabs extends IoElement {
   static get Style() {
     return /* css */`
@@ -476,7 +477,7 @@ export class IoTabs extends IoElement {
   }
 }
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoTabDragicon extends IoElement {
   static get Style() {
     return /* css */`
@@ -505,7 +506,7 @@ export class IoTabDragicon extends IoElement {
   }
 }
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoTabDropzone extends IoElement {
   static get Style() {
     return /* css */`

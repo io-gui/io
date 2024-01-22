@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement } from './element.js';
+import { RegisterIoNode } from './node.js';
+import { IoElement } from './element.js';
 import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
 
@@ -32,7 +33,7 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoGl extends IoElement {
   static get Style() {
     return /* css */`

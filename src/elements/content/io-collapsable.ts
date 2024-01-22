@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { IoElement, VDOMArray } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 
 /**
@@ -6,7 +7,7 @@ import { Property } from '../../core/internals/property.js';
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
  **/
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoCollapsable extends IoElement {
   static get Style() {
     return /* css */`

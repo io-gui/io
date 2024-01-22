@@ -1,4 +1,4 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
 
@@ -8,7 +8,7 @@ import { IoField } from './io-field.js';
  *
  * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoBoolean extends IoField {
   static get Style() {
     return /* css */`

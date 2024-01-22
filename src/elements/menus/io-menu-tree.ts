@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
+import { IoElement, VDOMArray } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
@@ -50,7 +51,7 @@ export function filterOptions(options: MenuOptions, search: string, depth = 5, e
   }
 }
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoMenuTree extends IoElement {
   static get Style() {
     return /* css */`

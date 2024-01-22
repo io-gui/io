@@ -1,7 +1,7 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { IoMenuItem } from './io-menu-item.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoMenuHamburger extends IoMenuItem {
   static get Style() {
     return /* css */`

@@ -1,8 +1,9 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoScroller extends IoElement {
   static get Style() {
     return /* css */`

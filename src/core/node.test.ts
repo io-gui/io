@@ -1,4 +1,4 @@
-import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement, RegisterIoElement } from '../iogui.js';
+import { Change, Binding, ProtoChain, IoNode, RegisterIoNode, PropertyDeclarations, IoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
 
 // TODO: test lazy reactivity!
@@ -275,7 +275,7 @@ export default class {
           chai.expect((binding2 as any).targets[0]).to.be.equal(node);
         });
         it('Should execute attribute reflection on IoElement', () => {
-          @RegisterIoElement
+          @RegisterIoNode
           class TestElementReflection extends IoElement {
             static get Properties(): PropertyDeclarations {
               return {

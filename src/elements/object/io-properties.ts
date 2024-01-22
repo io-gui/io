@@ -1,17 +1,108 @@
-import { IoElement, RegisterIoElement, VDOMArray } from '../../core/element.js';
-import { ObjectConfig } from './models/object-config.js';
+import { Constructor, IoNode, IoNodeConstructor, RegisterIoNode } from '../../core/node.js';
+import { IoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
+import { Binding } from '../../core/internals/binding.js';
 
+export interface IoPropertiesConstructor<T> extends IoNodeConstructor<T> {
+  Config?: ObjectConfig[];
+}
 
-const RegisterIoProperties = function (element: typeof IoProperties) {
-  RegisterIoElement(element);
-  Object.defineProperty(element.prototype, '_config', {writable: true, value: new ObjectConfig(element.prototype._protochain.constructors)});
-};
+type PropertyTypeKey = Constructor | string | null | undefined;
+type PropertyConfig = [PropertyTypeKey, VDOMArray];
+type ObjectConfig = [Constructor, PropertyConfig[]];
+
+// const configCache = new WeakMap<object, Record<string, VDOMArray>>();
+
+export class ProtoObjectConfig extends Map<Constructor, Map<PropertyTypeKey, VDOMArray>> {
+  constructor(constructors: IoPropertiesConstructor<any>[]) {
+    super();
+    for (let i = 0; i < constructors.length; i++) {
+      const configs = constructors[i].Config;
+      if (!configs) continue;
+      for (let i = 0; i < configs.length; i++) {
+        const config = configs[i] as ObjectConfig;
+        const object = config[0];
+        const properties = config[1];
+
+        let objectMap: Map<PropertyTypeKey, VDOMArray>;
+        if (this.has(object)) {
+          objectMap = this.get(object)!;
+        } else {
+          objectMap = new Map();
+          this.set(object, objectMap);
+        }
+
+        for (let j = 0; j < properties.length; j++) {
+          const propConstructor = properties[j][0];
+          const config = [...properties[j][1]] as VDOMArray;
+          objectMap.set(propConstructor, config);
+        }
+      }
+    }
+  }
+  getObjectConfig(object: object) {
+
+    if (!(object instanceof Object)) {
+      debug: {
+        console.warn('`getObjectConfig` should be used on Object instance');
+      }
+      return;
+    }
+
+    // if (configCache.has(object)) return configCache.get(object)!;
+
+    const flatMap = new Map<PropertyTypeKey, VDOMArray>();
+
+    for (const [constructorKey, propertyTypes] of this) {
+      if (object instanceof constructorKey) {
+        for (const [propertyTypeKey, config] of propertyTypes) {
+          flatMap.set(propertyTypeKey, config);
+        }
+      }
+    }
+
+    const finalConfigs: Record<string, VDOMArray> = {};
+
+    for (const [key, value] of Object.entries(object)) {
+      const realValue = value instanceof Binding ? value.value : value;
+      for (const [propertyTypeKey, configCandidate] of flatMap) {
+        let config: VDOMArray | undefined;
+        if (typeof propertyTypeKey === 'function' && realValue instanceof propertyTypeKey) {
+          config = configCandidate;
+        } else if (typeof propertyTypeKey === 'function' && realValue.constructor === propertyTypeKey) {
+          config = configCandidate;
+        } else if (typeof propertyTypeKey === 'string' && key === propertyTypeKey) {
+          config = configCandidate;
+        } else if (propertyTypeKey === null && realValue === null) {
+          config = configCandidate;
+        } else if (propertyTypeKey === undefined && realValue === undefined) {
+          config = configCandidate;
+        }
+        if (config) {
+          finalConfigs[key] = config;
+        }
+      }
+    }
+
+    debug: {
+      for (const [key, value] of Object.entries(object)) {
+        if (!finalConfigs[key]) {
+          console.warn('No config found for', key, value);
+          console.log(finalConfigs, object);
+        }
+      }
+    }
+
+    // configCache.set(object, finalConfigs);
+
+    return finalConfigs;
+  }
+}
 
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
-@RegisterIoProperties
+@RegisterIoNode
 export class IoProperties extends IoElement {
   static get Style() {
     return /* css */`
@@ -48,22 +139,28 @@ export class IoProperties extends IoElement {
   declare config: Record<string, any>;
 
   @Property({type: Array})
-  declare slotted: VDOMArray;
+  declare widget: VDOMArray;
 
   @Property(true)
   declare labeled: boolean;
 
-  static get ObjectConfig() {
-    return {
-      'type:string': ['io-string', {appearance: 'neutral'}],
-      'type:number': ['io-number', {appearance: 'neutral', step: 0.0001}],
-      'type:null': ['io-string', {appearance: 'neutral'}],
-      'type:undefined': ['io-string', {appearance: 'neutral'}],
-      'type:boolean': ['io-boolean'],
-      'type:object': ['io-object'],
-    };
+  static get Config(): ObjectConfig[] {
+    return [
+      [Object, [
+        [null, ['io-string', {appearance: 'neutral'}]],
+        [undefined, ['io-string', {appearance: 'neutral'}]],
+        [String, ['io-string', {appearance: 'neutral'}]],
+        [Number, ['io-number', {appearance: 'neutral', step: 0.0001}]],
+        [Boolean, ['io-boolean']],
+        [Object, ['io-object']],
+      ]],
+      [Array, [
+        [Number, ['io-number', {appearance: 'neutral', step: 0.0001}]],
+      ]]
+    ];
   }
-  _onValueSet(event: CustomEvent) {
+
+  _onValueInput(event: CustomEvent) {
     if (event.detail.object) return; // TODO: unhack/remove?
     const item: any = event.composedPath()[0];
     if (item === this as any) return;
@@ -78,17 +175,6 @@ export class IoProperties extends IoElement {
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
     }
   }
-  _getObjectConfig() {
-    const propLength = Object.getOwnPropertyNames(this.value).length;
-    if (!this._config || this.config !== this._currentObjectConfig || this.value !== this._currentValue || propLength !== this._currentLength) {
-      this._currentObjectConfig = this.config;
-      this._currentValue = this.value;
-      this._currentLength = propLength;
-      this._config = this.__proto__._config.getObjectConfig(this.value, this.config);
-      return this._config;
-    }
-    return this._config;
-  }
   valueMutated() {
     this._changedThrottled();
   }
@@ -99,44 +185,40 @@ export class IoProperties extends IoElement {
     this.throttle(this._onChange, undefined, 0); // TODO: consider async
   }
   _onChange() {
-    this._config = this._getObjectConfig();
+    const config = this.__proto__._protoConfig.getObjectConfig(this.value);
+    Object.assign(config, this.config);
 
-    const config = this._config;
     const elements = [];
-    const properties = this.properties.length ? this.properties : Object.keys(config);
+    const properties = this.properties.length ? this.properties : Object.keys(this.value);
 
-    if (this.slotted.length) {
-      elements.push(this.slotted);
+    if (this.widget.length) {
+      elements.push(this.widget);
     } else {
-      elements.push(['slotted-dummy']);
+      elements.push(['widget-dummy']);
     }
 
     for (let i = 0; i < properties.length; i++) {
       const c = properties[i] as keyof typeof this.value;
-      if (!this.properties.length || this.properties.indexOf(c) !== -1) {
-        const tag = config[c][0];
-        const protoConfig = config[c][1];
-        const label = config[c].label || c;
-        const itemConfig: any = {title: label, id: c, value: this.value[c], '@value-input': this._onValueSet};
-        itemConfig.config = this.config;
-        if (tag === 'io-object') {
-          itemConfig.label = label + ': ' + this.value[c].constructor.name;
-          elements.push([tag, Object.assign(itemConfig, protoConfig)]);
-        } else {
-          elements.push(['div', {class: 'io-row'}, [
-            this.labeled ? ['io-label', {label: label}] : null,
-            [tag, Object.assign(itemConfig, protoConfig)],
-          ]]);
-        }
+      const value = this.value[c];
+      const tag = config[c][0];
+      const props = config[c][1] || {};
+      const label = props.label || c;
+      const finalProps: any = {title: label, id: c, config: config, value: value, '@value-input': this._onValueInput};
+      Object.assign(finalProps, props);
+      if (tag === 'io-object') {
+        finalProps.label = label + ': ' + value.constructor.name;
+        elements.push([tag, finalProps]);
+      } else {
+        elements.push(['div', {class: 'io-row'}, [
+          this.labeled ? ['io-label', {label: label}] : null,
+          [tag, finalProps],
+        ]]);
       }
     }
     this.template(elements);
   }
-  // TODO: unhack
-  static RegisterObjectConfig: (config: any) => void;
+  Register(ioNodeConstructor: typeof IoNode) {
+    super.Register(ioNodeConstructor);
+    Object.defineProperty(ioNodeConstructor.prototype, '_protoConfig', {writable: true, value: new ProtoObjectConfig(ioNodeConstructor.prototype._protochain.constructors)});
+  }
 }
-
-IoProperties.RegisterObjectConfig = function(config) {
-  this.prototype._config.registerObjectConfig(config);
-};
-

@@ -1,7 +1,7 @@
-import { RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
 import { IoBoolean } from './io-boolean.js';
 
-@RegisterIoElement
+@RegisterIoNode
 export class IoBoolicon extends IoBoolean {
   changed() {
     this.setAttribute('value', Boolean(this.value));

@@ -1,4 +1,5 @@
-import { IoElement, RegisterIoElement } from '../../core/element.js';
+import { RegisterIoNode } from '../../core/node.js';
+import { IoElement } from '../../core/element.js';
 import { Change } from '../../core/internals/changeQueue.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
@@ -29,7 +30,7 @@ import './io-menu-item.js';
  *
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
-@RegisterIoElement
+@RegisterIoNode
 export class IoOptionMenu extends IoElement {
   static get Style() {
     return /* css */`
