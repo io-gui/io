@@ -1,0 +1,1 @@
+{"version":3,"file":"io-matrix.d.ts","sourceRoot":"","sources":["../../../src/elements/vectors/io-matrix.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAC;AAC1C;;;;;;;;IAQI;AACJ,qBACa,QAAS,SAAQ,QAAQ;IACpC,MAAM,KAAK,KAAK,WAqBf;IAGO,KAAK,EAAE,MAAM,EAAE,CAAC;IAGhB,OAAO,EAAE,MAAM,CAAC;IAExB,mBAAmB,CAAC,KAAK,EAAE,WAAW;IAUtC,YAAY;CA+Bb"}
