@@ -4,7 +4,7 @@ import {ListenerDeclaration, hardenListenerDeclaration, assignListenerDeclaratio
 
 /**
  * Internal utility class that contains usefull information about class inheritance.
- * Inherited information is aggregated during prototype chain traversal in `RegisterIoNode()`.
+ * Inherited information is aggregated during prototype chain traversal in `Register()`.
  */
 export class ProtoChain {
   /**

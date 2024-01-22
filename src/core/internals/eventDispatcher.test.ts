@@ -1,8 +1,8 @@
-import {IoNode, RegisterIoNode, ListenersDeclaration, EventDispatcher} from '../../iogui.js';
+import {IoNode, Register, ListenersDeclaration, EventDispatcher} from '../../iogui.js';
 
 const handlerFunction = () => {};
 
-@RegisterIoNode
+@Register
 class IoNode1 extends IoNode {
   handler1Count = 0;
   handler1Detail?: string;
@@ -17,7 +17,7 @@ class IoNode1 extends IoNode {
   }
 }
 
-@RegisterIoNode
+@Register
 class IoNode2 extends IoNode1 {
   handler2Count = 0;
   handler3Count = 0;
@@ -38,7 +38,7 @@ class IoNode2 extends IoNode1 {
   }
 }
 
-@RegisterIoNode
+@Register
 class IoNode3 extends IoNode2 {
   static get Listeners(): ListenersDeclaration {
     return {

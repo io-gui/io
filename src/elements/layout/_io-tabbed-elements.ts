@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import '../content/io-selector.js';
 
@@ -22,7 +22,7 @@ const splitDirections: any = {
 /*
 
  **/
-@RegisterIoNode
+@Register
 export class IoSelectorTabs extends IoElement {
   static get Style() {
     return /* css */`
@@ -221,7 +221,7 @@ export class IoSelectorTabs extends IoElement {
   }
 }
 
-@RegisterIoNode
+@Register
 export class IoTabs extends IoElement {
   static get Style() {
     return /* css */`
@@ -477,7 +477,7 @@ export class IoTabs extends IoElement {
   }
 }
 
-@RegisterIoNode
+@Register
 export class IoTabDragicon extends IoElement {
   static get Style() {
     return /* css */`
@@ -506,7 +506,7 @@ export class IoTabDragicon extends IoElement {
   }
 }
 
-@RegisterIoNode
+@Register
 export class IoTabDropzone extends IoElement {
   static get Style() {
     return /* css */`

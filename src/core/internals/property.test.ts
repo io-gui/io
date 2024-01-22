@@ -1,4 +1,4 @@
-import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, RegisterIoNode, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
+import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
 
 class Object1 {
   constructor(init?: any) {
@@ -9,7 +9,7 @@ class Object1 {
   prop = true;
 }
 
-@RegisterIoNode
+@Register
 class TestIoNode extends IoNode {
   static get Properties(): PropertyDeclarations {
     return {
@@ -651,7 +651,7 @@ export default class {
           @Property({value: 'value2', type: String})
           declare prop2: string;
         }
-        RegisterIoNode(TestClass);
+        Register(TestClass);
         const propertyDefs = PropertyDecorators.get(TestClass);
         chai.expect(propertyDefs).to.be.eql({
           prop1: 'value1',

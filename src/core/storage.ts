@@ -1,6 +1,6 @@
 import { Binding } from '../iogui.js';
 import { Property } from './internals/property.js';
-import { IoNode, RegisterIoNode } from './node.js';
+import { IoNode, Register } from './node.js';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
@@ -110,7 +110,7 @@ export function genObjectStorageID(object: Record<string, any>) {
   return 'io-local-state-' + String(hash);
 }
 
-@RegisterIoNode
+@Register
 export class IoStorageNode extends IoNode {
 
   @Property({value: ''})

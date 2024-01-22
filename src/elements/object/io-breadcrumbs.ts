@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 
 /**
@@ -6,7 +6,7 @@ import { IoElement } from '../../core/element.js';
  * When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value.
  * Optionally, it can trim the `options` array to selected option index.
  **/
-@RegisterIoNode
+@Register
 export class IoBreadcrumbs extends IoElement {
   static get Style() {
     return /* css */`

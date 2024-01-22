@@ -1,4 +1,4 @@
-import { Constructor, IoNode, IoNodeConstructor, RegisterIoNode } from '../../core/node.js';
+import { Constructor, IoNode, IoNodeConstructor, Register } from '../../core/node.js';
 import { IoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { Binding } from '../../core/internals/binding.js';
@@ -102,7 +102,7 @@ export class ProtoObjectConfig extends Map<Constructor, Map<PropertyTypeKey, VDO
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
-@RegisterIoNode
+@Register
 export class IoProperties extends IoElement {
   static get Style() {
     return /* css */`

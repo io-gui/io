@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoField } from '../basic/io-field.js';
@@ -12,7 +12,7 @@ const MenuElementTagsSelector = MenuElementTags.join(', ');
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.
-@RegisterIoNode
+@Register
 export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`

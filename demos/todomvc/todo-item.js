@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../build/iogui.js';
+import { IoElement, Register } from '../../build/iogui.js';
 import {TodoModel} from './todo-model.js';
 
 const ENTER_KEY = 13;
@@ -59,4 +59,4 @@ export class TodoItem extends IoElement {
   }
 }
 
-RegisterIoElement(TodoItem);
+Register(TodoItem);

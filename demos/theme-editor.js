@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../build/iogui.js';
+import { IoElement, Register } from '../build/iogui.js';
 import { IoThemeSingleton, MenuOptions } from '../build/iogui.js';
 
 export class IoDemoThemeEditor extends IoElement {
@@ -79,4 +79,4 @@ export class IoDemoThemeEditor extends IoElement {
   }
 }
 
-RegisterIoElement(IoDemoThemeEditor);
+Register(IoDemoThemeEditor);

@@ -1,4 +1,4 @@
-import { RegisterIoNode } from './node.js';
+import { Register } from './node.js';
 import { IoElement } from './element.js';
 import { Property, PropertyDeclarations } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
@@ -202,7 +202,7 @@ const compositeVariables = /* css */`
  *
  * CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
  */
-@RegisterIoNode
+@Register
 class IoTheme extends IoElement {
   static get Properties(): PropertyDeclarations {
     const props: PropertyDeclarations = {};

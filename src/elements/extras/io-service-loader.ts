@@ -1,11 +1,11 @@
-import { IoNode, RegisterIoNode } from '../../core/node.js';
+import { IoNode, Register } from '../../core/node.js';
 
 debug: {
   if (!('serviceWorker' in navigator)) { console.warn('No Service Worker support!'); }
   if (!('PushManager' in window)) { console.warn('No Push API Support!'); }
 }
 
-@RegisterIoNode
+@Register
 export class IoServiceLoader extends IoNode {
   static get Properties(): any {
     return {

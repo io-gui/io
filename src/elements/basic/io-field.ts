@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 
@@ -11,7 +11,7 @@ import { Property } from '../../core/internals/property.js';
 //   focusBacktrack.set(element, backtrack);
 // }
 
-@RegisterIoNode
+@Register
 export class IoField extends IoElement {
   static get Style() {
     return /* css */`

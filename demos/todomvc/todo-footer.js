@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../build/iogui.js';
+import { IoElement, Register } from '../../build/iogui.js';
 import {TodoModel} from './todo-model.js';
 
 export class TodoFooter extends IoElement {
@@ -45,4 +45,4 @@ export class TodoFooter extends IoElement {
   }
 }
 
-RegisterIoElement(TodoFooter);
+Register(TodoFooter);

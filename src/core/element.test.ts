@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoNode, IoNode, Change } from '../iogui.js';
+import { IoElement, Register, IoNode, Change } from '../iogui.js';
 
 const element = new IoElement();
 element.style.display = 'none';
@@ -193,7 +193,7 @@ export default class {
               eventStack.push('TestNode: changed');
             }
           }
-          RegisterIoNode(TestNode);
+          Register(TestNode);
 
           class TestSubelement extends IoElement {
             static get Properties(): any {
@@ -203,7 +203,7 @@ export default class {
               };
             }
           }
-          RegisterIoNode(TestSubelement);
+          Register(TestSubelement);
 
           class TestElement1 extends IoElement {
             static get Properties(): any {
@@ -246,7 +246,7 @@ export default class {
               this._prop1Change = change;
             }
           }
-          RegisterIoNode(TestElement1);
+          Register(TestElement1);
 
           eventStack.length = 0;
 
@@ -334,7 +334,7 @@ export default class {
               }]]);
             }
           }
-          RegisterIoNode(TestElement2);
+          Register(TestElement2);
 
           const element2 = new TestElement2();
           element2.prop0 = 1;
@@ -430,7 +430,7 @@ export default class {
           };
         }
       }
-      RegisterIoNode(TestIoNode1);
+      Register(TestIoNode1);
 
       class TestIoElement1 extends IoElement {
         static get Properties(): any {
@@ -442,7 +442,7 @@ export default class {
           };
         }
       }
-      RegisterIoNode(TestIoElement1);
+      Register(TestIoElement1);
 
       class TestIoElement2 extends IoElement {
         static get Properties(): any {
@@ -456,7 +456,7 @@ export default class {
           };
         }
       }
-      RegisterIoNode(TestIoElement2);
+      Register(TestIoElement2);
 
       describe('Initialization', () => {
         it('Should initialize property definitions correctly', () => {
@@ -544,7 +544,7 @@ export default class {
             this._customEvent = event;
           }
         }
-        RegisterIoNode(TestIoElement3);
+        Register(TestIoElement3);
 
         let _changedCounter = 0;
 

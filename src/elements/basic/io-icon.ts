@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoIconsetSingleton } from './io-iconset.js';
@@ -7,7 +7,7 @@ import { IoIconsetSingleton } from './io-iconset.js';
  * SVG icon element.
  * It displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
  **/
-@RegisterIoNode
+@Register
 export class IoIcon extends IoElement {
   static get Style() {
     return /* css */`

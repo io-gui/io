@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement } from '../../build/iogui.js';
+import { IoElement, Register } from '../../build/iogui.js';
 
 export class TodoInfo extends IoElement {
   static get Style() {
@@ -17,4 +17,4 @@ export class TodoInfo extends IoElement {
   }
 }
 
-RegisterIoElement(TodoInfo);
+Register(TodoInfo);

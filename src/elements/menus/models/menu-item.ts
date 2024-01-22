@@ -1,4 +1,4 @@
-import { IoNode, RegisterIoNode } from '../../../core/node.js';
+import { IoNode, Register } from '../../../core/node.js';
 import { IoElementArgs } from '../../../core/element.js';
 import { Property } from '../../../core/internals/property.js';
 import { MenuOptions } from './menu-options.js';
@@ -21,7 +21,7 @@ export type MenuItemArgs = IoElementArgs & {
 
 // TODO: documentation!
 
-@RegisterIoNode
+@Register
 export class MenuItem extends IoNode {
 
   @Property(undefined)

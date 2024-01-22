@@ -1,4 +1,4 @@
-import { IoNode, RegisterIoNode } from '../../core/node.js';
+import { IoNode, Register } from '../../core/node.js';
 
 const IoIconsetDB: Record<string, Record<string, string>> = {};
 
@@ -15,7 +15,7 @@ const IoIconsetDB: Record<string, Record<string, string>> = {};
  * const icon = IoIconsetSingleton.getIcon('custom:myicon');
  * ```
  **/
-@RegisterIoNode
+@Register
 export class IoIconset extends IoNode {
   registerIcons(name: string, svg: string) {
     const stagingElement = document.createElement('div');

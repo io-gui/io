@@ -1,4 +1,4 @@
-import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDeclarations, ListenersDeclaration, IoElement, RegisterIoNode} from '../../iogui.js';
+import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDeclarations, ListenersDeclaration, IoElement, Register} from '../../iogui.js';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -12,7 +12,7 @@ class HTMLElement1 extends HTMLElement {}
 class HTMLElement2 extends HTMLElement1 {}
 class HTMLElement3 extends HTMLElement2 {}
 
-@RegisterIoNode
+@Register
 class IoNode1 extends IoNode {
   static get Properties(): PropertyDeclarations {
     return {
@@ -29,7 +29,7 @@ class IoNode1 extends IoNode {
   declare prop2: any;
 }
 
-@RegisterIoNode
+@Register
 class IoNode3 extends IoNode1 {
   static get Properties(): PropertyDeclarations {
     return {
@@ -49,7 +49,7 @@ class IoNode3 extends IoNode1 {
   declare prop3: any;
 }
 
-@RegisterIoNode
+@Register
 class IoNode4 extends IoNode1 {
   @Property({reactive: true})
   declare prop1: any;

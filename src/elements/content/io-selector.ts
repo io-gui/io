@@ -1,4 +1,4 @@
-import { RegisterIoNode} from '../../core/node.js';
+import { Register} from '../../core/node.js';
 import { IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
@@ -11,7 +11,7 @@ const dummyElement = document.createElement('div');
 
 const IMPORTED_PATHS: Record<string, any> = {};
 
-@RegisterIoNode
+@Register
 export class IoSelector extends IoElement {
   static get Style() {
     return /* css */`

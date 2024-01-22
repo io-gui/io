@@ -67,7 +67,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       debug: {
         const constructor = Object.getPrototypeOf(this).constructor;
         if (this._protochain.constructors[0] !== constructor) {
-          console.error(`${constructor.name} not registered! Call "RegisterIoNode([ClassName])" of @RegisterIoNode decorator before using ${constructor.name} class!`);
+          console.error(`${constructor.name} not registered! Call "Register([ClassName])" of @Register decorator before using ${constructor.name} class!`);
         }
       }
 
@@ -434,14 +434,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
  * Register function to be called once per class.
  * @param {IoNode} ioNodeConstructor - Node class to register.
  */
-export function RegisterIoNode(ioNodeConstructor: typeof IoNode) {
+export function Register(ioNodeConstructor: typeof IoNode) {
   ioNodeConstructor.prototype.Register(ioNodeConstructor);
 }
 
 /**
  * IoNodeMixin applied to `Object` class.
  */
-@RegisterIoNode
+@Register
 export class IoNode extends IoNodeMixin(Object) {}
 
 // TODO: Document and test. Improve argument and node disposal handling. Consider edge-cases.

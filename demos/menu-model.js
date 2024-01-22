@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement, MenuOptions, MenuItem } from '../build/iogui.js';
+import { IoElement, Register, MenuOptions, MenuItem } from '../build/iogui.js';
 
 // TODO: improve this test-demo
 
@@ -68,7 +68,7 @@ export class IoOptionsDemoView extends IoElement {
   }
 }
 
-RegisterIoElement(IoOptionsDemoView);
+Register(IoOptionsDemoView);
 
 export class IoItemDemoView extends IoElement {
   static get Style() {
@@ -108,7 +108,7 @@ export class IoItemDemoView extends IoElement {
   }
 }
 
-RegisterIoElement(IoItemDemoView);
+Register(IoItemDemoView);
 
 export class IoDemoMenuModel extends IoOptionsDemoView {
   static get Properties() {
@@ -146,4 +146,4 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
   }
 }
 
-RegisterIoElement(IoDemoMenuModel);
+Register(IoDemoMenuModel);

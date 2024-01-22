@@ -1,5 +1,5 @@
 import { EventDispatcher } from './internals/eventDispatcher.js';
-import { IoNode, IoNodeMixin, RegisterIoNode, IoNodeArgs } from './node.js';
+import { IoNode, IoNodeMixin, Register, IoNodeArgs } from './node.js';
 import { Property } from './internals/property.js';
 
 // Global mixin record
@@ -152,7 +152,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: any
 /**
  * Core `IoElement` class.
  */
-@RegisterIoNode
+@Register
 export class IoElement extends IoNodeMixin(HTMLElement) {
   static get Style(): string {
     return /* css */`

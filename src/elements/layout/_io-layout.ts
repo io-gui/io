@@ -1,10 +1,10 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 
 /*
 
  **/
-@RegisterIoNode
+@Register
 export class IoLayout extends IoElement {
   static get Style() {
     return /* css */`
@@ -206,7 +206,7 @@ export class IoLayout extends IoElement {
   }
 }
 
-@RegisterIoNode
+@Register
 export class IoLayoutDivider extends IoElement {
   static get Style() {
     return /* css */`

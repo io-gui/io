@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoField } from './io-field.js';
@@ -11,7 +11,7 @@ import { IoThemeSingleton } from '../../core/theme.js';
  * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
-@RegisterIoNode
+@Register
 export class IoNumber extends IoField {
   static get Style() {
     return /* css */`
@@ -237,7 +237,7 @@ let lastFocus: Element | null = null;
   }, {capture: true});
 }
 
-@RegisterIoNode
+@Register
 export class IoNumberLadderStep extends IoField {
   static get Style() {
     return /* css */`
@@ -336,7 +336,7 @@ export class IoNumberLadderStep extends IoField {
  *
  * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
  **/
-@RegisterIoNode
+@Register
 export class IoNumberLadder extends IoElement {
   static get Style() {
     return /* css */`

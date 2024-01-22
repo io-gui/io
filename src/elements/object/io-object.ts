@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import './io-properties.js';
@@ -6,7 +6,7 @@ import './io-properties.js';
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
  **/
-@RegisterIoNode
+@Register
 export class IoObject extends IoElement {
   static get Style() {
     return /* css */`

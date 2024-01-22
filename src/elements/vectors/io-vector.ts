@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import '../basic/io-boolicon.js';
@@ -10,7 +10,7 @@ import '../basic/io-boolicon.js';
  *
  * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
  **/
-@RegisterIoNode
+@Register
 export class IoVector extends IoElement {
   static get Style() {
     return /* css */`

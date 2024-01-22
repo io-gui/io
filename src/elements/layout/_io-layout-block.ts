@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";
@@ -6,7 +6,7 @@ import { IoElement } from '../../core/element.js';
 /*
 
  **/
-@RegisterIoNode
+@Register
 export class IoLayoutBlock extends IoElement {
   static get Style() {
     return /* css */`

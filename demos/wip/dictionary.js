@@ -1,4 +1,4 @@
-import {RegisterIoNode} from '../../build/iogui.js';
+import {Register} from '../../build/iogui.js';
 
 class DictionaryItem extends IoNode {
   static get Properties() {
@@ -17,7 +17,7 @@ class DictionaryItem extends IoNode {
   }
 }
 
-RegisterIoNode(DictionaryItem);
+Register(DictionaryItem);
 
 class Dictionary extends IoNode {
   static get Properties() {
@@ -38,4 +38,4 @@ class Dictionary extends IoNode {
   }
 }
 
-RegisterIoNode(Dictionary);
+Register(Dictionary);

@@ -1,4 +1,4 @@
-import { IoNode, RegisterIoNode } from '../../core/node.js';
+import { IoNode, Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import {IoStorage as $} from '../../core/storage.js';
@@ -12,7 +12,7 @@ import { ProtoObjectConfig } from './io-properties.js';
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 
-@RegisterIoNode
+@Register
 export class IoInspector extends IoElement {
   static get Style() {
     return /* css */`

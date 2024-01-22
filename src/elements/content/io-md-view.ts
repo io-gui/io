@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { marked } from 'marked';
@@ -7,7 +7,7 @@ import purify from 'dompurify';
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-@RegisterIoNode
+@Register
 export class IoMdView extends IoElement {
   static get Style() {
     return /* css */`

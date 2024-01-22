@@ -1,9 +1,9 @@
 import { VDOMArray } from '../../core/element.js';
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoNavigatorSelector } from './io-navigator-selector.js';
 import './io-scroller.js';
 
-@RegisterIoNode
+@Register
 export class IoNavigatorCombined extends IoNavigatorSelector {
   static get Style() {
     return /* css */`

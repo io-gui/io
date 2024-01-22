@@ -1,10 +1,10 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { IoColorBase } from './io-color-base.js';
 
 /**
  * Input element for color displayed as vector and an interactive picker.
  **/
-@RegisterIoNode
+@Register
 export class IoColorRgba extends IoColorBase {
   static get Style() {
     return /* css */`

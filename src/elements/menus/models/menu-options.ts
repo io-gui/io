@@ -1,4 +1,4 @@
-import { IoNodeMixin, RegisterIoNode, IoNodeArgs } from '../../../core/node.js';
+import { IoNodeMixin, Register, IoNodeArgs } from '../../../core/node.js';
 import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
 import { Property } from '../../../core/internals/property.js';
 
@@ -12,7 +12,7 @@ function _isSelectable(value: string) {
   return value === 'select' || value === 'scroll';
 }
 
-@RegisterIoNode
+@Register
 export class MenuOptions extends IoNodeMixin(Array) {
 
   @Property(undefined)

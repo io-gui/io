@@ -1,4 +1,4 @@
-import { RegisterIoNode } from '../../core/node.js';
+import { Register } from '../../core/node.js';
 import { Property } from '../../core/internals/property.js';
 import { IoOverlaySingleton } from '../../core/overlay.js';
 import { IoColorBase } from './io-color-base.js';
@@ -16,7 +16,7 @@ import './io-color-sliders.js';
  *
  * This element has a singleton instance `IoColorPanelSingleton` used by `IoColorPicker` and other elements.
  **/
-@RegisterIoNode
+@Register
 export class IoColorPanel extends IoColorBase {
   static get Style() {
     return /* css */`

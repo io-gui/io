@@ -1,4 +1,4 @@
-import { IoElement, RegisterIoElement, IoStorage as $ } from '../../build/iogui.js';
+import { IoElement, Register, IoStorage as $ } from '../../build/iogui.js';
 
 import { TodoModel } from './todo-model.js';
 import './todo-new-item.js';
@@ -43,4 +43,4 @@ export class TodoApp extends IoElement {
   }
 }
 
-RegisterIoElement(TodoApp);
+Register(TodoApp);
