@@ -71,7 +71,7 @@ let IoLayout = class IoLayout extends IoElement {
             if (split.tabs) {
                 children.push(['io-selector-tabs', {
                         elements: this.elements,
-                        filter: split.tabs,
+                        filter: split.tabs, // TODO: reimplement
                         selected: split.selected,
                         editable: this.editable,
                         style: style,

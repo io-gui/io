@@ -4,7 +4,6 @@ import '../basic/io-boolicon.js';
 export declare class IoElementDemo extends IoElement {
     static get Style(): string;
     static get Properties(): any;
-    objectMutated: (prop: string) => void;
     changed(): void;
 }
 //# sourceMappingURL=io-element-demo.d.ts.map

@@ -94,20 +94,20 @@ export class IoElementDemo extends IoElement {
       }
     };
   }
-  objectMutated = (prop: string) => {
-    super.objectMutated(prop);
-    // for (let i = this._protochain.observedObjectProperties.length; i--;) {
-    //   const prop = this._protochain.observedObjectProperties[i];
-    //   const value = this._properties.get(prop)!.value;
-    //   const hasObject = !!this._filterObject(value, o => { return o === event.detail.object; });
-    //   if (hasObject) {
-    //     const children = this.querySelectorAll('*');
-    //     for (let i = 0; i < children.length; i++) {
-    //       if (children[i].changed) children[i].changed();
-    //     }
-    //   }
-    // }
-  };
+  // objectMutated = (prop: string) => {
+  //   super.objectMutated(prop);
+  //   // for (let i = this._protochain.observedObjectProperties.length; i--;) {
+  //   //   const prop = this._protochain.observedObjectProperties[i];
+  //   //   const value = this._properties.get(prop)!.value;
+  //   //   const hasObject = !!this._filterObject(value, o => { return o === event.detail.object; });
+  //   //   if (hasObject) {
+  //   //     const children = this.querySelectorAll('*');
+  //   //     for (let i = 0; i < children.length; i++) {
+  //   //       if (children[i].changed) children[i].changed();
+  //   //     }
+  //   //   }
+  //   // }
+  // };
   changed() {
     const properties = this.properties;
     const elements: any = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
