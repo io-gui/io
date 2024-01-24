@@ -177,14 +177,12 @@ export class IoMdView extends IoElement {
 
   protected _parseMarkdown(markdown: string) {
     // if (this._disposed) return;
-    if (marked) {
-      const md = marked.parse(markdown) as string;
-      this.loading = false;
-      if (this.sanitize) {
-        this.innerHTML = this._strip(purify.sanitize(md));
-      } else {
-        this.innerHTML = this._strip(md);
-      }
+    const md = marked.parse(markdown) as string;
+    this.loading = false;
+    if (this.sanitize) {
+      this.innerHTML = this._strip(purify.sanitize(md));
+    } else {
+      this.innerHTML = this._strip(md);
     }
   }
 

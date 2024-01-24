@@ -20,7 +20,7 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v1
         with:
-          node-version: '17.x'
+          node-version: '18.x'
       - name: Install Yarn
         run: npm install -g yarn
       - name: Restore cache

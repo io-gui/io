@@ -58,7 +58,7 @@ export class IoVector extends IoElement {
   declare ladder: boolean;
 
   @Property({reactive: false})
-  declare keys: Array<keyof typeof this.value>;
+  declare keys: string[];
 
   private _ratios: Record<string, number> = {};
 
@@ -67,7 +67,7 @@ export class IoVector extends IoElement {
     const id = item.id as keyof typeof this.value;
     this._ratios = {};
     if (this.linked && this.value[id] !== 0) {
-      for (const k of this.keys) this._ratios[k] = this.value[k] / this.value[id];
+      for (const k of this.keys as [keyof typeof this.value]) this._ratios[k] = this.value[k] / this.value[id];
     }
   }
 
@@ -98,7 +98,7 @@ export class IoVector extends IoElement {
   }
   changed() {
     const elements = [];
-    for (const k of this.keys) {
+    for (const k of this.keys as [keyof typeof this.value]) {
       if (this.value[k] !== undefined) {
         elements.push(['io-number', {
           id: k, // Consider removing global id collisions
