@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rm -rf build && rm -rf bundle",
     "lint": "eslint src --fix",
-    "docs": "typedoc",
+    "docs": "typedoc  --plugin typedoc-plugin-markdown",
     "build": "yarn clean && yarn lint && tsc && rollup -c && dts-bundle-generator -o bundle/iogui.d.ts build/iogui.d.ts && rm -rf build && mv bundle build",
     "dev": "yarn clean && yarn lint && tsc -w"
   },
@@ -58,7 +58,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "tslib": "^2.4.1",
     "typedoc": "^0.25.7",
-    "typedoc-plugin-markdown": "^3.13.6",
+    "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "^5.3.3"
   }
 }

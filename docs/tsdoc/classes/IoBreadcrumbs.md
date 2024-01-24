@@ -1,3 +1,5 @@
+[io-gui](../README.md) / IoBreadcrumbs
+
 # Class: IoBreadcrumbs
 
 Breadcrumbs select element.
@@ -10,11 +12,76 @@ Optionally, it can trim the `options` array to selected option index.
 
   ↳ **`IoBreadcrumbs`**
 
+## Table of contents
+
+### Constructors
+
+- [constructor](IoBreadcrumbs.md#constructor)
+
+### Properties
+
+- [$](IoBreadcrumbs.md#$)
+- [\_bindings](IoBreadcrumbs.md#_bindings)
+- [\_changeQueue](IoBreadcrumbs.md#_changequeue)
+- [\_eventDispatcher](IoBreadcrumbs.md#_eventdispatcher)
+- [\_properties](IoBreadcrumbs.md#_properties)
+- [\_protochain](IoBreadcrumbs.md#_protochain)
+- [class](IoBreadcrumbs.md#class)
+- [contenteditable](IoBreadcrumbs.md#contenteditable)
+- [disabled](IoBreadcrumbs.md#disabled)
+- [hidden](IoBreadcrumbs.md#hidden)
+- [id](IoBreadcrumbs.md#id)
+- [label](IoBreadcrumbs.md#label)
+- [name](IoBreadcrumbs.md#name)
+- [role](IoBreadcrumbs.md#role)
+- [tabindex](IoBreadcrumbs.md#tabindex)
+- [title](IoBreadcrumbs.md#title)
+
+### Accessors
+
+- [textNode](IoBreadcrumbs.md#textnode)
+- [Properties](IoBreadcrumbs.md#properties)
+- [Style](IoBreadcrumbs.md#style)
+
+### Methods
+
+- [Register](IoBreadcrumbs.md#register)
+- [\_flattenTextNode](IoBreadcrumbs.md#_flattentextnode)
+- [\_onClick](IoBreadcrumbs.md#_onclick)
+- [addEventListener](IoBreadcrumbs.md#addeventlistener)
+- [applyProperties](IoBreadcrumbs.md#applyproperties)
+- [bind](IoBreadcrumbs.md#bind)
+- [changed](IoBreadcrumbs.md#changed)
+- [connectedCallback](IoBreadcrumbs.md#connectedcallback)
+- [disabledChanged](IoBreadcrumbs.md#disabledchanged)
+- [disconnectedCallback](IoBreadcrumbs.md#disconnectedcallback)
+- [dispatchEvent](IoBreadcrumbs.md#dispatchevent)
+- [dispatchMutationEvent](IoBreadcrumbs.md#dispatchmutationevent)
+- [dispatchQueue](IoBreadcrumbs.md#dispatchqueue)
+- [dispatchQueueSync](IoBreadcrumbs.md#dispatchqueuesync)
+- [dispose](IoBreadcrumbs.md#dispose)
+- [init](IoBreadcrumbs.md#init)
+- [inputValue](IoBreadcrumbs.md#inputvalue)
+- [labelChanged](IoBreadcrumbs.md#labelchanged)
+- [objectMutated](IoBreadcrumbs.md#objectmutated)
+- [onObjectMutated](IoBreadcrumbs.md#onobjectmutated)
+- [queue](IoBreadcrumbs.md#queue)
+- [removeEventListener](IoBreadcrumbs.md#removeeventlistener)
+- [selectedChanged](IoBreadcrumbs.md#selectedchanged)
+- [setAttribute](IoBreadcrumbs.md#setattribute)
+- [setProperties](IoBreadcrumbs.md#setproperties)
+- [setProperty](IoBreadcrumbs.md#setproperty)
+- [template](IoBreadcrumbs.md#template)
+- [throttle](IoBreadcrumbs.md#throttle)
+- [traverse](IoBreadcrumbs.md#traverse)
+- [unbind](IoBreadcrumbs.md#unbind)
+- [valueChanged](IoBreadcrumbs.md#valuechanged)
+
 ## Constructors
 
 ### constructor
 
-**new IoBreadcrumbs**(...`args`)
+• **new IoBreadcrumbs**(`...args`): [`IoBreadcrumbs`](IoBreadcrumbs.md)
 
 Creates a class instance and initializes the internals.
 
@@ -24,19 +91,23 @@ Creates a class instance and initializes the internals.
 | :------ | :------ |
 | `...args` | `any`[] |
 
+#### Returns
+
+[`IoBreadcrumbs`](IoBreadcrumbs.md)
+
 #### Inherited from
 
 [IoElement](IoElement.md).[constructor](IoElement.md#constructor)
 
 #### Defined in
 
-[src/core/node.ts:63](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L63)
+[src/core/node.ts:63](https://github.com/io-gui/io/blob/main/src/core/node.ts#L63)
 
 ## Properties
 
 ### $
 
- **$**: `Record`<`string`, `any`\>
+• **$**: `Record`\<`string`, `any`\>
 
 #### Inherited from
 
@@ -44,13 +115,13 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/core/element.ts:243](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L243)
+[src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
 
 ___
 
 ### \_bindings
 
- `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
+• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -58,13 +129,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ___
 
 ### \_changeQueue
 
- `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
@@ -72,13 +143,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ___
 
 ### \_eventDispatcher
 
- `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
@@ -86,13 +157,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ___
 
 ### \_properties
 
- `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -100,13 +171,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ___
 
 ### \_protochain
 
- `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
@@ -114,13 +185,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
+[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
 ___
 
 ### class
 
- **class**: `string`
+• **class**: `string`
 
 #### Inherited from
 
@@ -128,13 +199,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L252)
+[src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
 ___
 
 ### contenteditable
 
- **contenteditable**: `boolean`
+• **contenteditable**: `boolean`
 
 #### Inherited from
 
@@ -142,13 +213,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:249](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L249)
+[src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
 ___
 
 ### disabled
 
- **disabled**: `boolean`
+• **disabled**: `boolean`
 
 #### Inherited from
 
@@ -156,13 +227,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:273](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L273)
+[src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
 ___
 
 ### hidden
 
- **hidden**: `boolean`
+• **hidden**: `boolean`
 
 #### Inherited from
 
@@ -170,13 +241,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:270](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L270)
+[src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
 ___
 
 ### id
 
- **id**: `string`
+• **id**: `string`
 
 #### Inherited from
 
@@ -184,13 +255,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:267](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L267)
+[src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
 ___
 
 ### label
 
- **label**: `string`
+• **label**: `string`
 
 #### Inherited from
 
@@ -198,13 +269,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:258](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L258)
+[src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
 ___
 
 ### name
 
- **name**: `string`
+• **name**: `string`
 
 #### Inherited from
 
@@ -212,13 +283,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:261](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L261)
+[src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
 ___
 
 ### role
 
- **role**: `string`
+• **role**: `string`
 
 #### Inherited from
 
@@ -226,13 +297,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:255](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L255)
+[src/core/element.ts:190](https://github.com/io-gui/io/blob/main/src/core/element.ts#L190)
 
 ___
 
 ### tabindex
 
- **tabindex**: `string`
+• **tabindex**: `string`
 
 #### Inherited from
 
@@ -240,13 +311,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:246](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L246)
+[src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
 ___
 
 ### title
 
- **title**: `string`
+• **title**: `string`
 
 #### Inherited from
 
@@ -254,13 +325,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L264)
+[src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
 ## Accessors
 
 ### textNode
 
-`get` **textNode**(): `any`
+• `get` **textNode**(): `any`
 
 #### Returns
 
@@ -272,9 +343,9 @@ IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:391](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L391)
+[src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
 
-`set` **textNode**(`value`): `void`
+• `set` **textNode**(`value`): `void`
 
 #### Parameters
 
@@ -292,13 +363,13 @@ IoElement.textNode
 
 #### Defined in
 
-[src/core/element.ts:395](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L395)
+[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
 
 ___
 
 ### Properties
 
-`Static` `get` **Properties**(): `any`
+• `get` **Properties**(): `any`
 
 #### Returns
 
@@ -310,13 +381,13 @@ IoElement.Properties
 
 #### Defined in
 
-[src/elements/object/io-breadcrumbs.ts:51](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-breadcrumbs.ts#L51)
+[src/elements/object/io-breadcrumbs.ts:52](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L52)
 
 ___
 
 ### Style
 
-`Static` `get` **Style**(): `string`
+• `get` **Style**(): `string`
 
 #### Returns
 
@@ -328,13 +399,37 @@ IoElement.Style
 
 #### Defined in
 
-[src/elements/object/io-breadcrumbs.ts:10](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-breadcrumbs.ts#L10)
+[src/elements/object/io-breadcrumbs.ts:11](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L11)
 
 ## Methods
 
+### Register
+
+▸ **Register**(`ioNodeConstructor`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[Register](IoElement.md#register)
+
+#### Defined in
+
+[src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
+
+___
+
 ### \_flattenTextNode
 
-**_flattenTextNode**(`element`): `void`
+▸ **_flattenTextNode**(`element`): `void`
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
@@ -355,19 +450,19 @@ Update textContent via TextNode is better for layout performance.
 
 #### Defined in
 
-[src/core/element.ts:374](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L374)
+[src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
 
 ___
 
 ### \_onClick
 
-**_onClick**(`event`): `void`
+▸ **_onClick**(`event`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
+| `event` | `CustomEvent`\<`any`\> |
 
 #### Returns
 
@@ -375,13 +470,13 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-breadcrumbs.ts:61](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-breadcrumbs.ts#L61)
+[src/elements/object/io-breadcrumbs.ts:62](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L62)
 
 ___
 
 ### addEventListener
 
-**addEventListener**(`type`, `listener`, `options?`): `void`
+▸ **addEventListener**(`type`, `listener`, `options?`): `void`
 
 Wrapper for addEventListener.
 
@@ -403,13 +498,13 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:368](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L368)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
 ### applyProperties
 
-**applyProperties**(`props`): `void`
+▸ **applyProperties**(`props`): `void`
 
 #### Parameters
 
@@ -427,13 +522,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:399](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L399)
+[src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
 
 ___
 
 ### bind
 
-**bind**(`prop`): [`Binding`](Binding.md)
+▸ **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
@@ -455,13 +550,13 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:335](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L335)
+[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
 
 ___
 
 ### changed
 
-**changed**(): `void`
+▸ **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -476,13 +571,13 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/object/io-breadcrumbs.ts:79](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-breadcrumbs.ts#L79)
+[src/elements/object/io-breadcrumbs.ts:80](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L80)
 
 ___
 
 ### connectedCallback
 
-**connectedCallback**(): `void`
+▸ **connectedCallback**(): `void`
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -496,13 +591,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:278](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L278)
+[src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
 
 ___
 
 ### disabledChanged
 
-**disabledChanged**(): `void`
+▸ **disabledChanged**(): `void`
 
 #### Returns
 
@@ -514,13 +609,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:428](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L428)
+[src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
 
 ___
 
 ### disconnectedCallback
 
-**disconnectedCallback**(): `void`
+▸ **disconnectedCallback**(): `void`
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -534,13 +629,13 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Defined in
 
-[src/core/element.ts:286](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L286)
+[src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
 
 ___
 
 ### dispatchEvent
 
-**dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
 
 Wrapper for dispatchEvent.
 
@@ -563,13 +658,39 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:393](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L393)
+[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+
+___
+
+### dispatchMutationEvent
+
+▸ **dispatchMutationEvent**(`object`): `void`
+
+Shorthand for dispatching `'object-mutated'` event on window.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `object` | `any` | object which mutated. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoElement](IoElement.md).[dispatchMutationEvent](IoElement.md#dispatchmutationevent)
+
+#### Defined in
+
+[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
 
 ___
 
 ### dispatchQueue
 
-**dispatchQueue**(): `void`
+▸ **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -583,13 +704,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:277](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L277)
+[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 ___
 
 ### dispatchQueueSync
 
-**dispatchQueueSync**(): `void`
+▸ **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -603,13 +724,13 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
 
 ___
 
 ### dispose
 
-**dispose**(): `void`
+▸ **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -624,13 +745,13 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/node.ts:400](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L400)
+[src/core/node.ts:391](https://github.com/io-gui/io/blob/main/src/core/node.ts#L391)
 
 ___
 
 ### init
 
-**init**(): `void`
+▸ **init**(): `void`
 
 #### Returns
 
@@ -642,13 +763,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L264)
+[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
 
 ___
 
 ### inputValue
 
-**inputValue**(`value`): `void`
+▸ **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -669,13 +790,13 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L252)
+[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
 
 ___
 
 ### labelChanged
 
-**labelChanged**(): `void`
+▸ **labelChanged**(): `void`
 
 #### Returns
 
@@ -687,13 +808,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:421](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L421)
+[src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
 ___
 
 ### objectMutated
 
-**objectMutated**(`prop`): `void`
+▸ **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -714,13 +835,13 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:326](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L326)
+[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
 
 ___
 
 ### onObjectMutated
 
-**onObjectMutated**(`event`): `void`
+▸ **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -729,7 +850,7 @@ Node should be listening for this event if it has an observed object property
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event payload. |
+| `event` | `CustomEvent`\<`any`\> | Event payload. |
 
 #### Returns
 
@@ -741,13 +862,13 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:305](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L305)
+[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
 
 ___
 
 ### queue
 
-**queue**(`prop`, `value`, `oldValue`): `void`
+▸ **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
@@ -769,13 +890,13 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:271](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L271)
+[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
 
 ___
 
 ### removeEventListener
 
-**removeEventListener**(`type`, `listener?`, `options?`): `void`
+▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
 
 Wrapper for removeEventListener.
 
@@ -797,13 +918,13 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:383](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L383)
+[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
 
 ___
 
 ### selectedChanged
 
-**selectedChanged**(): `void`
+▸ **selectedChanged**(): `void`
 
 #### Returns
 
@@ -811,13 +932,13 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-breadcrumbs.ts:69](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-breadcrumbs.ts#L69)
+[src/elements/object/io-breadcrumbs.ts:70](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L70)
 
 ___
 
 ### setAttribute
 
-**setAttribute**(`attr`, `value`): `void`
+▸ **setAttribute**(`attr`, `value`): `void`
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
@@ -838,13 +959,13 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Defined in
 
-[src/core/element.ts:412](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L412)
+[src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
 
 ___
 
 ### setProperties
 
-**setProperties**(`props`): `void`
+▸ **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -865,13 +986,13 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
 
 ___
 
 ### setProperty
 
-**setProperty**(`name`, `value`, `skipDispatch?`): `void`
+▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -893,13 +1014,13 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:129](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L129)
+[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
 
 ___
 
 ### template
 
-**template**(`vDOM`, `host?`, `cache?`): `void`
+▸ **template**(`vDOM`, `host?`, `cache?`): `void`
 
 Renders DOM from virtual DOM arrays.
 
@@ -921,13 +1042,13 @@ Renders DOM from virtual DOM arrays.
 
 #### Defined in
 
-[src/core/element.ts:298](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L298)
+[src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
 
 ___
 
 ### throttle
 
-**throttle**(`func`, `arg?`, `sync?`): `void`
+▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -937,7 +1058,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 | :------ | :------ | :------ | :------ |
 | `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
 | `arg` | `any` | `undefined` | argument for throttled function. |
-| `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
+| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
 
 #### Returns
 
@@ -949,13 +1070,13 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:296](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L296)
+[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
 
 ___
 
 ### traverse
 
-**traverse**(`vChildren`, `host?`, `cache?`): `void`
+▸ **traverse**(`vChildren`, `host?`, `cache?`): `void`
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
@@ -978,13 +1099,13 @@ TODO: test element.traverse() function!
 
 #### Defined in
 
-[src/core/element.ts:311](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L311)
+[src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
 
 ___
 
 ### unbind
 
-**unbind**(`prop`): `void`
+▸ **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
@@ -1004,13 +1125,13 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
 
 ___
 
 ### valueChanged
 
-**valueChanged**(): `void`
+▸ **valueChanged**(): `void`
 
 #### Returns
 
@@ -1018,4 +1139,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/io-breadcrumbs.ts:64](https://github.com/io-gui/iogui/blob/main/src/elements/object/io-breadcrumbs.ts#L64)
+[src/elements/object/io-breadcrumbs.ts:65](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L65)

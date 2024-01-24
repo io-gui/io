@@ -1,12 +1,34 @@
+[io-gui](../README.md) / ProtoProperty
+
 # Class: ProtoProperty
 
 Finalized property definition created from property declaration.
+
+## Table of contents
+
+### Constructors
+
+- [constructor](ProtoProperty.md#constructor)
+
+### Properties
+
+- [binding](ProtoProperty.md#binding)
+- [init](ProtoProperty.md#init)
+- [observe](ProtoProperty.md#observe)
+- [reactive](ProtoProperty.md#reactive)
+- [reflect](ProtoProperty.md#reflect)
+- [type](ProtoProperty.md#type)
+- [value](ProtoProperty.md#value)
+
+### Methods
+
+- [assign](ProtoProperty.md#assign)
 
 ## Constructors
 
 ### constructor
 
-**new ProtoProperty**(`def`)
+• **new ProtoProperty**(`def`): [`ProtoProperty`](ProtoProperty.md)
 
 Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
 
@@ -16,75 +38,89 @@ Takes a loosely typed property declaration and returns full property definition 
 | :------ | :------ | :------ |
 | `def` | [`PropertyDeclarationLoose`](../README.md#propertydeclarationloose) | Loosely typed property definition |
 
+#### Returns
+
+[`ProtoProperty`](ProtoProperty.md)
+
 #### Defined in
 
-[src/core/internals/property.ts:36](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L36)
+[src/core/internals/property.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L38)
 
 ## Properties
 
 ### binding
 
- `Optional` **binding**: [`Binding`](Binding.md)
+• `Optional` **binding**: [`Binding`](Binding.md)
 
 #### Defined in
 
-[src/core/internals/property.ts:28](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L28)
+[src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
+
+___
+
+### init
+
+• `Optional` **init**: `any`
+
+#### Defined in
+
+[src/core/internals/property.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L33)
 
 ___
 
 ### observe
 
- `Optional` **observe**: `boolean`
+• `Optional` **observe**: `boolean`
 
 #### Defined in
 
-[src/core/internals/property.ts:31](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L31)
+[src/core/internals/property.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L32)
 
 ___
 
 ### reactive
 
- `Optional` **reactive**: `boolean`
+• `Optional` **reactive**: `boolean`
 
 #### Defined in
 
-[src/core/internals/property.ts:30](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L30)
+[src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
 
 ___
 
 ### reflect
 
- `Optional` **reflect**: `boolean`
+• `Optional` **reflect**: `boolean`
 
 #### Defined in
 
-[src/core/internals/property.ts:29](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L29)
+[src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
 
 ___
 
 ### type
 
- `Optional` **type**: [`Constructor`](../README.md#constructor) \| [`Constructor`](../README.md#constructor)[]
+• `Optional` **type**: [`Constructor`](../README.md#constructor)
 
 #### Defined in
 
-[src/core/internals/property.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L27)
+[src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
 
 ___
 
 ### value
 
- `Optional` **value**: `any`
+• `Optional` **value**: `any`
 
 #### Defined in
 
-[src/core/internals/property.ts:26](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L26)
+[src/core/internals/property.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L27)
 
 ## Methods
 
 ### assign
 
-**assign**(`protoProp`): `void`
+▸ **assign**(`protoProp`): `void`
 
 Assigns values of another ProtoProperty to itself, unless they are default values.
 
@@ -100,4 +136,4 @@ Assigns values of another ProtoProperty to itself, unless they are default value
 
 #### Defined in
 
-[src/core/internals/property.ts:65](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L65)
+[src/core/internals/property.ts:68](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L68)

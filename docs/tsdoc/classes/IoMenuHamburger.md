@@ -1,115 +1,123 @@
-[io-gui](../README.md) / IoField
+[io-gui](../README.md) / IoMenuHamburger
 
-# Class: IoField
+# Class: IoMenuHamburger
 
-Core `IoElement` class.
+It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
 
 ## Hierarchy
 
-- [`IoElement`](IoElement.md)
+- [`IoMenuItem`](IoMenuItem.md)
 
-  ↳ **`IoField`**
-
-  ↳↳ [`IoButton`](IoButton.md)
-
-  ↳↳ [`IoBoolean`](IoBoolean.md)
-
-  ↳↳ [`IoString`](IoString.md)
-
-  ↳↳ [`IoNumber`](IoNumber.md)
-
-  ↳↳ [`IoNumberLadderStep`](IoNumberLadderStep.md)
-
-  ↳↳ [`IoMenuItem`](IoMenuItem.md)
+  ↳ **`IoMenuHamburger`**
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](IoField.md#constructor)
+- [constructor](IoMenuHamburger.md#constructor)
 
 ### Properties
 
-- [$](IoField.md#$)
-- [\_bindings](IoField.md#_bindings)
-- [\_changeQueue](IoField.md#_changequeue)
-- [\_eventDispatcher](IoField.md#_eventdispatcher)
-- [\_properties](IoField.md#_properties)
-- [\_protochain](IoField.md#_protochain)
-- [appearance](IoField.md#appearance)
-- [class](IoField.md#class)
-- [contenteditable](IoField.md#contenteditable)
-- [disabled](IoField.md#disabled)
-- [hidden](IoField.md#hidden)
-- [icon](IoField.md#icon)
-- [id](IoField.md#id)
-- [invalid](IoField.md#invalid)
-- [label](IoField.md#label)
-- [name](IoField.md#name)
-- [placeholder](IoField.md#placeholder)
-- [role](IoField.md#role)
-- [selected](IoField.md#selected)
-- [stroke](IoField.md#stroke)
-- [tabindex](IoField.md#tabindex)
-- [title](IoField.md#title)
-- [value](IoField.md#value)
+- [$](IoMenuHamburger.md#$)
+- [$options](IoMenuHamburger.md#$options)
+- [\_bindings](IoMenuHamburger.md#_bindings)
+- [\_changeQueue](IoMenuHamburger.md#_changequeue)
+- [\_eventDispatcher](IoMenuHamburger.md#_eventdispatcher)
+- [\_properties](IoMenuHamburger.md#_properties)
+- [\_protochain](IoMenuHamburger.md#_protochain)
+- [appearance](IoMenuHamburger.md#appearance)
+- [class](IoMenuHamburger.md#class)
+- [contenteditable](IoMenuHamburger.md#contenteditable)
+- [depth](IoMenuHamburger.md#depth)
+- [direction](IoMenuHamburger.md#direction)
+- [disabled](IoMenuHamburger.md#disabled)
+- [expanded](IoMenuHamburger.md#expanded)
+- [hidden](IoMenuHamburger.md#hidden)
+- [icon](IoMenuHamburger.md#icon)
+- [id](IoMenuHamburger.md#id)
+- [invalid](IoMenuHamburger.md#invalid)
+- [item](IoMenuHamburger.md#item)
+- [label](IoMenuHamburger.md#label)
+- [name](IoMenuHamburger.md#name)
+- [placeholder](IoMenuHamburger.md#placeholder)
+- [role](IoMenuHamburger.md#role)
+- [selected](IoMenuHamburger.md#selected)
+- [stroke](IoMenuHamburger.md#stroke)
+- [tabindex](IoMenuHamburger.md#tabindex)
+- [title](IoMenuHamburger.md#title)
+- [value](IoMenuHamburger.md#value)
 
 ### Accessors
 
-- [textNode](IoField.md#textnode)
-- [Listeners](IoField.md#listeners)
-- [Properties](IoField.md#properties)
-- [Style](IoField.md#style)
+- [$parent](IoMenuHamburger.md#$parent)
+- [hasmore](IoMenuHamburger.md#hasmore)
+- [inlayer](IoMenuHamburger.md#inlayer)
+- [textNode](IoMenuHamburger.md#textnode)
+- [Listeners](IoMenuHamburger.md#listeners)
+- [Properties](IoMenuHamburger.md#properties)
+- [Style](IoMenuHamburger.md#style)
 
 ### Methods
 
-- [Register](IoField.md#register)
-- [\_flattenTextNode](IoField.md#_flattentextnode)
-- [\_onBlur](IoField.md#_onblur)
-- [\_onClick](IoField.md#_onclick)
-- [\_onFocus](IoField.md#_onfocus)
-- [\_onFocusTo](IoField.md#_onfocusto)
-- [\_onKeydown](IoField.md#_onkeydown)
-- [\_onKeyup](IoField.md#_onkeyup)
-- [\_onPointerdown](IoField.md#_onpointerdown)
-- [\_onPointerleave](IoField.md#_onpointerleave)
-- [\_onPointermove](IoField.md#_onpointermove)
-- [\_onPointerup](IoField.md#_onpointerup)
-- [addEventListener](IoField.md#addeventlistener)
-- [applyProperties](IoField.md#applyproperties)
-- [bind](IoField.md#bind)
-- [changed](IoField.md#changed)
-- [connectedCallback](IoField.md#connectedcallback)
-- [disabledChanged](IoField.md#disabledchanged)
-- [disconnectedCallback](IoField.md#disconnectedcallback)
-- [dispatchEvent](IoField.md#dispatchevent)
-- [dispatchMutationEvent](IoField.md#dispatchmutationevent)
-- [dispatchQueue](IoField.md#dispatchqueue)
-- [dispatchQueueSync](IoField.md#dispatchqueuesync)
-- [dispose](IoField.md#dispose)
-- [focusTo](IoField.md#focusto)
-- [getCaretPosition](IoField.md#getcaretposition)
-- [init](IoField.md#init)
-- [inputValue](IoField.md#inputvalue)
-- [labelChanged](IoField.md#labelchanged)
-- [objectMutated](IoField.md#objectmutated)
-- [onObjectMutated](IoField.md#onobjectmutated)
-- [queue](IoField.md#queue)
-- [removeEventListener](IoField.md#removeeventlistener)
-- [setAttribute](IoField.md#setattribute)
-- [setCaretPosition](IoField.md#setcaretposition)
-- [setProperties](IoField.md#setproperties)
-- [setProperty](IoField.md#setproperty)
-- [template](IoField.md#template)
-- [throttle](IoField.md#throttle)
-- [traverse](IoField.md#traverse)
-- [unbind](IoField.md#unbind)
+- [Register](IoMenuHamburger.md#register)
+- [\_expandHovered](IoMenuHamburger.md#_expandhovered)
+- [\_flattenTextNode](IoMenuHamburger.md#_flattentextnode)
+- [\_gethovered](IoMenuHamburger.md#_gethovered)
+- [\_onBlur](IoMenuHamburger.md#_onblur)
+- [\_onClick](IoMenuHamburger.md#_onclick)
+- [\_onCollapse](IoMenuHamburger.md#_oncollapse)
+- [\_onCollapseRoot](IoMenuHamburger.md#_oncollapseroot)
+- [\_onFocus](IoMenuHamburger.md#_onfocus)
+- [\_onFocusTo](IoMenuHamburger.md#_onfocusto)
+- [\_onItemClicked](IoMenuHamburger.md#_onitemclicked)
+- [\_onKeydown](IoMenuHamburger.md#_onkeydown)
+- [\_onKeyup](IoMenuHamburger.md#_onkeyup)
+- [\_onOverlayPointermove](IoMenuHamburger.md#_onoverlaypointermove)
+- [\_onOverlayPointerup](IoMenuHamburger.md#_onoverlaypointerup)
+- [\_onPointerdown](IoMenuHamburger.md#_onpointerdown)
+- [\_onPointerdownAction](IoMenuHamburger.md#_onpointerdownaction)
+- [\_onPointerleave](IoMenuHamburger.md#_onpointerleave)
+- [\_onPointermove](IoMenuHamburger.md#_onpointermove)
+- [\_onPointermoveAction](IoMenuHamburger.md#_onpointermoveaction)
+- [\_onPointerup](IoMenuHamburger.md#_onpointerup)
+- [\_onPointerupAction](IoMenuHamburger.md#_onpointerupaction)
+- [addEventListener](IoMenuHamburger.md#addeventlistener)
+- [applyProperties](IoMenuHamburger.md#applyproperties)
+- [bind](IoMenuHamburger.md#bind)
+- [changed](IoMenuHamburger.md#changed)
+- [connectedCallback](IoMenuHamburger.md#connectedcallback)
+- [disabledChanged](IoMenuHamburger.md#disabledchanged)
+- [disconnectedCallback](IoMenuHamburger.md#disconnectedcallback)
+- [dispatchEvent](IoMenuHamburger.md#dispatchevent)
+- [dispatchMutationEvent](IoMenuHamburger.md#dispatchmutationevent)
+- [dispatchQueue](IoMenuHamburger.md#dispatchqueue)
+- [dispatchQueueSync](IoMenuHamburger.md#dispatchqueuesync)
+- [dispose](IoMenuHamburger.md#dispose)
+- [expandedChanged](IoMenuHamburger.md#expandedchanged)
+- [focusTo](IoMenuHamburger.md#focusto)
+- [getCaretPosition](IoMenuHamburger.md#getcaretposition)
+- [init](IoMenuHamburger.md#init)
+- [inputValue](IoMenuHamburger.md#inputvalue)
+- [labelChanged](IoMenuHamburger.md#labelchanged)
+- [objectMutated](IoMenuHamburger.md#objectmutated)
+- [onObjectMutated](IoMenuHamburger.md#onobjectmutated)
+- [preventDefault](IoMenuHamburger.md#preventdefault)
+- [queue](IoMenuHamburger.md#queue)
+- [removeEventListener](IoMenuHamburger.md#removeeventlistener)
+- [setAttribute](IoMenuHamburger.md#setattribute)
+- [setCaretPosition](IoMenuHamburger.md#setcaretposition)
+- [setProperties](IoMenuHamburger.md#setproperties)
+- [setProperty](IoMenuHamburger.md#setproperty)
+- [template](IoMenuHamburger.md#template)
+- [throttle](IoMenuHamburger.md#throttle)
+- [traverse](IoMenuHamburger.md#traverse)
+- [unbind](IoMenuHamburger.md#unbind)
 
 ## Constructors
 
 ### constructor
 
-• **new IoField**(`...args`): [`IoField`](IoField.md)
+• **new IoMenuHamburger**(`...args`): [`IoMenuHamburger`](IoMenuHamburger.md)
 
 Creates a class instance and initializes the internals.
 
@@ -121,11 +129,11 @@ Creates a class instance and initializes the internals.
 
 #### Returns
 
-[`IoField`](IoField.md)
+[`IoMenuHamburger`](IoMenuHamburger.md)
 
 #### Inherited from
 
-[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
+[IoMenuItem](IoMenuItem.md).[constructor](IoMenuItem.md#constructor)
 
 #### Defined in
 
@@ -139,11 +147,25 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[$](IoElement.md#$)
+[IoMenuItem](IoMenuItem.md).[$](IoMenuItem.md#$)
 
 #### Defined in
 
 [src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
+
+___
+
+### $options
+
+• `Optional` **$options**: [`IoMenuOptions`](IoMenuOptions.md)
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[$options](IoMenuItem.md#$options)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:56](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L56)
 
 ___
 
@@ -153,7 +175,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
+[IoMenuItem](IoMenuItem.md).[_bindings](IoMenuItem.md#_bindings)
 
 #### Defined in
 
@@ -167,7 +189,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
+[IoMenuItem](IoMenuItem.md).[_changeQueue](IoMenuItem.md#_changequeue)
 
 #### Defined in
 
@@ -181,7 +203,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
+[IoMenuItem](IoMenuItem.md).[_eventDispatcher](IoMenuItem.md#_eventdispatcher)
 
 #### Defined in
 
@@ -195,7 +217,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
+[IoMenuItem](IoMenuItem.md).[_properties](IoMenuItem.md#_properties)
 
 #### Defined in
 
@@ -209,7 +231,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
+[IoMenuItem](IoMenuItem.md).[_protochain](IoMenuItem.md#_protochain)
 
 #### Defined in
 
@@ -220,6 +242,10 @@ ___
 ### appearance
 
 • **appearance**: ``"inset"`` \| ``"flush"`` \| ``"outset"`` \| ``"neutral"``
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[appearance](IoMenuItem.md#appearance)
 
 #### Defined in
 
@@ -233,7 +259,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[class](IoElement.md#class)
+[IoMenuItem](IoMenuItem.md).[class](IoMenuItem.md#class)
 
 #### Defined in
 
@@ -247,11 +273,39 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
+[IoMenuItem](IoMenuItem.md).[contenteditable](IoMenuItem.md#contenteditable)
 
 #### Defined in
 
 [src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
+
+___
+
+### depth
+
+• **depth**: `number`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[depth](IoMenuItem.md#depth)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:53](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L53)
+
+___
+
+### direction
+
+• **direction**: `string`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[direction](IoMenuItem.md#direction)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:50](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L50)
 
 ___
 
@@ -261,11 +315,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
+[IoMenuItem](IoMenuItem.md).[disabled](IoMenuItem.md#disabled)
 
 #### Defined in
 
 [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
+
+___
+
+### expanded
+
+• **expanded**: `boolean`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[expanded](IoMenuItem.md#expanded)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:47](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L47)
 
 ___
 
@@ -275,7 +343,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
+[IoMenuItem](IoMenuItem.md).[hidden](IoMenuItem.md#hidden)
 
 #### Defined in
 
@@ -286,6 +354,10 @@ ___
 ### icon
 
 • **icon**: `string`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[icon](IoMenuItem.md#icon)
 
 #### Defined in
 
@@ -299,7 +371,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[id](IoElement.md#id)
+[IoMenuItem](IoMenuItem.md).[id](IoMenuItem.md#id)
 
 #### Defined in
 
@@ -311,9 +383,27 @@ ___
 
 • **invalid**: `boolean`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[invalid](IoMenuItem.md#invalid)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:95](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L95)
+
+___
+
+### item
+
+• **item**: [`MenuItem`](MenuItem.md)
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[item](IoMenuItem.md#item)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:44](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L44)
 
 ___
 
@@ -323,7 +413,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[label](IoElement.md#label)
+[IoMenuItem](IoMenuItem.md).[label](IoMenuItem.md#label)
 
 #### Defined in
 
@@ -337,7 +427,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[name](IoElement.md#name)
+[IoMenuItem](IoMenuItem.md).[name](IoMenuItem.md#name)
 
 #### Defined in
 
@@ -348,6 +438,10 @@ ___
 ### placeholder
 
 • **placeholder**: `string`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[placeholder](IoMenuItem.md#placeholder)
 
 #### Defined in
 
@@ -361,7 +455,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[role](IoElement.md#role)
+[IoMenuItem](IoMenuItem.md).[role](IoMenuItem.md#role)
 
 #### Defined in
 
@@ -373,6 +467,10 @@ ___
 
 • **selected**: `boolean`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[selected](IoMenuItem.md#selected)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:92](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L92)
@@ -382,6 +480,10 @@ ___
 ### stroke
 
 • **stroke**: `boolean`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[stroke](IoMenuItem.md#stroke)
 
 #### Defined in
 
@@ -393,9 +495,9 @@ ___
 
 • **tabindex**: `string`
 
-#### Overrides
+#### Inherited from
 
-[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
+[IoMenuItem](IoMenuItem.md).[tabindex](IoMenuItem.md#tabindex)
 
 #### Defined in
 
@@ -409,7 +511,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[title](IoElement.md#title)
+[IoMenuItem](IoMenuItem.md).[title](IoMenuItem.md#title)
 
 #### Defined in
 
@@ -421,11 +523,69 @@ ___
 
 • **value**: `any`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[value](IoMenuItem.md#value)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:80](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L80)
 
 ## Accessors
+
+### $parent
+
+• `get` **$parent**(): `any`
+
+#### Returns
+
+`any`
+
+#### Inherited from
+
+IoMenuItem.$parent
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:73](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L73)
+
+___
+
+### hasmore
+
+• `get` **hasmore**(): `boolean`
+
+#### Returns
+
+`boolean`
+
+#### Inherited from
+
+IoMenuItem.hasmore
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:67](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L67)
+
+___
+
+### inlayer
+
+• `get` **inlayer**(): `boolean`
+
+#### Returns
+
+`boolean`
+
+#### Inherited from
+
+IoMenuItem.inlayer
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:70](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L70)
+
+___
 
 ### textNode
 
@@ -437,7 +597,7 @@ ___
 
 #### Inherited from
 
-IoElement.textNode
+IoMenuItem.textNode
 
 #### Defined in
 
@@ -457,7 +617,7 @@ IoElement.textNode
 
 #### Inherited from
 
-IoElement.textNode
+IoMenuItem.textNode
 
 #### Defined in
 
@@ -467,22 +627,19 @@ ___
 
 ### Listeners
 
-• `get` **Listeners**(): `Object`
+• `get` **Listeners**(): `any`
 
 #### Returns
 
-`Object`
+`any`
 
-| Name | Type |
-| :------ | :------ |
-| `click` | `string` |
-| `focus` | `string` |
-| `focus-to` | `string` |
-| `pointerdown` | `string` |
+#### Inherited from
+
+IoMenuItem.Listeners
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:100](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L100)
+[src/elements/menus/io-menu-item.ts:58](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L58)
 
 ___
 
@@ -496,7 +653,7 @@ ___
 
 #### Inherited from
 
-IoElement.Properties
+IoMenuItem.Properties
 
 #### Defined in
 
@@ -514,11 +671,11 @@ ___
 
 #### Overrides
 
-IoElement.Style
+IoMenuItem.Style
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:16](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L16)
+[src/elements/menus/io-menu-hamburger.ts:6](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-hamburger.ts#L6)
 
 ## Methods
 
@@ -538,11 +695,29 @@ IoElement.Style
 
 #### Inherited from
 
-[IoElement](IoElement.md).[Register](IoElement.md#register)
+[IoMenuItem](IoMenuItem.md).[Register](IoMenuItem.md#register)
 
 #### Defined in
 
 [src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
+
+___
+
+### \_expandHovered
+
+▸ **_expandHovered**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_expandHovered](IoMenuItem.md#_expandhovered)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:220](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L220)
 
 ___
 
@@ -565,11 +740,35 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_flattenTextNode](IoElement.md#_flattentextnode)
+[IoMenuItem](IoMenuItem.md).[_flattenTextNode](IoMenuItem.md#_flattentextnode)
 
 #### Defined in
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
+
+___
+
+### \_gethovered
+
+▸ **_gethovered**(`event`): `undefined` \| `IoMenuElementType`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`undefined` \| `IoMenuElementType`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_gethovered](IoMenuItem.md#_gethovered)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:204](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L204)
 
 ___
 
@@ -587,6 +786,10 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onBlur](IoMenuItem.md#_onblur)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:113](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L113)
@@ -601,9 +804,49 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onClick](IoMenuItem.md#_onclick)
+
 #### Defined in
 
-[src/elements/basic/io-field.ts:136](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L136)
+[src/elements/menus/io-menu-item.ts:96](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L96)
+
+___
+
+### \_onCollapse
+
+▸ **_onCollapse**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onCollapse](IoMenuItem.md#_oncollapse)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:306](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L306)
+
+___
+
+### \_onCollapseRoot
+
+▸ **_onCollapseRoot**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onCollapseRoot](IoMenuItem.md#_oncollapseroot)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:309](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L309)
 
 ___
 
@@ -620,6 +863,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onFocus](IoMenuItem.md#_onfocus)
 
 #### Defined in
 
@@ -641,9 +888,37 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onFocusTo](IoMenuItem.md#_onfocusto)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:159](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L159)
+
+___
+
+### \_onItemClicked
+
+▸ **_onItemClicked**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onItemClicked](IoMenuItem.md#_onitemclicked)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:121](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L121)
 
 ___
 
@@ -661,9 +936,13 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onKeydown](IoMenuItem.md#_onkeydown)
+
 #### Defined in
 
-[src/elements/basic/io-field.ts:139](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L139)
+[src/elements/menus/io-menu-item.ts:241](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L241)
 
 ___
 
@@ -681,9 +960,61 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onKeyup](IoMenuItem.md#_onkeyup)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:158](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L158)
+
+___
+
+### \_onOverlayPointermove
+
+▸ **_onOverlayPointermove**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onOverlayPointermove](IoMenuItem.md#_onoverlaypointermove)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:90](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L90)
+
+___
+
+### \_onOverlayPointerup
+
+▸ **_onOverlayPointerup**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onOverlayPointerup](IoMenuItem.md#_onoverlaypointerup)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:93](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L93)
 
 ___
 
@@ -701,9 +1032,37 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointerdown](IoMenuItem.md#_onpointerdown)
+
 #### Defined in
 
-[src/elements/basic/io-field.ts:118](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L118)
+[src/elements/menus/io-menu-item.ts:129](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L129)
+
+___
+
+### \_onPointerdownAction
+
+▸ **_onPointerdownAction**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointerdownAction](IoMenuItem.md#_onpointerdownaction)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:137](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L137)
 
 ___
 
@@ -720,6 +1079,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointerleave](IoMenuItem.md#_onpointerleave)
 
 #### Defined in
 
@@ -741,9 +1104,37 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointermove](IoMenuItem.md#_onpointermove)
+
 #### Defined in
 
-[src/elements/basic/io-field.ts:124](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L124)
+[src/elements/menus/io-menu-item.ts:150](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L150)
+
+___
+
+### \_onPointermoveAction
+
+▸ **_onPointermoveAction**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `PointerEvent` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointermoveAction](IoMenuItem.md#_onpointermoveaction)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:154](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L154)
 
 ___
 
@@ -761,9 +1152,38 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointerup](IoMenuItem.md#_onpointerup)
+
 #### Defined in
 
-[src/elements/basic/io-field.ts:130](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L130)
+[src/elements/menus/io-menu-item.ts:187](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L187)
+
+___
+
+### \_onPointerupAction
+
+▸ **_onPointerupAction**(`event`, `skipCollapse?`): `void`
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `event` | `PointerEvent` | `undefined` |
+| `skipCollapse` | `boolean` | `false` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[_onPointerupAction](IoMenuItem.md#_onpointerupaction)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:193](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L193)
 
 ___
 
@@ -787,7 +1207,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
+[IoMenuItem](IoMenuItem.md).[addEventListener](IoMenuItem.md#addeventlistener)
 
 #### Defined in
 
@@ -811,7 +1231,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
+[IoMenuItem](IoMenuItem.md).[applyProperties](IoMenuItem.md#applyproperties)
 
 #### Defined in
 
@@ -839,7 +1259,7 @@ Binding object.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[bind](IoElement.md#bind)
+[IoMenuItem](IoMenuItem.md).[bind](IoMenuItem.md#bind)
 
 #### Defined in
 
@@ -860,11 +1280,11 @@ Invoked when one of the properties change.
 
 #### Overrides
 
-[IoElement](IoElement.md).[changed](IoElement.md#changed)
+[IoMenuItem](IoMenuItem.md).[changed](IoMenuItem.md#changed)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:294](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L294)
+[src/elements/menus/io-menu-hamburger.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-hamburger.ts#L19)
 
 ___
 
@@ -880,11 +1300,11 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
+[IoMenuItem](IoMenuItem.md).[connectedCallback](IoMenuItem.md#connectedcallback)
 
 #### Defined in
 
-[src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
+[src/elements/menus/io-menu-item.ts:77](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L77)
 
 ___
 
@@ -898,7 +1318,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
+[IoMenuItem](IoMenuItem.md).[disabledChanged](IoMenuItem.md#disabledchanged)
 
 #### Defined in
 
@@ -918,11 +1338,11 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
+[IoMenuItem](IoMenuItem.md).[disconnectedCallback](IoMenuItem.md#disconnectedcallback)
 
 #### Defined in
 
-[src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
+[src/elements/menus/io-menu-item.ts:84](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L84)
 
 ___
 
@@ -947,7 +1367,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
+[IoMenuItem](IoMenuItem.md).[dispatchEvent](IoMenuItem.md#dispatchevent)
 
 #### Defined in
 
@@ -973,7 +1393,7 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchMutationEvent](IoElement.md#dispatchmutationevent)
+[IoMenuItem](IoMenuItem.md).[dispatchMutationEvent](IoMenuItem.md#dispatchmutationevent)
 
 #### Defined in
 
@@ -993,7 +1413,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
+[IoMenuItem](IoMenuItem.md).[dispatchQueue](IoMenuItem.md#dispatchqueue)
 
 #### Defined in
 
@@ -1013,7 +1433,7 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
+[IoMenuItem](IoMenuItem.md).[dispatchQueueSync](IoMenuItem.md#dispatchqueuesync)
 
 #### Defined in
 
@@ -1034,11 +1454,29 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
+[IoMenuItem](IoMenuItem.md).[dispose](IoMenuItem.md#dispose)
 
 #### Defined in
 
 [src/core/node.ts:391](https://github.com/io-gui/io/blob/main/src/core/node.ts#L391)
+
+___
+
+### expandedChanged
+
+▸ **expandedChanged**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[expandedChanged](IoMenuItem.md#expandedchanged)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:312](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L312)
 
 ___
 
@@ -1056,6 +1494,10 @@ ___
 
 `void`
 
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[focusTo](IoMenuItem.md#focusto)
+
 #### Defined in
 
 [src/elements/basic/io-field.ts:266](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L266)
@@ -1069,6 +1511,10 @@ ___
 #### Returns
 
 `number`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[getCaretPosition](IoMenuItem.md#getcaretposition)
 
 #### Defined in
 
@@ -1086,7 +1532,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[init](IoElement.md#init)
+[IoMenuItem](IoMenuItem.md).[init](IoMenuItem.md#init)
 
 #### Defined in
 
@@ -1113,7 +1559,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
+[IoMenuItem](IoMenuItem.md).[inputValue](IoMenuItem.md#inputvalue)
 
 #### Defined in
 
@@ -1131,7 +1577,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
+[IoMenuItem](IoMenuItem.md).[labelChanged](IoMenuItem.md#labelchanged)
 
 #### Defined in
 
@@ -1158,7 +1604,7 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
+[IoMenuItem](IoMenuItem.md).[objectMutated](IoMenuItem.md#objectmutated)
 
 #### Defined in
 
@@ -1185,11 +1631,35 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
+[IoMenuItem](IoMenuItem.md).[onObjectMutated](IoMenuItem.md#onobjectmutated)
 
 #### Defined in
 
 [src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+
+___
+
+### preventDefault
+
+▸ **preventDefault**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `Event` |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[preventDefault](IoMenuItem.md#preventdefault)
+
+#### Defined in
+
+[src/elements/menus/io-menu-item.ts:63](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L63)
 
 ___
 
@@ -1213,7 +1683,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[queue](IoElement.md#queue)
+[IoMenuItem](IoMenuItem.md).[queue](IoMenuItem.md#queue)
 
 #### Defined in
 
@@ -1241,7 +1711,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
+[IoMenuItem](IoMenuItem.md).[removeEventListener](IoMenuItem.md#removeeventlistener)
 
 #### Defined in
 
@@ -1268,7 +1738,7 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
+[IoMenuItem](IoMenuItem.md).[setAttribute](IoMenuItem.md#setattribute)
 
 #### Defined in
 
@@ -1289,6 +1759,10 @@ ___
 #### Returns
 
 `void`
+
+#### Inherited from
+
+[IoMenuItem](IoMenuItem.md).[setCaretPosition](IoMenuItem.md#setcaretposition)
 
 #### Defined in
 
@@ -1315,7 +1789,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
+[IoMenuItem](IoMenuItem.md).[setProperties](IoMenuItem.md#setproperties)
 
 #### Defined in
 
@@ -1343,7 +1817,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
+[IoMenuItem](IoMenuItem.md).[setProperty](IoMenuItem.md#setproperty)
 
 #### Defined in
 
@@ -1371,7 +1845,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[template](IoElement.md#template)
+[IoMenuItem](IoMenuItem.md).[template](IoMenuItem.md#template)
 
 #### Defined in
 
@@ -1399,7 +1873,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
+[IoMenuItem](IoMenuItem.md).[throttle](IoMenuItem.md#throttle)
 
 #### Defined in
 
@@ -1428,7 +1902,7 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
+[IoMenuItem](IoMenuItem.md).[traverse](IoMenuItem.md#traverse)
 
 #### Defined in
 
@@ -1454,7 +1928,7 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
+[IoMenuItem](IoMenuItem.md).[unbind](IoMenuItem.md#unbind)
 
 #### Defined in
 

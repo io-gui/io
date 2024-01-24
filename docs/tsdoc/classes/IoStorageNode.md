@@ -1,3 +1,5 @@
+[io-gui](../README.md) / IoStorageNode
+
 # Class: IoStorageNode
 
 IoNodeMixin applied to `Object` class.
@@ -8,11 +10,61 @@ IoNodeMixin applied to `Object` class.
 
   ↳ **`IoStorageNode`**
 
+## Table of contents
+
+### Constructors
+
+- [constructor](IoStorageNode.md#constructor)
+
+### Properties
+
+- [\_bindings](IoStorageNode.md#_bindings)
+- [\_changeQueue](IoStorageNode.md#_changequeue)
+- [\_eventDispatcher](IoStorageNode.md#_eventdispatcher)
+- [\_properties](IoStorageNode.md#_properties)
+- [\_protochain](IoStorageNode.md#_protochain)
+- [binding](IoStorageNode.md#binding)
+- [default](IoStorageNode.md#default)
+- [key](IoStorageNode.md#key)
+- [storage](IoStorageNode.md#storage)
+- [value](IoStorageNode.md#value)
+
+### Accessors
+
+- [Properties](IoStorageNode.md#properties)
+
+### Methods
+
+- [Register](IoStorageNode.md#register)
+- [\_clearStorage](IoStorageNode.md#_clearstorage)
+- [addEventListener](IoStorageNode.md#addeventlistener)
+- [applyProperties](IoStorageNode.md#applyproperties)
+- [bind](IoStorageNode.md#bind)
+- [changed](IoStorageNode.md#changed)
+- [dispatchEvent](IoStorageNode.md#dispatchevent)
+- [dispatchMutationEvent](IoStorageNode.md#dispatchmutationevent)
+- [dispatchQueue](IoStorageNode.md#dispatchqueue)
+- [dispatchQueueSync](IoStorageNode.md#dispatchqueuesync)
+- [dispose](IoStorageNode.md#dispose)
+- [init](IoStorageNode.md#init)
+- [inputValue](IoStorageNode.md#inputvalue)
+- [objectMutated](IoStorageNode.md#objectmutated)
+- [onObjectMutated](IoStorageNode.md#onobjectmutated)
+- [queue](IoStorageNode.md#queue)
+- [removeEventListener](IoStorageNode.md#removeeventlistener)
+- [removeValueToHash](IoStorageNode.md#removevaluetohash)
+- [saveValueToHash](IoStorageNode.md#savevaluetohash)
+- [setProperties](IoStorageNode.md#setproperties)
+- [setProperty](IoStorageNode.md#setproperty)
+- [throttle](IoStorageNode.md#throttle)
+- [unbind](IoStorageNode.md#unbind)
+- [valueChanged](IoStorageNode.md#valuechanged)
+
 ## Constructors
 
 ### constructor
 
-**new IoStorageNode**(`props`)
+• **new IoStorageNode**(`props`): [`IoStorageNode`](IoStorageNode.md)
 
 #### Parameters
 
@@ -20,19 +72,23 @@ IoNodeMixin applied to `Object` class.
 | :------ | :------ |
 | `props` | `StorageProps` |
 
+#### Returns
+
+[`IoStorageNode`](IoStorageNode.md)
+
 #### Overrides
 
 [IoNode](IoNode.md).[constructor](IoNode.md#constructor)
 
 #### Defined in
 
-[src/core/storage.ts:124](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L124)
+[src/core/storage.ts:130](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L130)
 
 ## Properties
 
 ### \_bindings
 
- `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
+• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -40,13 +96,13 @@ IoNodeMixin applied to `Object` class.
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ___
 
 ### \_changeQueue
 
- `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
@@ -54,13 +110,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ___
 
 ### \_eventDispatcher
 
- `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
@@ -68,13 +124,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ___
 
 ### \_properties
 
- `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -82,13 +138,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ___
 
 ### \_protochain
 
- `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
@@ -96,63 +152,63 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
+[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
 ___
 
 ### binding
 
- **binding**: [`Binding`](Binding.md)
+• **binding**: [`Binding`](Binding.md)
 
 #### Defined in
 
-[src/core/storage.ts:122](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L122)
+[src/core/storage.ts:128](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L128)
 
 ___
 
 ### default
 
- **default**: `any`
+• **default**: `any`
 
 #### Defined in
 
-[src/core/storage.ts:117](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L117)
+[src/core/storage.ts:123](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L123)
 
 ___
 
 ### key
 
- **key**: `string`
+• **key**: `string`
 
 #### Defined in
 
-[src/core/storage.ts:111](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L111)
+[src/core/storage.ts:117](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L117)
 
 ___
 
 ### storage
 
- **storage**: ``"none"`` \| ``"hash"`` \| ``"local"``
+• **storage**: ``"none"`` \| ``"hash"`` \| ``"local"``
 
 #### Defined in
 
-[src/core/storage.ts:120](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L120)
+[src/core/storage.ts:126](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L126)
 
 ___
 
 ### value
 
- **value**: `any`
+• **value**: `any`
 
 #### Defined in
 
-[src/core/storage.ts:114](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L114)
+[src/core/storage.ts:120](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L120)
 
 ## Accessors
 
 ### Properties
 
-`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
@@ -164,13 +220,37 @@ IoNode.Properties
 
 #### Defined in
 
-[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
+[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
 ## Methods
 
+### Register
+
+▸ **Register**(`ioNodeConstructor`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNode](IoNode.md).[Register](IoNode.md#register)
+
+#### Defined in
+
+[src/core/node.ts:426](https://github.com/io-gui/io/blob/main/src/core/node.ts#L426)
+
+___
+
 ### \_clearStorage
 
-**_clearStorage**(): `void`
+▸ **_clearStorage**(): `void`
 
 #### Returns
 
@@ -178,13 +258,13 @@ IoNode.Properties
 
 #### Defined in
 
-[src/core/storage.ts:179](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L179)
+[src/core/storage.ts:185](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L185)
 
 ___
 
 ### addEventListener
 
-**addEventListener**(`type`, `listener`, `options?`): `void`
+▸ **addEventListener**(`type`, `listener`, `options?`): `void`
 
 Wrapper for addEventListener.
 
@@ -206,13 +286,13 @@ Wrapper for addEventListener.
 
 #### Defined in
 
-[src/core/node.ts:368](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L368)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
 ### applyProperties
 
-**applyProperties**(`props`): `void`
+▸ **applyProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -233,13 +313,13 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:212](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L212)
+[src/core/node.ts:194](https://github.com/io-gui/io/blob/main/src/core/node.ts#L194)
 
 ___
 
 ### bind
 
-**bind**(`prop`): [`Binding`](Binding.md)
+▸ **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
@@ -261,13 +341,13 @@ Binding object.
 
 #### Defined in
 
-[src/core/node.ts:335](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L335)
+[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
 
 ___
 
 ### changed
 
-**changed**(): `void`
+▸ **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -282,13 +362,13 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/core/node.ts:263](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L263)
+[src/core/node.ts:245](https://github.com/io-gui/io/blob/main/src/core/node.ts#L245)
 
 ___
 
 ### dispatchEvent
 
-**dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
 
 Wrapper for dispatchEvent.
 
@@ -311,13 +391,39 @@ Wrapper for dispatchEvent.
 
 #### Defined in
 
-[src/core/node.ts:393](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L393)
+[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+
+___
+
+### dispatchMutationEvent
+
+▸ **dispatchMutationEvent**(`object`): `void`
+
+Shorthand for dispatching `'object-mutated'` event on window.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `object` | `any` | object which mutated. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNode](IoNode.md).[dispatchMutationEvent](IoNode.md#dispatchmutationevent)
+
+#### Defined in
+
+[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
 
 ___
 
 ### dispatchQueue
 
-**dispatchQueue**(): `void`
+▸ **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -331,13 +437,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Defined in
 
-[src/core/node.ts:277](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L277)
+[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 ___
 
 ### dispatchQueueSync
 
-**dispatchQueueSync**(): `void`
+▸ **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -351,13 +457,13 @@ Dispatches the queue immediately.
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
 
 ___
 
 ### dispose
 
-**dispose**(): `void`
+▸ **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -372,13 +478,13 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/core/storage.ts:175](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L175)
+[src/core/storage.ts:181](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L181)
 
 ___
 
 ### init
 
-**init**(): `void`
+▸ **init**(): `void`
 
 #### Returns
 
@@ -390,13 +496,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L264)
+[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
 
 ___
 
 ### inputValue
 
-**inputValue**(`value`): `void`
+▸ **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -417,13 +523,13 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Defined in
 
-[src/core/node.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L252)
+[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
 
 ___
 
 ### objectMutated
 
-**objectMutated**(`prop`): `void`
+▸ **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -444,13 +550,13 @@ the object properties has mutated.
 
 #### Defined in
 
-[src/core/node.ts:326](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L326)
+[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
 
 ___
 
 ### onObjectMutated
 
-**onObjectMutated**(`event`): `void`
+▸ **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -459,7 +565,7 @@ Node should be listening for this event if it has an observed object property
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event payload. |
+| `event` | `CustomEvent`\<`any`\> | Event payload. |
 
 #### Returns
 
@@ -471,13 +577,13 @@ Node should be listening for this event if it has an observed object property
 
 #### Defined in
 
-[src/core/node.ts:305](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L305)
+[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
 
 ___
 
 ### queue
 
-**queue**(`prop`, `value`, `oldValue`): `void`
+▸ **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
@@ -499,13 +605,13 @@ Adds property change to the queue.
 
 #### Defined in
 
-[src/core/node.ts:271](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L271)
+[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
 
 ___
 
 ### removeEventListener
 
-**removeEventListener**(`type`, `listener?`, `options?`): `void`
+▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
 
 Wrapper for removeEventListener.
 
@@ -527,13 +633,13 @@ Wrapper for removeEventListener.
 
 #### Defined in
 
-[src/core/node.ts:383](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L383)
+[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
 
 ___
 
 ### removeValueToHash
 
-**removeValueToHash**(): `void`
+▸ **removeValueToHash**(): `void`
 
 #### Returns
 
@@ -541,13 +647,13 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:209](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L209)
+[src/core/storage.ts:215](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L215)
 
 ___
 
 ### saveValueToHash
 
-**saveValueToHash**(): `void`
+▸ **saveValueToHash**(): `void`
 
 #### Returns
 
@@ -555,13 +661,13 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:224](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L224)
+[src/core/storage.ts:230](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L230)
 
 ___
 
 ### setProperties
 
-**setProperties**(`props`): `void`
+▸ **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -582,13 +688,13 @@ Sets multiple properties in batch.
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
 
 ___
 
 ### setProperty
 
-**setProperty**(`name`, `value`, `skipDispatch?`): `void`
+▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -610,13 +716,13 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Defined in
 
-[src/core/node.ts:129](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L129)
+[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
 
 ___
 
 ### throttle
 
-**throttle**(`func`, `arg?`, `sync?`): `void`
+▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -626,7 +732,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 | :------ | :------ | :------ | :------ |
 | `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
 | `arg` | `any` | `undefined` | argument for throttled function. |
-| `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
+| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
 
 #### Returns
 
@@ -638,13 +744,13 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Defined in
 
-[src/core/node.ts:296](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L296)
+[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
 
 ___
 
 ### unbind
 
-**unbind**(`prop`): `void`
+▸ **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
@@ -664,13 +770,13 @@ Unbinds a binding to a specified property`.
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
 
 ___
 
 ### valueChanged
 
-**valueChanged**(): `void`
+▸ **valueChanged**(): `void`
 
 #### Returns
 
@@ -678,4 +784,4 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:193](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L193)
+[src/core/storage.ts:199](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L199)

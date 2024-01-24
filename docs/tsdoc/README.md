@@ -1,10 +1,10 @@
+io-gui
+
 # io-gui
 
-## Namespaces
+## Table of contents
 
-- [IoStorage](modules/IoStorage.md)
-
-## Classes
+### Classes
 
 - [Binding](classes/Binding.md)
 - [ChangeQueue](classes/ChangeQueue.md)
@@ -47,12 +47,16 @@
 - [IoInspector](classes/IoInspector.md)
 - [IoLabel](classes/IoLabel.md)
 - [IoMatrix](classes/IoMatrix.md)
-- [IoMdNavigator](classes/IoMdNavigator.md)
 - [IoMdView](classes/IoMdView.md)
+- [IoMenuHamburger](classes/IoMenuHamburger.md)
 - [IoMenuItem](classes/IoMenuItem.md)
 - [IoMenuOptions](classes/IoMenuOptions.md)
 - [IoMenuTree](classes/IoMenuTree.md)
-- [IoNavigator](classes/IoNavigator.md)
+- [IoNavigatorBase](classes/IoNavigatorBase.md)
+- [IoNavigatorCombined](classes/IoNavigatorCombined.md)
+- [IoNavigatorMdView](classes/IoNavigatorMdView.md)
+- [IoNavigatorScroller](classes/IoNavigatorScroller.md)
+- [IoNavigatorSelector](classes/IoNavigatorSelector.md)
 - [IoNode](classes/IoNode.md)
 - [IoNotify](classes/IoNotify.md)
 - [IoNumber](classes/IoNumber.md)
@@ -73,7 +77,6 @@
 - [IoStorageNode](classes/IoStorageNode.md)
 - [IoString](classes/IoString.md)
 - [IoSwitch](classes/IoSwitch.md)
-- [IoTheme](classes/IoTheme.md)
 - [IoVector](classes/IoVector.md)
 - [MenuItem](classes/MenuItem.md)
 - [MenuOptions](classes/MenuOptions.md)
@@ -82,33 +85,94 @@
 - [ObjectWidgets](classes/ObjectWidgets.md)
 - [PropertyInstance](classes/PropertyInstance.md)
 - [ProtoChain](classes/ProtoChain.md)
+- [ProtoObjectConfig](classes/ProtoObjectConfig.md)
 - [ProtoProperty](classes/ProtoProperty.md)
 
-## Interfaces
+### Interfaces
 
 - [Change](interfaces/Change.md)
 - [ChangeEvent](interfaces/ChangeEvent.md)
 - [IoNodeConstructor](interfaces/IoNodeConstructor.md)
+- [IoPropertiesConstructor](interfaces/IoPropertiesConstructor.md)
+
+### Type Aliases
+
+- [AnyEventListener](README.md#anyeventlistener)
+- [CallbackFunction](README.md#callbackfunction)
+- [Constructor](README.md#constructor)
+- [CustomEventListener](README.md#customeventlistener)
+- [FocusEventListener](README.md#focuseventlistener)
+- [IoElementArgs](README.md#ioelementargs)
+- [IoNodeArgs](README.md#ionodeargs)
+- [KeyboardEventListener](README.md#keyboardeventlistener)
+- [Listener](README.md#listener)
+- [ListenerDeclaration](README.md#listenerdeclaration)
+- [ListenerDeclarationLoose](README.md#listenerdeclarationloose)
+- [Listeners](README.md#listeners)
+- [ListenersDeclaration](README.md#listenersdeclaration)
+- [MenuItemArgs](README.md#menuitemargs)
+- [MenuItemArgsLoose](README.md#menuitemargsloose)
+- [MenuItemSelectType](README.md#menuitemselecttype)
+- [NudgeDirection](README.md#nudgedirection)
+- [PointerEventListener](README.md#pointereventlistener)
+- [PropertyDeclaration](README.md#propertydeclaration)
+- [PropertyDeclarationLoose](README.md#propertydeclarationloose)
+- [PropertyDeclarations](README.md#propertydeclarations)
+- [Theme](README.md#theme)
+- [TouchEventListener](README.md#toucheventlistener)
+- [VDOMArray](README.md#vdomarray)
+- [VDOMElement](README.md#vdomelement)
+
+### Variables
+
+- [DARK\_THEME](README.md#dark_theme)
+- [IoColorPanelSingleton](README.md#iocolorpanelsingleton)
+- [IoIconsetSingleton](README.md#ioiconsetsingleton)
+- [IoNumberLadderSingleton](README.md#ionumberladdersingleton)
+- [IoOverlaySingleton](README.md#iooverlaysingleton)
+- [IoThemeSingleton](README.md#iothemesingleton)
+- [LICENSE](README.md#license)
+- [LIGHT\_THEME](README.md#light_theme)
+- [PropertyDecorators](README.md#propertydecorators)
+
+### Functions
+
+- [IoNodeMixin](README.md#ionodemixin)
+- [IoStorage](README.md#iostorage)
+- [Property](README.md#property)
+- [Register](README.md#register)
+- [addMenuOptions](README.md#addmenuoptions)
+- [applyNativeElementProps](README.md#applynativeelementprops)
+- [assignListenerDeclaration](README.md#assignlistenerdeclaration)
+- [buildTree](README.md#buildtree)
+- [disposeElementDeep](README.md#disposeelementdeep)
+- [filterOptions](README.md#filteroptions)
+- [genObjectStorageID](README.md#genobjectstorageid)
+- [getMenuAncestors](README.md#getmenuancestors)
+- [getMenuDescendants](README.md#getmenudescendants)
+- [getMenuRoot](README.md#getmenuroot)
+- [hardenListenerDeclaration](README.md#hardenlistenerdeclaration)
+- [listenerFromDefinition](README.md#listenerfromdefinition)
 
 ## Type Aliases
 
 ### AnyEventListener
 
- **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](README.md#keyboardeventlistener) \| [`PointerEventListener`](README.md#pointereventlistener) \| [`CustomEventListener`](README.md#customeventlistener) \| [`FocusEventListener`](README.md#focuseventlistener) \| [`TouchEventListener`](README.md#toucheventlistener)
+Ƭ **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](README.md#keyboardeventlistener) \| [`PointerEventListener`](README.md#pointereventlistener) \| [`CustomEventListener`](README.md#customeventlistener) \| [`FocusEventListener`](README.md#focuseventlistener) \| [`TouchEventListener`](README.md#toucheventlistener)
 
 #### Defined in
 
-[src/core/node.ts:23](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L23)
+[src/core/node.ts:23](https://github.com/io-gui/io/blob/main/src/core/node.ts#L23)
 
 ___
 
 ### CallbackFunction
 
- **CallbackFunction**: (`arg?`: `any`) => `void`
+Ƭ **CallbackFunction**: (`arg?`: `any`) => `void`
 
 #### Type declaration
 
-(`arg?`): `void`
+▸ (`arg?`): `void`
 
 ##### Parameters
 
@@ -122,17 +186,17 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:16](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L16)
+[src/core/node.ts:16](https://github.com/io-gui/io/blob/main/src/core/node.ts#L16)
 
 ___
 
 ### Constructor
 
- **Constructor**: (...`args`: `any`[]) => `unknown`
+Ƭ **Constructor**: (...`args`: `any`[]) => `unknown`
 
 #### Type declaration
 
-(...`args`)
+• (`...args`): `unknown`
 
 ##### Parameters
 
@@ -140,19 +204,23 @@ ___
 | :------ | :------ |
 | `...args` | `any`[] |
 
+##### Returns
+
+`unknown`
+
 #### Defined in
 
-[src/core/node.ts:7](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L7)
+[src/core/node.ts:7](https://github.com/io-gui/io/blob/main/src/core/node.ts#L7)
 
 ___
 
 ### CustomEventListener
 
- **CustomEventListener**: (`event`: `CustomEvent`) => `void` \| `EventListener`
+Ƭ **CustomEventListener**: (`event`: `CustomEvent`) => `void` \| `EventListener`
 
 #### Type declaration
 
-(`event`): `void` \| `EventListener`
+▸ (`event`): `void` \| `EventListener`
 
 ##### Parameters
 
@@ -166,17 +234,17 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:20](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L20)
+[src/core/node.ts:20](https://github.com/io-gui/io/blob/main/src/core/node.ts#L20)
 
 ___
 
 ### FocusEventListener
 
- **FocusEventListener**: (`event`: `FocusEvent`) => `void`
+Ƭ **FocusEventListener**: (`event`: `FocusEvent`) => `void`
 
 #### Type declaration
 
-(`event`): `void`
+▸ (`event`): `void`
 
 ##### Parameters
 
@@ -190,27 +258,27 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:21](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L21)
+[src/core/node.ts:21](https://github.com/io-gui/io/blob/main/src/core/node.ts#L21)
 
 ___
 
 ### IoElementArgs
 
- **IoElementArgs**: [`IoNodeArgs`](README.md#ionodeargs) & { `[key: string]`: `any`; `cache?`: `boolean` ; `class?`: `string` ; `contenteditable?`: `boolean` ; `disabled?`: `boolean` ; `hidden?`: `boolean` ; `id?`: `string` ; `label?`: `string` ; `name?`: `string` ; `role?`: `string` ; `tabindex?`: `string` ; `title?`: `string`  }
+Ƭ **IoElementArgs**: [`IoNodeArgs`](README.md#ionodeargs) & \{ `[key: string]`: `any`; `cache?`: `boolean` ; `class?`: `string` ; `contenteditable?`: `boolean` ; `disabled?`: `boolean` ; `hidden?`: `boolean` ; `id?`: `string` ; `label?`: `string` ; `name?`: `string` ; `role?`: `string` ; `tabindex?`: `string` ; `title?`: `string`  }
 
 #### Defined in
 
-[src/core/element.ts:20](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L20)
+[src/core/element.ts:20](https://github.com/io-gui/io/blob/main/src/core/element.ts#L20)
 
 ___
 
 ### IoNodeArgs
 
- **IoNodeArgs**: `Object`
+Ƭ **IoNodeArgs**: `Object`
 
 #### Index signature
 
-▪ [key: `prefix`<`string`, ``"@"``\>]: `string` \| (`event`: `CustomEvent`<`any`\>) => `void`
+▪ [key: `prefix`\<`string`, ``"@"``\>]: `string` \| (`event`: `CustomEvent`\<`any`\>) => `void`
 
 #### Type declaration
 
@@ -220,17 +288,17 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:32](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L32)
+[src/core/node.ts:32](https://github.com/io-gui/io/blob/main/src/core/node.ts#L32)
 
 ___
 
 ### KeyboardEventListener
 
- **KeyboardEventListener**: (`event`: `KeyboardEvent`) => `void`
+Ƭ **KeyboardEventListener**: (`event`: `KeyboardEvent`) => `void`
 
 #### Type declaration
 
-(`event`): `void`
+▸ (`event`): `void`
 
 ##### Parameters
 
@@ -244,111 +312,111 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L18)
+[src/core/node.ts:18](https://github.com/io-gui/io/blob/main/src/core/node.ts#L18)
 
 ___
 
 ### Listener
 
- **Listener**: [[`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
+Ƭ **Listener**: [[`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L60)
+[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L60)
 
 ___
 
 ### ListenerDeclaration
 
- **ListenerDeclaration**: [`string` \| [`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
+Ƭ **ListenerDeclaration**: [`string` \| [`CustomEventListener`](README.md#customeventlistener), AddEventListenerOptions?]
 
 Declares default listeners.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L6)
+[src/core/internals/eventDispatcher.ts:6](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L6)
 
 ___
 
 ### ListenerDeclarationLoose
 
- **ListenerDeclarationLoose**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`ListenerDeclaration`](README.md#listenerdeclaration)
+Ƭ **ListenerDeclarationLoose**: `string` \| [`CustomEventListener`](README.md#customeventlistener) \| [`ListenerDeclaration`](README.md#listenerdeclaration)
 
 Allows loose declaration of listeners by specifying only partial declarations such as function or function name.
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L11)
+[src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L11)
 
 ___
 
 ### Listeners
 
- **Listeners**: `Record`<`string`, [`Listener`](README.md#listener)[]\>
+Ƭ **Listeners**: `Record`\<`string`, [`Listener`](README.md#listener)[]\>
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L61)
+[src/core/internals/eventDispatcher.ts:61](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L61)
 
 ___
 
 ### ListenersDeclaration
 
- **ListenersDeclaration**: `Record`<`string`, [`ListenerDeclarationLoose`](README.md#listenerdeclarationloose)\>
+Ƭ **ListenersDeclaration**: `Record`\<`string`, [`ListenerDeclarationLoose`](README.md#listenerdeclarationloose)\>
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L63)
+[src/core/internals/eventDispatcher.ts:63](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L63)
 
 ___
 
 ### MenuItemArgs
 
- **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & { `action?`: () => `void` ; `hint?`: `string` ; `icon?`: `string` ; `mode?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `options?`: [`MenuItemArgsLoose`](README.md#menuitemargsloose)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `selected?`: `boolean` ; `value?`: `any`  }
+Ƭ **MenuItemArgs**: [`IoElementArgs`](README.md#ioelementargs) & \{ `action?`: () => `void` ; `disabled?`: `boolean` ; `hidden?`: `boolean` ; `hint?`: `string` ; `icon?`: `string` ; `mode?`: [`MenuItemSelectType`](README.md#menuitemselecttype) ; `options?`: [`MenuItemArgsLoose`](README.md#menuitemargsloose)[] \| [`MenuOptions`](classes/MenuOptions.md) ; `selected?`: `boolean` ; `value?`: `any`  }
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L10)
+[src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L10)
 
 ___
 
 ### MenuItemArgsLoose
 
- **MenuItemArgsLoose**: `undefined` \| ``null`` \| `string` \| `number` \| [`MenuItemArgs`](README.md#menuitemargs)
+Ƭ **MenuItemArgsLoose**: `undefined` \| ``null`` \| `string` \| `number` \| [`MenuItemArgs`](README.md#menuitemargs)
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L8)
+[src/elements/menus/models/menu-item.ts:8](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L8)
 
 ___
 
 ### MenuItemSelectType
 
- **MenuItemSelectType**: ``"select"`` \| ``"anchor"`` \| ``"toggle"`` \| ``"link"`` \| ``"none"``
+Ƭ **MenuItemSelectType**: ``"select"`` \| ``"scroll"`` \| ``"toggle"`` \| ``"link"`` \| ``"none"``
 
 #### Defined in
 
-[src/elements/menus/models/menu-item.ts:6](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-item.ts#L6)
+[src/elements/menus/models/menu-item.ts:6](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L6)
 
 ___
 
 ### NudgeDirection
 
- **NudgeDirection**: ``"none"`` \| ``"pointer"`` \| ``"up"`` \| ``"left"`` \| ``"down"`` \| ``"right"``
+Ƭ **NudgeDirection**: ``"none"`` \| ``"pointer"`` \| ``"up"`` \| ``"left"`` \| ``"down"`` \| ``"right"``
 
 #### Defined in
 
-[src/core/overlay.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L18)
+[src/core/overlay.ts:19](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L19)
 
 ___
 
 ### PointerEventListener
 
- **PointerEventListener**: (`event`: `PointerEvent`) => `void`
+Ƭ **PointerEventListener**: (`event`: `PointerEvent`) => `void`
 
 #### Type declaration
 
-(`event`): `void`
+▸ (`event`): `void`
 
 ##### Parameters
 
@@ -362,13 +430,13 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L19)
+[src/core/node.ts:19](https://github.com/io-gui/io/blob/main/src/core/node.ts#L19)
 
 ___
 
 ### PropertyDeclaration
 
- **PropertyDeclaration**: `Object`
+Ƭ **PropertyDeclaration**: `Object`
 
 Declares default value, type and reactive behavior of the property.
 
@@ -377,47 +445,106 @@ Declares default value, type and reactive behavior of the property.
 | Name | Type |
 | :------ | :------ |
 | `binding?` | [`Binding`](classes/Binding.md) |
+| `init?` | `any` |
 | `observe?` | `boolean` |
 | `reactive?` | `boolean` |
 | `reflect?` | `boolean` |
-| `type?` | [`Constructor`](README.md#constructor) \| [`Constructor`](README.md#constructor)[] |
+| `type?` | [`Constructor`](README.md#constructor) |
 | `value?` | `any` |
 
 #### Defined in
 
-[src/core/internals/property.ts:7](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L7)
+[src/core/internals/property.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L7)
 
 ___
 
 ### PropertyDeclarationLoose
 
- **PropertyDeclarationLoose**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](README.md#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](README.md#propertydeclaration)
+Ƭ **PropertyDeclarationLoose**: `string` \| `number` \| `boolean` \| `any`[] \| ``null`` \| `undefined` \| [`Constructor`](README.md#constructor) \| [`Binding`](classes/Binding.md) \| [`PropertyDeclaration`](README.md#propertydeclaration)
 
 Allows loose declaration of properties by specifying only partial declarations such as default value or type.
 
 #### Defined in
 
-[src/core/internals/property.ts:19](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L19)
+[src/core/internals/property.ts:20](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L20)
 
 ___
 
 ### PropertyDeclarations
 
- **PropertyDeclarations**: `Record`<`string`, [`PropertyDeclarationLoose`](README.md#propertydeclarationloose)\>
+Ƭ **PropertyDeclarations**: `Record`\<`string`, [`PropertyDeclarationLoose`](README.md#propertydeclarationloose)\>
 
 #### Defined in
 
-[src/core/internals/property.ts:138](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L138)
+[src/core/internals/property.ts:189](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L189)
+
+___
+
+### Theme
+
+Ƭ **Theme**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `iotBackgroundColor` | [`Color`](classes/Color.md) |
+| `iotBackgroundColorDimmed` | [`Color`](classes/Color.md) |
+| `iotBackgroundColorFaint` | [`Color`](classes/Color.md) |
+| `iotBackgroundColorField` | [`Color`](classes/Color.md) |
+| `iotBackgroundColorSelected` | [`Color`](classes/Color.md) |
+| `iotBackgroundColorStrong` | [`Color`](classes/Color.md) |
+| `iotBorderColor` | [`Color`](classes/Color.md) |
+| `iotBorderColorDark` | [`Color`](classes/Color.md) |
+| `iotBorderColorFocus` | [`Color`](classes/Color.md) |
+| `iotBorderColorLight` | [`Color`](classes/Color.md) |
+| `iotBorderColorSelected` | [`Color`](classes/Color.md) |
+| `iotBorderRadius` | `number` |
+| `iotBorderRadius2` | `number` |
+| `iotBorderWidth` | `number` |
+| `iotBorderWidth2` | `number` |
+| `iotColor` | [`Color`](classes/Color.md) |
+| `iotColorDimmed` | [`Color`](classes/Color.md) |
+| `iotColorError` | [`Color`](classes/Color.md) |
+| `iotColorField` | [`Color`](classes/Color.md) |
+| `iotColorLink` | [`Color`](classes/Color.md) |
+| `iotColorSelected` | [`Color`](classes/Color.md) |
+| `iotColorStrong` | [`Color`](classes/Color.md) |
+| `iotFieldHeight` | `number` |
+| `iotFieldHeight10` | `number` |
+| `iotFieldHeight12` | `number` |
+| `iotFieldHeight2` | `number` |
+| `iotFieldHeight3` | `number` |
+| `iotFieldHeight4` | `number` |
+| `iotFieldHeight8` | `number` |
+| `iotFontSize` | `number` |
+| `iotGradientColorEnd` | [`Color`](classes/Color.md) |
+| `iotGradientColorStart` | [`Color`](classes/Color.md) |
+| `iotLineHeight` | `number` |
+| `iotLineHeight2` | `number` |
+| `iotLineHeight3` | `number` |
+| `iotLineHeight4` | `number` |
+| `iotLineHeight8` | `number` |
+| `iotShadowColor` | [`Color`](classes/Color.md) |
+| `iotSpacing` | `number` |
+| `iotSpacing2` | `number` |
+| `iotSpacing3` | `number` |
+| `iotSpacing4` | `number` |
+| `iotStrokeWidth` | `number` |
+
+#### Defined in
+
+[src/core/theme.ts:16](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L16)
 
 ___
 
 ### TouchEventListener
 
- **TouchEventListener**: (`event`: `TouchEvent`) => `void`
+Ƭ **TouchEventListener**: (`event`: `TouchEvent`) => `void`
 
 #### Type declaration
 
-(`event`): `void`
+▸ (`event`): `void`
 
 ##### Parameters
 
@@ -431,23 +558,23 @@ ___
 
 #### Defined in
 
-[src/core/node.ts:22](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L22)
+[src/core/node.ts:22](https://github.com/io-gui/io/blob/main/src/core/node.ts#L22)
 
 ___
 
 ### VDOMArray
 
- **VDOMArray**: [`string`, [`IoElementArgs`](README.md#ioelementargs) \| `string` \| [`VDOMArray`](README.md#vdomarray)[]] \| [`string`, [`IoElementArgs`](README.md#ioelementargs) \| `string`, [`VDOMArray`](README.md#vdomarray)[] \| `string`]
+Ƭ **VDOMArray**: [`string`] \| [`string`, [`IoElementArgs`](README.md#ioelementargs) \| `string` \| [`VDOMArray`](README.md#vdomarray)[]] \| [`string`, [`IoElementArgs`](README.md#ioelementargs) \| `string`, [`VDOMArray`](README.md#vdomarray)[] \| `string`]
 
 #### Defined in
 
-[src/core/element.ts:39](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L39)
+[src/core/element.ts:39](https://github.com/io-gui/io/blob/main/src/core/element.ts#L39)
 
 ___
 
 ### VDOMElement
 
- **VDOMElement**: `Object`
+Ƭ **VDOMElement**: `Object`
 
 #### Type declaration
 
@@ -459,63 +586,73 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:43](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L43)
+[src/core/element.ts:44](https://github.com/io-gui/io/blob/main/src/core/element.ts#L44)
 
 ## Variables
 
-### IoColorPanelSingleton
+### DARK\_THEME
 
- `Const` **IoColorPanelSingleton**: [`IoColorPanel`](classes/IoColorPanel.md)
+• `Const` **DARK\_THEME**: [`Theme`](README.md#theme)
 
 #### Defined in
 
-[src/elements/color/io-color-panel.ts:105](https://github.com/io-gui/iogui/blob/main/src/elements/color/io-color-panel.ts#L105)
+[src/core/theme.ts:118](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L118)
+
+___
+
+### IoColorPanelSingleton
+
+• `Const` **IoColorPanelSingleton**: [`IoColorPanel`](classes/IoColorPanel.md)
+
+#### Defined in
+
+[src/elements/color/io-color-panel.ts:104](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-panel.ts#L104)
 
 ___
 
 ### IoIconsetSingleton
 
- `Const` **IoIconsetSingleton**: [`IoIconset`](classes/IoIconset.md)
+• `Const` **IoIconsetSingleton**: [`IoIconset`](classes/IoIconset.md)
 
 #### Defined in
 
-[src/elements/basic/io-iconset.ts:41](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-iconset.ts#L41)
+[src/elements/basic/io-iconset.ts:41](https://github.com/io-gui/io/blob/main/src/elements/basic/io-iconset.ts#L41)
 
 ___
 
 ### IoNumberLadderSingleton
 
- `Const` **IoNumberLadderSingleton**: [`IoNumberLadder`](classes/IoNumberLadder.md)
+• `Const` **IoNumberLadderSingleton**: [`IoNumberLadder`](classes/IoNumberLadder.md)
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:560](https://github.com/io-gui/iogui/blob/main/src/elements/basic/io-number.ts#L560)
+[src/elements/basic/io-number.ts:561](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L561)
 
 ___
 
 ### IoOverlaySingleton
 
- `Const` **IoOverlaySingleton**: [`IoOverlay`](classes/IoOverlay.md)
+• `Const` **IoOverlaySingleton**: [`IoOverlay`](classes/IoOverlay.md)
 
 #### Defined in
 
-[src/core/overlay.ts:236](https://github.com/io-gui/iogui/blob/main/src/core/overlay.ts#L236)
+[src/core/overlay.ts:237](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L237)
 
 ___
 
 ### IoThemeSingleton
 
- `Const` **IoThemeSingleton**: [`IoTheme`](classes/IoTheme.md)
+• `Const` **IoThemeSingleton**: `IoTheme`
 
 #### Defined in
 
-[src/core/theme.ts:299](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L299)
+[src/core/theme.ts:307](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L307)
 
 ___
 
 ### LICENSE
 
- `Const` **LICENSE**: ``"MIT"``
+• `Const` **LICENSE**: ``"MIT"``
 
 **`License`**
 
@@ -543,23 +680,33 @@ THE SOFTWARE.
 
 #### Defined in
 
-[src/iogui.ts:33](https://github.com/io-gui/iogui/blob/main/src/iogui.ts#L33)
+[src/iogui.ts:33](https://github.com/io-gui/io/blob/main/src/iogui.ts#L33)
+
+___
+
+### LIGHT\_THEME
+
+• `Const` **LIGHT\_THEME**: [`Theme`](README.md#theme)
+
+#### Defined in
+
+[src/core/theme.ts:67](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L67)
 
 ___
 
 ### PropertyDecorators
 
- `Const` **PropertyDecorators**: `WeakMap`<[`Constructor`](README.md#constructor), [`PropertyDeclarations`](README.md#propertydeclarations)\>
+• `Const` **PropertyDecorators**: `WeakMap`\<[`Constructor`](README.md#constructor), [`PropertyDeclarations`](README.md#propertydeclarations)\>
 
 #### Defined in
 
-[src/core/internals/property.ts:140](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L140)
+[src/core/internals/property.ts:191](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L191)
 
 ## Functions
 
 ### IoNodeMixin
 
-**IoNodeMixin**<`T`\>(`superclass`): typeof `__class`
+▸ **IoNodeMixin**\<`T`\>(`superclass`): typeof `__class`
 
 Core mixin for `Node` classes.
 
@@ -567,7 +714,7 @@ Core mixin for `Node` classes.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`IoNodeConstructor`](interfaces/IoNodeConstructor.md)<`any`, `T`\> |
+| `T` | extends [`IoNodeConstructor`](interfaces/IoNodeConstructor.md)\<`any`\> |
 
 #### Parameters
 
@@ -583,13 +730,13 @@ typeof `__class`
 
 #### Defined in
 
-[src/core/node.ts:42](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L42)
+[src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)
 
 ___
 
 ### IoStorage
 
-**IoStorage**(`props`): [`Binding`](classes/Binding.md)
+▸ **IoStorage**(`props`): [`Binding`](classes/Binding.md)
 
 #### Parameters
 
@@ -603,13 +750,13 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:255](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L255)
+[src/core/storage.ts:263](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L263)
 
 ___
 
 ### Property
 
-**Property**(`propertyDefinition`): (`target`: [`IoNode`](classes/IoNode.md), `propertyName`: `string`) => `void`
+▸ **Property**(`propertyDefinition`): (`target`: [`IoNode`](classes/IoNode.md), `propertyName`: `string`) => `void`
 
 Allows property declarations using decorator pattern.
 
@@ -625,7 +772,7 @@ Allows property declarations using decorator pattern.
 
 Property decorator function.
 
-(`target`, `propertyName`): `void`
+▸ (`target`, `propertyName`): `void`
 
 ##### Parameters
 
@@ -640,35 +787,13 @@ Property decorator function.
 
 #### Defined in
 
-[src/core/internals/property.ts:147](https://github.com/io-gui/iogui/blob/main/src/core/internals/property.ts#L147)
+[src/core/internals/property.ts:198](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L198)
 
 ___
 
-### RegisterIoElement
+### Register
 
-**RegisterIoElement**(`elementConstructor`): `void`
-
-Register function for `IoElement`. Registers custom element.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `elementConstructor` | typeof [`IoElement`](classes/IoElement.md) | Element class to register. |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/element.ts:89](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L89)
-
-___
-
-### RegisterIoNode
-
-**RegisterIoNode**(`target`): `void`
+▸ **Register**(`ioNodeConstructor`): `void`
 
 Register function to be called once per class.
 
@@ -676,7 +801,7 @@ Register function to be called once per class.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `target` | typeof [`IoNode`](classes/IoNode.md) | Node class to register. |
+| `ioNodeConstructor` | typeof [`IoNode`](classes/IoNode.md) | Node class to register. |
 
 #### Returns
 
@@ -684,13 +809,13 @@ Register function to be called once per class.
 
 #### Defined in
 
-[src/core/node.ts:443](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L443)
+[src/core/node.ts:437](https://github.com/io-gui/io/blob/main/src/core/node.ts#L437)
 
 ___
 
 ### addMenuOptions
 
-**addMenuOptions**(`options`, `depth`, `d?`): [`VDOMArray`](README.md#vdomarray)[]
+▸ **addMenuOptions**(`options`, `depth`, `d?`): [`VDOMArray`](README.md#vdomarray)[]
 
 #### Parameters
 
@@ -706,13 +831,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-tree.ts#L8)
+[src/elements/menus/io-menu-tree.ts:9](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L9)
 
 ___
 
 ### applyNativeElementProps
 
-**applyNativeElementProps**(`element`, `props`): `void`
+▸ **applyNativeElementProps**(`element`, `props`): `void`
 
 Sets element properties.
 
@@ -729,13 +854,13 @@ Sets element properties.
 
 #### Defined in
 
-[src/core/element.ts:206](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L206)
+[src/core/element.ts:137](https://github.com/io-gui/io/blob/main/src/core/element.ts#L137)
 
 ___
 
 ### assignListenerDeclaration
 
-**assignListenerDeclaration**(`defs`, `srcDef`): `void`
+▸ **assignListenerDeclaration**(`defs`, `srcDef`): `void`
 
 Assigns source listener declaration to an existing array of listener declarations.
 
@@ -752,19 +877,19 @@ Assigns source listener declaration to an existing array of listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L27)
+[src/core/internals/eventDispatcher.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L27)
 
 ___
 
 ### buildTree
 
-**buildTree**(): (`node`: [`VDOMArray`](README.md#vdomarray)) => `any`
+▸ **buildTree**(): (`node`: [`VDOMArray`](README.md#vdomarray)) => `any`
 
 #### Returns
 
 `fn`
 
-(`node`): `any`
+▸ (`node`): `any`
 
 ##### Parameters
 
@@ -778,13 +903,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:79](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L79)
+[src/core/element.ts:80](https://github.com/io-gui/io/blob/main/src/core/element.ts#L80)
 
 ___
 
 ### disposeElementDeep
 
-**disposeElementDeep**(`element`): `void`
+▸ **disposeElementDeep**(`element`): `void`
 
 #### Parameters
 
@@ -798,13 +923,13 @@ ___
 
 #### Defined in
 
-[src/core/element.ts:175](https://github.com/io-gui/iogui/blob/main/src/core/element.ts#L175)
+[src/core/element.ts:103](https://github.com/io-gui/io/blob/main/src/core/element.ts#L103)
 
 ___
 
 ### filterOptions
 
-**filterOptions**(`options`, `search`, `depth?`, `elements?`, `d?`): `any`
+▸ **filterOptions**(`options`, `search`, `depth?`, `elements?`, `d?`): `any`
 
 #### Parameters
 
@@ -822,19 +947,19 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:38](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-tree.ts#L38)
+[src/elements/menus/io-menu-tree.ts:39](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L39)
 
 ___
 
 ### genObjectStorageID
 
-**genObjectStorageID**(`object`): `string`
+▸ **genObjectStorageID**(`object`): `string`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `object` | `Record`<`string`, `any`\> |
+| `object` | `Record`\<`string`, `any`\> |
 
 #### Returns
 
@@ -842,13 +967,13 @@ ___
 
 #### Defined in
 
-[src/core/storage.ts:98](https://github.com/io-gui/iogui/blob/main/src/core/storage.ts#L98)
+[src/core/storage.ts:104](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L104)
 
 ___
 
 ### getMenuAncestors
 
-**getMenuAncestors**(`element`): ([`IoMenuItem`](classes/IoMenuItem.md) \| [`IoMenuOptions`](classes/IoMenuOptions.md))[]
+▸ **getMenuAncestors**(`element`): ([`IoMenuItem`](classes/IoMenuItem.md) \| [`IoMenuOptions`](classes/IoMenuOptions.md))[]
 
 #### Parameters
 
@@ -862,13 +987,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:408](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L408)
+[src/elements/menus/io-menu-item.ts:393](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L393)
 
 ___
 
 ### getMenuDescendants
 
-**getMenuDescendants**(`element`): `IoMenuElementType`[]
+▸ **getMenuDescendants**(`element`): `IoMenuElementType`[]
 
 #### Parameters
 
@@ -882,13 +1007,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:387](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L387)
+[src/elements/menus/io-menu-item.ts:372](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L372)
 
 ___
 
 ### getMenuRoot
 
-**getMenuRoot**(`element`): `IoMenuElementType`
+▸ **getMenuRoot**(`element`): `IoMenuElementType`
 
 #### Parameters
 
@@ -902,13 +1027,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/io-menu-item.ts:418](https://github.com/io-gui/iogui/blob/main/src/elements/menus/io-menu-item.ts#L418)
+[src/elements/menus/io-menu-item.ts:403](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L403)
 
 ___
 
 ### hardenListenerDeclaration
 
-**hardenListenerDeclaration**(`def`): [`ListenerDeclaration`](README.md#listenerdeclaration)
+▸ **hardenListenerDeclaration**(`def`): [`ListenerDeclaration`](README.md#listenerdeclaration)
 
 Takes loosely typed listener declaration and returns stronly typed listener declaration.
 
@@ -926,13 +1051,13 @@ Stronly typed listener declaration
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L18)
+[src/core/internals/eventDispatcher.ts:18](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L18)
 
 ___
 
 ### listenerFromDefinition
 
-**listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
+▸ **listenerFromDefinition**(`node`, `def`): [`Listener`](README.md#listener)
 
 Takes a node and a listener declaration and returns a listener.
 
@@ -951,4 +1076,4 @@ Listener
 
 #### Defined in
 
-[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/iogui/blob/main/src/core/internals/eventDispatcher.ts#L45)
+[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L45)

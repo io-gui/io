@@ -1,16 +1,73 @@
+[io-gui](../README.md) / MenuOptions
+
 # Class: MenuOptions
 
 ## Hierarchy
 
-- `__class`<`ArrayConstructor`, `this`\>
+- `__class`\<`ArrayConstructor`, `this`\>
 
   ↳ **`MenuOptions`**
+
+## Table of contents
+
+### Constructors
+
+- [constructor](MenuOptions.md#constructor)
+
+### Properties
+
+- [\_bindings](MenuOptions.md#_bindings)
+- [\_changeQueue](MenuOptions.md#_changequeue)
+- [\_eventDispatcher](MenuOptions.md#_eventdispatcher)
+- [\_properties](MenuOptions.md#_properties)
+- [\_protochain](MenuOptions.md#_protochain)
+- [delimiter](MenuOptions.md#delimiter)
+- [first](MenuOptions.md#first)
+- [last](MenuOptions.md#last)
+- [path](MenuOptions.md#path)
+- [scroll](MenuOptions.md#scroll)
+
+### Accessors
+
+- [Properties](MenuOptions.md#properties)
+
+### Methods
+
+- [Register](MenuOptions.md#register)
+- [\_onItemSelectedChanged](MenuOptions.md#_onitemselectedchanged)
+- [\_onSubOptionsPathChanged](MenuOptions.md#_onsuboptionspathchanged)
+- [addEventListener](MenuOptions.md#addeventlistener)
+- [applyProperties](MenuOptions.md#applyproperties)
+- [bind](MenuOptions.md#bind)
+- [changed](MenuOptions.md#changed)
+- [dispatchEvent](MenuOptions.md#dispatchevent)
+- [dispatchMutationEvent](MenuOptions.md#dispatchmutationevent)
+- [dispatchQueue](MenuOptions.md#dispatchqueue)
+- [dispatchQueueSync](MenuOptions.md#dispatchqueuesync)
+- [dispose](MenuOptions.md#dispose)
+- [firstChanged](MenuOptions.md#firstchanged)
+- [getItem](MenuOptions.md#getitem)
+- [init](MenuOptions.md#init)
+- [inputValue](MenuOptions.md#inputvalue)
+- [lastChanged](MenuOptions.md#lastchanged)
+- [objectMutated](MenuOptions.md#objectmutated)
+- [onObjectMutated](MenuOptions.md#onobjectmutated)
+- [pathChanged](MenuOptions.md#pathchanged)
+- [push](MenuOptions.md#push)
+- [queue](MenuOptions.md#queue)
+- [removeEventListener](MenuOptions.md#removeeventlistener)
+- [selectDefault](MenuOptions.md#selectdefault)
+- [setProperties](MenuOptions.md#setproperties)
+- [setProperty](MenuOptions.md#setproperty)
+- [throttle](MenuOptions.md#throttle)
+- [unbind](MenuOptions.md#unbind)
+- [updatePaths](MenuOptions.md#updatepaths)
 
 ## Constructors
 
 ### constructor
 
-**new MenuOptions**(`args?`, `properties?`)
+• **new MenuOptions**(`args?`, `properties?`): [`MenuOptions`](MenuOptions.md)
 
 #### Parameters
 
@@ -19,19 +76,23 @@
 | `args` | [`MenuItemArgsLoose`](../README.md#menuitemargsloose)[] | `[]` |
 | `properties` | [`IoNodeArgs`](../README.md#ionodeargs) | `{}` |
 
+#### Returns
+
+[`MenuOptions`](MenuOptions.md)
+
 #### Overrides
 
 IoNodeMixin(Array).constructor
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:65](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L65)
+[src/elements/menus/models/menu-options.ts:65](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L65)
 
 ## Properties
 
 ### \_bindings
 
- `Readonly` **\_bindings**: `Map`<`string`, [`Binding`](Binding.md)\>
+• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
@@ -39,13 +100,13 @@ IoNodeMixin(Array).\_bindings
 
 #### Defined in
 
-[src/core/node.ts:55](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L55)
+[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ___
 
 ### \_changeQueue
 
- `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
@@ -53,13 +114,13 @@ IoNodeMixin(Array).\_changeQueue
 
 #### Defined in
 
-[src/core/node.ts:56](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L56)
+[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ___
 
 ### \_eventDispatcher
 
- `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
@@ -67,13 +128,13 @@ IoNodeMixin(Array).\_eventDispatcher
 
 #### Defined in
 
-[src/core/node.ts:57](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L57)
+[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ___
 
 ### \_properties
 
- `Readonly` **\_properties**: `Map`<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
@@ -81,13 +142,13 @@ IoNodeMixin(Array).\_properties
 
 #### Defined in
 
-[src/core/node.ts:54](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L54)
+[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ___
 
 ### \_protochain
 
- `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
@@ -95,63 +156,63 @@ IoNodeMixin(Array).\_protochain
 
 #### Defined in
 
-[src/core/node.ts:53](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L53)
-
-___
-
-### anchor
-
- **anchor**: `any`
-
-#### Defined in
-
-[src/elements/menus/models/menu-options.ts:25](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L25)
+[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
 ___
 
 ### delimiter
 
- **delimiter**: `string`
+• **delimiter**: `string`
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:31](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L31)
+[src/elements/menus/models/menu-options.ts:31](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L31)
 
 ___
 
 ### first
 
- **first**: `any`
+• **first**: `any`
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:19](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L19)
+[src/elements/menus/models/menu-options.ts:19](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L19)
 
 ___
 
 ### last
 
- **last**: `any`
+• **last**: `any`
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:22](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L22)
+[src/elements/menus/models/menu-options.ts:22](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L22)
 
 ___
 
 ### path
 
- **path**: `string`
+• **path**: `string`
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:28](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L28)
+[src/elements/menus/models/menu-options.ts:28](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L28)
+
+___
+
+### scroll
+
+• **scroll**: `any`
+
+#### Defined in
+
+[src/elements/menus/models/menu-options.ts:25](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L25)
 
 ## Accessors
 
 ### Properties
 
-`Static` `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
 
 #### Returns
 
@@ -163,19 +224,43 @@ IoNodeMixin(Array).Properties
 
 #### Defined in
 
-[src/core/node.ts:44](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L44)
+[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
 ## Methods
 
-### \_onItemSelectedChanged
+### Register
 
-**_onItemSelectedChanged**(`event`): `void`
+▸ **Register**(`ioNodeConstructor`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
+| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+IoNodeMixin(Array).Register
+
+#### Defined in
+
+[src/core/node.ts:426](https://github.com/io-gui/io/blob/main/src/core/node.ts#L426)
+
+___
+
+### \_onItemSelectedChanged
+
+▸ **_onItemSelectedChanged**(`event`): `void`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `event` | `CustomEvent`\<`any`\> |
 
 #### Returns
 
@@ -183,19 +268,19 @@ IoNodeMixin(Array).Properties
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:227](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L227)
+[src/elements/menus/models/menu-options.ts:227](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L227)
 
 ___
 
 ### \_onSubOptionsPathChanged
 
-**_onSubOptionsPathChanged**(`event`): `void`
+▸ **_onSubOptionsPathChanged**(`event`): `void`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> |
+| `event` | `CustomEvent`\<`any`\> |
 
 #### Returns
 
@@ -203,13 +288,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:244](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L244)
+[src/elements/menus/models/menu-options.ts:244](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L244)
 
 ___
 
 ### addEventListener
 
-**addEventListener**(`type`, `listener`, `options?`): `void`
+▸ **addEventListener**(`type`, `listener`, `options?`): `void`
 
 Wrapper for addEventListener.
 
@@ -231,13 +316,13 @@ IoNodeMixin(Array).addEventListener
 
 #### Defined in
 
-[src/core/node.ts:368](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L368)
+[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 ___
 
 ### applyProperties
 
-**applyProperties**(`props`): `void`
+▸ **applyProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -258,13 +343,13 @@ IoNodeMixin(Array).applyProperties
 
 #### Defined in
 
-[src/core/node.ts:212](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L212)
+[src/core/node.ts:194](https://github.com/io-gui/io/blob/main/src/core/node.ts#L194)
 
 ___
 
 ### bind
 
-**bind**(`prop`): [`Binding`](Binding.md)
+▸ **bind**(`prop`): [`Binding`](Binding.md)
 
 #### Parameters
 
@@ -282,13 +367,13 @@ IoNodeMixin(Array).bind
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:264](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L264)
+[src/elements/menus/models/menu-options.ts:264](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L264)
 
 ___
 
 ### changed
 
-**changed**(): `void`
+▸ **changed**(): `void`
 
 #### Returns
 
@@ -300,13 +385,13 @@ IoNodeMixin(Array).changed
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:281](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L281)
+[src/elements/menus/models/menu-options.ts:281](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L281)
 
 ___
 
 ### dispatchEvent
 
-**dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
 
 Wrapper for dispatchEvent.
 
@@ -329,13 +414,39 @@ IoNodeMixin(Array).dispatchEvent
 
 #### Defined in
 
-[src/core/node.ts:393](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L393)
+[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+
+___
+
+### dispatchMutationEvent
+
+▸ **dispatchMutationEvent**(`object`): `void`
+
+Shorthand for dispatching `'object-mutated'` event on window.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `object` | `any` | object which mutated. |
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+IoNodeMixin(Array).dispatchMutationEvent
+
+#### Defined in
+
+[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
 
 ___
 
 ### dispatchQueue
 
-**dispatchQueue**(): `void`
+▸ **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -349,13 +460,13 @@ IoNodeMixin(Array).dispatchQueue
 
 #### Defined in
 
-[src/core/node.ts:277](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L277)
+[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 ___
 
 ### dispatchQueueSync
 
-**dispatchQueueSync**(): `void`
+▸ **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -369,13 +480,13 @@ IoNodeMixin(Array).dispatchQueueSync
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
 
 ___
 
 ### dispose
 
-**dispose**(): `void`
+▸ **dispose**(): `void`
 
 #### Returns
 
@@ -387,13 +498,13 @@ IoNodeMixin(Array).dispose
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:273](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L273)
+[src/elements/menus/models/menu-options.ts:273](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L273)
 
 ___
 
 ### firstChanged
 
-**firstChanged**(): `void`
+▸ **firstChanged**(): `void`
 
 #### Returns
 
@@ -401,13 +512,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:151](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L151)
+[src/elements/menus/models/menu-options.ts:151](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L151)
 
 ___
 
 ### getItem
 
-**getItem**(`value`, `deep?`): `any`
+▸ **getItem**(`value`, `deep?`): `any`
 
 #### Parameters
 
@@ -422,13 +533,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:54](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L54)
+[src/elements/menus/models/menu-options.ts:54](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L54)
 
 ___
 
 ### init
 
-**init**(): `void`
+▸ **init**(): `void`
 
 #### Returns
 
@@ -440,13 +551,13 @@ IoNodeMixin(Array).init
 
 #### Defined in
 
-[src/core/node.ts:264](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L264)
+[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
 
 ___
 
 ### inputValue
 
-**inputValue**(`value`): `void`
+▸ **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -467,13 +578,13 @@ IoNodeMixin(Array).inputValue
 
 #### Defined in
 
-[src/core/node.ts:252](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L252)
+[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
 
 ___
 
 ### lastChanged
 
-**lastChanged**(): `void`
+▸ **lastChanged**(): `void`
 
 #### Returns
 
@@ -481,13 +592,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:169](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L169)
+[src/elements/menus/models/menu-options.ts:169](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L169)
 
 ___
 
 ### objectMutated
 
-**objectMutated**(`prop`): `void`
+▸ **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -508,13 +619,13 @@ IoNodeMixin(Array).objectMutated
 
 #### Defined in
 
-[src/core/node.ts:326](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L326)
+[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
 
 ___
 
 ### onObjectMutated
 
-**onObjectMutated**(`event`): `void`
+▸ **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -523,7 +634,7 @@ Node should be listening for this event if it has an observed object property
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `event` | `CustomEvent`<`any`\> | Event payload. |
+| `event` | `CustomEvent`\<`any`\> | Event payload. |
 
 #### Returns
 
@@ -535,13 +646,13 @@ IoNodeMixin(Array).onObjectMutated
 
 #### Defined in
 
-[src/core/node.ts:305](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L305)
+[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
 
 ___
 
 ### pathChanged
 
-**pathChanged**(): `void`
+▸ **pathChanged**(): `void`
 
 #### Returns
 
@@ -549,13 +660,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:119](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L119)
+[src/elements/menus/models/menu-options.ts:119](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L119)
 
 ___
 
 ### push
 
-**push**(...`items`): `void`
+▸ **push**(`...items`): `void`
 
 #### Parameters
 
@@ -569,13 +680,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:33](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L33)
+[src/elements/menus/models/menu-options.ts:33](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L33)
 
 ___
 
 ### queue
 
-**queue**(`prop`, `value`, `oldValue`): `void`
+▸ **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
@@ -597,13 +708,13 @@ IoNodeMixin(Array).queue
 
 #### Defined in
 
-[src/core/node.ts:271](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L271)
+[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
 
 ___
 
 ### removeEventListener
 
-**removeEventListener**(`type`, `listener?`, `options?`): `void`
+▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
 
 Wrapper for removeEventListener.
 
@@ -625,13 +736,13 @@ IoNodeMixin(Array).removeEventListener
 
 #### Defined in
 
-[src/core/node.ts:383](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L383)
+[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
 
 ___
 
 ### selectDefault
 
-**selectDefault**(): `boolean`
+▸ **selectDefault**(): `boolean`
 
 #### Returns
 
@@ -639,13 +750,13 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:249](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L249)
+[src/elements/menus/models/menu-options.ts:249](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L249)
 
 ___
 
 ### setProperties
 
-**setProperties**(`props`): `void`
+▸ **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -666,13 +777,13 @@ IoNodeMixin(Array).setProperties
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
 
 ___
 
 ### setProperty
 
-**setProperty**(`name`, `value`, `skipDispatch?`): `void`
+▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -694,13 +805,13 @@ IoNodeMixin(Array).setProperty
 
 #### Defined in
 
-[src/core/node.ts:129](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L129)
+[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
 
 ___
 
 ### throttle
 
-**throttle**(`func`, `arg?`, `sync?`): `void`
+▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -710,7 +821,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 | :------ | :------ | :------ | :------ |
 | `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
 | `arg` | `any` | `undefined` | argument for throttled function. |
-| `sync` | `boolean` | `false` | execute immediately without rAF timeout. |
+| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
 
 #### Returns
 
@@ -722,13 +833,13 @@ IoNodeMixin(Array).throttle
 
 #### Defined in
 
-[src/core/node.ts:296](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L296)
+[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
 
 ___
 
 ### unbind
 
-**unbind**(`prop`): `void`
+▸ **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
@@ -748,13 +859,13 @@ IoNodeMixin(Array).unbind
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/iogui/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
 
 ___
 
 ### updatePaths
 
-**updatePaths**(`item?`): `void`
+▸ **updatePaths**(`item?`): `void`
 
 #### Parameters
 
@@ -768,4 +879,4 @@ ___
 
 #### Defined in
 
-[src/elements/menus/models/menu-options.ts:199](https://github.com/io-gui/iogui/blob/main/src/elements/menus/models/menu-options.ts#L199)
+[src/elements/menus/models/menu-options.ts:199](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-options.ts#L199)

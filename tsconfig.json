@@ -36,10 +36,10 @@
     "useDefineForClassFields": true
   },
   "typedocOptions": {
-    "hideBreadcrumbs": true,
-    "hideInPageTOC": true,
+    // "hideBreadcrumbs": true,
+    // "hideInPageTOC": true,
     "hideGenerator": true,
-    "hideMembersSymbol": true,
+    // "hideMembersSymbol": true,
     "excludePrivate": true,
     "excludeProtected": true,
     "excludeInternal": true,

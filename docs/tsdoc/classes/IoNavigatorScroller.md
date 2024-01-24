@@ -1,115 +1,92 @@
-[io-gui](../README.md) / IoField
+[io-gui](../README.md) / IoNavigatorScroller
 
-# Class: IoField
+# Class: IoNavigatorScroller
 
 Core `IoElement` class.
 
 ## Hierarchy
 
-- [`IoElement`](IoElement.md)
+- [`IoNavigatorBase`](IoNavigatorBase.md)
 
-  ↳ **`IoField`**
-
-  ↳↳ [`IoButton`](IoButton.md)
-
-  ↳↳ [`IoBoolean`](IoBoolean.md)
-
-  ↳↳ [`IoString`](IoString.md)
-
-  ↳↳ [`IoNumber`](IoNumber.md)
-
-  ↳↳ [`IoNumberLadderStep`](IoNumberLadderStep.md)
-
-  ↳↳ [`IoMenuItem`](IoMenuItem.md)
+  ↳ **`IoNavigatorScroller`**
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](IoField.md#constructor)
+- [constructor](IoNavigatorScroller.md#constructor)
 
 ### Properties
 
-- [$](IoField.md#$)
-- [\_bindings](IoField.md#_bindings)
-- [\_changeQueue](IoField.md#_changequeue)
-- [\_eventDispatcher](IoField.md#_eventdispatcher)
-- [\_properties](IoField.md#_properties)
-- [\_protochain](IoField.md#_protochain)
-- [appearance](IoField.md#appearance)
-- [class](IoField.md#class)
-- [contenteditable](IoField.md#contenteditable)
-- [disabled](IoField.md#disabled)
-- [hidden](IoField.md#hidden)
-- [icon](IoField.md#icon)
-- [id](IoField.md#id)
-- [invalid](IoField.md#invalid)
-- [label](IoField.md#label)
-- [name](IoField.md#name)
-- [placeholder](IoField.md#placeholder)
-- [role](IoField.md#role)
-- [selected](IoField.md#selected)
-- [stroke](IoField.md#stroke)
-- [tabindex](IoField.md#tabindex)
-- [title](IoField.md#title)
-- [value](IoField.md#value)
+- [$](IoNavigatorScroller.md#$)
+- [\_bindings](IoNavigatorScroller.md#_bindings)
+- [\_changeQueue](IoNavigatorScroller.md#_changequeue)
+- [\_eventDispatcher](IoNavigatorScroller.md#_eventdispatcher)
+- [\_properties](IoNavigatorScroller.md#_properties)
+- [\_protochain](IoNavigatorScroller.md#_protochain)
+- [class](IoNavigatorScroller.md#class)
+- [collapseWidth](IoNavigatorScroller.md#collapsewidth)
+- [collapsed](IoNavigatorScroller.md#collapsed)
+- [contenteditable](IoNavigatorScroller.md#contenteditable)
+- [depth](IoNavigatorScroller.md#depth)
+- [disabled](IoNavigatorScroller.md#disabled)
+- [elements](IoNavigatorScroller.md#elements)
+- [hidden](IoNavigatorScroller.md#hidden)
+- [id](IoNavigatorScroller.md#id)
+- [label](IoNavigatorScroller.md#label)
+- [menu](IoNavigatorScroller.md#menu)
+- [name](IoNavigatorScroller.md#name)
+- [options](IoNavigatorScroller.md#options)
+- [role](IoNavigatorScroller.md#role)
+- [slotted](IoNavigatorScroller.md#slotted)
+- [tabindex](IoNavigatorScroller.md#tabindex)
+- [title](IoNavigatorScroller.md#title)
 
 ### Accessors
 
-- [textNode](IoField.md#textnode)
-- [Listeners](IoField.md#listeners)
-- [Properties](IoField.md#properties)
-- [Style](IoField.md#style)
+- [textNode](IoNavigatorScroller.md#textnode)
+- [Properties](IoNavigatorScroller.md#properties)
+- [Style](IoNavigatorScroller.md#style)
 
 ### Methods
 
-- [Register](IoField.md#register)
-- [\_flattenTextNode](IoField.md#_flattentextnode)
-- [\_onBlur](IoField.md#_onblur)
-- [\_onClick](IoField.md#_onclick)
-- [\_onFocus](IoField.md#_onfocus)
-- [\_onFocusTo](IoField.md#_onfocusto)
-- [\_onKeydown](IoField.md#_onkeydown)
-- [\_onKeyup](IoField.md#_onkeyup)
-- [\_onPointerdown](IoField.md#_onpointerdown)
-- [\_onPointerleave](IoField.md#_onpointerleave)
-- [\_onPointermove](IoField.md#_onpointermove)
-- [\_onPointerup](IoField.md#_onpointerup)
-- [addEventListener](IoField.md#addeventlistener)
-- [applyProperties](IoField.md#applyproperties)
-- [bind](IoField.md#bind)
-- [changed](IoField.md#changed)
-- [connectedCallback](IoField.md#connectedcallback)
-- [disabledChanged](IoField.md#disabledchanged)
-- [disconnectedCallback](IoField.md#disconnectedcallback)
-- [dispatchEvent](IoField.md#dispatchevent)
-- [dispatchMutationEvent](IoField.md#dispatchmutationevent)
-- [dispatchQueue](IoField.md#dispatchqueue)
-- [dispatchQueueSync](IoField.md#dispatchqueuesync)
-- [dispose](IoField.md#dispose)
-- [focusTo](IoField.md#focusto)
-- [getCaretPosition](IoField.md#getcaretposition)
-- [init](IoField.md#init)
-- [inputValue](IoField.md#inputvalue)
-- [labelChanged](IoField.md#labelchanged)
-- [objectMutated](IoField.md#objectmutated)
-- [onObjectMutated](IoField.md#onobjectmutated)
-- [queue](IoField.md#queue)
-- [removeEventListener](IoField.md#removeeventlistener)
-- [setAttribute](IoField.md#setattribute)
-- [setCaretPosition](IoField.md#setcaretposition)
-- [setProperties](IoField.md#setproperties)
-- [setProperty](IoField.md#setproperty)
-- [template](IoField.md#template)
-- [throttle](IoField.md#throttle)
-- [traverse](IoField.md#traverse)
-- [unbind](IoField.md#unbind)
+- [Register](IoNavigatorScroller.md#register)
+- [\_computeCollapsed](IoNavigatorScroller.md#_computecollapsed)
+- [\_flattenTextNode](IoNavigatorScroller.md#_flattentextnode)
+- [addEventListener](IoNavigatorScroller.md#addeventlistener)
+- [applyProperties](IoNavigatorScroller.md#applyproperties)
+- [bind](IoNavigatorScroller.md#bind)
+- [changed](IoNavigatorScroller.md#changed)
+- [connectedCallback](IoNavigatorScroller.md#connectedcallback)
+- [disabledChanged](IoNavigatorScroller.md#disabledchanged)
+- [disconnectedCallback](IoNavigatorScroller.md#disconnectedcallback)
+- [dispatchEvent](IoNavigatorScroller.md#dispatchevent)
+- [dispatchMutationEvent](IoNavigatorScroller.md#dispatchmutationevent)
+- [dispatchQueue](IoNavigatorScroller.md#dispatchqueue)
+- [dispatchQueueSync](IoNavigatorScroller.md#dispatchqueuesync)
+- [dispose](IoNavigatorScroller.md#dispose)
+- [getSlotted](IoNavigatorScroller.md#getslotted)
+- [init](IoNavigatorScroller.md#init)
+- [inputValue](IoNavigatorScroller.md#inputvalue)
+- [labelChanged](IoNavigatorScroller.md#labelchanged)
+- [objectMutated](IoNavigatorScroller.md#objectmutated)
+- [onObjectMutated](IoNavigatorScroller.md#onobjectmutated)
+- [onResized](IoNavigatorScroller.md#onresized)
+- [queue](IoNavigatorScroller.md#queue)
+- [removeEventListener](IoNavigatorScroller.md#removeeventlistener)
+- [setAttribute](IoNavigatorScroller.md#setattribute)
+- [setProperties](IoNavigatorScroller.md#setproperties)
+- [setProperty](IoNavigatorScroller.md#setproperty)
+- [template](IoNavigatorScroller.md#template)
+- [throttle](IoNavigatorScroller.md#throttle)
+- [traverse](IoNavigatorScroller.md#traverse)
+- [unbind](IoNavigatorScroller.md#unbind)
 
 ## Constructors
 
 ### constructor
 
-• **new IoField**(`...args`): [`IoField`](IoField.md)
+• **new IoNavigatorScroller**(`...args`): [`IoNavigatorScroller`](IoNavigatorScroller.md)
 
 Creates a class instance and initializes the internals.
 
@@ -121,11 +98,11 @@ Creates a class instance and initializes the internals.
 
 #### Returns
 
-[`IoField`](IoField.md)
+[`IoNavigatorScroller`](IoNavigatorScroller.md)
 
 #### Inherited from
 
-[IoElement](IoElement.md).[constructor](IoElement.md#constructor)
+[IoNavigatorBase](IoNavigatorBase.md).[constructor](IoNavigatorBase.md#constructor)
 
 #### Defined in
 
@@ -139,7 +116,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[$](IoElement.md#$)
+[IoNavigatorBase](IoNavigatorBase.md).[$](IoNavigatorBase.md#$)
 
 #### Defined in
 
@@ -153,7 +130,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_bindings](IoElement.md#_bindings)
+[IoNavigatorBase](IoNavigatorBase.md).[_bindings](IoNavigatorBase.md#_bindings)
 
 #### Defined in
 
@@ -167,7 +144,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_changeQueue](IoElement.md#_changequeue)
+[IoNavigatorBase](IoNavigatorBase.md).[_changeQueue](IoNavigatorBase.md#_changequeue)
 
 #### Defined in
 
@@ -181,7 +158,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_eventDispatcher](IoElement.md#_eventdispatcher)
+[IoNavigatorBase](IoNavigatorBase.md).[_eventDispatcher](IoNavigatorBase.md#_eventdispatcher)
 
 #### Defined in
 
@@ -195,7 +172,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_properties](IoElement.md#_properties)
+[IoNavigatorBase](IoNavigatorBase.md).[_properties](IoNavigatorBase.md#_properties)
 
 #### Defined in
 
@@ -209,21 +186,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_protochain](IoElement.md#_protochain)
+[IoNavigatorBase](IoNavigatorBase.md).[_protochain](IoNavigatorBase.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
-
-___
-
-### appearance
-
-• **appearance**: ``"inset"`` \| ``"flush"`` \| ``"outset"`` \| ``"neutral"``
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:86](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L86)
 
 ___
 
@@ -233,11 +200,39 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[class](IoElement.md#class)
+[IoNavigatorBase](IoNavigatorBase.md).[class](IoNavigatorBase.md#class)
 
 #### Defined in
 
 [src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
+
+___
+
+### collapseWidth
+
+• **collapseWidth**: `number`
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[collapseWidth](IoNavigatorBase.md#collapsewidth)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:99](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L99)
+
+___
+
+### collapsed
+
+• **collapsed**: `boolean`
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[collapsed](IoNavigatorBase.md#collapsed)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:96](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L96)
 
 ___
 
@@ -247,11 +242,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[contenteditable](IoElement.md#contenteditable)
+[IoNavigatorBase](IoNavigatorBase.md).[contenteditable](IoNavigatorBase.md#contenteditable)
 
 #### Defined in
 
 [src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
+
+___
+
+### depth
+
+• **depth**: `number`
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[depth](IoNavigatorBase.md#depth)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:93](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L93)
 
 ___
 
@@ -261,11 +270,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabled](IoElement.md#disabled)
+[IoNavigatorBase](IoNavigatorBase.md).[disabled](IoNavigatorBase.md#disabled)
 
 #### Defined in
 
 [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
+
+___
+
+### elements
+
+• **elements**: [`VDOMArray`](../README.md#vdomarray)[]
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[elements](IoNavigatorBase.md#elements)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:84](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L84)
 
 ___
 
@@ -275,21 +298,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[hidden](IoElement.md#hidden)
+[IoNavigatorBase](IoNavigatorBase.md).[hidden](IoNavigatorBase.md#hidden)
 
 #### Defined in
 
 [src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
-
-___
-
-### icon
-
-• **icon**: `string`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:83](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L83)
 
 ___
 
@@ -299,21 +312,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[id](IoElement.md#id)
+[IoNavigatorBase](IoNavigatorBase.md).[id](IoNavigatorBase.md#id)
 
 #### Defined in
 
 [src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
-
-___
-
-### invalid
-
-• **invalid**: `boolean`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:95](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L95)
 
 ___
 
@@ -323,11 +326,25 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[label](IoElement.md#label)
+[IoNavigatorBase](IoNavigatorBase.md).[label](IoNavigatorBase.md#label)
 
 #### Defined in
 
 [src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
+
+___
+
+### menu
+
+• **menu**: ``"left"`` \| ``"top"`` \| ``"bottom"`` \| ``"right"``
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[menu](IoNavigatorBase.md#menu)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:90](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L90)
 
 ___
 
@@ -337,7 +354,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[name](IoElement.md#name)
+[IoNavigatorBase](IoNavigatorBase.md).[name](IoNavigatorBase.md#name)
 
 #### Defined in
 
@@ -345,13 +362,17 @@ ___
 
 ___
 
-### placeholder
+### options
 
-• **placeholder**: `string`
+• **options**: [`MenuOptions`](MenuOptions.md)
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[options](IoNavigatorBase.md#options)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:98](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L98)
+[src/elements/content/io-navigator-base.ts:87](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L87)
 
 ___
 
@@ -361,7 +382,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[role](IoElement.md#role)
+[IoNavigatorBase](IoNavigatorBase.md).[role](IoNavigatorBase.md#role)
 
 #### Defined in
 
@@ -369,23 +390,17 @@ ___
 
 ___
 
-### selected
+### slotted
 
-• **selected**: `boolean`
+• **slotted**: [`VDOMArray`](../README.md#vdomarray)[]
 
-#### Defined in
+#### Inherited from
 
-[src/elements/basic/io-field.ts:92](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L92)
-
-___
-
-### stroke
-
-• **stroke**: `boolean`
+[IoNavigatorBase](IoNavigatorBase.md).[slotted](IoNavigatorBase.md#slotted)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:89](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L89)
+[src/elements/content/io-navigator-base.ts:81](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L81)
 
 ___
 
@@ -393,13 +408,13 @@ ___
 
 • **tabindex**: `string`
 
-#### Overrides
+#### Inherited from
 
-[IoElement](IoElement.md).[tabindex](IoElement.md#tabindex)
+[IoNavigatorBase](IoNavigatorBase.md).[tabindex](IoNavigatorBase.md#tabindex)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:77](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L77)
+[src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
 ___
 
@@ -409,21 +424,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[title](IoElement.md#title)
+[IoNavigatorBase](IoNavigatorBase.md).[title](IoNavigatorBase.md#title)
 
 #### Defined in
 
 [src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
-
-___
-
-### value
-
-• **value**: `any`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:80](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L80)
 
 ## Accessors
 
@@ -437,7 +442,7 @@ ___
 
 #### Inherited from
 
-IoElement.textNode
+IoNavigatorBase.textNode
 
 #### Defined in
 
@@ -457,32 +462,11 @@ IoElement.textNode
 
 #### Inherited from
 
-IoElement.textNode
+IoNavigatorBase.textNode
 
 #### Defined in
 
 [src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
-
-___
-
-### Listeners
-
-• `get` **Listeners**(): `Object`
-
-#### Returns
-
-`Object`
-
-| Name | Type |
-| :------ | :------ |
-| `click` | `string` |
-| `focus` | `string` |
-| `focus-to` | `string` |
-| `pointerdown` | `string` |
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:100](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L100)
 
 ___
 
@@ -496,7 +480,7 @@ ___
 
 #### Inherited from
 
-IoElement.Properties
+IoNavigatorBase.Properties
 
 #### Defined in
 
@@ -512,13 +496,13 @@ ___
 
 `string`
 
-#### Overrides
+#### Inherited from
 
-IoElement.Style
+IoNavigatorBase.Style
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:16](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L16)
+[src/elements/content/io-navigator-base.ts:7](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L7)
 
 ## Methods
 
@@ -538,11 +522,29 @@ IoElement.Style
 
 #### Inherited from
 
-[IoElement](IoElement.md).[Register](IoElement.md#register)
+[IoNavigatorBase](IoNavigatorBase.md).[Register](IoNavigatorBase.md#register)
 
 #### Defined in
 
 [src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
+
+___
+
+### \_computeCollapsed
+
+▸ **_computeCollapsed**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[_computeCollapsed](IoNavigatorBase.md#_computecollapsed)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:110](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L110)
 
 ___
 
@@ -565,205 +567,11 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[_flattenTextNode](IoElement.md#_flattentextnode)
+[IoNavigatorBase](IoNavigatorBase.md).[_flattenTextNode](IoNavigatorBase.md#_flattentextnode)
 
 #### Defined in
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
-
-___
-
-### \_onBlur
-
-▸ **_onBlur**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `FocusEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:113](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L113)
-
-___
-
-### \_onClick
-
-▸ **_onClick**(): `void`
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:136](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L136)
-
-___
-
-### \_onFocus
-
-▸ **_onFocus**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `FocusEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:108](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L108)
-
-___
-
-### \_onFocusTo
-
-▸ **_onFocusTo**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:159](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L159)
-
-___
-
-### \_onKeydown
-
-▸ **_onKeydown**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:139](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L139)
-
-___
-
-### \_onKeyup
-
-▸ **_onKeyup**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:158](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L158)
-
-___
-
-### \_onPointerdown
-
-▸ **_onPointerdown**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:118](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L118)
-
-___
-
-### \_onPointerleave
-
-▸ **_onPointerleave**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:125](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L125)
-
-___
-
-### \_onPointermove
-
-▸ **_onPointermove**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:124](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L124)
-
-___
-
-### \_onPointerup
-
-▸ **_onPointerup**(`event`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:130](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L130)
 
 ___
 
@@ -787,7 +595,7 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[addEventListener](IoElement.md#addeventlistener)
+[IoNavigatorBase](IoNavigatorBase.md).[addEventListener](IoNavigatorBase.md#addeventlistener)
 
 #### Defined in
 
@@ -811,7 +619,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[applyProperties](IoElement.md#applyproperties)
+[IoNavigatorBase](IoNavigatorBase.md).[applyProperties](IoNavigatorBase.md#applyproperties)
 
 #### Defined in
 
@@ -839,7 +647,7 @@ Binding object.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[bind](IoElement.md#bind)
+[IoNavigatorBase](IoNavigatorBase.md).[bind](IoNavigatorBase.md#bind)
 
 #### Defined in
 
@@ -858,13 +666,13 @@ Invoked when one of the properties change.
 
 `void`
 
-#### Overrides
+#### Inherited from
 
-[IoElement](IoElement.md).[changed](IoElement.md#changed)
+[IoNavigatorBase](IoNavigatorBase.md).[changed](IoNavigatorBase.md#changed)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:294](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L294)
+[src/elements/content/io-navigator-base.ts:118](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L118)
 
 ___
 
@@ -880,7 +688,7 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[connectedCallback](IoElement.md#connectedcallback)
+[IoNavigatorBase](IoNavigatorBase.md).[connectedCallback](IoNavigatorBase.md#connectedcallback)
 
 #### Defined in
 
@@ -898,7 +706,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disabledChanged](IoElement.md#disabledchanged)
+[IoNavigatorBase](IoNavigatorBase.md).[disabledChanged](IoNavigatorBase.md#disabledchanged)
 
 #### Defined in
 
@@ -918,7 +726,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[disconnectedCallback](IoElement.md#disconnectedcallback)
+[IoNavigatorBase](IoNavigatorBase.md).[disconnectedCallback](IoNavigatorBase.md#disconnectedcallback)
 
 #### Defined in
 
@@ -947,7 +755,7 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchEvent](IoElement.md#dispatchevent)
+[IoNavigatorBase](IoNavigatorBase.md).[dispatchEvent](IoNavigatorBase.md#dispatchevent)
 
 #### Defined in
 
@@ -973,7 +781,7 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchMutationEvent](IoElement.md#dispatchmutationevent)
+[IoNavigatorBase](IoNavigatorBase.md).[dispatchMutationEvent](IoNavigatorBase.md#dispatchmutationevent)
 
 #### Defined in
 
@@ -993,7 +801,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueue](IoElement.md#dispatchqueue)
+[IoNavigatorBase](IoNavigatorBase.md).[dispatchQueue](IoNavigatorBase.md#dispatchqueue)
 
 #### Defined in
 
@@ -1013,7 +821,7 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispatchQueueSync](IoElement.md#dispatchqueuesync)
+[IoNavigatorBase](IoNavigatorBase.md).[dispatchQueueSync](IoNavigatorBase.md#dispatchqueuesync)
 
 #### Defined in
 
@@ -1034,7 +842,7 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[dispose](IoElement.md#dispose)
+[IoNavigatorBase](IoNavigatorBase.md).[dispose](IoNavigatorBase.md#dispose)
 
 #### Defined in
 
@@ -1042,37 +850,21 @@ Use this when instance is no longer needed.
 
 ___
 
-### focusTo
+### getSlotted
 
-▸ **focusTo**(`dir`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `dir` | `string` |
+▸ **getSlotted**(): [`VDOMArray`](../README.md#vdomarray)
 
 #### Returns
 
-`void`
+[`VDOMArray`](../README.md#vdomarray)
+
+#### Overrides
+
+[IoNavigatorBase](IoNavigatorBase.md).[getSlotted](IoNavigatorBase.md#getslotted)
 
 #### Defined in
 
-[src/elements/basic/io-field.ts:266](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L266)
-
-___
-
-### getCaretPosition
-
-▸ **getCaretPosition**(): `number`
-
-#### Returns
-
-`number`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:270](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L270)
+[src/elements/content/io-navigator-scroller.ts:8](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-scroller.ts#L8)
 
 ___
 
@@ -1086,11 +878,11 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[init](IoElement.md#init)
+[IoNavigatorBase](IoNavigatorBase.md).[init](IoNavigatorBase.md#init)
 
 #### Defined in
 
-[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
+[src/elements/content/io-navigator-base.ts:101](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L101)
 
 ___
 
@@ -1113,7 +905,7 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoElement](IoElement.md).[inputValue](IoElement.md#inputvalue)
+[IoNavigatorBase](IoNavigatorBase.md).[inputValue](IoNavigatorBase.md#inputvalue)
 
 #### Defined in
 
@@ -1131,7 +923,7 @@ ___
 
 #### Inherited from
 
-[IoElement](IoElement.md).[labelChanged](IoElement.md#labelchanged)
+[IoNavigatorBase](IoNavigatorBase.md).[labelChanged](IoNavigatorBase.md#labelchanged)
 
 #### Defined in
 
@@ -1158,7 +950,7 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[objectMutated](IoElement.md#objectmutated)
+[IoNavigatorBase](IoNavigatorBase.md).[objectMutated](IoNavigatorBase.md#objectmutated)
 
 #### Defined in
 
@@ -1185,11 +977,29 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoElement](IoElement.md).[onObjectMutated](IoElement.md#onobjectmutated)
+[IoNavigatorBase](IoNavigatorBase.md).[onObjectMutated](IoNavigatorBase.md#onobjectmutated)
 
 #### Defined in
 
 [src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+
+___
+
+### onResized
+
+▸ **onResized**(): `void`
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[IoNavigatorBase](IoNavigatorBase.md).[onResized](IoNavigatorBase.md#onresized)
+
+#### Defined in
+
+[src/elements/content/io-navigator-base.ts:106](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L106)
 
 ___
 
@@ -1213,7 +1023,7 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[queue](IoElement.md#queue)
+[IoNavigatorBase](IoNavigatorBase.md).[queue](IoNavigatorBase.md#queue)
 
 #### Defined in
 
@@ -1241,7 +1051,7 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[removeEventListener](IoElement.md#removeeventlistener)
+[IoNavigatorBase](IoNavigatorBase.md).[removeEventListener](IoNavigatorBase.md#removeeventlistener)
 
 #### Defined in
 
@@ -1268,31 +1078,11 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setAttribute](IoElement.md#setattribute)
+[IoNavigatorBase](IoNavigatorBase.md).[setAttribute](IoNavigatorBase.md#setattribute)
 
 #### Defined in
 
 [src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
-
-___
-
-### setCaretPosition
-
-▸ **setCaretPosition**(`position`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `position` | `number` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/elements/basic/io-field.ts:283](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L283)
 
 ___
 
@@ -1315,7 +1105,7 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperties](IoElement.md#setproperties)
+[IoNavigatorBase](IoNavigatorBase.md).[setProperties](IoNavigatorBase.md#setproperties)
 
 #### Defined in
 
@@ -1343,7 +1133,7 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoElement](IoElement.md).[setProperty](IoElement.md#setproperty)
+[IoNavigatorBase](IoNavigatorBase.md).[setProperty](IoNavigatorBase.md#setproperty)
 
 #### Defined in
 
@@ -1371,7 +1161,7 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[template](IoElement.md#template)
+[IoNavigatorBase](IoNavigatorBase.md).[template](IoNavigatorBase.md#template)
 
 #### Defined in
 
@@ -1399,7 +1189,7 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoElement](IoElement.md).[throttle](IoElement.md#throttle)
+[IoNavigatorBase](IoNavigatorBase.md).[throttle](IoNavigatorBase.md#throttle)
 
 #### Defined in
 
@@ -1428,7 +1218,7 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoElement](IoElement.md).[traverse](IoElement.md#traverse)
+[IoNavigatorBase](IoNavigatorBase.md).[traverse](IoNavigatorBase.md#traverse)
 
 #### Defined in
 
@@ -1454,7 +1244,7 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoElement](IoElement.md).[unbind](IoElement.md#unbind)
+[IoNavigatorBase](IoNavigatorBase.md).[unbind](IoNavigatorBase.md#unbind)
 
 #### Defined in
 

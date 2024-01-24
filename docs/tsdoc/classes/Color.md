@@ -1,10 +1,25 @@
+[io-gui](../README.md) / Color
+
 # Class: Color
+
+## Table of contents
+
+### Constructors
+
+- [constructor](Color.md#constructor)
+
+### Properties
+
+- [a](Color.md#a)
+- [b](Color.md#b)
+- [g](Color.md#g)
+- [r](Color.md#r)
 
 ## Constructors
 
 ### constructor
 
-**new Color**(`r`, `g`, `b`, `a`)
+• **new Color**(`r`, `g`, `b`, `a`): [`Color`](Color.md)
 
 #### Parameters
 
@@ -15,46 +30,50 @@
 | `b` | `number` |
 | `a` | `number` |
 
+#### Returns
+
+[`Color`](Color.md)
+
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
 
 ## Properties
 
 ### a
 
- **a**: `number`
+• **a**: `number`
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
 
 ___
 
 ### b
 
- **b**: `number`
+• **b**: `number`
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
 
 ___
 
 ### g
 
- **g**: `number`
+• **g**: `number`
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
 
 ___
 
 ### r
 
- **r**: `number`
+• **r**: `number`
 
 #### Defined in
 
-[src/core/theme.ts:12](https://github.com/io-gui/iogui/blob/main/src/core/theme.ts#L12)
+[src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)

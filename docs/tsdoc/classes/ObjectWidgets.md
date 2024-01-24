@@ -1,10 +1,23 @@
+[io-gui](../README.md) / ObjectWidgets
+
 # Class: ObjectWidgets
+
+## Table of contents
+
+### Constructors
+
+- [constructor](ObjectWidgets.md#constructor)
+
+### Methods
+
+- [getObjectWidgets](ObjectWidgets.md#getobjectwidgets)
+- [registerObjectWidgets](ObjectWidgets.md#registerobjectwidgets)
 
 ## Constructors
 
 ### constructor
 
-**new ObjectWidgets**(`prototypes`)
+• **new ObjectWidgets**(`prototypes`): [`ObjectWidgets`](ObjectWidgets.md)
 
 #### Parameters
 
@@ -12,15 +25,19 @@
 | :------ | :------ |
 | `prototypes` | `any` |
 
+#### Returns
+
+[`ObjectWidgets`](ObjectWidgets.md)
+
 #### Defined in
 
-[src/elements/object/models/object-widgets.ts:8](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-widgets.ts#L8)
+[src/elements/object/models/object-widgets.ts:8](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L8)
 
 ## Methods
 
 ### getObjectWidgets
 
-**getObjectWidgets**(`object`): `Object`
+▸ **getObjectWidgets**(`object`): `Object`
 
 #### Parameters
 
@@ -39,13 +56,13 @@
 
 #### Defined in
 
-[src/elements/object/models/object-widgets.ts:20](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-widgets.ts#L20)
+[src/elements/object/models/object-widgets.ts:20](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L20)
 
 ___
 
 ### registerObjectWidgets
 
-**registerObjectWidgets**(`widgets`): `void`
+▸ **registerObjectWidgets**(`widgets`): `void`
 
 #### Parameters
 
@@ -59,4 +76,4 @@ ___
 
 #### Defined in
 
-[src/elements/object/models/object-widgets.ts:13](https://github.com/io-gui/iogui/blob/main/src/elements/object/models/object-widgets.ts#L13)
+[src/elements/object/models/object-widgets.ts:13](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L13)
