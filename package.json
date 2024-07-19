@@ -1,6 +1,6 @@
 {
   "name": "io-gui",
-  "version": "1.4.0-rc7",
+  "version": "1.4.0-rc8",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui, a UI framework for web development.",
