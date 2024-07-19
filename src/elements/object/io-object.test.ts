@@ -1,5 +1,4 @@
 import {IoObject} from '../../iogui.js';
-import * as chai from 'chai';
 
 const testValue = {
   'number': 0.5,

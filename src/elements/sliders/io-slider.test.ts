@@ -1,5 +1,4 @@
 import {IoSlider} from '../../iogui.js';
-import * as chai from 'chai';
 
 const element = new IoSlider();
 element.lazy = false;

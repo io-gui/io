@@ -1,5 +1,4 @@
 import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDeclarations, ListenersDeclaration, IoElement, Register} from '../../iogui.js';
-import * as chai from 'chai';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

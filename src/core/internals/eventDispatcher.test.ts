@@ -1,5 +1,4 @@
 import {IoNode, Register, ListenersDeclaration, EventDispatcher} from '../../iogui.js';
-import * as chai from 'chai';
 
 const handlerFunction = () => {};
 

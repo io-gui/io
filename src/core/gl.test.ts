@@ -1,5 +1,4 @@
 import { IoElement, IoGl, IoThemeSingleton } from '../iogui.js';
-import * as chai from 'chai';
 
 const element = new IoGl();
 element.size = [0, 0];

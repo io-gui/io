@@ -61,11 +61,7 @@
     <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
 
     <link lazyload href="./lib/highlight.a11y-light.css" rel="stylesheet">
-    <link href="./lib/mocha.css" rel="stylesheet" />
 
-    <!-- Import maps polyfill -->
-    <!-- Remove this when import maps will be widely supported -->
-    <script async src="https://unpkg.com/es-module-shims@1.6.0/dist/es-module-shims.js"></script>
     <script type="importmap">
       {
         "imports": {
@@ -73,14 +69,19 @@
           "marked": "./node_modules/marked/lib/marked.esm.js",
           "marked-highlight": "./node_modules/marked-highlight/src/index.js",
           "highlight.js": "./node_modules/highlight.js/es/index.js",
-          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
-          "mocha/": "./node_modules/mocha/",
-          "chai/": "./node_modules/chai/"
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
         }
       }
     </script>
     <script src="./lib/highlight.pack.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+
+    <link href="./lib/mocha.css" rel="stylesheet" />
+    <script src="./node_modules/mocha/mocha.js"></script>
+    <script type="module">
+      import * as chai from './node_modules/chai/chai.js';
+      window.chai = chai;
+    </script>
 
     <style>
       html {

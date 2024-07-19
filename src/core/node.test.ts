@@ -1,6 +1,5 @@
 import { Change, Binding, ProtoChain, IoNode, Register, PropertyDeclarations, IoElement } from '../iogui.js';
 import { nextTick } from '../iogui.test.js';
-import * as chai from 'chai';
 
 // TODO: test lazy reactivity!
 

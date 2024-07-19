@@ -1,5 +1,4 @@
 import { IoOptionMenu, MenuOptions } from '../../iogui.js';
-import * as chai from 'chai';
 
 const element = new IoOptionMenu();
 document.body.appendChild(element as unknown as HTMLElement);

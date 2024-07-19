@@ -259,7 +259,8 @@ body {
 
 #mocha-stats {
   position: fixed;
-  top: 15px;
+  display: flex;
+  flex-direction: row;
   right: 10px;
   font-size: 12px;
   margin: 0;
@@ -281,6 +282,10 @@ body {
   -moz-box-shadow: none;
   box-shadow: none;
   background-color: initial;
+}
+
+#mocha-stats .progress-ring {
+  display: none;
 }
 
 #mocha-stats em {
