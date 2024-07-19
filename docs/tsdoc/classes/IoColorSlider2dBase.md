@@ -1,3 +1,7 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / IoColorSlider2dBase
 
 # Class: IoColorSlider2dBase
@@ -5,146 +9,25 @@
 A base class for 2D color slider.
 It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
 
-## Hierarchy
+## Extends
 
 - [`IoSlider2d`](IoSlider2d.md)
 
-  ↳ **`IoColorSlider2dBase`**
+## Extended by
 
-  ↳↳ [`IoColorSliderHs`](IoColorSliderHs.md)
-
-  ↳↳ [`IoColorSliderSv`](IoColorSliderSv.md)
-
-  ↳↳ [`IoColorSliderSL`](IoColorSliderSL.md)
-
-## Table of contents
-
-### Constructors
-
-- [constructor](IoColorSlider2dBase.md#constructor)
-
-### Properties
-
-- [$](IoColorSlider2dBase.md#$)
-- [\_active](IoColorSlider2dBase.md#_active)
-- [\_bindings](IoColorSlider2dBase.md#_bindings)
-- [\_changeQueue](IoColorSlider2dBase.md#_changequeue)
-- [\_eventDispatcher](IoColorSlider2dBase.md#_eventdispatcher)
-- [\_properties](IoColorSlider2dBase.md#_properties)
-- [\_protochain](IoColorSlider2dBase.md#_protochain)
-- [\_rect](IoColorSlider2dBase.md#_rect)
-- [\_startX](IoColorSlider2dBase.md#_startx)
-- [\_startY](IoColorSlider2dBase.md#_starty)
-- [class](IoColorSlider2dBase.md#class)
-- [color](IoColorSlider2dBase.md#color)
-- [contenteditable](IoColorSlider2dBase.md#contenteditable)
-- [disabled](IoColorSlider2dBase.md#disabled)
-- [exponent](IoColorSlider2dBase.md#exponent)
-- [hidden](IoColorSlider2dBase.md#hidden)
-- [id](IoColorSlider2dBase.md#id)
-- [label](IoColorSlider2dBase.md#label)
-- [lazy](IoColorSlider2dBase.md#lazy)
-- [max](IoColorSlider2dBase.md#max)
-- [min](IoColorSlider2dBase.md#min)
-- [name](IoColorSlider2dBase.md#name)
-- [noscroll](IoColorSlider2dBase.md#noscroll)
-- [pxRatio](IoColorSlider2dBase.md#pxratio)
-- [role](IoColorSlider2dBase.md#role)
-- [size](IoColorSlider2dBase.md#size)
-- [step](IoColorSlider2dBase.md#step)
-- [tabindex](IoColorSlider2dBase.md#tabindex)
-- [theme](IoColorSlider2dBase.md#theme)
-- [title](IoColorSlider2dBase.md#title)
-- [value](IoColorSlider2dBase.md#value)
-- [vertical](IoColorSlider2dBase.md#vertical)
-
-### Accessors
-
-- [\_max](IoColorSlider2dBase.md#_max)
-- [\_min](IoColorSlider2dBase.md#_min)
-- [\_step](IoColorSlider2dBase.md#_step)
-- [\_value](IoColorSlider2dBase.md#_value)
-- [textNode](IoColorSlider2dBase.md#textnode)
-- [Frag](IoColorSlider2dBase.md#frag)
-- [GlUtils](IoColorSlider2dBase.md#glutils)
-- [Listeners](IoColorSlider2dBase.md#listeners)
-- [Properties](IoColorSlider2dBase.md#properties)
-- [Style](IoColorSlider2dBase.md#style)
-- [Vert](IoColorSlider2dBase.md#vert)
-
-### Methods
-
-- [Register](IoColorSlider2dBase.md#register)
-- [\_flattenTextNode](IoColorSlider2dBase.md#_flattentextnode)
-- [\_getPointerCoord](IoColorSlider2dBase.md#_getpointercoord)
-- [\_getValueFromCoord](IoColorSlider2dBase.md#_getvaluefromcoord)
-- [\_inputValue](IoColorSlider2dBase.md#_inputvalue)
-- [\_onBlur](IoColorSlider2dBase.md#_onblur)
-- [\_onContextmenu](IoColorSlider2dBase.md#_oncontextmenu)
-- [\_onFocus](IoColorSlider2dBase.md#_onfocus)
-- [\_onKeydown](IoColorSlider2dBase.md#_onkeydown)
-- [\_onPointerdown](IoColorSlider2dBase.md#_onpointerdown)
-- [\_onPointermove](IoColorSlider2dBase.md#_onpointermove)
-- [\_onPointermoveThrottled](IoColorSlider2dBase.md#_onpointermovethrottled)
-- [\_onPointerup](IoColorSlider2dBase.md#_onpointerup)
-- [\_onRender](IoColorSlider2dBase.md#_onrender)
-- [\_onTouchend](IoColorSlider2dBase.md#_ontouchend)
-- [\_onTouchmove](IoColorSlider2dBase.md#_ontouchmove)
-- [\_onTouchstart](IoColorSlider2dBase.md#_ontouchstart)
-- [\_setDecrease](IoColorSlider2dBase.md#_setdecrease)
-- [\_setDown](IoColorSlider2dBase.md#_setdown)
-- [\_setIncrease](IoColorSlider2dBase.md#_setincrease)
-- [\_setLeft](IoColorSlider2dBase.md#_setleft)
-- [\_setMax](IoColorSlider2dBase.md#_setmax)
-- [\_setMin](IoColorSlider2dBase.md#_setmin)
-- [\_setRight](IoColorSlider2dBase.md#_setright)
-- [\_setUp](IoColorSlider2dBase.md#_setup)
-- [addEventListener](IoColorSlider2dBase.md#addeventlistener)
-- [applyProperties](IoColorSlider2dBase.md#applyproperties)
-- [bind](IoColorSlider2dBase.md#bind)
-- [changed](IoColorSlider2dBase.md#changed)
-- [connectedCallback](IoColorSlider2dBase.md#connectedcallback)
-- [disabledChanged](IoColorSlider2dBase.md#disabledchanged)
-- [disconnectedCallback](IoColorSlider2dBase.md#disconnectedcallback)
-- [dispatchEvent](IoColorSlider2dBase.md#dispatchevent)
-- [dispatchMutationEvent](IoColorSlider2dBase.md#dispatchmutationevent)
-- [dispatchQueue](IoColorSlider2dBase.md#dispatchqueue)
-- [dispatchQueueSync](IoColorSlider2dBase.md#dispatchqueuesync)
-- [dispose](IoColorSlider2dBase.md#dispose)
-- [init](IoColorSlider2dBase.md#init)
-- [initPropertyUniform](IoColorSlider2dBase.md#initpropertyuniform)
-- [initShader](IoColorSlider2dBase.md#initshader)
-- [inputValue](IoColorSlider2dBase.md#inputvalue)
-- [labelChanged](IoColorSlider2dBase.md#labelchanged)
-- [objectMutated](IoColorSlider2dBase.md#objectmutated)
-- [onObjectMutated](IoColorSlider2dBase.md#onobjectmutated)
-- [onResized](IoColorSlider2dBase.md#onresized)
-- [queue](IoColorSlider2dBase.md#queue)
-- [removeEventListener](IoColorSlider2dBase.md#removeeventlistener)
-- [setAttribute](IoColorSlider2dBase.md#setattribute)
-- [setProperties](IoColorSlider2dBase.md#setproperties)
-- [setProperty](IoColorSlider2dBase.md#setproperty)
-- [setShaderProgram](IoColorSlider2dBase.md#setshaderprogram)
-- [setUniform](IoColorSlider2dBase.md#setuniform)
-- [template](IoColorSlider2dBase.md#template)
-- [themeMutated](IoColorSlider2dBase.md#thememutated)
-- [throttle](IoColorSlider2dBase.md#throttle)
-- [traverse](IoColorSlider2dBase.md#traverse)
-- [unbind](IoColorSlider2dBase.md#unbind)
-- [updatePropertyUniform](IoColorSlider2dBase.md#updatepropertyuniform)
-- [updateThemeUniforms](IoColorSlider2dBase.md#updatethemeuniforms)
+- [`IoColorSliderHs`](IoColorSliderHs.md)
+- [`IoColorSliderSv`](IoColorSliderSv.md)
+- [`IoColorSliderSL`](IoColorSliderSL.md)
 
 ## Constructors
 
-### constructor
+### new IoColorSlider2dBase()
 
-• **new IoColorSlider2dBase**(`properties?`): [`IoColorSlider2dBase`](IoColorSlider2dBase.md)
+> **new IoColorSlider2dBase**(`properties`): [`IoColorSlider2dBase`](IoColorSlider2dBase.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `properties` | `Record`\<`string`, `any`\> |
+• **properties**: `Record`\<`string`, `any`\> = `{}`
 
 #### Returns
 
@@ -152,7 +35,7 @@ It as an incomplete implementation of a color slider desiged to be fully impleme
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[constructor](IoSlider2d.md#constructor)
+[`IoSlider2d`](IoSlider2d.md).[`constructor`](IoSlider2d.md#constructors)
 
 #### Defined in
 
@@ -162,445 +45,445 @@ It as an incomplete implementation of a color slider desiged to be fully impleme
 
 ### $
 
-• **$**: `Record`\<`string`, `any`\>
+> **$**: `Record`\<`string`, `any`\>
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[$](IoSlider2d.md#$)
+[`IoSlider2d`](IoSlider2d.md).[`$`](IoSlider2d.md#$)
 
 #### Defined in
 
 [src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
 
-___
+***
 
 ### \_active
 
-• **\_active**: `number` = `-1`
+> **\_active**: `number` = `-1`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_active](IoSlider2d.md#_active)
+[`IoSlider2d`](IoSlider2d.md).[`_active`](IoSlider2d.md#_active)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:65](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L65)
 
-___
+***
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
+> `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_bindings](IoSlider2d.md#_bindings)
+[`IoSlider2d`](IoSlider2d.md).[`_bindings`](IoSlider2d.md#_bindings)
 
 #### Defined in
 
 [src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
-___
+***
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+> `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_changeQueue](IoSlider2d.md#_changequeue)
+[`IoSlider2d`](IoSlider2d.md).[`_changeQueue`](IoSlider2d.md#_changequeue)
 
 #### Defined in
 
 [src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
-___
+***
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+> `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_eventDispatcher](IoSlider2d.md#_eventdispatcher)
+[`IoSlider2d`](IoSlider2d.md).[`_eventDispatcher`](IoSlider2d.md#_eventdispatcher)
 
 #### Defined in
 
 [src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
-___
+***
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+> `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_properties](IoSlider2d.md#_properties)
+[`IoSlider2d`](IoSlider2d.md).[`_properties`](IoSlider2d.md#_properties)
 
 #### Defined in
 
 [src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
-___
+***
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+> `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_protochain](IoSlider2d.md#_protochain)
+[`IoSlider2d`](IoSlider2d.md).[`_protochain`](IoSlider2d.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
-___
+***
 
 ### \_rect
 
-• **\_rect**: ``null`` \| `DOMRect` = `null`
+> **\_rect**: `null` \| `DOMRect` = `null`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_rect](IoSlider2d.md#_rect)
+[`IoSlider2d`](IoSlider2d.md).[`_rect`](IoSlider2d.md#_rect)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:66](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L66)
 
-___
+***
 
 ### \_startX
 
-• **\_startX**: `number` = `0`
+> **\_startX**: `number` = `0`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_startX](IoSlider2d.md#_startx)
+[`IoSlider2d`](IoSlider2d.md).[`_startX`](IoSlider2d.md#_startx)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L63)
 
-___
+***
 
 ### \_startY
 
-• **\_startY**: `number` = `0`
+> **\_startY**: `number` = `0`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_startY](IoSlider2d.md#_starty)
+[`IoSlider2d`](IoSlider2d.md).[`_startY`](IoSlider2d.md#_starty)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:64](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L64)
 
-___
+***
 
 ### class
 
-• **class**: `string`
+> **class**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[class](IoSlider2d.md#class)
+[`IoSlider2d`](IoSlider2d.md).[`class`](IoSlider2d.md#class)
 
 #### Defined in
 
 [src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
-___
+***
 
 ### color
 
-• **color**: [`number`, `number`, `number`, `number`]
+> **color**: [`number`, `number`, `number`, `number`]
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[color](IoSlider2d.md#color)
+[`IoSlider2d`](IoSlider2d.md).[`color`](IoSlider2d.md#color)
 
 #### Defined in
 
 [src/core/gl.ts:69](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L69)
 
-___
+***
 
 ### contenteditable
 
-• **contenteditable**: `boolean`
+> **contenteditable**: `boolean`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[contenteditable](IoSlider2d.md#contenteditable)
+[`IoSlider2d`](IoSlider2d.md).[`contenteditable`](IoSlider2d.md#contenteditable)
 
 #### Defined in
 
 [src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
-___
+***
 
 ### disabled
 
-• **disabled**: `boolean`
+> **disabled**: `boolean`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[disabled](IoSlider2d.md#disabled)
+[`IoSlider2d`](IoSlider2d.md).[`disabled`](IoSlider2d.md#disabled)
 
 #### Defined in
 
 [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
-___
+***
 
 ### exponent
 
-• **exponent**: `number`
+> **exponent**: `number`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[exponent](IoSlider2d.md#exponent)
+[`IoSlider2d`](IoSlider2d.md).[`exponent`](IoSlider2d.md#exponent)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:46](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L46)
 
-___
+***
 
 ### hidden
 
-• **hidden**: `boolean`
+> **hidden**: `boolean`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[hidden](IoSlider2d.md#hidden)
+[`IoSlider2d`](IoSlider2d.md).[`hidden`](IoSlider2d.md#hidden)
 
 #### Defined in
 
 [src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
-___
+***
 
 ### id
 
-• **id**: `string`
+> **id**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[id](IoSlider2d.md#id)
+[`IoSlider2d`](IoSlider2d.md).[`id`](IoSlider2d.md#id)
 
 #### Defined in
 
 [src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
-___
+***
 
 ### label
 
-• **label**: `string`
+> **label**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[label](IoSlider2d.md#label)
+[`IoSlider2d`](IoSlider2d.md).[`label`](IoSlider2d.md#label)
 
 #### Defined in
 
 [src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
-___
+***
 
 ### lazy
 
-• **lazy**: `boolean`
+> **lazy**: `boolean`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[lazy](IoSlider2d.md#lazy)
+[`IoSlider2d`](IoSlider2d.md).[`lazy`](IoSlider2d.md#lazy)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L61)
 
-___
+***
 
 ### max
 
-• **max**: [`number`, `number`]
+> **max**: [`number`, `number`]
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[max](IoSlider2d.md#max)
+[`IoSlider2d`](IoSlider2d.md).[`max`](IoSlider2d.md#max)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-2d.ts:37](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L37)
 
-___
+***
 
 ### min
 
-• **min**: [`number`, `number`]
+> **min**: [`number`, `number`]
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[min](IoSlider2d.md#min)
+[`IoSlider2d`](IoSlider2d.md).[`min`](IoSlider2d.md#min)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-2d.ts:34](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L34)
 
-___
+***
 
 ### name
 
-• **name**: `string`
+> **name**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[name](IoSlider2d.md#name)
+[`IoSlider2d`](IoSlider2d.md).[`name`](IoSlider2d.md#name)
 
 #### Defined in
 
 [src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
-___
+***
 
 ### noscroll
 
-• **noscroll**: `boolean`
+> **noscroll**: `boolean`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[noscroll](IoSlider2d.md#noscroll)
+[`IoSlider2d`](IoSlider2d.md).[`noscroll`](IoSlider2d.md#noscroll)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-2d.ts:40](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L40)
 
-___
+***
 
 ### pxRatio
 
-• **pxRatio**: `number`
+> **pxRatio**: `number`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[pxRatio](IoSlider2d.md#pxratio)
+[`IoSlider2d`](IoSlider2d.md).[`pxRatio`](IoSlider2d.md#pxratio)
 
 #### Defined in
 
 [src/core/gl.ts:72](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L72)
 
-___
+***
 
 ### role
 
-• **role**: `string`
+> **role**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[role](IoSlider2d.md#role)
+[`IoSlider2d`](IoSlider2d.md).[`role`](IoSlider2d.md#role)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:55](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L55)
 
-___
+***
 
 ### size
 
-• **size**: [`number`, `number`]
+> **size**: [`number`, `number`]
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[size](IoSlider2d.md#size)
+[`IoSlider2d`](IoSlider2d.md).[`size`](IoSlider2d.md#size)
 
 #### Defined in
 
 [src/core/gl.ts:66](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L66)
 
-___
+***
 
 ### step
 
-• **step**: [`number`, `number`]
+> **step**: [`number`, `number`]
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[step](IoSlider2d.md#step)
+[`IoSlider2d`](IoSlider2d.md).[`step`](IoSlider2d.md#step)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-2d.ts:31](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L31)
 
-___
+***
 
 ### tabindex
 
-• **tabindex**: `string`
+> **tabindex**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[tabindex](IoSlider2d.md#tabindex)
+[`IoSlider2d`](IoSlider2d.md).[`tabindex`](IoSlider2d.md#tabindex)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:58](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L58)
 
-___
+***
 
 ### theme
 
-• **theme**: `IoTheme`
+> **theme**: `IoTheme`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[theme](IoSlider2d.md#theme)
+[`IoSlider2d`](IoSlider2d.md).[`theme`](IoSlider2d.md#theme)
 
 #### Defined in
 
 [src/core/gl.ts:75](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L75)
 
-___
+***
 
 ### title
 
-• **title**: `string`
+> **title**: `string`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[title](IoSlider2d.md#title)
+[`IoSlider2d`](IoSlider2d.md).[`title`](IoSlider2d.md#title)
 
 #### Defined in
 
 [src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
-___
+***
 
 ### value
 
-• **value**: [`number`, `number`]
+> **value**: [`number`, `number`]
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[value](IoSlider2d.md#value)
+[`IoSlider2d`](IoSlider2d.md).[`value`](IoSlider2d.md#value)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-2d.ts:28](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L28)
 
-___
+***
 
 ### vertical
 
-• **vertical**: `boolean`
+> **vertical**: `boolean`
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[vertical](IoSlider2d.md#vertical)
+[`IoSlider2d`](IoSlider2d.md).[`vertical`](IoSlider2d.md#vertical)
 
 #### Defined in
 
@@ -610,7 +493,7 @@ ___
 
 ### \_max
 
-• `get` **_max**(): [`number`, `number`]
+> `get` **\_max**(): [`number`, `number`]
 
 #### Returns
 
@@ -618,17 +501,17 @@ ___
 
 #### Inherited from
 
-IoSlider2d.\_max
+[`IoSlider2d`](IoSlider2d.md).[`_max`](IoSlider2d.md#_max)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:79](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L79)
 
-___
+***
 
 ### \_min
 
-• `get` **_min**(): [`number`, `number`]
+> `get` **\_min**(): [`number`, `number`]
 
 #### Returns
 
@@ -636,17 +519,17 @@ ___
 
 #### Inherited from
 
-IoSlider2d.\_min
+[`IoSlider2d`](IoSlider2d.md).[`_min`](IoSlider2d.md#_min)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:68](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L68)
 
-___
+***
 
 ### \_step
 
-• `get` **_step**(): [`number`, `number`]
+> `get` **\_step**(): [`number`, `number`]
 
 #### Returns
 
@@ -654,17 +537,17 @@ ___
 
 #### Inherited from
 
-IoSlider2d.\_step
+[`IoSlider2d`](IoSlider2d.md).[`_step`](IoSlider2d.md#_step)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:90](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L90)
 
-___
+***
 
 ### \_value
 
-• `get` **_value**(): [`number`, `number`]
+> `get` **\_value**(): [`number`, `number`]
 
 #### Returns
 
@@ -672,17 +555,23 @@ ___
 
 #### Inherited from
 
-IoSlider2d.\_value
+[`IoSlider2d`](IoSlider2d.md).[`_value`](IoSlider2d.md#_value)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:101](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L101)
 
-___
+***
 
 ### textNode
 
-• `get` **textNode**(): `any`
+> `get` **textNode**(): `any`
+
+> `set` **textNode**(`value`): `void`
+
+#### Parameters
+
+• **value**: `any`
 
 #### Returns
 
@@ -690,37 +579,17 @@ ___
 
 #### Inherited from
 
-IoSlider2d.textNode
+[`IoSlider2d`](IoSlider2d.md).[`textNode`](IoSlider2d.md#textnode)
 
 #### Defined in
 
 [src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
 
-• `set` **textNode**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoSlider2d.textNode
-
-#### Defined in
-
-[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
-
-___
+***
 
 ### Frag
 
-• `get` **Frag**(): `string`
+> `get` `static` **Frag**(): `string`
 
 #### Returns
 
@@ -728,17 +597,17 @@ ___
 
 #### Overrides
 
-IoSlider2d.Frag
+[`IoSlider2d`](IoSlider2d.md).[`Frag`](IoSlider2d.md#frag)
 
 #### Defined in
 
 [src/elements/color/io-color-sliders.ts:264](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L264)
 
-___
+***
 
 ### GlUtils
 
-• `get` **GlUtils**(): `string`
+> `get` `static` **GlUtils**(): `string`
 
 #### Returns
 
@@ -746,60 +615,69 @@ ___
 
 #### Overrides
 
-IoSlider2d.GlUtils
+[`IoSlider2d`](IoSlider2d.md).[`GlUtils`](IoSlider2d.md#glutils)
 
 #### Defined in
 
 [src/elements/color/io-color-sliders.ts:257](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L257)
 
-___
+***
 
 ### Listeners
 
-• `get` **Listeners**(): `Object`
+> `get` `static` **Listeners**(): `object`
 
 #### Returns
 
-`Object`
+`object`
 
-| Name | Type |
-| :------ | :------ |
-| `contextmenu` | `string` |
-| `focus` | `string` |
-| `pointerdown` | `string` |
-| `touchstart` | (`string` \| \{ `passive`: `boolean` = false })[] |
+##### contextmenu
+
+> **contextmenu**: `string` = `'_onContextmenu'`
+
+##### focus
+
+> **focus**: `string` = `'_onFocus'`
+
+##### pointerdown
+
+> **pointerdown**: `string` = `'_onPointerdown'`
+
+##### touchstart
+
+> **touchstart**: (`string` \| `object`)[]
 
 #### Inherited from
 
-IoSlider2d.Listeners
+[`IoSlider2d`](IoSlider2d.md).[`Listeners`](IoSlider2d.md#listeners)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:112](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L112)
 
-___
+***
 
 ### Properties
 
-• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Inherited from
 
-IoSlider2d.Properties
+[`IoSlider2d`](IoSlider2d.md).[`Properties`](IoSlider2d.md#properties)
 
 #### Defined in
 
 [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
-___
+***
 
 ### Style
 
-• `get` **Style**(): `string`
+> `get` `static` **Style**(): `string`
 
 #### Returns
 
@@ -807,17 +685,17 @@ ___
 
 #### Inherited from
 
-IoSlider2d.Style
+[`IoSlider2d`](IoSlider2d.md).[`Style`](IoSlider2d.md#style)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-2d.ts:7](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L7)
 
-___
+***
 
 ### Vert
 
-• `get` **Vert**(): `string`
+> `get` `static` **Vert**(): `string`
 
 #### Returns
 
@@ -825,7 +703,7 @@ ___
 
 #### Inherited from
 
-IoSlider2d.Vert
+[`IoSlider2d`](IoSlider2d.md).[`Vert`](IoSlider2d.md#vert)
 
 #### Defined in
 
@@ -833,15 +711,13 @@ IoSlider2d.Vert
 
 ## Methods
 
-### Register
+### Register()
 
-▸ **Register**(`ioNodeConstructor`): `void`
+> **Register**(`ioNodeConstructor`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
 
 #### Returns
 
@@ -849,26 +725,26 @@ IoSlider2d.Vert
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[Register](IoSlider2d.md#register)
+[`IoSlider2d`](IoSlider2d.md).[`Register`](IoSlider2d.md#register)
 
 #### Defined in
 
 [src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
 
-___
+***
 
-### \_flattenTextNode
+### \_flattenTextNode()
 
-▸ **_flattenTextNode**(`element`): `void`
+> **\_flattenTextNode**(`element`): `void`
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
+• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+
+Element to flatten.
 
 #### Returns
 
@@ -876,23 +752,21 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_flattenTextNode](IoSlider2d.md#_flattentextnode)
+[`IoSlider2d`](IoSlider2d.md).[`_flattenTextNode`](IoSlider2d.md#_flattentextnode)
 
 #### Defined in
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
 
-___
+***
 
-### \_getPointerCoord
+### \_getPointerCoord()
 
-▸ **_getPointerCoord**(`event`): [`number`, `number`]
+> **\_getPointerCoord**(`event`): [`number`, `number`]
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -900,23 +774,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_getPointerCoord](IoSlider2d.md#_getpointercoord)
+[`IoSlider2d`](IoSlider2d.md).[`_getPointerCoord`](IoSlider2d.md#_getpointercoord)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:179](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L179)
 
-___
+***
 
-### \_getValueFromCoord
+### \_getValueFromCoord()
 
-▸ **_getValueFromCoord**(`coord`): [`number`, `number`]
+> **\_getValueFromCoord**(`coord`): [`number`, `number`]
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `coord` | [`number`, `number`] |
+• **coord**: [`number`, `number`]
 
 #### Returns
 
@@ -924,23 +796,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_getValueFromCoord](IoSlider2d.md#_getvaluefromcoord)
+[`IoSlider2d`](IoSlider2d.md).[`_getValueFromCoord`](IoSlider2d.md#_getvaluefromcoord)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:187](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L187)
 
-___
+***
 
-### \_inputValue
+### \_inputValue()
 
-▸ **_inputValue**(`value`): `void`
+> **\_inputValue**(`value`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `value` | [`number`, `number`] |
+• **value**: [`number`, `number`]
 
 #### Returns
 
@@ -948,17 +818,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_inputValue](IoSlider2d.md#_inputvalue)
+[`IoSlider2d`](IoSlider2d.md).[`_inputValue`](IoSlider2d.md#_inputvalue)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:203](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L203)
 
-___
+***
 
-### \_onBlur
+### \_onBlur()
 
-▸ **_onBlur**(): `void`
+> **\_onBlur**(): `void`
 
 #### Returns
 
@@ -966,23 +836,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onBlur](IoSlider2d.md#_onblur)
+[`IoSlider2d`](IoSlider2d.md).[`_onBlur`](IoSlider2d.md#_onblur)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:124](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L124)
 
-___
+***
 
-### \_onContextmenu
+### \_onContextmenu()
 
-▸ **_onContextmenu**(`event`): `void`
+> **\_onContextmenu**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `Event` |
+• **event**: `Event`
 
 #### Returns
 
@@ -990,17 +858,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onContextmenu](IoSlider2d.md#_oncontextmenu)
+[`IoSlider2d`](IoSlider2d.md).[`_onContextmenu`](IoSlider2d.md#_oncontextmenu)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:128](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L128)
 
-___
+***
 
-### \_onFocus
+### \_onFocus()
 
-▸ **_onFocus**(): `void`
+> **\_onFocus**(): `void`
 
 #### Returns
 
@@ -1008,23 +876,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onFocus](IoSlider2d.md#_onfocus)
+[`IoSlider2d`](IoSlider2d.md).[`_onFocus`](IoSlider2d.md#_onfocus)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:120](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L120)
 
-___
+***
 
-### \_onKeydown
+### \_onKeydown()
 
-▸ **_onKeydown**(`event`): `void`
+> **\_onKeydown**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
+• **event**: `KeyboardEvent`
 
 #### Returns
 
@@ -1032,23 +898,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onKeydown](IoSlider2d.md#_onkeydown)
+[`IoSlider2d`](IoSlider2d.md).[`_onKeydown`](IoSlider2d.md#_onkeydown)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:230](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L230)
 
-___
+***
 
-### \_onPointerdown
+### \_onPointerdown()
 
-▸ **_onPointerdown**(`event`): `void`
+> **\_onPointerdown**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -1056,23 +920,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onPointerdown](IoSlider2d.md#_onpointerdown)
+[`IoSlider2d`](IoSlider2d.md).[`_onPointerdown`](IoSlider2d.md#_onpointerdown)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:161](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L161)
 
-___
+***
 
-### \_onPointermove
+### \_onPointermove()
 
-▸ **_onPointermove**(`event`): `void`
+> **\_onPointermove**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -1080,23 +942,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onPointermove](IoSlider2d.md#_onpointermove)
+[`IoSlider2d`](IoSlider2d.md).[`_onPointermove`](IoSlider2d.md#_onpointermove)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:168](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L168)
 
-___
+***
 
-### \_onPointermoveThrottled
+### \_onPointermoveThrottled()
 
-▸ **_onPointermoveThrottled**(`event`): `void`
+> **\_onPointermoveThrottled**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -1104,23 +964,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onPointermoveThrottled](IoSlider2d.md#_onpointermovethrottled)
+[`IoSlider2d`](IoSlider2d.md).[`_onPointermoveThrottled`](IoSlider2d.md#_onpointermovethrottled)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:195](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L195)
 
-___
+***
 
-### \_onPointerup
+### \_onPointerup()
 
-▸ **_onPointerup**(`event`): `void`
+> **\_onPointerup**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -1128,17 +986,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onPointerup](IoSlider2d.md#_onpointerup)
+[`IoSlider2d`](IoSlider2d.md).[`_onPointerup`](IoSlider2d.md#_onpointerup)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:172](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L172)
 
-___
+***
 
-### \_onRender
+### \_onRender()
 
-▸ **_onRender**(): `void`
+> **\_onRender**(): `void`
 
 #### Returns
 
@@ -1146,17 +1004,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onRender](IoSlider2d.md#_onrender)
+[`IoSlider2d`](IoSlider2d.md).[`_onRender`](IoSlider2d.md#_onrender)
 
 #### Defined in
 
 [src/core/gl.ts:344](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L344)
 
-___
+***
 
-### \_onTouchend
+### \_onTouchend()
 
-▸ **_onTouchend**(): `void`
+> **\_onTouchend**(): `void`
 
 #### Returns
 
@@ -1164,23 +1022,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onTouchend](IoSlider2d.md#_ontouchend)
+[`IoSlider2d`](IoSlider2d.md).[`_onTouchend`](IoSlider2d.md#_ontouchend)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:157](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L157)
 
-___
+***
 
-### \_onTouchmove
+### \_onTouchmove()
 
-▸ **_onTouchmove**(`event`): `void`
+> **\_onTouchmove**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `TouchEvent` |
+• **event**: `TouchEvent`
 
 #### Returns
 
@@ -1188,23 +1044,21 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onTouchmove](IoSlider2d.md#_ontouchmove)
+[`IoSlider2d`](IoSlider2d.md).[`_onTouchmove`](IoSlider2d.md#_ontouchmove)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:139](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L139)
 
-___
+***
 
-### \_onTouchstart
+### \_onTouchstart()
 
-▸ **_onTouchstart**(`event`): `void`
+> **\_onTouchstart**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `TouchEvent` |
+• **event**: `TouchEvent`
 
 #### Returns
 
@@ -1212,17 +1066,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_onTouchstart](IoSlider2d.md#_ontouchstart)
+[`IoSlider2d`](IoSlider2d.md).[`_onTouchstart`](IoSlider2d.md#_ontouchstart)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:131](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L131)
 
-___
+***
 
-### \_setDecrease
+### \_setDecrease()
 
-▸ **_setDecrease**(): `void`
+> **\_setDecrease**(): `void`
 
 #### Returns
 
@@ -1230,17 +1084,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setDecrease](IoSlider2d.md#_setdecrease)
+[`IoSlider2d`](IoSlider2d.md).[`_setDecrease`](IoSlider2d.md#_setdecrease)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:276](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L276)
 
-___
+***
 
-### \_setDown
+### \_setDown()
 
-▸ **_setDown**(): `void`
+> **\_setDown**(): `void`
 
 #### Returns
 
@@ -1248,17 +1102,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setDown](IoSlider2d.md#_setdown)
+[`IoSlider2d`](IoSlider2d.md).[`_setDown`](IoSlider2d.md#_setdown)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:297](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L297)
 
-___
+***
 
-### \_setIncrease
+### \_setIncrease()
 
-▸ **_setIncrease**(): `void`
+> **\_setIncrease**(): `void`
 
 #### Returns
 
@@ -1266,17 +1120,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setIncrease](IoSlider2d.md#_setincrease)
+[`IoSlider2d`](IoSlider2d.md).[`_setIncrease`](IoSlider2d.md#_setincrease)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:269](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L269)
 
-___
+***
 
-### \_setLeft
+### \_setLeft()
 
-▸ **_setLeft**(): `void`
+> **\_setLeft**(): `void`
 
 #### Returns
 
@@ -1284,17 +1138,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setLeft](IoSlider2d.md#_setleft)
+[`IoSlider2d`](IoSlider2d.md).[`_setLeft`](IoSlider2d.md#_setleft)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:303](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L303)
 
-___
+***
 
-### \_setMax
+### \_setMax()
 
-▸ **_setMax**(): `void`
+> **\_setMax**(): `void`
 
 #### Returns
 
@@ -1302,17 +1156,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setMax](IoSlider2d.md#_setmax)
+[`IoSlider2d`](IoSlider2d.md).[`_setMax`](IoSlider2d.md#_setmax)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:287](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L287)
 
-___
+***
 
-### \_setMin
+### \_setMin()
 
-▸ **_setMin**(): `void`
+> **\_setMin**(): `void`
 
 #### Returns
 
@@ -1320,17 +1174,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setMin](IoSlider2d.md#_setmin)
+[`IoSlider2d`](IoSlider2d.md).[`_setMin`](IoSlider2d.md#_setmin)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:283](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L283)
 
-___
+***
 
-### \_setRight
+### \_setRight()
 
-▸ **_setRight**(): `void`
+> **\_setRight**(): `void`
 
 #### Returns
 
@@ -1338,17 +1192,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setRight](IoSlider2d.md#_setright)
+[`IoSlider2d`](IoSlider2d.md).[`_setRight`](IoSlider2d.md#_setright)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:309](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L309)
 
-___
+***
 
-### \_setUp
+### \_setUp()
 
-▸ **_setUp**(): `void`
+> **\_setUp**(): `void`
 
 #### Returns
 
@@ -1356,27 +1210,33 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[_setUp](IoSlider2d.md#_setup)
+[`IoSlider2d`](IoSlider2d.md).[`_setUp`](IoSlider2d.md#_setup)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:291](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L291)
 
-___
+***
 
-### addEventListener
+### addEventListener()
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+> **addEventListener**(`type`, `listener`, `options`?): `void`
 
 Wrapper for addEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+listener name.
+
+• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -1384,23 +1244,26 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[addEventListener](IoSlider2d.md#addeventlistener)
+[`IoSlider2d`](IoSlider2d.md).[`addEventListener`](IoSlider2d.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
 
-___
+***
 
-### applyProperties
+### applyProperties()
 
-▸ **applyProperties**(`props`): `void`
+> **applyProperties**(`props`): `void`
+
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `any` |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -1408,25 +1271,25 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[applyProperties](IoSlider2d.md#applyproperties)
+[`IoSlider2d`](IoSlider2d.md).[`applyProperties`](IoSlider2d.md#applyproperties)
 
 #### Defined in
 
 [src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
 
-___
+***
 
-### bind
+### bind()
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+> **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to bind to. |
+• **prop**: `string`
+
+Property to bind to.
 
 #### Returns
 
@@ -1436,17 +1299,17 @@ Binding object.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[bind](IoSlider2d.md#bind)
+[`IoSlider2d`](IoSlider2d.md).[`bind`](IoSlider2d.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
 
-___
+***
 
-### changed
+### changed()
 
-▸ **changed**(): `void`
+> **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -1457,17 +1320,17 @@ Invoked when one of the properties change.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[changed](IoSlider2d.md#changed)
+[`IoSlider2d`](IoSlider2d.md).[`changed`](IoSlider2d.md#changed)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:318](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L318)
 
-___
+***
 
-### connectedCallback
+### connectedCallback()
 
-▸ **connectedCallback**(): `void`
+> **connectedCallback**(): `void`
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -1477,17 +1340,17 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[connectedCallback](IoSlider2d.md#connectedcallback)
+[`IoSlider2d`](IoSlider2d.md).[`connectedCallback`](IoSlider2d.md#connectedcallback)
 
 #### Defined in
 
 [src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
 
-___
+***
 
-### disabledChanged
+### disabledChanged()
 
-▸ **disabledChanged**(): `void`
+> **disabledChanged**(): `void`
 
 #### Returns
 
@@ -1495,17 +1358,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[disabledChanged](IoSlider2d.md#disabledchanged)
+[`IoSlider2d`](IoSlider2d.md).[`disabledChanged`](IoSlider2d.md#disabledchanged)
 
 #### Defined in
 
 [src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
 
-___
+***
 
-### disconnectedCallback
+### disconnectedCallback()
 
-▸ **disconnectedCallback**(): `void`
+> **disconnectedCallback**(): `void`
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -1515,28 +1378,37 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[disconnectedCallback](IoSlider2d.md#disconnectedcallback)
+[`IoSlider2d`](IoSlider2d.md).[`disconnectedCallback`](IoSlider2d.md#disconnectedcallback)
 
 #### Defined in
 
 [src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
 
-___
+***
 
-### dispatchEvent
+### dispatchEvent()
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+> **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `type` | `string` | `undefined` | event name to dispatch. |
-| `detail` | `Object` | `{}` | event detail. |
-| `bubbles` | `boolean` | `false` | event bubbles. |
-| `src?` | `Node` \| `Document` \| `HTMLElement` \| `Window` | `undefined` | source node/element to dispatch event from. |
+• **type**: `string`
+
+event name to dispatch.
+
+• **detail** = `{}`
+
+event detail.
+
+• **bubbles**: `boolean` = `false`
+
+event bubbles.
+
+• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+
+source node/element to dispatch event from.
 
 #### Returns
 
@@ -1544,25 +1416,25 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[dispatchEvent](IoSlider2d.md#dispatchevent)
+[`IoSlider2d`](IoSlider2d.md).[`dispatchEvent`](IoSlider2d.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
 
-___
+***
 
-### dispatchMutationEvent
+### dispatchMutationEvent()
 
-▸ **dispatchMutationEvent**(`object`): `void`
+> **dispatchMutationEvent**(`object`): `void`
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `object` | `any` | object which mutated. |
+• **object**: `any`
+
+object which mutated.
 
 #### Returns
 
@@ -1570,17 +1442,17 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[dispatchMutationEvent](IoSlider2d.md#dispatchmutationevent)
+[`IoSlider2d`](IoSlider2d.md).[`dispatchMutationEvent`](IoSlider2d.md#dispatchmutationevent)
 
 #### Defined in
 
-[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
+[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
 
-___
+***
 
-### dispatchQueue
+### dispatchQueue()
 
-▸ **dispatchQueue**(): `void`
+> **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -1590,17 +1462,17 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[dispatchQueue](IoSlider2d.md#dispatchqueue)
+[`IoSlider2d`](IoSlider2d.md).[`dispatchQueue`](IoSlider2d.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
 
-___
+***
 
-### dispatchQueueSync
+### dispatchQueueSync()
 
-▸ **dispatchQueueSync**(): `void`
+> **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -1610,17 +1482,17 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[dispatchQueueSync](IoSlider2d.md#dispatchqueuesync)
+[`IoSlider2d`](IoSlider2d.md).[`dispatchQueueSync`](IoSlider2d.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
+[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
 
-___
+***
 
-### dispose
+### dispose()
 
-▸ **dispose**(): `void`
+> **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -1631,17 +1503,17 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[dispose](IoSlider2d.md#dispose)
+[`IoSlider2d`](IoSlider2d.md).[`dispose`](IoSlider2d.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:391](https://github.com/io-gui/io/blob/main/src/core/node.ts#L391)
+[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
 
-___
+***
 
-### init
+### init()
 
-▸ **init**(): `void`
+> **init**(): `void`
 
 #### Returns
 
@@ -1649,24 +1521,23 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[init](IoSlider2d.md#init)
+[`IoSlider2d`](IoSlider2d.md).[`init`](IoSlider2d.md#init)
 
 #### Defined in
 
 [src/elements/sliders/io-slider-base.ts:315](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L315)
 
-___
+***
 
-### initPropertyUniform
+### initPropertyUniform()
 
-▸ **initPropertyUniform**(`name`, `property`): `string`
+> **initPropertyUniform**(`name`, `property`): `string`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `name` | `string` |
-| `property` | [`PropertyDeclaration`](../README.md#propertydeclaration) |
+• **name**: `string`
+
+• **property**: [`PropertyDeclaration`](../type-aliases/PropertyDeclaration.md)
 
 #### Returns
 
@@ -1674,17 +1545,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[initPropertyUniform](IoSlider2d.md#initpropertyuniform)
+[`IoSlider2d`](IoSlider2d.md).[`initPropertyUniform`](IoSlider2d.md#initpropertyuniform)
 
 #### Defined in
 
 [src/core/gl.ts:191](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L191)
 
-___
+***
 
-### initShader
+### initShader()
 
-▸ **initShader**(): `WebGLProgram`
+> **initShader**(): `WebGLProgram`
 
 #### Returns
 
@@ -1692,26 +1563,26 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[initShader](IoSlider2d.md#initshader)
+[`IoSlider2d`](IoSlider2d.md).[`initShader`](IoSlider2d.md#initshader)
 
 #### Defined in
 
 [src/core/gl.ts:209](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L209)
 
-___
+***
 
-### inputValue
+### inputValue()
 
-▸ **inputValue**(`value`): `void`
+> **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
+• **value**: `any`
+
+Property value.
 
 #### Returns
 
@@ -1719,17 +1590,17 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[inputValue](IoSlider2d.md#inputvalue)
+[`IoSlider2d`](IoSlider2d.md).[`inputValue`](IoSlider2d.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
-___
+***
 
-### labelChanged
+### labelChanged()
 
-▸ **labelChanged**(): `void`
+> **labelChanged**(): `void`
 
 #### Returns
 
@@ -1737,26 +1608,26 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[labelChanged](IoSlider2d.md#labelchanged)
+[`IoSlider2d`](IoSlider2d.md).[`labelChanged`](IoSlider2d.md#labelchanged)
 
 #### Defined in
 
 [src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
-___
+***
 
-### objectMutated
+### objectMutated()
 
-▸ **objectMutated**(`prop`): `void`
+> **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Mutated object property name. |
+• **prop**: `string`
+
+Mutated object property name.
 
 #### Returns
 
@@ -1764,26 +1635,26 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[objectMutated](IoSlider2d.md#objectmutated)
+[`IoSlider2d`](IoSlider2d.md).[`objectMutated`](IoSlider2d.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
+[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
 
-___
+***
 
-### onObjectMutated
+### onObjectMutated()
 
-▸ **onObjectMutated**(`event`): `void`
+> **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> | Event payload. |
+• **event**: `CustomEvent`\<`any`\>
+
+Event payload.
 
 #### Returns
 
@@ -1791,17 +1662,17 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[onObjectMutated](IoSlider2d.md#onobjectmutated)
+[`IoSlider2d`](IoSlider2d.md).[`onObjectMutated`](IoSlider2d.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
-___
+***
 
-### onResized
+### onResized()
 
-▸ **onResized**(): `void`
+> **onResized**(): `void`
 
 #### Returns
 
@@ -1809,27 +1680,33 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[onResized](IoSlider2d.md#onresized)
+[`IoSlider2d`](IoSlider2d.md).[`onResized`](IoSlider2d.md#onresized)
 
 #### Defined in
 
 [src/core/gl.ts:303](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L303)
 
-___
+***
 
-### queue
+### queue()
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+> **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `oldValue` | `any` | Old property value. |
+• **prop**: `string`
+
+Property name.
+
+• **value**: `any`
+
+Property value.
+
+• **oldValue**: `any`
+
+Old property value.
 
 #### Returns
 
@@ -1837,27 +1714,33 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[queue](IoSlider2d.md#queue)
+[`IoSlider2d`](IoSlider2d.md).[`queue`](IoSlider2d.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
+[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
-___
+***
 
-### removeEventListener
+### removeEventListener()
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+> **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
 Wrapper for removeEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+event name to listen to.
+
+• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -1865,26 +1748,29 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[removeEventListener](IoSlider2d.md#removeeventlistener)
+[`IoSlider2d`](IoSlider2d.md).[`removeEventListener`](IoSlider2d.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
-___
+***
 
-### setAttribute
+### setAttribute()
 
-▸ **setAttribute**(`attr`, `value`): `void`
+> **setAttribute**(`attr`, `value`): `void`
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `attr` | `string` | Attribute name. |
-| `value` | `string` \| `number` \| `boolean` | Attribute value. |
+• **attr**: `string`
+
+Attribute name.
+
+• **value**: `string` \| `number` \| `boolean`
+
+Attribute value.
 
 #### Returns
 
@@ -1892,26 +1778,26 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[setAttribute](IoSlider2d.md#setattribute)
+[`IoSlider2d`](IoSlider2d.md).[`setAttribute`](IoSlider2d.md#setattribute)
 
 #### Defined in
 
 [src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
 
-___
+***
 
-### setProperties
+### setProperties()
 
-▸ **setProperties**(`props`): `void`
+> **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `props` | `any` | Map of property names and values. |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -1919,27 +1805,33 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[setProperties](IoSlider2d.md#setproperties)
+[`IoSlider2d`](IoSlider2d.md).[`setProperties`](IoSlider2d.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
-___
+***
 
-### setProperty
+### setProperty()
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `name` | `string` | Property name to set value of. |
-| `value` | `any` | Peroperty value. |
-| `skipDispatch?` | `boolean` | flag to skip event dispatch. |
+• **name**: `string`
+
+Property name to set value of.
+
+• **value**: `any`
+
+Peroperty value.
+
+• **skipDispatch?**: `boolean`
+
+flag to skip event dispatch.
 
 #### Returns
 
@@ -1947,17 +1839,17 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[setProperty](IoSlider2d.md#setproperty)
+[`IoSlider2d`](IoSlider2d.md).[`setProperty`](IoSlider2d.md#setproperty)
 
 #### Defined in
 
-[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
+[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
 
-___
+***
 
-### setShaderProgram
+### setShaderProgram()
 
-▸ **setShaderProgram**(): `void`
+> **setShaderProgram**(): `void`
 
 #### Returns
 
@@ -1965,24 +1857,23 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[setShaderProgram](IoSlider2d.md#setshaderprogram)
+[`IoSlider2d`](IoSlider2d.md).[`setShaderProgram`](IoSlider2d.md#setshaderprogram)
 
 #### Defined in
 
 [src/core/gl.ts:379](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L379)
 
-___
+***
 
-### setUniform
+### setUniform()
 
-▸ **setUniform**(`name`, `value`): `void`
+> **setUniform**(`name`, `value`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `name` | `string` |
-| `value` | `any` |
+• **name**: `string`
+
+• **value**: `any`
 
 #### Returns
 
@@ -1990,27 +1881,33 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[setUniform](IoSlider2d.md#setuniform)
+[`IoSlider2d`](IoSlider2d.md).[`setUniform`](IoSlider2d.md#setuniform)
 
 #### Defined in
 
 [src/core/gl.ts:396](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L396)
 
-___
+***
 
-### template
+### template()
 
-▸ **template**(`vDOM`, `host?`, `cache?`): `void`
+> **template**(`vDOM`, `host`?, `cache`?): `void`
 
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vDOM` | `any`[] | Array of vDOM children. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vDOM**: `any`[]
+
+Array of vDOM children.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -2018,17 +1915,17 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[template](IoSlider2d.md#template)
+[`IoSlider2d`](IoSlider2d.md).[`template`](IoSlider2d.md#template)
 
 #### Defined in
 
 [src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
 
-___
+***
 
-### themeMutated
+### themeMutated()
 
-▸ **themeMutated**(): `void`
+> **themeMutated**(): `void`
 
 #### Returns
 
@@ -2036,27 +1933,33 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[themeMutated](IoSlider2d.md#thememutated)
+[`IoSlider2d`](IoSlider2d.md).[`themeMutated`](IoSlider2d.md#thememutated)
 
 #### Defined in
 
 [src/core/gl.ts:329](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L329)
 
-___
+***
 
-### throttle
+### throttle()
 
-▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
+> **throttle**(`func`, `arg`, `timeout`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
-| `arg` | `any` | `undefined` | argument for throttled function. |
-| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
+• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+
+Function to throttle.
+
+• **arg**: `any` = `undefined`
+
+argument for throttled function.
+
+• **timeout**: `number` = `1`
+
+minimum delay in ms before executing the function.
 
 #### Returns
 
@@ -2064,28 +1967,34 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[throttle](IoSlider2d.md#throttle)
+[`IoSlider2d`](IoSlider2d.md).[`throttle`](IoSlider2d.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
-___
+***
 
-### traverse
+### traverse()
 
-▸ **traverse**(`vChildren`, `host?`, `cache?`): `void`
+> **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vChildren**: `any`[]
+
+Array of vDOM children converted by `buildTree()` for easier parsing.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -2093,25 +2002,25 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[traverse](IoSlider2d.md#traverse)
+[`IoSlider2d`](IoSlider2d.md).[`traverse`](IoSlider2d.md#traverse)
 
 #### Defined in
 
 [src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
 
-___
+***
 
-### unbind
+### unbind()
 
-▸ **unbind**(`prop`): `void`
+> **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to unbind. |
+• **prop**: `string`
+
+Property to unbind.
 
 #### Returns
 
@@ -2119,24 +2028,23 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[unbind](IoSlider2d.md#unbind)
+[`IoSlider2d`](IoSlider2d.md).[`unbind`](IoSlider2d.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
-___
+***
 
-### updatePropertyUniform
+### updatePropertyUniform()
 
-▸ **updatePropertyUniform**(`name`, `property`): `void`
+> **updatePropertyUniform**(`name`, `property`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `name` | `string` |
-| `property` | [`PropertyInstance`](PropertyInstance.md) |
+• **name**: `string`
+
+• **property**: [`PropertyInstance`](PropertyInstance.md)
 
 #### Returns
 
@@ -2144,17 +2052,17 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[updatePropertyUniform](IoSlider2d.md#updatepropertyuniform)
+[`IoSlider2d`](IoSlider2d.md).[`updatePropertyUniform`](IoSlider2d.md#updatepropertyuniform)
 
 #### Defined in
 
 [src/core/gl.ts:385](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L385)
 
-___
+***
 
-### updateThemeUniforms
+### updateThemeUniforms()
 
-▸ **updateThemeUniforms**(): `void`
+> **updateThemeUniforms**(): `void`
 
 #### Returns
 
@@ -2162,7 +2070,7 @@ ___
 
 #### Inherited from
 
-[IoSlider2d](IoSlider2d.md).[updateThemeUniforms](IoSlider2d.md#updatethemeuniforms)
+[`IoSlider2d`](IoSlider2d.md).[`updateThemeUniforms`](IoSlider2d.md#updatethemeuniforms)
 
 #### Defined in
 

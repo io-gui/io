@@ -140,7 +140,7 @@ export class IoMenuItem extends IoField {
       this.focus();
       if (this.item.options) this.expanded = true;
     }
-    // eslint-disable-next-line
+
     // hovered = this;
     // hoveredParent = this.parentElement;
     // TODO: Safari temp fix for event.movement = 0

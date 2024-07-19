@@ -62,6 +62,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     constructor(...args: any[]); // TODO: reconsider?
     constructor(properties: IoNodeArgs = {}, ...args: any[]) {
+      // eslint-disable-next-line constructor-super
       super(...args);
 
       debug: {

@@ -1,3 +1,7 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / IoNumber
 
 # Class: IoNumber
@@ -7,119 +11,21 @@ It clamps the `value` to `min` / `max` and rounds it to the nearest `step` incre
 If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
 Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
 
-## Hierarchy
+## Extends
 
 - [`IoField`](IoField.md)
 
-  ↳ **`IoNumber`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](IoNumber.md#constructor)
-
-### Properties
-
-- [$](IoNumber.md#$)
-- [\_bindings](IoNumber.md#_bindings)
-- [\_changeQueue](IoNumber.md#_changequeue)
-- [\_eventDispatcher](IoNumber.md#_eventdispatcher)
-- [\_properties](IoNumber.md#_properties)
-- [\_protochain](IoNumber.md#_protochain)
-- [appearance](IoNumber.md#appearance)
-- [class](IoNumber.md#class)
-- [contenteditable](IoNumber.md#contenteditable)
-- [conversion](IoNumber.md#conversion)
-- [disabled](IoNumber.md#disabled)
-- [hidden](IoNumber.md#hidden)
-- [icon](IoNumber.md#icon)
-- [id](IoNumber.md#id)
-- [inputmode](IoNumber.md#inputmode)
-- [invalid](IoNumber.md#invalid)
-- [label](IoNumber.md#label)
-- [ladder](IoNumber.md#ladder)
-- [max](IoNumber.md#max)
-- [min](IoNumber.md#min)
-- [name](IoNumber.md#name)
-- [pattern](IoNumber.md#pattern)
-- [placeholder](IoNumber.md#placeholder)
-- [role](IoNumber.md#role)
-- [selected](IoNumber.md#selected)
-- [spellcheck](IoNumber.md#spellcheck)
-- [step](IoNumber.md#step)
-- [stroke](IoNumber.md#stroke)
-- [tabindex](IoNumber.md#tabindex)
-- [title](IoNumber.md#title)
-- [type](IoNumber.md#type)
-- [value](IoNumber.md#value)
-
-### Accessors
-
-- [textNode](IoNumber.md#textnode)
-- [Listeners](IoNumber.md#listeners)
-- [Properties](IoNumber.md#properties)
-- [Style](IoNumber.md#style)
-
-### Methods
-
-- [Register](IoNumber.md#register)
-- [\_expandLadder](IoNumber.md#_expandladder)
-- [\_flattenTextNode](IoNumber.md#_flattentextnode)
-- [\_onBlur](IoNumber.md#_onblur)
-- [\_onClick](IoNumber.md#_onclick)
-- [\_onFocus](IoNumber.md#_onfocus)
-- [\_onFocusTo](IoNumber.md#_onfocusto)
-- [\_onKeydown](IoNumber.md#_onkeydown)
-- [\_onKeyup](IoNumber.md#_onkeyup)
-- [\_onPointerdown](IoNumber.md#_onpointerdown)
-- [\_onPointerleave](IoNumber.md#_onpointerleave)
-- [\_onPointermove](IoNumber.md#_onpointermove)
-- [\_onPointerup](IoNumber.md#_onpointerup)
-- [\_setFromTextNode](IoNumber.md#_setfromtextnode)
-- [addEventListener](IoNumber.md#addeventlistener)
-- [applyProperties](IoNumber.md#applyproperties)
-- [bind](IoNumber.md#bind)
-- [changed](IoNumber.md#changed)
-- [connectedCallback](IoNumber.md#connectedcallback)
-- [disabledChanged](IoNumber.md#disabledchanged)
-- [disconnectedCallback](IoNumber.md#disconnectedcallback)
-- [dispatchEvent](IoNumber.md#dispatchevent)
-- [dispatchMutationEvent](IoNumber.md#dispatchmutationevent)
-- [dispatchQueue](IoNumber.md#dispatchqueue)
-- [dispatchQueueSync](IoNumber.md#dispatchqueuesync)
-- [dispose](IoNumber.md#dispose)
-- [focusTo](IoNumber.md#focusto)
-- [getCaretPosition](IoNumber.md#getcaretposition)
-- [init](IoNumber.md#init)
-- [inputValue](IoNumber.md#inputvalue)
-- [labelChanged](IoNumber.md#labelchanged)
-- [objectMutated](IoNumber.md#objectmutated)
-- [onObjectMutated](IoNumber.md#onobjectmutated)
-- [queue](IoNumber.md#queue)
-- [removeEventListener](IoNumber.md#removeeventlistener)
-- [setAttribute](IoNumber.md#setattribute)
-- [setCaretPosition](IoNumber.md#setcaretposition)
-- [setProperties](IoNumber.md#setproperties)
-- [setProperty](IoNumber.md#setproperty)
-- [template](IoNumber.md#template)
-- [throttle](IoNumber.md#throttle)
-- [traverse](IoNumber.md#traverse)
-- [unbind](IoNumber.md#unbind)
-
 ## Constructors
 
-### constructor
+### new IoNumber()
 
-• **new IoNumber**(`...args`): [`IoNumber`](IoNumber.md)
+> **new IoNumber**(...`args`): [`IoNumber`](IoNumber.md)
 
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `...args` | `any`[] |
+• ...**args**: `any`[]
 
 #### Returns
 
@@ -127,7 +33,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoField](IoField.md).[constructor](IoField.md#constructor)
+[`IoField`](IoField.md).[`constructor`](IoField.md#constructors)
 
 #### Defined in
 
@@ -137,409 +43,409 @@ Creates a class instance and initializes the internals.
 
 ### $
 
-• **$**: `Record`\<`string`, `any`\>
+> **$**: `Record`\<`string`, `any`\>
 
 #### Inherited from
 
-[IoField](IoField.md).[$](IoField.md#$)
+[`IoField`](IoField.md).[`$`](IoField.md#$)
 
 #### Defined in
 
 [src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
 
-___
+***
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
+> `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
-[IoField](IoField.md).[_bindings](IoField.md#_bindings)
+[`IoField`](IoField.md).[`_bindings`](IoField.md#_bindings)
 
 #### Defined in
 
 [src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
-___
+***
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+> `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
-[IoField](IoField.md).[_changeQueue](IoField.md#_changequeue)
+[`IoField`](IoField.md).[`_changeQueue`](IoField.md#_changequeue)
 
 #### Defined in
 
 [src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
-___
+***
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+> `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
-[IoField](IoField.md).[_eventDispatcher](IoField.md#_eventdispatcher)
+[`IoField`](IoField.md).[`_eventDispatcher`](IoField.md#_eventdispatcher)
 
 #### Defined in
 
 [src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
-___
+***
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+> `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
-[IoField](IoField.md).[_properties](IoField.md#_properties)
+[`IoField`](IoField.md).[`_properties`](IoField.md#_properties)
 
 #### Defined in
 
 [src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
-___
+***
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+> `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
-[IoField](IoField.md).[_protochain](IoField.md#_protochain)
+[`IoField`](IoField.md).[`_protochain`](IoField.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
-___
+***
 
 ### appearance
 
-• **appearance**: ``"inset"`` \| ``"flush"`` \| ``"outset"``
+> **appearance**: `"inset"` \| `"flush"` \| `"outset"`
 
 #### Overrides
 
-[IoField](IoField.md).[appearance](IoField.md#appearance)
+[`IoField`](IoField.md).[`appearance`](IoField.md#appearance)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:64](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L64)
 
-___
+***
 
 ### class
 
-• **class**: `string`
+> **class**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[class](IoField.md#class)
+[`IoField`](IoField.md).[`class`](IoField.md#class)
 
 #### Defined in
 
 [src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
-___
+***
 
 ### contenteditable
 
-• **contenteditable**: `boolean`
+> **contenteditable**: `boolean`
 
 #### Overrides
 
-[IoField](IoField.md).[contenteditable](IoField.md#contenteditable)
+[`IoField`](IoField.md).[`contenteditable`](IoField.md#contenteditable)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:49](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L49)
 
-___
+***
 
 ### conversion
 
-• **conversion**: `number`
+> **conversion**: `number`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:34](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L34)
 
-___
+***
 
 ### disabled
 
-• **disabled**: `boolean`
+> **disabled**: `boolean`
 
 #### Inherited from
 
-[IoField](IoField.md).[disabled](IoField.md#disabled)
+[`IoField`](IoField.md).[`disabled`](IoField.md#disabled)
 
 #### Defined in
 
 [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
-___
+***
 
 ### hidden
 
-• **hidden**: `boolean`
+> **hidden**: `boolean`
 
 #### Inherited from
 
-[IoField](IoField.md).[hidden](IoField.md#hidden)
+[`IoField`](IoField.md).[`hidden`](IoField.md#hidden)
 
 #### Defined in
 
 [src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
-___
+***
 
 ### icon
 
-• **icon**: `string`
+> **icon**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[icon](IoField.md#icon)
+[`IoField`](IoField.md).[`icon`](IoField.md#icon)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:83](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L83)
 
-___
+***
 
 ### id
 
-• **id**: `string`
+> **id**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[id](IoField.md#id)
+[`IoField`](IoField.md).[`id`](IoField.md#id)
 
 #### Defined in
 
 [src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
-___
+***
 
 ### inputmode
 
-• **inputmode**: `string`
+> **inputmode**: `string`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:58](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L58)
 
-___
+***
 
 ### invalid
 
-• **invalid**: `boolean`
+> **invalid**: `boolean`
 
 #### Inherited from
 
-[IoField](IoField.md).[invalid](IoField.md#invalid)
+[`IoField`](IoField.md).[`invalid`](IoField.md#invalid)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:95](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L95)
 
-___
+***
 
 ### label
 
-• **label**: `string`
+> **label**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[label](IoField.md#label)
+[`IoField`](IoField.md).[`label`](IoField.md#label)
 
 #### Defined in
 
 [src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
-___
+***
 
 ### ladder
 
-• **ladder**: `boolean`
+> **ladder**: `boolean`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:46](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L46)
 
-___
+***
 
 ### max
 
-• **max**: `number`
+> **max**: `number`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:43](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L43)
 
-___
+***
 
 ### min
 
-• **min**: `number`
+> **min**: `number`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:40](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L40)
 
-___
+***
 
 ### name
 
-• **name**: `string`
+> **name**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[name](IoField.md#name)
+[`IoField`](IoField.md).[`name`](IoField.md#name)
 
 #### Defined in
 
 [src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
-___
+***
 
 ### pattern
 
-• **pattern**: `string`
+> **pattern**: `string`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:55](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L55)
 
-___
+***
 
 ### placeholder
 
-• **placeholder**: `string`
+> **placeholder**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[placeholder](IoField.md#placeholder)
+[`IoField`](IoField.md).[`placeholder`](IoField.md#placeholder)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:98](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L98)
 
-___
+***
 
 ### role
 
-• **role**: `string`
+> **role**: `string`
 
 #### Overrides
 
-[IoField](IoField.md).[role](IoField.md#role)
+[`IoField`](IoField.md).[`role`](IoField.md#role)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:28](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L28)
 
-___
+***
 
 ### selected
 
-• **selected**: `boolean`
+> **selected**: `boolean`
 
 #### Inherited from
 
-[IoField](IoField.md).[selected](IoField.md#selected)
+[`IoField`](IoField.md).[`selected`](IoField.md#selected)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:92](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L92)
 
-___
+***
 
 ### spellcheck
 
-• **spellcheck**: `string`
+> **spellcheck**: `string`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:61](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L61)
 
-___
+***
 
 ### step
 
-• **step**: `number`
+> **step**: `number`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:37](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L37)
 
-___
+***
 
 ### stroke
 
-• **stroke**: `boolean`
+> **stroke**: `boolean`
 
 #### Inherited from
 
-[IoField](IoField.md).[stroke](IoField.md#stroke)
+[`IoField`](IoField.md).[`stroke`](IoField.md#stroke)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:89](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L89)
 
-___
+***
 
 ### tabindex
 
-• **tabindex**: `string`
+> **tabindex**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[tabindex](IoField.md#tabindex)
+[`IoField`](IoField.md).[`tabindex`](IoField.md#tabindex)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:77](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L77)
 
-___
+***
 
 ### title
 
-• **title**: `string`
+> **title**: `string`
 
 #### Inherited from
 
-[IoField](IoField.md).[title](IoField.md#title)
+[`IoField`](IoField.md).[`title`](IoField.md#title)
 
 #### Defined in
 
 [src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
-___
+***
 
 ### type
 
-• **type**: `string`
+> **type**: `string`
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:52](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L52)
 
-___
+***
 
 ### value
 
-• **value**: `number`
+> **value**: `number`
 
 #### Overrides
 
-[IoField](IoField.md).[value](IoField.md#value)
+[`IoField`](IoField.md).[`value`](IoField.md#value)
 
 #### Defined in
 
@@ -549,7 +455,13 @@ ___
 
 ### textNode
 
-• `get` **textNode**(): `any`
+> `get` **textNode**(): `any`
+
+> `set` **textNode**(`value`): `void`
+
+#### Parameters
+
+• **value**: `any`
 
 #### Returns
 
@@ -557,80 +469,69 @@ ___
 
 #### Inherited from
 
-IoField.textNode
+[`IoField`](IoField.md).[`textNode`](IoField.md#textnode)
 
 #### Defined in
 
 [src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
 
-• `set` **textNode**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoField.textNode
-
-#### Defined in
-
-[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
-
-___
+***
 
 ### Listeners
 
-• `get` **Listeners**(): `Object`
+> `get` `static` **Listeners**(): `object`
 
 #### Returns
 
-`Object`
+`object`
 
-| Name | Type |
-| :------ | :------ |
-| `click` | `string` |
-| `focus` | `string` |
-| `focus-to` | `string` |
-| `pointerdown` | `string` |
+##### click
+
+> **click**: `string` = `'_onClick'`
+
+##### focus
+
+> **focus**: `string` = `'_onFocus'`
+
+##### focus-to
+
+> **focus-to**: `string` = `'_onFocusTo'`
+
+##### pointerdown
+
+> **pointerdown**: `string` = `'_onPointerdown'`
 
 #### Inherited from
 
-IoField.Listeners
+[`IoField`](IoField.md).[`Listeners`](IoField.md#listeners)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:100](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L100)
 
-___
+***
 
 ### Properties
 
-• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Inherited from
 
-IoField.Properties
+[`IoField`](IoField.md).[`Properties`](IoField.md#properties)
 
 #### Defined in
 
 [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
-___
+***
 
 ### Style
 
-• `get` **Style**(): `string`
+> `get` `static` **Style**(): `string`
 
 #### Returns
 
@@ -638,7 +539,7 @@ ___
 
 #### Overrides
 
-IoField.Style
+[`IoField`](IoField.md).[`Style`](IoField.md#style)
 
 #### Defined in
 
@@ -646,15 +547,13 @@ IoField.Style
 
 ## Methods
 
-### Register
+### Register()
 
-▸ **Register**(`ioNodeConstructor`): `void`
+> **Register**(`ioNodeConstructor`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
 
 #### Returns
 
@@ -662,17 +561,17 @@ IoField.Style
 
 #### Inherited from
 
-[IoField](IoField.md).[Register](IoField.md#register)
+[`IoField`](IoField.md).[`Register`](IoField.md#register)
 
 #### Defined in
 
 [src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
 
-___
+***
 
-### \_expandLadder
+### \_expandLadder()
 
-▸ **_expandLadder**(): `void`
+> **\_expandLadder**(): `void`
 
 #### Returns
 
@@ -682,20 +581,20 @@ ___
 
 [src/elements/basic/io-number.ts:114](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L114)
 
-___
+***
 
-### \_flattenTextNode
+### \_flattenTextNode()
 
-▸ **_flattenTextNode**(`element`): `void`
+> **\_flattenTextNode**(`element`): `void`
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
+• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+
+Element to flatten.
 
 #### Returns
 
@@ -703,23 +602,21 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoField](IoField.md).[_flattenTextNode](IoField.md#_flattentextnode)
+[`IoField`](IoField.md).[`_flattenTextNode`](IoField.md#_flattentextnode)
 
 #### Defined in
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
 
-___
+***
 
-### \_onBlur
+### \_onBlur()
 
-▸ **_onBlur**(`event`): `void`
+> **\_onBlur**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `FocusEvent` |
+• **event**: `FocusEvent`
 
 #### Returns
 
@@ -727,17 +624,17 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[_onBlur](IoField.md#_onblur)
+[`IoField`](IoField.md).[`_onBlur`](IoField.md#_onblur)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:68](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L68)
 
-___
+***
 
-### \_onClick
+### \_onClick()
 
-▸ **_onClick**(): `void`
+> **\_onClick**(): `void`
 
 #### Returns
 
@@ -745,23 +642,21 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_onClick](IoField.md#_onclick)
+[`IoField`](IoField.md).[`_onClick`](IoField.md#_onclick)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:136](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L136)
 
-___
+***
 
-### \_onFocus
+### \_onFocus()
 
-▸ **_onFocus**(`event`): `void`
+> **\_onFocus**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `FocusEvent` |
+• **event**: `FocusEvent`
 
 #### Returns
 
@@ -769,23 +664,21 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[_onFocus](IoField.md#_onfocus)
+[`IoField`](IoField.md).[`_onFocus`](IoField.md#_onfocus)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:108](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L108)
 
-___
+***
 
-### \_onFocusTo
+### \_onFocusTo()
 
-▸ **_onFocusTo**(`event`): `void`
+> **\_onFocusTo**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> |
+• **event**: `CustomEvent`\<`any`\>
 
 #### Returns
 
@@ -793,23 +686,21 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_onFocusTo](IoField.md#_onfocusto)
+[`IoField`](IoField.md).[`_onFocusTo`](IoField.md#_onfocusto)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:159](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L159)
 
-___
+***
 
-### \_onKeydown
+### \_onKeydown()
 
-▸ **_onKeydown**(`event`): `void`
+> **\_onKeydown**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
+• **event**: `KeyboardEvent`
 
 #### Returns
 
@@ -817,23 +708,21 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[_onKeydown](IoField.md#_onkeydown)
+[`IoField`](IoField.md).[`_onKeydown`](IoField.md#_onkeydown)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:118](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L118)
 
-___
+***
 
-### \_onKeyup
+### \_onKeyup()
 
-▸ **_onKeyup**(`event`): `void`
+> **\_onKeyup**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `KeyboardEvent` |
+• **event**: `KeyboardEvent`
 
 #### Returns
 
@@ -841,23 +730,21 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[_onKeyup](IoField.md#_onkeyup)
+[`IoField`](IoField.md).[`_onKeyup`](IoField.md#_onkeyup)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:178](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L178)
 
-___
+***
 
-### \_onPointerdown
+### \_onPointerdown()
 
-▸ **_onPointerdown**(`event`): `void`
+> **\_onPointerdown**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -865,23 +752,21 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[_onPointerdown](IoField.md#_onpointerdown)
+[`IoField`](IoField.md).[`_onPointerdown`](IoField.md#_onpointerdown)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:80](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L80)
 
-___
+***
 
-### \_onPointerleave
+### \_onPointerleave()
 
-▸ **_onPointerleave**(`event`): `void`
+> **\_onPointerleave**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -889,23 +774,21 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_onPointerleave](IoField.md#_onpointerleave)
+[`IoField`](IoField.md).[`_onPointerleave`](IoField.md#_onpointerleave)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:125](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L125)
 
-___
+***
 
-### \_onPointermove
+### \_onPointermove()
 
-▸ **_onPointermove**(`event`): `void`
+> **\_onPointermove**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -913,23 +796,21 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[_onPointermove](IoField.md#_onpointermove)
+[`IoField`](IoField.md).[`_onPointermove`](IoField.md#_onpointermove)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:124](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L124)
 
-___
+***
 
-### \_onPointerup
+### \_onPointerup()
 
-▸ **_onPointerup**(`event`): `void`
+> **\_onPointerup**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -937,17 +818,17 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[_onPointerup](IoField.md#_onpointerup)
+[`IoField`](IoField.md).[`_onPointerup`](IoField.md#_onpointerup)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:87](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L87)
 
-___
+***
 
-### \_setFromTextNode
+### \_setFromTextNode()
 
-▸ **_setFromTextNode**(): `void`
+> **\_setFromTextNode**(): `void`
 
 #### Returns
 
@@ -957,21 +838,27 @@ ___
 
 [src/elements/basic/io-number.ts:185](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L185)
 
-___
+***
 
-### addEventListener
+### addEventListener()
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+> **addEventListener**(`type`, `listener`, `options`?): `void`
 
 Wrapper for addEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+listener name.
+
+• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -979,23 +866,26 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoField](IoField.md).[addEventListener](IoField.md#addeventlistener)
+[`IoField`](IoField.md).[`addEventListener`](IoField.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
 
-___
+***
 
-### applyProperties
+### applyProperties()
 
-▸ **applyProperties**(`props`): `void`
+> **applyProperties**(`props`): `void`
+
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `any` |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -1003,25 +893,25 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[applyProperties](IoField.md#applyproperties)
+[`IoField`](IoField.md).[`applyProperties`](IoField.md#applyproperties)
 
 #### Defined in
 
 [src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
 
-___
+***
 
-### bind
+### bind()
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+> **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to bind to. |
+• **prop**: `string`
+
+Property to bind to.
 
 #### Returns
 
@@ -1031,17 +921,17 @@ Binding object.
 
 #### Inherited from
 
-[IoField](IoField.md).[bind](IoField.md#bind)
+[`IoField`](IoField.md).[`bind`](IoField.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
 
-___
+***
 
-### changed
+### changed()
 
-▸ **changed**(): `void`
+> **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -1052,17 +942,17 @@ Invoked when one of the properties change.
 
 #### Overrides
 
-[IoField](IoField.md).[changed](IoField.md#changed)
+[`IoField`](IoField.md).[`changed`](IoField.md#changed)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:198](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L198)
 
-___
+***
 
-### connectedCallback
+### connectedCallback()
 
-▸ **connectedCallback**(): `void`
+> **connectedCallback**(): `void`
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -1072,17 +962,17 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoField](IoField.md).[connectedCallback](IoField.md#connectedcallback)
+[`IoField`](IoField.md).[`connectedCallback`](IoField.md#connectedcallback)
 
 #### Defined in
 
 [src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
 
-___
+***
 
-### disabledChanged
+### disabledChanged()
 
-▸ **disabledChanged**(): `void`
+> **disabledChanged**(): `void`
 
 #### Returns
 
@@ -1090,17 +980,17 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[disabledChanged](IoField.md#disabledchanged)
+[`IoField`](IoField.md).[`disabledChanged`](IoField.md#disabledchanged)
 
 #### Defined in
 
 [src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
 
-___
+***
 
-### disconnectedCallback
+### disconnectedCallback()
 
-▸ **disconnectedCallback**(): `void`
+> **disconnectedCallback**(): `void`
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -1110,28 +1000,37 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoField](IoField.md).[disconnectedCallback](IoField.md#disconnectedcallback)
+[`IoField`](IoField.md).[`disconnectedCallback`](IoField.md#disconnectedcallback)
 
 #### Defined in
 
 [src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
 
-___
+***
 
-### dispatchEvent
+### dispatchEvent()
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+> **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `type` | `string` | `undefined` | event name to dispatch. |
-| `detail` | `Object` | `{}` | event detail. |
-| `bubbles` | `boolean` | `false` | event bubbles. |
-| `src?` | `Node` \| `Document` \| `HTMLElement` \| `Window` | `undefined` | source node/element to dispatch event from. |
+• **type**: `string`
+
+event name to dispatch.
+
+• **detail** = `{}`
+
+event detail.
+
+• **bubbles**: `boolean` = `false`
+
+event bubbles.
+
+• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+
+source node/element to dispatch event from.
 
 #### Returns
 
@@ -1139,25 +1038,25 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchEvent](IoField.md#dispatchevent)
+[`IoField`](IoField.md).[`dispatchEvent`](IoField.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
 
-___
+***
 
-### dispatchMutationEvent
+### dispatchMutationEvent()
 
-▸ **dispatchMutationEvent**(`object`): `void`
+> **dispatchMutationEvent**(`object`): `void`
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `object` | `any` | object which mutated. |
+• **object**: `any`
+
+object which mutated.
 
 #### Returns
 
@@ -1165,17 +1064,17 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchMutationEvent](IoField.md#dispatchmutationevent)
+[`IoField`](IoField.md).[`dispatchMutationEvent`](IoField.md#dispatchmutationevent)
 
 #### Defined in
 
-[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
+[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
 
-___
+***
 
-### dispatchQueue
+### dispatchQueue()
 
-▸ **dispatchQueue**(): `void`
+> **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -1185,17 +1084,17 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchQueue](IoField.md#dispatchqueue)
+[`IoField`](IoField.md).[`dispatchQueue`](IoField.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
 
-___
+***
 
-### dispatchQueueSync
+### dispatchQueueSync()
 
-▸ **dispatchQueueSync**(): `void`
+> **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -1205,17 +1104,17 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispatchQueueSync](IoField.md#dispatchqueuesync)
+[`IoField`](IoField.md).[`dispatchQueueSync`](IoField.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
+[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
 
-___
+***
 
-### dispose
+### dispose()
 
-▸ **dispose**(): `void`
+> **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -1226,23 +1125,21 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoField](IoField.md).[dispose](IoField.md#dispose)
+[`IoField`](IoField.md).[`dispose`](IoField.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:391](https://github.com/io-gui/io/blob/main/src/core/node.ts#L391)
+[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
 
-___
+***
 
-### focusTo
+### focusTo()
 
-▸ **focusTo**(`dir`): `void`
+> **focusTo**(`dir`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `dir` | `string` |
+• **dir**: `string`
 
 #### Returns
 
@@ -1250,17 +1147,17 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[focusTo](IoField.md#focusto)
+[`IoField`](IoField.md).[`focusTo`](IoField.md#focusto)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:266](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L266)
 
-___
+***
 
-### getCaretPosition
+### getCaretPosition()
 
-▸ **getCaretPosition**(): `number`
+> **getCaretPosition**(): `number`
 
 #### Returns
 
@@ -1268,17 +1165,17 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[getCaretPosition](IoField.md#getcaretposition)
+[`IoField`](IoField.md).[`getCaretPosition`](IoField.md#getcaretposition)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:270](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L270)
 
-___
+***
 
-### init
+### init()
 
-▸ **init**(): `void`
+> **init**(): `void`
 
 #### Returns
 
@@ -1286,26 +1183,26 @@ ___
 
 #### Overrides
 
-[IoField](IoField.md).[init](IoField.md#init)
+[`IoField`](IoField.md).[`init`](IoField.md#init)
 
 #### Defined in
 
 [src/elements/basic/io-number.ts:195](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L195)
 
-___
+***
 
-### inputValue
+### inputValue()
 
-▸ **inputValue**(`value`): `void`
+> **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
+• **value**: `any`
+
+Property value.
 
 #### Returns
 
@@ -1313,17 +1210,17 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoField](IoField.md).[inputValue](IoField.md#inputvalue)
+[`IoField`](IoField.md).[`inputValue`](IoField.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
-___
+***
 
-### labelChanged
+### labelChanged()
 
-▸ **labelChanged**(): `void`
+> **labelChanged**(): `void`
 
 #### Returns
 
@@ -1331,26 +1228,26 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[labelChanged](IoField.md#labelchanged)
+[`IoField`](IoField.md).[`labelChanged`](IoField.md#labelchanged)
 
 #### Defined in
 
 [src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
-___
+***
 
-### objectMutated
+### objectMutated()
 
-▸ **objectMutated**(`prop`): `void`
+> **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Mutated object property name. |
+• **prop**: `string`
+
+Mutated object property name.
 
 #### Returns
 
@@ -1358,26 +1255,26 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoField](IoField.md).[objectMutated](IoField.md#objectmutated)
+[`IoField`](IoField.md).[`objectMutated`](IoField.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
+[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
 
-___
+***
 
-### onObjectMutated
+### onObjectMutated()
 
-▸ **onObjectMutated**(`event`): `void`
+> **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> | Event payload. |
+• **event**: `CustomEvent`\<`any`\>
+
+Event payload.
 
 #### Returns
 
@@ -1385,27 +1282,33 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoField](IoField.md).[onObjectMutated](IoField.md#onobjectmutated)
+[`IoField`](IoField.md).[`onObjectMutated`](IoField.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
-___
+***
 
-### queue
+### queue()
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+> **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `oldValue` | `any` | Old property value. |
+• **prop**: `string`
+
+Property name.
+
+• **value**: `any`
+
+Property value.
+
+• **oldValue**: `any`
+
+Old property value.
 
 #### Returns
 
@@ -1413,27 +1316,33 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoField](IoField.md).[queue](IoField.md#queue)
+[`IoField`](IoField.md).[`queue`](IoField.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
+[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
-___
+***
 
-### removeEventListener
+### removeEventListener()
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+> **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
 Wrapper for removeEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+event name to listen to.
+
+• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -1441,26 +1350,29 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoField](IoField.md).[removeEventListener](IoField.md#removeeventlistener)
+[`IoField`](IoField.md).[`removeEventListener`](IoField.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
-___
+***
 
-### setAttribute
+### setAttribute()
 
-▸ **setAttribute**(`attr`, `value`): `void`
+> **setAttribute**(`attr`, `value`): `void`
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `attr` | `string` | Attribute name. |
-| `value` | `string` \| `number` \| `boolean` | Attribute value. |
+• **attr**: `string`
+
+Attribute name.
+
+• **value**: `string` \| `number` \| `boolean`
+
+Attribute value.
 
 #### Returns
 
@@ -1468,23 +1380,21 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoField](IoField.md).[setAttribute](IoField.md#setattribute)
+[`IoField`](IoField.md).[`setAttribute`](IoField.md#setattribute)
 
 #### Defined in
 
 [src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
 
-___
+***
 
-### setCaretPosition
+### setCaretPosition()
 
-▸ **setCaretPosition**(`position`): `void`
+> **setCaretPosition**(`position`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `position` | `number` |
+• **position**: `number`
 
 #### Returns
 
@@ -1492,26 +1402,26 @@ ___
 
 #### Inherited from
 
-[IoField](IoField.md).[setCaretPosition](IoField.md#setcaretposition)
+[`IoField`](IoField.md).[`setCaretPosition`](IoField.md#setcaretposition)
 
 #### Defined in
 
 [src/elements/basic/io-field.ts:283](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L283)
 
-___
+***
 
-### setProperties
+### setProperties()
 
-▸ **setProperties**(`props`): `void`
+> **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `props` | `any` | Map of property names and values. |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -1519,27 +1429,33 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoField](IoField.md).[setProperties](IoField.md#setproperties)
+[`IoField`](IoField.md).[`setProperties`](IoField.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
-___
+***
 
-### setProperty
+### setProperty()
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `name` | `string` | Property name to set value of. |
-| `value` | `any` | Peroperty value. |
-| `skipDispatch?` | `boolean` | flag to skip event dispatch. |
+• **name**: `string`
+
+Property name to set value of.
+
+• **value**: `any`
+
+Peroperty value.
+
+• **skipDispatch?**: `boolean`
+
+flag to skip event dispatch.
 
 #### Returns
 
@@ -1547,27 +1463,33 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoField](IoField.md).[setProperty](IoField.md#setproperty)
+[`IoField`](IoField.md).[`setProperty`](IoField.md#setproperty)
 
 #### Defined in
 
-[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
+[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
 
-___
+***
 
-### template
+### template()
 
-▸ **template**(`vDOM`, `host?`, `cache?`): `void`
+> **template**(`vDOM`, `host`?, `cache`?): `void`
 
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vDOM` | `any`[] | Array of vDOM children. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vDOM**: `any`[]
+
+Array of vDOM children.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -1575,27 +1497,33 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoField](IoField.md).[template](IoField.md#template)
+[`IoField`](IoField.md).[`template`](IoField.md#template)
 
 #### Defined in
 
 [src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
 
-___
+***
 
-### throttle
+### throttle()
 
-▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
+> **throttle**(`func`, `arg`, `timeout`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
-| `arg` | `any` | `undefined` | argument for throttled function. |
-| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
+• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+
+Function to throttle.
+
+• **arg**: `any` = `undefined`
+
+argument for throttled function.
+
+• **timeout**: `number` = `1`
+
+minimum delay in ms before executing the function.
 
 #### Returns
 
@@ -1603,28 +1531,34 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoField](IoField.md).[throttle](IoField.md#throttle)
+[`IoField`](IoField.md).[`throttle`](IoField.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
-___
+***
 
-### traverse
+### traverse()
 
-▸ **traverse**(`vChildren`, `host?`, `cache?`): `void`
+> **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vChildren**: `any`[]
+
+Array of vDOM children converted by `buildTree()` for easier parsing.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -1632,25 +1566,25 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoField](IoField.md).[traverse](IoField.md#traverse)
+[`IoField`](IoField.md).[`traverse`](IoField.md#traverse)
 
 #### Defined in
 
 [src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
 
-___
+***
 
-### unbind
+### unbind()
 
-▸ **unbind**(`prop`): `void`
+> **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to unbind. |
+• **prop**: `string`
+
+Property to unbind.
 
 #### Returns
 
@@ -1658,8 +1592,8 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoField](IoField.md).[unbind](IoField.md#unbind)
+[`IoField`](IoField.md).[`unbind`](IoField.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)

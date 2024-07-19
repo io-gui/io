@@ -22,7 +22,7 @@
  */
 
 /* MIT license */
-/* eslint-disable no-mixed-operators */
+
 
 // NOTE: conversions should only return primitive values (i.e. arrays, or
 //       values that give correct `typeof` results).
@@ -354,7 +354,7 @@ convert.hwb.rgb = function (hwb: number[]) {
   let r;
   let g;
   let b;
-  /* eslint-disable max-statements-per-line,no-multi-spaces */
+
   switch (i) {
     default:
     case 6:
@@ -365,7 +365,7 @@ convert.hwb.rgb = function (hwb: number[]) {
     case 4: r = n;  g = wh; b = v; break;
     case 5: r = v;  g = wh; b = n; break;
   }
-  /* eslint-enable max-statements-per-line,no-multi-spaces */
+
 
   return [r * 255, g * 255, b * 255];
 };
@@ -693,7 +693,7 @@ convert.hcg.rgb = function (hcg: number[]) {
   const w = 1 - v;
   let mg = 0;
 
-  /* eslint-disable max-statements-per-line */
+
   switch (Math.floor(hi)) {
     case 0:
       pure[0] = 1; pure[1] = v; pure[2] = 0; break;
@@ -708,7 +708,7 @@ convert.hcg.rgb = function (hcg: number[]) {
     default:
       pure[0] = 1; pure[1] = 0; pure[2] = w;
   }
-  /* eslint-enable max-statements-per-line */
+
 
   mg = (1.0 - c) * g;
 

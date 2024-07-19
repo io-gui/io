@@ -1,29 +1,20 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / ObjectGroups
 
 # Class: ObjectGroups
 
-## Table of contents
-
-### Constructors
-
-- [constructor](ObjectGroups.md#constructor)
-
-### Methods
-
-- [getObjectGroups](ObjectGroups.md#getobjectgroups)
-- [registerObjectGroups](ObjectGroups.md#registerobjectgroups)
-
 ## Constructors
 
-### constructor
+### new ObjectGroups()
 
-• **new ObjectGroups**(`prototypes`): [`ObjectGroups`](ObjectGroups.md)
+> **new ObjectGroups**(`prototypes`): [`ObjectGroups`](ObjectGroups.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `prototypes` | `any` |
+• **prototypes**: `any`
 
 #### Returns
 
@@ -35,17 +26,17 @@
 
 ## Methods
 
-### getObjectGroups
+### getObjectGroups()
 
-▸ **getObjectGroups**(`object`, `customGroups`, `keys`): `any`
+> **getObjectGroups**(`object`, `customGroups`, `keys`): `any`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `object` | `any` |
-| `customGroups` | `any` |
-| `keys` | `any` |
+• **object**: `any`
+
+• **customGroups**: `any`
+
+• **keys**: `any`
 
 #### Returns
 
@@ -55,17 +46,15 @@
 
 [src/elements/object/models/object-groups.ts:18](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-groups.ts#L18)
 
-___
+***
 
-### registerObjectGroups
+### registerObjectGroups()
 
-▸ **registerObjectGroups**(`groups`): `void`
+> **registerObjectGroups**(`groups`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `groups` | `any` |
+• **groups**: `any`
 
 #### Returns
 

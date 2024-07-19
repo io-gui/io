@@ -1,140 +1,56 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / IoElement
 
 # Class: IoElement
 
 Core `IoElement` class.
 
-## Hierarchy
+## Extends
 
-- `__class`\<() => `HTMLElement`, `this`\>
+- `IoNodeMixinConstructor`\<() => `HTMLElement`, `this`\>
 
-  ↳ **`IoElement`**
+## Extended by
 
-  ↳↳ [`IoGl`](IoGl.md)
-
-  ↳↳ [`IoOverlay`](IoOverlay.md)
-
-  ↳↳ [`IoLabel`](IoLabel.md)
-
-  ↳↳ [`IoField`](IoField.md)
-
-  ↳↳ [`IoNumberLadder`](IoNumberLadder.md)
-
-  ↳↳ [`IoIcon`](IoIcon.md)
-
-  ↳↳ [`IoColorBase`](IoColorBase.md)
-
-  ↳↳ [`IoColorPicker`](IoColorPicker.md)
-
-  ↳↳ [`IoCollapsable`](IoCollapsable.md)
-
-  ↳↳ [`IoMdView`](IoMdView.md)
-
-  ↳↳ [`IoSelector`](IoSelector.md)
-
-  ↳↳ [`IoScroller`](IoScroller.md)
-
-  ↳↳ [`IoNavigatorBase`](IoNavigatorBase.md)
-
-  ↳↳ [`IoVector`](IoVector.md)
-
-  ↳↳ [`IoMenuTree`](IoMenuTree.md)
-
-  ↳↳ [`IoMenuOptions`](IoMenuOptions.md)
-
-  ↳↳ [`IoOptionMenu`](IoOptionMenu.md)
-
-  ↳↳ [`IoContextMenu`](IoContextMenu.md)
-
-  ↳↳ [`IoNotify`](IoNotify.md)
-
-  ↳↳ [`IoBreadcrumbs`](IoBreadcrumbs.md)
-
-  ↳↳ [`IoInspector`](IoInspector.md)
-
-  ↳↳ [`IoObject`](IoObject.md)
-
-  ↳↳ [`IoProperties`](IoProperties.md)
-
-  ↳↳ [`IoNumberSliderRange`](IoNumberSliderRange.md)
-
-  ↳↳ [`IoNumberSlider`](IoNumberSlider.md)
-
-## Table of contents
-
-### Constructors
-
-- [constructor](IoElement.md#constructor)
-
-### Properties
-
-- [$](IoElement.md#$)
-- [\_bindings](IoElement.md#_bindings)
-- [\_changeQueue](IoElement.md#_changequeue)
-- [\_eventDispatcher](IoElement.md#_eventdispatcher)
-- [\_properties](IoElement.md#_properties)
-- [\_protochain](IoElement.md#_protochain)
-- [class](IoElement.md#class)
-- [contenteditable](IoElement.md#contenteditable)
-- [disabled](IoElement.md#disabled)
-- [hidden](IoElement.md#hidden)
-- [id](IoElement.md#id)
-- [label](IoElement.md#label)
-- [name](IoElement.md#name)
-- [role](IoElement.md#role)
-- [tabindex](IoElement.md#tabindex)
-- [title](IoElement.md#title)
-
-### Accessors
-
-- [textNode](IoElement.md#textnode)
-- [Properties](IoElement.md#properties)
-- [Style](IoElement.md#style)
-
-### Methods
-
-- [Register](IoElement.md#register)
-- [\_flattenTextNode](IoElement.md#_flattentextnode)
-- [addEventListener](IoElement.md#addeventlistener)
-- [applyProperties](IoElement.md#applyproperties)
-- [bind](IoElement.md#bind)
-- [changed](IoElement.md#changed)
-- [connectedCallback](IoElement.md#connectedcallback)
-- [disabledChanged](IoElement.md#disabledchanged)
-- [disconnectedCallback](IoElement.md#disconnectedcallback)
-- [dispatchEvent](IoElement.md#dispatchevent)
-- [dispatchMutationEvent](IoElement.md#dispatchmutationevent)
-- [dispatchQueue](IoElement.md#dispatchqueue)
-- [dispatchQueueSync](IoElement.md#dispatchqueuesync)
-- [dispose](IoElement.md#dispose)
-- [init](IoElement.md#init)
-- [inputValue](IoElement.md#inputvalue)
-- [labelChanged](IoElement.md#labelchanged)
-- [objectMutated](IoElement.md#objectmutated)
-- [onObjectMutated](IoElement.md#onobjectmutated)
-- [queue](IoElement.md#queue)
-- [removeEventListener](IoElement.md#removeeventlistener)
-- [setAttribute](IoElement.md#setattribute)
-- [setProperties](IoElement.md#setproperties)
-- [setProperty](IoElement.md#setproperty)
-- [template](IoElement.md#template)
-- [throttle](IoElement.md#throttle)
-- [traverse](IoElement.md#traverse)
-- [unbind](IoElement.md#unbind)
+- [`IoGl`](IoGl.md)
+- [`IoOverlay`](IoOverlay.md)
+- [`IoLabel`](IoLabel.md)
+- [`IoField`](IoField.md)
+- [`IoNumberLadder`](IoNumberLadder.md)
+- [`IoIcon`](IoIcon.md)
+- [`IoColorBase`](IoColorBase.md)
+- [`IoColorPicker`](IoColorPicker.md)
+- [`IoCollapsable`](IoCollapsable.md)
+- [`IoMdView`](IoMdView.md)
+- [`IoSelector`](IoSelector.md)
+- [`IoScroller`](IoScroller.md)
+- [`IoNavigatorBase`](IoNavigatorBase.md)
+- [`IoVector`](IoVector.md)
+- [`IoMenuTree`](IoMenuTree.md)
+- [`IoMenuOptions`](IoMenuOptions.md)
+- [`IoOptionMenu`](IoOptionMenu.md)
+- [`IoContextMenu`](IoContextMenu.md)
+- [`IoNotify`](IoNotify.md)
+- [`IoBreadcrumbs`](IoBreadcrumbs.md)
+- [`IoInspector`](IoInspector.md)
+- [`IoObject`](IoObject.md)
+- [`IoProperties`](IoProperties.md)
+- [`IoNumberSliderRange`](IoNumberSliderRange.md)
+- [`IoNumberSlider`](IoNumberSlider.md)
 
 ## Constructors
 
-### constructor
+### new IoElement()
 
-• **new IoElement**(`...args`): [`IoElement`](IoElement.md)
+> **new IoElement**(...`args`): [`IoElement`](IoElement.md)
 
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `...args` | `any`[] |
+• ...**args**: `any`[]
 
 #### Returns
 
@@ -142,7 +58,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).constructor
+`IoNodeMixin(HTMLElement).constructor`
 
 #### Defined in
 
@@ -152,177 +68,177 @@ IoNodeMixin(HTMLElement).constructor
 
 ### $
 
-• **$**: `Record`\<`string`, `any`\>
+> **$**: `Record`\<`string`, `any`\>
 
 #### Defined in
 
 [src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
 
-___
+***
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
+> `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_bindings
+`IoNodeMixin(HTMLElement)._bindings`
 
 #### Defined in
 
 [src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
-___
+***
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+> `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_changeQueue
+`IoNodeMixin(HTMLElement)._changeQueue`
 
 #### Defined in
 
 [src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
-___
+***
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+> `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_eventDispatcher
+`IoNodeMixin(HTMLElement)._eventDispatcher`
 
 #### Defined in
 
 [src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
-___
+***
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+> `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_properties
+`IoNodeMixin(HTMLElement)._properties`
 
 #### Defined in
 
 [src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
-___
+***
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+> `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).\_protochain
+`IoNodeMixin(HTMLElement)._protochain`
 
 #### Defined in
 
 [src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
-___
+***
 
 ### class
 
-• **class**: `string`
+> **class**: `string`
 
 #### Defined in
 
 [src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
-___
+***
 
 ### contenteditable
 
-• **contenteditable**: `boolean`
+> **contenteditable**: `boolean`
 
 #### Defined in
 
 [src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
-___
+***
 
 ### disabled
 
-• **disabled**: `boolean`
+> **disabled**: `boolean`
 
 #### Defined in
 
 [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
-___
+***
 
 ### hidden
 
-• **hidden**: `boolean`
+> **hidden**: `boolean`
 
 #### Defined in
 
 [src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
-___
+***
 
 ### id
 
-• **id**: `string`
+> **id**: `string`
 
 #### Defined in
 
 [src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
-___
+***
 
 ### label
 
-• **label**: `string`
+> **label**: `string`
 
 #### Defined in
 
 [src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
-___
+***
 
 ### name
 
-• **name**: `string`
+> **name**: `string`
 
 #### Defined in
 
 [src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
-___
+***
 
 ### role
 
-• **role**: `string`
+> **role**: `string`
 
 #### Defined in
 
 [src/core/element.ts:190](https://github.com/io-gui/io/blob/main/src/core/element.ts#L190)
 
-___
+***
 
 ### tabindex
 
-• **tabindex**: `string`
+> **tabindex**: `string`
 
 #### Defined in
 
 [src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
-___
+***
 
 ### title
 
-• **title**: `string`
+> **title**: `string`
 
 #### Defined in
 
@@ -332,7 +248,13 @@ ___
 
 ### textNode
 
-• `get` **textNode**(): `any`
+> `get` **textNode**(): `any`
+
+> `set` **textNode**(`value`): `void`
+
+#### Parameters
+
+• **value**: `any`
 
 #### Returns
 
@@ -342,45 +264,29 @@ ___
 
 [src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
 
-• `set` **textNode**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
-
-___
+***
 
 ### Properties
 
-• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).Properties
+`IoNodeMixin(HTMLElement).Properties`
 
 #### Defined in
 
 [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
-___
+***
 
 ### Style
 
-• `get` **Style**(): `string`
+> `get` `static` **Style**(): `string`
 
 #### Returns
 
@@ -392,15 +298,13 @@ ___
 
 ## Methods
 
-### Register
+### Register()
 
-▸ **Register**(`ioNodeConstructor`): `void`
+> **Register**(`ioNodeConstructor`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
 
 #### Returns
 
@@ -408,26 +312,26 @@ ___
 
 #### Overrides
 
-IoNodeMixin(HTMLElement).Register
+`IoNodeMixin(HTMLElement).Register`
 
 #### Defined in
 
 [src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
 
-___
+***
 
-### \_flattenTextNode
+### \_flattenTextNode()
 
-▸ **_flattenTextNode**(`element`): `void`
+> **\_flattenTextNode**(`element`): `void`
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
+• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+
+Element to flatten.
 
 #### Returns
 
@@ -437,21 +341,27 @@ Update textContent via TextNode is better for layout performance.
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
 
-___
+***
 
-### addEventListener
+### addEventListener()
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+> **addEventListener**(`type`, `listener`, `options`?): `void`
 
 Wrapper for addEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+listener name.
+
+• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -459,23 +369,26 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).addEventListener
+`IoNodeMixin(HTMLElement).addEventListener`
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
 
-___
+***
 
-### applyProperties
+### applyProperties()
 
-▸ **applyProperties**(`props`): `void`
+> **applyProperties**(`props`): `void`
+
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `any` |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -483,25 +396,25 @@ ___
 
 #### Overrides
 
-IoNodeMixin(HTMLElement).applyProperties
+`IoNodeMixin(HTMLElement).applyProperties`
 
 #### Defined in
 
 [src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
 
-___
+***
 
-### bind
+### bind()
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+> **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to bind to. |
+• **prop**: `string`
+
+Property to bind to.
 
 #### Returns
 
@@ -511,17 +424,17 @@ Binding object.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).bind
+`IoNodeMixin(HTMLElement).bind`
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
 
-___
+***
 
-### changed
+### changed()
 
-▸ **changed**(): `void`
+> **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -532,17 +445,17 @@ Invoked when one of the properties change.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).changed
+`IoNodeMixin(HTMLElement).changed`
 
 #### Defined in
 
-[src/core/node.ts:245](https://github.com/io-gui/io/blob/main/src/core/node.ts#L245)
+[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
 
-___
+***
 
-### connectedCallback
+### connectedCallback()
 
-▸ **connectedCallback**(): `void`
+> **connectedCallback**(): `void`
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -554,11 +467,11 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
 
-___
+***
 
-### disabledChanged
+### disabledChanged()
 
-▸ **disabledChanged**(): `void`
+> **disabledChanged**(): `void`
 
 #### Returns
 
@@ -568,11 +481,11 @@ ___
 
 [src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
 
-___
+***
 
-### disconnectedCallback
+### disconnectedCallback()
 
-▸ **disconnectedCallback**(): `void`
+> **disconnectedCallback**(): `void`
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -584,22 +497,31 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 [src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
 
-___
+***
 
-### dispatchEvent
+### dispatchEvent()
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+> **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `type` | `string` | `undefined` | event name to dispatch. |
-| `detail` | `Object` | `{}` | event detail. |
-| `bubbles` | `boolean` | `false` | event bubbles. |
-| `src?` | `Node` \| `Document` \| `HTMLElement` \| `Window` | `undefined` | source node/element to dispatch event from. |
+• **type**: `string`
+
+event name to dispatch.
+
+• **detail** = `{}`
+
+event detail.
+
+• **bubbles**: `boolean` = `false`
+
+event bubbles.
+
+• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+
+source node/element to dispatch event from.
 
 #### Returns
 
@@ -607,25 +529,25 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchEvent
+`IoNodeMixin(HTMLElement).dispatchEvent`
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
 
-___
+***
 
-### dispatchMutationEvent
+### dispatchMutationEvent()
 
-▸ **dispatchMutationEvent**(`object`): `void`
+> **dispatchMutationEvent**(`object`): `void`
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `object` | `any` | object which mutated. |
+• **object**: `any`
+
+object which mutated.
 
 #### Returns
 
@@ -633,17 +555,17 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchMutationEvent
+`IoNodeMixin(HTMLElement).dispatchMutationEvent`
 
 #### Defined in
 
-[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
+[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
 
-___
+***
 
-### dispatchQueue
+### dispatchQueue()
 
-▸ **dispatchQueue**(): `void`
+> **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -653,17 +575,17 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchQueue
+`IoNodeMixin(HTMLElement).dispatchQueue`
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
 
-___
+***
 
-### dispatchQueueSync
+### dispatchQueueSync()
 
-▸ **dispatchQueueSync**(): `void`
+> **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -673,17 +595,17 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispatchQueueSync
+`IoNodeMixin(HTMLElement).dispatchQueueSync`
 
 #### Defined in
 
-[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
+[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
 
-___
+***
 
-### dispose
+### dispose()
 
-▸ **dispose**(): `void`
+> **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -694,17 +616,17 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).dispose
+`IoNodeMixin(HTMLElement).dispose`
 
 #### Defined in
 
-[src/core/node.ts:391](https://github.com/io-gui/io/blob/main/src/core/node.ts#L391)
+[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
 
-___
+***
 
-### init
+### init()
 
-▸ **init**(): `void`
+> **init**(): `void`
 
 #### Returns
 
@@ -712,26 +634,26 @@ ___
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).init
+`IoNodeMixin(HTMLElement).init`
 
 #### Defined in
 
-[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
+[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
 
-___
+***
 
-### inputValue
+### inputValue()
 
-▸ **inputValue**(`value`): `void`
+> **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
+• **value**: `any`
+
+Property value.
 
 #### Returns
 
@@ -739,17 +661,17 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).inputValue
+`IoNodeMixin(HTMLElement).inputValue`
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
-___
+***
 
-### labelChanged
+### labelChanged()
 
-▸ **labelChanged**(): `void`
+> **labelChanged**(): `void`
 
 #### Returns
 
@@ -759,20 +681,20 @@ ___
 
 [src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
-___
+***
 
-### objectMutated
+### objectMutated()
 
-▸ **objectMutated**(`prop`): `void`
+> **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Mutated object property name. |
+• **prop**: `string`
+
+Mutated object property name.
 
 #### Returns
 
@@ -780,26 +702,26 @@ the object properties has mutated.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).objectMutated
+`IoNodeMixin(HTMLElement).objectMutated`
 
 #### Defined in
 
-[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
+[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
 
-___
+***
 
-### onObjectMutated
+### onObjectMutated()
 
-▸ **onObjectMutated**(`event`): `void`
+> **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> | Event payload. |
+• **event**: `CustomEvent`\<`any`\>
+
+Event payload.
 
 #### Returns
 
@@ -807,27 +729,33 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).onObjectMutated
+`IoNodeMixin(HTMLElement).onObjectMutated`
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
-___
+***
 
-### queue
+### queue()
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+> **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `oldValue` | `any` | Old property value. |
+• **prop**: `string`
+
+Property name.
+
+• **value**: `any`
+
+Property value.
+
+• **oldValue**: `any`
+
+Old property value.
 
 #### Returns
 
@@ -835,27 +763,33 @@ Adds property change to the queue.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).queue
+`IoNodeMixin(HTMLElement).queue`
 
 #### Defined in
 
-[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
+[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
-___
+***
 
-### removeEventListener
+### removeEventListener()
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+> **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
 Wrapper for removeEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+event name to listen to.
+
+• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -863,26 +797,29 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).removeEventListener
+`IoNodeMixin(HTMLElement).removeEventListener`
 
 #### Defined in
 
-[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
-___
+***
 
-### setAttribute
+### setAttribute()
 
-▸ **setAttribute**(`attr`, `value`): `void`
+> **setAttribute**(`attr`, `value`): `void`
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `attr` | `string` | Attribute name. |
-| `value` | `string` \| `number` \| `boolean` | Attribute value. |
+• **attr**: `string`
+
+Attribute name.
+
+• **value**: `string` \| `number` \| `boolean`
+
+Attribute value.
 
 #### Returns
 
@@ -892,20 +829,20 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 [src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
 
-___
+***
 
-### setProperties
+### setProperties()
 
-▸ **setProperties**(`props`): `void`
+> **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `props` | `any` | Map of property names and values. |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -913,27 +850,33 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperties
+`IoNodeMixin(HTMLElement).setProperties`
 
 #### Defined in
 
-[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
-___
+***
 
-### setProperty
+### setProperty()
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `name` | `string` | Property name to set value of. |
-| `value` | `any` | Peroperty value. |
-| `skipDispatch?` | `boolean` | flag to skip event dispatch. |
+• **name**: `string`
+
+Property name to set value of.
+
+• **value**: `any`
+
+Peroperty value.
+
+• **skipDispatch?**: `boolean`
+
+flag to skip event dispatch.
 
 #### Returns
 
@@ -941,27 +884,33 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).setProperty
+`IoNodeMixin(HTMLElement).setProperty`
 
 #### Defined in
 
-[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
+[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
 
-___
+***
 
-### template
+### template()
 
-▸ **template**(`vDOM`, `host?`, `cache?`): `void`
+> **template**(`vDOM`, `host`?, `cache`?): `void`
 
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vDOM` | `any`[] | Array of vDOM children. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vDOM**: `any`[]
+
+Array of vDOM children.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -971,21 +920,27 @@ Renders DOM from virtual DOM arrays.
 
 [src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
 
-___
+***
 
-### throttle
+### throttle()
 
-▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
+> **throttle**(`func`, `arg`, `timeout`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
-| `arg` | `any` | `undefined` | argument for throttled function. |
-| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
+• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+
+Function to throttle.
+
+• **arg**: `any` = `undefined`
+
+argument for throttled function.
+
+• **timeout**: `number` = `1`
+
+minimum delay in ms before executing the function.
 
 #### Returns
 
@@ -993,28 +948,34 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).throttle
+`IoNodeMixin(HTMLElement).throttle`
 
 #### Defined in
 
-[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
-___
+***
 
-### traverse
+### traverse()
 
-▸ **traverse**(`vChildren`, `host?`, `cache?`): `void`
+> **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vChildren**: `any`[]
+
+Array of vDOM children converted by `buildTree()` for easier parsing.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -1024,19 +985,19 @@ TODO: test element.traverse() function!
 
 [src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
 
-___
+***
 
-### unbind
+### unbind()
 
-▸ **unbind**(`prop`): `void`
+> **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to unbind. |
+• **prop**: `string`
+
+Property to unbind.
 
 #### Returns
 
@@ -1044,8 +1005,8 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-IoNodeMixin(HTMLElement).unbind
+`IoNodeMixin(HTMLElement).unbind`
 
 #### Defined in
 
-[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)

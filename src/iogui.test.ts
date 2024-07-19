@@ -1,5 +1,4 @@
-import 'mocha/mocha.js';
-import 'chai/chai.js';
+// import 'mocha';
 
 import { IoElement, Register } from './iogui.js';
 

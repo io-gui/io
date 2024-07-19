@@ -1,3 +1,7 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / IoMatrix
 
 # Class: IoMatrix
@@ -10,101 +14,21 @@ Input element for vector arrays dispalayed as 2D matrices. Array `value` can hav
 
 <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
 
-## Hierarchy
+## Extends
 
 - [`IoVector`](IoVector.md)
 
-  ↳ **`IoMatrix`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](IoMatrix.md#constructor)
-
-### Properties
-
-- [$](IoMatrix.md#$)
-- [\_bindings](IoMatrix.md#_bindings)
-- [\_changeQueue](IoMatrix.md#_changequeue)
-- [\_eventDispatcher](IoMatrix.md#_eventdispatcher)
-- [\_properties](IoMatrix.md#_properties)
-- [\_protochain](IoMatrix.md#_protochain)
-- [class](IoMatrix.md#class)
-- [columns](IoMatrix.md#columns)
-- [contenteditable](IoMatrix.md#contenteditable)
-- [conversion](IoMatrix.md#conversion)
-- [disabled](IoMatrix.md#disabled)
-- [hidden](IoMatrix.md#hidden)
-- [id](IoMatrix.md#id)
-- [keys](IoMatrix.md#keys)
-- [label](IoMatrix.md#label)
-- [ladder](IoMatrix.md#ladder)
-- [linkable](IoMatrix.md#linkable)
-- [linked](IoMatrix.md#linked)
-- [max](IoMatrix.md#max)
-- [min](IoMatrix.md#min)
-- [name](IoMatrix.md#name)
-- [role](IoMatrix.md#role)
-- [step](IoMatrix.md#step)
-- [tabindex](IoMatrix.md#tabindex)
-- [title](IoMatrix.md#title)
-- [value](IoMatrix.md#value)
-
-### Accessors
-
-- [textNode](IoMatrix.md#textnode)
-- [Properties](IoMatrix.md#properties)
-- [Style](IoMatrix.md#style)
-
-### Methods
-
-- [Register](IoMatrix.md#register)
-- [\_flattenTextNode](IoMatrix.md#_flattentextnode)
-- [\_onNumberPointerDown](IoMatrix.md#_onnumberpointerdown)
-- [\_onNumberValueInput](IoMatrix.md#_onnumbervalueinput)
-- [addEventListener](IoMatrix.md#addeventlistener)
-- [applyProperties](IoMatrix.md#applyproperties)
-- [bind](IoMatrix.md#bind)
-- [changed](IoMatrix.md#changed)
-- [connectedCallback](IoMatrix.md#connectedcallback)
-- [disabledChanged](IoMatrix.md#disabledchanged)
-- [disconnectedCallback](IoMatrix.md#disconnectedcallback)
-- [dispatchEvent](IoMatrix.md#dispatchevent)
-- [dispatchMutationEvent](IoMatrix.md#dispatchmutationevent)
-- [dispatchQueue](IoMatrix.md#dispatchqueue)
-- [dispatchQueueSync](IoMatrix.md#dispatchqueuesync)
-- [dispose](IoMatrix.md#dispose)
-- [getSlotted](IoMatrix.md#getslotted)
-- [init](IoMatrix.md#init)
-- [inputValue](IoMatrix.md#inputvalue)
-- [labelChanged](IoMatrix.md#labelchanged)
-- [objectMutated](IoMatrix.md#objectmutated)
-- [onObjectMutated](IoMatrix.md#onobjectmutated)
-- [queue](IoMatrix.md#queue)
-- [removeEventListener](IoMatrix.md#removeeventlistener)
-- [setAttribute](IoMatrix.md#setattribute)
-- [setProperties](IoMatrix.md#setproperties)
-- [setProperty](IoMatrix.md#setproperty)
-- [template](IoMatrix.md#template)
-- [throttle](IoMatrix.md#throttle)
-- [traverse](IoMatrix.md#traverse)
-- [unbind](IoMatrix.md#unbind)
-- [valueChanged](IoMatrix.md#valuechanged)
-
 ## Constructors
 
-### constructor
+### new IoMatrix()
 
-• **new IoMatrix**(`...args`): [`IoMatrix`](IoMatrix.md)
+> **new IoMatrix**(...`args`): [`IoMatrix`](IoMatrix.md)
 
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `...args` | `any`[] |
+• ...**args**: `any`[]
 
 #### Returns
 
@@ -112,7 +36,7 @@ Creates a class instance and initializes the internals.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[constructor](IoVector.md#constructor)
+[`IoVector`](IoVector.md).[`constructor`](IoVector.md#constructors)
 
 #### Defined in
 
@@ -122,357 +46,357 @@ Creates a class instance and initializes the internals.
 
 ### $
 
-• **$**: `Record`\<`string`, `any`\>
+> **$**: `Record`\<`string`, `any`\>
 
 #### Inherited from
 
-[IoVector](IoVector.md).[$](IoVector.md#$)
+[`IoVector`](IoVector.md).[`$`](IoVector.md#$)
 
 #### Defined in
 
 [src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
 
-___
+***
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
+> `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_bindings](IoVector.md#_bindings)
+[`IoVector`](IoVector.md).[`_bindings`](IoVector.md#_bindings)
 
 #### Defined in
 
 [src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
-___
+***
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+> `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_changeQueue](IoVector.md#_changequeue)
+[`IoVector`](IoVector.md).[`_changeQueue`](IoVector.md#_changequeue)
 
 #### Defined in
 
 [src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
-___
+***
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+> `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_eventDispatcher](IoVector.md#_eventdispatcher)
+[`IoVector`](IoVector.md).[`_eventDispatcher`](IoVector.md#_eventdispatcher)
 
 #### Defined in
 
 [src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
-___
+***
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+> `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_properties](IoVector.md#_properties)
+[`IoVector`](IoVector.md).[`_properties`](IoVector.md#_properties)
 
 #### Defined in
 
 [src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
-___
+***
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+> `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_protochain](IoVector.md#_protochain)
+[`IoVector`](IoVector.md).[`_protochain`](IoVector.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
-___
+***
 
 ### class
 
-• **class**: `string`
+> **class**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[class](IoVector.md#class)
+[`IoVector`](IoVector.md).[`class`](IoVector.md#class)
 
 #### Defined in
 
 [src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
-___
+***
 
 ### columns
 
-• **columns**: `number`
+> **columns**: `number`
 
 #### Defined in
 
 [src/elements/vectors/io-matrix.ts:42](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L42)
 
-___
+***
 
 ### contenteditable
 
-• **contenteditable**: `boolean`
+> **contenteditable**: `boolean`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[contenteditable](IoVector.md#contenteditable)
+[`IoVector`](IoVector.md).[`contenteditable`](IoVector.md#contenteditable)
 
 #### Defined in
 
 [src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
-___
+***
 
 ### conversion
 
-• **conversion**: `number`
+> **conversion**: `number`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[conversion](IoVector.md#conversion)
+[`IoVector`](IoVector.md).[`conversion`](IoVector.md#conversion)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:40](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L40)
 
-___
+***
 
 ### disabled
 
-• **disabled**: `boolean`
+> **disabled**: `boolean`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[disabled](IoVector.md#disabled)
+[`IoVector`](IoVector.md).[`disabled`](IoVector.md#disabled)
 
 #### Defined in
 
 [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
-___
+***
 
 ### hidden
 
-• **hidden**: `boolean`
+> **hidden**: `boolean`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[hidden](IoVector.md#hidden)
+[`IoVector`](IoVector.md).[`hidden`](IoVector.md#hidden)
 
 #### Defined in
 
 [src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
-___
+***
 
 ### id
 
-• **id**: `string`
+> **id**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[id](IoVector.md#id)
+[`IoVector`](IoVector.md).[`id`](IoVector.md#id)
 
 #### Defined in
 
 [src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
-___
+***
 
 ### keys
 
-• **keys**: `string`[]
+> **keys**: `string`[]
 
 #### Inherited from
 
-[IoVector](IoVector.md).[keys](IoVector.md#keys)
+[`IoVector`](IoVector.md).[`keys`](IoVector.md#keys)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:61](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L61)
 
-___
+***
 
 ### label
 
-• **label**: `string`
+> **label**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[label](IoVector.md#label)
+[`IoVector`](IoVector.md).[`label`](IoVector.md#label)
 
 #### Defined in
 
 [src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
-___
+***
 
 ### ladder
 
-• **ladder**: `boolean`
+> **ladder**: `boolean`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[ladder](IoVector.md#ladder)
+[`IoVector`](IoVector.md).[`ladder`](IoVector.md#ladder)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:58](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L58)
 
-___
+***
 
 ### linkable
 
-• **linkable**: `boolean`
+> **linkable**: `boolean`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[linkable](IoVector.md#linkable)
+[`IoVector`](IoVector.md).[`linkable`](IoVector.md#linkable)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:52](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L52)
 
-___
+***
 
 ### linked
 
-• **linked**: `boolean`
+> **linked**: `boolean`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[linked](IoVector.md#linked)
+[`IoVector`](IoVector.md).[`linked`](IoVector.md#linked)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:55](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L55)
 
-___
+***
 
 ### max
 
-• **max**: `number`
+> **max**: `number`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[max](IoVector.md#max)
+[`IoVector`](IoVector.md).[`max`](IoVector.md#max)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:49](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L49)
 
-___
+***
 
 ### min
 
-• **min**: `number`
+> **min**: `number`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[min](IoVector.md#min)
+[`IoVector`](IoVector.md).[`min`](IoVector.md#min)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:46](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L46)
 
-___
+***
 
 ### name
 
-• **name**: `string`
+> **name**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[name](IoVector.md#name)
+[`IoVector`](IoVector.md).[`name`](IoVector.md#name)
 
 #### Defined in
 
 [src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
-___
+***
 
 ### role
 
-• **role**: `string`
+> **role**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[role](IoVector.md#role)
+[`IoVector`](IoVector.md).[`role`](IoVector.md#role)
 
 #### Defined in
 
 [src/core/element.ts:190](https://github.com/io-gui/io/blob/main/src/core/element.ts#L190)
 
-___
+***
 
 ### step
 
-• **step**: `number`
+> **step**: `number`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[step](IoVector.md#step)
+[`IoVector`](IoVector.md).[`step`](IoVector.md#step)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:43](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L43)
 
-___
+***
 
 ### tabindex
 
-• **tabindex**: `string`
+> **tabindex**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[tabindex](IoVector.md#tabindex)
+[`IoVector`](IoVector.md).[`tabindex`](IoVector.md#tabindex)
 
 #### Defined in
 
 [src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
-___
+***
 
 ### title
 
-• **title**: `string`
+> **title**: `string`
 
 #### Inherited from
 
-[IoVector](IoVector.md).[title](IoVector.md#title)
+[`IoVector`](IoVector.md).[`title`](IoVector.md#title)
 
 #### Defined in
 
 [src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
-___
+***
 
 ### value
 
-• **value**: `number`[]
+> **value**: `number`[]
 
 #### Overrides
 
-[IoVector](IoVector.md).[value](IoVector.md#value)
+[`IoVector`](IoVector.md).[`value`](IoVector.md#value)
 
 #### Defined in
 
@@ -482,7 +406,13 @@ ___
 
 ### textNode
 
-• `get` **textNode**(): `any`
+> `get` **textNode**(): `any`
+
+> `set` **textNode**(`value`): `void`
+
+#### Parameters
+
+• **value**: `any`
 
 #### Returns
 
@@ -490,55 +420,35 @@ ___
 
 #### Inherited from
 
-IoVector.textNode
+[`IoVector`](IoVector.md).[`textNode`](IoVector.md#textnode)
 
 #### Defined in
 
 [src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
 
-• `set` **textNode**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-IoVector.textNode
-
-#### Defined in
-
-[src/core/element.ts:396](https://github.com/io-gui/io/blob/main/src/core/element.ts#L396)
-
-___
+***
 
 ### Properties
 
-• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Inherited from
 
-IoVector.Properties
+[`IoVector`](IoVector.md).[`Properties`](IoVector.md#properties)
 
 #### Defined in
 
 [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
-___
+***
 
 ### Style
 
-• `get` **Style**(): `string`
+> `get` `static` **Style**(): `string`
 
 #### Returns
 
@@ -546,7 +456,7 @@ ___
 
 #### Overrides
 
-IoVector.Style
+[`IoVector`](IoVector.md).[`Style`](IoVector.md#style)
 
 #### Defined in
 
@@ -554,15 +464,13 @@ IoVector.Style
 
 ## Methods
 
-### Register
+### Register()
 
-▸ **Register**(`ioNodeConstructor`): `void`
+> **Register**(`ioNodeConstructor`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
 
 #### Returns
 
@@ -570,26 +478,26 @@ IoVector.Style
 
 #### Inherited from
 
-[IoVector](IoVector.md).[Register](IoVector.md#register)
+[`IoVector`](IoVector.md).[`Register`](IoVector.md#register)
 
 #### Defined in
 
 [src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
 
-___
+***
 
-### \_flattenTextNode
+### \_flattenTextNode()
 
-▸ **_flattenTextNode**(`element`): `void`
+> **\_flattenTextNode**(`element`): `void`
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `element` | `HTMLElement` \| [`IoElement`](IoElement.md) | Element to flatten. |
+• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+
+Element to flatten.
 
 #### Returns
 
@@ -597,23 +505,21 @@ Update textContent via TextNode is better for layout performance.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_flattenTextNode](IoVector.md#_flattentextnode)
+[`IoVector`](IoVector.md).[`_flattenTextNode`](IoVector.md#_flattentextnode)
 
 #### Defined in
 
 [src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
 
-___
+***
 
-### \_onNumberPointerDown
+### \_onNumberPointerDown()
 
-▸ **_onNumberPointerDown**(`event`): `void`
+> **\_onNumberPointerDown**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `PointerEvent` |
+• **event**: `PointerEvent`
 
 #### Returns
 
@@ -621,23 +527,21 @@ ___
 
 #### Inherited from
 
-[IoVector](IoVector.md).[_onNumberPointerDown](IoVector.md#_onnumberpointerdown)
+[`IoVector`](IoVector.md).[`_onNumberPointerDown`](IoVector.md#_onnumberpointerdown)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:65](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L65)
 
-___
+***
 
-### \_onNumberValueInput
+### \_onNumberValueInput()
 
-▸ **_onNumberValueInput**(`event`): `void`
+> **\_onNumberValueInput**(`event`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> |
+• **event**: `CustomEvent`\<`any`\>
 
 #### Returns
 
@@ -645,27 +549,33 @@ ___
 
 #### Overrides
 
-[IoVector](IoVector.md).[_onNumberValueInput](IoVector.md#_onnumbervalueinput)
+[`IoVector`](IoVector.md).[`_onNumberValueInput`](IoVector.md#_onnumbervalueinput)
 
 #### Defined in
 
 [src/elements/vectors/io-matrix.ts:44](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L44)
 
-___
+***
 
-### addEventListener
+### addEventListener()
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+> **addEventListener**(`type`, `listener`, `options`?): `void`
 
 Wrapper for addEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+listener name.
+
+• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -673,23 +583,26 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[addEventListener](IoVector.md#addeventlistener)
+[`IoVector`](IoVector.md).[`addEventListener`](IoVector.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
 
-___
+***
 
-### applyProperties
+### applyProperties()
 
-▸ **applyProperties**(`props`): `void`
+> **applyProperties**(`props`): `void`
+
+Sets multiple properties in batch.
+[property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `any` |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -697,25 +610,25 @@ ___
 
 #### Inherited from
 
-[IoVector](IoVector.md).[applyProperties](IoVector.md#applyproperties)
+[`IoVector`](IoVector.md).[`applyProperties`](IoVector.md#applyproperties)
 
 #### Defined in
 
 [src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
 
-___
+***
 
-### bind
+### bind()
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+> **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to bind to. |
+• **prop**: `string`
+
+Property to bind to.
 
 #### Returns
 
@@ -725,17 +638,17 @@ Binding object.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[bind](IoVector.md#bind)
+[`IoVector`](IoVector.md).[`bind`](IoVector.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
 
-___
+***
 
-### changed
+### changed()
 
-▸ **changed**(): `void`
+> **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -746,17 +659,17 @@ Invoked when one of the properties change.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[changed](IoVector.md#changed)
+[`IoVector`](IoVector.md).[`changed`](IoVector.md#changed)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:99](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L99)
 
-___
+***
 
-### connectedCallback
+### connectedCallback()
 
-▸ **connectedCallback**(): `void`
+> **connectedCallback**(): `void`
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -766,17 +679,17 @@ Add resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[connectedCallback](IoVector.md#connectedcallback)
+[`IoVector`](IoVector.md).[`connectedCallback`](IoVector.md#connectedcallback)
 
 #### Defined in
 
 [src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
 
-___
+***
 
-### disabledChanged
+### disabledChanged()
 
-▸ **disabledChanged**(): `void`
+> **disabledChanged**(): `void`
 
 #### Returns
 
@@ -784,17 +697,17 @@ ___
 
 #### Inherited from
 
-[IoVector](IoVector.md).[disabledChanged](IoVector.md#disabledchanged)
+[`IoVector`](IoVector.md).[`disabledChanged`](IoVector.md#disabledchanged)
 
 #### Defined in
 
 [src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
 
-___
+***
 
-### disconnectedCallback
+### disconnectedCallback()
 
-▸ **disconnectedCallback**(): `void`
+> **disconnectedCallback**(): `void`
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -804,28 +717,37 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[disconnectedCallback](IoVector.md#disconnectedcallback)
+[`IoVector`](IoVector.md).[`disconnectedCallback`](IoVector.md#disconnectedcallback)
 
 #### Defined in
 
 [src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
 
-___
+***
 
-### dispatchEvent
+### dispatchEvent()
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+> **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `type` | `string` | `undefined` | event name to dispatch. |
-| `detail` | `Object` | `{}` | event detail. |
-| `bubbles` | `boolean` | `false` | event bubbles. |
-| `src?` | `Node` \| `Document` \| `HTMLElement` \| `Window` | `undefined` | source node/element to dispatch event from. |
+• **type**: `string`
+
+event name to dispatch.
+
+• **detail** = `{}`
+
+event detail.
+
+• **bubbles**: `boolean` = `false`
+
+event bubbles.
+
+• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+
+source node/element to dispatch event from.
 
 #### Returns
 
@@ -833,25 +755,25 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[dispatchEvent](IoVector.md#dispatchevent)
+[`IoVector`](IoVector.md).[`dispatchEvent`](IoVector.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
 
-___
+***
 
-### dispatchMutationEvent
+### dispatchMutationEvent()
 
-▸ **dispatchMutationEvent**(`object`): `void`
+> **dispatchMutationEvent**(`object`): `void`
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `object` | `any` | object which mutated. |
+• **object**: `any`
+
+object which mutated.
 
 #### Returns
 
@@ -859,17 +781,17 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[dispatchMutationEvent](IoVector.md#dispatchmutationevent)
+[`IoVector`](IoVector.md).[`dispatchMutationEvent`](IoVector.md#dispatchmutationevent)
 
 #### Defined in
 
-[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
+[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
 
-___
+***
 
-### dispatchQueue
+### dispatchQueue()
 
-▸ **dispatchQueue**(): `void`
+> **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -879,17 +801,17 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoVector](IoVector.md).[dispatchQueue](IoVector.md#dispatchqueue)
+[`IoVector`](IoVector.md).[`dispatchQueue`](IoVector.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
 
-___
+***
 
-### dispatchQueueSync
+### dispatchQueueSync()
 
-▸ **dispatchQueueSync**(): `void`
+> **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -899,17 +821,17 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[dispatchQueueSync](IoVector.md#dispatchqueuesync)
+[`IoVector`](IoVector.md).[`dispatchQueueSync`](IoVector.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
+[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
 
-___
+***
 
-### dispose
+### dispose()
 
-▸ **dispose**(): `void`
+> **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -920,35 +842,35 @@ Use this when instance is no longer needed.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[dispose](IoVector.md#dispose)
+[`IoVector`](IoVector.md).[`dispose`](IoVector.md#dispose)
 
 #### Defined in
 
-[src/core/node.ts:391](https://github.com/io-gui/io/blob/main/src/core/node.ts#L391)
+[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
 
-___
+***
 
-### getSlotted
+### getSlotted()
 
-▸ **getSlotted**(): ``null`` \| `any`[]
+> **getSlotted**(): `null` \| `any`[]
 
 #### Returns
 
-``null`` \| `any`[]
+`null` \| `any`[]
 
 #### Inherited from
 
-[IoVector](IoVector.md).[getSlotted](IoVector.md#getslotted)
+[`IoVector`](IoVector.md).[`getSlotted`](IoVector.md#getslotted)
 
 #### Defined in
 
 [src/elements/vectors/io-vector.ts:119](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L119)
 
-___
+***
 
-### init
+### init()
 
-▸ **init**(): `void`
+> **init**(): `void`
 
 #### Returns
 
@@ -956,26 +878,26 @@ ___
 
 #### Inherited from
 
-[IoVector](IoVector.md).[init](IoVector.md#init)
+[`IoVector`](IoVector.md).[`init`](IoVector.md#init)
 
 #### Defined in
 
-[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
+[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
 
-___
+***
 
-### inputValue
+### inputValue()
 
-▸ **inputValue**(`value`): `void`
+> **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
+• **value**: `any`
+
+Property value.
 
 #### Returns
 
@@ -983,17 +905,17 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoVector](IoVector.md).[inputValue](IoVector.md#inputvalue)
+[`IoVector`](IoVector.md).[`inputValue`](IoVector.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
-___
+***
 
-### labelChanged
+### labelChanged()
 
-▸ **labelChanged**(): `void`
+> **labelChanged**(): `void`
 
 #### Returns
 
@@ -1001,26 +923,26 @@ ___
 
 #### Inherited from
 
-[IoVector](IoVector.md).[labelChanged](IoVector.md#labelchanged)
+[`IoVector`](IoVector.md).[`labelChanged`](IoVector.md#labelchanged)
 
 #### Defined in
 
 [src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
-___
+***
 
-### objectMutated
+### objectMutated()
 
-▸ **objectMutated**(`prop`): `void`
+> **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Mutated object property name. |
+• **prop**: `string`
+
+Mutated object property name.
 
 #### Returns
 
@@ -1028,26 +950,26 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[objectMutated](IoVector.md#objectmutated)
+[`IoVector`](IoVector.md).[`objectMutated`](IoVector.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
+[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
 
-___
+***
 
-### onObjectMutated
+### onObjectMutated()
 
-▸ **onObjectMutated**(`event`): `void`
+> **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> | Event payload. |
+• **event**: `CustomEvent`\<`any`\>
+
+Event payload.
 
 #### Returns
 
@@ -1055,27 +977,33 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoVector](IoVector.md).[onObjectMutated](IoVector.md#onobjectmutated)
+[`IoVector`](IoVector.md).[`onObjectMutated`](IoVector.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
-___
+***
 
-### queue
+### queue()
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+> **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `oldValue` | `any` | Old property value. |
+• **prop**: `string`
+
+Property name.
+
+• **value**: `any`
+
+Property value.
+
+• **oldValue**: `any`
+
+Old property value.
 
 #### Returns
 
@@ -1083,27 +1011,33 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[queue](IoVector.md#queue)
+[`IoVector`](IoVector.md).[`queue`](IoVector.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
+[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
-___
+***
 
-### removeEventListener
+### removeEventListener()
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+> **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
 Wrapper for removeEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+event name to listen to.
+
+• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -1111,26 +1045,29 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[removeEventListener](IoVector.md#removeeventlistener)
+[`IoVector`](IoVector.md).[`removeEventListener`](IoVector.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
-___
+***
 
-### setAttribute
+### setAttribute()
 
-▸ **setAttribute**(`attr`, `value`): `void`
+> **setAttribute**(`attr`, `value`): `void`
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `attr` | `string` | Attribute name. |
-| `value` | `string` \| `number` \| `boolean` | Attribute value. |
+• **attr**: `string`
+
+Attribute name.
+
+• **value**: `string` \| `number` \| `boolean`
+
+Attribute value.
 
 #### Returns
 
@@ -1138,26 +1075,26 @@ Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[setAttribute](IoVector.md#setattribute)
+[`IoVector`](IoVector.md).[`setAttribute`](IoVector.md#setattribute)
 
 #### Defined in
 
 [src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
 
-___
+***
 
-### setProperties
+### setProperties()
 
-▸ **setProperties**(`props`): `void`
+> **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `props` | `any` | Map of property names and values. |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -1165,27 +1102,33 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[setProperties](IoVector.md#setproperties)
+[`IoVector`](IoVector.md).[`setProperties`](IoVector.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
-___
+***
 
-### setProperty
+### setProperty()
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `name` | `string` | Property name to set value of. |
-| `value` | `any` | Peroperty value. |
-| `skipDispatch?` | `boolean` | flag to skip event dispatch. |
+• **name**: `string`
+
+Property name to set value of.
+
+• **value**: `any`
+
+Peroperty value.
+
+• **skipDispatch?**: `boolean`
+
+flag to skip event dispatch.
 
 #### Returns
 
@@ -1193,27 +1136,33 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoVector](IoVector.md).[setProperty](IoVector.md#setproperty)
+[`IoVector`](IoVector.md).[`setProperty`](IoVector.md#setproperty)
 
 #### Defined in
 
-[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
+[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
 
-___
+***
 
-### template
+### template()
 
-▸ **template**(`vDOM`, `host?`, `cache?`): `void`
+> **template**(`vDOM`, `host`?, `cache`?): `void`
 
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vDOM` | `any`[] | Array of vDOM children. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vDOM**: `any`[]
+
+Array of vDOM children.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -1221,27 +1170,33 @@ Renders DOM from virtual DOM arrays.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[template](IoVector.md#template)
+[`IoVector`](IoVector.md).[`template`](IoVector.md#template)
 
 #### Defined in
 
 [src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
 
-___
+***
 
-### throttle
+### throttle()
 
-▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
+> **throttle**(`func`, `arg`, `timeout`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
-| `arg` | `any` | `undefined` | argument for throttled function. |
-| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
+• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+
+Function to throttle.
+
+• **arg**: `any` = `undefined`
+
+argument for throttled function.
+
+• **timeout**: `number` = `1`
+
+minimum delay in ms before executing the function.
 
 #### Returns
 
@@ -1249,28 +1204,34 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoVector](IoVector.md).[throttle](IoVector.md#throttle)
+[`IoVector`](IoVector.md).[`throttle`](IoVector.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
-___
+***
 
-### traverse
+### traverse()
 
-▸ **traverse**(`vChildren`, `host?`, `cache?`): `void`
+> **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `vChildren` | `any`[] | Array of vDOM children converted by `buildTree()` for easier parsing. |
-| `host?` | `HTMLElement` | Optional template target. |
-| `cache?` | `boolean` | Optional don't reuse existing elements and skip dispose |
+• **vChildren**: `any`[]
+
+Array of vDOM children converted by `buildTree()` for easier parsing.
+
+• **host?**: `HTMLElement`
+
+Optional template target.
+
+• **cache?**: `boolean`
+
+Optional don't reuse existing elements and skip dispose
 
 #### Returns
 
@@ -1278,25 +1239,25 @@ TODO: test element.traverse() function!
 
 #### Inherited from
 
-[IoVector](IoVector.md).[traverse](IoVector.md#traverse)
+[`IoVector`](IoVector.md).[`traverse`](IoVector.md#traverse)
 
 #### Defined in
 
 [src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
 
-___
+***
 
-### unbind
+### unbind()
 
-▸ **unbind**(`prop`): `void`
+> **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to unbind. |
+• **prop**: `string`
+
+Property to unbind.
 
 #### Returns
 
@@ -1304,17 +1265,17 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoVector](IoVector.md).[unbind](IoVector.md#unbind)
+[`IoVector`](IoVector.md).[`unbind`](IoVector.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
-___
+***
 
-### valueChanged
+### valueChanged()
 
-▸ **valueChanged**(): `void`
+> **valueChanged**(): `void`
 
 #### Returns
 
@@ -1322,7 +1283,7 @@ ___
 
 #### Overrides
 
-[IoVector](IoVector.md).[valueChanged](IoVector.md#valuechanged)
+[`IoVector`](IoVector.md).[`valueChanged`](IoVector.md#valuechanged)
 
 #### Defined in
 

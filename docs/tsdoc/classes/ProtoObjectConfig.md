@@ -1,34 +1,24 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / ProtoObjectConfig
 
 # Class: ProtoObjectConfig
 
-## Hierarchy
+## Extends
 
-- `Map`\<[`Constructor`](../README.md#constructor), `Map`\<`PropertyTypeKey`, [`VDOMArray`](../README.md#vdomarray)\>\>
-
-  ↳ **`ProtoObjectConfig`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](ProtoObjectConfig.md#constructor)
-
-### Methods
-
-- [getObjectConfig](ProtoObjectConfig.md#getobjectconfig)
+- `Map`\<[`Constructor`](../type-aliases/Constructor.md), `Map`\<`PropertyTypeKey`, [`VDOMArray`](../type-aliases/VDOMArray.md)\>\>
 
 ## Constructors
 
-### constructor
+### new ProtoObjectConfig()
 
-• **new ProtoObjectConfig**(`constructors`): [`ProtoObjectConfig`](ProtoObjectConfig.md)
+> **new ProtoObjectConfig**(`constructors`): [`ProtoObjectConfig`](ProtoObjectConfig.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `constructors` | [`IoPropertiesConstructor`](../interfaces/IoPropertiesConstructor.md)\<`any`\>[] |
+• **constructors**: [`IoPropertiesConstructor`](../interfaces/IoPropertiesConstructor.md)\<`any`\>[]
 
 #### Returns
 
@@ -36,7 +26,7 @@
 
 #### Overrides
 
-Map\&lt;Constructor, Map\&lt;PropertyTypeKey, VDOMArray\&gt;\&gt;.constructor
+`Map<Constructor, Map<PropertyTypeKey, VDOMArray>>.constructor`
 
 #### Defined in
 
@@ -44,19 +34,17 @@ Map\&lt;Constructor, Map\&lt;PropertyTypeKey, VDOMArray\&gt;\&gt;.constructor
 
 ## Methods
 
-### getObjectConfig
+### getObjectConfig()
 
-▸ **getObjectConfig**(`object`): `undefined` \| `Record`\<`string`, [`VDOMArray`](../README.md#vdomarray)\>
+> **getObjectConfig**(`object`): `undefined` \| `Record`\<`string`, [`VDOMArray`](../type-aliases/VDOMArray.md)\>
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `object` | `object` |
+• **object**: `object`
 
 #### Returns
 
-`undefined` \| `Record`\<`string`, [`VDOMArray`](../README.md#vdomarray)\>
+`undefined` \| `Record`\<`string`, [`VDOMArray`](../type-aliases/VDOMArray.md)\>
 
 #### Defined in
 

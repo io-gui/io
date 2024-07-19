@@ -1,29 +1,20 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / ObjectConfig
 
 # Class: ObjectConfig
 
-## Table of contents
-
-### Constructors
-
-- [constructor](ObjectConfig.md#constructor)
-
-### Methods
-
-- [getObjectConfig](ObjectConfig.md#getobjectconfig)
-- [registerObjectConfig](ObjectConfig.md#registerobjectconfig)
-
 ## Constructors
 
-### constructor
+### new ObjectConfig()
 
-• **new ObjectConfig**(`prototypes`): [`ObjectConfig`](ObjectConfig.md)
+> **new ObjectConfig**(`prototypes`): [`ObjectConfig`](ObjectConfig.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `prototypes` | `any` |
+• **prototypes**: `any`
 
 #### Returns
 
@@ -35,16 +26,15 @@
 
 ## Methods
 
-### getObjectConfig
+### getObjectConfig()
 
-▸ **getObjectConfig**(`object`, `customConfig`): `any`
+> **getObjectConfig**(`object`, `customConfig`): `any`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `object` | `any` |
-| `customConfig` | `any` |
+• **object**: `any`
+
+• **customConfig**: `any`
 
 #### Returns
 
@@ -54,17 +44,15 @@
 
 [src/elements/object/models/object-config.ts:22](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L22)
 
-___
+***
 
-### registerObjectConfig
+### registerObjectConfig()
 
-▸ **registerObjectConfig**(`config`): `void`
+> **registerObjectConfig**(`config`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `config` | `any` |
+• **config**: `any`
 
 #### Returns
 

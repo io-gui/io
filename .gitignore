@@ -1,8 +1,14 @@
-**/.DS_Store
+.DS_Store
 npm-debug.log
+yarn-error.log
 node_modules/
 .git/
 .idea/
 .vscode/
+.yarn/
 .vs/
+.jshintrc
 .project
+*.swp
+*.iml
+

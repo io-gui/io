@@ -1,4 +1,5 @@
 import {IoLabel} from '../../iogui.js';
+import * as chai from 'chai';
 
 const element = new IoLabel();
 element.style.display = 'none';

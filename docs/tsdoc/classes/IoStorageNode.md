@@ -1,76 +1,26 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / IoStorageNode
 
 # Class: IoStorageNode
 
 IoNodeMixin applied to `Object` class.
 
-## Hierarchy
+## Extends
 
 - [`IoNode`](IoNode.md)
 
-  ↳ **`IoStorageNode`**
-
-## Table of contents
-
-### Constructors
-
-- [constructor](IoStorageNode.md#constructor)
-
-### Properties
-
-- [\_bindings](IoStorageNode.md#_bindings)
-- [\_changeQueue](IoStorageNode.md#_changequeue)
-- [\_eventDispatcher](IoStorageNode.md#_eventdispatcher)
-- [\_properties](IoStorageNode.md#_properties)
-- [\_protochain](IoStorageNode.md#_protochain)
-- [binding](IoStorageNode.md#binding)
-- [default](IoStorageNode.md#default)
-- [key](IoStorageNode.md#key)
-- [storage](IoStorageNode.md#storage)
-- [value](IoStorageNode.md#value)
-
-### Accessors
-
-- [Properties](IoStorageNode.md#properties)
-
-### Methods
-
-- [Register](IoStorageNode.md#register)
-- [\_clearStorage](IoStorageNode.md#_clearstorage)
-- [addEventListener](IoStorageNode.md#addeventlistener)
-- [applyProperties](IoStorageNode.md#applyproperties)
-- [bind](IoStorageNode.md#bind)
-- [changed](IoStorageNode.md#changed)
-- [dispatchEvent](IoStorageNode.md#dispatchevent)
-- [dispatchMutationEvent](IoStorageNode.md#dispatchmutationevent)
-- [dispatchQueue](IoStorageNode.md#dispatchqueue)
-- [dispatchQueueSync](IoStorageNode.md#dispatchqueuesync)
-- [dispose](IoStorageNode.md#dispose)
-- [init](IoStorageNode.md#init)
-- [inputValue](IoStorageNode.md#inputvalue)
-- [objectMutated](IoStorageNode.md#objectmutated)
-- [onObjectMutated](IoStorageNode.md#onobjectmutated)
-- [queue](IoStorageNode.md#queue)
-- [removeEventListener](IoStorageNode.md#removeeventlistener)
-- [removeValueToHash](IoStorageNode.md#removevaluetohash)
-- [saveValueToHash](IoStorageNode.md#savevaluetohash)
-- [setProperties](IoStorageNode.md#setproperties)
-- [setProperty](IoStorageNode.md#setproperty)
-- [throttle](IoStorageNode.md#throttle)
-- [unbind](IoStorageNode.md#unbind)
-- [valueChanged](IoStorageNode.md#valuechanged)
-
 ## Constructors
 
-### constructor
+### new IoStorageNode()
 
-• **new IoStorageNode**(`props`): [`IoStorageNode`](IoStorageNode.md)
+> **new IoStorageNode**(`props`): [`IoStorageNode`](IoStorageNode.md)
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `props` | `StorageProps` |
+• **props**: `StorageProps`
 
 #### Returns
 
@@ -78,7 +28,7 @@ IoNodeMixin applied to `Object` class.
 
 #### Overrides
 
-[IoNode](IoNode.md).[constructor](IoNode.md#constructor)
+[`IoNode`](IoNode.md).[`constructor`](IoNode.md#constructors)
 
 #### Defined in
 
@@ -88,117 +38,117 @@ IoNodeMixin applied to `Object` class.
 
 ### \_bindings
 
-• `Readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
+> `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
 #### Inherited from
 
-[IoNode](IoNode.md).[_bindings](IoNode.md#_bindings)
+[`IoNode`](IoNode.md).[`_bindings`](IoNode.md#_bindings)
 
 #### Defined in
 
 [src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
-___
+***
 
 ### \_changeQueue
 
-• `Readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
+> `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
 #### Inherited from
 
-[IoNode](IoNode.md).[_changeQueue](IoNode.md#_changequeue)
+[`IoNode`](IoNode.md).[`_changeQueue`](IoNode.md#_changequeue)
 
 #### Defined in
 
 [src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
-___
+***
 
 ### \_eventDispatcher
 
-• `Readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
+> `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
 #### Inherited from
 
-[IoNode](IoNode.md).[_eventDispatcher](IoNode.md#_eventdispatcher)
+[`IoNode`](IoNode.md).[`_eventDispatcher`](IoNode.md#_eventdispatcher)
 
 #### Defined in
 
 [src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
-___
+***
 
 ### \_properties
 
-• `Readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
+> `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
 #### Inherited from
 
-[IoNode](IoNode.md).[_properties](IoNode.md#_properties)
+[`IoNode`](IoNode.md).[`_properties`](IoNode.md#_properties)
 
 #### Defined in
 
 [src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
-___
+***
 
 ### \_protochain
 
-• `Readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
+> `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
 #### Inherited from
 
-[IoNode](IoNode.md).[_protochain](IoNode.md#_protochain)
+[`IoNode`](IoNode.md).[`_protochain`](IoNode.md#_protochain)
 
 #### Defined in
 
 [src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
-___
+***
 
 ### binding
 
-• **binding**: [`Binding`](Binding.md)
+> **binding**: [`Binding`](Binding.md)
 
 #### Defined in
 
 [src/core/storage.ts:128](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L128)
 
-___
+***
 
 ### default
 
-• **default**: `any`
+> **default**: `any`
 
 #### Defined in
 
 [src/core/storage.ts:123](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L123)
 
-___
+***
 
 ### key
 
-• **key**: `string`
+> **key**: `string`
 
 #### Defined in
 
 [src/core/storage.ts:117](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L117)
 
-___
+***
 
 ### storage
 
-• **storage**: ``"none"`` \| ``"hash"`` \| ``"local"``
+> **storage**: `"none"` \| `"hash"` \| `"local"`
 
 #### Defined in
 
 [src/core/storage.ts:126](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L126)
 
-___
+***
 
 ### value
 
-• **value**: `any`
+> **value**: `any`
 
 #### Defined in
 
@@ -208,15 +158,15 @@ ___
 
 ### Properties
 
-• `get` **Properties**(): [`PropertyDeclarations`](../README.md#propertydeclarations)
+> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Returns
 
-[`PropertyDeclarations`](../README.md#propertydeclarations)
+[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Inherited from
 
-IoNode.Properties
+[`IoNode`](IoNode.md).[`Properties`](IoNode.md#properties)
 
 #### Defined in
 
@@ -224,15 +174,13 @@ IoNode.Properties
 
 ## Methods
 
-### Register
+### Register()
 
-▸ **Register**(`ioNodeConstructor`): `void`
+> **Register**(`ioNodeConstructor`): `void`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `ioNodeConstructor` | typeof [`IoNode`](IoNode.md) |
+• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
 
 #### Returns
 
@@ -240,17 +188,17 @@ IoNode.Properties
 
 #### Inherited from
 
-[IoNode](IoNode.md).[Register](IoNode.md#register)
+[`IoNode`](IoNode.md).[`Register`](IoNode.md#register)
 
 #### Defined in
 
-[src/core/node.ts:426](https://github.com/io-gui/io/blob/main/src/core/node.ts#L426)
+[src/core/node.ts:427](https://github.com/io-gui/io/blob/main/src/core/node.ts#L427)
 
-___
+***
 
-### \_clearStorage
+### \_clearStorage()
 
-▸ **_clearStorage**(): `void`
+> **\_clearStorage**(): `void`
 
 #### Returns
 
@@ -260,21 +208,27 @@ ___
 
 [src/core/storage.ts:185](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L185)
 
-___
+***
 
-### addEventListener
+### addEventListener()
 
-▸ **addEventListener**(`type`, `listener`, `options?`): `void`
+> **addEventListener**(`type`, `listener`, `options`?): `void`
 
 Wrapper for addEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | listener name. |
-| `listener` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+listener name.
+
+• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -282,26 +236,26 @@ Wrapper for addEventListener.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[addEventListener](IoNode.md#addeventlistener)
+[`IoNode`](IoNode.md).[`addEventListener`](IoNode.md#addeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
+[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
 
-___
+***
 
-### applyProperties
+### applyProperties()
 
-▸ **applyProperties**(`props`): `void`
+> **applyProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `props` | `any` | Map of property names and values. |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -309,25 +263,25 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[applyProperties](IoNode.md#applyproperties)
+[`IoNode`](IoNode.md).[`applyProperties`](IoNode.md#applyproperties)
 
 #### Defined in
 
-[src/core/node.ts:194](https://github.com/io-gui/io/blob/main/src/core/node.ts#L194)
+[src/core/node.ts:195](https://github.com/io-gui/io/blob/main/src/core/node.ts#L195)
 
-___
+***
 
-### bind
+### bind()
 
-▸ **bind**(`prop`): [`Binding`](Binding.md)
+> **bind**(`prop`): [`Binding`](Binding.md)
 
 Returns a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to bind to. |
+• **prop**: `string`
+
+Property to bind to.
 
 #### Returns
 
@@ -337,17 +291,17 @@ Binding object.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[bind](IoNode.md#bind)
+[`IoNode`](IoNode.md).[`bind`](IoNode.md#bind)
 
 #### Defined in
 
-[src/core/node.ts:319](https://github.com/io-gui/io/blob/main/src/core/node.ts#L319)
+[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
 
-___
+***
 
-### changed
+### changed()
 
-▸ **changed**(): `void`
+> **changed**(): `void`
 
 default change handler.
 Invoked when one of the properties change.
@@ -358,28 +312,37 @@ Invoked when one of the properties change.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[changed](IoNode.md#changed)
+[`IoNode`](IoNode.md).[`changed`](IoNode.md#changed)
 
 #### Defined in
 
-[src/core/node.ts:245](https://github.com/io-gui/io/blob/main/src/core/node.ts#L245)
+[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
 
-___
+***
 
-### dispatchEvent
+### dispatchEvent()
 
-▸ **dispatchEvent**(`type`, `detail?`, `bubbles?`, `src?`): `void`
+> **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `type` | `string` | `undefined` | event name to dispatch. |
-| `detail` | `Object` | `{}` | event detail. |
-| `bubbles` | `boolean` | `false` | event bubbles. |
-| `src?` | `Node` \| `Document` \| `HTMLElement` \| `Window` | `undefined` | source node/element to dispatch event from. |
+• **type**: `string`
+
+event name to dispatch.
+
+• **detail** = `{}`
+
+event detail.
+
+• **bubbles**: `boolean` = `false`
+
+event bubbles.
+
+• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+
+source node/element to dispatch event from.
 
 #### Returns
 
@@ -387,25 +350,25 @@ Wrapper for dispatchEvent.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[dispatchEvent](IoNode.md#dispatchevent)
+[`IoNode`](IoNode.md).[`dispatchEvent`](IoNode.md#dispatchevent)
 
 #### Defined in
 
-[src/core/node.ts:377](https://github.com/io-gui/io/blob/main/src/core/node.ts#L377)
+[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
 
-___
+***
 
-### dispatchMutationEvent
+### dispatchMutationEvent()
 
-▸ **dispatchMutationEvent**(`object`): `void`
+> **dispatchMutationEvent**(`object`): `void`
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `object` | `any` | object which mutated. |
+• **object**: `any`
+
+object which mutated.
 
 #### Returns
 
@@ -413,17 +376,17 @@ Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[dispatchMutationEvent](IoNode.md#dispatchmutationevent)
+[`IoNode`](IoNode.md).[`dispatchMutationEvent`](IoNode.md#dispatchmutationevent)
 
 #### Defined in
 
-[src/core/node.ts:384](https://github.com/io-gui/io/blob/main/src/core/node.ts#L384)
+[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
 
-___
+***
 
-### dispatchQueue
+### dispatchQueue()
 
-▸ **dispatchQueue**(): `void`
+> **dispatchQueue**(): `void`
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -433,17 +396,17 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 #### Inherited from
 
-[IoNode](IoNode.md).[dispatchQueue](IoNode.md#dispatchqueue)
+[`IoNode`](IoNode.md).[`dispatchQueue`](IoNode.md#dispatchqueue)
 
 #### Defined in
 
-[src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
+[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
 
-___
+***
 
-### dispatchQueueSync
+### dispatchQueueSync()
 
-▸ **dispatchQueueSync**(): `void`
+> **dispatchQueueSync**(): `void`
 
 Dispatches the queue immediately.
 
@@ -453,17 +416,17 @@ Dispatches the queue immediately.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[dispatchQueueSync](IoNode.md#dispatchqueuesync)
+[`IoNode`](IoNode.md).[`dispatchQueueSync`](IoNode.md#dispatchqueuesync)
 
 #### Defined in
 
-[src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
+[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
 
-___
+***
 
-### dispose
+### dispose()
 
-▸ **dispose**(): `void`
+> **dispose**(): `void`
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -474,17 +437,17 @@ Use this when instance is no longer needed.
 
 #### Overrides
 
-[IoNode](IoNode.md).[dispose](IoNode.md#dispose)
+[`IoNode`](IoNode.md).[`dispose`](IoNode.md#dispose)
 
 #### Defined in
 
 [src/core/storage.ts:181](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L181)
 
-___
+***
 
-### init
+### init()
 
-▸ **init**(): `void`
+> **init**(): `void`
 
 #### Returns
 
@@ -492,26 +455,26 @@ ___
 
 #### Inherited from
 
-[IoNode](IoNode.md).[init](IoNode.md#init)
+[`IoNode`](IoNode.md).[`init`](IoNode.md#init)
 
 #### Defined in
 
-[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
+[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
 
-___
+***
 
-### inputValue
+### inputValue()
 
-▸ **inputValue**(`value`): `void`
+> **inputValue**(`value`): `void`
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `any` | Property value. |
+• **value**: `any`
+
+Property value.
 
 #### Returns
 
@@ -519,26 +482,26 @@ Use this when value property is set by user action (e.g. mouse click).
 
 #### Inherited from
 
-[IoNode](IoNode.md).[inputValue](IoNode.md#inputvalue)
+[`IoNode`](IoNode.md).[`inputValue`](IoNode.md#inputvalue)
 
 #### Defined in
 
-[src/core/node.ts:234](https://github.com/io-gui/io/blob/main/src/core/node.ts#L234)
+[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
-___
+***
 
-### objectMutated
+### objectMutated()
 
-▸ **objectMutated**(`prop`): `void`
+> **objectMutated**(`prop`): `void`
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Mutated object property name. |
+• **prop**: `string`
+
+Mutated object property name.
 
 #### Returns
 
@@ -546,26 +509,26 @@ the object properties has mutated.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[objectMutated](IoNode.md#objectmutated)
+[`IoNode`](IoNode.md).[`objectMutated`](IoNode.md#objectmutated)
 
 #### Defined in
 
-[src/core/node.ts:308](https://github.com/io-gui/io/blob/main/src/core/node.ts#L308)
+[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
 
-___
+***
 
-### onObjectMutated
+### onObjectMutated()
 
-▸ **onObjectMutated**(`event`): `void`
+> **onObjectMutated**(`event`): `void`
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | `CustomEvent`\<`any`\> | Event payload. |
+• **event**: `CustomEvent`\<`any`\>
+
+Event payload.
 
 #### Returns
 
@@ -573,27 +536,33 @@ Node should be listening for this event if it has an observed object property
 
 #### Inherited from
 
-[IoNode](IoNode.md).[onObjectMutated](IoNode.md#onobjectmutated)
+[`IoNode`](IoNode.md).[`onObjectMutated`](IoNode.md#onobjectmutated)
 
 #### Defined in
 
-[src/core/node.ts:287](https://github.com/io-gui/io/blob/main/src/core/node.ts#L287)
+[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
 
-___
+***
 
-### queue
+### queue()
 
-▸ **queue**(`prop`, `value`, `oldValue`): `void`
+> **queue**(`prop`, `value`, `oldValue`): `void`
 
 Adds property change to the queue.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property name. |
-| `value` | `any` | Property value. |
-| `oldValue` | `any` | Old property value. |
+• **prop**: `string`
+
+Property name.
+
+• **value**: `any`
+
+Property value.
+
+• **oldValue**: `any`
+
+Old property value.
 
 #### Returns
 
@@ -601,27 +570,33 @@ Adds property change to the queue.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[queue](IoNode.md#queue)
+[`IoNode`](IoNode.md).[`queue`](IoNode.md#queue)
 
 #### Defined in
 
-[src/core/node.ts:253](https://github.com/io-gui/io/blob/main/src/core/node.ts#L253)
+[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
-___
+***
 
-### removeEventListener
+### removeEventListener()
 
-▸ **removeEventListener**(`type`, `listener?`, `options?`): `void`
+> **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
 Wrapper for removeEventListener.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `type` | `string` | event name to listen to. |
-| `listener?` | [`AnyEventListener`](../README.md#anyeventlistener) | listener handler. |
-| `options?` | `AddEventListenerOptions` | event listener options. |
+• **type**: `string`
+
+event name to listen to.
+
+• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+
+listener handler.
+
+• **options?**: `AddEventListenerOptions`
+
+event listener options.
 
 #### Returns
 
@@ -629,17 +604,17 @@ Wrapper for removeEventListener.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[removeEventListener](IoNode.md#removeeventlistener)
+[`IoNode`](IoNode.md).[`removeEventListener`](IoNode.md#removeeventlistener)
 
 #### Defined in
 
-[src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
-___
+***
 
-### removeValueToHash
+### removeValueToHash()
 
-▸ **removeValueToHash**(): `void`
+> **removeValueToHash**(): `void`
 
 #### Returns
 
@@ -649,11 +624,11 @@ ___
 
 [src/core/storage.ts:215](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L215)
 
-___
+***
 
-### saveValueToHash
+### saveValueToHash()
 
-▸ **saveValueToHash**(): `void`
+> **saveValueToHash**(): `void`
 
 #### Returns
 
@@ -663,20 +638,20 @@ ___
 
 [src/core/storage.ts:230](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L230)
 
-___
+***
 
-### setProperties
+### setProperties()
 
-▸ **setProperties**(`props`): `void`
+> **setProperties**(`props`): `void`
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `props` | `any` | Map of property names and values. |
+• **props**: `any`
+
+Map of property names and values.
 
 #### Returns
 
@@ -684,27 +659,33 @@ Sets multiple properties in batch.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[setProperties](IoNode.md#setproperties)
+[`IoNode`](IoNode.md).[`setProperties`](IoNode.md#setproperties)
 
 #### Defined in
 
-[src/core/node.ts:216](https://github.com/io-gui/io/blob/main/src/core/node.ts#L216)
+[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
 
-___
+***
 
-### setProperty
+### setProperty()
 
-▸ **setProperty**(`name`, `value`, `skipDispatch?`): `void`
+> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `name` | `string` | Property name to set value of. |
-| `value` | `any` | Peroperty value. |
-| `skipDispatch?` | `boolean` | flag to skip event dispatch. |
+• **name**: `string`
+
+Property name to set value of.
+
+• **value**: `any`
+
+Peroperty value.
+
+• **skipDispatch?**: `boolean`
+
+flag to skip event dispatch.
 
 #### Returns
 
@@ -712,27 +693,33 @@ Sets the property value, connects the bindings and sets attributes for propertie
 
 #### Inherited from
 
-[IoNode](IoNode.md).[setProperty](IoNode.md#setproperty)
+[`IoNode`](IoNode.md).[`setProperty`](IoNode.md#setproperty)
 
 #### Defined in
 
-[src/core/node.ts:121](https://github.com/io-gui/io/blob/main/src/core/node.ts#L121)
+[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
 
-___
+***
 
-### throttle
+### throttle()
 
-▸ **throttle**(`func`, `arg?`, `timeout?`): `void`
+> **throttle**(`func`, `arg`, `timeout`): `void`
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-| Name | Type | Default value | Description |
-| :------ | :------ | :------ | :------ |
-| `func` | [`CallbackFunction`](../README.md#callbackfunction) | `undefined` | Function to throttle. |
-| `arg` | `any` | `undefined` | argument for throttled function. |
-| `timeout` | `number` | `1` | minimum delay in ms before executing the function. |
+• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+
+Function to throttle.
+
+• **arg**: `any` = `undefined`
+
+argument for throttled function.
+
+• **timeout**: `number` = `1`
+
+minimum delay in ms before executing the function.
 
 #### Returns
 
@@ -740,25 +727,25 @@ Throttles function execution to next frame (rAF) if the function has been execut
 
 #### Inherited from
 
-[IoNode](IoNode.md).[throttle](IoNode.md#throttle)
+[`IoNode`](IoNode.md).[`throttle`](IoNode.md#throttle)
 
 #### Defined in
 
-[src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
+[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
 
-___
+***
 
-### unbind
+### unbind()
 
-▸ **unbind**(`prop`): `void`
+> **unbind**(`prop`): `void`
 
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `prop` | `string` | Property to unbind. |
+• **prop**: `string`
+
+Property to unbind.
 
 #### Returns
 
@@ -766,17 +753,17 @@ Unbinds a binding to a specified property`.
 
 #### Inherited from
 
-[IoNode](IoNode.md).[unbind](IoNode.md#unbind)
+[`IoNode`](IoNode.md).[`unbind`](IoNode.md#unbind)
 
 #### Defined in
 
-[src/core/node.ts:336](https://github.com/io-gui/io/blob/main/src/core/node.ts#L336)
+[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
 
-___
+***
 
-### valueChanged
+### valueChanged()
 
-▸ **valueChanged**(): `void`
+> **valueChanged**(): `void`
 
 #### Returns
 

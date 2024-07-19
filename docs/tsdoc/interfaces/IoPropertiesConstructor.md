@@ -1,43 +1,28 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / IoPropertiesConstructor
 
 # Interface: IoPropertiesConstructor\<T\>
 
-## Type parameters
-
-| Name |
-| :------ |
-| `T` |
-
-## Hierarchy
+## Extends
 
 - [`IoNodeConstructor`](IoNodeConstructor.md)\<`T`\>
 
-  ↳ **`IoPropertiesConstructor`**
+## Type Parameters
 
-## Table of contents
-
-### Constructors
-
-- [constructor](IoPropertiesConstructor.md#constructor)
-
-### Properties
-
-- [Config](IoPropertiesConstructor.md#config)
-- [Listeners](IoPropertiesConstructor.md#listeners)
-- [Properties](IoPropertiesConstructor.md#properties)
-- [Style](IoPropertiesConstructor.md#style)
+• **T**
 
 ## Constructors
 
-### constructor
+### new IoPropertiesConstructor()
 
-• **new IoPropertiesConstructor**(`...args`): `T`
+> **new IoPropertiesConstructor**(...`args`): `T`
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `...args` | `any`[] |
+• ...**args**: `any`[]
 
 #### Returns
 
@@ -45,7 +30,7 @@
 
 #### Inherited from
 
-[IoNodeConstructor](IoNodeConstructor.md).[constructor](IoNodeConstructor.md#constructor)
+[`IoNodeConstructor`](IoNodeConstructor.md).[`constructor`](IoNodeConstructor.md#constructors)
 
 #### Defined in
 
@@ -53,51 +38,51 @@
 
 ## Properties
 
-### Config
+### Config?
 
-• `Optional` **Config**: `ObjectConfig`[]
+> `optional` **Config**: `ObjectConfig`[]
 
 #### Defined in
 
 [src/elements/object/io-properties.ts:7](https://github.com/io-gui/io/blob/main/src/elements/object/io-properties.ts#L7)
 
-___
+***
 
-### Listeners
+### Listeners?
 
-• `Optional` **Listeners**: [`ListenersDeclaration`](../README.md#listenersdeclaration)
+> `optional` **Listeners**: [`ListenersDeclaration`](../type-aliases/ListenersDeclaration.md)
 
 #### Inherited from
 
-[IoNodeConstructor](IoNodeConstructor.md).[Listeners](IoNodeConstructor.md#listeners)
+[`IoNodeConstructor`](IoNodeConstructor.md).[`Listeners`](IoNodeConstructor.md#listeners)
 
 #### Defined in
 
 [src/core/node.ts:12](https://github.com/io-gui/io/blob/main/src/core/node.ts#L12)
 
-___
+***
 
-### Properties
+### Properties?
 
-• `Optional` **Properties**: [`PropertyDeclarations`](../README.md#propertydeclarations)
+> `optional` **Properties**: [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
 
 #### Inherited from
 
-[IoNodeConstructor](IoNodeConstructor.md).[Properties](IoNodeConstructor.md#properties)
+[`IoNodeConstructor`](IoNodeConstructor.md).[`Properties`](IoNodeConstructor.md#properties)
 
 #### Defined in
 
 [src/core/node.ts:11](https://github.com/io-gui/io/blob/main/src/core/node.ts#L11)
 
-___
+***
 
-### Style
+### Style?
 
-• `Optional` **Style**: `string`
+> `optional` **Style**: `string`
 
 #### Inherited from
 
-[IoNodeConstructor](IoNodeConstructor.md).[Style](IoNodeConstructor.md#style)
+[`IoNodeConstructor`](IoNodeConstructor.md).[`Style`](IoNodeConstructor.md#style)
 
 #### Defined in
 

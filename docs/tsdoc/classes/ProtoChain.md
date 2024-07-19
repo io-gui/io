@@ -1,3 +1,7 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / ProtoChain
 
 # Class: ProtoChain
@@ -5,38 +9,19 @@
 Internal utility class that contains usefull information about class inheritance.
 Inherited information is aggregated during prototype chain traversal in `Register()`.
 
-## Table of contents
-
-### Constructors
-
-- [constructor](ProtoChain.md#constructor)
-
-### Properties
-
-- [constructors](ProtoChain.md#constructors)
-- [functions](ProtoChain.md#functions)
-- [listeners](ProtoChain.md#listeners)
-- [observedObjectProperties](ProtoChain.md#observedobjectproperties)
-- [properties](ProtoChain.md#properties)
-- [style](ProtoChain.md#style)
-
-### Methods
-
-- [autobindFunctions](ProtoChain.md#autobindfunctions)
-
 ## Constructors
 
-### constructor
+### new ProtoChain()
 
-• **new ProtoChain**(`ioNodeConstructor`): [`ProtoChain`](ProtoChain.md)
+> **new ProtoChain**(`ioNodeConstructor`): [`ProtoChain`](ProtoChain.md)
 
 Creates an instance of `ProtoChain` for specified class constructor.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `ioNodeConstructor` | [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)\<`any`\> | Owner `IoNode`-derived constructor. |
+• **ioNodeConstructor**: [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)\<`any`\>
+
+Owner `IoNode`-derived constructor.
 
 #### Returns
 
@@ -50,7 +35,7 @@ Creates an instance of `ProtoChain` for specified class constructor.
 
 ### constructors
 
-• `Readonly` **constructors**: [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)\<`any`\>[] = `[]`
+> `readonly` **constructors**: [`IoNodeConstructor`](../interfaces/IoNodeConstructor.md)\<`any`\>[] = `[]`
 
 Array of inherited class constructors ending with `HTMLElement`, `Object` or `Array`.
 
@@ -58,11 +43,11 @@ Array of inherited class constructors ending with `HTMLElement`, `Object` or `Ar
 
 [src/core/internals/protoChain.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L13)
 
-___
+***
 
 ### functions
 
-• `Readonly` **functions**: `string`[] = `[]`
+> `readonly` **functions**: `string`[] = `[]`
 
 Array of function names that start with "on" or "_" for auto-binding.
 
@@ -70,27 +55,27 @@ Array of function names that start with "on" or "_" for auto-binding.
 
 [src/core/internals/protoChain.ts:17](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L17)
 
-___
+***
 
 ### listeners
 
-• `Readonly` **listeners**: `Object` = `{}`
+> `readonly` **listeners**: `object` = `{}`
 
 Aggregated listener declarations declared in `static get Listeners()` return ojects.
 
-#### Index signature
+#### Index Signature
 
-▪ [property: `string`]: [`ListenerDeclaration`](../README.md#listenerdeclaration)[]
+ \[`property`: `string`\]: [`ListenerDeclaration`](../type-aliases/ListenerDeclaration.md)[]
 
 #### Defined in
 
 [src/core/internals/protoChain.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L25)
 
-___
+***
 
 ### observedObjectProperties
 
-• `Readonly` **observedObjectProperties**: `string`[] = `[]`
+> `readonly` **observedObjectProperties**: `string`[] = `[]`
 
 Array of property names of observed object properties.
 
@@ -98,27 +83,27 @@ Array of property names of observed object properties.
 
 [src/core/internals/protoChain.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L33)
 
-___
+***
 
 ### properties
 
-• `Readonly` **properties**: `Object` = `{}`
+> `readonly` **properties**: `object` = `{}`
 
 Aggregated property declarations declared in `static get Properties()` return ojects.
 
-#### Index signature
+#### Index Signature
 
-▪ [property: `string`]: [`ProtoProperty`](ProtoProperty.md)
+ \[`property`: `string`\]: [`ProtoProperty`](ProtoProperty.md)
 
 #### Defined in
 
 [src/core/internals/protoChain.ts:21](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L21)
 
-___
+***
 
 ### style
 
-• `Readonly` **style**: `string` = `''`
+> `readonly` **style**: `string` = `''`
 
 Aggregated CSS style declarations declared in `static get Style()` return strings.
 
@@ -128,17 +113,17 @@ Aggregated CSS style declarations declared in `static get Style()` return string
 
 ## Methods
 
-### autobindFunctions
+### autobindFunctions()
 
-▸ **autobindFunctions**(`node`): `void`
+> **autobindFunctions**(`node`): `void`
 
 Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | `IoNode` instance to bind functions to. |
+• **node**: [`IoNode`](IoNode.md)
+
+`IoNode` instance to bind functions to.
 
 #### Returns
 

@@ -4,21 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>Io-GUI Test</title>
-    <!-- Import maps polyfill -->
-    <!-- Remove this when import maps will be widely supported -->
-    <script async src="https://unpkg.com/es-module-shims@1.6.0/dist/es-module-shims.js"></script>
     <script type="importmap">
       {
         "imports": {
           "io-gui": "./build/iogui.js",
           "marked": "./node_modules/marked/lib/marked.esm.js",
           "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
-          "mocha/": "./node_modules/mocha/",
-          "chai/": "./node_modules/chai/"
+          "chai": "./node_modules/chai/chai.js"
         }
       }
     </script>
     <link href="./lib/mocha.css" rel="stylesheet" />
+    <script src="./node_modules/mocha/mocha.js"></script>
+    <script type="module">
+      import * as chai from './node_modules/chai/chai.js';
+      window.chai = chai;
+    </script>
     <script type="module" src="./build/iogui.test.js"></script>
   </head>
   <body>

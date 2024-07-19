@@ -1,42 +1,26 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / ProtoProperty
 
 # Class: ProtoProperty
 
 Finalized property definition created from property declaration.
 
-## Table of contents
-
-### Constructors
-
-- [constructor](ProtoProperty.md#constructor)
-
-### Properties
-
-- [binding](ProtoProperty.md#binding)
-- [init](ProtoProperty.md#init)
-- [observe](ProtoProperty.md#observe)
-- [reactive](ProtoProperty.md#reactive)
-- [reflect](ProtoProperty.md#reflect)
-- [type](ProtoProperty.md#type)
-- [value](ProtoProperty.md#value)
-
-### Methods
-
-- [assign](ProtoProperty.md#assign)
-
 ## Constructors
 
-### constructor
+### new ProtoProperty()
 
-• **new ProtoProperty**(`def`): [`ProtoProperty`](ProtoProperty.md)
+> **new ProtoProperty**(`def`): [`ProtoProperty`](ProtoProperty.md)
 
 Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `def` | [`PropertyDeclarationLoose`](../README.md#propertydeclarationloose) | Loosely typed property definition |
+• **def**: [`PropertyDeclarationLoose`](../type-aliases/PropertyDeclarationLoose.md)
+
+Loosely typed property definition
 
 #### Returns
 
@@ -48,69 +32,69 @@ Takes a loosely typed property declaration and returns full property definition 
 
 ## Properties
 
-### binding
+### binding?
 
-• `Optional` **binding**: [`Binding`](Binding.md)
+> `optional` **binding**: [`Binding`](Binding.md)
 
 #### Defined in
 
 [src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
 
-___
+***
 
-### init
+### init?
 
-• `Optional` **init**: `any`
+> `optional` **init**: `any`
 
 #### Defined in
 
 [src/core/internals/property.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L33)
 
-___
+***
 
-### observe
+### observe?
 
-• `Optional` **observe**: `boolean`
+> `optional` **observe**: `boolean`
 
 #### Defined in
 
 [src/core/internals/property.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L32)
 
-___
+***
 
-### reactive
+### reactive?
 
-• `Optional` **reactive**: `boolean`
+> `optional` **reactive**: `boolean`
 
 #### Defined in
 
 [src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
 
-___
+***
 
-### reflect
+### reflect?
 
-• `Optional` **reflect**: `boolean`
+> `optional` **reflect**: `boolean`
 
 #### Defined in
 
 [src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
 
-___
+***
 
-### type
+### type?
 
-• `Optional` **type**: [`Constructor`](../README.md#constructor)
+> `optional` **type**: [`Constructor`](../type-aliases/Constructor.md)
 
 #### Defined in
 
 [src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
 
-___
+***
 
-### value
+### value?
 
-• `Optional` **value**: `any`
+> `optional` **value**: `any`
 
 #### Defined in
 
@@ -118,17 +102,17 @@ ___
 
 ## Methods
 
-### assign
+### assign()
 
-▸ **assign**(`protoProp`): `void`
+> **assign**(`protoProp`): `void`
 
 Assigns values of another ProtoProperty to itself, unless they are default values.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `protoProp` | [`ProtoProperty`](ProtoProperty.md) | Source ProtoProperty |
+• **protoProp**: [`ProtoProperty`](ProtoProperty.md)
+
+Source ProtoProperty
 
 #### Returns
 

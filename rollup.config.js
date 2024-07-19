@@ -1,7 +1,7 @@
 import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
-import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 
 function makeBundleTarget(src, target, externals = [], debug) {
 
@@ -38,7 +38,7 @@ function makeBundleTarget(src, target, externals = [], debug) {
 }
 
 export default [
-  makeBundleTarget('build/iogui.js', 'bundle/iogui.js'),
+  makeBundleTarget('build/iogui.js', 'bundle/iogui.js', []),
   makeBundleTarget('build/iogui.js', 'bundle/iogui.debug.js', [], true),
-  makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js', ['build/iogui.js'], true),
+  makeBundleTarget('build/iogui.test.js', 'bundle/iogui.test.js', ['build/iogui.js', 'node_modules/mocha/mocha.js'], true),
 ];

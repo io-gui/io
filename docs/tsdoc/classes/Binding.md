@@ -1,3 +1,7 @@
+[**io-gui**](../README.md) • **Docs**
+
+***
+
 [io-gui](../README.md) / Binding
 
 # Class: Binding
@@ -6,47 +10,23 @@ Property binding class.
 It facilitates data binding between source node/property and target nodes/properties
 using `[property]-changed` events.
 
-## Table of contents
-
-### Constructors
-
-- [constructor](Binding.md#constructor)
-
-### Properties
-
-- [node](Binding.md#node)
-- [property](Binding.md#property)
-- [targetProperties](Binding.md#targetproperties)
-- [targets](Binding.md#targets)
-
-### Accessors
-
-- [value](Binding.md#value)
-
-### Methods
-
-- [addTarget](Binding.md#addtarget)
-- [dispose](Binding.md#dispose)
-- [getTargetProperties](Binding.md#gettargetproperties)
-- [onSourceChanged](Binding.md#onsourcechanged)
-- [onTargetChanged](Binding.md#ontargetchanged)
-- [removeTarget](Binding.md#removetarget)
-- [toJSON](Binding.md#tojson)
-
 ## Constructors
 
-### constructor
+### new Binding()
 
-• **new Binding**(`node`, `property`): [`Binding`](Binding.md)
+> **new Binding**(`node`, `property`): [`Binding`](Binding.md)
 
 Creates a binding object for specified `node` and `property`.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | Property owner node |
-| `property` | `string` | Name of the property |
+• **node**: [`IoNode`](IoNode.md)
+
+Property owner node
+
+• **property**: `string`
+
+Name of the property
 
 #### Returns
 
@@ -60,37 +40,37 @@ Creates a binding object for specified `node` and `property`.
 
 ### node
 
-• `Readonly` **node**: [`IoNode`](IoNode.md)
+> `readonly` **node**: [`IoNode`](IoNode.md)
 
 #### Defined in
 
 [src/core/internals/binding.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L10)
 
-___
+***
 
 ### property
 
-• `Readonly` **property**: `string` = `''`
+> `readonly` **property**: `string` = `''`
 
 #### Defined in
 
 [src/core/internals/binding.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L11)
 
-___
+***
 
 ### targetProperties
 
-• `Readonly` **targetProperties**: `WeakMap`\<`EventTarget`, `string`[]\>
+> `readonly` **targetProperties**: `WeakMap`\<`EventTarget`, `string`[]\>
 
 #### Defined in
 
 [src/core/internals/binding.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L13)
 
-___
+***
 
 ### targets
 
-• `Readonly` **targets**: `EventTarget`[] = `[]`
+> `readonly` **targets**: `EventTarget`[] = `[]`
 
 #### Defined in
 
@@ -100,7 +80,13 @@ ___
 
 ### value
 
-• `get` **value**(): `any`
+> `get` **value**(): `any`
+
+> `set` **value**(`value`): `void`
+
+#### Parameters
+
+• **value**: `any`
 
 #### Returns
 
@@ -110,36 +96,23 @@ ___
 
 [src/core/internals/binding.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L27)
 
-• `set` **value**(`value`): `void`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `value` | `any` |
-
-#### Returns
-
-`void`
-
-#### Defined in
-
-[src/core/internals/binding.ts:24](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L24)
-
 ## Methods
 
-### addTarget
+### addTarget()
 
-▸ **addTarget**(`node`, `property`): `void`
+> **addTarget**(`node`, `property`): `void`
 
 Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | Target node |
-| `property` | `string` | Target property |
+• **node**: [`IoNode`](IoNode.md)
+
+Target node
+
+• **property**: `string`
+
+Target property
 
 #### Returns
 
@@ -149,11 +122,11 @@ Adds a target `node` and `targetProp` and corresponding `[property]-changed` lis
 
 [src/core/internals/binding.ts:42](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L42)
 
-___
+***
 
-### dispose
+### dispose()
 
-▸ **dispose**(): `void`
+> **dispose**(): `void`
 
 Dispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
@@ -166,19 +139,19 @@ Use this when node is no longer needed.
 
 [src/core/internals/binding.ts:147](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L147)
 
-___
+***
 
-### getTargetProperties
+### getTargetProperties()
 
-▸ **getTargetProperties**(`node`): `string`[]
+> **getTargetProperties**(`node`): `string`[]
 
 Retrieves a list of target properties for specified target node.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `node` | `EventTarget` \| [`IoNode`](IoNode.md) | Target node. |
+• **node**: `EventTarget` \| [`IoNode`](IoNode.md)
+
+Target node.
 
 #### Returns
 
@@ -190,19 +163,19 @@ list of target property names.
 
 [src/core/internals/binding.ts:88](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L88)
 
-___
+***
 
-### onSourceChanged
+### onSourceChanged()
 
-▸ **onSourceChanged**(`event`): `void`
+> **onSourceChanged**(`event`): `void`
 
 Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | [`ChangeEvent`](../interfaces/ChangeEvent.md) | Property change event. |
+• **event**: [`ChangeEvent`](../interfaces/ChangeEvent.md)
+
+Property change event.
 
 #### Returns
 
@@ -212,19 +185,19 @@ Event handler that updates bound properties on target nodes when source node emi
 
 [src/core/internals/binding.ts:121](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L121)
 
-___
+***
 
-### onTargetChanged
+### onTargetChanged()
 
-▸ **onTargetChanged**(`event`): `void`
+> **onTargetChanged**(`event`): `void`
 
 Event handler that updates source property when one of the targets emits `[property]-changed` event.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `event` | [`ChangeEvent`](../interfaces/ChangeEvent.md) | Property change event. |
+• **event**: [`ChangeEvent`](../interfaces/ChangeEvent.md)
+
+Property change event.
 
 #### Returns
 
@@ -234,21 +207,24 @@ Event handler that updates source property when one of the targets emits `[prope
 
 [src/core/internals/binding.ts:102](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L102)
 
-___
+***
 
-### removeTarget
+### removeTarget()
 
-▸ **removeTarget**(`node`, `property?`): `void`
+> **removeTarget**(`node`, `property`?): `void`
 
 Removes target `node` and `property` and corresponding `[property]-changed` listener.
 If `property` is not specified, it removes all target properties.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `node` | [`IoNode`](IoNode.md) | Target node |
-| `property?` | `string` | Target property |
+• **node**: [`IoNode`](IoNode.md)
+
+Target node
+
+• **property?**: `string`
+
+Target property
 
 #### Returns
 
@@ -258,11 +234,11 @@ If `property` is not specified, it removes all target properties.
 
 [src/core/internals/binding.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L67)
 
-___
+***
 
-### toJSON
+### toJSON()
 
-▸ **toJSON**(): `string`
+> **toJSON**(): `string`
 
 #### Returns
 
