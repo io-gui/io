@@ -1,5 +1,3 @@
-// import 'mocha';
-
 import { IoElement, Register } from './iogui.js';
 
 import CoreTests from './core/index.test.js';
@@ -49,40 +47,124 @@ export class IoGuiTestPage extends IoElement {
         color: var(--iotColor);
       }
       :host #mocha {
+        font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
         margin: 0 var(--iotLineHeight);
         position: relative;
       }
-      :host #mocha-report {
-        margin: 4em 1em 2em 1em;
-      }
+
       :host #mocha-stats {
-        position: absolute;
-        top: -4em;
-        left: var(--iotSpacing2);
-        font-size: 12px;
-        margin: 0;
-      }
-      :host #mocha-stats em {
+        display: flex;
+        flex-direction: row;
+        font-size: var(--iotFontSize);
         color: var(--iotColor);
+        margin: var(--iotLineHeight) 0 !important;
       }
-      :host #mocha-stats li {
-        padding: 0;
+      :host #mocha-stats .progress-contain {
+        display: flex;
+        margin-right: auto;
       }
-      :host #mocha-stats .progress {
+      :host #mocha-stats .progress-ring {
         display: none;
       }
+      :host #mocha-stats .progress-element {
+        margin-top: 0.2em;
+        margin-right: 1em;
+      }
+      :host #mocha-stats a {
+        text-decoration: none;
+        color: inherit;
+      }
+
       :host #mocha-stats .passes {
+        margin-right: var(--iotLineHeight);
         color: #0c0;
       }
       :host #mocha-stats .failures {
+        margin-right: var(--iotLineHeight);
         color: #f00;
-        font-weight: bold;
       }
-      :host h2 {
-        padding-right: 2em;
-      }
-      :host .replay {
+
+      :host #mocha .replay {
         display: none !important;
+      }
+
+      :host #mocha ul,
+      :host #mocha li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      :host #mocha h1,
+      :host #mocha h2 {
+        margin: 0;
+      }
+      :host #mocha h1 {
+        margin-top: 1em;
+        font-size: 1em;
+        font-weight: 200;
+      }
+      :host #mocha h1 a {
+        text-decoration: none;
+        color: inherit;
+      }
+      :host #mocha h1 a:hover {
+        text-decoration: underline;
+      }
+      :host #mocha h2 {
+        font-size: 0.75em;
+        font-weight: 300;
+        padding-left: 1em !important;
+        cursor: pointer;
+      }
+
+      :host #mocha .hidden {
+        display: none;
+      }
+
+      :host #mocha .test > pre {
+        background: var(--iotBackgroundColorDimmed);
+        font-size: var(--iotFontSize);
+        margin: var(--iotLineHeight);
+        margin-top: 0.25em;
+        padding: var(--iotLineHeight);
+        overflow: auto;
+        border: var(--iotBorder);
+        border-radius: var(--iotBorderRadius2);
+        max-width: calc(100% - 42px);
+      }
+
+      :host #mocha .test.fail h2::before {
+        content: '✖';
+        font-size: 1em;
+        margin: 0 0.5em 0 0;
+        color: var(--iotColorError);
+      }
+      :host #mocha .test.pass h2::before {
+        content: '✓';
+        font-size: 1em;
+        margin: 0 0.5em 0 0;
+        color: var(--iotColorLink);
+      }
+
+      :host #mocha .test.fail pre.error {
+        border: var(--iotBorderError);
+      }
+
+      :host #mocha code .comment { color: #ddd; }
+      :host #mocha code .init { color: #2f6fad; }
+      :host #mocha code .string { color: #5890ad; }
+      :host #mocha code .keyword { color: #8a6343; }
+      :host #mocha code .number { color: #2f6fad; }
+
+      @media screen and (max-width: 550px) {
+        :host #mocha-stats .progress-contain {
+          display: none;
+        }
+
+        :host #mocha .test > pre {
+          font-size: 0.5em;
+        }
       }
     `;
   }
@@ -98,30 +180,3 @@ export class IoGuiTestPage extends IoElement {
     mochaDiv.style.display = 'none';
   }
 }
-
-// Element test template
-// const element = new IoElement();
-// export default class {
-//   run() {
-//     describe('IoElement', () => {
-//       describe('Initialization', () => {
-//         it('Should initialize property definitions correctly', () => {
-//         });
-//         it('has correct default attributes', () => {
-//         });
-//         it('has correct default innerHTML', () => {
-//         });
-//       });
-//       describe('Reactivity', () => {
-//         it('should render innerHTML', () => {
-//         });
-//         it('should change...', () => {
-//         });
-//         it('has reactive attributes', () => {
-//         });
-//       });
-//       describe('Accessibility', () => {
-//       });
-//     });
-//   }
-// }

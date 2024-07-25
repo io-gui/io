@@ -239,159 +239,159 @@ export class IoDemoElements extends IoElement {
   }
   init() {
     this.template([
-      // ['io-collapsable', {label: 'Theme Editor', expanded: $('expanded-demo-theme-editor'), elements: [
-      //   ['io-demo-theme-editor'],
-      // ]}],
-      // ['io-collapsable', {label: 'Basic Elements', expanded: $('expanded-demo-basic'), elements: [
-      //   ['io-collapsable', {label: 'io-icon', class: 'row', expanded: $('expanded-demo-basic-1'),
-      //     elements: [
-      //       ['io-icon', {icon: 'icons:io'}],
-      //       ['io-icon', {icon: 'icons:io', stroke: true}],
-      //       ['io-icon', {icon: 'ℹ️'}],
-      //       ['io-icon', {icon: '❤️'}],
-      //     ]
-      //   }],
-        // ['io-collapsable', {label: 'io-field', class: 'row', expanded: $('expanded-demo-basic-2'),
-        //   elements: [
-        //     ['io-field', {value: this.bind('string'), appearance: 'outset'}],
-        //     ['io-field', {value: this.bind('string'), appearance: 'inset'}],
-        //     ['io-field', {value: this.bind('string')}],
-        //     ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
-        //     ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
-        //     ['io-field', {value: this.bind('string'), invalid: true}],
-        //   ]
-        // }],
-        // ['io-collapsable', {label: 'io-string', class: 'row', expanded: $('expanded-demo-basic-3'),
-        //   elements: [
-        //     ['io-string', {value: this.bind('string')}],
-        //     ['io-string', {value: this.bind('string'), live: true}],
-        //   ]
-        // }],
-      //   ['io-collapsable', {label: 'io-number', class: 'row', expanded: $('expanded-demo-basic-4'),
-      //     elements: [
-      //       ['io-number', {value: this.bind('number')}],
-      //       ['io-number', {ladder: true, value: this.bind('number')}],
-      //       ['io-number', {conversion: 2, value: this.bind('number')}],
-      //     ]
-      //   }],
-      //   ['io-collapsable', {label: 'io-boolean', class: 'row', expanded: $('expanded-demo-basic-5'),
-      //     elements: [
-      //       ['io-boolicon', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
-      //       ['io-boolean', {value: this.bind('boolean')}],
-      //     ]
-      //   }],
-      //   ['io-collapsable', {label: 'io-switch', expanded: $('expanded-demo-basic-6'),
-      //     elements: [
-      //       ['io-switch', {value: this.bind('boolean')}],
-      //     ]
-      //   }],
-      //   ['io-collapsable', {label: 'io-button', class: 'row', expanded: $('expanded-demo-basic-7'),
-      //       elements: [
-      //         ['io-button', {label: 'Button', icon: 'icons:check'}],
-      //         ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'inset'}],
-      //         ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'flush'}],
-      //         ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'neutral'}],
-      //       ]
-      //     }],
-      // ]}],
-      // ['io-collapsable', {label: 'Basic Sliders', expanded: $('expanded-sliders-basic'), elements: [
-      //   ['io-collapsable', {label: 'io-slider', expanded: $('expanded-sliders-basic-1'),
-      //     elements: [
-      //       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-      //       ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
-      //       ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
-      //       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
-      //       ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
-      //       ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
-      //     ]
-      //   }],
-      //   ['io-collapsable', {label: 'io-slider-range', expanded: $('expanded-sliders-basic-2'), elements: [
-      //     ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
-      //     ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 3}],
-      //     ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 0.3}],
-      //   ]}],
-      //   ['io-collapsable', {label: 'io-number-slider and io-number-slider-range', expanded: $('expanded-sliders-basic-3'), elements: [
-      //     ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-      //     ['io-number-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
-      //   ]}],
-      //   ['io-collapsable', {label: 'io-slider-2d and io-slider[vertical]', class: 'row', expanded: $('expanded-sliders-basic-4'), elements: [
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
-      //     ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
-      //     ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
-      //     ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
-      //     ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
-      //     ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
-      //   ]}],
-      // ]}],
-      // ['io-collapsable', {label: 'Color Sliders', expanded: $('expanded-demo-color'), elements: [
-      //   ['io-collapsable', {label: 'io-color-slider', expanded: $('expanded-demo-color-1'), elements: [
-      //     ['io-color-rgba', {value: this.rgba}],
-      //     ['io-color-rgba', {value: this.rgb}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'r'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'g'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'b'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'a'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'h'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 's'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'v'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'l'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'c'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'm'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'y'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'k'}],
-      //   ]}],
-      //   ['io-collapsable', {label: 'io-color-slider (2D and vertical)', class: 'row', expanded: $('expanded-demo-color-2'), elements: [
-      //     ['io-color-slider', {value: this.rgba, channel: 'hs'}],
-      //     ['io-color-slider', {value: this.rgba, channel: 'sv'}],
-      //     ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
-      //     ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
-      //     ['io-color-panel', {expanded: true, value: this.rgba}]
-      //   ]}],
-      // ]}],
-      // ['io-collapsable', {label: 'Vector Editors', expanded: $('expanded-demo-vector'), elements: [
-      //   ['io-collapsable', {label: 'io-vector', expanded: $('expanded-demo-vector-1'), elements: [
-      //     ['io-vector', {value: this.array2}],
-      //     ['io-vector', {value: this.array3}],
-      //     ['io-vector', {value: this.array3, linkable: true}],
-      //     ['io-vector', {value: this.array4}],
-      //     ['io-vector', {value: this.vector2}],
-      //     ['io-vector', {value: this.vector3}],
-      //     ['io-vector', {value: this.vector3, linkable: true}],
-      //     ['io-vector', {value: this.vector4}],
-      //     ['io-vector', {value: this.rgb}],
-      //     ['io-vector', {value: this.rgba}],
-      //   ]}],
-      //   ['io-collapsable', {label: 'io-matrix', expanded: $('expanded-demo-vector-2'), elements: [
-      //     ['io-matrix', {value: this.matrix2}],
-      //     ['io-matrix', {value: this.matrix3}],
-      //     ['io-matrix', {value: this.matrix4}],
-      //   ]}],
-      // ]}],
-      // ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
-      //   ['io-collapsable', {label: 'io-navigator-scroller and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
-      //     ['io-navigator-scroller', {
-      //       menu: 'right',
-      //       options: contentOptions[0].options,
-      //       elements: [elements[0]]
-      //     }]
-      //   ]}],
-      //   ['io-collapsable', {label: 'io-navigator-selector with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
-      //     ['io-navigator-selector', {
-      //       menu: 'top',
-      //       depth: 0,
-      //       options: contentOptions,
-      //       elements: elements
-      //     }]
-      //   ]}],
-      //   ['io-collapsable', {label: 'io-selector', class: 'fixed-tall', expanded: $('expanded-demo-content-4'), elements: [
-      //     ['io-selector', {
-      //       elements: elements,
-      //       options: contentOptions,
-      //     }]
-      //   ]}],
-      // ]}],
+      ['io-collapsable', {label: 'Theme Editor', expanded: $('expanded-demo-theme-editor'), elements: [
+        ['io-demo-theme-editor'],
+      ]}],
+      ['io-collapsable', {label: 'Basic Elements', expanded: $('expanded-demo-basic'), elements: [
+        ['io-collapsable', {label: 'io-icon', class: 'row', expanded: $('expanded-demo-basic-1'),
+          elements: [
+            ['io-icon', {icon: 'icons:io'}],
+            ['io-icon', {icon: 'icons:io', stroke: true}],
+            ['io-icon', {icon: 'ℹ️'}],
+            ['io-icon', {icon: '❤️'}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-field', class: 'row', expanded: $('expanded-demo-basic-2'),
+          elements: [
+            ['io-field', {value: this.bind('string'), appearance: 'outset'}],
+            ['io-field', {value: this.bind('string'), appearance: 'inset'}],
+            ['io-field', {value: this.bind('string')}],
+            ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
+            ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
+            ['io-field', {value: this.bind('string'), invalid: true}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-string', class: 'row', expanded: $('expanded-demo-basic-3'),
+          elements: [
+            ['io-string', {value: this.bind('string')}],
+            ['io-string', {value: this.bind('string'), live: true}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-number', class: 'row', expanded: $('expanded-demo-basic-4'),
+          elements: [
+            ['io-number', {value: this.bind('number')}],
+            ['io-number', {ladder: true, value: this.bind('number')}],
+            ['io-number', {conversion: 2, value: this.bind('number')}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-boolean', class: 'row', expanded: $('expanded-demo-basic-5'),
+          elements: [
+            ['io-boolicon', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+            ['io-boolean', {value: this.bind('boolean')}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-switch', expanded: $('expanded-demo-basic-6'),
+          elements: [
+            ['io-switch', {value: this.bind('boolean')}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-button', class: 'row', expanded: $('expanded-demo-basic-7'),
+            elements: [
+              ['io-button', {label: 'Button', icon: 'icons:check'}],
+              ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'inset'}],
+              ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'flush'}],
+              ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'neutral'}],
+            ]
+          }],
+      ]}],
+      ['io-collapsable', {label: 'Basic Sliders', expanded: $('expanded-sliders-basic'), elements: [
+        ['io-collapsable', {label: 'io-slider', expanded: $('expanded-sliders-basic-1'),
+          elements: [
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
+            ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
+            ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
+          ]
+        }],
+        ['io-collapsable', {label: 'io-slider-range', expanded: $('expanded-sliders-basic-2'), elements: [
+          ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
+          ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 3}],
+          ['io-slider-range', {value: this.array2, min: 0, max: 2, step: 0.05, exponent: 0.3}],
+        ]}],
+        ['io-collapsable', {label: 'io-number-slider and io-number-slider-range', expanded: $('expanded-sliders-basic-3'), elements: [
+          ['io-number-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
+          ['io-number-slider-range', {value: this.array2, min: 0, max: 2, step: 0.1}],
+        ]}],
+        ['io-collapsable', {label: 'io-slider-2d and io-slider[vertical]', class: 'row', expanded: $('expanded-sliders-basic-4'), elements: [
+          ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
+          ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
+          ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
+          ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
+          ['io-slider', {value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}],
+          ['io-slider-range', {value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}],
+        ]}],
+      ]}],
+      ['io-collapsable', {label: 'Color Sliders', expanded: $('expanded-demo-color'), elements: [
+        ['io-collapsable', {label: 'io-color-slider', expanded: $('expanded-demo-color-1'), elements: [
+          ['io-color-rgba', {value: this.rgba}],
+          ['io-color-rgba', {value: this.rgb}],
+          ['io-color-slider', {value: this.rgba, channel: 'r'}],
+          ['io-color-slider', {value: this.rgba, channel: 'g'}],
+          ['io-color-slider', {value: this.rgba, channel: 'b'}],
+          ['io-color-slider', {value: this.rgba, channel: 'a'}],
+          ['io-color-slider', {value: this.rgba, channel: 'h'}],
+          ['io-color-slider', {value: this.rgba, channel: 's'}],
+          ['io-color-slider', {value: this.rgba, channel: 'v'}],
+          ['io-color-slider', {value: this.rgba, channel: 'l'}],
+          ['io-color-slider', {value: this.rgba, channel: 'c'}],
+          ['io-color-slider', {value: this.rgba, channel: 'm'}],
+          ['io-color-slider', {value: this.rgba, channel: 'y'}],
+          ['io-color-slider', {value: this.rgba, channel: 'k'}],
+        ]}],
+        ['io-collapsable', {label: 'io-color-slider (2D and vertical)', class: 'row', expanded: $('expanded-demo-color-2'), elements: [
+          ['io-color-slider', {value: this.rgba, channel: 'hs'}],
+          ['io-color-slider', {value: this.rgba, channel: 'sv'}],
+          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
+          ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
+          ['io-color-panel', {expanded: true, value: this.rgba}]
+        ]}],
+      ]}],
+      ['io-collapsable', {label: 'Vector Editors', expanded: $('expanded-demo-vector'), elements: [
+        ['io-collapsable', {label: 'io-vector', expanded: $('expanded-demo-vector-1'), elements: [
+          ['io-vector', {value: this.array2}],
+          ['io-vector', {value: this.array3}],
+          ['io-vector', {value: this.array3, linkable: true}],
+          ['io-vector', {value: this.array4}],
+          ['io-vector', {value: this.vector2}],
+          ['io-vector', {value: this.vector3}],
+          ['io-vector', {value: this.vector3, linkable: true}],
+          ['io-vector', {value: this.vector4}],
+          ['io-vector', {value: this.rgb}],
+          ['io-vector', {value: this.rgba}],
+        ]}],
+        ['io-collapsable', {label: 'io-matrix', expanded: $('expanded-demo-vector-2'), elements: [
+          ['io-matrix', {value: this.matrix2}],
+          ['io-matrix', {value: this.matrix3}],
+          ['io-matrix', {value: this.matrix4}],
+        ]}],
+      ]}],
+      ['io-collapsable', {label: 'Content Elements', expanded: $('expanded-demo-content'), elements: [
+        ['io-collapsable', {label: 'io-navigator-scroller and with menu:"right"', class: 'fixed-tall', expanded: $('expanded-demo-content-2'), elements: [
+          ['io-navigator-scroller', {
+            menu: 'right',
+            options: contentOptions[0].options,
+            elements: [elements[0]]
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-navigator-selector with with menu:"top" and depth=0', class: 'fixed-tall', expanded: $('expanded-demo-content-3'), elements: [
+          ['io-navigator-selector', {
+            menu: 'top',
+            depth: 0,
+            options: contentOptions,
+            elements: elements
+          }]
+        ]}],
+        ['io-collapsable', {label: 'io-selector', class: 'fixed-tall', expanded: $('expanded-demo-content-4'), elements: [
+          ['io-selector', {
+            elements: elements,
+            options: contentOptions,
+          }]
+        ]}],
+      ]}],
       ['io-collapsable', {label: 'Object Editors', expanded: $('expanded-demo-objects'), elements: [
           ['io-collapsable', {label: 'io-properties', direction: 'row', expanded: $('expanded-demo-objects-1'), elements: [
             ['io-properties', {

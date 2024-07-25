@@ -4,19 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>Io-GUI Test</title>
+
     <script type="importmap">
       {
         "imports": {
           "io-gui": "./build/iogui.js",
-          "marked": "./node_modules/marked/lib/marked.esm.js",
-          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
+          "marked": "./lib/marked.esm.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
+          "chai": "./lib/chai.js",
+          "mocha": "./lib/mocha.js"
         }
       }
     </script>
-    <link href="./lib/mocha.css" rel="stylesheet" />
-    <script src="./node_modules/mocha/mocha.js"></script>
+
     <script type="module">
-      import * as chai from './node_modules/chai/chai.js';
+      import 'mocha';
+      import * as chai from 'chai';
       window.chai = chai;
     </script>
     <script type="module" src="./build/iogui.test.js"></script>

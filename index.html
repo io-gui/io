@@ -56,7 +56,7 @@
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
-    <link rel="me" href="https://mastodon.gamedev.place/@aki" />
+    <link rel="me" href="https://x.com/akirodic" />
 
     <link lazyload href="https://fonts.googleapis.com/css?family=Open+Sans:300,400&display=swap|Roboto+Mono&display=swap" rel="stylesheet">
 
@@ -66,30 +66,41 @@
       {
         "imports": {
           "io-gui": "./build/iogui.js",
-          "marked": "./node_modules/marked/lib/marked.esm.js",
-          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
-          "highlight.js": "./node_modules/highlight.js/es/index.js",
-          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
+          "marked": "./lib/marked.esm.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
+          "marked-highlight": "./lib/marked-highlight.js",
+          "hljs": "./lib/highlight.min.js",
+          "chai": "./lib/chai.js",
+          "mocha": "./lib/mocha.js"
         }
       }
     </script>
-    <script src="./lib/highlight.pack.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
 
-    <link href="./lib/mocha.css" rel="stylesheet" />
-    <script src="./node_modules/mocha/mocha.js"></script>
     <script type="module">
-      import * as chai from './node_modules/chai/chai.js';
+      import 'mocha';
+      import * as chai from 'chai';
+
       window.chai = chai;
+
+      import { IoMdView } from 'io-gui';
+      import { Marked } from 'marked';
+      import { markedHighlight } from 'marked-highlight';
+      import hljs from 'hljs';
+
+      IoMdView.marked = new Marked(
+        markedHighlight({
+          langPrefix: 'hljs language-',
+          highlight(code, lang) {
+            const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+            return hljs.highlight(code, { language }).value;
+          }
+        })
+      );
     </script>
 
     <style>
-      html {
+      html, body {
         font: 16px 'Open Sans', Helvetica, Arial, sans-serif;
-        width: 100%;
-        height: 100%;
-      }
-      body {
         padding: 0;
         margin: 0;
         width: 100%;

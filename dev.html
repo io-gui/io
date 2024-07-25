@@ -4,15 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>Io-GUI Test</title>
-    <!-- Import maps polyfill -->
-    <!-- Remove this when import maps will be widely supported -->
-    <script async src="https://unpkg.com/es-module-shims@1.6.0/dist/es-module-shims.js"></script>
+
     <script type="importmap">
       {
         "imports": {
           "io-gui": "./build/iogui.js",
-          "marked": "./node_modules/marked/lib/marked.esm.js",
-          "dompurify": "./node_modules/dompurify/dist/purify.es.js"
+          "marked": "./lib/marked.esm.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
         }
       }
     </script>
@@ -28,11 +26,11 @@
   </head>
   <body>
     <script type="module">
-import { IoInspector } from "io-gui";
+      import { IoInspector } from "io-gui";
 
-const inspector = new IoInspector({value: window.location});
+      const inspector = new IoInspector({value: window.location});
 
-document.body.appendChild(inspector);
+      document.body.appendChild(inspector);
       </script>
   </body>
 </html>

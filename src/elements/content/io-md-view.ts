@@ -2,24 +2,15 @@ import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { Marked } from 'marked';
-// import { markedHighlight } from 'marked-highlight';
-// import hljs from 'highlight.js';
 import purify from 'dompurify';
 
-const marked = new Marked(
-  // markedHighlight({
-  //   langPrefix: 'hljs language-',
-  //   highlight(code, lang) {
-  //     const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-  //     return hljs.highlight(code, { language }).value;
-  //   }
-  // })
-);
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 @Register
-export class IoMdView extends IoElement {
+class IoMdView extends IoElement {
+  declare static marked: Marked;
+
   static get Style() {
     return /* css */`
       :host {
@@ -177,7 +168,7 @@ export class IoMdView extends IoElement {
 
   protected _parseMarkdown(markdown: string) {
     // if (this._disposed) return;
-    const md = marked.parse(markdown) as string;
+    const md = IoMdView.marked.parse(markdown) as string;
     this.loading = false;
     if (this.sanitize) {
       this.innerHTML = this._strip(purify.sanitize(md));
@@ -202,3 +193,7 @@ export class IoMdView extends IoElement {
 
   changed() {}
 }
+
+IoMdView.marked = new Marked();
+
+export { IoMdView };

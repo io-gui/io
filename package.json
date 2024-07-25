@@ -1,6 +1,6 @@
 {
   "name": "io-gui",
-  "version": "1.4.0-rc8",
+  "version": "1.4.0-rc9",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui, a UI framework for web development.",
@@ -51,7 +51,6 @@
     "eslint": "^9.7.0",
     "eslint-plugin-html": "^8.1.1",
     "globals": "^15.8.0",
-    "highlight.js": "^11.10.0",
     "marked": "^13.0.2",
     "marked-highlight": "^2.1.3",
     "mocha": "^10.6.0",

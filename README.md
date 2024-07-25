@@ -15,7 +15,7 @@ To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
 
 You can also check out the collection of built-in [elements].
 
-Stay in touch on [github] and [mastodon].
+Stay in touch on [github] and [twitter].
 
 ## Design system
 
@@ -58,7 +58,7 @@ The files in `docs/tsdoc` are a work in progress. The files are automatically ge
 [license-url]: https://github.com/io-gui/io/blob/main/LICENSE
 
 [github]: https://github.com/io-gui/io/
-[mastodon]: https://mastodon.gamedev.place/web/@aki
+[twitter]: https://x.com/akirodic
 [threejs]: https://threejs.org
 [nodejs]: https://nodejs.org
 [yarn]: https://yarnpkg.com
