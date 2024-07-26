@@ -58,7 +58,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:155](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L155)
+[src/elements/menus/io-menu-options.ts:150](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L150)
 
 ***
 
@@ -166,7 +166,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:137](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L137)
+[src/elements/menus/io-menu-options.ts:132](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L132)
 
 ***
 
@@ -176,7 +176,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:134](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L134)
+[src/elements/menus/io-menu-options.ts:129](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L129)
 
 ***
 
@@ -200,7 +200,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:122](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L122)
+[src/elements/menus/io-menu-options.ts:117](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L117)
 
 ***
 
@@ -224,7 +224,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:125](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L125)
+[src/elements/menus/io-menu-options.ts:120](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L120)
 
 ***
 
@@ -248,7 +248,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:146](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L146)
+[src/elements/menus/io-menu-options.ts:141](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L141)
 
 ***
 
@@ -286,7 +286,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:140](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L140)
+[src/elements/menus/io-menu-options.ts:135](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L135)
 
 ***
 
@@ -296,7 +296,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:119](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L119)
+[src/elements/menus/io-menu-options.ts:114](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L114)
 
 ***
 
@@ -306,7 +306,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:143](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L143)
+[src/elements/menus/io-menu-options.ts:138](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L138)
 
 ***
 
@@ -320,7 +320,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:152](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L152)
+[src/elements/menus/io-menu-options.ts:147](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L147)
 
 ***
 
@@ -330,7 +330,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:131](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L131)
+[src/elements/menus/io-menu-options.ts:126](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L126)
 
 ***
 
@@ -340,7 +340,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:128](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L128)
+[src/elements/menus/io-menu-options.ts:123](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L123)
 
 ***
 
@@ -350,7 +350,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:149](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L149)
+[src/elements/menus/io-menu-options.ts:144](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L144)
 
 ***
 
@@ -424,7 +424,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:160](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L160)
+[src/elements/menus/io-menu-options.ts:155](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L155)
 
 ***
 
@@ -523,7 +523,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:276](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L276)
+[src/elements/menus/io-menu-options.ts:271](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L271)
 
 ***
 
@@ -537,7 +537,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:235](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L235)
+[src/elements/menus/io-menu-options.ts:230](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L230)
 
 ***
 
@@ -551,7 +551,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:262](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L262)
+[src/elements/menus/io-menu-options.ts:257](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L257)
 
 ***
 
@@ -569,7 +569,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:167](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L167)
+[src/elements/menus/io-menu-options.ts:162](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L162)
 
 ***
 
@@ -583,7 +583,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:191](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L191)
+[src/elements/menus/io-menu-options.ts:186](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L186)
 
 ***
 
@@ -601,7 +601,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:180](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L180)
+[src/elements/menus/io-menu-options.ts:175](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L175)
 
 ***
 
@@ -711,7 +711,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:297](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L297)
+[src/elements/menus/io-menu-options.ts:292](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L292)
 
 ***
 
@@ -908,7 +908,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:243](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L243)
+[src/elements/menus/io-menu-options.ts:238](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L238)
 
 ***
 
@@ -926,7 +926,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:184](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L184)
+[src/elements/menus/io-menu-options.ts:179](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L179)
 
 ***
 
@@ -1039,7 +1039,7 @@ Event payload.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:187](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L187)
+[src/elements/menus/io-menu-options.ts:182](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L182)
 
 ***
 
@@ -1121,7 +1121,7 @@ event listener options.
 
 #### Defined in
 
-[src/elements/menus/io-menu-options.ts:256](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L256)
+[src/elements/menus/io-menu-options.ts:251](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L251)
 
 ***
 

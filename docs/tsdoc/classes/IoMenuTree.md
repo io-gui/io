@@ -58,7 +58,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:168](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L168)
+[src/elements/menus/io-menu-tree.ts:166](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L166)
 
 ***
 
@@ -166,7 +166,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:159](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L159)
+[src/elements/menus/io-menu-tree.ts:157](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L157)
 
 ***
 
@@ -246,7 +246,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:150](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L150)
+[src/elements/menus/io-menu-tree.ts:148](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L148)
 
 ***
 
@@ -260,7 +260,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:165](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L165)
+[src/elements/menus/io-menu-tree.ts:163](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L163)
 
 ***
 
@@ -270,7 +270,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:156](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L156)
+[src/elements/menus/io-menu-tree.ts:154](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L154)
 
 ***
 
@@ -280,7 +280,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:153](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L153)
+[src/elements/menus/io-menu-tree.ts:151](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L151)
 
 ***
 
@@ -290,7 +290,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:162](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L162)
+[src/elements/menus/io-menu-tree.ts:160](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L160)
 
 ***
 
@@ -360,7 +360,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:170](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L170)
+[src/elements/menus/io-menu-tree.ts:168](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L168)
 
 ***
 
@@ -459,7 +459,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:187](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L187)
+[src/elements/menus/io-menu-tree.ts:185](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L185)
 
 ***
 
@@ -477,7 +477,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:176](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L176)
+[src/elements/menus/io-menu-tree.ts:174](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L174)
 
 ***
 
@@ -587,7 +587,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/menus/io-menu-tree.ts:193](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L193)
+[src/elements/menus/io-menu-tree.ts:191](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L191)
 
 ***
 

@@ -212,7 +212,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:166](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L166)
+[src/elements/content/io-md-view.ts:157](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L157)
 
 ***
 
@@ -240,7 +240,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:157](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L157)
+[src/elements/content/io-md-view.ts:148](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L148)
 
 ***
 
@@ -250,7 +250,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:169](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L169)
+[src/elements/content/io-md-view.ts:160](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L160)
 
 ***
 
@@ -260,7 +260,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:160](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L160)
+[src/elements/content/io-md-view.ts:151](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L151)
 
 ***
 
@@ -270,7 +270,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:163](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L163)
+[src/elements/content/io-md-view.ts:154](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L154)
 
 ***
 
@@ -299,6 +299,16 @@ Creates a class instance and initializes the internals.
 #### Defined in
 
 [src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
+
+***
+
+### marked
+
+> `static` **marked**: `Marked`
+
+#### Defined in
+
+[src/elements/content/io-md-view.ts:12](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L12)
 
 ## Accessors
 
@@ -358,7 +368,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:23](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L23)
+[src/elements/content/io-md-view.ts:14](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L14)
 
 ## Methods
 
@@ -517,7 +527,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:203](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L203)
+[src/elements/content/io-md-view.ts:194](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L194)
 
 ***
 
@@ -831,7 +841,7 @@ Event payload.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:189](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L189)
+[src/elements/content/io-md-view.ts:180](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L180)
 
 ***
 
@@ -1004,7 +1014,7 @@ flag to skip event dispatch.
 
 #### Defined in
 
-[src/elements/content/io-md-view.ts:195](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L195)
+[src/elements/content/io-md-view.ts:186](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L186)
 
 ***
 

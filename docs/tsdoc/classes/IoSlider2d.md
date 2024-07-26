@@ -598,7 +598,7 @@ Core `IoElement` class.
 
 #### Defined in
 
-[src/elements/sliders/io-slider-2d.ts:58](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L58)
+[src/elements/sliders/io-slider-2d.ts:59](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L59)
 
 ***
 

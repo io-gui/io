@@ -10,4 +10,4 @@
 
 ## Defined in
 
-[src/elements/basic/io-number.ts:561](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L561)
+[src/elements/basic/io-number.ts:562](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L562)

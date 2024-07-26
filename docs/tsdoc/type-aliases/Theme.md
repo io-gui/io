@@ -14,21 +14,25 @@
 
 > **iotBackgroundColor**: [`Color`](../classes/Color.md)
 
+### iotBackgroundColorBlue
+
+> **iotBackgroundColorBlue**: [`Color`](../classes/Color.md)
+
 ### iotBackgroundColorDimmed
 
 > **iotBackgroundColorDimmed**: [`Color`](../classes/Color.md)
-
-### iotBackgroundColorFaint
-
-> **iotBackgroundColorFaint**: [`Color`](../classes/Color.md)
 
 ### iotBackgroundColorField
 
 > **iotBackgroundColorField**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorSelected
+### iotBackgroundColorGreen
 
-> **iotBackgroundColorSelected**: [`Color`](../classes/Color.md)
+> **iotBackgroundColorGreen**: [`Color`](../classes/Color.md)
+
+### iotBackgroundColorRed
+
+> **iotBackgroundColorRed**: [`Color`](../classes/Color.md)
 
 ### iotBackgroundColorStrong
 
@@ -38,21 +42,13 @@
 
 > **iotBorderColor**: [`Color`](../classes/Color.md)
 
-### iotBorderColorDark
+### iotBorderColorDimmed
 
-> **iotBorderColorDark**: [`Color`](../classes/Color.md)
+> **iotBorderColorDimmed**: [`Color`](../classes/Color.md)
 
-### iotBorderColorFocus
+### iotBorderColorStrong
 
-> **iotBorderColorFocus**: [`Color`](../classes/Color.md)
-
-### iotBorderColorLight
-
-> **iotBorderColorLight**: [`Color`](../classes/Color.md)
-
-### iotBorderColorSelected
-
-> **iotBorderColorSelected**: [`Color`](../classes/Color.md)
+> **iotBorderColorStrong**: [`Color`](../classes/Color.md)
 
 ### iotBorderRadius
 
@@ -66,37 +62,37 @@
 
 > **iotBorderWidth**: `number`
 
-### iotBorderWidth2
-
-> **iotBorderWidth2**: `number`
-
 ### iotColor
 
 > **iotColor**: [`Color`](../classes/Color.md)
+
+### iotColorBlue
+
+> **iotColorBlue**: [`Color`](../classes/Color.md)
 
 ### iotColorDimmed
 
 > **iotColorDimmed**: [`Color`](../classes/Color.md)
 
-### iotColorError
-
-> **iotColorError**: [`Color`](../classes/Color.md)
-
 ### iotColorField
 
 > **iotColorField**: [`Color`](../classes/Color.md)
 
-### iotColorLink
+### iotColorGreen
 
-> **iotColorLink**: [`Color`](../classes/Color.md)
+> **iotColorGreen**: [`Color`](../classes/Color.md)
 
-### iotColorSelected
+### iotColorRed
 
-> **iotColorSelected**: [`Color`](../classes/Color.md)
+> **iotColorRed**: [`Color`](../classes/Color.md)
 
 ### iotColorStrong
 
 > **iotColorStrong**: [`Color`](../classes/Color.md)
+
+### iotColorWhite
+
+> **iotColorWhite**: [`Color`](../classes/Color.md)
 
 ### iotFieldHeight
 
@@ -105,6 +101,10 @@
 ### iotFieldHeight10
 
 > **iotFieldHeight10**: `number`
+
+### iotFieldHeight11
+
+> **iotFieldHeight11**: `number`
 
 ### iotFieldHeight12
 
@@ -122,9 +122,29 @@
 
 > **iotFieldHeight4**: `number`
 
+### iotFieldHeight5
+
+> **iotFieldHeight5**: `number`
+
+### iotFieldHeight6
+
+> **iotFieldHeight6**: `number`
+
+### iotFieldHeight7
+
+> **iotFieldHeight7**: `number`
+
 ### iotFieldHeight8
 
 > **iotFieldHeight8**: `number`
+
+### iotFieldHeight9
+
+> **iotFieldHeight9**: `number`
+
+### iotFillColor
+
+> **iotFillColor**: [`Color`](../classes/Color.md)
 
 ### iotFontSize
 
@@ -142,22 +162,6 @@
 
 > **iotLineHeight**: `number`
 
-### iotLineHeight2
-
-> **iotLineHeight2**: `number`
-
-### iotLineHeight3
-
-> **iotLineHeight3**: `number`
-
-### iotLineHeight4
-
-> **iotLineHeight4**: `number`
-
-### iotLineHeight8
-
-> **iotLineHeight8**: `number`
-
 ### iotShadowColor
 
 > **iotShadowColor**: [`Color`](../classes/Color.md)
@@ -174,9 +178,17 @@
 
 > **iotSpacing3**: `number`
 
-### iotSpacing4
+### iotSpacing5
 
-> **iotSpacing4**: `number`
+> **iotSpacing5**: `number`
+
+### iotSpacing8
+
+> **iotSpacing8**: `number`
+
+### iotStrokeColor
+
+> **iotStrokeColor**: [`Color`](../classes/Color.md)
 
 ### iotStrokeWidth
 

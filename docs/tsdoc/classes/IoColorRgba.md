@@ -471,7 +471,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/color/io-color-rgba.ts:30](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L30)
+[src/elements/color/io-color-rgba.ts:41](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L41)
 
 ***
 
@@ -581,7 +581,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/color/io-color-rgba.ts:42](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L42)
+[src/elements/color/io-color-rgba.ts:53](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L53)
 
 ***
 

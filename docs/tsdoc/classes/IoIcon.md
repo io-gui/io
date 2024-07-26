@@ -185,7 +185,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-icon.ts:44](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L44)
+[src/elements/basic/io-icon.ts:43](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L43)
 
 ***
 
@@ -251,7 +251,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-icon.ts:47](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L47)
+[src/elements/basic/io-icon.ts:46](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L46)
 
 ***
 
@@ -695,7 +695,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/basic/io-icon.ts:49](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L49)
+[src/elements/basic/io-icon.ts:48](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L48)
 
 ***
 

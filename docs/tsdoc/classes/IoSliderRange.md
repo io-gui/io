@@ -609,7 +609,7 @@ Keys left/right/up/down+shift and pageup/pagedown change the value in step incem
 
 #### Defined in
 
-[src/elements/sliders/io-slider-range.ts:109](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L109)
+[src/elements/sliders/io-slider-range.ts:111](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-range.ts#L111)
 
 ***
 

@@ -10,4 +10,4 @@
 
 ## Defined in
 
-[src/core/theme.ts:307](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L307)
+[src/core/theme.ts:330](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L330)

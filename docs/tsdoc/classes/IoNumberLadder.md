@@ -177,7 +177,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:429](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L429)
+[src/elements/basic/io-number.ts:430](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L430)
 
 ***
 
@@ -247,7 +247,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:423](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L423)
+[src/elements/basic/io-number.ts:424](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L424)
 
 ***
 
@@ -257,7 +257,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:426](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L426)
+[src/elements/basic/io-number.ts:427](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L427)
 
 ***
 
@@ -299,7 +299,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:450](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L450)
+[src/elements/basic/io-number.ts:451](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L451)
 
 ***
 
@@ -313,7 +313,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:444](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L444)
+[src/elements/basic/io-number.ts:445](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L445)
 
 ***
 
@@ -327,7 +327,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:441](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L441)
+[src/elements/basic/io-number.ts:442](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L442)
 
 ***
 
@@ -341,7 +341,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:447](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L447)
+[src/elements/basic/io-number.ts:448](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L448)
 
 ***
 
@@ -379,7 +379,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:438](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L438)
+[src/elements/basic/io-number.ts:439](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L439)
 
 ***
 
@@ -405,7 +405,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:431](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L431)
+[src/elements/basic/io-number.ts:432](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L432)
 
 ***
 
@@ -441,7 +441,7 @@ Creates a class instance and initializes the internals.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:341](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L341)
+[src/elements/basic/io-number.ts:342](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L342)
 
 ## Methods
 
@@ -508,7 +508,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:453](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L453)
+[src/elements/basic/io-number.ts:454](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L454)
 
 ***
 
@@ -526,7 +526,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:456](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L456)
+[src/elements/basic/io-number.ts:457](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L457)
 
 ***
 
@@ -544,7 +544,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:471](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L471)
+[src/elements/basic/io-number.ts:472](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L472)
 
 ***
 
@@ -558,7 +558,7 @@ Element to flatten.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:481](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L481)
+[src/elements/basic/io-number.ts:482](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L482)
 
 ***
 
@@ -668,7 +668,7 @@ Invoked when one of the properties change.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:507](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L507)
+[src/elements/basic/io-number.ts:508](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L508)
 
 ***
 
@@ -865,7 +865,7 @@ Use this when instance is no longer needed.
 
 #### Defined in
 
-[src/elements/basic/io-number.ts:484](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L484)
+[src/elements/basic/io-number.ts:485](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L485)
 
 ***
 
