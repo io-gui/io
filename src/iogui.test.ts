@@ -77,11 +77,11 @@ export class IoGuiTestPage extends IoElement {
 
       :host #mocha-stats .passes {
         margin-right: var(--iotLineHeight);
-        color: #0c0;
+        color: var(--iotColorGreen);
       }
       :host #mocha-stats .failures {
         margin-right: var(--iotLineHeight);
-        color: #f00;
+        color: var(--iotColorRed);
       }
 
       :host #mocha .replay {
@@ -138,17 +138,17 @@ export class IoGuiTestPage extends IoElement {
         content: '✖';
         font-size: 1em;
         margin: 0 0.5em 0 0;
-        color: var(--iotColorError);
+        color: var(--iotColorRed);
       }
       :host #mocha .test.pass h2::before {
         content: '✓';
         font-size: 1em;
         margin: 0 0.5em 0 0;
-        color: var(--iotColorLink);
+        color: var(--iotColorGreen);
       }
 
       :host #mocha .test.fail pre.error {
-        border: var(--iotBorderError);
+        border: var(--iotBorderFail);
       }
 
       :host #mocha code .comment { color: #ddd; }

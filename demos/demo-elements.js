@@ -249,6 +249,7 @@ export class IoDemoElements extends IoElement {
             ['io-icon', {icon: 'icons:io', stroke: true}],
             ['io-icon', {icon: 'ℹ️'}],
             ['io-icon', {icon: '❤️'}],
+            ['io-icon', {icon: 'icons:gear', stroke: true}],
           ]
         }],
         ['io-collapsable', {label: 'io-field', class: 'row', expanded: $('expanded-demo-basic-2'),
@@ -257,8 +258,9 @@ export class IoDemoElements extends IoElement {
             ['io-field', {value: this.bind('string'), appearance: 'inset'}],
             ['io-field', {value: this.bind('string')}],
             ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
-            ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
             ['io-field', {value: this.bind('string'), invalid: true}],
+            ['io-field', {value: this.bind('string'), class: 'green'}],
+            ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
           ]
         }],
         ['io-collapsable', {label: 'io-string', class: 'row', expanded: $('expanded-demo-basic-3'),

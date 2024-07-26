@@ -26,7 +26,7 @@ export class IoBreadcrumbs extends IoElement {
     :host > io-field {
       padding-left: var(--iotSpacing);
       padding-right: var(--iotSpacing);
-      color: var(--iotColorLink);
+      color: var(--iotColorBlue);
     }
     :host > io-field:hover {
       text-decoration: underline;

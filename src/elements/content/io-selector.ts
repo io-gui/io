@@ -40,8 +40,8 @@ export class IoSelector extends IoElement {
         margin-left: calc(-1 * var(--iotFieldHeight));
         border-radius: 50%;
         border: var(--iotBorder);
-        border-color: var(--iotBorderColorDark);
-        border-top-color: var(--iotBorderColorFocus);
+        border-color: var(--iotBorderColorDimmed);
+        border-top-color: var(--iotColorBlue);
         animation: io-loading-spinner .6s linear infinite;
       }
     `;

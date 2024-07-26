@@ -83,7 +83,7 @@ export class IoInspector extends IoElement {
       text-align: right;
     }
     :host io-properties io-field.select {
-      color: var(--iotColorLink) !important;
+      color: var(--iotColorBlue) !important;
     }
     :host io-properties io-field.select:hover {
       text-decoration: underline;

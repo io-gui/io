@@ -25,19 +25,19 @@ export class IoOptionsDemoView extends IoElement {
         color: var(--iotColor);
       }
       :host io-label.first {
-        color: var(--iotColorLink);
+        color: var(--iotColorBlue);
       }
       :host io-label.path {
         margin-left: 0.5em;
-        color: var(--iotColorLink);
+        color: var(--iotColorBlue);
       }
       :host io-label.last {
         margin-left: 0.5em;
-        color: var(--iotColorLink);
+        color: var(--iotColorBlue);
       }
       :host io-label.scroll {
         margin-left: 0.5em;
-        color: var(--iotColorLink);
+        color: var(--iotColorBlue);
       }
 
     `;

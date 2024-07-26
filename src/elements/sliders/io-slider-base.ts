@@ -22,8 +22,8 @@ export class IoSliderBase extends IoGl {
       }
       :host[vertical] {
         cursor: ns-resize;
-        height: var(--iotFieldHeight4);
-        min-height: var(--iotFieldHeight4);
+        height: var(--iotFieldHeight5);
+        min-height: var(--iotFieldHeight5);
         flex-basis: var(--iotFieldHeight);
         flex-grow: 0;
       }

@@ -20,7 +20,7 @@ export class IoNavigatorBase extends IoElement {
       :host > io-menu-options {
         align-self: stretch;
         border-radius: 0;
-        /* border-color: var(--iotBorderColorLight); */
+        /* border-color: var(--iotBorderColorStrong); */
       }
       :host[collapsed] > io-menu-options {
         /* min-height: calc(var(--iotFieldHeight) + 1em); */

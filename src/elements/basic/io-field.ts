@@ -35,7 +35,7 @@ export class IoField extends IoElement {
         border-color: transparent;
         color: var(--iotColorField);
         background-color: var(--iotBackgroundColorField);
-        padding: var(--iotSpacing) calc(var(--iotSpacing) + 0.5em);
+        padding: var(--iotSpacing) calc(var(--iotSpacing) + 0.25em);
         transition: background-color 0.25s;
       }
       :host {
@@ -51,14 +51,23 @@ export class IoField extends IoElement {
         border-color: var(--iotBorderColorOutset);
         background-image: var(--iotGradientOutset);
       }
+      :host.red,
       :host[invalid] {
-        color: var(--iotColorError);
-        border: var(--iotBorderError);
+        color: var(--iotColorWhite);
+        background-color: var(--iotBackgroundColorRed);
+        border-color: var(--iotColorRed);
       }
+      :host.green {
+        color: var(--iotColorWhite);
+        background-color: var(--iotBackgroundColorGreen);
+        border-color: var(--iotColorGreen);
+      }
+
+      :host.blue,
       :host[selected] {
-        color: var(--iotColorSelected);
-        background-color: var(--iotBackgroundColorSelected);
-        border-color: var(--iotBorderColorSelected);
+        color: var(--iotColorWhite);
+        background-color: var(--iotBackgroundColorBlue);
+        border-color: var(--iotColorBlue);
       }
       :host:focus {
         text-overflow: inherit;
@@ -116,7 +125,6 @@ export class IoField extends IoElement {
     this.removeEventListener('keyup', this._onKeyup);
   }
   _onPointerdown(event: PointerEvent) {
-    event.preventDefault();
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerleave', this._onPointerleave);
     this.addEventListener('pointerup', this._onPointerup);

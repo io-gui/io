@@ -17,7 +17,7 @@ export class IoVector extends IoElement {
       :host {
         display: flex;
         flex: 0 1 auto;
-        min-width: var(--iotFieldHeight4);
+        min-width: var(--iotFieldHeight5);
         width: var(--iotFieldHeight8);
       }
       :host > io-number {

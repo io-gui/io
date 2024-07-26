@@ -19,8 +19,7 @@ export class IoIcon extends IoElement {
         line-height: var(--iotLineHeight);
         font-size: var(--iotFontSize);
         text-align: center;
-        fill: currentcolor;
-        /* line-height: initial; */
+        fill: var(--iotFillColor);
       }
       :host {
         @apply --ioIcon;
@@ -29,7 +28,7 @@ export class IoIcon extends IoElement {
         display: none;
       }
       :host[stroke] {
-        stroke: currentcolor;
+        stroke: var(--iotStrokeColor);
         stroke-width: var(--iotStrokeWidth);
       }
       :host > svg {

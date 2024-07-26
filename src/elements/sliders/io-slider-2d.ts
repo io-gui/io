@@ -15,10 +15,10 @@ export class IoSlider2d extends IoSliderBase {
       }
       :host:not([vertical]),
       :host[vertical] {
-        width: var(--iotFieldHeight4);
-        height: var(--iotFieldHeight4);
-        min-width: var(--iotFieldHeight4);
-        min-height: var(--iotFieldHeight4);
+        width: var(--iotFieldHeight5);
+        height: var(--iotFieldHeight5);
+        min-width: var(--iotFieldHeight5);
+        min-height: var(--iotFieldHeight5);
         cursor: crosshair;
       }
     `;
@@ -45,10 +45,11 @@ export class IoSlider2d extends IoSliderBase {
         vec4 finalCol = vec4(0.0);
         vec2 pCenter = translate(p, center);
         float radius = iotFieldHeight * 0.25;
-        float strokeShape = circle(pCenter, radius + iotStrokeWidth + iotStrokeWidth);
-        float fillShape   = circle(pCenter, radius + iotStrokeWidth);
+        float stroke = iotStrokeWidth / 0.5;
+        float strokeShape = circle(pCenter, radius + stroke + stroke);
+        float fillShape   = circle(pCenter, radius + stroke);
         float colorShape  = circle(pCenter, radius);
-        finalCol = mix(iotColor, finalCol, strokeShape);
+        finalCol = mix(iotColorStrong, finalCol, strokeShape);
         finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
         finalCol = mix(vec4(color, 1.0), finalCol, colorShape);
         return compose(dstCol, finalCol);
@@ -67,11 +68,11 @@ export class IoSlider2d extends IoSliderBase {
 
       // Colors
       vec3 finalCol = iotBackgroundColorField.rgb;
-      vec3 gridCol = mix(iotColor.rgb, iotBackgroundColorField.rgb, 0.95);
-      vec3 axisCol = mix(iotColorSelected.rgb, iotBackgroundColorField.rgb, 0.75);
-      vec3 sliderCol = iotColorLink.rgb;
+      vec3 gridCol = iotColorDimmed.rgb;
+      vec3 axisCol = iotColor.rgb;
+      vec3 sliderCol = iotBackgroundColorGreen.rgb;
 
-      // // Sizes
+      // Sizes
       float gridThickness = iotStrokeWidth;
       vec2  gridSize = size / abs((uMax - uMin) / uStep);
       vec2  gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;

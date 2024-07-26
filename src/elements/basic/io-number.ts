@@ -20,6 +20,7 @@ export class IoNumber extends IoField {
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
+        font-family: monospace;
       }
     `;
   }
@@ -406,7 +407,7 @@ export class IoNumberLadder extends IoElement {
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
         background-color: var(--iotBackgroundColorStrong);
-        border-color: var(--iotBorderColorFocus);
+        border-color: var(--iotColorBlue);
         transition: opacity 0.2s;
         opacity: 1;
       }

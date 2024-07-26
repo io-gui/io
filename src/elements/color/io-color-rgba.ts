@@ -11,12 +11,23 @@ export class IoColorRgba extends IoColorBase {
       :host {
         display: flex;
         flex: 0 1 auto;
-        min-width: var(--iotFieldHeight4);
+        min-width: var(--iotFieldHeight5);
         width: var(--iotFieldHeight10);
       }
       :host > io-number {
         flex: 1 0 0;
-
+      }
+      :host > io-number#r {
+        box-shadow: 0px -1px 1px inset var(--iotColorRed);
+      }
+      :host > io-number#g {
+        box-shadow: 0px -1px 1px inset var(--iotColorGreen);
+      }
+      :host > io-number#b {
+        box-shadow: 0px -1px 1px inset var(--iotColorBlue);
+      }
+      :host > io-number#a {
+        box-shadow: 0px -1px 1px inset var(--iotColor);
       }
       :host > io-color-picker {
         flex-shrink: 0;
@@ -42,9 +53,9 @@ export class IoColorRgba extends IoColorBase {
   changed() {
     this.template([
       // Consider removing global id collisions.
-      ['io-number', {$: 'r', id: 'r', value: this.value.r, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput}],
-      ['io-number', {$: 'g', id: 'g', value: this.value.g, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput}],
-      ['io-number', {$: 'b', id: 'b', value: this.value.b, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput}],
+      ['io-number', {$: 'r', id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}],
+      ['io-number', {$: 'g', id: 'g', value: this.value.g, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}],
+      ['io-number', {$: 'b', id: 'b', value: this.value.b, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}],
       this.value.a !== undefined ? ['io-number', {$: 'a', id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput}] : null,
       ['io-color-picker', {$: 'swatch', value: this.value}],
     ]);

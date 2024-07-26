@@ -27,7 +27,6 @@ export class IoMenuOptions extends IoElement {
       flex-direction: row;
       align-self: stretch;
       padding: 0 var(--iotSpacing);
-      min-height: calc(var(--iotFieldHeight) + var(--iotBorderWidth2));
     }
     :host:not([horizontal]) {
       flex-direction: column;
@@ -58,16 +57,16 @@ export class IoMenuOptions extends IoElement {
       border-width: var(--iotBorderWidth) var(--iotSpacing);
     }
     :host > io-menu-item[selected][direction="up"] {
-      border-color: var(--iotBorderColorSelected) transparent transparent transparent;
+      border-color: var(--iotColorBlue) transparent transparent transparent;
     }
     :host > io-menu-item[selected][direction="down"] {
-      border-color: transparent transparent var(--iotBorderColorSelected) transparent;
+      border-color: transparent transparent var(--iotColorBlue) transparent;
     }
     :host > io-menu-item[selected][direction="right"] {
-      border-color: transparent var(--iotBorderColorSelected) transparent transparent;
+      border-color: transparent var(--iotColorBlue) transparent transparent;
     }
     :host > io-menu-item[selected][direction="left"] {
-      border-color: transparent transparent transparent var(--iotBorderColorSelected);
+      border-color: transparent transparent transparent var(--iotColorBlue);
     }
 
     /* Item divider */
@@ -79,11 +78,7 @@ export class IoMenuOptions extends IoElement {
       flex: 0 0 0;
       border: var(--iotBorder);
       border-color: var(--iotBorderColorInset);
-      margin: var(--iotBorderWidth2) var(--iotSpacing);
-      opacity: 0.25;
-    }
-    :host[horizontal] > span.divider {
-      margin: var(--iotSpacing) var(--iotBorderWidth2);
+      margin: var(--iotSpacing);
       opacity: 0.5;
     }
 

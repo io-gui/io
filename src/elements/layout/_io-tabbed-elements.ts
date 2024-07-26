@@ -256,23 +256,23 @@ export class IoTabs extends IoElement {
       border-bottom-color: var(--iotBackgroundColor);
       border-bottom-style: solid;
       background: var(--iotBackgroundColor);
-      color: var(--iotColorLink);
+      color: var(--iotColorBlue);
       margin-bottom: -1px;
       background-image: none;
     }
     :host > io-button.io-tab-insert-before {
       background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                        linear-gradient(90deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
+                        linear-gradient(90deg, var(--iotBackgroundColorBlue) 0.3em, transparent 0.31em);
     }
     :host > io-button.io-tab-insert-after {
       background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.125), transparent 0.75em),
-                        linear-gradient(270deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
+                        linear-gradient(270deg, var(--iotBackgroundColorBlue) 0.3em, transparent 0.31em);
     }
     :host > io-button.io-selected-tab.io-tab-insert-before {
-      background-image: linear-gradient(90deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
+      background-image: linear-gradient(90deg, var(--iotBackgroundColorBlue) 0.3em, transparent 0.31em);
     }
     :host > io-button.io-selected-tab.io-tab-insert-after {
-      background-image: linear-gradient(270deg, var(--iotBackgroundColorSelected) 0.3em, transparent 0.31em);
+      background-image: linear-gradient(270deg, var(--iotBackgroundColorBlue) 0.3em, transparent 0.31em);
     }
     :host > io-option-menu {
       background: none !important;
@@ -517,7 +517,7 @@ export class IoTabDropzone extends IoElement {
       pointer-events: none;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
-      border: 4px solid var(--iotBorderColorFocus);
+      border: 4px solid var(--iotColorBlue);
       border-radius: var(--iotBorderRadius);
       transform: translateZ(0);
       position: fixed;

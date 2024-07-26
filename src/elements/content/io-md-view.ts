@@ -34,7 +34,7 @@ class IoMdView extends IoElement {
       }
       :host a {
         text-decoration: none;
-        color: var(--iotColorLink);
+        color: var(--iotColorBlue);
       }
       :host h1 {
         padding: 0.7em 0;
@@ -45,7 +45,7 @@ class IoMdView extends IoElement {
       :host h2 {
         padding: 0.6em 0;
         margin: 0;
-        color: var(--iotColorLink);
+        color: var(--iotColorBlue);
         color: var(--iotColorDimmed);
       }
       :host h3 {
@@ -59,7 +59,7 @@ class IoMdView extends IoElement {
         color: var(--iotColorDimmed);
       }
       :host code {
-        background-color: var(--iotBackgroundColorFaint);
+        background-color: var(--iotBackgroundColorDimmed);
       }
       :host strong code {}
       :host pre > code {
@@ -68,7 +68,7 @@ class IoMdView extends IoElement {
       
       :host code[class] {
         background-color: var(--iotBackgroundColorDimmed);
-        padding: var(--iotSpacing4);
+        padding: var(--iotSpacing3);
         display: block;
         overflow-x: auto;
         font-size: var(--io-code-size);
@@ -80,7 +80,7 @@ class IoMdView extends IoElement {
         font-size: 0.85em;
         opacity: 0.75;
         margin: var(--iotLineHeight) 0;
-        padding: var(--iotSpacing4) var(--iotLineHeight);
+        padding: var(--iotSpacing3) var(--iotLineHeight);
         background-color: var(--iotBackgroundColorDimmed);
         color: var(--iotColorDimmed);
         border-left: var(--iotBorder);

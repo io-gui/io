@@ -49,12 +49,12 @@ export class IoSwitch extends IoBoolean {
         transition: left 0.25s;
       }
       :host[value]:after {
-        background-color: var(--iotBackgroundColorSelected);
+        background-color: var(--iotBackgroundColorBlue);
         left: calc(100% - calc(var(--iotLineHeight) - var(--iotBorderWidth)));
       }
       :host:focus:before {
-        border-color: var(--iotBorderColorFocus);
-        outline: 1px auto var(--iotBorderColorSelected);
+        border-color: var(--iotColorBlue);
+        outline: 1px auto var(--iotColorBlue);
         outline: 1px auto -webkit-focus-ring-color;
       }
       :host:focus {

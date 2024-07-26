@@ -52,7 +52,7 @@ export class IoGl extends IoElement {
         image-rendering: pixelated;
       }
       :host[aria-invalid] {
-        border: var(--iotBorderError);
+        border: var(--iotBorderFail);
       }
       :host[aria-invalid] > canvas {
         opacity: 0.5;

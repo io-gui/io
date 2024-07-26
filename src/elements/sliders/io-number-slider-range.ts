@@ -15,7 +15,7 @@ export class IoNumberSliderRange extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      min-width: var(--iotFieldHeight4);
+      min-width: var(--iotFieldHeight5);
       width: var(--iotFieldHeight8);
     }
     :host > io-number {

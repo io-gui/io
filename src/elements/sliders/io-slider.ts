@@ -44,26 +44,26 @@ export class IoSlider extends IoSliderBase {
 
         float slotThickness = iotFieldHeight * 0.125;
 
-        float stroke = iotStrokeWidth / 1.5;
+        float stroke = iotStrokeWidth / 0.5;
 
         float strokeShape = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness + stroke + stroke)),
-          circle(pEnd, 1.5 * slotThickness + stroke + stroke)
+          circle(pEnd, 1.0 * slotThickness + stroke + stroke)
         );
 
-        float fillShape   = min(
+        float fillShape = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness + stroke)),
-          circle(pEnd, 1.5 * slotThickness + stroke)
+          circle(pEnd, 1.0 * slotThickness + stroke)
         );
-        float colorShape  = min(
+        float colorShape = min(
           rectangle(pCenter, vec2(slotHalfWidth, slotThickness)),
-          circle(pEnd, 1.5 * slotThickness)
+          circle(pEnd, 1.0 * slotThickness)
         );
 
         float grad = (p.x - start.x) / (end.x - start.x);
         vec3 sloiotGradient = mix(colorStart, colorEnd, saturate(grad));
 
-        finalCol = mix(iotColor, finalCol, strokeShape);
+        finalCol = mix(iotColorStrong, finalCol, strokeShape);
         finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
         finalCol = mix(vec4(sloiotGradient, 1.0), finalCol, colorShape);
 
@@ -92,19 +92,15 @@ export class IoSlider extends IoSliderBase {
       float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
       vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y - 0.5);
       vec2 gridPosition = translate(expPosition, gridOffset, 0.0);
-      float gridShape = grid2d(gridPosition, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
+      float gridShape = grid2d(gridPosition - size.y / 1.9, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
 
       if (gridSize > gridThickness * 2.0) {
-        vec3 gridCol = mix(iotColor.rgb, iotBackgroundColorField.rgb, 0.85);
+        vec3 gridCol = iotColorDimmed.rgb;
         finalCol = compose(finalCol, vec4(gridCol, gridShape));
       }
 
-      // Line
-      vec3 lineCol = mix(iotColorSelected.rgb, iotBackgroundColorField.rgb, 0.75);
-      finalCol = paintHorizontalLine(finalCol, position, lineCol);
-
       // Slider
-      finalCol = paintSlider(finalCol, position, size, iotColorSelected.rgb, iotColorLink.rgb);
+      finalCol = paintSlider(finalCol, position, size, iotBackgroundColorGreen.rgb, iotBackgroundColorGreen.rgb);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

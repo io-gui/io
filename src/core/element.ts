@@ -167,8 +167,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--iotBorderColorSelected);
-        outline: 1px auto var(--iotBorderColorSelected);
+        border-color: var(--iotColorBlue);
+        outline: 1px auto var(--iotColorBlue);
         outline: 1px auto -webkit-focus-ring-color;
       }
     `;

@@ -72,8 +72,6 @@ export class IoMenuTree extends IoElement {
       align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
-      min-width: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
-      min-height: calc(var(--iotFieldHeight) + calc(var(--iotSpacing2) + var(--iotBorderWidth2)));
       overflow: auto;
     }
 
@@ -89,7 +87,7 @@ export class IoMenuTree extends IoElement {
       border-radius: 0 !important;
       margin: 0 !important;
       padding: 0 !important;
-      background: var(--iotBackgroundColorFaint);
+      background: var(--iotBackgroundColorDimmed);
     }
     
     :host io-menu-item:first-of-type {

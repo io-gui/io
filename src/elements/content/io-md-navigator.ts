@@ -26,7 +26,7 @@ export class IoMdNavigator extends IoElement {
         align-self: stretch;
         border-radius: 0;
         padding: 0;
-        border-color: var(--iotBorderColorLight);
+        border-color: var(--iotBorderColorStrong);
       }
       :host > io-menu-options {
         flex: 0 0 auto;
