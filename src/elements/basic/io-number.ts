@@ -21,6 +21,8 @@ export class IoNumber extends IoField {
         -webkit-user-select: text;
         -webkit-touch-callout: default;
         font-family: monospace;
+        padding-top: calc(var(--iotSpacing) + 0.05em);
+        padding-bottom: calc(var(--iotSpacing) - 0.05em);
       }
     `;
   }
@@ -247,7 +249,7 @@ export class IoNumberLadderStep extends IoField {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--iotBackgroundColorStrong);
+        background-color: var(--iotBgColorStrong);
         color: var(--iotColor);
         align-self: stretch;
         touch-action: none;
@@ -406,7 +408,7 @@ export class IoNumberLadder extends IoElement {
       }
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
-        background-color: var(--iotBackgroundColorStrong);
+        background-color: var(--iotBgColorStrong);
         border-color: var(--iotColorBlue);
         transition: opacity 0.2s;
         opacity: 1;

@@ -21,6 +21,7 @@ export class IoColorSwatch extends IoColorBase {
         background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
         background-size: 12px 12px;
         background-position: 0 0, 0 6px, 6px -6px, -6px 0px;
+        overflow: visible;
       }
       :host > div { 
         width: 100%;

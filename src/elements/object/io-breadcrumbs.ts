@@ -20,7 +20,7 @@ export class IoBreadcrumbs extends IoElement {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorInset);
       padding: var(--iotSpacing);
-      background-color: var(--iotBackgroundColorField);
+      background-color: var(--iotBgColorField);
       overflow-x: hidden;
     }
     :host > io-field {

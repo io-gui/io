@@ -8,7 +8,7 @@ export class IoDemoThemeEditor extends IoElement {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-gap: var(--iotSpacing);
-      background-color: var(--iotBackgroundColor);
+      background-color: var(--iotBgColor);
       padding: var(--iotSpacing);
       grid-template-columns: auto 1fr !important;
     }
@@ -32,38 +32,31 @@ export class IoDemoThemeEditor extends IoElement {
       ['io-field', {appearance: 'neutral', label: 'iotFontSize'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('iotFontSize'), min: 5, max: 20, step: 1}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotStrokeWidth'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotStrokeWidth'), min: 1, max: 20, step: 1}],
-      ['io-field', {appearance: 'neutral', label: 'iotStrokeColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotStrokeColor')}],
-      ['io-field', {appearance: 'neutral', label: 'iotFillColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotFillColor')}],
-
       ['io-field', {appearance: 'neutral', label: 'iotBorderRadius'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderRadius'), min: 0, max: 20}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderRadius'), min: 0, max: 20, step: 1}],
       ['io-field', {appearance: 'neutral', label: 'iotBorderWidth'}],
       ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderWidth'), min: 0, max: 5, step: 1}],
       ['io-field', {appearance: 'neutral', label: 'iotBorderColor'}],
       ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColor')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBorderColorStrong'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorStrong')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBorderColorDimmed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorDimmed')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColorLight'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorLight')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBorderColorDark'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorDark')}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColor')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorStrong'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorStrong')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorDimmed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorDimmed')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorRed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorRed')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorGreen'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorGreen')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorBlue'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorBlue')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBackgroundColorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBackgroundColorField')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColor')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColorStrong'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorStrong')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColorDimmed'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorDimmed')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColorRed'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorRed')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColorGreen'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorGreen')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColorBlue'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorBlue')}],
+      ['io-field', {appearance: 'neutral', label: 'iotBgColorField'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorField')}],
 
       ['io-field', {appearance: 'neutral', label: 'iotColor'}],
       ['io-color-rgba', {value: IoThemeSingleton.bind('iotColor')}],

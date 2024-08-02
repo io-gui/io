@@ -300,11 +300,12 @@ export class IoDemoElements extends IoElement {
         ['io-collapsable', {label: 'io-slider', expanded: $('expanded-sliders-basic-1'),
           elements: [
             ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
-            ['io-slider', {value: this.bind('number'), min: -0.3, max: 2, step: 1}],
-            ['io-slider', {value: this.bind('number'), min: 0, max: 2.3, step: 1}],
-            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 3}],
-            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.05, exponent: 0.3}],
-            ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.05, exponent: 0.3}],
+            ['io-slider', {value: this.bind('number'), min: -1.3, max: 3, step: 1}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 4.3, step: 1}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1, exponent: 3}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.01, exponent: 5}],
+            ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1, exponent: 0.3}],
+            ['io-slider', {value: this.bind('number'), min: 2, max: 0, step: 0.1, exponent: 0.1}],
           ]
         }],
         ['io-collapsable', {label: 'io-slider-range', expanded: $('expanded-sliders-basic-2'), elements: [
@@ -319,7 +320,7 @@ export class IoDemoElements extends IoElement {
         ['io-collapsable', {label: 'io-slider-2d and io-slider[vertical]', class: 'row', expanded: $('expanded-sliders-basic-4'), elements: [
           ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1]}],
           ['io-slider-2d', {value: this.bind('array2'), min: [-6, -2.5], max: [4.2, 8], step: [1, 1], vertical: true}],
-          ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.2}],
+          ['io-slider', {value: this.bind('number'), vertical: true, min: -2, max: 2, step: 0.02, exponent: 5.5}],
           ['io-slider-range', {value: this.array2, vertical: true, min: 0, max: 2, step: 0.1}],
           ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1]}],
           ['io-slider-2d', {value: this.bind('array2'), min: [4.2, 8], max: [-6, -2.5], step: [1, 1], vertical: true}],
@@ -331,9 +332,9 @@ export class IoDemoElements extends IoElement {
         ['io-collapsable', {label: 'io-color-slider', expanded: $('expanded-demo-color-1'), elements: [
           ['io-color-rgba', {value: this.rgba}],
           ['io-color-rgba', {value: this.rgb}],
-          ['io-color-slider', {value: this.rgba, channel: 'r'}],
-          ['io-color-slider', {value: this.rgba, channel: 'g'}],
-          ['io-color-slider', {value: this.rgba, channel: 'b'}],
+          ['io-color-slider', {value: this.rgba, channel: 'r', step: 0.05}],
+          ['io-color-slider', {value: this.rgba, channel: 'g', step: 0.05}],
+          ['io-color-slider', {value: this.rgba, channel: 'b', step: 0.05}],
           ['io-color-slider', {value: this.rgba, channel: 'a'}],
           ['io-color-slider', {value: this.rgba, channel: 'h'}],
           ['io-color-slider', {value: this.rgba, channel: 's'}],
@@ -346,7 +347,7 @@ export class IoDemoElements extends IoElement {
         ]}],
         ['io-collapsable', {label: 'io-color-slider (2D and vertical)', class: 'row', expanded: $('expanded-demo-color-2'), elements: [
           ['io-color-slider', {value: this.rgba, channel: 'hs'}],
-          ['io-color-slider', {value: this.rgba, channel: 'sv'}],
+          ['io-color-slider', {value: this.rgba, channel: 'sl', step: 0.1}],
           ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
           ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
           ['io-color-panel', {expanded: true, value: this.rgba}]

@@ -24,7 +24,7 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options {
         align-self: stretch;
         border-radius: 0;
-        border-color: var(--iotBorderColorStrong);
+        border-color: var(--iotBorderColorLight);
       }
       :host[collapsed] > io-menu-options {
         min-height: calc(var(--iotFieldHeight) + 1em);
@@ -58,7 +58,7 @@ export class IoNavigator extends IoElement {
         padding: calc(var(--iotSpacing) + 0.5em);
         height: 100%;
         flex: 0 0 auto;
-        background-color: var(--iotBackgroundColorDimmed);
+        background-color: var(--iotBgColorDimmed);
         border-color: transparent !important;
       }
       :host > io-menu-item.hamburger > .hasmore {

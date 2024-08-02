@@ -2,12 +2,8 @@ export * from './core/index.js';
 export * from './elements/menus/models/index.js';
 export * from './elements/index.js';
 
-// import { IoElementArgs } from './core/element.js';
-// export type IoVDomArray =
-//   ['io-element', IoElementArgs | string | IoVDomArray ] |
-
 /** @License
- * Copyright ©2022 Aleksandar (Aki) Rodic
+ * Copyright ©2024 Aleksandar (Aki) Rodic
  *
  * The MIT License
  *

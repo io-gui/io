@@ -67,7 +67,7 @@ export class IoMenuTree extends IoElement {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColorDimmed);
+      background-color: var(--iotBgColorDimmed);
       padding: var(--iotSpacing) 0;
       align-self: flex-start;
       user-select: none;
@@ -87,14 +87,14 @@ export class IoMenuTree extends IoElement {
       border-radius: 0 !important;
       margin: 0 !important;
       padding: 0 !important;
-      background: var(--iotBackgroundColorDimmed);
+      background: var(--iotBgColorDimmed);
     }
     
     :host io-menu-item:first-of-type {
       margin-top: var(--iotBorderWidth);
     }
     :host io-menu-item {
-      background-color: var(--iotBackgroundColorDimmed);
+      background-color: var(--iotBgColorDimmed);
       flex: 0 0 auto;
       align-self: stretch;
       border-radius: 0;

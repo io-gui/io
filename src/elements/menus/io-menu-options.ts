@@ -20,7 +20,7 @@ export class IoMenuOptions extends IoElement {
     :host {
       display: flex;
       border-radius: var(--iotBorderRadius);
-      background-color: var(--iotBackgroundColorDimmed);
+      background-color: var(--iotBgColorDimmed);
       position: relative;
     }
     :host[horizontal] {

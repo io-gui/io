@@ -13,7 +13,7 @@ export class IoSwitch extends IoBoolean {
       :host {
         position: relative;
         width: calc(1.5 * var(--iotFieldHeight));
-        
+        overflow: visible;
       }
       :host:before {
         content: '';
@@ -27,7 +27,7 @@ export class IoSwitch extends IoBoolean {
         border-radius: var(--iotLineHeight);
         border: var(--iotBorder);
         border-color: var(--iotBorderColorInset);
-        background-color: var(--iotBackgroundColorField);
+        background-color: var(--iotBgColorField);
         box-shadow: var(--iotShadowInset);
         transition: background-color 0.4s;
       }
@@ -40,7 +40,7 @@ export class IoSwitch extends IoBoolean {
         left: var(--iotBorderWidth);
         height: calc(var(--iotLineHeight) - calc(2 * var(--iotBorderWidth)));
         width: calc(var(--iotLineHeight) - calc(2 * var(--iotBorderWidth)));
-        background-color: var(--iotBackgroundColorDimmed);
+        background-color: var(--iotBgColorDimmed);
         box-shadow: var(--iotShadowOutset);
         border: var(--iotBorder);
         border-color: var(--iotBorderColorOutset);
@@ -49,7 +49,7 @@ export class IoSwitch extends IoBoolean {
         transition: left 0.25s;
       }
       :host[value]:after {
-        background-color: var(--iotBackgroundColorBlue);
+        background-color: var(--iotBgColorBlue);
         left: calc(100% - calc(var(--iotLineHeight) - var(--iotBorderWidth)));
       }
       :host:focus:before {

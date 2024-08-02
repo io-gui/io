@@ -211,7 +211,7 @@ export class IoLayoutDivider extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      background: var(--iotBackgroundColor);
+      background: var(--iotBgColor);
       color: var(--iotColor);
       z-index: 1;
       display: flex;

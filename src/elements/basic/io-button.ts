@@ -16,6 +16,7 @@ export class IoButton extends IoField {
         text-align: center;
         padding-left: calc(2 * var(--iotSpacing));
         padding-right: calc(2 * var(--iotSpacing));
+        color: var(--iotColorStrong);
       }
       :host[pressed] {
         border-color: var(--iotBorderColorInset);

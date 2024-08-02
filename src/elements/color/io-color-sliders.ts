@@ -28,6 +28,9 @@ export class IoColorSlider extends IoColorBase {
   @Property({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
+  @Property(0.01)
+  declare step: number;
+
   @Property('')
   declare channel: string;
 
@@ -126,7 +129,7 @@ export class IoColorSlider extends IoColorBase {
     let color: [number, number, number, number] = [0, 0, 0, 0];
     let min: number | [number, number] = 0;
     let max: number | [number, number] = 1;
-    let step: number | [number, number] = 0.0001;
+    let step: number | [number, number] = this.step;
 
     switch (this.channel) {
       case 'r':
@@ -215,7 +218,7 @@ export class IoColorSliderBase extends IoSlider {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
-      // vec3 getStariotColor(vec2 uv) {}
+      // vec3 getStartColor(vec2 uv) {}
       // vec3 getEndColor(vec2 uv) {}
     `;
   }
@@ -227,22 +230,30 @@ export class IoColorSliderBase extends IoSlider {
       // Dimensions
       vec2 size = uVertical == 1 ? uSize.yx : uSize;
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
-      vec2 position = size * (uv - vec2(0.0, 0.5));
+      vec2 position = size * vec2(uv.x, uv.y - 0.5);
+      float valueInRange = (uValue - uMin) / (uMax - uMin);
 
-      // Background
-      vec3 finalCol = iotBackgroundColorField.rgb;
-
-      // Line
-      vec3 startCol = getStariotColor(uv);
+      // Colors
+      vec3 finalCol = iotBgColorField.rgb;
+      vec3 startCol = getStartColor(uv);
+      vec3 gridCol = iotBgColorDimmed.rgb;
       vec3 endCol = getEndColor(uv);
-      vec3 lineCol = mix(startCol, endCol, uv.x);
+      vec3 sliderCol = mix(startCol, endCol, uv.x);
 
       vec2 linePos = translate(size * uv, 0.0, size.y / 2.);
-      finalCol = paintHorizontalLine(finalCol, linePos, lineCol);
+      finalCol = paintHorizontalLine(finalCol, linePos, sliderCol);
+
+      // Grid
+      float gridSize = size.x / abs((uMax - uMin) / uStep);
+      float gridOffset = mod(uStep - uMin, uStep) / (uMax - uMin) * size.x;
+      float gridShape = paintDerivativeGrid2D(translate(position, gridOffset, 0.0), vec2(gridSize, 0.0), iotBorderWidth);
+      if (size.x * uStep < 4.0) gridShape = 0.0;
+      finalCol = compose(finalCol, vec4(sliderCol, gridShape * 0.25));
 
       // Slider
-      vec3 sliderCol = hsv2rgb(uColor.rgb);
-      finalCol = paintSlider(finalCol, position, size, startCol, endCol);
+      float sliderShape = rectangle(position, vec2(size.x * valueInRange, size.y));
+      finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
+      finalCol = compose(finalCol, vec4(iotBgColorField.rgb, gridShape * sliderShape * 0.125));
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
@@ -273,13 +284,19 @@ export class IoColorSlider2dBase extends IoSlider2d {
 
       // Colors
       vec3 finalCol = geiotColor(uv);
+      vec3 gridCol = iotBgColorDimmed.rgb;
       vec3 sliderCol = geiotColor(uValue);
 
+      // Grid
+      vec2 gridSize = size / abs((uMax - uMin) / uStep);
       vec2 gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
-      vec2 offsetPosition = translate(position, -gridOffset);
+      vec2 gridPosition = translate(position, -gridOffset);
+      float gridShape = paintDerivativeGrid2D(gridPosition, gridSize, iotBorderWidth);
+      if (min(size.x * uStep.x, size.y * uStep.y) < 2.0) gridShape = 0.0;
+      finalCol = compose(finalCol, vec4(gridCol, gridShape * 0.5));
 
       vec2 knobPos = uValue / (uMax - uMin) * size;
-      finalCol = paintKnob(finalCol, offsetPosition, knobPos, sliderCol);
+      finalCol = paintKnob(finalCol, gridPosition, knobPos, sliderCol);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
@@ -293,7 +310,7 @@ export class IoColorSlider2dBase extends IoSlider2d {
 export class IoColorSliderR extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return vec3(uv.x, uColor[1], uColor[2]);
       }
       vec3 getEndColor(vec2 uv) {
@@ -309,7 +326,7 @@ export class IoColorSliderR extends IoColorSliderBase {
 export class IoColorSliderG extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return vec3(uColor[0], uv.x, uColor[2]);
       }
       vec3 getEndColor(vec2 uv) {
@@ -325,7 +342,7 @@ export class IoColorSliderG extends IoColorSliderBase {
 export class IoColorSliderB extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return vec3(uColor[0], uColor[1], uv.x);
       }
       vec3 getEndColor(vec2 uv) {
@@ -341,7 +358,7 @@ export class IoColorSliderB extends IoColorSliderBase {
 export class IoColorSliderA extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
         vec2 position = size * (uv - vec2(0.0, 0.5));
         return mix(vec3(0.5), vec3(1.0), checkerX(position, iotFieldHeight / 4.0));
@@ -350,7 +367,7 @@ export class IoColorSliderA extends IoColorSliderBase {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
         vec2 position = size * (uv - vec2(0.0, 0.5));
         vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, iotFieldHeight / 4.0));
-        return mix(chkCol, uColor.rgb, uColor.a);
+        return mix(chkCol, uColor.rgb, 1.0);
       }
     `;
   }
@@ -362,7 +379,7 @@ export class IoColorSliderA extends IoColorSliderBase {
 export class IoColorSliderH extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return hsv2rgb(vec3(uv.x, uColor[1], uColor[2]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -378,7 +395,7 @@ export class IoColorSliderH extends IoColorSliderBase {
 export class IoColorSliderS extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv.x, uColor[2]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -394,7 +411,7 @@ export class IoColorSliderS extends IoColorSliderBase {
 export class IoColorSliderV extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uColor[1], uv.x));
       }
       vec3 getEndColor(vec2 uv) {
@@ -410,7 +427,7 @@ export class IoColorSliderV extends IoColorSliderBase {
 export class IoColorSliderL extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uColor[1], uv.x));
       }
       vec3 getEndColor(vec2 uv) {
@@ -426,7 +443,7 @@ export class IoColorSliderL extends IoColorSliderBase {
 export class IoColorSliderC extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return cmyk2rgb(vec4(uv.x, uColor[1], uColor[2], uColor[3]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -442,7 +459,7 @@ export class IoColorSliderC extends IoColorSliderBase {
 export class IoColorSliderM extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return cmyk2rgb(vec4(uColor[0], uv.x, uColor[2], uColor[3]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -458,7 +475,7 @@ export class IoColorSliderM extends IoColorSliderBase {
 export class IoColorSliderY extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return cmyk2rgb(vec4(uColor[0], uColor[1], uv.x, uColor[3]));
       }
       vec3 getEndColor(vec2 uv) {
@@ -474,7 +491,7 @@ export class IoColorSliderY extends IoColorSliderBase {
 export class IoColorSliderK extends IoColorSliderBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 getStariotColor(vec2 uv) {
+      vec3 getStartColor(vec2 uv) {
         return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
       }
       vec3 getEndColor(vec2 uv) {

@@ -110,7 +110,7 @@ export class IoProperties extends IoElement {
       display: flex;
       flex-direction: column;
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColor);
+      background-color: var(--iotBgColor);
     }
     :host > .io-row {
       display: flex;

@@ -37,24 +37,20 @@ export type Theme = {
   iotFieldHeight11: number;
   iotFieldHeight12: number;
 
-  iotStrokeWidth: number;
-  iotStrokeColor: Color;
-  iotFillColor: Color;
-
   iotBorderRadius: number;
   iotBorderRadius2: number;
   iotBorderWidth: number;
   iotBorderColor: Color;
-  iotBorderColorStrong: Color;
-  iotBorderColorDimmed: Color;
+  iotBorderColorLight: Color;
+  iotBorderColorDark: Color;
 
-  iotBackgroundColor: Color;
-  iotBackgroundColorStrong: Color;
-  iotBackgroundColorDimmed: Color;
-  iotBackgroundColorRed: Color;
-  iotBackgroundColorGreen: Color;
-  iotBackgroundColorBlue: Color;
-  iotBackgroundColorField: Color;
+  iotBgColor: Color;
+  iotBgColorStrong: Color;
+  iotBgColorDimmed: Color;
+  iotBgColorRed: Color;
+  iotBgColorGreen: Color;
+  iotBgColorBlue: Color;
+  iotBgColorField: Color;
 
   iotColor: Color;
   iotColorStrong: Color;
@@ -73,46 +69,42 @@ export type Theme = {
 
 export const LIGHT_THEME: Theme = {
   iotSpacing: 2,
-  iotSpacing2: NaN,
-  iotSpacing3: NaN,
-  iotSpacing5: NaN,
-  iotSpacing8: NaN,
+  iotSpacing2: 0,
+  iotSpacing3: 0,
+  iotSpacing5: 0,
+  iotSpacing8: 0,
 
   iotLineHeight: 20,
 
   iotFontSize: 14,
 
-  iotFieldHeight: NaN,
-  iotFieldHeight2: NaN,
-  iotFieldHeight3: NaN,
-  iotFieldHeight4: NaN,
-  iotFieldHeight5: NaN,
-  iotFieldHeight6: NaN,
-  iotFieldHeight7: NaN,
-  iotFieldHeight8: NaN,
-  iotFieldHeight9: NaN,
-  iotFieldHeight10: NaN,
-  iotFieldHeight11: NaN,
-  iotFieldHeight12: NaN,
-
-  iotStrokeWidth: 1,
-  iotStrokeColor: new Color(0, 0, 0, 1),
-  iotFillColor: new Color(0.5, 0.5, 0.5, 1),
+  iotFieldHeight: 0,
+  iotFieldHeight2: 0,
+  iotFieldHeight3: 0,
+  iotFieldHeight4: 0,
+  iotFieldHeight5: 0,
+  iotFieldHeight6: 0,
+  iotFieldHeight7: 0,
+  iotFieldHeight8: 0,
+  iotFieldHeight9: 0,
+  iotFieldHeight10: 0,
+  iotFieldHeight11: 0,
+  iotFieldHeight12: 0,
 
   iotBorderRadius: 2,
-  iotBorderRadius2: NaN,
+  iotBorderRadius2: 0,
   iotBorderWidth: 1,
-  iotBorderColor: new Color(0.5, 0.5, 0.5, 1),
-  iotBorderColorStrong: new Color(0.6, 0.6, 0.6, 1),
-  iotBorderColorDimmed: new Color(0.4, 0.4, 0.4, 1),
+  iotBorderColor: new Color(0, 0, 0, 0.2),
+  iotBorderColorLight: new Color(1, 1, 1, 0.8),
+  iotBorderColorDark: new Color(0, 0, 0, 0.4),
 
-  iotBackgroundColor: new Color(0.85, 0.85, 0.85, 1),
-  iotBackgroundColorStrong: new Color(0.9, 0.9, 0.9, 1),
-  iotBackgroundColorDimmed: new Color(0.8, 0.8, 0.8, 1),
-  iotBackgroundColorRed: new Color(1, 0.5, 0.3, 1),
-  iotBackgroundColorGreen: new Color(0.2, 0.9, 0.3, 1),
-  iotBackgroundColorBlue: new Color(0.2, 0.5, 0.9, 1),
-  iotBackgroundColorField: new Color(0.88, 0.9, 0.89, 1),
+  iotBgColor: new Color(0.85, 0.85, 0.85, 1),
+  iotBgColorStrong: new Color(0.9, 0.9, 0.9, 1),
+  iotBgColorDimmed: new Color(0.8, 0.8, 0.8, 1),
+  iotBgColorRed: new Color(1, 0.5, 0.3, 1),
+  iotBgColorGreen: new Color(0.2, 0.9, 0.3, 1),
+  iotBgColorBlue: new Color(0.2, 0.5, 0.9, 1),
+  iotBgColorField: new Color(0.95, 0.96, 0.95, 1),
 
   iotColor: new Color(0.25, 0.25, 0.2, 1),
   iotColorStrong: new Color(0, 0, 0, 1),
@@ -121,7 +113,7 @@ export const LIGHT_THEME: Theme = {
   iotColorGreen: new Color(0, 0.6, 0.1, 1),
   iotColorBlue: new Color(0.2, 0.3, 1, 1),
   iotColorWhite: new Color(1, 1, 1, 1),
-  iotColorField: new Color(0, 0.05, 0.02, 0.8),
+  iotColorField: new Color(0, 0.05, 0.02, 1),
 
   iotGradientColorStart: new Color(0.9, 0.9, 0.9, 1),
   iotGradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
@@ -131,58 +123,54 @@ export const LIGHT_THEME: Theme = {
 
 export const DARK_THEME: Theme = {
   iotSpacing: 2,
-  iotSpacing2: NaN,
-  iotSpacing3: NaN,
-  iotSpacing5: NaN,
-  iotSpacing8: NaN,
+  iotSpacing2: 0,
+  iotSpacing3: 0,
+  iotSpacing5: 0,
+  iotSpacing8: 0,
 
   iotLineHeight: 20,
 
   iotFontSize: 14,
 
-  iotFieldHeight: NaN,
-  iotFieldHeight2: NaN,
-  iotFieldHeight3: NaN,
-  iotFieldHeight4: NaN,
-  iotFieldHeight5: NaN,
-  iotFieldHeight6: NaN,
-  iotFieldHeight7: NaN,
-  iotFieldHeight8: NaN,
-  iotFieldHeight9: NaN,
-  iotFieldHeight10: NaN,
-  iotFieldHeight11: NaN,
-  iotFieldHeight12: NaN,
-
-  iotStrokeWidth: 1,
-  iotStrokeColor: new Color(1, 1, 1, 1),
-  iotFillColor: new Color(0.5, 0.5, 0.5, 1),
+  iotFieldHeight: 0,
+  iotFieldHeight2: 0,
+  iotFieldHeight3: 0,
+  iotFieldHeight4: 0,
+  iotFieldHeight5: 0,
+  iotFieldHeight6: 0,
+  iotFieldHeight7: 0,
+  iotFieldHeight8: 0,
+  iotFieldHeight9: 0,
+  iotFieldHeight10: 0,
+  iotFieldHeight11: 0,
+  iotFieldHeight12: 0,
 
   iotBorderRadius: 2,
-  iotBorderRadius2: NaN,
+  iotBorderRadius2: 0,
   iotBorderWidth: 1,
-  iotBorderColor: new Color(1, 1, 1, 0.3),
-  iotBorderColorStrong: new Color(1, 1, 1, 0.4),
-  iotBorderColorDimmed: new Color(1, 1, 1, 0.2),
-  iotColorRed: new Color(1, 0.4, 0.4, 1),
-  iotColorGreen: new Color(0.3, 0.95, 0.5, 1),
-  iotColorBlue: new Color(0.6, 0.9, 1, 1),
+  iotBorderColor: new Color(1, 1, 1, 0.5),
+  iotBorderColorLight: new Color(1, 1, 1, 0.3),
+  iotBorderColorDark: new Color(0, 0, 0, 1),
 
-  iotBackgroundColor: new Color(0.092, 0.094, 0.093, 1),
-  iotBackgroundColorStrong: new Color(0.06, 0.06, 0.06, 1),
-  iotBackgroundColorDimmed: new Color(0.3, 0.3, 0.3, 1),
-  iotBackgroundColorRed: new Color(0.7, 0.2, 0.1, 1),
-  iotBackgroundColorGreen: new Color(0.1, 0.5, 0.2, 1),
-  iotBackgroundColorBlue: new Color(0, 0.3, 0.65, 1),
-  iotBackgroundColorField: new Color(0.02, 0.038, 0.03, 1),
+  iotBgColor: new Color(0.2, 0.2, 0.2, 1),
+  iotBgColorStrong: new Color(0.15, 0.15, 0.15, 1),
+  iotBgColorDimmed: new Color(0.25, 0.25, 0.25, 1),
+  iotBgColorRed: new Color(0.7, 0.2, 0.1, 1),
+  iotBgColorGreen: new Color(0.1, 0.5, 0.2, 1),
+  iotBgColorBlue: new Color(0, 0.3, 0.65, 1),
+  iotBgColorField: new Color(0.02, 0.02, 0.02, 1),
 
   iotColor: new Color(0.6, 0.6, 0.6, 1),
-  iotColorStrong: new Color(1, 1, 1, 1),
+  iotColorStrong: new Color(0.86, 0.86, 0.86, 1),
   iotColorDimmed: new Color(0.3, 0.3, 0.3, 1),
+  iotColorRed: new Color(1, 0.4, 0.4, 1),
+  iotColorGreen: new Color(0.4, 0.95, 0.3, 1),
+  iotColorBlue: new Color(0.6, 0.9, 1, 1),
   iotColorWhite: new Color(1, 1, 1, 1),
   iotColorField: new Color(0.65, 0.7, 0.68, 1),
 
-  iotGradientColorStart: new Color(0.192, 0.195, 0.194, 1),
-  iotGradientColorEnd: new Color(0.08, 0.083, 0.082, 1),
+  iotGradientColorStart: new Color(0.45, 0.45, 0.45, 1),
+  iotGradientColorEnd: new Color(0.2, 0.2, 0.2, 1),
 
   iotShadowColor: new Color(0, 0, 0, 0.2),
 };
@@ -202,8 +190,8 @@ const $Themes = $({
 const compositeVariables = /* css */`
   body {
     --iotBorder: var(--iotBorderWidth) solid var(--iotBorderColor);
-    --iotBorderColorInset: var(--iotBorderColorDimmed) var(--iotBorderColorStrong) var(--iotBorderColorStrong) var(--iotBorderColorDimmed);
-    --iotBorderColorOutset: var(--iotBorderColorStrong) var(--iotBorderColorDimmed) var(--iotBorderColorDimmed) var(--iotBorderColorStrong);
+    --iotBorderColorInset: var(--iotBorderColorDark) var(--iotBorderColorLight) var(--iotBorderColorLight) var(--iotBorderColorDark);
+    --iotBorderColorOutset: var(--iotBorderColorLight) var(--iotBorderColorDark) var(--iotBorderColorDark) var(--iotBorderColorLight);
     --iotGradientOutset: linear-gradient(180deg, var(--iotGradientColorStart), var(--iotGradientColorEnd) 100%);
     --iotGradientInset: linear-gradient(0deg, var(--iotGradientColorStart), var(--iotGradientColorEnd) 150%);
     --iotShadow: 2px 2px 6px var(--iotShadowColor), 1px 1px 1px var(--iotShadowColor);
@@ -220,7 +208,7 @@ const compositeVariables = /* css */`
  * IoThemeSingleton.themeID = 'dark';
  * ```
  *
- * CSS color variables such as `'--iotColor'` and `'--iotBackgroundColor'` are mapped to numeric properties `iotColor` and `iotBackgroundColor`.
+ * CSS color variables such as `'--iotColor'` and `'--iotBgColor'` are mapped to numeric properties `iotColor` and `iotBgColor`.
  */
 @Register
 class IoTheme extends IoElement {

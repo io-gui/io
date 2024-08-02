@@ -45,12 +45,12 @@ export class IoSlider2d extends IoSliderBase {
         vec4 finalCol = vec4(0.0);
         vec2 pCenter = translate(p, center);
         float radius = iotFieldHeight * 0.25;
-        float stroke = iotStrokeWidth / 0.5;
+        float stroke = iotBorderWidth;
         float strokeShape = circle(pCenter, radius + stroke + stroke);
         float fillShape   = circle(pCenter, radius + stroke);
         float colorShape  = circle(pCenter, radius);
         finalCol = mix(iotColorStrong, finalCol, strokeShape);
-        finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
+        finalCol = mix(vec4(iotBgColor.rgb, 1.0), finalCol, fillShape);
         finalCol = mix(vec4(color, 1.0), finalCol, colorShape);
         return compose(dstCol, finalCol);
       }
@@ -67,27 +67,26 @@ export class IoSlider2d extends IoSliderBase {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = iotBackgroundColorField.rgb;
-      vec3 gridCol = iotColorDimmed.rgb;
-      vec3 axisCol = iotColor.rgb;
-      vec3 sliderCol = iotBackgroundColorGreen.rgb;
+      vec3 finalCol = iotBgColorField.rgb;
+      vec3 gridCol = iotBgColorDimmed.rgb;
+      vec3 sliderCol = iotBgColorBlue.rgb;
+      vec3 lineCol1 = iotColor.rgb;
+      vec3 lineCol2 = iotBgColor.rgb;
 
-      // Sizes
-      float gridThickness = iotStrokeWidth;
-      vec2  gridSize = size / abs((uMax - uMin) / uStep);
-      vec2  gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
+      // Grid
+      vec2 gridSize = size / abs((uMax - uMin) / uStep);
+      vec2 gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
+      vec2 gridPosition = translate(position, -gridOffset);
+      float gridShape = paintDerivativeGrid2D(gridPosition, gridSize, iotBorderWidth);
+      finalCol = compose(finalCol, vec4(gridCol, gridShape * 0.5));
 
-      vec2 offsetPosition = translate(position, -gridOffset);
-      float gridShape = grid2d(offsetPosition, gridSize, gridThickness);
-      float axisShape = lineCross2d(offsetPosition, gridThickness);
+      // Axis
+      float axisShape = lineCross2d(gridPosition, iotBorderWidth);
+      finalCol = compose(finalCol, vec4(gridCol, axisShape));
 
-      if (max(gridSize.x, gridSize.y) > gridThickness * 2.0) {
-        finalCol = compose(finalCol, vec4(gridCol, gridShape));
-        finalCol = compose(finalCol, vec4(axisCol, axisShape));
-      }
-
+      // Knob
       vec2 knobPos = uValue / (uMax - uMin) * size;
-      finalCol = paintKnob(finalCol, offsetPosition, knobPos, sliderCol);
+      finalCol = paintKnob(finalCol, gridPosition, knobPos, sliderCol);
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

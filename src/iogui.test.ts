@@ -43,7 +43,7 @@ export class IoGuiTestPage extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        background: var(--iotBackgroundColor);
+        background: var(--iotBgColor);
         color: var(--iotColor);
       }
       :host #mocha {
@@ -123,7 +123,7 @@ export class IoGuiTestPage extends IoElement {
       }
 
       :host #mocha .test > pre {
-        background: var(--iotBackgroundColorDimmed);
+        background: var(--iotBgColorDimmed);
         font-size: var(--iotFontSize);
         margin: var(--iotLineHeight);
         margin-top: 0.25em;

@@ -18,16 +18,16 @@ export class IoColorRgba extends IoColorBase {
         flex: 1 0 0;
       }
       :host > io-number#r {
-        box-shadow: 0px -1px 1px inset var(--iotColorRed);
+        border-bottom-color: var(--iotBgColorRed);
       }
       :host > io-number#g {
-        box-shadow: 0px -1px 1px inset var(--iotColorGreen);
+        border-bottom-color: var(--iotBgColorGreen);
       }
       :host > io-number#b {
-        box-shadow: 0px -1px 1px inset var(--iotColorBlue);
+        border-bottom-color: var(--iotBgColorBlue);
       }
       :host > io-number#a {
-        box-shadow: 0px -1px 1px inset var(--iotColor);
+        border-bottom-color: var(--iotColor);
       }
       :host > io-color-picker {
         flex-shrink: 0;

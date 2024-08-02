@@ -70,7 +70,7 @@ export class IoInspector extends IoElement {
     }
     :host > io-object > io-properties {
       border-radius: var(--iotBorderRadius);
-      background-color: var(--iotBackgroundColor) !important;
+      background-color: var(--iotBgColor) !important;
       border: var(--iotBorder);
       border-color: var(--iotBorderColorInset);
       padding: var(--iotSpacing);

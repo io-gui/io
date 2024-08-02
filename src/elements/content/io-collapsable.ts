@@ -23,7 +23,7 @@ export class IoCollapsable extends IoElement {
       border-radius: calc(var(--iotBorderRadius) - var(--iotSpacing));
       border-color: var(--iotBorderColorOutset);
       min-height: var(--iotFieldHeight);
-      background-color: var(--iotBackgroundColorDimmed);
+      background-color: var(--iotBgColorDimmed);
     }
     :host > io-boolean {
       flex: 0 0 auto;
@@ -46,7 +46,7 @@ export class IoCollapsable extends IoElement {
       align-items: flex-start;
       flex-direction: column;
       overflow: auto;
-      background-color: var(--iotBackgroundColorStrong);
+      background-color: var(--iotBgColorStrong);
     }
     :host[direction=row] > div.io-collapsable-content {
       flex-direction: row;

@@ -12,6 +12,7 @@ export class IoColorPicker extends IoElement {
       :host {
         height: var(--iotFieldHeight);
         border: var(--iotBorder);
+        border-color: var(--iotBorderColorInset);
         border-radius: var(--iotBorderRadius);
         overflow: hidden;
       }

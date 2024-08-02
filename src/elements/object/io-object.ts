@@ -17,7 +17,7 @@ export class IoObject extends IoElement {
       padding-left: var(--iotSpacing);
       padding-right: var(--iotSpacing);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColor);
+      background-color: var(--iotBgColor);
     }
     :host > io-boolean {
       padding-left: 0;

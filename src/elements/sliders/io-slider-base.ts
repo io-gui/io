@@ -9,7 +9,7 @@ export class IoSliderBase extends IoGl {
   static get Style() {
     return /* css */`
       :host {
-        /* display: flex; */
+        display: flex;
         cursor: ew-resize;
         border: var(--iotBorder);
         border-radius: var(--iotBorderRadius);
@@ -18,7 +18,7 @@ export class IoSliderBase extends IoGl {
         min-width: var(--iotFieldHeight);
       }
       :host:not([vertical]) {
-        width: var(--iotFieldHeight8);
+        width: var(--iotFieldHeight10);
       }
       :host[vertical] {
         cursor: ns-resize;

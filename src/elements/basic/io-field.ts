@@ -34,7 +34,7 @@ export class IoField extends IoElement {
         border-radius: var(--iotBorderRadius);
         border-color: transparent;
         color: var(--iotColorField);
-        background-color: var(--iotBackgroundColorField);
+        background-color: var(--iotBgColorField);
         padding: var(--iotSpacing) calc(var(--iotSpacing) + 0.25em);
         transition: background-color 0.25s;
       }
@@ -42,6 +42,7 @@ export class IoField extends IoElement {
         @apply --ioField;
       }
       :host[appearance=neutral] {
+        color: var(--iotColor);
         background-color: transparent;
       }
       :host[appearance=inset] {
@@ -54,19 +55,19 @@ export class IoField extends IoElement {
       :host.red,
       :host[invalid] {
         color: var(--iotColorWhite);
-        background-color: var(--iotBackgroundColorRed);
+        background-color: var(--iotBgColorRed);
         border-color: var(--iotColorRed);
       }
       :host.green {
         color: var(--iotColorWhite);
-        background-color: var(--iotBackgroundColorGreen);
+        background-color: var(--iotBgColorGreen);
         border-color: var(--iotColorGreen);
       }
 
       :host.blue,
       :host[selected] {
         color: var(--iotColorWhite);
-        background-color: var(--iotBackgroundColorBlue);
+        background-color: var(--iotBgColorBlue);
         border-color: var(--iotColorBlue);
       }
       :host:focus {

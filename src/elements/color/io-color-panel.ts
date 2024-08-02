@@ -33,7 +33,7 @@ export class IoColorPanel extends IoColorBase {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColorDimmed);
+      background-color: var(--iotBgColorDimmed);
       padding: var(--iotSpacing);
       /*  */
       cursor: move;

@@ -55,59 +55,6 @@ export class IoSliderRange extends IoSliderBase {
       }
     }
   }
-  static get GlUtils() {
-    return /* glsl */`
-      vec3 paintSliderRange(vec3 dstCol, vec2 p, vec2 size, vec3 colorStart, vec3 colorEnd) {
-        vec4 finalCol = vec4(0.0);
-
-        float valueInRangeStart = (uValue[0] - uMin) / (uMax - uMin);
-        float signStart = valueInRangeStart < 0.0 ? -1.0 : 1.0;
-        valueInRangeStart = abs(pow(valueInRangeStart, 1./uExponent)) * signStart;
-
-        float valueInRangeEnd = (uValue[1] - uMin) / (uMax - uMin);
-        valueInRangeEnd = abs(pow(valueInRangeEnd, 1./uExponent));
-
-        vec2 start = vec2(size.x * min(2.0, max(-1.0, (valueInRangeStart))), size.y * 0.5);
-        vec2 end = vec2(size.x * min(2.0, max(-1.0, (valueInRangeEnd))), size.y * 0.5);
-
-        vec2 pStart = translate(p, start);
-        vec2 pEnd = translate(p, end);
-        vec2 pCenter = (pStart + pEnd) / 2.0;
-        float slotHalfWidth = abs(pStart.x - pEnd.x) / 2.0;
-
-        float slotThickness = iotFieldHeight * 0.125;
-        float knobRadius = iotFieldHeight * 0.125;
-
-        float stroke = iotStrokeWidth / 0.5;
-
-        float strokeShape = min(min(
-          circle(pStart, knobRadius + stroke + stroke),
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + stroke + stroke))),
-          circle(pEnd, knobRadius + stroke + stroke)
-        );
-
-        float fillShape = min(min(
-          circle(pStart, knobRadius + stroke),
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness + stroke))),
-          circle(pEnd, knobRadius + stroke)
-        );
-        float colorShape = min(min(
-          circle(pStart, knobRadius),
-          rectangle(pCenter, vec2(slotHalfWidth, slotThickness))),
-          circle(pEnd, knobRadius)
-        );
-
-        float grad = (p.x - start.x) / (end.x - start.x);
-        vec3 sloiotGradient = mix(colorStart, colorEnd, saturate(grad));
-
-        finalCol = mix(iotColorStrong, finalCol, strokeShape);
-        finalCol = mix(vec4(iotBackgroundColor.rgb, 1.0), finalCol, fillShape);
-        finalCol = mix(vec4(sloiotGradient, 1.0), finalCol, colorShape);
-
-        return compose(dstCol, finalCol);
-      }
-    `;
-  }
   static get Frag() {
     return /* glsl */`
     varying vec2 vUv;
@@ -116,28 +63,48 @@ export class IoSliderRange extends IoSliderBase {
       // Dimensions
       vec2 size = uVertical == 1 ? uSize.yx : uSize;
       vec2 uv = uVertical == 1 ? vUv.yx : vUv;
-      vec2 position = size * uv;
+      vec2 position = size * vec2(uv.x, uv.y - 0.5);
+      vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y - 0.5);
+
+      vec2 valueInRange = (uValue - vec2(uMin)) / (vec2(uMax) - vec2(uMin));
+
+      vec2 valueSign = sign(valueInRange);
+      vec2 expValueInRange = pow(abs(valueInRange), vec2(1./uExponent)) * valueSign;
+      float valueInRangeWidth = valueInRange[1] - valueInRange[0];
+      float valueInRangeCenter = (valueInRange[1] + valueInRange[0]) / 2.0;
+      float signRange = sign(valueInRangeWidth);
 
       // Colors
-      vec3 finalCol = iotBackgroundColorField.rgb;
-      vec4 gridCol = iotColorDimmed;
-
-      // Sizes
-      float gridThickness = iotStrokeWidth;
-      float gridSize = size.x / abs((uMax - uMin) / uStep);
-      float gridOffset = mod(uMin, uStep) / (uMax - uMin) * size.x;
+      vec3 finalCol = iotBgColorField.rgb;
+      vec3 gridCol = iotBgColorDimmed.rgb;
+      vec3 sliderCol = signRange > 0.0 ? iotBgColorBlue.rgb : iotBgColorRed.rgb;
+      vec3 lineCol1 = iotColor.rgb;
+      vec3 lineCol2 = iotBgColor.rgb;
 
       // Grid
-      vec2 expPosition = size * vec2(pow(uv.x, uExponent), uv.y);
-      vec2 gridPosition = translate(expPosition, gridOffset, size.y / 2.);
-      float gridShape = grid2d(gridPosition - size.y / 1.9, vec2(gridSize, size.y + gridThickness * 2.0), gridThickness);
-
-      if (gridSize > gridThickness * 2.0) {
-        finalCol = compose(finalCol, vec4(gridCol.rgb, gridShape));
-      }
+      float gridSize = size.x / abs((uMax - uMin) / uStep);
+      float gridOffset = mod(uStep - uMin, uStep) / (uMax - uMin) * size.x;
+      float gridShape = paintDerivativeGrid2D(translate(expPosition, gridOffset, 0.0), vec2(gridSize, 0.0), iotBorderWidth);
+      finalCol = compose(finalCol, vec4(gridCol, gridShape * 0.5));
 
       // Slider
-      finalCol = paintSliderRange(finalCol, position, size, iotBackgroundColorGreen.rgb, iotBackgroundColorGreen.rgb);
+      float sliderShape = rectangle(translate(expPosition, size.x * valueInRangeCenter, 0.0), vec2(size.x * abs(valueInRangeWidth) * 0.5, size.y));
+      finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
+      finalCol = compose(finalCol, vec4(iotBgColorField.rgb, gridShape * sliderShape * 0.125));
+
+      // Lines
+      float maxPos = expValueInRange[0];
+      float minPos = expValueInRange[1];
+
+      float lineMinShape1 = lineVertical(translate(position, maxPos * size.x, 0.0), iotBorderWidth);
+      finalCol = compose(finalCol, vec4(lineCol1, lineMinShape1));
+      float lineMinShape2 = lineVertical(translate(position, maxPos * size.x + iotBorderWidth * signRange, 0.0), iotBorderWidth);
+      finalCol = compose(finalCol, vec4(lineCol2, lineMinShape2));
+      
+      float lineMaxShape1 = lineVertical(translate(position, minPos * size.x, 0.0), iotBorderWidth);
+      finalCol = compose(finalCol, vec4(lineCol1, lineMaxShape1));
+      float lineMaxShape2 = lineVertical(translate(position, minPos * size.x - iotBorderWidth * signRange, 0.0), iotBorderWidth);
+      finalCol = compose(finalCol, vec4(lineCol2, lineMaxShape2));
 
       gl_FragColor = vec4(finalCol, 1.0);
     }

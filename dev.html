@@ -26,11 +26,13 @@
   </head>
   <body>
     <script type="module">
-      import { IoInspector } from "io-gui";
+      import { IoInspector, IoSlider } from "io-gui";
 
       const inspector = new IoInspector({value: window.location});
+      const slider = new IoSlider({value: 0.5, step: 0.4, exponent: 2});
 
-      document.body.appendChild(inspector);
+      // document.body.appendChild(inspector);
+      document.body.appendChild(slider);
       </script>
   </body>
 </html>

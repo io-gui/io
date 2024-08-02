@@ -39,7 +39,7 @@ export class IoGl extends IoElement {
     return /* css */`
       :host {
         position: relative;
-        /* overflow: hidden !important; */
+        overflow: hidden !important;
         /* -webkit-tap-highlight-color: transparent; */
         user-select: none;
       }
@@ -110,14 +110,31 @@ export class IoGl extends IoElement {
       float rectangle(vec2 samplePosition, vec2 halfSize){
         vec2 edgeDistance = abs(samplePosition) - halfSize;
         float outside = length(max(edgeDistance, 0.));
-        float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-        return saturate((outside + inside) * uPxRatio); // TODO: check
+        float inside = min(
+          max(edgeDistance.x, edgeDistance.y)
+        , 0.);
+        return 1.0 - saturate((outside + inside) * 1000000.);
       }
-      float grid2d(vec2 samplePosition, vec2 gridSize, float lineWidth) {
-        vec2 sp = samplePosition / vec2(gridSize.x, gridSize.y);
-        float linex = (abs(fract(sp.x - 0.5) - 0.5) * 2.0 / abs(max(dFdx(sp.x), dFdy(sp.x))) - lineWidth);
-        float liney = (abs(fract(sp.y - 0.5) - 0.5) * 2.0 / abs(max(dFdy(sp.y), dFdx(sp.y))) - lineWidth);
-        return 1.0 - saturate(min(linex, liney));
+      float paintDerivativeGrid2D(vec2 samplePosition, vec2 gridWidth, float lineWidth) {
+        vec2 sp = samplePosition / gridWidth;
+        float fractx = abs(fract(sp.x - 0.5) - 0.5) * 2.0;
+        float fracty = abs(fract(sp.y - 0.5) - 0.5) * 2.0;
+
+        float sx = ((sp.x - 0.5) - 0.5) * 2.0;
+        float sy = ((sp.y - 0.5) - 0.5) * 2.0;
+        
+        float absx = abs(max(dFdx(sx), dFdy(sx)));
+        float absy = abs(max(dFdy(sy), dFdx(sy)));
+
+        float fadeX = 1.0 - dFdx(sx);
+        float fadeY = 1.0 - dFdy(sx);
+
+        if (fadeX <= 0.0 || fadeY <= 0.0) return .5;
+
+        float linex = fractx / absx - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0);
+        float liney = fracty / absy - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0);
+
+        return (1.0 - saturate(min(linex, liney)));
       }
       float lineVertical(vec2 samplePosition, float lineWidth) {
         return (abs(samplePosition.x) * 2.0 > lineWidth) ? 0.0 : 1.0;
@@ -171,7 +188,7 @@ export class IoGl extends IoElement {
       }
       // Painter Functions
       vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
-        float lineShape = lineHorizontal(p, iotStrokeWidth);
+        float lineShape = lineHorizontal(p, iotBorderWidth);
         return compose(dstCol, vec4(color, lineShape));
       }
     `;
@@ -183,7 +200,7 @@ export class IoGl extends IoElement {
         vec2 position = uSize * vUv;
         float gridWidth = 8. * uPxRatio;
         float lineWidth = 1. * uPxRatio;
-        float gridShape = grid2d(position, vec2(gridWidth), lineWidth);
+        float gridShape = paintDerivativeGrid2D(position, vec2(gridWidth), lineWidth);
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
