@@ -740,22 +740,19 @@ export type Theme = {
 	iotFieldHeight10: number;
 	iotFieldHeight11: number;
 	iotFieldHeight12: number;
-	iotStrokeWidth: number;
-	iotStrokeColor: Color;
-	iotFillColor: Color;
 	iotBorderRadius: number;
 	iotBorderRadius2: number;
 	iotBorderWidth: number;
 	iotBorderColor: Color;
-	iotBorderColorStrong: Color;
-	iotBorderColorDimmed: Color;
-	iotBackgroundColor: Color;
-	iotBackgroundColorStrong: Color;
-	iotBackgroundColorDimmed: Color;
-	iotBackgroundColorRed: Color;
-	iotBackgroundColorGreen: Color;
-	iotBackgroundColorBlue: Color;
-	iotBackgroundColorField: Color;
+	iotBorderColorLight: Color;
+	iotBorderColorDark: Color;
+	iotBgColor: Color;
+	iotBgColorStrong: Color;
+	iotBgColorDimmed: Color;
+	iotBgColorRed: Color;
+	iotBgColorGreen: Color;
+	iotBgColorBlue: Color;
+	iotBgColorField: Color;
 	iotColor: Color;
 	iotColorStrong: Color;
 	iotColorDimmed: Color;
@@ -1347,7 +1344,6 @@ export declare class IoSlider extends IoSliderBase {
 	step: number;
 	min: number;
 	max: number;
-	static get GlUtils(): string;
 	static get Frag(): string;
 }
 export declare class IoSlider2d extends IoSliderBase {
@@ -1391,6 +1387,7 @@ export declare class IoColorSlider extends IoColorBase {
 		number,
 		number
 	];
+	step: number;
 	channel: string;
 	vertical: boolean;
 	_onValueInput(event: CustomEvent): void;
@@ -2014,7 +2011,6 @@ export declare class IoSliderRange extends IoSliderBase {
 	]): number[];
 	_onPointerdown(event: PointerEvent): void;
 	_onPointermoveThrottled(event: PointerEvent): void;
-	static get GlUtils(): string;
 	static get Frag(): string;
 }
 /**
@@ -2059,7 +2055,7 @@ export declare class IoNumberSlider extends IoElement {
 	changed(): void;
 }
 /** @License
- * Copyright ©2022 Aleksandar (Aki) Rodic
+ * Copyright ©2024 Aleksandar (Aki) Rodic
  *
  * The MIT License
  *
