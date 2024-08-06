@@ -19,7 +19,7 @@ export class IoIcon extends IoElement {
         line-height: var(--iotLineHeight);
         font-size: var(--iotFontSize);
         text-align: center;
-        fill: var(--iotColorDimmed);
+        fill: var(--iotColor);
       }
       :host {
         @apply --ioIcon;

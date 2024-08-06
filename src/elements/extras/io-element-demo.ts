@@ -20,7 +20,7 @@ export class IoElementDemo extends IoElement {
       border: var(--iotBorder);
       border-color: var(--iotBorderColorOutset);
       color: var(--iotColorField);
-      background-color: var(--iotBackgroundColorDimmed);
+      background-color: var(--iotBgColorDimmed);
       padding: var(--iotSpacing);
       /*  */
       display: flex;
@@ -57,7 +57,7 @@ export class IoElementDemo extends IoElement {
       border-color: var(--iotBorderColorInset);
       padding: var(--iotSpacing);
       color: var(--iotColor);
-      background-color: var(--iotBackgroundColor);
+      background-color: var(--iotBgColor);
       background-image: none;
     }
     :host:not([expanded]) > .io-content {

@@ -34,8 +34,7 @@ export class IoMenuItem extends IoField {
         padding: 0 var(--iotSpacing2);
       }
       :host > .hasmore {
-        opacity: 0.25;
-        margin-right: calc(-0.5 * var(--iotLineHeight));
+        opacity: 0.5;
       }
     `;
   }
