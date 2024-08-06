@@ -6,6 +6,9 @@ element.color = [0, 0, 0, 0];
 element.pxRatio = 1;
 element.style.visibility = 'hidden';
 element.style.position = 'fixed';
+element.style.left = '0';
+element.style.bottom = '0';
+element.style.zIndex = '1000000';
 document.body.appendChild(element as unknown as HTMLElement);
 
 export default class {

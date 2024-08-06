@@ -110,10 +110,8 @@ export class IoGl extends IoElement {
       float rectangle(vec2 samplePosition, vec2 halfSize){
         vec2 edgeDistance = abs(samplePosition) - halfSize;
         float outside = length(max(edgeDistance, 0.));
-        float inside = min(
-          max(edgeDistance.x, edgeDistance.y)
-        , 0.);
-        return 1.0 - saturate((outside + inside) * 1000000.);
+        float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
+        return 1.0 - saturate((outside + inside) * 1000000.0);
       }
       float paintDerivativeGrid2D(vec2 samplePosition, vec2 gridWidth, float lineWidth) {
         vec2 sp = samplePosition / gridWidth;
@@ -128,11 +126,10 @@ export class IoGl extends IoElement {
 
         float fadeX = 1.0 - dFdx(sx);
         float fadeY = 1.0 - dFdy(sx);
+        if (fadeX <= 0.0 || fadeY <= 0.0) return 1.0;
 
-        if (fadeX <= 0.0 || fadeY <= 0.0) return .5;
-
-        float linex = fractx / absx - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0);
-        float liney = fracty / absy - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0);
+        float linex = fractx / absx - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0) - 0.5;
+        float liney = fracty / absy - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0) - 0.5;
 
         return (1.0 - saturate(min(linex, liney)));
       }
@@ -199,7 +196,7 @@ export class IoGl extends IoElement {
       void main(void) {
         vec2 position = uSize * vUv;
         float gridWidth = 8. * uPxRatio;
-        float lineWidth = 1. * uPxRatio;
+        float lineWidth = 1.;
         float gridShape = paintDerivativeGrid2D(position, vec2(gridWidth), lineWidth);
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
