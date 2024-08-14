@@ -1,5 +1,6 @@
 import { IoStorageNode, IoStorage, Binding } from '../iogui.js';
 import { afterHashChange } from '../iogui.test.js';
+import * as chai from 'chai';
 
 localStorage.removeItem('IoStorage:test2');
 localStorage.removeItem('IoStorage:test3');

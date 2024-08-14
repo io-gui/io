@@ -1,5 +1,6 @@
 import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
 import { MenuOptions } from './menu-options.js';
+import * as chai from 'chai';
 
 const testOptions = [
   {value: 1, options: [

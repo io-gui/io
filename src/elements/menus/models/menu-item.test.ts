@@ -1,4 +1,5 @@
 import { MenuItem } from './menu-item.js';
+import * as chai from 'chai';
 
 export default class {
   run() {

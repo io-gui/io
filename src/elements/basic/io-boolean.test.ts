@@ -1,4 +1,5 @@
 import { IoBoolean, IoIconsetSingleton } from '../../iogui.js';
+import * as chai from 'chai';
 
 const element = new IoBoolean();
 element.style.display = 'none';

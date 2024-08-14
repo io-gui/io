@@ -1,4 +1,5 @@
 import {Binding, IoNode, Register, PropertyDeclarations} from '../../iogui.js';
+import * as chai from 'chai';
 
 @Register
 class TestIoNode extends IoNode {

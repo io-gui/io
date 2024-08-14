@@ -3,24 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <link rel="shortcut icon" href="./images/favicon.ico" />
+
     <title>Io-GUI Test</title>
 
     <script type="importmap">
       {
         "imports": {
           "io-gui": "./build/iogui.js",
-          "marked": "./lib/marked.esm.js",
+          "marked": "./node_modules/marked/lib/marked.esm.js",
           "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
-          "chai": "./lib/chai.js",
-          "mocha": "./lib/mocha.js"
+          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
+          "chai": "./node_modules/chai/chai.js"
         }
       }
-    </script>
-
-    <script type="module">
-      import 'mocha';
-      import * as chai from 'chai';
-      window.chai = chai;
     </script>
     <script type="module" src="./build/iogui.test.js"></script>
   </head>
