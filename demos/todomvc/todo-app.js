@@ -1,4 +1,4 @@
-import { IoElement, Register, IoStorage as $ } from '../../build/iogui.js';
+import { IoElement, Register, IoStorage as $ } from 'io-gui';
 
 import { TodoModel } from './todo-model.js';
 import './todo-new-item.js';
@@ -7,13 +7,6 @@ import './todo-footer.js';
 import './todo-info.js';
 
 export class TodoApp extends IoElement {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: block;
-      }
-    `;
-  }
   static get Properties() {
     return {
       model: {

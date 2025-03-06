@@ -1,14 +1,7 @@
-import { IoElement, Register } from '../../build/iogui.js';
+import { IoElement, Register } from 'io-gui';
 import {TodoModel} from './todo-model.js';
 
 export class TodoFooter extends IoElement {
-  static get Style() {
-    return /* css */`
-    :host {
-      display: block;
-    }
-    `;
-  }
   static get Properties() {
     return {
       model: {
