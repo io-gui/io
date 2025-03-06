@@ -640,7 +640,8 @@ declare const IoElement_base: {
 		dispatchQueueSync: () => void;
 		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onObjectMutated: (event: CustomEvent) => void;
-		objectMutated: (prop: string) => void;
+		objectMutated: (// TODO: improve mixing regex and string handling.
+		prop: string) => void;
 		bind(prop: string): Binding;
 		unbind(prop: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -1598,6 +1599,7 @@ export declare class IoSelector extends IoElement {
 	elements: VDOMArray[];
 	cache: boolean;
 	precache: boolean;
+	precacheDelay: number;
 	loading: boolean;
 	private _caches;
 	private _selected?;
@@ -1910,7 +1912,7 @@ export declare class IoInspector extends IoElement {
 	changed(): void;
 	_onChangedThrottled(): void;
 	_onChange(): void;
-	static get Config(): (ObjectConstructor | (((string | {
+	static get Config(): (ObjectConstructor | ((string[] | BooleanConstructor)[] | ((string | {
 		appearance: string;
 		class: string;
 	})[] | null)[] | ((string | {
@@ -1920,7 +1922,7 @@ export declare class IoInspector extends IoElement {
 	})[])[] | (NumberConstructor | (string | {
 		appearance: string;
 		step: number;
-	})[])[] | (string[] | BooleanConstructor)[] | (ObjectConstructor | (string | {
+	})[])[] | (ObjectConstructor | (string | {
 		appearance: string;
 		class: string;
 	})[])[])[])[][];

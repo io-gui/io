@@ -1,5 +1,5 @@
 import {IoInspector} from '../../iogui.js';
-
+import * as chai from 'chai';
 export default class {
   element = new IoInspector();
   constructor() {

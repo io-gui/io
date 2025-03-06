@@ -1,6 +1,5 @@
 import { IoNumber, IoNumberLadder, IoNumberLadderStep } from '../../iogui.js';
 import * as chai from 'chai';
-
 const element = new IoNumber();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);

@@ -1,4 +1,5 @@
 import { IoColorSwatch } from '../../iogui.js';
+// import * as chai from 'chai';
 
 const element = new IoColorSwatch();
 element.style.display = 'none';

@@ -62,6 +62,9 @@ export class IoSelector extends IoElement {
   @Property({value: false, reactive: false})
   declare precache: boolean;
 
+  @Property({value: 1000, reactive: false})
+  declare precacheDelay: number;
+
   @Property({value: false, reflect: true, reactive: false})
   declare loading: boolean;
 
@@ -82,7 +85,7 @@ export class IoSelector extends IoElement {
       this.renderSelected();
     }
 
-    this.throttle(this.onLoadPrecache, undefined, 1000);
+    this.throttle(this.onLoadPrecache, undefined, this.precacheDelay);
   }
 
   importModule(path: string) {
@@ -180,7 +183,7 @@ export class IoSelector extends IoElement {
           this.template([element], dummyElement, true);
           this._caches[args.id] = dummyElement.childNodes[0] as HTMLElement;
           dummyElement.removeChild(dummyElement.childNodes[0]);
-          this.throttle(this.onLoadPrecache, undefined, 1000);
+          this.throttle(this.onLoadPrecache, undefined, this.precacheDelay);
           return;
         }
       }

@@ -1,4 +1,5 @@
 import { IoColorPicker } from '../../iogui.js';
+// import * as chai from 'chai';
 
 const element = new IoColorPicker();
 element.style.display = 'none';

@@ -1,6 +1,5 @@
 import {IoIconsetSingleton} from '../../iogui.js';
 import * as chai from 'chai';
-
 export default class {
   run() {
     describe('IoIconsetSingleton', () => {

@@ -1,4 +1,5 @@
 import { IoColorRgba } from '../../iogui.js';
+// import * as chai from 'chai';
 
 const element = new IoColorRgba();
 element.style.display = 'none';

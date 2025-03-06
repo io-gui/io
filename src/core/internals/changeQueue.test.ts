@@ -1,6 +1,5 @@
 import {ChangeQueue, Change} from '../../iogui.js';
 import * as chai from 'chai';
-
 class FakeIoNode {
   prop1ChangeCounter = 0;
   prop1Change?: Change;

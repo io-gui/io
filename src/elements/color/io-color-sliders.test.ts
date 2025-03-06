@@ -1,4 +1,5 @@
 import { IoColorSlider } from '../../iogui.js';
+// import * as chai from 'chai';
 
 const element = new IoColorSlider();
 element.style.display = 'none';

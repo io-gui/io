@@ -1,6 +1,5 @@
 import {IoSlider2d} from '../../iogui.js';
 import * as chai from 'chai';
-
 const element = new IoSlider2d();
 
 export default class {

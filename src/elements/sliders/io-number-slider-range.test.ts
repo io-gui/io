@@ -1,6 +1,5 @@
 import {IoNumberSliderRange} from '../../iogui.js';
 import * as chai from 'chai';
-
 export default class {
   element = new IoNumberSliderRange();
   constructor() {

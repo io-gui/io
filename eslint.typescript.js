@@ -12,7 +12,6 @@ export default tseslint.config(
         ...globals.browser,
         'it': true,
         'describe': true,
-        'chai': true,
         'mocha': true,
         'hljs': true
       },
@@ -29,7 +28,6 @@ export default tseslint.config(
     plugins: {},
     rules: {
       'no-debugger': 'error',
-      // 'no-console': ['error', { allow: ['warn', 'error', 'info'] }],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion' : 'off',
       '@typescript-eslint/consistent-type-assertions': 'error',
@@ -45,22 +43,6 @@ export default tseslint.config(
       'semi': 'error',
       'strict': 'error',
       'quotes': ['error', 'single'],
-      // 'valid-jsdoc': ['error', {
-      //   'requireReturn': false,
-      //   'requireReturnType': false,
-      //   'requireParamType': false,
-      //   'prefer': {
-      //     'arg': 'param',
-      //     'argument': 'param',
-      //     'returns': 'return'
-      //   },
-      //   'preferType': {
-      //     'Boolean': 'boolean',
-      //     'Number': 'number',
-      //     'String': 'string',
-      //     'object': 'Object'
-      //   }
-      // }]
     }
   },
   {

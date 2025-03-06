@@ -63,6 +63,8 @@
         "imports": {
           "io-gui": "./build/iogui.js",
           "marked": "./node_modules/marked/lib/marked.esm.js",
+          "mocha": "./node_modules/mocha/mocha.js",
+          "chai": "./node_modules/chai/chai.js",
           "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
           "marked-highlight": "./node_modules/marked-highlight/src/index.js"
         }
@@ -71,8 +73,6 @@
 
     <script type="module">
       import 'mocha';
-      import * as chai from 'chai';
-      window.chai = chai;
     </script>
 
     <style>
