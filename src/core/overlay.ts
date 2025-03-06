@@ -31,7 +31,6 @@ export class IoOverlay extends IoElement {
     return /* css */`
       :host {
         display: block;
-        visibility: hidden;
         position: fixed;
         top: 0;
         left: 0;
@@ -42,15 +41,10 @@ export class IoOverlay extends IoElement {
         overflow: hidden;
         pointer-events: none;
         touch-action: none;
-        opacity: 0;
-        transition: opacity 0.5s;
         background: transparent;
       }
       :host[expanded] {
         pointer-events: all;
-        visibility: visible;
-        opacity: 1;
-        background: rgba(0,0,0,0.1);
       }
       :host > * {
         position: absolute !important;
@@ -64,21 +58,21 @@ export class IoOverlay extends IoElement {
 
   static get Listeners() {
     return {
-      'pointerdown': 'stopPropagation',
-      'pointermove': 'stopPropagation',
+      'pointerdown': ['stopPropagation', {passive: false}],
+      'pointermove': ['stopPropagation', {passive: false}],
       'pointerup': '_onPointerup',
       'contextmenu': '_onContextmenu',
       'focusin': '_onFocusIn',
       'scroll': '_onScroll',
       'wheel': ['_onScroll', {passive: false}],
-      'mousedown': 'stopPropagation',
-      'mousemove': 'stopPropagation',
-      'mouseup': 'stopPropagation',
+      'mousedown': ['stopPropagation', {passive: false}],
+      'mousemove': ['stopPropagation', {passive: false}],
+      'mouseup': ['stopPropagation', {passive: false}],
       'touchstart': ['stopPropagation', {passive: false}],
       'touchmove': ['stopPropagation', {passive: false}],
-      'touchend': 'stopPropagation',
-      'keydown': 'stopPropagation',
-      'keyup': 'stopPropagation',
+      'touchend': ['stopPropagation', {passive: false}],
+      'keydown': ['stopPropagation', {passive: false}],
+      'keyup': ['stopPropagation', {passive: false}],
     };
   }
   constructor(properties: Record<string, any> = {}) {

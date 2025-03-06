@@ -1,5 +1,6 @@
-import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDeclarations, ListenersDeclaration, IoElement, Register} from '../../iogui.js';
+import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register} from '../../iogui.js';
 import * as chai from 'chai';
+
 class Array1 extends Array {}
 class Array2 extends Array1 {}
 class Array3 extends Array2 {}
@@ -14,7 +15,7 @@ class HTMLElement3 extends HTMLElement2 {}
 
 @Register
 class IoNode1 extends IoNode {
-  static get Properties(): PropertyDeclarations {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         reactive: false
@@ -31,7 +32,7 @@ class IoNode1 extends IoNode {
 
 @Register
 class IoNode3 extends IoNode1 {
-  static get Properties(): PropertyDeclarations {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         reactive: true,
@@ -62,14 +63,14 @@ class IoElement1 extends IoElement {}
 class IoNode2 extends IoNodeMixin(Object3) {}
 
 class FakeIoNode1 {
-  static get Properties(): PropertyDeclarations {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         reactive: false
       }
     };
   }
-  static get Listeners(): ListenersDeclaration {
+  static get Listeners(): ListenerDefinitions {
     return {
       listener1: 'function1',
       listener2: '',
@@ -89,7 +90,7 @@ class FakeIoNode2 extends FakeIoNode1 {
   function2() {}
   onFunction2() {}
   _onFunction2() {}
-  static get Properties(): PropertyDeclarations {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: {
         observe: true
@@ -97,7 +98,7 @@ class FakeIoNode2 extends FakeIoNode1 {
       prop2: {}
     };
   }
-  static get Listeners(): ListenersDeclaration {
+  static get Listeners(): ListenerDefinitions {
     return {
       listener1: '_onFunction2',
       listener2: ['function2', {capture: true, passive: true}],
@@ -202,11 +203,11 @@ export default class {
       });
       it('Should include all style strings declared in `static get Style()` return string', () => {
         let protoChain = new ProtoChain(FakeIoNode1);
-        chai.expect(protoChain.style).to.be.equal('a\n');
+        chai.expect(protoChain.styles).to.be.equal('a\n');
         protoChain = new ProtoChain(FakeIoNode2);
-        chai.expect(protoChain.style).to.be.equal('a\nb\n');
+        chai.expect(protoChain.styles).to.be.equal('a\nb\n');
         protoChain = new ProtoChain(FakeIoNode3);
-        chai.expect(protoChain.style).to.be.equal('a\nb\n');
+        chai.expect(protoChain.styles).to.be.equal('a\nb\n');
       });
       it('Should include all property names of observed object properties', () => {
         let protoChain = new ProtoChain(FakeIoNode1);

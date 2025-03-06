@@ -1,31 +1,20 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
-import {PropertyInstance, PropertyDeclarations} from './internals/property.js';
-import {EventDispatcher, ListenersDeclaration} from './internals/eventDispatcher.js';
+import {PropertyInstance, PropertyDefinitions} from './internals/property.js';
+import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher.js';
 
 export type Constructor = new (...args: any[]) => unknown;
+export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 
 export interface IoNodeConstructor<T> {
   new (...args: any[]): T;
-  Properties?: PropertyDeclarations;
-  Listeners?: ListenersDeclaration;
+  Properties?: PropertyDefinitions;
+  Listeners?: ListenerDefinitions;
   Style?: string;
 }
 
 export type CallbackFunction = (arg?: any) => void;
-
-export type KeyboardEventListener = (event: KeyboardEvent) => void;
-export type PointerEventListener = (event: PointerEvent) => void;
-export type CustomEventListener = (event: CustomEvent) => void | EventListener;
-export type FocusEventListener = (event: FocusEvent) => void;
-export type TouchEventListener = (event: TouchEvent) => void;
-export type AnyEventListener = EventListener |
-                        KeyboardEventListener |
-                        PointerEventListener |
-                        CustomEventListener |
-                        FocusEventListener |
-                        TouchEventListener;
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
@@ -41,7 +30,7 @@ export type IoNodeArgs = {
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const IoNodeMixinConstructor = class extends (superclass as any) {
-    static get Properties(): PropertyDeclarations {
+    static get Properties(): PropertyDefinitions {
       return {
         lazy: {
           value: false,

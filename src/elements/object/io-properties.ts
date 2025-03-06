@@ -3,13 +3,13 @@ import { IoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { Binding } from '../../core/internals/binding.js';
 
-export interface IoPropertiesConstructor<T> extends IoNodeConstructor<T> {
-  Config?: ObjectConfig[];
-}
-
 type PropertyTypeKey = Constructor | string | null | undefined;
 type PropertyConfig = [PropertyTypeKey, VDOMArray];
-type ObjectConfig = [Constructor, PropertyConfig[]];
+type PropertyConfigCollection = [Constructor, PropertyConfig[]];
+
+export interface IoPropertiesConstructor<T> extends IoNodeConstructor<T> {
+  Config?: PropertyConfigCollection[];
+}
 
 // const configCache = new WeakMap<object, Record<string, VDOMArray>>();
 
@@ -20,7 +20,7 @@ export class ProtoObjectConfig extends Map<Constructor, Map<PropertyTypeKey, VDO
       const configs = constructors[i].Config;
       if (!configs) continue;
       for (let i = 0; i < configs.length; i++) {
-        const config = configs[i] as ObjectConfig;
+        const config = configs[i] as PropertyConfigCollection;
         const object = config[0];
         const properties = config[1];
 
@@ -144,7 +144,7 @@ export class IoProperties extends IoElement {
   @Property(true)
   declare labeled: boolean;
 
-  static get Config(): ObjectConfig[] {
+  static get Config(): PropertyConfigCollection[] {
     return [
       [Object, [
         [null, ['io-string', {appearance: 'neutral'}]],

@@ -74,7 +74,7 @@ export default class {
         });
         it('has <canvas> element', () => {
           chai.expect(element.children[0].localName).to.equal('canvas');
-          chai.expect((element as any)._canvas.localName).to.equal('canvas');
+          chai.expect((element as IoGl)._canvas.localName).to.equal('canvas');
         });
       });
       describe('Reactivity', () => {
@@ -88,11 +88,11 @@ export default class {
           chai.expect(element.pxRatio).to.equal(window.devicePixelRatio);
         });
         it('has correct color', () => {
-          let color = (element as any)._ctx.getImageData(0, 0, 1, 1).data;
+          let color = (element as IoGl)._ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
           element.color = [1, 0.5, 0.25, 1];
           element._onRender();
-          color = (element as any)._ctx.getImageData(0, 0, 1, 1).data;
+          color = (element as IoGl)._ctx.getImageData(0, 0, 1, 1).data;
           chai.expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
         });
       });

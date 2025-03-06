@@ -1,6 +1,13 @@
 import { IoStorageNode, IoStorage, Binding } from '../iogui.js';
-import { afterHashChange } from '../iogui.test.js';
 import * as chai from 'chai';
+
+async function afterHashChange(): Promise<void> {
+  return new Promise((resolve) => {
+    self.addEventListener('hashchange', () => {
+      resolve();
+    }, { once: true });
+  });
+}
 
 localStorage.removeItem('IoStorage:test2');
 localStorage.removeItem('IoStorage:test3');

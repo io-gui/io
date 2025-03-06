@@ -1,6 +1,8 @@
 import {ChangeEvent} from './changeQueue.js';
 import {IoNode} from '../node.js';
 
+type TargetProperties = string[];
+
 /**
  * Property binding class.
  * It facilitates data binding between source node/property and target nodes/properties
@@ -9,8 +11,8 @@ import {IoNode} from '../node.js';
 export class Binding {
   readonly node: IoNode;
   readonly property: string = '';
-  readonly targets: Array<EventTarget> = [];
-  readonly targetProperties: WeakMap<EventTarget, string[]> = new WeakMap();
+  readonly targets: Array<IoNode> = [];
+  readonly targetProperties: WeakMap<IoNode, string[]> = new WeakMap();
   /**
    * Creates a binding object for specified `node` and `property`.
    * @param {IoNode} node - Property owner node
@@ -19,7 +21,7 @@ export class Binding {
   constructor(node: IoNode, property: string) {
     this.node = node;
     this.property = property;
-    this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged as EventListener);
+    this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged);
   }
   set value(value) {
     this.node[this.property] = value;
@@ -28,7 +30,6 @@ export class Binding {
     return this.node[this.property];
   }
   toJSON() {
-    // Custom serialization to avoid serializing nodes.
     return JSON.stringify({
       property: this.property,
       targetProperties: this.targetProperties,
@@ -48,12 +49,12 @@ export class Binding {
     }
     propertyInstance.binding = this;
     node.setProperty(property, this.node[this.property], true);
-    const target = node as unknown as EventTarget;
+    const target = node as unknown as IoNode;
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
     const targetProperties = this.getTargetProperties(target);
     if (targetProperties.indexOf(property) === -1) {
       targetProperties.push(property);
-      target.addEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
+      target.addEventListener(`${property}-changed`, this.onTargetChanged);
     } else debug: {
       console.warn('Binding target alredy added!');
     }
@@ -69,31 +70,28 @@ export class Binding {
     if (property) {
       const i = targetProperties.indexOf(property);
       if (i !== -1) targetProperties.splice(i, 1);
-      node.removeEventListener(`${property}-changed`, this.onTargetChanged as EventListener);
+      node.removeEventListener(`${property}-changed`, this.onTargetChanged);
       node._properties.get(property)!.binding = undefined;
     } else {
       for (let i = targetProperties.length; i--;) {
-        node.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged as EventListener);
+        node.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged);
         node._properties.get(targetProperties[i])!.binding = undefined;
       }
       targetProperties.length = 0;
     }
-    if (targetProperties.length === 0) this.targets.splice(this.targets.indexOf(node as unknown as EventTarget), 1);
+    if (targetProperties.length === 0) this.targets.splice(this.targets.indexOf(node as unknown as IoNode), 1);
   }
   /**
+   * Helper function to get target properties from WeakMap
    * Retrieves a list of target properties for specified target node.
-   * @param {IoNode} node - Target node.
-   * @return {Array.<string>} list of target property names.
+   * @param {IoNode} target - Target node.
+   * @return {TargetProperties} list of target property names.
    */
-   getTargetProperties(node: IoNode | EventTarget): string[] {
-    let targetProperties = this.targetProperties.get(node as unknown as EventTarget);
-    if (targetProperties) {
-      return targetProperties;
-    } else {
-      targetProperties = [];
-      this.targetProperties.set(node as unknown as EventTarget, targetProperties);
-      return targetProperties;
+  getTargetProperties(target: IoNode): TargetProperties {
+    if (!this.targetProperties.has(target)) {
+      this.targetProperties.set(target, []);
     }
+    return this.targetProperties.get(target)!;
   }
   /**
    * Event handler that updates source property when one of the targets emits `[property]-changed` event.
@@ -120,7 +118,7 @@ export class Binding {
    */
   onSourceChanged = (event: ChangeEvent) => {
     debug: {
-      if (event.target !== this.node as unknown as EventTarget) {
+      if (event.target !== this.node as unknown as IoNode) {
         console.error('onSourceChanged() should always originate form source node. Please file an issue at https://github.com/arodic/iogui/issues.'); return;
       }
     }
@@ -129,13 +127,13 @@ export class Binding {
       const target = this.targets[i];
       const targetProperties = this.getTargetProperties(target);
       for (let j = targetProperties.length; j--;) {
-        const propName = targetProperties[j] as keyof (typeof target);
+        const propName = targetProperties[j];
         const oldValue = target[propName];
         if (oldValue !== value) {
           // JavaScript is weird NaN != NaN
           if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) continue;
           // target[propName] = value;
-          (target as any).setProperty(propName, value);
+          (target as IoNode).setProperty(propName, value);
         }
       }
     }
@@ -145,9 +143,9 @@ export class Binding {
    * Use this when node is no longer needed.
    */
   dispose() {
-    this.node.removeEventListener(`${this.property}-changed`, this.onSourceChanged as EventListener);
+    this.node.removeEventListener(`${this.property}-changed`, this.onSourceChanged);
     for (let i = this.targets.length; i--;) {
-      this.removeTarget(this.targets[i] as unknown as IoNode);
+      this.removeTarget(this.targets[i]);
     }
     this.targets.length = 0;
     delete (this as any).node;

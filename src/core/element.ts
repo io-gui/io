@@ -139,14 +139,14 @@ export const applyNativeElementProps = function(element: HTMLElement, props: any
     const prop = props[p];
     if (p === 'style') for (const s in prop) element.style.setProperty(s, prop[s]);
     else if (p === 'class') element['className'] = prop;
-    else (element as any)[p] = prop;
+    else (element as unknown as IoElement)[p] = prop;
     if (p === 'name') element.setAttribute('name', prop);
     if (p === 'src') element.setAttribute('src', prop);
   }
-  if (!(element as any)._eventDispatcher) {
+  if (!(element as unknown as IoElement)._eventDispatcher) {
     Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoNode)});
   }
-  (element as any)._eventDispatcher.applyPropListeners(props, element);
+  (element as unknown as IoElement)._eventDispatcher.applyPropListeners(props);
 };
 
 /**
@@ -158,6 +158,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     return /* css */`
       :host {
         box-sizing: border-box;
+        display: block;
       }
       :host[hidden] {
         display: none;
@@ -293,7 +294,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);
-          (child as any)._textNode.nodeValue = String(vChildren[i].children);
+          (child as IoElement)._textNode.nodeValue = String(vChildren[i].children);
         } else if (typeof vChildren[i].children === 'object') {
           // Traverse deeper.
           this.traverse(vChildren[i].children, child as HTMLElement, cache);
@@ -315,7 +316,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     window.customElements.define(localName, ioNodeConstructor as unknown as CustomElementConstructor);
 
     let mixinsString = '';
-    const mixins = ioNodeConstructor.prototype._protochain.style.match(mixinRegex);
+    const mixins = ioNodeConstructor.prototype._protochain.styles.match(mixinRegex);
     if (mixins) {
       for (let i = 0; i < mixins.length; i++) {
         // TODO: improve mixing regex and string handling.
@@ -328,7 +329,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
 
     // Remove mixins
-    let styleString = ioNodeConstructor.prototype._protochain.style.replace(mixinRegex, '');
+    let styleString = ioNodeConstructor.prototype._protochain.styles.replace(mixinRegex, '');
     // Apply mixins
     const apply = styleString.match(applyRegex);
     if (apply) {
@@ -380,13 +381,13 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       element.innerHTML = '';
       element.appendChild(document.createTextNode(''));
     }
-    (element as any)._textNode = element.childNodes[0];
+    (element as IoElement)._textNode = element.childNodes[0];
     if (element.childNodes.length > 1) {
       const textContent = element.textContent;
       for (let i = element.childNodes.length; i--;) {
         if (i !== 0) element.removeChild(element.childNodes[i]);
       }
-      (element as any)._textNode.nodeValue = textContent;
+      (element as IoElement)._textNode.nodeValue = textContent;
     }
   }
   get textNode() {

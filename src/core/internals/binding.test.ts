@@ -1,8 +1,9 @@
-import {Binding, IoNode, Register, PropertyDeclarations} from '../../iogui.js';
+import {Binding, IoNode, Register, PropertyDefinitions} from '../../iogui.js';
 import * as chai from 'chai';
+
 @Register
 class TestIoNode extends IoNode {
-  static get Properties(): PropertyDeclarations {
+  static get Properties(): PropertyDefinitions {
     return {
       prop1: 0,
       prop2: 0,
@@ -15,7 +16,7 @@ export default class {
     describe('Binding', () => {
       it('Should initialize with correct default values', () => {
         const node = new TestIoNode();
-        const binding = new Binding(node, 'prop1') as any;
+        const binding = new Binding(node, 'prop1');
         chai.expect(binding.node).to.be.equal(node);
         chai.expect(binding.property).to.be.equal('prop1');
         chai.expect(binding.targets instanceof Array).to.be.equal(true);
@@ -24,7 +25,7 @@ export default class {
       });
       it('Should get and set property value on source node with `value` getter/setter', () => {
         const node = new TestIoNode();
-        const binding = new Binding(node, 'prop1') as any;
+        const binding = new Binding(node, 'prop1');
         node.prop1 = 1;
         chai.expect(binding.value).to.be.equal(1);
         node.prop1 = 2;
@@ -34,8 +35,8 @@ export default class {
       });
       it('Should add/remove target nodes and properties with `.addTarget()` and `removeTarget()`', () => {
         const srcIoNode = new TestIoNode();
-        const binding0 = new Binding(srcIoNode, 'prop1') as any;
-        const binding1 = new Binding(srcIoNode, 'prop2') as any;
+        const binding0 = new Binding(srcIoNode, 'prop1');
+        const binding1 = new Binding(srcIoNode, 'prop2');
 
         const dstIoNode0 = new TestIoNode();
         const dstIoNode1 = new TestIoNode();
@@ -107,7 +108,7 @@ export default class {
       it('Should dispose correctly', () => {
         const node = new TestIoNode();
         const dstIoNode = new TestIoNode();
-        const binding = new Binding(node, 'prop1') as any;
+        const binding = new Binding(node, 'prop1');
         binding.addTarget(dstIoNode, 'prop1');
 
         chai.expect(node._eventDispatcher.addedListeners).to.be.eql({

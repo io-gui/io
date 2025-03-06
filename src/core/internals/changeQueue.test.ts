@@ -1,5 +1,6 @@
-import {ChangeQueue, Change} from '../../iogui.js';
+import {ChangeQueue, Change, IoNode} from '../../iogui.js';
 import * as chai from 'chai';
+
 class FakeIoNode {
   prop1ChangeCounter = 0;
   prop1Change?: Change;
@@ -29,7 +30,7 @@ class FakeIoNode {
     this.eventChange = change;
   }
   dispatchMutationEvent() {
-    // this.dispatchEvent('object-mutated', {object: this} as any);
+    // this.dispatchEvent('object-mutated', {object: this});
   }
   changed() {
     this.changeCounter++;
@@ -41,7 +42,7 @@ export default class {
     describe('ChangeQueue', () => {
       it('Should initialize with correct default values', () => {
         const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any) as any;
+        const changeQueue = new ChangeQueue(node as unknown as IoNode);
         chai.expect(changeQueue.node).to.be.equal(node);
         chai.expect(JSON.stringify(changeQueue.changes)).to.be.equal('[]');
         chai.expect(changeQueue.changes.length).to.be.equal(0);
@@ -49,7 +50,7 @@ export default class {
       });
       it('Should dispatch change events with correct payloads', () => {
         const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any) as any;
+        const changeQueue = new ChangeQueue(node as unknown as IoNode);
         changeQueue.queue('test', 1, 0);
         changeQueue.queue('test', 2, 1);
         chai.expect(changeQueue.changes.length).to.be.equal(1);
@@ -76,7 +77,7 @@ export default class {
       });
       it('Should invoke handler functions with correct payloads', () => {
         const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any);
+        const changeQueue = new ChangeQueue(node as unknown as IoNode);
         changeQueue.queue('prop1', 1, 0);
         changeQueue.queue('prop1', 2, 1);
         changeQueue.dispatch();
@@ -88,7 +89,7 @@ export default class {
       });
       it('Should handle changes in first-in, first-out (FIFO) order', () => {
         const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any);
+        const changeQueue = new ChangeQueue(node as unknown as IoNode);
         changeQueue.queue('prop1', 1, 0);
         changeQueue.queue('prop1', 3, 0);
         changeQueue.queue('prop2', 2, 0);
@@ -98,14 +99,14 @@ export default class {
       });
       it('Should skip dispatch if value is same as oldValue', () => {
         const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any);
+        const changeQueue = new ChangeQueue(node as unknown as IoNode);
         changeQueue.queue('prop1', 0, 0);
         changeQueue.dispatch();
         chai.expect(node.prop1ChangeCounter).to.be.equal(0);
       });
       it('Should dispose correctly', () => {
         const node = new FakeIoNode();
-        const changeQueue = new ChangeQueue(node as any) as any;
+        const changeQueue = new ChangeQueue(node as unknown as IoNode);
         changeQueue.dispose();
         chai.expect(changeQueue.node).to.be.equal(undefined);
         chai.expect(changeQueue.changes).to.be.equal(undefined);

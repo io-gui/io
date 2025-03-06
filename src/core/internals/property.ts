@@ -4,7 +4,7 @@ import {Binding} from './binding.js';
 /**
  * Declares default value, type and reactive behavior of the property.
  */
-export type PropertyDeclaration = {
+export type PropertyDefinition = {
   value?: any;
   type?: Constructor;
   binding?: Binding;
@@ -15,13 +15,12 @@ export type PropertyDeclaration = {
 };
 
 /**
- * Allows loose declaration of properties by specifying only partial declarations such as default value or type.
+ * Allows loose definition of properties by specifying only partial definitions such as default value or type.
  */
-export type PropertyDeclarationLoose = string | number | boolean | Array<any> | null | undefined | Constructor | Binding |
-    PropertyDeclaration;
+export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
 
 /**
- * Finalized property definition created from property declaration.
+ * Finalized property definition created from property definition.
  */
 export class ProtoProperty {
   value?: any;
@@ -32,10 +31,10 @@ export class ProtoProperty {
   observe?: boolean;
   init?: any;
   /**
-   * Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
-   * @param {PropertyDeclarationLoose} def Loosely typed property definition
+   * Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
+   * @param {PropertyDefinitionLoose} def Loosely typed property definition
    */
-  constructor(def: PropertyDeclarationLoose) {
+  constructor(def: PropertyDefinitionLoose) {
     if (def === undefined || def === null) {
       this.value = def;
     } else if (typeof def === 'function') {
@@ -45,7 +44,7 @@ export class ProtoProperty {
       this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
       this.binding = def;
     } else if (def && def.constructor === Object) {
-      const d = def as PropertyDeclaration;
+      const d = def as PropertyDefinition;
       this.value = d.value !== undefined ? d.value : undefined;
       this.type = d.type !== undefined ? d.type : (d.value !== undefined && d.value !== null) ? d.value.constructor : undefined;
       if (d.binding instanceof Binding) {
@@ -186,16 +185,16 @@ export class PropertyInstance {
   }
 }
 
-export type PropertyDeclarations = Record<string, PropertyDeclarationLoose>;
+export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 
-export const PropertyDecorators: WeakMap<Constructor, PropertyDeclarations> = new WeakMap();
+export const PropertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
 
 /**
- * Allows property declarations using decorator pattern.
- * @param propertyDefinition Property declaration.
+ * Allows property definitions using decorator pattern.
+ * @param propertyDefinition Property definition.
  * @return Property decorator function.
  */
-export const Property = function(propertyDefinition: PropertyDeclarationLoose) {
+export const Property = function(propertyDefinition: PropertyDefinitionLoose) {
   return (target: IoNode, propertyName: string) => {
     const constructor = target.constructor as Constructor;
     const _Properties = PropertyDecorators.get(constructor) || {};

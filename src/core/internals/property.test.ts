@@ -1,5 +1,6 @@
-import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDeclarations, PropertyDecorators} from '../../iogui.js';
+import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, PropertyDecorators} from '../../iogui.js';
 import * as chai from 'chai';
+
 class Object1 {
   constructor(init?: any) {
     if (init !== undefined) {
@@ -11,7 +12,7 @@ class Object1 {
 
 @Register
 class TestIoNode extends IoNode {
-  static get Properties(): PropertyDeclarations {
+  static get Properties(): PropertyDefinitions {
     return {
       label: 'default'
     };
@@ -644,7 +645,7 @@ export default class {
           init: true,
         });
       });
-      it('Should register property declarations from decorators.', () => {
+      it('Should register property definitions from decorators.', () => {
         class TestClass extends IoNode {
           @Property('value1')
           declare prop1: string;

@@ -1,6 +1,6 @@
 import { Register } from './node.js';
 import { IoElement } from './element.js';
-import { PropertyInstance, PropertyDeclaration, Property } from './internals/property.js';
+import { PropertyInstance, PropertyDefinition, Property } from './internals/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
 
 const canvas = document.createElement('canvas');
@@ -74,9 +74,9 @@ export class IoGl extends IoElement {
   @Property({observe: true, type: IoElement, value: IoThemeSingleton})
   declare theme: typeof IoThemeSingleton;
 
-  private _needsResize = false;
-  private _canvas: HTMLCanvasElement;
-  private _ctx: CanvasRenderingContext2D;
+  _needsResize = false;
+  _canvas: HTMLCanvasElement;
+  _ctx: CanvasRenderingContext2D;
 
   static get Vert() {
     return /* glsl */`
@@ -201,8 +201,7 @@ export class IoGl extends IoElement {
         gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
       }\n\n`;
   }
-  //TODO: this is possible an error. property should be PropertyDeclaration
-  initPropertyUniform(name: string, property: PropertyDeclaration) {
+  initPropertyUniform(name: string, property: PropertyDefinition) {
     if (property.reactive) {
       switch (property.type) {
         case Boolean:
@@ -245,7 +244,7 @@ export class IoGl extends IoElement {
     }
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
-    gl.shaderSource(vertShader, (this.constructor as any).Vert);
+    gl.shaderSource(vertShader, (this.constructor as typeof IoGl).Vert);
     gl.compileShader(vertShader);
 
     if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
@@ -255,7 +254,7 @@ export class IoGl extends IoElement {
     }
 
     const fragShader = gl.createShader(gl.FRAGMENT_SHADER) as WebGLShader;
-    gl.shaderSource(fragShader, frag + (this.constructor as any).Frag);
+    gl.shaderSource(fragShader, frag + (this.constructor as typeof IoGl).Frag);
     gl.compileShader(fragShader);
 
     if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {

@@ -12,22 +12,6 @@ mochaDiv.style.display = 'none';
 
 let testCompleted = false;
 
-export async function nextTick(): Promise<void> {
-  return new Promise((resolve) => {
-    setTimeout(()=>{
-      resolve();
-    });
-  });
-}
-
-export async function afterHashChange(): Promise<void> {
-  return new Promise((resolve) => {
-    self.addEventListener('hashchange', () => {
-      resolve();
-    }, { once: true });
-  });
-}
-
 function runTests() {
   if (!testCompleted) {
     new CoreTests().run();

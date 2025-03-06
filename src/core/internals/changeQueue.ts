@@ -5,8 +5,8 @@ import {IoNode} from '../node.js';
  * Responsible for dispatching change events and invoking change handler functions with property change payloads.
  */
 export class ChangeQueue {
-  declare private readonly node: IoNode;
-  declare readonly changes: Array<Change>;
+  declare readonly node: IoNode;
+  declare readonly changes: Change[];
   hasChanged = false;
   dispatching = false;
   /**
@@ -80,8 +80,8 @@ export interface Change {
   oldValue: any;
 }
 
-export interface ChangeEvent extends CustomEvent {
-  readonly target: EventTarget,
+export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
+  readonly target: IoNode;
   readonly detail: Change;
-  readonly path: EventTarget[];
+  readonly path: IoNode[];
 }

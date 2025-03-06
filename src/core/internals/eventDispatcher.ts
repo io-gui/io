@@ -1,77 +1,102 @@
-import {IoNode, CustomEventListener} from '../node.js';
+import {IoNode} from '../node.js';
+import {ChangeEvent} from './changeQueue.js';
 
 /**
- * Declares default listeners.
+ * Event listener types.
  */
-export type ListenerDeclaration = [string | CustomEventListener, AddEventListenerOptions?];
+export interface KeyboardEventListener { (event: KeyboardEvent): void }
+export interface PointerEventListener { (event: PointerEvent): void }
+export interface CustomEventListener { (event: CustomEvent): void }
+export interface FocusEventListener { (event: FocusEvent): void }
+export interface TouchEventListener { (event: TouchEvent): void }
+export interface ChangeEventListener { (event: ChangeEvent): void }
+export interface IoEventListener { (event: {detail: any, target: IoNode, path: IoNode[]}): void }
+export type AnyEventListener = EventListener |
+                               KeyboardEventListener |
+                               PointerEventListener |
+                               CustomEventListener |
+                               FocusEventListener |
+                               TouchEventListener |
+                               ChangeEventListener |
+                               IoEventListener;
 
 /**
- * Allows loose declaration of listeners by specifying only partial declarations such as function or function name.
+ * Listener definition type.
+ * The first item is a string (function name) or an event listener function.
+ * The second item is an optional object of event listener options.
  */
-export type ListenerDeclarationLoose = string | CustomEventListener | ListenerDeclaration;
+export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOptions?];
 
 /**
- * Takes loosely typed listener declaration and returns stronly typed listener declaration.
- * @param {ListenerDeclarationLoose} def Loosely typed listener declaration
- * @return {ListenerDeclaration} Stronly typed listener declaration
+ * Loose listener definition type.
+ * It can be a string (function name), an event listener function or a ListenerDefinition array.
  */
-export const hardenListenerDeclaration = (def: ListenerDeclarationLoose): ListenerDeclaration => {
-  return def instanceof Array ? def : [def];
-};
+export type ListenerDefinitionLoose = string | AnyEventListener | ListenerDefinition;
 
 /**
- * Assigns source listener declaration to an existing array of listener declarations.
- * @param {ListenerDeclaration[]} defs Array of listener declarations
- * @param {ListenerDeclaration} srcDef Source listener declaration
+ * Converts a loose listener definition into a strongly typed ListenerDefinition array format.
+ * This ensures consistent handling of listeners regardless of how they were initially defined.
+ *
+ * @param {ListenerDefinitionLoose} listenerDefinition - Loosely typed listener definition
+ * @return {ListenerDefinition} Normalized listener definition in [string | listener, options?] format
  */
-export const assignListenerDeclaration = (defs: ListenerDeclaration[], srcDef: ListenerDeclaration) => {
-  const i = defs.findIndex(def => def[0] === srcDef[0]);
-  if (i !== -1) {
-    if (defs[i][1]) defs[i][1] = Object.assign(defs[i][1] as ListenerDeclaration, srcDef[1]);
-    else if (srcDef[1]) defs[i][1] = srcDef[1];
-  } else {
-    defs.push(srcDef);
-  }
+export const hardenListenerDefinition = (listenerDefinition: ListenerDefinitionLoose): ListenerDefinition => {
+  return Array.isArray(listenerDefinition) ? listenerDefinition : [listenerDefinition];
 };
 
 const LISTENER_OPTIONS = ['capture', 'passive'];
 
 /**
- * Takes a node and a listener declaration and returns a listener.
- * @param {IoNode} node `IoNode` instance
- * @param {ListenerDeclaration} def Listener declaration
- * @return {Listener} Listener
+ * Converts a listener definition into a normalized Listener tuple.
+ * If the first item is a string, it looks up the method on the node.
+ *
+ * @param {IoNode | EventTarget} node - The node instance containing potential method references
+ * @param {ListenerDefinition} def - The listener definition to normalize
+ * @return {Listener} Normalized [listener, options?] tuple
  */
-export const listenerFromDefinition = (node: IoNode | HTMLElement, def: ListenerDeclaration): Listener => {
+export const listenerFromDefinition = (node: IoNode | EventTarget, def: ListenerDefinition): Listener => {
+  const handlerDef = def[0];
+  const options = def[1];
+
   debug: {
-    if (typeof def[0] !== 'string' && typeof def[0] !== 'function') console.warn('listenerFromDefinition: Invalid listener type');
-    if (def[1]) {
-      if (typeof def[1] !== 'object') console.warn('listenerFromDefinition: Invalid listener options type');
-      else if (Object.keys(def[1]).some(k => !(LISTENER_OPTIONS.includes(k)))) {
-        console.warn('listenerFromDefinition: Invalid listener options type');
+    if (typeof handlerDef !== 'string' && typeof handlerDef !== 'function') {
+      console.warn('listenerFromDefinition: Listener must be a function or method name');
+    }
+
+    if (options !== undefined) {
+      if (typeof options !== 'object' || options === null) {
+        console.warn('listenerFromDefinition: Listener options must be an object');
+      }
+
+      const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
+      if (invalidOptions.length > 0) {
+        console.warn(`listenerFromDefinition: Invalid listener options: ${invalidOptions.join(', ')}`);
       }
     }
+
+    if (typeof handlerDef === 'string' && !(handlerDef in node)) {
+      console.warn(`listenerFromDefinition: Method "${handlerDef}" not found on node`);
+    }
   }
-  const listener: Listener = [typeof def[0] === 'string' ? (node as any)[def[0]] : def[0]];
-  if (def[1]) listener.push(def[1]);
-  return listener;
+
+  const handler = typeof handlerDef === 'string' ? (node as Record<string, AnyEventListener>)[handlerDef] : handlerDef;
+
+  return options ? [handler, options] : [handler];
 };
 
-export type Listener = [CustomEventListener, AddEventListenerOptions?];
+export type Listener = [AnyEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
-
-export type ListenersDeclaration = Record<string, ListenerDeclarationLoose>;
 
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `IoNode` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
- *  - `protoListeners` specified as `get Listeners()` class declarations.
- *  - `propListeners` specified as inline properties prefixed with "".
+ *  - `protoListeners` specified as `get Listeners()` return value of class.
+ *  - `propListeners` specified as inline properties prefixed with "@".
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export class EventDispatcher {
-  readonly node: IoNode | HTMLElement;
+  readonly node: IoNode | EventTarget;
   readonly isEventTarget: boolean;
   readonly protoListeners: Listeners = {};
   readonly propListeners: Listeners = {};
@@ -81,118 +106,156 @@ export class EventDispatcher {
    * It initializes `protoListeners` from `ProtoChain`.
    * @param {IoNode} node owner IoNode
    */
-  constructor(node: IoNode | HTMLElement) {
+  constructor(node: IoNode | EventTarget) {
     this.node = node;
     this.isEventTarget = node instanceof EventTarget;
     this.setProtoListeners(node as IoNode);
   }
+
   /**
-   * Sets `protoListeners` specified as `get Listeners()` class declarations.
+   * Sets `protoListeners` specified as `get Listeners()` class definitions.
+   * Definitions from subclass replace the ones from parent class.
    * @param {IoNode} node owner IoNode
    */
   setProtoListeners(node: IoNode) {
     for (const name in node._protochain?.listeners) {
-      this.protoListeners[name] = [];
       for (let i = 0; i < node._protochain.listeners[name].length; i++) {
         const listener = listenerFromDefinition(node, node._protochain.listeners[name][i]);
-        this.protoListeners[name]= [listener];
+        this.protoListeners[name] = [listener];
       }
-      if (this.isEventTarget && this.protoListeners[name].length) {
+      if (this.isEventTarget && this.protoListeners[name]) {
         const listener = this.protoListeners[name][0];
         EventTarget.prototype.addEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
       }
     }
   }
   /**
-   * Sets `propListeners` specified as inline properties prefixed with "".
+   * Sets `propListeners` specified as inline properties prefixed with "@".
    * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
-   * @param {Record<string, any>} properties Inline properties
+   * @param {Record<string, any>} properties - Inline properties
    */
   applyPropListeners(properties: Record<string, any>) {
+    // Create and object with new listeners
     const newPropListeners: Listeners = {};
     for (const prop in properties) {
-      if (prop.startsWith('@')) {
-        const name = prop.slice(1, prop.length);
-        const definition = hardenListenerDeclaration(properties[prop]);
-        const listener = listenerFromDefinition(this.node, definition);
-        newPropListeners[name] = [listener];
-      }
+      if (!prop.startsWith('@')) continue;
+
+      const name = prop.slice(1);
+      const definition = hardenListenerDefinition(properties[prop]);
+      const listener = listenerFromDefinition(this.node, definition);
+      newPropListeners[name] = [listener];
     }
+
+    // Remove listeners that are no longer specified
     const propListeners = this.propListeners;
     for (const name in propListeners) {
       if (!newPropListeners[name]) {
         if (this.isEventTarget) {
-          const definition = hardenListenerDeclaration(propListeners[name][0]);
-          const listener = listenerFromDefinition(this.node, definition);
+          const listener = propListeners[name][0];
           EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
         }
         delete propListeners[name];
       }
     }
+
+    // Add new listeners and remove old ones if they are different
     for (const name in newPropListeners) {
       if (this.isEventTarget) {
-        const newDefinition = hardenListenerDeclaration(newPropListeners[name][0]);
-        const newListener = listenerFromDefinition(this.node, newDefinition);
-        if (!propListeners[name]) {
-          EventTarget.prototype.addEventListener.call(this.node, name, newListener[0] as EventListener, newListener[1]);
-        } else {
-          const definition = hardenListenerDeclaration(propListeners[name][0]);
-          const listener = listenerFromDefinition(this.node, definition);
-          if ((listener !== newListener || newListener[1] && (JSON.stringify(listener[1]) !== JSON.stringify(newListener[1])))) {
-            EventTarget.prototype.removeEventListener.call(this.node, name, listener[0] as EventListener, listener[1]);
-            EventTarget.prototype.addEventListener.call(this.node, name, newListener[0] as EventListener, newListener[1]);
+        const newListener = newPropListeners[name][0];
+        if (propListeners[name]) {
+          const oldListener = propListeners[name][0];
+          if ((oldListener !== newListener || newListener[1] && (JSON.stringify(oldListener[1]) !== JSON.stringify(newListener[1])))) {
+            EventTarget.prototype.removeEventListener.call(this.node, name, oldListener[0] as EventListener, oldListener[1]);
           }
         }
+        EventTarget.prototype.addEventListener.call(this.node, name, newListener[0] as EventListener, newListener[1]);
       }
       propListeners[name] = newPropListeners[name];
     }
   }
   /**
    * Proxy for `addEventListener` method.
-   * Adds an event listener to `addedListeners`.
-   * @param {string} name Name of the event
-   * @param {CustomEventListener} listener Event listener handler
-   * @param {AddEventListenerOptions} [options] Event listener options
+   * Adds an event listener to the node's `addedListeners` collection.
+   * If the node is an EventTarget, also registers the listener with the DOM.
+   * @param {string} name - Name of the event
+   * @param {AnyEventListener} listener - Event listener handler
+   * @param {AddEventListenerOptions} [options] - Event listener options
    */
-  addEventListener(name: string, listener: CustomEventListener, options?: AddEventListenerOptions) {
-    this.addedListeners[name] = this.addedListeners[name] || [];
-    const l = this.addedListeners[name].findIndex(l => l[0] === listener);
+  addEventListener(name: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
+    // Validate listener
     debug: {
-      if (l !== -1) console.warn(`EventDispatcher.addEventListener: Listener ${name} already added!`);
-      if (typeof listener !== 'function') console.warn('EventDispatcher.addEventListener: Invalid listener type!');
-      if (options) {
-        if (typeof options !== 'object') console.warn('EventDispatcher.addEventListener: Invalid listener options type');
-        else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) console.warn('EventDispatcher.addEventListener: Invalid listener options type');
+      if (typeof listener !== 'function') {
+        console.warn('EventDispatcher.addEventListener: Invalid listener type - must be a function');
       }
-    }
+      if (options !== undefined) {
+        if (typeof options !== 'object' || options === null) {
+          console.warn('EventDispatcher.addEventListener: Invalid listener options type - must be an object');
+        }
 
-    if (l === -1)  {
-      this.addedListeners[name].push(options ? [listener, options] : [listener]);
-      if (this.isEventTarget) {
-        EventTarget.prototype.addEventListener.call(this.node, name, listener as EventListener, options);
-      }
-    }
-  }
-  /**
-   * Proxy for `removeEventListener` method.
-   * Removes an event listener from `addedListeners`.
-   * If `listener` is not specified it removes all listeners for specified `type`.
-   * @param {string} name Name of the event
-   * @param {CustomEventListener} listener Event listener handler
-   * @param {AddEventListenerOptions} [options] Event listener options
-  */
-  removeEventListener(name: string, listener?: CustomEventListener, options?: AddEventListenerOptions) {
-    debug: {
-      if (!this.addedListeners[name]) console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
-      if (listener && typeof listener !== 'function') console.warn('EventDispatcher.removeEventListener: Invalid listener type!');
-      if (options) {
-        if (typeof options !== 'object') console.warn('EventDispatcher.removeEventListener: Invalid listener options type');
-        else if (Object.keys(options).some(k => !(LISTENER_OPTIONS.includes(k)))) {
-          console.warn('EventDispatcher.removeEventListener: Invalid listener options type');
+        const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
+        if (invalidOptions.length > 0) {
+          console.warn(
+            `EventDispatcher.addEventListener: Invalid listener options: ${invalidOptions.join(', ')}`
+          );
         }
       }
     }
+
+    // Initialize listener array if needed
+    if (!this.addedListeners[name]) {
+      this.addedListeners[name] = [];
+    }
+
+    // Check for duplicate listener
+    const existingIndex = this.addedListeners[name].findIndex(l => l[0] === listener);
+    if (existingIndex !== -1) {
+      debug: {
+        console.warn(`EventDispatcher.addEventListener: Listener for '${name}' event already added`);
+      }
+      return;
+    }
+
+    // Create and store listener tuple
+    const listenerTuple: Listener = options ? [listener, options] : [listener];
+    this.addedListeners[name].push(listenerTuple);
+
+    if (this.isEventTarget) {
+      EventTarget.prototype.addEventListener.call(this.node, name, listener as EventListener, options);
+    }
+  }
+
+  /**
+   * Proxy for `removeEventListener` method.
+   * Removes an event listener from the node's `addedListeners` collection.
+   * If `listener` is not specified it removes all listeners for specified `type`.
+   * @param {string} name - Name of the event
+   * @param {AnyEventListener} listener - Event listener handler
+   * @param {AddEventListenerOptions} [options] - Event listener options
+  */
+  removeEventListener(name: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
+    debug: {
+      if (listener && typeof listener !== 'function') {
+        console.warn('EventDispatcher.removeEventListener: Invalid listener type!');
+      }
+      if (options !== undefined) {
+        if (typeof options !== 'object' || options === null) {
+          console.warn('EventDispatcher.removeEventListener: Invalid listener options type - must be an object');
+        }
+
+        const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
+        if (invalidOptions.length > 0) {
+          console.warn(
+            `EventDispatcher.removeEventListener: Invalid listener options: ${invalidOptions.join(', ')}`
+          );
+        }
+      }
+      if (!this.addedListeners[name]) {
+        console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
+      }
+    }
+
     if (!this.addedListeners[name]) return;
+
     if (!listener) {
       for (let i = 0; i < this.addedListeners[name].length; i ++) {
         if (this.isEventTarget) {
@@ -202,49 +265,53 @@ export class EventDispatcher {
       }
       this.addedListeners[name].length = 0;
     } else {
-      const l = this.addedListeners[name].findIndex(item => item[0] === listener);
+      const index = this.addedListeners[name].findIndex(item => item[0] === listener);
       debug: {
-        if (l === -1) {
+        if (index === -1) {
           console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
         }
       }
-      if (l !== -1) {
-        this.addedListeners[name].splice(l, 1);
+      if (index !== -1) {
+        this.addedListeners[name].splice(index, 1);
         if (this.isEventTarget) {
           EventTarget.prototype.removeEventListener.call(this.node, name, listener as EventListener, options);
         }
       }
     }
+
     if (this.addedListeners[name].length === 0) {
       delete this.addedListeners[name];
     }
   }
   /**
    * Shorthand for custom event dispatch.
-   * @param {string} name Name of the event
-   * @param {any} detail Event detail data
-   * @param {boolean} [bubbles] Makes event bubble
-   * @param {EventTarget} [node] Event target override to dispatch the event from
+   * @param {string} name - Name of the event
+   * @param {any} detail - Event detail data
+   * @param {boolean} [bubbles] - Makes event bubble
+   * @param {EventTarget} [node] - Event target override to dispatch the event from
    */
   dispatchEvent(name: string, detail?: any, bubbles = true, node: EventTarget | IoNode = this.node) {
-    const payload = {detail: detail, target: node, path: [node]} as any;
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
+      const payload = {detail: detail, target: node, path: [node]};
       if (this.protoListeners[name]) {
         for (let i = 0; i < this.protoListeners[name].length; i ++) {
-          this.protoListeners[name][i][0].call(node, payload);
+          const handler = this.protoListeners[name][i][0] as IoEventListener;
+          handler.call(node, payload);
         }
       }
       if (this.propListeners[name]) {
         debug: {
           if (this.propListeners[name].length > 1) console.warn(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
         }
-        this.propListeners[name][0][0].call(node, payload);
+        const handler = this.propListeners[name][0][0] as IoEventListener;
+        handler.call(node, payload);
       }
       if (this.addedListeners[name]) {
         for (let i = 0; i < this.addedListeners[name].length; i ++) {
-          this.addedListeners[name][i][0].call(node, payload);
+          const handler = this.addedListeners[name][i][0] as IoEventListener;
+          handler.call(node, payload);
         }
       }
     }

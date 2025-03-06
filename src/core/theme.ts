@@ -1,6 +1,6 @@
 import { Register } from './node.js';
 import { IoElement } from './element.js';
-import { Property, PropertyDeclarations } from './internals/property.js';
+import { Property, PropertyDefinitions } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
 
 const THEME_VERSION = 'v0.9';
@@ -212,8 +212,8 @@ const compositeVariables = /* css */`
  */
 @Register
 class IoTheme extends IoElement {
-  static get Properties(): PropertyDeclarations {
-    const props: PropertyDeclarations = {};
+  static get Properties(): PropertyDefinitions {
+    const props: PropertyDefinitions = {};
     for (const p in LIGHT_THEME) {
       const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME];
       if (prop instanceof Object) {

@@ -1,8 +1,15 @@
-import { Change, Binding, ProtoChain, IoNode, Register, PropertyDeclarations, IoElement } from '../iogui.js';
-import { nextTick } from '../iogui.test.js';
+import { Change, Binding, ProtoChain, IoNode, Register, PropertyDefinitions, IoElement } from '../iogui.js';
 import * as chai from 'chai';
 
 // TODO: test lazy reactivity!
+
+async function nextTick(): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(()=>{
+      resolve();
+    });
+  });
+}
 
 export default class {
   run() {
@@ -32,7 +39,7 @@ export default class {
         it('Should register property definitions correctly', () => {
           @Register
           class TestNode extends IoNode {
-            static get Properties(): any {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop0: { type: String },
                 prop1: { value: false },
@@ -58,7 +65,7 @@ export default class {
         it('Should aggregate property definitions from protochain', () => {
           @Register
           class Object1 extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: {
                   value: 0
@@ -70,7 +77,7 @@ export default class {
 
           @Register
           class Object2 extends Object1 {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: {
                   value: {},
@@ -128,7 +135,7 @@ export default class {
         });
         it('Should favor explicit property definitions over implicit', () => {
           class Object1 {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: {
                   value: {},
@@ -141,7 +148,7 @@ export default class {
           }
 
           class Object2 extends Object1 {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: [1, 2, 3],
               };
@@ -173,7 +180,7 @@ export default class {
 
           @Register
           class Object1 extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: binding1,
               };
@@ -182,7 +189,7 @@ export default class {
 
           @Register
           class Object2 extends Object1 {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: {
                   binding: binding2
@@ -200,9 +207,9 @@ export default class {
           chai.expect(node2._properties.get('prop1')!.binding).to.be.equal(binding2);
           chai.expect(node2._properties.get('prop3')!.binding).to.be.equal(binding3);
 
-          chai.expect((binding1 as any).targets[0]).to.be.equal(node1);
-          chai.expect((binding2 as any).targets[0]).to.be.equal(node2);
-          chai.expect((binding3 as any).targets[0]).to.be.equal(node2);
+          chai.expect((binding1).targets[0]).to.be.equal(node1);
+          chai.expect((binding2).targets[0]).to.be.equal(node2);
+          chai.expect((binding3).targets[0]).to.be.equal(node2);
 
           chai.expect(node1._properties.get('prop1')!.value).to.be.equal('binding1');
           chai.expect(node2._properties.get('prop1')!.value).to.be.equal('binding2');
@@ -216,7 +223,7 @@ export default class {
 
           @Register
           class TestNode extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: {
                   value: 1
@@ -237,7 +244,7 @@ export default class {
 
           @Register
           class TestNode extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 label: '',
               };
@@ -249,7 +256,7 @@ export default class {
 
           @Register
           class TestNode2 extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: binding1
               };
@@ -262,7 +269,7 @@ export default class {
           chai.expect(node.prop1).to.be.equal('binding1');
 
           chai.expect(node._properties.get('prop1')!.binding).to.be.equal(binding1);
-          chai.expect((binding1 as any).targets[0]).to.be.equal(node);
+          chai.expect((binding1).targets[0]).to.be.equal(node);
 
           binding1.removeTarget(node, 'prop1');
           const prop = node._properties.get('prop1');
@@ -272,13 +279,13 @@ export default class {
           chai.expect(node._properties.get('prop1')!.value).to.be.equal('binding2');
           chai.expect(node.prop1).to.be.equal('binding2');
 
-          chai.expect((binding1 as any).targets[0]).to.be.equal(undefined);
-          chai.expect((binding2 as any).targets[0]).to.be.equal(node);
+          chai.expect((binding1).targets[0]).to.be.equal(undefined);
+          chai.expect((binding2).targets[0]).to.be.equal(node);
         });
         it('Should execute attribute reflection on IoElement', () => {
           @Register
           class TestElementReflection extends IoElement {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 label: {
                   value: 'label1',
@@ -298,7 +305,7 @@ export default class {
         it('Should dipatch queue on object value initialization and value set', () => {
           @Register
           class TestNode extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop: Object,
               };
@@ -336,7 +343,7 @@ export default class {
         it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
           @Register
           class TestSubNode extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop: 0,
                 propChangeCounter: 0,
@@ -349,7 +356,7 @@ export default class {
 
           @Register
           class TestNode extends IoNode {
-            static get Properties(): PropertyDeclarations {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop: TestSubNode
               };
@@ -545,7 +552,7 @@ export default class {
         it('should correctly bind properties', () => {
           @Register
           class TestNode extends IoNode {
-            static get Properties(): any {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: String,
                 prop2: String,
@@ -555,7 +562,7 @@ export default class {
 
           const node = new TestNode();
 
-          const binding = node.bind('prop1') as any;
+          const binding = node.bind('prop1');
           chai.expect(binding).to.be.instanceof(Binding);
           chai.expect(binding.node).to.be.equal(node);
           chai.expect(binding.property).to.be.equal('prop1');
@@ -566,10 +573,10 @@ export default class {
 
           chai.expect(binding.targets[0]).to.be.equal(boundNode1);
           chai.expect(binding.targets[1]).to.be.equal(boundNode2);
-          chai.expect(binding.targetProperties.get(boundNode1)[0]).to.be.equal('prop1');
-          chai.expect(binding.targetProperties.get(boundNode1)[1]).to.be.equal(undefined);
-          chai.expect(binding.targetProperties.get(boundNode2)[0]).to.be.equal('prop1');
-          chai.expect(binding.targetProperties.get(boundNode2)[1]).to.be.equal('prop2');
+          chai.expect(binding.targetProperties.get(boundNode1)![0]).to.be.equal('prop1');
+          chai.expect(binding.targetProperties.get(boundNode1)![1]).to.be.equal(undefined);
+          chai.expect(binding.targetProperties.get(boundNode2)![0]).to.be.equal('prop1');
+          chai.expect(binding.targetProperties.get(boundNode2)![1]).to.be.equal('prop2');
 
           node.prop1 = 'one';
           chai.expect(boundNode1.prop1).to.be.equal('one');
@@ -594,7 +601,7 @@ export default class {
         it('Should add/remove targets and targetProperties when assigned to values', () => {
           @Register
           class TestNode extends IoNode {
-            static get Properties(): any {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: String,
                 prop2: String,
@@ -603,8 +610,8 @@ export default class {
           }
 
           const srcNode = new TestNode();
-          const binding0 = new Binding(srcNode, 'prop1') as any;
-          const binding1 = new Binding(srcNode, 'prop2') as any;
+          const binding0 = new Binding(srcNode, 'prop1');
+          const binding1 = new Binding(srcNode, 'prop2');
 
           const dstNode0 = new TestNode();
           dstNode0.prop1 = binding0;
@@ -640,7 +647,7 @@ export default class {
         it('Should return existing binding or create a new on "bind()"', () => {
           @Register
           class TestNode extends IoNode {
-            static get Properties(): any {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: String,
                 prop2: String,
@@ -655,7 +662,7 @@ export default class {
         it('Should dispose bindings correctly', () => {
           @Register
           class TestNode extends IoNode {
-            static get Properties(): any {
+            static get Properties(): PropertyDefinitions {
               return {
                 prop1: String,
                 prop2: String,
@@ -663,16 +670,19 @@ export default class {
             }
           }
           const node1 = new TestNode();
-          const binding0 = node1.bind('prop1') as any;
+          const binding0 = node1.bind('prop1');
           node1.unbind('prop1');
           chai.expect(node1._bindings.get('prop1')).to.be.equal(undefined);
-          chai.expect(binding0.prop1).to.be.equal(undefined);
+          chai.expect(binding0.node).to.be.equal(undefined);
 
           const node2 = new TestNode();
-          const binding1 = node2.bind('prop1') as any;
+          const binding1 = node2.bind('prop1');
           node2.dispose();
           chai.expect(node2._bindings).to.be.equal(undefined);
-          chai.expect(binding1.prop1).to.be.equal(undefined);
+          chai.expect(binding1.node).to.be.equal(undefined);
+          chai.expect(binding1.property).to.be.equal(undefined);
+          chai.expect(binding1.targets).to.be.equal(undefined);
+          chai.expect(binding1.targetProperties).to.be.equal(undefined);
         });
       });
     });

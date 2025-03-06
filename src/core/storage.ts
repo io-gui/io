@@ -233,7 +233,7 @@ export class IoStorageNode extends IoNode {
     const value = this.value;
     if (value !== undefined && value !== '' && value !== this.default) {
       if (typeof value === 'string') {
-        if (isNaN(value as any)) {
+        if (isNaN(value as unknown as number)) {
           hashValues[this.key] = value;
         } else {
           hashValues[this.key] = '"' + value + '"';

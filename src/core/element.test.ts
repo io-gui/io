@@ -383,7 +383,7 @@ export default class {
         it('Should bind and unbind correctly', () => {
           const element1 = new IoElement();
           const element2 = new IoElement();
-          element2.label = element1.bind('label') as any;
+          element2.label = element1.bind('label') as unknown as string;
           element1.label = 'one';
           chai.expect(element1.label).to.equal('one');
           chai.expect(element2.label).to.equal('one');
@@ -395,7 +395,7 @@ export default class {
           element1.label = 'three';
           chai.expect(element1.label).to.equal('three');
           chai.expect(element2.label).to.equal('two');
-          element2.label = element1.bind('label') as any;
+          element2.label = element1.bind('label') as unknown as string;
           chai.expect(element2.label).to.equal('three');
           element1.label = 'four';
           chai.expect(element1.label).to.equal('four');
