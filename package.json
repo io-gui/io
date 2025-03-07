@@ -18,6 +18,7 @@
     "clean": "rm -rf build && rm -rf bundle",
     "lint": "eslint -c ./eslint.typescript.js src --fix",
     "test": "web-test-runner \"test.html\" --node-resolve",
+    "test:watch": "web-test-runner \"test.html\" --node-resolve --watch",
     "docs": "typedoc --plugin typedoc-plugin-markdown",
     "build": "pnpm clean && pnpm lint && tsc && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/iogui.d.ts build/iogui.d.ts && rm -rf build && mv bundle build",
     "dev": "pnpm clean && tsc -w",

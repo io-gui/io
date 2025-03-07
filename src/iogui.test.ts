@@ -1,8 +1,12 @@
-import { IoElement, Register } from './iogui.js';
 import CoreTests from './core/index.test.js';
 import ElementsTests from './elements/index.test.js';
 
 import { mocha, sessionFinished, sessionFailed } from '@web/test-runner-mocha';
+
+const mochaDiv = document.createElement('div');
+mochaDiv.setAttribute('id', 'mocha');
+document.body.appendChild(mochaDiv);
+mochaDiv.style.display = 'none';
 
 try {
   mocha.setup({ ui: 'bdd' });
@@ -10,23 +14,13 @@ try {
   console.error(error);
 }
 
-let testCompleted = false;
-
-@Register
-export class IoGuiTestPage extends IoElement {
-  connectedCallback() {
-    super.connectedCallback();
-    if (testCompleted) return;
-    try {
-      new CoreTests().run();
-      new ElementsTests().run();
-      mocha.checkLeaks();
-      mocha.run(() => {
-        sessionFinished();
-        testCompleted = true;
-      });
-    } catch (error) {
-      sessionFailed(error as any);
-    }
-  }
+try {
+  new CoreTests().run();
+  new ElementsTests().run();
+  mocha.checkLeaks();
+  mocha.run(() => {
+    sessionFinished();
+  });
+} catch (error) {
+  sessionFailed(error as any);
 }

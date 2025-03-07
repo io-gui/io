@@ -1,45 +1,21 @@
 {
   "compilerOptions": {
-    /* Basic Options */
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": ["esnext.array", "esnext", "dom"],
+    "lib": ["esnext", "dom"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    // "inlineSources": true,
-    /* Strict Type-Checking Options */
     "strict": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    //
-    "forceConsistentCasingInFileNames": true,
-    //
     "rootDir": "./src",
     "outDir": "./build",
-    /* Module Options */
     "esModuleInterop": true,
-    "allowJs": true,
-    "checkJs": true,
-    // Only necessary because @types/uglify-js can't find types for source-map
-    // "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "useDefineForClassFields": true
+    "experimentalDecorators": true
   },
   "typedocOptions": {
-    // "hideBreadcrumbs": true,
-    // "hideInPageTOC": true,
+    "hideBreadcrumbs": true,
     "hideGenerator": true,
-    // "hideMembersSymbol": true,
     "excludePrivate": true,
     "excludeProtected": true,
     "excludeInternal": true,
