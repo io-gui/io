@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoVector
-
 # Class: IoVector
 
 Defined in: [src/elements/vectors/io-vector.ts:14](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-vector.ts#L14)

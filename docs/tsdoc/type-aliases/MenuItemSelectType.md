@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / MenuItemSelectType
-
 # Type Alias: MenuItemSelectType
 
 > **MenuItemSelectType**: `"select"` \| `"scroll"` \| `"toggle"` \| `"link"` \| `"none"`

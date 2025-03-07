@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / disposeElementDeep
-
 # Function: disposeElementDeep()
 
 > **disposeElementDeep**(`element`): `void`

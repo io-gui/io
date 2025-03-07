@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoMatrix
-
 # Class: IoMatrix
 
 Defined in: [src/elements/vectors/io-matrix.ts:14](https://github.com/io-gui/io/blob/main/src/elements/vectors/io-matrix.ts#L14)

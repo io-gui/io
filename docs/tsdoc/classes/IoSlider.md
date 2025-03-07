@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoSlider
-
 # Class: IoSlider
 
 Defined in: [src/elements/sliders/io-slider.ts:14](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider.ts#L14)

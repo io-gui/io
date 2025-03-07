@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoBoolean
-
 # Class: IoBoolean
 
 Defined in: [src/elements/basic/io-boolean.ts:12](https://github.com/io-gui/io/blob/main/src/elements/basic/io-boolean.ts#L12)

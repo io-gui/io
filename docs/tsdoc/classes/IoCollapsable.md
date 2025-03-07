@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoCollapsable
-
 # Class: IoCollapsable
 
 Defined in: [src/elements/content/io-collapsable.ts:11](https://github.com/io-gui/io/blob/main/src/elements/content/io-collapsable.ts#L11)

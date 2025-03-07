@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoElement
-
 # Class: IoElement
 
 Defined in: [src/core/element.ts:156](https://github.com/io-gui/io/blob/main/src/core/element.ts#L156)

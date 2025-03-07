@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoBoolicon
-
 # Class: IoBoolicon
 
 Defined in: [src/elements/basic/io-boolicon.ts:5](https://github.com/io-gui/io/blob/main/src/elements/basic/io-boolicon.ts#L5)

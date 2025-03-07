@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoMdView
-
 # Class: IoMdView
 
 Defined in: [src/elements/content/io-md-view.ts:25](https://github.com/io-gui/io/blob/main/src/elements/content/io-md-view.ts#L25)

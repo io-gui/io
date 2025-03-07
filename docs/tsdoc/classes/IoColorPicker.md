@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorPicker
-
 # Class: IoColorPicker
 
 Defined in: [src/elements/color/io-color-picker.ts:9](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-picker.ts#L9)

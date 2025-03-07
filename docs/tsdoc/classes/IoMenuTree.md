@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoMenuTree
-
 # Class: IoMenuTree
 
 Defined in: [src/elements/menus/io-menu-tree.ts:55](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-tree.ts#L55)

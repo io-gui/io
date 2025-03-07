@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoPropertiesConstructor
-
 # Interface: IoPropertiesConstructor\<T\>
 
 Defined in: [src/elements/object/io-properties.ts:10](https://github.com/io-gui/io/blob/main/src/elements/object/io-properties.ts#L10)

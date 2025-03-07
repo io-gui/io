@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ProtoChain
-
 # Class: ProtoChain
 
 Defined in: [src/core/internals/protoChain.ts:15](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L15)

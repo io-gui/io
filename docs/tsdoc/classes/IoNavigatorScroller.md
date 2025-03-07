@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNavigatorScroller
-
 # Class: IoNavigatorScroller
 
 Defined in: [src/elements/content/io-navigator-scroller.ts:7](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-scroller.ts#L7)

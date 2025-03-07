@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / getMenuAncestors
-
 # Function: getMenuAncestors()
 
 > **getMenuAncestors**(`element`): ([`IoMenuItem`](../classes/IoMenuItem.md) \| [`IoMenuOptions`](../classes/IoMenuOptions.md))[]

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNodeMixin
-
 # Function: IoNodeMixin()
 
 > **IoNodeMixin**\<`T`\>(`superclass`): *typeof* `__class`

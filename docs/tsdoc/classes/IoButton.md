@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoButton
-
 # Class: IoButton
 
 Defined in: [src/elements/basic/io-button.ts:12](https://github.com/io-gui/io/blob/main/src/elements/basic/io-button.ts#L12)

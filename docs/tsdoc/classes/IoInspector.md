@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoInspector
-
 # Class: IoInspector
 
 Defined in: [src/elements/object/io-inspector.ts:16](https://github.com/io-gui/io/blob/main/src/elements/object/io-inspector.ts#L16)

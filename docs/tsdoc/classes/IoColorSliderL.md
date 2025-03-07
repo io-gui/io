@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorSliderL
-
 # Class: IoColorSliderL
 
 Defined in: [src/elements/color/io-color-sliders.ts:427](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L427)

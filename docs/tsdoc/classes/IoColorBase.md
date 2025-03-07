@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorBase
-
 # Class: IoColorBase
 
 Defined in: [src/elements/color/io-color-base.ts:5](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L5)

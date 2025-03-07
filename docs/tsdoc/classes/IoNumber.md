@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNumber
-
 # Class: IoNumber
 
 Defined in: [src/elements/basic/io-number.ts:15](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L15)

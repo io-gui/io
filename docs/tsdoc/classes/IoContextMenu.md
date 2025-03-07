@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoContextMenu
-
 # Class: IoContextMenu
 
 Defined in: [src/elements/menus/io-context-menu.ts:13](https://github.com/io-gui/io/blob/main/src/elements/menus/io-context-menu.ts#L13)

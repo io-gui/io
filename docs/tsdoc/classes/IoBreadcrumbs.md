@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoBreadcrumbs
-
 # Class: IoBreadcrumbs
 
 Defined in: [src/elements/object/io-breadcrumbs.ts:10](https://github.com/io-gui/io/blob/main/src/elements/object/io-breadcrumbs.ts#L10)

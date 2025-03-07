@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Change
-
 # Interface: Change
 
 Defined in: [src/core/internals/changeQueue.ts:77](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L77)

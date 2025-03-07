@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoSliderBase
-
 # Class: IoSliderBase
 
 Defined in: [src/elements/sliders/io-slider-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L8)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Color
-
 # Class: Color
 
 Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoThemeSingleton
-
 # Variable: IoThemeSingleton
 
 > `const` **IoThemeSingleton**: `IoTheme`

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoField
-
 # Class: IoField
 
 Defined in: [src/elements/basic/io-field.ts:15](https://github.com/io-gui/io/blob/main/src/elements/basic/io-field.ts#L15)

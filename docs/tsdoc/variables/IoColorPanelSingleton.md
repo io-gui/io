@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorPanelSingleton
-
 # Variable: IoColorPanelSingleton
 
 > `const` **IoColorPanelSingleton**: [`IoColorPanel`](../classes/IoColorPanel.md)

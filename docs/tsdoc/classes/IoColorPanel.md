@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorPanel
-
 # Class: IoColorPanel
 
 Defined in: [src/elements/color/io-color-panel.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-panel.ts#L20)

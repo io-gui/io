@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoIcon
-
 # Class: IoIcon
 
 Defined in: [src/elements/basic/io-icon.ts:11](https://github.com/io-gui/io/blob/main/src/elements/basic/io-icon.ts#L11)

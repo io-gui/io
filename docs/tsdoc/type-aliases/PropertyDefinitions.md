@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / PropertyDefinitions
-
 # Type Alias: PropertyDefinitions
 
 > **PropertyDefinitions**: `Record`\<`string`, [`PropertyDefinitionLoose`](PropertyDefinitionLoose.md)\>

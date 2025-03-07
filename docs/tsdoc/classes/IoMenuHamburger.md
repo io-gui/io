@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoMenuHamburger
-
 # Class: IoMenuHamburger
 
 Defined in: [src/elements/menus/io-menu-hamburger.ts:5](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-hamburger.ts#L5)

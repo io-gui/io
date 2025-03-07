@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / PropertyDecorators
-
 # Variable: PropertyDecorators
 
 > `const` **PropertyDecorators**: `WeakMap`\<[`Constructor`](../type-aliases/Constructor.md), [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)\>

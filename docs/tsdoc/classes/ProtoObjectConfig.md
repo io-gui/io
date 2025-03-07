@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ProtoObjectConfig
-
 # Class: ProtoObjectConfig
 
 Defined in: [src/elements/object/io-properties.ts:16](https://github.com/io-gui/io/blob/main/src/elements/object/io-properties.ts#L16)

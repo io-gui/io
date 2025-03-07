@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNumberLadderStep
-
 # Class: IoNumberLadderStep
 
 Defined in: [src/elements/basic/io-number.ts:244](https://github.com/io-gui/io/blob/main/src/elements/basic/io-number.ts#L244)

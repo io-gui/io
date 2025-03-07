@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNavigatorCombined
-
 # Class: IoNavigatorCombined
 
 Defined in: [src/elements/content/io-navigator-combined.ts:7](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-combined.ts#L7)

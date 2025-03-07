@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Listeners
-
 # Type Alias: Listeners
 
 > **Listeners**: `Record`\<`string`, [`Listener`](Listener.md)[]\>

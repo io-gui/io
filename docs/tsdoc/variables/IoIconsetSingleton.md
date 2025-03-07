@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoIconsetSingleton
-
 # Variable: IoIconsetSingleton
 
 > `const` **IoIconsetSingleton**: [`IoIconset`](../classes/IoIconset.md)

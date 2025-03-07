@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoSelector
-
 # Class: IoSelector
 
 Defined in: [src/elements/content/io-selector.ts:15](https://github.com/io-gui/io/blob/main/src/elements/content/io-selector.ts#L15)

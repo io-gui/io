@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ObjectGroups
-
 # Class: ObjectGroups
 
 Defined in: [src/elements/object/models/object-groups.ts:5](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-groups.ts#L5)

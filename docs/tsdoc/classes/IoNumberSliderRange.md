@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNumberSliderRange
-
 # Class: IoNumberSliderRange
 
 Defined in: [src/elements/sliders/io-number-slider-range.ts:13](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-number-slider-range.ts#L13)

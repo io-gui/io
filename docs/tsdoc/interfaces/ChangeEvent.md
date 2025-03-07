@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ChangeEvent
-
 # Interface: ChangeEvent
 
 Defined in: [src/core/internals/changeQueue.ts:83](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L83)

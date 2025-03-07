@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / getMenuRoot
-
 # Function: getMenuRoot()
 
 > **getMenuRoot**(`element`): `IoMenuElementType`

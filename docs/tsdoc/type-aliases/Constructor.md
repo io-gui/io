@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Constructor
-
 # Type Alias: Constructor()
 
 > **Constructor**: (...`args`) => `unknown`

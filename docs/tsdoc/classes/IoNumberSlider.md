@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNumberSlider
-
 # Class: IoNumberSlider
 
 Defined in: [src/elements/sliders/io-number-slider.ts:15](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-number-slider.ts#L15)

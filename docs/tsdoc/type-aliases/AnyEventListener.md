@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / AnyEventListener
-
 # Type Alias: AnyEventListener
 
 > **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](../interfaces/KeyboardEventListener.md) \| [`PointerEventListener`](../interfaces/PointerEventListener.md) \| [`CustomEventListener`](../interfaces/CustomEventListener.md) \| [`FocusEventListener`](../interfaces/FocusEventListener.md) \| [`TouchEventListener`](../interfaces/TouchEventListener.md) \| [`ChangeEventListener`](../interfaces/ChangeEventListener.md) \| [`IoEventListener`](../interfaces/IoEventListener.md)

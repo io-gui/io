@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Register
-
 # Function: Register()
 
 > **Register**(`ioNodeConstructor`): `void`

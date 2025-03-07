@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNotify
-
 # Class: IoNotify
 
 Defined in: [src/elements/notify/io-notify.ts:9](https://github.com/io-gui/io/blob/main/src/elements/notify/io-notify.ts#L9)

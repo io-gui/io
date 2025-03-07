@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ObjectConfig
-
 # Class: ObjectConfig
 
 Defined in: [src/elements/object/models/object-config.ts:9](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L9)

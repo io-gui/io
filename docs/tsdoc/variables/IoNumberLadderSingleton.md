@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNumberLadderSingleton
-
 # Variable: IoNumberLadderSingleton
 
 > `const` **IoNumberLadderSingleton**: [`IoNumberLadder`](../classes/IoNumberLadder.md)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoStorageNode
-
 # Class: IoStorageNode
 
 Defined in: [src/core/storage.ts:114](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L114)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / VDOMElement
-
 # Type Alias: VDOMElement
 
 > **VDOMElement**: `object`

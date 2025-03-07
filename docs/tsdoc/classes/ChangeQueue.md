@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ChangeQueue
-
 # Class: ChangeQueue
 
 Defined in: [src/core/internals/changeQueue.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L7)

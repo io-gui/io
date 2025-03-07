@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Theme
-
 # Type Alias: Theme
 
 > **Theme**: `object`

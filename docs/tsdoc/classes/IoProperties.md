@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoProperties
-
 # Class: IoProperties
 
 Defined in: [src/elements/object/io-properties.ts:106](https://github.com/io-gui/io/blob/main/src/elements/object/io-properties.ts#L106)

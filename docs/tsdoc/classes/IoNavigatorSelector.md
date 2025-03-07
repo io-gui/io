@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNavigatorSelector
-
 # Class: IoNavigatorSelector
 
 Defined in: [src/elements/content/io-navigator-selector.ts:7](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-selector.ts#L7)

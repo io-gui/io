@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoStorage
-
 # Function: IoStorage()
 
 > **IoStorage**(`props`): [`Binding`](../classes/Binding.md)

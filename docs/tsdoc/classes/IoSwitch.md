@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoSwitch
-
 # Class: IoSwitch
 
 Defined in: [src/elements/basic/io-switch.ts:10](https://github.com/io-gui/io/blob/main/src/elements/basic/io-switch.ts#L10)

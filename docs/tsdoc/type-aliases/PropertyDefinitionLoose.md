@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / PropertyDefinitionLoose
-
 # Type Alias: PropertyDefinitionLoose
 
 > **PropertyDefinitionLoose**: `string` \| `number` \| `boolean` \| `any`[] \| `null` \| `undefined` \| [`Constructor`](Constructor.md) \| [`Binding`](../classes/Binding.md) \| [`PropertyDefinition`](PropertyDefinition.md)

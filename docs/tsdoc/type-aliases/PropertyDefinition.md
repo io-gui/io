@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / PropertyDefinition
-
 # Type Alias: PropertyDefinition
 
 > **PropertyDefinition**: `object`

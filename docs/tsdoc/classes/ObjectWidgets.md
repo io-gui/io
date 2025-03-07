@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ObjectWidgets
-
 # Class: ObjectWidgets
 
 Defined in: [src/elements/object/models/object-widgets.ts:7](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-widgets.ts#L7)

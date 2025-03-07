@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / TouchEventListener
-
 # Interface: TouchEventListener()
 
 Defined in: [src/core/internals/eventDispatcher.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L11)

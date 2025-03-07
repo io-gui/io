@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoElementArgs
-
 # Type Alias: IoElementArgs
 
 > **IoElementArgs**: [`IoNodeArgs`](IoNodeArgs.md) & `object`

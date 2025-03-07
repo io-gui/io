@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoEventListener
-
 # Interface: IoEventListener()
 
 Defined in: [src/core/internals/eventDispatcher.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L13)

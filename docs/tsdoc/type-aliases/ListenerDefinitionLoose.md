@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ListenerDefinitionLoose
-
 # Type Alias: ListenerDefinitionLoose
 
 > **ListenerDefinitionLoose**: `string` \| [`AnyEventListener`](AnyEventListener.md) \| [`ListenerDefinition`](ListenerDefinition.md)

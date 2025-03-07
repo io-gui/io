@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ListenerDefinition
-
 # Type Alias: ListenerDefinition
 
 > **ListenerDefinition**: \[`string` \| [`AnyEventListener`](AnyEventListener.md), `AddEventListenerOptions`?\]

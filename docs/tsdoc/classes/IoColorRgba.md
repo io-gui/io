@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorRgba
-
 # Class: IoColorRgba
 
 Defined in: [src/elements/color/io-color-rgba.ts:8](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-rgba.ts#L8)

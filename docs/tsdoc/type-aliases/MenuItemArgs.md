@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / MenuItemArgs
-
 # Type Alias: MenuItemArgs
 
 > **MenuItemArgs**: [`IoElementArgs`](IoElementArgs.md) & `object`

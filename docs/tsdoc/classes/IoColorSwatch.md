@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoColorSwatch
-
 # Class: IoColorSwatch
 
 Defined in: [src/elements/color/io-color-swatch.ts:13](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-swatch.ts#L13)

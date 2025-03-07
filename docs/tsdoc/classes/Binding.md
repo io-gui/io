@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Binding
-
 # Class: Binding
 
 Defined in: [src/core/internals/binding.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L11)

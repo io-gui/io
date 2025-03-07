@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / filterOptions
-
 # Function: filterOptions()
 
 > **filterOptions**(`options`, `search`, `depth`, `elements`, `d`): `any`

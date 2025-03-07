@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / LICENSE
-
 # Variable: LICENSE
 
 > `const` **LICENSE**: `"MIT"` = `'MIT'`

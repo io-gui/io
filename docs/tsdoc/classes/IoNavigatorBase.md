@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNavigatorBase
-
 # Class: IoNavigatorBase
 
 Defined in: [src/elements/content/io-navigator-base.ts:6](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L6)

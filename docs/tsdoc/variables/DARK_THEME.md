@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / DARK\_THEME
-
 # Variable: DARK\_THEME
 
 > `const` **DARK\_THEME**: [`Theme`](../type-aliases/Theme.md)

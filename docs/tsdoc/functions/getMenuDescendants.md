@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / getMenuDescendants
-
 # Function: getMenuDescendants()
 
 > **getMenuDescendants**(`element`): `IoMenuElementType`[]

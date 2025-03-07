@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / hardenListenerDefinition
-
 # Function: hardenListenerDefinition()
 
 > **hardenListenerDefinition**(`listenerDefinition`): [`ListenerDefinition`](../type-aliases/ListenerDefinition.md)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ListenerDefinitions
-
 # Type Alias: ListenerDefinitions
 
 > **ListenerDefinitions**: `Record`\<`string`, [`ListenerDefinitionLoose`](ListenerDefinitionLoose.md)\>

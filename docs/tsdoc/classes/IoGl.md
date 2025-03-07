@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoGl
-
 # Class: IoGl
 
 Defined in: [src/core/gl.ts:37](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L37)

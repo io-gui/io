@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / addMenuOptions
-
 # Function: addMenuOptions()
 
 > **addMenuOptions**(`options`, `depth`, `d`): [`VDOMArray`](../type-aliases/VDOMArray.md)[]

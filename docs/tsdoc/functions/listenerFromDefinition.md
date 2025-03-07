@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / listenerFromDefinition
-
 # Function: listenerFromDefinition()
 
 > **listenerFromDefinition**(`node`, `def`): [`Listener`](../type-aliases/Listener.md)

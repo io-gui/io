@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoObject
-
 # Class: IoObject
 
 Defined in: [src/elements/object/io-object.ts:10](https://github.com/io-gui/io/blob/main/src/elements/object/io-object.ts#L10)

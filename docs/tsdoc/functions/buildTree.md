@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / buildTree
-
 # Function: buildTree()
 
 > **buildTree**(): (`node`) => `any`

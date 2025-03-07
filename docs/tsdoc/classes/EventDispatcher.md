@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / EventDispatcher
-
 # Class: EventDispatcher
 
 Defined in: [src/core/internals/eventDispatcher.ts:98](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L98)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoOverlay
-
 # Class: IoOverlay
 
 Defined in: [src/core/overlay.ts:29](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L29)

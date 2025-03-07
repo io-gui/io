@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / Property
-
 # Function: Property()
 
 > **Property**(`propertyDefinition`): (`target`, `propertyName`) => `void`

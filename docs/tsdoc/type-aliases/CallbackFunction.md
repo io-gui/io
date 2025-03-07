@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / CallbackFunction
-
 # Type Alias: CallbackFunction()
 
 > **CallbackFunction**: (`arg`?) => `void`

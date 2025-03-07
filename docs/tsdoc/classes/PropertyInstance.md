@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / PropertyInstance
-
 # Class: PropertyInstance
 
 Defined in: [src/core/internals/property.ts:97](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L97)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoMenuOptions
-
 # Class: IoMenuOptions
 
 Defined in: [src/elements/menus/io-menu-options.ts:17](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-options.ts#L17)

@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoOverlaySingleton
-
 # Variable: IoOverlaySingleton
 
 > `const` **IoOverlaySingleton**: [`IoOverlay`](../classes/IoOverlay.md)

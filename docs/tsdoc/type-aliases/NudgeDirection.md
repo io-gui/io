@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / NudgeDirection
-
 # Type Alias: NudgeDirection
 
 > **NudgeDirection**: `"none"` \| `"pointer"` \| `"up"` \| `"left"` \| `"down"` \| `"right"`

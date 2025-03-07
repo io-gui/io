@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNodeConstructor
-
 # Interface: IoNodeConstructor\<T\>
 
 Defined in: [src/core/node.ts:10](https://github.com/io-gui/io/blob/main/src/core/node.ts#L10)

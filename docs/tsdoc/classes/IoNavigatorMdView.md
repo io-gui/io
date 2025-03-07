@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoNavigatorMdView
-
 # Class: IoNavigatorMdView
 
 Defined in: [src/elements/content/io-navigator-md-view.ts:8](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-md-view.ts#L8)

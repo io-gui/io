@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / ProtoProperty
-
 # Class: ProtoProperty
 
 Defined in: [src/core/internals/property.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L25)

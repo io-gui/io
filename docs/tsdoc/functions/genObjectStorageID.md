@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / genObjectStorageID
-
 # Function: genObjectStorageID()
 
 > **genObjectStorageID**(`object`): `string`

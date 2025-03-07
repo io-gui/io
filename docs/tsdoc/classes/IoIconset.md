@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoIconset
-
 # Class: IoIconset
 
 Defined in: [src/elements/basic/io-iconset.ts:19](https://github.com/io-gui/io/blob/main/src/elements/basic/io-iconset.ts#L19)

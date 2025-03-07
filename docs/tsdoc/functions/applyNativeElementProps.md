@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / applyNativeElementProps
-
 # Function: applyNativeElementProps()
 
 > **applyNativeElementProps**(`element`, `props`): `void`

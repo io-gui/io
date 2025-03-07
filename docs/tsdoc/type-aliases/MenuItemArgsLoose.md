@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / MenuItemArgsLoose
-
 # Type Alias: MenuItemArgsLoose
 
 > **MenuItemArgsLoose**: `undefined` \| `null` \| `string` \| `number` \| [`MenuItemArgs`](MenuItemArgs.md)

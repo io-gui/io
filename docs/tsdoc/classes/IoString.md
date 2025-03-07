@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / IoString
-
 # Class: IoString
 
 Defined in: [src/elements/basic/io-string.ts:9](https://github.com/io-gui/io/blob/main/src/elements/basic/io-string.ts#L9)

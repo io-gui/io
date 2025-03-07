@@ -2,8 +2,6 @@
 
 ***
 
-[io-gui](../README.md) / MenuItem
-
 # Class: MenuItem
 
 Defined in: [src/elements/menus/models/menu-item.ts:25](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L25)
