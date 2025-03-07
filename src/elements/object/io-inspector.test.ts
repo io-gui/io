@@ -1,5 +1,5 @@
 import {IoInspector} from '../../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 export default class {
   element = new IoInspector();
   constructor() {
@@ -14,8 +14,8 @@ export default class {
     describe('IoInspector', () => {
       describe('default values', () => {
         it('has default values', () => {
-          chai.expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}));
-          chai.expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}));
+          expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}));
+          expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}));
         });
       });
     });

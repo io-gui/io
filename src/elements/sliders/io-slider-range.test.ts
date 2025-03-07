@@ -1,5 +1,5 @@
 import {IoSliderRange} from '../../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 export default class {
   element = new IoSliderRange({value: [0, 0]});
   constructor() {
@@ -18,27 +18,27 @@ export default class {
       describe('default values', () => {
         it('has default values', () => {
           this.reset();
-          chai.expect(this.element.value[0]).to.equal(0);
-          chai.expect(this.element.value[1]).to.equal(1);
-          chai.expect(this.element.step).to.equal(0.01);
-          chai.expect(this.element.min).to.equal(0);
-          chai.expect(this.element.max).to.equal(1);
+          expect(this.element.value[0]).to.equal(0);
+          expect(this.element.value[1]).to.equal(1);
+          expect(this.element.step).to.equal(0.01);
+          expect(this.element.min).to.equal(0);
+          expect(this.element.max).to.equal(1);
         });
       });
       describe('attributes', () => {
         it('has tabindex attribute', () => {
-          chai.expect(this.element.getAttribute('tabindex')).to.equal('0');
+          expect(this.element.getAttribute('tabindex')).to.equal('0');
         });
         it('has contenteditable attribute on number field', () => {
-          chai.expect(this.element.getAttribute('contenteditable')).to.equal(null);
+          expect(this.element.getAttribute('contenteditable')).to.equal(null);
         });
         it('has a11y attributes', () => {
           this.reset();
-          chai.expect(this.element.getAttribute('role')).to.equal('slider');
+          expect(this.element.getAttribute('role')).to.equal('slider');
           this.element.min = 0;
-          chai.expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
+          expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
           this.element.max = 1;
-          chai.expect(this.element.getAttribute('aria-valuemax')).to.equal('1');
+          expect(this.element.getAttribute('aria-valuemax')).to.equal('1');
         });
       });
     });

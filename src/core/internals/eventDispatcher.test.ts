@@ -1,5 +1,5 @@
 import {IoNode, Register, ListenerDefinitions, EventDispatcher, IoElement} from '../../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 
 const handlerFunction = () => {};
 
@@ -97,35 +97,35 @@ export default class {
       it('Should initialize with correct values', () => {
         const node = {} as IoNode;
         let eventDispatcher = new EventDispatcher(node);
-        chai.expect(eventDispatcher.node).to.be.equal(node);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({});
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
-        chai.expect(eventDispatcher.isEventTarget).to.be.eql(false);
+        expect(eventDispatcher.node).to.be.equal(node);
+        expect(eventDispatcher.protoListeners).to.be.eql({});
+        expect(eventDispatcher.propListeners).to.be.eql({});
+        expect(eventDispatcher.addedListeners).to.be.eql({});
+        expect(eventDispatcher.isEventTarget).to.be.eql(false);
 
         const element = document.createElement('div');
         eventDispatcher = new EventDispatcher(element);
-        chai.expect(eventDispatcher.node).to.be.equal(element);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({});
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
-        chai.expect(eventDispatcher.isEventTarget).to.be.equal(true);
+        expect(eventDispatcher.node).to.be.equal(element);
+        expect(eventDispatcher.protoListeners).to.be.eql({});
+        expect(eventDispatcher.propListeners).to.be.eql({});
+        expect(eventDispatcher.addedListeners).to.be.eql({});
+        expect(eventDispatcher.isEventTarget).to.be.equal(true);
       });
       it('Should initialize listeners from ProtoChain', () => {
         let node = new IoNode1();
         let eventDispatcher = new EventDispatcher(node);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+        expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler1]],
         });
         node = new IoNode2();
         eventDispatcher = new EventDispatcher(node);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+        expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler1]],
           event2:[[node.handler2, {capture:true}]]
         });
         node = new IoNode3();
         eventDispatcher = new EventDispatcher(node);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+        expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node.handler3]],
           event2:[[handlerFunction, {passive: true}]],
           event3:[[handlerFunction]]
@@ -133,13 +133,13 @@ export default class {
 
         let element = new IoElement1();
         eventDispatcher = new EventDispatcher(element);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+        expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[element.handler1]],
         });
 
         element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
-        chai.expect(eventDispatcher.protoListeners).to.be.eql({
+        expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[element.handler2]],
         });
       });
@@ -149,25 +149,25 @@ export default class {
         const handler4 = () => {};
         const handler5 = () => {};
         eventDispatcher.applyPropListeners({'@event3': 'handler3', '@event4': handler4});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({
+        expect(eventDispatcher.propListeners).to.be.eql({
           event3:[[node.handler3]], event4:[[handler4]]
         });
         eventDispatcher.applyPropListeners({'@event5': ['handler3'], '@event6': [handler4]});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({
+        expect(eventDispatcher.propListeners).to.be.eql({
           event5:[[node.handler3]], event6:[[handler4]]
         });
         eventDispatcher.applyPropListeners({'@event7': [node.handler3, {capture: true}], '@event8': [handler5, {capture: true}]});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({
+        expect(eventDispatcher.propListeners).to.be.eql({
           event7:[[node.handler3, {capture:true}]], event8:[[handler5, {capture:true}]]
         });
         eventDispatcher.applyPropListeners({});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({});
+        expect(eventDispatcher.propListeners).to.be.eql({});
 
 
         let element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.applyPropListeners({'@event3': 'handler1', '@event4': handler4});
-        chai.expect(eventDispatcher.propListeners).to.be.eql({
+        expect(eventDispatcher.propListeners).to.be.eql({
           event3:[[element.handler1]], event4:[[handler4]]
         });
       });
@@ -178,29 +178,29 @@ export default class {
         const listener2 = () => {};
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1],[listener2, {capture:true}]]
         });
         eventDispatcher.removeEventListener('event1', listener1);
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener2, {capture:true}]]
         });
         eventDispatcher.removeEventListener('event1');
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+        expect(eventDispatcher.addedListeners).to.be.eql({});
 
         let element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1],[listener2, {capture:true}]]
         });
         eventDispatcher.removeEventListener('event1', listener1);
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener2, {capture:true}]]
         });
         eventDispatcher.removeEventListener('event1');
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+        expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should not add listeners if already added', () => {
         const node = new IoNode2();
@@ -211,7 +211,7 @@ export default class {
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1],[listener2, {capture:true}]]
         });
 
@@ -221,7 +221,7 @@ export default class {
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1],[listener2, {capture:true}]]
         });
       });
@@ -233,22 +233,22 @@ export default class {
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         eventDispatcher.removeEventListener('event1', listener2);
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1]]
         });
         eventDispatcher.removeEventListener('event1', listener1);
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+        expect(eventDispatcher.addedListeners).to.be.eql({});
 
         let element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         eventDispatcher.removeEventListener('event1', listener2);
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({
+        expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1]]
         });
         eventDispatcher.removeEventListener('event1', listener1);
-        chai.expect(eventDispatcher.addedListeners).to.be.eql({});
+        expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should dispatch added events', () => {
         const node = new IoNode2();
@@ -268,11 +268,11 @@ export default class {
         eventDispatcher.dispatchEvent('event3');
         eventDispatcher.dispatchEvent('event4');
         eventDispatcher.dispatchEvent('event5');
-        chai.expect(node.handler1Count).to.be.equal(1);
-        chai.expect(node.handler2Count).to.be.equal(1);
-        chai.expect(node.handler3Count).to.be.equal(1);
-        chai.expect(handler4Count).to.be.equal(1);
-        chai.expect(handler5Count).to.be.equal(1);
+        expect(node.handler1Count).to.be.equal(1);
+        expect(node.handler2Count).to.be.equal(1);
+        expect(node.handler3Count).to.be.equal(1);
+        expect(handler4Count).to.be.equal(1);
+        expect(handler5Count).to.be.equal(1);
         // Remove events
         eventDispatcher.applyPropListeners({'@event4': handler4});
         eventDispatcher.removeEventListener('event5', handler5);
@@ -281,32 +281,32 @@ export default class {
         eventDispatcher.dispatchEvent('event3');
         eventDispatcher.dispatchEvent('event4');
         eventDispatcher.dispatchEvent('event5');
-        chai.expect(node.handler1Count).to.be.equal(2);
-        chai.expect(node.handler2Count).to.be.equal(2);
-        chai.expect(node.handler3Count).to.be.equal(1);
-        chai.expect(handler4Count).to.be.equal(2);
-        chai.expect(handler5Count).to.be.equal(1);
+        expect(node.handler1Count).to.be.equal(2);
+        expect(node.handler2Count).to.be.equal(2);
+        expect(node.handler3Count).to.be.equal(1);
+        expect(handler4Count).to.be.equal(2);
+        expect(handler5Count).to.be.equal(1);
 
         let element = new IoElement1();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.dispatchEvent('event1');
-        chai.expect(element.handler1Count).to.be.equal(1);
+        expect(element.handler1Count).to.be.equal(1);
 
         element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.dispatchEvent('event1');
-        chai.expect(element.handler1Count).to.be.equal(0);
-        chai.expect(element.handler2Count).to.be.equal(1);
+        expect(element.handler1Count).to.be.equal(0);
+        expect(element.handler2Count).to.be.equal(1);
 
         element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.applyPropListeners({'@event3': 'handler1'});
         element.dispatchEvent('event3', {detail: 'detail1'});
-        chai.expect(element.handler1Count).to.be.equal(1);
+        expect(element.handler1Count).to.be.equal(1);
         eventDispatcher.applyPropListeners({'@event3': 'handler2'});
         element.dispatchEvent('event3', {detail: 'detail1'});
-        chai.expect(element.handler1Count).to.be.equal(1);
-        chai.expect(element.handler2Count).to.be.equal(1);
+        expect(element.handler1Count).to.be.equal(1);
+        expect(element.handler2Count).to.be.equal(1);
       });
       it('Should dispatch events with correct event detail', () => {
         const node = new IoNode2();
@@ -326,22 +326,22 @@ export default class {
         eventDispatcher.dispatchEvent('event3', 'detail3');
         eventDispatcher.dispatchEvent('event4', 'detail4');
         eventDispatcher.dispatchEvent('event5', 'detail5');
-        chai.expect(node.handler1Detail).to.be.equal('detail1');
-        chai.expect(node.handler2Detail).to.be.equal('detail2');
-        chai.expect(node.handler3Detail).to.be.equal('detail3');
-        chai.expect(handler4Detail).to.be.equal('detail4');
-        chai.expect(handler5Detail).to.be.equal('detail5');
+        expect(node.handler1Detail).to.be.equal('detail1');
+        expect(node.handler2Detail).to.be.equal('detail2');
+        expect(node.handler3Detail).to.be.equal('detail3');
+        expect(handler4Detail).to.be.equal('detail4');
+        expect(handler5Detail).to.be.equal('detail5');
 
         let element = new IoElement1();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.dispatchEvent('event1', 'detail1');
-        chai.expect(element.handler1Detail).to.be.equal('detail1');
+        expect(element.handler1Detail).to.be.equal('detail1');
 
         element = new IoElement2();
         eventDispatcher = new EventDispatcher(element);
         eventDispatcher.dispatchEvent('event1', 'detail1');
-        chai.expect(element.handler1Detail).to.be.equal(undefined);
-        chai.expect(element.handler2Detail).to.be.equal('detail1');
+        expect(element.handler1Detail).to.be.equal(undefined);
+        expect(element.handler2Detail).to.be.equal('detail1');
       });
       it('Should add/remove/dispatch events on HTML elements', () => {
         const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
@@ -363,24 +363,24 @@ export default class {
         element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3'}));
         element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4'}));
         element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5'}));
-        chai.expect(element.handler3Count).to.be.equal(1);
-        chai.expect(handler4Count).to.be.equal(1);
-        chai.expect(handler5Count).to.be.equal(1);
-        chai.expect(element.handler3Detail).to.be.equal('detail3');
-        chai.expect(handler4Detail).to.be.equal('detail4');
-        chai.expect(handler5Detail).to.be.equal('detail5');
+        expect(element.handler3Count).to.be.equal(1);
+        expect(handler4Count).to.be.equal(1);
+        expect(handler5Count).to.be.equal(1);
+        expect(element.handler3Detail).to.be.equal('detail3');
+        expect(handler4Detail).to.be.equal('detail4');
+        expect(handler5Detail).to.be.equal('detail5');
         // Remove event listeners
         eventDispatcher.applyPropListeners({});
         eventDispatcher.removeEventListener('event5', handler5);
         element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3i'}));
         element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4i'}));
         element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5i'}));
-        chai.expect(element.handler3Count).to.be.equal(1);
-        chai.expect(handler4Count).to.be.equal(1);
-        chai.expect(handler5Count).to.be.equal(1);
-        chai.expect(element.handler3Detail).to.be.equal('detail3');
-        chai.expect(handler4Detail).to.be.equal('detail4');
-        chai.expect(handler5Detail).to.be.equal('detail5');
+        expect(element.handler3Count).to.be.equal(1);
+        expect(handler4Count).to.be.equal(1);
+        expect(handler5Count).to.be.equal(1);
+        expect(element.handler3Detail).to.be.equal('detail3');
+        expect(handler4Detail).to.be.equal('detail4');
+        expect(handler5Detail).to.be.equal('detail5');
       });
       it('Should bubble events if specified', () => {
         const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
@@ -392,11 +392,11 @@ export default class {
           eventCount++;
         });
         eventDispatcher.dispatchEvent('event', null, false);
-        chai.expect(eventCount).to.be.equal(0);
+        expect(eventCount).to.be.equal(0);
         eventDispatcher.dispatchEvent('event', null, true);
-        chai.expect(eventCount).to.be.equal(1);
+        expect(eventCount).to.be.equal(1);
         eventDispatcher.dispatchEvent('event');
-        chai.expect(eventCount).to.be.equal(2);
+        expect(eventCount).to.be.equal(2);
       });
       it('Should emit event from specified target', () => {
         const element = document.createElement('div');
@@ -413,18 +413,18 @@ export default class {
         });
 
         eventDispatcher.dispatchEvent('event3', 'detail', false, element2);
-        chai.expect(element2.handler3Detail).to.be.equal('detail');
-        chai.expect(path).to.be.eql([element2]);
-        chai.expect(target).to.be.eql(target);
+        expect(element2.handler3Detail).to.be.equal('detail');
+        expect(path).to.be.eql([element2]);
+        expect(target).to.be.eql(target);
       });
       it('Should dispose correctly', () => {
         const node = new IoNode2();
         const eventDispatcher = new EventDispatcher(node);
         eventDispatcher.dispose();
-        chai.expect(eventDispatcher.node).to.be.equal(undefined);
-        chai.expect(eventDispatcher.protoListeners).to.be.equal(undefined);
-        chai.expect(eventDispatcher.propListeners).to.be.equal(undefined);
-        chai.expect(eventDispatcher.addedListeners).to.be.equal(undefined);
+        expect(eventDispatcher.node).to.be.equal(undefined);
+        expect(eventDispatcher.protoListeners).to.be.equal(undefined);
+        expect(eventDispatcher.propListeners).to.be.equal(undefined);
+        expect(eventDispatcher.addedListeners).to.be.equal(undefined);
       });
     });
   }

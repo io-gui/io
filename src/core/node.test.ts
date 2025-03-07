@@ -1,5 +1,5 @@
 import { Change, Binding, ProtoChain, IoNode, Register, PropertyDefinitions, IoElement } from '../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 
 // TODO: test lazy reactivity!
 
@@ -17,23 +17,23 @@ export default class {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
           const node = new IoNode();
-          chai.expect(node.setProperty).to.be.a('function');
-          chai.expect(node.applyProperties).to.be.a('function');
-          chai.expect(node.setProperties).to.be.a('function');
-          chai.expect(node.inputValue).to.be.a('function');
-          chai.expect(node.changed).to.be.a('function');
-          chai.expect(node.queue).to.be.a('function');
-          chai.expect(node.dispatchQueue).to.be.a('function');
-          chai.expect(node.dispatchQueueSync).to.be.a('function');
-          chai.expect(node.throttle).to.be.a('function');
-          chai.expect(node.onObjectMutated).to.be.a('function');
-          chai.expect(node.objectMutated).to.be.a('function');
-          chai.expect(node.bind).to.be.a('function');
-          chai.expect(node.unbind).to.be.a('function');
-          chai.expect(node.addEventListener).to.be.a('function');
-          chai.expect(node.removeEventListener).to.be.a('function');
-          chai.expect(node.dispatchEvent).to.be.a('function');
-          chai.expect(node.dispose).to.be.a('function');
+          expect(node.setProperty).to.be.a('function');
+          expect(node.applyProperties).to.be.a('function');
+          expect(node.setProperties).to.be.a('function');
+          expect(node.inputValue).to.be.a('function');
+          expect(node.changed).to.be.a('function');
+          expect(node.queue).to.be.a('function');
+          expect(node.dispatchQueue).to.be.a('function');
+          expect(node.dispatchQueueSync).to.be.a('function');
+          expect(node.throttle).to.be.a('function');
+          expect(node.onObjectMutated).to.be.a('function');
+          expect(node.objectMutated).to.be.a('function');
+          expect(node.bind).to.be.a('function');
+          expect(node.unbind).to.be.a('function');
+          expect(node.addEventListener).to.be.a('function');
+          expect(node.removeEventListener).to.be.a('function');
+          expect(node.dispatchEvent).to.be.a('function');
+          expect(node.dispose).to.be.a('function');
           node.dispose();
         });
         it('Should register property definitions correctly', () => {
@@ -53,12 +53,12 @@ export default class {
 
           const node = new TestNode();
 
-          chai.expect(node.prop0).to.be.equal('');
-          chai.expect(node.prop1).to.be.equal(false);
-          chai.expect(node.prop2).to.be.equal(-1);
-          chai.expect(node.prop3).to.be.equal(0);
-          chai.expect(node.prop4).to.be.deep.equal({});
-          chai.expect(node.prop5).to.be.deep.equal([0, 1, 2]);
+          expect(node.prop0).to.be.equal('');
+          expect(node.prop1).to.be.equal(false);
+          expect(node.prop2).to.be.equal(-1);
+          expect(node.prop3).to.be.equal(0);
+          expect(node.prop4).to.be.deep.equal({});
+          expect(node.prop5).to.be.deep.equal([0, 1, 2]);
 
           node.dispose();
         });
@@ -98,11 +98,11 @@ export default class {
           const protoProps1 = node1._protochain.properties;
           const protoProps2 = node2._protochain.properties;
 
-          chai.expect(Array.from(node1._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2']);
-          chai.expect(Array.from(node2._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
+          expect(Array.from(node1._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2']);
+          expect(Array.from(node2._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
 
-          chai.expect(protoProps1.prop1.value).to.be.equal(0);
-          chai.expect(node1._properties.get('prop1')).to.be.eql({
+          expect(protoProps1.prop1.value).to.be.equal(0);
+          expect(node1._properties.get('prop1')).to.be.eql({
             value: 0,
             type: Number,
             binding: undefined,
@@ -112,8 +112,8 @@ export default class {
             init: undefined,
           });
 
-          chai.expect(protoProps2.prop1.value).to.be.eql({});
-          chai.expect(node2._properties.get('prop1')).to.be.eql({
+          expect(protoProps2.prop1.value).to.be.eql({});
+          expect(node2._properties.get('prop1')).to.be.eql({
             value: {},
             type: Object,
             binding: undefined,
@@ -123,7 +123,7 @@ export default class {
             init: undefined,
           });
 
-          chai.expect(node2._properties.get('prop2')).to.be.eql({
+          expect(node2._properties.get('prop2')).to.be.eql({
             value: null,
             type: undefined,
             binding: undefined,
@@ -158,11 +158,11 @@ export default class {
           const protochain = new ProtoChain(Object2);
           const props = protochain.properties;
 
-          chai.expect(props.prop1.value).to.be.eql([1, 2, 3]);
-          chai.expect(props.prop1.type).to.be.equal(Array);
-          chai.expect(props.prop1.reactive).to.be.equal(false);
-          chai.expect(props.prop1.reflect).to.be.equal(true);
-          chai.expect(props.prop1.observe).to.be.equal(true);
+          expect(props.prop1.value).to.be.eql([1, 2, 3]);
+          expect(props.prop1.type).to.be.equal(Array);
+          expect(props.prop1.reactive).to.be.equal(false);
+          expect(props.prop1.reflect).to.be.equal(true);
+          expect(props.prop1.observe).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
           @Register
@@ -203,17 +203,17 @@ export default class {
           const node2 = new Object2();
 
 
-          chai.expect(node1._properties.get('prop1')!.binding).to.be.equal(binding1);
-          chai.expect(node2._properties.get('prop1')!.binding).to.be.equal(binding2);
-          chai.expect(node2._properties.get('prop3')!.binding).to.be.equal(binding3);
+          expect(node1._properties.get('prop1')!.binding).to.be.equal(binding1);
+          expect(node2._properties.get('prop1')!.binding).to.be.equal(binding2);
+          expect(node2._properties.get('prop3')!.binding).to.be.equal(binding3);
 
-          chai.expect((binding1).targets[0]).to.be.equal(node1);
-          chai.expect((binding2).targets[0]).to.be.equal(node2);
-          chai.expect((binding3).targets[0]).to.be.equal(node2);
+          expect((binding1).targets[0]).to.be.equal(node1);
+          expect((binding2).targets[0]).to.be.equal(node2);
+          expect((binding3).targets[0]).to.be.equal(node2);
 
-          chai.expect(node1._properties.get('prop1')!.value).to.be.equal('binding1');
-          chai.expect(node2._properties.get('prop1')!.value).to.be.equal('binding2');
-          chai.expect(node2._properties.get('prop3')!.value).to.be.equal('binding3');
+          expect(node1._properties.get('prop1')!.value).to.be.equal('binding1');
+          expect(node2._properties.get('prop1')!.value).to.be.equal('binding2');
+          expect(node2._properties.get('prop3')!.value).to.be.equal('binding3');
         });
       });
       describe('Construction', () => {
@@ -234,11 +234,11 @@ export default class {
 
           const node = new TestNode();
 
-          chai.expect(node._properties.get('prop1')!.value).to.be.equal(1);
-          chai.expect(node.prop1).to.be.equal(1);
+          expect(node._properties.get('prop1')!.value).to.be.equal(1);
+          expect(node.prop1).to.be.equal(1);
           node.setProperty('prop1', 0);
-          chai.expect(node._properties.get('prop1')!.value).to.be.equal(0);
-          chai.expect(node.prop1).to.be.equal(0);
+          expect(node._properties.get('prop1')!.value).to.be.equal(0);
+          expect(node.prop1).to.be.equal(0);
         });
         it('Should correctly get/set bound properties', () => {
 
@@ -265,22 +265,22 @@ export default class {
 
           const node = new TestNode2();
 
-          chai.expect(node._properties.get('prop1')!.value).to.be.equal('binding1');
-          chai.expect(node.prop1).to.be.equal('binding1');
+          expect(node._properties.get('prop1')!.value).to.be.equal('binding1');
+          expect(node.prop1).to.be.equal('binding1');
 
-          chai.expect(node._properties.get('prop1')!.binding).to.be.equal(binding1);
-          chai.expect((binding1).targets[0]).to.be.equal(node);
+          expect(node._properties.get('prop1')!.binding).to.be.equal(binding1);
+          expect((binding1).targets[0]).to.be.equal(node);
 
           binding1.removeTarget(node, 'prop1');
           const prop = node._properties.get('prop1');
           if (prop) prop.binding = undefined;
 
           node.setProperty('prop1', binding2);
-          chai.expect(node._properties.get('prop1')!.value).to.be.equal('binding2');
-          chai.expect(node.prop1).to.be.equal('binding2');
+          expect(node._properties.get('prop1')!.value).to.be.equal('binding2');
+          expect(node.prop1).to.be.equal('binding2');
 
-          chai.expect((binding1).targets[0]).to.be.equal(undefined);
-          chai.expect((binding2).targets[0]).to.be.equal(node);
+          expect((binding1).targets[0]).to.be.equal(undefined);
+          expect((binding2).targets[0]).to.be.equal(node);
         });
         it('Should execute attribute reflection on IoElement', () => {
           @Register
@@ -296,11 +296,11 @@ export default class {
           }
 
           const element = new TestElementReflection();
-          chai.expect(element.getAttribute('label')).to.be.equal('label1');
+          expect(element.getAttribute('label')).to.be.equal('label1');
           element.label = 'label2';
-          chai.expect(element.getAttribute('label')).to.be.equal('label2');
+          expect(element.getAttribute('label')).to.be.equal('label2');
           element.setProperty('label', 'label3');
-          chai.expect(element.getAttribute('label')).to.be.equal('label3');
+          expect(element.getAttribute('label')).to.be.equal('label3');
         });
         it('Should dipatch queue on object value initialization and value set', () => {
           @Register
@@ -316,7 +316,7 @@ export default class {
 
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           node.addEventListener('prop-changed', ((event: CustomEvent) => {
-            chai.expect('This should not execute').to.be.eql(true);
+            expect('This should not execute').to.be.eql(true);
           }) as EventListener);
 
           node.removeEventListener('prop-changed');
@@ -324,14 +324,14 @@ export default class {
           node.addEventListener('prop-changed', ((event: CustomEvent) => {
             const value = event.detail.value;
             const oldValue = event.detail.oldValue;
-            chai.expect(value).to.be.eql({});
-            chai.expect(oldValue).to.be.eql({});
+            expect(value).to.be.eql({});
+            expect(oldValue).to.be.eql({});
           }) as EventListener);
 
           node.prop = {};
 
           node.addEventListener('prop-changed', () => {
-            chai.expect('This should never happen!').to.be.equal(true);
+            expect('This should never happen!').to.be.equal(true);
           });
 
           node.setProperty('prop', {}, true);
@@ -365,20 +365,20 @@ export default class {
 
           const node = new TestNode();
           const subIoNode1 = node.prop;
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(0);
+          expect(subIoNode1.propChangeCounter).to.be.equal(0);
 
           subIoNode1.prop = 1;
           subIoNode1.prop = 2;
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(2);
+          expect(subIoNode1.propChangeCounter).to.be.equal(2);
           subIoNode1.prop = 3;
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(3);
+          expect(subIoNode1.propChangeCounter).to.be.equal(3);
 
           const subIoNode2 = new TestSubNode();
           node.prop = subIoNode2;
           subIoNode1.prop = 4;
 
-          chai.expect(subIoNode1.propChangeCounter).to.be.equal(4);
-          chai.expect(subIoNode2.propChangeCounter).to.be.equal(0);
+          expect(subIoNode1.propChangeCounter).to.be.equal(4);
+          expect(subIoNode2.propChangeCounter).to.be.equal(0);
         });
       });
       describe('Reactivity', () => {
@@ -411,50 +411,50 @@ export default class {
 
           const node = new TestNode();
 
-          chai.expect(node._changedCounter).to.equal(0);
-          chai.expect(node._prop1ChangedCounter).to.equal(0);
-          chai.expect(node._prop2ChangedCounter).to.equal(0);
-          chai.expect(node._prop1Change?.property).to.equal(undefined);
-          chai.expect(node._prop1Change?.oldValue).to.equal(undefined);
-          chai.expect(node._prop1Change?.value).to.equal(undefined);
-          chai.expect(node._prop2ChangedCounter).to.equal(0);
-          chai.expect(node._prop2Change?.property).to.equal(undefined);
-          chai.expect(node._prop2Change?.oldValue).to.equal(undefined);
-          chai.expect(node._prop2Change?.value).to.equal(undefined);
+          expect(node._changedCounter).to.equal(0);
+          expect(node._prop1ChangedCounter).to.equal(0);
+          expect(node._prop2ChangedCounter).to.equal(0);
+          expect(node._prop1Change?.property).to.equal(undefined);
+          expect(node._prop1Change?.oldValue).to.equal(undefined);
+          expect(node._prop1Change?.value).to.equal(undefined);
+          expect(node._prop2ChangedCounter).to.equal(0);
+          expect(node._prop2Change?.property).to.equal(undefined);
+          expect(node._prop2Change?.oldValue).to.equal(undefined);
+          expect(node._prop2Change?.value).to.equal(undefined);
 
           node.prop1 = 'one';
-          chai.expect(node._changedCounter).to.equal(1);
-          chai.expect(node._prop1ChangedCounter).to.equal(1);
-          chai.expect(node._prop2ChangedCounter).to.equal(0);
-          chai.expect(node._prop1Change?.property).to.equal('prop1');
-          chai.expect(node._prop1Change?.oldValue).to.equal('');
-          chai.expect(node._prop1Change?.value).to.equal('one');
+          expect(node._changedCounter).to.equal(1);
+          expect(node._prop1ChangedCounter).to.equal(1);
+          expect(node._prop2ChangedCounter).to.equal(0);
+          expect(node._prop1Change?.property).to.equal('prop1');
+          expect(node._prop1Change?.oldValue).to.equal('');
+          expect(node._prop1Change?.value).to.equal('one');
 
           node.prop1 = 'two';
           node.prop2 = 'test';
-          chai.expect(node._changedCounter).to.equal(3);
-          chai.expect(node._prop1ChangedCounter).to.equal(2);
-          chai.expect(node._prop1Change?.property).to.equal('prop1');
-          chai.expect(node._prop1Change?.oldValue).to.equal('one');
-          chai.expect(node._prop1Change?.value).to.equal('two');
-          chai.expect(node._prop2ChangedCounter).to.equal(1);
-          chai.expect(node._prop2Change?.property).to.equal('prop2');
-          chai.expect(node._prop2Change?.oldValue).to.equal('');
-          chai.expect(node._prop2Change?.value).to.equal('test');
+          expect(node._changedCounter).to.equal(3);
+          expect(node._prop1ChangedCounter).to.equal(2);
+          expect(node._prop1Change?.property).to.equal('prop1');
+          expect(node._prop1Change?.oldValue).to.equal('one');
+          expect(node._prop1Change?.value).to.equal('two');
+          expect(node._prop2ChangedCounter).to.equal(1);
+          expect(node._prop2Change?.property).to.equal('prop2');
+          expect(node._prop2Change?.oldValue).to.equal('');
+          expect(node._prop2Change?.value).to.equal('test');
 
           node.setProperties({
             'prop1': 'three',
             'prop2': '',
           });
-          chai.expect(node._changedCounter).to.equal(4);
-          chai.expect(node._prop1ChangedCounter).to.equal(3);
-          chai.expect(node._prop1Change?.property).to.equal('prop1');
-          chai.expect(node._prop1Change?.oldValue).to.equal('two');
-          chai.expect(node._prop1Change?.value).to.equal('three');
-          chai.expect(node._prop2ChangedCounter).to.equal(2);
-          chai.expect(node._prop2Change?.property).to.equal('prop2');
-          chai.expect(node._prop2Change?.oldValue).to.equal('test');
-          chai.expect(node._prop2Change?.value).to.equal('');
+          expect(node._changedCounter).to.equal(4);
+          expect(node._prop1ChangedCounter).to.equal(3);
+          expect(node._prop1Change?.property).to.equal('prop1');
+          expect(node._prop1Change?.oldValue).to.equal('two');
+          expect(node._prop1Change?.value).to.equal('three');
+          expect(node._prop2ChangedCounter).to.equal(2);
+          expect(node._prop2Change?.property).to.equal('prop2');
+          expect(node._prop2Change?.oldValue).to.equal('test');
+          expect(node._prop2Change?.value).to.equal('');
 
           node.dispose();
         });
@@ -489,16 +489,16 @@ export default class {
 
           const node = new TestNode();
 
-          chai.expect(node._changedCounter).to.equal(0);
-          chai.expect(node._obj1MutatedCounter).to.equal(0);
+          expect(node._changedCounter).to.equal(0);
+          expect(node._obj1MutatedCounter).to.equal(0);
 
           node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
 
           await nextTick();
 
-          chai.expect(node._changedCounter).to.equal(1);
-          chai.expect(node._obj1MutatedCounter).to.equal(1);
-          chai.expect(node._obj2MutatedCounter).to.equal(0);
+          expect(node._changedCounter).to.equal(1);
+          expect(node._obj1MutatedCounter).to.equal(1);
+          expect(node._obj2MutatedCounter).to.equal(0);
 
           node.dispatchEvent('object-mutated', {object: node.obj2}, false, window);
 
@@ -537,15 +537,15 @@ export default class {
           const node = new TestNode();
 
           node.prop1 = 'one';
-          chai.expect(node._onProp1ChangedCounter).to.equal(1);
-          chai.expect(node._onProp1Change.detail.property).to.equal('prop1');
-          chai.expect(node._onProp1Change.detail.oldValue).to.equal('');
-          chai.expect(node._onProp1Change.detail.value).to.equal('one');
+          expect(node._onProp1ChangedCounter).to.equal(1);
+          expect(node._onProp1Change.detail.property).to.equal('prop1');
+          expect(node._onProp1Change.detail.oldValue).to.equal('');
+          expect(node._onProp1Change.detail.value).to.equal('one');
 
           node.dispatchEvent('custom-event', {value: 'hello'});
-          chai.expect(node._onCustomEventCounter).to.equal(1);
-          chai.expect(node._onCustomEven.path[0]).to.equal(node);
-          chai.expect(node._onCustomEven.detail.value).to.equal('hello');
+          expect(node._onCustomEventCounter).to.equal(1);
+          expect(node._onCustomEven.path[0]).to.equal(node);
+          expect(node._onCustomEven.detail.value).to.equal('hello');
         });
       });
       describe('Binding', () => {
@@ -563,38 +563,38 @@ export default class {
           const node = new TestNode();
 
           const binding = node.bind('prop1');
-          chai.expect(binding).to.be.instanceof(Binding);
-          chai.expect(binding.node).to.be.equal(node);
-          chai.expect(binding.property).to.be.equal('prop1');
+          expect(binding).to.be.instanceof(Binding);
+          expect(binding.node).to.be.equal(node);
+          expect(binding.property).to.be.equal('prop1');
 
           const boundNode1 = new TestNode({prop1: binding});
           const boundNode2 = new TestNode({prop1: binding});
           boundNode2.prop2 = binding;
 
-          chai.expect(binding.targets[0]).to.be.equal(boundNode1);
-          chai.expect(binding.targets[1]).to.be.equal(boundNode2);
-          chai.expect(binding.targetProperties.get(boundNode1)![0]).to.be.equal('prop1');
-          chai.expect(binding.targetProperties.get(boundNode1)![1]).to.be.equal(undefined);
-          chai.expect(binding.targetProperties.get(boundNode2)![0]).to.be.equal('prop1');
-          chai.expect(binding.targetProperties.get(boundNode2)![1]).to.be.equal('prop2');
+          expect(binding.targets[0]).to.be.equal(boundNode1);
+          expect(binding.targets[1]).to.be.equal(boundNode2);
+          expect(binding.targetProperties.get(boundNode1)![0]).to.be.equal('prop1');
+          expect(binding.targetProperties.get(boundNode1)![1]).to.be.equal(undefined);
+          expect(binding.targetProperties.get(boundNode2)![0]).to.be.equal('prop1');
+          expect(binding.targetProperties.get(boundNode2)![1]).to.be.equal('prop2');
 
           node.prop1 = 'one';
-          chai.expect(boundNode1.prop1).to.be.equal('one');
-          chai.expect(boundNode1.prop2).to.be.equal('');
-          chai.expect(boundNode2.prop1).to.be.equal('one');
-          chai.expect(boundNode2.prop2).to.be.equal('one');
+          expect(boundNode1.prop1).to.be.equal('one');
+          expect(boundNode1.prop2).to.be.equal('');
+          expect(boundNode2.prop1).to.be.equal('one');
+          expect(boundNode2.prop2).to.be.equal('one');
 
           boundNode1.prop1 = 'two';
-          chai.expect(node.prop1).to.be.equal('two');
-          chai.expect(boundNode2.prop1).to.be.equal('two');
+          expect(node.prop1).to.be.equal('two');
+          expect(boundNode2.prop1).to.be.equal('two');
 
-          chai.expect(binding.targets.length).to.be.equal(2);
+          expect(binding.targets.length).to.be.equal(2);
 
           boundNode1.dispose();
-          chai.expect(binding.targets.length).to.be.equal(1);
+          expect(binding.targets.length).to.be.equal(1);
 
           boundNode2.dispose();
-          chai.expect(binding.targets.length).to.be.equal(0);
+          expect(binding.targets.length).to.be.equal(0);
 
           node.dispose();
         });
@@ -620,29 +620,29 @@ export default class {
           const dstNode1 = new TestNode({prop1: binding0});
           const dstNode3 = new TestNode({prop1: binding0, prop2: binding0});
 
-          chai.expect(binding0.targets[0]).to.be.equal(dstNode0);
-          chai.expect(binding0.targets[1]).to.be.equal(dstNode1);
-          chai.expect(binding0.targets[2]).to.be.equal(dstNode3);
+          expect(binding0.targets[0]).to.be.equal(dstNode0);
+          expect(binding0.targets[1]).to.be.equal(dstNode1);
+          expect(binding0.targets[2]).to.be.equal(dstNode3);
 
-          chai.expect(binding0.targetProperties.get(dstNode0)).to.be.eql(['prop1']);
-          chai.expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop1']);
-          chai.expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop1', 'prop2']);
+          expect(binding0.targetProperties.get(dstNode0)).to.be.eql(['prop1']);
+          expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop1']);
+          expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop1', 'prop2']);
 
           dstNode0.dispose();
           dstNode1.unbind('prop1');
           dstNode3.unbind('prop1');
 
-          chai.expect(binding0.targetProperties.get(dstNode0)).to.be.eql([]);
-          chai.expect(binding0.targetProperties.get(dstNode1)).to.be.eql([]);
-          chai.expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2']);
+          expect(binding0.targetProperties.get(dstNode0)).to.be.eql([]);
+          expect(binding0.targetProperties.get(dstNode1)).to.be.eql([]);
+          expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2']);
 
           dstNode1.prop2 = binding0;
           dstNode1.prop1 = binding0;
 
           dstNode3.prop1 = binding0;
 
-          chai.expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop2', 'prop1']);
-          chai.expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2', 'prop1']);
+          expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop2', 'prop1']);
+          expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2', 'prop1']);
         });
         it('Should return existing binding or create a new on "bind()"', () => {
           @Register
@@ -656,8 +656,8 @@ export default class {
           }
           const node = new TestNode();
           const binding0 = node.bind('prop1');
-          chai.expect(binding0).to.be.equal(node._bindings.get('prop1'));
-          chai.expect(binding0).to.be.equal(node.bind('prop1'));
+          expect(binding0).to.be.equal(node._bindings.get('prop1'));
+          expect(binding0).to.be.equal(node.bind('prop1'));
         });
         it('Should dispose bindings correctly', () => {
           @Register
@@ -672,17 +672,17 @@ export default class {
           const node1 = new TestNode();
           const binding0 = node1.bind('prop1');
           node1.unbind('prop1');
-          chai.expect(node1._bindings.get('prop1')).to.be.equal(undefined);
-          chai.expect(binding0.node).to.be.equal(undefined);
+          expect(node1._bindings.get('prop1')).to.be.equal(undefined);
+          expect(binding0.node).to.be.equal(undefined);
 
           const node2 = new TestNode();
           const binding1 = node2.bind('prop1');
           node2.dispose();
-          chai.expect(node2._bindings).to.be.equal(undefined);
-          chai.expect(binding1.node).to.be.equal(undefined);
-          chai.expect(binding1.property).to.be.equal(undefined);
-          chai.expect(binding1.targets).to.be.equal(undefined);
-          chai.expect(binding1.targetProperties).to.be.equal(undefined);
+          expect(node2._bindings).to.be.equal(undefined);
+          expect(binding1.node).to.be.equal(undefined);
+          expect(binding1.property).to.be.equal(undefined);
+          expect(binding1.targets).to.be.equal(undefined);
+          expect(binding1.targetProperties).to.be.equal(undefined);
         });
       });
     });

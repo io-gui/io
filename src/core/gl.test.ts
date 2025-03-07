@@ -1,5 +1,5 @@
 import { IoElement, IoGl, IoThemeSingleton } from '../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 
 const element = new IoGl();
 element.size = [0, 0];
@@ -17,22 +17,22 @@ export default class {
     describe('IoGl', () => {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
-          chai.expect(element.initShader).to.be.a('function');
-          chai.expect(element.onResized).to.be.a('function');
-          chai.expect(element.themeMutated).to.be.a('function');
-          chai.expect(element.setShaderProgram).to.be.a('function');
-          chai.expect(element.updatePropertyUniform).to.be.a('function');
-          chai.expect(element.updateThemeUniforms).to.be.a('function');
-          chai.expect(element.setUniform).to.be.a('function');
+          expect(element.initShader).to.be.a('function');
+          expect(element.onResized).to.be.a('function');
+          expect(element.themeMutated).to.be.a('function');
+          expect(element.setShaderProgram).to.be.a('function');
+          expect(element.updatePropertyUniform).to.be.a('function');
+          expect(element.updateThemeUniforms).to.be.a('function');
+          expect(element.setUniform).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
           element.onResized();
-          chai.expect(element.size).to.be.eql([0, 0]);
-          chai.expect(element.color).to.be.eql([0, 0, 0, 0]);
-          chai.expect(element.pxRatio).to.be.equal(window.devicePixelRatio);
-          chai.expect(element.theme).to.be.equal(IoThemeSingleton);
+          expect(element.size).to.be.eql([0, 0]);
+          expect(element.color).to.be.eql([0, 0, 0, 0]);
+          expect(element.pxRatio).to.be.equal(window.devicePixelRatio);
+          expect(element.theme).to.be.equal(IoThemeSingleton);
 
-          chai.expect(element._properties.get('size')).to.eql({
+          expect(element._properties.get('size')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -42,7 +42,7 @@ export default class {
             value: [0, 0],
           });
 
-          chai.expect(element._properties.get('color')).to.eql({
+          expect(element._properties.get('color')).to.eql({
             binding: undefined,
             reactive: true,
             observe: true,
@@ -52,7 +52,7 @@ export default class {
             value: [0, 0, 0, 0],
           });
 
-          chai.expect(element._properties.get('pxRatio')).to.eql({
+          expect(element._properties.get('pxRatio')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -62,7 +62,7 @@ export default class {
             value: window.devicePixelRatio,
           });
 
-          chai.expect(element._properties.get('theme')).to.eql({
+          expect(element._properties.get('theme')).to.eql({
             binding: undefined,
             reactive: true,
             observe: true,
@@ -73,8 +73,8 @@ export default class {
           });
         });
         it('has <canvas> element', () => {
-          chai.expect(element.children[0].localName).to.equal('canvas');
-          chai.expect((element as IoGl)._canvas.localName).to.equal('canvas');
+          expect(element.children[0].localName).to.equal('canvas');
+          expect((element as IoGl)._canvas.localName).to.equal('canvas');
         });
       });
       describe('Reactivity', () => {
@@ -83,17 +83,17 @@ export default class {
           element.style.width = '32px';
           element.style.height = '32px';
           element.onResized();
-          chai.expect(element.size[0]).to.equal(32);
-          chai.expect(element.size[1]).to.equal(32);
-          chai.expect(element.pxRatio).to.equal(window.devicePixelRatio);
+          expect(element.size[0]).to.equal(32);
+          expect(element.size[1]).to.equal(32);
+          expect(element.pxRatio).to.equal(window.devicePixelRatio);
         });
         it('has correct color', () => {
           let color = (element as IoGl)._ctx.getImageData(0, 0, 1, 1).data;
-          chai.expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
+          expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
           element.color = [1, 0.5, 0.25, 1];
           element._onRender();
           color = (element as IoGl)._ctx.getImageData(0, 0, 1, 1).data;
-          chai.expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
+          expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
         });
       });
     });

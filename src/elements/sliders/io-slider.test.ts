@@ -1,5 +1,5 @@
 import {IoSlider} from '../../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 const element = new IoSlider();
 element.lazy = false;
 
@@ -8,14 +8,14 @@ export default class {
     describe('IoSlider', () => {
       describe('Initialization', () => {
         it('Should initialize property definitions correctly', () => {
-          chai.expect(element.value).to.equal(0);
-          chai.expect(element.step).to.equal(0.01);
-          chai.expect(element.min).to.equal(0);
-          chai.expect(element.max).to.equal(1);
+          expect(element.value).to.equal(0);
+          expect(element.step).to.equal(0.01);
+          expect(element.min).to.equal(0);
+          expect(element.max).to.equal(1);
         });
         it('has correct default attributes', () => {
-          chai.expect(element.getAttribute('tabindex')).to.equal('0');
-          chai.expect(element.getAttribute('contenteditable')).to.equal(null);
+          expect(element.getAttribute('tabindex')).to.equal('0');
+          expect(element.getAttribute('contenteditable')).to.equal(null);
         });
         it('has correct default innerHTML', () => {
         });
@@ -30,13 +30,13 @@ export default class {
       });
       describe('Accessibility', () => {
         it('has a11y attributes', () => {
-          chai.expect(element.getAttribute('role')).to.equal('slider');
+          expect(element.getAttribute('role')).to.equal('slider');
           element.value = 0.1;
-          chai.expect(element.getAttribute('aria-valuenow')).to.equal('0.1');
+          expect(element.getAttribute('aria-valuenow')).to.equal('0.1');
           element.min = 0;
-          chai.expect(element.getAttribute('aria-valuemin')).to.equal('0');
+          expect(element.getAttribute('aria-valuemin')).to.equal('0');
           element.max = 1;
-          chai.expect(element.getAttribute('aria-valuemax')).to.equal('1');
+          expect(element.getAttribute('aria-valuemax')).to.equal('1');
         });
       });
     });

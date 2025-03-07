@@ -1,5 +1,5 @@
 import {IoLabel} from '../../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 const element = new IoLabel();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
@@ -9,8 +9,8 @@ export default class {
     describe('IoLabel', () => {
       describe('Initialization', () => {
         it('Should initialize property definitions correctly', () => {
-          chai.expect(element.label).to.equal('');
-          chai.expect(element._properties.get('label')).to.eql({
+          expect(element.label).to.equal('');
+          expect(element._properties.get('label')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -21,29 +21,29 @@ export default class {
           });
         });
         it('has correct default attributes', () => {
-          chai.expect(element.getAttribute('label')).to.equal(null);
+          expect(element.getAttribute('label')).to.equal(null);
         });
       });
       describe('Reactivity', () => {
         it('should set innerText to match label property', () => {
           element.label = 'label';
-          chai.expect(element.innerText).to.equal('label');
+          expect(element.innerText).to.equal('label');
           element.label = '';
-          chai.expect(element.innerText).to.equal('');
+          expect(element.innerText).to.equal('');
         });
         it('has reactive attributes', () => {
           element.label = 'text';
-          chai.expect(element.getAttribute('label')).to.equal('text');
+          expect(element.getAttribute('label')).to.equal('text');
           element.label = '';
         });
       });
       describe('Accessibility', () => {
         it('has a11y attributes', () => {
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          expect(element.getAttribute('aria-label')).to.equal(null);
           element.label = 'label';
-          chai.expect(element.getAttribute('aria-label')).to.equal('label');
+          expect(element.getAttribute('aria-label')).to.equal('label');
           element.label = '';
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          expect(element.getAttribute('aria-label')).to.equal(null);
         });
       });
     });

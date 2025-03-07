@@ -1,5 +1,5 @@
 // import { IoColor } from '../../iogui.js';
-// import * as chai from '@esm-bundle/chai';
+// import { expect } from 'chai';
 
 // const element = new IoColor();
 // element.style.display = 'none';

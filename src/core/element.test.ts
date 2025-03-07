@@ -1,5 +1,5 @@
 import { IoElement, Register, IoNode, Change } from '../iogui.js';
-import * as chai from '@esm-bundle/chai';
+import { expect } from 'chai';
 
 const element = new IoElement();
 element.style.display = 'none';
@@ -12,25 +12,25 @@ export default class {
     describe('IoElement', () => {
       describe('Initialization', () => {
         it('Should have core API functions defined', () => {
-          chai.expect(element.template).to.be.a('function');
-          chai.expect(element.traverse).to.be.a('function');
-          chai.expect(element.setAttribute).to.be.a('function');
+          expect(element.template).to.be.a('function');
+          expect(element.traverse).to.be.a('function');
+          expect(element.setAttribute).to.be.a('function');
         });
         it('Should initialize property definitions correctly', () => {
           // Default properties
-          chai.expect(element.$).to.be.a('object');
-          chai.expect(element.tabindex).to.be.equal('');
-          chai.expect(element.contenteditable).to.be.equal(false);
-          chai.expect(element.class).to.be.equal('');
-          chai.expect(element.role).to.be.equal('');
-          chai.expect(element.label).to.be.equal('');
-          chai.expect(element.name).to.be.equal('');
-          chai.expect(element.title).to.be.equal('');
-          chai.expect(element.id).to.be.equal('');
-          chai.expect(element.hidden).to.be.equal(false);
-          chai.expect(element.disabled).to.be.equal(false);
+          expect(element.$).to.be.a('object');
+          expect(element.tabindex).to.be.equal('');
+          expect(element.contenteditable).to.be.equal(false);
+          expect(element.class).to.be.equal('');
+          expect(element.role).to.be.equal('');
+          expect(element.label).to.be.equal('');
+          expect(element.name).to.be.equal('');
+          expect(element.title).to.be.equal('');
+          expect(element.id).to.be.equal('');
+          expect(element.hidden).to.be.equal(false);
+          expect(element.disabled).to.be.equal(false);
 
-          chai.expect(element._properties.get('$')).to.eql({
+          expect(element._properties.get('$')).to.eql({
             binding: undefined,
             reactive: false,
             observe: false,
@@ -39,7 +39,7 @@ export default class {
             type: Object,
             value: {},
           });
-          chai.expect(element._properties.get('tabindex')).to.eql({
+          expect(element._properties.get('tabindex')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -48,7 +48,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('contenteditable')).to.eql({
+          expect(element._properties.get('contenteditable')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -57,7 +57,7 @@ export default class {
             type: Boolean,
             value: false,
           });
-          chai.expect(element._properties.get('class')).to.eql({
+          expect(element._properties.get('class')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -66,7 +66,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('role')).to.eql({
+          expect(element._properties.get('role')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -75,7 +75,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('label')).to.eql({
+          expect(element._properties.get('label')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -84,7 +84,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('name')).to.eql({
+          expect(element._properties.get('name')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -93,7 +93,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('title')).to.eql({
+          expect(element._properties.get('title')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -102,7 +102,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('id')).to.eql({
+          expect(element._properties.get('id')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -111,7 +111,7 @@ export default class {
             type: String,
             value: '',
           });
-          chai.expect(element._properties.get('hidden')).to.eql({
+          expect(element._properties.get('hidden')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -120,7 +120,7 @@ export default class {
             type: Boolean,
             value: false,
           });
-          chai.expect(element._properties.get('disabled')).to.eql({
+          expect(element._properties.get('disabled')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -131,49 +131,49 @@ export default class {
           });
         });
         it('Has correct default attributes', () => {
-          chai.expect(element.getAttribute('tabindex')).to.equal(null);
-          chai.expect(element.getAttribute('contenteditable')).to.equal(null);
-          chai.expect(element.getAttribute('class')).to.equal(null);
-          chai.expect(element.getAttribute('role')).to.equal(null);
-          chai.expect(element.getAttribute('label')).to.equal(null);
-          chai.expect(element.getAttribute('name')).to.equal(null);
-          chai.expect(element.getAttribute('title')).to.equal(null);
-          chai.expect(element.getAttribute('id')).to.equal(null);
-          chai.expect(element.getAttribute('hidden')).to.equal(null);
-          chai.expect(element.getAttribute('disabled')).to.equal(null);
+          expect(element.getAttribute('tabindex')).to.equal(null);
+          expect(element.getAttribute('contenteditable')).to.equal(null);
+          expect(element.getAttribute('class')).to.equal(null);
+          expect(element.getAttribute('role')).to.equal(null);
+          expect(element.getAttribute('label')).to.equal(null);
+          expect(element.getAttribute('name')).to.equal(null);
+          expect(element.getAttribute('title')).to.equal(null);
+          expect(element.getAttribute('id')).to.equal(null);
+          expect(element.getAttribute('hidden')).to.equal(null);
+          expect(element.getAttribute('disabled')).to.equal(null);
         });
       });
       describe('Reactivity', () => {
         it('Has reactive attributes', () => {
           element.tabindex = '1';
-          chai.expect(element.getAttribute('tabindex')).to.equal('1');
+          expect(element.getAttribute('tabindex')).to.equal('1');
           element.tabindex = '';
           element.contenteditable = true;
-          chai.expect(element.getAttribute('contenteditable')).to.equal('');
+          expect(element.getAttribute('contenteditable')).to.equal('');
           element.contenteditable = false;
           element.class = 'foo';
-          chai.expect(element.getAttribute('class')).to.equal('foo');
+          expect(element.getAttribute('class')).to.equal('foo');
           element.class = '';
           element.role = 'button';
-          chai.expect(element.getAttribute('role')).to.equal('button');
+          expect(element.getAttribute('role')).to.equal('button');
           element.role = '';
           element.label = 'text';
-          chai.expect(element.getAttribute('label')).to.equal('text');
+          expect(element.getAttribute('label')).to.equal('text');
           element.label = '';
           element.name = 'name';
-          chai.expect(element.getAttribute('name')).to.equal('name');
+          expect(element.getAttribute('name')).to.equal('name');
           element.name = '';
           element.title = 'title';
-          chai.expect(element.getAttribute('title')).to.equal('title');
+          expect(element.getAttribute('title')).to.equal('title');
           element.title = '';
           element.id = 'one';
-          chai.expect(element.getAttribute('id')).to.equal('one');
+          expect(element.getAttribute('id')).to.equal('one');
           element.id = '';
           element.hidden = true;
-          chai.expect(element.getAttribute('hidden')).to.equal('');
+          expect(element.getAttribute('hidden')).to.equal('');
           element.hidden = false;
           element.disabled = true;
-          chai.expect(element.getAttribute('disabled')).to.equal('');
+          expect(element.getAttribute('disabled')).to.equal('');
           element.disabled = false;
         });
         it('Invokes change events and functions', () => {
@@ -252,70 +252,70 @@ export default class {
           eventStack.length = 0;
 
           const element = new TestElement1();
-          chai.expect(element.prop0).to.equal(-1);
-          chai.expect(element.subnode.prop0).to.equal(-1);
-          chai.expect(element.$.subelement.prop0).to.equal(-1);
-          chai.expect(element.$.subelement.prop1).to.equal('default');
-          chai.expect(element.subnode.prop0).to.equal(-1);
-          chai.expect(element.subnode.prop1).to.equal('default');
+          expect(element.prop0).to.equal(-1);
+          expect(element.subnode.prop0).to.equal(-1);
+          expect(element.$.subelement.prop0).to.equal(-1);
+          expect(element.$.subelement.prop1).to.equal('default');
+          expect(element.subnode.prop0).to.equal(-1);
+          expect(element.subnode.prop1).to.equal('default');
 
-          chai.expect(element._counter).to.equal(0);
-          chai.expect(element._prop0counter).to.equal(0);
-          chai.expect(element._prop0Change).to.equal(null);
-          chai.expect(element._prop1counter).to.equal(0);
-          chai.expect(element._prop1Change).to.equal(null);
+          expect(element._counter).to.equal(0);
+          expect(element._prop0counter).to.equal(0);
+          expect(element._prop0Change).to.equal(null);
+          expect(element._prop1counter).to.equal(0);
+          expect(element._prop1Change).to.equal(null);
 
           element.subnode.prop0 = 1;
 
-          chai.expect(element.prop0).to.equal(1);
-          chai.expect(element.subnode.prop0).to.equal(1);
-          chai.expect(element._counter).to.equal(1);
-          chai.expect(element._prop0counter).to.equal(1);
-          chai.expect(element._prop0Change).to.eql({property: 'prop0', value: 1, oldValue: -1});
-          chai.expect(element._prop1counter).to.equal(0);
-          chai.expect(element._prop1Change).to.equal(null);
+          expect(element.prop0).to.equal(1);
+          expect(element.subnode.prop0).to.equal(1);
+          expect(element._counter).to.equal(1);
+          expect(element._prop0counter).to.equal(1);
+          expect(element._prop0Change).to.eql({property: 'prop0', value: 1, oldValue: -1});
+          expect(element._prop1counter).to.equal(0);
+          expect(element._prop1Change).to.equal(null);
 
           element.setProperties({
             prop0: 2,
             prop1: 'foo'
           });
 
-          chai.expect(element.prop0).to.equal(2);
-          chai.expect(element.subnode.prop0).to.equal(2);
-          chai.expect(element.$.subelement.prop0).to.equal(2);
-          chai.expect(element.prop1).to.equal('foo');
-          chai.expect(element.subnode.prop1).to.equal('foo');
-          chai.expect(element.$.subelement.prop1).to.equal('foo');
-          chai.expect(element._counter).to.equal(2);
-          chai.expect(element._prop0counter).to.equal(2);
-          chai.expect(element._prop0Change).to.eql({property: 'prop0', value: 2, oldValue: 1});
-          chai.expect(element._prop1counter).to.equal(1);
-          chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
+          expect(element.prop0).to.equal(2);
+          expect(element.subnode.prop0).to.equal(2);
+          expect(element.$.subelement.prop0).to.equal(2);
+          expect(element.prop1).to.equal('foo');
+          expect(element.subnode.prop1).to.equal('foo');
+          expect(element.$.subelement.prop1).to.equal('foo');
+          expect(element._counter).to.equal(2);
+          expect(element._prop0counter).to.equal(2);
+          expect(element._prop0Change).to.eql({property: 'prop0', value: 2, oldValue: 1});
+          expect(element._prop1counter).to.equal(1);
+          expect(element._prop1Change).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
 
           element.subnode.setProperties({
             prop0: 3,
             prop1: 'buzz',
           });
 
-          chai.expect(element.prop0).to.equal(3);
-          chai.expect(element.subnode.prop0).to.equal(3);
-          chai.expect(element.$.subelement.prop0).to.equal(3);
-          chai.expect(element.$.subelement.prop0).to.equal(3);
-          chai.expect(element.prop1).to.equal('buzz');
-          chai.expect(element.subnode.prop1).to.equal('buzz');
-          chai.expect(element.$.subelement.prop1).to.equal('buzz');
+          expect(element.prop0).to.equal(3);
+          expect(element.subnode.prop0).to.equal(3);
+          expect(element.$.subelement.prop0).to.equal(3);
+          expect(element.$.subelement.prop0).to.equal(3);
+          expect(element.prop1).to.equal('buzz');
+          expect(element.subnode.prop1).to.equal('buzz');
+          expect(element.$.subelement.prop1).to.equal('buzz');
 
           // // NOTE: element.subnode.setProperties on 2 bound properties causes change() event on element twice.
-          // // TODO: Consider fixing // chai.expect(element._counter).to.equal(3);
-          chai.expect(element._counter).to.equal(4);
+          // // TODO: Consider fixing // expect(element._counter).to.equal(3);
+          expect(element._counter).to.equal(4);
 
-          chai.expect(element._prop0counter).to.equal(3);
-          chai.expect(element._prop0Change).to.eql({property: 'prop0', value: 3, oldValue: 2});
-          chai.expect(element._prop1counter).to.equal(2);
-          chai.expect(element._prop1Change).to.eql({property: 'prop1', value: 'buzz', oldValue: 'foo'});
+          expect(element._prop0counter).to.equal(3);
+          expect(element._prop0Change).to.eql({property: 'prop0', value: 3, oldValue: 2});
+          expect(element._prop1counter).to.equal(2);
+          expect(element._prop1Change).to.eql({property: 'prop1', value: 'buzz', oldValue: 'foo'});
 
           // console.log(eventStack);
-          chai.expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changed foo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changed buzz', 'TestElement1: changed', 'TestNode: changed']);
+          expect(eventStack).to.eql(['TestNode: prop0Changed -1', 'TestNode: prop1Changed default', 'TestNode: changed', 'TestNode: prop0Changed 1', 'TestElement1: prop0Changed 1', 'TestElement1: changed', 'TestNode: changed', 'TestElement1: prop0Changed 2', 'TestNode: prop0Changed 2', 'TestNode: changed', 'TestElement1: prop1Changed foo', 'TestNode: prop1Changed foo', 'TestNode: changed', 'TestElement1: changed', 'TestNode: prop0Changed 3', 'TestElement1: prop0Changed 3', 'TestElement1: changed', 'TestNode: prop1Changed buzz', 'TestElement1: prop1Changed buzz', 'TestElement1: changed', 'TestNode: changed']);
 
           eventStack.length = 0;
 
@@ -341,41 +341,41 @@ export default class {
           element2.prop0 = 1;
           element2.prop1 = 'default';
 
-          chai.expect(element2.prop0).to.equal(1);
-          chai.expect(element2.$.subelement.prop0).to.equal(1);
-          chai.expect(element2.prop1).to.equal('default');
-          chai.expect(element2.$.subelement.prop1).to.equal('default');
+          expect(element2.prop0).to.equal(1);
+          expect(element2.$.subelement.prop0).to.equal(1);
+          expect(element2.prop1).to.equal('default');
+          expect(element2.$.subelement.prop1).to.equal('default');
 
           element2.setProperties({
             prop0: 2,
             prop1: 'foo'
           });
 
-          chai.expect(element2.prop0).to.equal(2);
-          chai.expect(element2.$.subelement.prop0).to.equal(2);
-          chai.expect(element2.prop1).to.equal('foo');
-          chai.expect(element2.$.subelement.prop1).to.equal('foo');
+          expect(element2.prop0).to.equal(2);
+          expect(element2.$.subelement.prop0).to.equal(2);
+          expect(element2.prop1).to.equal('foo');
+          expect(element2.$.subelement.prop1).to.equal('foo');
 
           element2.$.subelement.setProperties({
             prop0: 3,
             prop1: 'buzz'
           });
 
-          chai.expect(element2.prop0).to.equal(3);
-          chai.expect(element2.$.subelement.prop0).to.equal(3);
-          chai.expect(element2.prop1).to.equal('buzz');
-          chai.expect(element2.$.subelement.prop1).to.equal('buzz');
+          expect(element2.prop0).to.equal(3);
+          expect(element2.$.subelement.prop0).to.equal(3);
+          expect(element2.prop1).to.equal('buzz');
+          expect(element2.$.subelement.prop1).to.equal('buzz');
         });
       });
       describe('Accessibility', () => {
         it('Has a11y attributes', () => {
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          expect(element.getAttribute('aria-label')).to.equal(null);
           element.label = 'label';
-          chai.expect(element.getAttribute('aria-label')).to.equal('label');
+          expect(element.getAttribute('aria-label')).to.equal('label');
           element.label = '';
-          chai.expect(element.getAttribute('aria-label')).to.equal(null);
+          expect(element.getAttribute('aria-label')).to.equal(null);
           element.disabled = true;
-          chai.expect(element.getAttribute('aria-disabled')).to.equal('');
+          expect(element.getAttribute('aria-disabled')).to.equal('');
           element.disabled = false;
         });
       });
@@ -385,35 +385,35 @@ export default class {
           const element2 = new IoElement();
           element2.label = element1.bind('label') as unknown as string;
           element1.label = 'one';
-          chai.expect(element1.label).to.equal('one');
-          chai.expect(element2.label).to.equal('one');
+          expect(element1.label).to.equal('one');
+          expect(element2.label).to.equal('one');
           element2.label = 'two';
-          chai.expect(element1.label).to.equal('two');
-          chai.expect(element2.label).to.equal('two');
+          expect(element1.label).to.equal('two');
+          expect(element2.label).to.equal('two');
           // unbind
           element1.unbind('label');
           element1.label = 'three';
-          chai.expect(element1.label).to.equal('three');
-          chai.expect(element2.label).to.equal('two');
+          expect(element1.label).to.equal('three');
+          expect(element2.label).to.equal('two');
           element2.label = element1.bind('label') as unknown as string;
-          chai.expect(element2.label).to.equal('three');
+          expect(element2.label).to.equal('three');
           element1.label = 'four';
-          chai.expect(element1.label).to.equal('four');
-          chai.expect(element2.label).to.equal('four');
+          expect(element1.label).to.equal('four');
+          expect(element2.label).to.equal('four');
           element2.unbind('label');
           element1.label = 'five';
-          chai.expect(element1.label).to.equal('five');
-          chai.expect(element2.label).to.equal('four');
+          expect(element1.label).to.equal('five');
+          expect(element2.label).to.equal('four');
         });
         it('Should bind from constructor', () => {
           const element1 = new IoElement();
           const element2 = new IoElement({label: element1.bind('label')});
           element1.label = 'one';
-          chai.expect(element2.label).to.equal('one');
+          expect(element2.label).to.equal('one');
           element2.unbind('label');
           element1.label = 'two';
-          chai.expect(element1.label).to.equal('two');
-          chai.expect(element2.label).to.equal('one');
+          expect(element1.label).to.equal('two');
+          expect(element2.label).to.equal('one');
         });
         // TODO: Bind to node
       });
@@ -464,12 +464,12 @@ export default class {
           const element1 = new TestIoElement1();
           const element2 = new TestIoElement2();
 
-          chai.expect(element1.prop0).to.equal(-1);
-          chai.expect(element1.prop1).to.equal('default');
-          chai.expect(element2.prop0).to.equal(0);
-          chai.expect(element2.prop1).to.equal(0);
+          expect(element1.prop0).to.equal(-1);
+          expect(element1.prop1).to.equal('default');
+          expect(element2.prop0).to.equal(0);
+          expect(element2.prop1).to.equal(0);
 
-          chai.expect(element1._properties.get('prop0')).to.eql({
+          expect(element1._properties.get('prop0')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -478,7 +478,7 @@ export default class {
             type: Number,
             value: -1,
           });
-          chai.expect(element1._properties.get('prop1')).to.eql({
+          expect(element1._properties.get('prop1')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -488,7 +488,7 @@ export default class {
             value: 'default',
           });
 
-          chai.expect(element2._properties.get('prop0')).to.eql({
+          expect(element2._properties.get('prop0')).to.eql({
             binding: undefined,
             reactive: false,
             observe: false,
@@ -497,7 +497,7 @@ export default class {
             type: Number,
             value: 0,
           });
-          chai.expect(element2._properties.get('prop1')).to.eql({
+          expect(element2._properties.get('prop1')).to.eql({
             binding: undefined,
             reactive: true,
             observe: false,
@@ -558,22 +558,22 @@ export default class {
           element.dispatchEvent('custom-event');
           element.prop0 = 1;
           element.prop1 = 'test';
-          chai.expect(_changedCounter).to.equal(1);
-          chai.expect(element._changedCounter).to.equal(2);
-          chai.expect(element._prop0ChangedCounter).to.equal(1);
-          chai.expect(element._prop1ChangedCounter).to.equal(1);
-          chai.expect(element._prop1ChangeEventCounter).to.equal(1);
-          chai.expect(element._customEventCounter).to.equal(1);
+          expect(_changedCounter).to.equal(1);
+          expect(element._changedCounter).to.equal(2);
+          expect(element._prop0ChangedCounter).to.equal(1);
+          expect(element._prop1ChangedCounter).to.equal(1);
+          expect(element._prop1ChangeEventCounter).to.equal(1);
+          expect(element._customEventCounter).to.equal(1);
         });
         it('Should dispatch correct event payloads to handlers', () => {
           const element = new TestIoElement3();
           element.dispatchEvent('custom-event', {asd: ''});
           element.prop0 = 1;
           element.prop1 = 'foo';
-          chai.expect(element._prop0ChangedChange).to.eql({oldValue: -1, property: 'prop0', value: 1});
-          chai.expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
-          chai.expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
-          chai.expect(element._prop1ChangeEvent.detail).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
+          expect(element._prop0ChangedChange).to.eql({oldValue: -1, property: 'prop0', value: 1});
+          expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
+          expect(element._prop1ChangedChange).to.eql({oldValue: 'default', property: 'prop1', value: 'foo'});
+          expect(element._prop1ChangeEvent.detail).to.eql({property: 'prop1', value: 'foo', oldValue: 'default'});
         });
       });
       describe('Binding', () => {
@@ -584,16 +584,16 @@ export default class {
         ]);
         it('Should update bound values correctly', () => {
           element.prop0 = Infinity;
-          chai.expect(element.$.subelement.prop0).to.equal(Infinity);
+          expect(element.$.subelement.prop0).to.equal(Infinity);
           element.$.subelement.prop0 = -2;
-          chai.expect(element.prop0).to.equal(-2);
+          expect(element.prop0).to.equal(-2);
         });
         it('Should bind to Node node', () => {
           node.prop1 = element.bind('prop1');
           node.prop1 = 'a';
-          chai.expect(element.prop1).to.equal('a');
+          expect(element.prop1).to.equal('a');
           element.prop1 = 'b';
-          chai.expect(element.prop1).to.equal('b');
+          expect(element.prop1).to.equal('b');
         });
       });
     });

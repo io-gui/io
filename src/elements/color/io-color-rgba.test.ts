@@ -1,5 +1,5 @@
 import { IoColorRgba } from '../../iogui.js';
-// import * as chai from '@esm-bundle/chai';
+// import { expect } from 'chai';
 
 const element = new IoColorRgba();
 element.style.display = 'none';

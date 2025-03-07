@@ -1,5 +1,5 @@
 import { IoColorPicker } from '../../iogui.js';
-// import * as chai from '@esm-bundle/chai';
+// import { expect } from 'chai';
 
 const element = new IoColorPicker();
 element.style.display = 'none';
