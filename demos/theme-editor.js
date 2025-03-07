@@ -1,4 +1,4 @@
-import { IoElement, Register, IoThemeSingleton, MenuOptions } from 'io-gui';
+import { IoElement, Register, IoThemeSingleton, MenuOptions } from '../build/iogui.js';
 
 export class IoDemoThemeEditor extends IoElement {
   static get Style() {
