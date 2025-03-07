@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,8 +6,6 @@
 
 # Type Alias: AnyEventListener
 
-> **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](KeyboardEventListener.md) \| [`PointerEventListener`](PointerEventListener.md) \| [`CustomEventListener`](CustomEventListener.md) \| [`FocusEventListener`](FocusEventListener.md) \| [`TouchEventListener`](TouchEventListener.md)
+> **AnyEventListener**: `EventListener` \| [`KeyboardEventListener`](../interfaces/KeyboardEventListener.md) \| [`PointerEventListener`](../interfaces/PointerEventListener.md) \| [`CustomEventListener`](../interfaces/CustomEventListener.md) \| [`FocusEventListener`](../interfaces/FocusEventListener.md) \| [`TouchEventListener`](../interfaces/TouchEventListener.md) \| [`ChangeEventListener`](../interfaces/ChangeEventListener.md) \| [`IoEventListener`](../interfaces/IoEventListener.md)
 
-## Defined in
-
-[src/core/node.ts:23](https://github.com/io-gui/io/blob/main/src/core/node.ts#L23)
+Defined in: [src/core/internals/eventDispatcher.ts:14](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L14)

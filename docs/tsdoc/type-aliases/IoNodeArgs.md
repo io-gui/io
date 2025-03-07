@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,16 +8,14 @@
 
 > **IoNodeArgs**: `object`
 
-## Index Signature
-
- \[`key`: `prefix`\<`string`, `"@"`\>\]: `string` \| (`event`) => `void`
+Defined in: [src/core/node.ts:21](https://github.com/io-gui/io/blob/main/src/core/node.ts#L21)
 
 ## Type declaration
+
+## Index Signature
+
+\[`key`: `` `@${string}` ``\]: `string` \| (`event`) => `void`
 
 ### lazy?
 
 > `optional` **lazy**: `boolean`
-
-## Defined in
-
-[src/core/node.ts:32](https://github.com/io-gui/io/blob/main/src/core/node.ts#L32)

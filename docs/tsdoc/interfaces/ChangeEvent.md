@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,9 +6,11 @@
 
 # Interface: ChangeEvent
 
+Defined in: [src/core/internals/changeQueue.ts:83](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L83)
+
 ## Extends
 
-- `CustomEvent`
+- `Omit`\<`CustomEvent`\<[`Change`](Change.md)\>, `"target"`\>
 
 ## Properties
 
@@ -16,42 +18,28 @@
 
 > `readonly` **detail**: [`Change`](Change.md)
 
+Defined in: [src/core/internals/changeQueue.ts:85](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L85)
+
 Returns any custom data event was created with. Typically used for synthetic events.
 
 [MDN Reference](https://developer.mozilla.org/docs/Web/API/CustomEvent/detail)
 
 #### Overrides
 
-`CustomEvent.detail`
-
-#### Defined in
-
-[src/core/internals/changeQueue.ts:85](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L85)
+`Omit.detail`
 
 ***
 
 ### path
 
-> `readonly` **path**: `EventTarget`[]
+> `readonly` **path**: [`IoNode`](../classes/IoNode.md)[]
 
-#### Defined in
-
-[src/core/internals/changeQueue.ts:86](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L86)
+Defined in: [src/core/internals/changeQueue.ts:86](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L86)
 
 ***
 
 ### target
 
-> `readonly` **target**: `EventTarget`
+> `readonly` **target**: [`IoNode`](../classes/IoNode.md)
 
-Returns the object to which event is dispatched (its target).
-
-[MDN Reference](https://developer.mozilla.org/docs/Web/API/Event/target)
-
-#### Overrides
-
-`CustomEvent.target`
-
-#### Defined in
-
-[src/core/internals/changeQueue.ts:84](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L84)
+Defined in: [src/core/internals/changeQueue.ts:84](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L84)

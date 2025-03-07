@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,22 +8,27 @@
 
 > **listenerFromDefinition**(`node`, `def`): [`Listener`](../type-aliases/Listener.md)
 
+Defined in: [src/core/internals/eventDispatcher.ts:57](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L57)
+
+Converts a listener definition into a normalized Listener tuple.
+If the first item is a string, it looks up the method on the node.
+
 ## Parameters
 
-• **node**: `HTMLElement` \| [`IoNode`](../classes/IoNode.md)
+### node
 
-`IoNode` instance
+The node instance containing potential method references
 
-• **def**: [`ListenerDeclaration`](../type-aliases/ListenerDeclaration.md)
+`EventTarget` | [`IoNode`](../classes/IoNode.md)
 
-Listener declaration
+### def
+
+[`ListenerDefinition`](../type-aliases/ListenerDefinition.md)
+
+The listener definition to normalize
 
 ## Returns
 
 [`Listener`](../type-aliases/Listener.md)
 
-Listener
-
-## Defined in
-
-[src/core/internals/eventDispatcher.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L45)
+Normalized [listener, options?] tuple

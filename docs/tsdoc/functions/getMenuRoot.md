@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,14 +8,14 @@
 
 > **getMenuRoot**(`element`): `IoMenuElementType`
 
+Defined in: [src/elements/menus/io-menu-item.ts:402](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L402)
+
 ## Parameters
 
-• **element**: `IoMenuElementType`
+### element
+
+`IoMenuElementType`
 
 ## Returns
 
 `IoMenuElementType`
-
-## Defined in
-
-[src/elements/menus/io-menu-item.ts:403](https://github.com/io-gui/io/blob/main/src/elements/menus/io-menu-item.ts#L403)

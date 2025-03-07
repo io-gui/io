@@ -1,4 +1,4 @@
-**io-gui** • **Docs**
+**io-gui**
 
 ***
 
@@ -92,34 +92,36 @@
 
 - [Change](interfaces/Change.md)
 - [ChangeEvent](interfaces/ChangeEvent.md)
+- [ChangeEventListener](interfaces/ChangeEventListener.md)
+- [CustomEventListener](interfaces/CustomEventListener.md)
+- [FocusEventListener](interfaces/FocusEventListener.md)
+- [IoEventListener](interfaces/IoEventListener.md)
 - [IoNodeConstructor](interfaces/IoNodeConstructor.md)
 - [IoPropertiesConstructor](interfaces/IoPropertiesConstructor.md)
+- [KeyboardEventListener](interfaces/KeyboardEventListener.md)
+- [PointerEventListener](interfaces/PointerEventListener.md)
+- [TouchEventListener](interfaces/TouchEventListener.md)
 
 ## Type Aliases
 
 - [AnyEventListener](type-aliases/AnyEventListener.md)
 - [CallbackFunction](type-aliases/CallbackFunction.md)
 - [Constructor](type-aliases/Constructor.md)
-- [CustomEventListener](type-aliases/CustomEventListener.md)
-- [FocusEventListener](type-aliases/FocusEventListener.md)
 - [IoElementArgs](type-aliases/IoElementArgs.md)
 - [IoNodeArgs](type-aliases/IoNodeArgs.md)
-- [KeyboardEventListener](type-aliases/KeyboardEventListener.md)
 - [Listener](type-aliases/Listener.md)
-- [ListenerDeclaration](type-aliases/ListenerDeclaration.md)
-- [ListenerDeclarationLoose](type-aliases/ListenerDeclarationLoose.md)
+- [ListenerDefinition](type-aliases/ListenerDefinition.md)
+- [ListenerDefinitionLoose](type-aliases/ListenerDefinitionLoose.md)
+- [ListenerDefinitions](type-aliases/ListenerDefinitions.md)
 - [Listeners](type-aliases/Listeners.md)
-- [ListenersDeclaration](type-aliases/ListenersDeclaration.md)
 - [MenuItemArgs](type-aliases/MenuItemArgs.md)
 - [MenuItemArgsLoose](type-aliases/MenuItemArgsLoose.md)
 - [MenuItemSelectType](type-aliases/MenuItemSelectType.md)
 - [NudgeDirection](type-aliases/NudgeDirection.md)
-- [PointerEventListener](type-aliases/PointerEventListener.md)
-- [PropertyDeclaration](type-aliases/PropertyDeclaration.md)
-- [PropertyDeclarationLoose](type-aliases/PropertyDeclarationLoose.md)
-- [PropertyDeclarations](type-aliases/PropertyDeclarations.md)
+- [PropertyDefinition](type-aliases/PropertyDefinition.md)
+- [PropertyDefinitionLoose](type-aliases/PropertyDefinitionLoose.md)
+- [PropertyDefinitions](type-aliases/PropertyDefinitions.md)
 - [Theme](type-aliases/Theme.md)
-- [TouchEventListener](type-aliases/TouchEventListener.md)
 - [VDOMArray](type-aliases/VDOMArray.md)
 - [VDOMElement](type-aliases/VDOMElement.md)
 
@@ -137,13 +139,8 @@
 
 ## Functions
 
-- [IoNodeMixin](functions/IoNodeMixin.md)
-- [IoStorage](functions/IoStorage.md)
-- [Property](functions/Property.md)
-- [Register](functions/Register.md)
 - [addMenuOptions](functions/addMenuOptions.md)
 - [applyNativeElementProps](functions/applyNativeElementProps.md)
-- [assignListenerDeclaration](functions/assignListenerDeclaration.md)
 - [buildTree](functions/buildTree.md)
 - [disposeElementDeep](functions/disposeElementDeep.md)
 - [filterOptions](functions/filterOptions.md)
@@ -151,5 +148,9 @@
 - [getMenuAncestors](functions/getMenuAncestors.md)
 - [getMenuDescendants](functions/getMenuDescendants.md)
 - [getMenuRoot](functions/getMenuRoot.md)
-- [hardenListenerDeclaration](functions/hardenListenerDeclaration.md)
+- [hardenListenerDefinition](functions/hardenListenerDefinition.md)
+- [IoNodeMixin](functions/IoNodeMixin.md)
+- [IoStorage](functions/IoStorage.md)
 - [listenerFromDefinition](functions/listenerFromDefinition.md)
+- [Property](functions/Property.md)
+- [Register](functions/Register.md)

@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: IoElementArgs
 
 > **IoElementArgs**: [`IoNodeArgs`](IoNodeArgs.md) & `object`
+
+Defined in: [src/core/element.ts:20](https://github.com/io-gui/io/blob/main/src/core/element.ts#L20)
 
 ## Type declaration
 
@@ -53,7 +55,3 @@
 ### title?
 
 > `optional` **title**: `string`
-
-## Defined in
-
-[src/core/element.ts:20](https://github.com/io-gui/io/blob/main/src/core/element.ts#L20)

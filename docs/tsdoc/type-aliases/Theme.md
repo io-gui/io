@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,47 +8,49 @@
 
 > **Theme**: `object`
 
+Defined in: [src/core/theme.ts:16](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L16)
+
 ## Type declaration
 
-### iotBackgroundColor
+### iotBgColor
 
-> **iotBackgroundColor**: [`Color`](../classes/Color.md)
+> **iotBgColor**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorBlue
+### iotBgColorBlue
 
-> **iotBackgroundColorBlue**: [`Color`](../classes/Color.md)
+> **iotBgColorBlue**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorDimmed
+### iotBgColorDimmed
 
-> **iotBackgroundColorDimmed**: [`Color`](../classes/Color.md)
+> **iotBgColorDimmed**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorField
+### iotBgColorField
 
-> **iotBackgroundColorField**: [`Color`](../classes/Color.md)
+> **iotBgColorField**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorGreen
+### iotBgColorGreen
 
-> **iotBackgroundColorGreen**: [`Color`](../classes/Color.md)
+> **iotBgColorGreen**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorRed
+### iotBgColorRed
 
-> **iotBackgroundColorRed**: [`Color`](../classes/Color.md)
+> **iotBgColorRed**: [`Color`](../classes/Color.md)
 
-### iotBackgroundColorStrong
+### iotBgColorStrong
 
-> **iotBackgroundColorStrong**: [`Color`](../classes/Color.md)
+> **iotBgColorStrong**: [`Color`](../classes/Color.md)
 
 ### iotBorderColor
 
 > **iotBorderColor**: [`Color`](../classes/Color.md)
 
-### iotBorderColorDimmed
+### iotBorderColorDark
 
-> **iotBorderColorDimmed**: [`Color`](../classes/Color.md)
+> **iotBorderColorDark**: [`Color`](../classes/Color.md)
 
-### iotBorderColorStrong
+### iotBorderColorLight
 
-> **iotBorderColorStrong**: [`Color`](../classes/Color.md)
+> **iotBorderColorLight**: [`Color`](../classes/Color.md)
 
 ### iotBorderRadius
 
@@ -142,10 +144,6 @@
 
 > **iotFieldHeight9**: `number`
 
-### iotFillColor
-
-> **iotFillColor**: [`Color`](../classes/Color.md)
-
 ### iotFontSize
 
 > **iotFontSize**: `number`
@@ -185,15 +183,3 @@
 ### iotSpacing8
 
 > **iotSpacing8**: `number`
-
-### iotStrokeColor
-
-> **iotStrokeColor**: [`Color`](../classes/Color.md)
-
-### iotStrokeWidth
-
-> **iotStrokeWidth**: `number`
-
-## Defined in
-
-[src/core/theme.ts:16](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L16)

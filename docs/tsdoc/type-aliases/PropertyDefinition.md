@@ -1,12 +1,14 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
-[io-gui](../README.md) / PropertyDeclaration
+[io-gui](../README.md) / PropertyDefinition
 
-# Type Alias: PropertyDeclaration
+# Type Alias: PropertyDefinition
 
-> **PropertyDeclaration**: `object`
+> **PropertyDefinition**: `object`
+
+Defined in: [src/core/internals/property.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L7)
 
 Declares default value, type and reactive behavior of the property.
 
@@ -39,7 +41,3 @@ Declares default value, type and reactive behavior of the property.
 ### value?
 
 > `optional` **value**: `any`
-
-## Defined in
-
-[src/core/internals/property.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L7)

@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,7 +6,9 @@
 
 # Class: ProtoProperty
 
-Finalized property definition created from property declaration.
+Defined in: [src/core/internals/property.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L25)
+
+Finalized property definition created from property definition.
 
 ## Constructors
 
@@ -14,11 +16,15 @@ Finalized property definition created from property declaration.
 
 > **new ProtoProperty**(`def`): [`ProtoProperty`](ProtoProperty.md)
 
-Takes a loosely typed property declaration and returns full property definition with unscpecified fileds inferred.
+Defined in: [src/core/internals/property.ts:37](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L37)
+
+Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
 
 #### Parameters
 
-• **def**: [`PropertyDeclarationLoose`](../type-aliases/PropertyDeclarationLoose.md)
+##### def
+
+[`PropertyDefinitionLoose`](../type-aliases/PropertyDefinitionLoose.md)
 
 Loosely typed property definition
 
@@ -26,19 +32,13 @@ Loosely typed property definition
 
 [`ProtoProperty`](ProtoProperty.md)
 
-#### Defined in
-
-[src/core/internals/property.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L38)
-
 ## Properties
 
 ### binding?
 
 > `optional` **binding**: [`Binding`](Binding.md)
 
-#### Defined in
-
-[src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
+Defined in: [src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
 
 ***
 
@@ -46,9 +46,7 @@ Loosely typed property definition
 
 > `optional` **init**: `any`
 
-#### Defined in
-
-[src/core/internals/property.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L33)
+Defined in: [src/core/internals/property.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L32)
 
 ***
 
@@ -56,9 +54,7 @@ Loosely typed property definition
 
 > `optional` **observe**: `boolean`
 
-#### Defined in
-
-[src/core/internals/property.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L32)
+Defined in: [src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
 
 ***
 
@@ -66,9 +62,7 @@ Loosely typed property definition
 
 > `optional` **reactive**: `boolean`
 
-#### Defined in
-
-[src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
+Defined in: [src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
 
 ***
 
@@ -76,9 +70,7 @@ Loosely typed property definition
 
 > `optional` **reflect**: `boolean`
 
-#### Defined in
-
-[src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
+Defined in: [src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
 
 ***
 
@@ -86,9 +78,7 @@ Loosely typed property definition
 
 > `optional` **type**: [`Constructor`](../type-aliases/Constructor.md)
 
-#### Defined in
-
-[src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
+Defined in: [src/core/internals/property.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L27)
 
 ***
 
@@ -96,9 +86,7 @@ Loosely typed property definition
 
 > `optional` **value**: `any`
 
-#### Defined in
-
-[src/core/internals/property.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L27)
+Defined in: [src/core/internals/property.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L26)
 
 ## Methods
 
@@ -106,18 +94,18 @@ Loosely typed property definition
 
 > **assign**(`protoProp`): `void`
 
+Defined in: [src/core/internals/property.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L67)
+
 Assigns values of another ProtoProperty to itself, unless they are default values.
 
 #### Parameters
 
-• **protoProp**: [`ProtoProperty`](ProtoProperty.md)
+##### protoProp
+
+[`ProtoProperty`](ProtoProperty.md)
 
 Source ProtoProperty
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/internals/property.ts:68](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L68)

@@ -1,10 +1,12 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
 [io-gui](../README.md) / IoColorSlider
 
 # Class: IoColorSlider
+
+Defined in: [src/elements/color/io-color-sliders.ts:19](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L19)
 
 A generic color slider element.
 It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
@@ -20,17 +22,25 @@ config='{"value": ["io-properties"]}
 
 - [`IoColorBase`](IoColorBase.md)
 
+## Indexable
+
+\[`key`: `string`\]: `any`
+
 ## Constructors
 
 ### new IoColorSlider()
 
 > **new IoColorSlider**(...`args`): [`IoColorSlider`](IoColorSlider.md)
 
+Defined in: [src/core/node.ts:52](https://github.com/io-gui/io/blob/main/src/core/node.ts#L52)
+
 Creates a class instance and initializes the internals.
 
 #### Parameters
 
-• ...**args**: `any`[]
+##### args
+
+...`any`[]
 
 #### Returns
 
@@ -40,37 +50,17 @@ Creates a class instance and initializes the internals.
 
 [`IoColorBase`](IoColorBase.md).[`constructor`](IoColorBase.md#constructors)
 
-#### Defined in
-
-[src/core/node.ts:63](https://github.com/io-gui/io/blob/main/src/core/node.ts#L63)
-
 ## Properties
-
-### $
-
-> **$**: `Record`\<`string`, `any`\>
-
-#### Inherited from
-
-[`IoColorBase`](IoColorBase.md).[`$`](IoColorBase.md#$)
-
-#### Defined in
-
-[src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
-
-***
 
 ### \_bindings
 
 > `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
+Defined in: [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`_bindings`](IoColorBase.md#_bindings)
-
-#### Defined in
-
-[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ***
 
@@ -78,13 +68,11 @@ Creates a class instance and initializes the internals.
 
 > `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
+Defined in: [src/core/node.ts:45](https://github.com/io-gui/io/blob/main/src/core/node.ts#L45)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`_changeQueue`](IoColorBase.md#_changequeue)
-
-#### Defined in
-
-[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ***
 
@@ -92,13 +80,11 @@ Creates a class instance and initializes the internals.
 
 > `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
+Defined in: [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`_eventDispatcher`](IoColorBase.md#_eventdispatcher)
-
-#### Defined in
-
-[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ***
 
@@ -106,13 +92,11 @@ Creates a class instance and initializes the internals.
 
 > `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
+Defined in: [src/core/node.ts:43](https://github.com/io-gui/io/blob/main/src/core/node.ts#L43)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`_properties`](IoColorBase.md#_properties)
-
-#### Defined in
-
-[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ***
 
@@ -120,13 +104,23 @@ Creates a class instance and initializes the internals.
 
 > `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
+Defined in: [src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`_protochain`](IoColorBase.md#_protochain)
 
-#### Defined in
+***
 
-[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
+### $
+
+> **$**: `Record`\<`string`, `any`\>
+
+Defined in: [src/core/element.ts:179](https://github.com/io-gui/io/blob/main/src/core/element.ts#L179)
+
+#### Inherited from
+
+[`IoColorBase`](IoColorBase.md).[`$`](IoColorBase.md#$)
 
 ***
 
@@ -134,9 +128,7 @@ Creates a class instance and initializes the internals.
 
 > **channel**: `string`
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:32](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L32)
+Defined in: [src/elements/color/io-color-sliders.ts:35](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L35)
 
 ***
 
@@ -144,37 +136,31 @@ Creates a class instance and initializes the internals.
 
 > **class**: `string`
 
+Defined in: [src/core/element.ts:188](https://github.com/io-gui/io/blob/main/src/core/element.ts#L188)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`class`](IoColorBase.md#class)
-
-#### Defined in
-
-[src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
 ***
 
 ### cmyk
 
-> **cmyk**: [`number`, `number`, `number`, `number`]
+> **cmyk**: \[`number`, `number`, `number`, `number`\]
+
+Defined in: [src/elements/color/io-color-base.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L20)
 
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`cmyk`](IoColorBase.md#cmyk)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L20)
-
 ***
 
 ### color
 
-> **color**: [`number`, `number`, `number`, `number`]
+> **color**: \[`number`, `number`, `number`, `number`\]
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:29](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L29)
+Defined in: [src/elements/color/io-color-sliders.ts:29](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L29)
 
 ***
 
@@ -182,13 +168,11 @@ Creates a class instance and initializes the internals.
 
 > **contenteditable**: `boolean`
 
+Defined in: [src/core/element.ts:185](https://github.com/io-gui/io/blob/main/src/core/element.ts#L185)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`contenteditable`](IoColorBase.md#contenteditable)
-
-#### Defined in
-
-[src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
 ***
 
@@ -196,13 +180,11 @@ Creates a class instance and initializes the internals.
 
 > **disabled**: `boolean`
 
+Defined in: [src/core/element.ts:209](https://github.com/io-gui/io/blob/main/src/core/element.ts#L209)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`disabled`](IoColorBase.md#disabled)
-
-#### Defined in
-
-[src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
 ***
 
@@ -210,41 +192,35 @@ Creates a class instance and initializes the internals.
 
 > **hidden**: `boolean`
 
+Defined in: [src/core/element.ts:206](https://github.com/io-gui/io/blob/main/src/core/element.ts#L206)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`hidden`](IoColorBase.md#hidden)
-
-#### Defined in
-
-[src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
 ***
 
 ### hsl
 
-> **hsl**: [`number`, `number`, `number`]
+> **hsl**: \[`number`, `number`, `number`\]
+
+Defined in: [src/elements/color/io-color-base.ts:17](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L17)
 
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`hsl`](IoColorBase.md#hsl)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:17](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L17)
-
 ***
 
 ### hsv
 
-> **hsv**: [`number`, `number`, `number`]
+> **hsv**: \[`number`, `number`, `number`\]
+
+Defined in: [src/elements/color/io-color-base.ts:14](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L14)
 
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`hsv`](IoColorBase.md#hsv)
-
-#### Defined in
-
-[src/elements/color/io-color-base.ts:14](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L14)
 
 ***
 
@@ -252,13 +228,11 @@ Creates a class instance and initializes the internals.
 
 > **id**: `string`
 
+Defined in: [src/core/element.ts:203](https://github.com/io-gui/io/blob/main/src/core/element.ts#L203)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`id`](IoColorBase.md#id)
-
-#### Defined in
-
-[src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
 ***
 
@@ -266,13 +240,11 @@ Creates a class instance and initializes the internals.
 
 > **label**: `string`
 
+Defined in: [src/core/element.ts:194](https://github.com/io-gui/io/blob/main/src/core/element.ts#L194)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`label`](IoColorBase.md#label)
-
-#### Defined in
-
-[src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
 ***
 
@@ -280,27 +252,23 @@ Creates a class instance and initializes the internals.
 
 > **name**: `string`
 
+Defined in: [src/core/element.ts:197](https://github.com/io-gui/io/blob/main/src/core/element.ts#L197)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`name`](IoColorBase.md#name)
-
-#### Defined in
-
-[src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
 ***
 
 ### rgba
 
-> **rgba**: [`number`, `number`, `number`, `number`]
+> **rgba**: \[`number`, `number`, `number`, `number`\]
+
+Defined in: [src/elements/color/io-color-base.ts:11](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L11)
 
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`rgba`](IoColorBase.md#rgba)
-
-#### Defined in
-
-[src/elements/color/io-color-base.ts:11](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L11)
 
 ***
 
@@ -308,13 +276,19 @@ Creates a class instance and initializes the internals.
 
 > **role**: `string`
 
+Defined in: [src/core/element.ts:191](https://github.com/io-gui/io/blob/main/src/core/element.ts#L191)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`role`](IoColorBase.md#role)
 
-#### Defined in
+***
 
-[src/core/element.ts:190](https://github.com/io-gui/io/blob/main/src/core/element.ts#L190)
+### step
+
+> **step**: `number`
+
+Defined in: [src/elements/color/io-color-sliders.ts:32](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L32)
 
 ***
 
@@ -322,13 +296,11 @@ Creates a class instance and initializes the internals.
 
 > **tabindex**: `string`
 
+Defined in: [src/core/element.ts:182](https://github.com/io-gui/io/blob/main/src/core/element.ts#L182)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`tabindex`](IoColorBase.md#tabindex)
-
-#### Defined in
-
-[src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
 ***
 
@@ -336,19 +308,19 @@ Creates a class instance and initializes the internals.
 
 > **title**: `string`
 
+Defined in: [src/core/element.ts:200](https://github.com/io-gui/io/blob/main/src/core/element.ts#L200)
+
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`title`](IoColorBase.md#title)
-
-#### Defined in
-
-[src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
 ***
 
 ### value
 
 > **value**: `object`
+
+Defined in: [src/elements/color/io-color-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L8)
 
 #### a?
 
@@ -370,69 +342,77 @@ Creates a class instance and initializes the internals.
 
 [`IoColorBase`](IoColorBase.md).[`value`](IoColorBase.md#value)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L8)
-
 ***
 
 ### vertical
 
 > **vertical**: `boolean`
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:35](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L35)
+Defined in: [src/elements/color/io-color-sliders.ts:38](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L38)
 
 ## Accessors
 
 ### textNode
 
-> `get` **textNode**(): `any`
+#### Get Signature
 
-> `set` **textNode**(`value`): `void`
+> **get** **textNode**(): `any`
 
-#### Parameters
+Defined in: [src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src/core/element.ts#L393)
 
-• **value**: `any`
-
-#### Returns
+##### Returns
 
 `any`
+
+#### Set Signature
+
+> **set** **textNode**(`value`): `void`
+
+Defined in: [src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
+
+##### Parameters
+
+###### value
+
+`any`
+
+##### Returns
+
+`void`
 
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`textNode`](IoColorBase.md#textnode)
 
-#### Defined in
-
-[src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
-
 ***
 
 ### Properties
 
-> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
+#### Get Signature
 
-#### Returns
+> **get** `static` **Properties**(): [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
-[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
+Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/core/node.ts#L33)
+
+##### Returns
+
+[`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`Properties`](IoColorBase.md#properties)
 
-#### Defined in
-
-[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
-
 ***
 
 ### Style
 
-> `get` `static` **Style**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Style**(): `string`
+
+Defined in: [src/elements/color/io-color-sliders.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L20)
+
+##### Returns
 
 `string`
 
@@ -440,46 +420,24 @@ Creates a class instance and initializes the internals.
 
 [`IoColorBase`](IoColorBase.md).[`Style`](IoColorBase.md#style)
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:20](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L20)
-
 ## Methods
-
-### Register()
-
-> **Register**(`ioNodeConstructor`): `void`
-
-#### Parameters
-
-• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoColorBase`](IoColorBase.md).[`Register`](IoColorBase.md#register)
-
-#### Defined in
-
-[src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
-
-***
 
 ### \_flattenTextNode()
 
 > **\_flattenTextNode**(`element`): `void`
+
+Defined in: [src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+##### element
 
 Element to flatten.
+
+`HTMLElement` | [`IoElement`](IoElement.md)
 
 #### Returns
 
@@ -489,27 +447,23 @@ Element to flatten.
 
 [`IoColorBase`](IoColorBase.md).[`_flattenTextNode`](IoColorBase.md#_flattentextnode)
 
-#### Defined in
-
-[src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
-
 ***
 
 ### \_onValueInput()
 
 > **\_onValueInput**(`event`): `void`
 
+Defined in: [src/elements/color/io-color-sliders.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L40)
+
 #### Parameters
 
-• **event**: `CustomEvent`\<`any`\>
+##### event
+
+`CustomEvent`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:37](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L37)
 
 ***
 
@@ -517,19 +471,27 @@ Element to flatten.
 
 > **addEventListener**(`type`, `listener`, `options`?): `void`
 
+Defined in: [src/core/node.ts:342](https://github.com/io-gui/io/blob/main/src/core/node.ts#L342)
+
 Wrapper for addEventListener.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 listener name.
 
-• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+##### listener
+
+[`AnyEventListener`](../type-aliases/AnyEventListener.md)
 
 listener handler.
 
-• **options?**: `AddEventListenerOptions`
+##### options?
+
+`AddEventListenerOptions`
 
 event listener options.
 
@@ -541,22 +503,22 @@ event listener options.
 
 [`IoColorBase`](IoColorBase.md).[`addEventListener`](IoColorBase.md#addeventlistener)
 
-#### Defined in
-
-[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
-
 ***
 
 ### applyProperties()
 
 > **applyProperties**(`props`): `void`
 
+Defined in: [src/core/element.ts:401](https://github.com/io-gui/io/blob/main/src/core/element.ts#L401)
+
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-• **props**: `any`
+##### props
+
+`any`
 
 Map of property names and values.
 
@@ -568,21 +530,21 @@ Map of property names and values.
 
 [`IoColorBase`](IoColorBase.md).[`applyProperties`](IoColorBase.md#applyproperties)
 
-#### Defined in
-
-[src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
-
 ***
 
 ### bind()
 
 > **bind**(`prop`): [`Binding`](Binding.md)
 
+Defined in: [src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
+
 Returns a binding to a specified property`.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property to bind to.
 
@@ -596,15 +558,13 @@ Binding object.
 
 [`IoColorBase`](IoColorBase.md).[`bind`](IoColorBase.md#bind)
 
-#### Defined in
-
-[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
-
 ***
 
 ### changed()
 
 > **changed**(): `void`
+
+Defined in: [src/elements/color/io-color-sliders.ts:118](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L118)
 
 default change handler.
 Invoked when one of the properties change.
@@ -617,15 +577,13 @@ Invoked when one of the properties change.
 
 [`IoColorBase`](IoColorBase.md).[`changed`](IoColorBase.md#changed)
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:115](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L115)
-
 ***
 
 ### connectedCallback()
 
 > **connectedCallback**(): `void`
+
+Defined in: [src/core/element.ts:214](https://github.com/io-gui/io/blob/main/src/core/element.ts#L214)
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -637,15 +595,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [`IoColorBase`](IoColorBase.md).[`connectedCallback`](IoColorBase.md#connectedcallback)
 
-#### Defined in
-
-[src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
-
 ***
 
 ### disabledChanged()
 
 > **disabledChanged**(): `void`
+
+Defined in: [src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src/core/element.ts#L430)
 
 #### Returns
 
@@ -655,15 +611,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [`IoColorBase`](IoColorBase.md).[`disabledChanged`](IoColorBase.md#disabledchanged)
 
-#### Defined in
-
-[src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
-
 ***
 
 ### disconnectedCallback()
 
 > **disconnectedCallback**(): `void`
+
+Defined in: [src/core/element.ts:222](https://github.com/io-gui/io/blob/main/src/core/element.ts#L222)
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -675,35 +629,39 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 [`IoColorBase`](IoColorBase.md).[`disconnectedCallback`](IoColorBase.md#disconnectedcallback)
 
-#### Defined in
-
-[src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
-
 ***
 
 ### dispatchEvent()
 
 > **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
+Defined in: [src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 event name to dispatch.
 
-• **detail** = `{}`
+##### detail
 
 event detail.
 
-• **bubbles**: `boolean` = `false`
+##### bubbles
+
+`boolean` = `false`
 
 event bubbles.
 
-• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+##### src?
 
 source node/element to dispatch event from.
+
+`Node` | `Document` | `HTMLElement` | `Window`
 
 #### Returns
 
@@ -713,21 +671,21 @@ source node/element to dispatch event from.
 
 [`IoColorBase`](IoColorBase.md).[`dispatchEvent`](IoColorBase.md#dispatchevent)
 
-#### Defined in
-
-[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
-
 ***
 
 ### dispatchMutationEvent()
 
 > **dispatchMutationEvent**(`object`): `void`
 
+Defined in: [src/core/node.ts:374](https://github.com/io-gui/io/blob/main/src/core/node.ts#L374)
+
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-• **object**: `any`
+##### object
+
+`any`
 
 object which mutated.
 
@@ -739,15 +697,13 @@ object which mutated.
 
 [`IoColorBase`](IoColorBase.md).[`dispatchMutationEvent`](IoColorBase.md#dispatchmutationevent)
 
-#### Defined in
-
-[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
-
 ***
 
 ### dispatchQueue()
 
 > **dispatchQueue**(): `void`
+
+Defined in: [src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -759,15 +715,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 [`IoColorBase`](IoColorBase.md).[`dispatchQueue`](IoColorBase.md#dispatchqueue)
 
-#### Defined in
-
-[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
-
 ***
 
 ### dispatchQueueSync()
 
 > **dispatchQueueSync**(): `void`
+
+Defined in: [src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 Dispatches the queue immediately.
 
@@ -779,15 +733,13 @@ Dispatches the queue immediately.
 
 [`IoColorBase`](IoColorBase.md).[`dispatchQueueSync`](IoColorBase.md#dispatchqueuesync)
 
-#### Defined in
-
-[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
-
 ***
 
 ### dispose()
 
 > **dispose**(): `void`
+
+Defined in: [src/core/node.ts:381](https://github.com/io-gui/io/blob/main/src/core/node.ts#L381)
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -800,15 +752,13 @@ Use this when instance is no longer needed.
 
 [`IoColorBase`](IoColorBase.md).[`dispose`](IoColorBase.md#dispose)
 
-#### Defined in
-
-[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
-
 ***
 
 ### init()
 
 > **init**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:22](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L22)
 
 #### Returns
 
@@ -818,22 +768,22 @@ Use this when instance is no longer needed.
 
 [`IoColorBase`](IoColorBase.md).[`init`](IoColorBase.md#init)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:22](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L22)
-
 ***
 
 ### inputValue()
 
 > **inputValue**(`value`): `void`
 
+Defined in: [src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
@@ -845,15 +795,13 @@ Property value.
 
 [`IoColorBase`](IoColorBase.md).[`inputValue`](IoColorBase.md#inputvalue)
 
-#### Defined in
-
-[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
-
 ***
 
 ### labelChanged()
 
 > **labelChanged**(): `void`
+
+Defined in: [src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src/core/element.ts#L423)
 
 #### Returns
 
@@ -863,22 +811,22 @@ Property value.
 
 [`IoColorBase`](IoColorBase.md).[`labelChanged`](IoColorBase.md#labelchanged)
 
-#### Defined in
-
-[src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
-
 ***
 
 ### objectMutated()
 
 > **objectMutated**(`prop`): `void`
 
+Defined in: [src/core/node.ts:298](https://github.com/io-gui/io/blob/main/src/core/node.ts#L298)
+
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Mutated object property name.
 
@@ -890,22 +838,22 @@ Mutated object property name.
 
 [`IoColorBase`](IoColorBase.md).[`objectMutated`](IoColorBase.md#objectmutated)
 
-#### Defined in
-
-[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
-
 ***
 
 ### onObjectMutated()
 
 > **onObjectMutated**(`event`): `void`
 
+Defined in: [src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-• **event**: `CustomEvent`\<`any`\>
+##### event
+
+`CustomEvent`
 
 Event payload.
 
@@ -917,29 +865,33 @@ Event payload.
 
 [`IoColorBase`](IoColorBase.md).[`onObjectMutated`](IoColorBase.md#onobjectmutated)
 
-#### Defined in
-
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
-
 ***
 
 ### queue()
 
 > **queue**(`prop`, `value`, `oldValue`): `void`
 
+Defined in: [src/core/node.ts:243](https://github.com/io-gui/io/blob/main/src/core/node.ts#L243)
+
 Adds property change to the queue.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property name.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
-• **oldValue**: `any`
+##### oldValue
+
+`any`
 
 Old property value.
 
@@ -951,9 +903,27 @@ Old property value.
 
 [`IoColorBase`](IoColorBase.md).[`queue`](IoColorBase.md#queue)
 
-#### Defined in
+***
 
-[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
+### Register()
+
+> **Register**(`ioNodeConstructor`): `void`
+
+Defined in: [src/core/element.ts:305](https://github.com/io-gui/io/blob/main/src/core/element.ts#L305)
+
+#### Parameters
+
+##### ioNodeConstructor
+
+*typeof* [`IoNode`](IoNode.md)
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`IoColorBase`](IoColorBase.md).[`Register`](IoColorBase.md#register)
 
 ***
 
@@ -961,19 +931,27 @@ Old property value.
 
 > **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
+Defined in: [src/core/node.ts:357](https://github.com/io-gui/io/blob/main/src/core/node.ts#L357)
+
 Wrapper for removeEventListener.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 event name to listen to.
 
-• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+##### listener?
+
+[`AnyEventListener`](../type-aliases/AnyEventListener.md)
 
 listener handler.
 
-• **options?**: `AddEventListenerOptions`
+##### options?
+
+`AddEventListenerOptions`
 
 event listener options.
 
@@ -985,15 +963,13 @@ event listener options.
 
 [`IoColorBase`](IoColorBase.md).[`removeEventListener`](IoColorBase.md#removeeventlistener)
 
-#### Defined in
-
-[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
-
 ***
 
 ### rgbFromCmyk()
 
 > **rgbFromCmyk**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:50](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L50)
 
 #### Returns
 
@@ -1003,15 +979,13 @@ event listener options.
 
 [`IoColorBase`](IoColorBase.md).[`rgbFromCmyk`](IoColorBase.md#rgbfromcmyk)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:50](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L50)
-
 ***
 
 ### rgbFromHsl()
 
 > **rgbFromHsl**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L40)
 
 #### Returns
 
@@ -1021,15 +995,13 @@ event listener options.
 
 [`IoColorBase`](IoColorBase.md).[`rgbFromHsl`](IoColorBase.md#rgbfromhsl)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:40](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L40)
-
 ***
 
 ### rgbFromHsv()
 
 > **rgbFromHsv**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:30](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L30)
 
 #### Returns
 
@@ -1039,27 +1011,29 @@ event listener options.
 
 [`IoColorBase`](IoColorBase.md).[`rgbFromHsv`](IoColorBase.md#rgbfromhsv)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:30](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L30)
-
 ***
 
 ### setAttribute()
 
 > **setAttribute**(`attr`, `value`): `void`
 
+Defined in: [src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
+
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-• **attr**: `string`
+##### attr
+
+`string`
 
 Attribute name.
 
-• **value**: `string` \| `number` \| `boolean`
+##### value
 
 Attribute value.
+
+`string` | `number` | `boolean`
 
 #### Returns
 
@@ -1069,22 +1043,22 @@ Attribute value.
 
 [`IoColorBase`](IoColorBase.md).[`setAttribute`](IoColorBase.md#setattribute)
 
-#### Defined in
-
-[src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
-
 ***
 
 ### setProperties()
 
 > **setProperties**(`props`): `void`
 
+Defined in: [src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
+
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-• **props**: `any`
+##### props
+
+`any`
 
 Map of property names and values.
 
@@ -1096,29 +1070,33 @@ Map of property names and values.
 
 [`IoColorBase`](IoColorBase.md).[`setProperties`](IoColorBase.md#setproperties)
 
-#### Defined in
-
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
-
 ***
 
 ### setProperty()
 
 > **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
+Defined in: [src/core/node.ts:111](https://github.com/io-gui/io/blob/main/src/core/node.ts#L111)
+
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-• **name**: `string`
+##### name
+
+`string`
 
 Property name to set value of.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Peroperty value.
 
-• **skipDispatch?**: `boolean`
+##### skipDispatch?
+
+`boolean`
 
 flag to skip event dispatch.
 
@@ -1130,29 +1108,33 @@ flag to skip event dispatch.
 
 [`IoColorBase`](IoColorBase.md).[`setProperty`](IoColorBase.md#setproperty)
 
-#### Defined in
-
-[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
-
 ***
 
 ### template()
 
 > **template**(`vDOM`, `host`?, `cache`?): `void`
 
+Defined in: [src/core/element.ts:234](https://github.com/io-gui/io/blob/main/src/core/element.ts#L234)
+
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-• **vDOM**: `any`[]
+##### vDOM
+
+`any`[]
 
 Array of vDOM children.
 
-• **host?**: `HTMLElement`
+##### host?
+
+`HTMLElement`
 
 Optional template target.
 
-• **cache?**: `boolean`
+##### cache?
+
+`boolean`
 
 Optional don't reuse existing elements and skip dispose
 
@@ -1164,29 +1146,33 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoColorBase`](IoColorBase.md).[`template`](IoColorBase.md#template)
 
-#### Defined in
-
-[src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
-
 ***
 
 ### throttle()
 
 > **throttle**(`func`, `arg`, `timeout`): `void`
 
+Defined in: [src/core/node.ts:268](https://github.com/io-gui/io/blob/main/src/core/node.ts#L268)
+
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+##### func
+
+[`CallbackFunction`](../type-aliases/CallbackFunction.md)
 
 Function to throttle.
 
-• **arg**: `any` = `undefined`
+##### arg
+
+`any` = `undefined`
 
 argument for throttled function.
 
-• **timeout**: `number` = `1`
+##### timeout
+
+`number` = `1`
 
 minimum delay in ms before executing the function.
 
@@ -1198,30 +1184,34 @@ minimum delay in ms before executing the function.
 
 [`IoColorBase`](IoColorBase.md).[`throttle`](IoColorBase.md#throttle)
 
-#### Defined in
-
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
-
 ***
 
 ### traverse()
 
 > **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
+Defined in: [src/core/element.ts:247](https://github.com/io-gui/io/blob/main/src/core/element.ts#L247)
+
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-• **vChildren**: `any`[]
+##### vChildren
+
+`any`[]
 
 Array of vDOM children converted by `buildTree()` for easier parsing.
 
-• **host?**: `HTMLElement`
+##### host?
+
+`HTMLElement`
 
 Optional template target.
 
-• **cache?**: `boolean`
+##### cache?
+
+`boolean`
 
 Optional don't reuse existing elements and skip dispose
 
@@ -1233,21 +1223,21 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoColorBase`](IoColorBase.md).[`traverse`](IoColorBase.md#traverse)
 
-#### Defined in
-
-[src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
-
 ***
 
 ### unbind()
 
 > **unbind**(`prop`): `void`
 
+Defined in: [src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property to unbind.
 
@@ -1259,15 +1249,13 @@ Property to unbind.
 
 [`IoColorBase`](IoColorBase.md).[`unbind`](IoColorBase.md#unbind)
 
-#### Defined in
-
-[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
-
 ***
 
 ### valueChanged()
 
 > **valueChanged**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:67](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L67)
 
 #### Returns
 
@@ -1277,15 +1265,13 @@ Property to unbind.
 
 [`IoColorBase`](IoColorBase.md).[`valueChanged`](IoColorBase.md#valuechanged)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:67](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L67)
-
 ***
 
 ### valueFromRgb()
 
 > **valueFromRgb**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L61)
 
 #### Returns
 
@@ -1295,15 +1281,13 @@ Property to unbind.
 
 [`IoColorBase`](IoColorBase.md).[`valueFromRgb`](IoColorBase.md#valuefromrgb)
 
-#### Defined in
-
-[src/elements/color/io-color-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L61)
-
 ***
 
 ### valueMutated()
 
 > **valueMutated**(): `void`
+
+Defined in: [src/elements/color/io-color-base.ts:26](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L26)
 
 #### Returns
 
@@ -1312,7 +1296,3 @@ Property to unbind.
 #### Inherited from
 
 [`IoColorBase`](IoColorBase.md).[`valueMutated`](IoColorBase.md#valuemutated)
-
-#### Defined in
-
-[src/elements/color/io-color-base.ts:26](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-base.ts#L26)

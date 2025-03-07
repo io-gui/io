@@ -1,10 +1,12 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
 [io-gui](../README.md) / IoOverlay
 
 # Class: IoOverlay
+
+Defined in: [src/core/overlay.ts:29](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L29)
 
 This element is designed to be used as a singleton `IoOverlaySingleton`.
 It is a pointer-blocking element covering the entire window at a very high z-index.
@@ -16,15 +18,23 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 - [`IoElement`](IoElement.md)
 
+## Indexable
+
+\[`key`: `string`\]: `any`
+
 ## Constructors
 
 ### new IoOverlay()
 
 > **new IoOverlay**(`properties`): [`IoOverlay`](IoOverlay.md)
 
+Defined in: [src/core/overlay.ts:78](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L78)
+
 #### Parameters
 
-• **properties**: `Record`\<`string`, `any`\> = `{}`
+##### properties
+
+`Record`\<`string`, `any`\> = `{}`
 
 #### Returns
 
@@ -34,37 +44,17 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 [`IoElement`](IoElement.md).[`constructor`](IoElement.md#constructors)
 
-#### Defined in
-
-[src/core/overlay.ts:84](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L84)
-
 ## Properties
-
-### $
-
-> **$**: `Record`\<`string`, `any`\>
-
-#### Inherited from
-
-[`IoElement`](IoElement.md).[`$`](IoElement.md#$)
-
-#### Defined in
-
-[src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
-
-***
 
 ### \_bindings
 
 > `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
+Defined in: [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`_bindings`](IoElement.md#_bindings)
-
-#### Defined in
-
-[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
 
 ***
 
@@ -72,13 +62,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
+Defined in: [src/core/node.ts:45](https://github.com/io-gui/io/blob/main/src/core/node.ts#L45)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`_changeQueue`](IoElement.md#_changequeue)
-
-#### Defined in
-
-[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
 
 ***
 
@@ -86,13 +74,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
+Defined in: [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`_eventDispatcher`](IoElement.md#_eventdispatcher)
-
-#### Defined in
-
-[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
 
 ***
 
@@ -100,13 +86,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
+Defined in: [src/core/node.ts:43](https://github.com/io-gui/io/blob/main/src/core/node.ts#L43)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`_properties`](IoElement.md#_properties)
-
-#### Defined in
-
-[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ***
 
@@ -114,13 +98,23 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
+Defined in: [src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`_protochain`](IoElement.md#_protochain)
 
-#### Defined in
+***
 
-[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
+### $
+
+> **$**: `Record`\<`string`, `any`\>
+
+Defined in: [src/core/element.ts:179](https://github.com/io-gui/io/blob/main/src/core/element.ts#L179)
+
+#### Inherited from
+
+[`IoElement`](IoElement.md).[`$`](IoElement.md#$)
 
 ***
 
@@ -128,13 +122,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **class**: `string`
 
+Defined in: [src/core/element.ts:188](https://github.com/io-gui/io/blob/main/src/core/element.ts#L188)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`class`](IoElement.md#class)
-
-#### Defined in
-
-[src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
 ***
 
@@ -142,13 +134,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **contenteditable**: `boolean`
 
+Defined in: [src/core/element.ts:185](https://github.com/io-gui/io/blob/main/src/core/element.ts#L185)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`contenteditable`](IoElement.md#contenteditable)
-
-#### Defined in
-
-[src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
 ***
 
@@ -156,13 +146,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **disabled**: `boolean`
 
+Defined in: [src/core/element.ts:209](https://github.com/io-gui/io/blob/main/src/core/element.ts#L209)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`disabled`](IoElement.md#disabled)
-
-#### Defined in
-
-[src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
 ***
 
@@ -170,9 +158,7 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **expanded**: `boolean`
 
-#### Defined in
-
-[src/core/overlay.ts:63](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L63)
+Defined in: [src/core/overlay.ts:57](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L57)
 
 ***
 
@@ -180,13 +166,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **hidden**: `boolean`
 
+Defined in: [src/core/element.ts:206](https://github.com/io-gui/io/blob/main/src/core/element.ts#L206)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`hidden`](IoElement.md#hidden)
-
-#### Defined in
-
-[src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
 ***
 
@@ -194,13 +178,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **id**: `string`
 
+Defined in: [src/core/element.ts:203](https://github.com/io-gui/io/blob/main/src/core/element.ts#L203)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`id`](IoElement.md#id)
-
-#### Defined in
-
-[src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
 ***
 
@@ -208,13 +190,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **label**: `string`
 
+Defined in: [src/core/element.ts:194](https://github.com/io-gui/io/blob/main/src/core/element.ts#L194)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`label`](IoElement.md#label)
-
-#### Defined in
-
-[src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
 ***
 
@@ -222,13 +202,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **name**: `string`
 
+Defined in: [src/core/element.ts:197](https://github.com/io-gui/io/blob/main/src/core/element.ts#L197)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`name`](IoElement.md#name)
-
-#### Defined in
-
-[src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
 ***
 
@@ -236,13 +214,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **role**: `string`
 
+Defined in: [src/core/element.ts:191](https://github.com/io-gui/io/blob/main/src/core/element.ts#L191)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`role`](IoElement.md#role)
-
-#### Defined in
-
-[src/core/element.ts:190](https://github.com/io-gui/io/blob/main/src/core/element.ts#L190)
 
 ***
 
@@ -250,13 +226,11 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **tabindex**: `string`
 
+Defined in: [src/core/element.ts:182](https://github.com/io-gui/io/blob/main/src/core/element.ts#L182)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`tabindex`](IoElement.md#tabindex)
-
-#### Defined in
-
-[src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
 ***
 
@@ -264,137 +238,149 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 > **title**: `string`
 
+Defined in: [src/core/element.ts:200](https://github.com/io-gui/io/blob/main/src/core/element.ts#L200)
+
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`title`](IoElement.md#title)
-
-#### Defined in
-
-[src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
 ## Accessors
 
 ### textNode
 
-> `get` **textNode**(): `any`
+#### Get Signature
 
-> `set` **textNode**(`value`): `void`
+> **get** **textNode**(): `any`
 
-#### Parameters
+Defined in: [src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src/core/element.ts#L393)
 
-• **value**: `any`
-
-#### Returns
+##### Returns
 
 `any`
+
+#### Set Signature
+
+> **set** **textNode**(`value`): `void`
+
+Defined in: [src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
+
+##### Parameters
+
+###### value
+
+`any`
+
+##### Returns
+
+`void`
 
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`textNode`](IoElement.md#textnode)
 
-#### Defined in
-
-[src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
-
 ***
 
 ### Listeners
 
-> `get` `static` **Listeners**(): `object`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Listeners**(): `object`
+
+Defined in: [src/core/overlay.ts:59](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L59)
+
+##### Returns
 
 `object`
 
-##### contextmenu
+###### contextmenu
 
 > **contextmenu**: `string` = `'_onContextmenu'`
 
-##### focusin
+###### focusin
 
 > **focusin**: `string` = `'_onFocusIn'`
 
-##### keydown
+###### keydown
 
-> **keydown**: `string` = `'stopPropagation'`
+> **keydown**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### keyup
+###### keyup
 
-> **keyup**: `string` = `'stopPropagation'`
+> **keyup**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### mousedown
+###### mousedown
 
-> **mousedown**: `string` = `'stopPropagation'`
+> **mousedown**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### mousemove
+###### mousemove
 
-> **mousemove**: `string` = `'stopPropagation'`
+> **mousemove**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### mouseup
+###### mouseup
 
-> **mouseup**: `string` = `'stopPropagation'`
+> **mouseup**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### pointerdown
+###### pointerdown
 
-> **pointerdown**: `string` = `'stopPropagation'`
+> **pointerdown**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### pointermove
+###### pointermove
 
-> **pointermove**: `string` = `'stopPropagation'`
+> **pointermove**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### pointerup
+###### pointerup
 
 > **pointerup**: `string` = `'_onPointerup'`
 
-##### scroll
+###### scroll
 
 > **scroll**: `string` = `'_onScroll'`
 
-##### touchend
+###### touchend
 
-> **touchend**: `string` = `'stopPropagation'`
+> **touchend**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### touchmove
+###### touchmove
 
-> **touchmove**: (`string` \| `object`)[]
+> **touchmove**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### touchstart
+###### touchstart
 
-> **touchstart**: (`string` \| `object`)[]
+> **touchstart**: (`string` \| \{ `passive`: `boolean`; \})[]
 
-##### wheel
+###### wheel
 
-> **wheel**: (`string` \| `object`)[]
-
-#### Defined in
-
-[src/core/overlay.ts:65](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L65)
+> **wheel**: (`string` \| \{ `passive`: `boolean`; \})[]
 
 ***
 
 ### Properties
 
-> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
+#### Get Signature
 
-#### Returns
+> **get** `static` **Properties**(): [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
-[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
+Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/core/node.ts#L33)
+
+##### Returns
+
+[`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`Properties`](IoElement.md#properties)
 
-#### Defined in
-
-[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
-
 ***
 
 ### Style
 
-> `get` `static` **Style**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Style**(): `string`
+
+Defined in: [src/core/overlay.ts:30](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L30)
+
+##### Returns
 
 `string`
 
@@ -402,46 +388,24 @@ Child elements should emmit bubbling `"expanded"` event when expanded/collapsed.
 
 [`IoElement`](IoElement.md).[`Style`](IoElement.md#style)
 
-#### Defined in
-
-[src/core/overlay.ts:30](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L30)
-
 ## Methods
-
-### Register()
-
-> **Register**(`ioNodeConstructor`): `void`
-
-#### Parameters
-
-• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoElement`](IoElement.md).[`Register`](IoElement.md#register)
-
-#### Defined in
-
-[src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
-
-***
 
 ### \_flattenTextNode()
 
 > **\_flattenTextNode**(`element`): `void`
+
+Defined in: [src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+##### element
 
 Element to flatten.
+
+`HTMLElement` | [`IoElement`](IoElement.md)
 
 #### Returns
 
@@ -451,23 +415,17 @@ Element to flatten.
 
 [`IoElement`](IoElement.md).[`_flattenTextNode`](IoElement.md#_flattentextnode)
 
-#### Defined in
-
-[src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
-
 ***
 
 ### \_onCollapse()
 
 > **\_onCollapse**(): `void`
 
+Defined in: [src/core/overlay.ts:94](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L94)
+
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:100](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L100)
 
 ***
 
@@ -475,17 +433,17 @@ Element to flatten.
 
 > **\_onContextmenu**(`event`): `void`
 
+Defined in: [src/core/overlay.ts:97](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L97)
+
 #### Parameters
 
-• **event**: `Event`
+##### event
+
+`Event`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:103](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L103)
 
 ***
 
@@ -493,17 +451,17 @@ Element to flatten.
 
 > **\_onFocusIn**(`event`): `void`
 
+Defined in: [src/core/overlay.ts:100](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L100)
+
 #### Parameters
 
-• **event**: `FocusEvent`
+##### event
+
+`FocusEvent`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:106](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L106)
 
 ***
 
@@ -511,17 +469,17 @@ Element to flatten.
 
 > **\_onPointerup**(`event`): `void`
 
+Defined in: [src/core/overlay.ts:89](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L89)
+
 #### Parameters
 
-• **event**: `PointerEvent`
+##### event
+
+`PointerEvent`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:95](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L95)
 
 ***
 
@@ -529,17 +487,17 @@ Element to flatten.
 
 > **\_onScroll**(`event`): `void`
 
+Defined in: [src/core/overlay.ts:103](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L103)
+
 #### Parameters
 
-• **event**: `Event`
+##### event
+
+`Event`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:109](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L109)
 
 ***
 
@@ -547,19 +505,27 @@ Element to flatten.
 
 > **addEventListener**(`type`, `listener`, `options`?): `void`
 
+Defined in: [src/core/node.ts:342](https://github.com/io-gui/io/blob/main/src/core/node.ts#L342)
+
 Wrapper for addEventListener.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 listener name.
 
-• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+##### listener
+
+[`AnyEventListener`](../type-aliases/AnyEventListener.md)
 
 listener handler.
 
-• **options?**: `AddEventListenerOptions`
+##### options?
+
+`AddEventListenerOptions`
 
 event listener options.
 
@@ -571,27 +537,23 @@ event listener options.
 
 [`IoElement`](IoElement.md).[`addEventListener`](IoElement.md#addeventlistener)
 
-#### Defined in
-
-[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
-
 ***
 
 ### appendChild()
 
 > **appendChild**(`child`): `void`
 
+Defined in: [src/core/overlay.ts:199](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L199)
+
 #### Parameters
 
-• **child**: `HTMLElement`
+##### child
+
+`HTMLElement`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:205](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L205)
 
 ***
 
@@ -599,12 +561,16 @@ event listener options.
 
 > **applyProperties**(`props`): `void`
 
+Defined in: [src/core/element.ts:401](https://github.com/io-gui/io/blob/main/src/core/element.ts#L401)
+
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-• **props**: `any`
+##### props
+
+`any`
 
 Map of property names and values.
 
@@ -616,21 +582,21 @@ Map of property names and values.
 
 [`IoElement`](IoElement.md).[`applyProperties`](IoElement.md#applyproperties)
 
-#### Defined in
-
-[src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
-
 ***
 
 ### bind()
 
 > **bind**(`prop`): [`Binding`](Binding.md)
 
+Defined in: [src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
+
 Returns a binding to a specified property`.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property to bind to.
 
@@ -644,15 +610,13 @@ Binding object.
 
 [`IoElement`](IoElement.md).[`bind`](IoElement.md#bind)
 
-#### Defined in
-
-[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
-
 ***
 
 ### changed()
 
 > **changed**(): `void`
+
+Defined in: [src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
 
 default change handler.
 Invoked when one of the properties change.
@@ -665,15 +629,13 @@ Invoked when one of the properties change.
 
 [`IoElement`](IoElement.md).[`changed`](IoElement.md#changed)
 
-#### Defined in
-
-[src/core/node.ts:246](https://github.com/io-gui/io/blob/main/src/core/node.ts#L246)
-
 ***
 
 ### connectedCallback()
 
 > **connectedCallback**(): `void`
+
+Defined in: [src/core/element.ts:214](https://github.com/io-gui/io/blob/main/src/core/element.ts#L214)
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -685,15 +647,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [`IoElement`](IoElement.md).[`connectedCallback`](IoElement.md#connectedcallback)
 
-#### Defined in
-
-[src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
-
 ***
 
 ### disabledChanged()
 
 > **disabledChanged**(): `void`
+
+Defined in: [src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src/core/element.ts#L430)
 
 #### Returns
 
@@ -703,15 +663,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [`IoElement`](IoElement.md).[`disabledChanged`](IoElement.md#disabledchanged)
 
-#### Defined in
-
-[src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
-
 ***
 
 ### disconnectedCallback()
 
 > **disconnectedCallback**(): `void`
+
+Defined in: [src/core/element.ts:222](https://github.com/io-gui/io/blob/main/src/core/element.ts#L222)
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -723,35 +681,39 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 [`IoElement`](IoElement.md).[`disconnectedCallback`](IoElement.md#disconnectedcallback)
 
-#### Defined in
-
-[src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
-
 ***
 
 ### dispatchEvent()
 
 > **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
+Defined in: [src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 event name to dispatch.
 
-• **detail** = `{}`
+##### detail
 
 event detail.
 
-• **bubbles**: `boolean` = `false`
+##### bubbles
+
+`boolean` = `false`
 
 event bubbles.
 
-• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+##### src?
 
 source node/element to dispatch event from.
+
+`Node` | `Document` | `HTMLElement` | `Window`
 
 #### Returns
 
@@ -761,21 +723,21 @@ source node/element to dispatch event from.
 
 [`IoElement`](IoElement.md).[`dispatchEvent`](IoElement.md#dispatchevent)
 
-#### Defined in
-
-[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
-
 ***
 
 ### dispatchMutationEvent()
 
 > **dispatchMutationEvent**(`object`): `void`
 
+Defined in: [src/core/node.ts:374](https://github.com/io-gui/io/blob/main/src/core/node.ts#L374)
+
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-• **object**: `any`
+##### object
+
+`any`
 
 object which mutated.
 
@@ -787,15 +749,13 @@ object which mutated.
 
 [`IoElement`](IoElement.md).[`dispatchMutationEvent`](IoElement.md#dispatchmutationevent)
 
-#### Defined in
-
-[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
-
 ***
 
 ### dispatchQueue()
 
 > **dispatchQueue**(): `void`
+
+Defined in: [src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -807,15 +767,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 [`IoElement`](IoElement.md).[`dispatchQueue`](IoElement.md#dispatchqueue)
 
-#### Defined in
-
-[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
-
 ***
 
 ### dispatchQueueSync()
 
 > **dispatchQueueSync**(): `void`
+
+Defined in: [src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 Dispatches the queue immediately.
 
@@ -827,15 +785,13 @@ Dispatches the queue immediately.
 
 [`IoElement`](IoElement.md).[`dispatchQueueSync`](IoElement.md#dispatchqueuesync)
 
-#### Defined in
-
-[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
-
 ***
 
 ### dispose()
 
 > **dispose**(): `void`
+
+Defined in: [src/core/node.ts:381](https://github.com/io-gui/io/blob/main/src/core/node.ts#L381)
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -848,29 +804,25 @@ Use this when instance is no longer needed.
 
 [`IoElement`](IoElement.md).[`dispose`](IoElement.md#dispose)
 
-#### Defined in
-
-[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
-
 ***
 
 ### expandedChanged()
 
 > **expandedChanged**(): `void`
 
+Defined in: [src/core/overlay.ts:221](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L221)
+
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:227](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L227)
 
 ***
 
 ### init()
 
 > **init**(): `void`
+
+Defined in: [src/core/node.ts:236](https://github.com/io-gui/io/blob/main/src/core/node.ts#L236)
 
 #### Returns
 
@@ -880,22 +832,22 @@ Use this when instance is no longer needed.
 
 [`IoElement`](IoElement.md).[`init`](IoElement.md#init)
 
-#### Defined in
-
-[src/core/node.ts:247](https://github.com/io-gui/io/blob/main/src/core/node.ts#L247)
-
 ***
 
 ### inputValue()
 
 > **inputValue**(`value`): `void`
 
+Defined in: [src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
@@ -907,15 +859,13 @@ Property value.
 
 [`IoElement`](IoElement.md).[`inputValue`](IoElement.md#inputvalue)
 
-#### Defined in
-
-[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
-
 ***
 
 ### labelChanged()
 
 > **labelChanged**(): `void`
+
+Defined in: [src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src/core/element.ts#L423)
 
 #### Returns
 
@@ -925,35 +875,39 @@ Property value.
 
 [`IoElement`](IoElement.md).[`labelChanged`](IoElement.md#labelchanged)
 
-#### Defined in
-
-[src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
-
 ***
 
 ### nudgeDown()
 
 > **nudgeDown**(`element`, `x`, `y`, `elemRect`, `force`?): `boolean`
 
+Defined in: [src/core/overlay.ts:108](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L108)
+
 #### Parameters
 
-• **element**: `HTMLElement`
+##### element
 
-• **x**: `number`
+`HTMLElement`
 
-• **y**: `number`
+##### x
 
-• **elemRect**: `DOMRect`
+`number`
 
-• **force?**: `boolean`
+##### y
+
+`number`
+
+##### elemRect
+
+`DOMRect`
+
+##### force?
+
+`boolean`
 
 #### Returns
 
 `boolean`
-
-#### Defined in
-
-[src/core/overlay.ts:114](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L114)
 
 ***
 
@@ -961,25 +915,33 @@ Property value.
 
 > **nudgeLeft**(`element`, `x`, `y`, `elemRect`, `force`?): `boolean`
 
+Defined in: [src/core/overlay.ts:140](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L140)
+
 #### Parameters
 
-• **element**: `HTMLElement`
+##### element
 
-• **x**: `number`
+`HTMLElement`
 
-• **y**: `number`
+##### x
 
-• **elemRect**: `DOMRect`
+`number`
 
-• **force?**: `boolean`
+##### y
+
+`number`
+
+##### elemRect
+
+`DOMRect`
+
+##### force?
+
+`boolean`
 
 #### Returns
 
 `boolean`
-
-#### Defined in
-
-[src/core/overlay.ts:146](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L146)
 
 ***
 
@@ -987,23 +949,29 @@ Property value.
 
 > **nudgePointer**(`element`, `x`, `y`, `elemRect`): `boolean`
 
+Defined in: [src/core/overlay.ts:150](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L150)
+
 #### Parameters
 
-• **element**: `HTMLElement`
+##### element
 
-• **x**: `number`
+`HTMLElement`
 
-• **y**: `number`
+##### x
 
-• **elemRect**: `DOMRect`
+`number`
+
+##### y
+
+`number`
+
+##### elemRect
+
+`DOMRect`
 
 #### Returns
 
 `boolean`
-
-#### Defined in
-
-[src/core/overlay.ts:156](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L156)
 
 ***
 
@@ -1011,25 +979,33 @@ Property value.
 
 > **nudgeRight**(`element`, `x`, `y`, `elemRect`, `force`?): `boolean`
 
+Defined in: [src/core/overlay.ts:130](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L130)
+
 #### Parameters
 
-• **element**: `HTMLElement`
+##### element
 
-• **x**: `number`
+`HTMLElement`
 
-• **y**: `number`
+##### x
 
-• **elemRect**: `DOMRect`
+`number`
 
-• **force?**: `boolean`
+##### y
+
+`number`
+
+##### elemRect
+
+`DOMRect`
+
+##### force?
+
+`boolean`
 
 #### Returns
 
 `boolean`
-
-#### Defined in
-
-[src/core/overlay.ts:136](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L136)
 
 ***
 
@@ -1037,25 +1013,33 @@ Property value.
 
 > **nudgeUp**(`element`, `x`, `y`, `elemRect`, `force`?): `boolean`
 
+Defined in: [src/core/overlay.ts:119](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L119)
+
 #### Parameters
 
-• **element**: `HTMLElement`
+##### element
 
-• **x**: `number`
+`HTMLElement`
 
-• **y**: `number`
+##### x
 
-• **elemRect**: `DOMRect`
+`number`
 
-• **force?**: `boolean`
+##### y
+
+`number`
+
+##### elemRect
+
+`DOMRect`
+
+##### force?
+
+`boolean`
 
 #### Returns
 
 `boolean`
-
-#### Defined in
-
-[src/core/overlay.ts:125](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L125)
 
 ***
 
@@ -1063,12 +1047,16 @@ Property value.
 
 > **objectMutated**(`prop`): `void`
 
+Defined in: [src/core/node.ts:298](https://github.com/io-gui/io/blob/main/src/core/node.ts#L298)
+
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Mutated object property name.
 
@@ -1080,23 +1068,17 @@ Mutated object property name.
 
 [`IoElement`](IoElement.md).[`objectMutated`](IoElement.md#objectmutated)
 
-#### Defined in
-
-[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
-
 ***
 
 ### onChildExpanded()
 
 > **onChildExpanded**(): `void`
 
+Defined in: [src/core/overlay.ts:209](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L209)
+
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:215](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L215)
 
 ***
 
@@ -1104,13 +1086,11 @@ Mutated object property name.
 
 > **onChildExpandedDelayed**(): `void`
 
+Defined in: [src/core/overlay.ts:212](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L212)
+
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:218](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L218)
 
 ***
 
@@ -1118,12 +1098,16 @@ Mutated object property name.
 
 > **onObjectMutated**(`event`): `void`
 
+Defined in: [src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-• **event**: `CustomEvent`\<`any`\>
+##### event
+
+`CustomEvent`
 
 Event payload.
 
@@ -1135,23 +1119,17 @@ Event payload.
 
 [`IoElement`](IoElement.md).[`onObjectMutated`](IoElement.md#onobjectmutated)
 
-#### Defined in
-
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
-
 ***
 
 ### onResized()
 
 > **onResized**(): `void`
 
+Defined in: [src/core/overlay.ts:86](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L86)
+
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:92](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L92)
 
 ***
 
@@ -1159,19 +1137,27 @@ Event payload.
 
 > **queue**(`prop`, `value`, `oldValue`): `void`
 
+Defined in: [src/core/node.ts:243](https://github.com/io-gui/io/blob/main/src/core/node.ts#L243)
+
 Adds property change to the queue.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property name.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
-• **oldValue**: `any`
+##### oldValue
+
+`any`
 
 Old property value.
 
@@ -1183,9 +1169,27 @@ Old property value.
 
 [`IoElement`](IoElement.md).[`queue`](IoElement.md#queue)
 
-#### Defined in
+***
 
-[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
+### Register()
+
+> **Register**(`ioNodeConstructor`): `void`
+
+Defined in: [src/core/element.ts:305](https://github.com/io-gui/io/blob/main/src/core/element.ts#L305)
+
+#### Parameters
+
+##### ioNodeConstructor
+
+*typeof* [`IoNode`](IoNode.md)
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`IoElement`](IoElement.md).[`Register`](IoElement.md#register)
 
 ***
 
@@ -1193,17 +1197,17 @@ Old property value.
 
 > **removeChild**(`child`): `void`
 
+Defined in: [src/core/overlay.ts:204](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L204)
+
 #### Parameters
 
-• **child**: `HTMLElement`
+##### child
+
+`HTMLElement`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:210](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L210)
 
 ***
 
@@ -1211,19 +1215,27 @@ Old property value.
 
 > **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
+Defined in: [src/core/node.ts:357](https://github.com/io-gui/io/blob/main/src/core/node.ts#L357)
+
 Wrapper for removeEventListener.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 event name to listen to.
 
-• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+##### listener?
+
+[`AnyEventListener`](../type-aliases/AnyEventListener.md)
 
 listener handler.
 
-• **options?**: `AddEventListenerOptions`
+##### options?
+
+`AddEventListenerOptions`
 
 event listener options.
 
@@ -1235,27 +1247,29 @@ event listener options.
 
 [`IoElement`](IoElement.md).[`removeEventListener`](IoElement.md#removeeventlistener)
 
-#### Defined in
-
-[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
-
 ***
 
 ### setAttribute()
 
 > **setAttribute**(`attr`, `value`): `void`
 
+Defined in: [src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
+
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-• **attr**: `string`
+##### attr
+
+`string`
 
 Attribute name.
 
-• **value**: `string` \| `number` \| `boolean`
+##### value
 
 Attribute value.
+
+`string` | `number` | `boolean`
 
 #### Returns
 
@@ -1265,31 +1279,31 @@ Attribute value.
 
 [`IoElement`](IoElement.md).[`setAttribute`](IoElement.md#setattribute)
 
-#### Defined in
-
-[src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
-
 ***
 
 ### setElementPosition()
 
 > **setElementPosition**(`element`, `direction`, `srcRect`): `void`
 
+Defined in: [src/core/overlay.ts:155](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L155)
+
 #### Parameters
 
-• **element**: `HTMLElement`
+##### element
 
-• **direction**: [`NudgeDirection`](../type-aliases/NudgeDirection.md)
+`HTMLElement`
 
-• **srcRect**: `DOMRect`
+##### direction
+
+[`NudgeDirection`](../type-aliases/NudgeDirection.md)
+
+##### srcRect
+
+`DOMRect`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:161](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L161)
 
 ***
 
@@ -1297,12 +1311,16 @@ Attribute value.
 
 > **setProperties**(`props`): `void`
 
+Defined in: [src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
+
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-• **props**: `any`
+##### props
+
+`any`
 
 Map of property names and values.
 
@@ -1314,29 +1332,33 @@ Map of property names and values.
 
 [`IoElement`](IoElement.md).[`setProperties`](IoElement.md#setproperties)
 
-#### Defined in
-
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
-
 ***
 
 ### setProperty()
 
 > **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
+Defined in: [src/core/node.ts:111](https://github.com/io-gui/io/blob/main/src/core/node.ts#L111)
+
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-• **name**: `string`
+##### name
+
+`string`
 
 Property name to set value of.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Peroperty value.
 
-• **skipDispatch?**: `boolean`
+##### skipDispatch?
+
+`boolean`
 
 flag to skip event dispatch.
 
@@ -1348,27 +1370,23 @@ flag to skip event dispatch.
 
 [`IoElement`](IoElement.md).[`setProperty`](IoElement.md#setproperty)
 
-#### Defined in
-
-[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
-
 ***
 
 ### stopPropagation()
 
 > **stopPropagation**(`event`): `void`
 
+Defined in: [src/core/overlay.ts:83](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L83)
+
 #### Parameters
 
-• **event**: `Event`
+##### event
+
+`Event`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/overlay.ts:89](https://github.com/io-gui/io/blob/main/src/core/overlay.ts#L89)
 
 ***
 
@@ -1376,19 +1394,27 @@ flag to skip event dispatch.
 
 > **template**(`vDOM`, `host`?, `cache`?): `void`
 
+Defined in: [src/core/element.ts:234](https://github.com/io-gui/io/blob/main/src/core/element.ts#L234)
+
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-• **vDOM**: `any`[]
+##### vDOM
+
+`any`[]
 
 Array of vDOM children.
 
-• **host?**: `HTMLElement`
+##### host?
+
+`HTMLElement`
 
 Optional template target.
 
-• **cache?**: `boolean`
+##### cache?
+
+`boolean`
 
 Optional don't reuse existing elements and skip dispose
 
@@ -1400,29 +1426,33 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoElement`](IoElement.md).[`template`](IoElement.md#template)
 
-#### Defined in
-
-[src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
-
 ***
 
 ### throttle()
 
 > **throttle**(`func`, `arg`, `timeout`): `void`
 
+Defined in: [src/core/node.ts:268](https://github.com/io-gui/io/blob/main/src/core/node.ts#L268)
+
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+##### func
+
+[`CallbackFunction`](../type-aliases/CallbackFunction.md)
 
 Function to throttle.
 
-• **arg**: `any` = `undefined`
+##### arg
+
+`any` = `undefined`
 
 argument for throttled function.
 
-• **timeout**: `number` = `1`
+##### timeout
+
+`number` = `1`
 
 minimum delay in ms before executing the function.
 
@@ -1434,30 +1464,34 @@ minimum delay in ms before executing the function.
 
 [`IoElement`](IoElement.md).[`throttle`](IoElement.md#throttle)
 
-#### Defined in
-
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
-
 ***
 
 ### traverse()
 
 > **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
+Defined in: [src/core/element.ts:247](https://github.com/io-gui/io/blob/main/src/core/element.ts#L247)
+
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-• **vChildren**: `any`[]
+##### vChildren
+
+`any`[]
 
 Array of vDOM children converted by `buildTree()` for easier parsing.
 
-• **host?**: `HTMLElement`
+##### host?
+
+`HTMLElement`
 
 Optional template target.
 
-• **cache?**: `boolean`
+##### cache?
+
+`boolean`
 
 Optional don't reuse existing elements and skip dispose
 
@@ -1469,21 +1503,21 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoElement`](IoElement.md).[`traverse`](IoElement.md#traverse)
 
-#### Defined in
-
-[src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
-
 ***
 
 ### unbind()
 
 > **unbind**(`prop`): `void`
 
+Defined in: [src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property to unbind.
 
@@ -1494,7 +1528,3 @@ Property to unbind.
 #### Inherited from
 
 [`IoElement`](IoElement.md).[`unbind`](IoElement.md#unbind)
-
-#### Defined in
-
-[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)

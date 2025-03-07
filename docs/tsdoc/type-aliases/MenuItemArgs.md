@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -7,6 +7,8 @@
 # Type Alias: MenuItemArgs
 
 > **MenuItemArgs**: [`IoElementArgs`](IoElementArgs.md) & `object`
+
+Defined in: [src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L10)
 
 ## Type declaration
 
@@ -49,7 +51,3 @@
 ### value?
 
 > `optional` **value**: `any`
-
-## Defined in
-
-[src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L10)

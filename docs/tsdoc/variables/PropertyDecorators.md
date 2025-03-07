@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,8 +6,6 @@
 
 # Variable: PropertyDecorators
 
-> `const` **PropertyDecorators**: `WeakMap`\<[`Constructor`](../type-aliases/Constructor.md), [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)\>
+> `const` **PropertyDecorators**: `WeakMap`\<[`Constructor`](../type-aliases/Constructor.md), [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)\>
 
-## Defined in
-
-[src/core/internals/property.ts:191](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L191)
+Defined in: [src/core/internals/property.ts:190](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L190)

@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,14 +8,14 @@
 
 > **IoStorage**(`props`): [`Binding`](../classes/Binding.md)
 
+Defined in: [src/core/storage.ts:263](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L263)
+
 ## Parameters
 
-• **props**: `StorageProps`
+### props
+
+`StorageProps`
 
 ## Returns
 
 [`Binding`](../classes/Binding.md)
-
-## Defined in
-
-[src/core/storage.ts:263](https://github.com/io-gui/io/blob/main/src/core/storage.ts#L263)

@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,22 +8,24 @@
 
 > **applyNativeElementProps**(`element`, `props`): `void`
 
+Defined in: [src/core/element.ts:137](https://github.com/io-gui/io/blob/main/src/core/element.ts#L137)
+
 Sets element properties.
 
 ## Parameters
 
-• **element**: `HTMLElement`
+### element
+
+`HTMLElement`
 
 Element to set properties on.
 
-• **props**: `any`
+### props
+
+`any`
 
 Element properties.
 
 ## Returns
 
 `void`
-
-## Defined in
-
-[src/core/element.ts:137](https://github.com/io-gui/io/blob/main/src/core/element.ts#L137)

@@ -1,10 +1,12 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
 [io-gui](../README.md) / ChangeQueue
 
 # Class: ChangeQueue
+
+Defined in: [src/core/internals/changeQueue.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L7)
 
 Responsive property change FIFO queue.
 Responsible for dispatching change events and invoking change handler functions with property change payloads.
@@ -15,11 +17,15 @@ Responsible for dispatching change events and invoking change handler functions 
 
 > **new ChangeQueue**(`node`): [`ChangeQueue`](ChangeQueue.md)
 
+Defined in: [src/core/internals/changeQueue.ts:16](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L16)
+
 Creates change queue for the specified owner instance of `IoNode`.
 
 #### Parameters
 
-• **node**: [`IoNode`](IoNode.md)
+##### node
+
+[`IoNode`](IoNode.md)
 
 Owner node.
 
@@ -27,19 +33,13 @@ Owner node.
 
 [`ChangeQueue`](ChangeQueue.md)
 
-#### Defined in
-
-[src/core/internals/changeQueue.ts:16](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L16)
-
 ## Properties
 
 ### changes
 
 > `readonly` **changes**: [`Change`](../interfaces/Change.md)[]
 
-#### Defined in
-
-[src/core/internals/changeQueue.ts:9](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L9)
+Defined in: [src/core/internals/changeQueue.ts:9](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L9)
 
 ***
 
@@ -47,9 +47,7 @@ Owner node.
 
 > **dispatching**: `boolean` = `false`
 
-#### Defined in
-
-[src/core/internals/changeQueue.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L11)
+Defined in: [src/core/internals/changeQueue.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L11)
 
 ***
 
@@ -57,15 +55,23 @@ Owner node.
 
 > **hasChanged**: `boolean` = `false`
 
-#### Defined in
+Defined in: [src/core/internals/changeQueue.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L10)
 
-[src/core/internals/changeQueue.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L10)
+***
+
+### node
+
+> `readonly` **node**: [`IoNode`](IoNode.md)
+
+Defined in: [src/core/internals/changeQueue.ts:8](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L8)
 
 ## Methods
 
 ### dispatch()
 
 > **dispatch**(): `void`
+
+Defined in: [src/core/internals/changeQueue.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L45)
 
 Dispatches and clears the queue.
 For each property change in the queue:
@@ -77,15 +83,13 @@ After all changes are dispatched it invokes `.changed()` functions od the owner 
 
 `void`
 
-#### Defined in
-
-[src/core/internals/changeQueue.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L45)
-
 ***
 
 ### dispose()
 
 > **dispose**(): `void`
+
+Defined in: [src/core/internals/changeQueue.ts:70](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L70)
 
 Clears the queue and removes the node reference.
 Use this when node queue is no longer needed.
@@ -94,37 +98,37 @@ Use this when node queue is no longer needed.
 
 `void`
 
-#### Defined in
-
-[src/core/internals/changeQueue.ts:70](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L70)
-
 ***
 
 ### queue()
 
 > **queue**(`property`, `value`, `oldValue`): `void`
 
+Defined in: [src/core/internals/changeQueue.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L27)
+
 Adds property change payload to the queue by specifying property name, previous and the new value.
 If the change is already in the queue, the new value is updated in-queue.
 
 #### Parameters
 
-• **property**: `string`
+##### property
+
+`string`
 
 Property name.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
-• **oldValue**: `any`
+##### oldValue
+
+`any`
 
 Old property value.
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/internals/changeQueue.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L27)

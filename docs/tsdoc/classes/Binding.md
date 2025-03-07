@@ -1,10 +1,12 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
 [io-gui](../README.md) / Binding
 
 # Class: Binding
+
+Defined in: [src/core/internals/binding.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L11)
 
 Property binding class.
 It facilitates data binding between source node/property and target nodes/properties
@@ -16,15 +18,21 @@ using `[property]-changed` events.
 
 > **new Binding**(`node`, `property`): [`Binding`](Binding.md)
 
+Defined in: [src/core/internals/binding.ts:21](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L21)
+
 Creates a binding object for specified `node` and `property`.
 
 #### Parameters
 
-• **node**: [`IoNode`](IoNode.md)
+##### node
+
+[`IoNode`](IoNode.md)
 
 Property owner node
 
-• **property**: `string`
+##### property
+
+`string`
 
 Name of the property
 
@@ -32,19 +40,13 @@ Name of the property
 
 [`Binding`](Binding.md)
 
-#### Defined in
-
-[src/core/internals/binding.ts:19](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L19)
-
 ## Properties
 
 ### node
 
 > `readonly` **node**: [`IoNode`](IoNode.md)
 
-#### Defined in
-
-[src/core/internals/binding.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L10)
+Defined in: [src/core/internals/binding.ts:12](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L12)
 
 ***
 
@@ -52,49 +54,53 @@ Name of the property
 
 > `readonly` **property**: `string` = `''`
 
-#### Defined in
-
-[src/core/internals/binding.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L11)
+Defined in: [src/core/internals/binding.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L13)
 
 ***
 
 ### targetProperties
 
-> `readonly` **targetProperties**: `WeakMap`\<`EventTarget`, `string`[]\>
+> `readonly` **targetProperties**: `WeakMap`\<[`IoNode`](IoNode.md), `string`[]\>
 
-#### Defined in
-
-[src/core/internals/binding.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L13)
+Defined in: [src/core/internals/binding.ts:15](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L15)
 
 ***
 
 ### targets
 
-> `readonly` **targets**: `EventTarget`[] = `[]`
+> `readonly` **targets**: [`IoNode`](IoNode.md)[] = `[]`
 
-#### Defined in
-
-[src/core/internals/binding.ts:12](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L12)
+Defined in: [src/core/internals/binding.ts:14](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L14)
 
 ## Accessors
 
 ### value
 
-> `get` **value**(): `any`
+#### Get Signature
 
-> `set` **value**(`value`): `void`
+> **get** **value**(): `any`
 
-#### Parameters
+Defined in: [src/core/internals/binding.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L29)
 
-• **value**: `any`
-
-#### Returns
+##### Returns
 
 `any`
 
-#### Defined in
+#### Set Signature
 
-[src/core/internals/binding.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L27)
+> **set** **value**(`value`): `void`
+
+Defined in: [src/core/internals/binding.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L26)
+
+##### Parameters
+
+###### value
+
+`any`
+
+##### Returns
+
+`void`
 
 ## Methods
 
@@ -102,15 +108,21 @@ Name of the property
 
 > **addTarget**(`node`, `property`): `void`
 
+Defined in: [src/core/internals/binding.ts:43](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L43)
+
 Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
 
 #### Parameters
 
-• **node**: [`IoNode`](IoNode.md)
+##### node
+
+[`IoNode`](IoNode.md)
 
 Target node
 
-• **property**: `string`
+##### property
+
+`string`
 
 Target property
 
@@ -118,15 +130,13 @@ Target property
 
 `void`
 
-#### Defined in
-
-[src/core/internals/binding.ts:42](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L42)
-
 ***
 
 ### dispose()
 
 > **dispose**(): `void`
+
+Defined in: [src/core/internals/binding.ts:145](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L145)
 
 Dispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
@@ -135,33 +145,30 @@ Use this when node is no longer needed.
 
 `void`
 
-#### Defined in
-
-[src/core/internals/binding.ts:147](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L147)
-
 ***
 
 ### getTargetProperties()
 
-> **getTargetProperties**(`node`): `string`[]
+> **getTargetProperties**(`target`): `TargetProperties`
 
+Defined in: [src/core/internals/binding.ts:90](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L90)
+
+Helper function to get target properties from WeakMap
 Retrieves a list of target properties for specified target node.
 
 #### Parameters
 
-• **node**: `EventTarget` \| [`IoNode`](IoNode.md)
+##### target
+
+[`IoNode`](IoNode.md)
 
 Target node.
 
 #### Returns
 
-`string`[]
+`TargetProperties`
 
 list of target property names.
-
-#### Defined in
-
-[src/core/internals/binding.ts:88](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L88)
 
 ***
 
@@ -169,21 +176,21 @@ list of target property names.
 
 > **onSourceChanged**(`event`): `void`
 
+Defined in: [src/core/internals/binding.ts:119](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L119)
+
 Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
 
 #### Parameters
 
-• **event**: [`ChangeEvent`](../interfaces/ChangeEvent.md)
+##### event
+
+[`ChangeEvent`](../interfaces/ChangeEvent.md)
 
 Property change event.
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/core/internals/binding.ts:121](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L121)
 
 ***
 
@@ -191,11 +198,15 @@ Property change event.
 
 > **onTargetChanged**(`event`): `void`
 
+Defined in: [src/core/internals/binding.ts:100](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L100)
+
 Event handler that updates source property when one of the targets emits `[property]-changed` event.
 
 #### Parameters
 
-• **event**: [`ChangeEvent`](../interfaces/ChangeEvent.md)
+##### event
+
+[`ChangeEvent`](../interfaces/ChangeEvent.md)
 
 Property change event.
 
@@ -203,26 +214,28 @@ Property change event.
 
 `void`
 
-#### Defined in
-
-[src/core/internals/binding.ts:102](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L102)
-
 ***
 
 ### removeTarget()
 
 > **removeTarget**(`node`, `property`?): `void`
 
+Defined in: [src/core/internals/binding.ts:68](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L68)
+
 Removes target `node` and `property` and corresponding `[property]-changed` listener.
 If `property` is not specified, it removes all target properties.
 
 #### Parameters
 
-• **node**: [`IoNode`](IoNode.md)
+##### node
+
+[`IoNode`](IoNode.md)
 
 Target node
 
-• **property?**: `string`
+##### property?
+
+`string`
 
 Target property
 
@@ -230,20 +243,14 @@ Target property
 
 `void`
 
-#### Defined in
-
-[src/core/internals/binding.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L67)
-
 ***
 
 ### toJSON()
 
 > **toJSON**(): `string`
 
+Defined in: [src/core/internals/binding.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L32)
+
 #### Returns
 
 `string`
-
-#### Defined in
-
-[src/core/internals/binding.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L30)

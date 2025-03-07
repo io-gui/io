@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,8 +6,6 @@
 
 # Type Alias: Listener
 
-> **Listener**: [[`CustomEventListener`](CustomEventListener.md), `AddEventListenerOptions?`]
+> **Listener**: \[[`AnyEventListener`](AnyEventListener.md), `AddEventListenerOptions`?\]
 
-## Defined in
-
-[src/core/internals/eventDispatcher.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L60)
+Defined in: [src/core/internals/eventDispatcher.ts:87](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L87)

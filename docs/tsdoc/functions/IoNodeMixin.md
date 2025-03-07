@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,6 +8,8 @@
 
 > **IoNodeMixin**\<`T`\>(`superclass`): *typeof* `__class`
 
+Defined in: [src/core/node.ts:31](https://github.com/io-gui/io/blob/main/src/core/node.ts#L31)
+
 Core mixin for `Node` classes.
 
 ## Type Parameters
@@ -16,7 +18,9 @@ Core mixin for `Node` classes.
 
 ## Parameters
 
-• **superclass**: `T`
+### superclass
+
+`T`
 
 Class to extend.
 
@@ -25,7 +29,3 @@ Class to extend.
 *typeof* `__class`
 
 - Extended class constructor with `IoNodeMixin` applied to it.
-
-## Defined in
-
-[src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)

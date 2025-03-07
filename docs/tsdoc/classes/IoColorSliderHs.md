@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,11 +6,17 @@
 
 # Class: IoColorSliderHs
 
+Defined in: [src/elements/color/io-color-sliders.ts:507](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L507)
+
 A 2D slider gor "hue" and "saturation" color channels.
 
 ## Extends
 
 - [`IoColorSlider2dBase`](IoColorSlider2dBase.md)
+
+## Indexable
+
+\[`key`: `string`\]: `any`
 
 ## Constructors
 
@@ -18,9 +24,13 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **new IoColorSliderHs**(`properties`): [`IoColorSliderHs`](IoColorSliderHs.md)
 
+Defined in: [src/core/gl.ts:272](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L272)
+
 #### Parameters
 
-• **properties**: `Record`\<`string`, `any`\> = `{}`
+##### properties
+
+`Record`\<`string`, `any`\> = `{}`
 
 #### Returns
 
@@ -30,37 +40,17 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`constructor`](IoColorSlider2dBase.md#constructors)
 
-#### Defined in
-
-[src/core/gl.ts:259](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L259)
-
 ## Properties
-
-### $
-
-> **$**: `Record`\<`string`, `any`\>
-
-#### Inherited from
-
-[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`$`](IoColorSlider2dBase.md#$)
-
-#### Defined in
-
-[src/core/element.ts:178](https://github.com/io-gui/io/blob/main/src/core/element.ts#L178)
-
-***
 
 ### \_active
 
 > **\_active**: `number` = `-1`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:65](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L65)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_active`](IoColorSlider2dBase.md#_active)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:65](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L65)
 
 ***
 
@@ -68,13 +58,23 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
+Defined in: [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_bindings`](IoColorSlider2dBase.md#_bindings)
 
-#### Defined in
+***
 
-[src/core/node.ts:55](https://github.com/io-gui/io/blob/main/src/core/node.ts#L55)
+### \_canvas
+
+> **\_canvas**: `HTMLCanvasElement`
+
+Defined in: [src/core/gl.ts:78](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L78)
+
+#### Inherited from
+
+[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_canvas`](IoColorSlider2dBase.md#_canvas)
 
 ***
 
@@ -82,13 +82,23 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
+Defined in: [src/core/node.ts:45](https://github.com/io-gui/io/blob/main/src/core/node.ts#L45)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_changeQueue`](IoColorSlider2dBase.md#_changequeue)
 
-#### Defined in
+***
 
-[src/core/node.ts:56](https://github.com/io-gui/io/blob/main/src/core/node.ts#L56)
+### \_ctx
+
+> **\_ctx**: `CanvasRenderingContext2D`
+
+Defined in: [src/core/gl.ts:79](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L79)
+
+#### Inherited from
+
+[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_ctx`](IoColorSlider2dBase.md#_ctx)
 
 ***
 
@@ -96,13 +106,23 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
+Defined in: [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_eventDispatcher`](IoColorSlider2dBase.md#_eventdispatcher)
 
-#### Defined in
+***
 
-[src/core/node.ts:57](https://github.com/io-gui/io/blob/main/src/core/node.ts#L57)
+### \_needsResize
+
+> **\_needsResize**: `boolean` = `false`
+
+Defined in: [src/core/gl.ts:77](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L77)
+
+#### Inherited from
+
+[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_needsResize`](IoColorSlider2dBase.md#_needsresize)
 
 ***
 
@@ -110,13 +130,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
+Defined in: [src/core/node.ts:43](https://github.com/io-gui/io/blob/main/src/core/node.ts#L43)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_properties`](IoColorSlider2dBase.md#_properties)
-
-#### Defined in
-
-[src/core/node.ts:54](https://github.com/io-gui/io/blob/main/src/core/node.ts#L54)
 
 ***
 
@@ -124,13 +142,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
+Defined in: [src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_protochain`](IoColorSlider2dBase.md#_protochain)
-
-#### Defined in
-
-[src/core/node.ts:53](https://github.com/io-gui/io/blob/main/src/core/node.ts#L53)
 
 ***
 
@@ -138,13 +154,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **\_rect**: `null` \| `DOMRect` = `null`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:66](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L66)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_rect`](IoColorSlider2dBase.md#_rect)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:66](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L66)
 
 ***
 
@@ -152,13 +166,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **\_startX**: `number` = `0`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L63)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_startX`](IoColorSlider2dBase.md#_startx)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L63)
 
 ***
 
@@ -166,13 +178,23 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **\_startY**: `number` = `0`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:64](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L64)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_startY`](IoColorSlider2dBase.md#_starty)
 
-#### Defined in
+***
 
-[src/elements/sliders/io-slider-base.ts:64](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L64)
+### $
+
+> **$**: `Record`\<`string`, `any`\>
+
+Defined in: [src/core/element.ts:179](https://github.com/io-gui/io/blob/main/src/core/element.ts#L179)
+
+#### Inherited from
+
+[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`$`](IoColorSlider2dBase.md#$)
 
 ***
 
@@ -180,27 +202,23 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **class**: `string`
 
+Defined in: [src/core/element.ts:188](https://github.com/io-gui/io/blob/main/src/core/element.ts#L188)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`class`](IoColorSlider2dBase.md#class)
-
-#### Defined in
-
-[src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
 ***
 
 ### color
 
-> **color**: [`number`, `number`, `number`, `number`]
+> **color**: \[`number`, `number`, `number`, `number`\]
+
+Defined in: [src/core/gl.ts:69](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L69)
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`color`](IoColorSlider2dBase.md#color)
-
-#### Defined in
-
-[src/core/gl.ts:69](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L69)
 
 ***
 
@@ -208,13 +226,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **contenteditable**: `boolean`
 
+Defined in: [src/core/element.ts:185](https://github.com/io-gui/io/blob/main/src/core/element.ts#L185)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`contenteditable`](IoColorSlider2dBase.md#contenteditable)
-
-#### Defined in
-
-[src/core/element.ts:184](https://github.com/io-gui/io/blob/main/src/core/element.ts#L184)
 
 ***
 
@@ -222,13 +238,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **disabled**: `boolean`
 
+Defined in: [src/core/element.ts:209](https://github.com/io-gui/io/blob/main/src/core/element.ts#L209)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`disabled`](IoColorSlider2dBase.md#disabled)
-
-#### Defined in
-
-[src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
 ***
 
@@ -236,13 +250,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **exponent**: `number`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:46](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L46)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`exponent`](IoColorSlider2dBase.md#exponent)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:46](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L46)
 
 ***
 
@@ -250,13 +262,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **hidden**: `boolean`
 
+Defined in: [src/core/element.ts:206](https://github.com/io-gui/io/blob/main/src/core/element.ts#L206)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`hidden`](IoColorSlider2dBase.md#hidden)
-
-#### Defined in
-
-[src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
 ***
 
@@ -264,13 +274,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **id**: `string`
 
+Defined in: [src/core/element.ts:203](https://github.com/io-gui/io/blob/main/src/core/element.ts#L203)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`id`](IoColorSlider2dBase.md#id)
-
-#### Defined in
-
-[src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
 ***
 
@@ -278,13 +286,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **label**: `string`
 
+Defined in: [src/core/element.ts:194](https://github.com/io-gui/io/blob/main/src/core/element.ts#L194)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`label`](IoColorSlider2dBase.md#label)
-
-#### Defined in
-
-[src/core/element.ts:193](https://github.com/io-gui/io/blob/main/src/core/element.ts#L193)
 
 ***
 
@@ -292,41 +298,35 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **lazy**: `boolean`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L61)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`lazy`](IoColorSlider2dBase.md#lazy)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L61)
 
 ***
 
 ### max
 
-> **max**: [`number`, `number`]
+> **max**: \[`number`, `number`\]
+
+Defined in: [src/elements/sliders/io-slider-2d.ts:37](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L37)
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`max`](IoColorSlider2dBase.md#max)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-2d.ts:37](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L37)
-
 ***
 
 ### min
 
-> **min**: [`number`, `number`]
+> **min**: \[`number`, `number`\]
+
+Defined in: [src/elements/sliders/io-slider-2d.ts:34](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L34)
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`min`](IoColorSlider2dBase.md#min)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-2d.ts:34](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L34)
 
 ***
 
@@ -334,13 +334,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **name**: `string`
 
+Defined in: [src/core/element.ts:197](https://github.com/io-gui/io/blob/main/src/core/element.ts#L197)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`name`](IoColorSlider2dBase.md#name)
-
-#### Defined in
-
-[src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
 ***
 
@@ -348,13 +346,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **noscroll**: `boolean`
 
+Defined in: [src/elements/sliders/io-slider-2d.ts:40](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L40)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`noscroll`](IoColorSlider2dBase.md#noscroll)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-2d.ts:40](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L40)
 
 ***
 
@@ -362,13 +358,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **pxRatio**: `number`
 
+Defined in: [src/core/gl.ts:72](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L72)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`pxRatio`](IoColorSlider2dBase.md#pxratio)
-
-#### Defined in
-
-[src/core/gl.ts:72](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L72)
 
 ***
 
@@ -376,41 +370,35 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **role**: `string`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:55](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L55)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`role`](IoColorSlider2dBase.md#role)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:55](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L55)
 
 ***
 
 ### size
 
-> **size**: [`number`, `number`]
+> **size**: \[`number`, `number`\]
+
+Defined in: [src/core/gl.ts:66](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L66)
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`size`](IoColorSlider2dBase.md#size)
 
-#### Defined in
-
-[src/core/gl.ts:66](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L66)
-
 ***
 
 ### step
 
-> **step**: [`number`, `number`]
+> **step**: \[`number`, `number`\]
+
+Defined in: [src/elements/sliders/io-slider-2d.ts:31](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L31)
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`step`](IoColorSlider2dBase.md#step)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-2d.ts:31](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L31)
 
 ***
 
@@ -418,13 +406,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **tabindex**: `string`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:58](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L58)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`tabindex`](IoColorSlider2dBase.md#tabindex)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:58](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L58)
 
 ***
 
@@ -432,13 +418,11 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **theme**: `IoTheme`
 
+Defined in: [src/core/gl.ts:75](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L75)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`theme`](IoColorSlider2dBase.md#theme)
-
-#### Defined in
-
-[src/core/gl.ts:75](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L75)
 
 ***
 
@@ -446,27 +430,23 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **title**: `string`
 
+Defined in: [src/core/element.ts:200](https://github.com/io-gui/io/blob/main/src/core/element.ts#L200)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`title`](IoColorSlider2dBase.md#title)
-
-#### Defined in
-
-[src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
 ***
 
 ### value
 
-> **value**: [`number`, `number`]
+> **value**: \[`number`, `number`\]
+
+Defined in: [src/elements/sliders/io-slider-2d.ts:28](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L28)
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`value`](IoColorSlider2dBase.md#value)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-2d.ts:28](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L28)
 
 ***
 
@@ -474,117 +454,129 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 > **vertical**: `boolean`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:49](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L49)
+
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`vertical`](IoColorSlider2dBase.md#vertical)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:49](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L49)
 
 ## Accessors
 
 ### \_max
 
-> `get` **\_max**(): [`number`, `number`]
+#### Get Signature
 
-#### Returns
+> **get** **\_max**(): \[`number`, `number`\]
 
-[`number`, `number`]
+Defined in: [src/elements/sliders/io-slider-base.ts:79](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L79)
+
+##### Returns
+
+\[`number`, `number`\]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_max`](IoColorSlider2dBase.md#_max)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:79](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L79)
-
 ***
 
 ### \_min
 
-> `get` **\_min**(): [`number`, `number`]
+#### Get Signature
 
-#### Returns
+> **get** **\_min**(): \[`number`, `number`\]
 
-[`number`, `number`]
+Defined in: [src/elements/sliders/io-slider-base.ts:68](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L68)
+
+##### Returns
+
+\[`number`, `number`\]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_min`](IoColorSlider2dBase.md#_min)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:68](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L68)
-
 ***
 
 ### \_step
 
-> `get` **\_step**(): [`number`, `number`]
+#### Get Signature
 
-#### Returns
+> **get** **\_step**(): \[`number`, `number`\]
 
-[`number`, `number`]
+Defined in: [src/elements/sliders/io-slider-base.ts:90](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L90)
+
+##### Returns
+
+\[`number`, `number`\]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_step`](IoColorSlider2dBase.md#_step)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:90](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L90)
-
 ***
 
 ### \_value
 
-> `get` **\_value**(): [`number`, `number`]
+#### Get Signature
 
-#### Returns
+> **get** **\_value**(): \[`number`, `number`\]
 
-[`number`, `number`]
+Defined in: [src/elements/sliders/io-slider-base.ts:101](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L101)
+
+##### Returns
+
+\[`number`, `number`\]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_value`](IoColorSlider2dBase.md#_value)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:101](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L101)
-
 ***
 
 ### textNode
 
-> `get` **textNode**(): `any`
+#### Get Signature
 
-> `set` **textNode**(`value`): `void`
+> **get** **textNode**(): `any`
 
-#### Parameters
+Defined in: [src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src/core/element.ts#L393)
 
-• **value**: `any`
-
-#### Returns
+##### Returns
 
 `any`
+
+#### Set Signature
+
+> **set** **textNode**(`value`): `void`
+
+Defined in: [src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
+
+##### Parameters
+
+###### value
+
+`any`
+
+##### Returns
+
+`void`
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`textNode`](IoColorSlider2dBase.md#textnode)
 
-#### Defined in
-
-[src/core/element.ts:392](https://github.com/io-gui/io/blob/main/src/core/element.ts#L392)
-
 ***
 
 ### Frag
 
-> `get` `static` **Frag**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Frag**(): `string`
+
+Defined in: [src/elements/color/io-color-sliders.ts:275](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L275)
+
+##### Returns
 
 `string`
 
@@ -592,17 +584,17 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Frag`](IoColorSlider2dBase.md#frag)
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:264](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L264)
-
 ***
 
 ### GlUtils
 
-> `get` `static` **GlUtils**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** `static` **GlUtils**(): `string`
+
+Defined in: [src/elements/color/io-color-sliders.ts:508](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L508)
+
+##### Returns
 
 `string`
 
@@ -610,69 +602,69 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`GlUtils`](IoColorSlider2dBase.md#glutils)
 
-#### Defined in
-
-[src/elements/color/io-color-sliders.ts:491](https://github.com/io-gui/io/blob/main/src/elements/color/io-color-sliders.ts#L491)
-
 ***
 
 ### Listeners
 
-> `get` `static` **Listeners**(): `object`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Listeners**(): `object`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:112](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L112)
+
+##### Returns
 
 `object`
 
-##### contextmenu
+###### contextmenu
 
 > **contextmenu**: `string` = `'_onContextmenu'`
 
-##### focus
+###### focus
 
 > **focus**: `string` = `'_onFocus'`
 
-##### pointerdown
+###### pointerdown
 
 > **pointerdown**: `string` = `'_onPointerdown'`
 
-##### touchstart
+###### touchstart
 
-> **touchstart**: (`string` \| `object`)[]
+> **touchstart**: (`string` \| \{ `passive`: `boolean`; \})[]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Listeners`](IoColorSlider2dBase.md#listeners)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:112](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L112)
-
 ***
 
 ### Properties
 
-> `get` `static` **Properties**(): [`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
+#### Get Signature
 
-#### Returns
+> **get** `static` **Properties**(): [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
-[`PropertyDeclarations`](../type-aliases/PropertyDeclarations.md)
+Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/core/node.ts#L33)
+
+##### Returns
+
+[`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
 #### Inherited from
 
-[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Properties`](IoColorSlider2dBase.md#properties)
-
-#### Defined in
-
-[src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Properties`](IoColorSlider2dBase.md#properties-1)
 
 ***
 
 ### Style
 
-> `get` `static` **Style**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Style**(): `string`
+
+Defined in: [src/elements/sliders/io-slider-2d.ts:7](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L7)
+
+##### Returns
 
 `string`
 
@@ -680,17 +672,17 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Style`](IoColorSlider2dBase.md#style)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-2d.ts:7](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-2d.ts#L7)
-
 ***
 
 ### Vert
 
-> `get` `static` **Vert**(): `string`
+#### Get Signature
 
-#### Returns
+> **get** `static` **Vert**(): `string`
+
+Defined in: [src/core/gl.ts:81](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L81)
+
+##### Returns
 
 `string`
 
@@ -698,46 +690,24 @@ A 2D slider gor "hue" and "saturation" color channels.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Vert`](IoColorSlider2dBase.md#vert)
 
-#### Defined in
-
-[src/core/gl.ts:81](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L81)
-
 ## Methods
-
-### Register()
-
-> **Register**(`ioNodeConstructor`): `void`
-
-#### Parameters
-
-• **ioNodeConstructor**: *typeof* [`IoNode`](IoNode.md)
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Register`](IoColorSlider2dBase.md#register)
-
-#### Defined in
-
-[src/core/element.ts:304](https://github.com/io-gui/io/blob/main/src/core/element.ts#L304)
-
-***
 
 ### \_flattenTextNode()
 
 > **\_flattenTextNode**(`element`): `void`
+
+Defined in: [src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
 
 #### Parameters
 
-• **element**: `HTMLElement` \| [`IoElement`](IoElement.md)
+##### element
 
 Element to flatten.
+
+`HTMLElement` | [`IoElement`](IoElement.md)
 
 #### Returns
 
@@ -747,53 +717,49 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_flattenTextNode`](IoColorSlider2dBase.md#_flattentextnode)
 
-#### Defined in
-
-[src/core/element.ts:375](https://github.com/io-gui/io/blob/main/src/core/element.ts#L375)
-
 ***
 
 ### \_getPointerCoord()
 
-> **\_getPointerCoord**(`event`): [`number`, `number`]
+> **\_getPointerCoord**(`event`): \[`number`, `number`\]
+
+Defined in: [src/elements/sliders/io-slider-base.ts:179](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L179)
 
 #### Parameters
 
-• **event**: `PointerEvent`
+##### event
+
+`PointerEvent`
 
 #### Returns
 
-[`number`, `number`]
+\[`number`, `number`\]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_getPointerCoord`](IoColorSlider2dBase.md#_getpointercoord)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:179](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L179)
-
 ***
 
 ### \_getValueFromCoord()
 
-> **\_getValueFromCoord**(`coord`): [`number`, `number`]
+> **\_getValueFromCoord**(`coord`): \[`number`, `number`\]
+
+Defined in: [src/elements/sliders/io-slider-base.ts:187](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L187)
 
 #### Parameters
 
-• **coord**: [`number`, `number`]
+##### coord
+
+\[`number`, `number`\]
 
 #### Returns
 
-[`number`, `number`]
+\[`number`, `number`\]
 
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_getValueFromCoord`](IoColorSlider2dBase.md#_getvaluefromcoord)
-
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:187](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L187)
 
 ***
 
@@ -801,9 +767,13 @@ Element to flatten.
 
 > **\_inputValue**(`value`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:203](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L203)
+
 #### Parameters
 
-• **value**: [`number`, `number`]
+##### value
+
+\[`number`, `number`\]
 
 #### Returns
 
@@ -813,15 +783,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_inputValue`](IoColorSlider2dBase.md#_inputvalue)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:203](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L203)
-
 ***
 
 ### \_onBlur()
 
 > **\_onBlur**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:124](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L124)
 
 #### Returns
 
@@ -831,19 +799,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onBlur`](IoColorSlider2dBase.md#_onblur)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:124](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L124)
-
 ***
 
 ### \_onContextmenu()
 
 > **\_onContextmenu**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:128](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L128)
+
 #### Parameters
 
-• **event**: `Event`
+##### event
+
+`Event`
 
 #### Returns
 
@@ -853,15 +821,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onContextmenu`](IoColorSlider2dBase.md#_oncontextmenu)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:128](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L128)
-
 ***
 
 ### \_onFocus()
 
 > **\_onFocus**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:120](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L120)
 
 #### Returns
 
@@ -871,19 +837,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onFocus`](IoColorSlider2dBase.md#_onfocus)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:120](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L120)
-
 ***
 
 ### \_onKeydown()
 
 > **\_onKeydown**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:230](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L230)
+
 #### Parameters
 
-• **event**: `KeyboardEvent`
+##### event
+
+`KeyboardEvent`
 
 #### Returns
 
@@ -893,19 +859,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onKeydown`](IoColorSlider2dBase.md#_onkeydown)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:230](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L230)
-
 ***
 
 ### \_onPointerdown()
 
 > **\_onPointerdown**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:161](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L161)
+
 #### Parameters
 
-• **event**: `PointerEvent`
+##### event
+
+`PointerEvent`
 
 #### Returns
 
@@ -915,19 +881,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onPointerdown`](IoColorSlider2dBase.md#_onpointerdown)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:161](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L161)
-
 ***
 
 ### \_onPointermove()
 
 > **\_onPointermove**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:168](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L168)
+
 #### Parameters
 
-• **event**: `PointerEvent`
+##### event
+
+`PointerEvent`
 
 #### Returns
 
@@ -937,19 +903,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onPointermove`](IoColorSlider2dBase.md#_onpointermove)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:168](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L168)
-
 ***
 
 ### \_onPointermoveThrottled()
 
 > **\_onPointermoveThrottled**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:195](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L195)
+
 #### Parameters
 
-• **event**: `PointerEvent`
+##### event
+
+`PointerEvent`
 
 #### Returns
 
@@ -959,19 +925,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onPointermoveThrottled`](IoColorSlider2dBase.md#_onpointermovethrottled)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:195](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L195)
-
 ***
 
 ### \_onPointerup()
 
 > **\_onPointerup**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:172](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L172)
+
 #### Parameters
 
-• **event**: `PointerEvent`
+##### event
+
+`PointerEvent`
 
 #### Returns
 
@@ -981,15 +947,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onPointerup`](IoColorSlider2dBase.md#_onpointerup)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:172](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L172)
-
 ***
 
 ### \_onRender()
 
 > **\_onRender**(): `void`
+
+Defined in: [src/core/gl.ts:357](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L357)
 
 #### Returns
 
@@ -999,15 +963,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onRender`](IoColorSlider2dBase.md#_onrender)
 
-#### Defined in
-
-[src/core/gl.ts:344](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L344)
-
 ***
 
 ### \_onTouchend()
 
 > **\_onTouchend**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:157](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L157)
 
 #### Returns
 
@@ -1017,19 +979,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onTouchend`](IoColorSlider2dBase.md#_ontouchend)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:157](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L157)
-
 ***
 
 ### \_onTouchmove()
 
 > **\_onTouchmove**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:139](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L139)
+
 #### Parameters
 
-• **event**: `TouchEvent`
+##### event
+
+`TouchEvent`
 
 #### Returns
 
@@ -1039,19 +1001,19 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onTouchmove`](IoColorSlider2dBase.md#_ontouchmove)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:139](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L139)
-
 ***
 
 ### \_onTouchstart()
 
 > **\_onTouchstart**(`event`): `void`
 
+Defined in: [src/elements/sliders/io-slider-base.ts:131](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L131)
+
 #### Parameters
 
-• **event**: `TouchEvent`
+##### event
+
+`TouchEvent`
 
 #### Returns
 
@@ -1061,15 +1023,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_onTouchstart`](IoColorSlider2dBase.md#_ontouchstart)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:131](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L131)
-
 ***
 
 ### \_setDecrease()
 
 > **\_setDecrease**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:276](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L276)
 
 #### Returns
 
@@ -1079,15 +1039,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setDecrease`](IoColorSlider2dBase.md#_setdecrease)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:276](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L276)
-
 ***
 
 ### \_setDown()
 
 > **\_setDown**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:297](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L297)
 
 #### Returns
 
@@ -1097,15 +1055,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setDown`](IoColorSlider2dBase.md#_setdown)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:297](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L297)
-
 ***
 
 ### \_setIncrease()
 
 > **\_setIncrease**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:269](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L269)
 
 #### Returns
 
@@ -1115,15 +1071,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setIncrease`](IoColorSlider2dBase.md#_setincrease)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:269](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L269)
-
 ***
 
 ### \_setLeft()
 
 > **\_setLeft**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:303](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L303)
 
 #### Returns
 
@@ -1133,15 +1087,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setLeft`](IoColorSlider2dBase.md#_setleft)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:303](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L303)
-
 ***
 
 ### \_setMax()
 
 > **\_setMax**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:287](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L287)
 
 #### Returns
 
@@ -1151,15 +1103,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setMax`](IoColorSlider2dBase.md#_setmax)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:287](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L287)
-
 ***
 
 ### \_setMin()
 
 > **\_setMin**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:283](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L283)
 
 #### Returns
 
@@ -1169,15 +1119,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setMin`](IoColorSlider2dBase.md#_setmin)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:283](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L283)
-
 ***
 
 ### \_setRight()
 
 > **\_setRight**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:309](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L309)
 
 #### Returns
 
@@ -1187,15 +1135,13 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setRight`](IoColorSlider2dBase.md#_setright)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:309](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L309)
-
 ***
 
 ### \_setUp()
 
 > **\_setUp**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:291](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L291)
 
 #### Returns
 
@@ -1205,29 +1151,33 @@ Element to flatten.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`_setUp`](IoColorSlider2dBase.md#_setup)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:291](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L291)
-
 ***
 
 ### addEventListener()
 
 > **addEventListener**(`type`, `listener`, `options`?): `void`
 
+Defined in: [src/core/node.ts:342](https://github.com/io-gui/io/blob/main/src/core/node.ts#L342)
+
 Wrapper for addEventListener.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 listener name.
 
-• **listener**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+##### listener
+
+[`AnyEventListener`](../type-aliases/AnyEventListener.md)
 
 listener handler.
 
-• **options?**: `AddEventListenerOptions`
+##### options?
+
+`AddEventListenerOptions`
 
 event listener options.
 
@@ -1239,22 +1189,22 @@ event listener options.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`addEventListener`](IoColorSlider2dBase.md#addeventlistener)
 
-#### Defined in
-
-[src/core/node.ts:353](https://github.com/io-gui/io/blob/main/src/core/node.ts#L353)
-
 ***
 
 ### applyProperties()
 
 > **applyProperties**(`props`): `void`
 
+Defined in: [src/core/element.ts:401](https://github.com/io-gui/io/blob/main/src/core/element.ts#L401)
+
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-• **props**: `any`
+##### props
+
+`any`
 
 Map of property names and values.
 
@@ -1266,21 +1216,21 @@ Map of property names and values.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`applyProperties`](IoColorSlider2dBase.md#applyproperties)
 
-#### Defined in
-
-[src/core/element.ts:400](https://github.com/io-gui/io/blob/main/src/core/element.ts#L400)
-
 ***
 
 ### bind()
 
 > **bind**(`prop`): [`Binding`](Binding.md)
 
+Defined in: [src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
+
 Returns a binding to a specified property`.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property to bind to.
 
@@ -1294,15 +1244,13 @@ Binding object.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`bind`](IoColorSlider2dBase.md#bind)
 
-#### Defined in
-
-[src/core/node.ts:320](https://github.com/io-gui/io/blob/main/src/core/node.ts#L320)
-
 ***
 
 ### changed()
 
 > **changed**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:318](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L318)
 
 default change handler.
 Invoked when one of the properties change.
@@ -1315,15 +1263,13 @@ Invoked when one of the properties change.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`changed`](IoColorSlider2dBase.md#changed)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:318](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L318)
-
 ***
 
 ### connectedCallback()
 
 > **connectedCallback**(): `void`
+
+Defined in: [src/core/element.ts:214](https://github.com/io-gui/io/blob/main/src/core/element.ts#L214)
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -1335,15 +1281,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`connectedCallback`](IoColorSlider2dBase.md#connectedcallback)
 
-#### Defined in
-
-[src/core/element.ts:213](https://github.com/io-gui/io/blob/main/src/core/element.ts#L213)
-
 ***
 
 ### disabledChanged()
 
 > **disabledChanged**(): `void`
+
+Defined in: [src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src/core/element.ts#L430)
 
 #### Returns
 
@@ -1353,15 +1297,13 @@ Add resize listener if `onResized()` is defined in subclass.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`disabledChanged`](IoColorSlider2dBase.md#disabledchanged)
 
-#### Defined in
-
-[src/core/element.ts:429](https://github.com/io-gui/io/blob/main/src/core/element.ts#L429)
-
 ***
 
 ### disconnectedCallback()
 
 > **disconnectedCallback**(): `void`
+
+Defined in: [src/core/element.ts:222](https://github.com/io-gui/io/blob/main/src/core/element.ts#L222)
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -1373,35 +1315,39 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`disconnectedCallback`](IoColorSlider2dBase.md#disconnectedcallback)
 
-#### Defined in
-
-[src/core/element.ts:221](https://github.com/io-gui/io/blob/main/src/core/element.ts#L221)
-
 ***
 
 ### dispatchEvent()
 
 > **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
+Defined in: [src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+
 Wrapper for dispatchEvent.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 event name to dispatch.
 
-• **detail** = `{}`
+##### detail
 
 event detail.
 
-• **bubbles**: `boolean` = `false`
+##### bubbles
+
+`boolean` = `false`
 
 event bubbles.
 
-• **src?**: `Node` \| `Document` \| `HTMLElement` \| `Window`
+##### src?
 
 source node/element to dispatch event from.
+
+`Node` | `Document` | `HTMLElement` | `Window`
 
 #### Returns
 
@@ -1411,21 +1357,21 @@ source node/element to dispatch event from.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`dispatchEvent`](IoColorSlider2dBase.md#dispatchevent)
 
-#### Defined in
-
-[src/core/node.ts:378](https://github.com/io-gui/io/blob/main/src/core/node.ts#L378)
-
 ***
 
 ### dispatchMutationEvent()
 
 > **dispatchMutationEvent**(`object`): `void`
 
+Defined in: [src/core/node.ts:374](https://github.com/io-gui/io/blob/main/src/core/node.ts#L374)
+
 Shorthand for dispatching `'object-mutated'` event on window.
 
 #### Parameters
 
-• **object**: `any`
+##### object
+
+`any`
 
 object which mutated.
 
@@ -1437,15 +1383,13 @@ object which mutated.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`dispatchMutationEvent`](IoColorSlider2dBase.md#dispatchmutationevent)
 
-#### Defined in
-
-[src/core/node.ts:385](https://github.com/io-gui/io/blob/main/src/core/node.ts#L385)
-
 ***
 
 ### dispatchQueue()
 
 > **dispatchQueue**(): `void`
+
+Defined in: [src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
 
@@ -1457,15 +1401,13 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`dispatchQueue`](IoColorSlider2dBase.md#dispatchqueue)
 
-#### Defined in
-
-[src/core/node.ts:260](https://github.com/io-gui/io/blob/main/src/core/node.ts#L260)
-
 ***
 
 ### dispatchQueueSync()
 
 > **dispatchQueueSync**(): `void`
+
+Defined in: [src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
 
 Dispatches the queue immediately.
 
@@ -1477,15 +1419,13 @@ Dispatches the queue immediately.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`dispatchQueueSync`](IoColorSlider2dBase.md#dispatchqueuesync)
 
-#### Defined in
-
-[src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
-
 ***
 
 ### dispose()
 
 > **dispose**(): `void`
+
+Defined in: [src/core/node.ts:381](https://github.com/io-gui/io/blob/main/src/core/node.ts#L381)
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -1498,15 +1438,13 @@ Use this when instance is no longer needed.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`dispose`](IoColorSlider2dBase.md#dispose)
 
-#### Defined in
-
-[src/core/node.ts:392](https://github.com/io-gui/io/blob/main/src/core/node.ts#L392)
-
 ***
 
 ### init()
 
 > **init**(): `void`
+
+Defined in: [src/elements/sliders/io-slider-base.ts:315](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L315)
 
 #### Returns
 
@@ -1516,21 +1454,23 @@ Use this when instance is no longer needed.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`init`](IoColorSlider2dBase.md#init)
 
-#### Defined in
-
-[src/elements/sliders/io-slider-base.ts:315](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L315)
-
 ***
 
 ### initPropertyUniform()
 
 > **initPropertyUniform**(`name`, `property`): `string`
 
+Defined in: [src/core/gl.ts:204](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L204)
+
 #### Parameters
 
-• **name**: `string`
+##### name
 
-• **property**: [`PropertyDeclaration`](../type-aliases/PropertyDeclaration.md)
+`string`
+
+##### property
+
+[`PropertyDefinition`](../type-aliases/PropertyDefinition.md)
 
 #### Returns
 
@@ -1540,15 +1480,13 @@ Use this when instance is no longer needed.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`initPropertyUniform`](IoColorSlider2dBase.md#initpropertyuniform)
 
-#### Defined in
-
-[src/core/gl.ts:191](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L191)
-
 ***
 
 ### initShader()
 
 > **initShader**(): `WebGLProgram`
+
+Defined in: [src/core/gl.ts:222](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L222)
 
 #### Returns
 
@@ -1558,22 +1496,22 @@ Use this when instance is no longer needed.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`initShader`](IoColorSlider2dBase.md#initshader)
 
-#### Defined in
-
-[src/core/gl.ts:209](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L209)
-
 ***
 
 ### inputValue()
 
 > **inputValue**(`value`): `void`
 
+Defined in: [src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
 
 #### Parameters
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
@@ -1585,15 +1523,13 @@ Property value.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`inputValue`](IoColorSlider2dBase.md#inputvalue)
 
-#### Defined in
-
-[src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
-
 ***
 
 ### labelChanged()
 
 > **labelChanged**(): `void`
+
+Defined in: [src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src/core/element.ts#L423)
 
 #### Returns
 
@@ -1603,22 +1539,22 @@ Property value.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`labelChanged`](IoColorSlider2dBase.md#labelchanged)
 
-#### Defined in
-
-[src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
-
 ***
 
 ### objectMutated()
 
 > **objectMutated**(`prop`): `void`
 
+Defined in: [src/core/node.ts:298](https://github.com/io-gui/io/blob/main/src/core/node.ts#L298)
+
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Mutated object property name.
 
@@ -1630,22 +1566,22 @@ Mutated object property name.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`objectMutated`](IoColorSlider2dBase.md#objectmutated)
 
-#### Defined in
-
-[src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
-
 ***
 
 ### onObjectMutated()
 
 > **onObjectMutated**(`event`): `void`
 
+Defined in: [src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
 
 #### Parameters
 
-• **event**: `CustomEvent`\<`any`\>
+##### event
+
+`CustomEvent`
 
 Event payload.
 
@@ -1657,15 +1593,13 @@ Event payload.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`onObjectMutated`](IoColorSlider2dBase.md#onobjectmutated)
 
-#### Defined in
-
-[src/core/node.ts:288](https://github.com/io-gui/io/blob/main/src/core/node.ts#L288)
-
 ***
 
 ### onResized()
 
 > **onResized**(): `void`
+
+Defined in: [src/core/gl.ts:316](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L316)
 
 #### Returns
 
@@ -1675,29 +1609,33 @@ Event payload.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`onResized`](IoColorSlider2dBase.md#onresized)
 
-#### Defined in
-
-[src/core/gl.ts:303](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L303)
-
 ***
 
 ### queue()
 
 > **queue**(`prop`, `value`, `oldValue`): `void`
 
+Defined in: [src/core/node.ts:243](https://github.com/io-gui/io/blob/main/src/core/node.ts#L243)
+
 Adds property change to the queue.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property name.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Property value.
 
-• **oldValue**: `any`
+##### oldValue
+
+`any`
 
 Old property value.
 
@@ -1709,9 +1647,27 @@ Old property value.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`queue`](IoColorSlider2dBase.md#queue)
 
-#### Defined in
+***
 
-[src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
+### Register()
+
+> **Register**(`ioNodeConstructor`): `void`
+
+Defined in: [src/core/element.ts:305](https://github.com/io-gui/io/blob/main/src/core/element.ts#L305)
+
+#### Parameters
+
+##### ioNodeConstructor
+
+*typeof* [`IoNode`](IoNode.md)
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`Register`](IoColorSlider2dBase.md#register)
 
 ***
 
@@ -1719,19 +1675,27 @@ Old property value.
 
 > **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
+Defined in: [src/core/node.ts:357](https://github.com/io-gui/io/blob/main/src/core/node.ts#L357)
+
 Wrapper for removeEventListener.
 
 #### Parameters
 
-• **type**: `string`
+##### type
+
+`string`
 
 event name to listen to.
 
-• **listener?**: [`AnyEventListener`](../type-aliases/AnyEventListener.md)
+##### listener?
+
+[`AnyEventListener`](../type-aliases/AnyEventListener.md)
 
 listener handler.
 
-• **options?**: `AddEventListenerOptions`
+##### options?
+
+`AddEventListenerOptions`
 
 event listener options.
 
@@ -1743,27 +1707,29 @@ event listener options.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`removeEventListener`](IoColorSlider2dBase.md#removeeventlistener)
 
-#### Defined in
-
-[src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
-
 ***
 
 ### setAttribute()
 
 > **setAttribute**(`attr`, `value`): `void`
 
+Defined in: [src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
+
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
 #### Parameters
 
-• **attr**: `string`
+##### attr
+
+`string`
 
 Attribute name.
 
-• **value**: `string` \| `number` \| `boolean`
+##### value
 
 Attribute value.
+
+`string` | `number` | `boolean`
 
 #### Returns
 
@@ -1773,22 +1739,22 @@ Attribute value.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`setAttribute`](IoColorSlider2dBase.md#setattribute)
 
-#### Defined in
-
-[src/core/element.ts:413](https://github.com/io-gui/io/blob/main/src/core/element.ts#L413)
-
 ***
 
 ### setProperties()
 
 > **setProperties**(`props`): `void`
 
+Defined in: [src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
+
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
 
 #### Parameters
 
-• **props**: `any`
+##### props
+
+`any`
 
 Map of property names and values.
 
@@ -1800,29 +1766,33 @@ Map of property names and values.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`setProperties`](IoColorSlider2dBase.md#setproperties)
 
-#### Defined in
-
-[src/core/node.ts:217](https://github.com/io-gui/io/blob/main/src/core/node.ts#L217)
-
 ***
 
 ### setProperty()
 
 > **setProperty**(`name`, `value`, `skipDispatch`?): `void`
 
+Defined in: [src/core/node.ts:111](https://github.com/io-gui/io/blob/main/src/core/node.ts#L111)
+
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
 #### Parameters
 
-• **name**: `string`
+##### name
+
+`string`
 
 Property name to set value of.
 
-• **value**: `any`
+##### value
+
+`any`
 
 Peroperty value.
 
-• **skipDispatch?**: `boolean`
+##### skipDispatch?
+
+`boolean`
 
 flag to skip event dispatch.
 
@@ -1834,15 +1804,13 @@ flag to skip event dispatch.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`setProperty`](IoColorSlider2dBase.md#setproperty)
 
-#### Defined in
-
-[src/core/node.ts:122](https://github.com/io-gui/io/blob/main/src/core/node.ts#L122)
-
 ***
 
 ### setShaderProgram()
 
 > **setShaderProgram**(): `void`
+
+Defined in: [src/core/gl.ts:392](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L392)
 
 #### Returns
 
@@ -1852,21 +1820,23 @@ flag to skip event dispatch.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`setShaderProgram`](IoColorSlider2dBase.md#setshaderprogram)
 
-#### Defined in
-
-[src/core/gl.ts:379](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L379)
-
 ***
 
 ### setUniform()
 
 > **setUniform**(`name`, `value`): `void`
 
+Defined in: [src/core/gl.ts:409](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L409)
+
 #### Parameters
 
-• **name**: `string`
+##### name
 
-• **value**: `any`
+`string`
+
+##### value
+
+`any`
 
 #### Returns
 
@@ -1876,29 +1846,33 @@ flag to skip event dispatch.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`setUniform`](IoColorSlider2dBase.md#setuniform)
 
-#### Defined in
-
-[src/core/gl.ts:396](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L396)
-
 ***
 
 ### template()
 
 > **template**(`vDOM`, `host`?, `cache`?): `void`
 
+Defined in: [src/core/element.ts:234](https://github.com/io-gui/io/blob/main/src/core/element.ts#L234)
+
 Renders DOM from virtual DOM arrays.
 
 #### Parameters
 
-• **vDOM**: `any`[]
+##### vDOM
+
+`any`[]
 
 Array of vDOM children.
 
-• **host?**: `HTMLElement`
+##### host?
+
+`HTMLElement`
 
 Optional template target.
 
-• **cache?**: `boolean`
+##### cache?
+
+`boolean`
 
 Optional don't reuse existing elements and skip dispose
 
@@ -1910,15 +1884,13 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`template`](IoColorSlider2dBase.md#template)
 
-#### Defined in
-
-[src/core/element.ts:233](https://github.com/io-gui/io/blob/main/src/core/element.ts#L233)
-
 ***
 
 ### themeMutated()
 
 > **themeMutated**(): `void`
+
+Defined in: [src/core/gl.ts:342](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L342)
 
 #### Returns
 
@@ -1928,29 +1900,33 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`themeMutated`](IoColorSlider2dBase.md#thememutated)
 
-#### Defined in
-
-[src/core/gl.ts:329](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L329)
-
 ***
 
 ### throttle()
 
 > **throttle**(`func`, `arg`, `timeout`): `void`
 
+Defined in: [src/core/node.ts:268](https://github.com/io-gui/io/blob/main/src/core/node.ts#L268)
+
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
 #### Parameters
 
-• **func**: [`CallbackFunction`](../type-aliases/CallbackFunction.md)
+##### func
+
+[`CallbackFunction`](../type-aliases/CallbackFunction.md)
 
 Function to throttle.
 
-• **arg**: `any` = `undefined`
+##### arg
+
+`any` = `undefined`
 
 argument for throttled function.
 
-• **timeout**: `number` = `1`
+##### timeout
+
+`number` = `1`
 
 minimum delay in ms before executing the function.
 
@@ -1962,30 +1938,34 @@ minimum delay in ms before executing the function.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`throttle`](IoColorSlider2dBase.md#throttle)
 
-#### Defined in
-
-[src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
-
 ***
 
 ### traverse()
 
 > **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
+Defined in: [src/core/element.ts:247](https://github.com/io-gui/io/blob/main/src/core/element.ts#L247)
+
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
 
 #### Parameters
 
-• **vChildren**: `any`[]
+##### vChildren
+
+`any`[]
 
 Array of vDOM children converted by `buildTree()` for easier parsing.
 
-• **host?**: `HTMLElement`
+##### host?
+
+`HTMLElement`
 
 Optional template target.
 
-• **cache?**: `boolean`
+##### cache?
+
+`boolean`
 
 Optional don't reuse existing elements and skip dispose
 
@@ -1997,21 +1977,21 @@ Optional don't reuse existing elements and skip dispose
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`traverse`](IoColorSlider2dBase.md#traverse)
 
-#### Defined in
-
-[src/core/element.ts:246](https://github.com/io-gui/io/blob/main/src/core/element.ts#L246)
-
 ***
 
 ### unbind()
 
 > **unbind**(`prop`): `void`
 
+Defined in: [src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-• **prop**: `string`
+##### prop
+
+`string`
 
 Property to unbind.
 
@@ -2023,21 +2003,23 @@ Property to unbind.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`unbind`](IoColorSlider2dBase.md#unbind)
 
-#### Defined in
-
-[src/core/node.ts:337](https://github.com/io-gui/io/blob/main/src/core/node.ts#L337)
-
 ***
 
 ### updatePropertyUniform()
 
 > **updatePropertyUniform**(`name`, `property`): `void`
 
+Defined in: [src/core/gl.ts:398](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L398)
+
 #### Parameters
 
-• **name**: `string`
+##### name
 
-• **property**: [`PropertyInstance`](PropertyInstance.md)
+`string`
+
+##### property
+
+[`PropertyInstance`](PropertyInstance.md)
 
 #### Returns
 
@@ -2047,15 +2029,13 @@ Property to unbind.
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`updatePropertyUniform`](IoColorSlider2dBase.md#updatepropertyuniform)
 
-#### Defined in
-
-[src/core/gl.ts:385](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L385)
-
 ***
 
 ### updateThemeUniforms()
 
 > **updateThemeUniforms**(): `void`
+
+Defined in: [src/core/gl.ts:404](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L404)
 
 #### Returns
 
@@ -2064,7 +2044,3 @@ Property to unbind.
 #### Inherited from
 
 [`IoColorSlider2dBase`](IoColorSlider2dBase.md).[`updateThemeUniforms`](IoColorSlider2dBase.md#updatethemeuniforms)
-
-#### Defined in
-
-[src/core/gl.ts:391](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L391)

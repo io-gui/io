@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,11 +8,17 @@
 
 > **Property**(`propertyDefinition`): (`target`, `propertyName`) => `void`
 
+Defined in: [src/core/internals/property.ts:197](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L197)
+
+Allows property definitions using decorator pattern.
+
 ## Parameters
 
-• **propertyDefinition**: [`PropertyDeclarationLoose`](../type-aliases/PropertyDeclarationLoose.md)
+### propertyDefinition
 
-Property declaration.
+[`PropertyDefinitionLoose`](../type-aliases/PropertyDefinitionLoose.md)
+
+Property definition.
 
 ## Returns
 
@@ -22,14 +28,14 @@ Property decorator function.
 
 ### Parameters
 
-• **target**: [`IoNode`](../classes/IoNode.md)
+#### target
 
-• **propertyName**: `string`
+[`IoNode`](../classes/IoNode.md)
+
+#### propertyName
+
+`string`
 
 ### Returns
 
 `void`
-
-## Defined in
-
-[src/core/internals/property.ts:198](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L198)

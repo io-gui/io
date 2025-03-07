@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,6 +8,4 @@
 
 > `const` **DARK\_THEME**: [`Theme`](../type-aliases/Theme.md)
 
-## Defined in
-
-[src/core/theme.ts:132](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L132)
+Defined in: [src/core/theme.ts:124](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L124)

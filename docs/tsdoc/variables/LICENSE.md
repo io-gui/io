@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -8,9 +8,11 @@
 
 > `const` **LICENSE**: `"MIT"` = `'MIT'`
 
+Defined in: [src/iogui.ts:29](https://github.com/io-gui/io/blob/main/src/iogui.ts#L29)
+
 ## License
 
-Copyright ©2022 Aleksandar (Aki) Rodic
+Copyright ©2024 Aleksandar (Aki) Rodic
 
 The MIT License
 
@@ -31,7 +33,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-## Defined in
-
-[src/iogui.ts:33](https://github.com/io-gui/io/blob/main/src/iogui.ts#L33)

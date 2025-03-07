@@ -1,10 +1,12 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
 [io-gui](../README.md) / PropertyInstance
 
 # Class: PropertyInstance
+
+Defined in: [src/core/internals/property.ts:97](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L97)
 
 PropertyInstance object constructed from `ProtoProperty`.
 
@@ -14,15 +16,21 @@ PropertyInstance object constructed from `ProtoProperty`.
 
 > **new PropertyInstance**(`node`, `propDef`): [`PropertyInstance`](PropertyInstance.md)
 
+Defined in: [src/core/internals/property.ts:117](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L117)
+
 Creates the property configuration object and copies values from `ProtoProperty`.
 
 #### Parameters
 
-• **node**: [`IoNode`](IoNode.md)
+##### node
+
+[`IoNode`](IoNode.md)
 
 owner IoNode instance
 
-• **propDef**: [`ProtoProperty`](ProtoProperty.md)
+##### propDef
+
+[`ProtoProperty`](ProtoProperty.md)
 
 ProtoProperty object
 
@@ -30,19 +38,13 @@ ProtoProperty object
 
 [`PropertyInstance`](PropertyInstance.md)
 
-#### Defined in
-
-[src/core/internals/property.ts:118](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L118)
-
 ## Properties
 
 ### binding?
 
 > `optional` **binding**: [`Binding`](Binding.md)
 
-#### Defined in
-
-[src/core/internals/property.ts:104](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L104)
+Defined in: [src/core/internals/property.ts:103](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L103)
 
 ***
 
@@ -50,9 +52,7 @@ ProtoProperty object
 
 > `optional` **init**: `any` = `undefined`
 
-#### Defined in
-
-[src/core/internals/property.ts:112](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L112)
+Defined in: [src/core/internals/property.ts:111](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L111)
 
 ***
 
@@ -60,9 +60,7 @@ ProtoProperty object
 
 > **observe**: `boolean` = `false`
 
-#### Defined in
-
-[src/core/internals/property.ts:110](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L110)
+Defined in: [src/core/internals/property.ts:109](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L109)
 
 ***
 
@@ -70,9 +68,7 @@ ProtoProperty object
 
 > **reactive**: `boolean` = `true`
 
-#### Defined in
-
-[src/core/internals/property.ts:108](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L108)
+Defined in: [src/core/internals/property.ts:107](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L107)
 
 ***
 
@@ -80,9 +76,7 @@ ProtoProperty object
 
 > **reflect**: `boolean` = `false`
 
-#### Defined in
-
-[src/core/internals/property.ts:106](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L106)
+Defined in: [src/core/internals/property.ts:105](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L105)
 
 ***
 
@@ -90,9 +84,7 @@ ProtoProperty object
 
 > `optional` **type**: [`Constructor`](../type-aliases/Constructor.md)
 
-#### Defined in
-
-[src/core/internals/property.ts:102](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L102)
+Defined in: [src/core/internals/property.ts:101](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L101)
 
 ***
 
@@ -100,6 +92,4 @@ ProtoProperty object
 
 > `optional` **value**: `any` = `undefined`
 
-#### Defined in
-
-[src/core/internals/property.ts:100](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L100)
+Defined in: [src/core/internals/property.ts:99](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L99)

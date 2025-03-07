@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,8 +6,6 @@
 
 # Type Alias: VDOMArray
 
-> **VDOMArray**: [`string`] \| [`string`, [`IoElementArgs`](IoElementArgs.md) \| `string` \| [`VDOMArray`](VDOMArray.md)[]] \| [`string`, [`IoElementArgs`](IoElementArgs.md) \| `string`, [`VDOMArray`](VDOMArray.md)[] \| `string`]
+> **VDOMArray**: \[`string`\] \| \[`string`, [`IoElementArgs`](IoElementArgs.md) \| `string` \| [`VDOMArray`](VDOMArray.md)[]\] \| \[`string`, [`IoElementArgs`](IoElementArgs.md) \| `string`, [`VDOMArray`](VDOMArray.md)[] \| `string`\]
 
-## Defined in
-
-[src/core/element.ts:39](https://github.com/io-gui/io/blob/main/src/core/element.ts#L39)
+Defined in: [src/core/element.ts:39](https://github.com/io-gui/io/blob/main/src/core/element.ts#L39)

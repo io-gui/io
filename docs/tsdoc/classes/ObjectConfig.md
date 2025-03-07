@@ -1,4 +1,4 @@
-[**io-gui**](../README.md) • **Docs**
+[**io-gui**](../README.md)
 
 ***
 
@@ -6,23 +6,25 @@
 
 # Class: ObjectConfig
 
+Defined in: [src/elements/object/models/object-config.ts:9](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L9)
+
 ## Constructors
 
 ### new ObjectConfig()
 
 > **new ObjectConfig**(`prototypes`): [`ObjectConfig`](ObjectConfig.md)
 
+Defined in: [src/elements/object/models/object-config.ts:10](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L10)
+
 #### Parameters
 
-• **prototypes**: `any`
+##### prototypes
+
+`any`
 
 #### Returns
 
 [`ObjectConfig`](ObjectConfig.md)
-
-#### Defined in
-
-[src/elements/object/models/object-config.ts:10](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L10)
 
 ## Methods
 
@@ -30,19 +32,21 @@
 
 > **getObjectConfig**(`object`, `customConfig`): `any`
 
+Defined in: [src/elements/object/models/object-config.ts:22](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L22)
+
 #### Parameters
 
-• **object**: `any`
+##### object
 
-• **customConfig**: `any`
+`any`
+
+##### customConfig
+
+`any`
 
 #### Returns
 
 `any`
-
-#### Defined in
-
-[src/elements/object/models/object-config.ts:22](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L22)
 
 ***
 
@@ -50,14 +54,14 @@
 
 > **registerObjectConfig**(`config`): `void`
 
+Defined in: [src/elements/object/models/object-config.ts:15](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L15)
+
 #### Parameters
 
-• **config**: `any`
+##### config
+
+`any`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[src/elements/object/models/object-config.ts:15](https://github.com/io-gui/io/blob/main/src/elements/object/models/object-config.ts#L15)
