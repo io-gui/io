@@ -1,5 +1,5 @@
 import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, PropertyDecorators} from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 class Object1 {
   constructor(init?: any) {

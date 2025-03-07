@@ -3,19 +3,19 @@ import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/internals/property.js';
 import { IoThemeSingleton } from '../../core/theme.js';
 import { Marked } from 'marked';
-import { markedHighlight } from 'marked-highlight';
+// import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
-import hljs from '../../../lib/highlight.min.js';
+// import hljs from 'highlight.js';
 import { DARK_THEME, LIGHT_THEME } from './io-md-view-theme.js';
 
 const marked = new Marked(
-  markedHighlight({
-    langPrefix: 'hljs language-',
-    highlight(code, lang) {
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, { language }).value;
-    }
-  })
+  // markedHighlight({
+  //   langPrefix: 'hljs language-',
+  //   // highlight(code, lang) {
+  //   //   const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+  //   //   // return hljs.highlight(code, { language }).value;
+  //   // }
+  // })
 );
 
 /**

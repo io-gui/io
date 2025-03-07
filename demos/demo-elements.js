@@ -1,4 +1,4 @@
-import { Register, IoElement, IoStorage, MenuOptions, MenuItem } from '../build/iogui.js';
+import { Register, IoElement, IoStorage, MenuOptions, MenuItem } from 'io-gui';
 import './menu-model.js';
 import './theme-editor.js';
 

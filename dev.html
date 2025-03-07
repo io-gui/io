@@ -8,16 +8,10 @@
     <script type="importmap">
       {
         "imports": {
-          "io-gui": "./build/iogui.js",
-          "marked": "./node_modules/marked/lib/marked.esm.js",
-          "mocha": "./node_modules/mocha/mocha.js",
-          "chai": "./node_modules/chai/chai.js",
-          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs",
-          "marked-highlight": "./node_modules/marked-highlight/src/index.js"
+          "io-gui": "./build/iogui.js"
         }
       }
     </script>
-
     <style>
       html, body {
         padding: 0;
@@ -29,7 +23,7 @@
   </head>
   <body>
     <script type="module">
-      import { IoInspector, IoSlider } from "io-gui";
+      import { IoInspector, IoSlider } from 'io-gui';
 
       const inspector = new IoInspector({value: window.location});
       const slider = new IoSlider({value: 0.5, step: 0.4, exponent: 2});

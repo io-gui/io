@@ -1,5 +1,5 @@
 import {IoObject} from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 const testValue = {
   'number': 0.5,

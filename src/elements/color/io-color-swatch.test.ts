@@ -1,5 +1,5 @@
 import { IoColorSwatch } from '../../iogui.js';
-// import * as chai from 'chai';
+// import * as chai from '@esm-bundle/chai';
 
 const element = new IoColorSwatch();
 element.style.display = 'none';

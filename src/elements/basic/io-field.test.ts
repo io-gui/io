@@ -1,5 +1,5 @@
 import { IoField, IoIconsetSingleton } from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 const element = new IoField();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);

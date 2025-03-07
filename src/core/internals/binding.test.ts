@@ -1,5 +1,5 @@
 import {Binding, IoNode, Register, PropertyDefinitions} from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 @Register
 class TestIoNode extends IoNode {

@@ -1,5 +1,5 @@
 import { IoNumber, IoNumberLadder, IoNumberLadderStep } from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 const element = new IoNumber();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
@@ -355,33 +355,30 @@ export default class {
           element.step = 0.0001;
           ladder.changed();
         });
-        it('has reactive attributes', () => {
-        const $ = (selector: string) => { return ladder.querySelector(selector); };
-        it('steps have tabindex attribute', () => {
-          chai.expect($('.io-up1').getAttribute('tabindex')).to.equal('0');
-          chai.expect($('.io-down1').getAttribute('tabindex')).to.equal('0');
-        });
-        it('has a11y attributes', () => {
-          chai.expect(ladder.getAttribute('role')).to.equal('list');
-        });
-        it('steps have a11y attributes', () => {
-          chai.expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
-          chai.expect($('.io-up1').getAttribute('type')).to.equal('number');
-          chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
-          chai.expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
-          chai.expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
-          chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
-          element.value = 3;
-          ladder.changed();
-          chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
-          element.step = 0.5;
-          ladder.changed();
-          chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('5');
-          element.value = 0;
-          element.step = 0.0001;
-          ladder.changed();
-        });
-        });
+          it('steps have tabindex attribute', () => {
+            chai.expect($('.io-up1').getAttribute('tabindex')).to.equal('0');
+            chai.expect($('.io-down1').getAttribute('tabindex')).to.equal('0');
+          });
+          it('has a11y attributes', () => {
+            chai.expect(ladder.getAttribute('role')).to.equal('list');
+          });
+          it('steps have a11y attributes', () => {
+            chai.expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
+            chai.expect($('.io-up1').getAttribute('type')).to.equal('number');
+            chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
+            chai.expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
+            chai.expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
+            chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
+            element.value = 3;
+            ladder.changed();
+            chai.expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
+            element.step = 0.5;
+            ladder.changed();
+            chai.expect($('.io-up1').getAttribute('aria-label')).to.equal('5');
+            element.value = 0;
+            element.step = 0.0001;
+            ladder.changed();
+          });
       });
       describe('Accessibility', () => {
         it('TODO', () => {

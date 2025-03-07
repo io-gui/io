@@ -1,5 +1,5 @@
 import {ChangeQueue, Change, IoNode} from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 class FakeIoNode {
   prop1ChangeCounter = 0;

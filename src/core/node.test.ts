@@ -1,5 +1,5 @@
 import { Change, Binding, ProtoChain, IoNode, Register, PropertyDefinitions, IoElement } from '../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 // TODO: test lazy reactivity!
 

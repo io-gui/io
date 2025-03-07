@@ -1,5 +1,5 @@
 import { IoBoolean, IoIconsetSingleton } from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 const element = new IoBoolean();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);

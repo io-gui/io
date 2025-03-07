@@ -1,5 +1,5 @@
 import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register} from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

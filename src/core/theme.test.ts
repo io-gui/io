@@ -1,5 +1,5 @@
 import { IoThemeSingleton } from '../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 const theme = IoThemeSingleton;
 const binding = theme._properties.get('themeID')!.binding;

@@ -1,5 +1,5 @@
 import { IoStorageNode, IoStorage, Binding } from '../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {

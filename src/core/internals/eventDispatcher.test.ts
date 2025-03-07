@@ -1,5 +1,5 @@
 import {IoNode, Register, ListenerDefinitions, EventDispatcher, IoElement} from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 const handlerFunction = () => {};
 

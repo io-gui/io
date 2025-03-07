@@ -1,5 +1,5 @@
 import { IoElement, Register, IoNode, Change } from '../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 const element = new IoElement();
 element.style.display = 'none';

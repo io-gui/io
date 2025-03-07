@@ -1,5 +1,5 @@
 import { IoOptionMenu, MenuOptions } from '../../iogui.js';
-import * as chai from 'chai';
+import * as chai from '@esm-bundle/chai';
 
 const element = new IoOptionMenu();
 document.body.appendChild(element as unknown as HTMLElement);
