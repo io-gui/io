@@ -1,6 +1,26 @@
-export * from './core/index.js';
+export * from './core/internals/changeQueue.js';
+export * from './core/internals/eventDispatcher.js';
+export * from './core/internals/property.js';
+export * from './core/internals/binding.js';
+export * from './core/internals/protoChain.js';
+
+export * from './core/node.js';
+export * from './core/element.js';
+export * from './core/theme.js';
+export * from './core/storage.js';
+export * from './core/gl.js';
+export * from './core/overlay.js';
+
 export * from './elements/menus/models/index.js';
-export * from './elements/index.js';
+
+export * from './elements/basic/index.js';
+export * from './elements/color/index.js';
+export * from './elements/content/index.js';
+export * from './elements/vectors/index.js';
+export * from './elements/menus/index.js';
+export * from './elements/notify/index.js';
+export * from './elements/object/index.js';
+export * from './elements/sliders/index.js';
 
 /** @License
  * Copyright ©2024 Aleksandar (Aki) Rodic

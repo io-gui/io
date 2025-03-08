@@ -1,5 +1,5 @@
-import {Constructor, IoNode} from '../node.js';
-import {Binding} from './binding.js';
+import { Constructor, IoNode } from '../node.js';
+import { Binding } from './binding.js';
 
 /**
  * Declares default value, type and reactive behavior of the property.

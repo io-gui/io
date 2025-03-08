@@ -6,7 +6,6 @@ import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
 import { DARK_THEME, LIGHT_THEME } from './io-md-view-theme.js';
-
 import hljs from '../../../lib/highlight.min.js';
 
 const marked = new Marked(

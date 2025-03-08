@@ -1,4 +1,4 @@
-import {ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register} from '../../iogui.js';
+import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../../iogui.js';
 import { expect } from 'chai';
 
 class Array1 extends Array {}
@@ -26,8 +26,8 @@ class IoNode1 extends IoNode {
     };
   }
 
-  @Property({observe: true})
-  declare prop2: any;
+  @Property({observe: true, type: Object})
+  declare prop2: Object;
 }
 
 @Register
@@ -40,10 +40,11 @@ class IoNode3 extends IoNode1 {
       }
     };
   }
+
   @Property({reactive: true, observe: true, init: undefined})
   declare prop1: any;
 
-  @Property({value: 'foo', reflect: false})
+  @Property({value: 'foo', reflect: false, observe: false})
   declare prop2: any;
 
   @Property({reflect: true})
@@ -168,14 +169,14 @@ export default class {
         expect(protoChain.properties).to.be.eql({
           lazy:{value: false, type: Boolean, binding: undefined, reactive: false, reflect: true, observe: undefined, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reactive: false, reflect: undefined, observe: undefined, init: undefined},
-          prop2:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, observe: true, init: undefined},
+          prop2:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, observe: true, init: undefined},
         });
         protoChain = new ProtoChain(IoNode3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1', 'prop3']);
         expect(protoChain.properties).to.be.eql({
           lazy:{value: false, type: Boolean, binding: undefined, reactive: false, reflect: true, observe: undefined, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reactive: true, reflect: true, observe: true, init: undefined},
-          prop2:{value: 'foo', type: String, binding: undefined, reactive: undefined, reflect: false, observe: true, init: undefined},
+          prop2:{value: 'foo', type: String, binding: undefined, reactive: undefined, reflect: false, observe: false, init: undefined},
           prop3:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: true, observe: undefined, init: undefined},
         });
       });
@@ -185,7 +186,7 @@ export default class {
         expect(protoChain.properties).to.be.eql({
           lazy:{value: false, type: Boolean, binding: undefined, reactive: false, reflect: true, observe: undefined, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reactive: true, reflect: undefined, observe: undefined, init: undefined},
-          prop2:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, observe: false, init: undefined},
+          prop2:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, observe: false, init: undefined},
         });
       });
       it('Should include all listners declared in `static get Listeners()` return oject', () => {

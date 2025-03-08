@@ -1,4 +1,4 @@
-import {Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, PropertyDecorators} from '../../iogui.js';
+import { Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, PropertyDecorators } from '../../iogui.js';
 import { expect } from 'chai';
 
 class Object1 {

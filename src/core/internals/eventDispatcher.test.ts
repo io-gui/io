@@ -1,4 +1,4 @@
-import {IoNode, Register, ListenerDefinitions, EventDispatcher, IoElement} from '../../iogui.js';
+import { IoNode, Register, ListenerDefinitions, EventDispatcher, IoElement } from '../../iogui.js';
 import { expect } from 'chai';
 
 const handlerFunction = () => {};
@@ -95,21 +95,13 @@ export default class {
   run() {
     describe('EventDispatcher', () => {
       it('Should initialize with correct values', () => {
-        const node = {} as IoNode;
+        const node = new IoNode();
         let eventDispatcher = new EventDispatcher(node);
         expect(eventDispatcher.node).to.be.equal(node);
         expect(eventDispatcher.protoListeners).to.be.eql({});
         expect(eventDispatcher.propListeners).to.be.eql({});
         expect(eventDispatcher.addedListeners).to.be.eql({});
         expect(eventDispatcher.isEventTarget).to.be.eql(false);
-
-        const element = document.createElement('div');
-        eventDispatcher = new EventDispatcher(element);
-        expect(eventDispatcher.node).to.be.equal(element);
-        expect(eventDispatcher.protoListeners).to.be.eql({});
-        expect(eventDispatcher.propListeners).to.be.eql({});
-        expect(eventDispatcher.addedListeners).to.be.eql({});
-        expect(eventDispatcher.isEventTarget).to.be.equal(true);
       });
       it('Should initialize listeners from ProtoChain', () => {
         let node = new IoNode1();

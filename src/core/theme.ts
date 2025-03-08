@@ -232,6 +232,9 @@ class IoTheme extends IoElement {
   @Property({type: String, binding: $ThemeID})
   declare themeID: string;
 
+  @Property(true)
+  declare lazy: boolean;
+
   init() {
     // this.changed = this.changed.bind(this);
     this._properties.forEach((property) => {

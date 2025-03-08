@@ -255,9 +255,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     }
     /**
      * Dispatches the queue immediately.
+     * If dispatching is already in progress, it throttles the function execution to next frame.
      */
     dispatchQueueSync = () => {
-      this._changeQueue.dispatch();
+      if (this._changeQueue.dispatching) {
+        this.throttle(this.dispatchQueueSync);
+      } else {
+        this._changeQueue.dispatch();
+      }
     };
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.

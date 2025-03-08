@@ -1,7 +1,6 @@
-import {IoNode, IoNodeConstructor} from '../node.js';
-import {ProtoProperty, PropertyDecorators} from './property.js';
-import {ListenerDefinition, hardenListenerDefinition} from './eventDispatcher.js';
-
+import { IoNode, IoNodeConstructor } from '../node.js';
+import { ProtoProperty, PropertyDecorators } from './property.js';
+import { ListenerDefinition, hardenListenerDefinition } from './eventDispatcher.js';
 
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
 type ProtoFunctions = string[];

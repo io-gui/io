@@ -1,5 +1,5 @@
-import {IoNode} from '../node.js';
-import {ChangeEvent} from './changeQueue.js';
+import { IoNode } from '../node.js';
+import { ChangeEvent } from './changeQueue.js';
 
 /**
  * Event listener types.
@@ -60,22 +60,20 @@ export const listenerFromDefinition = (node: IoNode | EventTarget, def: Listener
 
   debug: {
     if (typeof handlerDef !== 'string' && typeof handlerDef !== 'function') {
-      console.warn('listenerFromDefinition: Listener must be a function or method name');
+      console.error('listenerFromDefinition: Listener must be a function or method name');
     }
-
-    if (options !== undefined) {
-      if (typeof options !== 'object' || options === null) {
-        console.warn('listenerFromDefinition: Listener options must be an object');
-      }
-
-      const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
-      if (invalidOptions.length > 0) {
-        console.warn(`listenerFromDefinition: Invalid listener options: ${invalidOptions.join(', ')}`);
+    if (options) {
+      if (typeof options !== 'object') {
+        console.error('listenerFromDefinition: Listener options must be an object');
+      } else {
+        const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
+        if (invalidOptions.length > 0) {
+          console.error(`listenerFromDefinition: Invalid listener options: ${invalidOptions.join(', ')}`);
+        }
       }
     }
-
     if (typeof handlerDef === 'string' && !(handlerDef in node)) {
-      console.warn(`listenerFromDefinition: Method "${handlerDef}" not found on node`);
+      console.error(`listenerFromDefinition: Method "${handlerDef}" not found on node`);
     }
   }
 
@@ -185,18 +183,16 @@ export class EventDispatcher {
     // Validate listener
     debug: {
       if (typeof listener !== 'function') {
-        console.warn('EventDispatcher.addEventListener: Invalid listener type - must be a function');
+        console.error('EventDispatcher.addEventListener: Invalid listener type - must be a function');
       }
-      if (options !== undefined) {
-        if (typeof options !== 'object' || options === null) {
-          console.warn('EventDispatcher.addEventListener: Invalid listener options type - must be an object');
-        }
-
-        const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
-        if (invalidOptions.length > 0) {
-          console.warn(
-            `EventDispatcher.addEventListener: Invalid listener options: ${invalidOptions.join(', ')}`
-          );
+      if (options) {
+        if (typeof options !== 'object') {
+          console.error('EventDispatcher.addEventListener: Invalid listener options type - must be an object');
+        } else {
+          const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
+          if (invalidOptions.length > 0) {
+            console.warn(`EventDispatcher.addEventListener: Invalid listener options: ${invalidOptions.join(', ')}`);
+          }
         }
       }
     }
@@ -235,22 +231,21 @@ export class EventDispatcher {
   removeEventListener(name: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
     debug: {
       if (listener && typeof listener !== 'function') {
-        console.warn('EventDispatcher.removeEventListener: Invalid listener type!');
+        console.error('EventDispatcher.removeEventListener: Invalid listener type!');
       }
-      if (options !== undefined) {
-        if (typeof options !== 'object' || options === null) {
-          console.warn('EventDispatcher.removeEventListener: Invalid listener options type - must be an object');
+      if (options) {
+        if (typeof options !== 'object') {
+          console.error('EventDispatcher.removeEventListener: Invalid listener options type - must be an object');
+        } else {
+          const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
+          if (invalidOptions.length > 0) {
+            console.warn(`EventDispatcher.removeEventListener: Invalid listener options: ${invalidOptions.join(', ')}`);
+          }
         }
 
-        const invalidOptions = Object.keys(options).filter(k => !LISTENER_OPTIONS.includes(k));
-        if (invalidOptions.length > 0) {
-          console.warn(
-            `EventDispatcher.removeEventListener: Invalid listener options: ${invalidOptions.join(', ')}`
-          );
-        }
       }
       if (!this.addedListeners[name]) {
-        console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
+        console.error(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
       }
     }
 
@@ -268,7 +263,7 @@ export class EventDispatcher {
       const index = this.addedListeners[name].findIndex(item => item[0] === listener);
       debug: {
         if (index === -1) {
-          console.warn(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
+          console.error(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
         }
       }
       if (index !== -1) {
@@ -303,7 +298,7 @@ export class EventDispatcher {
       }
       if (this.propListeners[name]) {
         debug: {
-          if (this.propListeners[name].length > 1) console.warn(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
+          if (this.propListeners[name].length > 1) console.error(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
         }
         const handler = this.propListeners[name][0][0] as IoEventListener;
         handler.call(node, payload);

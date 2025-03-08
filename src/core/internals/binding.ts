@@ -1,22 +1,42 @@
-import {ChangeEvent} from './changeQueue.js';
-import {IoNode} from '../node.js';
+import { ChangeEvent } from './changeQueue.js';
+import { IoNode } from '../node.js';
 
-type TargetProperties = string[];
+type Properties = string[];
+type TargetProperties = WeakMap<IoNode, Properties>;
 
 /**
- * Property binding class.
- * It facilitates data binding between source node/property and target nodes/properties
- * using `[property]-changed` events.
+ * Property binding class that enables two-way data synchronization between `IoNode` and `IoElement` nodes.
+ *
+ * It manages bindings between a source node's property and one or more target nodes and properties.
+ * Using a hub-and-spoke pub/sub event system, it maintains data consistency by automatically propagating
+ * changes to all bound nodes and properties.
+ *
+ * Key features:
+ * - Listens for `[propName]-changed` events to detect changes
+ * - Sets properties using `node.setProperty(propName, value)` method
+ * - Supports one-to-many property bindings
+ * - Prevents circular update loops
+ * - Automatically cleans up listeners when disposed
+ *
+ * Note: `debug: {}` code blocks are used in dev/debug builds for sanity checks.
+ * They print error messages if unexpected state is detected.
+ * In theory, they should never be reached.
+ *
+ * @example
+ * // Create a two-way binding between nodeA.value and nodeB.value
+ * const binding = new Binding(nodeA, 'value');
+ * binding.addTarget(nodeB, 'value');
  */
 export class Binding {
   readonly node: IoNode;
   readonly property: string = '';
-  readonly targets: Array<IoNode> = [];
-  readonly targetProperties: WeakMap<IoNode, string[]> = new WeakMap();
+  readonly targets: IoNode[] = [];
+  readonly targetProperties: TargetProperties = new WeakMap();
   /**
-   * Creates a binding object for specified `node` and `property`.
-   * @param {IoNode} node - Property owner node
-   * @param {string} property - Name of the property
+   * Creates a binding object for specified source `node` and `property`.
+   * It attaches a `[propName]-changed` listener to the source node.
+   * @param {IoNode} node - Source node
+   * @param {string} property - Name of the sourceproperty
    */
   constructor(node: IoNode, property: string) {
     this.node = node;
@@ -36,91 +56,115 @@ export class Binding {
     });
   }
   /**
-   * Adds a target `node` and `targetProp` and corresponding `[property]-changed` listener, unless already added.
-   * @param {IoNode} node - Target node
-   * @param {string} property - Target property
-   */
-  addTarget(node: IoNode, property: string) {
-    const propertyInstance = node._properties.get(property)!;
-    debug: {
-      if (propertyInstance.binding && propertyInstance.binding !== this) {
-        console.warn('Binding target alredy has a binding!');
-      }
-    }
-    propertyInstance.binding = this;
-    node.setProperty(property, this.node[this.property], true);
-    const target = node as unknown as IoNode;
-    if (this.targets.indexOf(target) === -1) this.targets.push(target);
-    const targetProperties = this.getTargetProperties(target);
-    if (targetProperties.indexOf(property) === -1) {
-      targetProperties.push(property);
-      target.addEventListener(`${property}-changed`, this.onTargetChanged);
-    } else debug: {
-      console.warn('Binding target alredy added!');
-    }
-  }
-  /**
-   * Removes target `node` and `property` and corresponding `[property]-changed` listener.
-   * If `property` is not specified, it removes all target properties.
-   * @param {IoNode} node - Target node
-   * @param {string} property - Target property
-   */
-  removeTarget(node: IoNode, property?: string) {
-    const targetProperties = this.getTargetProperties(node);
-    if (property) {
-      const i = targetProperties.indexOf(property);
-      if (i !== -1) targetProperties.splice(i, 1);
-      node.removeEventListener(`${property}-changed`, this.onTargetChanged);
-      node._properties.get(property)!.binding = undefined;
-    } else {
-      for (let i = targetProperties.length; i--;) {
-        node.removeEventListener(`${targetProperties[i]}-changed`, this.onTargetChanged);
-        node._properties.get(targetProperties[i])!.binding = undefined;
-      }
-      targetProperties.length = 0;
-    }
-    if (targetProperties.length === 0) this.targets.splice(this.targets.indexOf(node as unknown as IoNode), 1);
-  }
-  /**
    * Helper function to get target properties from WeakMap
    * Retrieves a list of target properties for specified target node.
    * @param {IoNode} target - Target node.
-   * @return {TargetProperties} list of target property names.
+   * @return {Properties} list of target property names.
    */
-  getTargetProperties(target: IoNode): TargetProperties {
-    if (!this.targetProperties.has(target)) {
-      this.targetProperties.set(target, []);
-    }
+  getTargetProperties(target: IoNode): Properties {
+    if (!this.targetProperties.has(target)) this.targetProperties.set(target, []);
     return this.targetProperties.get(target)!;
   }
   /**
-   * Event handler that updates source property when one of the targets emits `[property]-changed` event.
+   * Adds a target node and property.
+   * Sets itself as the binding reference on the target `PropertyInstance`.
+   * Adds a `[propName]-changed` listener to the target node.
+   * @param {IoNode} target - Target node
+   * @param {string} property - Target property
+   */
+  addTarget(target: IoNode, property: string) {
+    if (this.targets.indexOf(target) === -1) this.targets.push(target);
+
+    const targetProperties = this.getTargetProperties(target);
+
+    if (targetProperties.indexOf(property) === -1) {
+      targetProperties.push(property);
+
+      const propertyInstance = target._properties.get(property)!;
+      if (propertyInstance.binding && propertyInstance.binding !== this) {
+        debug: {
+          console.warn('Binding: improper usage detected!');
+          console.info('Binding: target property is already a target of another binding. Undinding previous binding!');
+        }
+        propertyInstance.binding.removeTarget(target, property);
+      }
+
+      propertyInstance.binding = this;
+      target.addEventListener(`${property}-changed`, this.onTargetChanged);
+      target.setProperty(property, this.node[this.property]);
+
+    } else debug: {
+
+      console.error('Binding: target property already added!');
+
+    }
+  }
+  /**
+   * Removes target node and property.
+   * If `property` is not specified, it removes all target properties.
+   * Removes binding reference from the target `PropertyInstance`.
+   * Removes `[propName]-changed` listener from the target node.
+   * @param {IoNode} target - Target node
+   * @param {string} property - Target property
+   */
+  removeTarget(target: IoNode, property?: string) {
+    const targetProperties = this.getTargetProperties(target);
+
+    if (property) {
+
+      const i = targetProperties.indexOf(property);
+      debug: if (i === -1) {
+        console.error('Binding: target property not found!');
+      }
+      targetProperties.splice(i, 1);
+
+      const propertyInstance = target._properties.get(property)!;
+      debug: if (propertyInstance.binding !== this) {
+        console.error('Binding: target property has a different binding!');
+      }
+      propertyInstance.binding = undefined;
+      target.removeEventListener(`${property}-changed`, this.onTargetChanged);
+
+    } else {
+
+      for (let i = targetProperties.length; i--;) {
+        const prop = targetProperties[i];
+        const propertyInstance = target._properties.get(prop)!;
+        debug: if (propertyInstance.binding !== this) {
+          console.error('Binding: target property has a different binding!');
+        }
+        propertyInstance.binding = undefined;
+        target.removeEventListener(`${prop}-changed`, this.onTargetChanged);
+      }
+      targetProperties.length = 0;
+
+    }
+
+    if (targetProperties.length === 0) this.targets.splice(this.targets.indexOf(target), 1);
+  }
+  /**
+   * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
    * @param {ChangeEvent} event - Property change event.
    */
   onTargetChanged = (event: ChangeEvent) => {
-    debug: {
-      if (this.targets.indexOf(event.target) === -1) {
-        console.error('onTargetChanged() should never fire when target is removed from binding. Please file an issue at https://github.com/arodic/iogui/issues.'); return;
-      }
+    debug: if (this.targets.indexOf(event.target) === -1) {
+      console.error('onTargetChanged() should never fire if target is not accounted for');
     }
     const oldValue = this.node[this.property];
     const value = event.detail.value;
     if (oldValue !== value) {
-      // JavaScript is weird NaN != NaN
+      // This is a hack to prevent infinite update loop when a value is NaN bacause JavaScript is weird NaN !== NaN.
       if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) return;
-      // this.node[this.property] = value;
       this.node.setProperty(this.property, value);
     }
   };
   /**
-   * Event handler that updates bound properties on target nodes when source node emits `[property]-changed` event.
+   * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
    * @param {ChangeEvent} event - Property change event.
    */
   onSourceChanged = (event: ChangeEvent) => {
-    debug: {
-      if (event.target !== this.node as unknown as IoNode) {
-        console.error('onSourceChanged() should always originate form source node. Please file an issue at https://github.com/arodic/iogui/issues.'); return;
-      }
+    debug: if (event.target !== this.node) {
+      console.error('onSourceChanged() should always originate form source node.');
     }
     const value = event.detail.value;
     for (let i = this.targets.length; i--;) {
@@ -130,10 +174,9 @@ export class Binding {
         const propName = targetProperties[j];
         const oldValue = target[propName];
         if (oldValue !== value) {
-          // JavaScript is weird NaN != NaN
+          // This is a hack to prevent infinite update loop when a value is NaN bacause JavaScript is weird NaN !== NaN.
           if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) continue;
-          // target[propName] = value;
-          (target as IoNode).setProperty(propName, value);
+          target.setProperty(propName, value);
         }
       }
     }

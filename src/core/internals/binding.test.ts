@@ -1,4 +1,4 @@
-import {Binding, IoNode, Register, PropertyDefinitions} from '../../iogui.js';
+import { Binding, IoNode, Register, PropertyDefinitions } from '../../iogui.js';
 import { expect } from 'chai';
 
 @Register
@@ -23,7 +23,7 @@ export default class {
         expect(binding.targets.length).to.be.equal(0);
         expect(binding.targetProperties instanceof WeakMap).to.be.equal(true);
       });
-      it('Should get and set property value on source node with `value` getter/setter', () => {
+      it('Should set source and target property values', () => {
         const node = new TestIoNode();
         const binding = new Binding(node, 'prop1');
         node.prop1 = 1;
@@ -32,6 +32,17 @@ export default class {
         expect(binding.value).to.be.equal(2);
         binding.value = 3;
         expect(node.prop1).to.be.equal(3);
+        const targetNode = new TestIoNode();
+        binding.addTarget(targetNode, 'prop1');
+        expect(targetNode.prop1).to.be.equal(3);
+        targetNode.prop1 = 4;
+        expect(binding.value).to.be.equal(4);
+        node.prop1 = 5;
+        expect(targetNode.prop1).to.be.equal(5);
+        expect(binding.value).to.be.equal(5);
+        binding.value = 6;
+        expect(node.prop1).to.be.equal(6);
+        expect(targetNode.prop1).to.be.equal(6);
       });
       it('Should add/remove target nodes and properties with `.addTarget()` and `removeTarget()`', () => {
         const srcIoNode = new TestIoNode();
@@ -72,13 +83,17 @@ export default class {
         expect(dstIoNode1._properties.get('prop1')!.binding).to.be.equal(binding1);
         expect(dstIoNode1._properties.get('prop2')!.binding).to.be.equal(binding1);
 
+        // @ts-ignore
         const binding0target0Props = binding0.getTargetProperties(dstIoNode0);
+        // @ts-ignore
         const binding0target1Props = binding0.getTargetProperties(dstIoNode1);
         expect(binding0target0Props[0]).to.be.equal('prop1');
         expect(binding0target0Props.length).to.be.equal(1);
         expect(binding0target1Props.length).to.be.equal(0);
 
+        // @ts-ignore
         const binding1target0Props = binding1.getTargetProperties(dstIoNode0);
+        // @ts-ignore
         const binding1target1Props = binding1.getTargetProperties(dstIoNode1);
         expect(binding1target0Props[0]).to.be.equal('prop2');
         expect(binding1target0Props.length).to.be.equal(1);
@@ -104,6 +119,28 @@ export default class {
         expect(dstIoNode1._properties.get('prop2')!.binding).to.be.equal(undefined);
 
         expect(dstIoNode1._eventDispatcher.addedListeners).to.be.eql({});
+      });
+      it('Should remove existing binding from target if `.addTarget()` causes a binding collision', () => {
+        const srcIoNode1 = new TestIoNode();
+        const binding1 = new Binding(srcIoNode1, 'prop1');
+        const dstIoNode1 = new TestIoNode();
+        binding1.addTarget(dstIoNode1, 'prop1');
+
+        const srcIoNode2 = new TestIoNode();
+        const binding2 = new Binding(srcIoNode2, 'prop1');
+
+        expect(binding1.targets).to.be.include(dstIoNode1);
+        // @ts-ignore
+        let binding1targetProps = binding1.getTargetProperties(dstIoNode1);
+        expect(binding1targetProps.length).to.be.equal(1);
+        expect(binding1targetProps[0]).to.be.equal('prop1');
+
+        binding2.addTarget(dstIoNode1, 'prop1');
+
+        expect(binding1.targets).to.be.eql([]);
+        // @ts-ignore
+        binding1targetProps = binding1.getTargetProperties(dstIoNode1);
+        expect(binding1targetProps.length).to.be.equal(0);
       });
       it('Should dispose correctly', () => {
         const node = new TestIoNode();
