@@ -23,7 +23,7 @@ const dummy = new TestIoNode();
 
 export default class {
   run() {
-    describe('Property', () => {
+    describe('property.test.ts', () => {
       it('Should initialize correct property definitions and values from loosely typed property definitions', () => {
         let propDef, prop;
         // initialize with empty object as property definition

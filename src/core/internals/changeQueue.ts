@@ -45,6 +45,7 @@ export class ChangeQueue {
   constructor(node: IoNode) {
     this.changes = [];
     this.node = node;
+    this.dispatch = this.dispatch.bind(this);
   }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.

@@ -106,9 +106,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
      * @param {string} name Property name to set value of.
      * @param {any} value Peroperty value.
-     * @param {boolean} [skipDispatch] flag to skip event dispatch.
+     * @param {boolean} [lazyDispatch] flag to skip event dispatch.
      */
-    setProperty(name: string, value: any, skipDispatch?: boolean) {
+    setProperty(name: string, value: any, lazyDispatch = false) {
       const prop = this._properties.get(name)!;
       const oldValue = prop.value;
 
@@ -169,9 +169,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         if (prop.reactive && oldValue !== value) {
           this.queue(name, value, oldValue);
-          if (!skipDispatch) {
-            this.dispatchQueue();
-          }
+          this.dispatchQueue(lazyDispatch);
         }
         if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
       }
@@ -246,24 +244,15 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     /**
      * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
      */
-    dispatchQueue() {
-      if (this.lazy) {
-        this.throttle(this.dispatchQueueSync);
-      } else {
-        this.dispatchQueueSync();
-      }
-    }
-    /**
-     * Dispatches the queue immediately.
-     * If dispatching is already in progress, it throttles the function execution to next frame.
-     */
-    dispatchQueueSync = () => {
-      if (this._changeQueue.dispatching) {
-        this.throttle(this.dispatchQueueSync);
+    dispatchQueue(lazy = false) {
+      if (this.lazy || lazy) {
+        this.throttle(this._changeQueue.dispatch);
+      } else if (this._changeQueue.dispatching) {
+        this.throttle(this._changeQueue.dispatch);
       } else {
         this._changeQueue.dispatch();
       }
-    };
+    }
     /**
      * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
      * @param {function} func - Function to throttle.

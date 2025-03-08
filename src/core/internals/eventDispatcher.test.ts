@@ -93,7 +93,7 @@ window.customElements.define('test-div-event-dispatch', TestDivEventDispatchElem
 
 export default class {
   run() {
-    describe('EventDispatcher', () => {
+    describe('eventDispatcher.test.ts', () => {
       it('Should initialize with correct values', () => {
         const node = new IoNode();
         let eventDispatcher = new EventDispatcher(node);

@@ -25,7 +25,7 @@ class MockIoNode extends IoNode {
 
 export default class {
   run() {
-    describe('ChangeQueue', () => {
+    describe('changeQueue.test.ts', () => {
       it('Should initialize with correct default values', () => {
         const node = new MockIoNode();
         const changeQueue = new ChangeQueue(node);

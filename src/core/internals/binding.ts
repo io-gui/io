@@ -88,10 +88,9 @@ export class Binding {
         }
         propertyInstance.binding.removeTarget(target, property);
       }
-
       propertyInstance.binding = this;
       target.addEventListener(`${property}-changed`, this.onTargetChanged);
-      target.setProperty(property, this.node[this.property]);
+      target.setProperty(property, this.node[this.property], true);
 
     } else debug: {
 

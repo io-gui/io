@@ -258,12 +258,10 @@ export class IoMenuOptions extends IoElement {
     debug: {
       if (!this.$parent) {
         console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoOverlaySingleton`.');
-        console.log(this);
       }
     }
     if (this.$parent) {
       const pRect = this.$parent.getBoundingClientRect();
-      // console.log(this.directon);
       IoOverlaySingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
       this._onClipHeight();
     }

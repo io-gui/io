@@ -6,6 +6,7 @@ import { MenuItem } from './models/menu-item.js';
 import { Property } from '../../core/internals/property.js';
 import './io-menu-item.js';
 
+const dummyOptions = new MenuOptions();
 // TODO: fix tab-out without collapse
 
 /**
@@ -60,7 +61,7 @@ export class IoOptionMenu extends IoElement {
   @Property({value: undefined, reflect: true})
   declare value: any;
 
-  @Property({observe: true, type: MenuOptions, reflect: true})
+  @Property({value: dummyOptions, observe: true, type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
   @Property('button')
@@ -73,7 +74,7 @@ export class IoOptionMenu extends IoElement {
   }
 
   optionsChanged(change: Change) {
-    if (change.oldValue) {
+    if (change.oldValue && change.oldValue !== dummyOptions) {
       change.oldValue.removeEventListener('last-changed', this._onLeafChanged);
     }
     if (change.value) {

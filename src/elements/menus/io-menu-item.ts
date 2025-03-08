@@ -314,10 +314,10 @@ export class IoMenuItem extends IoField {
       if (this.item.options && this.$options === undefined) {
         this.$options = new IoMenuOptions({
           expanded: this.bind('expanded'),
+          inlayer: true,
           depth: this.depth - 1,
           options: this.item.options,
           direction: this.direction,
-          inlayer: true,
           $parent: this,
         });
       }

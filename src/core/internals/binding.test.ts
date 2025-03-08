@@ -13,7 +13,7 @@ class TestIoNode extends IoNode {
 
 export default class {
   run() {
-    describe('Binding', () => {
+    describe('binding.test.ts', () => {
       it('Should initialize with correct default values', () => {
         const node = new TestIoNode();
         const binding = new Binding(node, 'prop1');
@@ -83,17 +83,13 @@ export default class {
         expect(dstIoNode1._properties.get('prop1')!.binding).to.be.equal(binding1);
         expect(dstIoNode1._properties.get('prop2')!.binding).to.be.equal(binding1);
 
-        // @ts-ignore
         const binding0target0Props = binding0.getTargetProperties(dstIoNode0);
-        // @ts-ignore
         const binding0target1Props = binding0.getTargetProperties(dstIoNode1);
         expect(binding0target0Props[0]).to.be.equal('prop1');
         expect(binding0target0Props.length).to.be.equal(1);
         expect(binding0target1Props.length).to.be.equal(0);
 
-        // @ts-ignore
         const binding1target0Props = binding1.getTargetProperties(dstIoNode0);
-        // @ts-ignore
         const binding1target1Props = binding1.getTargetProperties(dstIoNode1);
         expect(binding1target0Props[0]).to.be.equal('prop2');
         expect(binding1target0Props.length).to.be.equal(1);
@@ -130,7 +126,6 @@ export default class {
         const binding2 = new Binding(srcIoNode2, 'prop1');
 
         expect(binding1.targets).to.be.include(dstIoNode1);
-        // @ts-ignore
         let binding1targetProps = binding1.getTargetProperties(dstIoNode1);
         expect(binding1targetProps.length).to.be.equal(1);
         expect(binding1targetProps[0]).to.be.equal('prop1');
@@ -138,7 +133,6 @@ export default class {
         binding2.addTarget(dstIoNode1, 'prop1');
 
         expect(binding1.targets).to.be.eql([]);
-        // @ts-ignore
         binding1targetProps = binding1.getTargetProperties(dstIoNode1);
         expect(binding1targetProps.length).to.be.equal(0);
       });

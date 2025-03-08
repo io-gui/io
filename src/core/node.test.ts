@@ -24,7 +24,6 @@ export default class {
           expect(node.changed).to.be.a('function');
           expect(node.queue).to.be.a('function');
           expect(node.dispatchQueue).to.be.a('function');
-          expect(node.dispatchQueueSync).to.be.a('function');
           expect(node.throttle).to.be.a('function');
           expect(node.onObjectMutated).to.be.a('function');
           expect(node.objectMutated).to.be.a('function');
