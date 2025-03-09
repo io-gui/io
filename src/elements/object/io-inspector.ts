@@ -1,6 +1,6 @@
 import { IoNode, Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import {IoStorage as $} from '../../core/storage.js';
 import { ObjectGroups } from './models/object-groups.js';
 import { ObjectWidgets } from './models/object-widgets.js';

@@ -1,6 +1,6 @@
 import { IoNode, Register } from '../../../core/node.js';
 import { IoElementArgs } from '../../../core/element.js';
-import { Property } from '../../../core/internals/property.js';
+import { Property } from '../../../core/decorators/property.js';
 import { MenuOptions } from './menu-options.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';

@@ -1,5 +1,5 @@
 import { Binding } from '../iogui.js';
-import { Property } from './internals/property.js';
+import { Property } from './decorators/property.js';
 import { IoNode, Register } from './node.js';
 
 class EmulatedLocalStorage {

@@ -1,6 +1,6 @@
 import { IoElement, VDOMArray } from '../../core/element.js';
 import { Register } from '../../core/node.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuItem } from './io-menu-item.js';

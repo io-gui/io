@@ -1,6 +1,6 @@
 import { Register } from '../../core/node.js';
 import { IoElement, VDOMArray } from '../../core/element.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import './io-properties.js';
 
 /**

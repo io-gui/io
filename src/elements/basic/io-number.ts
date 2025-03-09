@@ -1,6 +1,6 @@
 import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import { IoField } from './io-field.js';
 import { IoOverlaySingleton } from '../../core/overlay.js';
 import { IoThemeSingleton } from '../../core/theme.js';

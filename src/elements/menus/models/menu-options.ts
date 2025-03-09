@@ -1,6 +1,6 @@
 import { IoNodeMixin, Register, IoNodeArgs } from '../../../core/node.js';
 import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
-import { Property } from '../../../core/internals/property.js';
+import { Property } from '../../../core/decorators/property.js';
 
 // TODO: document!
 

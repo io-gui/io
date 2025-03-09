@@ -1,5 +1,5 @@
 import { Register } from '../../core/node.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import { IoSliderBase } from './io-slider-base.js';
 
 /**
