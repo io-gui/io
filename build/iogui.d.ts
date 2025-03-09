@@ -184,7 +184,7 @@ export type ListenerDefinition = [
 ];
 /**
  * Loose listener definition type.
- * It can be a string (function name), an event listener function or a ListenerDefinition array.
+ * It can be a string (function name), an event AnyEventListener function or a ListenerDefinition array.
  */
 export type ListenerDefinitionLoose = string | AnyEventListener | ListenerDefinition;
 /**
@@ -649,7 +649,7 @@ export declare class ChangeQueue {
 	 */
 	dispatch(): void;
 	/**
-	 * Clears the queue and removes the node reference.
+	 * Clears the queue and removes the node reference for garbage collection.
 	 * Use this when node queue is no longer needed.
 	 */
 	dispose(): void;
