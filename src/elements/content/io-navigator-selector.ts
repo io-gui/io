@@ -1,6 +1,6 @@
 import { VDOMArray } from '../../core/element.js';
 import { Register } from '../../core/decorators/register.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import { IoNavigatorBase } from './io-navigator-base.js';
 
 @Register

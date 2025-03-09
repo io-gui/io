@@ -1,7 +1,7 @@
 import { Register } from '../../core/decorators/register.js';
 import { IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 
 const dummyElement = document.createElement('div');
 /**

@@ -2,7 +2,7 @@ import { Register } from '../../core/decorators/register.js';
 import { IoElement } from '../../core/element.js';
 import { IoOverlaySingleton as Overlay } from '../../core/overlay.js';
 import { IoMenuOptions } from './io-menu-options.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import { MenuOptions } from './models/menu-options.js';
 // import { getMenuDescendants, IoMenuItem } from './io-menu-item.js';
 

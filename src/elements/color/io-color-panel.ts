@@ -1,5 +1,5 @@
 import { Register } from '../../core/decorators/register.js';
-import { Property } from '../../core/internals/property.js';
+import { Property } from '../../core/decorators/property.js';
 import { IoOverlaySingleton } from '../../core/overlay.js';
 import { IoColorBase } from './io-color-base.js';
 import './io-color-sliders.js';
