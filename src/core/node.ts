@@ -69,7 +69,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
       }
 
-      this._protochain.autobindFunctions(this);
+      this._protochain.autobindHandlers(this);
 
       Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
       Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: new Map()});
@@ -104,7 +104,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this.applyProperties(properties);
 
-      if (this._protochain.observedObjectProperties.length) {
+      if (this._protochain.mutationObservedProperties.length) {
         window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
 
@@ -276,8 +276,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} event.detail.object - Mutated object.
      */
     onObjectMutated = (event: CustomEvent) => {
-      for (let i = 0; i < this._protochain.observedObjectProperties.length; i++) {
-        const prop = this._protochain.observedObjectProperties[i];
+      for (let i = 0; i < this._protochain.mutationObservedProperties.length; i++) {
+        const prop = this._protochain.mutationObservedProperties[i];
         const value = this._properties.get(prop)!.value;
         if (value === event.detail.object) {
           this.throttle(this.objectMutated, prop, 0);
@@ -396,7 +396,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       });
       delete (this as any)._bindings;
 
-      if (this._protochain.observedObjectProperties.length) {
+      if (this._protochain.mutationObservedProperties.length) {
         window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
       }
       delete (this as any)._protochain;

@@ -1,4 +1,4 @@
-import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../../iogui.js';
+import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register, Binding } from '../../iogui.js';
 import { expect } from 'chai';
 
 class Array1 extends Array {}
@@ -131,25 +131,6 @@ export default class {
         constructors = new ProtoChain(IoNode2).constructors;
         expect(constructors).to.be.eql([IoNode2, Object.getPrototypeOf(IoNode2), Object3, Object2, Object1]);
       });
-      it('Should include an array of function names that start with "on" or "_on" for auto-binding', () => {
-        let protoChain = new ProtoChain(IoNode1);
-        expect(protoChain.functions).to.be.eql([]);
-        protoChain = new ProtoChain(MockIoNode1);
-        expect(protoChain.functions).to.be.eql(['onFunction1', '_onFunction1']);
-        protoChain = new ProtoChain(MockIoNode2);
-        expect(protoChain.functions).to.be.eql(['onFunction2', '_onFunction2', 'onFunction1', '_onFunction1']);
-      });
-      it('Should bind auto-binding functions with `.autobindFunctions(node)` function', () => {
-        const protoChain = new ProtoChain(MockIoNode2);
-        const node = new MockIoNode2();
-        protoChain.autobindFunctions(node as unknown as IoNode);
-        expect(node.function1.name).to.be.equal('function1');
-        expect(node.onFunction1.name).to.be.equal('bound onFunction1');
-        expect(node._onFunction1.name).to.be.equal('bound _onFunction1');
-        expect(node.function2.name).to.be.equal('function2');
-        expect(node.onFunction2.name).to.be.equal('bound onFunction2');
-        expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
-      });
       it('Should include all properties declared in `static get Properties()` return oject', () => {
         let protoChain = new ProtoChain(MockIoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
@@ -210,11 +191,59 @@ export default class {
         protoChain = new ProtoChain(MockIoNode3);
         expect(protoChain.styles).to.be.equal('a\nb\n');
       });
-      it('Should include all property names of observed object properties', () => {
-        let protoChain = new ProtoChain(MockIoNode1);
-        expect(protoChain.observedObjectProperties).to.be.eql([]);
+      it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
+        let protoChain = new ProtoChain(IoNode1);
+        expect(protoChain.handlers).to.be.eql([]);
+        protoChain = new ProtoChain(MockIoNode1);
+        expect(protoChain.handlers).to.be.eql(['onFunction1', '_onFunction1']);
         protoChain = new ProtoChain(MockIoNode2);
-        expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
+        expect(protoChain.handlers).to.be.eql(['onFunction2', '_onFunction2', 'onFunction1', '_onFunction1']);
+      });
+      it('Should bind auto-binding functions with `.autobindHandlers(node)` function', () => {
+        const protoChain = new ProtoChain(MockIoNode2);
+        const node = new MockIoNode2();
+        protoChain.autobindHandlers(node as unknown as IoNode);
+        expect(node.function1.name).to.be.equal('function1');
+        expect(node.onFunction1.name).to.be.equal('bound onFunction1');
+        expect(node._onFunction1.name).to.be.equal('bound _onFunction1');
+        expect(node.function2.name).to.be.equal('function2');
+        expect(node.onFunction2.name).to.be.equal('bound onFunction2');
+        expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
+      });
+      it('serializeProperties() should return a unique fingerprint of the properties object', () => {
+        const protoChain = new ProtoChain(MockIoNode1);
+        const node = new IoNode1();
+        const element = new IoElement();
+        const binding = new Binding(node, 'prop1');
+        binding.addTarget(element, 'lazy');
+        let hash = protoChain.serializeProperties({
+          prop1: {
+              value: node,
+              type: Object,
+              reflect: true,
+              reactive: true,
+              observe: true,
+              init: [0, 1, 2],
+          }
+        });
+        expect(hash).to.be.equal('{"prop1":{"value":"IoNode1","type":"Object","reflect":true,"reactive":true,"observe":true,"init":[0,1,2]}}');
+        hash = protoChain.serializeProperties({
+          prop1: {
+              type: Object,
+              binding: binding,
+              reflect: true,
+              reactive: true,
+              observe: true,
+              init: [0, 1, 2],
+          }
+        });
+        expect(hash).to.be.equal('{"prop1":{"type":"Object","reflect":true,"reactive":true,"observe":true,"init":[0,1,2],"binding":{"node":"IoNode1","property":"prop1","targets":["IoElement"],"targetProperties":{"IoElement":["lazy"]}}}}');
+      });
+      it('Should include property names of mutation-observed object properties', () => {
+        let protoChain = new ProtoChain(MockIoNode1);
+        expect(protoChain.mutationObservedProperties).to.be.eql([]);
+        protoChain = new ProtoChain(MockIoNode2);
+        expect(protoChain.mutationObservedProperties).to.be.eql(['prop1']);
       });
     });
   }

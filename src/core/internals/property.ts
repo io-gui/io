@@ -73,6 +73,24 @@ export class ProtoProperty {
     if (protoProp.init !== undefined) this.init = protoProp.init;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
   }
+  toJSON() {
+    const json: any = {
+      value: this.value,
+      type: this.type,
+      reflect: this.reflect,
+      reactive: this.reactive,
+      observe: this.observe,
+      init: this.init,
+      binding: this.binding,
+    };
+    if (json.value && typeof json.value === 'object') {
+      json.value = json.value.constructor.name;
+    }
+    if (json.type && typeof json.type === 'function') {
+      json.type = json.type.name;
+    }
+    return json;
+  }
 }
 
 function decodeInitArgument(item: any, node: IoNode) {

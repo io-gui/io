@@ -54,11 +54,25 @@ export class Binding {
   get value() {
     return this.node[this.property];
   }
+  /**
+   * Returns a JSON representation of the binding.
+   * This is required for `protoChain` serializeProperties() to work more accurately.
+   * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
+   * @return {string} JSON representation of the binding.
+   */
   toJSON() {
-    return JSON.stringify({
+    const targetProperties: Record<string, Properties> = {};
+    for (let i = 0; i < this.targets.length; i++) {
+      const target = this.targets[i];
+      const props = this.getTargetProperties(target);
+      targetProperties[target.constructor.name] = props;
+    }
+    return {
+      node: this.node.constructor.name,
       property: this.property,
-      targetProperties: this.targetProperties,
-    });
+      targets: this.targets.map(t => t.constructor.name),
+      targetProperties: targetProperties,
+    };
   }
   /**
    * Helper function to get target properties from WeakMap
