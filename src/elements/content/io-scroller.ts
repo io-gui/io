@@ -2,7 +2,7 @@ import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
-import { Autobind } from '../../core/internals/protoChain.js';
+import { Autobind } from '../../core/decorators/autobind.js';
 
 @Register
 export class IoScroller extends IoElement {

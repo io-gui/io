@@ -1,5 +1,5 @@
 import { IoNode, IoNodeConstructor, ListenerDefinitions } from '../node.js';
-import { ProtoProperty, PropertyDecorators, PropertyDefinitions } from './property.js';
+import { ProtoProperty, propertyDecorators, PropertyDefinitions } from './property.js';
 import { ListenerDefinition, hardenListenerDefinition } from './eventDispatcher.js';
 
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
@@ -92,7 +92,7 @@ export class ProtoChain {
    * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
    */
   addPropertiesFromDecorators(ioNodeConstructor: IoNodeConstructor<any>) {
-    const props = PropertyDecorators.get(ioNodeConstructor);
+    const props = propertyDecorators.get(ioNodeConstructor);
     if (props) for (const name in props) {
       const hardPropDef = new ProtoProperty(props[name]);
       if (!this.properties[name]) this.properties[name] = hardPropDef;
@@ -233,42 +233,4 @@ export class ProtoChain {
       });
     }
   }
-}
-
-// TODO: move decorators to a separate file
-
-/**
- * Autobinds a method to the instance.
- * @param {Function} target - The target object.
- * @param {string | symbol} propertyKey - The name of the property.
- * @param {PropertyDescriptor} descriptor - The descriptor of the property.
- * @returns {PropertyDescriptor} The modified descriptor.
- */
-export const Autobind = function(target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
-  const originalMethod = descriptor.value;
-  return {
-    configurable: true,
-    enumerable: false,
-    get() {
-      if (this === (target as Function).prototype || this.hasOwnProperty(propertyKey)) {
-        return originalMethod;
-      }
-      const boundMethod = originalMethod.bind(this);
-      Object.defineProperty(this, propertyKey, {
-        configurable: true,
-        writable: true,
-        enumerable: false,
-        value: boundMethod
-      });
-      return boundMethod;
-    },
-    set(value: any) {
-      Object.defineProperty(this, propertyKey, {
-        configurable: true,
-        writable: true,
-        enumerable: true,
-        value
-      });
-    }
-  };
 }

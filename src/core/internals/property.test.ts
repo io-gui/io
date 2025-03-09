@@ -1,4 +1,4 @@
-import { Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, PropertyDecorators } from '../../iogui.js';
+import { Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, propertyDecorators } from '../../iogui.js';
 import { expect } from 'chai';
 
 class Object1 {
@@ -595,7 +595,7 @@ export default class {
           declare prop2: string;
         }
         Register(TestClass);
-        const propertyDefs = PropertyDecorators.get(TestClass);
+        const propertyDefs = propertyDecorators.get(TestClass);
         expect(propertyDefs).to.be.eql({
           prop1: 'value1',
           prop2: {value: 'value2', type: String}

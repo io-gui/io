@@ -196,7 +196,7 @@ export class PropertyInstance {
 
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 
-export const PropertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
+export const propertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
 
 /**
  * Allows property definitions using decorator pattern.
@@ -206,8 +206,8 @@ export const PropertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new
 export const Property = function(propertyDefinition: PropertyDefinitionLoose) {
   return (target: IoNode, propertyName: string) => {
     const constructor = target.constructor as Constructor;
-    const _Properties = PropertyDecorators.get(constructor) || {};
-    PropertyDecorators.set(constructor, _Properties);
+    const _Properties = propertyDecorators.get(constructor) || {};
+    propertyDecorators.set(constructor, _Properties);
     _Properties[propertyName] = propertyDefinition;
   };
 };
