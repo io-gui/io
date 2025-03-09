@@ -1,6 +1,6 @@
 import { EventDispatcher } from './internals/eventDispatcher.js';
 import { IoNode, IoNodeMixin, IoNodeArgs } from './node.js';
-import { Property } from './decorators/property.js';
+import { Property } from './internals/property.js';
 import { Register } from './decorators/register.js';
 // Global mixin record
 const mixinRecord: Record<string, string> = {};

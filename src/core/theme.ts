@@ -1,8 +1,7 @@
 import { Register } from './decorators/register.js';
 import { IoElement } from './element.js';
-import { PropertyDefinitions } from './internals/property.js';
+import { Property, PropertyDefinitions } from './internals/property.js';
 import { IoStorage as $ } from './storage.js';
-import { Property } from './decorators/property.js';
 const THEME_VERSION = 'v0.9';
 
 const styleElement = document.createElement('style');

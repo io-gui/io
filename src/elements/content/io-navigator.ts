@@ -2,7 +2,7 @@ import { IoElement, VDOMArray } from '../../core/element.js';
 import { Register } from '../../core/decorators/register.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { MenuItem } from '../menus/models/menu-item.js';
-import { Property } from '../../core/decorators/property.js';
+import { Property } from '../../core/internals/property.js';
 import './io-selector.js';
 
 @Register

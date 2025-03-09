@@ -1,4 +1,4 @@
-import { Property } from './decorators/property.js';
+import { Property } from './internals/property.js';
 import { Register } from './decorators/register.js';
 import { IoElement } from './element.js';
 

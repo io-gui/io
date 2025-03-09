@@ -1,7 +1,6 @@
 import { Register } from './decorators/register.js';
 import { IoElement } from './element.js';
-import { PropertyInstance, PropertyDefinition } from './internals/property.js';
-import { Property } from './decorators/property.js';
+import { PropertyInstance, PropertyDefinition, Property } from './internals/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
 
 const canvas = document.createElement('canvas');

@@ -1,4 +1,4 @@
-import { Property } from '../../core/decorators/property.js';
+import { Property } from '../../core/internals/property.js';
 import { IoGl } from '../../core/gl.js';
 
 const clamp = (num: number, min: number, max: number) => {

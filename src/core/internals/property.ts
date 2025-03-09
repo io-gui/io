@@ -1,3 +1,4 @@
+import { Property } from '../decorators/property.js';
 import { Constructor, IoNode } from '../node.js';
 import { Binding } from './binding.js';
 
@@ -186,3 +187,6 @@ export class PropertyInstance {
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 
 export const propertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
+
+
+export { Property };

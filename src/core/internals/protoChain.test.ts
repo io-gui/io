@@ -1,5 +1,4 @@
-import { ProtoChain, IoNode, IoNodeMixin, PropertyDefinitions, ListenerDefinitions, IoElement, Register, Binding } from '../../iogui.js';
-import { Property } from '../../core/decorators/property.js';
+import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register, Binding } from '../../iogui.js';
 import { expect } from 'chai';
 
 class Array1 extends Array {}

@@ -3,7 +3,7 @@ import { IoElement } from '../../core/element.js';
 import { Change } from '../../core/internals/changeQueue.js';
 import { MenuOptions } from './models/menu-options.js';
 import { MenuItem } from './models/menu-item.js';
-import { Property } from '../../core/decorators/property.js';
+import { Property } from '../../core/internals/property.js';
 import './io-menu-item.js';
 
 const dummyOptions = new MenuOptions();
