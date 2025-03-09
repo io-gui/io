@@ -65,13 +65,13 @@ export class IoGl extends IoElement {
   @Property({type: Array, init: [0, 0]})
   declare size: [number, number];
 
-  @Property({type: Array, init: [1, 1, 1, 1], observe: true})
+  @Property({type: Array, init: [1, 1, 1, 1]})
   declare color: [number, number, number, number];
 
   @Property({value: 1})
   declare pxRatio: number;
 
-  @Property({observe: true, type: IoElement, value: IoThemeSingleton})
+  @Property({type: IoElement, value: IoThemeSingleton})
   declare theme: typeof IoThemeSingleton;
 
   _needsResize = false;

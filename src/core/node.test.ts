@@ -81,7 +81,6 @@ export default class {
                 prop1: {
                   value: {},
                   reactive: false,
-                  observe: true,
                 },
                 prop2: {
                   reactive: true,
@@ -107,7 +106,6 @@ export default class {
             binding: undefined,
             reactive: true,
             reflect: false,
-            observe: false,
             init: undefined,
           });
 
@@ -118,7 +116,6 @@ export default class {
             binding: undefined,
             reactive: false,
             reflect: false,
-            observe: true,
             init: undefined,
           });
 
@@ -128,7 +125,6 @@ export default class {
             binding: undefined,
             reactive: true,
             reflect: false,
-            observe: false,
             init: undefined,
           });
         });
@@ -140,7 +136,6 @@ export default class {
                   value: {},
                   reactive: false,
                   reflect: true,
-                  observe: true,
                 },
               };
             }
@@ -161,7 +156,6 @@ export default class {
           expect(props.prop1.type).to.be.equal(Array);
           expect(props.prop1.reactive).to.be.equal(false);
           expect(props.prop1.reflect).to.be.equal(true);
-          expect(props.prop1.observe).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
           @Register
@@ -467,11 +461,9 @@ export default class {
               return {
                 obj1: {
                   type: Object,
-                  observe: true,
                 },
                 obj2: {
                   type: Object,
-                  observe: true,
                 },
               };
             }

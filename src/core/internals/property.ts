@@ -10,7 +10,6 @@ export type PropertyDefinition = {
   binding?: Binding;
   reflect?: boolean;
   reactive?: boolean;
-  observe?: boolean;
   init?: any;
 };
 
@@ -28,7 +27,6 @@ export class ProtoProperty {
   binding?: Binding;
   reflect?: boolean;
   reactive?: boolean;
-  observe?: boolean;
   init?: any;
   /**
    * Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
@@ -53,7 +51,6 @@ export class ProtoProperty {
       }
       if (d.reflect !== undefined) this.reflect = d.reflect;
       if (d.reactive !== undefined) this.reactive = d.reactive;
-      if (d.observe !== undefined) this.observe = d.observe;
       if (d.init !== undefined) this.init = d.init;
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
@@ -69,7 +66,6 @@ export class ProtoProperty {
     if (protoProp.type !== undefined) this.type = protoProp.type;
     if (protoProp.reflect !== undefined) this.reflect = protoProp.reflect;
     if (protoProp.reactive !== undefined) this.reactive = protoProp.reactive;
-    if (protoProp.observe !== undefined) this.observe = protoProp.observe;
     if (protoProp.init !== undefined) this.init = protoProp.init;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
   }
@@ -79,7 +75,6 @@ export class ProtoProperty {
       type: this.type,
       reflect: this.reflect,
       reactive: this.reactive,
-      observe: this.observe,
       init: this.init,
       binding: this.binding,
     };
@@ -123,8 +118,6 @@ export class PropertyInstance {
   reflect = false;
   // Enables change handlers and events.
   reactive = true;
-  // Observe object mutations for this property.
-  observe = false;
   // Initialize property with provided constructor arguments. `null` prevents initialization.
   init?: any = undefined;
   /**
@@ -135,7 +128,7 @@ export class PropertyInstance {
   constructor(node: IoNode, propDef: ProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
-        if (['value', 'type', 'reflect', 'reactive', 'observe', 'init', 'binding'].indexOf(key) === -1) {
+        if (['value', 'type', 'reflect', 'reactive', 'init', 'binding'].indexOf(key) === -1) {
           console.warn(`ProtoProperty: Invalid field ${key}`);
         }
       });
@@ -145,7 +138,6 @@ export class PropertyInstance {
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
       if (propDef.reactive !== undefined && typeof propDef.reactive !== 'boolean') console.warn('Incorrect type for "reactive" field');
-      if (propDef.observe !== undefined && typeof propDef.observe !== 'boolean') console.warn('Incorrect type for "observe" field');
     }
 
     // TODO: Consider not allowing shared object instances as initial values.
@@ -154,7 +146,6 @@ export class PropertyInstance {
     this.binding = propDef.binding;
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
     if (propDef.reactive !== undefined) this.reactive = propDef.reactive;
-    if (propDef.observe !== undefined) this.observe = propDef.observe;
     if (propDef.init !== undefined) this.init = propDef.init;
 
     if (this.binding instanceof Binding) {
@@ -209,8 +200,8 @@ export const PropertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new
 
 /**
  * Allows property definitions using decorator pattern.
- * @param propertyDefinition Property definition.
- * @return Property decorator function.
+ * @param {PropertyDefinitionLoose} propertyDefinition - Property definition.
+ * @return {Function} Property decorator function.
  */
 export const Property = function(propertyDefinition: PropertyDefinitionLoose) {
   return (target: IoNode, propertyName: string) => {

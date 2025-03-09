@@ -12,7 +12,7 @@ import { MenuOptions } from './models/menu-options.js';
 @Register
 export class IoContextMenu extends IoElement {
 
-  @Property({observe: true, type: MenuOptions})
+  @Property({type: MenuOptions})
   declare options: MenuOptions;
 
   @Property({value: false, reflect: true})

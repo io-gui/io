@@ -24,7 +24,7 @@ export class IoSlider2d extends IoSliderBase {
     `;
   }
 
-  @Property({value: null, type: Array, init: [0, 0], observe: true})
+  @Property({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
 
   @Property({value: null, type: Array, init: [0.01, 0.01]})

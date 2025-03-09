@@ -52,7 +52,7 @@ export class IoMdNavigator extends IoElement {
   @Property(Array)
   declare slotted: VDOMArray[];
 
-  @Property({type: MenuOptions, observe: true})
+  @Property({type: MenuOptions})
   declare options: MenuOptions;
 
   @Property({value: 'none', reflect: true})

@@ -91,10 +91,10 @@ export class IoInspector extends IoElement {
     `;
   }
 
-  @Property({observe: true})
+  @Property({})
   declare value: Record<string, any> | any[];
 
-  @Property({observe: true})
+  @Property({})
   declare selected: Record<string, any> | any[];
 
   @Property({type: Object})

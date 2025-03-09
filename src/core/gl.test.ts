@@ -35,7 +35,6 @@ export default class {
           expect(element._properties.get('size')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: [0, 0],
             reflect: false,
             type: Array,
@@ -45,7 +44,6 @@ export default class {
           expect(element._properties.get('color')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: true,
             init: [1, 1, 1, 1],
             reflect: false,
             type: Array,
@@ -55,7 +53,6 @@ export default class {
           expect(element._properties.get('pxRatio')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: Number,
@@ -65,7 +62,6 @@ export default class {
           expect(element._properties.get('theme')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: true,
             init: undefined,
             reflect: false,
             type: IoElement,

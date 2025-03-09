@@ -14,7 +14,6 @@ export class TodoList extends IoElement {
     return {
       model: {
         type: TodoModel,
-        observe: true,
       },
       route: 'all',
     };

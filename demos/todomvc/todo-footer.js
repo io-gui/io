@@ -6,7 +6,6 @@ export class TodoFooter extends IoElement {
     return {
       model: {
         type: TodoModel,
-        observe: true,
       },
       route: 'all',
     };

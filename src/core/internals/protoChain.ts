@@ -1,11 +1,23 @@
 import { IoNode, IoNodeConstructor, ListenerDefinitions } from '../node.js';
-import { ProtoProperty, PropertyDecorators, PropertyDefinitions, PropertyDefinitionLoose } from './property.js';
+import { ProtoProperty, PropertyDecorators, PropertyDefinitions } from './property.js';
 import { ListenerDefinition, hardenListenerDefinition } from './eventDispatcher.js';
 
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = { [property: string]: ProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
+
+const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
+function isObjectConstructor(constructor: any) {
+  if (typeof constructor !== 'function') return false;
+  let proto = constructor.prototype;
+  while (proto) {
+    if (NON_OBSERVED.includes(constructor)) return false;
+    if (proto === Object.prototype) return true;
+    proto = Object.getPrototypeOf(proto);
+  }
+  return false;
+}
 
 /**
  * ProtoChain manages class inheritance metadata and configuration.
@@ -173,7 +185,10 @@ export class ProtoChain {
    */
   getMutationObservedProperties() {
     for (const name in this.properties) {
-      if (this.properties[name].observe) {
+      const value = this.properties[name].value;
+      const type = this.properties[name].type;
+      const isObject = (typeof value === 'object' && value !== null) || isObjectConstructor(type);
+      if (isObject) {
         this.mutationObservedProperties.push(name);
       }
     }
@@ -187,13 +202,6 @@ export class ProtoChain {
   validateProperties() {
     for (const name in this.properties) {
       const prop = this.properties[name];
-      if (prop.observe) {
-        if (
-          [String, Number, Boolean].indexOf(prop.type as any) !== -1
-        ) {
-          console.warn(`Property "${name}" in ProtoChain: "observe" is only intended for property definitions with Object data type!`);
-        }
-      }
       if ([String, Number, Boolean].indexOf(prop.type as any) !== -1) {
         if (prop.type === Boolean && typeof prop.value !== 'boolean' ||
             prop.type === Number && typeof prop.value !== 'number' ||
@@ -225,4 +233,42 @@ export class ProtoChain {
       });
     }
   }
+}
+
+// TODO: move decorators to a separate file
+
+/**
+ * Autobinds a method to the instance.
+ * @param {Function} target - The target object.
+ * @param {string | symbol} propertyKey - The name of the property.
+ * @param {PropertyDescriptor} descriptor - The descriptor of the property.
+ * @returns {PropertyDescriptor} The modified descriptor.
+ */
+export const Autobind = function(target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  return {
+    configurable: true,
+    enumerable: false,
+    get() {
+      if (this === (target as Function).prototype || this.hasOwnProperty(propertyKey)) {
+        return originalMethod;
+      }
+      const boundMethod = originalMethod.bind(this);
+      Object.defineProperty(this, propertyKey, {
+        configurable: true,
+        writable: true,
+        enumerable: false,
+        value: boundMethod
+      });
+      return boundMethod;
+    },
+    set(value: any) {
+      Object.defineProperty(this, propertyKey, {
+        configurable: true,
+        writable: true,
+        enumerable: true,
+        value
+      });
+    }
+  };
 }

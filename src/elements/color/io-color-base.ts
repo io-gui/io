@@ -4,7 +4,7 @@ import { Property } from '../../core/internals/property.js';
 
 export class IoColorBase extends IoElement {
 
-  @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}, observe: true})
+  @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number, g: number, b: number, a?: number};
 
   @Property({type: Array, init: [1, 1, 1, 1]})

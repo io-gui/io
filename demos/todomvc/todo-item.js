@@ -17,7 +17,6 @@ export class TodoItem extends IoElement {
       item: Object,
       model: {
         type: TodoModel,
-        observe: true,
       },
       editing: false
     };

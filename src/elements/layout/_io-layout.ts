@@ -27,7 +27,6 @@ export class IoLayout extends IoElement {
       elements: Array,
       splits: {
         type: Array,
-        observe: true,
       },
       editable: true,
       orientation: {

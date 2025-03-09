@@ -21,7 +21,6 @@ export default class {
           expect(IoOverlaySingleton._properties.get('expanded')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: Boolean,

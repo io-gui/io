@@ -2,6 +2,7 @@ import { Register } from '../../core/node.js';
 import { IoElement } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { Property } from '../../core/internals/property.js';
+import { Autobind } from '../../core/internals/protoChain.js';
 
 @Register
 export class IoScroller extends IoElement {
@@ -23,26 +24,27 @@ export class IoScroller extends IoElement {
     `;
   }
 
-  @Property({type: MenuOptions, observe: true})
+  @Property({type: MenuOptions})
   declare options: MenuOptions;
 
   declare private _observer: MutationObserver;
 
   init() {
-    this._observer = new MutationObserver(this._domMutated);
+    this._observer = new MutationObserver(this._onDomMutated);
     this._observer.observe(this as unknown as HTMLElement, {attributes: false, childList: true, subtree: true});
   }
   connectedCallback() {
     super.connectedCallback();
     this.optionsMutated();
   }
-  _domMutated() {
+  _onDomMutated() {
     this.throttle(this._scrollToSelected);
   }
   optionsMutated() {
     this.throttle(this._scrollToSelected);
   }
 
+  @Autobind
   _scrollToSelected() {
     if (this.scrollHeight <= this.clientHeight) return;
 

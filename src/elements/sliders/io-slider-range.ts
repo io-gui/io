@@ -13,7 +13,7 @@ import { IoSliderBase } from './io-slider-base.js';
 @Register
 export class IoSliderRange extends IoSliderBase {
 
-  @Property({value: null, type: Array, init: [0, 0], observe: true})
+  @Property({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
 
   @Property(0.01)

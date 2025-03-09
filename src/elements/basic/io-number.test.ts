@@ -32,7 +32,6 @@ export default class {
           expect(element._properties.get('conversion')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: Number,
@@ -41,7 +40,6 @@ export default class {
           expect(element._properties.get('step')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: Number,
@@ -50,7 +48,6 @@ export default class {
           expect(element._properties.get('min')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: Number,
@@ -59,7 +56,6 @@ export default class {
           expect(element._properties.get('max')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: Number,
@@ -68,7 +64,6 @@ export default class {
           expect(element._properties.get('type')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,
@@ -77,7 +72,6 @@ export default class {
           expect(element._properties.get('pattern')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,
@@ -86,7 +80,6 @@ export default class {
           expect(element._properties.get('inputmode')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,
@@ -95,7 +88,6 @@ export default class {
           expect(element._properties.get('spellcheck')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,
@@ -222,7 +214,6 @@ export default class {
           expect(step._properties.get('type')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,
@@ -267,7 +258,6 @@ export default class {
           expect(ladder._properties.get('src')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: undefined,
@@ -276,7 +266,6 @@ export default class {
           expect(ladder._properties.get('expanded')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: Boolean,

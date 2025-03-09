@@ -217,7 +217,7 @@ class IoTheme extends IoElement {
     for (const p in LIGHT_THEME) {
       const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME];
       if (prop instanceof Object) {
-        props[p] = {value: prop, type: Color, observe: true};
+        props[p] = {value: prop, type: Color};
       } else {
         props[p] = prop;
       }
@@ -237,9 +237,6 @@ class IoTheme extends IoElement {
 
   init() {
     // this.changed = this.changed.bind(this);
-    this._properties.forEach((property) => {
-      if (property.value === 'object') { property.observe = true; }
-    });
     this.registerTheme('light', LIGHT_THEME);
     this.registerTheme('dark', DARK_THEME);
     this.themeIDChanged();

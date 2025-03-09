@@ -13,7 +13,6 @@ export default class {
           expect(element._properties.get('label')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,

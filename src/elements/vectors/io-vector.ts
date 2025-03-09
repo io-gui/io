@@ -33,7 +33,7 @@ export class IoVector extends IoElement {
     `;
   }
 
-  @Property({observe: true})
+  @Property({})
   declare value: {x: number, y: number, z?: number, w?: number} | number[];
 
   @Property(1)

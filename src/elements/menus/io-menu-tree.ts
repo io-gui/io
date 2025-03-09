@@ -144,7 +144,7 @@ export class IoMenuTree extends IoElement {
     `;
   }
 
-  @Property({observe: true, type: MenuOptions, reflect: true})
+  @Property({type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
   @Property(false)

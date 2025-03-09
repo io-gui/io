@@ -12,7 +12,6 @@ export class TodoApp extends IoElement {
       model: {
         type: TodoModel,
         value: new TodoModel(),
-        observe: true,
       },
       route: $({value: 'all', storage: 'hash', key: 'route'}),
     };

@@ -47,7 +47,7 @@ export class IoSelector extends IoElement {
     `;
   }
 
-  @Property({type: MenuOptions, observe: true})
+  @Property({type: MenuOptions})
   declare options: MenuOptions;
 
   @Property('first')

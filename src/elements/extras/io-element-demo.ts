@@ -74,7 +74,6 @@ export class IoElementDemo extends IoElement {
       properties: {
         type: Object,
         reflect: true,
-        observe: true,
       },
       width: {
         type: String,

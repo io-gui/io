@@ -47,7 +47,6 @@ export class IoOptionsDemoView extends IoElement {
       options: {
         type: MenuOptions,
         strict: true,
-        observe: true,
       },
     };
   }
@@ -87,7 +86,6 @@ export class IoItemDemoView extends IoElement {
       item: {
         type: MenuItem,
         strict: true,
-        observe: true,
       },
     };
   }

@@ -16,7 +16,6 @@ export class TodoNewItem extends IoElement {
     return {
       model: {
         type: TodoModel,
-        observe: true,
       },
     };
   }

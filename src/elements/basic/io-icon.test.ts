@@ -14,7 +14,6 @@ export default class {
           expect(element._properties.get('icon')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: String,
@@ -23,7 +22,6 @@ export default class {
           expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: Boolean,

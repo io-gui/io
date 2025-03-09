@@ -55,7 +55,6 @@ export class IoBreadcrumbs extends IoElement {
       selected: null,
       options: {
         type: Array,
-        observe: true,
       },
     };
   }

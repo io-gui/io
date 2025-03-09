@@ -32,7 +32,6 @@ export default class {
           expect(node._properties.get('key')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             reflect: false,
             init: undefined,
             type: String,
@@ -42,7 +41,6 @@ export default class {
           expect(node._properties.get('value')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             reflect: false,
             init: undefined,
             type: undefined,
@@ -52,7 +50,6 @@ export default class {
           expect(node._properties.get('default')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             reflect: false,
             init: undefined,
             type: undefined,
@@ -62,7 +59,6 @@ export default class {
           expect(node._properties.get('storage')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             reflect: false,
             init: undefined,
             type: String,

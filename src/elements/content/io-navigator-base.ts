@@ -2,6 +2,7 @@ import { IoElement, VDOMArray } from '../../core/element.js';
 import { MenuOptions } from '../menus/models/menu-options.js';
 import { MenuItem } from '../menus/models/menu-item.js';
 import { Property } from '../../core/internals/property.js';
+import { Autobind } from '../../core/internals/protoChain.js';
 
 export class IoNavigatorBase extends IoElement {
   static get Style() {
@@ -83,7 +84,7 @@ export class IoNavigatorBase extends IoElement {
   @Property(Array)
   declare elements: VDOMArray[];
 
-  @Property({type: MenuOptions, observe: true})
+  @Property({type: MenuOptions})
   declare options: MenuOptions;
 
   @Property({value: 'left', reflect: true})
@@ -107,6 +108,7 @@ export class IoNavigatorBase extends IoElement {
     this.throttle(this._computeCollapsed);
   }
 
+  @Autobind
   _computeCollapsed() {
     this.collapsed = this.offsetWidth < this.collapseWidth;
   }

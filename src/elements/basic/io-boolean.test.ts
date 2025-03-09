@@ -20,7 +20,6 @@ export default class {
           expect(element._properties.get('value')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: true,
             type: Boolean,
@@ -29,7 +28,6 @@ export default class {
           expect(element._properties.get('true')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: String,
@@ -38,7 +36,6 @@ export default class {
           expect(element._properties.get('false')).to.eql({
             binding: undefined,
             reactive: true,
-            observe: false,
             init: undefined,
             reflect: false,
             type: String,
