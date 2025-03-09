@@ -1,4 +1,4 @@
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { IoElement } from '../../core/element.js';
 import { Change } from '../../core/internals/changeQueue.js';
 import { MenuOptions } from './models/menu-options.js';

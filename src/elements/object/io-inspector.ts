@@ -1,4 +1,5 @@
-import { IoNode, Register } from '../../core/node.js';
+import { IoNode } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/decorators/property.js';
 import {IoStorage as $} from '../../core/storage.js';

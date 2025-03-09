@@ -1,4 +1,5 @@
-import { IoNode, Register } from '../../core/node.js';
+import { IoNode } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 
 const IoIconsetDB: Record<string, Record<string, string>> = {};
 

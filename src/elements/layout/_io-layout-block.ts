@@ -1,4 +1,4 @@
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { IoElement } from '../../core/element.js';
 // import "./_layout-tab.js";
 // import "./layout-tabs.js";

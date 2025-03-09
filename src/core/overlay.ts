@@ -1,5 +1,5 @@
 import { Property } from './decorators/property.js';
-import { Register } from './node.js';
+import { Register } from './decorators/register.js';
 import { IoElement } from './element.js';
 
 let lastFocus: Element | null = null;

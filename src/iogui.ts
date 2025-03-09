@@ -4,6 +4,10 @@ export * from './core/internals/property.js';
 export * from './core/internals/binding.js';
 export * from './core/internals/protoChain.js';
 
+export * from './core/decorators/autobind.js';
+export * from './core/decorators/register.js';
+export * from './core/decorators/property.js';
+
 export * from './core/node.js';
 export * from './core/element.js';
 export * from './core/theme.js';

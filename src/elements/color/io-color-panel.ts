@@ -1,4 +1,4 @@
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { Property } from '../../core/decorators/property.js';
 import { IoOverlaySingleton } from '../../core/overlay.js';
 import { IoColorBase } from './io-color-base.js';

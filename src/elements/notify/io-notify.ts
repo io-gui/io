@@ -1,5 +1,5 @@
 import {IoElement } from '../../core/element.js';
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import {IoStorage} from '../../core/storage.js';
 
 /*

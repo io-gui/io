@@ -1,4 +1,4 @@
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { IoBoolean } from './io-boolean.js';
 
 /**

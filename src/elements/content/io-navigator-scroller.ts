@@ -1,5 +1,5 @@
 import { VDOMArray } from '../../core/element.js';
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { IoNavigatorBase } from './io-navigator-base.js';
 import './io-scroller.js';
 

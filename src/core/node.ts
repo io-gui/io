@@ -3,6 +3,7 @@ import {Binding} from './internals/binding.js';
 import {ChangeQueue} from './internals/changeQueue.js';
 import {PropertyInstance, PropertyDefinitions} from './internals/property.js';
 import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher.js';
+import { Register } from './decorators/register.js';
 
 export type Constructor = new (...args: any[]) => unknown;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
@@ -419,14 +420,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     }
   };
   return IoNodeMixinConstructor;
-}
-
-/**
- * Register function to be called once per class.
- * @param {IoNode} ioNodeConstructor - Node class to register.
- */
-export function Register(ioNodeConstructor: typeof IoNode) {
-  ioNodeConstructor.prototype.Register(ioNodeConstructor);
 }
 
 /**

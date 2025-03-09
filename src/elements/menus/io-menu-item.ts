@@ -1,4 +1,4 @@
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { Property } from '../../core/decorators/property.js';
 import { MenuItem } from './models/menu-item.js';
 import { IoField } from '../basic/io-field.js';

@@ -1,4 +1,4 @@
-import { IoElement, Register, IoNode, Change } from '../iogui.js';
+import { Register, IoElement, IoNode, Change } from '../iogui.js';
 import { expect } from 'chai';
 
 const element = new IoElement();

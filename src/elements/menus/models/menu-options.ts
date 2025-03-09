@@ -1,7 +1,7 @@
-import { IoNodeMixin, Register, IoNodeArgs } from '../../../core/node.js';
+import { IoNodeMixin, IoNodeArgs } from '../../../core/node.js';
 import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
 import { Property } from '../../../core/decorators/property.js';
-
+import { Register } from '../../../core/decorators/register.js';
 // TODO: document!
 
 function _isNaN(value: any) {

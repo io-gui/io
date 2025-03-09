@@ -1,4 +1,4 @@
-import { Register } from '../../core/node.js';
+import { Register } from '../../core/decorators/register.js';
 import { IoElement } from '../../core/element.js';
 import { IoOverlaySingleton as Overlay } from '../../core/overlay.js';
 import { IoMenuOptions } from './io-menu-options.js';

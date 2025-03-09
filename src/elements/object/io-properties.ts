@@ -1,8 +1,8 @@
-import { Constructor, IoNode, IoNodeConstructor, Register } from '../../core/node.js';
+import { Constructor, IoNode, IoNodeConstructor } from '../../core/node.js';
 import { IoElement, VDOMArray } from '../../core/element.js';
 import { Property } from '../../core/decorators/property.js';
 import { Binding } from '../../core/internals/binding.js';
-
+import { Register } from '../../core/decorators/register.js';
 type PropertyTypeKey = Constructor | string | null | undefined;
 type PropertyConfig = [PropertyTypeKey, VDOMArray];
 type PropertyConfigCollection = [Constructor, PropertyConfig[]];
