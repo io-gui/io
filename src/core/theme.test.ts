@@ -11,7 +11,6 @@ export default class {
         it('Should register property definitions correctly', () => {
           expect(theme._properties.get('themeID')).to.eql({
             binding: binding,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: String,

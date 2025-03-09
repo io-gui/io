@@ -31,7 +31,6 @@ export default class {
 
           expect(element._properties.get('tabindex')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -39,7 +38,6 @@ export default class {
           });
           expect(element._properties.get('contenteditable')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,
@@ -47,7 +45,6 @@ export default class {
           });
           expect(element._properties.get('class')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -55,7 +52,6 @@ export default class {
           });
           expect(element._properties.get('role')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -63,7 +59,6 @@ export default class {
           });
           expect(element._properties.get('label')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -71,7 +66,6 @@ export default class {
           });
           expect(element._properties.get('name')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -79,7 +73,6 @@ export default class {
           });
           expect(element._properties.get('title')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -87,7 +80,6 @@ export default class {
           });
           expect(element._properties.get('id')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -95,7 +87,6 @@ export default class {
           });
           expect(element._properties.get('hidden')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,
@@ -103,7 +94,6 @@ export default class {
           });
           expect(element._properties.get('disabled')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,
@@ -452,7 +442,6 @@ export default class {
 
           expect(element1._properties.get('prop0')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: Number,
@@ -460,7 +449,6 @@ export default class {
           });
           expect(element1._properties.get('prop1')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: String,
@@ -469,7 +457,6 @@ export default class {
 
           expect(element2._properties.get('prop0')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Number,
@@ -477,7 +464,6 @@ export default class {
           });
           expect(element2._properties.get('prop1')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: Number,

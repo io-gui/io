@@ -19,7 +19,6 @@ export default class {
           expect(element.role).to.equal('switch');
           expect(element._properties.get('value')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,
@@ -27,7 +26,6 @@ export default class {
           });
           expect(element._properties.get('true')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: String,
@@ -35,7 +33,6 @@ export default class {
           });
           expect(element._properties.get('false')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: String,

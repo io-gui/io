@@ -13,7 +13,6 @@ export default class {
           expect(element.stroke).to.equal(false);
           expect(element._properties.get('icon')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,
@@ -21,7 +20,6 @@ export default class {
           });
           expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,

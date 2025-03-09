@@ -36,7 +36,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -44,7 +43,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with null property definition
@@ -55,7 +53,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -63,7 +60,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with undefined property definition
@@ -74,7 +70,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -82,7 +77,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with Number property definition
@@ -93,7 +87,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -101,7 +94,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with type: Number property definition
@@ -112,7 +104,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -120,7 +111,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with number property definition
@@ -131,7 +121,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -139,7 +128,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with value: number property definition
@@ -150,7 +138,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -158,7 +145,6 @@ export default class {
           type: Number,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with String property definition
@@ -169,7 +155,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -177,7 +162,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with type: String property definition
@@ -188,7 +172,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -196,7 +179,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with string property definition
@@ -207,7 +189,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -215,7 +196,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with value: string property definition
@@ -226,7 +206,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -234,7 +213,6 @@ export default class {
           type: String,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with Boolean property definition
@@ -245,7 +223,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -253,7 +230,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with type: Boolean property definition
@@ -264,7 +240,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -272,7 +247,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with boolean property definition
@@ -283,7 +257,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -291,7 +264,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with value: boolean property definition
@@ -302,7 +274,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -310,7 +281,6 @@ export default class {
           type: Boolean,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with Object property definition
@@ -321,7 +291,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -329,7 +298,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with type: Object property definition
@@ -340,7 +308,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -348,7 +315,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         const object = {prop: true};
@@ -360,7 +326,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -368,7 +333,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         expect(propDef.value).to.equal(object);
@@ -381,7 +345,6 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -389,7 +352,6 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with type: Array property definition
@@ -400,7 +362,6 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -408,7 +369,6 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with an object property definition with object value property
@@ -420,7 +380,6 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -428,7 +387,6 @@ export default class {
           type: Array,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         expect(propDef.value).to.equal(array);
@@ -441,7 +399,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: null,
         });
         expect(prop).to.be.eql({
@@ -449,7 +406,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: null,
         });
         // initialize with custom Object1 property definition
@@ -460,7 +416,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -468,7 +423,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with custom Object1 property definition with initial argument
@@ -479,7 +433,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: 'test',
         });
         expect(prop).to.be.eql({
@@ -487,7 +440,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: 'test',
         });
         // initialize with custom Object1 property definition with initial argument being `this` node reference
@@ -498,7 +450,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: 'this',
         });
         expect(prop).to.be.eql({
@@ -506,7 +457,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: 'this',
         });
         // initialize with custom Object1 property definition with initial argument being `this.[propName]` node property reference
@@ -517,7 +467,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: 'this.label',
         });
         expect(prop).to.be.eql({
@@ -525,7 +474,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: 'this.label',
         });
         // initialize with an object property definition with custom object1 value property
@@ -537,7 +485,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(propDef.value).to.be.equal(object1);
@@ -546,7 +493,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         expect(prop.value).to.be.equal(object1);
@@ -560,7 +506,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -569,7 +514,6 @@ export default class {
           type: Object1,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
         // initialize with non-default property definition
@@ -584,7 +528,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          reactive: undefined,
           init: true,
         });
         expect(prop).to.be.eql({
@@ -592,7 +535,6 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          reactive: true,
           init: true,
         });
       });
@@ -622,7 +564,6 @@ export default class {
           type: String,
           binding: binding,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -630,7 +571,6 @@ export default class {
           type: String,
           binding: binding,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
 
@@ -644,7 +584,6 @@ export default class {
           type: String,
           binding: binding,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
@@ -652,7 +591,6 @@ export default class {
           type: String,
           binding: binding,
           reflect: false,
-          reactive: true,
           init: undefined,
         });
       });
@@ -675,7 +613,6 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          reactive: true,
           init: true,
         });
         propDef2.assign(propDef1);
@@ -684,7 +621,6 @@ export default class {
           type: undefined,
           binding: undefined,
           reflect: undefined,
-          reactive: undefined,
           init: undefined,
         });
         expect(propDef2).to.be.eql({
@@ -692,13 +628,11 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          reactive: true,
           init: true,
         });
 
         propDef1 = new ProtoProperty({
           reflect: true,
-          reactive: true,
           init: undefined,
         });
         propDef2 = new ProtoProperty({
@@ -712,7 +646,6 @@ export default class {
           binding: undefined,
           type: String,
           reflect: true,
-          reactive: true,
           init: undefined
         });
       });

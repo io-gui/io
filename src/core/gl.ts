@@ -203,20 +203,18 @@ export class IoGl extends IoElement {
       }\n\n`;
   }
   initPropertyUniform(name: string, property: PropertyDefinition) {
-    if (property.reactive) {
-      switch (property.type) {
-        case Boolean:
-          return 'uniform int ' + name + ';\n';
-        case Number:
-          return 'uniform float ' + name + ';\n';
-        case Array:
-          this._vecLengths[name] = property.value.length;
-          return 'uniform vec' + property.value.length + ' ' + name + ';\n';
-        case Color:
-          this._vecLengths[name] = 4;
-          return 'uniform vec4 ' + name + ';\n';
-        default:
-      }
+    switch (property.type) {
+      case Boolean:
+        return 'uniform int ' + name + ';\n';
+      case Number:
+        return 'uniform float ' + name + ';\n';
+      case Array:
+        this._vecLengths[name] = property.value.length;
+        return 'uniform vec' + property.value.length + ' ' + name + ';\n';
+      case Color:
+        this._vecLengths[name] = 4;
+        return 'uniform vec4 ' + name + ';\n';
+      default:
     }
     return '';
   }
@@ -277,14 +275,14 @@ export class IoGl extends IoElement {
     this._vecLengths = {};
     this.theme._properties.forEach((property, name) => {
       // TODO: consider making more type agnostic
-      if (property.reactive && property.type === Color) {
+      if (property.type === Color) {
         this._vecLengths[name] = 4;
       }
     });
 
     this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
-      if (property.reactive && property.type === Array) {
+      if (property.type === Array) {
         this._vecLengths[uname] = property.value.length;
       }
     });
@@ -398,9 +396,7 @@ export class IoGl extends IoElement {
   }
   updatePropertyUniform(name: string, property: PropertyInstance) {
     this.setShaderProgram();
-    if (property.reactive) {
-      this.setUniform(name, property.value);
-    }
+    this.setUniform(name, property.value);
   }
   updateThemeUniforms() {
     this.theme._properties.forEach((property, name) => {

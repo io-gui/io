@@ -139,11 +139,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             // TODO: make more tests to make sure this does not cause regressions and unexpected behaviors.
             binding.value = value = prop.value;
           }
-          debug: {
-            if (!prop.reactive) {
-              console.warn(`IoNode: property "${name}" is bound but has reactive flag set to false!`);
-            }
-          }
         }
         prop.value = value;
 
@@ -174,7 +169,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             }
           }
         }
-        if (prop.reactive && oldValue !== value) {
+        if (oldValue !== value) {
           this.queue(name, value, oldValue);
           this.dispatchQueue(lazyDispatch);
         }
@@ -311,8 +306,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       debug: {
         if (!this._properties.has(prop)) {
           console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
-        } else if (this._properties.get(prop)!.reactive === false) {
-          console.warn(`IoGUI Node: cannot bind to ${prop} property. It has reactive flag set to false!`);
         }
       }
       if (!this._bindings.has(prop)) {

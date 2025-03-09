@@ -21,7 +21,6 @@ export default class {
 
           expect(element._properties.get('value')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: false,
             type: undefined,
@@ -29,7 +28,6 @@ export default class {
           });
           expect(element._properties.get('stroke')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,
@@ -37,7 +35,6 @@ export default class {
           });
           expect(element._properties.get('selected')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: Boolean,

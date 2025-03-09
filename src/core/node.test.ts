@@ -104,7 +104,6 @@ export default class {
             value: 0,
             type: Number,
             binding: undefined,
-            reactive: true,
             reflect: false,
             init: undefined,
           });
@@ -114,7 +113,6 @@ export default class {
             value: 'asd',
             type: String,
             binding: undefined,
-            reactive: true,
             reflect: false,
             init: false,
           });
@@ -123,7 +121,6 @@ export default class {
             value: null,
             type: undefined,
             binding: undefined,
-            reactive: true,
             reflect: false,
             init: true,
           });

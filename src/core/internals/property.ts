@@ -9,7 +9,6 @@ export type PropertyDefinition = {
   type?: Constructor;
   binding?: Binding;
   reflect?: boolean;
-  reactive?: boolean;
   init?: any;
 };
 
@@ -26,7 +25,6 @@ export class ProtoProperty {
   type?: Constructor;
   binding?: Binding;
   reflect?: boolean;
-  reactive?: boolean;
   init?: any;
   /**
    * Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
@@ -50,7 +48,6 @@ export class ProtoProperty {
         this.value = this.binding.value;
       }
       if (d.reflect !== undefined) this.reflect = d.reflect;
-      if (d.reactive !== undefined) this.reactive = d.reactive;
       if (d.init !== undefined) this.init = d.init;
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
@@ -65,7 +62,6 @@ export class ProtoProperty {
     if (protoProp.value !== undefined) this.value = protoProp.value;
     if (protoProp.type !== undefined) this.type = protoProp.type;
     if (protoProp.reflect !== undefined) this.reflect = protoProp.reflect;
-    if (protoProp.reactive !== undefined) this.reactive = protoProp.reactive;
     if (protoProp.init !== undefined) this.init = protoProp.init;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
   }
@@ -74,7 +70,6 @@ export class ProtoProperty {
       value: this.value,
       type: this.type,
       reflect: this.reflect,
-      reactive: this.reactive,
       init: this.init,
       binding: this.binding,
     };
@@ -116,8 +111,6 @@ export class PropertyInstance {
   binding?: Binding;
   // Reflects to HTML attribute.
   reflect = false;
-  // Enables change handlers and events.
-  reactive = true;
   // Initialize property with provided constructor arguments. `null` prevents initialization.
   init?: any = undefined;
   /**
@@ -128,7 +121,7 @@ export class PropertyInstance {
   constructor(node: IoNode, propDef: ProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
-        if (['value', 'type', 'reflect', 'reactive', 'init', 'binding'].indexOf(key) === -1) {
+        if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {
           console.warn(`ProtoProperty: Invalid field ${key}`);
         }
       });
@@ -137,7 +130,6 @@ export class PropertyInstance {
       }
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
-      if (propDef.reactive !== undefined && typeof propDef.reactive !== 'boolean') console.warn('Incorrect type for "reactive" field');
     }
 
     // TODO: Consider not allowing shared object instances as initial values.
@@ -145,7 +137,6 @@ export class PropertyInstance {
     this.type = propDef.type;
     this.binding = propDef.binding;
     if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
-    if (propDef.reactive !== undefined) this.reactive = propDef.reactive;
     if (propDef.init !== undefined) this.init = propDef.init;
 
     if (this.binding instanceof Binding) {

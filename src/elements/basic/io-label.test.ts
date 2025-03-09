@@ -12,7 +12,6 @@ export default class {
           expect(element.label).to.equal('');
           expect(element._properties.get('label')).to.eql({
             binding: undefined,
-            reactive: true,
             init: undefined,
             reflect: true,
             type: String,

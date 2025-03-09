@@ -134,39 +134,39 @@ export default class {
         let protoChain = new ProtoChain(MockIoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
         expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: false},
+          prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: false},
         });
         protoChain = new ProtoChain(MockIoNode2);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
         expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, init: false},
-          prop2:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: undefined},
+          prop1:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: false},
+          prop2:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: undefined},
         });
       });
       it('Should include all properties declared in Property decorator', () => {
         let protoChain = new ProtoChain(IoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, reactive: undefined, reflect: true, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: false},
-          prop2:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, init: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, reflect: true, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: false},
+          prop2:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: undefined},
         });
         protoChain = new ProtoChain(IoNode3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1', 'prop3']);
         expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, reactive: undefined, reflect: true, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: true, init: true},
-          prop2:{value: 'foo', type: String, binding: undefined, reactive: undefined, reflect: false, init: undefined},
-          prop3:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: true, init: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, reflect: true, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reflect: true, init: true},
+          prop2:{value: 'foo', type: String, binding: undefined, reflect: false, init: undefined},
+          prop3:{value: undefined, type: undefined, binding: undefined, reflect: true, init: undefined},
         });
       });
       it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
         const protoChain = new ProtoChain(IoNode4);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, reactive: undefined, reflect: true, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: true},
-          prop2:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, init: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, reflect: true, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: true},
+          prop2:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: undefined},
         });
       });
       it('Should include all listners declared in `static get Listeners()` return oject', () => {
@@ -220,21 +220,19 @@ export default class {
               value: node,
               type: Object,
               reflect: true,
-              reactive: true,
               init: [0, 1, 2],
           }
         });
-        expect(hash).to.be.equal('{"prop1":{"value":"IoNode1","type":"Object","reflect":true,"reactive":true,"init":[0,1,2]}}');
+        expect(hash).to.be.equal('{"prop1":{"value":"IoNode1","type":"Object","reflect":true,"init":[0,1,2]}}');
         hash = protoChain.serializeProperties({
           prop1: {
               type: Object,
               binding: binding,
               reflect: true,
-              reactive: true,
               init: [0, 1, 2],
           }
         });
-        expect(hash).to.be.equal('{"prop1":{"type":"Object","reflect":true,"reactive":true,"init":[0,1,2],"binding":{"node":"IoNode1","property":"prop1","targets":["IoElement"],"targetProperties":{"IoElement":["lazy"]}}}}');
+        expect(hash).to.be.equal('{"prop1":{"type":"Object","reflect":true,"init":[0,1,2],"binding":{"node":"IoNode1","property":"prop1","targets":["IoElement"],"targetProperties":{"IoElement":["lazy"]}}}}');
       });
       it('Should include property names of mutation-observed object properties', () => {
         let protoChain = new ProtoChain(MockIoNode1);
