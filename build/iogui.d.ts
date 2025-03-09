@@ -39,7 +39,18 @@ export declare class Binding {
 	constructor(node: IoNode, property: string);
 	set value(value: any);
 	get value(): any;
-	toJSON(): string;
+	/**
+	 * Returns a JSON representation of the binding.
+	 * This is required for `protoChain` serializeProperties() to work more accurately.
+	 * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
+	 * @return {string} JSON representation of the binding.
+	 */
+	toJSON(): {
+		node: string;
+		property: string;
+		targets: string[];
+		targetProperties: Record<string, Properties>;
+	};
 	/**
 	 * Helper function to get target properties from WeakMap
 	 * Retrieves a list of target properties for specified target node.
@@ -88,8 +99,6 @@ type PropertyDefinition$1 = {
 	type?: Constructor;
 	binding?: Binding;
 	reflect?: boolean;
-	reactive?: boolean;
-	observe?: boolean;
 	init?: any;
 };
 /**
@@ -104,8 +113,6 @@ export declare class ProtoProperty {
 	type?: Constructor;
 	binding?: Binding;
 	reflect?: boolean;
-	reactive?: boolean;
-	observe?: boolean;
 	init?: any;
 	/**
 	 * Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
@@ -117,6 +124,7 @@ export declare class ProtoProperty {
 	 * @param {ProtoProperty} protoProp Source ProtoProperty
 	 */
 	assign(protoProp: ProtoProperty): void;
+	toJSON(): any;
 }
 /**
  * PropertyInstance object constructed from `ProtoProperty`.
@@ -126,8 +134,6 @@ export declare class PropertyInstance {
 	type?: Constructor;
 	binding?: Binding;
 	reflect: boolean;
-	reactive: boolean;
-	observe: boolean;
 	init?: any;
 	/**
 	 * Creates the property configuration object and copies values from `ProtoProperty`.
@@ -137,13 +143,7 @@ export declare class PropertyInstance {
 	constructor(node: IoNode, propDef: ProtoProperty);
 }
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
-export declare const PropertyDecorators: WeakMap<Constructor, PropertyDefinitions>;
-/**
- * Allows property definitions using decorator pattern.
- * @param propertyDefinition Property definition.
- * @return Property decorator function.
- */
-export declare const Property: (propertyDefinition: PropertyDefinitionLoose) => (target: IoNode, propertyName: string) => void;
+export declare const propertyDecorators: WeakMap<Constructor, PropertyDefinitions>;
 /**
  * Event listener types.
  */
@@ -274,7 +274,7 @@ export declare class EventDispatcher {
 	dispose(): void;
 }
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
-type ProtoFunctions = string[];
+type ProtoHandlers = string[];
 type ProtoProperties = {
 	[property: string]: ProtoProperty;
 };
@@ -282,50 +282,100 @@ type ProtoListeners = {
 	[property: string]: ListenerDefinition[];
 };
 /**
- * Internal utility class that contains usefull information about class inheritance.
- * Inherited information is aggregated during prototype chain traversal in `Register()`.
+ * ProtoChain manages class inheritance metadata and configuration.
+ *
+ * This utility class traverses the prototype chain during class registration to:
+ * - Aggregate property configurations
+ * - Aggregate event listeners
+ * - Aggregate CSS styles strings
+ * - Auto-bind event handlers to maintain proper 'this' context
+ *
+ * This class is internal and instantiated during the `Register()` process.
  */
 export declare class ProtoChain {
 	/**
-	 * Array of inherited class constructors ending with `HTMLElement`, `Object` or `Array`.
+	 * Array of inherited class constructors
 	 */
-	readonly constructors: ProtoConstructors;
+	constructors: ProtoConstructors;
 	/**
-	 * Array of function names that start with "on" or "_" for auto-binding.
+	 * Aggregated property definition declared in `static get Properties()`
 	 */
-	readonly functions: ProtoFunctions;
+	properties: ProtoProperties;
 	/**
-	 * Aggregated property definition declared in `static get Properties()` return ojects.
+	 * Aggregated listener definition declared in `static get Listeners()`
 	 */
-	readonly properties: ProtoProperties;
+	listeners: ProtoListeners;
 	/**
-	 * Aggregated listener definition declared in `static get Listeners()` return ojects.
+	 * Aggregated CSS style definition declared in `static get Style()`
 	 */
-	readonly listeners: ProtoListeners;
+	styles: string;
 	/**
-	 * Aggregated CSS style definition declared in `static get Style()` return strings.
+	 * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
 	 */
-	readonly styles: string;
+	handlers: ProtoHandlers;
 	/**
-	 * Array of property names of observed object properties.
+	 * Array of property names of mutation-observed object properties.
 	 */
-	readonly observedObjectProperties: string[];
+	mutationObservedProperties: string[];
 	/**
 	 * Creates an instance of `ProtoChain` for specified class constructor.
-	 * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode`-derived constructor.
+	 * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
 	 */
 	constructor(ioNodeConstructor: IoNodeConstructor<any>);
 	/**
-	 * Assigns source listener definition to an existing array of listener definitions.
-	 * @param {string} lsnName name of the listener
-	 * @param {ListenerDefinition} newListenerDefinition Source listener definition
+	 * Adds properties defined in decorators to the properties array.
+	 * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
 	 */
-	assignListenerDefinition: (lsnName: keyof ProtoListeners, newListenerDefinition: ListenerDefinition) => void;
+	addPropertiesFromDecorators(ioNodeConstructor: IoNodeConstructor<any>): void;
 	/**
-	 * Binds all auto-binding functions from the `.functions` array to specified `IoNode`-derived instance.
-	 * @param {IoNode} node - `IoNode` instance to bind functions to.
+	 * Adds static properties from `static get Properties()` to the properties array.
+	 * Only process properties if they differ from superclass.
+	 * This prevents 'static get Properties()' from overriding subclass properties defined in decorators.
+	 * @param {PropertyDefinitions} properties - Properties to add
+	 * @param {string} prevHash - Previous properties hash
+	 * @returns {string} - Updated properties hash
 	 */
-	autobindFunctions(node: IoNode): void;
+	addStaticProperties(properties?: PropertyDefinitions, prevHash?: string): string;
+	/**
+	 * Serializes the properties object to a JSON string.
+	 * Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
+	 * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
+	 * Not a hash in the cryptographic sense but serves the purpose.
+	 * @returns {string} - Serialized properties
+	 */
+	serializeProperties(properties: PropertyDefinitions): string;
+	/**
+	 * Merges or appends a listener definitions to the existing listeners array.
+	 * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
+	 */
+	addListeners(listenerDefs?: ListenerDefinitions): void;
+	/**
+	 * Adds a style string to the styles array.
+	 * @param {string} style - Style string to add
+	 */
+	addStyles(style?: string): void;
+	/**
+	 * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
+	 * @param {IoNode} proto - Prototype object to search for handlers
+	 */
+	addHandlers(proto: IoNode): void;
+	/**
+	 * Adds property names to the mutationObservedProperties array if the property has the 'observe' flag.
+	 * @returns {void}
+	 */
+	getMutationObservedProperties(): void;
+	/**
+	 * Debug only.
+	 * Validates property definitions.
+	 * Logs warnings for incorrect property definitions.
+	 * @returns {void}
+	 */
+	validateProperties(): void;
+	/**
+	 * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+	 * @param {IoNode} node - Target node instance
+	 */
+	autobindHandlers(node: IoNode): void;
 }
 export type Constructor = new (...args: any[]) => unknown;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
@@ -464,11 +514,6 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 	[x: string]: any;
 	readonly Properties: PropertyDefinitions;
 };
-/**
- * Register function to be called once per class.
- * @param {IoNode} ioNodeConstructor - Node class to register.
- */
-export declare function Register(ioNodeConstructor: typeof IoNode): void;
 declare const IoNode_base: {
 	new (...args: any[]): {
 		[x: string]: any;
@@ -654,6 +699,30 @@ export declare class ChangeQueue {
 	 */
 	dispose(): void;
 }
+/**
+ * Autobinds a method to the instance.
+ * @param {Function} target - The target object.
+ * @param {string | symbol} propertyKey - The name of the property.
+ * @param {PropertyDescriptor} descriptor - The descriptor of the property.
+ * @returns {PropertyDescriptor} The modified descriptor.
+ */
+export declare const Autobind: (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+	configurable: boolean;
+	enumerable: boolean;
+	get(): any;
+	set(value: any): void;
+};
+/**
+ * Register function to be called once per class.
+ * @param {IoNode} ioNodeConstructor - Node class to register.
+ */
+export declare function Register(ioNodeConstructor: typeof IoNode): void;
+/**
+ * Allows property definitions using decorator pattern.
+ * @param {PropertyDefinitionLoose} propertyDefinition - Property definition.
+ * @return {Function} Property decorator function.
+ */
+export declare const Property: (propertyDefinition: PropertyDefinitionLoose) => (target: IoNode, propertyName: string) => void;
 export type IoElementArgs = IoNodeArgs & {
 	tabindex?: string;
 	contenteditable?: boolean;
@@ -1700,7 +1769,7 @@ export declare class IoScroller extends IoElement {
 	private _observer;
 	init(): void;
 	connectedCallback(): void;
-	_domMutated(): void;
+	_onDomMutated(): void;
 	optionsMutated(): void;
 	_scrollToSelected(): void;
 	dispose(): void;
