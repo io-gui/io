@@ -4,6 +4,11 @@ import { IoNode } from '../node.js';
 type Properties = string[];
 type TargetProperties = WeakMap<IoNode, Properties>;
 
+// This helper checks if both values are NaN to prevent infinite update loops.
+const bothAreNaNs = function(value: any, oldValue: any) {
+  return typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue);
+};
+
 /**
  * Property binding class that enables two-way data synchronization between `IoNode` and `IoElement` nodes.
  *
@@ -152,8 +157,7 @@ export class Binding {
     const oldValue = this.node[this.property];
     const value = event.detail.value;
     if (oldValue !== value) {
-      // This is a hack to prevent infinite update loop when a value is NaN bacause JavaScript is weird NaN !== NaN.
-      if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) return;
+      if (bothAreNaNs(value, oldValue)) return;
       this.node.setProperty(this.property, value);
     }
   };
@@ -173,8 +177,7 @@ export class Binding {
         const propName = targetProperties[j];
         const oldValue = target[propName];
         if (oldValue !== value) {
-          // This is a hack to prevent infinite update loop when a value is NaN bacause JavaScript is weird NaN !== NaN.
-          if ((typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue))) continue;
+          if (bothAreNaNs(value, oldValue)) continue;
           target.setProperty(propName, value);
         }
       }

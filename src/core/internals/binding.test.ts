@@ -23,7 +23,7 @@ export default class {
         expect(binding.targets.length).to.be.equal(0);
         expect(binding.targetProperties instanceof WeakMap).to.be.equal(true);
       });
-      it('Should set source and target property values', () => {
+      it('Should set source and target properties', () => {
         const node = new TestIoNode();
         const binding = new Binding(node, 'prop1');
         node.prop1 = 1;
@@ -44,7 +44,7 @@ export default class {
         expect(node.prop1).to.be.equal(6);
         expect(targetNode.prop1).to.be.equal(6);
       });
-      it('Should add/remove target nodes and properties with `.addTarget()` and `removeTarget()`', () => {
+      it('Should add/remove target nodes and properties with `addTarget()` and `removeTarget()`', () => {
         const srcIoNode = new TestIoNode();
         const binding0 = new Binding(srcIoNode, 'prop1');
         const binding1 = new Binding(srcIoNode, 'prop2');
@@ -116,7 +116,7 @@ export default class {
 
         expect(dstIoNode1._eventDispatcher.addedListeners).to.be.eql({});
       });
-      it('Should remove existing binding from target if `.addTarget()` causes a binding collision', () => {
+      it('Should remove existing binding from target if `addTarget()` causes a binding collision', () => {
         const srcIoNode1 = new TestIoNode();
         const binding1 = new Binding(srcIoNode1, 'prop1');
         const dstIoNode1 = new TestIoNode();

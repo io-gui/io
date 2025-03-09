@@ -101,7 +101,7 @@ export class ChangeQueue {
     this.dispatching = false;
   }
   /**
-   * Clears the queue and removes the node reference.
+   * Clears the queue and removes the node reference for garbage collection.
    * Use this when node queue is no longer needed.
    */
   dispose() {

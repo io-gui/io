@@ -47,9 +47,17 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
      /**
      * Creates a class instance and initializes the internals.
-     * @param {Object} properties - Initial property values.
+     * @overload
+     * @constructor
+     * @param {...any} args - Additional arguments
+     *
+     * Creates a class instance and initializes the internals with properties.
+     * @overload
+     * @constructor
+     * @param {IoNodeArgs} properties - Initial property values
+     * @param {...any} args - Additional arguments
      */
-    constructor(...args: any[]); // TODO: reconsider?
+    constructor(...args: any[]);
     constructor(properties: IoNodeArgs = {}, ...args: any[]) {
       // eslint-disable-next-line constructor-super
       super(...args);
@@ -138,7 +146,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           }
         }
         prop.value = value;
-        if (value instanceof Binding) console.log(value instanceof Binding);
 
         debug: {
           if (prop.type === String) {

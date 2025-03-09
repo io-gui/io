@@ -29,7 +29,7 @@ export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOpt
 
 /**
  * Loose listener definition type.
- * It can be a string (function name), an event listener function or a ListenerDefinition array.
+ * It can be a string (function name), an event AnyEventListener function or a ListenerDefinition array.
  */
 export type ListenerDefinitionLoose = string | AnyEventListener | ListenerDefinition;
 

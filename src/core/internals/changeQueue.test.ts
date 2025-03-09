@@ -34,7 +34,7 @@ export default class {
         expect(changeQueue.changes.length).to.be.equal(0);
         expect(changeQueue.dispatching).to.be.equal(false);
       });
-      it('Should keep track of changes values and oldValues correctly', () => {
+      it('Should keep track of changes correctly', () => {
         const node = new MockIoNode();
         const changeQueue = new ChangeQueue(node);
         changeQueue.queue('prop1', 1, 0);

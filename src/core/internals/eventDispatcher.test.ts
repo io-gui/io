@@ -1,187 +1,116 @@
 import { IoNode, Register, ListenerDefinitions, EventDispatcher, IoElement } from '../../iogui.js';
 import { expect } from 'chai';
 
-const handlerFunction = () => {};
+const handlerFunction = (event: CustomEvent) => {
+  (event.target as unknown as MockIoNode1).eventStack.push(`handlerFunction ${event.detail}`);
+};
 
 @Register
-class IoNode1 extends IoNode {
-  handler1Count = 0;
-  handler1Detail?: string;
+class MockIoNode1 extends IoNode {
+  eventStack: string[] = [];
   static get Listeners(): ListenerDefinitions {
     return {
-      'event1': 'handler1',
+      'event1': 'event1Handler',
     };
   }
-  handler1(event: CustomEvent) {
-    this.handler1Count++;
-    this.handler1Detail = event.detail;
+  event1Handler(event: CustomEvent) {
+    this.eventStack.push(`event1Handler ${event.detail}`);
   }
 }
 
 @Register
-class IoNode2 extends IoNode1 {
-  handler2Count = 0;
-  handler3Count = 0;
-  handler2Detail?: string;
-  handler3Detail?: string;
+class MockIoNode2 extends MockIoNode1 {
+  eventStack: string[] = [];
   static get Listeners(): ListenerDefinitions {
     return {
-      'event2': ['handler2', {capture: true}],
+      'event2': ['event2Handler', {capture: true}],
     };
   }
-  handler2(event: CustomEvent) {
-    this.handler2Count++;
-    this.handler2Detail = event.detail;
-  }
-  handler3(event: CustomEvent) {
-    this.handler3Count++;
-    this.handler3Detail = event.detail;
+  event2Handler(event: CustomEvent) {
+    this.eventStack.push(`event2Handler ${event.detail}`);
   }
 }
 
 @Register
-class IoNode3 extends IoNode2 {
+class MockIoNode3 extends MockIoNode2 {
+  eventStack: string[] = [];
   static get Listeners(): ListenerDefinitions {
     return {
-      'event1': 'handler3',
+      'event1': 'event3Handler',
       'event2': [handlerFunction, {passive: true}],
       'event3': handlerFunction
     };
   }
-}
-
-@Register
-class IoElement1 extends IoElement {
-  handler1Count = 0;
-  handler1Detail?: string;
-  static get Listeners(): ListenerDefinitions {
-    return {
-      'event1': 'handler1',
-    };
-  }
-  handler1(event: CustomEvent) {
-    this.handler1Count++;
-    this.handler1Detail = event.detail;
+  event3Handler(event: CustomEvent) {
+    this.eventStack.push(`event3Handler ${event.detail}`);
   }
 }
 
-@Register
-class IoElement2 extends IoElement1 {
-  handler2Count = 0;
-  handler2Detail?: string;
-  static get Listeners(): ListenerDefinitions {
-    return {
-      'event1': 'handler2',
-    };
-  }
-  handler2(event: CustomEvent) {
-    this.handler2Count++;
-    this.handler2Detail = event.detail;
+class TestDiv extends HTMLElement {
+  eventStack: string[] = [];
+  event1Handler(event: CustomEvent) {
+    this.eventStack.push(`event1Handler ${event.detail}`);
   }
 }
-
-
-class TestDivEventDispatchElement extends HTMLElement {
-  handler3Count = 0;
-  handler3Detail?: string;
-  handler3(event: CustomEvent) {
-    this.handler3Count++;
-    this.handler3Detail = event.detail;
-  }
-}
-window.customElements.define('test-div-event-dispatch', TestDivEventDispatchElement);
+window.customElements.define('test-div', TestDiv);
 
 export default class {
   run() {
     describe('eventDispatcher.test.ts', () => {
       it('Should initialize with correct values', () => {
-        const node = new IoNode();
+        const node = new MockIoNode1();
         let eventDispatcher = new EventDispatcher(node);
         expect(eventDispatcher.node).to.be.equal(node);
-        expect(eventDispatcher.protoListeners).to.be.eql({});
+        expect(eventDispatcher.protoListeners).to.be.eql({event1:[[node.event1Handler]]});
         expect(eventDispatcher.propListeners).to.be.eql({});
         expect(eventDispatcher.addedListeners).to.be.eql({});
         expect(eventDispatcher.isEventTarget).to.be.eql(false);
       });
       it('Should initialize listeners from ProtoChain', () => {
-        let node = new IoNode1();
-        let eventDispatcher = new EventDispatcher(node);
+        const node1 = new MockIoNode1();
+        let eventDispatcher = new EventDispatcher(node1);
         expect(eventDispatcher.protoListeners).to.be.eql({
-          event1:[[node.handler1]],
+          event1:[[node1.event1Handler]],
         });
-        node = new IoNode2();
-        eventDispatcher = new EventDispatcher(node);
+        const node2 = new MockIoNode2();
+        eventDispatcher = new EventDispatcher(node2);
         expect(eventDispatcher.protoListeners).to.be.eql({
-          event1:[[node.handler1]],
-          event2:[[node.handler2, {capture:true}]]
+          event1:[[node1.event1Handler]],
+          event2:[[node2.event2Handler, {capture:true}]]
         });
-        node = new IoNode3();
-        eventDispatcher = new EventDispatcher(node);
+        const node3 = new MockIoNode3();
+        eventDispatcher = new EventDispatcher(node3);
         expect(eventDispatcher.protoListeners).to.be.eql({
-          event1:[[node.handler3]],
+          event1:[[node3.event3Handler]],
           event2:[[handlerFunction, {passive: true}]],
           event3:[[handlerFunction]]
         });
-
-        let element = new IoElement1();
-        eventDispatcher = new EventDispatcher(element);
-        expect(eventDispatcher.protoListeners).to.be.eql({
-          event1:[[element.handler1]],
-        });
-
-        element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        expect(eventDispatcher.protoListeners).to.be.eql({
-          event1:[[element.handler2]],
-        });
       });
-      it('Should set property listeners correctly', () => {
-        const node = new IoNode2();
-        let eventDispatcher = new EventDispatcher(node);
+      it('Should applyPropListeners() correctly', () => {
+        const node3 = new MockIoNode3();
+        let eventDispatcher = new EventDispatcher(node3);
         const handler4 = () => {};
         const handler5 = () => {};
-        eventDispatcher.applyPropListeners({'@event3': 'handler3', '@event4': handler4});
+        eventDispatcher.applyPropListeners({'@event3': 'event3Handler', '@event4': handler4});
         expect(eventDispatcher.propListeners).to.be.eql({
-          event3:[[node.handler3]], event4:[[handler4]]
+          event3:[[node3.event3Handler]], event4:[[handler4]]
         });
-        eventDispatcher.applyPropListeners({'@event5': ['handler3'], '@event6': [handler4]});
+        eventDispatcher.applyPropListeners({'@event5': ['event3Handler'], '@event6': [handler4]});
         expect(eventDispatcher.propListeners).to.be.eql({
-          event5:[[node.handler3]], event6:[[handler4]]
+          event5:[[node3.event3Handler]], event6:[[handler4]]
         });
-        eventDispatcher.applyPropListeners({'@event7': [node.handler3, {capture: true}], '@event8': [handler5, {capture: true}]});
+        eventDispatcher.applyPropListeners({'@event7': [node3.event3Handler, {capture: true}], '@event8': [handler5, {capture: true}]});
         expect(eventDispatcher.propListeners).to.be.eql({
-          event7:[[node.handler3, {capture:true}]], event8:[[handler5, {capture:true}]]
+          event7:[[node3.event3Handler, {capture:true}]], event8:[[handler5, {capture:true}]]
         });
         eventDispatcher.applyPropListeners({});
         expect(eventDispatcher.propListeners).to.be.eql({});
-
-
-        let element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.applyPropListeners({'@event3': 'handler1', '@event4': handler4});
-        expect(eventDispatcher.propListeners).to.be.eql({
-          event3:[[element.handler1]], event4:[[handler4]]
-        });
       });
       it('Should add/remove listeners correctly', () => {
-        const node = new IoNode2();
-        let eventDispatcher = new EventDispatcher(node);
+        const node2 = new MockIoNode2();
+        let eventDispatcher = new EventDispatcher(node2);
         const listener1 = () => {};
         const listener2 = () => {};
-        eventDispatcher.addEventListener('event1', listener1);
-        eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        expect(eventDispatcher.addedListeners).to.be.eql({
-          event1:[[listener1],[listener2, {capture:true}]]
-        });
-        eventDispatcher.removeEventListener('event1', listener1);
-        expect(eventDispatcher.addedListeners).to.be.eql({
-          event1:[[listener2, {capture:true}]]
-        });
-        eventDispatcher.removeEventListener('event1');
-        expect(eventDispatcher.addedListeners).to.be.eql({});
-
-        let element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         expect(eventDispatcher.addedListeners).to.be.eql({
@@ -195,31 +124,20 @@ export default class {
         expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should not add listeners if already added', () => {
-        const node = new IoNode2();
-        let eventDispatcher = new EventDispatcher(node);
+        const node2 = new MockIoNode2();
+        let eventDispatcher = new EventDispatcher(node2);
         const listener1 = () => {};
         const listener2 = () => {};
         eventDispatcher.addEventListener('event1', listener1);
         eventDispatcher.addEventListener('event1', listener1);
-        eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        expect(eventDispatcher.addedListeners).to.be.eql({
-          event1:[[listener1],[listener2, {capture:true}]]
-        });
-
-        let element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.addEventListener('event1', listener1);
-        eventDispatcher.addEventListener('event1', listener1);
-        eventDispatcher.addEventListener('event1', listener2, {capture: true});
         eventDispatcher.addEventListener('event1', listener2, {capture: true});
         expect(eventDispatcher.addedListeners).to.be.eql({
           event1:[[listener1],[listener2, {capture:true}]]
         });
       });
       it('Should remove correct listener', () => {
-        const node = new IoNode2();
-        let eventDispatcher = new EventDispatcher(node);
+        const node2 = new MockIoNode2();
+        let eventDispatcher = new EventDispatcher(node2);
         const listener1 = () => {};
         const listener2 = () => {};
         eventDispatcher.addEventListener('event1', listener1);
@@ -230,187 +148,109 @@ export default class {
         });
         eventDispatcher.removeEventListener('event1', listener1);
         expect(eventDispatcher.addedListeners).to.be.eql({});
-
-        let element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.addEventListener('event1', listener1);
-        eventDispatcher.addEventListener('event1', listener2, {capture: true});
-        eventDispatcher.removeEventListener('event1', listener2);
-        expect(eventDispatcher.addedListeners).to.be.eql({
-          event1:[[listener1]]
-        });
-        eventDispatcher.removeEventListener('event1', listener1);
-        expect(eventDispatcher.addedListeners).to.be.eql({});
       });
-      it('Should dispatch added events', () => {
-        const node = new IoNode2();
-        let eventDispatcher = new EventDispatcher(node);
-        let handler4Count = 0;
-        const handler4 = () => {
-          handler4Count++;
+      it('Should dispatch added events with correct payloads', () => {
+        const node3 = new MockIoNode3();
+        let eventDispatcher = new EventDispatcher(node3);
+        const handler4 = (event: CustomEvent) => {
+          (event.target as unknown as MockIoNode3).eventStack.push(`handler4 ${event.detail}`);
         };
-        let handler5Count = 0;
-        const handler5 = () => {
-          handler5Count++;
+        const handler5 = (event: CustomEvent) => {
+          (event.target as unknown as MockIoNode3).eventStack.push(`handler5 ${event.detail}`);
         };
-        eventDispatcher.applyPropListeners({'@event3': 'handler3', '@event4': handler4});
+        eventDispatcher.applyPropListeners({'@event3': 'event3Handler', '@event4': handler4});
         eventDispatcher.addEventListener('event5', handler5);
-        eventDispatcher.dispatchEvent('event1');
-        eventDispatcher.dispatchEvent('event2');
-        eventDispatcher.dispatchEvent('event3');
-        eventDispatcher.dispatchEvent('event4');
-        eventDispatcher.dispatchEvent('event5');
-        expect(node.handler1Count).to.be.equal(1);
-        expect(node.handler2Count).to.be.equal(1);
-        expect(node.handler3Count).to.be.equal(1);
-        expect(handler4Count).to.be.equal(1);
-        expect(handler5Count).to.be.equal(1);
-        // Remove events
+        eventDispatcher.dispatchEvent('event1', 1);
+        eventDispatcher.dispatchEvent('event2', 2);
+        eventDispatcher.dispatchEvent('event3', 3);
+        eventDispatcher.dispatchEvent('event4', 4);
+        eventDispatcher.dispatchEvent('event5', 5);
+        expect(node3.eventStack).to.be.eql(['event3Handler 1', 'handlerFunction 2', 'handlerFunction 3', 'event3Handler 3', 'handler4 4', 'handler5 5']);
+
+        node3.eventStack = [];
         eventDispatcher.applyPropListeners({'@event4': handler4});
         eventDispatcher.removeEventListener('event5', handler5);
-        eventDispatcher.dispatchEvent('event1');
-        eventDispatcher.dispatchEvent('event2');
-        eventDispatcher.dispatchEvent('event3');
-        eventDispatcher.dispatchEvent('event4');
-        eventDispatcher.dispatchEvent('event5');
-        expect(node.handler1Count).to.be.equal(2);
-        expect(node.handler2Count).to.be.equal(2);
-        expect(node.handler3Count).to.be.equal(1);
-        expect(handler4Count).to.be.equal(2);
-        expect(handler5Count).to.be.equal(1);
-
-        let element = new IoElement1();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.dispatchEvent('event1');
-        expect(element.handler1Count).to.be.equal(1);
-
-        element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.dispatchEvent('event1');
-        expect(element.handler1Count).to.be.equal(0);
-        expect(element.handler2Count).to.be.equal(1);
-
-        element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.applyPropListeners({'@event3': 'handler1'});
-        element.dispatchEvent('event3', {detail: 'detail1'});
-        expect(element.handler1Count).to.be.equal(1);
-        eventDispatcher.applyPropListeners({'@event3': 'handler2'});
-        element.dispatchEvent('event3', {detail: 'detail1'});
-        expect(element.handler1Count).to.be.equal(1);
-        expect(element.handler2Count).to.be.equal(1);
-      });
-      it('Should dispatch events with correct event detail', () => {
-        const node = new IoNode2();
-        let eventDispatcher = new EventDispatcher(node);
-        let handler4Detail: any;
-        const handler4 = (event: CustomEvent) => {
-          handler4Detail = event.detail;
-        };
-        let handler5Detail: any;
-        const handler5 = (event: CustomEvent) => {
-          handler5Detail = event.detail;
-        };
-        eventDispatcher.applyPropListeners({'@event3': 'handler3', '@event4': handler4});
-        eventDispatcher.addEventListener('event5', handler5);
-        eventDispatcher.dispatchEvent('event1', 'detail1');
-        eventDispatcher.dispatchEvent('event2', 'detail2');
-        eventDispatcher.dispatchEvent('event3', 'detail3');
-        eventDispatcher.dispatchEvent('event4', 'detail4');
-        eventDispatcher.dispatchEvent('event5', 'detail5');
-        expect(node.handler1Detail).to.be.equal('detail1');
-        expect(node.handler2Detail).to.be.equal('detail2');
-        expect(node.handler3Detail).to.be.equal('detail3');
-        expect(handler4Detail).to.be.equal('detail4');
-        expect(handler5Detail).to.be.equal('detail5');
-
-        let element = new IoElement1();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.dispatchEvent('event1', 'detail1');
-        expect(element.handler1Detail).to.be.equal('detail1');
-
-        element = new IoElement2();
-        eventDispatcher = new EventDispatcher(element);
-        eventDispatcher.dispatchEvent('event1', 'detail1');
-        expect(element.handler1Detail).to.be.equal(undefined);
-        expect(element.handler2Detail).to.be.equal('detail1');
+        eventDispatcher.dispatchEvent('event1', 1);
+        eventDispatcher.dispatchEvent('event2', 2);
+        eventDispatcher.dispatchEvent('event3', 3);
+        eventDispatcher.dispatchEvent('event4', 4);
+        eventDispatcher.dispatchEvent('event5', 5);
+        expect(node3.eventStack).to.be.eql(['event3Handler 1', 'handlerFunction 2', 'handlerFunction 3', 'handler4 4']);
       });
       it('Should add/remove/dispatch events on HTML elements', () => {
-        const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
+        const element = document.createElement('test-div') as TestDiv;
         const eventDispatcher = new EventDispatcher(element);
-        let handler4Count = 0;
-        let handler4Detail: any;
-        const handler4 = (event: CustomEvent) => {
-          handler4Count++;
-          handler4Detail = event.detail;
+        const handler2 = (event: CustomEvent) => {
+          (event.target as unknown as TestDiv).eventStack.push(`handler2 ${event.detail}`);
         };
-        let handler5Count = 0;
-        let handler5Detail: any;
-        const handler5 = (event: CustomEvent) => {
-          handler5Count++;
-          handler5Detail = event.detail;
+        const handler3 = (event: CustomEvent) => {
+          (event.target as unknown as TestDiv).eventStack.push(`handler3 ${event.detail}`);
         };
-        eventDispatcher.applyPropListeners({'@event3': 'handler3', '@event4': handler4});
-        eventDispatcher.addEventListener('event5', handler5);
-        element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3'}));
-        element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4'}));
-        element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5'}));
-        expect(element.handler3Count).to.be.equal(1);
-        expect(handler4Count).to.be.equal(1);
-        expect(handler5Count).to.be.equal(1);
-        expect(element.handler3Detail).to.be.equal('detail3');
-        expect(handler4Detail).to.be.equal('detail4');
-        expect(handler5Detail).to.be.equal('detail5');
-        // Remove event listeners
+        eventDispatcher.applyPropListeners({'@event1': 'event1Handler', '@event2': handler2});
+        eventDispatcher.addEventListener('event3', handler3);
+        element.dispatchEvent(new CustomEvent('event1', {detail: 1}));
+        element.dispatchEvent(new CustomEvent('event2', {detail: 2}));
+        element.dispatchEvent(new CustomEvent('event3', {detail: 3}));
+        expect(element.eventStack).to.be.eql(['event1Handler 1', 'handler2 2', 'handler3 3']);
+
+        element.eventStack = [];
         eventDispatcher.applyPropListeners({});
-        eventDispatcher.removeEventListener('event5', handler5);
-        element.dispatchEvent(new CustomEvent('event3', {detail: 'detail3i'}));
-        element.dispatchEvent(new CustomEvent('event4', {detail: 'detail4i'}));
-        element.dispatchEvent(new CustomEvent('event5', {detail: 'detail5i'}));
-        expect(element.handler3Count).to.be.equal(1);
-        expect(handler4Count).to.be.equal(1);
-        expect(handler5Count).to.be.equal(1);
-        expect(element.handler3Detail).to.be.equal('detail3');
-        expect(handler4Detail).to.be.equal('detail4');
-        expect(handler5Detail).to.be.equal('detail5');
+        eventDispatcher.removeEventListener('event3', handler3);
+        element.dispatchEvent(new CustomEvent('event1', {detail: 1}));
+        element.dispatchEvent(new CustomEvent('event2', {detail: 2}));
+        element.dispatchEvent(new CustomEvent('event3', {detail: 3}));
+        expect(element.eventStack).to.be.eql([]);
       });
       it('Should bubble events if specified', () => {
-        const element = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
-        const parentElement = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
+        const element = document.createElement('test-div') as TestDiv;
+        element.id = 'element';
+        const parentElement = document.createElement('test-div') as TestDiv;
+        parentElement.id = 'parentElement';
         parentElement.appendChild(element);
         const eventDispatcher = new EventDispatcher(element);
-        let eventCount = 0;
-        parentElement.addEventListener('event', () => {
-          eventCount++;
-        });
-        eventDispatcher.dispatchEvent('event', null, false);
-        expect(eventCount).to.be.equal(0);
-        eventDispatcher.dispatchEvent('event', null, true);
-        expect(eventCount).to.be.equal(1);
-        eventDispatcher.dispatchEvent('event');
-        expect(eventCount).to.be.equal(2);
+        const parentEventDispatcher = new EventDispatcher(parentElement);
+        const handler2 = function(this: TestDiv, event: CustomEvent) {
+          this.eventStack.push(`handler2 ${event.detail}`);
+        };
+        eventDispatcher.applyPropListeners({'@event1': 'event1Handler'});
+        eventDispatcher.addEventListener('event2', handler2.bind(element));
+        parentEventDispatcher.applyPropListeners({'@event1': 'event1Handler'});
+        parentEventDispatcher.addEventListener('event2', handler2.bind(parentElement));
+
+        eventDispatcher.dispatchEvent('event1', 1, false);
+        eventDispatcher.dispatchEvent('event2', 2, false);
+        expect(element.eventStack).to.be.eql(['event1Handler 1', 'handler2 2']);
+        expect(parentElement.eventStack).to.be.eql([]);
+
+        element.eventStack = [];
+        parentElement.eventStack = [];
+        eventDispatcher.dispatchEvent('event1', 1, true);
+        eventDispatcher.dispatchEvent('event2', 2, true);
+        expect(element.eventStack).to.be.eql(['event1Handler 1', 'handler2 2']);
+        expect(parentElement.eventStack).to.be.eql(['event1Handler 1', 'handler2 2']);
       });
       it('Should emit event from specified target', () => {
         const element = document.createElement('div');
         const eventDispatcher = new EventDispatcher(element);
 
-        const element2 = document.createElement('test-div-event-dispatch') as TestDivEventDispatchElement;
+        const element2 = document.createElement('test-div') as TestDiv;
         const eventDispatcher2 = new EventDispatcher(element2);
-        eventDispatcher2.applyPropListeners({'@event3': 'handler3'});
+        eventDispatcher2.applyPropListeners({'@event1': 'event1Handler'});
+
         let path = null;
         let target = null;
-        eventDispatcher2.addEventListener('event3', (event: CustomEvent) => {
+        eventDispatcher2.addEventListener('event1', (event: CustomEvent) => {
           path = event.composedPath();
           target = event.target;
         });
 
-        eventDispatcher.dispatchEvent('event3', 'detail', false, element2);
-        expect(element2.handler3Detail).to.be.equal('detail');
+        eventDispatcher.dispatchEvent('event1', 1, false, element2);
+        expect(element2.eventStack).to.be.eql(['event1Handler 1']);
         expect(path).to.be.eql([element2]);
-        expect(target).to.be.eql(target);
+        expect(target).to.be.eql(element2);
       });
       it('Should dispose correctly', () => {
-        const node = new IoNode2();
+        const node = new MockIoNode1();
         const eventDispatcher = new EventDispatcher(node);
         eventDispatcher.dispose();
         expect(eventDispatcher.node).to.be.equal(undefined);
