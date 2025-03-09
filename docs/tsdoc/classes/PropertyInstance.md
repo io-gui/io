@@ -4,7 +4,7 @@
 
 # Class: PropertyInstance
 
-Defined in: [src/core/internals/property.ts:97](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L97)
+Defined in: [src/core/internals/property.ts:110](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L110)
 
 PropertyInstance object constructed from `ProtoProperty`.
 
@@ -14,7 +14,7 @@ PropertyInstance object constructed from `ProtoProperty`.
 
 > **new PropertyInstance**(`node`, `propDef`): [`PropertyInstance`](PropertyInstance.md)
 
-Defined in: [src/core/internals/property.ts:117](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L117)
+Defined in: [src/core/internals/property.ts:128](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L128)
 
 Creates the property configuration object and copies values from `ProtoProperty`.
 
@@ -42,7 +42,7 @@ ProtoProperty object
 
 > `optional` **binding**: [`Binding`](Binding.md)
 
-Defined in: [src/core/internals/property.ts:103](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L103)
+Defined in: [src/core/internals/property.ts:116](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L116)
 
 ***
 
@@ -50,15 +50,7 @@ Defined in: [src/core/internals/property.ts:103](https://github.com/io-gui/io/bl
 
 > `optional` **init**: `any` = `undefined`
 
-Defined in: [src/core/internals/property.ts:111](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L111)
-
-***
-
-### observe
-
-> **observe**: `boolean` = `false`
-
-Defined in: [src/core/internals/property.ts:109](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L109)
+Defined in: [src/core/internals/property.ts:122](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L122)
 
 ***
 
@@ -66,7 +58,7 @@ Defined in: [src/core/internals/property.ts:109](https://github.com/io-gui/io/bl
 
 > **reactive**: `boolean` = `true`
 
-Defined in: [src/core/internals/property.ts:107](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L107)
+Defined in: [src/core/internals/property.ts:120](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L120)
 
 ***
 
@@ -74,7 +66,7 @@ Defined in: [src/core/internals/property.ts:107](https://github.com/io-gui/io/bl
 
 > **reflect**: `boolean` = `false`
 
-Defined in: [src/core/internals/property.ts:105](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L105)
+Defined in: [src/core/internals/property.ts:118](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L118)
 
 ***
 
@@ -82,7 +74,7 @@ Defined in: [src/core/internals/property.ts:105](https://github.com/io-gui/io/bl
 
 > `optional` **type**: [`Constructor`](../type-aliases/Constructor.md)
 
-Defined in: [src/core/internals/property.ts:101](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L101)
+Defined in: [src/core/internals/property.ts:114](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L114)
 
 ***
 
@@ -90,4 +82,4 @@ Defined in: [src/core/internals/property.ts:101](https://github.com/io-gui/io/bl
 
 > `optional` **value**: `any` = `undefined`
 
-Defined in: [src/core/internals/property.ts:99](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L99)
+Defined in: [src/core/internals/property.ts:112](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L112)

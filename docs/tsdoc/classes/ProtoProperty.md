@@ -4,7 +4,7 @@
 
 # Class: ProtoProperty
 
-Defined in: [src/core/internals/property.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L25)
+Defined in: [src/core/internals/property.ts:24](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L24)
 
 Finalized property definition created from property definition.
 
@@ -14,7 +14,7 @@ Finalized property definition created from property definition.
 
 > **new ProtoProperty**(`def`): [`ProtoProperty`](ProtoProperty.md)
 
-Defined in: [src/core/internals/property.ts:37](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L37)
+Defined in: [src/core/internals/property.ts:35](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L35)
 
 Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
 
@@ -36,7 +36,7 @@ Loosely typed property definition
 
 > `optional` **binding**: [`Binding`](Binding.md)
 
-Defined in: [src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
+Defined in: [src/core/internals/property.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L27)
 
 ***
 
@@ -44,15 +44,7 @@ Defined in: [src/core/internals/property.ts:28](https://github.com/io-gui/io/blo
 
 > `optional` **init**: `any`
 
-Defined in: [src/core/internals/property.ts:32](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L32)
-
-***
-
-### observe?
-
-> `optional` **observe**: `boolean`
-
-Defined in: [src/core/internals/property.ts:31](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L31)
+Defined in: [src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
 
 ***
 
@@ -60,7 +52,7 @@ Defined in: [src/core/internals/property.ts:31](https://github.com/io-gui/io/blo
 
 > `optional` **reactive**: `boolean`
 
-Defined in: [src/core/internals/property.ts:30](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L30)
+Defined in: [src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
 
 ***
 
@@ -68,7 +60,7 @@ Defined in: [src/core/internals/property.ts:30](https://github.com/io-gui/io/blo
 
 > `optional` **reflect**: `boolean`
 
-Defined in: [src/core/internals/property.ts:29](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L29)
+Defined in: [src/core/internals/property.ts:28](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L28)
 
 ***
 
@@ -76,7 +68,7 @@ Defined in: [src/core/internals/property.ts:29](https://github.com/io-gui/io/blo
 
 > `optional` **type**: [`Constructor`](../type-aliases/Constructor.md)
 
-Defined in: [src/core/internals/property.ts:27](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L27)
+Defined in: [src/core/internals/property.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L26)
 
 ***
 
@@ -84,7 +76,7 @@ Defined in: [src/core/internals/property.ts:27](https://github.com/io-gui/io/blo
 
 > `optional` **value**: `any`
 
-Defined in: [src/core/internals/property.ts:26](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L26)
+Defined in: [src/core/internals/property.ts:25](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L25)
 
 ## Methods
 
@@ -92,7 +84,7 @@ Defined in: [src/core/internals/property.ts:26](https://github.com/io-gui/io/blo
 
 > **assign**(`protoProp`): `void`
 
-Defined in: [src/core/internals/property.ts:67](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L67)
+Defined in: [src/core/internals/property.ts:64](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L64)
 
 Assigns values of another ProtoProperty to itself, unless they are default values.
 
@@ -107,3 +99,15 @@ Source ProtoProperty
 #### Returns
 
 `void`
+
+***
+
+### toJSON()
+
+> **toJSON**(): `any`
+
+Defined in: [src/core/internals/property.ts:72](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L72)
+
+#### Returns
+
+`any`

@@ -4,7 +4,7 @@
 
 # Interface: ChangeEvent
 
-Defined in: [src/core/internals/changeQueue.ts:83](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L83)
+Defined in: [src/core/internals/changeQueue.ts:9](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L9)
 
 ## Extends
 
@@ -16,7 +16,7 @@ Defined in: [src/core/internals/changeQueue.ts:83](https://github.com/io-gui/io/
 
 > `readonly` **detail**: [`Change`](Change.md)
 
-Defined in: [src/core/internals/changeQueue.ts:85](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L85)
+Defined in: [src/core/internals/changeQueue.ts:11](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L11)
 
 Returns any custom data event was created with. Typically used for synthetic events.
 
@@ -32,7 +32,7 @@ Returns any custom data event was created with. Typically used for synthetic eve
 
 > `readonly` **path**: [`IoNode`](../classes/IoNode.md)[]
 
-Defined in: [src/core/internals/changeQueue.ts:86](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L86)
+Defined in: [src/core/internals/changeQueue.ts:12](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L12)
 
 ***
 
@@ -40,4 +40,4 @@ Defined in: [src/core/internals/changeQueue.ts:86](https://github.com/io-gui/io/
 
 > `readonly` **target**: [`IoNode`](../classes/IoNode.md)
 
-Defined in: [src/core/internals/changeQueue.ts:84](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L84)
+Defined in: [src/core/internals/changeQueue.ts:10](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L10)

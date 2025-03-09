@@ -4,7 +4,7 @@
 
 # Class: EventDispatcher
 
-Defined in: [src/core/internals/eventDispatcher.ts:98](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L98)
+Defined in: [src/core/internals/eventDispatcher.ts:96](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L96)
 
 Internal utility class responsible for handling listeners and dispatching events.
 It makes events of all `IoNode` class instances compatible with DOM events.
@@ -19,7 +19,7 @@ It maintains three independent lists of listeners:
 
 > **new EventDispatcher**(`node`): [`EventDispatcher`](EventDispatcher.md)
 
-Defined in: [src/core/internals/eventDispatcher.ts:109](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L109)
+Defined in: [src/core/internals/eventDispatcher.ts:107](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L107)
 
 Creates an instance of `EventDispatcher` for specified `IoNode` instance.
 It initializes `protoListeners` from `ProtoChain`.
@@ -42,7 +42,7 @@ owner IoNode
 
 > `readonly` **addedListeners**: [`Listeners`](../type-aliases/Listeners.md) = `{}`
 
-Defined in: [src/core/internals/eventDispatcher.ts:103](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L103)
+Defined in: [src/core/internals/eventDispatcher.ts:101](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L101)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [src/core/internals/eventDispatcher.ts:103](https://github.com/io-gu
 
 > `readonly` **isEventTarget**: `boolean`
 
-Defined in: [src/core/internals/eventDispatcher.ts:100](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L100)
+Defined in: [src/core/internals/eventDispatcher.ts:98](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L98)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/core/internals/eventDispatcher.ts:100](https://github.com/io-gu
 
 > `readonly` **node**: `EventTarget` \| [`IoNode`](IoNode.md)
 
-Defined in: [src/core/internals/eventDispatcher.ts:99](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L99)
+Defined in: [src/core/internals/eventDispatcher.ts:97](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L97)
 
 ***
 
@@ -66,7 +66,7 @@ Defined in: [src/core/internals/eventDispatcher.ts:99](https://github.com/io-gui
 
 > `readonly` **propListeners**: [`Listeners`](../type-aliases/Listeners.md) = `{}`
 
-Defined in: [src/core/internals/eventDispatcher.ts:102](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L102)
+Defined in: [src/core/internals/eventDispatcher.ts:100](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L100)
 
 ***
 
@@ -74,7 +74,7 @@ Defined in: [src/core/internals/eventDispatcher.ts:102](https://github.com/io-gu
 
 > `readonly` **protoListeners**: [`Listeners`](../type-aliases/Listeners.md) = `{}`
 
-Defined in: [src/core/internals/eventDispatcher.ts:101](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L101)
+Defined in: [src/core/internals/eventDispatcher.ts:99](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L99)
 
 ## Methods
 
@@ -82,7 +82,7 @@ Defined in: [src/core/internals/eventDispatcher.ts:101](https://github.com/io-gu
 
 > **addEventListener**(`name`, `listener`, `options`?): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:184](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L184)
+Defined in: [src/core/internals/eventDispatcher.ts:182](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L182)
 
 Proxy for `addEventListener` method.
 Adds an event listener to the node's `addedListeners` collection.
@@ -118,7 +118,7 @@ Event listener options
 
 > **applyPropListeners**(`properties`): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:137](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L137)
+Defined in: [src/core/internals/eventDispatcher.ts:135](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L135)
 
 Sets `propListeners` specified as inline properties prefixed with "@".
 It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
@@ -141,7 +141,7 @@ Inline properties
 
 > **dispatchEvent**(`name`, `detail`?, `bubbles`?, `node`?): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:293](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L293)
+Defined in: [src/core/internals/eventDispatcher.ts:288](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L288)
 
 Shorthand for custom event dispatch.
 
@@ -181,7 +181,7 @@ Event target override to dispatch the event from
 
 > **dispose**(): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:323](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L323)
+Defined in: [src/core/internals/eventDispatcher.ts:318](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L318)
 
 Disconnects all event listeners and removes all references for garbage collection.
 Use this when node is discarded.
@@ -196,7 +196,7 @@ Use this when node is discarded.
 
 > **removeEventListener**(`name`, `listener`?, `options`?): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:235](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L235)
+Defined in: [src/core/internals/eventDispatcher.ts:231](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L231)
 
 Proxy for `removeEventListener` method.
 Removes an event listener from the node's `addedListeners` collection.
@@ -232,7 +232,7 @@ Event listener options
 
 > **setProtoListeners**(`node`): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:120](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L120)
+Defined in: [src/core/internals/eventDispatcher.ts:118](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L118)
 
 Sets `protoListeners` specified as `get Listeners()` class definitions.
 Definitions from subclass replace the ones from parent class.

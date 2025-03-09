@@ -80,6 +80,7 @@
 - [IoVector](classes/IoVector.md)
 - [MenuItem](classes/MenuItem.md)
 - [MenuOptions](classes/MenuOptions.md)
+- [MutationEvent](classes/MutationEvent.md)
 - [ObjectConfig](classes/ObjectConfig.md)
 - [ObjectGroups](classes/ObjectGroups.md)
 - [ObjectWidgets](classes/ObjectWidgets.md)
@@ -141,6 +142,7 @@
 
 - [addMenuOptions](functions/addMenuOptions.md)
 - [applyNativeElementProps](functions/applyNativeElementProps.md)
+- [Autobind](functions/Autobind.md)
 - [buildTree](functions/buildTree.md)
 - [disposeElementDeep](functions/disposeElementDeep.md)
 - [filterOptions](functions/filterOptions.md)

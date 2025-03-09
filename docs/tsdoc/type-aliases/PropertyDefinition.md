@@ -20,10 +20,6 @@ Declares default value, type and reactive behavior of the property.
 
 > `optional` **init**: `any`
 
-### observe?
-
-> `optional` **observe**: `boolean`
-
 ### reactive?
 
 > `optional` **reactive**: `boolean`

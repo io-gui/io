@@ -32,7 +32,7 @@ const icon = IoIconsetSingleton.getIcon('custom:myicon');
 
 > **new IoIconset**(...`args`): [`IoIconset`](IoIconset.md)
 
-Defined in: [src/core/node.ts:52](https://github.com/io-gui/io/blob/main/src/core/node.ts#L52)
+Defined in: [src/core/node.ts:60](https://github.com/io-gui/io/blob/main/src/core/node.ts#L60)
 
 Creates a class instance and initializes the internals.
 
@@ -41,6 +41,10 @@ Creates a class instance and initializes the internals.
 ##### args
 
 ...`any`[]
+
+Additional arguments
+
+Creates a class instance and initializes the internals with properties.
 
 #### Returns
 
@@ -134,7 +138,7 @@ Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/cor
 
 > **addEventListener**(`type`, `listener`, `options`?): `void`
 
-Defined in: [src/core/node.ts:342](https://github.com/io-gui/io/blob/main/src/core/node.ts#L342)
+Defined in: [src/core/node.ts:343](https://github.com/io-gui/io/blob/main/src/core/node.ts#L343)
 
 Wrapper for addEventListener.
 
@@ -172,7 +176,7 @@ event listener options.
 
 > **applyProperties**(`props`): `void`
 
-Defined in: [src/core/node.ts:184](https://github.com/io-gui/io/blob/main/src/core/node.ts#L184)
+Defined in: [src/core/node.ts:189](https://github.com/io-gui/io/blob/main/src/core/node.ts#L189)
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -199,7 +203,7 @@ Map of property names and values.
 
 > **bind**(`prop`): [`Binding`](Binding.md)
 
-Defined in: [src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
+Defined in: [src/core/node.ts:310](https://github.com/io-gui/io/blob/main/src/core/node.ts#L310)
 
 Returns a binding to a specified property`.
 
@@ -227,7 +231,7 @@ Binding object.
 
 > **changed**(): `void`
 
-Defined in: [src/core/node.ts:235](https://github.com/io-gui/io/blob/main/src/core/node.ts#L235)
+Defined in: [src/core/node.ts:240](https://github.com/io-gui/io/blob/main/src/core/node.ts#L240)
 
 default change handler.
 Invoked when one of the properties change.
@@ -246,7 +250,7 @@ Invoked when one of the properties change.
 
 > **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
-Defined in: [src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+Defined in: [src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
 Wrapper for dispatchEvent.
 
@@ -288,7 +292,7 @@ source node/element to dispatch event from.
 
 > **dispatchMutationEvent**(`object`): `void`
 
-Defined in: [src/core/node.ts:374](https://github.com/io-gui/io/blob/main/src/core/node.ts#L374)
+Defined in: [src/core/node.ts:375](https://github.com/io-gui/io/blob/main/src/core/node.ts#L375)
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
@@ -312,11 +316,17 @@ object which mutated.
 
 ### dispatchQueue()
 
-> **dispatchQueue**(): `void`
+> **dispatchQueue**(`lazy`): `void`
 
-Defined in: [src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+Defined in: [src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+
+#### Parameters
+
+##### lazy
+
+`boolean` = `false`
 
 #### Returns
 
@@ -328,29 +338,11 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 ***
 
-### dispatchQueueSync()
-
-> **dispatchQueueSync**(): `void`
-
-Defined in: [src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
-
-Dispatches the queue immediately.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoNode`](IoNode.md).[`dispatchQueueSync`](IoNode.md#dispatchqueuesync)
-
-***
-
 ### dispose()
 
 > **dispose**(): `void`
 
-Defined in: [src/core/node.ts:381](https://github.com/io-gui/io/blob/main/src/core/node.ts#L381)
+Defined in: [src/core/node.ts:382](https://github.com/io-gui/io/blob/main/src/core/node.ts#L382)
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -387,7 +379,7 @@ Defined in: [src/elements/basic/io-iconset.ts:28](https://github.com/io-gui/io/b
 
 > **init**(): `void`
 
-Defined in: [src/core/node.ts:236](https://github.com/io-gui/io/blob/main/src/core/node.ts#L236)
+Defined in: [src/core/node.ts:241](https://github.com/io-gui/io/blob/main/src/core/node.ts#L241)
 
 #### Returns
 
@@ -403,7 +395,7 @@ Defined in: [src/core/node.ts:236](https://github.com/io-gui/io/blob/main/src/co
 
 > **inputValue**(`value`): `void`
 
-Defined in: [src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+Defined in: [src/core/node.ts:229](https://github.com/io-gui/io/blob/main/src/core/node.ts#L229)
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -430,7 +422,7 @@ Property value.
 
 > **objectMutated**(`prop`): `void`
 
-Defined in: [src/core/node.ts:298](https://github.com/io-gui/io/blob/main/src/core/node.ts#L298)
+Defined in: [src/core/node.ts:299](https://github.com/io-gui/io/blob/main/src/core/node.ts#L299)
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -457,7 +449,7 @@ Mutated object property name.
 
 > **onObjectMutated**(`event`): `void`
 
-Defined in: [src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+Defined in: [src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -484,7 +476,7 @@ Event payload.
 
 > **queue**(`prop`, `value`, `oldValue`): `void`
 
-Defined in: [src/core/node.ts:243](https://github.com/io-gui/io/blob/main/src/core/node.ts#L243)
+Defined in: [src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 Adds property change to the queue.
 
@@ -522,7 +514,7 @@ Old property value.
 
 > **Register**(`ioNodeConstructor`): `void`
 
-Defined in: [src/core/node.ts:416](https://github.com/io-gui/io/blob/main/src/core/node.ts#L416)
+Defined in: [src/core/node.ts:417](https://github.com/io-gui/io/blob/main/src/core/node.ts#L417)
 
 #### Parameters
 
@@ -566,7 +558,7 @@ Defined in: [src/elements/basic/io-iconset.ts:20](https://github.com/io-gui/io/b
 
 > **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
-Defined in: [src/core/node.ts:357](https://github.com/io-gui/io/blob/main/src/core/node.ts#L357)
+Defined in: [src/core/node.ts:358](https://github.com/io-gui/io/blob/main/src/core/node.ts#L358)
 
 Wrapper for removeEventListener.
 
@@ -604,7 +596,7 @@ event listener options.
 
 > **setProperties**(`props`): `void`
 
-Defined in: [src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
+Defined in: [src/core/node.ts:211](https://github.com/io-gui/io/blob/main/src/core/node.ts#L211)
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -629,9 +621,9 @@ Map of property names and values.
 
 ### setProperty()
 
-> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
+> **setProperty**(`name`, `value`, `lazyDispatch`?): `void`
 
-Defined in: [src/core/node.ts:111](https://github.com/io-gui/io/blob/main/src/core/node.ts#L111)
+Defined in: [src/core/node.ts:119](https://github.com/io-gui/io/blob/main/src/core/node.ts#L119)
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -649,9 +641,9 @@ Property name to set value of.
 
 Peroperty value.
 
-##### skipDispatch?
+##### lazyDispatch?
 
-`boolean`
+`boolean` = `false`
 
 flag to skip event dispatch.
 
@@ -669,7 +661,7 @@ flag to skip event dispatch.
 
 > **throttle**(`func`, `arg`, `timeout`): `void`
 
-Defined in: [src/core/node.ts:268](https://github.com/io-gui/io/blob/main/src/core/node.ts#L268)
+Defined in: [src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -707,7 +699,7 @@ minimum delay in ms before executing the function.
 
 > **unbind**(`prop`): `void`
 
-Defined in: [src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+Defined in: [src/core/node.ts:327](https://github.com/io-gui/io/blob/main/src/core/node.ts#L327)
 
 Unbinds a binding to a specified property`.
 

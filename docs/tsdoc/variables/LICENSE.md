@@ -6,7 +6,7 @@
 
 > `const` **LICENSE**: `"MIT"` = `'MIT'`
 
-Defined in: [src/iogui.ts:29](https://github.com/io-gui/io/blob/main/src/iogui.ts#L29)
+Defined in: [src/iogui.ts:49](https://github.com/io-gui/io/blob/main/src/iogui.ts#L49)
 
 ## License
 

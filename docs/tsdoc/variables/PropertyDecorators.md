@@ -6,4 +6,4 @@
 
 > `const` **PropertyDecorators**: `WeakMap`\<[`Constructor`](../type-aliases/Constructor.md), [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)\>
 
-Defined in: [src/core/internals/property.ts:190](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L190)
+Defined in: [src/core/internals/property.ts:199](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L199)

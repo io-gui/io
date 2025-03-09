@@ -6,7 +6,7 @@
 
 > **Register**(`ioNodeConstructor`): `void`
 
-Defined in: [src/core/node.ts:427](https://github.com/io-gui/io/blob/main/src/core/node.ts#L427)
+Defined in: [src/core/node.ts:428](https://github.com/io-gui/io/blob/main/src/core/node.ts#L428)
 
 Register function to be called once per class.
 

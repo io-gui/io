@@ -26,7 +26,7 @@ Core `IoElement` class.
 
 > **new IoNavigatorSelector**(...`args`): [`IoNavigatorSelector`](IoNavigatorSelector.md)
 
-Defined in: [src/core/node.ts:52](https://github.com/io-gui/io/blob/main/src/core/node.ts#L52)
+Defined in: [src/core/node.ts:60](https://github.com/io-gui/io/blob/main/src/core/node.ts#L60)
 
 Creates a class instance and initializes the internals.
 
@@ -35,6 +35,10 @@ Creates a class instance and initializes the internals.
 ##### args
 
 ...`any`[]
+
+Additional arguments
+
+Creates a class instance and initializes the internals with properties.
 
 #### Returns
 
@@ -142,7 +146,7 @@ Defined in: [src/core/element.ts:188](https://github.com/io-gui/io/blob/main/src
 
 > **collapsed**: `boolean`
 
-Defined in: [src/elements/content/io-navigator-base.ts:96](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L96)
+Defined in: [src/elements/content/io-navigator-base.ts:97](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L97)
 
 #### Inherited from
 
@@ -154,7 +158,7 @@ Defined in: [src/elements/content/io-navigator-base.ts:96](https://github.com/io
 
 > **collapseWidth**: `number`
 
-Defined in: [src/elements/content/io-navigator-base.ts:99](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L99)
+Defined in: [src/elements/content/io-navigator-base.ts:100](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L100)
 
 #### Inherited from
 
@@ -178,7 +182,7 @@ Defined in: [src/core/element.ts:185](https://github.com/io-gui/io/blob/main/src
 
 > **depth**: `number`
 
-Defined in: [src/elements/content/io-navigator-base.ts:93](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L93)
+Defined in: [src/elements/content/io-navigator-base.ts:94](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L94)
 
 #### Inherited from
 
@@ -202,7 +206,7 @@ Defined in: [src/core/element.ts:209](https://github.com/io-gui/io/blob/main/src
 
 > **elements**: [`VDOMArray`](../type-aliases/VDOMArray.md)[]
 
-Defined in: [src/elements/content/io-navigator-base.ts:84](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L84)
+Defined in: [src/elements/content/io-navigator-base.ts:85](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L85)
 
 #### Inherited from
 
@@ -250,7 +254,7 @@ Defined in: [src/core/element.ts:194](https://github.com/io-gui/io/blob/main/src
 
 > **menu**: `"left"` \| `"top"` \| `"bottom"` \| `"right"`
 
-Defined in: [src/elements/content/io-navigator-base.ts:90](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L90)
+Defined in: [src/elements/content/io-navigator-base.ts:91](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L91)
 
 #### Inherited from
 
@@ -274,7 +278,7 @@ Defined in: [src/core/element.ts:197](https://github.com/io-gui/io/blob/main/src
 
 > **options**: [`MenuOptions`](MenuOptions.md)
 
-Defined in: [src/elements/content/io-navigator-base.ts:87](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L87)
+Defined in: [src/elements/content/io-navigator-base.ts:88](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L88)
 
 #### Inherited from
 
@@ -314,7 +318,7 @@ Defined in: [src/elements/content/io-navigator-selector.ts:10](https://github.co
 
 > **slotted**: [`VDOMArray`](../type-aliases/VDOMArray.md)[]
 
-Defined in: [src/elements/content/io-navigator-base.ts:81](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L81)
+Defined in: [src/elements/content/io-navigator-base.ts:82](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L82)
 
 #### Inherited from
 
@@ -404,7 +408,7 @@ Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/cor
 
 > **get** `static` **Style**(): `string`
 
-Defined in: [src/elements/content/io-navigator-base.ts:7](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L7)
+Defined in: [src/elements/content/io-navigator-base.ts:8](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L8)
 
 ##### Returns
 
@@ -420,7 +424,7 @@ Defined in: [src/elements/content/io-navigator-base.ts:7](https://github.com/io-
 
 > **\_computeCollapsed**(): `void`
 
-Defined in: [src/elements/content/io-navigator-base.ts:110](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L110)
+Defined in: [src/elements/content/io-navigator-base.ts:112](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L112)
 
 #### Returns
 
@@ -463,7 +467,7 @@ Element to flatten.
 
 > **addEventListener**(`type`, `listener`, `options`?): `void`
 
-Defined in: [src/core/node.ts:342](https://github.com/io-gui/io/blob/main/src/core/node.ts#L342)
+Defined in: [src/core/node.ts:343](https://github.com/io-gui/io/blob/main/src/core/node.ts#L343)
 
 Wrapper for addEventListener.
 
@@ -528,7 +532,7 @@ Map of property names and values.
 
 > **bind**(`prop`): [`Binding`](Binding.md)
 
-Defined in: [src/core/node.ts:309](https://github.com/io-gui/io/blob/main/src/core/node.ts#L309)
+Defined in: [src/core/node.ts:310](https://github.com/io-gui/io/blob/main/src/core/node.ts#L310)
 
 Returns a binding to a specified property`.
 
@@ -556,7 +560,7 @@ Binding object.
 
 > **changed**(): `void`
 
-Defined in: [src/elements/content/io-navigator-base.ts:118](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L118)
+Defined in: [src/elements/content/io-navigator-base.ts:120](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L120)
 
 default change handler.
 Invoked when one of the properties change.
@@ -627,7 +631,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 > **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
-Defined in: [src/core/node.ts:367](https://github.com/io-gui/io/blob/main/src/core/node.ts#L367)
+Defined in: [src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
 
 Wrapper for dispatchEvent.
 
@@ -669,7 +673,7 @@ source node/element to dispatch event from.
 
 > **dispatchMutationEvent**(`object`): `void`
 
-Defined in: [src/core/node.ts:374](https://github.com/io-gui/io/blob/main/src/core/node.ts#L374)
+Defined in: [src/core/node.ts:375](https://github.com/io-gui/io/blob/main/src/core/node.ts#L375)
 
 Shorthand for dispatching `'object-mutated'` event on window.
 
@@ -693,11 +697,17 @@ object which mutated.
 
 ### dispatchQueue()
 
-> **dispatchQueue**(): `void`
+> **dispatchQueue**(`lazy`): `void`
 
-Defined in: [src/core/node.ts:249](https://github.com/io-gui/io/blob/main/src/core/node.ts#L249)
+Defined in: [src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
 
 Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+
+#### Parameters
+
+##### lazy
+
+`boolean` = `false`
 
 #### Returns
 
@@ -709,29 +719,11 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 ***
 
-### dispatchQueueSync()
-
-> **dispatchQueueSync**(): `void`
-
-Defined in: [src/core/node.ts:259](https://github.com/io-gui/io/blob/main/src/core/node.ts#L259)
-
-Dispatches the queue immediately.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoNavigatorBase`](IoNavigatorBase.md).[`dispatchQueueSync`](IoNavigatorBase.md#dispatchqueuesync)
-
-***
-
 ### dispose()
 
 > **dispose**(): `void`
 
-Defined in: [src/core/node.ts:381](https://github.com/io-gui/io/blob/main/src/core/node.ts#L381)
+Defined in: [src/core/node.ts:382](https://github.com/io-gui/io/blob/main/src/core/node.ts#L382)
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -766,7 +758,7 @@ Defined in: [src/elements/content/io-navigator-selector.ts:18](https://github.co
 
 > **init**(): `void`
 
-Defined in: [src/elements/content/io-navigator-base.ts:101](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L101)
+Defined in: [src/elements/content/io-navigator-base.ts:102](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L102)
 
 #### Returns
 
@@ -782,7 +774,7 @@ Defined in: [src/elements/content/io-navigator-base.ts:101](https://github.com/i
 
 > **inputValue**(`value`): `void`
 
-Defined in: [src/core/node.ts:224](https://github.com/io-gui/io/blob/main/src/core/node.ts#L224)
+Defined in: [src/core/node.ts:229](https://github.com/io-gui/io/blob/main/src/core/node.ts#L229)
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -825,7 +817,7 @@ Defined in: [src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src
 
 > **objectMutated**(`prop`): `void`
 
-Defined in: [src/core/node.ts:298](https://github.com/io-gui/io/blob/main/src/core/node.ts#L298)
+Defined in: [src/core/node.ts:299](https://github.com/io-gui/io/blob/main/src/core/node.ts#L299)
 
 This function is called after `onObjectMutated()` determines that one of
 the object properties has mutated.
@@ -852,7 +844,7 @@ Mutated object property name.
 
 > **onObjectMutated**(`event`): `void`
 
-Defined in: [src/core/node.ts:277](https://github.com/io-gui/io/blob/main/src/core/node.ts#L277)
+Defined in: [src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
 
 Event handler for 'object-mutated' event emitted from the `window`.
 Node should be listening for this event if it has an observed object property
@@ -879,7 +871,7 @@ Event payload.
 
 > **onResized**(): `void`
 
-Defined in: [src/elements/content/io-navigator-base.ts:106](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L106)
+Defined in: [src/elements/content/io-navigator-base.ts:107](https://github.com/io-gui/io/blob/main/src/elements/content/io-navigator-base.ts#L107)
 
 #### Returns
 
@@ -895,7 +887,7 @@ Defined in: [src/elements/content/io-navigator-base.ts:106](https://github.com/i
 
 > **queue**(`prop`, `value`, `oldValue`): `void`
 
-Defined in: [src/core/node.ts:243](https://github.com/io-gui/io/blob/main/src/core/node.ts#L243)
+Defined in: [src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
 Adds property change to the queue.
 
@@ -955,7 +947,7 @@ Defined in: [src/core/element.ts:305](https://github.com/io-gui/io/blob/main/src
 
 > **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
-Defined in: [src/core/node.ts:357](https://github.com/io-gui/io/blob/main/src/core/node.ts#L357)
+Defined in: [src/core/node.ts:358](https://github.com/io-gui/io/blob/main/src/core/node.ts#L358)
 
 Wrapper for removeEventListener.
 
@@ -1025,7 +1017,7 @@ Attribute value.
 
 > **setProperties**(`props`): `void`
 
-Defined in: [src/core/node.ts:206](https://github.com/io-gui/io/blob/main/src/core/node.ts#L206)
+Defined in: [src/core/node.ts:211](https://github.com/io-gui/io/blob/main/src/core/node.ts#L211)
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -1050,9 +1042,9 @@ Map of property names and values.
 
 ### setProperty()
 
-> **setProperty**(`name`, `value`, `skipDispatch`?): `void`
+> **setProperty**(`name`, `value`, `lazyDispatch`?): `void`
 
-Defined in: [src/core/node.ts:111](https://github.com/io-gui/io/blob/main/src/core/node.ts#L111)
+Defined in: [src/core/node.ts:119](https://github.com/io-gui/io/blob/main/src/core/node.ts#L119)
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -1070,9 +1062,9 @@ Property name to set value of.
 
 Peroperty value.
 
-##### skipDispatch?
+##### lazyDispatch?
 
-`boolean`
+`boolean` = `false`
 
 flag to skip event dispatch.
 
@@ -1128,7 +1120,7 @@ Optional don't reuse existing elements and skip dispose
 
 > **throttle**(`func`, `arg`, `timeout`): `void`
 
-Defined in: [src/core/node.ts:268](https://github.com/io-gui/io/blob/main/src/core/node.ts#L268)
+Defined in: [src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
 
 Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
 
@@ -1205,7 +1197,7 @@ Optional don't reuse existing elements and skip dispose
 
 > **unbind**(`prop`): `void`
 
-Defined in: [src/core/node.ts:326](https://github.com/io-gui/io/blob/main/src/core/node.ts#L326)
+Defined in: [src/core/node.ts:327](https://github.com/io-gui/io/blob/main/src/core/node.ts#L327)
 
 Unbinds a binding to a specified property`.
 
