@@ -118,14 +118,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: 1,
-          type: Number,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: 1,
-          type: Number,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -135,14 +135,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: 2,
-          type: Number,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: 2,
-          type: Number,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -186,14 +186,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: 'test',
-          type: String,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: 'test',
-          type: String,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -203,14 +203,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: 'test',
-          type: String,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: 'test',
-          type: String,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -254,14 +254,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: true,
-          type: Boolean,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: true,
-          type: Boolean,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -271,14 +271,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: true,
-          type: Boolean,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: true,
-          type: Boolean,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -317,20 +317,20 @@ export default class {
           reflect: false,
           init: undefined,
         });
-        const object = {prop: true};
         // initialize with object: value property definition
+        const object = {prop: true};
         propDef = new ProtoProperty({value: object});
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: {prop: true},
-          type: Object,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: {prop: true},
-          type: Object,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -377,14 +377,14 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: [1, 2, 3],
-          type: Array,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: [1, 2, 3],
-          type: Array,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -482,7 +482,7 @@ export default class {
         prop = new PropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           value: object1,
-          type: Object1,
+          type: undefined,
           binding: undefined,
           reflect: undefined,
           init: undefined,
@@ -490,7 +490,7 @@ export default class {
         expect(propDef.value).to.be.equal(object1);
         expect(prop).to.be.eql({
           value: object1,
-          type: Object1,
+          type: undefined,
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -561,14 +561,14 @@ export default class {
 
         expect(propDef).to.be.eql({
           value: 'lorem',
-          type: String,
+          type: undefined,
           binding: binding,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: 'lorem',
-          type: String,
+          type: undefined,
           binding: binding,
           reflect: false,
           init: undefined,
@@ -581,14 +581,14 @@ export default class {
 
         expect(propDef).to.be.eql({
           value: 'lorem',
-          type: String,
+          type: undefined,
           binding: binding,
           reflect: undefined,
           init: undefined,
         });
         expect(prop).to.be.eql({
           value: 'lorem',
-          type: String,
+          type: undefined,
           binding: binding,
           reflect: false,
           init: undefined,

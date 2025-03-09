@@ -69,7 +69,7 @@ export class IoGl extends IoElement {
   @Property({type: Array, init: [1, 1, 1, 1]})
   declare color: [number, number, number, number];
 
-  @Property({value: 1})
+  @Property({type: Number, value: 1})
   declare pxRatio: number;
 
   @Property({type: IoElement, value: IoThemeSingleton})
@@ -203,7 +203,8 @@ export class IoGl extends IoElement {
       }\n\n`;
   }
   initPropertyUniform(name: string, property: PropertyDefinition) {
-    switch (property.type) {
+    const type = property.value.constructor;
+    switch (type) {
       case Boolean:
         return 'uniform int ' + name + ';\n';
       case Number:

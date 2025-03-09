@@ -102,7 +102,7 @@ export default class {
           expect(protoProps1.prop1.value).to.be.equal(0);
           expect(node1._properties.get('prop1')).to.be.eql({
             value: 0,
-            type: Number,
+            type: undefined,
             binding: undefined,
             reflect: false,
             init: undefined,
@@ -111,7 +111,7 @@ export default class {
           expect(protoProps2.prop1.value).to.be.eql('asd');
           expect(node2._properties.get('prop1')).to.be.eql({
             value: 'asd',
-            type: String,
+            type: undefined,
             binding: undefined,
             reflect: false,
             init: false,
@@ -150,7 +150,7 @@ export default class {
           const props = protochain.properties;
 
           expect(props.prop1.value).to.be.eql([1, 2, 3]);
-          expect(props.prop1.type).to.be.equal(Array);
+          expect(props.prop1.type).to.be.equal(undefined);
           expect(props.prop1.init).to.be.equal(false);
           expect(props.prop1.reflect).to.be.equal(true);
         });

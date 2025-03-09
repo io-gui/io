@@ -19,16 +19,16 @@ export class IoBoolean extends IoField {
     `;
   }
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare value: boolean;
 
-  @Property('true')
+  @Property({value: 'true', type: String})
   declare true: string;
 
-  @Property('false')
+  @Property({value: 'false', type: String})
   declare false: string;
 
-  @Property('switch')
+  @Property({value: 'switch', type: String})
   declare role: string;
 
   _onClick() {

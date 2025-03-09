@@ -177,34 +177,34 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
   declare $: Record<string, any>; // TODO: Add type safety.
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare tabindex: string;
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare contenteditable: boolean;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare class: string;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare role: string;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare label: string;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare name: string;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare title: string;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare id: string;
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare hidden: boolean;
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
   /**

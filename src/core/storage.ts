@@ -2,6 +2,7 @@ import { Binding } from '../iogui.js';
 import { Property } from './decorators/property.js';
 import { Register } from './decorators/register.js';
 import { IoNode } from './node.js';
+
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
   declare warned: boolean;
@@ -113,7 +114,7 @@ export function genObjectStorageID(object: Record<string, any>) {
 @Register
 export class IoStorageNode extends IoNode {
 
-  @Property({value: ''})
+  @Property({value: '', type: String})
   declare key: string;
 
   @Property({value: undefined})
@@ -122,7 +123,7 @@ export class IoStorageNode extends IoNode {
   @Property({value: undefined})
   declare default: any;
 
-  @Property({value: 'none'})
+  @Property({value: 'none', type: String})
   declare storage: 'hash' | 'local' | 'none';
 
   declare binding: Binding;

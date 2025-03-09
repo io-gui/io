@@ -226,13 +226,13 @@ class IoTheme extends IoElement {
   }
 
   // Default themes
-  @Property(Object)
+  @Property({type: Object})
   declare themes: Record<string, Theme>;
 
   @Property({type: String, binding: $ThemeID})
   declare themeID: string;
 
-  @Property(true)
+  @Property({type: Boolean, value: true})
   declare lazy: boolean;
 
   init() {

@@ -95,16 +95,16 @@ export class IoField extends IoElement {
   @Property({value: 'flush', reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare selected: boolean;
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare invalid: boolean;
 
-  @Property({value: '', reflect: true})
+  @Property({value: '', type: String, reflect: true})
   declare placeholder: string;
 
   static get Listeners() {

@@ -37,12 +37,11 @@ export class ProtoProperty {
       this.type = def;
     } else if (def instanceof Binding) {
       this.value = def.value;
-      this.type = (def.value !== undefined && def.value !== null) ? def.value.constructor : undefined;
       this.binding = def;
     } else if (def && def.constructor === Object) {
       const d = def as PropertyDefinition;
       this.value = d.value !== undefined ? d.value : undefined;
-      this.type = d.type !== undefined ? d.type : (d.value !== undefined && d.value !== null) ? d.value.constructor : undefined;
+      this.type = d.type !== undefined ? d.type : undefined;
       if (d.binding instanceof Binding) {
         this.binding = d.binding;
         this.value = this.binding.value;
@@ -51,7 +50,6 @@ export class ProtoProperty {
       if (d.init !== undefined) this.init = d.init;
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
-      this.type = def.constructor as Constructor;
     }
   }
   /**

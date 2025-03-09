@@ -30,10 +30,10 @@ export class IoButton extends IoField {
   @Property(undefined)
   declare value: any;
 
-  @Property({value: 'outset', reflect: true})
+  @Property({value: 'outset', type: String, reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean;
 
   @Property('button')

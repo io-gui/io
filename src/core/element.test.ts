@@ -444,14 +444,14 @@ export default class {
             binding: undefined,
             init: undefined,
             reflect: false,
-            type: Number,
+            type: undefined,
             value: -1,
           });
           expect(element1._properties.get('prop1')).to.eql({
             binding: undefined,
             init: undefined,
             reflect: false,
-            type: String,
+            type: undefined,
             value: 'default',
           });
 
@@ -459,14 +459,14 @@ export default class {
             binding: undefined,
             init: undefined,
             reflect: true,
-            type: Number,
+            type: undefined,
             value: 0,
           });
           expect(element2._properties.get('prop1')).to.eql({
             binding: undefined,
             init: undefined,
             reflect: false,
-            type: Number,
+            type: undefined,
             value: 0,
           });
         });

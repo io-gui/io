@@ -53,7 +53,7 @@ export class IoOverlay extends IoElement {
       }
     `;
   }
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
 
   static get Listeners() {

@@ -156,7 +156,7 @@ export default class {
         expect(protoChain.properties).to.be.eql({
           lazy:{value: false, type: Boolean, binding: undefined, reflect: true, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reflect: true, init: true},
-          prop2:{value: 'foo', type: String, binding: undefined, reflect: false, init: undefined},
+          prop2:{value: 'foo', type: Object, binding: undefined, reflect: false, init: undefined},
           prop3:{value: undefined, type: undefined, binding: undefined, reflect: true, init: undefined},
         });
       });

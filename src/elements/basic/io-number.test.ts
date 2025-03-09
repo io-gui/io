@@ -250,7 +250,7 @@ export default class {
             binding: undefined,
             init: undefined,
             reflect: false,
-            type: undefined,
+            type: IoNumber,
             value: element,
           });
           expect(ladder._properties.get('expanded')).to.eql({

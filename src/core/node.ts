@@ -35,6 +35,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       return {
         lazy: {
           value: false,
+          type: Boolean,
           reflect: true
         }
       };

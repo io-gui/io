@@ -30,40 +30,40 @@ export class IoNumber extends IoField {
   @Property('textbox')
   declare role: string;
 
-  @Property(0)
+  @Property({value: 0, type: Number})
   declare value: number;
 
-  @Property(1)
+  @Property({value: 1, type: Number})
   declare conversion: number;
 
-  @Property(0.0001)
+  @Property({value: 0.0001, type: Number})
   declare step: number;
 
-  @Property(-Infinity)
+  @Property({value: -Infinity, type: Number})
   declare min: number;
 
-  @Property(Infinity)
+  @Property({value: Infinity, type: Number})
   declare max: number;
 
-  @Property(false)
+  @Property({value: false, type: Boolean})
   declare ladder: boolean;
 
-  @Property(true)
+  @Property({value: true, type: Boolean})
   declare contenteditable: boolean;
 
-  @Property({value: 'number', reflect: true})
+  @Property({value: 'number', type: String, reflect: true})
   declare type: string;
 
-  @Property({value: 'pattern="[0-9]*"', reflect: true})
+  @Property({value: 'pattern="[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
-  @Property({value: 'numeric', reflect: true})
+  @Property({value: 'numeric', type: String, reflect: true})
   declare inputmode: string;
 
-  @Property({value: 'false', reflect: true})
+  @Property({value: 'false', type: String, reflect: true})
   declare spellcheck: string;
 
-  @Property({value: 'inset', reflect: true})
+  @Property({value: 'inset', type: String, reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset';
 
   private _pointer = '';
@@ -268,13 +268,13 @@ export class IoNumberLadderStep extends IoField {
     `;
   }
 
-  @Property(1)
+  @Property({value: 1, type: Number})
   declare value: number;
 
-  @Property({value: 'number', reflect: true})
+  @Property({value: 'number', type: String, reflect: true})
   declare type: string;
 
-  @Property('spinbutton')
+  @Property({value: 'spinbutton', type: String})
   declare role: string;
 
   _onKeydown(event: KeyboardEvent) {
@@ -422,13 +422,13 @@ export class IoNumberLadder extends IoElement {
     `;
   }
 
-  @Property('list')
+  @Property({value: 'list', type: String})
   declare role: string;
 
-  @Property(undefined)
+  @Property({value: undefined, type: IoNumber})
   declare src?: IoNumber;
 
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
 
   static get Listeners() {
