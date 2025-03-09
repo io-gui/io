@@ -57,7 +57,8 @@ export class IoVector extends IoElement {
   @Property(true)
   declare ladder: boolean;
 
-  @Property({reactive: false})
+  // TODO: make non-reactive
+  @Property({})
   declare keys: string[];
 
   private _ratios: Record<string, number> = {};

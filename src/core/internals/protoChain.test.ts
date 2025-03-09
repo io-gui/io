@@ -19,7 +19,7 @@ class IoNode1 extends IoNode {
   static get Properties(): PropertyDefinitions {
     return {
       prop1: {
-        reactive: false
+        init: false
       },
       prop2: {}
     };
@@ -34,13 +34,13 @@ class IoNode3 extends IoNode1 {
   static get Properties(): PropertyDefinitions {
     return {
       prop1: {
-        reactive: true,
+        init: true,
         reflect: true
       }
     };
   }
 
-  @Property({reactive: true, init: undefined})
+  @Property({init: true})
   declare prop1: any;
 
   @Property({value: 'foo', reflect: false})
@@ -52,7 +52,7 @@ class IoNode3 extends IoNode1 {
 
 @Register
 class IoNode4 extends IoNode1 {
-  @Property({reactive: true})
+  @Property({init: true})
   declare prop1: any;
 
   @Property({})
@@ -66,7 +66,7 @@ class MockIoNode1 {
   static get Properties(): PropertyDefinitions {
     return {
       prop1: {
-        reactive: false
+        init: false
       }
     };
   }
@@ -134,12 +134,12 @@ export default class {
         let protoChain = new ProtoChain(MockIoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
         expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: false, reflect: undefined, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: false},
         });
         protoChain = new ProtoChain(MockIoNode2);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
         expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: Object, binding: undefined, reactive: false, reflect: undefined, init: undefined},
+          prop1:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, init: false},
           prop2:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: undefined},
         });
       });
@@ -147,15 +147,15 @@ export default class {
         let protoChain = new ProtoChain(IoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, reactive: false, reflect: true, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: false, reflect: undefined, init: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, reactive: undefined, reflect: true, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: false},
           prop2:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, init: undefined},
         });
         protoChain = new ProtoChain(IoNode3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1', 'prop3']);
         expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, reactive: false, reflect: true, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: true, reflect: true, init: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, reactive: undefined, reflect: true, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: true, init: true},
           prop2:{value: 'foo', type: String, binding: undefined, reactive: undefined, reflect: false, init: undefined},
           prop3:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: true, init: undefined},
         });
@@ -164,8 +164,8 @@ export default class {
         const protoChain = new ProtoChain(IoNode4);
         expect(Object.keys(protoChain.properties)).to.be.eql(['lazy', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          lazy:{value: false, type: Boolean, binding: undefined, reactive: false, reflect: true, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reactive: true, reflect: undefined, init: undefined},
+          lazy:{value: false, type: Boolean, binding: undefined, reactive: undefined, reflect: true, init: undefined},
+          prop1:{value: undefined, type: undefined, binding: undefined, reactive: undefined, reflect: undefined, init: true},
           prop2:{value: undefined, type: Object, binding: undefined, reactive: undefined, reflect: undefined, init: undefined},
         });
       });

@@ -175,7 +175,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     `;
   }
 
-  @Property({type: Object, reactive: false})
   declare $: Record<string, any>; // TODO: Add type safety.
 
   @Property({value: '', reflect: true})
@@ -234,7 +233,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   template(vDOM: Array<any>, host?: HTMLElement, cache?: boolean) {
     const vChildren = buildTree()(['first', vDOM]).children;
     host = (host || this) as any;
-    if (host === (this as any)) this.setProperty('$', {});
+    if (host === (this as any)) this.$ = {};
     this.traverse(vChildren, host as HTMLElement, cache);
   }
   /**

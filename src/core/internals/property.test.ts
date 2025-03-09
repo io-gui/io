@@ -574,17 +574,25 @@ export default class {
         });
         // initialize with non-default property definition
         propDef = new ProtoProperty({
-          reflect: true,
-          reactive: false,
+          reflect: false,
+          type: Object,
           init: true,
         });
         prop = new PropertyInstance(dummy, propDef);
-        expect(propDef).to.be.eql(prop).to.be.eql({
+        expect(propDef).to.be.eql({
           value: undefined,
-          type: undefined,
+          type: Object,
           binding: undefined,
-          reflect: true,
-          reactive: false,
+          reflect: false,
+          reactive: undefined,
+          init: true,
+        });
+        expect(prop).to.be.eql({
+          value: new Object(true),
+          type: Object,
+          binding: undefined,
+          reflect: false,
+          reactive: true,
           init: true,
         });
       });
@@ -655,8 +663,7 @@ export default class {
           value: 'lorem',
           type: String,
           binding: binding,
-          reflect: true,
-          reactive: false,
+          reflect: false,
           init: undefined,
         });
         propDef1.assign(propDef2);
@@ -668,7 +675,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          reactive: false,
+          reactive: true,
           init: true,
         });
         propDef2.assign(propDef1);
@@ -685,7 +692,7 @@ export default class {
           type: String,
           binding: binding,
           reflect: true,
-          reactive: false,
+          reactive: true,
           init: true,
         });
 

@@ -56,19 +56,19 @@ export class IoSelector extends IoElement {
   @Property(Array)
   declare elements: VDOMArray[];
 
-  @Property({value: false, reactive: false})
+  @Property({value: false})
   declare cache: boolean;
 
-  @Property({value: false, reactive: false})
+  @Property({value: false})
   declare precache: boolean;
 
-  @Property({value: 1000, reactive: false})
+  @Property({value: 1000})
   declare precacheDelay: number;
 
-  @Property({value: false, reflect: true, reactive: false})
+  @Property({value: false, reflect: true})
   declare loading: boolean;
 
-  @Property({type: Object, reactive: false})
+  @Property({type: Object})
   declare private _caches: Record<string, HTMLElement>;
 
   private _selected?: any;

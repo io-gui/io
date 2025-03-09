@@ -18,7 +18,6 @@ export default class {
         });
         it('Should initialize property definitions correctly', () => {
           // Default properties
-          expect(element.$).to.be.a('object');
           expect(element.tabindex).to.be.equal('');
           expect(element.contenteditable).to.be.equal(false);
           expect(element.class).to.be.equal('');
@@ -30,14 +29,6 @@ export default class {
           expect(element.hidden).to.be.equal(false);
           expect(element.disabled).to.be.equal(false);
 
-          expect(element._properties.get('$')).to.eql({
-            binding: undefined,
-            reactive: false,
-            init: undefined,
-            reflect: false,
-            type: Object,
-            value: {},
-          });
           expect(element._properties.get('tabindex')).to.eql({
             binding: undefined,
             reactive: true,
@@ -441,7 +432,6 @@ export default class {
           return {
             prop0: {
               value: 0,
-              reactive: false,
               reflect: true
             },
             prop1: 0,
@@ -479,7 +469,7 @@ export default class {
 
           expect(element2._properties.get('prop0')).to.eql({
             binding: undefined,
-            reactive: false,
+            reactive: true,
             init: undefined,
             reflect: true,
             type: Number,

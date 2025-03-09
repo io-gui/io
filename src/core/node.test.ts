@@ -79,11 +79,11 @@ export default class {
             static get Properties(): PropertyDefinitions {
               return {
                 prop1: {
-                  value: {},
-                  reactive: false,
+                  value: 'asd',
+                  init: false,
                 },
                 prop2: {
-                  reactive: true,
+                  init: true,
                 },
                 prop3: ''
               };
@@ -109,14 +109,14 @@ export default class {
             init: undefined,
           });
 
-          expect(protoProps2.prop1.value).to.be.eql({});
+          expect(protoProps2.prop1.value).to.be.eql('asd');
           expect(node2._properties.get('prop1')).to.be.eql({
-            value: {},
-            type: Object,
+            value: 'asd',
+            type: String,
             binding: undefined,
-            reactive: false,
+            reactive: true,
             reflect: false,
-            init: undefined,
+            init: false,
           });
 
           expect(node2._properties.get('prop2')).to.be.eql({
@@ -125,7 +125,7 @@ export default class {
             binding: undefined,
             reactive: true,
             reflect: false,
-            init: undefined,
+            init: true,
           });
         });
         it('Should favor explicit property definitions over implicit', () => {
@@ -134,7 +134,7 @@ export default class {
               return {
                 prop1: {
                   value: {},
-                  reactive: false,
+                  init: false,
                   reflect: true,
                 },
               };
@@ -154,7 +154,7 @@ export default class {
 
           expect(props.prop1.value).to.be.eql([1, 2, 3]);
           expect(props.prop1.type).to.be.equal(Array);
-          expect(props.prop1.reactive).to.be.equal(false);
+          expect(props.prop1.init).to.be.equal(false);
           expect(props.prop1.reflect).to.be.equal(true);
         });
         it('Should correctly register properties with bindigs', () => {
