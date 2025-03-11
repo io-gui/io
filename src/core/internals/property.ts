@@ -189,7 +189,9 @@ export class PropertyInstance {
             const argument = decodeInitArgument(this.init, node);
             this.value = new this.type(argument);
           }
-        } else {
+        } else if (this.init !== null) {
+          // TODO: test
+          // TODO: consider not initializing if init undefined also
           this.value = new this.type();
         }
       }

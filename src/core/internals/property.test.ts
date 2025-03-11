@@ -316,6 +316,23 @@ export default class {
           reflect: false,
           init: undefined,
         });
+        // initialize with type: Object property definition and init: null
+        propDef = new ProtoProperty({type: Object, init: null});
+        prop = new PropertyInstance(dummy, propDef);
+        expect(propDef).to.be.eql({
+          value: undefined,
+          type: Object,
+          binding: undefined,
+          reflect: undefined,
+          init: null,
+        });
+        expect(prop).to.be.eql({
+          value: undefined,
+          type: Object,
+          binding: undefined,
+          reflect: false,
+          init: null,
+        });
         // initialize with object: value property definition
         const object = {prop: true};
         propDef = new ProtoProperty({value: object});

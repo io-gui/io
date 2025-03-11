@@ -13,54 +13,140 @@ async function nextTick(): Promise<void> {
 
 export default class {
   run() {
-    describe('IoNode', () => {
-      describe('Initialization', () => {
-        it('Should have core API functions defined', () => {
-          const node = new IoNode();
-          expect(node.setProperty).to.be.a('function');
-          expect(node.applyProperties).to.be.a('function');
-          expect(node.setProperties).to.be.a('function');
-          expect(node.inputValue).to.be.a('function');
-          expect(node.changed).to.be.a('function');
-          expect(node.queue).to.be.a('function');
-          expect(node.dispatchQueue).to.be.a('function');
-          expect(node.throttle).to.be.a('function');
-          expect(node.onObjectMutated).to.be.a('function');
-          expect(node.objectMutated).to.be.a('function');
-          expect(node.bind).to.be.a('function');
-          expect(node.unbind).to.be.a('function');
-          expect(node.addEventListener).to.be.a('function');
-          expect(node.removeEventListener).to.be.a('function');
-          expect(node.dispatchEvent).to.be.a('function');
-          expect(node.dispose).to.be.a('function');
-          node.dispose();
-        });
-        it('Should register property definitions correctly', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop0: { type: String },
-                prop1: { value: false },
-                prop2: -1,
-                prop3: Number,
-                prop4: Object,
-                prop5: [0, 1, 2],
-              };
-            }
+    describe('node.test.ts', () => {
+      it('Should have core API functions defined', () => {
+        const node = new IoNode();
+        expect(node.setProperty).to.be.a('function');
+        expect(node.applyProperties).to.be.a('function');
+        expect(node.setProperties).to.be.a('function');
+        expect(node.inputValue).to.be.a('function');
+        expect(node.changed).to.be.a('function');
+        expect(node.queue).to.be.a('function');
+        expect(node.dispatchQueue).to.be.a('function');
+        expect(node.throttle).to.be.a('function');
+        expect(node.onObjectMutated).to.be.a('function');
+        expect(node.objectMutated).to.be.a('function');
+        expect(node.bind).to.be.a('function');
+        expect(node.unbind).to.be.a('function');
+        expect(node.addEventListener).to.be.a('function');
+        expect(node.removeEventListener).to.be.a('function');
+        expect(node.dispatchEvent).to.be.a('function');
+        expect(node.dispose).to.be.a('function');
+        node.dispose();
+      });
+      it('Should register property definitions correctly', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop0: { type: String },
+              prop1: { value: false },
+              prop2: -1,
+              prop3: Number,
+              prop4: Object,
+              prop5: [0, 1, 2],
+              prop6: { value: 'hello', type: String },
+              prop7: { value: true, type: Boolean },
+              prop8: { value: 1, type: Number },
+              prop9: { type: Array, init: [1, 2, 3] },
+              prop10: { type: Array, init: null },
+            };
           }
+        }
 
-          const node = new TestNode();
+        const node = new TestNode();
 
-          expect(node.prop0).to.be.equal('');
-          expect(node.prop1).to.be.equal(false);
-          expect(node.prop2).to.be.equal(-1);
-          expect(node.prop3).to.be.equal(0);
-          expect(node.prop4).to.be.deep.equal({});
-          expect(node.prop5).to.be.deep.equal([0, 1, 2]);
+        expect(node.prop0).to.be.equal('');
+        expect(node.prop1).to.be.equal(false);
+        expect(node.prop2).to.be.equal(-1);
+        expect(node.prop3).to.be.equal(0);
+        expect(node.prop4).to.be.eql({});
+        expect(node.prop5).to.be.eql([0, 1, 2]);
+        expect(node.prop6).to.be.equal('hello');
+        expect(node.prop7).to.be.equal(true);
+        expect(node.prop8).to.be.equal(1);
+        expect(node.prop9).to.be.eql([1, 2, 3]);
 
-          node.dispose();
+        expect(node._properties.get('prop0')).to.be.eql({
+          value: '',
+          type: String,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
         });
+        expect(node._properties.get('prop1')).to.be.eql({
+          value: false,
+          type: undefined,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop2')).to.be.eql({
+          value: -1,
+          type: undefined,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop3')).to.be.eql({
+          value: 0,
+          type: Number,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop4')).to.be.eql({
+          value: {},
+          type: Object,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop5')).to.be.eql({
+          value: [0, 1, 2],
+          type: undefined,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop6')).to.be.eql({
+          value: 'hello',
+          type: String,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop7')).to.be.eql({
+          value: true,
+          type: Boolean,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop8')).to.be.eql({
+          value: 1,
+          type: Number,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
+        });
+        expect(node._properties.get('prop9')).to.be.eql({
+          value: [1, 2, 3],
+          type: Array,
+          binding: undefined,
+          reflect: false,
+          init: [1, 2, 3],
+        });
+        expect(node._properties.get('prop10')).to.be.eql({
+          value: undefined,
+          type: Array,
+          binding: undefined,
+          reflect: false,
+          init: null,
+        });
+        node.dispose();
+      });
+      describe('Initialization', () => {
         it('Should aggregate property definitions from protochain', () => {
           @Register
           class Object1 extends IoNode {
