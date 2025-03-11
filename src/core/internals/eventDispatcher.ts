@@ -1,5 +1,5 @@
-import { IoNode } from '../node.js';
-import { ChangeEvent } from './changeQueue.js';
+import { ChangeEvent } from './changeQueue';
+import { IoNode } from '../node';
 
 /**
  * Event listener types.

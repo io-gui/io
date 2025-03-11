@@ -1,8 +1,14 @@
-import { Constructor, IoNode } from '../node.js';
-import { Binding } from './binding.js';
+import { Binding } from './binding';
+import { Constructor, IoNode } from '../node';
 
 /**
- * Declares default value, type and reactive behavior of the property.
+ * Configuration for a property of an IoNode class.
+ * @typedef {Object} PropertyDefinition
+ * @property {*} [value] The property's value. Can be any type unless `type` is specified.
+ * @property {Constructor} [type] Constructor function defining the property's type.
+ * @property {Binding} [binding] Binding object for two-way data synchronization.
+ * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
+ * @property {*} [init] Initialization arguments for constructing initial value.
  */
 export type PropertyDefinition = {
   value?: any;
@@ -13,12 +19,20 @@ export type PropertyDefinition = {
 };
 
 /**
- * Allows loose definition of properties by specifying only partial definitions such as default value or type.
+ * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
 export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
 
 /**
- * Finalized property definition created from property definition.
+ * Instantiates a property definition object from a loosely or strongly typed property definition.
+ * It facilitates merging of inherited property definitions from the prototype chain.
+ * @class
+ * @property {*} [value] The property's value. Can be any type.
+ * @property {Constructor} [type] Constructor function defining the property's type.
+ * @property {Binding} [binding] Binding object for two-way data synchronization.
+ * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
+ * @property {*} [init] Initialization arguments for constructing initial values.
  */
 export class ProtoProperty {
   value?: any;
@@ -27,8 +41,18 @@ export class ProtoProperty {
   reflect?: boolean;
   init?: any;
   /**
-   * Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
-   * @param {PropertyDefinitionLoose} def Loosely typed property definition
+   * Creates a property definition from various input types.
+   * @param {PropertyDefinitionLoose} def Input definition which can be:
+   * - `undefined` or `null`: Sets as value
+   * - `Constructor`: Sets as type
+   * - `Binding`: Sets value from binding and stores binding reference
+   * - `PropertyDefinition`: Copies all defined fields
+   * - Other values: Sets as value
+   * @example
+   * new ProtoProperty(String) // {type: String}
+   * new ProtoProperty('hello') // {value: 'hello'}
+   * new ProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
+   * new ProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
    */
   constructor(def: PropertyDefinitionLoose) {
     if (def === undefined || def === null) {
@@ -63,6 +87,14 @@ export class ProtoProperty {
     if (protoProp.init !== undefined) this.init = protoProp.init;
     if (protoProp.binding !== undefined) this.binding = protoProp.binding;
   }
+  /**
+   * Creates a serializable representation of the property definition.
+   * Handles special cases for better JSON serialization:
+   * - Converts object values to their constructor names
+   * - Converts function types to their names
+   * - Only includes defined fields
+   * @returns {object} A plain object suitable for JSON serialization
+   */
   toJSON() {
     const json: any = {
       value: this.value,
@@ -130,7 +162,6 @@ export class PropertyInstance {
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
     }
 
-    // TODO: Consider not allowing shared object instances as initial values.
     this.value = propDef.value;
     this.type = propDef.type;
     this.binding = propDef.binding;
@@ -158,7 +189,6 @@ export class PropertyInstance {
             const argument = decodeInitArgument(this.init, node);
             this.value = new this.type(argument);
           }
-          // TODO: Consider other ways of encoding initial values.
         } else {
           this.value = new this.type();
         }
@@ -182,7 +212,3 @@ export class PropertyInstance {
     }
   }
 }
-
-export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
-
-export const propertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();

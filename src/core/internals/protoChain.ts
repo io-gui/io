@@ -1,11 +1,13 @@
-import { IoNode, IoNodeConstructor, ListenerDefinitions } from '../node.js';
-import { ProtoProperty, propertyDecorators, PropertyDefinitions } from './property.js';
-import { ListenerDefinition, hardenListenerDefinition } from './eventDispatcher.js';
+import { ProtoProperty } from './property';
+import { ListenerDefinition, hardenListenerDefinition } from './eventDispatcher';
+import { IoNode, IoNodeConstructor, Constructor, PropertyDefinitions, ListenerDefinitions } from '../node';
 
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = { [property: string]: ProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
+
+export const propertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
 
 const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
 function isObjectConstructor(constructor: any) {
@@ -108,29 +110,23 @@ export class ProtoChain {
    * @returns {string} - Updated properties hash
    */
   addStaticProperties(properties: PropertyDefinitions = {}, prevHash = ''): string {
-    const newHash = this.serializeProperties(properties);
-    if (newHash !== prevHash) for (const name in properties) {
-      const hardPropDef = new ProtoProperty(properties[name]);
-      if (!this.properties[name]) this.properties[name] = hardPropDef;
-      this.properties[name].assign(hardPropDef);
-      prevHash = newHash;
+    const protoProperties: Record<string, ProtoProperty> = {};
+    for (const name in properties) {
+      protoProperties[name] = new ProtoProperty(properties[name]);
+    }
+    /**
+     * Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
+     * this does not provide completely accurate signiture of the binding but it's good enough.
+     */
+    const newHash = JSON.stringify(protoProperties);
+    if (newHash !== prevHash) {
+      for (const name in properties) {
+       if (!this.properties[name]) this.properties[name] = protoProperties[name];
+       else this.properties[name].assign(protoProperties[name]);
+       prevHash = newHash;
+     }
     }
     return prevHash;
-  }
-  /**
-   * Serializes the properties object to a JSON string.
-   * Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
-   * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
-   * Not a hash in the cryptographic sense but serves the purpose.
-   * @returns {string} - Serialized properties
-   */
-  serializeProperties(properties: PropertyDefinitions) {
-    // TODO: consider using custom toJSON() method to avoid stringifying heavy objects in "value" and "type" fields.
-    const enhancedProperties: Record<string, ProtoProperty> = {};
-    for (const name in properties) {
-      enhancedProperties[name] = new ProtoProperty(properties[name]);
-    }
-    return JSON.stringify(enhancedProperties);
   }
   /**
    * Merges or appends a listener definitions to the existing listeners array.

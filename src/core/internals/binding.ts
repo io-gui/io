@@ -1,5 +1,5 @@
-import { ChangeEvent } from './changeQueue.js';
-import { IoNode } from '../node.js';
+import { ChangeEvent } from './changeQueue';
+import { IoNode } from '../node';
 
 type Properties = string[];
 type TargetProperties = WeakMap<IoNode, Properties>;
@@ -56,7 +56,7 @@ export class Binding {
   }
   /**
    * Returns a JSON representation of the binding.
-   * This is required for `protoChain` serializeProperties() to work more accurately.
+   * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
    * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
    * @return {string} JSON representation of the binding.
    */

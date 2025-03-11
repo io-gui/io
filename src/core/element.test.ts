@@ -387,7 +387,6 @@ export default class {
           expect(element1.label).to.equal('two');
           expect(element2.label).to.equal('one');
         });
-        // TODO: Bind to node
       });
     });
     // Extended IoElement

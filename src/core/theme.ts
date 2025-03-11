@@ -1,7 +1,7 @@
 import { Register } from './decorators/register.js';
-import { IoElement } from './element.js';
-import { PropertyDefinitions } from './internals/property.js';
 import { Property } from './decorators/property.js';
+import { PropertyDefinitions } from './node.js';
+import { IoElement } from './element.js';
 import { IoStorage as $ } from './storage.js';
 const THEME_VERSION = 'v0.9';
 

@@ -209,31 +209,6 @@ export default class {
         expect(node.onFunction2.name).to.be.equal('bound onFunction2');
         expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
       });
-      it('serializeProperties() should return a unique fingerprint of the properties object', () => {
-        const protoChain = new ProtoChain(MockIoNode1);
-        const node = new IoNode1();
-        const element = new IoElement();
-        const binding = new Binding(node, 'prop1');
-        binding.addTarget(element, 'lazy');
-        let hash = protoChain.serializeProperties({
-          prop1: {
-              value: node,
-              type: Object,
-              reflect: true,
-              init: [0, 1, 2],
-          }
-        });
-        expect(hash).to.be.equal('{"prop1":{"value":"IoNode1","type":"Object","reflect":true,"init":[0,1,2]}}');
-        hash = protoChain.serializeProperties({
-          prop1: {
-              type: Object,
-              binding: binding,
-              reflect: true,
-              init: [0, 1, 2],
-          }
-        });
-        expect(hash).to.be.equal('{"prop1":{"type":"Object","reflect":true,"init":[0,1,2],"binding":{"node":"IoNode1","property":"prop1","targets":["IoElement"],"targetProperties":{"IoElement":["lazy"]}}}}');
-      });
       it('Should include property names of mutation-observed object properties', () => {
         let protoChain = new ProtoChain(MockIoNode1);
         expect(protoChain.mutationObservedProperties).to.be.eql([]);

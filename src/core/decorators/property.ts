@@ -1,4 +1,5 @@
-import { PropertyDefinitionLoose, propertyDecorators } from '../internals/property';
+import { PropertyDefinitionLoose } from '../internals/property';
+import { propertyDecorators } from '../internals/protoChain';
 import { IoNode, Constructor } from '../node';
 
 /**

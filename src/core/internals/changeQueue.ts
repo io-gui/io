@@ -1,4 +1,4 @@
-import { IoNode } from '../node.js';
+import { IoNode } from '../node';
 
 export interface Change {
   property: string;
