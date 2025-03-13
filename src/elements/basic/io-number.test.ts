@@ -6,6 +6,7 @@ element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
 
 const ladder = new IoNumberLadder();
+ladder.expanded = true;
 ladder.style.display = 'none';
 ladder.src = element;
 document.body.appendChild(ladder as unknown as HTMLElement);
@@ -247,7 +248,7 @@ export default class {
         expect(ladder.role).to.equal('list');
         expect(ladder.src).to.equal(element);
         expect(ladder.conversion).to.equal(1);
-        expect(ladder.expanded).to.equal(false);
+        expect(ladder.expanded).to.equal(true);
         expect(ladder.min).to.equal(-Infinity);
         expect(ladder.max).to.equal(Infinity);
         expect(ladder.step).to.equal(0.0001);
@@ -266,15 +267,15 @@ export default class {
           init: undefined,
           reflect: true,
           type: Boolean,
-          value: false,
+          value: true,
         });
       });
       it('has correct default attributes', () => {
         expect(ladder.getAttribute('role')).to.equal('list');
-        expect(ladder.getAttribute('expanded')).to.equal(null);
+        expect(ladder.getAttribute('expanded')).to.equal('');
       });
       it('has correct default innerHTML', async () => {
-        // TODO: adding substantial workload on the page load requires waiting a frame for this test to pass. Investigate.
+        // TODO: Fix this test nextTick() should not be needed
         await nextTick();
         expect(ladder.innerHTML).to.equal('<io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up4" label="1000" aria-label="1000" aria-valuestep="1000" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1000" aria-label="1000">1000</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up3" label="100" aria-label="100" aria-valuestep="100" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="100" aria-label="100">100</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up2" label="10" aria-label="10" aria-valuestep="10" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="10" aria-label="10">10</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up1" label="1" aria-label="1" aria-valuestep="1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1" aria-label="1">1</io-label></io-number-ladder-step><span class="io-number-ladder-center"></span><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down1" label="0.1" aria-label="0.1" aria-valuestep="0.1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.1" aria-label="0.1">0.1</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down2" label="0.01" aria-label="0.01" aria-valuestep="0.010000000000000002" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.01" aria-label="0.01">0.01</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down3" label="0.001" aria-label="0.001" aria-valuestep="0.001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.001" aria-label="0.001">0.001</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down4" label="0.0001" aria-label="0.0001" aria-valuestep="0.0001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.0001" aria-label="0.0001">0.0001</io-label></io-number-ladder-step>');
       });

@@ -36,28 +36,28 @@ try {
 }
 
 try {
-  // new BindingTest().run();
-  // new ChangeQueueTest().run();
-  // new EventDispatcherTest().run();
-  // new PropertyTest().run();
-  // new ProtoChainTest().run ();
+  new BindingTest().run();
+  new ChangeQueueTest().run();
+  new EventDispatcherTest().run();
+  new PropertyTest().run();
+  new ProtoChainTest().run ();
 
-  // new NodeTest().run();
-  // new ElementTest().run();
-  // new GLTest().run();
-  // new ThemeTest().run();
-  // new OverlayTest().run();
-  // new StorageTest().run();
+  new NodeTest().run();
+  new ElementTest().run();
+  new GLTest().run();
+  new ThemeTest().run();
+  new OverlayTest().run();
+  new StorageTest().run();
 
   new BasicElementTest().run();
-  // new ColorElementTest().run();
+  new ColorElementTest().run();
   // new ExtrasElementTest().run();
   // new LayoutElementTest().run();
   // new VectorElementTest().run();
-  // new MenuElementTest().run();
+  new MenuElementTest().run();
   // new NotifyElementTest().run();
   // new ObjectElementTest().run();
-  // new SlidersElementTest().run();
+  new SlidersElementTest().run();
 
   mocha.checkLeaks();
   mocha.run(() => {

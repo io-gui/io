@@ -458,7 +458,7 @@ export default class {
         node3.propChangedEvents.length = 0;
         node3.reactivity = 'debounced';
         node3.prop = 10;
-        
+
         expect(node3.propChangedEvents).to.be.eql([]);
 
         await nextTick();
@@ -472,12 +472,51 @@ export default class {
         node3.propChangedEvents.length = 0;
         node3.reactivity = 'none';
         node3.prop = 20;
-        
+
         expect(node3.propChangedEvents).to.be.eql([]);
-        
+
         await nextTick();
 
         expect(node3.propChangedEvents).to.be.eql([]);
+      });
+      it('Should add "changed" event listeners to properties of IoNode type', async () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop: Number,
+            };
+          }
+        }
+
+        const subnode = new TestNode();
+        const node = new TestNode({
+          prop: subnode,
+        });
+
+        expect(subnode._eventDispatcher.addedListeners.changed[0][0]).to.be.equal(node.onIoNodePropertyChanged);
+
+        node.prop = null;
+
+        expect(subnode._eventDispatcher.addedListeners.changed).to.be.equal(undefined);
+
+        const subnode2 = new TestNode();
+        node.prop = subnode2;
+
+        expect(subnode2._eventDispatcher.addedListeners.changed[0][0]).to.be.equal(node.onIoNodePropertyChanged);
+
+        @Register
+        class TestNode2 extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop: TestNode,
+            };
+          }
+        }
+
+        const node2 = new TestNode2();
+
+        expect(node2.prop._eventDispatcher.addedListeners.changed[0][0]).to.be.equal(node2.onIoNodePropertyChanged);
       });
       it('Should corectly invoke handler functions on change', async () => {
         @Register
@@ -590,7 +629,7 @@ export default class {
 
         expect(node.prop1Changes).to.be.eql([]);
         expect(node.prop2Changes).to.be.eql([]);
-        
+
         node.dispose();
       });
       it('should invoke property mutation handler functions on mutation event', async () => {
@@ -653,183 +692,140 @@ export default class {
 
         node.dispose();
       });
-      it('should fire change events', () => {
+      it('should correctly bind properties', () => {
         @Register
         class TestNode extends IoNode {
-          static get Properties(): any {
+          static get Properties(): PropertyDefinitions {
             return {
               prop1: String,
-              _onProp1ChangedCounter: 0,
-              _onProp1Change: null,
-              _onCustomEventCounter: 0,
-              _onCustomEven: null,
+              prop2: String,
             };
-          }
-          static get Listeners() {
-            return {
-              'prop1-changed': 'onProp1Changed',
-              'custom-event': 'onCustomEvent',
-            };
-          }
-          onProp1Changed(event: Event) {
-            this._onProp1ChangedCounter++;
-            this._onProp1Change = event;
-          }
-          onCustomEvent(event: Event) {
-            this._onCustomEventCounter++;
-            this._onCustomEven = event;
           }
         }
 
         const node = new TestNode();
 
+        const binding = node.bind('prop1');
+        expect(binding).to.be.instanceof(Binding);
+        expect(binding.node).to.be.equal(node);
+        expect(binding.property).to.be.equal('prop1');
+
+        const boundNode1 = new TestNode({prop1: binding});
+        const boundNode2 = new TestNode({prop1: binding});
+        boundNode2.prop2 = binding;
+
+        expect(binding.targets[0]).to.be.equal(boundNode1);
+        expect(binding.targets[1]).to.be.equal(boundNode2);
+        expect(binding.targetProperties.get(boundNode1)![0]).to.be.equal('prop1');
+        expect(binding.targetProperties.get(boundNode1)![1]).to.be.equal(undefined);
+        expect(binding.targetProperties.get(boundNode2)![0]).to.be.equal('prop1');
+        expect(binding.targetProperties.get(boundNode2)![1]).to.be.equal('prop2');
+
         node.prop1 = 'one';
-        expect(node._onProp1ChangedCounter).to.equal(1);
-        expect(node._onProp1Change.detail.property).to.equal('prop1');
-        expect(node._onProp1Change.detail.oldValue).to.equal('');
-        expect(node._onProp1Change.detail.value).to.equal('one');
+        expect(boundNode1.prop1).to.be.equal('one');
+        expect(boundNode1.prop2).to.be.equal('');
+        expect(boundNode2.prop1).to.be.equal('one');
+        expect(boundNode2.prop2).to.be.equal('one');
 
-        node.dispatchEvent('custom-event', {value: 'hello'});
-        expect(node._onCustomEventCounter).to.equal(1);
-        expect(node._onCustomEven.path[0]).to.equal(node);
-        expect(node._onCustomEven.detail.value).to.equal('hello');
+        boundNode1.prop1 = 'two';
+        expect(node.prop1).to.be.equal('two');
+        expect(boundNode2.prop1).to.be.equal('two');
+
+        expect(binding.targets.length).to.be.equal(2);
+
+        boundNode1.dispose();
+        expect(binding.targets.length).to.be.equal(1);
+
+        boundNode2.dispose();
+        expect(binding.targets.length).to.be.equal(0);
+
+        node.dispose();
       });
-      describe('Binding', () => {
-        it('should correctly bind properties', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: String,
-                prop2: String,
-              };
-            }
+      it('Should add/remove targets and targetProperties when assigned to values', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: String,
+              prop2: String,
+            };
           }
+        }
 
-          const node = new TestNode();
+        const srcNode = new TestNode();
+        const binding0 = new Binding(srcNode, 'prop1');
+        const binding1 = new Binding(srcNode, 'prop2');
 
-          const binding = node.bind('prop1');
-          expect(binding).to.be.instanceof(Binding);
-          expect(binding.node).to.be.equal(node);
-          expect(binding.property).to.be.equal('prop1');
+        const dstNode0 = new TestNode();
+        dstNode0.prop1 = binding0;
+        dstNode0.prop2 = binding1;
 
-          const boundNode1 = new TestNode({prop1: binding});
-          const boundNode2 = new TestNode({prop1: binding});
-          boundNode2.prop2 = binding;
+        const dstNode1 = new TestNode({prop1: binding0});
+        const dstNode3 = new TestNode({prop1: binding0, prop2: binding0});
 
-          expect(binding.targets[0]).to.be.equal(boundNode1);
-          expect(binding.targets[1]).to.be.equal(boundNode2);
-          expect(binding.targetProperties.get(boundNode1)![0]).to.be.equal('prop1');
-          expect(binding.targetProperties.get(boundNode1)![1]).to.be.equal(undefined);
-          expect(binding.targetProperties.get(boundNode2)![0]).to.be.equal('prop1');
-          expect(binding.targetProperties.get(boundNode2)![1]).to.be.equal('prop2');
+        expect(binding0.targets[0]).to.be.equal(dstNode0);
+        expect(binding0.targets[1]).to.be.equal(dstNode1);
+        expect(binding0.targets[2]).to.be.equal(dstNode3);
 
-          node.prop1 = 'one';
-          expect(boundNode1.prop1).to.be.equal('one');
-          expect(boundNode1.prop2).to.be.equal('');
-          expect(boundNode2.prop1).to.be.equal('one');
-          expect(boundNode2.prop2).to.be.equal('one');
+        expect(binding0.targetProperties.get(dstNode0)).to.be.eql(['prop1']);
+        expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop1']);
+        expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop1', 'prop2']);
 
-          boundNode1.prop1 = 'two';
-          expect(node.prop1).to.be.equal('two');
-          expect(boundNode2.prop1).to.be.equal('two');
+        dstNode0.dispose();
+        dstNode1.unbind('prop1');
+        dstNode3.unbind('prop1');
 
-          expect(binding.targets.length).to.be.equal(2);
+        expect(binding0.targetProperties.get(dstNode0)).to.be.eql([]);
+        expect(binding0.targetProperties.get(dstNode1)).to.be.eql([]);
+        expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2']);
 
-          boundNode1.dispose();
-          expect(binding.targets.length).to.be.equal(1);
+        dstNode1.prop2 = binding0;
+        dstNode1.prop1 = binding0;
 
-          boundNode2.dispose();
-          expect(binding.targets.length).to.be.equal(0);
+        dstNode3.prop1 = binding0;
 
-          node.dispose();
-        });
-        it('Should add/remove targets and targetProperties when assigned to values', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: String,
-                prop2: String,
-              };
-            }
+        expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop2', 'prop1']);
+        expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2', 'prop1']);
+      });
+      it('Should return existing binding or create a new on "bind()"', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: String,
+              prop2: String,
+            };
           }
-
-          const srcNode = new TestNode();
-          const binding0 = new Binding(srcNode, 'prop1');
-          const binding1 = new Binding(srcNode, 'prop2');
-
-          const dstNode0 = new TestNode();
-          dstNode0.prop1 = binding0;
-          dstNode0.prop2 = binding1;
-
-          const dstNode1 = new TestNode({prop1: binding0});
-          const dstNode3 = new TestNode({prop1: binding0, prop2: binding0});
-
-          expect(binding0.targets[0]).to.be.equal(dstNode0);
-          expect(binding0.targets[1]).to.be.equal(dstNode1);
-          expect(binding0.targets[2]).to.be.equal(dstNode3);
-
-          expect(binding0.targetProperties.get(dstNode0)).to.be.eql(['prop1']);
-          expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop1']);
-          expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop1', 'prop2']);
-
-          dstNode0.dispose();
-          dstNode1.unbind('prop1');
-          dstNode3.unbind('prop1');
-
-          expect(binding0.targetProperties.get(dstNode0)).to.be.eql([]);
-          expect(binding0.targetProperties.get(dstNode1)).to.be.eql([]);
-          expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2']);
-
-          dstNode1.prop2 = binding0;
-          dstNode1.prop1 = binding0;
-
-          dstNode3.prop1 = binding0;
-
-          expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop2', 'prop1']);
-          expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2', 'prop1']);
-        });
-        it('Should return existing binding or create a new on "bind()"', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: String,
-                prop2: String,
-              };
-            }
+        }
+        const node = new TestNode();
+        const binding0 = node.bind('prop1');
+        expect(binding0).to.be.equal(node._bindings.get('prop1'));
+        expect(binding0).to.be.equal(node.bind('prop1'));
+      });
+      it('Should dispose bindings correctly', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: String,
+              prop2: String,
+            };
           }
-          const node = new TestNode();
-          const binding0 = node.bind('prop1');
-          expect(binding0).to.be.equal(node._bindings.get('prop1'));
-          expect(binding0).to.be.equal(node.bind('prop1'));
-        });
-        it('Should dispose bindings correctly', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: String,
-                prop2: String,
-              };
-            }
-          }
-          const node1 = new TestNode();
-          const binding0 = node1.bind('prop1');
-          node1.unbind('prop1');
-          expect(node1._bindings.get('prop1')).to.be.equal(undefined);
-          expect(binding0.node).to.be.equal(undefined);
+        }
+        const node1 = new TestNode();
+        const binding0 = node1.bind('prop1');
+        node1.unbind('prop1');
+        expect(node1._bindings.get('prop1')).to.be.equal(undefined);
+        expect(binding0.node).to.be.equal(undefined);
 
-          const node2 = new TestNode();
-          const binding1 = node2.bind('prop1');
-          node2.dispose();
-          expect(node2._bindings).to.be.equal(undefined);
-          expect(binding1.node).to.be.equal(undefined);
-          expect(binding1.property).to.be.equal(undefined);
-          expect(binding1.targets).to.be.equal(undefined);
-          expect(binding1.targetProperties).to.be.equal(undefined);
-        });
+        const node2 = new TestNode();
+        const binding1 = node2.bind('prop1');
+        node2.dispose();
+        expect(node2._bindings).to.be.equal(undefined);
+        expect(binding1.node).to.be.equal(undefined);
+        expect(binding1.property).to.be.equal(undefined);
+        expect(binding1.targets).to.be.equal(undefined);
+        expect(binding1.targetProperties).to.be.equal(undefined);
       });
     });
   }

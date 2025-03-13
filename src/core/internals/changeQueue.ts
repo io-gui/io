@@ -90,8 +90,6 @@ export class ChangeQueue {
     if (this.hasChanged) {
       this.node.changed();
       this.node.dispatchEvent('changed');
-      // TODO: emit from node only if it is assigned as observed property
-      this.node.dispatchEvent('object-mutated', {object: this.node}, false, window);
     }
     this.dispatching = false;
   }

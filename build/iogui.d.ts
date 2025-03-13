@@ -41,7 +41,7 @@ export declare class Binding {
 	get value(): any;
 	/**
 	 * Returns a JSON representation of the binding.
-	 * This is required for `protoChain` serializeProperties() to work more accurately.
+	 * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
 	 * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
 	 * @return {string} JSON representation of the binding.
 	 */
@@ -92,7 +92,13 @@ export declare class Binding {
 	dispose(): void;
 }
 /**
- * Declares default value, type and reactive behavior of the property.
+ * Configuration for a property of an IoNode class.
+ * @typedef {Object} PropertyDefinition
+ * @property {*} [value] The property's value. Can be any type unless `type` is specified.
+ * @property {Constructor} [type] Constructor function defining the property's type.
+ * @property {Binding} [binding] Binding object for two-way data synchronization.
+ * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
+ * @property {*} [init] Initialization arguments for constructing initial value.
  */
 type PropertyDefinition$1 = {
 	value?: any;
@@ -102,11 +108,19 @@ type PropertyDefinition$1 = {
 	init?: any;
 };
 /**
- * Allows loose definition of properties by specifying only partial definitions such as default value or type.
+ * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
 export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition$1;
 /**
- * Finalized property definition created from property definition.
+ * Instantiates a property definition object from a loosely or strongly typed property definition.
+ * It facilitates merging of inherited property definitions from the prototype chain.
+ * @class
+ * @property {*} [value] The property's value. Can be any type.
+ * @property {Constructor} [type] Constructor function defining the property's type.
+ * @property {Binding} [binding] Binding object for two-way data synchronization.
+ * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
+ * @property {*} [init] Initialization arguments for constructing initial values.
  */
 export declare class ProtoProperty {
 	value?: any;
@@ -115,8 +129,18 @@ export declare class ProtoProperty {
 	reflect?: boolean;
 	init?: any;
 	/**
-	 * Takes a loosely typed property definition and returns full property definition with unscpecified fileds inferred.
-	 * @param {PropertyDefinitionLoose} def Loosely typed property definition
+	 * Creates a property definition from various input types.
+	 * @param {PropertyDefinitionLoose} def Input definition which can be:
+	 * - `undefined` or `null`: Sets as value
+	 * - `Constructor`: Sets as type
+	 * - `Binding`: Sets value from binding and stores binding reference
+	 * - `PropertyDefinition`: Copies all defined fields
+	 * - Other values: Sets as value
+	 * @example
+	 * new ProtoProperty(String) // {type: String}
+	 * new ProtoProperty('hello') // {value: 'hello'}
+	 * new ProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
+	 * new ProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
 	 */
 	constructor(def: PropertyDefinitionLoose);
 	/**
@@ -124,6 +148,14 @@ export declare class ProtoProperty {
 	 * @param {ProtoProperty} protoProp Source ProtoProperty
 	 */
 	assign(protoProp: ProtoProperty): void;
+	/**
+	 * Creates a serializable representation of the property definition.
+	 * Handles special cases for better JSON serialization:
+	 * - Converts object values to their constructor names
+	 * - Converts function types to their names
+	 * - Only includes defined fields
+	 * @returns {object} A plain object suitable for JSON serialization
+	 */
 	toJSON(): any;
 }
 /**
@@ -142,8 +174,6 @@ export declare class PropertyInstance {
 	 */
 	constructor(node: IoNode, propDef: ProtoProperty);
 }
-export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
-export declare const propertyDecorators: WeakMap<Constructor, PropertyDefinitions>;
 /**
  * Event listener types.
  */
@@ -281,6 +311,7 @@ type ProtoProperties = {
 type ProtoListeners = {
 	[property: string]: ListenerDefinition[];
 };
+export declare const propertyDecorators: WeakMap<Constructor, PropertyDefinitions>;
 /**
  * ProtoChain manages class inheritance metadata and configuration.
  *
@@ -337,14 +368,6 @@ export declare class ProtoChain {
 	 */
 	addStaticProperties(properties?: PropertyDefinitions, prevHash?: string): string;
 	/**
-	 * Serializes the properties object to a JSON string.
-	 * Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
-	 * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
-	 * Not a hash in the cryptographic sense but serves the purpose.
-	 * @returns {string} - Serialized properties
-	 */
-	serializeProperties(properties: PropertyDefinitions): string;
-	/**
 	 * Merges or appends a listener definitions to the existing listeners array.
 	 * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
 	 */
@@ -378,6 +401,7 @@ export declare class ProtoChain {
 	autobindHandlers(node: IoNode): void;
 }
 export type Constructor = new (...args: any[]) => unknown;
+export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 export interface IoNodeConstructor<T> {
 	new (...args: any[]): T;
@@ -388,7 +412,7 @@ export interface IoNodeConstructor<T> {
 export type CallbackFunction = (arg?: any) => void;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type IoNodeArgs = {
-	lazy?: boolean;
+	reactivity?: "none" | "immediate" | "debounced";
 	[key: prefix<string, "@">]: string | ((event: CustomEvent<any>) => void);
 };
 /**
@@ -405,18 +429,18 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
-		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
-		 * @param {string} name Property name to set value of.
-		 * @param {any} value Peroperty value.
-		 * @param {boolean} [lazyDispatch] flag to skip event dispatch.
-		 */
-		setProperty(name: string, value: any, lazyDispatch?: boolean): void;
-		/**
 		 * Sets multiple properties in batch.
 		 * [property]-changed` events will be broadcast in the end.
 		 * @param {Object} props - Map of property names and values.
 		 */
 		applyProperties(props: any): void;
+		/**
+		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+		 * @param {string} name Property name to set value of.
+		 * @param {any} value Peroperty value.
+		 * @param {boolean} [debounce] flag to skip event dispatch.
+		 */
+		setProperty(name: string, value: any, debounce?: boolean): void;
 		/**
 		 * Sets multiple properties in batch.
 		 * [property]-changed` events will be broadcast in the end.
@@ -443,16 +467,29 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 */
 		queue(prop: string, value: any, oldValue: any): void;
 		/**
-		 * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+		 * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
 		 */
-		dispatchQueue(lazy?: boolean): void;
+		dispatchQueue(debounce?: boolean): void;
 		/**
-		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+		 * Throttles function execution once per frame (rAF).
 		 * @param {function} func - Function to throttle.
 		 * @param {*} arg - argument for throttled function.
+		 */
+		throttle(func: CallbackFunction, arg?: any): void;
+		/**
+		 * Debounces function execution to next frame (rAF).
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for debounced function.
 		 * @param {number} timeout - minimum delay in ms before executing the function.
 		 */
-		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
+		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+		/**
+		 * Event handler for '[property]-changed' events emitted from the properties which are IoNode instances.
+		 * This is used to propagate 'object-mutated' event from the parent node.
+		 * @param {Object} event - Event payload.
+		 * @param {IoNode} event.detail.object - Mutated node.
+		 */
+		onIoNodePropertyChanged: (event: CustomEvent) => void;
 		/**
 		 * Event handler for 'object-mutated' event emitted from the `window`.
 		 * Node should be listening for this event if it has an observed object property
@@ -499,11 +536,6 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
 		 */
 		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-		/**
-		 * Shorthand for dispatching `'object-mutated'` event on window.
-		 * @param {any} object - object which mutated.
-		 */
-		dispatchMutationEvent(object: any): void;
 		/**
 		 * Disposes all internals.
 		 * Use this when instance is no longer needed.
@@ -523,18 +555,18 @@ declare const IoNode_base: {
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
-		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
-		 * @param {string} name Property name to set value of.
-		 * @param {any} value Peroperty value.
-		 * @param {boolean} [lazyDispatch] flag to skip event dispatch.
-		 */
-		setProperty(name: string, value: any, lazyDispatch?: boolean): void;
-		/**
 		 * Sets multiple properties in batch.
 		 * [property]-changed` events will be broadcast in the end.
 		 * @param {Object} props - Map of property names and values.
 		 */
 		applyProperties(props: any): void;
+		/**
+		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+		 * @param {string} name Property name to set value of.
+		 * @param {any} value Peroperty value.
+		 * @param {boolean} [debounce] flag to skip event dispatch.
+		 */
+		setProperty(name: string, value: any, debounce?: boolean): void;
 		/**
 		 * Sets multiple properties in batch.
 		 * [property]-changed` events will be broadcast in the end.
@@ -561,16 +593,29 @@ declare const IoNode_base: {
 		 */
 		queue(prop: string, value: any, oldValue: any): void;
 		/**
-		 * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+		 * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
 		 */
-		dispatchQueue(lazy?: boolean): void;
+		dispatchQueue(debounce?: boolean): void;
 		/**
-		 * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+		 * Throttles function execution once per frame (rAF).
 		 * @param {function} func - Function to throttle.
 		 * @param {*} arg - argument for throttled function.
+		 */
+		throttle(func: CallbackFunction, arg?: any): void;
+		/**
+		 * Debounces function execution to next frame (rAF).
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for debounced function.
 		 * @param {number} timeout - minimum delay in ms before executing the function.
 		 */
-		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
+		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+		/**
+		 * Event handler for '[property]-changed' events emitted from the properties which are IoNode instances.
+		 * This is used to propagate 'object-mutated' event from the parent node.
+		 * @param {Object} event - Event payload.
+		 * @param {IoNode} event.detail.object - Mutated node.
+		 */
+		onIoNodePropertyChanged: (event: CustomEvent) => void;
 		/**
 		 * Event handler for 'object-mutated' event emitted from the `window`.
 		 * Node should be listening for this event if it has an observed object property
@@ -617,11 +662,6 @@ declare const IoNode_base: {
 		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
 		 */
 		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-		/**
-		 * Shorthand for dispatching `'object-mutated'` event on window.
-		 * @param {any} object - object which mutated.
-		 */
-		dispatchMutationEvent(object: any): void;
 		/**
 		 * Disposes all internals.
 		 * Use this when instance is no longer needed.
@@ -646,9 +686,6 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, "target"> {
 	readonly target: IoNode;
 	readonly detail: Change;
 	readonly path: IoNode[];
-}
-export declare class MutationEvent extends CustomEvent<Object> {
-	constructor(object: Object);
 }
 /**
  * A queue system for managing and batching property changes in `IoNode` and `IoElement` nodes.
@@ -768,15 +805,17 @@ declare const IoElement_base: {
 		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
-		setProperty(name: string, value: any, lazyDispatch?: boolean): void;
 		applyProperties(props: any): void;
+		setProperty(name: string, value: any, debounce?: boolean): void;
 		setProperties(props: any): void;
 		inputValue(value: any): void;
 		changed(): void;
 		init(): void;
 		queue(prop: string, value: any, oldValue: any): void;
-		dispatchQueue(lazy?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
+		dispatchQueue(debounce?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any): void;
+		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+		onIoNodePropertyChanged: (event: CustomEvent) => void;
 		onObjectMutated: (event: CustomEvent) => void;
 		objectMutated: (prop: string) => void;
 		bind(prop: string): Binding;
@@ -784,7 +823,6 @@ declare const IoElement_base: {
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
 		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-		dispatchMutationEvent(object: any): void;
 		dispose(): void;
 		Register(ioNodeConstructor: typeof IoNode): void;
 	};
@@ -815,6 +853,7 @@ export declare class IoElement extends IoElement_base {
 	* Removes resize listener if `onResized()` is defined in subclass.
 	*/
 	disconnectedCallback(): void;
+	setProperty(name: string, value: any, debounce?: boolean): void;
 	/**
 	 * Renders DOM from virtual DOM arrays.
 	 * @param {Array} vDOM - Array of vDOM children.
@@ -907,7 +946,7 @@ declare class IoTheme extends IoElement {
 	static get Properties(): PropertyDefinitions;
 	themes: Record<string, Theme>;
 	themeID: string;
-	lazy: boolean;
+	reactivity: string;
 	init(): void;
 	registerTheme(themeID: string, theme: Theme): void;
 	_toCss(rgba: Color): string;
@@ -954,6 +993,7 @@ export declare class IoGl extends IoElement {
 	];
 	pxRatio: number;
 	theme: typeof IoThemeSingleton;
+	reactivity: string;
 	_needsResize: boolean;
 	_canvas: HTMLCanvasElement;
 	_ctx: CanvasRenderingContext2D;
@@ -1051,15 +1091,17 @@ declare const MenuOptions_base: {
 		readonly _bindings: Map<string, Binding>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
-		setProperty(name: string, value: any, lazyDispatch?: boolean): void;
 		applyProperties(props: any): void;
+		setProperty(name: string, value: any, debounce?: boolean): void;
 		setProperties(props: any): void;
 		inputValue(value: any): void;
 		changed(): void;
 		init(): void;
 		queue(prop: string, value: any, oldValue: any): void;
-		dispatchQueue(lazy?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
+		dispatchQueue(debounce?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any): void;
+		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+		onIoNodePropertyChanged: (event: CustomEvent) => void;
 		onObjectMutated: (event: CustomEvent) => void;
 		objectMutated: (prop: string) => void;
 		bind(prop: string): Binding;
@@ -1067,7 +1109,6 @@ declare const MenuOptions_base: {
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
 		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-		dispatchMutationEvent(object: any): void;
 		dispose(): void;
 		Register(ioNodeConstructor: typeof IoNode): void;
 	};
@@ -1417,7 +1458,6 @@ export declare class IoSliderBase extends IoGl {
 	noscroll: boolean;
 	role: string;
 	tabindex: string;
-	lazy: boolean;
 	_startX: number;
 	_startY: number;
 	_active: number;
