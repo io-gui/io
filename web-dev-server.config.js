@@ -3,8 +3,13 @@ import { importMapsPlugin } from '@web/dev-server-import-maps';
 
 export default {
   nodeResolve: true,
+  open: true,
   plugins: [
-    esbuildPlugin({ts: true}),
+    esbuildPlugin({
+      ts: true,
+      target: 'esnext',
+      tsconfig: './tsconfig.json',
+    }),
     importMapsPlugin()
   ]
 }

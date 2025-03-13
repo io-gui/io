@@ -21,7 +21,7 @@ export type CallbackFunction = (arg?: any) => void;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
 export type IoNodeArgs = {
-  reactivity?: 'none' | 'immediate' | 'debounced' | 'throttled';
+  reactivity?: 'none' | 'immediate' | 'debounced';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void)
 }
 
@@ -35,7 +35,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     static get Properties(): PropertyDefinitions {
       return {
         reactivity: {
-          value: 'throttled',
+          value: 'immediate',
           type: String,
         }
       };
@@ -210,7 +210,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         this.setProperty(p, props[p], true);
       }
-
       this.dispatchQueue();
     }
     /**
@@ -238,27 +237,37 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {*} oldValue - Old property value.
      */
     queue(prop: string, value: any, oldValue: any) {
+      if (this.reactivity === 'none') return;
       this._changeQueue.queue(prop, value, oldValue);
     }
     /**
      * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
      */
     dispatchQueue(debounce = false) {
-      if (this.reactivity === 'debounced' || debounce) {
-        this.throttle(this._changeQueue.dispatch);
-      } else if (this._changeQueue.dispatching) {
-        this.throttle(this._changeQueue.dispatch);
-      } else {
+      if (this.reactivity === 'debounced' || debounce || this._changeQueue.dispatching) {
+        this.debounce(this._changeQueue.dispatch);
+      } else if (this.reactivity === 'immediate') {
         this._changeQueue.dispatch();
+      }
+      debug: if (['none', 'immediate', 'debounced'].indexOf(this.reactivity) === -1) {
+        console.warn(`IoNode.dispatchQueue(): Invalid reactivity property value: "${this.reactivity}". Expected one of: "none", "immediate", "debounced".`);
       }
     }
     /**
-     * Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+     * Throttles function execution once per frame (rAF).
      * @param {function} func - Function to throttle.
      * @param {*} arg - argument for throttled function.
+     */
+    throttle(func: CallbackFunction, arg: any = undefined) {
+      throttle(this, func, arg, 0);
+    }
+    /**
+     * Debounces function execution to next frame (rAF).
+     * @param {function} func - Function to throttle.
+     * @param {*} arg - argument for debounced function.
      * @param {number} timeout - minimum delay in ms before executing the function.
      */
-    throttle(func: CallbackFunction, arg: any = undefined, timeout = 1) {
+    debounce(func: CallbackFunction, arg: any = undefined, timeout = 1) {
       throttle(this, func, arg, timeout);
     }
     /**
@@ -272,7 +281,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         const prop = this._protochain.mutationObservedProperties[i];
         const value = this._properties.get(prop)!.value;
         if (value === event.detail.object) {
-          this.throttle(this.objectMutated, prop, 0);
+          this.throttle(this.objectMutated, prop);
           return;
         }
         debug: if (event.detail.objects) {

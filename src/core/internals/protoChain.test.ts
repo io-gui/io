@@ -147,14 +147,14 @@ export default class {
         let protoChain = new ProtoChain(IoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          reactivity:{value: 'throttled', type: String, binding: undefined, reflect: undefined, init: undefined},
+          reactivity:{value: 'immediate', type: String, binding: undefined, reflect: undefined, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: false},
           prop2:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: undefined},
         });
         protoChain = new ProtoChain(IoNode3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
         expect(protoChain.properties).to.be.eql({
-          reactivity:{value: 'throttled', type: String, binding: undefined, reflect: undefined, init: undefined},
+          reactivity:{value: 'immediate', type: String, binding: undefined, reflect: undefined, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reflect: true, init: true},
           prop2:{value: 'foo', type: Object, binding: undefined, reflect: false, init: undefined},
           prop3:{value: undefined, type: undefined, binding: undefined, reflect: true, init: undefined},
@@ -164,7 +164,7 @@ export default class {
         const protoChain = new ProtoChain(IoNode4);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          reactivity:{value: 'throttled', type: String, binding: undefined, reflect: undefined, init: undefined},
+          reactivity:{value: 'immediate', type: String, binding: undefined, reflect: undefined, init: undefined},
           prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: true},
           prop2:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: undefined},
         });
