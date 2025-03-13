@@ -75,6 +75,9 @@ export class IoGl extends IoElement {
   @Property({type: IoElement, value: IoThemeSingleton})
   declare theme: typeof IoThemeSingleton;
 
+  @Property('debounced')
+  declare reactivity: string;
+
   _needsResize = false;
   _canvas: HTMLCanvasElement;
   _ctx: CanvasRenderingContext2D;

@@ -57,9 +57,6 @@ export class IoSliderBase extends IoGl {
   @Property('0')
   declare tabindex: string;
 
-  @Property(true)
-  declare lazy: boolean;
-
   _startX = 0;
   _startY = 0;
   _active = -1;

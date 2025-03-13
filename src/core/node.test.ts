@@ -184,8 +184,8 @@ export default class {
         const protoProps1 = node1._protochain.properties;
         const protoProps2 = node2._protochain.properties;
 
-        expect(Array.from(node1._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
-        expect(Array.from(node2._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
+        expect(Array.from(node1._properties.keys())).to.be.eql(['reactivity', 'prop1', 'prop2', 'prop3']);
+        expect(Array.from(node2._properties.keys())).to.be.eql(['reactivity', 'prop1', 'prop2', 'prop3']);
 
         expect(protoProps1.prop1.value).to.be.equal(0);
         expect(node1._properties.get('prop1')).to.be.eql({

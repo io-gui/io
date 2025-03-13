@@ -21,7 +21,7 @@ export type CallbackFunction = (arg?: any) => void;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
 export type IoNodeArgs = {
-  lazy?: boolean;
+  reactivity?: 'none' | 'immediate' | 'debounced' | 'throttled';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void)
 }
 
@@ -34,10 +34,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
   const IoNodeMixinConstructor = class extends (superclass as any) {
     static get Properties(): PropertyDefinitions {
       return {
-        lazy: {
-          value: false,
-          type: Boolean,
-          reflect: true
+        reactivity: {
+          value: 'throttled',
+          type: String,
         }
       };
     }
@@ -116,9 +115,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
      * @param {string} name Property name to set value of.
      * @param {any} value Peroperty value.
-     * @param {boolean} [lazyDispatch] flag to skip event dispatch.
+     * @param {boolean} [debounce] flag to skip event dispatch.
      */
-    setProperty(name: string, value: any, lazyDispatch = false) {
+    setProperty(name: string, value: any, debounce = false) {
       const prop = this._properties.get(name)!;
       const oldValue = prop.value;
 
@@ -173,7 +172,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
         if (oldValue !== value) {
           this.queue(name, value, oldValue);
-          this.dispatchQueue(lazyDispatch);
+          this.dispatchQueue(debounce);
         }
         if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
       }
@@ -242,10 +241,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._changeQueue.queue(prop, value, oldValue);
     }
     /**
-     * Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+     * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
      */
-    dispatchQueue(lazy = false) {
-      if (this.lazy || lazy) {
+    dispatchQueue(debounce = false) {
+      if (this.reactivity === 'debounced' || debounce) {
         this.throttle(this._changeQueue.dispatch);
       } else if (this._changeQueue.dispatching) {
         this.throttle(this._changeQueue.dispatch);

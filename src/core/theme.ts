@@ -232,8 +232,8 @@ class IoTheme extends IoElement {
   @Property({type: String, binding: $ThemeID})
   declare themeID: string;
 
-  @Property({type: Boolean, value: true})
-  declare lazy: boolean;
+  @Property('debounced')
+  declare reactivity: string;
 
   init() {
     // this.changed = this.changed.bind(this);

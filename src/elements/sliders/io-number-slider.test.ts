@@ -1,11 +1,19 @@
 import { IoNumberSlider } from '../../iogui.js';
 import { expect } from 'chai';
+
+async function nextTick(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(()=>{
+      resolve();
+    });
+  });
+}
+
 export default class {
   element = new IoNumberSlider();
   constructor() {
     this.element.style.display = 'none';
     document.body.appendChild(this.element as unknown as HTMLElement);
-    this.element.$.slider.lazy = false;
   }
   reset() {
     this.element.value = 0;
@@ -24,16 +32,21 @@ export default class {
         });
       });
       describe('innerText', () => {
-        it('matches values', () => {
+        it('matches values', async () => {
           this.element.value = 0;
+          await nextTick();
           expect(this.element.$.number.innerText).to.equal('0');
           this.element.value = 1;
+          await nextTick();
           expect(this.element.$.number.innerText).to.equal('1');
           this.element.value = 0.1;
+          await nextTick();
           expect(this.element.$.number.innerText).to.equal('0.1');
           this.element.value = 0.01;
+          await nextTick();
           expect(this.element.$.number.innerText).to.equal('0.01');
           this.element.value = 0.001;
+          await nextTick();
           expect(this.element.$.number.innerText).to.equal('0');
         });
       });
@@ -47,13 +60,16 @@ export default class {
           expect(this.element.$.number.getAttribute('contenteditable')).to.equal('');
           expect(this.element.$.slider.getAttribute('contenteditable')).to.equal(null);
         });
-        it('has a11y attributes', () => {
+        it('has a11y attributes', async () => {
           expect(this.element.$.slider.getAttribute('role')).to.equal('slider');
           this.element.value = 0.1;
+          await nextTick();
           expect(this.element.$.slider.getAttribute('aria-valuenow')).to.equal('0.1');
           this.element.min = 0;
+          await nextTick();
           expect(this.element.$.slider.getAttribute('aria-valuemin')).to.equal('0');
           this.element.max = 1;
+          await nextTick();
           expect(this.element.$.slider.getAttribute('aria-valuemax')).to.equal('1');
           this.reset();
         });

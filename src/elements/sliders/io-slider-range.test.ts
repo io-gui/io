@@ -1,11 +1,19 @@
 import {IoSliderRange} from '../../iogui.js';
 import { expect } from 'chai';
+
+async function nextTick(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(()=>{
+      resolve();
+    });
+  });
+}
+
 export default class {
   element = new IoSliderRange({value: [0, 0]});
   constructor() {
     this.element.style.display = 'none';
     document.body.appendChild(this.element as unknown as HTMLElement);
-    this.element.lazy = false;
   }
   reset() {
     this.element.value = [0, 1];
@@ -32,11 +40,13 @@ export default class {
         it('has contenteditable attribute on number field', () => {
           expect(this.element.getAttribute('contenteditable')).to.equal(null);
         });
-        it('has a11y attributes', () => {
+        it('has a11y attributes', async () => {
           this.reset();
           expect(this.element.getAttribute('role')).to.equal('slider');
+          await nextTick();
           this.element.min = 0;
           expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
+          await nextTick();
           this.element.max = 1;
           expect(this.element.getAttribute('aria-valuemax')).to.equal('1');
         });
