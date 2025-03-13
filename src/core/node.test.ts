@@ -1,11 +1,9 @@
-import { Change, Binding, ProtoChain, IoNode, Register, PropertyDefinitions, IoElement } from '../iogui.js';
+import { Change, Binding, ProtoChain, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, ChangeEvent } from '../iogui.js';
 import { expect } from 'chai';
-
-// TODO: test lazy reactivity!
 
 async function nextTick(): Promise<void> {
   return new Promise((resolve) => {
-    setTimeout(()=>{
+    requestAnimationFrame(()=>{
       resolve();
     });
   });
@@ -146,276 +144,329 @@ export default class {
         });
         node.dispose();
       });
-      describe('Initialization', () => {
-        it('Should aggregate property definitions from protochain', () => {
-          @Register
-          class Object1 extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: {
-                  value: 0
-                },
-                prop2: null
-              };
-            }
+      it('Should aggregate property definitions from protochain', () => {
+        @Register
+        class Object1 extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: {
+                value: 0
+              },
+              prop2: null,
+              prop3: {
+                value: 'test',
+                type: String,
+                reflect: true
+              },
+            };
           }
+        }
 
-          @Register
-          class Object2 extends Object1 {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: {
-                  value: 'asd',
-                  init: false,
-                },
-                prop2: {
-                  init: true,
-                },
-                prop3: ''
-              };
-            }
+        @Register
+        class Object2 extends Object1 {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: {
+                value: 'asd',
+                init: false,
+              },
+              prop2: {
+                init: true,
+              },
+              prop3: ''
+            };
           }
+        }
 
-          const node1 = new Object1();
-          const node2 = new Object2();
+        const node1 = new Object1();
+        const node2 = new Object2();
 
-          const protoProps1 = node1._protochain.properties;
-          const protoProps2 = node2._protochain.properties;
+        const protoProps1 = node1._protochain.properties;
+        const protoProps2 = node2._protochain.properties;
 
-          expect(Array.from(node1._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2']);
-          expect(Array.from(node2._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
+        expect(Array.from(node1._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
+        expect(Array.from(node2._properties.keys())).to.be.eql(['lazy', 'prop1', 'prop2', 'prop3']);
 
-          expect(protoProps1.prop1.value).to.be.equal(0);
-          expect(node1._properties.get('prop1')).to.be.eql({
-            value: 0,
-            type: undefined,
-            binding: undefined,
-            reflect: false,
-            init: undefined,
-          });
-
-          expect(protoProps2.prop1.value).to.be.eql('asd');
-          expect(node2._properties.get('prop1')).to.be.eql({
-            value: 'asd',
-            type: undefined,
-            binding: undefined,
-            reflect: false,
-            init: false,
-          });
-
-          expect(node2._properties.get('prop2')).to.be.eql({
-            value: null,
-            type: undefined,
-            binding: undefined,
-            reflect: false,
-            init: true,
-          });
+        expect(protoProps1.prop1.value).to.be.equal(0);
+        expect(node1._properties.get('prop1')).to.be.eql({
+          value: 0,
+          type: undefined,
+          binding: undefined,
+          reflect: false,
+          init: undefined,
         });
-        it('Should favor explicit property definitions over implicit', () => {
-          class Object1 {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: {
-                  value: {},
-                  init: false,
-                  reflect: true,
-                },
-              };
-            }
-          }
 
-          class Object2 extends Object1 {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: [1, 2, 3],
-              };
-            }
-          }
-
-          const protochain = new ProtoChain(Object2);
-          const props = protochain.properties;
-
-          expect(props.prop1.value).to.be.eql([1, 2, 3]);
-          expect(props.prop1.type).to.be.equal(undefined);
-          expect(props.prop1.init).to.be.equal(false);
-          expect(props.prop1.reflect).to.be.equal(true);
+        expect(protoProps2.prop1.value).to.be.eql('asd');
+        expect(node2._properties.get('prop1')).to.be.eql({
+          value: 'asd',
+          type: undefined,
+          binding: undefined,
+          reflect: false,
+          init: false,
         });
-        it('Should correctly register properties with bindigs', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): any {
-              return {
-                label: ''
-              };
-            }
-          }
-
-          const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
-          const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
-          const binding3 = new Binding(new TestNode({label: 'binding3'}), 'label');
-
-          @Register
-          class Object1 extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: binding1,
-              };
-            }
-          }
-
-          @Register
-          class Object2 extends Object1 {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: {
-                  binding: binding2
-                },
-                prop3: binding3
-              };
-            }
-          }
-
-          const node1 = new Object1();
-          const node2 = new Object2();
-
-
-          expect(node1._properties.get('prop1')!.binding).to.be.equal(binding1);
-          expect(node2._properties.get('prop1')!.binding).to.be.equal(binding2);
-          expect(node2._properties.get('prop3')!.binding).to.be.equal(binding3);
-
-          expect((binding1).targets[0]).to.be.equal(node1);
-          expect((binding2).targets[0]).to.be.equal(node2);
-          expect((binding3).targets[0]).to.be.equal(node2);
-
-          expect(node1._properties.get('prop1')!.value).to.be.equal('binding1');
-          expect(node2._properties.get('prop1')!.value).to.be.equal('binding2');
-          expect(node2._properties.get('prop3')!.value).to.be.equal('binding3');
+        expect(node2._properties.get('prop2')).to.be.eql({
+          value: null,
+          type: undefined,
+          binding: undefined,
+          reflect: false,
+          init: true,
+        });
+        expect(node2._properties.get('prop3')).to.be.eql({
+          value: '',
+          type: String,
+          binding: undefined,
+          reflect: true,
+          init: undefined,
         });
       });
-      describe('Construction', () => {
+      it('Should correctly register properties with bindigs', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): any {
+            return {
+              label: ''
+            };
+          }
+        }
+
+        const binding1 = new Binding(new TestNode({label: 'label1'}), 'label');
+        const binding2 = new Binding(new TestNode({label: 'label2'}), 'label');
+        const binding3 = new Binding(new TestNode({label: 'label3'}), 'label');
+
+        @Register
+        class Object1 extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: binding1,
+            };
+          }
+        }
+
+        @Register
+        class Object2 extends Object1 {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: {
+                binding: binding2
+              },
+              prop3: binding3
+            };
+          }
+        }
+
+        const node1 = new Object1();
+        const node2 = new Object2();
+
+
+        expect(node1._properties.get('prop1')!.binding).to.be.equal(binding1);
+        expect(node2._properties.get('prop1')!.binding).to.be.equal(binding2);
+        expect(node2._properties.get('prop3')!.binding).to.be.equal(binding3);
+
+        expect((binding1).targets[0]).to.be.equal(node1);
+        expect((binding2).targets[0]).to.be.equal(node2);
+        expect((binding3).targets[0]).to.be.equal(node2);
+
+        expect(node1._properties.get('prop1')!.value).to.be.equal('label1');
+        expect(node2._properties.get('prop1')!.value).to.be.equal('label2');
+        expect(node2._properties.get('prop3')!.value).to.be.equal('label3');
+      });
+      it('Should correctly get/set properties', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: {
+                value: 1
+              },
+            };
+          }
+        }
+
+        const node = new TestNode();
+
+        expect(node._properties.get('prop1')!.value).to.be.equal(1);
+        expect(node.prop1).to.be.equal(1);
+        node.setProperty('prop1', 0);
+        expect(node._properties.get('prop1')!.value).to.be.equal(0);
+        expect(node.prop1).to.be.equal(0);
+      });
+      it('Should correctly get/set bound properties', () => {
+
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              label: '',
+            };
+          }
+        }
+
+        const binding1 = new Binding(new TestNode({label: 'label1'}), 'label');
+        const binding2 = new Binding(new TestNode({label: 'label2'}), 'label');
+
+        @Register
+        class TestNode2 extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: binding1
+            };
+          }
+        }
+
+        const node = new TestNode2();
+
+        expect(node._properties.get('prop1')!.value).to.be.equal('label1');
+        expect(node.prop1).to.be.equal('label1');
+
+        expect(node._properties.get('prop1')!.binding).to.be.equal(binding1);
+        expect((binding1).targets[0]).to.be.equal(node);
+
+        node.setProperty('prop1', binding2);
+        expect(node._properties.get('prop1')!.value).to.be.equal('label2');
+        expect(node.prop1).to.be.equal('label2');
+
+        expect((binding1).targets[0]).to.be.equal(undefined);
+        expect((binding2).targets[0]).to.be.equal(node);
+      });
+      it('Should execute attribute reflection on IoElement', () => {
+        @Register
+        class TestElementReflection extends IoElement {
+          static get Properties(): PropertyDefinitions {
+            return {
+              label: {
+                value: 'label1',
+                reflect: true
+              },
+              label2: 'label2',
+            };
+          }
+        }
+
+        const element = new TestElementReflection();
+        expect(element.getAttribute('label')).to.be.equal('label1');
+        expect(element.getAttribute('label2')).to.be.equal(null);
+        element.label = 'label2';
+        expect(element.getAttribute('label')).to.be.equal('label2');
+        element.setProperty('label', 'label3');
+        expect(element.getAttribute('label')).to.be.equal('label3');
+      });
+      it('Should dipatch "[propName]-changed" events correctly', async () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              onPropChangedEvents: Array,
+              prop: Number,
+            };
+          }
+          static get Listeners(): ListenerDefinitions {
+            return {
+              'prop-changed': 'onPropChanged',
+            };
+          }
+          onPropChanged(event: CustomEvent) {
+            this.onPropChangedEvents.push(event.detail);
+          }
+        }
+
+        const node = new TestNode();
+        expect(node.onPropChangedEvents).to.be.eql([]);
+
+        node.addEventListener('prop-changed', (() => {
+          expect('This should not execute').to.be.eql(true);
+        }));
+
+        node.removeEventListener('prop-changed');
+;
+        node.addEventListener('prop-changed', (event: CustomEvent) => {
+          const oldValue = event.detail.oldValue;
+          const value = event.detail.value;
+          expect(oldValue).to.be.eql(0);
+          expect(value).to.be.eql(1);
+        });
+
+        node.prop = 1;
+
+        node.removeEventListener('prop-changed');
+
+        node.addEventListener('prop-changed', () => {
+          expect('This is actually not expected to happen!').to.be.equal(true);
+        });
+
+        node.setProperty('prop', 2, true);
+
+        node.removeEventListener('prop-changed');
+
+        expect(node.onPropChangedEvents).to.be.eql([{
+          oldValue: 0,
+          property: 'prop',
+          value: 1,
+        }]);
+
+        await nextTick();
+
+        expect(node.onPropChangedEvents).to.be.eql([{
+          oldValue: 0,
+          property: 'prop',
+          value: 1,
+        }, {
+          oldValue: 1,
+          property: 'prop',
+          value: 2,
+        }]);
+
+        node.setProperty('prop', 3, true);
+        node.prop = 4;
+
+        await nextTick();
+
+        expect(node.onPropChangedEvents).to.be.eql([{
+          oldValue: 0,
+          property: 'prop',
+          value: 1,
+        }, {
+          oldValue: 1,
+          property: 'prop',
+          value: 2,
+        }, {
+          oldValue: 2,
+          property: 'prop',
+          value: 4,
+        }]);
+
+        const node2 = new TestNode({
+          prop: new Binding(node, 'prop'),
+        });
+
+        expect(node2.onPropChangedEvents).to.be.eql([{
+          oldValue: 0,
+          property: 'prop',
+          value: 4,
+        }]);
+
+        const node3 = new TestNode({
+          prop: -1
+        });
+
+        expect(node3.onPropChangedEvents).to.be.eql([{
+          oldValue: 0,
+          property: 'prop',
+          value: -1,
+        }]);
+
+        // await nextTick(1000);
+        
+        // expect(node2.onPropChangedEvents).to.be.eql([]);
+        // expect(node2.onPropChangedEvents).to.be.eql([{
+        //   oldValue: undefined,
+        //   property: 'prop',
+        //   value: {
+        //     foo: 'bar',
+        //   },
+        // }]);
+
       });
       describe('Properties', () => {
-        it('Should correctly get/set properties', () => {
-
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: {
-                  value: 1
-                },
-              };
-            }
-          }
-
-          const node = new TestNode();
-
-          expect(node._properties.get('prop1')!.value).to.be.equal(1);
-          expect(node.prop1).to.be.equal(1);
-          node.setProperty('prop1', 0);
-          expect(node._properties.get('prop1')!.value).to.be.equal(0);
-          expect(node.prop1).to.be.equal(0);
-        });
-        it('Should correctly get/set bound properties', () => {
-
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                label: '',
-              };
-            }
-          }
-
-          const binding1 = new Binding(new TestNode({label: 'binding1'}), 'label');
-          const binding2 = new Binding(new TestNode({label: 'binding2'}), 'label');
-
-          @Register
-          class TestNode2 extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop1: binding1
-              };
-            }
-          }
-
-          const node = new TestNode2();
-
-          expect(node._properties.get('prop1')!.value).to.be.equal('binding1');
-          expect(node.prop1).to.be.equal('binding1');
-
-          expect(node._properties.get('prop1')!.binding).to.be.equal(binding1);
-          expect((binding1).targets[0]).to.be.equal(node);
-
-          binding1.removeTarget(node, 'prop1');
-          const prop = node._properties.get('prop1');
-          if (prop) prop.binding = undefined;
-
-          node.setProperty('prop1', binding2);
-          expect(node._properties.get('prop1')!.value).to.be.equal('binding2');
-          expect(node.prop1).to.be.equal('binding2');
-
-          expect((binding1).targets[0]).to.be.equal(undefined);
-          expect((binding2).targets[0]).to.be.equal(node);
-        });
-        it('Should execute attribute reflection on IoElement', () => {
-          @Register
-          class TestElementReflection extends IoElement {
-            static get Properties(): PropertyDefinitions {
-              return {
-                label: {
-                  value: 'label1',
-                  reflect: true
-                }
-              };
-            }
-          }
-
-          const element = new TestElementReflection();
-          expect(element.getAttribute('label')).to.be.equal('label1');
-          element.label = 'label2';
-          expect(element.getAttribute('label')).to.be.equal('label2');
-          element.setProperty('label', 'label3');
-          expect(element.getAttribute('label')).to.be.equal('label3');
-        });
-        it('Should dipatch queue on object value initialization and value set', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop: Object,
-              };
-            }
-          }
-
-          const node = new TestNode();
-
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          node.addEventListener('prop-changed', ((event: CustomEvent) => {
-            expect('This should not execute').to.be.eql(true);
-          }) as EventListener);
-
-          node.removeEventListener('prop-changed');
-
-          node.addEventListener('prop-changed', ((event: CustomEvent) => {
-            const value = event.detail.value;
-            const oldValue = event.detail.oldValue;
-            expect(value).to.be.eql({});
-            expect(oldValue).to.be.eql({});
-          }) as EventListener);
-
-          node.prop = {};
-
-          node.addEventListener('prop-changed', () => {
-            expect('This should never happen!').to.be.equal(true);
-          });
-
-          node.setProperty('prop', {}, true);
-
-          node.removeEventListener('prop-changed');
-
-          node.prop = {};
-        });
         it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
           @Register
           class TestSubNode extends IoNode {

@@ -186,12 +186,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     applyProperties(props: any) {
       for (const p in props) {
         if (!this._properties.has(p)) {
-          debug: {
-            // TODO: consider converting style and config to properties
-            // TODO: document!
-            if (!p.startsWith('@') && p !== 'style' && p !== 'config' && p !== '$') {
-              console.warn(`Property "${p}" is not defined`, this);
-            }
+          // TODO: consider converting style and config to properties
+          // TODO: document!
+          debug: if (!p.startsWith('@') && p !== 'style' && p !== 'config' && p !== '$') {
+            console.warn(`Property "${p}" is not defined`, this);
           }
           continue;
         }
@@ -208,9 +206,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     setProperties(props: any) {
       for (const p in props) {
         if (!this._properties.has(p)) {
-          debug: {
-            console.warn(`Property "${p}" is not defined`, this);
-          }
+          debug: console.warn(`Property "${p}" is not defined`, this);
           continue;
         }
         this.setProperty(p, props[p], true);
@@ -280,11 +276,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           this.throttle(this.objectMutated, prop, 0);
           return;
         }
-        debug: {
-          if (event.detail.objects) {
-            console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
-            return;
-          }
+        debug: if (event.detail.objects) {
+          console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
         }
       }
     };
@@ -305,10 +298,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @return {Binding} Binding object.
      */
     bind(prop: string): Binding {
-      debug: {
-        if (!this._properties.has(prop)) {
-          console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
-        }
+      debug: if (!this._properties.has(prop)) {
+        console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
       }
       if (!this._bindings.has(prop)) {
         this._bindings.set(prop, new Binding(this, prop));
@@ -336,11 +327,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} options - event listener options.
      */
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
-      debug: {
-        if (typeof listener !== 'function') {
-          console.warn(`${this.constructor.name}incorrect listener type.`, this);
-          return;
-        }
+      debug: if (typeof listener !== 'function') {
+        console.warn(`${this.constructor.name}incorrect listener type.`, this);
+        return;
       }
       this._eventDispatcher.addEventListener(type, listener as EventListener, options);
     }
@@ -375,11 +364,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Use this when instance is no longer needed.
      */
     dispose() {
-      debug: {
-        if (this._disposed) {
-          // TODO: figure out how to prevent redundant disposals from nested io-selectors with cache:false
-          // console.warn('IoNode.dispose(): Already disposed!', this.constructor.name);
-        }
+      debug: if (this._disposed) {
+        // TODO: figure out how to prevent redundant disposals from nested io-selectors with cache:false
+        // console.warn('IoNode.dispose(): Already disposed!', this.constructor.name);
       }
       if (this._disposed) return;
 
@@ -462,7 +449,7 @@ function animate () {
       continue;
     }
     // TODO: make test to veryfy you can add throttled function to throttle queue from itself.
-    // If we execute the function before clearing it from the queue it wont be queued again.
+    // If we execute the function before clearing it from the queue it can't be queued again int the same rAF cycle.
     throttleQueue.splice(throttleQueue.indexOf(func), 1);
     throttleQueueOptions.delete(func);
     try {

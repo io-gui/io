@@ -50,10 +50,8 @@ export class IoScroller extends IoElement {
 
     const selected = this.options.scroll;
 
-    debug: {
-      if (selected && typeof selected !== 'string') {
-        console.warn('IoScroller: selected scroll option is not a string!');
-      }
+    debug: if (selected && typeof selected !== 'string') {
+      console.warn('IoScroller: selected scroll option is not a string!');
     }
 
     if (selected && typeof selected === 'string') {

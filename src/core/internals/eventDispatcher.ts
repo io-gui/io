@@ -205,9 +205,7 @@ export class EventDispatcher {
     // Check for duplicate listener
     const existingIndex = this.addedListeners[name].findIndex(l => l[0] === listener);
     if (existingIndex !== -1) {
-      debug: {
-        console.warn(`EventDispatcher.addEventListener: Listener for '${name}' event already added`);
-      }
+      debug: console.warn(`EventDispatcher.addEventListener: Listener for '${name}' event already added`);
       return;
     }
 
@@ -261,10 +259,8 @@ export class EventDispatcher {
       this.addedListeners[name].length = 0;
     } else {
       const index = this.addedListeners[name].findIndex(item => item[0] === listener);
-      debug: {
-        if (index === -1) {
-          console.error(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
-        }
+      debug: if (index === -1) {
+        console.error(`EventDispatcher.removeEventListener: Listener ${name} not found!`);
       }
       if (index !== -1) {
         this.addedListeners[name].splice(index, 1);
@@ -297,8 +293,8 @@ export class EventDispatcher {
         }
       }
       if (this.propListeners[name]) {
-        debug: {
-          if (this.propListeners[name].length > 1) console.error(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
+        debug: if (this.propListeners[name].length > 1) {
+          console.error(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`);
         }
         const handler = this.propListeners[name][0][0] as IoEventListener;
         handler.call(node, payload);

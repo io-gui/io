@@ -106,10 +106,8 @@ export class IoSelector extends IoElement {
   protected renderSelected() {
     const selected = this._selected;
 
-    debug: {
-      if (selected && typeof selected !== 'string') {
-        console.warn('IoSelector: selected option first is not a string!');
-      }
+    debug: if (selected && typeof selected !== 'string') {
+      console.warn('IoSelector: selected option first is not a string!');
     }
 
     if (typeof selected !== 'string') return;

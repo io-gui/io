@@ -43,9 +43,7 @@ export class ProtoObjectConfig extends Map<Constructor, Map<PropertyTypeKey, VDO
   getObjectConfig(object: object) {
 
     if (!(object instanceof Object)) {
-      debug: {
-        console.warn('`getObjectConfig` should be used on Object instance');
-      }
+      debug: console.warn('`getObjectConfig` should be used on Object instance');
       return;
     }
 
@@ -84,12 +82,10 @@ export class ProtoObjectConfig extends Map<Constructor, Map<PropertyTypeKey, VDO
       }
     }
 
-    debug: {
-      for (const [key, value] of Object.entries(object)) {
-        if (!finalConfigs[key]) {
-          console.warn('No config found for', key, value);
-          console.log(finalConfigs, object);
-        }
+    debug: for (const [key, value] of Object.entries(object)) {
+      if (!finalConfigs[key]) {
+        console.warn('No config found for', key, value);
+        console.log(finalConfigs, object);
       }
     }
 

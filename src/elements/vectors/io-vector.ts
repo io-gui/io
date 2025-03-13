@@ -91,10 +91,8 @@ export class IoVector extends IoElement {
 
   valueChanged() {
     this.keys = Object.keys(this.value).filter(key => typeof (this.value as any)[key] === 'number') as Array<keyof typeof this.value>;
-    debug: {
-      if (this.keys.find(k => ['0', '1', '2', '3', 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v'].indexOf(k) === -1)) {
-        console.warn('IoVector: Unrecognized vector type!');
-      }
+    debug: if (this.keys.find(k => ['0', '1', '2', '3', 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v'].indexOf(k) === -1)) {
+      console.warn('IoVector: Unrecognized vector type!');
     }
   }
   changed() {

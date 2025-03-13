@@ -123,9 +123,7 @@ function decodeInitArgument(item: any, node: IoNode) {
       target = target[keys[i]];
     }
     if (target) return target;
-    debug: {
-      console.warn(`PropertyInstance: Invalid path ${item}`);
-    }
+    debug: console.warn(`PropertyInstance: Invalid path ${item}`);
   } else return item;
 }
 
@@ -190,8 +188,6 @@ export class PropertyInstance {
             this.value = new this.type(argument);
           }
         } else if (this.init !== null) {
-          // TODO: test
-          // TODO: consider not initializing if init undefined also
           this.value = new this.type();
         }
       }

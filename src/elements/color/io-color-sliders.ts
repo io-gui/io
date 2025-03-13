@@ -118,10 +118,8 @@ export class IoColorSlider extends IoColorBase {
   changed() {
     const c = this.channel as keyof typeof this.value;
 
-    debug: {
-      if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'c', 'm', 'y', 'k', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
-        console.warn('IoColorSlider: Incorrect channel value!', c);
-      }
+    debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'c', 'm', 'y', 'k', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
+      console.warn('IoColorSlider: Incorrect channel value!', c);
     }
 
     const sliderInputTagName = `io-color-slider-${c}`;
