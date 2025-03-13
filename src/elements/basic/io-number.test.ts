@@ -1,5 +1,6 @@
 import { IoNumber, IoNumberLadder, IoNumberLadderStep } from '../../iogui.js';
 import { expect } from 'chai';
+
 const element = new IoNumber();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
@@ -12,6 +13,14 @@ document.body.appendChild(ladder as unknown as HTMLElement);
 const step = new IoNumberLadderStep();
 step.style.display = 'none';
 document.body.appendChild(step as unknown as HTMLElement);
+
+async function nextTick(): Promise<void> {
+  return new Promise((resolve) => {
+    requestAnimationFrame(()=>{
+      resolve();
+    });
+  });
+}
 
 export default class {
   run() {
@@ -234,157 +243,153 @@ export default class {
       });
     });
     describe('IoNumberLadder', () => {
-      describe('Initialization', () => {
-        it('Should initialize property definitions correctly', () => {
-          expect(ladder.role).to.equal('list');
-          expect(ladder.src).to.equal(element);
-          expect(ladder.conversion).to.equal(1);
-          expect(ladder.expanded).to.equal(false);
-          expect(ladder.min).to.equal(-Infinity);
-          expect(ladder.max).to.equal(Infinity);
-          expect(ladder.step).to.equal(0.0001);
-          expect(ladder.value).to.equal(0);
-          expect(ladder.conversion).to.equal(1);
+      it('Should initialize property definitions correctly', () => {
+        expect(ladder.role).to.equal('list');
+        expect(ladder.src).to.equal(element);
+        expect(ladder.conversion).to.equal(1);
+        expect(ladder.expanded).to.equal(false);
+        expect(ladder.min).to.equal(-Infinity);
+        expect(ladder.max).to.equal(Infinity);
+        expect(ladder.step).to.equal(0.0001);
+        expect(ladder.value).to.equal(0);
+        expect(ladder.conversion).to.equal(1);
 
-          expect(ladder._properties.get('src')).to.eql({
-            binding: undefined,
-            init: undefined,
-            reflect: false,
-            type: IoNumber,
-            value: element,
-          });
-          expect(ladder._properties.get('expanded')).to.eql({
-            binding: undefined,
-            init: undefined,
-            reflect: true,
-            type: Boolean,
-            value: false,
-          });
+        expect(ladder._properties.get('src')).to.eql({
+          binding: undefined,
+          init: undefined,
+          reflect: false,
+          type: IoNumber,
+          value: element,
         });
-        it('has correct default attributes', () => {
-          expect(ladder.getAttribute('role')).to.equal('list');
-          expect(ladder.getAttribute('expanded')).to.equal(null);
-        });
-        it('has correct default innerHTML', () => {
-          expect(ladder.innerHTML).to.equal('<io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up4" label="1000" aria-label="1000" aria-valuestep="1000" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1000" aria-label="1000">1000</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up3" label="100" aria-label="100" aria-valuestep="100" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="100" aria-label="100">100</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up2" label="10" aria-label="10" aria-valuestep="10" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="10" aria-label="10">10</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up1" label="1" aria-label="1" aria-valuestep="1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1" aria-label="1">1</io-label></io-number-ladder-step><span class="io-number-ladder-center"></span><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down1" label="0.1" aria-label="0.1" aria-valuestep="0.1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.1" aria-label="0.1">0.1</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down2" label="0.01" aria-label="0.01" aria-valuestep="0.010000000000000002" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.01" aria-label="0.01">0.01</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down3" label="0.001" aria-label="0.001" aria-valuestep="0.001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.001" aria-label="0.001">0.001</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down4" label="0.0001" aria-label="0.0001" aria-valuestep="0.0001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.0001" aria-label="0.0001">0.0001</io-label></io-number-ladder-step>');
+        expect(ladder._properties.get('expanded')).to.eql({
+          binding: undefined,
+          init: undefined,
+          reflect: true,
+          type: Boolean,
+          value: false,
         });
       });
-      describe('Reactivity', () => {
-        const $ = (selector: string) => { return ladder.querySelector(selector); };
-        it('should set innerText to match value property', () => {
-          expect($('.io-up1').value).to.equal(1);
-          expect($('.io-up1').textContent).to.equal('1');
-          expect($('.io-up2').textContent).to.equal('10');
-          expect($('.io-up3').textContent).to.equal('100');
-          expect($('.io-up4').textContent).to.equal('1000');
-          expect($('.io-down1').value).to.equal(0.1);
-          expect($('.io-down1').textContent).to.equal('0.1');
-          expect($('.io-down2').textContent).to.equal('0.01');
-          expect($('.io-down3').textContent).to.equal('0.001');
-          expect($('.io-down4').textContent).to.equal('0.0001');
-        });
-        it('should set innerText to match value with custom step settings', () => {
-          element.step = 0.2;
-          ladder.changed();
-          expect($('.io-up1').value).to.equal(2);
-          expect($('.io-up1').textContent).to.equal('2');
-          expect($('.io-up2').textContent).to.equal('20');
-          expect($('.io-up3').textContent).to.equal('200');
-          expect($('.io-up4').textContent).to.equal('2000');
-          expect($('.io-down1').value).to.equal(0.2);
-          expect($('.io-down1').textContent).to.equal('0.2');
-          expect($('.io-down2')).to.equal(null);
-          expect($('.io-down3')).to.equal(null);
-          expect($('.io-down4')).to.equal(null);
-          element.step = 0.02;
-          ladder.changed();
-          expect($('.io-down1').textContent).to.equal('0.2');
-          expect($('.io-down2').textContent).to.equal('0.02');
-          expect($('.io-down3')).to.equal(null);
-          element.step = 0.0001;
-          ladder.changed();
-        });
-        it('should set innerText to match value with custom min/max settings', () => {
-          element.min = 0;
-          element.max = 100;
-          ladder.changed();
-          expect($('.io-up1').value).to.equal(1);
-          expect($('.io-up1').innerText).to.equal('1');
-          expect($('.io-up2').innerText).to.equal('10');
-          expect($('.io-up3').innerText).to.equal('100');
-          expect($('.io-up4')).to.equal(null);
-          element.max = 1000;
-          ladder.changed();
-          expect($('.io-up4').innerText).to.equal('1000');
-          element.min = -Infinity;
-          element.max = Infinity;
-          ladder.changed();
-        });
-        it('should set innerText to match value with conversion factor', () => {
-          element.conversion = 20;
-          ladder.changed();
-          expect($('.io-up2').value).to.equal(10);
-          expect($('.io-up2').innerText).to.equal('200');
-          element.step = 0.2;
-          ladder.changed();
-          expect($('.io-up2').value).to.equal(20);
-          expect($('.io-up2').innerText).to.equal('400');
-          element.conversion = 1;
-          element.step = 0.0001;
-          ladder.changed();
-        });
-          it('steps have tabindex attribute', () => {
-            expect($('.io-up1').getAttribute('tabindex')).to.equal('0');
-            expect($('.io-down1').getAttribute('tabindex')).to.equal('0');
-          });
-          it('has a11y attributes', () => {
-            expect(ladder.getAttribute('role')).to.equal('list');
-          });
-          it('steps have a11y attributes', () => {
-            expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
-            expect($('.io-up1').getAttribute('type')).to.equal('number');
-            expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
-            expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
-            expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
-            expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
-            element.value = 3;
-            ladder.changed();
-            expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
-            element.step = 0.5;
-            ladder.changed();
-            expect($('.io-up1').getAttribute('aria-label')).to.equal('5');
-            element.value = 0;
-            element.step = 0.0001;
-            ladder.changed();
-          });
+      it('has correct default attributes', () => {
+        expect(ladder.getAttribute('role')).to.equal('list');
+        expect(ladder.getAttribute('expanded')).to.equal(null);
       });
-      describe('Accessibility', () => {
-        it('TODO', () => {
-          expect(ladder.getAttribute('aria-valuemin')).to.equal('-Infinity');
-          expect(ladder.getAttribute('aria-valuemax')).to.equal('Infinity');
-          expect(ladder.getAttribute('aria-valuenow')).to.equal('0');
-        });
-        it('has a11y attributes', () => {
-          // TODO: Aria attributes
-          expect(ladder.getAttribute('aria-invalid')).to.equal(null);
-          element.value = NaN;
-          ladder.changed();
-          expect(ladder.getAttribute('aria-invalid')).to.equal('true');
-          element.value = 12;
-          ladder.changed();
-          element.min = 0;
-          element.max = 24;
-          element.step = 2;
-          ladder.changed();
-          expect(ladder.getAttribute('aria-valuenow')).to.equal('12');
-          expect(ladder.getAttribute('aria-valuemin')).to.equal('0');
-          expect(ladder.getAttribute('aria-valuemax')).to.equal('24');
-          expect(ladder.getAttribute('aria-valuestep')).to.equal('2');
-          element.min = -Infinity;
-          element.max = Infinity;
-          element.step = 0.0001;
-          ladder.changed();
-        });
+      it('has correct default innerHTML', async () => {
+        // TODO: adding substantial workload on the page load requires waiting a frame for this test to pass. Investigate.
+        await nextTick();
+        expect(ladder.innerHTML).to.equal('<io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up4" label="1000" aria-label="1000" aria-valuestep="1000" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1000" aria-label="1000">1000</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up3" label="100" aria-label="100" aria-valuestep="100" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="100" aria-label="100">100</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up2" label="10" aria-label="10" aria-valuestep="10" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="10" aria-label="10">10</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-up1" label="1" aria-label="1" aria-valuestep="1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="1" aria-label="1">1</io-label></io-number-ladder-step><span class="io-number-ladder-center"></span><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down1" label="0.1" aria-label="0.1" aria-valuestep="0.1" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.1" aria-label="0.1">0.1</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down2" label="0.01" aria-label="0.01" aria-valuestep="0.010000000000000002" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.01" aria-label="0.01">0.01</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down3" label="0.001" aria-label="0.001" aria-valuestep="0.001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.001" aria-label="0.001">0.001</io-label></io-number-ladder-step><io-number-ladder-step tabindex="0" role="spinbutton" appearance="flush" type="number" class="io-down4" label="0.0001" aria-label="0.0001" aria-valuestep="0.0001" aria-valuemin="-Infinity" aria-valuemax="Infinity" aria-valuenow="0"><io-label label="0.0001" aria-label="0.0001">0.0001</io-label></io-number-ladder-step>');
+      });
+      const $ = (selector: string) => { return ladder.querySelector(selector); };
+      it('should set innerText to match value property', () => {
+        expect($('.io-up1').value).to.equal(1);
+        expect($('.io-up1').textContent).to.equal('1');
+        expect($('.io-up2').textContent).to.equal('10');
+        expect($('.io-up3').textContent).to.equal('100');
+        expect($('.io-up4').textContent).to.equal('1000');
+        expect($('.io-down1').value).to.equal(0.1);
+        expect($('.io-down1').textContent).to.equal('0.1');
+        expect($('.io-down2').textContent).to.equal('0.01');
+        expect($('.io-down3').textContent).to.equal('0.001');
+        expect($('.io-down4').textContent).to.equal('0.0001');
+      });
+      it('should set innerText to match value with custom step settings', () => {
+        element.step = 0.2;
+        ladder.changed();
+        expect($('.io-up1').value).to.equal(2);
+        expect($('.io-up1').textContent).to.equal('2');
+        expect($('.io-up2').textContent).to.equal('20');
+        expect($('.io-up3').textContent).to.equal('200');
+        expect($('.io-up4').textContent).to.equal('2000');
+        expect($('.io-down1').value).to.equal(0.2);
+        expect($('.io-down1').textContent).to.equal('0.2');
+        expect($('.io-down2')).to.equal(null);
+        expect($('.io-down3')).to.equal(null);
+        expect($('.io-down4')).to.equal(null);
+        element.step = 0.02;
+        ladder.changed();
+        expect($('.io-down1').textContent).to.equal('0.2');
+        expect($('.io-down2').textContent).to.equal('0.02');
+        expect($('.io-down3')).to.equal(null);
+        element.step = 0.0001;
+        ladder.changed();
+      });
+      it('should set innerText to match value with custom min/max settings', () => {
+        element.min = 0;
+        element.max = 100;
+        ladder.changed();
+        expect($('.io-up1').value).to.equal(1);
+        expect($('.io-up1').innerText).to.equal('1');
+        expect($('.io-up2').innerText).to.equal('10');
+        expect($('.io-up3').innerText).to.equal('100');
+        expect($('.io-up4')).to.equal(null);
+        element.max = 1000;
+        ladder.changed();
+        expect($('.io-up4').innerText).to.equal('1000');
+        element.min = -Infinity;
+        element.max = Infinity;
+        ladder.changed();
+      });
+      it('should set innerText to match value with conversion factor', () => {
+        element.conversion = 20;
+        ladder.changed();
+        expect($('.io-up2').value).to.equal(10);
+        expect($('.io-up2').innerText).to.equal('200');
+        element.step = 0.2;
+        ladder.changed();
+        expect($('.io-up2').value).to.equal(20);
+        expect($('.io-up2').innerText).to.equal('400');
+        element.conversion = 1;
+        element.step = 0.0001;
+        ladder.changed();
+      });
+      it('steps have tabindex attribute', () => {
+        expect($('.io-up1').getAttribute('tabindex')).to.equal('0');
+        expect($('.io-down1').getAttribute('tabindex')).to.equal('0');
+      });
+      it('has a11y attributes', () => {
+        expect(ladder.getAttribute('role')).to.equal('list');
+      });
+      it('steps have a11y attributes', () => {
+        expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
+        expect($('.io-up1').getAttribute('type')).to.equal('number');
+        expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
+        expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
+        expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
+        expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
+        element.value = 3;
+        ladder.changed();
+        expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
+        element.step = 0.5;
+        ladder.changed();
+        expect($('.io-up1').getAttribute('aria-label')).to.equal('5');
+        element.value = 0;
+        element.step = 0.0001;
+        ladder.changed();
+      });
+      it('TODO', () => {
+        expect(ladder.getAttribute('aria-valuemin')).to.equal('-Infinity');
+        expect(ladder.getAttribute('aria-valuemax')).to.equal('Infinity');
+        expect(ladder.getAttribute('aria-valuenow')).to.equal('0');
+      });
+      it('has a11y attributes', () => {
+        // TODO: Aria attributes
+        expect(ladder.getAttribute('aria-invalid')).to.equal(null);
+        element.value = NaN;
+        ladder.changed();
+        expect(ladder.getAttribute('aria-invalid')).to.equal('true');
+        element.value = 12;
+        ladder.changed();
+        element.min = 0;
+        element.max = 24;
+        element.step = 2;
+        ladder.changed();
+        expect(ladder.getAttribute('aria-valuenow')).to.equal('12');
+        expect(ladder.getAttribute('aria-valuemin')).to.equal('0');
+        expect(ladder.getAttribute('aria-valuemax')).to.equal('24');
+        expect(ladder.getAttribute('aria-valuestep')).to.equal('2');
+        element.min = -Infinity;
+        element.max = Infinity;
+        element.step = 0.0001;
+        ladder.changed();
       });
     });
   }

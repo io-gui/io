@@ -12,12 +12,6 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
   readonly path: IoNode[];
 }
 
-export class MutationEvent extends CustomEvent<Object> {
-  constructor(object: Object) {
-    super('object-mutated', {detail: object});
-  }
-}
-
 /**
  * A queue system for managing and batching property changes in `IoNode` and `IoElement` nodes.
  *
@@ -96,7 +90,8 @@ export class ChangeQueue {
     if (this.hasChanged) {
       this.node.changed();
       this.node.dispatchEvent('changed');
-      window.dispatchEvent(new MutationEvent(this.node));
+      // TODO: emit from node only if it is assigned as observed property
+      this.node.dispatchEvent('object-mutated', {object: this.node}, false, window);
     }
     this.dispatching = false;
   }

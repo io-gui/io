@@ -92,15 +92,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       for (const name in this._protochain.properties) {
         const property = new PropertyInstance(this, this._protochain.properties[name]);
         this._properties.set(name, property);
+        
+        if (property.binding) property.binding.addTarget(this, name);
 
+        // TODO: move this to element.ts
         const value = property.value;
         if (value !== undefined && value !== null) {
           if (property.reflect && this._isIoElement) {
             this.setAttribute(name, value);
           }
         }
-
-        if (property.binding) property.binding.addTarget(this, name);
       }
 
       this.applyProperties(properties);
@@ -174,7 +175,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           this.queue(name, value, oldValue);
           this.dispatchQueue(debounce);
         }
-        if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
       }
     }
     /**
@@ -298,7 +298,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       if (this[prop + 'Mutated']) this[prop + 'Mutated']();
       this.changed();
       this.dispatchEvent('changed');
-      this.dispatchMutationEvent(this);
+      // TODO: emit only if it is assigned as observed property
+      this.dispatchEvent('object-mutated', {object: this}, false, window);
     };
     /**
      * Returns a binding to a specified property`.
@@ -359,13 +360,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     dispatchEvent(type: string, detail = {}, bubbles = false, src?: Node | HTMLElement | Document | Window) {
       this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
-    }
-    /**
-     * Shorthand for dispatching `'object-mutated'` event on window.
-     * @param {any} object - object which mutated.
-     */
-    dispatchMutationEvent(object: any) {
-      this.dispatchEvent('object-mutated', {object: object}, true, window);
     }
     /**
      * Disposes all internals.

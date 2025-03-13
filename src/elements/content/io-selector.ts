@@ -85,7 +85,7 @@ export class IoSelector extends IoElement {
       this.renderSelected();
     }
 
-    this.throttle(this.onLoadPrecache, undefined, this.precacheDelay);
+    this.debounce(this.onLoadPrecache, undefined, this.precacheDelay);
   }
 
   importModule(path: string) {
@@ -181,7 +181,7 @@ export class IoSelector extends IoElement {
           this.template([element], dummyElement, true);
           this._caches[args.id] = dummyElement.childNodes[0] as HTMLElement;
           dummyElement.removeChild(dummyElement.childNodes[0]);
-          this.throttle(this.onLoadPrecache, undefined, this.precacheDelay);
+          this.debounce(this.onLoadPrecache, undefined, this.precacheDelay);
           return;
         }
       }

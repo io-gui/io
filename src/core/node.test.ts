@@ -22,6 +22,7 @@ export default class {
         expect(node.queue).to.be.a('function');
         expect(node.dispatchQueue).to.be.a('function');
         expect(node.throttle).to.be.a('function');
+        expect(node.debounce).to.be.a('function');
         expect(node.onObjectMutated).to.be.a('function');
         expect(node.objectMutated).to.be.a('function');
         expect(node.bind).to.be.a('function');
@@ -355,7 +356,7 @@ export default class {
         class TestNode extends IoNode {
           static get Properties(): PropertyDefinitions {
             return {
-              onPropChangedEvents: Array,
+              propChangedEvents: Array,
               prop: Number,
             };
           }
@@ -365,19 +366,19 @@ export default class {
             };
           }
           onPropChanged(event: CustomEvent) {
-            this.onPropChangedEvents.push(event.detail);
+            this.propChangedEvents.push(event.detail);
           }
         }
 
         const node = new TestNode();
-        expect(node.onPropChangedEvents).to.be.eql([]);
+        expect(node.propChangedEvents).to.be.eql([]);
 
         node.addEventListener('prop-changed', (() => {
           expect('This should not execute').to.be.eql(true);
         }));
 
         node.removeEventListener('prop-changed');
-;
+
         node.addEventListener('prop-changed', (event: CustomEvent) => {
           const oldValue = event.detail.oldValue;
           const value = event.detail.value;
@@ -397,7 +398,7 @@ export default class {
 
         node.removeEventListener('prop-changed');
 
-        expect(node.onPropChangedEvents).to.be.eql([{
+        expect(node.propChangedEvents).to.be.eql([{
           oldValue: 0,
           property: 'prop',
           value: 1,
@@ -405,7 +406,7 @@ export default class {
 
         await nextTick();
 
-        expect(node.onPropChangedEvents).to.be.eql([{
+        expect(node.propChangedEvents).to.be.eql([{
           oldValue: 0,
           property: 'prop',
           value: 1,
@@ -420,7 +421,7 @@ export default class {
 
         await nextTick();
 
-        expect(node.onPropChangedEvents).to.be.eql([{
+        expect(node.propChangedEvents).to.be.eql([{
           oldValue: 0,
           property: 'prop',
           value: 1,
@@ -438,7 +439,7 @@ export default class {
           prop: new Binding(node, 'prop'),
         });
 
-        expect(node2.onPropChangedEvents).to.be.eql([{
+        expect(node2.propChangedEvents).to.be.eql([{
           oldValue: 0,
           property: 'prop',
           value: 4,
@@ -448,230 +449,250 @@ export default class {
           prop: -1
         });
 
-        expect(node3.onPropChangedEvents).to.be.eql([{
+        expect(node3.propChangedEvents).to.be.eql([{
           oldValue: 0,
           property: 'prop',
           value: -1,
         }]);
 
-        // await nextTick(1000);
+        node3.propChangedEvents.length = 0;
+        node3.reactivity = 'debounced';
+        node3.prop = 10;
         
-        // expect(node2.onPropChangedEvents).to.be.eql([]);
-        // expect(node2.onPropChangedEvents).to.be.eql([{
-        //   oldValue: undefined,
-        //   property: 'prop',
-        //   value: {
-        //     foo: 'bar',
-        //   },
-        // }]);
+        expect(node3.propChangedEvents).to.be.eql([]);
 
+        await nextTick();
+
+        expect(node3.propChangedEvents).to.be.eql([{
+          oldValue: -1,
+          property: 'prop',
+          value: 10,
+        }]);
+
+        node3.propChangedEvents.length = 0;
+        node3.reactivity = 'none';
+        node3.prop = 20;
+        
+        expect(node3.propChangedEvents).to.be.eql([]);
+        
+        await nextTick();
+
+        expect(node3.propChangedEvents).to.be.eql([]);
       });
-      describe('Properties', () => {
-        it('Should connect/disconnect IoNode-property-values on construction and value set', () => {
-          @Register
-          class TestSubNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop: 0,
-                propChangeCounter: 0,
-              };
-            }
-            propChanged() {
-              this.propChangeCounter++;
-            }
+      it('Should corectly invoke handler functions on change', async () => {
+        @Register
+        class TestNode extends IoNode {
+          changedCounter = 0;
+          prop1Changes: Change[] = [];
+          prop2Changes: Change[] = [];
+          static get Properties(): any {
+            return {
+              prop1: String,
+              prop2: String,
+            };
           }
-
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): PropertyDefinitions {
-              return {
-                prop: TestSubNode
-              };
-            }
+          changed() {
+            this.changedCounter++;
           }
+          prop1Changed(change: Change) {
+            this.prop1Changes.push(change);
+          }
+          prop2Changed(change: Change) {
+            this.prop2Changes.push(change);
+          }
+        }
 
-          const node = new TestNode();
-          const subIoNode1 = node.prop;
-          expect(subIoNode1.propChangeCounter).to.be.equal(0);
+        const node = new TestNode();
 
-          subIoNode1.prop = 1;
-          subIoNode1.prop = 2;
-          expect(subIoNode1.propChangeCounter).to.be.equal(2);
-          subIoNode1.prop = 3;
-          expect(subIoNode1.propChangeCounter).to.be.equal(3);
+        expect(node.changedCounter).to.equal(0);
+        expect(node.prop1Changes).to.be.eql([]);
+        expect(node.prop2Changes).to.be.eql([]);
 
-          const subIoNode2 = new TestSubNode();
-          node.prop = subIoNode2;
-          subIoNode1.prop = 4;
+        node.prop1 = 'one';
+        expect(node.changedCounter).to.equal(1);
+        expect(node.prop1Changes).to.be.eql([{
+          property: 'prop1',
+          oldValue: '',
+          value: 'one',
+        }]);
+        expect(node.prop2Changes).to.be.eql([]);
+        node.prop1Changes.length = 0;
 
-          expect(subIoNode1.propChangeCounter).to.be.equal(4);
-          expect(subIoNode2.propChangeCounter).to.be.equal(0);
+        node.prop1 = 'two';
+        node.prop2 = 'test';
+        expect(node.changedCounter).to.equal(3);
+        expect(node.prop1Changes).to.be.eql([{
+          property: 'prop1',
+          oldValue: 'one',
+          value: 'two',
+        }]);
+        expect(node.prop2Changes).to.be.eql([{
+          property: 'prop2',
+          oldValue: '',
+          value: 'test',
+        }]);
+        node.prop1Changes.length = 0;
+        node.prop2Changes.length = 0;
+
+        node.setProperties({
+          'prop1': 'three',
+          'prop2': '',
         });
+        expect(node.changedCounter).to.equal(4);
+        expect(node.prop1Changes).to.be.eql([{
+          property: 'prop1',
+          oldValue: 'two',
+          value: 'three',
+        }]);
+        expect(node.prop2Changes).to.be.eql([{
+          property: 'prop2',
+          oldValue: 'test',
+          value: '',
+        }]);
+
+        node.prop1Changes.length = 0;
+        node.prop2Changes.length = 0;
+
+        node.reactivity = 'debounced';
+
+        node.setProperties({
+          'prop1': 'four',
+          'prop2': 'test2',
+        });
+
+        expect(node.prop1Changes).to.be.eql([]);
+        expect(node.prop2Changes).to.be.eql([]);
+
+        await nextTick();
+
+        expect(node.prop1Changes).to.be.eql([{
+          property: 'prop1',
+          oldValue: 'three',
+          value: 'four',
+        }]);
+        expect(node.prop2Changes).to.be.eql([{
+          property: 'prop2',
+          oldValue: '',
+          value: 'test2',
+        }]);
+
+        node.prop1Changes.length = 0;
+        node.prop2Changes.length = 0;
+
+        node.reactivity = 'none';
+
+        node.setProperties({
+          'prop1': 'five',
+          'prop2': 'test3',
+        });
+
+        await nextTick();
+
+        expect(node.prop1Changes).to.be.eql([]);
+        expect(node.prop2Changes).to.be.eql([]);
+        
+        node.dispose();
       });
-      describe('Reactivity', () => {
-        it('Should corectly invoke handler functions on change', () => {
-          @Register
-          class TestNode extends IoNode {
-            _changedCounter = 0;
-            _prop1ChangedCounter = 0;
-            _prop1Change: Change | null = null;
-            _prop2ChangedCounter = 0;
-            _prop2Change: Change | null = null;
-            static get Properties(): any {
-              return {
-                prop1: String,
-                prop2: String,
-              };
-            }
-            changed() {
-              this._changedCounter++;
-            }
-            prop1Changed(change: Change) {
-              this._prop1ChangedCounter++;
-              this._prop1Change = change;
-            }
-            prop2Changed(change: Change) {
-              this._prop2ChangedCounter++;
-              this._prop2Change = change;
-            }
+      it('should invoke property mutation handler functions on mutation event', async () => {
+        @Register
+        class TestNode extends IoNode {
+          changedCounter = 0;
+          obj1MutatedCounter = 0;
+          obj2MutatedCounter = 0;
+          static get Properties(): any {
+            return {
+              obj1: {
+                type: Object,
+              },
+              obj2: {
+                type: Object,
+              },
+            };
           }
-
-          const node = new TestNode();
-
-          expect(node._changedCounter).to.equal(0);
-          expect(node._prop1ChangedCounter).to.equal(0);
-          expect(node._prop2ChangedCounter).to.equal(0);
-          expect(node._prop1Change?.property).to.equal(undefined);
-          expect(node._prop1Change?.oldValue).to.equal(undefined);
-          expect(node._prop1Change?.value).to.equal(undefined);
-          expect(node._prop2ChangedCounter).to.equal(0);
-          expect(node._prop2Change?.property).to.equal(undefined);
-          expect(node._prop2Change?.oldValue).to.equal(undefined);
-          expect(node._prop2Change?.value).to.equal(undefined);
-
-          node.prop1 = 'one';
-          expect(node._changedCounter).to.equal(1);
-          expect(node._prop1ChangedCounter).to.equal(1);
-          expect(node._prop2ChangedCounter).to.equal(0);
-          expect(node._prop1Change?.property).to.equal('prop1');
-          expect(node._prop1Change?.oldValue).to.equal('');
-          expect(node._prop1Change?.value).to.equal('one');
-
-          node.prop1 = 'two';
-          node.prop2 = 'test';
-          expect(node._changedCounter).to.equal(3);
-          expect(node._prop1ChangedCounter).to.equal(2);
-          expect(node._prop1Change?.property).to.equal('prop1');
-          expect(node._prop1Change?.oldValue).to.equal('one');
-          expect(node._prop1Change?.value).to.equal('two');
-          expect(node._prop2ChangedCounter).to.equal(1);
-          expect(node._prop2Change?.property).to.equal('prop2');
-          expect(node._prop2Change?.oldValue).to.equal('');
-          expect(node._prop2Change?.value).to.equal('test');
-
-          node.setProperties({
-            'prop1': 'three',
-            'prop2': '',
-          });
-          expect(node._changedCounter).to.equal(4);
-          expect(node._prop1ChangedCounter).to.equal(3);
-          expect(node._prop1Change?.property).to.equal('prop1');
-          expect(node._prop1Change?.oldValue).to.equal('two');
-          expect(node._prop1Change?.value).to.equal('three');
-          expect(node._prop2ChangedCounter).to.equal(2);
-          expect(node._prop2Change?.property).to.equal('prop2');
-          expect(node._prop2Change?.oldValue).to.equal('test');
-          expect(node._prop2Change?.value).to.equal('');
-
-          node.dispose();
-        });
-        it('should invoke property mutation handler functions on mutation event', async () => {
-          @Register
-          class TestNode extends IoNode {
-            _changedCounter = 0;
-            _obj1MutatedCounter = 0;
-            _obj2MutatedCounter = 0;
-            static get Properties(): any {
-              return {
-                obj1: {
-                  type: Object,
-                },
-                obj2: {
-                  type: Object,
-                },
-              };
-            }
-            changed() {
-              this._changedCounter++;
-            }
-            obj1Mutated() {
-              this._obj1MutatedCounter++;
-            }
-            obj2Mutated() {
-              this._obj2MutatedCounter++;
-            }
+          changed() {
+            this.changedCounter++;
           }
-
-          const node = new TestNode();
-
-          expect(node._changedCounter).to.equal(0);
-          expect(node._obj1MutatedCounter).to.equal(0);
-
-          node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
-
-          await nextTick();
-
-          expect(node._changedCounter).to.equal(1);
-          expect(node._obj1MutatedCounter).to.equal(1);
-          expect(node._obj2MutatedCounter).to.equal(0);
-
-          node.dispatchEvent('object-mutated', {object: node.obj2}, false, window);
-
-          await nextTick();
-
-          node.dispose();
-        });
-        it('should fire change events', () => {
-          @Register
-          class TestNode extends IoNode {
-            static get Properties(): any {
-              return {
-                prop1: String,
-                _onProp1ChangedCounter: 0,
-                _onProp1Change: null,
-                _onCustomEventCounter: 0,
-                _onCustomEven: null,
-              };
-            }
-            static get Listeners() {
-              return {
-                'prop1-changed': 'onProp1Changed',
-                'custom-event': 'onCustomEvent',
-              };
-            }
-            onProp1Changed(event: Event) {
-              this._onProp1ChangedCounter++;
-              this._onProp1Change = event;
-            }
-            onCustomEvent(event: Event) {
-              this._onCustomEventCounter++;
-              this._onCustomEven = event;
-            }
+          obj1Mutated() {
+            this.obj1MutatedCounter++;
           }
+          obj2Mutated() {
+            this.obj2MutatedCounter++;
+          }
+        }
 
-          const node = new TestNode();
+        const node = new TestNode();
 
-          node.prop1 = 'one';
-          expect(node._onProp1ChangedCounter).to.equal(1);
-          expect(node._onProp1Change.detail.property).to.equal('prop1');
-          expect(node._onProp1Change.detail.oldValue).to.equal('');
-          expect(node._onProp1Change.detail.value).to.equal('one');
+        expect(node.changedCounter).to.equal(0);
+        expect(node.obj1MutatedCounter).to.equal(0);
 
-          node.dispatchEvent('custom-event', {value: 'hello'});
-          expect(node._onCustomEventCounter).to.equal(1);
-          expect(node._onCustomEven.path[0]).to.equal(node);
-          expect(node._onCustomEven.detail.value).to.equal('hello');
-        });
+        node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
+
+        await nextTick();
+
+        expect(node.changedCounter).to.equal(1);
+        expect(node.obj1MutatedCounter).to.equal(1);
+        expect(node.obj2MutatedCounter).to.equal(0);
+
+        node.dispatchEvent('object-mutated', {object: node.obj2}, false, window);
+
+        expect(node.obj2MutatedCounter).to.equal(1);
+
+        await nextTick();
+
+        node.obj1 = new TestNode();
+
+        await nextTick();
+
+        expect(node.obj1MutatedCounter).to.equal(1);
+
+        node.obj1.obj1 = {a: 1};
+
+        await nextTick();
+
+        expect(node.obj1MutatedCounter).to.equal(2);
+
+        node.dispose();
+      });
+      it('should fire change events', () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): any {
+            return {
+              prop1: String,
+              _onProp1ChangedCounter: 0,
+              _onProp1Change: null,
+              _onCustomEventCounter: 0,
+              _onCustomEven: null,
+            };
+          }
+          static get Listeners() {
+            return {
+              'prop1-changed': 'onProp1Changed',
+              'custom-event': 'onCustomEvent',
+            };
+          }
+          onProp1Changed(event: Event) {
+            this._onProp1ChangedCounter++;
+            this._onProp1Change = event;
+          }
+          onCustomEvent(event: Event) {
+            this._onCustomEventCounter++;
+            this._onCustomEven = event;
+          }
+        }
+
+        const node = new TestNode();
+
+        node.prop1 = 'one';
+        expect(node._onProp1ChangedCounter).to.equal(1);
+        expect(node._onProp1Change.detail.property).to.equal('prop1');
+        expect(node._onProp1Change.detail.oldValue).to.equal('');
+        expect(node._onProp1Change.detail.value).to.equal('one');
+
+        node.dispatchEvent('custom-event', {value: 'hello'});
+        expect(node._onCustomEventCounter).to.equal(1);
+        expect(node._onCustomEven.path[0]).to.equal(node);
+        expect(node._onCustomEven.detail.value).to.equal('hello');
       });
       describe('Binding', () => {
         it('should correctly bind properties', () => {

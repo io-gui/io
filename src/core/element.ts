@@ -223,6 +223,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       resizeObserver.unobserve(this as unknown as HTMLElement);
     }
   }
+
+  setProperty(name: string, value: any, debounce = false) {
+    super.setProperty(name, value, debounce);
+    const prop = this._properties.get(name)!;
+    if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
+  }
   // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**
    * Renders DOM from virtual DOM arrays.

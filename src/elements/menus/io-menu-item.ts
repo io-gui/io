@@ -114,7 +114,7 @@ export class IoMenuItem extends IoField {
         window.open(item.value, '_blank');
       }
       this.dispatchEvent('item-clicked', item, true);
-      this.throttle(this._onCollapse, undefined, 0);
+      this.throttle(this._onCollapse, undefined);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -123,7 +123,7 @@ export class IoMenuItem extends IoField {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.throttle(this._onCollapse, undefined, 0);
+    if (this.expanded) this.throttle(this._onCollapse, undefined);
   }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();

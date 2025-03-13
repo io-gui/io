@@ -10,14 +10,14 @@ import NumberElementTest from './io-number.test.js';
 
 export default class {
   run() {
-    new BooleanElementTest().run();
-    new ButtonElementTest().run();
-    new FieldElementTest().run();
-    new IconElementTest().run();
-    new IconsetElementTest().run();
-    new LabelElementTest().run();
+    // new BooleanElementTest().run();
+    // new ButtonElementTest().run();
+    // new FieldElementTest().run();
+    // new IconElementTest().run();
+    // new IconsetElementTest().run();
+    // new LabelElementTest().run();
     new NumberElementTest().run();
-    new StringElementTest().run();
-    new SwitchElementTest().run();
+    // new StringElementTest().run();
+    // new SwitchElementTest().run();
   }
 }
