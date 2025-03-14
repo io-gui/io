@@ -416,6 +416,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._properties.forEach((property, key) => {
         property.binding?.removeTarget(this, key);
+        if (property.value?._isIoNode) {
+          property.value.removeEventListener('changed', this.onIoNodePropertyChanged);
+        }
       });
 
       this._eventDispatcher.dispose();

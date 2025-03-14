@@ -187,7 +187,7 @@ export class PropertyInstance {
             const argument = decodeInitArgument(this.init, node);
             this.value = new this.type(argument);
           }
-        } else if (this.init !== null) {
+        } else {
           this.value = new this.type();
         }
       }

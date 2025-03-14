@@ -1,4 +1,4 @@
-import { Change, Binding, ProtoChain, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, ChangeEvent } from '../iogui.js';
+import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions } from '../iogui.js';
 import { expect } from 'chai';
 
 async function nextTick(): Promise<void> {
@@ -479,7 +479,7 @@ export default class {
 
         expect(node3.propChangedEvents).to.be.eql([]);
       });
-      it('Should add "changed" event listeners to properties of IoNode type', async () => {
+      it('Should add/remove "changed" event listeners to properties of IoNode type', async () => {
         @Register
         class TestNode extends IoNode {
           static get Properties(): PropertyDefinitions {
@@ -515,8 +515,13 @@ export default class {
         }
 
         const node2 = new TestNode2();
+        const subnode3 = node2.prop;
 
-        expect(node2.prop._eventDispatcher.addedListeners.changed[0][0]).to.be.equal(node2.onIoNodePropertyChanged);
+        expect(subnode3._eventDispatcher.addedListeners.changed[0][0]).to.be.equal(node2.onIoNodePropertyChanged);
+
+        node2.dispose();
+
+        expect(subnode3._eventDispatcher.addedListeners.changed).to.be.equal(undefined);
       });
       it('Should corectly invoke handler functions on change', async () => {
         @Register

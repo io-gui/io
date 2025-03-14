@@ -1,4 +1,4 @@
-import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register, Binding } from '../../iogui.js';
+import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../../iogui.js';
 
 import { expect } from 'chai';
 
