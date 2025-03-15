@@ -496,7 +496,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 * @param {Object} event - Event payload.
 		 * @param {Object} event.detail.object - Mutated object.
 		 */
-		onObjectMutated: (event: CustomEvent) => void;
+		onObjectMutated(event: CustomEvent): void;
 		/**
 		 * This function is called after `onObjectMutated()` determines that one of
 		 * the object properties has mutated.
@@ -622,7 +622,7 @@ declare const IoNode_base: {
 		 * @param {Object} event - Event payload.
 		 * @param {Object} event.detail.object - Mutated object.
 		 */
-		onObjectMutated: (event: CustomEvent) => void;
+		onObjectMutated(event: CustomEvent): void;
 		/**
 		 * This function is called after `onObjectMutated()` determines that one of
 		 * the object properties has mutated.
@@ -816,7 +816,7 @@ declare const IoElement_base: {
 		throttle(func: CallbackFunction, arg?: any): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onIoNodePropertyChanged: (event: CustomEvent) => void;
-		onObjectMutated: (event: CustomEvent) => void;
+		onObjectMutated(event: CustomEvent): void;
 		objectMutated: (prop: string) => void;
 		bind(prop: string): Binding;
 		unbind(prop: string): void;
@@ -1102,7 +1102,7 @@ declare const MenuOptions_base: {
 		throttle(func: CallbackFunction, arg?: any): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onIoNodePropertyChanged: (event: CustomEvent) => void;
-		onObjectMutated: (event: CustomEvent) => void;
+		onObjectMutated(event: CustomEvent): void;
 		objectMutated: (prop: string) => void;
 		bind(prop: string): Binding;
 		unbind(prop: string): void;

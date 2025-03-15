@@ -9,7 +9,7 @@ To quickly import Io-Gui and get started, continue reading this article.
 Here is a basic example of a reaciteve element `<my-element>` with a `message` property and a simple template.
 
 ```javascript
-import { IoElement, RegisterIoElement } from "io-gui";
+import { IoElement, Register } from "io-gui";
 
 class MyElement extends IoElement {
   static get Properties() {
@@ -21,7 +21,7 @@ class MyElement extends IoElement {
     this.template([['p', this.message]]);
   }
 }
-RegisterIoElement(MyElement);
+Register(MyElement);
 
 const myElement = new MyElement({message: 'Hello World'});
 document.body.appendChild(myElement);
@@ -34,7 +34,7 @@ document.body.appendChild(myElement);
 Here is a quick way to make a simple website `<my-website>` with navigation and pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator, RegisterIoElement, MenuOptions } from "io-gui";
+import { IoNavigator, Register, MenuOptions } from "io-gui";
 import { IoStorage as $ } from "io-gui";
 
 export class MyWebsite extends IoNavigator {
@@ -57,7 +57,7 @@ export class MyWebsite extends IoNavigator {
     };
   }
 }
-RegisterIoElement(MyWebsite);
+Register(MyWebsite);
 ```
 
 See [index.html] of iogui.dev for more advanced example.

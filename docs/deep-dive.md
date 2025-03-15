@@ -22,23 +22,23 @@ DOM Events (CustomEvents) work with nodes just like with elements, allowing node
 
 ## Registration
 
-All new classes must be registered before use. You should use `RegisterIoNode` decorator for nodes and `RegisterIoElement` for elements.
+All new classes must be registered before use.
 
 ```javascript
 // Javascript flavor
 class MyNode extends IoNode {}
-RegisterIoNode(MyNode);
+Register(MyNode);
 
 class MyElement extends IoElement {}
-RegisterIoElement(MyElement);
+Register(MyElement);
 ```
 
 ```typescript
 // Typescript flavor with experimentalDecorators: true
-@RegisterIoNode
+@Register
 class MyNode extends IoNode {}
 
-@RegisterIoElement
+@Register
 class MyElement extends IoElement {}
 ```
 
@@ -184,7 +184,7 @@ Custom element styles are defined inside `static get Style()` template literal s
 Each CSS style rule set has to be prefixed with `:host` selector. This selector ensures that style rules will not leak outside of the element and it makes it possible to apply inherited rules to subclassed elements.
 
 ```typescript
-@RegisterIoElement
+@Register
 class MyElement extends IoElement {
   static get Style() {
     return /* css */`
@@ -206,7 +206,7 @@ The above style rule is effectively the same as adding the following style block
 </style>
 ```
 
-In fact, this is automatically done by the `RegisterIoElement` decorator. Each element will have its own style block inside the document head.
+In fact, this is automatically done by the `Register` decorator. Each element will have its own style block inside the document head.
 
 ## CSS Mixin Polyfill
 
@@ -232,7 +232,7 @@ To use the mixin in any element use `@apply` CSS rule. It is important that the 
 Listeners are defined inside the `static get Listeners()` object and .Following listener will call `onClick` handler function when `"click"` event happens.
 
 ```typescript
-@RegisterIoElement
+@Register
 class MyElement extends IoElement {
   static get Listeners() {
     return {
@@ -280,7 +280,7 @@ All properties are reactive by default, meaning that changing a property value w
 Here is an example of a node fully rigged to handle changes of its `selected` property.
 
 ```typescript
-@RegisterIoNode
+@Register
 class MyNode extends IoNode {
   @Property(false)
   declare selected: boolean;

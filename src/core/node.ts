@@ -304,7 +304,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} event - Event payload.
      * @param {Object} event.detail.object - Mutated object.
      */
-    onObjectMutated = (event: CustomEvent) => {
+    onObjectMutated(event: CustomEvent) {
       for (let i = 0; i < this._protochain.mutationObservedProperties.length; i++) {
         const prop = this._protochain.mutationObservedProperties[i];
         const value = this._properties.get(prop)!.value;

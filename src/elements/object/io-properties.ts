@@ -125,7 +125,7 @@ export class IoProperties extends IoElement {
     `;
   }
 
-  @Property({})
+  @Property({type: Object})
   declare value: Record<string, any> | any[];
 
   @Property({type: Array})

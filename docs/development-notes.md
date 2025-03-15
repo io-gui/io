@@ -53,7 +53,7 @@ This document is a rough draft.
 
 * ProtoChain
     - ProtoChain is an inheritance aggregator that also performs one-time class initialization.
-    - `@RegisterIoNode` and `@RegisterIoElement` decorators to harness the class prototype with `ProtoChain`.
+    - `@Register` decorator to harness the class prototype with `ProtoChain`.
 
 
 # Core Classes
