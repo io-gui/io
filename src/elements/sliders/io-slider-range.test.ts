@@ -1,13 +1,5 @@
-import {IoSliderRange} from '../../iogui.js';
+import { IoSliderRange, nextQueue } from '../../iogui.js';
 import { expect } from 'chai';
-
-async function nextTick(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(()=>{
-      resolve();
-    });
-  });
-}
 
 export default class {
   element = new IoSliderRange({value: [0, 0]});
@@ -43,10 +35,10 @@ export default class {
         it('has a11y attributes', async () => {
           this.reset();
           expect(this.element.getAttribute('role')).to.equal('slider');
-          await nextTick();
+          await nextQueue();
           this.element.min = 0;
           expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
-          await nextTick();
+          await nextQueue();
           this.element.max = 1;
           expect(this.element.getAttribute('aria-valuemax')).to.equal('1');
         });

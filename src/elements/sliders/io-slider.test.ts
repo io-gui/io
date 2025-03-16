@@ -1,16 +1,7 @@
-import {IoSlider} from '../../iogui.js';
+import { IoSlider, nextQueue } from '../../iogui.js';
 import { expect } from 'chai';
 
 const element = new IoSlider();
-
-async function nextTick(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(()=>{
-      resolve();
-    });
-  });
-}
-
 
 export default class {
   run() {
@@ -41,13 +32,13 @@ export default class {
         it('has a11y attributes', async () => {
           expect(element.getAttribute('role')).to.equal('slider');
           element.value = 0.1;
-          await nextTick();
+          await nextQueue();
           expect(element.getAttribute('aria-valuenow')).to.equal('0.1');
           element.min = 0;
-          await nextTick();
+          await nextQueue();
           expect(element.getAttribute('aria-valuemin')).to.equal('0');
           element.max = 1;
-          await nextTick();
+          await nextQueue();
           expect(element.getAttribute('aria-valuemax')).to.equal('1');
         });
       });

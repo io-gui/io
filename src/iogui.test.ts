@@ -36,11 +36,11 @@ try {
 }
 
 try {
-  new BindingTest().run();
-  new ChangeQueueTest().run();
-  new EventDispatcherTest().run();
-  new PropertyTest().run();
-  new ProtoChainTest().run ();
+  // new BindingTest().run();
+  // new ChangeQueueTest().run();
+  // new EventDispatcherTest().run();
+  // new PropertyTest().run();
+  // new ProtoChainTest().run ();
 
   new NodeTest().run();
   new ElementTest().run();

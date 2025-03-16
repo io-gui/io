@@ -1,13 +1,5 @@
-import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions } from '../iogui.js';
+import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../iogui.js';
 import { expect } from 'chai';
-
-async function nextTick(): Promise<void> {
-  return new Promise((resolve) => {
-    requestAnimationFrame(()=>{
-      resolve();
-    });
-  });
-}
 
 export default class {
   run() {
@@ -404,22 +396,24 @@ export default class {
           value: 1,
         }]);
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.propChangedEvents).to.be.eql([{
           oldValue: 0,
           property: 'prop',
           value: 1,
-        }, {
+        },
+        {
           oldValue: 1,
           property: 'prop',
           value: 2,
-        }]);
+        }
+      ]);
 
         node.setProperty('prop', 3, true);
         node.prop = 4;
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.propChangedEvents).to.be.eql([{
           oldValue: 0,
@@ -461,7 +455,7 @@ export default class {
 
         expect(node3.propChangedEvents).to.be.eql([]);
 
-        await nextTick();
+        await nextQueue();
 
         expect(node3.propChangedEvents).to.be.eql([{
           oldValue: -1,
@@ -475,9 +469,27 @@ export default class {
 
         expect(node3.propChangedEvents).to.be.eql([]);
 
-        await nextTick();
+        await nextQueue();
 
         expect(node3.propChangedEvents).to.be.eql([]);
+      });
+      it('Should execute throttle/debounce queue in FIFO order', async () => {
+        let order: number[] = [];
+        const node = new IoNode();
+        node.debounce(() => {
+          order.push(1);
+        });
+        node.debounce(() => {
+          order.push(2);
+        });
+        const throttleFuc = () => {
+          order.push(0);
+        }
+        node.throttle(throttleFuc);
+        node.throttle(throttleFuc);
+
+        await nextQueue();
+        expect(order).to.be.eql([0, 1, 2, 0]);
       });
       it('Should add/remove "changed" event listeners to properties of IoNode type', async () => {
         @Register
@@ -522,6 +534,25 @@ export default class {
         node2.dispose();
 
         expect(subnode3._eventDispatcher.addedListeners.changed).to.be.equal(undefined);
+
+        const node3 = new TestNode2();
+        const subnode4 = node3.prop;
+
+        node3.prop = null;
+
+        expect(subnode4._eventDispatcher.addedListeners.changed).to.be.equal(undefined);
+
+        const node4 = new TestNode2();
+        const node5 = new TestNode2();
+        const subnode5 = node4.prop;
+        const subnode6 = node5.prop;
+
+        node4.prop = new Binding(node5, 'prop');
+
+        expect(subnode5._eventDispatcher.addedListeners.changed).to.be.equal(undefined);
+        expect(subnode6._eventDispatcher.addedListeners.changed[0][0]).to.be.equal(node5.onIoNodePropertyChanged);
+        expect(subnode6._eventDispatcher.addedListeners.changed[1][0]).to.be.equal(node4.onIoNodePropertyChanged);
+
       });
       it('Should corectly invoke handler functions on change', async () => {
         @Register
@@ -607,7 +638,7 @@ export default class {
         expect(node.prop1Changes).to.be.eql([]);
         expect(node.prop2Changes).to.be.eql([]);
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.prop1Changes).to.be.eql([{
           property: 'prop1',
@@ -630,7 +661,7 @@ export default class {
           'prop2': 'test3',
         });
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.prop1Changes).to.be.eql([]);
         expect(node.prop2Changes).to.be.eql([]);
@@ -671,7 +702,7 @@ export default class {
 
         node.dispatchEvent('object-mutated', {object: node.obj1}, false, window);
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.changedCounter).to.equal(1);
         expect(node.obj1MutatedCounter).to.equal(1);
@@ -681,17 +712,17 @@ export default class {
 
         expect(node.obj2MutatedCounter).to.equal(1);
 
-        await nextTick();
+        await nextQueue();
 
         node.obj1 = new TestNode();
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.obj1MutatedCounter).to.equal(1);
 
         node.obj1.obj1 = {a: 1};
 
-        await nextTick();
+        await nextQueue();
 
         expect(node.obj1MutatedCounter).to.equal(2);
 

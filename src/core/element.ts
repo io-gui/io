@@ -207,6 +207,19 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
+  constructor(...args: any[]) {
+    super(...args);
+    for (const name in this._protochain.properties) {
+      const property = this._properties.get(name)!;
+      const value = property.value;
+      if (value !== undefined && value !== null) {
+        if (property.reflect) {
+          this.setAttribute(name, value);
+        }
+      }
+    }
+  }
+
   /**
   * Add resize listener if `onResized()` is defined in subclass.
   */

@@ -93,18 +93,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         const property = new PropertyInstance(this, this._protochain.properties[name]);
         this._properties.set(name, property);
 
-        // TODO: test removal of event listeners.
         if (property.binding) property.binding.addTarget(this, name);
         if (property.value?._isIoNode) {
           property.value.addEventListener('changed', this.onIoNodePropertyChanged);
-        }
-
-        // TODO: move this to element.ts
-        const value = property.value;
-        if (value !== undefined && value !== null) {
-          if (property.reflect && this._isIoElement) {
-            this.setAttribute(name, value);
-          }
         }
       }
 
@@ -124,7 +115,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     applyProperties(props: any) {
       for (const p in props) {
         if (!this._properties.has(p)) {
-          // TODO: consider converting style and config to properties
           // TODO: document!
           debug: if (!p.startsWith('@') && p !== 'style' && p !== 'config' && p !== '$') {
             console.warn(`Property "${p}" is not defined`, this);
@@ -154,9 +144,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             if (oldBinding) {
               oldBinding.removeTarget(this, name);
             }
-            // TODO: check for regressions.
-            // binding.addTarget will invoke setProperty again, so maybe we can skip the rest of the logic.
             binding.addTarget(this, name);
+            value = binding.value;
+            // NOTE: We return here because binding.setTarget() will trigger execution of setProperty() again.
             return;
           } else {
             // NOTE: Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings, it causes
@@ -442,20 +432,44 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 @Register
 export class IoNode extends IoNodeMixin(Object) {}
 
-// TODO: Document and test. Improve argument and node disposal handling. Consider edge-cases.
+interface QueueOptions {
+  node: IoNode | undefined;
+  arg: any;
+  timeout: number;
+}
+
 const throttleQueueSync: CallbackFunction[] = [];
-const throttleQueue: CallbackFunction[] = [];
-const throttleQueueOptions = new WeakMap();
+const throttleQueue0: CallbackFunction[] = [];
+const throttleQueue1: CallbackFunction[] = [];
+const throttleQueueOptions0: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
+const throttleQueueOptions1: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
+let throttleQueue = throttleQueue0;
+let throttleQueueOptions = throttleQueueOptions0;
+
+export async function nextQueue(): Promise<void> {
+  return new Promise((resolve) => {
+    throttleQueue.push(resolve);
+    throttleQueueOptions.set(resolve, {
+      arg: undefined,
+      timeout: Date.now() + 1,
+      node: undefined,
+    });
+  });
+}
 
 function throttle(node: IoNode, func: CallbackFunction, arg: any = undefined, timeout = 1) {
-  if (timeout === 0 && throttleQueueSync.indexOf(func) === -1) {
-    throttleQueueSync.push(func);
-    try {
-      func(arg);
-    } catch (e) {
-      console.error(e);
+  if (timeout === 0) {
+    if (throttleQueueSync.indexOf(func) === -1) {
+      throttleQueueSync.push(func);
+      try {
+        func(arg);
+      } catch (e) {
+        console.error(e);
+      }
+      return;
+    } else {
+      timeout = 1;
     }
-    return;
   }
   if (throttleQueue.indexOf(func) === -1) {
     throttleQueue.push(func);
@@ -467,32 +481,39 @@ function throttle(node: IoNode, func: CallbackFunction, arg: any = undefined, ti
       timeout: Date.now() + timeout,
     });
   } else {
-    const options = throttleQueueOptions.get(func);
-    options.arg = arg;
+    throttleQueueOptions.get(func)!.arg = arg;
   }
 }
 
 function animate () {
-  requestAnimationFrame(animate);
   throttleQueueSync.length = 0;
-  for (let i = throttleQueue.length; i--;) {
-    const func = throttleQueue[i];
-    const options = throttleQueueOptions.get(func);
-    if (options.timeout > Date.now()) {
+
+  const activeThrottleQueue = throttleQueue;
+  const activeThrottleQueueOptions = throttleQueueOptions;
+  throttleQueue = throttleQueue === throttleQueue0 ? throttleQueue1 : throttleQueue0;
+  throttleQueueOptions = throttleQueueOptions === throttleQueueOptions0 ? throttleQueueOptions1 : throttleQueueOptions0;
+
+  const time = Date.now();
+  for (let i = 0; i < activeThrottleQueue.length; i++) {
+    const func = activeThrottleQueue[i];
+    const options = activeThrottleQueueOptions.get(func)!;
+    activeThrottleQueueOptions.delete(func);
+    
+    if (options.timeout > time) {
+      throttleQueue.push(func);
+      throttleQueueOptions.set(func, options);
       continue;
     }
-    // TODO: make test to veryfy you can add throttled function to throttle queue from itself.
-    // If we execute the function before clearing it from the queue it can't be queued again int the same rAF cycle.
-    throttleQueue.splice(throttleQueue.indexOf(func), 1);
-    throttleQueueOptions.delete(func);
+
+    if (options.node?._disposed) continue;
     try {
-      if (!options.node._disposed) {
-        if (options.arg !== undefined) func(options.arg);
-        else func();
-      }
+      if (options.arg !== undefined) func(options.arg);
+      else func();
     } catch (e) {
       console.error(e);
     }
   }
+  activeThrottleQueue.length = 0;
+  requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
