@@ -192,7 +192,7 @@ export default class {
       });
       it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
         let protoChain = new ProtoChain(IoNode1);
-        expect(protoChain.handlers).to.be.eql([]);
+        expect(protoChain.handlers).to.be.eql(['onObjectMutated']);
         protoChain = new ProtoChain(MockIoNode1);
         expect(protoChain.handlers).to.be.eql(['onFunction1', '_onFunction1']);
         protoChain = new ProtoChain(MockIoNode2);

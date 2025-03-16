@@ -215,6 +215,7 @@ export class ProtoChain {
   }
   /**
    * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+   * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
    * @param {IoNode} node - Target node instance
    */
   autobindHandlers(node: IoNode) {

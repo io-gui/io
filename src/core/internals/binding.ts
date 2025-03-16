@@ -46,6 +46,8 @@ export class Binding {
   constructor(node: IoNode, property: string) {
     this.node = node;
     this.property = property;
+    this.onSourceChanged = this.onSourceChanged.bind(this);
+    this.onTargetChanged = this.onTargetChanged.bind(this);
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged);
   }
   set value(value) {
@@ -164,7 +166,7 @@ export class Binding {
    * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
    * @param {ChangeEvent} event - Property change event.
    */
-  onTargetChanged = (event: ChangeEvent) => {
+  onTargetChanged(event: ChangeEvent){
     debug: if (this.targets.indexOf(event.target) === -1) {
       console.error('onTargetChanged() should never fire if target is not accounted for');
     }
@@ -179,7 +181,7 @@ export class Binding {
    * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
    * @param {ChangeEvent} event - Property change event.
    */
-  onSourceChanged = (event: ChangeEvent) => {
+  onSourceChanged(event: ChangeEvent) {
     debug: if (event.target !== this.node) {
       console.error('onSourceChanged() should always originate form source node.');
     }
