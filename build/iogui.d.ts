@@ -79,12 +79,12 @@ export declare class Binding {
 	 * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
 	 * @param {ChangeEvent} event - Property change event.
 	 */
-	onTargetChanged: (event: ChangeEvent) => void;
+	onTargetChanged(event: ChangeEvent): void;
 	/**
 	 * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
 	 * @param {ChangeEvent} event - Property change event.
 	 */
-	onSourceChanged: (event: ChangeEvent) => void;
+	onSourceChanged(event: ChangeEvent): void;
 	/**
 	 * Dispose of the binding by removing all targets and listeners.
 	 * Use this when node is no longer needed.
@@ -396,6 +396,7 @@ export declare class ProtoChain {
 	validateProperties(): void;
 	/**
 	 * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+	 * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
 	 * @param {IoNode} node - Target node instance
 	 */
 	autobindHandlers(node: IoNode): void;
@@ -677,6 +678,7 @@ declare const IoNode_base: {
  */
 export declare class IoNode extends IoNode_base {
 }
+export declare function nextQueue(): Promise<void>;
 export interface Change {
 	property: string;
 	value: any;
@@ -845,6 +847,7 @@ export declare class IoElement extends IoElement_base {
 	id: string;
 	hidden: boolean;
 	disabled: boolean;
+	constructor(...args: any[]);
 	/**
 	* Add resize listener if `onResized()` is defined in subclass.
 	*/

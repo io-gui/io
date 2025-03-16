@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Register } from '../../core/decorators/register.js';
 import { IoElement } from '../../core/element.js';
 import { Property } from '../../core/decorators/property.js';
@@ -131,6 +131,7 @@ export class IoField extends IoElement {
     this.addEventListener('pointerup', this._onPointerup);
   }
   _onPointermove(event: PointerEvent) {}
+
   _onPointerleave(event: PointerEvent) {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerleave', this._onPointerleave);

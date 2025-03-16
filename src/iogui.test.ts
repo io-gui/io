@@ -36,11 +36,11 @@ try {
 }
 
 try {
-  // new BindingTest().run();
-  // new ChangeQueueTest().run();
-  // new EventDispatcherTest().run();
-  // new PropertyTest().run();
-  // new ProtoChainTest().run ();
+  new BindingTest().run();
+  new ChangeQueueTest().run();
+  new EventDispatcherTest().run();
+  new PropertyTest().run();
+  new ProtoChainTest().run ();
 
   new NodeTest().run();
   new ElementTest().run();
@@ -64,5 +64,5 @@ try {
     sessionFinished();
   });
 } catch (error) {
-  sessionFailed(error as any);
+  await sessionFailed(error as any);
 }

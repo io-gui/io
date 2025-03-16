@@ -233,7 +233,9 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * default change handler.
      * Invoked when one of the properties change.
      */
+
     changed() {}
+
     init() {}
     /**
      * Adds property change to the queue.
@@ -498,7 +500,7 @@ function animate () {
     const func = activeThrottleQueue[i];
     const options = activeThrottleQueueOptions.get(func)!;
     activeThrottleQueueOptions.delete(func);
-    
+
     if (options.timeout > time) {
       throttleQueue.push(func);
       throttleQueueOptions.set(func, options);

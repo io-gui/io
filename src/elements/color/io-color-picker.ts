@@ -32,7 +32,7 @@ export class IoColorPicker extends IoElement {
   @Property('0')
   declare tabindex: string;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _onClick(event: FocusEvent) {
     this.toggle();
   }

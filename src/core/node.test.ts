@@ -484,7 +484,7 @@ export default class {
         });
         const throttleFuc = () => {
           order.push(0);
-        }
+        };
         node.throttle(throttleFuc);
         node.throttle(throttleFuc);
 
