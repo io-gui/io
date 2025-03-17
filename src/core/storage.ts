@@ -15,7 +15,6 @@ class EmulatedLocalStorage {
       return self.localStorage.getItem('IoStorage:user-permitted') === 'true';
     } catch (error) {
       console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
-      console.error(error);
     }
     return false;
   }
@@ -38,7 +37,6 @@ class EmulatedLocalStorage {
       }
     } catch (error) {
       console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
-      console.error(error);
     }
   }
   setItem(key: string, value: unknown) {
@@ -154,7 +152,6 @@ export class IoStorageNode extends IoNode {
               props.value = JSON.parse(hash);
             } catch (error) {
               props.value = hash;
-              console.error(error);
             }
           }
           break;
@@ -294,7 +291,6 @@ function getValueFromHash(key: string) {
     try {
       return JSON.parse(hashValues[key]);
     } catch (error) {
-      console.error(error);
       return hashValues[key];
     }
   }
@@ -308,7 +304,6 @@ function updateAllFromHash() {
       try {
         node.value = JSON.parse(hashValues[h]);
       } catch (error) {
-        console.error(error);
         node.value = hashValues[h];
       }
     }

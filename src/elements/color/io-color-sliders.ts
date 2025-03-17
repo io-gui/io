@@ -3,7 +3,7 @@ import { Property } from '../../core/decorators/property.js';
 import { IoColorBase } from './io-color-base.js';
 import { IoSlider } from '../sliders/io-slider.js';
 import { IoSlider2d } from '../sliders/io-slider-2d.js';
-
+import { glsl } from '../../core/glsl/index.js';
 /**
  * A generic color slider element.
  * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
@@ -218,6 +218,10 @@ export class IoColorSliderBase extends IoSlider {
       // TODO: Allow GlUtils to rewrite inherited functions!
       // vec3 getStartColor(vec2 uv) {}
       // vec3 getEndColor(vec2 uv) {}
+      ${glsl.hue2rgb}
+      ${glsl.hsv2rgb}
+      ${glsl.hsl2rgb}
+      ${glsl.cmyk2rgb}
     `;
   }
   static get Frag() {
@@ -267,7 +271,11 @@ export class IoColorSlider2dBase extends IoSlider2d {
     return /* glsl */`
       // Note: Implement in subclass!
       // TODO: Allow GlUtils to rewrite inherited functions!
-      // vec3 geiotColor(vec2 uv) {}
+      // vec3 getColor(vec2 uv) {}
+      ${glsl.hue2rgb}
+      ${glsl.hsv2rgb}
+      ${glsl.hsl2rgb}
+      ${glsl.cmyk2rgb}
     `;
   }
   static get Frag() {

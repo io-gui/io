@@ -172,6 +172,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         outline: 1px auto var(--iotColorBlue);
         outline: 1px auto -webkit-focus-ring-color;
       }
+      :host[aria-invalid] {
+        border: var(--iotBorderFail);
+      }
     `;
   }
 

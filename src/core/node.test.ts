@@ -777,6 +777,81 @@ export default class {
 
         node.dispose();
       });
+      it('Should correctly set values when setProperties() is used to re-set multiple bindings', async () => {
+        @Register
+        class TestNode extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: 'subnode1',
+              prop2: 'subnode2',
+              prop3: 'subnode3',
+            };
+          }
+        }
+        const node = new TestNode();
+
+        @Register
+        class TestNodeTarget extends IoNode {
+          static get Properties(): PropertyDefinitions {
+            return {
+              subnode: TestNode,
+              prop1: 'target1',
+              prop2: 'target2',
+              prop3: 'target3',
+            };
+          }
+          init() {
+            this.changed();
+          }
+          changed() {
+            this.subnode.setProperties({
+              prop1: this.bind('prop1'),
+              prop2: this.bind('prop2'),
+              prop3: this.bind('prop3'),
+            });
+          }
+        }
+
+        const targetNode = new TestNodeTarget();
+
+        expect(targetNode.subnode.prop1).to.be.equal(targetNode.prop1).to.be.equal('target1');
+        expect(targetNode.subnode.prop2).to.be.equal(targetNode.prop2).to.be.equal('target2');
+        expect(targetNode.subnode.prop3).to.be.equal(targetNode.prop3).to.be.equal('target3');
+
+        const sourceNode = new TestNode({
+          prop1: 'source1',
+          prop2: 'source2',
+          prop3: 'source3',
+        });
+
+        targetNode.setProperties({
+          prop1: sourceNode.bind('prop1'),
+          prop2: sourceNode.bind('prop2'),
+          prop3: sourceNode.bind('prop3'),
+        });
+
+        expect(targetNode.subnode.prop1).to.be.equal(sourceNode.prop1).to.be.equal(targetNode.prop1).to.be.equal('source1');
+        expect(targetNode.subnode.prop2).to.be.equal(sourceNode.prop2).to.be.equal(targetNode.prop2).to.be.equal('source2');
+        expect(targetNode.subnode.prop3).to.be.equal(sourceNode.prop3).to.be.equal(targetNode.prop3).to.be.equal('source3');
+
+        sourceNode.prop1 = 'test1';
+        targetNode.prop2 = 'test2';
+        targetNode.subnode.prop3 = 'test3';
+
+        expect(targetNode.subnode.prop1).to.be.equal(sourceNode.prop1).to.be.equal(targetNode.prop1).to.be.equal('test1');
+        expect(targetNode.subnode.prop2).to.be.equal(sourceNode.prop2).to.be.equal(targetNode.prop2).to.be.equal('test2');
+        expect(targetNode.subnode.prop3).to.be.equal(sourceNode.prop3).to.be.equal(targetNode.prop3).to.be.equal('test3');
+
+        targetNode.setProperties({
+          prop1: 'final1',
+          prop2: 'final2',
+          prop3: 'final3',
+        });
+
+        expect(targetNode.subnode.prop1).to.be.equal(sourceNode.prop1).to.be.equal(targetNode.prop1).to.be.equal('final1');
+        expect(targetNode.subnode.prop2).to.be.equal(sourceNode.prop2).to.be.equal(targetNode.prop2).to.be.equal('final2');
+        expect(targetNode.subnode.prop3).to.be.equal(sourceNode.prop3).to.be.equal(targetNode.prop3).to.be.equal('final3');
+      });
       it('Should add/remove targets and targetProperties when assigned to values', () => {
         @Register
         class TestNode extends IoNode {

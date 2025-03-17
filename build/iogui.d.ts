@@ -436,18 +436,18 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 */
 		applyProperties(props: any): void;
 		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		setProperties(props: any): void;
+		/**
 		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 		 * @param {string} name Property name to set value of.
 		 * @param {any} value Peroperty value.
 		 * @param {boolean} [debounce] flag to skip event dispatch.
 		 */
 		setProperty(name: string, value: any, debounce?: boolean): void;
-		/**
-		 * Sets multiple properties in batch.
-		 * [property]-changed` events will be broadcast in the end.
-		 * @param {Object} props - Map of property names and values.
-		 */
-		setProperties(props: any): void;
 		/**
 		 * Sets value property and emits `value-input` event.
 		 * Use this when value property is set by user action (e.g. mouse click).
@@ -562,18 +562,18 @@ declare const IoNode_base: {
 		 */
 		applyProperties(props: any): void;
 		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		setProperties(props: any): void;
+		/**
 		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 		 * @param {string} name Property name to set value of.
 		 * @param {any} value Peroperty value.
 		 * @param {boolean} [debounce] flag to skip event dispatch.
 		 */
 		setProperty(name: string, value: any, debounce?: boolean): void;
-		/**
-		 * Sets multiple properties in batch.
-		 * [property]-changed` events will be broadcast in the end.
-		 * @param {Object} props - Map of property names and values.
-		 */
-		setProperties(props: any): void;
 		/**
 		 * Sets value property and emits `value-input` event.
 		 * Use this when value property is set by user action (e.g. mouse click).
@@ -808,8 +808,8 @@ declare const IoElement_base: {
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		applyProperties(props: any): void;
-		setProperty(name: string, value: any, debounce?: boolean): void;
 		setProperties(props: any): void;
+		setProperty(name: string, value: any, debounce?: boolean): void;
 		inputValue(value: any): void;
 		changed(): void;
 		init(): void;
@@ -997,9 +997,9 @@ export declare class IoGl extends IoElement {
 	pxRatio: number;
 	theme: typeof IoThemeSingleton;
 	reactivity: string;
-	_needsResize: boolean;
-	_canvas: HTMLCanvasElement;
-	_ctx: CanvasRenderingContext2D;
+	needsResize: boolean;
+	canvas: HTMLCanvasElement;
+	ctx: CanvasRenderingContext2D;
 	static get Vert(): string;
 	static get GlUtils(): string;
 	static get Frag(): string;
@@ -1095,8 +1095,8 @@ declare const MenuOptions_base: {
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		applyProperties(props: any): void;
-		setProperty(name: string, value: any, debounce?: boolean): void;
 		setProperties(props: any): void;
+		setProperty(name: string, value: any, debounce?: boolean): void;
 		inputValue(value: any): void;
 		changed(): void;
 		init(): void;

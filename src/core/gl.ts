@@ -3,10 +3,9 @@ import { IoElement } from './element.js';
 import { PropertyInstance, PropertyDefinition } from './internals/property.js';
 import { Property } from './decorators/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
-
+import { glsl } from './glsl/index.js';
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
-// TODO: disable filtering (image-rendering: pixelated)?
 
 gl.getExtension('OES_standard_derivatives');
 
@@ -41,28 +40,16 @@ export class IoGl extends IoElement {
       :host {
         position: relative;
         overflow: hidden !important;
-        /* -webkit-tap-highlight-color: transparent; */
         user-select: none;
       }
       :host > canvas {
         position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: calc(var(--iotBorderRadius) - var(--iotBorderWidth));
         pointer-events: none;
         image-rendering: pixelated;
       }
-      :host[aria-invalid] {
-        border: var(--iotBorderFail);
-      }
-      :host[aria-invalid] > canvas {
-        opacity: 0.5;
-      }
-      :host:focus > canvas {
-        border-radius: 3px;
-      }
     `;
   }
+
   @Property({type: Array, init: [0, 0]})
   declare size: [number, number];
 
@@ -78,9 +65,9 @@ export class IoGl extends IoElement {
   @Property('debounced')
   declare reactivity: string;
 
-  _needsResize = false;
-  _canvas: HTMLCanvasElement;
-  _ctx: CanvasRenderingContext2D;
+  needsResize = false;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
 
   static get Vert() {
     return /* glsl */`
@@ -95,114 +82,25 @@ export class IoGl extends IoElement {
   }
   static get GlUtils() {
     return /* glsl */`
-      #ifndef saturate
-        #define saturate(v) clamp(v, 0., 1.)
-      #endif
-
-      // Transform functions
-      vec2 translate(vec2 samplePosition, vec2 xy){
-        return samplePosition - vec2(xy.x, xy.y);
-      }
-      vec2 translate(vec2 samplePosition, float x, float y){
-        return samplePosition - vec2(x, y);
-      }
-
-      // SDF functions
-      float circle(vec2 samplePosition, float radius){
-        return saturate((length(samplePosition) - radius) * uPxRatio);
-      }
-      float rectangle(vec2 samplePosition, vec2 halfSize){
-        vec2 edgeDistance = abs(samplePosition) - halfSize;
-        float outside = length(max(edgeDistance, 0.));
-        float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
-        return 1.0 - saturate((outside + inside) * 1000000.0);
-      }
-      float paintDerivativeGrid2D(vec2 samplePosition, vec2 gridWidth, float lineWidth) {
-        vec2 sp = samplePosition / gridWidth;
-        float fractx = abs(fract(sp.x - 0.5) - 0.5) * 2.0;
-        float fracty = abs(fract(sp.y - 0.5) - 0.5) * 2.0;
-
-        float sx = ((sp.x - 0.5) - 0.5) * 2.0;
-        float sy = ((sp.y - 0.5) - 0.5) * 2.0;
-        
-        float absx = abs(max(dFdx(sx), dFdy(sx)));
-        float absy = abs(max(dFdy(sy), dFdx(sy)));
-
-        float fadeX = 1.0 - dFdx(sx);
-        float fadeY = 1.0 - dFdy(sx);
-        if (fadeX <= 0.0 || fadeY <= 0.0) return 1.0;
-
-        float linex = fractx / absx - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0) - 0.5;
-        float liney = fracty / absy - (0.5 * max(uPxRatio, 2.0) * lineWidth - 1.0) - 0.5;
-
-        return (1.0 - saturate(min(linex, liney)));
-      }
-      float lineVertical(vec2 samplePosition, float lineWidth) {
-        return (abs(samplePosition.x) * 2.0 > lineWidth) ? 0.0 : 1.0;
-      }
-      float lineHorizontal(vec2 samplePosition, float lineWidth) {
-        return (abs(samplePosition.y) * 2.0 > lineWidth) ? 0.0 : 1.0;
-      }
-      float lineCross2d(vec2 samplePosition, float lineWidth) {
-        return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 0.0 : 1.0;
-      }
-      float checker(vec2 samplePosition, float size) {
-        vec2 checkerPos = floor(samplePosition / size);
-        float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
-        return checkerMask;
-      }
-      float checkerX(vec2 samplePosition, float size) {
-        vec2 checkerPos = floor(samplePosition / size);
-        float checkerMask = mod(checkerPos.x, 2.0);
-        return checkerMask;
-      }
-      float checkerY(vec2 samplePosition, float size) {
-        vec2 checkerPos = floor(samplePosition / size);
-        float checkerMask = mod(checkerPos.y, 2.0);
-        return checkerMask;
-      }
-      vec3 hue2rgb(float hue) {
-        hue = fract(hue);
-        float R = abs(hue * 6. - 3.) - 1.;
-        float G = 2. - abs(hue * 6. - 2.);
-        float B = 2. - abs(hue * 6. - 4.);
-        return saturate(vec3(R,G,B));
-      }
-      vec3 hsv2rgb(vec3 hsv) {
-        vec3 rgb = hue2rgb(hsv.r);
-        return ((rgb - 1.) * hsv.g + 1.) * hsv.b;
-      }
-      vec3 hsl2rgb(vec3 hsl) {
-        vec3 rgb = hue2rgb(hsl.x);
-        float C = (1. - abs(2. * hsl.z - 1.)) * hsl.y;
-        return (rgb - 0.5) * C + hsl.z;
-      }
-      vec3 cmyk2rgb(vec4 cmyk) {
-        float r = 1. - min(1., cmyk.x * (1. - cmyk.w) + cmyk.w);
-        float g = 1. - min(1., cmyk.y * (1. - cmyk.w) + cmyk.w);
-        float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
-        return vec3(r, g, b);
-      }
-      // Compositing functions
-      vec3 compose(vec3 dst, vec4 src) {
-        return mix(dst, src.rgb, src.a);
-      }
-      // Painter Functions
-      vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
-        float lineShape = lineHorizontal(p, iotBorderWidth);
-        return compose(dstCol, vec4(color, lineShape));
-      }
+      ${glsl.saturate}
+      ${glsl.translate}
+      ${glsl.circle}
+      ${glsl.rectangle}
+      ${glsl.paintDerivativeGrid2D}
+      ${glsl.lineVertical}
+      ${glsl.lineHorizontal}
+      ${glsl.lineCross2d}
+      ${glsl.checker}
+      ${glsl.checkerX}
+      ${glsl.checkerY}
+      ${glsl.compose}
+      ${glsl.paintHorizontalLine}
     `;
   }
   static get Frag() {
     return /* glsl */`
-      varying vec2 vUv;
       void main(void) {
-        vec2 position = uSize * vUv;
-        float gridWidth = 8. * uPxRatio;
-        float lineWidth = 1.;
-        float gridShape = paintDerivativeGrid2D(position, vec2(gridWidth), lineWidth);
-        gl_FragColor = mix(vec4(vUv, 0.0, 1.0), uColor, gridShape);
+        gl_FragColor = vec4(uColor, 1.0);
       }\n\n`;
   }
   initPropertyUniform(name: string, property: PropertyDefinition) {
@@ -275,6 +173,10 @@ export class IoGl extends IoElement {
   constructor(properties: Record<string, any> = {}) {
     super(properties);
 
+    this.canvas = document.createElement('canvas');
+    this.appendChild(this.canvas);
+    this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
+
     // TODO: improve code clarity
     this._vecLengths = {};
     this.theme._properties.forEach((property, name) => {
@@ -310,10 +212,6 @@ export class IoGl extends IoElement {
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
 
-    this._canvas = document.createElement('canvas');
-    this.appendChild(this._canvas);
-    this._ctx = this._canvas.getContext('2d') as CanvasRenderingContext2D;
-
     this.updateThemeUniforms();
   }
   onResized() {
@@ -332,9 +230,9 @@ export class IoGl extends IoElement {
 
     if (hasResized) {
       // NOTE: Resizing only in inline CSS. Buffer resize postponed until `_onRender()`.`
-      this._canvas.style.width = Math.floor(width) + 'px';
-      this._canvas.style.height = Math.floor(height) + 'px';
-      this._needsResize = true;
+      this.canvas.style.width = Math.floor(width) + 'px';
+      this.canvas.style.height = Math.floor(height) + 'px';
+      this.needsResize = true;
 
       this.setProperties({
         size: [width, height],
@@ -344,18 +242,9 @@ export class IoGl extends IoElement {
   }
   themeMutated() {
     this.updateThemeUniforms();
-    this.throttle(this._onRender);
   }
   changed() {
-    // TODO: unhack when ResizeObserver is available in Safari
-    if (!window.ResizeObserver) {
-      setTimeout(() => {
-        this.onResized();
-        this.throttle(this._onRender);
-      });
-    } else {
-      this.throttle(this._onRender);
-    }
+    this.throttle(this._onRender);
   }
   _onRender() {
     const width = this.size[0] * this.pxRatio;
@@ -371,26 +260,19 @@ export class IoGl extends IoElement {
       this.updatePropertyUniform(uname, property);
     });
 
-    if (this._needsResize) {
-      this._canvas.width = Math.floor(width);
-      this._canvas.height = Math.floor(height);
-      this._needsResize = false;
+    if (this.needsResize) {
+      this.canvas.width = Math.floor(width);
+      this.canvas.height = Math.floor(height);
+      this.needsResize = false;
     }
 
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
 
-    // gl.clearColor(0, 0, 0, 1);
-    // gl.clear(gl.COLOR_BUFFER_BIT);
-
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    // this._canvas.src = canvas.toDataURL('image/png', 0.9);
-    // this._canvas.loading = true;
-
-    // this._ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this._ctx.drawImage(canvas, 0, 0);
+    this.ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {
     if (currentProgram !== this._shader) {

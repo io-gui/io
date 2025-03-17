@@ -127,6 +127,21 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this.dispatchQueue();
     }
     /**
+     * Sets multiple properties in batch.
+     * [property]-changed` events will be broadcast in the end.
+     * @param {Object} props - Map of property names and values.
+     */
+    setProperties(props: any) {
+      for (const p in props) {
+        if (!this._properties.has(p)) {
+          debug: console.warn(`Property "${p}" is not defined`, this);
+          continue;
+        }
+        this.setProperty(p, props[p], true);
+      }
+      this.dispatchQueue();
+    }
+    /**
      * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
      * @param {string} name Property name to set value of.
      * @param {any} value Peroperty value.
@@ -145,15 +160,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
               oldBinding.removeTarget(this, name);
             }
             binding.addTarget(this, name);
-            value = binding.value;
             // NOTE: We return here because binding.setTarget() will trigger execution of setProperty() again.
             return;
           } else {
-            // NOTE: Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings, it causes
-            // all but one of those properties to be reset to original value once parents's change event happens.
-            // This fixed the bug by setting binding value from target when binding already exists.
-            // TODO: make more tests to make sure this does not cause regressions and unexpected behaviors.
-            binding.value = value = prop.value;
+            // NOTE: This was a remedy for an old bug that might not be relevant anymore.
+            // Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings,
+            // it used to cause all but one of those properties to be reset to original value once parent changed.
+            // This ugly hack fixed the bug by setting binding value from target when binding already exists.
+            // TODO: keep an eye on this and remove if not needed.
+            // binding.value = value = prop.value;
+            return;
           }
         }
 
@@ -201,21 +217,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
           this.dispatchQueue(debounce);
         }
       }
-    }
-    /**
-     * Sets multiple properties in batch.
-     * [property]-changed` events will be broadcast in the end.
-     * @param {Object} props - Map of property names and values.
-     */
-    setProperties(props: any) {
-      for (const p in props) {
-        if (!this._properties.has(p)) {
-          debug: console.warn(`Property "${p}" is not defined`, this);
-          continue;
-        }
-        this.setProperty(p, props[p], true);
-      }
-      this.dispatchQueue();
     }
     /**
      * Sets value property and emits `value-input` event.
@@ -501,8 +502,13 @@ function animate () {
     const options = activeThrottleQueueOptions.get(func)!;
     activeThrottleQueueOptions.delete(func);
 
+    if (options === undefined) {
+      console.warn(func);
+    }
     if (options.timeout > time) {
-      throttleQueue.push(func);
+      if (throttleQueue.indexOf(func) === -1) {
+        throttleQueue.push(func);
+      }
       throttleQueueOptions.set(func, options);
       continue;
     }

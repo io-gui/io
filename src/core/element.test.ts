@@ -1,6 +1,5 @@
-import { Register, IoElement, IoNode, Change, PropertyDefinitions } from '../iogui.js';
+import { Register, IoElement, IoNode, Change, PropertyDefinitions, nextQueue } from '../iogui.js';
 import { expect } from 'chai';
-
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
@@ -351,6 +350,80 @@ export default class {
         expect(element2.$.subelement.prop0).to.equal(3);
         expect(element2.prop1).to.equal('buzz');
         expect(element2.$.subelement.prop1).to.equal('buzz');
+      });
+      it('Should correctly set values when setProperties() is used to re-set multiple bindings', async () => {
+        @Register
+        class TestBindingElement extends IoElement {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: 'subnode1',
+              prop2: 'subnode2',
+              prop3: 'subnode3',
+            };
+          }
+        }
+
+        @Register
+        class TestBindingElementTarget extends IoElement {
+          static get Properties(): PropertyDefinitions {
+            return {
+              prop1: 'target1',
+              prop2: 'target2',
+              prop3: 'target3',
+            };
+          }
+          init() {
+            this.changed();
+          }
+          changed() {
+            this.template([['test-binding-element', {
+              $: 'testElement',
+              prop1: this.bind('prop1'),
+              prop2: this.bind('prop2'),
+              prop3: this.bind('prop3'),
+            }]]);
+          }
+        }
+
+        const targetElement = new TestBindingElementTarget();
+
+        expect(targetElement.$.testElement.prop1).to.be.equal(targetElement.prop1).to.be.equal('target1');
+        expect(targetElement.$.testElement.prop2).to.be.equal(targetElement.prop2).to.be.equal('target2');
+        expect(targetElement.$.testElement.prop3).to.be.equal(targetElement.prop3).to.be.equal('target3');
+
+        const sourceElement = new TestBindingElement({
+          prop1: 'source1',
+          prop2: 'source2',
+          prop3: 'source3',
+        });
+
+        targetElement.setProperties({
+          prop1: sourceElement.bind('prop1'),
+          prop2: sourceElement.bind('prop2'),
+          prop3: sourceElement.bind('prop3'),
+        });
+
+        expect(targetElement.$.testElement.prop1).to.be.equal(sourceElement.prop1).to.be.equal(targetElement.prop1).to.be.equal('source1');
+        expect(targetElement.$.testElement.prop2).to.be.equal(sourceElement.prop2).to.be.equal(targetElement.prop2).to.be.equal('source2');
+        expect(targetElement.$.testElement.prop3).to.be.equal(sourceElement.prop3).to.be.equal(targetElement.prop3).to.be.equal('source3');
+
+        sourceElement.prop1 = 'test1';
+        targetElement.prop2 = 'test2';
+        targetElement.$.testElement.prop3 = 'test3';
+
+        expect(targetElement.$.testElement.prop1).to.be.equal(sourceElement.prop1).to.be.equal(targetElement.prop1).to.be.equal('test1');
+        expect(targetElement.$.testElement.prop2).to.be.equal(sourceElement.prop2).to.be.equal(targetElement.prop2).to.be.equal('test2');
+        expect(targetElement.$.testElement.prop3).to.be.equal(sourceElement.prop3).to.be.equal(targetElement.prop3).to.be.equal('test3');
+
+        targetElement.setProperties({
+          prop1: 'final1',
+          prop2: 'final2',
+          prop3: 'final3',
+        });
+
+        expect(targetElement.$.testElement.prop1).to.be.equal(sourceElement.prop1).to.be.equal(targetElement.prop1).to.be.equal('final1');
+        expect(targetElement.$.testElement.prop2).to.be.equal(sourceElement.prop2).to.be.equal(targetElement.prop2).to.be.equal('final2');
+        expect(targetElement.$.testElement.prop3).to.be.equal(sourceElement.prop3).to.be.equal(targetElement.prop3).to.be.equal('final3');
       });
       it('Has a11y attributes', () => {
         expect(element.getAttribute('aria-label')).to.equal(null);
