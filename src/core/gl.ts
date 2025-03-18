@@ -5,7 +5,7 @@ import { Property } from './decorators/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
 import { glsl } from './glsl/index.js';
 const canvas = document.createElement('canvas');
-const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: true}) as WebGLRenderingContext;
+const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false}) as WebGLRenderingContext;
 
 gl.getExtension('OES_standard_derivatives');
 
@@ -49,6 +49,9 @@ export class IoGl extends IoElement {
       }
     `;
   }
+
+  @Property({type: Boolean, value: false})
+  declare transparent: boolean;
 
   @Property({type: Array, init: [0, 0]})
   declare size: [number, number];
@@ -100,7 +103,7 @@ export class IoGl extends IoElement {
   static get Frag() {
     return /* glsl */`
       void main(void) {
-        gl_FragColor = vec4(uColor, 1.0);
+        gl_FragColor = uColor;
       }\n\n`;
   }
   initPropertyUniform(name: string, property: PropertyDefinition) {
@@ -175,7 +178,7 @@ export class IoGl extends IoElement {
 
     this.canvas = document.createElement('canvas');
     this.appendChild(this.canvas);
-    this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
+    this.ctx = this.canvas.getContext('2d', {alpha: true}) as CanvasRenderingContext2D;
 
     // TODO: improve code clarity
     this._vecLengths = {};
@@ -247,8 +250,8 @@ export class IoGl extends IoElement {
     this.throttle(this._onRender);
   }
   _onRender() {
-    const width = this.size[0] * this.pxRatio;
-    const height = this.size[1] * this.pxRatio;
+    const width = Math.floor(this.size[0] * this.pxRatio);
+    const height = Math.floor(this.size[1] * this.pxRatio);
 
     if (!width || !height) return;
 
@@ -261,14 +264,20 @@ export class IoGl extends IoElement {
     });
 
     if (this.needsResize) {
-      this.canvas.width = Math.floor(width);
-      this.canvas.height = Math.floor(height);
+      this.canvas.width = width;
+      this.canvas.height = height;
       this.needsResize = false;
     }
 
     canvas.width = width;
     canvas.height = height;
     gl.viewport(0, 0, width, height);
+
+    if (this.transparent) {
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      this.ctx.clearRect(0, 0, width, height);
+    }
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
@@ -291,6 +300,7 @@ export class IoGl extends IoElement {
   }
   setUniform(name: string, value: any) {
     const uniform = gl.getUniformLocation(this._shader, name);
+    if (uniform === null) return;
     let type: string = typeof value;
     if (value instanceof Array) type = 'array';
     let _c;

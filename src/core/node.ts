@@ -1,6 +1,6 @@
 import {ProtoChain} from './internals/protoChain.js';
 import {Binding} from './internals/binding.js';
-import {ChangeQueue} from './internals/changeQueue.js';
+import {Change, ChangeQueue, Changes} from './internals/changeQueue.js';
 import {PropertyInstance, PropertyDefinitionLoose} from './internals/property.js';
 import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher.js';
 import { Register } from './decorators/register.js';
@@ -285,6 +285,8 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {IoNode} event.detail.object - Mutated node.
      */
     onIoNodePropertyChanged = (event: CustomEvent) => {
+      // TODO: consider not emitting "object-mutated" event since implementation of target node might emit it instead.
+      // TODO: use change event to trigger mutation handler instead.
       const node = event.target as unknown as IoNode;
       debug: if (!node._isIoNode) {
         console.warn('IoNode.onIoNodePropertyChanged(): Handler evoked on a property which is not an IoNode instance.');
@@ -377,7 +379,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {boolean} bubbles - event bubbles.
      * @param {HTMLElement|Node} src source node/element to dispatch event from.
      */
-    dispatchEvent(type: string, detail = {}, bubbles = false, src?: Node | HTMLElement | Document | Window) {
+    dispatchEvent(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
       this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     /**

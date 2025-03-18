@@ -85,8 +85,13 @@ export default class {
           element.color = [1, 0.5, 0.25, 1];
           element._onRender();
           color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data;
-          // TODO: Test with IoTheme color
-          expect(color).to.eql(new Uint8ClampedArray([51, 51, 51, 255]));
+          expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
+
+          element.transparent = true;
+          element.color = [1, 0.25, 0.5, 0.5];
+          element._onRender();
+          color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data;
+          expect(color).to.eql(new Uint8ClampedArray([128, 32, 64, 64]));
         });
       });
     });

@@ -11,7 +11,7 @@ class MockIoNode extends IoNode {
   prop2Changed(change: Change) {
     this.changeStack.push(`prop2Changed ${change.property} ${change.value} ${change.oldValue}`);
   }
-  dispatchEvent(eventName: string, change: Change) {
+  dispatchEvent(eventName: string, change?: Change) {
     if (change) {
       this.eventStack.push(`${eventName} ${change.property} ${change.value} ${change.oldValue}`);
     } else {

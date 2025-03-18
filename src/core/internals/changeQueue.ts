@@ -6,6 +6,10 @@ export interface Change {
   oldValue: any;
 }
 
+export interface Changes {
+  [property: string]: Change;
+}
+
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
   readonly target: IoNode;
   readonly detail: Change;

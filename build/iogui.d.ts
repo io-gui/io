@@ -536,7 +536,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 * @param {boolean} bubbles - event bubbles.
 		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
 		 */
-		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
 		/**
 		 * Disposes all internals.
 		 * Use this when instance is no longer needed.
@@ -662,7 +662,7 @@ declare const IoNode_base: {
 		 * @param {boolean} bubbles - event bubbles.
 		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
 		 */
-		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
 		/**
 		 * Disposes all internals.
 		 * Use this when instance is no longer needed.
@@ -683,6 +683,9 @@ export interface Change {
 	property: string;
 	value: any;
 	oldValue: any;
+}
+export interface Changes {
+	[property: string]: Change;
 }
 export interface ChangeEvent extends Omit<CustomEvent<Change>, "target"> {
 	readonly target: IoNode;
@@ -824,7 +827,7 @@ declare const IoElement_base: {
 		unbind(prop: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
 		dispose(): void;
 		Register(ioNodeConstructor: typeof IoNode): void;
 	};
@@ -984,6 +987,7 @@ export declare const IoStorage: ((props: StorageProps) => Binding) & {
 };
 export declare class IoGl extends IoElement {
 	static get Style(): string;
+	transparent: boolean;
 	size: [
 		number,
 		number
@@ -1111,7 +1115,7 @@ declare const MenuOptions_base: {
 		unbind(prop: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-		dispatchEvent(type: string, detail?: {}, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
 		dispose(): void;
 		Register(ioNodeConstructor: typeof IoNode): void;
 	};
