@@ -7,10 +7,10 @@ export class IoLabel extends IoElement {
     return /* css */`
       --ioLabel: {
         display: inline-block;
-        height: var(--iotLineHeight);
-        line-height: var(--iotLineHeight);
-        font-size: var(--iotFontSize);
-        padding: 0 var(--iotSpacing);
+        height: var(--io_lineHeight);
+        line-height: var(--io_lineHeight);
+        font-size: var(--io_fontSize);
+        padding: 0 var(--io_spacing);
       }
       :host {
         @apply --ioLabel;

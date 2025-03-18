@@ -18,7 +18,7 @@ export class IoMatrix extends IoVector {
         display: grid;
         align-self: stretch;
         justify-self: stretch;
-        grid-gap: var(--iotSpacing);
+        grid-gap: var(--io_spacing);
       }
       :host > *:not(:last-child) {
         margin-right: 0;

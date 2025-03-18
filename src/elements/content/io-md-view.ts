@@ -35,10 +35,10 @@ class IoMdView extends IoElement {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
-        padding: 0 var(--iotLineHeight);
-        padding-bottom: var(--iotLineHeight);
-        color: var(--iotColor);
-        background-color: var(--iotBgColor);
+        padding: 0 var(--io_lineHeight);
+        padding-bottom: var(--io_lineHeight);
+        color: var(--io_color);
+        background-color: var(--io_bgColor);
       }
       :host p {
         line-height: 1.45em;
@@ -46,31 +46,31 @@ class IoMdView extends IoElement {
       }
       :host a {
         text-decoration: none;
-        color: var(--iotColorBlue);
+        color: var(--io_colorBlue);
       }
       :host h1 {
         padding: 0.7em 0;
         margin: 0;
-        border-bottom: var(--iotBorder);
-        color: var(--iotColorStrong);
+        border-bottom: var(--io_border);
+        color: var(--io_colorStrong);
       }
       :host h2 {
         padding: 0.6em 0;
         margin: 0;
-        color: var(--iotColorStrong);
+        color: var(--io_colorStrong);
       }
       :host h3 {
         padding: 0.5em 0;
         margin: 0;
-        color: var(--iotColorStrong);
+        color: var(--io_colorStrong);
       }
       :host h4 {
         padding: 0.4em 0;
         margin: 0;
-        color: var(--iotColorStrong);
+        color: var(--io_colorStrong);
       }
       :host code {
-        background-color: var(--iotBgColorDimmed);
+        background-color: var(--io_bgColorDimmed);
       }
       :host strong code {}
       :host pre > code {
@@ -78,8 +78,8 @@ class IoMdView extends IoElement {
       }
       
       :host code[class] {
-        background-color: var(--iotBgColorDimmed);
-        padding: var(--iotSpacing3);
+        background-color: var(--io_bgColorDimmed);
+        padding: var(--io_spacing3);
         display: block;
         overflow-x: auto;
         font-size: var(--io-code-size);
@@ -87,32 +87,32 @@ class IoMdView extends IoElement {
       :host blockquote {
         font-size: 0.85em;
         opacity: 0.75;
-        margin: var(--iotLineHeight) 0;
-        padding: var(--iotSpacing3) var(--iotLineHeight);
-        background-color: var(--iotBgColorStrong);
-        color: var(--iotColor);
-        border-left: var(--iotBorder);
-        border-left-width: var(--iotSpacing2);
+        margin: var(--io_lineHeight) 0;
+        padding: var(--io_spacing3) var(--io_lineHeight);
+        background-color: var(--io_bgColorStrong);
+        color: var(--io_color);
+        border-left: var(--io_border);
+        border-left-width: var(--io_spacing2);
       }
       :host blockquote strong {
-        color: var(--iotColorStrong);
+        color: var(--io_colorStrong);
       }
       :host table  {
         width: 100% !important;
-        border: var(--iotBorder);
+        border: var(--io_border);
         border-collapse: collapse;
         table-layout: auto;
       }
       :host table th {
-        background-color: var(--iotBgColorDimmed);
-        color: var(--iotColorStrong);
+        background-color: var(--io_bgColorDimmed);
+        color: var(--io_colorStrong);
         font-weight: bold;
       }
       :host table td,
       :host table tr,
       :host table th {
-        border: var(--iotBorder);
-        padding: var(--iotSpacing) var(--iotSpacing2);
+        border: var(--io_border);
+        padding: var(--io_spacing) var(--io_spacing2);
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
@@ -145,7 +145,7 @@ class IoMdView extends IoElement {
         margin-top: -20px;
         margin-left: -20px;
         border-radius: 50%;
-        border: var(--iotBorder);
+        border: var(--io_border);
         border-top-color: #000;
         animation: spinner .6s linear infinite;
       }

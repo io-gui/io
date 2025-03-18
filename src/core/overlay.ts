@@ -49,7 +49,7 @@ export class IoOverlay extends IoElement {
       :host > * {
         position: absolute !important;
         touch-action: none;
-        box-shadow: var(--iotShadow);
+        box-shadow: var(--io_shadow);
       }
     `;
   }

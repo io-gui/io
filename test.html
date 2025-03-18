@@ -10,8 +10,8 @@
       html, body {
         margin: 0;
         padding: 0;
-        background-color: var(--iotBgColor);
-        color: var(--iotColor);
+        background-color: var(--io_bgColor);
+        color: var(--io_color);
       }
       #mocha {
         font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -41,12 +41,12 @@
       }
 
       #mocha-stats .passes {
-        margin-right: var(--iotLineHeight);
-        color: var(--iotColorGreen);
+        margin-right: var(--io_lineHeight);
+        color: var(--io_colorGreen);
       }
       #mocha-stats .failures {
-        margin-right: var(--iotLineHeight);
-        color: var(--iotColorRed);
+        margin-right: var(--io_lineHeight);
+        color: var(--io_colorRed);
       }
 
       #mocha .replay {
@@ -88,14 +88,14 @@
       }
 
       #mocha .test > pre {
-        background: var(--iotBgColorDimmed);
-        font-size: var(--iotFontSize);
-        margin: var(--iotLineHeight);
+        background: var(--io_bgColorDimmed);
+        font-size: var(--io_fontSize);
+        margin: var(--io_lineHeight);
         margin-top: 0.25em;
-        padding: var(--iotLineHeight);
+        padding: var(--io_lineHeight);
         overflow: auto;
-        border: var(--iotBorder);
-        border-radius: var(--iotBorderRadius2);
+        border: var(--io_border);
+        border-radius: var(--io_borderRadius2);
         max-width: calc(100% - 42px);
       }
 
@@ -103,17 +103,17 @@
         content: '✖';
         font-size: 1em;
         margin: 0 0.5em 0 0;
-        color: var(--iotColorRed);
+        color: var(--io_colorRed);
       }
       #mocha .test.pass h2::before {
         content: '✓';
         font-size: 1em;
         margin: 0 0.5em 0 0;
-        color: var(--iotColorGreen);
+        color: var(--io_colorGreen);
       }
 
       #mocha .test.fail pre.error {
-        border: var(--iotBorderFail);
+        border: var(--io_borderFail);
       }
 
       #mocha code .comment { color: #ddd; }

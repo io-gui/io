@@ -105,22 +105,22 @@ export class IoProperties extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      color: var(--iotColorField);
-      background-color: var(--iotBgColor);
+      color: var(--io_colorField);
+      background-color: var(--io_bgColor);
     }
     :host > .io-row {
       display: flex;
       flex-direction: row;
     }
     :host > .io-row > io-label {
-      margin-top: calc(var(--iotSpacing) + var(--iotBorderWidth));
+      margin-top: calc(var(--io_spacing) + var(--io_borderWidth));
     }
     :host > .io-row > io-label:after {
       display: inline-block;
       content: ':';
     }
     :host io-object > io-properties {
-      padding-left: var(--iotLineHeight);
+      padding-left: var(--io_lineHeight);
     }
     `;
   }

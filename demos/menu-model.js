@@ -10,34 +10,34 @@ export class IoOptionsDemoView extends IoElement {
         display: flex;
         flex-direction: column;
         border: 1px solid gray;
-        border-radius: var(--iotBorderRadius);
+        border-radius: var(--io_borderRadius);
       }
       :host > div {
-        background-color: var(--iotBgColorDimmed);
+        background-color: var(--io_bgColorDimmed);
         display: flex;
-        height: var(--iotLineHeight);
+        height: var(--io_lineHeight);
       }
       :host io-item-demo-view {
-        margin-left: var(--iotSpacing);
+        margin-left: var(--io_spacing);
       }
       :host io-label {
         background-color: transparent;
-        color: var(--iotColor);
+        color: var(--io_color);
       }
       :host io-label.first {
-        color: var(--iotColorBlue);
+        color: var(--io_colorBlue);
       }
       :host io-label.path {
         margin-left: 0.5em;
-        color: var(--iotColorBlue);
+        color: var(--io_colorBlue);
       }
       :host io-label.last {
         margin-left: 0.5em;
-        color: var(--iotColorBlue);
+        color: var(--io_colorBlue);
       }
       :host io-label.scroll {
         margin-left: 0.5em;
-        color: var(--iotColorBlue);
+        color: var(--io_colorBlue);
       }
 
     `;

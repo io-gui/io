@@ -6,9 +6,9 @@ export class IoDemoThemeEditor extends IoElement {
     :host {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      grid-gap: var(--iotSpacing);
-      background-color: var(--iotBgColor);
-      padding: var(--iotSpacing);
+      grid-gap: var(--io_spacing);
+      background-color: var(--io_bgColor);
+      padding: var(--io_spacing);
       grid-template-columns: auto 1fr !important;
     }
     `;
@@ -22,66 +22,66 @@ export class IoDemoThemeEditor extends IoElement {
       ])}],
       ['io-button', {label: 'Reset', action: () => IoThemeSingleton.reset() }],
 
-      ['io-field', {appearance: 'neutral', label: 'iotSpacing'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotSpacing'), min: 0, max: 20, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'spacing'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotLineHeight'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotLineHeight'), min: 10, max: 50, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'lineHeight'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('lineHeight'), min: 10, max: 50, step: 1}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotFontSize'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotFontSize'), min: 5, max: 20, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'fontSize'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotBorderRadius'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderRadius'), min: 0, max: 20, step: 1}],
-      ['io-field', {appearance: 'neutral', label: 'iotBorderWidth'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('iotBorderWidth'), min: 0, max: 5, step: 1}],
-      ['io-field', {appearance: 'neutral', label: 'iotBorderColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColor')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBorderColorLight'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorLight')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBorderColorDark'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBorderColorDark')}],
+      ['io-field', {appearance: 'neutral', label: 'borderRadius'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('borderRadius'), min: 0, max: 20, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'borderWidth'}],
+      ['io-number-slider', {value: IoThemeSingleton.bind('borderWidth'), min: 0, max: 5, step: 1}],
+      ['io-field', {appearance: 'neutral', label: 'borderColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('borderColor')}],
+      ['io-field', {appearance: 'neutral', label: 'borderColorLight'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('borderColorLight')}],
+      ['io-field', {appearance: 'neutral', label: 'borderColorDark'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('borderColorDark')}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotBgColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColor')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBgColorStrong'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorStrong')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBgColorDimmed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorDimmed')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBgColorRed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorRed')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBgColorGreen'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorGreen')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBgColorBlue'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorBlue')}],
-      ['io-field', {appearance: 'neutral', label: 'iotBgColorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotBgColorField')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColor')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColorStrong'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorStrong')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColorDimmed'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorDimmed')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColorRed'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorRed')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColorGreen'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorGreen')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColorBlue'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorBlue')}],
+      ['io-field', {appearance: 'neutral', label: 'bgColorField'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorField')}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColor')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorStrong'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorStrong')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorDimmed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorDimmed')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorRed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorRed')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorGreen'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorGreen')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorBlue'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorBlue')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorWhite'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorWhite')}],
-      ['io-field', {appearance: 'neutral', label: 'iotColorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotColorField')}],
+      ['io-field', {appearance: 'neutral', label: 'color'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('color')}],
+      ['io-field', {appearance: 'neutral', label: 'colorStrong'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorStrong')}],
+      ['io-field', {appearance: 'neutral', label: 'colorDimmed'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorDimmed')}],
+      ['io-field', {appearance: 'neutral', label: 'colorRed'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorRed')}],
+      ['io-field', {appearance: 'neutral', label: 'colorGreen'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorGreen')}],
+      ['io-field', {appearance: 'neutral', label: 'colorBlue'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorBlue')}],
+      ['io-field', {appearance: 'neutral', label: 'colorWhite'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorWhite')}],
+      ['io-field', {appearance: 'neutral', label: 'colorField'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('colorField')}],
 
 
-      ['io-field', {appearance: 'neutral', label: 'iotGradientColorStart'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotGradientColorStart')}],
-      ['io-field', {appearance: 'neutral', label: 'iotGradientColorEnd'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotGradientColorEnd')}],
+      ['io-field', {appearance: 'neutral', label: 'gradientColorStart'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('gradientColorStart')}],
+      ['io-field', {appearance: 'neutral', label: 'gradientColorEnd'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('gradientColorEnd')}],
 
-      ['io-field', {appearance: 'neutral', label: 'iotShadowColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('iotShadowColor')}],
+      ['io-field', {appearance: 'neutral', label: 'shadowColor'}],
+      ['io-color-rgba', {value: IoThemeSingleton.bind('shadowColor')}],
     ]);
   }
 }

@@ -26,12 +26,12 @@ export class IoMenuItem extends IoField {
       }
       :host > .label {
         flex: 1 1 auto;
-        padding: 0 var(--iotSpacing2);
+        padding: 0 var(--io_spacing2);
       }
       :host > .hint {
         flex: 0 1 auto;
         opacity: 0.25;
-        padding: 0 var(--iotSpacing2);
+        padding: 0 var(--io_spacing2);
       }
       :host > .hasmore {
         opacity: 0.5;

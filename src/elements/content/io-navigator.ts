@@ -24,17 +24,17 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options {
         align-self: stretch;
         border-radius: 0;
-        border-color: var(--iotBorderColorLight);
+        border-color: var(--io_borderColorLight);
       }
       :host[collapsed] > io-menu-options {
-        min-height: calc(var(--iotFieldHeight) + 1em);
-        padding: calc(var(--iotSpacing) + 0.5em) !important;
+        min-height: calc(var(--io_fieldHeight) + 1em);
+        padding: calc(var(--io_spacing) + 0.5em) !important;
       }
       :host[collapsed] > io-menu-options > io-menu-item.hamburger {
         top: 0;
-        padding: calc(var(--iotSpacing) + 0.5em);
-        padding-right: calc(var(--iotSpacing2) + 0.5em);
-        min-height: calc(var(--iotFieldHeight) + 1em);
+        padding: calc(var(--io_spacing) + 0.5em);
+        padding-right: calc(var(--io_spacing2) + 0.5em);
+        min-height: calc(var(--io_fieldHeight) + 1em);
         background-color: transparent;
       }
       :host > io-menu-options {
@@ -45,30 +45,30 @@ export class IoNavigator extends IoElement {
         flex: 0 0 auto;
         min-width: 10em;
         overflow-y: auto;
-        padding: var(--iotBorderWidth) 0;
+        padding: var(--io_borderWidth) 0;
       }
       :host[menu=left] > io-menu-tree {
-        border-width: 0 var(--iotBorderWidth) 0 0;
+        border-width: 0 var(--io_borderWidth) 0 0;
       }
       :host[menu=left] > io-menu-tree {
-        border-width: 0 var(--iotBorderWidth) 0 0;
+        border-width: 0 var(--io_borderWidth) 0 0;
       }
       :host > io-menu-item.hamburger {
         border-radius: 0;
-        padding: calc(var(--iotSpacing) + 0.5em);
+        padding: calc(var(--io_spacing) + 0.5em);
         height: 100%;
         flex: 0 0 auto;
-        background-color: var(--iotBgColorDimmed);
+        background-color: var(--io_bgColorDimmed);
         border-color: transparent !important;
       }
       :host > io-menu-item.hamburger > .hasmore {
         display: none;
       }
       :host[menu=top] > io-menu-options {
-        border-width: 0 0 var(--iotBorderWidth) 0;
+        border-width: 0 0 var(--io_borderWidth) 0;
       }
       :host[menu=bottom] > io-menu-options {
-        border-width: var(--iotBorderWidth) 0 0 0;
+        border-width: var(--io_borderWidth) 0 0 0;
       }
       :host > io-menu-options > io-menu-item {
         border-radius: 0;

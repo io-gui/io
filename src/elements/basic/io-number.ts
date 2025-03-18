@@ -21,8 +21,8 @@ export class IoNumber extends IoField {
         -webkit-user-select: text;
         -webkit-touch-callout: default;
         font-family: monospace;
-        padding-top: calc(var(--iotSpacing) + 0.05em);
-        padding-bottom: calc(var(--iotSpacing) - 0.05em);
+        padding-top: calc(var(--io_spacing) + 0.05em);
+        padding-bottom: calc(var(--io_spacing) - 0.05em);
       }
     `;
   }
@@ -249,8 +249,8 @@ export class IoNumberLadderStep extends IoField {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--iotBgColorStrong);
-        color: var(--iotColor);
+        background-color: var(--io_bgColorStrong);
+        color: var(--io_color);
         align-self: stretch;
         touch-action: none;
         width: 6em;
@@ -377,22 +377,22 @@ export class IoNumberLadder extends IoElement {
         transition: opacity 0.2s, transform 0.2s;
       }
       :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--iotFieldHeight)));
+        transform: translateY(calc(3 * var(--io_fieldHeight)));
       }
       :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--iotFieldHeight)));
+        transform: translateY(calc(2 * var(--io_fieldHeight)));
       }
       :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--iotFieldHeight)));
+        transform: translateY(calc(1 * var(--io_fieldHeight)));
       }
       :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--iotFieldHeight)));
+        transform: translateY(calc(-1 * var(--io_fieldHeight)));
       }
       :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--iotFieldHeight)));
+        transform: translateY(calc(-2 * var(--io_fieldHeight)));
       }
       :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--iotFieldHeight)));
+        transform: translateY(calc(-3 * var(--io_fieldHeight)));
       }
       :host > .io-up3,
       :host > .io-down3 {
@@ -408,16 +408,16 @@ export class IoNumberLadder extends IoElement {
       }
       :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
-        background-color: var(--iotBgColorStrong);
-        border-color: var(--iotColorBlue);
+        background-color: var(--io_bgColorStrong);
+        border-color: var(--io_colorBlue);
         transition: opacity 0.2s;
         opacity: 1;
       }
       :host > .io-number-ladder-empty {
-        height: var(--iotFieldHeight);
+        height: var(--io_fieldHeight);
       }
       :host > .io-number-ladder-center {
-        height: calc(1.5 * var(--iotFieldHeight));
+        height: calc(1.5 * var(--io_fieldHeight));
       }
     `;
   }
@@ -494,7 +494,7 @@ export class IoNumberLadder extends IoElement {
         const layerRect = IoOverlaySingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
-        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.iotLineHeight / 2 + IoThemeSingleton.iotSpacing) + 'px';
+        this.style.marginTop = - (selfRect.height / 2 + IoThemeSingleton.lineHeight / 2 + IoThemeSingleton.spacing) + 'px';
       } else {
         this.removeAttribute('style');
       }

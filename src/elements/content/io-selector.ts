@@ -34,14 +34,14 @@ export class IoSelector extends IoElement {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: var(--iotFieldHeight2);
-        height: var(--iotFieldHeight2);
-        margin-top: calc(-1 * var(--iotFieldHeight));
-        margin-left: calc(-1 * var(--iotFieldHeight));
+        width: var(--io_fieldHeight2);
+        height: var(--io_fieldHeight2);
+        margin-top: calc(-1 * var(--io_fieldHeight));
+        margin-left: calc(-1 * var(--io_fieldHeight));
         border-radius: 50%;
-        border: var(--iotBorder);
-        border-color: var(--iotBorderColorDark);
-        border-top-color: var(--iotColorBlue);
+        border: var(--io_border);
+        border-color: var(--io_borderColorDark);
+        border-top-color: var(--io_colorBlue);
         animation: io-loading-spinner .6s linear infinite;
       }
     `;

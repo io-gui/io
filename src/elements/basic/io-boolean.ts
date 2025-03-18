@@ -14,7 +14,7 @@ export class IoBoolean extends IoField {
     return /* css */`
       :host {
         background-color: transparent;
-        padding: var(--iotSpacing) var(--iotSpacing);
+        padding: var(--io_spacing) var(--io_spacing);
       }
     `;
   }

@@ -12,7 +12,7 @@ export class IoSwitch extends IoBoolean {
     return /* css */`
       :host {
         position: relative;
-        width: calc(1.5 * var(--iotFieldHeight));
+        width: calc(1.5 * var(--io_fieldHeight));
         overflow: visible;
       }
       :host:before {
@@ -20,15 +20,15 @@ export class IoSwitch extends IoBoolean {
         box-sizing: border-box;
         position: absolute;
         visibility: visible;
-        top: var(--iotSpacing);
+        top: var(--io_spacing);
         left: 0;
         width: 100%;
-        height: var(--iotLineHeight);
-        border-radius: var(--iotLineHeight);
-        border: var(--iotBorder);
-        border-color: var(--iotBorderColorInset);
-        background-color: var(--iotBgColorField);
-        box-shadow: var(--iotShadowInset);
+        height: var(--io_lineHeight);
+        border-radius: var(--io_lineHeight);
+        border: var(--io_border);
+        border-color: var(--io_borderColorInset);
+        background-color: var(--io_bgColorField);
+        box-shadow: var(--io_shadowInset);
         transition: background-color 0.4s;
       }
       :host:after {
@@ -36,25 +36,25 @@ export class IoSwitch extends IoBoolean {
         box-sizing: border-box;
         position: absolute;
         visibility: visible;
-        top: calc(var(--iotBorderWidth) + var(--iotSpacing));
-        left: var(--iotBorderWidth);
-        height: calc(var(--iotLineHeight) - calc(2 * var(--iotBorderWidth)));
-        width: calc(var(--iotLineHeight) - calc(2 * var(--iotBorderWidth)));
-        background-color: var(--iotBgColorDimmed);
-        box-shadow: var(--iotShadowOutset);
-        border: var(--iotBorder);
-        border-color: var(--iotBorderColorOutset);
-        border-radius: var(--iotLineHeight);
+        top: calc(var(--io_borderWidth) + var(--io_spacing));
+        left: var(--io_borderWidth);
+        height: calc(var(--io_lineHeight) - calc(2 * var(--io_borderWidth)));
+        width: calc(var(--io_lineHeight) - calc(2 * var(--io_borderWidth)));
+        background-color: var(--io_bgColorDimmed);
+        box-shadow: var(--io_shadowOutset);
+        border: var(--io_border);
+        border-color: var(--io_borderColorOutset);
+        border-radius: var(--io_lineHeight);
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
       }
       :host[value]:after {
-        background-color: var(--iotBgColorBlue);
-        left: calc(100% - calc(var(--iotLineHeight) - var(--iotBorderWidth)));
+        background-color: var(--io_bgColorBlue);
+        left: calc(100% - calc(var(--io_lineHeight) - var(--io_borderWidth)));
       }
       :host:focus:before {
-        border-color: var(--iotColorBlue);
-        outline: 1px auto var(--iotColorBlue);
+        border-color: var(--io_colorBlue);
+        outline: 1px auto var(--io_colorBlue);
         outline: 1px auto -webkit-focus-ring-color;
       }
       :host:focus {

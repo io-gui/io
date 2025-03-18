@@ -6,16 +6,14 @@ const binding = theme._properties.get('themeID')!.binding;
 
 export default class {
   run() {
-    describe('IoThemeSingleton', () => {
-      describe('Initialization', () => {
-        it('Should register property definitions correctly', () => {
-          expect(theme._properties.get('themeID')).to.eql({
-            binding: binding,
-            init: undefined,
-            reflect: false,
-            type: String,
-            value: theme.themeID,
-          });
+    describe('theme.test.ts', () => {
+      it('Should register property definitions correctly', () => {
+        expect(theme._properties.get('themeID')).to.eql({
+          binding: binding,
+          init: undefined,
+          reflect: false,
+          type: String,
+          value: theme.themeID,
         });
       });
     });

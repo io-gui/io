@@ -16,17 +16,17 @@ export class IoBreadcrumbs extends IoElement {
       flex-direction: row;
       align-self: stretch;
       justify-self: stretch;
-      border-radius: var(--iotBorderRadius);
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorInset);
-      padding: var(--iotSpacing);
-      background-color: var(--iotBgColorField);
+      border-radius: var(--io_borderRadius);
+      border: var(--io_border);
+      border-color: var(--io_borderColorInset);
+      padding: var(--io_spacing);
+      background-color: var(--io_bgColorField);
       overflow-x: hidden;
     }
     :host > io-field {
-      padding-left: var(--iotSpacing);
-      padding-right: var(--iotSpacing);
-      color: var(--iotColorBlue);
+      padding-left: var(--io_spacing);
+      padding-right: var(--io_spacing);
+      color: var(--io_colorBlue);
     }
     :host > io-field:hover {
       text-decoration: underline;
@@ -34,17 +34,17 @@ export class IoBreadcrumbs extends IoElement {
     :host > io-field:first-of-type {
       overflow: visible;
       text-overflow: clip;
-      margin-left: var(--iotSpacing);
+      margin-left: var(--io_spacing);
     }
     :host > io-field:last-of-type {
       overflow: visible;
       text-overflow: clip;
-      margin-right: var(--iotSpacing);
+      margin-right: var(--io_spacing);
     }
     :host > io-field:not(:first-of-type):before {
       content: '>';
-      margin: 0 var(--iotSpacing);
-      padding: 0 var(--iotSpacing) 0 0;
+      margin: 0 var(--io_spacing);
+      padding: 0 var(--io_spacing) 0 0;
       opacity: 0.25;
     }
     `;

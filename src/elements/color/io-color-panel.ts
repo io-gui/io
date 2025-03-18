@@ -29,18 +29,18 @@ export class IoColorPanel extends IoColorBase {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      border-radius: var(--iotBorderRadius);
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorOutset);
-      color: var(--iotColorField);
-      background-color: var(--iotBgColorDimmed);
-      padding: var(--iotSpacing);
+      border-radius: var(--io_borderRadius);
+      border: var(--io_border);
+      border-color: var(--io_borderColorOutset);
+      color: var(--io_colorField);
+      background-color: var(--io_bgColorDimmed);
+      padding: var(--io_spacing);
       /*  */
       cursor: move;
       align-items: stretch;
       flex-grow: 0;
-      min-width: var(--iotLineHeight);
-      min-height: calc(var(--iotLineHeight) * 5.5);
+      min-width: var(--io_lineHeight);
+      min-height: calc(var(--io_lineHeight) * 5.5);
       flex-direction: row;
     }
     :host:not([expanded]) {
@@ -50,7 +50,7 @@ export class IoColorPanel extends IoColorBase {
       flex-direction: column;
     }
     :host > * {
-      border-radius: calc(var(--iotBorderRadius) - var(--iotBorderWidth));
+      border-radius: calc(var(--io_borderRadius) - var(--io_borderWidth));
     }
     :host > :first-child {
       flex: 1 0 auto;
@@ -59,10 +59,10 @@ export class IoColorPanel extends IoColorBase {
       flex: 0 0 auto;
     }
     :host > *:not(:last-child) {
-      margin: 0 0 var(--iotSpacing) 0;
+      margin: 0 0 var(--io_spacing) 0;
     }
     :host:not([vertical]) > * {
-      margin: 0 var(--iotSpacing) 0 0;
+      margin: 0 var(--io_spacing) 0 0;
     }
     `;
   }

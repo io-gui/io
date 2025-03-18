@@ -13,13 +13,13 @@ export class IoIcon extends IoElement {
     return /* css */`
       --ioIcon: {
         display: inline-block;
-        width: var(--iotLineHeight);
-        height: var(--iotLineHeight);
-        min-width: var(--iotLineHeight);
-        line-height: var(--iotLineHeight);
-        font-size: var(--iotFontSize);
+        width: var(--io_lineHeight);
+        height: var(--io_lineHeight);
+        min-width: var(--io_lineHeight);
+        line-height: var(--io_lineHeight);
+        font-size: var(--io_fontSize);
         text-align: center;
-        fill: var(--iotColor);
+        fill: var(--io_color);
       }
       :host {
         @apply --ioIcon;
@@ -28,8 +28,8 @@ export class IoIcon extends IoElement {
         display: none;
       }
       :host[stroke] {
-        stroke: var(--iotColorStrong);
-        stroke-width: var(--iotBorderWidth);
+        stroke: var(--io_colorStrong);
+        stroke-width: var(--io_borderWidth);
       }
       :host > svg {
         height: 100%;

@@ -26,49 +26,49 @@ export class IoField extends IoElement {
         text-overflow: ellipsis;
         white-space: nowrap;
 
-        height: var(--iotFieldHeight);
-        line-height: var(--iotLineHeight);
+        height: var(--io_fieldHeight);
+        line-height: var(--io_lineHeight);
 
-        font-size: var(--iotFontSize);
-        border: var(--iotBorder);
-        border-radius: var(--iotBorderRadius);
+        font-size: var(--io_fontSize);
+        border: var(--io_border);
+        border-radius: var(--io_borderRadius);
         border-color: transparent;
-        color: var(--iotColorField);
-        background-color: var(--iotBgColorField);
-        padding: var(--iotSpacing) calc(var(--iotSpacing) + 0.25em);
+        color: var(--io_colorField);
+        background-color: var(--io_bgColorField);
+        padding: var(--io_spacing) calc(var(--io_spacing) + 0.25em);
         transition: background-color 0.25s;
       }
       :host {
         @apply --ioField;
       }
       :host[appearance=neutral] {
-        color: var(--iotColor);
+        color: var(--io_color);
         background-color: transparent;
       }
       :host[appearance=inset] {
-        border-color: var(--iotBorderColorInset);
+        border-color: var(--io_borderColorInset);
       }
       :host[appearance=outset] {
-        border-color: var(--iotBorderColorOutset);
-        background-image: var(--iotGradientOutset);
+        border-color: var(--io_borderColorOutset);
+        background-image: var(--io_gradientOutset);
       }
       :host.red,
       :host[invalid] {
-        color: var(--iotColorWhite);
-        background-color: var(--iotBgColorRed);
-        border-color: var(--iotColorRed);
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorRed);
+        border-color: var(--io_colorRed);
       }
       :host.green {
-        color: var(--iotColorWhite);
-        background-color: var(--iotBgColorGreen);
-        border-color: var(--iotColorGreen);
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorGreen);
+        border-color: var(--io_colorGreen);
       }
 
       :host.blue,
       :host[selected] {
-        color: var(--iotColorWhite);
-        background-color: var(--iotBgColorBlue);
-        border-color: var(--iotColorBlue);
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorBlue);
+        border-color: var(--io_colorBlue);
       }
       :host:focus {
         text-overflow: inherit;
@@ -76,8 +76,8 @@ export class IoField extends IoElement {
       :host[placeholder]:empty:before {
         content: attr(placeholder);
         visibility: visible;
-        color: var(--iotColorField);
-        padding: 0 calc(var(--iotSpacing) + var(--iotBorderWidth));
+        color: var(--io_colorField);
+        padding: 0 calc(var(--io_spacing) + var(--io_borderWidth));
         opacity: 0.5;
       }
     `;

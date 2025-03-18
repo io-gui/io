@@ -393,8 +393,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
       if (this._disposed) return;
 
-      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
-
       this._bindings.forEach((binding, key) => {
         binding.dispose();
         this._bindings.delete(key);
@@ -416,6 +414,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
       });
 
+      // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._eventDispatcher.dispose();
       delete (this as any)._eventDispatcher;
       delete (this as any)._properties;

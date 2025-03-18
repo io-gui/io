@@ -14,10 +14,10 @@ export class IoObject extends IoElement {
       /* Panel */
       display: flex;
       flex-direction: column; */
-      padding-left: var(--iotSpacing);
-      padding-right: var(--iotSpacing);
-      color: var(--iotColorField);
-      background-color: var(--iotBgColor);
+      padding-left: var(--io_spacing);
+      padding-right: var(--io_spacing);
+      color: var(--io_colorField);
+      background-color: var(--io_bgColor);
     }
     :host > io-boolean {
       padding-left: 0;

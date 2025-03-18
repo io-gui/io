@@ -15,15 +15,15 @@ export class IoNumberSliderRange extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      min-width: var(--iotFieldHeight5);
-      width: var(--iotFieldHeight10);
+      min-width: var(--io_fieldHeight5);
+      width: var(--io_fieldHeight10);
     }
     :host > io-number {
       flex: 0 0 3.25em;
     }
     :host > io-slider-range {
-      margin-left: var(--iotSpacing);
-      margin-right: var(--iotSpacing);
+      margin-left: var(--io_spacing);
+      margin-right: var(--io_spacing);
       flex: 1 1 3.25em;
       min-width: 3.25em;
     }

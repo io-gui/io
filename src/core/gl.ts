@@ -4,6 +4,7 @@ import { PropertyInstance, PropertyDefinition } from './internals/property.js';
 import { Property } from './decorators/property.js';
 import { IoThemeSingleton, Color } from './theme.js';
 import { glsl } from './glsl/index.js';
+import { IoNode } from './node.js';
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false}) as WebGLRenderingContext;
 
@@ -62,7 +63,7 @@ export class IoGl extends IoElement {
   @Property({type: Number, value: 1})
   declare pxRatio: number;
 
-  @Property({type: IoElement, value: IoThemeSingleton})
+  @Property({type: IoNode, value: IoThemeSingleton})
   declare theme: typeof IoThemeSingleton;
 
   @Property('debounced')
@@ -129,7 +130,7 @@ export class IoGl extends IoElement {
     precision highp float;\n`;
 
     this.theme._properties.forEach((property, name) => {
-      frag += this.initPropertyUniform(name, property);
+      frag += this.initPropertyUniform('io_' + name, property);
     });
 
     frag += '\n';
@@ -139,13 +140,7 @@ export class IoGl extends IoElement {
       frag += this.initPropertyUniform(name, property);
     });
 
-    for (let i = this._protochain.constructors.length; i--;) {
-      const constructor = this._protochain.constructors[i];
-      const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
-      if (glUtilsProp && glUtilsProp.get) {
-        frag += (constructor as typeof IoGl).GlUtils;
-      }
-    }
+    frag += this.constructor.prototype._glUtils;
 
     const vertShader = gl.createShader(gl.VERTEX_SHADER) as WebGLShader;
     gl.shaderSource(vertShader, (this.constructor as typeof IoGl).Vert);
@@ -185,7 +180,7 @@ export class IoGl extends IoElement {
     this.theme._properties.forEach((property, name) => {
       // TODO: consider making more type agnostic
       if (property.type === Color) {
-        this._vecLengths[name] = 4;
+        this._vecLengths['io_' + name] = 4;
       }
     });
 
@@ -295,7 +290,7 @@ export class IoGl extends IoElement {
   }
   updateThemeUniforms() {
     this.theme._properties.forEach((property, name) => {
-      this.updatePropertyUniform(name, property);
+      this.updatePropertyUniform('io_' + name, property);
     });
   }
   setUniform(name: string, value: any) {
@@ -357,5 +352,18 @@ export class IoGl extends IoElement {
         break;
       default:
     }
+  }
+  Register(ioNodeConstructor: typeof IoElement) {
+    super.Register(ioNodeConstructor);
+    let _glUtils = '';
+    const constructors = ioNodeConstructor.prototype._protochain.constructors;
+    for (let i = constructors.length; i--;) {
+      const constructor = constructors[i];
+      const glUtilsProp = Object.getOwnPropertyDescriptor(constructor, 'GlUtils');
+      if (glUtilsProp && glUtilsProp.get) {
+        _glUtils += (constructor as typeof IoGl).GlUtils;
+      }
+    }
+    Object.defineProperty(ioNodeConstructor.prototype, '_glUtils', {enumerable: false, value: _glUtils});
   }
 }

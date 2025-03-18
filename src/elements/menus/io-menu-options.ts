@@ -19,18 +19,18 @@ export class IoMenuOptions extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      border-radius: var(--iotBorderRadius);
-      background-color: var(--iotBgColorDimmed);
+      border-radius: var(--io_borderRadius);
+      background-color: var(--io_bgColorDimmed);
       position: relative;
     }
     :host[horizontal] {
       flex-direction: row;
       align-self: stretch;
-      padding: 0 var(--iotSpacing);
+      padding: 0 var(--io_spacing);
     }
     :host:not([horizontal]) {
       flex-direction: column;
-      padding: var(--iotSpacing) 0;
+      padding: var(--io_spacing) 0;
     }
     :host[inlayer] {
       min-width: 8em;
@@ -46,27 +46,27 @@ export class IoMenuOptions extends IoElement {
       border-radius: 0;
     }
     :host[horizontal] > io-menu-item {
-      height: calc(var(--iotFieldHeight) + var(--iotSpacing2));
+      height: calc(var(--io_fieldHeight) + var(--io_spacing2));
       border-left: none;
       border-right: none;
-      border-width: calc(var(--iotSpacing) + var(--iotBorderWidth)) var(--iotBorderWidth);
+      border-width: calc(var(--io_spacing) + var(--io_borderWidth)) var(--io_borderWidth);
     }
     :host:not([horizontal]) > io-menu-item {
       border-top: none;
       border-bottom: none;
-      border-width: var(--iotBorderWidth) var(--iotSpacing);
+      border-width: var(--io_borderWidth) var(--io_spacing);
     }
     :host > io-menu-item[selected][direction="up"] {
-      border-color: var(--iotColorBlue) transparent transparent transparent;
+      border-color: var(--io_colorBlue) transparent transparent transparent;
     }
     :host > io-menu-item[selected][direction="down"] {
-      border-color: transparent transparent var(--iotColorBlue) transparent;
+      border-color: transparent transparent var(--io_colorBlue) transparent;
     }
     :host > io-menu-item[selected][direction="right"] {
-      border-color: transparent var(--iotColorBlue) transparent transparent;
+      border-color: transparent var(--io_colorBlue) transparent transparent;
     }
     :host > io-menu-item[selected][direction="left"] {
-      border-color: transparent transparent transparent var(--iotColorBlue);
+      border-color: transparent transparent transparent var(--io_colorBlue);
     }
 
     /* Item divider */
@@ -76,9 +76,9 @@ export class IoMenuOptions extends IoElement {
     }
     :host > span.divider {
       flex: 0 0 0;
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorInset);
-      margin: var(--iotSpacing);
+      border: var(--io_border);
+      border-color: var(--io_borderColorInset);
+      margin: var(--io_spacing);
       opacity: 0.5;
     }
 
@@ -89,11 +89,11 @@ export class IoMenuOptions extends IoElement {
 
     /* Search field */
     :host:not([horizontal]) > .search {
-      margin: var(--iotSpacing);
+      margin: var(--io_spacing);
       margin-top: 0;
     }
     :host[horizontal] > .search {
-      margin-right: var(--iotBorderWidth);
+      margin-right: var(--io_borderWidth);
       flex: 0 0 10em;
     }
 
@@ -104,8 +104,8 @@ export class IoMenuOptions extends IoElement {
     }
     :host[horizontal] > io-menu-hamburger {
       position: absolute;
-      right: var(--iotSpacing);
-      padding: var(--iotSpacing);
+      right: var(--io_spacing);
+      padding: var(--io_spacing);
     }
     `;
   }
@@ -191,7 +191,7 @@ export class IoMenuOptions extends IoElement {
     if (this.horizontal) {
       const hamburger = this.querySelector('io-menu-hamburger');
       const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
-      const end = this.getBoundingClientRect().right - (IoThemeSingleton.iotBorderWidth + IoThemeSingleton.iotSpacing);
+      const end = this.getBoundingClientRect().right - (IoThemeSingleton.borderWidth + IoThemeSingleton.spacing);
       let last = Infinity;
       let hasOwerflown = false;
 

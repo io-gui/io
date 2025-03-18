@@ -17,18 +17,18 @@ export class IoVector extends IoElement {
       :host {
         display: flex;
         flex: 0 1 auto;
-        min-width: var(--iotFieldHeight5);
-        width: var(--iotFieldHeight8);
+        min-width: var(--io_fieldHeight5);
+        width: var(--io_fieldHeight8);
       }
       :host > io-number {
         flex: 1 1 100%;
       }
       :host > *:not(:last-child) {
-        margin-right: var(--iotSpacing);
+        margin-right: var(--io_spacing);
       }
       :host > io-boolicon {
         flex-shrink: 0;
-        padding: var(--iotSpacing);
+        padding: var(--io_spacing);
       }
     `;
   }

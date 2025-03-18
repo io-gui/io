@@ -168,12 +168,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--iotColorBlue);
-        outline: 1px auto var(--iotColorBlue);
+        border-color: var(--io_colorBlue);
+        outline: 1px auto var(--io_colorBlue);
         outline: 1px auto -webkit-focus-ring-color;
       }
       :host[aria-invalid] {
-        border: var(--iotBorderFail);
+        border: var(--io_borderFail);
       }
     `;
   }

@@ -16,12 +16,12 @@ export class IoElementDemo extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      border-radius: var(--iotBorderRadius);
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorOutset);
-      color: var(--iotColorField);
-      background-color: var(--iotBgColorDimmed);
-      padding: var(--iotSpacing);
+      border-radius: var(--io_borderRadius);
+      border: var(--io_border);
+      border-color: var(--io_borderColorOutset);
+      color: var(--io_colorField);
+      background-color: var(--io_bgColorDimmed);
+      padding: var(--io_spacing);
       /*  */
       display: flex;
       flex: 1 1 auto;
@@ -35,33 +35,33 @@ export class IoElementDemo extends IoElement {
     :host > io-boolean {
       z-index: 2;
       position: absolute !important;
-      top: calc(calc(2 * var(--iotSpacing)) + var(--iotBorderWidth));
-      right: calc(calc(2 * var(--iotSpacing)) + var(--iotBorderWidth));
+      top: calc(calc(2 * var(--io_spacing)) + var(--io_borderWidth));
+      right: calc(calc(2 * var(--io_spacing)) + var(--io_borderWidth));
     }
     :host > io-boolean:not([value]):not(:hover) {
       opacity: 0.5;
     }
     :host > io-properties {
       align-self: stretch;
-      padding: var(--iotSpacing) 0;
-      margin: var(--iotBorderWidth);
-      margin-right: var(--iotSpacing);
-      margin-bottom: calc(2 * var(--iotSpacing));
+      padding: var(--io_spacing) 0;
+      margin: var(--io_borderWidth);
+      margin-right: var(--io_spacing);
+      margin-bottom: calc(2 * var(--io_spacing));
     }
     :host > io-properties > :nth-child(3) {
-      margin-right: calc(var(--iotFieldHeight) + var(--iotSpacing));
+      margin-right: calc(var(--io_fieldHeight) + var(--io_spacing));
     }
     :host > .io-content {
-      border-radius: var(--iotBorderRadius);
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorInset);
-      padding: var(--iotSpacing);
-      color: var(--iotColor);
-      background-color: var(--iotBgColor);
+      border-radius: var(--io_borderRadius);
+      border: var(--io_border);
+      border-color: var(--io_borderColorInset);
+      padding: var(--io_spacing);
+      color: var(--io_color);
+      background-color: var(--io_bgColor);
       background-image: none;
     }
     :host:not([expanded]) > .io-content {
-      margin-right: calc(var(--iotFieldHeight) + calc(3 * var(--iotSpacing)));
+      margin-right: calc(var(--io_fieldHeight) + calc(3 * var(--io_spacing)));
     }
     `;
   }

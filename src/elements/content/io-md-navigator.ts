@@ -26,11 +26,11 @@ export class IoMdNavigator extends IoElement {
         align-self: stretch;
         border-radius: 0;
         padding: 0;
-        border-color: var(--iotBorderColorLight);
+        border-color: var(--io_borderColorLight);
       }
       :host > io-menu-options {
         flex: 0 0 auto;
-        min-height: calc(var(--iotFieldHeight) - var(--iotBorderWidth));
+        min-height: calc(var(--io_fieldHeight) - var(--io_borderWidth));
       }
       :host > io-menu-tree {
         flex: 0 0 auto;
@@ -38,10 +38,10 @@ export class IoMdNavigator extends IoElement {
         overflow-y: auto;
       }
       :host[menu=top] > io-menu-options {
-        border-width: 0 0 var(--iotBorderWidth) 0;
+        border-width: 0 0 var(--io_borderWidth) 0;
       }
       :host[menu=bottom] > io-menu-options {
-        border-width: var(--iotBorderWidth) 0 0 0;
+        border-width: var(--io_borderWidth) 0 0 0;
       }
       :host > io-menu-options > io-menu-item {
         border-radius: 0;

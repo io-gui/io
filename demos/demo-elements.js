@@ -174,7 +174,7 @@ export class IoDemoElements extends IoElement {
         flex: 0 0 auto;
       }
       :host > io-collapsable {
-        margin: var(--iotSpacing);
+        margin: var(--io_spacing);
         margin-bottom: 0;
       }
       :host io-collapsable[expanded].fixed-tall > div {
@@ -187,13 +187,13 @@ export class IoDemoElements extends IoElement {
         overflow: hidden;
       }
       :host io-collapsable > div > io-collapsable:not(:last-of-type) {
-        margin-bottom: var(--iotSpacing);
+        margin-bottom: var(--io_spacing);
       }
       :host > io-collapsable[expanded] {
         /* flex-basis: 100%; */
       }
       :host io-collapsable > div.io-collapsable-content > * {
-        margin: var(--iotSpacing) !important;
+        margin: var(--io_spacing) !important;
       }
       :host div > span {
         display: block;

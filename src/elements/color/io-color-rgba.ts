@@ -11,29 +11,29 @@ export class IoColorRgba extends IoColorBase {
       :host {
         display: flex;
         flex: 0 1 auto;
-        min-width: var(--iotFieldHeight5);
-        width: var(--iotFieldHeight10);
+        min-width: var(--io_fieldHeight5);
+        width: var(--io_fieldHeight10);
       }
       :host > io-number {
         flex: 1 0 0;
       }
       :host > io-number#r {
-        border-bottom-color: var(--iotBgColorRed);
+        border-bottom-color: var(--io_bgColorRed);
       }
       :host > io-number#g {
-        border-bottom-color: var(--iotBgColorGreen);
+        border-bottom-color: var(--io_bgColorGreen);
       }
       :host > io-number#b {
-        border-bottom-color: var(--iotBgColorBlue);
+        border-bottom-color: var(--io_bgColorBlue);
       }
       :host > io-number#a {
-        border-bottom-color: var(--iotColor);
+        border-bottom-color: var(--io_color);
       }
       :host > io-color-picker {
         flex-shrink: 0;
       }
       :host > *:not(:last-child) {
-        margin-right: var(--iotSpacing);
+        margin-right: var(--io_spacing);
       }
     `;
   }

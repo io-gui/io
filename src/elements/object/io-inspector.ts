@@ -25,7 +25,7 @@ export class IoInspector extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      flex: 0 1 calc(var(--iotLineHeight) * 17.5);
+      flex: 0 1 calc(var(--io_lineHeight) * 17.5);
     }
     :host > * {
       flex-shrink: 0;
@@ -33,14 +33,14 @@ export class IoInspector extends IoElement {
     :host > .inspector-header {
       display: flex;
       flex-direction: row;
-      margin-bottom: var(--iotSpacing);
+      margin-bottom: var(--io_spacing);
       flex-grow: 0;
     }
     :host > .inspector-header > io-breadcrumbs {
       flex: 1 1;
     }
     :host > .inspector-header > io-boolean {
-      width: calc(var(--iotSpacing) + var(--iotLineHeight));
+      width: calc(var(--io_spacing) + var(--io_lineHeight));
       align-self: stretch;
       height: auto;
     }
@@ -48,8 +48,8 @@ export class IoInspector extends IoElement {
       opacity: 0.25;
     }
     :host > .inspector-header > io-string {
-      margin: 0 var(--iotSpacing);
-      padding: calc(2 * var(--iotSpacing));
+      margin: 0 var(--io_spacing);
+      padding: calc(2 * var(--io_spacing));
       align-self: stretch;
       height: auto;
     }
@@ -70,11 +70,11 @@ export class IoInspector extends IoElement {
       flex-basis: auto !important;
     }
     :host > io-object > io-properties {
-      border-radius: var(--iotBorderRadius);
-      background-color: var(--iotBgColor) !important;
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorInset);
-      padding: var(--iotSpacing);
+      border-radius: var(--io_borderRadius);
+      background-color: var(--io_bgColor) !important;
+      border: var(--io_border);
+      border-color: var(--io_borderColorInset);
+      padding: var(--io_spacing);
       overflow: hidden;
     }
     :host > io-object > io-properties:not([horizontal])[labeled] {
@@ -84,7 +84,7 @@ export class IoInspector extends IoElement {
       text-align: right;
     }
     :host io-properties io-field.select {
-      color: var(--iotColorBlue) !important;
+      color: var(--io_colorBlue) !important;
     }
     :host io-properties io-field.select:hover {
       text-decoration: underline;

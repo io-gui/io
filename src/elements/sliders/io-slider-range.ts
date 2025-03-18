@@ -75,35 +75,35 @@ export class IoSliderRange extends IoSliderBase {
       float signRange = sign(valueInRangeWidth);
 
       // Colors
-      vec3 finalCol = iotBgColorField.rgb;
-      vec3 gridCol = iotBgColorDimmed.rgb;
-      vec3 sliderCol = signRange > 0.0 ? iotBgColorBlue.rgb : iotBgColorRed.rgb;
-      vec3 lineCol1 = iotColor.rgb;
-      vec3 lineCol2 = iotBgColor.rgb;
+      vec3 finalCol = io_bgColorField.rgb;
+      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 sliderCol = signRange > 0.0 ? io_bgColorBlue.rgb : io_bgColorRed.rgb;
+      vec3 lineCol1 = io_color.rgb;
+      vec3 lineCol2 = io_bgColor.rgb;
 
       // Grid
       float gridSize = size.x / abs((uMax - uMin) / uStep);
       float gridOffset = mod(uStep - uMin, uStep) / (uMax - uMin) * size.x;
-      float gridShape = paintDerivativeGrid2D(translate(expPosition, gridOffset, 0.0), vec2(gridSize, 0.0), iotBorderWidth);
+      float gridShape = paintDerivativeGrid2D(translate(expPosition, gridOffset, 0.0), vec2(gridSize, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(gridCol, gridShape * 0.5));
 
       // Slider
       float sliderShape = rectangle(translate(expPosition, size.x * valueInRangeCenter, 0.0), vec2(size.x * abs(valueInRangeWidth) * 0.5, size.y));
       finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
-      finalCol = compose(finalCol, vec4(iotBgColorField.rgb, gridShape * sliderShape * 0.125));
+      finalCol = compose(finalCol, vec4(io_bgColorField.rgb, gridShape * sliderShape * 0.125));
 
       // Lines
       float maxPos = expValueInRange[0];
       float minPos = expValueInRange[1];
 
-      float lineMinShape1 = lineVertical(translate(position, maxPos * size.x, 0.0), iotBorderWidth);
+      float lineMinShape1 = lineVertical(translate(position, maxPos * size.x, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(lineCol1, lineMinShape1));
-      float lineMinShape2 = lineVertical(translate(position, maxPos * size.x + iotBorderWidth * signRange, 0.0), iotBorderWidth);
+      float lineMinShape2 = lineVertical(translate(position, maxPos * size.x + io_borderWidth * signRange, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(lineCol2, lineMinShape2));
       
-      float lineMaxShape1 = lineVertical(translate(position, minPos * size.x, 0.0), iotBorderWidth);
+      float lineMaxShape1 = lineVertical(translate(position, minPos * size.x, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(lineCol1, lineMaxShape1));
-      float lineMaxShape2 = lineVertical(translate(position, minPos * size.x - iotBorderWidth * signRange, 0.0), iotBorderWidth);
+      float lineMaxShape2 = lineVertical(translate(position, minPos * size.x - io_borderWidth * signRange, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(lineCol2, lineMaxShape2));
 
       gl_FragColor = vec4(finalCol, 1.0);

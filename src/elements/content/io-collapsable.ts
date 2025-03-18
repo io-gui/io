@@ -19,22 +19,22 @@ export class IoCollapsable extends IoElement {
       box-sizing: content-box;
       align-items: stretch;
       align-self: stretch;
-      border: var(--iotBorder);
-      border-radius: calc(var(--iotBorderRadius) - var(--iotSpacing));
-      border-color: var(--iotBorderColorOutset);
-      min-height: var(--iotFieldHeight);
-      background-color: var(--iotBgColorDimmed);
+      border: var(--io_border);
+      border-radius: calc(var(--io_borderRadius) - var(--io_spacing));
+      border-color: var(--io_borderColorOutset);
+      min-height: var(--io_fieldHeight);
+      background-color: var(--io_bgColorDimmed);
     }
     :host > io-boolean {
       flex: 0 0 auto;
       padding-left: 0;
-      margin: var(--iotSpacing) var(--iotSpacing2);
+      margin: var(--io_spacing) var(--io_spacing2);
       border-radius: 0;
       background-color: transparent;
     }
     :host > io-boolean:before {
       text-align: center;
-      width: var(--iotLineHeight);
+      width: var(--io_lineHeight);
       content: "▸"
     }
     :host > io-boolean[value]:before {
@@ -46,16 +46,16 @@ export class IoCollapsable extends IoElement {
       align-items: flex-start;
       flex-direction: column;
       overflow: auto;
-      background-color: var(--iotBgColorStrong);
+      background-color: var(--io_bgColorStrong);
     }
     :host[direction=row] > div.io-collapsable-content {
       flex-direction: row;
     }
     :host > div.io-collapsable-content:not(:empty) {
-      margin: var(--iotSpacing);
+      margin: var(--io_spacing);
       margin-top: 0;
-      padding: var(--iotSpacing);
-      border-radius: var(--iotBorderRadius);
+      padding: var(--io_spacing);
+      border-radius: var(--io_borderRadius);
     }
     `;
   }

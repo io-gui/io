@@ -40,27 +40,27 @@ export class IoSlider extends IoSliderBase {
       float expValueInRange = pow(abs(valueInRange), 1./uExponent) * valueSign;
 
       // Colors
-      vec3 finalCol = iotBgColorField.rgb;
-      vec3 gridCol = iotBgColorDimmed.rgb;
-      vec3 sliderCol = iotBgColorBlue.rgb;
-      vec3 lineCol1 = iotColor.rgb;
-      vec3 lineCol2 = iotBgColor.rgb;
+      vec3 finalCol = io_bgColorField.rgb;
+      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 sliderCol = io_bgColorBlue.rgb;
+      vec3 lineCol1 = io_color.rgb;
+      vec3 lineCol2 = io_bgColor.rgb;
 
       // Grid
       float gridSize = size.x / abs((uMax - uMin) / uStep);
       float gridOffset = mod(uStep - uMin, uStep) / (uMax - uMin) * size.x;
-      float gridShape = paintDerivativeGrid2D(translate(expPosition, gridOffset, 0.0), vec2(gridSize, 0.0), iotBorderWidth);
+      float gridShape = paintDerivativeGrid2D(translate(expPosition, gridOffset, 0.0), vec2(gridSize, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(gridCol, gridShape * 0.5));
 
       // Slider
       float sliderShape = rectangle(expPosition, vec2(size.x * valueInRange, size.y));
       finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
-      finalCol = compose(finalCol, vec4(iotBgColorField.rgb, gridShape * sliderShape * 0.125));
+      finalCol = compose(finalCol, vec4(io_bgColorField.rgb, gridShape * sliderShape * 0.125));
 
       // Lines
-      float lineShape1 = lineVertical(translate(position, expValueInRange * size.x, 0.0), iotBorderWidth);
+      float lineShape1 = lineVertical(translate(position, expValueInRange * size.x, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(lineCol1, lineShape1));
-      float lineShape2 = lineVertical(translate(position, expValueInRange * size.x - iotBorderWidth, 0.0), iotBorderWidth);
+      float lineShape2 = lineVertical(translate(position, expValueInRange * size.x - io_borderWidth, 0.0), io_borderWidth);
       finalCol = compose(finalCol, vec4(lineCol2, lineShape2));
 
       gl_FragColor = vec4(finalCol, 1.0);

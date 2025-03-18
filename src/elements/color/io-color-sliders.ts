@@ -236,9 +236,9 @@ export class IoColorSliderBase extends IoSlider {
       float valueInRange = (uValue - uMin) / (uMax - uMin);
 
       // Colors
-      vec3 finalCol = iotBgColorField.rgb;
+      vec3 finalCol = io_bgColorField.rgb;
       vec3 startCol = getStartColor(uv);
-      vec3 gridCol = iotBgColorDimmed.rgb;
+      vec3 gridCol = io_bgColorDimmed.rgb;
       vec3 endCol = getEndColor(uv);
       vec3 sliderCol = mix(startCol, endCol, uv.x);
 
@@ -248,14 +248,14 @@ export class IoColorSliderBase extends IoSlider {
       // Grid
       float gridSize = size.x / abs((uMax - uMin) / uStep);
       float gridOffset = mod(uStep - uMin, uStep) / (uMax - uMin) * size.x;
-      float gridShape = paintDerivativeGrid2D(translate(position, gridOffset, 0.0), vec2(gridSize, 0.0), iotBorderWidth);
+      float gridShape = paintDerivativeGrid2D(translate(position, gridOffset, 0.0), vec2(gridSize, 0.0), io_borderWidth);
       if (size.x * uStep < 4.0) gridShape = 0.0;
       finalCol = compose(finalCol, vec4(sliderCol, gridShape * 0.25));
 
       // Slider
       float sliderShape = rectangle(position, vec2(size.x * valueInRange, size.y));
       finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
-      finalCol = compose(finalCol, vec4(iotBgColorField.rgb, gridShape * sliderShape * 0.125));
+      finalCol = compose(finalCol, vec4(io_bgColorField.rgb, gridShape * sliderShape * 0.125));
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
@@ -289,15 +289,15 @@ export class IoColorSlider2dBase extends IoSlider2d {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = geiotColor(uv);
-      vec3 gridCol = iotBgColorDimmed.rgb;
-      vec3 sliderCol = geiotColor(uValue);
+      vec3 finalCol = geio_color(uv);
+      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 sliderCol = geio_color(uValue);
 
       // Grid
       vec2 gridSize = size / abs((uMax - uMin) / uStep);
       vec2 gridOffset = (uMax + uMin) / (uMax - uMin) * size / 2.;
       vec2 gridPosition = translate(position, -gridOffset);
-      float gridShape = paintDerivativeGrid2D(gridPosition, gridSize, iotBorderWidth);
+      float gridShape = paintDerivativeGrid2D(gridPosition, gridSize, io_borderWidth);
       if (min(size.x * uStep.x, size.y * uStep.y) < 2.0) gridShape = 0.0;
       finalCol = compose(finalCol, vec4(gridCol, gridShape * 0.5));
 
@@ -367,12 +367,12 @@ export class IoColorSliderA extends IoColorSliderBase {
       vec3 getStartColor(vec2 uv) {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
         vec2 position = size * (uv - vec2(0.0, 0.5));
-        return mix(vec3(0.5), vec3(1.0), checkerX(position, iotFieldHeight / 4.0));
+        return mix(vec3(0.5), vec3(1.0), checkerX(position, io_fieldHeight / 4.0));
       }
       vec3 getEndColor(vec2 uv) {
         vec2 size = uVertical == 1 ? uSize.yx : uSize;
         vec2 position = size * (uv - vec2(0.0, 0.5));
-        vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, iotFieldHeight / 4.0));
+        vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, io_fieldHeight / 4.0));
         return mix(chkCol, uColor.rgb, 1.0);
       }
     `;
@@ -513,7 +513,7 @@ export class IoColorSliderK extends IoColorSliderBase {
 export class IoColorSliderHs extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 geiotColor(vec2 uv) {
+      vec3 geio_color(vec2 uv) {
         return hsv2rgb(vec3(uv, uColor[2]));
       }
     `;
@@ -526,7 +526,7 @@ export class IoColorSliderHs extends IoColorSlider2dBase {
 export class IoColorSliderSv extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 geiotColor(vec2 uv) {
+      vec3 geio_color(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv));
       }
     `;
@@ -539,7 +539,7 @@ export class IoColorSliderSv extends IoColorSlider2dBase {
 export class IoColorSliderSL extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 geiotColor(vec2 uv) {
+      vec3 geio_color(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uv));
       }
     `;

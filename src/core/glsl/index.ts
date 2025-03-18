@@ -97,7 +97,7 @@ const compose = /* glsl*/`
 // Painter Functions
 const paintHorizontalLine = /* glsl*/`
   vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
-    float lineShape = lineHorizontal(p, iotBorderWidth);
+    float lineShape = lineHorizontal(p, io_borderWidth);
     return compose(dstCol, vec4(color, lineShape));
   }
 `;

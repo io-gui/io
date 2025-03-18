@@ -11,20 +11,20 @@ export class IoSliderBase extends IoGl {
       :host {
         display: flex;
         cursor: ew-resize;
-        border: var(--iotBorder);
-        border-radius: var(--iotBorderRadius);
-        border-color: var(--iotBorderColorInset);
-        min-height: var(--iotFieldHeight);
-        min-width: var(--iotFieldHeight);
+        border: var(--io_border);
+        border-radius: var(--io_borderRadius);
+        border-color: var(--io_borderColorInset);
+        min-height: var(--io_fieldHeight);
+        min-width: var(--io_fieldHeight);
       }
       :host:not([vertical]) {
-        width: var(--iotFieldHeight10);
+        width: var(--io_fieldHeight10);
       }
       :host[vertical] {
         cursor: ns-resize;
-        height: var(--iotFieldHeight5);
-        min-height: var(--iotFieldHeight5);
-        flex-basis: var(--iotFieldHeight);
+        height: var(--io_fieldHeight5);
+        min-height: var(--io_fieldHeight5);
+        flex-basis: var(--io_fieldHeight);
         flex-grow: 0;
       }
     `;

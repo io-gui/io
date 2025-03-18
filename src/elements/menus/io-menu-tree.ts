@@ -63,12 +63,12 @@ export class IoMenuTree extends IoElement {
       align-self: stretch;
       align-items: stretch;
       justify-self: stretch;
-      border-radius: var(--iotBorderRadius);
-      border: var(--iotBorder);
-      border-color: var(--iotBorderColorOutset);
-      color: var(--iotColorField);
-      background-color: var(--iotBgColorDimmed);
-      padding: var(--iotSpacing) 0;
+      border-radius: var(--io_borderRadius);
+      border: var(--io_border);
+      border-color: var(--io_borderColorOutset);
+      color: var(--io_colorField);
+      background-color: var(--io_bgColorDimmed);
+      padding: var(--io_spacing) 0;
       align-self: flex-start;
       user-select: none;
       transition: opacity 0.25s;
@@ -87,51 +87,51 @@ export class IoMenuTree extends IoElement {
       border-radius: 0 !important;
       margin: 0 !important;
       padding: 0 !important;
-      background: var(--iotBgColorDimmed);
+      background: var(--io_bgColorDimmed);
     }
     
     :host io-menu-item:first-of-type {
-      margin-top: var(--iotBorderWidth);
+      margin-top: var(--io_borderWidth);
     }
     :host io-menu-item {
-      background-color: var(--iotBgColorDimmed);
+      background-color: var(--io_bgColorDimmed);
       flex: 0 0 auto;
       align-self: stretch;
       border-radius: 0;
-      margin-left: var(--iotBorderWidth);
-      margin-right: var(--iotBorderWidth);
+      margin-left: var(--io_borderWidth);
+      margin-right: var(--io_borderWidth);
     }
     :host io-menu-item[depth="1"] {
-      padding-left: calc(var(--iotLineHeight) * 1);
+      padding-left: calc(var(--io_lineHeight) * 1);
     }
     :host io-menu-item[depth="2"] {
-      padding-left: calc(var(--iotLineHeight) * 2);
+      padding-left: calc(var(--io_lineHeight) * 2);
     }
     :host io-menu-item[depth="3"] {
-      padding-left: calc(var(--iotLineHeight) * 3);
+      padding-left: calc(var(--io_lineHeight) * 3);
     }
     :host io-menu-item[depth="4"] {
-      padding-left: calc(var(--iotLineHeight) * 4);
+      padding-left: calc(var(--io_lineHeight) * 4);
     }
     :host io-menu-item[depth="5"] {
-      padding-left: calc(var(--iotLineHeight) * 5);
+      padding-left: calc(var(--io_lineHeight) * 5);
     }
     :host io-menu-item[depth="6"] {
-      padding-left: calc(var(--iotLineHeight) * 6);
+      padding-left: calc(var(--io_lineHeight) * 6);
     }
     /* Item spacing */
     :host io-menu-item {
-      margin-bottom: var(--iotBorderWidth);
+      margin-bottom: var(--io_borderWidth);
     }
     :host io-menu-item:first-of-type {
-      /* margin-top: var(--iotSpacing); */
+      /* margin-top: var(--io_spacing); */
     }
 
     /* Item dividers */
     :host io-collapsable > io-boolean {
       margin: 0;
-      margin-left: var(--iotBorderWidth);
-      margin-right: var(--iotBorderWidth);
+      margin-left: var(--io_borderWidth);
+      margin-right: var(--io_borderWidth);
       z-index: 1;
       overflow: visible;
     }
