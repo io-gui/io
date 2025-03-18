@@ -27,7 +27,7 @@ export * from './elements/object/index.js';
 export * from './elements/sliders/index.js';
 
 /** @License
- * Copyright ©2024 Aleksandar (Aki) Rodic
+ * Copyright ©2025 Aleksandar (Aki) Rodic
  *
  * The MIT License
  *
