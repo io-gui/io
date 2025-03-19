@@ -1,9 +1,9 @@
-import {ProtoChain} from './internals/protoChain.js';
-import {Binding} from './internals/binding.js';
-import {Change, ChangeQueue, Changes} from './internals/changeQueue.js';
-import {PropertyInstance, PropertyDefinitionLoose} from './internals/property.js';
-import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher.js';
-import { Register } from './decorators/register.js';
+import {ProtoChain} from './internals/protoChain';
+import {Binding} from './internals/binding';
+import {Change, ChangeQueue, Changes} from './internals/changeQueue';
+import {PropertyInstance, PropertyDefinitionLoose} from './internals/property';
+import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher';
+import { Register } from './decorators/register';
 
 export type Constructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;

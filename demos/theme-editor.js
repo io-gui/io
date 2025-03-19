@@ -4,12 +4,11 @@ export class IoDemoThemeEditor extends IoElement {
   static get Style() {
     return /* css */`
     :host {
+      align-self: start;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
       grid-gap: var(--io_spacing);
-      background-color: var(--io_bgColor);
-      padding: var(--io_spacing);
-      grid-template-columns: auto 1fr !important;
+      padding: var(--io_spacing3);
+      grid-template-columns: auto 2fr !important;
     }
     `;
   }

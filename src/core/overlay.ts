@@ -1,6 +1,6 @@
-import { Property } from './decorators/property.js';
-import { Register } from './decorators/register.js';
-import { IoElement } from './element.js';
+import { Property } from './decorators/property';
+import { Register } from './decorators/register';
+import { IoElement } from './element';
 
 let lastFocus: Element | null = null;
 
@@ -184,11 +184,6 @@ export class IoOverlay extends IoElement {
         break;
       case 'right':
       default:
-        // console.log(this.nudgeRight(element, right, top, elemRect));
-        // console.log(this.nudgeLeft(element, left, top, elemRect));
-        // console.log(this.nudgeRight(element, right, top, elemRect, rightToWidth > left));
-        // console.log(this.nudgeLeft(element, left, top, elemRect, rightToWidth <= left));
-
         this.nudgeRight(element, right, top, elemRect) ||
         this.nudgeLeft(element, left, top, elemRect) ||
         this.nudgeRight(element, right, top, elemRect, rightToWidth > left) ||

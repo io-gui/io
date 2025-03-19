@@ -1,26 +1,35 @@
 
-import BindingTest from './core/internals/binding.test.js';
-import ChangeQueueTest from './core/internals/changeQueue.test.js';
-import EventDispatcherTest from './core/internals/eventDispatcher.test.js';
-import PropertyTest from './core/internals/property.test.js';
-import ProtoChainTest from './core/internals/protoChain.test.js';
+import BindingTest from './core/internals/binding.test';
+import ChangeQueueTest from './core/internals/changeQueue.test';
+import EventDispatcherTest from './core/internals/eventDispatcher.test';
+import PropertyTest from './core/internals/property.test';
+import ProtoChainTest from './core/internals/protoChain.test';
 
-import ElementTest from './core/element.test.js';
-import GLTest from './core/gl.test.js';
-import OverlayTest from './core/overlay.test.js';
-import NodeTest from './core/node.test.js';
-import StorageTest from './core/storage.test.js';
-import ThemeTest from './core/theme.test.js';
+import ElementTest from './core/element.test';
+import GLTest from './core/gl.test';
+import OverlayTest from './core/overlay.test';
+import NodeTest from './core/node.test';
+import StorageTest from './core/storage.test';
+import ThemeTest from './core/theme.test';
 
-import BasicElementTest from './elements/basic/index.test.js';
-import ColorElementTest from './elements/color/index.test.js';
-// import ExtrasElementTest from './elements/extras/index.test.js';
-// import LayoutElementTest from './elements/layout/index.test.js';
-// import VectorElementTest from './elements/vectors/index.test.js';
-import MenuElementTest from './elements/menus/index.test.js';
-// import NotifyElementTest from './elements/notify/index.test.js';
-// import ObjectElementTest from './elements/object/index.test.js';
-import SlidersElementTest from './elements/sliders/index.test.js';
+import BooleanElementTest from './elements/basic/io-boolean.test';
+import ButtonElementTest from './elements/basic/io-button.test';
+import FieldElementTest from './elements/basic/io-field.test';
+import IconElementTest from './elements/basic/io-icon.test';
+import IconsetElementTest from './elements/basic/io-iconset.test';
+import LabelElementTest from './elements/basic/io-label.test';
+import SwitchElementTest from './elements/basic/io-switch.test';
+import StringElementTest from './elements/basic/io-string.test';
+import NumberElementTest from './elements/basic/io-number.test';
+
+import ColorElementTest from './elements/color/index.test';
+// import ExtrasElementTest from './elements/extras/index.test';
+// import LayoutElementTest from './elements/layout/index.test';
+// import VectorElementTest from './elements/vectors/index.test';
+import MenuElementTest from './elements/menus/index.test';
+// import NotifyElementTest from './elements/notify/index.test';
+// import ObjectElementTest from './elements/object/index.test';
+import SlidersElementTest from './elements/sliders/index.test';
 
 import { mocha, sessionFinished, sessionFailed } from '@web/test-runner-mocha';
 
@@ -49,7 +58,16 @@ try {
   new OverlayTest().run();
   new StorageTest().run();
 
-  new BasicElementTest().run();
+  new BooleanElementTest().run();
+  new ButtonElementTest().run();
+  new FieldElementTest().run();
+  new IconElementTest().run();
+  new IconsetElementTest().run();
+  new LabelElementTest().run();
+  new NumberElementTest().run();
+  new StringElementTest().run();
+  new SwitchElementTest().run();
+
   new ColorElementTest().run();
   // new ExtrasElementTest().run();
   // new LayoutElementTest().run();

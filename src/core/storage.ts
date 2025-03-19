@@ -1,7 +1,7 @@
-import { Binding } from '../iogui.js';
-import { Property } from './decorators/property.js';
-import { Register } from './decorators/register.js';
-import { IoNode } from './node.js';
+import { Binding } from '../iogui';
+import { Property } from './decorators/property';
+import { Register } from './decorators/register';
+import { IoNode } from './node';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;

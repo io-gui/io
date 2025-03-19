@@ -1,30 +1,41 @@
-export * from './core/internals/changeQueue.js';
-export * from './core/internals/eventDispatcher.js';
-export * from './core/internals/property.js';
-export * from './core/internals/binding.js';
-export * from './core/internals/protoChain.js';
+export * from './core/internals/changeQueue';
+export * from './core/internals/eventDispatcher';
+export * from './core/internals/property';
+export * from './core/internals/binding';
+export * from './core/internals/protoChain';
 
-export * from './core/decorators/autobind.js';
-export * from './core/decorators/register.js';
-export * from './core/decorators/property.js';
+export * from './core/decorators/autobind';
+export * from './core/decorators/register';
+export * from './core/decorators/property';
 
-export * from './core/node.js';
-export * from './core/element.js';
-export * from './core/theme.js';
-export * from './core/storage.js';
-export * from './core/gl.js';
-export * from './core/overlay.js';
+export * from './core/glsl/index';
 
-export * from './elements/menus/models/index.js';
+export * from './core/node';
+export * from './core/element';
+export * from './core/theme';
+export * from './core/storage';
+export * from './core/gl';
+export * from './core/overlay';
 
-export * from './elements/basic/index.js';
-export * from './elements/color/index.js';
-export * from './elements/content/index.js';
-export * from './elements/vectors/index.js';
-export * from './elements/menus/index.js';
-export * from './elements/notify/index.js';
-export * from './elements/object/index.js';
-export * from './elements/sliders/index.js';
+export * from './elements/basic/io-label';
+export * from './elements/basic/io-field';
+export * from './elements/basic/io-button';
+export * from './elements/basic/io-boolean';
+export * from './elements/basic/io-boolicon';
+export * from './elements/basic/io-switch';
+export * from './elements/basic/io-string';
+export * from './elements/basic/io-number';
+export * from './elements/basic/io-icon';
+export * from './elements/basic/io-iconset';
+
+export * from './elements/color/index';
+export * from './elements/content/index';
+export * from './elements/vectors/index';
+export * from './elements/menus/models/index';
+export * from './elements/menus/index';
+export * from './elements/notify/index';
+export * from './elements/object/index';
+export * from './elements/sliders/index';
 
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic

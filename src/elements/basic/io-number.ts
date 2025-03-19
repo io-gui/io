@@ -21,8 +21,8 @@ export class IoNumber extends IoField {
         -webkit-user-select: text;
         -webkit-touch-callout: default;
         font-family: monospace;
-        padding-top: calc(var(--io_spacing) + 0.05em);
-        padding-bottom: calc(var(--io_spacing) - 0.05em);
+        padding-left: var(--io_spacing3);
+        padding-right: var(--io_spacing3);
       }
     `;
   }

@@ -1,7 +1,7 @@
 import { IoNode } from '../../core/node.js';
 import { Register } from '../../core/decorators/register.js';
 
-const IoIconsetDB: Record<string, Record<string, string>> = {};
+export const IoIconsetDB: Record<string, Record<string, string>> = {};
 
 /**
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace` and `id` attribute.

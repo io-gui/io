@@ -1,4 +1,4 @@
-import { IoStorageNode, IoStorage, Binding } from '../iogui.js';
+import { IoStorageNode, IoStorage, Binding } from '../iogui';
 import { expect } from 'chai';
 
 async function afterHashChange(): Promise<void> {

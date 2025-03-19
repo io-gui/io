@@ -1,4 +1,4 @@
-import {IoOverlaySingleton} from '../iogui.js';
+import {IoOverlaySingleton} from '../iogui';
 import { expect } from 'chai';
 
 export default class {

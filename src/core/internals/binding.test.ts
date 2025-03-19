@@ -1,4 +1,4 @@
-import { Binding, IoNode, Register, PropertyDefinitions } from '../../iogui.js';
+import { Binding, IoNode, Register, PropertyDefinitions } from '../../iogui';
 import { expect } from 'chai';
 
 @Register

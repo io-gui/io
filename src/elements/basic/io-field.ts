@@ -35,7 +35,10 @@ export class IoField extends IoElement {
         border-color: transparent;
         color: var(--io_colorField);
         background-color: var(--io_bgColorField);
-        padding: var(--io_spacing) calc(var(--io_spacing) + 0.25em);
+        padding-top: var(--io_spacing);
+        padding-bottom: var(--io_spacing);
+        padding-left: var(--io_spacing);
+        padding-right: var(--io_spacing);
         transition: background-color 0.25s;
       }
       :host {
@@ -47,6 +50,8 @@ export class IoField extends IoElement {
       }
       :host[appearance=inset] {
         border-color: var(--io_borderColorInset);
+        padding-top: calc(var(--io_spacing) + 0.05em);
+        padding-bottom: calc(var(--io_spacing) - 0.05em);
       }
       :host[appearance=outset] {
         border-color: var(--io_borderColorOutset);
@@ -79,6 +84,10 @@ export class IoField extends IoElement {
         color: var(--io_colorField);
         padding: 0 calc(var(--io_spacing) + var(--io_borderWidth));
         opacity: 0.5;
+      }
+      :host[appearance=inset] io-icon {
+        margin-top: -0.05em;
+        margin-bottom: 0.05em;
       }
     `;
   }
@@ -308,7 +317,7 @@ export class IoField extends IoElement {
     } else {
       if (this.value && typeof this.value === 'object') {
         label = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
-      } else {
+      } else if (this.value !== undefined) {
         label = String(this.value);
       }
     }

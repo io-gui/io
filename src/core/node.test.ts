@@ -1,4 +1,4 @@
-import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../iogui.js';
+import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../iogui';
 import { expect } from 'chai';
 
 export default class {

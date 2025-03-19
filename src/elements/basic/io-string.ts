@@ -14,6 +14,8 @@ export class IoString extends IoField {
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
+        padding-left: var(--io_spacing3);
+        padding-right: var(--io_spacing3);
       }
     `;
   }

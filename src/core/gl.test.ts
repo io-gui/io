@@ -1,4 +1,4 @@
-import { IoGl, IoNode, IoThemeSingleton } from '../iogui.js';
+import { IoGl, IoNode, IoThemeSingleton } from '../iogui';
 import { expect } from 'chai';
 
 const element = new IoGl();
