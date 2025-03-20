@@ -66,9 +66,10 @@ export default class {
           element.value = undefined;
           expect(element.innerText).to.equal('label');
           element.label = '';
-          expect(element.innerText).to.equal('undefined');
+          expect(element.innerText).to.equal('');
         });
         it('should set icon to match icon property', () => {
+          element.value = 'test';
           element.icon = 'icons:checkmark';
           expect(element.innerHTML).to.equal(`<io-icon icon="${element.icon}">${IoIconsetSingleton.getIcon(element.icon)}</io-icon><io-label label="${element.value}" aria-label="${element.value}">${element.value}</io-label>`);
           element.icon = '';

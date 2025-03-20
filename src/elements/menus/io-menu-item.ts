@@ -51,8 +51,7 @@ export class IoMenuItem extends IoField {
   @Property({value: 1000, reflect: true})
   declare depth: number;
 
-  @Property(undefined)
-  $options?: IoMenuOptions;
+  declare $options?: IoMenuOptions;
 
   static get Listeners(): any {
     return {
@@ -114,7 +113,7 @@ export class IoMenuItem extends IoField {
         window.open(item.value, '_blank');
       }
       this.dispatchEvent('item-clicked', item, true);
-      this.throttle(this._onCollapse, undefined);
+      this.throttle(this._onCollapse);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -123,7 +122,7 @@ export class IoMenuItem extends IoField {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.throttle(this._onCollapse, undefined);
+    if (this.expanded) this.throttle(this._onCollapse);
   }
   _onPointerdown(event: PointerEvent) {
     event.stopPropagation();
@@ -345,15 +344,20 @@ export class IoMenuItem extends IoField {
       for (let i = $descendants.length; i--;) $descendants[i].expanded = false;
     }
   }
+  itemChanged() {
+    this.setProperties({
+      selected: this.item.bind('selected'),
+      disabled: this.item.bind('disabled'),
+    });
+  }
   changed() {
     if (this.$options !== undefined && this.item.options) {
       this.$options.options = this.item.options;
     }
     const icon = this.icon || this.item.icon;
-    this.setAttribute('selected', this.item.selected);
+
     this.setAttribute('hidden', this.item.hidden);
     this.setAttribute('hasmore', this.hasmore);
-    this.disabled = this.item.disabled; // TODO: reconsider this
     this.template([
       this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
       this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
