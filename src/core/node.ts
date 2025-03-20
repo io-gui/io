@@ -1,6 +1,6 @@
 import {ProtoChain} from './internals/protoChain';
 import {Binding} from './internals/binding';
-import {Change, ChangeQueue, Changes} from './internals/changeQueue';
+import {ChangeQueue} from './internals/changeQueue';
 import {PropertyInstance, PropertyDefinitionLoose} from './internals/property';
 import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher';
 import { Register } from './decorators/register';

@@ -1,4 +1,4 @@
-import { Register, IoElement, IoNode, Change, PropertyDefinitions, nextQueue } from '../iogui';
+import { Register, IoElement, IoNode, Change, PropertyDefinitions } from '../iogui';
 import { expect } from 'chai';
 const element = new IoElement();
 element.style.display = 'none';
