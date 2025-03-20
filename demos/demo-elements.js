@@ -428,9 +428,8 @@ export class IoDemoElements extends IoElement {
       }],
       ['io-collapsable', {label: 'Content', expanded: $('expanded-demo-content'), elements: [
         ['io-navigator-scroller', {
-          menu: 'right',
-          collapseWidth: 100,
           menu: 'left',
+          collapseWidth: 100,
           options: contentOptions[0].options,
           elements: [contentElements[0]]
         }],
