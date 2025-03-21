@@ -22,7 +22,7 @@ function isNonIoNodeConstructor(constructor: any) {
   return false;
 }
 function isNonIoNodeObject(value: any) {
-  return (typeof value === 'object' && value !== null && !value._isIoNode)
+  return (typeof value === 'object' && value !== null && !value._isIoNode);
 }
 function isIoNodeObjectConstructor(constructor: any) {
   if (typeof constructor !== 'function') return false;
@@ -95,7 +95,7 @@ export class ProtoChain {
     }
 
     // Iterate through the prototype chain in reverse to aggregate inherited properties and listeners.
-    // TODO: warn if property name is not allowed e.g. 'constructor', 'prototype', 'length', 'name', 
+    // TODO: warn if property name is not allowed e.g. 'constructor', 'prototype', 'length', 'name',
     // 'property'. etc.
     let propHash = '';
     for (let i = this.constructors.length; i--;) {

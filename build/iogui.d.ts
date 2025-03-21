@@ -347,7 +347,11 @@ export declare class ProtoChain {
 	/**
 	 * Array of property names of mutation-observed object properties.
 	 */
-	mutationObservedProperties: string[];
+	observedObjectProperties: string[];
+	/**
+	 * Array of property names of mutation-observed IoNode properties.
+	 */
+	observedIoNodeProperties: string[];
 	/**
 	 * Creates an instance of `ProtoChain` for specified class constructor.
 	 * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
@@ -383,10 +387,15 @@ export declare class ProtoChain {
 	 */
 	addHandlers(proto: IoNode): void;
 	/**
-	 * Adds property names to the mutationObservedProperties array if the property has the 'observe' flag.
-	 * @returns {void}
+	 * Creates observedObjectProperties array.
+	 * @returns {string[]} - Array of property names that are observed as native objects.
 	 */
-	getMutationObservedProperties(): void;
+	getObservedObjectProperties(): string[];
+	/**
+	 * Creates observedIoNodeProperties array.
+	 * @returns {string[]} - Array of property names that are observed as IoNode objects.
+	 */
+	getObservedIoNodeProperties(): string[];
 	/**
 	 * Debug only.
 	 * Validates property definitions.
@@ -462,11 +471,11 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		init(): void;
 		/**
 		 * Adds property change to the queue.
-		 * @param {string} prop - Property name.
+		 * @param {string} name - Property name.
 		 * @param {*} value - Property value.
 		 * @param {*} oldValue - Old property value.
 		 */
-		queue(prop: string, value: any, oldValue: any): void;
+		queue(name: string, value: any, oldValue: any): void;
 		/**
 		 * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
 		 */
@@ -485,36 +494,26 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
 		 */
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
-		 * Event handler for '[property]-changed' events emitted from the properties which are IoNode instances.
-		 * This is used to propagate 'object-mutated' event from the parent node.
+		 * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
+		 * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
+		 * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+		 * This is used to evoke '[propName]Mutated()' mutation handler
 		 * @param {Object} event - Event payload.
+		 * @param {EventTarget} event.target - Node that emitted the event.
 		 * @param {IoNode} event.detail.object - Mutated node.
 		 */
-		onIoNodePropertyChanged: (event: CustomEvent) => void;
-		/**
-		 * Event handler for 'object-mutated' event emitted from the `window`.
-		 * Node should be listening for this event if it has an observed object property
-		 * @param {Object} event - Event payload.
-		 * @param {Object} event.detail.object - Mutated object.
-		 */
-		onObjectMutated(event: CustomEvent): void;
-		/**
-		 * This function is called after `onObjectMutated()` determines that one of
-		 * the object properties has mutated.
-		 * @param {string} prop - Mutated object property name.
-		 */
-		objectMutated: (prop: string) => void;
+		onPropertyMutated(event: CustomEvent): void;
 		/**
 		 * Returns a binding to a specified property`.
-		 * @param {string} prop - Property to bind to.
+		 * @param {string} name - Property name to bind to.
 		 * @return {Binding} Binding object.
 		 */
-		bind(prop: string): Binding;
+		bind(name: string): Binding;
 		/**
 		 * Unbinds a binding to a specified property`.
-		 * @param {string} prop - Property to unbind.
+		 * @param {string} name - Property name to unbind.
 		 */
-		unbind(prop: string): void;
+		unbind(name: string): void;
 		/**
 		 * Wrapper for addEventListener.
 		 * @param {string} type - listener name.
@@ -588,11 +587,11 @@ declare const IoNode_base: {
 		init(): void;
 		/**
 		 * Adds property change to the queue.
-		 * @param {string} prop - Property name.
+		 * @param {string} name - Property name.
 		 * @param {*} value - Property value.
 		 * @param {*} oldValue - Old property value.
 		 */
-		queue(prop: string, value: any, oldValue: any): void;
+		queue(name: string, value: any, oldValue: any): void;
 		/**
 		 * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
 		 */
@@ -611,36 +610,26 @@ declare const IoNode_base: {
 		 */
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
-		 * Event handler for '[property]-changed' events emitted from the properties which are IoNode instances.
-		 * This is used to propagate 'object-mutated' event from the parent node.
+		 * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
+		 * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
+		 * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+		 * This is used to evoke '[propName]Mutated()' mutation handler
 		 * @param {Object} event - Event payload.
+		 * @param {EventTarget} event.target - Node that emitted the event.
 		 * @param {IoNode} event.detail.object - Mutated node.
 		 */
-		onIoNodePropertyChanged: (event: CustomEvent) => void;
-		/**
-		 * Event handler for 'object-mutated' event emitted from the `window`.
-		 * Node should be listening for this event if it has an observed object property
-		 * @param {Object} event - Event payload.
-		 * @param {Object} event.detail.object - Mutated object.
-		 */
-		onObjectMutated(event: CustomEvent): void;
-		/**
-		 * This function is called after `onObjectMutated()` determines that one of
-		 * the object properties has mutated.
-		 * @param {string} prop - Mutated object property name.
-		 */
-		objectMutated: (prop: string) => void;
+		onPropertyMutated(event: CustomEvent): void;
 		/**
 		 * Returns a binding to a specified property`.
-		 * @param {string} prop - Property to bind to.
+		 * @param {string} name - Property name to bind to.
 		 * @return {Binding} Binding object.
 		 */
-		bind(prop: string): Binding;
+		bind(name: string): Binding;
 		/**
 		 * Unbinds a binding to a specified property`.
-		 * @param {string} prop - Property to unbind.
+		 * @param {string} name - Property name to unbind.
 		 */
-		unbind(prop: string): void;
+		unbind(name: string): void;
 		/**
 		 * Wrapper for addEventListener.
 		 * @param {string} type - listener name.
@@ -732,7 +721,6 @@ export declare class ChangeQueue {
 	 *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
 	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
 	 * After all changes are dispatched it invokes `.changed()` function of the owner node instance and fires `'changed'` event.
-	 * Finally it fires global `'object-mutated'` event on the window object with the owner node as `event.detail`.
 	 */
 	dispatch(): void;
 	/**
@@ -765,6 +753,24 @@ export declare function Register(ioNodeConstructor: typeof IoNode): void;
  * @return {Function} Property decorator function.
  */
 export declare const Property: (propertyDefinition: PropertyDefinitionLoose) => (target: IoNode, propertyName: string) => void;
+export declare const glsl: {
+	saturate: string;
+	translate: string;
+	circle: string;
+	rectangle: string;
+	paintDerivativeGrid2D: string;
+	lineVertical: string;
+	lineHorizontal: string;
+	lineCross2d: string;
+	checker: string;
+	checkerX: string;
+	checkerY: string;
+	compose: string;
+	paintHorizontalLine: string;
+	hue2rgb: string;
+	hsv2rgb: string;
+	hsl2rgb: string;
+};
 export type IoElementArgs = IoNodeArgs & {
 	tabindex?: string;
 	contenteditable?: boolean;
@@ -816,15 +822,13 @@ declare const IoElement_base: {
 		inputValue(value: any): void;
 		changed(): void;
 		init(): void;
-		queue(prop: string, value: any, oldValue: any): void;
+		queue(name: string, value: any, oldValue: any): void;
 		dispatchQueue(debounce?: boolean): void;
 		throttle(func: CallbackFunction, arg?: any): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-		onIoNodePropertyChanged: (event: CustomEvent) => void;
-		onObjectMutated(event: CustomEvent): void;
-		objectMutated: (prop: string) => void;
-		bind(prop: string): Binding;
-		unbind(prop: string): void;
+		onPropertyMutated(event: CustomEvent): void;
+		bind(name: string): Binding;
+		unbind(name: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
 		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
@@ -900,65 +904,67 @@ export declare class Color {
 	b: number;
 	a: number;
 	constructor(r: number, g: number, b: number, a: number);
+	toCss(): string;
 }
 export type Theme = {
-	iotSpacing: number;
-	iotSpacing2: number;
-	iotSpacing3: number;
-	iotSpacing5: number;
-	iotSpacing8: number;
-	iotFontSize: number;
-	iotLineHeight: number;
-	iotFieldHeight: number;
-	iotFieldHeight2: number;
-	iotFieldHeight3: number;
-	iotFieldHeight4: number;
-	iotFieldHeight5: number;
-	iotFieldHeight6: number;
-	iotFieldHeight7: number;
-	iotFieldHeight8: number;
-	iotFieldHeight9: number;
-	iotFieldHeight10: number;
-	iotFieldHeight11: number;
-	iotFieldHeight12: number;
-	iotBorderRadius: number;
-	iotBorderRadius2: number;
-	iotBorderWidth: number;
-	iotBorderColor: Color;
-	iotBorderColorLight: Color;
-	iotBorderColorDark: Color;
-	iotBgColor: Color;
-	iotBgColorStrong: Color;
-	iotBgColorDimmed: Color;
-	iotBgColorRed: Color;
-	iotBgColorGreen: Color;
-	iotBgColorBlue: Color;
-	iotBgColorField: Color;
-	iotColor: Color;
-	iotColorStrong: Color;
-	iotColorDimmed: Color;
-	iotColorRed: Color;
-	iotColorGreen: Color;
-	iotColorBlue: Color;
-	iotColorWhite: Color;
-	iotColorField: Color;
-	iotGradientColorStart: Color;
-	iotGradientColorEnd: Color;
-	iotShadowColor: Color;
+	spacing: number;
+	spacing2: number;
+	spacing3: number;
+	spacing5: number;
+	spacing8: number;
+	fontSize: number;
+	lineHeight: number;
+	fieldHeight: number;
+	fieldHeight2: number;
+	fieldHeight3: number;
+	fieldHeight4: number;
+	fieldHeight5: number;
+	fieldHeight6: number;
+	fieldHeight7: number;
+	fieldHeight8: number;
+	fieldHeight9: number;
+	fieldHeight10: number;
+	fieldHeight11: number;
+	fieldHeight12: number;
+	borderRadius: number;
+	borderRadius2: number;
+	borderWidth: number;
+	borderColor: Color;
+	borderColorLight: Color;
+	borderColorDark: Color;
+	bgColor: Color;
+	bgColorStrong: Color;
+	bgColorDimmed: Color;
+	bgColorRed: Color;
+	bgColorGreen: Color;
+	bgColorBlue: Color;
+	bgColorField: Color;
+	color: Color;
+	colorStrong: Color;
+	colorDimmed: Color;
+	colorRed: Color;
+	colorGreen: Color;
+	colorBlue: Color;
+	colorWhite: Color;
+	colorField: Color;
+	gradientColorStart: Color;
+	gradientColorEnd: Color;
+	shadowColor: Color;
 };
 export declare const LIGHT_THEME: Theme;
 export declare const DARK_THEME: Theme;
-declare class IoTheme extends IoElement {
+declare class IoTheme extends IoNode {
 	static get Properties(): PropertyDefinitions;
-	themes: Record<string, Theme>;
+	themeDefaults: Record<string, Theme>;
 	themeID: string;
 	reactivity: string;
 	init(): void;
 	registerTheme(themeID: string, theme: Theme): void;
-	_toCss(rgba: Color): string;
 	reset(): void;
 	themeIDChanged(): void;
+	onPropertyMutated(event: CustomEvent): void;
 	changed(): void;
+	saveTheme(): void;
 }
 export declare const IoThemeSingleton: IoTheme;
 interface StorageProps {
@@ -1018,6 +1024,7 @@ export declare class IoGl extends IoElement {
 	updatePropertyUniform(name: string, property: PropertyInstance): void;
 	updateThemeUniforms(): void;
 	setUniform(name: string, value: any): void;
+	Register(ioNodeConstructor: typeof IoElement): void;
 }
 export type NudgeDirection = "none" | "pointer" | "up" | "left" | "down" | "right";
 /**
@@ -1090,94 +1097,6 @@ export declare class IoOverlay extends IoElement {
 	expandedChanged(): void;
 }
 export declare const IoOverlaySingleton: IoOverlay;
-declare const MenuOptions_base: {
-	new (...args: any[]): {
-		[x: string]: any;
-		readonly _protochain: ProtoChain;
-		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
-		readonly _changeQueue: ChangeQueue;
-		readonly _eventDispatcher: EventDispatcher;
-		applyProperties(props: any): void;
-		setProperties(props: any): void;
-		setProperty(name: string, value: any, debounce?: boolean): void;
-		inputValue(value: any): void;
-		changed(): void;
-		init(): void;
-		queue(prop: string, value: any, oldValue: any): void;
-		dispatchQueue(debounce?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any): void;
-		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-		onIoNodePropertyChanged: (event: CustomEvent) => void;
-		onObjectMutated(event: CustomEvent): void;
-		objectMutated: (prop: string) => void;
-		bind(prop: string): Binding;
-		unbind(prop: string): void;
-		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
-		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-		dispose(): void;
-		Register(ioNodeConstructor: typeof IoNode): void;
-	};
-	[x: string]: any;
-	readonly Properties: PropertyDefinitions;
-};
-export declare class MenuOptions extends MenuOptions_base {
-	first: any;
-	last: any;
-	scroll: any;
-	path: string;
-	delimiter: string;
-	push(...items: MenuItem[]): void;
-	getItem(value: any, deep?: boolean): any;
-	constructor(args?: MenuItemArgsLoose[], properties?: IoNodeArgs);
-	protected addItems(items: MenuItemArgsLoose[]): void;
-	pathChanged(): void;
-	firstChanged(): void;
-	lastChanged(): void;
-	updatePaths(item?: MenuItem): void;
-	_onItemSelectedChanged(event: CustomEvent): void;
-	_onSubOptionsPathChanged(event: CustomEvent): void;
-	selectDefault(): boolean;
-	bind(prop: string): Binding;
-	dispose(): void;
-	changed(): void;
-}
-export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
-export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
-export type MenuItemArgs = IoElementArgs & {
-	value?: any;
-	icon?: string;
-	hint?: string;
-	action?: () => void;
-	mode?: MenuItemSelectType;
-	hidden?: boolean;
-	disabled?: boolean;
-	selected?: boolean;
-	options?: MenuItemArgsLoose[] | MenuOptions;
-};
-export declare class MenuItem extends IoNode {
-	value: any;
-	label: string;
-	icon: string;
-	hint: string;
-	hidden: boolean;
-	disabled: boolean;
-	action?: (value?: any) => void;
-	mode: MenuItemSelectType;
-	selected: boolean;
-	options?: MenuOptions;
-	get hasmore(): boolean;
-	getSubitem(value: any): any;
-	constructor(args?: MenuItemArgsLoose);
-	toJSON(): Record<string, any>;
-	_onSubItemSelected(): void;
-	_onOptionsPathChanged(event: CustomEvent): void;
-	optionsChanged(): void;
-	selectedChanged(): void;
-	changed(): void;
-	dispose(): void;
-}
 export declare class IoLabel extends IoElement {
 	static get Style(): string;
 	labelChanged(): void;
@@ -1375,6 +1294,7 @@ export declare class IoIcon extends IoElement {
 	stroke: boolean;
 	iconChanged(): void;
 }
+export declare const IoIconsetDB: Record<string, Record<string, string>>;
 /**
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace` and `id` attribute.
  *
@@ -1416,17 +1336,10 @@ export declare class IoColorBase extends IoElement {
 		number,
 		number
 	];
-	cmyk: [
-		number,
-		number,
-		number,
-		number
-	];
 	init(): void;
 	valueMutated(): void;
 	rgbFromHsv(): void;
 	rgbFromHsl(): void;
-	rgbFromCmyk(): void;
 	valueFromRgb(): void;
 	valueChanged(): void;
 }
@@ -1657,30 +1570,6 @@ export declare class IoColorSliderL extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
 /**
- * A 1D slider for "cyan" color channel.
- **/
-export declare class IoColorSliderC extends IoColorSliderBase {
-	static get GlUtils(): string;
-}
-/**
- * A 1D slider for "magenta" color channel.
- **/
-export declare class IoColorSliderM extends IoColorSliderBase {
-	static get GlUtils(): string;
-}
-/**
- * A 1D slider for "yellow" color channel.
- **/
-export declare class IoColorSliderY extends IoColorSliderBase {
-	static get GlUtils(): string;
-}
-/**
- * A 1D slider for "key" color channel.
- **/
-export declare class IoColorSliderK extends IoColorSliderBase {
-	static get GlUtils(): string;
-}
-/**
  * A 2D slider gor "hue" and "saturation" color channels.
  **/
 export declare class IoColorSliderHs extends IoColorSlider2dBase {
@@ -1705,7 +1594,7 @@ export declare class IoColorSliderSL extends IoColorSlider2dBase {
  * width= "192px"
  * height= "128px"
  * properties='{"mode": 0, "value": [1, 0.5, 0, 1], "horizontal": true}'
- * config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
+ * config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}]}]}
  * '></io-element-demo>
  *
  * This element has a singleton instance `IoColorPanelSingleton` used by `IoColorPicker` and other elements.
@@ -1791,6 +1680,90 @@ export declare class IoMdView extends IoElement {
 	onResized(): void;
 	srcChanged(): void;
 	changed(): void;
+}
+export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
+export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
+export type MenuItemArgs = IoElementArgs & {
+	value?: any;
+	icon?: string;
+	hint?: string;
+	action?: () => void;
+	mode?: MenuItemSelectType;
+	hidden?: boolean;
+	disabled?: boolean;
+	selected?: boolean;
+	options?: MenuItemArgsLoose[] | MenuOptions;
+};
+export declare class MenuItem extends IoNode {
+	value: any;
+	label: string;
+	icon: string;
+	hint: string;
+	hidden: boolean;
+	disabled: boolean;
+	action?: (value?: any) => void;
+	mode: MenuItemSelectType;
+	selected: boolean;
+	options?: MenuOptions;
+	get hasmore(): boolean;
+	getSubitem(value: any): any;
+	constructor(args?: MenuItemArgsLoose);
+	toJSON(): Record<string, any>;
+	_onSubItemSelected(): void;
+	_onOptionsPathChanged(event: CustomEvent): void;
+	optionsChanged(): void;
+	selectedChanged(): void;
+	dispose(): void;
+}
+declare const MenuOptions_base: {
+	new (...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain;
+		readonly _properties: Map<string, PropertyInstance>;
+		readonly _bindings: Map<string, Binding>;
+		readonly _changeQueue: ChangeQueue;
+		readonly _eventDispatcher: EventDispatcher;
+		applyProperties(props: any): void;
+		setProperties(props: any): void;
+		setProperty(name: string, value: any, debounce?: boolean): void;
+		inputValue(value: any): void;
+		changed(): void;
+		init(): void;
+		queue(name: string, value: any, oldValue: any): void;
+		dispatchQueue(debounce?: boolean): void;
+		throttle(func: CallbackFunction, arg?: any): void;
+		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+		onPropertyMutated(event: CustomEvent): void;
+		bind(name: string): Binding;
+		unbind(name: string): void;
+		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
+		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		dispose(): void;
+		Register(ioNodeConstructor: typeof IoNode): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertyDefinitions;
+};
+export declare class MenuOptions extends MenuOptions_base {
+	first: any;
+	last: any;
+	scroll: any;
+	path: string;
+	delimiter: string;
+	push(...items: MenuItem[]): void;
+	getItem(value: any, deep?: boolean): any;
+	constructor(args?: MenuItemArgsLoose[], properties?: IoNodeArgs);
+	protected addItems(items: MenuItemArgsLoose[]): void;
+	pathChanged(): void;
+	firstChanged(): void;
+	lastChanged(): void;
+	updatePaths(item?: MenuItem): void;
+	_onItemSelectedChanged(event: CustomEvent): void;
+	_onSubOptionsPathChanged(event: CustomEvent): void;
+	selectDefault(): boolean;
+	bind(prop: string): Binding;
+	dispose(): void;
 }
 export declare class IoSelector extends IoElement {
 	static get Style(): string;
@@ -1970,6 +1943,7 @@ export declare class IoMenuItem extends IoField {
 	_onCollapse(): void;
 	_onCollapseRoot(): void;
 	expandedChanged(): void;
+	itemChanged(): void;
 	changed(): void;
 }
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
@@ -2254,7 +2228,7 @@ export declare class IoNumberSlider extends IoElement {
 	changed(): void;
 }
 /** @License
- * Copyright ©2024 Aleksandar (Aki) Rodic
+ * Copyright ©2025 Aleksandar (Aki) Rodic
  *
  * The MIT License
  *

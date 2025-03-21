@@ -307,7 +307,7 @@ class IoTheme extends IoNode {
           return `${result}--io_${prop}: ${this[prop]}px;\n    `;
         }
       }, '');
-      
+
       styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
       this.debounce(this.saveTheme, undefined, 100);
   }
