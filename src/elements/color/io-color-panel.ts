@@ -11,7 +11,7 @@ import './io-color-sliders.js';
  * width= "192px"
  * height= "128px"
  * properties='{"mode": 0, "value": [1, 0.5, 0, 1], "horizontal": true}'
- * config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}, {"value": 3, "label": "3 - cmyk"}]}]}
+ * config='{"value": ["io-properties"], "mode": ["io-option-menu", {"options": [{"value": 0, "label": "0 - rgb"}, {"value": 1, "label": "1 - hsv"}, {"value": 2, "label": "2 - hsl"}]}]}
  * '></io-element-demo>
  *
  * This element has a singleton instance `IoColorPanelSingleton` used by `IoColorPicker` and other elements.

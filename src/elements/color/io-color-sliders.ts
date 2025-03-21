@@ -72,26 +72,6 @@ export class IoColorSlider extends IoColorBase {
         this.rgbFromHsl();
         this.valueFromRgb();
         break;
-      case 'c':
-        this.cmyk[0] = v;
-        this.rgbFromCmyk();
-        this.valueFromRgb();
-        break;
-      case 'm':
-        this.cmyk[1] = v;
-        this.rgbFromCmyk();
-        this.valueFromRgb();
-        break;
-      case 'y':
-        this.cmyk[2] = v;
-        this.rgbFromCmyk();
-        this.valueFromRgb();
-        break;
-      case 'k':
-        this.cmyk[3] = v;
-        this.rgbFromCmyk();
-        this.valueFromRgb();
-        break;
       case 'hs':
         this.hsv[0] = v[0];
         this.hsv[1] = v[1];
@@ -162,22 +142,6 @@ export class IoColorSlider extends IoColorBase {
         value = this.hsl[2];
         color = [...this.hsl, 1];
         break;
-      case 'c':
-        value = this.cmyk[0];
-        color = [...this.cmyk];
-        break;
-      case 'm':
-        value = this.cmyk[1];
-        color = [...this.cmyk];
-        break;
-      case 'y':
-        value = this.cmyk[2];
-        color = [...this.cmyk];
-        break;
-      case 'k':
-        value = this.cmyk[3];
-        color = [...this.cmyk];
-        break;
       case 'hs':
         value = [this.hsv[0], this.hsv[1]];
         color = [...this.hsv, 1];
@@ -221,7 +185,6 @@ export class IoColorSliderBase extends IoSlider {
       ${glsl.hue2rgb}
       ${glsl.hsv2rgb}
       ${glsl.hsl2rgb}
-      ${glsl.cmyk2rgb}
     `;
   }
   static get Frag() {
@@ -275,7 +238,6 @@ export class IoColorSlider2dBase extends IoSlider2d {
       ${glsl.hue2rgb}
       ${glsl.hsv2rgb}
       ${glsl.hsl2rgb}
-      ${glsl.cmyk2rgb}
     `;
   }
   static get Frag() {
@@ -438,70 +400,6 @@ export class IoColorSliderL extends IoColorSliderBase {
       }
       vec3 getEndColor(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uColor[1], uv.x));
-      }
-    `;
-  }
-}
-/**
- * A 1D slider for "cyan" color channel.
- **/
-@Register
-export class IoColorSliderC extends IoColorSliderBase {
-  static get GlUtils() {
-    return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uv.x, uColor[1], uColor[2], uColor[3]));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uv.x, uColor[1], uColor[2], uColor[3]));
-      }
-    `;
-  }
-}
-/**
- * A 1D slider for "magenta" color channel.
- **/
-@Register
-export class IoColorSliderM extends IoColorSliderBase {
-  static get GlUtils() {
-    return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uv.x, uColor[2], uColor[3]));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uv.x, uColor[2], uColor[3]));
-      }
-    `;
-  }
-}
-/**
- * A 1D slider for "yellow" color channel.
- **/
-@Register
-export class IoColorSliderY extends IoColorSliderBase {
-  static get GlUtils() {
-    return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uv.x, uColor[3]));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uv.x, uColor[3]));
-      }
-    `;
-  }
-}
-/**
- * A 1D slider for "key" color channel.
- **/
-@Register
-export class IoColorSliderK extends IoColorSliderBase {
-  static get GlUtils() {
-    return /* glsl */`
-      vec3 getStartColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
-      }
-      vec3 getEndColor(vec2 uv) {
-        return cmyk2rgb(vec4(uColor[0], uColor[1], uColor[2], uv.x));
       }
     `;
   }

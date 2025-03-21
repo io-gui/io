@@ -168,11 +168,6 @@ export class MenuItem extends IoNode {
     }
   }
 
-  changed() {
-    // TODO: remove this it shoud be handled by node class automatically
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
-  }
-
   dispose() {
     if (this.options) {
       this.options.removeEventListener('item-selected', this._onSubItemSelected);

@@ -12,7 +12,7 @@ class MockIoNode extends IoNode {
     this.changeStack.push(`prop2Changed ${change.property} ${change.value} ${change.oldValue}`);
   }
   dispatchEvent(eventName: string, change?: Change) {
-    if (change) {
+    if (change && change.property) {
       this.eventStack.push(`${eventName} ${change.property} ${change.value} ${change.oldValue}`);
     } else {
       this.eventStack.push(`${eventName}`);
@@ -49,7 +49,7 @@ export default class {
         changeQueue.queue('prop1', 1, 0);
         changeQueue.queue('prop1', 2, 1);
         changeQueue.dispatch();
-        expect(JSON.stringify(node.eventStack)).to.be.equal('["prop1-changed prop1 2 0","changed"]');
+        expect(JSON.stringify(node.eventStack)).to.be.equal('["prop1-changed prop1 2 0","object-mutated"]');
       });
       it('Should invoke handler functions with correct payloads', () => {
         const node = new MockIoNode();
@@ -67,7 +67,7 @@ export default class {
         changeQueue.queue('prop2', 2, 0);
         changeQueue.dispatch();
         expect(JSON.stringify(node.changeStack)).to.be.equal('["prop1Changed prop1 3 0","prop2Changed prop2 2 0","changed"]');
-        expect(JSON.stringify(node.eventStack)).to.be.equal('["prop1-changed prop1 3 0","prop2-changed prop2 2 0","changed"]');
+        expect(JSON.stringify(node.eventStack)).to.be.equal('["prop1-changed prop1 3 0","prop2-changed prop2 2 0","object-mutated"]');
       });
       it('Setting new value to the same value as oldValue should not trigger change event', () => {
         const node = new MockIoNode();

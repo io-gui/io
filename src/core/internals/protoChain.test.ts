@@ -111,6 +111,19 @@ class MockIoNode2 extends MockIoNode1 {
 }
 class MockIoNode3 extends MockIoNode2 {}
 
+class MockIoNode4 extends MockIoNode2 {
+  static get Properties(): PropertyDefinitions {
+    return {
+      prop3: {
+        type: IoNode,
+      },
+      prop4: {
+        value: new IoNode(),
+      }
+    };
+  }
+}
+
 export default class {
   run() {
     describe('protoChain.test.ts', () => {
@@ -192,7 +205,7 @@ export default class {
       });
       it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
         let protoChain = new ProtoChain(IoNode1);
-        expect(protoChain.handlers).to.be.eql(['onObjectMutated']);
+        expect(protoChain.handlers).to.be.eql(['onPropertyMutated']);
         protoChain = new ProtoChain(MockIoNode1);
         expect(protoChain.handlers).to.be.eql(['onFunction1', '_onFunction1']);
         protoChain = new ProtoChain(MockIoNode2);
@@ -211,9 +224,11 @@ export default class {
       });
       it('Should include property names of mutation-observed object properties', () => {
         let protoChain = new ProtoChain(MockIoNode1);
-        expect(protoChain.mutationObservedProperties).to.be.eql([]);
+        expect(protoChain.observedObjectProperties).to.be.eql([]);
         protoChain = new ProtoChain(MockIoNode2);
-        expect(protoChain.mutationObservedProperties).to.be.eql(['prop1']);
+        expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
+        protoChain = new ProtoChain(MockIoNode4);
+        expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
       });
     });
   }

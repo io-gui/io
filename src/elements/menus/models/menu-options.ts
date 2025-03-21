@@ -261,8 +261,4 @@ export class MenuOptions extends IoNodeMixin(Array) {
     }
     super.dispose();
   }
-
-  changed() {
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
-  }
 }

@@ -327,10 +327,6 @@ export class IoDemoElements extends IoElement {
         ['io-color-slider', {value: this.rgba, channel: 's'}],
         ['io-color-slider', {value: this.rgba, channel: 'v'}],
         ['io-color-slider', {value: this.rgba, channel: 'l'}],
-        ['io-color-slider', {value: this.rgba, channel: 'c'}],
-        ['io-color-slider', {value: this.rgba, channel: 'm'}],
-        ['io-color-slider', {value: this.rgba, channel: 'y'}],
-        ['io-color-slider', {value: this.rgba, channel: 'k'}],
         ['div', {class: 'row'}, [
           ['io-color-slider', {value: this.rgba, channel: 'hs'}],
           ['io-color-slider', {value: this.rgba, channel: 'sl', step: 0.1}],

@@ -10,12 +10,25 @@ type ProtoListeners = { [property: string]: ListenerDefinition[] };
 export const propertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
 
 const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
-function isObjectConstructor(constructor: any) {
+function isNonIoNodeConstructor(constructor: any) {
   if (typeof constructor !== 'function') return false;
   let proto = constructor.prototype;
   while (proto) {
     if (NON_OBSERVED.includes(constructor)) return false;
+    if (proto.constructor.name === 'IoNodeMixinConstructor') return false;
     if (proto === Object.prototype) return true;
+    proto = Object.getPrototypeOf(proto);
+  }
+  return false;
+}
+function isNonIoNodeObject(value: any) {
+  return (typeof value === 'object' && value !== null && !value._isIoNode)
+}
+function isIoNodeObjectConstructor(constructor: any) {
+  if (typeof constructor !== 'function') return false;
+  let proto = constructor.prototype;
+  while (proto) {
+    if (proto.constructor.name === 'IoNodeMixinConstructor') return true;
     proto = Object.getPrototypeOf(proto);
   }
   return false;
@@ -56,7 +69,11 @@ export class ProtoChain {
   /**
    * Array of property names of mutation-observed object properties.
    */
-  mutationObservedProperties: string[] = [];
+  observedObjectProperties: string[] = [];
+  /**
+   * Array of property names of mutation-observed IoNode properties.
+   */
+  observedIoNodeProperties: string[] = [];
   /**
    * Creates an instance of `ProtoChain` for specified class constructor.
    * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
@@ -78,6 +95,8 @@ export class ProtoChain {
     }
 
     // Iterate through the prototype chain in reverse to aggregate inherited properties and listeners.
+    // TODO: warn if property name is not allowed e.g. 'constructor', 'prototype', 'length', 'name', 
+    // 'property'. etc.
     let propHash = '';
     for (let i = this.constructors.length; i--;) {
       ioNodeConstructor = this.constructors[i];
@@ -86,7 +105,8 @@ export class ProtoChain {
       this.addListeners(ioNodeConstructor.Listeners);
     }
 
-    this.getMutationObservedProperties();
+    this.observedObjectProperties = this.getObservedObjectProperties();
+    this.observedIoNodeProperties = this.getObservedIoNodeProperties();
     debug: this.validateProperties();
   }
   /**
@@ -164,7 +184,7 @@ export class ProtoChain {
     const names = Object.getOwnPropertyNames(proto);
     for (let j = 0; j < names.length; j++) {
       const fn = names[j];
-      if (/^on[A-Z]/.test(fn) || /^_on[A-Z]/.test(fn)) {
+      if (/^on[A-Z]/.test(fn) || /^_on[A-Z]/.test(fn) || fn.endsWith('Changed') || fn.endsWith('Mutated')) {
         const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
         if (propDesr === undefined || propDesr.get || propDesr.set) continue;
         if (typeof proto[fn] === 'function') {
@@ -176,18 +196,34 @@ export class ProtoChain {
     }
   };
   /**
-   * Adds property names to the mutationObservedProperties array if the property has the 'observe' flag.
-   * @returns {void}
+   * Creates observedObjectProperties array.
+   * @returns {string[]} - Array of property names that are observed as native objects.
    */
-  getMutationObservedProperties() {
+  getObservedObjectProperties() {
+    const observedObjectProperties: string[] = [];
     for (const name in this.properties) {
       const value = this.properties[name].value;
       const type = this.properties[name].type;
-      const isObject = (typeof value === 'object' && value !== null) || isObjectConstructor(type);
-      if (isObject) {
-        this.mutationObservedProperties.push(name);
+      if(isNonIoNodeObject(value) || isNonIoNodeConstructor(type)) {
+        observedObjectProperties.push(name);
       }
     }
+    return observedObjectProperties;
+  }
+  /**
+   * Creates observedIoNodeProperties array.
+   * @returns {string[]} - Array of property names that are observed as IoNode objects.
+   */
+  getObservedIoNodeProperties() {
+    const observedIoNodeProperties: string[] = [];
+    for (const name in this.properties) {
+      const value = this.properties[name].value;
+      const type = this.properties[name].type;
+      if(value?._isIoNode || isIoNodeObjectConstructor(type)) {
+        observedIoNodeProperties.push(name);
+      }
+    }
+    return observedIoNodeProperties;
   }
   /**
    * Debug only.

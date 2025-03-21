@@ -72,7 +72,6 @@ export class ChangeQueue {
    *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
    *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
    * After all changes are dispatched it invokes `.changed()` function of the owner node instance and fires `'changed'` event.
-   * Finally it fires global `'object-mutated'` event on the window object with the owner node as `event.detail`.
    */
   dispatch() {
     if (this.dispatching === true) {
@@ -92,8 +91,9 @@ export class ChangeQueue {
       }
     }
     if (this.hasChanged) {
+      // TODO: Consider including change details in the change handler and event payload.
       this.node.changed();
-      this.node.dispatchEvent('changed');
+      this.node.dispatchEvent('object-mutated', {object: this.node});
     }
     this.dispatching = false;
   }

@@ -132,15 +132,6 @@ const hsl2rgb = /* glsl*/`
   }
 `;
 
-const cmyk2rgb = /* glsl*/`
-  vec3 cmyk2rgb(vec4 cmyk) {
-    float r = 1. - min(1., cmyk.x * (1. - cmyk.w) + cmyk.w);
-    float g = 1. - min(1., cmyk.y * (1. - cmyk.w) + cmyk.w);
-    float b = 1. - min(1., cmyk.z * (1. - cmyk.w) + cmyk.w);
-    return vec3(r, g, b);
-  }
-`;
-
 export const glsl = {
   saturate,
   translate,
@@ -158,5 +149,4 @@ export const glsl = {
   hue2rgb,
   hsv2rgb,
   hsl2rgb,
-  cmyk2rgb,
 };

@@ -34,7 +34,6 @@ const convert: any = {
   hsl: {channels: 3, labels: 'hsl'},
   hsv: {channels: 3, labels: 'hsv'},
   hwb: {channels: 3, labels: 'hwb'},
-  cmyk: {channels: 4, labels: 'cmyk'},
   xyz: {channels: 3, labels: 'xyz'},
   lab: {channels: 3, labels: 'lab'},
   lch: {channels: 3, labels: 'lch'},
@@ -163,19 +162,6 @@ convert.rgb.hwb = function (rgb: number[]) {
   b = 1 - 1 / 255 * Math.max(r, Math.max(g, b));
 
   return [h, w * 100, b * 100];
-};
-
-convert.rgb.cmyk = function (rgb: number[]) {
-  const r = rgb[0] / 255;
-  const g = rgb[1] / 255;
-  const b = rgb[2] / 255;
-
-  const k = Math.min(1 - r, 1 - g, 1 - b);
-  const c = (1 - r - k) / (1 - k) || 0;
-  const m = (1 - g - k) / (1 - k) || 0;
-  const y = (1 - b - k) / (1 - k) || 0;
-
-  return [c * 100, m * 100, y * 100, k * 100];
 };
 
 convert.rgb.xyz = function (rgb: number[]) {
@@ -366,19 +352,6 @@ convert.hwb.rgb = function (hwb: number[]) {
     case 5: r = v;  g = wh; b = n; break;
   }
 
-
-  return [r * 255, g * 255, b * 255];
-};
-
-convert.cmyk.rgb = function (cmyk: number[]) {
-  const c = cmyk[0] / 100;
-  const m = cmyk[1] / 100;
-  const y = cmyk[2] / 100;
-  const k = cmyk[3] / 100;
-
-  const r = 1 - Math.min(1, c * (1 - k) + k);
-  const g = 1 - Math.min(1, m * (1 - k) + k);
-  const b = 1 - Math.min(1, y * (1 - k) + k);
 
   return [r * 255, g * 255, b * 255];
 };
@@ -791,10 +764,6 @@ convert.gray.hsv = convert.gray.hsl;
 
 convert.gray.hwb = function (gray: number[]) {
   return [0, 100, gray[0]];
-};
-
-convert.gray.cmyk = function (gray: number[]) {
-  return [0, 0, 0, gray[0]];
 };
 
 convert.gray.lab = function (gray: number[]) {

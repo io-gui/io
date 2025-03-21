@@ -451,30 +451,30 @@ export default class {
       });
       it('Should update `path`, `first` and `last` properties in correct order and only when necessary.', () => {
         const options = new MenuOptions(testOptions);
-        options.addEventListener('changed', () => { eventStack.push('change'); });
+        options.addEventListener('object-mutated', () => { eventStack.push('object-mutated'); });
         options.addEventListener('path-changed', () => { eventStack.push('path changed: ' + options.path); });
         options.addEventListener('first-changed', () => { eventStack.push('firstChanged: ' + options.first); });
         options.addEventListener('last-changed', () => { eventStack.push('lastChanged: ' + options.last); });
 
         eventStack.length = 0;
         options[0].selected = true;
-        expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'lastChanged: 1', 'change']);
+        expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'lastChanged: 1', 'object-mutated']);
 
         eventStack.length = 0;
         options[1].options[1].selected = true;
-        expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'lastChanged: bar', 'change']);
+        expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'lastChanged: bar', 'object-mutated']);
 
         eventStack.length = 0;
         options[2].options[2].options[2].selected = true;
-        expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'lastChanged: NaN', 'change']);
+        expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'lastChanged: NaN', 'object-mutated']);
 
         eventStack.length = 0;
         options[2].selected = false;
-        expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'lastChanged: undefined', 'change']);
+        expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'lastChanged: undefined', 'object-mutated']);
 
         eventStack.length = 0;
         options[2].selected = true;
-        expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'lastChanged: 3', 'change']);
+        expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'lastChanged: 3', 'object-mutated']);
       });
     });
   }

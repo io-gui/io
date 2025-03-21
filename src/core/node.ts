@@ -77,15 +77,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
-      for (const p in this._protochain.properties) {
-        Object.defineProperty(this, p, {
+      for (const name in this._protochain.properties) {
+        Object.defineProperty(this, name, {
           get: function() {
-            return this._properties.get(p).value;
+            return this._properties.get(name).value;
           },
           set: function(value) {
-            (this as IoNode).setProperty(p, value);
+            (this as IoNode).setProperty(name, value);
           },
           configurable: true,
+          enumerable: true,
         });
       }
 
@@ -95,14 +96,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
         if (property.binding) property.binding.addTarget(this, name);
         if (property.value?._isIoNode) {
-          property.value.addEventListener('changed', this.onIoNodePropertyChanged);
+          property.value.addEventListener('object-mutated', this.onPropertyMutated);
         }
       }
 
       this.applyProperties(properties);
 
-      if (this._protochain.mutationObservedProperties.length) {
-        window.addEventListener('object-mutated', this.onObjectMutated as EventListener);
+      if (this._protochain.observedObjectProperties.length) {
+        window.addEventListener('object-mutated', this.onPropertyMutated as EventListener);
       }
 
       this.init();
@@ -113,15 +114,15 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} props - Map of property names and values.
      */
     applyProperties(props: any) {
-      for (const p in props) {
-        if (!this._properties.has(p)) {
+      for (const name in props) {
+        if (!this._properties.has(name)) {
           // TODO: document!
-          debug: if (!p.startsWith('@') && p !== 'style' && p !== 'config' && p !== '$') {
-            console.warn(`Property "${p}" is not defined`, this);
+          debug: if (!name.startsWith('@') && name !== 'style' && name !== 'config' && name !== '$') {
+            console.warn(`Property "${name}" is not defined`, this);
           }
           continue;
         }
-        this.setProperty(p, props[p], true);
+        this.setProperty(name, props[name], true);
       }
       this._eventDispatcher.applyPropListeners(props);
       this.dispatchQueue();
@@ -132,12 +133,12 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {Object} props - Map of property names and values.
      */
     setProperties(props: any) {
-      for (const p in props) {
-        if (!this._properties.has(p)) {
-          debug: console.warn(`Property "${p}" is not defined`, this);
+      for (const name in props) {
+        if (!this._properties.has(name)) {
+          debug: console.warn(`Property "${name}" is not defined`, this);
           continue;
         }
-        this.setProperty(p, props[p], true);
+        this.setProperty(name, props[name], true);
       }
       this.dispatchQueue();
     }
@@ -178,10 +179,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         // TODO: test removal of event listeners.
         if (value !== oldValue) {
           if (value?._isIoNode) {
-            value.addEventListener('changed', this.onIoNodePropertyChanged);
+            value.addEventListener('object-mutated', this.onPropertyMutated);
           }
           if (oldValue?._isIoNode) {
-            oldValue.removeEventListener('changed', this.onIoNodePropertyChanged);
+            oldValue.removeEventListener('object-mutated', this.onPropertyMutated);
           }
         }
 
@@ -240,13 +241,13 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     init() {}
     /**
      * Adds property change to the queue.
-     * @param {string} prop - Property name.
+     * @param {string} name - Property name.
      * @param {*} value - Property value.
      * @param {*} oldValue - Old property value.
      */
-    queue(prop: string, value: any, oldValue: any) {
+    queue(name: string, value: any, oldValue: any) {
       if (this.reactivity === 'none') return;
-      this._changeQueue.queue(prop, value, oldValue);
+      this._changeQueue.queue(name, value, oldValue);
     }
     /**
      * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
@@ -279,76 +280,55 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       throttle(this, func, arg, timeout);
     }
     /**
-     * Event handler for '[property]-changed' events emitted from the properties which are IoNode instances.
-     * This is used to propagate 'object-mutated' event from the parent node.
+     * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
+     * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
+     * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+     * This is used to evoke '[propName]Mutated()' mutation handler
      * @param {Object} event - Event payload.
+     * @param {EventTarget} event.target - Node that emitted the event.
      * @param {IoNode} event.detail.object - Mutated node.
      */
-    onIoNodePropertyChanged = (event: CustomEvent) => {
-      // TODO: consider not emitting "object-mutated" event since implementation of target node might emit it instead.
-      // TODO: use change event to trigger mutation handler instead.
-      const node = event.target as unknown as IoNode;
-      debug: if (!node._isIoNode) {
-        console.warn('IoNode.onIoNodePropertyChanged(): Handler evoked on a property which is not an IoNode instance.');
-      }
-      this.dispatchEvent('object-mutated', {object: node}, false, window);
-    };
-    /**
-     * Event handler for 'object-mutated' event emitted from the `window`.
-     * Node should be listening for this event if it has an observed object property
-     * @param {Object} event - Event payload.
-     * @param {Object} event.detail.object - Mutated object.
-     */
-    onObjectMutated(event: CustomEvent) {
-      for (let i = 0; i < this._protochain.mutationObservedProperties.length; i++) {
-        const prop = this._protochain.mutationObservedProperties[i];
-        const value = this._properties.get(prop)!.value;
-        if (value === event.detail.object) {
-          this.throttle(this.objectMutated, prop);
+    onPropertyMutated(event: CustomEvent) {
+      const object = event.detail.object;
+      const properties = event.target === window ? this._protochain.observedObjectProperties : this._protochain.observedIoNodeProperties;
+      for (let i = 0; i < properties.length; i++) {
+        const name = properties[i];
+        const value = this._properties.get(name)!.value;
+        if (value === object) {
+          if (typeof this[name + 'Mutated'] === 'function') {
+            this.throttle(this[name + 'Mutated']);
+          }
           return;
         }
-        debug: if (event.detail.objects) {
-          console.error('Deprecation warning! `objects` property no longer supported. Use `object` property instead.');
-        }
       }
-    };
-    /**
-     * This function is called after `onObjectMutated()` determines that one of
-     * the object properties has mutated.
-     * @param {string} prop - Mutated object property name.
-     */
-    objectMutated = (prop: string) => {
-      if (this[prop + 'Mutated']) this[prop + 'Mutated']();
-      this.changed();
-      this.dispatchEvent('changed');
     };
     /**
      * Returns a binding to a specified property`.
-     * @param {string} prop - Property to bind to.
+     * @param {string} name - Property name to bind to.
      * @return {Binding} Binding object.
      */
-    bind(prop: string): Binding {
-      debug: if (!this._properties.has(prop)) {
-        console.warn(`IoGUI Node: cannot bind to ${prop} property. Does not exist!`);
+    bind(name: string): Binding {
+      debug: if (!this._properties.has(name)) {
+        console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`);
       }
-      if (!this._bindings.has(prop)) {
-        this._bindings.set(prop, new Binding(this, prop));
+      if (!this._bindings.has(name)) {
+        this._bindings.set(name, new Binding(this, name));
       }
-      return this._bindings.get(prop) as Binding;
+      return this._bindings.get(name) as Binding;
     }
     /**
      * Unbinds a binding to a specified property`.
-     * @param {string} prop - Property to unbind.
+     * @param {string} name - Property name to unbind.
      */
-    unbind(prop: string) {
-      const binding = this._bindings.get(prop);
+    unbind(name: string) {
+      const binding = this._bindings.get(name);
       if (binding) {
         binding.dispose();
-        this._bindings.delete(prop);
+        this._bindings.delete(name);
       }
 
-      const property = this._properties.get(prop);
-      property?.binding?.removeTarget(this, prop);
+      const property = this._properties.get(name);
+      property?.binding?.removeTarget(this, name);
     }
     /**
      * Wrapper for addEventListener.
@@ -393,24 +373,24 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       }
       if (this._disposed) return;
 
-      this._bindings.forEach((binding, key) => {
+      this._bindings.forEach((binding, name) => {
         binding.dispose();
-        this._bindings.delete(key);
+        this._bindings.delete(name);
       });
       delete (this as any)._bindings;
 
-      if (this._protochain.mutationObservedProperties.length) {
-        window.removeEventListener('object-mutated', this.onObjectMutated as EventListener);
+      if (this._protochain.observedObjectProperties.length) {
+        window.removeEventListener('object-mutated', this.onPropertyMutated as EventListener);
       }
       delete (this as any)._protochain;
 
       this._changeQueue.dispose();
       delete (this as any)._changeQueue;
 
-      this._properties.forEach((property, key) => {
-        property.binding?.removeTarget(this, key);
+      this._properties.forEach((property, name) => {
+        property.binding?.removeTarget(this, name);
         if (property.value?._isIoNode) {
-          property.value.removeEventListener('changed', this.onIoNodePropertyChanged);
+          property.value.removeEventListener('object-mutated', this.onPropertyMutated);
         }
       });
 
@@ -486,6 +466,7 @@ function throttle(node: IoNode, func: CallbackFunction, arg: any = undefined, ti
     });
   } else {
     throttleQueueOptions.get(func)!.arg = arg;
+    // throttleQueueOptions.get(func)!.timeout = Date.now() + timeout;
   }
 }
 

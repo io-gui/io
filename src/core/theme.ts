@@ -10,6 +10,16 @@ document.head.appendChild(styleElement);
 
 export class Color {
   constructor(public r: number, public g: number, public b: number, public a: number) {}
+  toCss() {
+    const r = Math.floor(this.r * 255);
+    const g = Math.floor(this.g * 255);
+    const b = Math.floor(this.b * 255);
+    if (this.a !== undefined && this.a !== 1) {
+      return `rgba(${r}, ${g}, ${b}, ${this.a})`;
+    } else {
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+  }
 }
 
 export type Theme = {
@@ -237,6 +247,7 @@ class IoTheme extends IoNode {
   init() {
     this.registerTheme('light', LIGHT_THEME);
     this.registerTheme('dark', DARK_THEME);
+    this.saveTheme = this.saveTheme.bind(this);
     this.themeIDChanged();
   }
   registerTheme(themeID: string, theme: Theme) {
@@ -246,16 +257,6 @@ class IoTheme extends IoNode {
     // Save persistant theme
     $Themes.value[themeID] = $Themes.value[themeID] || theme;
     $Themes.value = JSON.parse(JSON.stringify($Themes.value));
-  }
-  _toCss(rgba: Color) {
-    const r = Math.floor(rgba.r * 255);
-    const g = Math.floor(rgba.g * 255);
-    const b = Math.floor(rgba.b * 255);
-    if (rgba.a !== undefined && rgba.a !== 1) {
-      return `rgba(${r}, ${g}, ${b}, ${rgba.a})`;
-    } else {
-      return `rgb(${r}, ${g}, ${b})`;
-    }
   }
   reset() {
     // Load persistant themes from default themes
@@ -270,6 +271,11 @@ class IoTheme extends IoNode {
       }
     }
     this.setProperties(values);
+  }
+  onPropertyMutated(event: CustomEvent) {
+    super.onPropertyMutated(event);
+    this.changed();
+    this.dispatchEvent('object-mutated', {object: this});
   }
   changed() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth);
@@ -296,16 +302,17 @@ class IoTheme extends IoNode {
       (result, prop) => {
         $Themes.value[this.themeID][prop] = this[prop];
         if (typeof this[prop] === 'object') {
-          return `${result}--io_${prop}: ${this._toCss(this[prop])};\n    `;
+          return `${result}--io_${prop}: ${this[prop].toCss()};\n    `;
         } else {
           return `${result}--io_${prop}: ${this[prop]}px;\n    `;
         }
       }, '');
       
+      styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
+      this.debounce(this.saveTheme, undefined, 100);
+  }
+  saveTheme() {
     $Themes.value = JSON.parse(JSON.stringify($Themes.value));
-    styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
-
-    this.dispatchEvent('object-mutated', {object: this}, false, window);
   }
 }
 

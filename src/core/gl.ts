@@ -240,6 +240,7 @@ export class IoGl extends IoElement {
   }
   themeMutated() {
     this.updateThemeUniforms();
+    this.throttle(this._onRender);
   }
   changed() {
     this.throttle(this._onRender);
@@ -310,7 +311,6 @@ export class IoGl extends IoElement {
       case 'array':
         _c = [0, 1, 2, 3];
         if (typeof value === 'object') {
-          // console.log(value);
           if (value.x !== undefined) _c = ['x', 'y', 'z', 'w'];
           else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a'];
           else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
