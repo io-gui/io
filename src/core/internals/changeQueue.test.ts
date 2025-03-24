@@ -1,4 +1,4 @@
-import { ChangeQueue, Change, IoNode, Register } from '../../iogui';
+import { ChangeQueue, Change, IoNode, Register } from '../../io-gui';
 import { expect } from 'chai';
 
 @Register

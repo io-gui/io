@@ -1,4 +1,4 @@
-import {IoLabel} from '../../iogui.js';
+import {IoLabel} from '../../io-gui.js';
 import { expect } from 'chai';
 const element = new IoLabel();
 element.style.display = 'none';

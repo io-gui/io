@@ -1,0 +1,74 @@
+{
+  "name": "io-icons",
+  "version": "1.0.0-rc1",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "Io-Gui, a UI framework for web development.",
+  "main": "build/io-icons.js",
+  "module": "build/io-icons.js",
+  "types": "build/io-icons.d.ts",
+  "files": [
+    "/src/",
+    "/build/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf build && rm -rf bundle",
+    "lint": "eslint -c ./eslint.typescript.js src --fix",
+    "test": "web-test-runner \"test.html\" --node-resolve",
+    "test:watch": "web-test-runner \"test.html\" --node-resolve --watch",
+    "docs": "typedoc --plugin typedoc-plugin-markdown",
+    "build": "pnpm clean && pnpm lint && tsc && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-icons.d.ts build/io-icons.d.ts && rm -rf build && mv bundle build",
+    "dev": "pnpm clean && tsc -w",
+    "serve": "pnpm wds --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io",
+    "gui",
+    "iogui",
+    "io-gui",
+    "icons",
+    "io-icons"
+  ],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iogui/iogui/issues"
+  },
+  "homepage": "https://iogui.dev",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-strip": "^3.0.4",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/chai": "^5.2.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.9",
+    "@web/dev-server": "^0.4.6",
+    "@web/dev-server-esbuild": "^1.0.4",
+    "@web/dev-server-import-maps": "^0.2.1",
+    "@web/dev-server-rollup": "^0.6.4",
+    "@web/test-runner": "^0.20.0",
+    "@web/test-runner-mocha": "^0.9.0",
+    "chai": "^5.2.0",
+    "dompurify": "^3.2.4",
+    "dts-bundle-generator": "^9.5.1",
+    "eslint": "^9.21.0",
+    "eslint-plugin-html": "^8.1.2",
+    "globals": "^16.0.0",
+    "marked": "^15.0.7",
+    "marked-highlight": "^2.2.1",
+    "mocha": "^11.1.0",
+    "rollup": "^4.34.9",
+    "typedoc": "^0.28.1",
+    "typedoc-plugin-markdown": "^4.4.2",
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.0"
+  }
+}

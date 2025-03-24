@@ -1,4 +1,4 @@
-import {IoSlider2d} from '../../iogui.js';
+import {IoSlider2d} from '../../io-gui.js';
 import { expect } from 'chai';
 const element = new IoSlider2d();
 

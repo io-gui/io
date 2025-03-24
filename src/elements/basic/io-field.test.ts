@@ -1,4 +1,4 @@
-import { IoField, IoIconsetSingleton } from '../../iogui.js';
+import { IoField, IoIconsetSingleton } from '../../io-gui.js';
 import { expect } from 'chai';
 const element = new IoField();
 element.style.display = 'none';

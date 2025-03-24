@@ -1,4 +1,4 @@
-import {IoNumberSliderRange} from '../../iogui.js';
+import {IoNumberSliderRange} from '../../io-gui.js';
 import { expect } from 'chai';
 export default class {
   element = new IoNumberSliderRange();

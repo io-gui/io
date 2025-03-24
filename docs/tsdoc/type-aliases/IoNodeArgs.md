@@ -6,7 +6,7 @@
 
 > **IoNodeArgs**: `object`
 
-Defined in: [src/core/node.ts:21](https://github.com/io-gui/io/blob/main/src/core/node.ts#L21)
+Defined in: [src/core/node.ts:23](https://github.com/io-gui/io/blob/main/src/core/node.ts#L23)
 
 ## Type declaration
 
@@ -14,6 +14,6 @@ Defined in: [src/core/node.ts:21](https://github.com/io-gui/io/blob/main/src/cor
 
 \[`key`: `` `@${string}` ``\]: `string` \| (`event`) => `void`
 
-### lazy?
+### reactivity?
 
-> `optional` **lazy**: `boolean`
+> `optional` **reactivity**: `"none"` \| `"immediate"` \| `"debounced"`

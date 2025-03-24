@@ -1,4 +1,4 @@
-import {IoCollapsable} from '../../iogui.js';
+import {IoCollapsable} from '../../io-gui.js';
 import { expect } from 'chai';
 export default class {
   element = new IoCollapsable();

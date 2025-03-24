@@ -1,4 +1,4 @@
-import { IoNumber, IoNumberLadder, IoNumberLadderStep, nextQueue } from '../../iogui.js';
+import { IoNumber, IoNumberLadder, IoNumberLadderStep, nextQueue } from '../../io-gui.js';
 import { expect } from 'chai';
 
 const element = new IoNumber();

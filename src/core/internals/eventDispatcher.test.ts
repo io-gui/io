@@ -1,4 +1,4 @@
-import { IoNode, Register, ListenerDefinitions, EventDispatcher } from '../../iogui';
+import { IoNode, Register, ListenerDefinitions, EventDispatcher } from '../../io-gui';
 import { expect } from 'chai';
 
 const handlerFunction = (event: CustomEvent) => {

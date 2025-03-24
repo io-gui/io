@@ -1,4 +1,4 @@
-import {IoObject} from '../../iogui.js';
+import {IoObject} from '../../io-gui.js';
 import { expect } from 'chai';
 
 const testValue = {

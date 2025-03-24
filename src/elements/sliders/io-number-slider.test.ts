@@ -1,4 +1,4 @@
-import { IoNumberSlider, nextQueue } from '../../iogui.js';
+import { IoNumberSlider, nextQueue } from '../../io-gui.js';
 import { expect } from 'chai';
 
 export default class {

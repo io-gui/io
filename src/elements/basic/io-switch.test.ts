@@ -1,4 +1,4 @@
-import {IoSwitch} from '../../iogui.js';
+import {IoSwitch} from '../../io-gui.js';
 import { expect } from 'chai';
 export default class {
   element = new IoSwitch();

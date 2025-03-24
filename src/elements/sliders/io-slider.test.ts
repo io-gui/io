@@ -1,4 +1,4 @@
-import { IoSlider, nextQueue } from '../../iogui.js';
+import { IoSlider, nextQueue } from '../../io-gui.js';
 import { expect } from 'chai';
 
 const element = new IoSlider();

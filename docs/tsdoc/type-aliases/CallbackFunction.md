@@ -6,7 +6,7 @@
 
 > **CallbackFunction**: (`arg`?) => `void`
 
-Defined in: [src/core/node.ts:17](https://github.com/io-gui/io/blob/main/src/core/node.ts#L17)
+Defined in: [src/core/node.ts:19](https://github.com/io-gui/io/blob/main/src/core/node.ts#L19)
 
 ## Parameters
 

@@ -1,4 +1,4 @@
-import { Binding } from '../iogui';
+import { Binding } from '../io-gui';
 import { Property } from './decorators/property';
 import { Register } from './decorators/register';
 import { IoNode } from './node';

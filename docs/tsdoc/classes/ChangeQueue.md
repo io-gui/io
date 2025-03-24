@@ -4,7 +4,7 @@
 
 # Class: ChangeQueue
 
-Defined in: [src/core/internals/changeQueue.ts:36](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L36)
+Defined in: [src/core/internals/changeQueue.ts:34](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L34)
 
 A queue system for managing and batching property changes in `IoNode` and `IoElement` nodes.
 
@@ -26,7 +26,7 @@ times within a single execution cycle.
 
 > **new ChangeQueue**(`node`): [`ChangeQueue`](ChangeQueue.md)
 
-Defined in: [src/core/internals/changeQueue.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L45)
+Defined in: [src/core/internals/changeQueue.ts:43](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L43)
 
 Creates change queue for the specified owner instance of `IoNode`.
 
@@ -48,7 +48,7 @@ Owner node.
 
 > `readonly` **changes**: [`Change`](../interfaces/Change.md)[]
 
-Defined in: [src/core/internals/changeQueue.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L38)
+Defined in: [src/core/internals/changeQueue.ts:36](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L36)
 
 ***
 
@@ -56,7 +56,7 @@ Defined in: [src/core/internals/changeQueue.ts:38](https://github.com/io-gui/io/
 
 > **dispatching**: `boolean` = `false`
 
-Defined in: [src/core/internals/changeQueue.ts:40](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L40)
+Defined in: [src/core/internals/changeQueue.ts:38](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L38)
 
 ***
 
@@ -64,7 +64,7 @@ Defined in: [src/core/internals/changeQueue.ts:40](https://github.com/io-gui/io/
 
 > **hasChanged**: `boolean` = `false`
 
-Defined in: [src/core/internals/changeQueue.ts:39](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L39)
+Defined in: [src/core/internals/changeQueue.ts:37](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L37)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [src/core/internals/changeQueue.ts:39](https://github.com/io-gui/io/
 
 > `readonly` **node**: [`IoNode`](IoNode.md)
 
-Defined in: [src/core/internals/changeQueue.ts:37](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L37)
+Defined in: [src/core/internals/changeQueue.ts:35](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L35)
 
 ## Methods
 
@@ -80,14 +80,13 @@ Defined in: [src/core/internals/changeQueue.ts:37](https://github.com/io-gui/io/
 
 > **dispatch**(): `void`
 
-Defined in: [src/core/internals/changeQueue.ts:79](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L79)
+Defined in: [src/core/internals/changeQueue.ts:76](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L76)
 
 Dispatches and clears the queue.
 For each property change in the queue:
  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
 After all changes are dispatched it invokes `.changed()` function of the owner node instance and fires `'changed'` event.
-Finally it fires global `'object-mutated'` event on the window object with the owner node as `event.detail`.
 
 #### Returns
 
@@ -99,7 +98,7 @@ Finally it fires global `'object-mutated'` event on the window object with the o
 
 > **dispose**(): `void`
 
-Defined in: [src/core/internals/changeQueue.ts:107](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L107)
+Defined in: [src/core/internals/changeQueue.ts:104](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L104)
 
 Clears the queue and removes the node reference for garbage collection.
 Use this when node queue is no longer needed.
@@ -114,7 +113,7 @@ Use this when node queue is no longer needed.
 
 > **queue**(`property`, `value`, `oldValue`): `void`
 
-Defined in: [src/core/internals/changeQueue.ts:58](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L58)
+Defined in: [src/core/internals/changeQueue.ts:56](https://github.com/io-gui/io/blob/main/src/core/internals/changeQueue.ts#L56)
 
 Adds property change payload to the queue by specifying property name, previous and the new value.
 If the change is already in the queue, the new value is updated in-queue.

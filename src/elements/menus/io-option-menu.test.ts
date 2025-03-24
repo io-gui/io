@@ -1,4 +1,4 @@
-import { IoOptionMenu, MenuOptions } from '../../iogui.js';
+import { IoOptionMenu, MenuOptions } from '../../io-gui.js';
 import { expect } from 'chai';
 
 const element = new IoOptionMenu();

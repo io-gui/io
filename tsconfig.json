@@ -26,7 +26,7 @@
     "readme": "none",
     "gitRevision": "main",
     "entryPoints": [
-      "src/iogui.ts"
+      "src/io-gui.ts"
     ],
     "out": "docs/tsdoc"
   },

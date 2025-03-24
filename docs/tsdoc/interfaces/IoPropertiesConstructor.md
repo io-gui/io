@@ -50,7 +50,7 @@ Defined in: [src/elements/object/io-properties.ts:11](https://github.com/io-gui/
 
 > `optional` **Listeners**: [`ListenerDefinitions`](../type-aliases/ListenerDefinitions.md)
 
-Defined in: [src/core/node.ts:13](https://github.com/io-gui/io/blob/main/src/core/node.ts#L13)
+Defined in: [src/core/node.ts:15](https://github.com/io-gui/io/blob/main/src/core/node.ts#L15)
 
 #### Inherited from
 
@@ -62,7 +62,7 @@ Defined in: [src/core/node.ts:13](https://github.com/io-gui/io/blob/main/src/cor
 
 > `optional` **Properties**: [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
-Defined in: [src/core/node.ts:12](https://github.com/io-gui/io/blob/main/src/core/node.ts#L12)
+Defined in: [src/core/node.ts:14](https://github.com/io-gui/io/blob/main/src/core/node.ts#L14)
 
 #### Inherited from
 
@@ -74,7 +74,7 @@ Defined in: [src/core/node.ts:12](https://github.com/io-gui/io/blob/main/src/cor
 
 > `optional` **Style**: `string`
 
-Defined in: [src/core/node.ts:14](https://github.com/io-gui/io/blob/main/src/core/node.ts#L14)
+Defined in: [src/core/node.ts:16](https://github.com/io-gui/io/blob/main/src/core/node.ts#L16)
 
 #### Inherited from
 

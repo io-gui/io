@@ -28,7 +28,7 @@ Core `IoElement` class.
 
 > **new IoSliderBase**(`properties`): [`IoSliderBase`](IoSliderBase.md)
 
-Defined in: [src/core/gl.ts:272](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L272)
+Defined in: [src/core/gl.ts:171](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L171)
 
 #### Parameters
 
@@ -50,7 +50,7 @@ Defined in: [src/core/gl.ts:272](https://github.com/io-gui/io/blob/main/src/core
 
 > **\_active**: `number` = `-1`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:65](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L65)
+Defined in: [src/elements/sliders/io-slider-base.ts:62](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L62)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:65](https://github.com/io-gu
 
 > `readonly` **\_bindings**: `Map`\<`string`, [`Binding`](Binding.md)\>
 
-Defined in: [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
+Defined in: [src/core/node.ts:45](https://github.com/io-gui/io/blob/main/src/core/node.ts#L45)
 
 #### Inherited from
 
@@ -66,23 +66,11 @@ Defined in: [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/cor
 
 ***
 
-### \_canvas
-
-> **\_canvas**: `HTMLCanvasElement`
-
-Defined in: [src/core/gl.ts:78](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L78)
-
-#### Inherited from
-
-[`IoGl`](IoGl.md).[`_canvas`](IoGl.md#_canvas)
-
-***
-
 ### \_changeQueue
 
 > `readonly` **\_changeQueue**: [`ChangeQueue`](ChangeQueue.md)
 
-Defined in: [src/core/node.ts:45](https://github.com/io-gui/io/blob/main/src/core/node.ts#L45)
+Defined in: [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
 
 #### Inherited from
 
@@ -90,23 +78,11 @@ Defined in: [src/core/node.ts:45](https://github.com/io-gui/io/blob/main/src/cor
 
 ***
 
-### \_ctx
-
-> **\_ctx**: `CanvasRenderingContext2D`
-
-Defined in: [src/core/gl.ts:79](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L79)
-
-#### Inherited from
-
-[`IoGl`](IoGl.md).[`_ctx`](IoGl.md#_ctx)
-
-***
-
 ### \_eventDispatcher
 
 > `readonly` **\_eventDispatcher**: [`EventDispatcher`](EventDispatcher.md)
 
-Defined in: [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/core/node.ts#L46)
+Defined in: [src/core/node.ts:47](https://github.com/io-gui/io/blob/main/src/core/node.ts#L47)
 
 #### Inherited from
 
@@ -114,23 +90,11 @@ Defined in: [src/core/node.ts:46](https://github.com/io-gui/io/blob/main/src/cor
 
 ***
 
-### \_needsResize
-
-> **\_needsResize**: `boolean` = `false`
-
-Defined in: [src/core/gl.ts:77](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L77)
-
-#### Inherited from
-
-[`IoGl`](IoGl.md).[`_needsResize`](IoGl.md#_needsresize)
-
-***
-
 ### \_properties
 
 > `readonly` **\_properties**: `Map`\<`string`, [`PropertyInstance`](PropertyInstance.md)\>
 
-Defined in: [src/core/node.ts:43](https://github.com/io-gui/io/blob/main/src/core/node.ts#L43)
+Defined in: [src/core/node.ts:44](https://github.com/io-gui/io/blob/main/src/core/node.ts#L44)
 
 #### Inherited from
 
@@ -142,7 +106,7 @@ Defined in: [src/core/node.ts:43](https://github.com/io-gui/io/blob/main/src/cor
 
 > `readonly` **\_protochain**: [`ProtoChain`](ProtoChain.md)
 
-Defined in: [src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/core/node.ts#L42)
+Defined in: [src/core/node.ts:43](https://github.com/io-gui/io/blob/main/src/core/node.ts#L43)
 
 #### Inherited from
 
@@ -154,7 +118,7 @@ Defined in: [src/core/node.ts:42](https://github.com/io-gui/io/blob/main/src/cor
 
 > **\_rect**: `null` \| `DOMRect` = `null`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:66](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L66)
+Defined in: [src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L63)
 
 ***
 
@@ -162,7 +126,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:66](https://github.com/io-gu
 
 > **\_startX**: `number` = `0`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L63)
+Defined in: [src/elements/sliders/io-slider-base.ts:60](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L60)
 
 ***
 
@@ -170,7 +134,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:63](https://github.com/io-gu
 
 > **\_startY**: `number` = `0`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:64](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L64)
+Defined in: [src/elements/sliders/io-slider-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L61)
 
 ***
 
@@ -178,7 +142,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:64](https://github.com/io-gu
 
 > **$**: `Record`\<`string`, `any`\>
 
-Defined in: [src/core/element.ts:179](https://github.com/io-gui/io/blob/main/src/core/element.ts#L179)
+Defined in: [src/core/element.ts:181](https://github.com/io-gui/io/blob/main/src/core/element.ts#L181)
 
 #### Inherited from
 
@@ -186,11 +150,23 @@ Defined in: [src/core/element.ts:179](https://github.com/io-gui/io/blob/main/src
 
 ***
 
+### canvas
+
+> **canvas**: `HTMLCanvasElement`
+
+Defined in: [src/core/gl.ts:73](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L73)
+
+#### Inherited from
+
+[`IoGl`](IoGl.md).[`canvas`](IoGl.md#canvas)
+
+***
+
 ### class
 
 > **class**: `string`
 
-Defined in: [src/core/element.ts:188](https://github.com/io-gui/io/blob/main/src/core/element.ts#L188)
+Defined in: [src/core/element.ts:190](https://github.com/io-gui/io/blob/main/src/core/element.ts#L190)
 
 #### Inherited from
 
@@ -202,7 +178,7 @@ Defined in: [src/core/element.ts:188](https://github.com/io-gui/io/blob/main/src
 
 > **color**: \[`number`, `number`, `number`, `number`\]
 
-Defined in: [src/core/gl.ts:69](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L69)
+Defined in: [src/core/gl.ts:61](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L61)
 
 #### Inherited from
 
@@ -214,7 +190,7 @@ Defined in: [src/core/gl.ts:69](https://github.com/io-gui/io/blob/main/src/core/
 
 > **contenteditable**: `boolean`
 
-Defined in: [src/core/element.ts:185](https://github.com/io-gui/io/blob/main/src/core/element.ts#L185)
+Defined in: [src/core/element.ts:187](https://github.com/io-gui/io/blob/main/src/core/element.ts#L187)
 
 #### Inherited from
 
@@ -222,11 +198,23 @@ Defined in: [src/core/element.ts:185](https://github.com/io-gui/io/blob/main/src
 
 ***
 
+### ctx
+
+> **ctx**: `CanvasRenderingContext2D`
+
+Defined in: [src/core/gl.ts:74](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L74)
+
+#### Inherited from
+
+[`IoGl`](IoGl.md).[`ctx`](IoGl.md#ctx)
+
+***
+
 ### disabled
 
 > **disabled**: `boolean`
 
-Defined in: [src/core/element.ts:209](https://github.com/io-gui/io/blob/main/src/core/element.ts#L209)
+Defined in: [src/core/element.ts:211](https://github.com/io-gui/io/blob/main/src/core/element.ts#L211)
 
 #### Inherited from
 
@@ -246,7 +234,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:46](https://github.com/io-gu
 
 > **hidden**: `boolean`
 
-Defined in: [src/core/element.ts:206](https://github.com/io-gui/io/blob/main/src/core/element.ts#L206)
+Defined in: [src/core/element.ts:208](https://github.com/io-gui/io/blob/main/src/core/element.ts#L208)
 
 #### Inherited from
 
@@ -258,7 +246,7 @@ Defined in: [src/core/element.ts:206](https://github.com/io-gui/io/blob/main/src
 
 > **id**: `string`
 
-Defined in: [src/core/element.ts:203](https://github.com/io-gui/io/blob/main/src/core/element.ts#L203)
+Defined in: [src/core/element.ts:205](https://github.com/io-gui/io/blob/main/src/core/element.ts#L205)
 
 #### Inherited from
 
@@ -270,19 +258,11 @@ Defined in: [src/core/element.ts:203](https://github.com/io-gui/io/blob/main/src
 
 > **label**: `string`
 
-Defined in: [src/core/element.ts:194](https://github.com/io-gui/io/blob/main/src/core/element.ts#L194)
+Defined in: [src/core/element.ts:196](https://github.com/io-gui/io/blob/main/src/core/element.ts#L196)
 
 #### Inherited from
 
 [`IoGl`](IoGl.md).[`label`](IoGl.md#label)
-
-***
-
-### lazy
-
-> **lazy**: `boolean`
-
-Defined in: [src/elements/sliders/io-slider-base.ts:61](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L61)
 
 ***
 
@@ -306,11 +286,23 @@ Defined in: [src/elements/sliders/io-slider-base.ts:40](https://github.com/io-gu
 
 > **name**: `string`
 
-Defined in: [src/core/element.ts:197](https://github.com/io-gui/io/blob/main/src/core/element.ts#L197)
+Defined in: [src/core/element.ts:199](https://github.com/io-gui/io/blob/main/src/core/element.ts#L199)
 
 #### Inherited from
 
 [`IoGl`](IoGl.md).[`name`](IoGl.md#name)
+
+***
+
+### needsResize
+
+> **needsResize**: `boolean` = `false`
+
+Defined in: [src/core/gl.ts:72](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L72)
+
+#### Inherited from
+
+[`IoGl`](IoGl.md).[`needsResize`](IoGl.md#needsresize)
 
 ***
 
@@ -326,11 +318,23 @@ Defined in: [src/elements/sliders/io-slider-base.ts:52](https://github.com/io-gu
 
 > **pxRatio**: `number`
 
-Defined in: [src/core/gl.ts:72](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L72)
+Defined in: [src/core/gl.ts:64](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L64)
 
 #### Inherited from
 
 [`IoGl`](IoGl.md).[`pxRatio`](IoGl.md#pxratio)
+
+***
+
+### reactivity
+
+> **reactivity**: `string`
+
+Defined in: [src/core/gl.ts:70](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L70)
+
+#### Inherited from
+
+[`IoGl`](IoGl.md).[`reactivity`](IoGl.md#reactivity)
 
 ***
 
@@ -350,7 +354,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:55](https://github.com/io-gu
 
 > **size**: \[`number`, `number`\]
 
-Defined in: [src/core/gl.ts:66](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L66)
+Defined in: [src/core/gl.ts:58](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L58)
 
 #### Inherited from
 
@@ -382,7 +386,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:58](https://github.com/io-gu
 
 > **theme**: `IoTheme`
 
-Defined in: [src/core/gl.ts:75](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L75)
+Defined in: [src/core/gl.ts:67](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L67)
 
 #### Inherited from
 
@@ -394,11 +398,23 @@ Defined in: [src/core/gl.ts:75](https://github.com/io-gui/io/blob/main/src/core/
 
 > **title**: `string`
 
-Defined in: [src/core/element.ts:200](https://github.com/io-gui/io/blob/main/src/core/element.ts#L200)
+Defined in: [src/core/element.ts:202](https://github.com/io-gui/io/blob/main/src/core/element.ts#L202)
 
 #### Inherited from
 
 [`IoGl`](IoGl.md).[`title`](IoGl.md#title)
+
+***
+
+### transparent
+
+> **transparent**: `boolean`
+
+Defined in: [src/core/gl.ts:55](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L55)
+
+#### Inherited from
+
+[`IoGl`](IoGl.md).[`transparent`](IoGl.md#transparent)
 
 ***
 
@@ -424,7 +440,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:49](https://github.com/io-gu
 
 > **get** **\_max**(): \[`number`, `number`\]
 
-Defined in: [src/elements/sliders/io-slider-base.ts:79](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L79)
+Defined in: [src/elements/sliders/io-slider-base.ts:76](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L76)
 
 ##### Returns
 
@@ -438,7 +454,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:79](https://github.com/io-gu
 
 > **get** **\_min**(): \[`number`, `number`\]
 
-Defined in: [src/elements/sliders/io-slider-base.ts:68](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L68)
+Defined in: [src/elements/sliders/io-slider-base.ts:65](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L65)
 
 ##### Returns
 
@@ -452,7 +468,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:68](https://github.com/io-gu
 
 > **get** **\_step**(): \[`number`, `number`\]
 
-Defined in: [src/elements/sliders/io-slider-base.ts:90](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L90)
+Defined in: [src/elements/sliders/io-slider-base.ts:87](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L87)
 
 ##### Returns
 
@@ -466,7 +482,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:90](https://github.com/io-gu
 
 > **get** **\_value**(): \[`number`, `number`\]
 
-Defined in: [src/elements/sliders/io-slider-base.ts:101](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L101)
+Defined in: [src/elements/sliders/io-slider-base.ts:98](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L98)
 
 ##### Returns
 
@@ -480,7 +496,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:101](https://github.com/io-g
 
 > **get** **textNode**(): `any`
 
-Defined in: [src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src/core/element.ts#L393)
+Defined in: [src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
 
 ##### Returns
 
@@ -490,7 +506,7 @@ Defined in: [src/core/element.ts:393](https://github.com/io-gui/io/blob/main/src
 
 > **set** **textNode**(`value`): `void`
 
-Defined in: [src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
+Defined in: [src/core/element.ts:418](https://github.com/io-gui/io/blob/main/src/core/element.ts#L418)
 
 ##### Parameters
 
@@ -514,7 +530,7 @@ Defined in: [src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src
 
 > **get** `static` **Frag**(): `string`
 
-Defined in: [src/core/gl.ts:193](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L193)
+Defined in: [src/core/gl.ts:104](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L104)
 
 ##### Returns
 
@@ -532,7 +548,7 @@ Defined in: [src/core/gl.ts:193](https://github.com/io-gui/io/blob/main/src/core
 
 > **get** `static` **GlUtils**(): `string`
 
-Defined in: [src/core/gl.ts:92](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L92)
+Defined in: [src/core/gl.ts:87](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L87)
 
 ##### Returns
 
@@ -550,7 +566,7 @@ Defined in: [src/core/gl.ts:92](https://github.com/io-gui/io/blob/main/src/core/
 
 > **get** `static` **Listeners**(): `object`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:112](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L112)
+Defined in: [src/elements/sliders/io-slider-base.ts:109](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L109)
 
 ##### Returns
 
@@ -580,7 +596,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:112](https://github.com/io-g
 
 > **get** `static` **Properties**(): [`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
 
-Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/core/node.ts#L33)
+Defined in: [src/core/node.ts:35](https://github.com/io-gui/io/blob/main/src/core/node.ts#L35)
 
 ##### Returns
 
@@ -616,7 +632,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:9](https://github.com/io-gui
 
 > **get** `static` **Vert**(): `string`
 
-Defined in: [src/core/gl.ts:81](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L81)
+Defined in: [src/core/gl.ts:76](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L76)
 
 ##### Returns
 
@@ -632,7 +648,7 @@ Defined in: [src/core/gl.ts:81](https://github.com/io-gui/io/blob/main/src/core/
 
 > **\_flattenTextNode**(`element`): `void`
 
-Defined in: [src/core/element.ts:376](https://github.com/io-gui/io/blob/main/src/core/element.ts#L376)
+Defined in: [src/core/element.ts:397](https://github.com/io-gui/io/blob/main/src/core/element.ts#L397)
 
 Helper function to flatten textContent into a single TextNode.
 Update textContent via TextNode is better for layout performance.
@@ -659,7 +675,7 @@ Element to flatten.
 
 > **\_getPointerCoord**(`event`): \[`number`, `number`\]
 
-Defined in: [src/elements/sliders/io-slider-base.ts:179](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L179)
+Defined in: [src/elements/sliders/io-slider-base.ts:176](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L176)
 
 #### Parameters
 
@@ -677,7 +693,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:179](https://github.com/io-g
 
 > **\_getValueFromCoord**(`coord`): \[`number`, `number`\]
 
-Defined in: [src/elements/sliders/io-slider-base.ts:187](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L187)
+Defined in: [src/elements/sliders/io-slider-base.ts:184](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L184)
 
 #### Parameters
 
@@ -695,7 +711,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:187](https://github.com/io-g
 
 > **\_inputValue**(`value`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:203](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L203)
+Defined in: [src/elements/sliders/io-slider-base.ts:200](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L200)
 
 #### Parameters
 
@@ -713,7 +729,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:203](https://github.com/io-g
 
 > **\_onBlur**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:124](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L124)
+Defined in: [src/elements/sliders/io-slider-base.ts:121](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L121)
 
 #### Returns
 
@@ -725,7 +741,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:124](https://github.com/io-g
 
 > **\_onContextmenu**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:128](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L128)
+Defined in: [src/elements/sliders/io-slider-base.ts:125](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L125)
 
 #### Parameters
 
@@ -743,7 +759,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:128](https://github.com/io-g
 
 > **\_onFocus**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:120](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L120)
+Defined in: [src/elements/sliders/io-slider-base.ts:117](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L117)
 
 #### Returns
 
@@ -755,7 +771,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:120](https://github.com/io-g
 
 > **\_onKeydown**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:230](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L230)
+Defined in: [src/elements/sliders/io-slider-base.ts:227](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L227)
 
 #### Parameters
 
@@ -773,7 +789,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:230](https://github.com/io-g
 
 > **\_onPointerdown**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:161](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L161)
+Defined in: [src/elements/sliders/io-slider-base.ts:158](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L158)
 
 #### Parameters
 
@@ -791,7 +807,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:161](https://github.com/io-g
 
 > **\_onPointermove**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:168](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L168)
+Defined in: [src/elements/sliders/io-slider-base.ts:165](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L165)
 
 #### Parameters
 
@@ -809,7 +825,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:168](https://github.com/io-g
 
 > **\_onPointermoveThrottled**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:195](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L195)
+Defined in: [src/elements/sliders/io-slider-base.ts:192](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L192)
 
 #### Parameters
 
@@ -827,7 +843,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:195](https://github.com/io-g
 
 > **\_onPointerup**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:172](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L172)
+Defined in: [src/elements/sliders/io-slider-base.ts:169](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L169)
 
 #### Parameters
 
@@ -845,7 +861,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:172](https://github.com/io-g
 
 > **\_onRender**(): `void`
 
-Defined in: [src/core/gl.ts:357](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L357)
+Defined in: [src/core/gl.ts:248](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L248)
 
 #### Returns
 
@@ -861,7 +877,7 @@ Defined in: [src/core/gl.ts:357](https://github.com/io-gui/io/blob/main/src/core
 
 > **\_onTouchend**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:157](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L157)
+Defined in: [src/elements/sliders/io-slider-base.ts:154](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L154)
 
 #### Returns
 
@@ -873,7 +889,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:157](https://github.com/io-g
 
 > **\_onTouchmove**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:139](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L139)
+Defined in: [src/elements/sliders/io-slider-base.ts:136](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L136)
 
 #### Parameters
 
@@ -891,7 +907,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:139](https://github.com/io-g
 
 > **\_onTouchstart**(`event`): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:131](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L131)
+Defined in: [src/elements/sliders/io-slider-base.ts:128](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L128)
 
 #### Parameters
 
@@ -909,7 +925,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:131](https://github.com/io-g
 
 > **\_setDecrease**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:276](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L276)
+Defined in: [src/elements/sliders/io-slider-base.ts:273](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L273)
 
 #### Returns
 
@@ -921,7 +937,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:276](https://github.com/io-g
 
 > **\_setDown**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:297](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L297)
+Defined in: [src/elements/sliders/io-slider-base.ts:294](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L294)
 
 #### Returns
 
@@ -933,7 +949,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:297](https://github.com/io-g
 
 > **\_setIncrease**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:269](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L269)
+Defined in: [src/elements/sliders/io-slider-base.ts:266](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L266)
 
 #### Returns
 
@@ -945,7 +961,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:269](https://github.com/io-g
 
 > **\_setLeft**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:303](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L303)
+Defined in: [src/elements/sliders/io-slider-base.ts:300](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L300)
 
 #### Returns
 
@@ -957,7 +973,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:303](https://github.com/io-g
 
 > **\_setMax**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:287](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L287)
+Defined in: [src/elements/sliders/io-slider-base.ts:284](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L284)
 
 #### Returns
 
@@ -969,7 +985,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:287](https://github.com/io-g
 
 > **\_setMin**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:283](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L283)
+Defined in: [src/elements/sliders/io-slider-base.ts:280](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L280)
 
 #### Returns
 
@@ -981,7 +997,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:283](https://github.com/io-g
 
 > **\_setRight**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:309](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L309)
+Defined in: [src/elements/sliders/io-slider-base.ts:306](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L306)
 
 #### Returns
 
@@ -993,7 +1009,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:309](https://github.com/io-g
 
 > **\_setUp**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:291](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L291)
+Defined in: [src/elements/sliders/io-slider-base.ts:288](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L288)
 
 #### Returns
 
@@ -1005,7 +1021,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:291](https://github.com/io-g
 
 > **addEventListener**(`type`, `listener`, `options`?): `void`
 
-Defined in: [src/core/node.ts:343](https://github.com/io-gui/io/blob/main/src/core/node.ts#L343)
+Defined in: [src/core/node.ts:339](https://github.com/io-gui/io/blob/main/src/core/node.ts#L339)
 
 Wrapper for addEventListener.
 
@@ -1043,7 +1059,7 @@ event listener options.
 
 > **applyProperties**(`props`): `void`
 
-Defined in: [src/core/element.ts:401](https://github.com/io-gui/io/blob/main/src/core/element.ts#L401)
+Defined in: [src/core/element.ts:422](https://github.com/io-gui/io/blob/main/src/core/element.ts#L422)
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -1068,7 +1084,7 @@ Map of property names and values.
 
 ### bind()
 
-> **bind**(`prop`): [`Binding`](Binding.md)
+> **bind**(`name`): [`Binding`](Binding.md)
 
 Defined in: [src/core/node.ts:310](https://github.com/io-gui/io/blob/main/src/core/node.ts#L310)
 
@@ -1076,11 +1092,11 @@ Returns a binding to a specified property`.
 
 #### Parameters
 
-##### prop
+##### name
 
 `string`
 
-Property to bind to.
+Property name to bind to.
 
 #### Returns
 
@@ -1098,7 +1114,7 @@ Binding object.
 
 > **changed**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:318](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L318)
+Defined in: [src/elements/sliders/io-slider-base.ts:315](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L315)
 
 default change handler.
 Invoked when one of the properties change.
@@ -1117,7 +1133,7 @@ Invoked when one of the properties change.
 
 > **connectedCallback**(): `void`
 
-Defined in: [src/core/element.ts:214](https://github.com/io-gui/io/blob/main/src/core/element.ts#L214)
+Defined in: [src/core/element.ts:229](https://github.com/io-gui/io/blob/main/src/core/element.ts#L229)
 
 Add resize listener if `onResized()` is defined in subclass.
 
@@ -1131,11 +1147,49 @@ Add resize listener if `onResized()` is defined in subclass.
 
 ***
 
+### debounce()
+
+> **debounce**(`func`, `arg`, `timeout`): `void`
+
+Defined in: [src/core/node.ts:279](https://github.com/io-gui/io/blob/main/src/core/node.ts#L279)
+
+Debounces function execution to next frame (rAF).
+
+#### Parameters
+
+##### func
+
+[`CallbackFunction`](../type-aliases/CallbackFunction.md)
+
+Function to throttle.
+
+##### arg
+
+`any` = `undefined`
+
+argument for debounced function.
+
+##### timeout
+
+`number` = `1`
+
+minimum delay in ms before executing the function.
+
+#### Returns
+
+`void`
+
+#### Inherited from
+
+[`IoGl`](IoGl.md).[`debounce`](IoGl.md#debounce)
+
+***
+
 ### disabledChanged()
 
 > **disabledChanged**(): `void`
 
-Defined in: [src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src/core/element.ts#L430)
+Defined in: [src/core/element.ts:451](https://github.com/io-gui/io/blob/main/src/core/element.ts#L451)
 
 #### Returns
 
@@ -1151,7 +1205,7 @@ Defined in: [src/core/element.ts:430](https://github.com/io-gui/io/blob/main/src
 
 > **disconnectedCallback**(): `void`
 
-Defined in: [src/core/element.ts:222](https://github.com/io-gui/io/blob/main/src/core/element.ts#L222)
+Defined in: [src/core/element.ts:237](https://github.com/io-gui/io/blob/main/src/core/element.ts#L237)
 
 Removes resize listener if `onResized()` is defined in subclass.
 
@@ -1169,7 +1223,7 @@ Removes resize listener if `onResized()` is defined in subclass.
 
 > **dispatchEvent**(`type`, `detail`, `bubbles`, `src`?): `void`
 
-Defined in: [src/core/node.ts:368](https://github.com/io-gui/io/blob/main/src/core/node.ts#L368)
+Defined in: [src/core/node.ts:362](https://github.com/io-gui/io/blob/main/src/core/node.ts#L362)
 
 Wrapper for dispatchEvent.
 
@@ -1182,6 +1236,8 @@ Wrapper for dispatchEvent.
 event name to dispatch.
 
 ##### detail
+
+`any` = `undefined`
 
 event detail.
 
@@ -1207,43 +1263,17 @@ source node/element to dispatch event from.
 
 ***
 
-### dispatchMutationEvent()
-
-> **dispatchMutationEvent**(`object`): `void`
-
-Defined in: [src/core/node.ts:375](https://github.com/io-gui/io/blob/main/src/core/node.ts#L375)
-
-Shorthand for dispatching `'object-mutated'` event on window.
-
-#### Parameters
-
-##### object
-
-`any`
-
-object which mutated.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoGl`](IoGl.md).[`dispatchMutationEvent`](IoGl.md#dispatchmutationevent)
-
-***
-
 ### dispatchQueue()
 
-> **dispatchQueue**(`lazy`): `void`
+> **dispatchQueue**(`debounce`): `void`
 
-Defined in: [src/core/node.ts:254](https://github.com/io-gui/io/blob/main/src/core/node.ts#L254)
+Defined in: [src/core/node.ts:255](https://github.com/io-gui/io/blob/main/src/core/node.ts#L255)
 
-Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise it dispatches the queue immediately.
+Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
 
 #### Parameters
 
-##### lazy
+##### debounce
 
 `boolean` = `false`
 
@@ -1261,7 +1291,7 @@ Dispatches the queue in the next rAF cycle if `lazy` property is set. Otherwise 
 
 > **dispose**(): `void`
 
-Defined in: [src/core/node.ts:382](https://github.com/io-gui/io/blob/main/src/core/node.ts#L382)
+Defined in: [src/core/node.ts:369](https://github.com/io-gui/io/blob/main/src/core/node.ts#L369)
 
 Disposes all internals.
 Use this when instance is no longer needed.
@@ -1280,7 +1310,7 @@ Use this when instance is no longer needed.
 
 > **init**(): `void`
 
-Defined in: [src/elements/sliders/io-slider-base.ts:315](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L315)
+Defined in: [src/elements/sliders/io-slider-base.ts:312](https://github.com/io-gui/io/blob/main/src/elements/sliders/io-slider-base.ts#L312)
 
 #### Returns
 
@@ -1296,7 +1326,7 @@ Defined in: [src/elements/sliders/io-slider-base.ts:315](https://github.com/io-g
 
 > **initPropertyUniform**(`name`, `property`): `string`
 
-Defined in: [src/core/gl.ts:204](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L204)
+Defined in: [src/core/gl.ts:110](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L110)
 
 #### Parameters
 
@@ -1322,7 +1352,7 @@ Defined in: [src/core/gl.ts:204](https://github.com/io-gui/io/blob/main/src/core
 
 > **initShader**(): `WebGLProgram`
 
-Defined in: [src/core/gl.ts:222](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L222)
+Defined in: [src/core/gl.ts:127](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L127)
 
 #### Returns
 
@@ -1338,7 +1368,7 @@ Defined in: [src/core/gl.ts:222](https://github.com/io-gui/io/blob/main/src/core
 
 > **inputValue**(`value`): `void`
 
-Defined in: [src/core/node.ts:229](https://github.com/io-gui/io/blob/main/src/core/node.ts#L229)
+Defined in: [src/core/node.ts:227](https://github.com/io-gui/io/blob/main/src/core/node.ts#L227)
 
 Sets value property and emits `value-input` event.
 Use this when value property is set by user action (e.g. mouse click).
@@ -1365,7 +1395,7 @@ Property value.
 
 > **labelChanged**(): `void`
 
-Defined in: [src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src/core/element.ts#L423)
+Defined in: [src/core/element.ts:444](https://github.com/io-gui/io/blob/main/src/core/element.ts#L444)
 
 #### Returns
 
@@ -1377,41 +1407,16 @@ Defined in: [src/core/element.ts:423](https://github.com/io-gui/io/blob/main/src
 
 ***
 
-### objectMutated()
+### onPropertyMutated()
 
-> **objectMutated**(`prop`): `void`
+> **onPropertyMutated**(`event`): `void`
 
-Defined in: [src/core/node.ts:299](https://github.com/io-gui/io/blob/main/src/core/node.ts#L299)
+Defined in: [src/core/node.ts:291](https://github.com/io-gui/io/blob/main/src/core/node.ts#L291)
 
-This function is called after `onObjectMutated()` determines that one of
-the object properties has mutated.
-
-#### Parameters
-
-##### prop
-
-`string`
-
-Mutated object property name.
-
-#### Returns
-
-`void`
-
-#### Inherited from
-
-[`IoGl`](IoGl.md).[`objectMutated`](IoGl.md#objectmutated)
-
-***
-
-### onObjectMutated()
-
-> **onObjectMutated**(`event`): `void`
-
-Defined in: [src/core/node.ts:278](https://github.com/io-gui/io/blob/main/src/core/node.ts#L278)
-
-Event handler for 'object-mutated' event emitted from the `window`.
-Node should be listening for this event if it has an observed object property
+Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
+Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
+NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+This is used to evoke '[propName]Mutated()' mutation handler
 
 #### Parameters
 
@@ -1427,7 +1432,7 @@ Event payload.
 
 #### Inherited from
 
-[`IoGl`](IoGl.md).[`onObjectMutated`](IoGl.md#onobjectmutated)
+[`IoGl`](IoGl.md).[`onPropertyMutated`](IoGl.md#onpropertymutated)
 
 ***
 
@@ -1435,7 +1440,7 @@ Event payload.
 
 > **onResized**(): `void`
 
-Defined in: [src/core/gl.ts:316](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L316)
+Defined in: [src/core/gl.ts:215](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L215)
 
 #### Returns
 
@@ -1449,7 +1454,7 @@ Defined in: [src/core/gl.ts:316](https://github.com/io-gui/io/blob/main/src/core
 
 ### queue()
 
-> **queue**(`prop`, `value`, `oldValue`): `void`
+> **queue**(`name`, `value`, `oldValue`): `void`
 
 Defined in: [src/core/node.ts:248](https://github.com/io-gui/io/blob/main/src/core/node.ts#L248)
 
@@ -1457,7 +1462,7 @@ Adds property change to the queue.
 
 #### Parameters
 
-##### prop
+##### name
 
 `string`
 
@@ -1489,13 +1494,13 @@ Old property value.
 
 > **Register**(`ioNodeConstructor`): `void`
 
-Defined in: [src/core/element.ts:305](https://github.com/io-gui/io/blob/main/src/core/element.ts#L305)
+Defined in: [src/core/gl.ts:356](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L356)
 
 #### Parameters
 
 ##### ioNodeConstructor
 
-*typeof* [`IoNode`](IoNode.md)
+*typeof* [`IoElement`](IoElement.md)
 
 #### Returns
 
@@ -1511,7 +1516,7 @@ Defined in: [src/core/element.ts:305](https://github.com/io-gui/io/blob/main/src
 
 > **removeEventListener**(`type`, `listener`?, `options`?): `void`
 
-Defined in: [src/core/node.ts:358](https://github.com/io-gui/io/blob/main/src/core/node.ts#L358)
+Defined in: [src/core/node.ts:352](https://github.com/io-gui/io/blob/main/src/core/node.ts#L352)
 
 Wrapper for removeEventListener.
 
@@ -1549,7 +1554,7 @@ event listener options.
 
 > **setAttribute**(`attr`, `value`): `void`
 
-Defined in: [src/core/element.ts:414](https://github.com/io-gui/io/blob/main/src/core/element.ts#L414)
+Defined in: [src/core/element.ts:435](https://github.com/io-gui/io/blob/main/src/core/element.ts#L435)
 
 Alias for HTMLElement setAttribute where falsey values remove the attribute.
 
@@ -1581,7 +1586,7 @@ Attribute value.
 
 > **setProperties**(`props`): `void`
 
-Defined in: [src/core/node.ts:211](https://github.com/io-gui/io/blob/main/src/core/node.ts#L211)
+Defined in: [src/core/node.ts:135](https://github.com/io-gui/io/blob/main/src/core/node.ts#L135)
 
 Sets multiple properties in batch.
 [property]-changed` events will be broadcast in the end.
@@ -1606,9 +1611,9 @@ Map of property names and values.
 
 ### setProperty()
 
-> **setProperty**(`name`, `value`, `lazyDispatch`?): `void`
+> **setProperty**(`name`, `value`, `debounce`): `void`
 
-Defined in: [src/core/node.ts:119](https://github.com/io-gui/io/blob/main/src/core/node.ts#L119)
+Defined in: [src/core/element.ts:243](https://github.com/io-gui/io/blob/main/src/core/element.ts#L243)
 
 Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
 
@@ -1626,7 +1631,7 @@ Property name to set value of.
 
 Peroperty value.
 
-##### lazyDispatch?
+##### debounce
 
 `boolean` = `false`
 
@@ -1646,7 +1651,7 @@ flag to skip event dispatch.
 
 > **setShaderProgram**(): `void`
 
-Defined in: [src/core/gl.ts:392](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L392)
+Defined in: [src/core/gl.ts:282](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L282)
 
 #### Returns
 
@@ -1662,7 +1667,7 @@ Defined in: [src/core/gl.ts:392](https://github.com/io-gui/io/blob/main/src/core
 
 > **setUniform**(`name`, `value`): `void`
 
-Defined in: [src/core/gl.ts:409](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L409)
+Defined in: [src/core/gl.ts:297](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L297)
 
 #### Parameters
 
@@ -1688,7 +1693,7 @@ Defined in: [src/core/gl.ts:409](https://github.com/io-gui/io/blob/main/src/core
 
 > **template**(`vDOM`, `host`?, `cache`?): `void`
 
-Defined in: [src/core/element.ts:234](https://github.com/io-gui/io/blob/main/src/core/element.ts#L234)
+Defined in: [src/core/element.ts:255](https://github.com/io-gui/io/blob/main/src/core/element.ts#L255)
 
 Renders DOM from virtual DOM arrays.
 
@@ -1726,7 +1731,7 @@ Optional don't reuse existing elements and skip dispose
 
 > **themeMutated**(): `void`
 
-Defined in: [src/core/gl.ts:342](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L342)
+Defined in: [src/core/gl.ts:241](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L241)
 
 #### Returns
 
@@ -1740,11 +1745,11 @@ Defined in: [src/core/gl.ts:342](https://github.com/io-gui/io/blob/main/src/core
 
 ### throttle()
 
-> **throttle**(`func`, `arg`, `timeout`): `void`
+> **throttle**(`func`, `arg`): `void`
 
-Defined in: [src/core/node.ts:269](https://github.com/io-gui/io/blob/main/src/core/node.ts#L269)
+Defined in: [src/core/node.ts:270](https://github.com/io-gui/io/blob/main/src/core/node.ts#L270)
 
-Throttles function execution to next frame (rAF) if the function has been executed in the current frame.
+Throttles function execution once per frame (rAF).
 
 #### Parameters
 
@@ -1760,12 +1765,6 @@ Function to throttle.
 
 argument for throttled function.
 
-##### timeout
-
-`number` = `1`
-
-minimum delay in ms before executing the function.
-
 #### Returns
 
 `void`
@@ -1780,7 +1779,7 @@ minimum delay in ms before executing the function.
 
 > **traverse**(`vChildren`, `host`?, `cache`?): `void`
 
-Defined in: [src/core/element.ts:247](https://github.com/io-gui/io/blob/main/src/core/element.ts#L247)
+Defined in: [src/core/element.ts:268](https://github.com/io-gui/io/blob/main/src/core/element.ts#L268)
 
 Recurively traverses vDOM.
 TODO: test element.traverse() function!
@@ -1817,19 +1816,19 @@ Optional don't reuse existing elements and skip dispose
 
 ### unbind()
 
-> **unbind**(`prop`): `void`
+> **unbind**(`name`): `void`
 
-Defined in: [src/core/node.ts:327](https://github.com/io-gui/io/blob/main/src/core/node.ts#L327)
+Defined in: [src/core/node.ts:323](https://github.com/io-gui/io/blob/main/src/core/node.ts#L323)
 
 Unbinds a binding to a specified property`.
 
 #### Parameters
 
-##### prop
+##### name
 
 `string`
 
-Property to unbind.
+Property name to unbind.
 
 #### Returns
 
@@ -1845,7 +1844,7 @@ Property to unbind.
 
 > **updatePropertyUniform**(`name`, `property`): `void`
 
-Defined in: [src/core/gl.ts:398](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L398)
+Defined in: [src/core/gl.ts:288](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L288)
 
 #### Parameters
 
@@ -1871,7 +1870,7 @@ Defined in: [src/core/gl.ts:398](https://github.com/io-gui/io/blob/main/src/core
 
 > **updateThemeUniforms**(): `void`
 
-Defined in: [src/core/gl.ts:404](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L404)
+Defined in: [src/core/gl.ts:292](https://github.com/io-gui/io/blob/main/src/core/gl.ts#L292)
 
 #### Returns
 

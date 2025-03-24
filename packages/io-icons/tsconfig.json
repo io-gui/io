@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "lib": ["esnext", "dom"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "strict": true,
+    "rootDir": "./src",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "paths": {
+      "io-gui": ["../../"]
+    }
+  },
+  "typedocOptions": {
+    "hideBreadcrumbs": true,
+    "hideGenerator": true,
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeInternal": true,
+    "excludeExternals": true,
+    "cleanOutputDir": true,
+    "githubPages": false,
+    "readme": "none",
+    "gitRevision": "main",
+    "entryPoints": [
+      "src/io-icons.ts"
+    ],
+    "out": "docs/tsdoc"
+  },
+  "include": ["./src", "../../build/io-gui.js"]
+}

@@ -6,9 +6,9 @@
 
 > **PropertyDefinition**: `object`
 
-Defined in: [src/core/internals/property.ts:7](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L7)
+Defined in: [src/core/internals/property.ts:13](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L13)
 
-Declares default value, type and reactive behavior of the property.
+Configuration for a property of an IoNode class.
 
 ## Type declaration
 
@@ -19,10 +19,6 @@ Declares default value, type and reactive behavior of the property.
 ### init?
 
 > `optional` **init**: `any`
-
-### reactive?
-
-> `optional` **reactive**: `boolean`
 
 ### reflect?
 

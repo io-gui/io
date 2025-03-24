@@ -100,7 +100,7 @@ Defined in: [src/core/internals/binding.ts:38](https://github.com/io-gui/io/blob
 
 > **get** **value**(): `any`
 
-Defined in: [src/core/internals/binding.ts:54](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L54)
+Defined in: [src/core/internals/binding.ts:56](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L56)
 
 ##### Returns
 
@@ -110,7 +110,7 @@ Defined in: [src/core/internals/binding.ts:54](https://github.com/io-gui/io/blob
 
 > **set** **value**(`value`): `void`
 
-Defined in: [src/core/internals/binding.ts:51](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L51)
+Defined in: [src/core/internals/binding.ts:53](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L53)
 
 ##### Parameters
 
@@ -128,7 +128,7 @@ Defined in: [src/core/internals/binding.ts:51](https://github.com/io-gui/io/blob
 
 > **addTarget**(`target`, `property`): `void`
 
-Defined in: [src/core/internals/binding.ts:94](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L94)
+Defined in: [src/core/internals/binding.ts:96](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L96)
 
 Adds a target node and property.
 Sets itself as the binding reference on the target `PropertyInstance`.
@@ -158,7 +158,7 @@ Target property
 
 > **dispose**(): `void`
 
-Defined in: [src/core/internals/binding.ts:204](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L204)
+Defined in: [src/core/internals/binding.ts:206](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L206)
 
 Dispose of the binding by removing all targets and listeners.
 Use this when node is no longer needed.
@@ -173,7 +173,7 @@ Use this when node is no longer needed.
 
 > **getTargetProperties**(`target`): `Properties`
 
-Defined in: [src/core/internals/binding.ts:83](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L83)
+Defined in: [src/core/internals/binding.ts:85](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L85)
 
 Helper function to get target properties from WeakMap
 Retrieves a list of target properties for specified target node.
@@ -198,7 +198,7 @@ list of target property names.
 
 > **onSourceChanged**(`event`): `void`
 
-Defined in: [src/core/internals/binding.ts:182](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L182)
+Defined in: [src/core/internals/binding.ts:184](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L184)
 
 Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
 
@@ -220,7 +220,7 @@ Property change event.
 
 > **onTargetChanged**(`event`): `void`
 
-Defined in: [src/core/internals/binding.ts:167](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L167)
+Defined in: [src/core/internals/binding.ts:169](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L169)
 
 Event handler that updates source property when one of the targets emits `[propName]-changed` event.
 
@@ -242,7 +242,7 @@ Property change event.
 
 > **removeTarget**(`target`, `property`?): `void`
 
-Defined in: [src/core/internals/binding.ts:128](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L128)
+Defined in: [src/core/internals/binding.ts:130](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L130)
 
 Removes target node and property.
 If `property` is not specified, it removes all target properties.
@@ -273,10 +273,10 @@ Target property
 
 > **toJSON**(): `object`
 
-Defined in: [src/core/internals/binding.ts:63](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L63)
+Defined in: [src/core/internals/binding.ts:65](https://github.com/io-gui/io/blob/main/src/core/internals/binding.ts#L65)
 
 Returns a JSON representation of the binding.
-This is required for `protoChain` serializeProperties() to work more accurately.
+This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
 NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
 
 #### Returns

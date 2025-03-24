@@ -1,4 +1,4 @@
-import { IoButton, IoIconsetSingleton } from '../../iogui.js';
+import { IoButton, IoIconsetSingleton } from '../../io-gui.js';
 import { expect } from 'chai';
 const element = new IoButton();
 element.style.display = 'none';

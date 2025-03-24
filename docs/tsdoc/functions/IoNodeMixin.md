@@ -4,9 +4,9 @@
 
 # Function: IoNodeMixin()
 
-> **IoNodeMixin**\<`T`\>(`superclass`): *typeof* `__class`
+> **IoNodeMixin**\<`T`\>(`superclass`): *typeof* `IoNodeMixinConstructor`
 
-Defined in: [src/core/node.ts:31](https://github.com/io-gui/io/blob/main/src/core/node.ts#L31)
+Defined in: [src/core/node.ts:33](https://github.com/io-gui/io/blob/main/src/core/node.ts#L33)
 
 Core mixin for `Node` classes.
 
@@ -24,6 +24,6 @@ Class to extend.
 
 ## Returns
 
-*typeof* `__class`
+*typeof* `IoNodeMixinConstructor`
 
 - Extended class constructor with `IoNodeMixin` applied to it.

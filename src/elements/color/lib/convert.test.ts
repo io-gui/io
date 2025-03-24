@@ -1,4 +1,4 @@
-// import { IoColorConvert } from '../../iogui.js';
+// import { IoColorConvert } from '../../io-gui.js';
 // import { expect } from 'chai';
 
 // const element = new IoColorConvert();

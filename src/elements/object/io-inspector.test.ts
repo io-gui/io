@@ -1,4 +1,4 @@
-import {IoInspector} from '../../iogui.js';
+import {IoInspector} from '../../io-gui.js';
 import { expect } from 'chai';
 export default class {
   element = new IoInspector();

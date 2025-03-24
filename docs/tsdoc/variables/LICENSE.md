@@ -6,11 +6,11 @@
 
 > `const` **LICENSE**: `"MIT"` = `'MIT'`
 
-Defined in: [src/iogui.ts:49](https://github.com/io-gui/io/blob/main/src/iogui.ts#L49)
+Defined in: [src/io-gui.ts:64](https://github.com/io-gui/io/blob/main/src/io-gui.ts#L64)
 
 ## License
 
-Copyright ©2024 Aleksandar (Aki) Rodic
+Copyright ©2025 Aleksandar (Aki) Rodic
 
 The MIT License
 

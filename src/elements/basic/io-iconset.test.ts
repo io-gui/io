@@ -1,4 +1,4 @@
-import {IoIconsetSingleton} from '../../iogui.js';
+import {IoIconsetSingleton} from '../../io-gui.js';
 import { expect } from 'chai';
 export default class {
   run() {

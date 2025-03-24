@@ -4,7 +4,7 @@
 
 # Class: ProtoChain
 
-Defined in: [src/core/internals/protoChain.ts:33](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L33)
+Defined in: [src/core/internals/protoChain.ts:48](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L48)
 
 ProtoChain manages class inheritance metadata and configuration.
 
@@ -22,7 +22,7 @@ This class is internal and instantiated during the `Register()` process.
 
 > **new ProtoChain**(`ioNodeConstructor`): [`ProtoChain`](ProtoChain.md)
 
-Defined in: [src/core/internals/protoChain.ts:62](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L62)
+Defined in: [src/core/internals/protoChain.ts:81](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L81)
 
 Creates an instance of `ProtoChain` for specified class constructor.
 
@@ -44,7 +44,7 @@ Owner `IoNode` constructor.
 
 > **constructors**: `ProtoConstructors` = `[]`
 
-Defined in: [src/core/internals/protoChain.ts:37](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L37)
+Defined in: [src/core/internals/protoChain.ts:52](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L52)
 
 Array of inherited class constructors
 
@@ -54,7 +54,7 @@ Array of inherited class constructors
 
 > **handlers**: `ProtoHandlers` = `[]`
 
-Defined in: [src/core/internals/protoChain.ts:53](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L53)
+Defined in: [src/core/internals/protoChain.ts:68](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L68)
 
 Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
 
@@ -64,17 +64,27 @@ Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding
 
 > **listeners**: `ProtoListeners` = `{}`
 
-Defined in: [src/core/internals/protoChain.ts:45](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L45)
+Defined in: [src/core/internals/protoChain.ts:60](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L60)
 
 Aggregated listener definition declared in `static get Listeners()`
 
 ***
 
-### mutationObservedProperties
+### observedIoNodeProperties
 
-> **mutationObservedProperties**: `string`[] = `[]`
+> **observedIoNodeProperties**: `string`[] = `[]`
 
-Defined in: [src/core/internals/protoChain.ts:57](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L57)
+Defined in: [src/core/internals/protoChain.ts:76](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L76)
+
+Array of property names of mutation-observed IoNode properties.
+
+***
+
+### observedObjectProperties
+
+> **observedObjectProperties**: `string`[] = `[]`
+
+Defined in: [src/core/internals/protoChain.ts:72](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L72)
 
 Array of property names of mutation-observed object properties.
 
@@ -84,7 +94,7 @@ Array of property names of mutation-observed object properties.
 
 > **properties**: `ProtoProperties` = `{}`
 
-Defined in: [src/core/internals/protoChain.ts:41](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L41)
+Defined in: [src/core/internals/protoChain.ts:56](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L56)
 
 Aggregated property definition declared in `static get Properties()`
 
@@ -94,7 +104,7 @@ Aggregated property definition declared in `static get Properties()`
 
 > **styles**: `string` = `''`
 
-Defined in: [src/core/internals/protoChain.ts:49](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L49)
+Defined in: [src/core/internals/protoChain.ts:64](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L64)
 
 Aggregated CSS style definition declared in `static get Style()`
 
@@ -104,7 +114,7 @@ Aggregated CSS style definition declared in `static get Style()`
 
 > **addHandlers**(`proto`): `void`
 
-Defined in: [src/core/internals/protoChain.ts:167](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L167)
+Defined in: [src/core/internals/protoChain.ts:183](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L183)
 
 Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
 
@@ -126,7 +136,7 @@ Prototype object to search for handlers
 
 > **addListeners**(`listenerDefs`?): `void`
 
-Defined in: [src/core/internals/protoChain.ts:139](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L139)
+Defined in: [src/core/internals/protoChain.ts:155](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L155)
 
 Merges or appends a listener definitions to the existing listeners array.
 
@@ -148,7 +158,7 @@ Listener definitions to add
 
 > **addPropertiesFromDecorators**(`ioNodeConstructor`): `void`
 
-Defined in: [src/core/internals/protoChain.ts:94](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L94)
+Defined in: [src/core/internals/protoChain.ts:116](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L116)
 
 Adds properties defined in decorators to the properties array.
 
@@ -170,7 +180,7 @@ Owner `IoNode` constructor.
 
 > **addStaticProperties**(`properties`, `prevHash`): `string`
 
-Defined in: [src/core/internals/protoChain.ts:110](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L110)
+Defined in: [src/core/internals/protoChain.ts:132](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L132)
 
 Adds static properties from `static get Properties()` to the properties array.
 Only process properties if they differ from superclass.
@@ -202,7 +212,7 @@ Previous properties hash
 
 > **addStyles**(`style`?): `void`
 
-Defined in: [src/core/internals/protoChain.ts:158](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L158)
+Defined in: [src/core/internals/protoChain.ts:174](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L174)
 
 Adds a style string to the styles array.
 
@@ -224,9 +234,10 @@ Style string to add
 
 > **autobindHandlers**(`node`): `void`
 
-Defined in: [src/core/internals/protoChain.ts:224](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L224)
+Defined in: [src/core/internals/protoChain.ts:257](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L257)
 
 Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
 
 #### Parameters
 
@@ -242,42 +253,35 @@ Target node instance
 
 ***
 
-### getMutationObservedProperties()
+### getObservedIoNodeProperties()
 
-> **getMutationObservedProperties**(): `void`
+> **getObservedIoNodeProperties**(): `string`[]
 
-Defined in: [src/core/internals/protoChain.ts:186](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L186)
+Defined in: [src/core/internals/protoChain.ts:217](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L217)
 
-Adds property names to the mutationObservedProperties array if the property has the 'observe' flag.
+Creates observedIoNodeProperties array.
 
 #### Returns
 
-`void`
+`string`[]
+
+- Array of property names that are observed as IoNode objects.
 
 ***
 
-### serializeProperties()
+### getObservedObjectProperties()
 
-> **serializeProperties**(`properties`): `string`
+> **getObservedObjectProperties**(): `string`[]
 
-Defined in: [src/core/internals/protoChain.ts:127](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L127)
+Defined in: [src/core/internals/protoChain.ts:202](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L202)
 
-Serializes the properties object to a JSON string.
-Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
-NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
-Not a hash in the cryptographic sense but serves the purpose.
-
-#### Parameters
-
-##### properties
-
-[`PropertyDefinitions`](../type-aliases/PropertyDefinitions.md)
+Creates observedObjectProperties array.
 
 #### Returns
 
-`string`
+`string`[]
 
-- Serialized properties
+- Array of property names that are observed as native objects.
 
 ***
 
@@ -285,7 +289,7 @@ Not a hash in the cryptographic sense but serves the purpose.
 
 > **validateProperties**(): `void`
 
-Defined in: [src/core/internals/protoChain.ts:202](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L202)
+Defined in: [src/core/internals/protoChain.ts:234](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L234)
 
 Debug only.
 Validates property definitions.

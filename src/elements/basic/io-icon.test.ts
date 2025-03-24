@@ -1,4 +1,4 @@
-import { IoIcon, IoIconsetSingleton } from '../../iogui.js';
+import { IoIcon, IoIconsetSingleton } from '../../io-gui.js';
 import { expect } from 'chai';
 const element = new IoIcon();
 element.style.display = 'none';

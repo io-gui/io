@@ -6,4 +6,4 @@
 
 > `const` **DARK\_THEME**: [`Theme`](../type-aliases/Theme.md)
 
-Defined in: [src/core/theme.ts:124](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L124)
+Defined in: [src/core/theme.ts:133](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L133)

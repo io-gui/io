@@ -6,7 +6,7 @@
 
 > **MenuItemArgs**: [`IoElementArgs`](IoElementArgs.md) & `object`
 
-Defined in: [src/elements/menus/models/menu-item.ts:10](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L10)
+Defined in: [src/elements/menus/models/menu-item.ts:11](https://github.com/io-gui/io/blob/main/src/elements/menus/models/menu-item.ts#L11)
 
 ## Type declaration
 

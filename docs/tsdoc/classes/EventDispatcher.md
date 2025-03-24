@@ -141,7 +141,7 @@ Inline properties
 
 > **dispatchEvent**(`name`, `detail`?, `bubbles`?, `node`?): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:288](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L288)
+Defined in: [src/core/internals/eventDispatcher.ts:284](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L284)
 
 Shorthand for custom event dispatch.
 
@@ -181,7 +181,7 @@ Event target override to dispatch the event from
 
 > **dispose**(): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:318](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L318)
+Defined in: [src/core/internals/eventDispatcher.ts:314](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L314)
 
 Disconnects all event listeners and removes all references for garbage collection.
 Use this when node is discarded.
@@ -196,7 +196,7 @@ Use this when node is discarded.
 
 > **removeEventListener**(`name`, `listener`?, `options`?): `void`
 
-Defined in: [src/core/internals/eventDispatcher.ts:231](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L231)
+Defined in: [src/core/internals/eventDispatcher.ts:229](https://github.com/io-gui/io/blob/main/src/core/internals/eventDispatcher.ts#L229)
 
 Proxy for `removeEventListener` method.
 Removes an event listener from the node's `addedListeners` collection.

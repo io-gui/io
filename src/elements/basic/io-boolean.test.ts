@@ -1,4 +1,4 @@
-import { IoBoolean, IoIconsetSingleton } from '../../iogui.js';
+import { IoBoolean, IoIconsetSingleton } from '../../io-gui.js';
 import { expect } from 'chai';
 
 const element = new IoBoolean();

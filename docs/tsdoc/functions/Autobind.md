@@ -6,7 +6,7 @@
 
 > **Autobind**(`target`, `propertyKey`, `descriptor`): `object`
 
-Defined in: [src/core/internals/protoChain.ts:247](https://github.com/io-gui/io/blob/main/src/core/internals/protoChain.ts#L247)
+Defined in: [src/core/decorators/autobind.ts:8](https://github.com/io-gui/io/blob/main/src/core/decorators/autobind.ts#L8)
 
 Autobinds a method to the instance.
 

@@ -1,4 +1,4 @@
-import { IoThemeSingleton } from '../iogui';
+import { IoThemeSingleton } from '../io-gui';
 import { expect } from 'chai';
 
 const theme = IoThemeSingleton;

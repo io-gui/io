@@ -4,9 +4,9 @@
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui, a UI framework for web development.",
-  "main": "build/iogui.js",
-  "module": "build/iogui.js",
-  "types": "build/iogui.d.ts",
+  "main": "build/io-gui.js",
+  "module": "build/io-gui.js",
+  "types": "build/io-gui.d.ts",
   "files": [
     "/src/",
     "/build/",
@@ -20,7 +20,7 @@
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --manual --open --debug",
     "docs": "typedoc --plugin typedoc-plugin-markdown",
-    "build": "pnpm clean && pnpm lint && tsc && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/iogui.d.ts build/iogui.d.ts && rm -rf build && mv bundle build",
+    "build": "pnpm clean && pnpm lint && tsc && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-gui.d.ts build/io-gui.d.ts && rm -rf build && mv bundle build",
     "dev": "pnpm clean && tsc -w",
     "serve": "pnpm wds --watch"
   },

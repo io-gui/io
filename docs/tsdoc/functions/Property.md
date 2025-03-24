@@ -6,7 +6,7 @@
 
 > **Property**(`propertyDefinition`): (`target`, `propertyName`) => `void`
 
-Defined in: [src/core/internals/property.ts:206](https://github.com/io-gui/io/blob/main/src/core/internals/property.ts#L206)
+Defined in: [src/core/decorators/property.ts:10](https://github.com/io-gui/io/blob/main/src/core/decorators/property.ts#L10)
 
 Allows property definitions using decorator pattern.
 

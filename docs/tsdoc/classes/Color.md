@@ -4,7 +4,7 @@
 
 # Class: Color
 
-Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
+Defined in: [src/core/theme.ts:11](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L11)
 
 ## Constructors
 
@@ -12,7 +12,7 @@ Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/co
 
 > **new Color**(`r`, `g`, `b`, `a`): [`Color`](Color.md)
 
-Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
+Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/co
 
 > **a**: `number`
 
-Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
+Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/co
 
 > **b**: `number`
 
-Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
+Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/co
 
 > **g**: `number`
 
-Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
+Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
 
 ***
 
@@ -66,4 +66,16 @@ Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/co
 
 > **r**: `number`
 
+Defined in: [src/core/theme.ts:12](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L12)
+
+## Methods
+
+### toCss()
+
+> **toCss**(): `string`
+
 Defined in: [src/core/theme.ts:13](https://github.com/io-gui/io/blob/main/src/core/theme.ts#L13)
+
+#### Returns
+
+`string`

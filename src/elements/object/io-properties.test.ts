@@ -1,4 +1,4 @@
-import {IoProperties} from '../../iogui.js';
+import {IoProperties} from '../../io-gui.js';
 import { expect } from 'chai';
 
 const testValue = {

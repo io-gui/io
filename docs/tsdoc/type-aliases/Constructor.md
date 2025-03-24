@@ -6,7 +6,7 @@
 
 > **Constructor**: (...`args`) => `unknown`
 
-Defined in: [src/core/node.ts:7](https://github.com/io-gui/io/blob/main/src/core/node.ts#L7)
+Defined in: [src/core/node.ts:8](https://github.com/io-gui/io/blob/main/src/core/node.ts#L8)
 
 ## Parameters
 
