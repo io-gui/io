@@ -58,6 +58,14 @@
 
     <link rel="me" href="https://bsky.app/profile/akirodic.com" />
 
+    <script type="importmap">
+      {
+        "imports": {
+          "io-gui": "./build/iogui.js"
+        }
+      }
+    </script>
+
     <style>
       html, body {
         font: 16px 'Open Sans', Helvetica, Arial, sans-serif;
@@ -82,7 +90,7 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, Register, IoNavigatorSelector, IoStorage as $, IoThemeSingleton } from './build/iogui.js';
+    import { MenuOptions, MenuItem, Register, IoNavigatorSelector, IoStorage as $, IoThemeSingleton } from 'io-gui';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},

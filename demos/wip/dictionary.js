@@ -1,4 +1,4 @@
-import {Register} from 'io-gui';
+import { Register } from '../../build/iogui.js';
 
 class DictionaryItem extends IoNode {
   static get Properties() {

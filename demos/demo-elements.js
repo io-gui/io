@@ -1,4 +1,4 @@
-import { Register, IoElement, IoStorage, MenuOptions, MenuItem, IoIconsetDB } from '../build/iogui.js';
+import { Register, IoElement, IoStorage, MenuOptions, MenuItem, IoIconsetDB } from 'io-gui';
 import './menu-model.js';
 
 function $(key) {

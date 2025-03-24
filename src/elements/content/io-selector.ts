@@ -89,7 +89,7 @@ export class IoSelector extends IoElement {
   }
 
   importModule(path: string) {
-    const importPath = new URL(path, String(window.location)).href;
+    const importPath = new URL(path, String(window.location)).pathname;
     return new Promise(resolve => {
       if (!path || IMPORTED_PATHS[importPath]) {
         resolve(importPath);

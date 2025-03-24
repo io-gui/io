@@ -18,6 +18,9 @@ export class TodoList extends IoElement {
       route: 'all',
     };
   }
+  modelMutated() {
+    this.changed();
+  }
   changed() {
     const itemCount = this.model.items.length;
     const completedCount = this.model.getCompletedCount();

@@ -34,5 +34,4 @@ export class TodoApp extends IoElement {
     ]);
   }
 }
-
 Register(TodoApp);
