@@ -20,6 +20,9 @@ function makeBundleTarget(src, target, externals = [], debug) {
       terser({
         keep_classnames: true,
         keep_fnames: true,
+        compress: {
+          keep_infinity: true,
+        }
       })
     ],
     treeshake: true,
