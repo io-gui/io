@@ -62,7 +62,8 @@
       {
         "imports": {
           "io-gui": "./build/io-gui.js",
-          "io-icons": "./packages/io-icons/build/io-icons.js"
+          "io-icons": "./packages/io-icons/build/io-icons.js",
+          "io-markdown": "./packages/io-markdown/build/io-markdown.js"
         }
       }
     </script>
@@ -92,6 +93,7 @@
     <script type="module">
 
     import { MenuOptions, MenuItem, Register, IoNavigatorSelector, IoStorage as $, IoThemeSingleton } from 'io-gui';
+    import 'io-markdown';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
@@ -137,7 +139,7 @@
           cache: true,
           depth: 1,
           elements: [
-            ['io-md-view', {id: 'About', strip: [siteRoot], src: './README.md'}],
+            ['io-markdown', {id: 'About', strip: [siteRoot], src: './README.md'}],
             ['io-selector', {id: 'Docs',
               options: OPTIONS.getItem('Docs').options,
               cache: true,
@@ -145,13 +147,13 @@
                 ['io-navigator-scroller', {id: 'Quick Start',
                   options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
                   elements: [
-                    ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+                    ['io-markdown', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
                   ]
                 }],
                 ['io-navigator-scroller', {id: 'Deep Dive',
                   options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
                   elements: [
-                    ['io-md-view', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
+                    ['io-markdown', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
                   ]
                 }],
               ]

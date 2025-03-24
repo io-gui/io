@@ -1665,22 +1665,6 @@ export declare class IoCollapsable extends IoElement {
 	role: string;
 	changed(): void;
 }
-/**
- * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
- */
-export declare class IoMdView extends IoElement {
-	static get Style(): string;
-	role: string;
-	src: string;
-	strip: string[];
-	loading: boolean;
-	sanitize: boolean;
-	protected _strip(innerHTML: string): string;
-	protected _parseMarkdown(markdown: string): void;
-	onResized(): void;
-	srcChanged(): void;
-	changed(): void;
-}
 export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
 export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
 export type MenuItemArgs = IoElementArgs & {

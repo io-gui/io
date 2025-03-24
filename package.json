@@ -13,7 +13,7 @@
     "/LICENSE",
     "/README.md"
   ],
-  "sideEffects": false,
+  "sideEffects": true,
   "scripts": {
     "clean": "rm -rf build && rm -rf bundle",
     "clean:icons": "rm -rf ./packages/io-icons/build && rm -rf ./packages/io-icons/bundle",
