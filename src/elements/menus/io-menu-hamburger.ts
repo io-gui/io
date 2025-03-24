@@ -23,7 +23,7 @@ export class IoMenuHamburger extends IoMenuItem {
     this.setAttribute('selected', this.item.selected);
     this.setAttribute('hidden', this.item.hidden);
     this.disabled = this.item.disabled; // TODO: reconsider this
-    this.template([['io-icon', {icon: 'icons:hamburger'}]]);
+    this.template([['io-icon', {icon: 'menu:hamburger'}]]);
   }
 }
 

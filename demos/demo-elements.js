@@ -1,5 +1,7 @@
-import { Register, IoElement, IoStorage, MenuOptions, MenuItem, IoIconsetDB } from 'io-gui';
+import { Register, IoElement, IoStorage, MenuOptions, MenuItem } from 'io-gui';
 import './menu-model.js';
+import 'io-icons';
+import '../packages/io-icons/demos/io-icons-demo.js';
 
 function $(key) {
   return IoStorage({key: key, value: false, storage: 'local'})
@@ -248,7 +250,7 @@ export class IoDemoElements extends IoElement {
           ['io-field', {value: this.bind('string'), invalid: true}],
           ['io-field', {value: this.bind('string'), class: 'green'}],
           ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
-          ['io-field', {icon: 'icons:circle_warning'}],
+          ['io-field', {icon: 'io:circle_warning'}],
         ]],
         ['div', {class: 'row'}, [
           ['io-string', {value: this.bind('string'), placeholder: 'io-string'}],
@@ -260,35 +262,26 @@ export class IoDemoElements extends IoElement {
           ['io-number', {conversion: 2, value: this.bind('number')}],
         ]],
         ['div', {class: 'row'}, [
-          ['io-boolicon', {value: this.bind('boolean'), true: 'icons:box_fill_checked', false: 'icons:box'}],
+          ['io-boolicon', {value: this.bind('boolean'), true: 'io:box_fill_checked', false: 'io:box'}],
           ['io-boolean', {value: this.bind('boolean')}],
         ]],
         ['div', {class: 'row'}, [
           ['io-switch', {value: this.bind('boolean')}],
         ]],
         ['div', {class: 'row'}, [
-          ['io-button', {label: 'Button', icon: 'icons:check'}],
-          ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'inset'}],
-          ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'flush'}],
-          ['io-button', {label: 'Button', icon: 'icons:check', appearance: 'neutral'}],
+          ['io-button', {label: 'Button', icon: 'io:check'}],
+          ['io-button', {label: 'Button', icon: 'io:check', appearance: 'inset'}],
+          ['io-button', {label: 'Button', icon: 'io:check', appearance: 'flush'}],
+          ['io-button', {label: 'Button', icon: 'io:check', appearance: 'neutral'}],
         ]],
         ['div', {class: 'row'}, [
-          ['io-icon', {icon: 'icons:io'}],
+          ['io-icon', {icon: 'io:io'}],
           ['io-icon', {icon: 'ℹ️'}],
           ['io-icon', {icon: '❤️'}],
-          ['io-icon', {icon: 'icons:io', stroke: true}],
-          ['io-icon', {icon: 'icons:gear', stroke: true}],
+          ['io-icon', {icon: 'io:io', stroke: true}],
+          ['io-icon', {icon: 'io:io_logo', stroke: true}],
         ]],
-        ['div', {class: 'row'}, (()=>{
-          const icons = [];
-          for (const set of Object.keys(IoIconsetDB)) {
-            for (const icon of Object.keys(IoIconsetDB[set])) {
-              const id = `${set}:${icon}`;
-              icons.push(['io-icon', {icon: id, title: id, name: id, label: id}]);
-            }
-          }
-          return icons;
-        })()],
+        ['io-icons-demo'],
       ]}],
       ['io-collapsable', {label: 'Sliders', expanded: $('expanded-sliders-basic'), elements: [
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],
@@ -450,14 +443,14 @@ export class IoDemoElements extends IoElement {
           value: 'value',
           hint: 'selected',
           label: 'menu item label',
-          icon: 'icons:code',
+          icon: 'io:code',
         })}],
         ['io-menu-item', {label: 'menu item', item: new MenuItem({
           selected: false,
           value: 'value',
           hint: 'not selected',
           label: 'menu item label',
-          icon: 'icons:circle_fill_plus',
+          icon: 'io:circle_fill_plus',
         })}],
         ['io-menu-options', {
           horizontal: true,
@@ -487,10 +480,10 @@ export class IoDemoElements extends IoElement {
           }],
           ['io-menu-options', {
             options: new MenuOptions([
-              new MenuItem({value: 0, label: 'zero', hint: 'Number(0)', icon: 'icons:layers'}),
-              new MenuItem({value: 1, label: 'one', hint: 'Number(1)', icon: 'icons:layers'}),
-              new MenuItem({value: 2, label: 'two', hint: 'Number(2)', icon: 'icons:box'}),
-              new MenuItem({value: 3, label: 'three', hint: 'Number(3)', icon: 'icons:film'}),
+              new MenuItem({value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:layers'}),
+              new MenuItem({value: 1, label: 'one', hint: 'Number(1)', icon: 'io:layers'}),
+              new MenuItem({value: 2, label: 'two', hint: 'Number(2)', icon: 'io:box'}),
+              new MenuItem({value: 3, label: 'three', hint: 'Number(3)', icon: 'io:film'}),
             ], {
               first: this.bind('menuRoot')
             }),

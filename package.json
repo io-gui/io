@@ -16,12 +16,21 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf build && rm -rf bundle",
+    
     "lint": "eslint -c ./eslint.typescript.js src --fix",
+    "lint:icons": "eslint -c ./packages/io-icons/eslint.typescript.js ./packages/io-icons/src --fix",
+    
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --manual --open --debug",
+    
     "docs": "typedoc --plugin typedoc-plugin-markdown",
-    "build": "pnpm clean && pnpm lint && tsc && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-gui.d.ts build/io-gui.d.ts && rm -rf build && mv bundle build",
+
+    "build": "pnpm clean && pnpm lint && tsc --project ./tsconfig.json && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-gui.d.ts build/io-gui.d.ts && rm -rf build && mv bundle build",
+    "build:icons": "tsc --project ./packages/io-icons/tsconfig.json && rollup -c ./packages/io-icons/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-icons/bundle/io-icons.d.ts ./packages/io-icons/build/io-icons.d.ts && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
+
     "dev": "pnpm clean && tsc -w",
+    "dev:icons": "tsc -w --project ./packages/io-icons/tsconfig.json",
+
     "serve": "pnpm wds --watch"
   },
   "repository": {

@@ -1,18 +1,8 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "lib": ["esnext", "dom"],
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "inlineSources": true,
-    "strict": true,
     "rootDir": "./src",
     "outDir": "./build",
-    "esModuleInterop": true,
-    "experimentalDecorators": true
   },
   "typedocOptions": {
     "hideBreadcrumbs": true,
@@ -30,5 +20,7 @@
     ],
     "out": "docs/tsdoc"
   },
-  "include": ["./src"]
+  "include": [
+    "./src"
+  ]
 }

@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
 import terser from "@rollup/plugin-terser";
 
-function makeBundleTarget(src, target, externals = [], debug) {
+export function makeBundleTarget(src, target, externals = [], debug) {
 
   externals.forEach(function(part, index) {
     externals[index] = path.resolve(externals[index]);

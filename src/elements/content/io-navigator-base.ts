@@ -131,7 +131,7 @@ export class IoNavigatorBase extends IoElement {
       direction: this.menu === 'left' ? 'right' : 'left',
       item: new MenuItem({
         label: '',
-        icon: 'icons:hamburger',
+        icon: 'menu:hamburger',
         options: this.options,
       })
     }];

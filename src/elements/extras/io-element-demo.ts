@@ -95,7 +95,7 @@ export class IoElementDemo extends IoElement {
   }
   changed() {
     const properties = this.properties;
-    const elements: any = [['io-boolicon', {value: this.bind('expanded'), true: 'icons:tune', false: 'icons:tune'}]];
+    const elements: any = [['io-boolicon', {value: this.bind('expanded')}]];
     if (this.expanded) {
       elements.push(['io-properties', {
         value: properties,

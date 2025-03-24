@@ -3,8 +3,8 @@ import tseslint from 'typescript-eslint'
 import tsParser from "@typescript-eslint/parser";
 import globals from "globals";
 
-export default tseslint.config(
-  {
+export function makeConfig(projectPath) {
+  return tseslint.config({
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "module",
@@ -17,7 +17,7 @@ export default tseslint.config(
       },
       parser: tsParser,
       parserOptions: {
-        project: "./tsconfig.json"
+        project: projectPath
       }
     },
     files: ['**/*.ts'],
@@ -50,5 +50,7 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-empty-function': 'off',
     }
-  },
-)
+  });
+}
+
+export default makeConfig("./tsconfig.json");

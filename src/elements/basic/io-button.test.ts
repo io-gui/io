@@ -52,7 +52,7 @@ export default class {
           element.label = '';
         });
         it('should set icon to match icon property', () => {
-          element.icon = 'icons:checkmark';
+          element.icon = 'icons:io_logo';
           expect(element.innerHTML).to.equal(`<io-icon icon="${element.icon}">${IoIconsetSingleton.getIcon(element.icon)}</io-icon>`);
           element.icon = '';
           expect(element.innerHTML).to.equal('');

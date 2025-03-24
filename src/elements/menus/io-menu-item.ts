@@ -359,13 +359,13 @@ export class IoMenuItem extends IoField {
     this.setAttribute('hidden', this.item.hidden);
     this.setAttribute('hasmore', this.hasmore);
     this.template([
-      this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_left'}] : null,
-      this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_up'}] : null,
+      this.hasmore && this.direction === 'left' ? ['io-icon', {class: 'hasmore', icon: 'menu:triangle_left'}] : null,
+      this.hasmore && this.direction === 'up' ? ['io-icon', {class: 'hasmore', icon: 'menu:triangle_up'}] : null,
       icon ? ['io-icon', {icon: icon}] : null,
       this.item.label ? ['span', {class: 'label'}, this.item.label] : null,
       this.item.hint ? ['span', {class: 'hint'}, this.item.hint] : null,
-      this.hasmore && this.direction === 'right' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_right'}] : null,
-      this.hasmore && this.direction === 'down' ? ['io-icon', {class: 'hasmore', icon: 'icons:triangle_down'}] : null,
+      this.hasmore && this.direction === 'right' ? ['io-icon', {class: 'hasmore', icon: 'menu:triangle_right'}] : null,
+      this.hasmore && this.direction === 'down' ? ['io-icon', {class: 'hasmore', icon: 'menu:triangle_down'}] : null,
     ]);
   }
 }

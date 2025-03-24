@@ -1,5 +1,0 @@
-**io-icons**
-
-***
-
-# io-icons

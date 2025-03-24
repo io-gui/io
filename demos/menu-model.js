@@ -92,9 +92,9 @@ export class IoItemDemoView extends IoElement {
   changed() {
     let selectElement = null;
     if (this.item.mode === 'toggle') {
-      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
+      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'}];
     } else if (this.item.mode === 'select' || this.item.mode === 'scroll') {
-      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'icons:box_fill_checked', false: 'icons:box'}];
+      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'}];
     }
     this.template([
       ['div', [
