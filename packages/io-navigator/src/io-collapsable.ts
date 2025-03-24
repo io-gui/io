@@ -1,6 +1,4 @@
-import { IoElement, VDOMArray } from '../../core/element.js';
-import { Register } from '../../core/decorators/register.js';
-import { Property } from '../../core/decorators/property.js';
+import { IoElement, VDOMArray, Register, Property } from 'io-gui';
 
 /**
  * An element with collapsable content.

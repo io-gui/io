@@ -1652,52 +1652,50 @@ export declare class IoColorRgba extends IoColorBase {
 	changed(): void;
 }
 /**
- * An element with collapsable content.
- * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ * Input element for vector arrays and objects.
+ *
+ * <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
+ *
+ * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
  **/
-export declare class IoCollapsable extends IoElement {
+export declare class IoVector extends IoElement {
 	static get Style(): string;
-	elements: VDOMArray[];
-	label: string;
-	direction: "column" | "row";
-	icon: string;
-	expanded: boolean;
-	role: string;
+	value: {
+		x: number;
+		y: number;
+		z?: number;
+		w?: number;
+	} | number[];
+	conversion: number;
+	step: number;
+	min: number;
+	max: number;
+	linkable: boolean;
+	linked: boolean;
+	ladder: boolean;
+	keys: string[];
+	private _ratios;
+	_onNumberPointerDown(event: PointerEvent): void;
+	_onNumberValueInput(event: CustomEvent): void;
+	valueChanged(): void;
 	changed(): void;
+	getSlotted(): Array<any> | null;
 }
-export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
-export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
-export type MenuItemArgs = IoElementArgs & {
-	value?: any;
-	icon?: string;
-	hint?: string;
-	action?: () => void;
-	mode?: MenuItemSelectType;
-	hidden?: boolean;
-	disabled?: boolean;
-	selected?: boolean;
-	options?: MenuItemArgsLoose[] | MenuOptions;
-};
-export declare class MenuItem extends IoNode {
-	value: any;
-	label: string;
-	icon: string;
-	hint: string;
-	hidden: boolean;
-	disabled: boolean;
-	action?: (value?: any) => void;
-	mode: MenuItemSelectType;
-	selected: boolean;
-	options?: MenuOptions;
-	get hasmore(): boolean;
-	getSubitem(value: any): any;
-	constructor(args?: MenuItemArgsLoose);
-	toJSON(): Record<string, any>;
-	_onSubItemSelected(): void;
-	_onOptionsPathChanged(event: CustomEvent): void;
-	optionsChanged(): void;
-	selectedChanged(): void;
-	dispose(): void;
+/**
+ * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
+ *
+ * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
+ *
+ * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 1, 0, 0, 0, 1]}'></io-element-demo>
+ *
+ * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
+ **/
+export declare class IoMatrix extends IoVector {
+	static get Style(): string;
+	value: number[];
+	columns: number;
+	_onNumberValueInput(event: CustomEvent): void;
+	valueChanged(): void;
 }
 declare const MenuOptions_base: {
 	new (...args: any[]): {
@@ -1749,113 +1747,39 @@ export declare class MenuOptions extends MenuOptions_base {
 	bind(prop: string): Binding;
 	dispose(): void;
 }
-export declare class IoSelector extends IoElement {
-	static get Style(): string;
-	options: MenuOptions;
-	select: "first" | "last";
-	elements: VDOMArray[];
-	cache: boolean;
-	precache: boolean;
-	precacheDelay: number;
-	loading: boolean;
-	private _caches;
-	private _selected?;
-	init(): void;
-	optionsMutated(): void;
-	importModule(path: string): Promise<unknown>;
-	protected renderSelected(): void;
-	onLoadPrecache(): void;
+export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
+export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
+export type MenuItemArgs = IoElementArgs & {
+	value?: any;
+	icon?: string;
+	hint?: string;
+	action?: () => void;
+	mode?: MenuItemSelectType;
+	hidden?: boolean;
+	disabled?: boolean;
+	selected?: boolean;
+	options?: MenuItemArgsLoose[] | MenuOptions;
+};
+export declare class MenuItem extends IoNode {
+	value: any;
+	label: string;
+	icon: string;
+	hint: string;
+	hidden: boolean;
+	disabled: boolean;
+	action?: (value?: any) => void;
+	mode: MenuItemSelectType;
+	selected: boolean;
+	options?: MenuOptions;
+	get hasmore(): boolean;
+	getSubitem(value: any): any;
+	constructor(args?: MenuItemArgsLoose);
+	toJSON(): Record<string, any>;
+	_onSubItemSelected(): void;
+	_onOptionsPathChanged(event: CustomEvent): void;
+	optionsChanged(): void;
+	selectedChanged(): void;
 	dispose(): void;
-}
-export declare class IoScroller extends IoElement {
-	static get Style(): string;
-	options: MenuOptions;
-	private _observer;
-	init(): void;
-	connectedCallback(): void;
-	_onDomMutated(): void;
-	optionsMutated(): void;
-	_scrollToSelected(): void;
-	dispose(): void;
-}
-export declare class IoNavigatorBase extends IoElement {
-	static get Style(): string;
-	slotted: VDOMArray[];
-	elements: VDOMArray[];
-	options: MenuOptions;
-	menu: "top" | "left" | "bottom" | "right";
-	depth: number;
-	collapsed: boolean;
-	collapseWidth: number;
-	init(): void;
-	onResized(): void;
-	_computeCollapsed(): void;
-	getSlotted(): VDOMArray | null;
-	changed(): void;
-}
-export declare class IoNavigatorSelector extends IoNavigatorBase {
-	select: "first" | "last";
-	cache: boolean;
-	precache: boolean;
-	getSlotted(): VDOMArray;
-}
-export declare class IoNavigatorCombined extends IoNavigatorSelector {
-	static get Style(): string;
-	getSlotted(): VDOMArray;
-}
-export declare class IoNavigatorMdView extends IoNavigatorBase {
-	strip: string[];
-	sanitize: boolean;
-	getSlotted(): VDOMArray;
-}
-export declare class IoNavigatorScroller extends IoNavigatorBase {
-	getSlotted(): VDOMArray;
-}
-/**
- * Input element for vector arrays and objects.
- *
- * <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
- *
- * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
- **/
-export declare class IoVector extends IoElement {
-	static get Style(): string;
-	value: {
-		x: number;
-		y: number;
-		z?: number;
-		w?: number;
-	} | number[];
-	conversion: number;
-	step: number;
-	min: number;
-	max: number;
-	linkable: boolean;
-	linked: boolean;
-	ladder: boolean;
-	keys: string[];
-	private _ratios;
-	_onNumberPointerDown(event: PointerEvent): void;
-	_onNumberValueInput(event: CustomEvent): void;
-	valueChanged(): void;
-	changed(): void;
-	getSlotted(): Array<any> | null;
-}
-/**
- * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
- *
- * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
- *
- * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 1, 0, 0, 0, 1]}'></io-element-demo>
- *
- * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
- **/
-export declare class IoMatrix extends IoVector {
-	static get Style(): string;
-	value: number[];
-	columns: number;
-	_onNumberValueInput(event: CustomEvent): void;
-	valueChanged(): void;
 }
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.

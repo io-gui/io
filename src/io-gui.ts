@@ -29,7 +29,6 @@ export * from './elements/basic/io-icon';
 export * from './elements/basic/io-iconset';
 
 export * from './elements/color/index';
-export * from './elements/content/index';
 export * from './elements/vectors/index';
 export * from './elements/menus/models/index';
 export * from './elements/menus/index';

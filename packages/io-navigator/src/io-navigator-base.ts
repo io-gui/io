@@ -1,19 +1,12 @@
-import { IoElement, VDOMArray } from '../../core/element.js';
-import { Register } from '../../core/decorators/register.js';
-import { MenuOptions } from '../menus/models/menu-options.js';
-import { MenuItem } from '../menus/models/menu-item.js';
-import { Property } from '../../core/decorators/property.js';
-import './io-selector.js';
+import { IoElement, VDOMArray, Property, MenuOptions, MenuItem, Autobind } from 'io-gui';
 
-@Register
-export class IoNavigator extends IoElement {
-
+export class IoNavigatorBase extends IoElement {
   static get Style() {
     return /* css */`
       :host {
         display: flex;
         flex-direction: column;
-        overflow: auto;
+        overflow-y: auto !important;
         flex: 1 1 auto;
       }
       :host[menu=left],
@@ -24,24 +17,27 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options {
         align-self: stretch;
         border-radius: 0;
-        border-color: var(--io_borderColorLight);
+        /* border-color: var(--io_borderColorLight); */
       }
       :host[collapsed] > io-menu-options {
-        min-height: calc(var(--io_fieldHeight) + 1em);
-        padding: calc(var(--io_spacing) + 0.5em) !important;
+        /* min-height: calc(var(--io_fieldHeight) + 1em); */
+        /* padding: calc(var(--io_spacing) + 0.5em) !important; */
       }
       :host[collapsed] > io-menu-options > io-menu-item.hamburger {
-        top: 0;
-        padding: calc(var(--io_spacing) + 0.5em);
-        padding-right: calc(var(--io_spacing2) + 0.5em);
-        min-height: calc(var(--io_fieldHeight) + 1em);
-        background-color: transparent;
+        /* top: 0; */
+        /* padding: calc(var(--io_spacing) + 0.5em); */
+        /* padding-right: calc(var(--io_spacing2) + 0.5em); */
+        /* min-height: calc(var(--io_fieldHeight) + 1em); */
+        /* background-color: transparent; */
       }
       :host > io-menu-options {
+        z-index: 1;
         flex: 0 0 auto;
-        padding: 0;
+        border: none;
+        min-height: var(--io_fieldHeight) !important;
       }
       :host > io-menu-tree {
+        z-index: 1;
         flex: 0 0 auto;
         min-width: 10em;
         overflow-y: auto;
@@ -54,10 +50,10 @@ export class IoNavigator extends IoElement {
         border-width: 0 var(--io_borderWidth) 0 0;
       }
       :host > io-menu-item.hamburger {
+        flex: 0 0 auto;
         border-radius: 0;
         padding: calc(var(--io_spacing) + 0.5em);
         height: 100%;
-        flex: 0 0 auto;
         background-color: var(--io_bgColorDimmed);
         border-color: transparent !important;
       }
@@ -65,26 +61,15 @@ export class IoNavigator extends IoElement {
         display: none;
       }
       :host[menu=top] > io-menu-options {
-        border-width: 0 0 var(--io_borderWidth) 0;
+        /* padding: 0 var(--io_spacing); */
+        /* border-width: 0 0 var(--io_borderWidth) 0; */
       }
       :host[menu=bottom] > io-menu-options {
-        border-width: var(--io_borderWidth) 0 0 0;
+        /* padding: 0 var(--io_spacing); */
+        /* border-width: var(--io_borderWidth) 0 0 0; */
       }
       :host > io-menu-options > io-menu-item {
-        border-radius: 0;
-      }
-      :host > io-selector {
-        overflow: auto;
-        flex: 1 1 auto;
-        max-height: 100%;
-      }
-      /* :host > io-selector, */
-      :host > io-scroller,
-      :host > io-scroller > io-selector {
-        flex: 1 1 auto;
-      }
-      :host > io-scroller > io-selector {
-        overflow: unset !important;
+        /* border-radius: 0; */
       }
     `;
   }
@@ -101,20 +86,8 @@ export class IoNavigator extends IoElement {
   @Property({value: 'left', reflect: true})
   declare menu: 'top' | 'left' | 'bottom' | 'right';
 
-  @Property('first')
-  declare select: 'first' | 'last';
-
-  @Property('select')
-  declare mode: 'select' | 'scroll';
-
   @Property(Infinity)
   declare depth: number;
-
-  @Property(false)
-  declare cache: boolean;
-
-  @Property(false)
-  declare precache: boolean;
 
   @Property({value: false, reflect: true})
   declare collapsed: boolean;
@@ -131,8 +104,13 @@ export class IoNavigator extends IoElement {
     this.throttle(this._computeCollapsed);
   }
 
+  @Autobind
   _computeCollapsed() {
     this.collapsed = this.offsetWidth < this.collapseWidth;
+  }
+
+  getSlotted(): VDOMArray | null {
+    return null;
   }
 
   changed() {
@@ -141,10 +119,6 @@ export class IoNavigator extends IoElement {
       slotted: this.slotted,
       depth: this.depth
     };
-
-    const contentNavigation: VDOMArray = ['io-scroller', {options: this.options}, [
-      ['io-selector', {options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}]
-    ]];
 
     const hamburger = ['io-menu-item', {
       depth: this.depth,
@@ -161,21 +135,21 @@ export class IoNavigator extends IoElement {
     if (this.menu === 'top') {
       this.template([
         ['io-menu-options', {horizontal: true, noPartialCollapse: this.collapsed, ...sharedMenuConfig}],
-        contentNavigation,
+        this.getSlotted(),
       ]);
     } else if (this.menu === 'left') {
       this.template([
         this.collapsed ? hamburger : ['io-menu-tree', {...sharedMenuConfig}],
-        contentNavigation,
+        this.getSlotted(),
       ]);
     } else if (this.menu === 'bottom') {
       this.template([
-        contentNavigation,
+        this.getSlotted(),
         ['io-menu-options', {horizontal: true, noPartialCollapse: this.collapsed, direction: 'up', ...sharedMenuConfig}],
       ]);
     } else if (this.menu === 'right') {
       this.template([
-        contentNavigation,
+        this.getSlotted(),
         this.collapsed ? hamburger : ['io-menu-tree', {...sharedMenuConfig}],
       ]);
     }

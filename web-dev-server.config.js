@@ -5,6 +5,7 @@ const importMapsModules = {
   'io-gui': '/build/io-gui.js?wds-import-map=0',
   'io-icons': '/packages/io-icons/build/io-icons.js?wds-import-map=0',
   'io-markdown': '/packages/io-markdown/build/io-markdown.js?wds-import-map=0',
+  'io-navigator': '/packages/io-navigator/build/io-navigator.js?wds-import-map=0',
 };
 
 export function wdsPluginFixImportMapsModules() {

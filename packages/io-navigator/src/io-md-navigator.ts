@@ -1,7 +1,4 @@
-import { IoElement, VDOMArray } from '../../core/element.js';
-import { Register } from '../../core/decorators/register.js';
-import { MenuOptions } from '../menus/models/menu-options.js';
-import { Property } from '../../core/decorators/property.js';
+import { IoElement, VDOMArray, Register, Property, MenuOptions } from 'io-gui';
 import './io-selector.js';
 
 @Register

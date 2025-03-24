@@ -63,7 +63,8 @@
         "imports": {
           "io-gui": "./build/io-gui.js",
           "io-icons": "./packages/io-icons/build/io-icons.js",
-          "io-markdown": "./packages/io-markdown/build/io-markdown.js"
+          "io-markdown": "./packages/io-markdown/build/io-markdown.js",
+          "io-navigator": "./packages/io-navigator/build/io-navigator.js"
         }
       }
     </script>
@@ -92,8 +93,9 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, Register, IoNavigatorSelector, IoStorage as $, IoThemeSingleton } from 'io-gui';
+    import { MenuOptions, MenuItem, Register, IoStorage as $, IoThemeSingleton } from 'io-gui';
     import 'io-markdown';
+    import { IoNavigatorSelector } from 'io-navigator';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},

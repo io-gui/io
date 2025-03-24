@@ -1,5 +1,4 @@
-import { VDOMArray } from '../../core/element.js';
-import { Register } from '../../core/decorators/register.js';
+import { VDOMArray, Register } from 'io-gui';
 import { IoNavigatorSelector } from './io-navigator-selector.js';
 import './io-scroller.js';
 

@@ -18,18 +18,21 @@
     "clean": "rm -rf build && rm -rf bundle",
     "clean:icons": "rm -rf ./packages/io-icons/build && rm -rf ./packages/io-icons/bundle",
     "clean:markdown": "rm -rf ./packages/io-markdown/build && rm -rf ./packages/io-markdown/bundle",
+    "clean:navigator": "rm -rf ./packages/io-navigator/build && rm -rf ./packages/io-navigator/bundle",
     
     "lint": "eslint -c ./eslint.typescript.js src --fix",
     "lint:icons": "eslint -c ./packages/io-icons/eslint.typescript.js ./packages/io-icons/src --fix",
     "lint:markdown": "eslint -c ./packages/io-markdown/eslint.typescript.js ./packages/io-markdown/src --fix",
-    
+    "lint:navigator": "eslint -c ./packages/io-navigator/eslint.typescript.js ./packages/io-navigator/src --fix",
     "build": "pnpm clean && pnpm lint && tsc --project ./tsconfig.json && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-gui.d.ts build/io-gui.d.ts && rm -rf build && mv bundle build",
     "build:icons": "tsc --project ./packages/io-icons/tsconfig.json && rollup -c ./packages/io-icons/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-icons/bundle/io-icons.d.ts ./packages/io-icons/build/io-icons.d.ts && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
     "build:markdown": "tsc --project ./packages/io-markdown/tsconfig.json && rollup -c ./packages/io-markdown/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-markdown/bundle/io-markdown.d.ts ./packages/io-markdown/build/io-markdown.d.ts && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
+    "build:navigator": "tsc --project ./packages/io-navigator/tsconfig.json && rollup -c ./packages/io-navigator/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-navigator/bundle/io-navigator.d.ts ./packages/io-navigator/build/io-navigator.d.ts && rm -rf ./packages/io-navigator/build && mv ./packages/io-navigator/bundle ./packages/io-navigator/build",
     
     "dev": "pnpm clean && tsc -w",
     "dev:icons": "tsc -w --project ./packages/io-icons/tsconfig.json",
     "dev:markdown": "tsc -w --project ./packages/io-markdown/tsconfig.json",
+    "dev:navigator": "tsc -w --project ./packages/io-navigator/tsconfig.json",
 
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --manual --open --debug",
