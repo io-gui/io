@@ -229,6 +229,7 @@ export default class {
         expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
         protoChain = new ProtoChain(MockIoNode4);
         expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
+        expect(protoChain.observedIoNodeProperties).to.be.eql(['prop3', 'prop4']);
       });
     });
   }

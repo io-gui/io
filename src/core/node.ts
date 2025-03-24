@@ -31,7 +31,7 @@ export type IoNodeArgs = {
  * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
 export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
-  const IoNodeMixinConstructor = class extends (superclass as any) {
+  return class IoNodeMixinConstructor extends (superclass as any) {
     static get Properties(): PropertyDefinitions {
       return {
         reactivity: {
@@ -407,7 +407,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
     }
   };
-  return IoNodeMixinConstructor;
 }
 
 /**
