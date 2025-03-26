@@ -8,33 +8,20 @@ export * from './core/decorators/autobind';
 export * from './core/decorators/register';
 export * from './core/decorators/property';
 
-export * from './core/glsl/index';
-
 export * from './core/node';
 export * from './core/element';
-export * from './core/theme';
-export * from './core/storage';
-export * from './core/gl';
-export * from './core/overlay';
 
-export * from './elements/basic/io-label';
-export * from './elements/basic/io-field';
-export * from './elements/basic/io-button';
-export * from './elements/basic/io-boolean';
-export * from './elements/basic/io-boolicon';
-export * from './elements/basic/io-switch';
-export * from './elements/basic/io-string';
-export * from './elements/basic/io-number';
-export * from './elements/basic/io-icon';
-export * from './elements/basic/io-iconset';
+export * from './nodes/iconset';
+export * from './nodes/storage';
+export * from './nodes/theme';
 
-export * from './elements/color/index';
-export * from './elements/vectors/index';
-export * from './elements/menus/models/index';
-export * from './elements/menus/index';
-export * from './elements/notify/index';
-export * from './elements/object/index';
-export * from './elements/sliders/index';
+export * from './elements/field';
+export * from './elements/gl';
+export * from './elements/gl.glsl';
+export * from './elements/icon';
+export * from './elements/label';
+export * from './elements/overlay';
+
 
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic

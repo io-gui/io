@@ -42,6 +42,5 @@ export function makeBundleTarget(src, target, externals = [], debug) {
 
 export default [
   makeBundleTarget('build/io-gui.js', 'bundle/io-gui.js', []),
-  makeBundleTarget('build/io-gui.js', 'bundle/io-gui.debug.js', [], true),
   makeBundleTarget('build/io-gui.test.js', 'bundle/io-gui.test.js', ['build/io-gui.js'], true),
 ];

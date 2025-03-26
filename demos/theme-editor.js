@@ -1,4 +1,5 @@
-import { IoElement, Register, IoThemeSingleton, MenuOptions } from 'io-gui';
+import { IoElement, Register, IoThemeSingleton } from 'io-gui';
+import { MenuOptions } from 'io-menus';
 
 export class IoDemoThemeEditor extends IoElement {
   static get Style() {

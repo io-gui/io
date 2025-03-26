@@ -1,0 +1,37 @@
+{
+  "name": "io-menus",
+  "version": "1.0.0-rc1",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "Io-menus, a collections of menus for Io-Gui.",
+  "main": "build/io-menus.js",
+  "module": "build/io-menus.js",
+  "types": "build/io-menus.d.ts",
+  "files": [
+    "/src/",
+    "/build/",
+    "/demos/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io",
+    "gui",
+    "md",
+    "iogui",
+    "io-gui",
+    "menus",
+    "io-menus"
+  ],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iogui/iogui/issues"
+  },
+  "homepage": "https://iogui.dev"
+}

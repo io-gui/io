@@ -1,10 +1,12 @@
-import { Register, IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps, Property, MenuOptions } from 'io-gui';
-
+import { Register, IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps, Property } from 'io-gui';
+import { MenuOptions } from 'io-menus';
 const dummyElement = document.createElement('div');
 /**
  * Element selector. Displays one of the virtual elements assigned in the `elements` property as its child if the name of the element matches the `value` property.
  * If `cache` property is set to `true`, a reference to the element will be kept fo later use.
  **/
+
+// TODO: consider moving io-selectior to core elements
 
 const IMPORTED_PATHS: Record<string, any> = {};
 

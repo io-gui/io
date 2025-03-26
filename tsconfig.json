@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./build",
+    "paths": {},
   },
   "typedocOptions": {
     "hideBreadcrumbs": true,

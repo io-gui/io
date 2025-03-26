@@ -3,7 +3,7 @@
   "version": "1.0.0-rc1",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-navigator, a set of icons for Io-Gui.",
+  "description": "Io-navigator, a set of navigators for Io-Gui.",
   "main": "build/io-navigator.js",
   "module": "build/io-navigator.js",
   "types": "build/io-navigator.d.ts",

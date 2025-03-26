@@ -1,0 +1,37 @@
+{
+  "name": "io-color",
+  "version": "1.0.0-rc1",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "Io-color, a set of color editors for Io-Gui.",
+  "main": "build/io-color.js",
+  "module": "build/io-color.js",
+  "types": "build/io-color.d.ts",
+  "files": [
+    "/src/",
+    "/build/",
+    "/demos/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io",
+    "gui",
+    "md",
+    "iogui",
+    "io-gui",
+    "color",
+    "io-color"
+  ],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iogui/iogui/issues"
+  },
+  "homepage": "https://iogui.dev"
+}

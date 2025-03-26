@@ -599,9 +599,575 @@ declare class IoElement extends IoElement_base {
 	labelChanged(): void;
 	disabledChanged(): void;
 }
+/**
+ * An element with collapsable content.
+ * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ **/
+export declare class IoCollapsable extends IoElement {
+	static get Style(): string;
+	elements: VDOMArray[];
+	label: string;
+	direction: "column" | "row";
+	icon: string;
+	expanded: boolean;
+	role: string;
+	changed(): void;
+}
+type Properties$1 = string[];
+type TargetProperties$1 = WeakMap<IoNode$1, Properties$1>;
+declare class Binding$1 {
+	readonly node: IoNode$1;
+	readonly property: string;
+	readonly targets: IoNode$1[];
+	readonly targetProperties: TargetProperties$1;
+	/**
+	 * Creates a binding object for specified source `node` and `property`.
+	 * It attaches a `[propName]-changed` listener to the source node.
+	 * @param {IoNode} node - Source node
+	 * @param {string} property - Name of the sourceproperty
+	 */
+	constructor(node: IoNode$1, property: string);
+	set value(value: any);
+	get value(): any;
+	/**
+	 * Returns a JSON representation of the binding.
+	 * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
+	 * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
+	 * @return {string} JSON representation of the binding.
+	 */
+	toJSON(): {
+		node: string;
+		property: string;
+		targets: string[];
+		targetProperties: Record<string, Properties$1>;
+	};
+	/**
+	 * Helper function to get target properties from WeakMap
+	 * Retrieves a list of target properties for specified target node.
+	 * @param {IoNode} target - Target node.
+	 * @return {Properties} list of target property names.
+	 */
+	getTargetProperties(target: IoNode$1): Properties$1;
+	/**
+	 * Adds a target node and property.
+	 * Sets itself as the binding reference on the target `PropertyInstance`.
+	 * Adds a `[propName]-changed` listener to the target node.
+	 * @param {IoNode} target - Target node
+	 * @param {string} property - Target property
+	 */
+	addTarget(target: IoNode$1, property: string): void;
+	/**
+	 * Removes target node and property.
+	 * If `property` is not specified, it removes all target properties.
+	 * Removes binding reference from the target `PropertyInstance`.
+	 * Removes `[propName]-changed` listener from the target node.
+	 * @param {IoNode} target - Target node
+	 * @param {string} property - Target property
+	 */
+	removeTarget(target: IoNode$1, property?: string): void;
+	/**
+	 * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
+	 * @param {ChangeEvent} event - Property change event.
+	 */
+	onTargetChanged(event: ChangeEvent$1): void;
+	/**
+	 * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
+	 * @param {ChangeEvent} event - Property change event.
+	 */
+	onSourceChanged(event: ChangeEvent$1): void;
+	/**
+	 * Dispose of the binding by removing all targets and listeners.
+	 * Use this when node is no longer needed.
+	 */
+	dispose(): void;
+}
+type PropertyDefinition$1$1 = {
+	value?: any;
+	type?: Constructor$1;
+	binding?: Binding$1;
+	reflect?: boolean;
+	init?: any;
+};
+type PropertyDefinitionLoose$1 = string | number | boolean | Array<any> | null | undefined | Constructor$1 | Binding$1 | PropertyDefinition$1$1;
+declare class ProtoProperty$1 {
+	value?: any;
+	type?: Constructor$1;
+	binding?: Binding$1;
+	reflect?: boolean;
+	init?: any;
+	/**
+	 * Creates a property definition from various input types.
+	 * @param {PropertyDefinitionLoose} def Input definition which can be:
+	 * - `undefined` or `null`: Sets as value
+	 * - `Constructor`: Sets as type
+	 * - `Binding`: Sets value from binding and stores binding reference
+	 * - `PropertyDefinition`: Copies all defined fields
+	 * - Other values: Sets as value
+	 * @example
+	 * new ProtoProperty(String) // {type: String}
+	 * new ProtoProperty('hello') // {value: 'hello'}
+	 * new ProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
+	 * new ProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
+	 */
+	constructor(def: PropertyDefinitionLoose$1);
+	/**
+	 * Assigns values of another ProtoProperty to itself, unless they are default values.
+	 * @param {ProtoProperty} protoProp Source ProtoProperty
+	 */
+	assign(protoProp: ProtoProperty$1): void;
+	/**
+	 * Creates a serializable representation of the property definition.
+	 * Handles special cases for better JSON serialization:
+	 * - Converts object values to their constructor names
+	 * - Converts function types to their names
+	 * - Only includes defined fields
+	 * @returns {object} A plain object suitable for JSON serialization
+	 */
+	toJSON(): any;
+}
+declare class PropertyInstance$1 {
+	value?: any;
+	type?: Constructor$1;
+	binding?: Binding$1;
+	reflect: boolean;
+	init?: any;
+	/**
+	 * Creates the property configuration object and copies values from `ProtoProperty`.
+	 * @param node owner IoNode instance
+	 * @param propDef ProtoProperty object
+	 */
+	constructor(node: IoNode$1, propDef: ProtoProperty$1);
+}
+interface KeyboardEventListener$1 {
+	(event: KeyboardEvent): void;
+}
+interface PointerEventListener$1 {
+	(event: PointerEvent): void;
+}
+interface CustomEventListener$1 {
+	(event: CustomEvent): void;
+}
+interface FocusEventListener$1 {
+	(event: FocusEvent): void;
+}
+interface TouchEventListener$1 {
+	(event: TouchEvent): void;
+}
+interface ChangeEventListener$1 {
+	(event: ChangeEvent$1): void;
+}
+interface IoEventListener$1 {
+	(event: {
+		detail: any;
+		target: IoNode$1;
+		path: IoNode$1[];
+	}): void;
+}
+type AnyEventListener$1 = EventListener | KeyboardEventListener$1 | PointerEventListener$1 | CustomEventListener$1 | FocusEventListener$1 | TouchEventListener$1 | ChangeEventListener$1 | IoEventListener$1;
+type ListenerDefinition$1 = [
+	string | AnyEventListener$1,
+	AddEventListenerOptions?
+];
+type ListenerDefinitionLoose$1 = string | AnyEventListener$1 | ListenerDefinition$1;
+type Listener$1 = [
+	AnyEventListener$1,
+	AddEventListenerOptions?
+];
+type Listeners$1 = Record<string, Listener$1[]>;
+declare class EventDispatcher$1 {
+	readonly node: IoNode$1 | EventTarget;
+	readonly isEventTarget: boolean;
+	readonly protoListeners: Listeners$1;
+	readonly propListeners: Listeners$1;
+	readonly addedListeners: Listeners$1;
+	/**
+	 * Creates an instance of `EventDispatcher` for specified `IoNode` instance.
+	 * It initializes `protoListeners` from `ProtoChain`.
+	 * @param {IoNode} node owner IoNode
+	 */
+	constructor(node: IoNode$1 | EventTarget);
+	/**
+	 * Sets `protoListeners` specified as `get Listeners()` class definitions.
+	 * Definitions from subclass replace the ones from parent class.
+	 * @param {IoNode} node owner IoNode
+	 */
+	setProtoListeners(node: IoNode$1): void;
+	/**
+	 * Sets `propListeners` specified as inline properties prefixed with "@".
+	 * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
+	 * @param {Record<string, any>} properties - Inline properties
+	 */
+	applyPropListeners(properties: Record<string, any>): void;
+	/**
+	 * Proxy for `addEventListener` method.
+	 * Adds an event listener to the node's `addedListeners` collection.
+	 * If the node is an EventTarget, also registers the listener with the DOM.
+	 * @param {string} name - Name of the event
+	 * @param {AnyEventListener} listener - Event listener handler
+	 * @param {AddEventListenerOptions} [options] - Event listener options
+	 */
+	addEventListener(name: string, listener: AnyEventListener$1, options?: AddEventListenerOptions): void;
+	/**
+	 * Proxy for `removeEventListener` method.
+	 * Removes an event listener from the node's `addedListeners` collection.
+	 * If `listener` is not specified it removes all listeners for specified `type`.
+	 * @param {string} name - Name of the event
+	 * @param {AnyEventListener} listener - Event listener handler
+	 * @param {AddEventListenerOptions} [options] - Event listener options
+	*/
+	removeEventListener(name: string, listener?: AnyEventListener$1, options?: AddEventListenerOptions): void;
+	/**
+	 * Shorthand for custom event dispatch.
+	 * @param {string} name - Name of the event
+	 * @param {any} detail - Event detail data
+	 * @param {boolean} [bubbles] - Makes event bubble
+	 * @param {EventTarget} [node] - Event target override to dispatch the event from
+	 */
+	dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: EventTarget | IoNode$1): void;
+	/**
+	 * Disconnects all event listeners and removes all references for garbage collection.
+	 * Use this when node is discarded.
+	 */
+	dispose(): void;
+}
+type ProtoConstructors$1 = Array<IoNodeConstructor$1<any>>;
+type ProtoHandlers$1 = string[];
+type ProtoProperties$1 = {
+	[property: string]: ProtoProperty$1;
+};
+type ProtoListeners$1 = {
+	[property: string]: ListenerDefinition$1[];
+};
+declare class ProtoChain$1 {
+	/**
+	 * Array of inherited class constructors
+	 */
+	constructors: ProtoConstructors$1;
+	/**
+	 * Aggregated property definition declared in `static get Properties()`
+	 */
+	properties: ProtoProperties$1;
+	/**
+	 * Aggregated listener definition declared in `static get Listeners()`
+	 */
+	listeners: ProtoListeners$1;
+	/**
+	 * Aggregated CSS style definition declared in `static get Style()`
+	 */
+	styles: string;
+	/**
+	 * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
+	 */
+	handlers: ProtoHandlers$1;
+	/**
+	 * Array of property names of mutation-observed object properties.
+	 */
+	observedObjectProperties: string[];
+	/**
+	 * Array of property names of mutation-observed IoNode properties.
+	 */
+	observedIoNodeProperties: string[];
+	/**
+	 * Creates an instance of `ProtoChain` for specified class constructor.
+	 * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
+	 */
+	constructor(ioNodeConstructor: IoNodeConstructor$1<any>);
+	/**
+	 * Adds properties defined in decorators to the properties array.
+	 * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
+	 */
+	addPropertiesFromDecorators(ioNodeConstructor: IoNodeConstructor$1<any>): void;
+	/**
+	 * Adds static properties from `static get Properties()` to the properties array.
+	 * Only process properties if they differ from superclass.
+	 * This prevents 'static get Properties()' from overriding subclass properties defined in decorators.
+	 * @param {PropertyDefinitions} properties - Properties to add
+	 * @param {string} prevHash - Previous properties hash
+	 * @returns {string} - Updated properties hash
+	 */
+	addStaticProperties(properties?: PropertyDefinitions$1, prevHash?: string): string;
+	/**
+	 * Merges or appends a listener definitions to the existing listeners array.
+	 * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
+	 */
+	addListeners(listenerDefs?: ListenerDefinitions$1): void;
+	/**
+	 * Adds a style string to the styles array.
+	 * @param {string} style - Style string to add
+	 */
+	addStyles(style?: string): void;
+	/**
+	 * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
+	 * @param {IoNode} proto - Prototype object to search for handlers
+	 */
+	addHandlers(proto: IoNode$1): void;
+	/**
+	 * Creates observedObjectProperties array.
+	 * @returns {string[]} - Array of property names that are observed as native objects.
+	 */
+	getObservedObjectProperties(): string[];
+	/**
+	 * Creates observedIoNodeProperties array.
+	 * @returns {string[]} - Array of property names that are observed as IoNode objects.
+	 */
+	getObservedIoNodeProperties(): string[];
+	/**
+	 * Debug only.
+	 * Validates property definitions.
+	 * Logs warnings for incorrect property definitions.
+	 * @returns {void}
+	 */
+	validateProperties(): void;
+	/**
+	 * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+	 * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
+	 * @param {IoNode} node - Target node instance
+	 */
+	autobindHandlers(node: IoNode$1): void;
+}
+type Constructor$1 = new (...args: any[]) => unknown;
+type PropertyDefinitions$1 = Record<string, PropertyDefinitionLoose$1>;
+type ListenerDefinitions$1 = Record<string, ListenerDefinitionLoose$1>;
+interface IoNodeConstructor$1<T> {
+	new (...args: any[]): T;
+	Properties?: PropertyDefinitions$1;
+	Listeners?: ListenerDefinitions$1;
+	Style?: string;
+}
+type CallbackFunction$1 = (arg?: any) => void;
+type prefix$1<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+type IoNodeArgs$1 = {
+	reactivity?: "none" | "immediate" | "debounced";
+	[key: prefix$1<string, "@">]: string | ((event: CustomEvent<any>) => void);
+};
+declare const IoNode_base$1: {
+	new (...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain$1;
+		readonly _properties: Map<string, PropertyInstance$1>;
+		readonly _bindings: Map<string, Binding$1>;
+		readonly _changeQueue: ChangeQueue$1;
+		readonly _eventDispatcher: EventDispatcher$1;
+		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		applyProperties(props: any): void;
+		/**
+		 * Sets multiple properties in batch.
+		 * [property]-changed` events will be broadcast in the end.
+		 * @param {Object} props - Map of property names and values.
+		 */
+		setProperties(props: any): void;
+		/**
+		 * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
+		 * @param {string} name Property name to set value of.
+		 * @param {any} value Peroperty value.
+		 * @param {boolean} [debounce] flag to skip event dispatch.
+		 */
+		setProperty(name: string, value: any, debounce?: boolean): void;
+		/**
+		 * Sets value property and emits `value-input` event.
+		 * Use this when value property is set by user action (e.g. mouse click).
+		 * @param {*} value - Property value.
+		 */
+		inputValue(value: any): void;
+		/**
+		 * default change handler.
+		 * Invoked when one of the properties change.
+		 */
+		changed(): void;
+		init(): void;
+		/**
+		 * Adds property change to the queue.
+		 * @param {string} name - Property name.
+		 * @param {*} value - Property value.
+		 * @param {*} oldValue - Old property value.
+		 */
+		queue(name: string, value: any, oldValue: any): void;
+		/**
+		 * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
+		 */
+		dispatchQueue(debounce?: boolean): void;
+		/**
+		 * Throttles function execution once per frame (rAF).
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for throttled function.
+		 */
+		throttle(func: CallbackFunction$1, arg?: any): void;
+		/**
+		 * Debounces function execution to next frame (rAF).
+		 * @param {function} func - Function to throttle.
+		 * @param {*} arg - argument for debounced function.
+		 * @param {number} timeout - minimum delay in ms before executing the function.
+		 */
+		debounce(func: CallbackFunction$1, arg?: any, timeout?: number): void;
+		/**
+		 * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
+		 * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
+		 * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+		 * This is used to evoke '[propName]Mutated()' mutation handler
+		 * @param {Object} event - Event payload.
+		 * @param {EventTarget} event.target - Node that emitted the event.
+		 * @param {IoNode} event.detail.object - Mutated node.
+		 */
+		onPropertyMutated(event: CustomEvent): void;
+		/**
+		 * Returns a binding to a specified property`.
+		 * @param {string} name - Property name to bind to.
+		 * @return {Binding} Binding object.
+		 */
+		bind(name: string): Binding$1;
+		/**
+		 * Unbinds a binding to a specified property`.
+		 * @param {string} name - Property name to unbind.
+		 */
+		unbind(name: string): void;
+		/**
+		 * Wrapper for addEventListener.
+		 * @param {string} type - listener name.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
+		addEventListener(type: string, listener: AnyEventListener$1, options?: AddEventListenerOptions): void;
+		/**
+		 * Wrapper for removeEventListener.
+		 * @param {string} type - event name to listen to.
+		 * @param {function} listener - listener handler.
+		 * @param {Object} options - event listener options.
+		 */
+		removeEventListener(type: string, listener?: AnyEventListener$1, options?: AddEventListenerOptions): void;
+		/**
+		 * Wrapper for dispatchEvent.
+		 * @param {string} type - event name to dispatch.
+		 * @param {Object} detail - event detail.
+		 * @param {boolean} bubbles - event bubbles.
+		 * @param {HTMLElement|Node} src source node/element to dispatch event from.
+		 */
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		/**
+		 * Disposes all internals.
+		 * Use this when instance is no longer needed.
+		 */
+		dispose(): void;
+		Register(ioNodeConstructor: typeof IoNode$1): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertyDefinitions$1;
+};
+declare class IoNode$1 extends IoNode_base$1 {
+}
+interface Change$1 {
+	property: string;
+	value: any;
+	oldValue: any;
+}
+interface ChangeEvent$1 extends Omit<CustomEvent<Change$1>, "target"> {
+	readonly target: IoNode$1;
+	readonly detail: Change$1;
+	readonly path: IoNode$1[];
+}
+declare class ChangeQueue$1 {
+	readonly node: IoNode$1;
+	readonly changes: Change$1[];
+	hasChanged: boolean;
+	dispatching: boolean;
+	/**
+	 * Creates change queue for the specified owner instance of `IoNode`.
+	 * @param {IoNode} node - Owner node.
+	 */
+	constructor(node: IoNode$1);
+	/**
+	 * Adds property change payload to the queue by specifying property name, previous and the new value.
+	 * If the change is already in the queue, the new value is updated in-queue.
+	 * If the new value is the same as the original value, the change is removed from the queue.
+	 * @param {string} property - Property name.
+	 * @param {any} value Property value.
+	 * @param {any} oldValue Old property value.
+	 */
+	queue(property: string, value: any, oldValue: any): void;
+	/**
+	 * Dispatches and clears the queue.
+	 * For each property change in the queue:
+	 *  - It executes node's `[propName]Changed(change)` change handler function if it is defined.
+	 *  - It fires the `'[propName]-changed'` `ChangeEvent` from the owner node with `Change` data as `event.detail`.
+	 * After all changes are dispatched it invokes `.changed()` function of the owner node instance and fires `'changed'` event.
+	 */
+	dispatch(): void;
+	/**
+	 * Clears the queue and removes the node reference for garbage collection.
+	 * Use this when node queue is no longer needed.
+	 */
+	dispose(): void;
+}
+type IoElementArgs$1 = IoNodeArgs$1 & {
+	tabindex?: string;
+	contenteditable?: boolean;
+	class?: string;
+	role?: string;
+	label?: string;
+	name?: string;
+	title?: string;
+	id?: string;
+	hidden?: boolean;
+	disabled?: boolean;
+	cache?: boolean;
+	[key: string]: any;
+};
+declare const MenuOptions_base: {
+	new (...args: any[]): {
+		[x: string]: any;
+		readonly _protochain: ProtoChain$1;
+		readonly _properties: Map<string, PropertyInstance$1>;
+		readonly _bindings: Map<string, Binding$1>;
+		readonly _changeQueue: ChangeQueue$1;
+		readonly _eventDispatcher: EventDispatcher$1;
+		applyProperties(props: any): void;
+		setProperties(props: any): void;
+		setProperty(name: string, value: any, debounce?: boolean): void;
+		inputValue(value: any): void;
+		changed(): void;
+		init(): void;
+		queue(name: string, value: any, oldValue: any): void;
+		dispatchQueue(debounce?: boolean): void;
+		throttle(func: CallbackFunction$1, arg?: any): void;
+		debounce(func: CallbackFunction$1, arg?: any, timeout?: number): void;
+		onPropertyMutated(event: CustomEvent): void;
+		bind(name: string): Binding$1;
+		unbind(name: string): void;
+		addEventListener(type: string, listener: AnyEventListener$1, options?: AddEventListenerOptions): void;
+		removeEventListener(type: string, listener?: AnyEventListener$1, options?: AddEventListenerOptions): void;
+		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+		dispose(): void;
+		Register(ioNodeConstructor: typeof IoNode$1): void;
+	};
+	[x: string]: any;
+	readonly Properties: PropertyDefinitions$1;
+};
+declare class MenuOptions extends MenuOptions_base {
+	first: any;
+	last: any;
+	scroll: any;
+	path: string;
+	delimiter: string;
+	push(...items: MenuItem[]): void;
+	getItem(value: any, deep?: boolean): any;
+	constructor(args?: MenuItemArgsLoose[], properties?: IoNodeArgs$1);
+	protected addItems(items: MenuItemArgsLoose[]): void;
+	pathChanged(): void;
+	firstChanged(): void;
+	lastChanged(): void;
+	updatePaths(item?: MenuItem): void;
+	_onItemSelectedChanged(event: CustomEvent): void;
+	_onSubOptionsPathChanged(event: CustomEvent): void;
+	selectDefault(): boolean;
+	bind(prop: string): Binding$1;
+	dispose(): void;
+}
 type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
 type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
-type MenuItemArgs = IoElementArgs & {
+type MenuItemArgs = IoElementArgs$1 & {
 	value?: any;
 	icon?: string;
 	hint?: string;
@@ -612,7 +1178,7 @@ type MenuItemArgs = IoElementArgs & {
 	selected?: boolean;
 	options?: MenuItemArgsLoose[] | MenuOptions;
 };
-declare class MenuItem extends IoNode {
+declare class MenuItem extends IoNode$1 {
 	value: any;
 	label: string;
 	icon: string;
@@ -632,70 +1198,6 @@ declare class MenuItem extends IoNode {
 	optionsChanged(): void;
 	selectedChanged(): void;
 	dispose(): void;
-}
-declare const MenuOptions_base: {
-	new (...args: any[]): {
-		[x: string]: any;
-		readonly _protochain: ProtoChain;
-		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
-		readonly _changeQueue: ChangeQueue;
-		readonly _eventDispatcher: EventDispatcher;
-		applyProperties(props: any): void;
-		setProperties(props: any): void;
-		setProperty(name: string, value: any, debounce?: boolean): void;
-		inputValue(value: any): void;
-		changed(): void;
-		init(): void;
-		queue(name: string, value: any, oldValue: any): void;
-		dispatchQueue(debounce?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any): void;
-		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-		onPropertyMutated(event: CustomEvent): void;
-		bind(name: string): Binding;
-		unbind(name: string): void;
-		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
-		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-		dispose(): void;
-		Register(ioNodeConstructor: typeof IoNode): void;
-	};
-	[x: string]: any;
-	readonly Properties: PropertyDefinitions;
-};
-declare class MenuOptions extends MenuOptions_base {
-	first: any;
-	last: any;
-	scroll: any;
-	path: string;
-	delimiter: string;
-	push(...items: MenuItem[]): void;
-	getItem(value: any, deep?: boolean): any;
-	constructor(args?: MenuItemArgsLoose[], properties?: IoNodeArgs);
-	protected addItems(items: MenuItemArgsLoose[]): void;
-	pathChanged(): void;
-	firstChanged(): void;
-	lastChanged(): void;
-	updatePaths(item?: MenuItem): void;
-	_onItemSelectedChanged(event: CustomEvent): void;
-	_onSubOptionsPathChanged(event: CustomEvent): void;
-	selectDefault(): boolean;
-	bind(prop: string): Binding;
-	dispose(): void;
-}
-/**
- * An element with collapsable content.
- * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
- **/
-export declare class IoCollapsable extends IoElement {
-	static get Style(): string;
-	elements: VDOMArray[];
-	label: string;
-	direction: "column" | "row";
-	icon: string;
-	expanded: boolean;
-	role: string;
-	changed(): void;
 }
 export declare class IoSelector extends IoElement {
 	static get Style(): string;

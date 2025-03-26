@@ -1,4 +1,5 @@
-import { Register, IoElement, IoStorage, MenuOptions, MenuItem } from 'io-gui';
+import { Register, IoElement, IoStorage } from 'io-gui';
+import { MenuItem, MenuOptions } from 'io-menus';
 import './menu-model.js';
 import 'io-icons';
 import '../packages/io-icons/demos/io-icons-demo.js';

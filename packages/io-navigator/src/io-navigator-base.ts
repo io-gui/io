@@ -1,4 +1,5 @@
-import { IoElement, VDOMArray, Property, MenuOptions, MenuItem, Autobind } from 'io-gui';
+import { IoElement, VDOMArray, Property, Autobind } from 'io-gui';
+import { MenuOptions, MenuItem } from 'io-menus';
 
 export class IoNavigatorBase extends IoElement {
   static get Style() {

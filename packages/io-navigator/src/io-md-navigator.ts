@@ -1,4 +1,5 @@
-import { IoElement, VDOMArray, Register, Property, MenuOptions } from 'io-gui';
+import { IoElement, VDOMArray, Register, Property } from 'io-gui';
+import { MenuOptions } from 'io-menus';
 import './io-selector.js';
 
 @Register

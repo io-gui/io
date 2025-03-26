@@ -6,30 +6,28 @@ import PropertyTest from './core/internals/property.test';
 import ProtoChainTest from './core/internals/protoChain.test';
 
 import ElementTest from './core/element.test';
-import GLTest from './core/gl.test';
-import OverlayTest from './core/overlay.test';
 import NodeTest from './core/node.test';
-import StorageTest from './core/storage.test';
-import ThemeTest from './core/theme.test';
 
-import BooleanElementTest from './elements/basic/io-boolean.test';
-import ButtonElementTest from './elements/basic/io-button.test';
-import FieldElementTest from './elements/basic/io-field.test';
-import IconElementTest from './elements/basic/io-icon.test';
-import IconsetElementTest from './elements/basic/io-iconset.test';
-import LabelElementTest from './elements/basic/io-label.test';
-import SwitchElementTest from './elements/basic/io-switch.test';
-import StringElementTest from './elements/basic/io-string.test';
-import NumberElementTest from './elements/basic/io-number.test';
+import IconsetElementTest from './nodes/iconset.test';
+import StorageTest from './nodes/storage.test';
+import ThemeTest from './nodes/theme.test';
 
-import ColorElementTest from './elements/color/index.test';
+import FieldElementTest from './elements/field.test';
+import GLTest from './elements/gl.test';
+import IconElementTest from './elements/icon.test';
+import LabelElementTest from './elements/label.test';
+import OverlayTest from './elements/overlay.test';
+
+// import InputsTests from 'io-inputs/build/index.test.js';
+
+// import ColorElementTest from './elements/color/index.test';
 // import ExtrasElementTest from './elements/extras/index.test';
 // import LayoutElementTest from './elements/layout/index.test';
 // import VectorElementTest from './elements/vectors/index.test';
-import MenuElementTest from './elements/menus/index.test';
+// import MenuElementTest from './elements/menus/index.test';
 // import NotifyElementTest from './elements/notify/index.test';
 // import ObjectElementTest from './elements/object/index.test';
-import SlidersElementTest from './elements/sliders/index.test';
+// import SlidersElementTest from './elements/sliders/index.test';
 
 import { mocha, sessionFinished, sessionFailed } from '@web/test-runner-mocha';
 
@@ -57,25 +55,21 @@ try {
   new ThemeTest().run();
   new OverlayTest().run();
   new StorageTest().run();
-
-  new BooleanElementTest().run();
-  new ButtonElementTest().run();
   new FieldElementTest().run();
   new IconElementTest().run();
   new IconsetElementTest().run();
   new LabelElementTest().run();
-  new NumberElementTest().run();
-  new StringElementTest().run();
-  new SwitchElementTest().run();
 
-  new ColorElementTest().run();
+  // new InputsTests().run();
+
+  // new ColorElementTest().run();
   // new ExtrasElementTest().run();
   // new LayoutElementTest().run();
   // new VectorElementTest().run();
-  new MenuElementTest().run();
+  // new MenuElementTest().run();
   // new NotifyElementTest().run();
   // new ObjectElementTest().run();
-  new SlidersElementTest().run();
+  // new SlidersElementTest().run();
 
   mocha.checkLeaks();
   mocha.run(() => {

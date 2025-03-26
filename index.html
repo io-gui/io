@@ -62,9 +62,14 @@
       {
         "imports": {
           "io-gui": "./build/io-gui.js",
+          "io-color": "./packages/io-color/build/io-color.js",
           "io-icons": "./packages/io-icons/build/io-icons.js",
+          "io-inputs": "./packages/io-inputs/build/index.js",
+          "io-inspector": "./packages/io-inspector/build/io-inspector.js",
           "io-markdown": "./packages/io-markdown/build/io-markdown.js",
-          "io-navigator": "./packages/io-navigator/build/io-navigator.js"
+          "io-menus": "./packages/io-menus/build/io-menus.js",
+          "io-navigator": "./packages/io-navigator/build/io-navigator.js",
+          "io-sliders": "./packages/io-sliders/build/io-sliders.js"
         }
       }
     </script>
@@ -93,9 +98,14 @@
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, Register, IoStorage as $, IoThemeSingleton } from 'io-gui';
+    import { Register, IoStorage as $, IoThemeSingleton } from 'io-gui';
     import 'io-markdown';
     import { IoNavigatorSelector } from 'io-navigator';
+    import 'io-sliders';
+    import 'io-color';
+    import { MenuOptions, MenuItem } from 'io-menus';
+    import 'io-inspector';
+    import 'io-inputs';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},

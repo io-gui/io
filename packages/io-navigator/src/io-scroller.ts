@@ -1,4 +1,5 @@
-import { Register, IoElement, Property, Autobind, MenuOptions } from 'io-gui';
+import { Register, IoElement, Property, Autobind } from 'io-gui';
+import { MenuOptions } from 'io-menus';
 
 @Register
 export class IoScroller extends IoElement {

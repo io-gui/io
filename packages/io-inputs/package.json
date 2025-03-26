@@ -1,0 +1,37 @@
+{
+  "name": "io-inputs",
+  "version": "1.0.0-rc1",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "Io-inputs, a collection of input elements for Io-Gui.",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "/src/",
+    "/build/",
+    "/demos/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io",
+    "gui",
+    "md",
+    "iogui",
+    "io-gui",
+    "inputs",
+    "io-inputs"
+  ],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iogui/iogui/issues"
+  },
+  "homepage": "https://iogui.dev"
+}

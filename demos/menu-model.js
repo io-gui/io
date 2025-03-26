@@ -1,4 +1,5 @@
-import { IoElement, Register, MenuOptions, MenuItem } from 'io-gui';
+import { IoElement, Register } from 'io-gui';
+import { MenuOptions, MenuItem } from 'io-menus';
 
 // TODO: improve this test-demo
 
