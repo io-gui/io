@@ -4,9 +4,15 @@
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-sliders, a set of sliders for Io-Gui.",
-  "main": "build/io-sliders.js",
-  "module": "build/io-sliders.js",
-  "types": "build/io-sliders.d.ts",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    }
+  },
   "files": [
     "/src/",
     "/build/",
@@ -33,5 +39,8 @@
   "bugs": {
     "url": "https://github.com/iogui/iogui/issues"
   },
-  "homepage": "https://iogui.dev"
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-gui": "^2.0.0"
+  }
 }

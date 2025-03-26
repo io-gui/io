@@ -37,7 +37,7 @@
 
     "build": "pnpm clean && pnpm lint && tsc --project ./tsconfig.json && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-gui.d.ts build/io-gui.d.ts && rm -rf build && mv bundle build",
     "build:color": "pnpm clean:color && pnpm lint:color && tsc --project ./packages/io-color/tsconfig.json && rollup -c ./packages/io-color/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-color/bundle/io-color.d.ts ./packages/io-color/build/io-color.d.ts && rm -rf ./packages/io-color/build && mv ./packages/io-color/bundle ./packages/io-color/build",
-    "build:icons": "pnpm clean:icons && pnpm lint:icons && tsc --project ./packages/io-icons/tsconfig.json && rollup -c ./packages/io-icons/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-icons/bundle/io-icons.d.ts ./packages/io-icons/build/io-icons.d.ts && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
+    "build:icons": "pnpm clean:icons && pnpm lint:icons && tsc --project ./packages/io-icons/tsconfig.json && rollup -c ./packages/io-icons/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-icons/bundle/index.d.ts ./packages/io-icons/build/index.d.ts && dts-bundle-generator --export-referenced-types false -o packages/io-icons/bundle/index.test.d.ts ./packages/io-icons/build/index.test.d.ts && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
     "build:inputs": "pnpm clean:inputs && pnpm lint:inputs && tsc --project ./packages/io-inputs/tsconfig.json && rollup -c ./packages/io-inputs/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-inputs/bundle/index.d.ts ./packages/io-inputs/build/index.d.ts && dts-bundle-generator --export-referenced-types false -o packages/io-inputs/bundle/index.test.d.ts ./packages/io-inputs/build/index.test.d.ts && rm -rf ./packages/io-inputs/build && mv ./packages/io-inputs/bundle ./packages/io-inputs/build",
     "build:inspector": "pnpm clean:inspector && pnpm lint:inspector && tsc --project ./packages/io-inspector/tsconfig.json && rollup -c ./packages/io-inspector/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-inspector/bundle/io-inspector.d.ts ./packages/io-inspector/build/io-inspector.d.ts && rm -rf ./packages/io-inspector/build && mv ./packages/io-inspector/bundle ./packages/io-inspector/build",
     "build:markdown": "pnpm clean:markdown && pnpm lint:markdown && tsc --project ./packages/io-markdown/tsconfig.json && rollup -c ./packages/io-markdown/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-markdown/bundle/io-markdown.d.ts ./packages/io-markdown/build/io-markdown.d.ts && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
@@ -55,7 +55,7 @@
     "dev:navigator": "tsc -w --project ./packages/io-navigator/tsconfig.json",
     "dev:sliders": "tsc -w --project ./packages/io-sliders/tsconfig.json",
     "test": "web-test-runner \"test.html\"",
-    "test:watch": "web-test-runner \"test.html\" --manual --open --debug",
+    "test:watch": "web-test-runner \"test.html\" --watch",
 
     "docs": "typedoc --plugin typedoc-plugin-markdown",
     "serve": "pnpm wds --watch"

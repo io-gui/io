@@ -4,9 +4,15 @@
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-inspector, a set of object inspector elements for Io-Gui.",
-  "main": "build/io-inspector.js",
-  "module": "build/io-inspector.js",
-  "types": "build/io-inspector.d.ts",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    }
+  },
   "files": [
     "/src/",
     "/build/",
@@ -34,5 +40,8 @@
   "bugs": {
     "url": "https://github.com/iogui/iogui/issues"
   },
-  "homepage": "https://iogui.dev"
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-gui": "^2.0.0"
+  }
 }

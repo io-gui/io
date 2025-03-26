@@ -1,12 +1,18 @@
 {
-  "name": "io-icons",
+  "name": "io-iconset",
   "version": "1.0.0-rc1",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-Icons, a set of icons for Io-Gui.",
-  "main": "build/io-icons.js",
-  "module": "build/io-icons.js",
-  "types": "build/io-icons.d.ts",
+  "description": "Io-Iconset, a set of icons for Io-Gui.",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    }
+  },
   "files": [
     "/src/",
     "/build/",
@@ -25,12 +31,15 @@
     "iogui",
     "io-gui",
     "icons",
-    "io-icons"
+    "io-iconset"
   ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/iogui/iogui/issues"
   },
-  "homepage": "https://iogui.dev"
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-gui": "^2.0.0"
+  }
 }

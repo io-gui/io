@@ -1,4 +1,4 @@
-import { IoString } from './index';
+import { IoString } from './index.js';
 export default class {
     element: IoString;
     constructor();

@@ -10,6 +10,7 @@ export function makeConfig(projectPath) {
       sourceType: "module",
       globals: {
         ...globals.browser,
+        'expect': true,
         'it': true,
         'describe': true,
         'mocha': true,

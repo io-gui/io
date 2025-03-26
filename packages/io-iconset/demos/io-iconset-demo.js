@@ -1,10 +1,9 @@
 import { Register, IoElement, IoIconsetDB } from 'io-gui';
 
-export class IoIconsDemo extends IoElement {
+export class IoIconsetDemo extends IoElement {
   init() {
-    super.init();
     this.template([
-      ['div', {class: 'row'}, (()=>{
+      (()=>{
         const icons = [];
         for (const set of Object.keys(IoIconsetDB)) {
           icons.push(['h3', set]);
@@ -14,8 +13,8 @@ export class IoIconsDemo extends IoElement {
           }
         }
         return icons;
-      })()],
+      })(),
     ])
   }
 }
-Register(IoIconsDemo);
+Register(IoIconsetDemo);

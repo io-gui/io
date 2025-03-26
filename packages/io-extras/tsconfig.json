@@ -7,6 +7,10 @@
       "io-gui": ["../../"],
       "io-navigator": ["../io-navigator/"]
     },
+    "types": [
+      "../../types/global.d.ts",
+      "../../node_modules/@types/mocha/index.d.ts"
+    ]
   },
   "include": [
     "./src"

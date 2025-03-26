@@ -7,6 +7,10 @@
       "io-gui": ["../../"],
       "io-sliders": ["../io-sliders/"]
     },
+    "types": [
+      "../../types/global.d.ts",
+      "../../node_modules/@types/mocha/index.d.ts"
+    ]
   },
   "include": [
     "./src"

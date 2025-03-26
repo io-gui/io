@@ -6,9 +6,14 @@
     "paths": {
       "io-color": ["./packages/io-color"],
       "io-color/*": ["./packages/io-color/*"],
+      "io-iconset": ["./packages/io-iconset"],
+      "io-iconset/*": ["./packages/io-iconset/*"],
       "io-inputs": ["./packages/io-inputs"],
       "io-inputs/*": ["./packages/io-inputs/*"]
     },
+    "types": [
+      "./types/global.d.ts",
+    ]
   },
   "typedocOptions": {
     "hideBreadcrumbs": true,

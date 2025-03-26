@@ -1,0 +1,37 @@
+import { IoElement } from 'io-gui';
+import { IoNumber } from './io-number';
+import './io-number-ladder-step';
+/**
+ * Interactive number ladder.
+ * When dragged horizontally, it changes the value in step increments.
+ * Dragging speed affects the rate of change exponentially.
+ * Up/down arrow keys change the step focus while left/right change the value in step increments.
+ * Escape key collapses the ladder and restores the focus to previously focused element.
+ * If shift key is pressed, value is rounded to the nearest step incement.
+ *
+ * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
+ **/
+export declare class IoNumberLadder extends IoElement {
+    static get Style(): string;
+    role: string;
+    src?: IoNumber;
+    expanded: boolean;
+    static get Listeners(): {
+        'ladder-step-change': string;
+        'ladder-step-collapse': string;
+        focusin: string;
+    };
+    get value(): number;
+    get min(): number;
+    get max(): number;
+    get step(): number;
+    get conversion(): number;
+    _onFocusIn(event: FocusEvent): void;
+    _onFocusTo(event: CustomEvent): void;
+    _onLadderStepChange(event: CustomEvent): void;
+    _onLadderStepCollapse(): void;
+    expandedChanged(): void;
+    changed(): void;
+}
+export declare const IoNumberLadderSingleton: IoNumberLadder;
+//# sourceMappingURL=io-number-ladder.d.ts.map

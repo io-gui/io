@@ -59,4 +59,4 @@ const icons = /* html */`
 </g>
 </svg>`;
 
-IoIconsetSingleton.registerIcons('icons', icons);
+IoIconsetSingleton.registerIcons('io', icons);

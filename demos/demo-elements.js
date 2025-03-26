@@ -1,8 +1,9 @@
 import { Register, IoElement, IoStorage } from 'io-gui';
 import { MenuItem, MenuOptions } from 'io-menus';
 import './menu-model.js';
-import 'io-icons';
-import '../packages/io-icons/demos/io-icons-demo.js';
+import 'io-iconset';
+import '../packages/io-inputs/demos/io-inputs-demo.js';
+import '../packages/io-iconset/demos/io-iconset-demo.js';
 
 function $(key) {
   return IoStorage({key: key, value: false, storage: 'local'})
@@ -242,47 +243,11 @@ export class IoDemoElements extends IoElement {
   }
   init() {
     this.template([
-      ['io-collapsable', {label: 'Basic', expanded: $('expanded-demo-basic'), elements: [
-        ['div', {class: 'row'}, [
-          ['io-field', {value: this.bind('string')}],
-          ['io-field', {value: this.bind('string'), appearance: 'outset'}],
-          ['io-field', {value: this.bind('string'), appearance: 'inset'}],
-          ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
-          ['io-field', {value: this.bind('string'), invalid: true}],
-          ['io-field', {value: this.bind('string'), class: 'green'}],
-          ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
-          ['io-field', {icon: 'io:circle_warning'}],
-        ]],
-        ['div', {class: 'row'}, [
-          ['io-string', {value: this.bind('string'), placeholder: 'io-string'}],
-          ['io-string', {value: this.bind('string'), placeholder: 'io-string', live: true}],
-        ]],
-        ['div', {class: 'row'}, [
-          ['io-number', {value: this.bind('number')}],
-          ['io-number', {ladder: true, value: this.bind('number')}],
-          ['io-number', {conversion: 2, value: this.bind('number')}],
-        ]],
-        ['div', {class: 'row'}, [
-          ['io-boolicon', {value: this.bind('boolean'), true: 'io:box_fill_checked', false: 'io:box'}],
-          ['io-boolean', {value: this.bind('boolean')}],
-        ]],
-        ['div', {class: 'row'}, [
-          ['io-switch', {value: this.bind('boolean')}],
-        ]],
-        ['div', {class: 'row'}, [
-          ['io-button', {label: 'Button', icon: 'io:check'}],
-          ['io-button', {label: 'Button', icon: 'io:check', appearance: 'inset'}],
-          ['io-button', {label: 'Button', icon: 'io:check', appearance: 'flush'}],
-          ['io-button', {label: 'Button', icon: 'io:check', appearance: 'neutral'}],
-        ]],
-        ['div', {class: 'row'}, [
-          ['io-icon', {icon: 'io:io'}],
-          ['io-icon', {icon: 'ℹ️'}],
-          ['io-icon', {icon: '❤️'}],
-          ['io-icon', {icon: 'io:io', stroke: true}],
-          ['io-icon', {icon: 'io:io_logo', stroke: true}],
-        ]],
-        ['io-icons-demo'],
+      ['io-collapsable', {label: 'io-inputs-demo', expanded: $('expanded-io-inputs-demo'), elements: [
+        ['io-inputs-demo', {string: this.bind('string'), number: this.bind('number'), boolean: this.bind('boolean')}],
+      ]}],
+      ['io-collapsable', {label: 'io-iconset-demo', expanded: $('expanded-io-iconset-demo'), elements: [
+        ['io-iconset-demo'],
       ]}],
       ['io-collapsable', {label: 'Sliders', expanded: $('expanded-sliders-basic'), elements: [
         ['io-slider', {value: this.bind('number'), min: 0, max: 2, step: 0.1}],

@@ -1,4 +1,4 @@
-import { IoSwitch } from './index';
+import { IoSwitch } from './index.js';
 export default class {
     element: IoSwitch;
     constructor();

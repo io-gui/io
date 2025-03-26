@@ -4,9 +4,15 @@
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-navigator, a set of navigators for Io-Gui.",
-  "main": "build/io-navigator.js",
-  "module": "build/io-navigator.js",
-  "types": "build/io-navigator.d.ts",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    }
+  },
   "files": [
     "/src/",
     "/build/",
@@ -33,5 +39,9 @@
   "bugs": {
     "url": "https://github.com/iogui/iogui/issues"
   },
-  "homepage": "https://iogui.dev"
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-gui": "^2.0.0",
+    "io-menus": "^2.0.0"
+  }
 }

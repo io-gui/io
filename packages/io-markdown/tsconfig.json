@@ -6,6 +6,10 @@
     "paths": {
       "io-gui": ["../../"],
     },
+    "types": [
+      "../../types/global.d.ts",
+      "../../node_modules/@types/mocha/index.d.ts"
+    ]
   },
   "include": [
     "./src"
