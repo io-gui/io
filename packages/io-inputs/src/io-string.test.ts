@@ -1,5 +1,4 @@
 import { IoString } from './index';
-import { expect } from 'chai';
 
 export default class {
   element = new IoString();

@@ -1,5 +1,4 @@
 import { IoThemeSingleton } from '../io-gui';
-import { expect } from 'chai';
 
 const theme = IoThemeSingleton;
 const binding = theme._properties.get('themeID')!.binding;

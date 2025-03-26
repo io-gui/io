@@ -1,5 +1,4 @@
 import { Register, IoElement, IoNode, Change, PropertyDefinitions } from '../io-gui';
-import { expect } from 'chai';
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);

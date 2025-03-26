@@ -1,5 +1,4 @@
 import { IoSwitch } from './index';
-import { expect } from 'chai';
 
 export default class {
   element = new IoSwitch();

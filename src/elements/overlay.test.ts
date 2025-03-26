@@ -1,5 +1,4 @@
 import { IoOverlaySingleton } from '../io-gui';
-import { expect } from 'chai';
 
 export default class {
   run() {

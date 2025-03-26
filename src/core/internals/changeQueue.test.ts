@@ -1,5 +1,4 @@
 import { ChangeQueue, Change, IoNode, Register } from '../../io-gui';
-import { expect } from 'chai';
 
 @Register
 class MockIoNode extends IoNode {

@@ -1,5 +1,4 @@
 import { MenuItem } from './menu-item.js';
-import { expect } from 'chai';
 
 export default class {
   run() {

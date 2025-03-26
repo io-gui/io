@@ -1,5 +1,4 @@
 import { IoProperties } from './io-properties.js';
-import { expect } from 'chai';
 
 const testValue = {
   'number': 0.5,

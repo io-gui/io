@@ -1,5 +1,4 @@
 import { IoNumberSliderRange } from './io-sliders';
-import { expect } from 'chai';
 
 export default class {
   element = new IoNumberSliderRange();

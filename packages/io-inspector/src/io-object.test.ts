@@ -1,5 +1,4 @@
 import { IoObject } from './io-object.js';
-import { expect } from 'chai';
 
 const testValue = {
   'number': 0.5,

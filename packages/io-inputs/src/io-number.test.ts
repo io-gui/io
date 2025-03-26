@@ -1,6 +1,5 @@
 import { nextQueue } from 'io-gui';
 import { IoNumber, IoNumberLadder, IoNumberLadderStep } from './index';
-import { expect } from 'chai';
 
 const element = new IoNumber();
 element.style.display = 'none';

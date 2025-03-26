@@ -1,5 +1,4 @@
 import { IoGl, IoNode, IoThemeSingleton } from '../io-gui';
-import { expect } from 'chai';
 
 const element = new IoGl();
 element.size = [0, 0];

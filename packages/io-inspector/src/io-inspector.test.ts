@@ -1,5 +1,4 @@
 import { IoInspector } from './io-inspector.js';
-import { expect } from 'chai';
 
 export default class {
   element = new IoInspector();

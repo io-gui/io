@@ -1,6 +1,5 @@
 import { IoIconsetSingleton } from 'io-gui';
 import { IoBoolean } from './index';
-import { expect } from 'chai';
 
 const element = new IoBoolean();
 element.style.display = 'none';

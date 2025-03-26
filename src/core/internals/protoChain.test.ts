@@ -1,6 +1,5 @@
 import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../../io-gui';
 
-import { expect } from 'chai';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

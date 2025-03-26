@@ -1,5 +1,4 @@
 import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../io-gui';
-import { expect } from 'chai';
 
 export default class {
   run() {

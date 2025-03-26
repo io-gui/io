@@ -3,18 +3,14 @@ export * from './core/internals/eventDispatcher';
 export * from './core/internals/property';
 export * from './core/internals/binding';
 export * from './core/internals/protoChain';
-
 export * from './core/decorators/autobind';
 export * from './core/decorators/register';
 export * from './core/decorators/property';
-
 export * from './core/node';
 export * from './core/element';
-
 export * from './nodes/iconset';
 export * from './nodes/storage';
 export * from './nodes/theme';
-
 export * from './elements/field';
 export * from './elements/gl';
 export * from './elements/gl.glsl';

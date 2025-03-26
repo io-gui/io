@@ -1,5 +1,4 @@
 import { Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, propertyDecorators } from '../../io-gui';
-import { expect } from 'chai';
 
 class Object1 {
   constructor(init?: any) {

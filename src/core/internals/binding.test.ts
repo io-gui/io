@@ -1,5 +1,4 @@
 import { Binding, IoNode, Register, PropertyDefinitions } from '../../io-gui';
-import { expect } from 'chai';
 
 @Register
 class TestIoNode extends IoNode {

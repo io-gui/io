@@ -3,7 +3,12 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./build",
-    "paths": {},
+    "paths": {
+      "io-color": ["./packages/io-color"],
+      "io-color/*": ["./packages/io-color/*"],
+      "io-inputs": ["./packages/io-inputs"],
+      "io-inputs/*": ["./packages/io-inputs/*"]
+    },
   },
   "typedocOptions": {
     "hideBreadcrumbs": true,

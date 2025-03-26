@@ -1,5 +1,4 @@
 import { IoField, IoIconsetSingleton } from '../io-gui';
-import { expect } from 'chai';
 
 const element = new IoField();
 element.style.display = 'none';

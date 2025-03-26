@@ -1,6 +1,5 @@
 import { nextQueue } from 'io-gui';
 import { IoSlider } from './io-sliders';
-import { expect } from 'chai';
 
 const element = new IoSlider();
 

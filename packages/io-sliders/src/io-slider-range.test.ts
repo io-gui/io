@@ -1,6 +1,5 @@
 import { nextQueue } from 'io-gui';
 import { IoSliderRange } from './io-sliders';
-import { expect } from 'chai';
 
 export default class {
   element = new IoSliderRange({value: [0, 0]});

@@ -1,5 +1,4 @@
 import { IoStorageNode, IoStorage, Binding } from '../io-gui';
-import { expect } from 'chai';
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {

@@ -1,5 +1,4 @@
 import { IoNode, Register, ListenerDefinitions, EventDispatcher } from '../../io-gui';
-import { expect } from 'chai';
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockIoNode1).eventStack.push(`handlerFunction ${event.detail}`);
