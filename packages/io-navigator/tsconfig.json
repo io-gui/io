@@ -4,11 +4,12 @@
     "rootDir": "./src",
     "outDir": "./build",
     "paths": {
-      "io-gui": ["../../"],
-      "io-menus": ["../io-menus/"]
+      "io-gui": ["../io-gui/"],
+      "io-menus": ["../io-menus/"],
+      "io-markdown": ["../io-markdown/"]
     },
     "types": [
-      "../../types/global.d.ts",
+      "../../global.d.ts",
       "../../node_modules/@types/mocha/index.d.ts"
     ]
   },

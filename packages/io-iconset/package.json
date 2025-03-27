@@ -1,6 +1,6 @@
 {
   "name": "io-iconset",
-  "version": "1.0.0-rc1",
+  "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Iconset, a set of icons for Io-Gui.",

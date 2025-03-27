@@ -4,18 +4,6 @@ import { ObjectWidgets } from './models/object-widgets.js';
 import { ProtoObjectConfig } from './io-properties.js';
 import './io-breadcrumbs.js';
 
-export * from './models/object-config.js';
-export * from './models/object-groups.js';
-export * from './models/object-widgets.js';
-
-export * from './io-breadcrumbs.js';
-export * from './io-inspector.js';
-export * from './io-object.js';
-export * from './io-properties.js';
-export * from './io-vector.js';
-export * from './io-matrix.js';
-export * from './io-vectors-iconset.js';
-
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/

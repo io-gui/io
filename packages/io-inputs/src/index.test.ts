@@ -6,6 +6,7 @@ import NumberLadderElementTest from './io-number-ladder.test';
 import NumberLadderStepElementTest from './io-number-ladder-step.test';
 import StringElementTest from './io-string.test';
 import SwitchElementTest from './io-switch.test';
+
 export default class {
   run() {
     new BooleanElementTest().run();

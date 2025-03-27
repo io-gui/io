@@ -1,5 +1,5 @@
-import { convert } from './lib/convert.js';
 import { IoElement, Property } from 'io-gui';
+import { convert } from './lib/convert.js';
 
 export class IoColorBase extends IoElement {
 

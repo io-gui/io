@@ -1,4 +1,4 @@
-import { IoNumberSliderRange } from './io-sliders';
+import { IoNumberSliderRange } from './index';
 
 export default class {
   element = new IoNumberSliderRange();

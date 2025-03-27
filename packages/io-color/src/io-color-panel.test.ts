@@ -1,4 +1,4 @@
-import { IoColorPanel } from './io-color-panel.js';
+import { IoColorPanel } from './index';
 // import { expect } from 'chai';
 
 const element = new IoColorPanel();

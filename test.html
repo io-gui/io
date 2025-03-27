@@ -8,24 +8,77 @@
     <script type="importmap">
       {
         "imports": {
-          "io-gui": "./build/io-gui.js",
-          "io-color": "./packages/io-color/build/io-color.js",
-
+          "io-gui": "./packages/io-gui/build/index.js",
+          "io-gui/": "./packages/io-gui/build/",
+          "io-color": "./packages/io-color/build/index.js",
+          "io-color/": "./packages/io-color/build/",
           "io-iconset": "./packages/io-iconset/build/index.js",
-          "io-iconset/": "./packages/io-iconset/",
+          "io-iconset/": "./packages/io-iconset/build/",
           "io-inputs": "./packages/io-inputs/build/index.js",
-          "io-inputs/": "./packages/io-inputs/",
-
-          "io-inputs-tests": "./packages/io-inputs/build/index.test.js",
-          "io-inspector": "./packages/io-inspector/build/io-inspector.js",
-          "io-markdown": "./packages/io-markdown/build/io-markdown.js",
-          "io-menus": "./packages/io-menus/build/io-menus.js",
-          "io-navigator": "./packages/io-navigator/build/io-navigator.js",
-          "io-sliders": "./packages/io-sliders/build/io-sliders.js"
+          "io-inputs/": "./packages/io-inputs/build/",
+          "io-inspector": "./packages/io-inspector/build/index.js",
+          "io-inspector/": "./packages/io-inspector/build/",
+          "io-markdown": "./packages/io-markdown/build/index.js",
+          "io-markdown/": "./packages/io-markdown/build/",
+          "io-menus": "./packages/io-menus/build/index.js",
+          "io-menus/": "./packages/io-menus/build/",
+          "io-navigator": "./packages/io-navigator/build/index.js",
+          "io-navigator/": "./packages/io-navigator/build/",
+          "io-sliders": "./packages/io-sliders/build/index.js",
+          "io-sliders/": "./packages/io-sliders/build/"
         }
       }
     </script>
-    <script type="module" src="./build/io-gui.test.js"></script>
+    <script type="module">
+      import { mocha, sessionFinished, sessionFailed } from '@web/test-runner-mocha';
+      import { expect } from 'chai';
+
+      import GuiTest from 'io-gui/index.test.js';
+      import ColorsTest from 'io-color/index.test.js';
+      // import ExtrasTest from 'io-extras/index.test.js';
+      import IconsetTest from 'io-iconset/index.test.js';
+      import InputsTest from 'io-inputs/index.test.js';
+      // import InspectorTest from 'io-inspector/index.test.js';
+      // import MarkdownTest from 'io-markdown/index.test.js';
+      import MenusTest from 'io-menus/index.test.js';
+      // import NavigatorTest from 'io-navigator/index.test.js';
+      import SlidersTest from 'io-sliders/index.test.js';
+
+
+
+      window.expect = expect;
+
+      const mochaDiv = document.createElement('div');
+      mochaDiv.setAttribute('id', 'mocha');
+      document.body.appendChild(mochaDiv);
+      mochaDiv.style.display = 'none';
+
+      try {
+        mocha.setup({ ui: 'bdd' });
+      } catch (error) {
+        console.error(error);
+      }
+
+      try {
+        new GuiTest().run();
+        new ColorsTest().run();
+        // new ExtrasTest().run();
+        new IconsetTest().run();
+        new InputsTest().run();
+        // new InspectorTest().run();
+        // new MarkdownTest().run();
+        new MenusTest().run();
+        // new NavigatorTest().run();
+        new SlidersTest().run();
+
+        mocha.checkLeaks();
+        mocha.run(() => {
+          sessionFinished();
+        });
+      } catch (error) {
+        await sessionFailed(error);
+      }
+    </script>
     <style>
       html, body {
         margin: 0;

@@ -5,10 +5,10 @@
     "outDir": "./build",
     "paths": {
       "io-inputs": ["."],
-      "io-gui": ["../../"],
+      "io-gui": ["../io-gui/"],
     },
     "types": [
-      "../../types/global.d.ts",
+      "../../global.d.ts",
       "../../node_modules/@types/mocha/index.d.ts"
     ]
   },

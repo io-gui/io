@@ -1,6 +1,6 @@
 import { Register, Property, glsl } from 'io-gui';
-import { IoColorBase } from './io-color-base.js';
 import { IoSlider, IoSlider2d } from 'io-sliders';
+import { IoColorBase } from './io-color-base.js';
 /**
  * A generic color slider element.
  * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.

@@ -1,4 +1,4 @@
-import { IoColorRgba } from './io-color-rgba.js';
+import { IoColorRgba } from './index';
 // import { expect } from 'chai';
 
 const element = new IoColorRgba();

@@ -1,6 +1,6 @@
 {
   "name": "io-navigator",
-  "version": "1.0.0-rc1",
+  "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-navigator, a set of navigators for Io-Gui.",
@@ -42,6 +42,7 @@
   "homepage": "https://iogui.dev",
   "peerDependencies": {
     "io-gui": "^2.0.0",
-    "io-menus": "^2.0.0"
+    "io-menus": "^2.0.0",
+    "io-markdown": "^2.0.0"
   }
 }

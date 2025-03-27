@@ -1,6 +1,6 @@
 {
   "name": "io-color",
-  "version": "1.0.0-rc1",
+  "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-color, a set of color editors for Io-Gui.",
@@ -11,6 +11,10 @@
     ".": {
       "types": "./build/index.d.ts",
       "import": "./build/index.js"
+    },
+    "./index.test.js": {
+      "types": "./types/index.test.d.ts",
+      "import": "./build/index.test.js"
     }
   },
   "files": [

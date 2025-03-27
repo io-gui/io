@@ -1,0 +1,46 @@
+{
+  "name": "io-gui",
+  "version": "2.0.0",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "Io-Gui core library, a UI framework for web development.",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/index.js"
+    },
+    "./index.test.js": {
+      "types": "./types/index.test.d.ts",
+      "import": "./build/index.test.js"
+    }
+  },
+  "files": [
+    "/src/",
+    "/build/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io",
+    "gui",
+    "md",
+    "iogui",
+    "io-gui",
+    "color",
+    "io-color"
+  ],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iogui/iogui/issues"
+  },
+  "homepage": "https://iogui.dev"
+}
