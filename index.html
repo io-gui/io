@@ -61,8 +61,9 @@
     <script type="importmap">
       {
         "imports": {
-          "io-gui": "./build/io-gui.js",
+          "io-gui": "./packages/io-gui/build/index.js",
           "io-color": "./packages/io-color/build/index.js",
+          "io-extras": "./packages/io-extras/build/index.js",
           "io-iconset": "./packages/io-iconset/build/index.js",
           "io-inputs": "./packages/io-inputs/build/index.js",
           "io-inspector": "./packages/io-inspector/build/index.js",
@@ -130,8 +131,14 @@
         ]},
       ]},
       {value: 'Demos', options: [
-        'Elements',
-        'Theme Editor',
+        {label: 'io-inputs', value: 'io-inputs-demo'},
+        {label: 'io-iconset', value: 'io-iconset-demo'},
+        {label: 'io-sliders', value: 'io-sliders-demo'},
+        {label: 'io-color', value: 'io-color-demo'},
+        {label: 'io-inspector', value: 'io-inspector-demo'},
+        {label: 'io-menus', value: 'io-menus-demo'},
+        {label: 'io-navigator', value: 'io-navigator-demo'},
+        'io-gui-theme-editor',
         'TODO MVC App',
       ]},
     ], {
@@ -174,9 +181,16 @@
               options: OPTIONS.getItem('Demos').options,
               cache: true,
               elements: [
-                ['io-demo-elements', {id: 'Elements', import: './demos/demo-elements.js'}],
-                ['io-demo-theme-editor', {id: 'Theme Editor', import: './demos/theme-editor.js'}],
-                ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],
+                ['io-inputs-demo', {id: 'io-inputs-demo', import: "./packages/io-inputs/demos/io-inputs-demo.js"}],
+                ['io-iconset-demo', {id: 'io-iconset-demo', import: "./packages/io-iconset/demos/io-iconset-demo.js"}],
+                ['io-sliders-demo', {id: 'io-sliders-demo', import: "./packages/io-sliders/demos/io-sliders-demo.js"}],
+                ['io-color-demo', {id: 'io-color-demo', import: "./packages/io-color/demos/io-color-demo.js"}],
+                ['io-inspector-demo', {id: 'io-inspector-demo', import: "./packages/io-inspector/demos/io-inspector-demo.js"}],
+                ['io-menus-demo', {id: 'io-menus-demo', import: "./packages/io-menus/demos/io-menus-demo.js"}],
+                ['io-navigator-demo', {id: 'io-navigator-demo', import: "./packages/io-navigator/demos/io-navigator-demo.js"}],
+                ['io-gui-theme-editor', {id: 'io-gui-theme-editor', import: './packages/io-gui/demos/io-gui-theme-editor.js'}],
+
+                ['iframe', {id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}],
               ]
             }],
           ]

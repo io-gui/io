@@ -1,4 +1,5 @@
 import { Register, IoElement, IoIconsetDB } from 'io-gui';
+import 'io-iconset';
 
 export class IoIconsetDemo extends IoElement {
   init() {
