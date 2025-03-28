@@ -122,6 +122,9 @@ export class IoProperties extends IoElement {
     `;
   }
 
+  @Property({type: String, value: 'debounced'})
+  declare reactivity: 'none' | 'immediate' | 'debounced';
+
   @Property({type: Object})
   declare value: Record<string, any> | any[];
 
@@ -165,19 +168,15 @@ export class IoProperties extends IoElement {
       const oldValue = event.detail.oldValue;
       this.value[prop] = value;
       const detail = {object: this.value, property: prop, value: value, oldValue: oldValue};
+      // TODO: see if this is redundant with auto dispatch from changeQueue.
+      // It might not be necessary for IoNode values.
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
     }
   }
   valueMutated() {
-    this._changedThrottled();
+    this.changed();
   }
   changed() {
-    this._changedThrottled();
-  }
-  _changedThrottled() {
-    this.throttle(this._onChange, undefined); // TODO: consider async
-  }
-  _onChange() {
     const config = this.__proto__._protoConfig.getObjectConfig(this.value);
     Object.assign(config, this.config);
 

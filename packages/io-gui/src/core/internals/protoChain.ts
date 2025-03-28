@@ -235,9 +235,9 @@ export class ProtoChain {
     for (const name in this.properties) {
       const prop = this.properties[name];
       if ([String, Number, Boolean].indexOf(prop.type as any) !== -1) {
-        if (prop.type === Boolean && typeof prop.value !== 'boolean' ||
-            prop.type === Number && typeof prop.value !== 'number' ||
-            prop.type === String && typeof prop.value !== 'string') {
+        if (prop.type === Boolean && prop.value !== undefined && typeof prop.value !== 'boolean' ||
+            prop.type === Number && prop.value !== undefined && typeof prop.value !== 'number' ||
+            prop.type === String && prop.value !== undefined && typeof prop.value !== 'string') {
           console.warn(`Property "${name}" in ProtoChain: Incorrect value type for ${prop.type} property!`);
         }
       } else {

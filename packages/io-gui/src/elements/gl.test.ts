@@ -64,7 +64,6 @@ export default class {
       });
       it('has <canvas> element', () => {
         expect(element.children[0].localName).to.equal('canvas');
-        expect((element as IoGl).canvas.localName).to.equal('canvas');
       });
       it('has correct size and pxRatio', () => {
         element.style.border = 'none';

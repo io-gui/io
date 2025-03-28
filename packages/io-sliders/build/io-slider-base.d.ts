@@ -1,5 +1,6 @@
 import { IoGl } from 'io-gui';
 export declare class IoSliderBase extends IoGl {
+    #private;
     static get Style(): string;
     value: number | [number, number] | {
         x: number;
@@ -22,12 +23,6 @@ export declare class IoSliderBase extends IoGl {
     noscroll: boolean;
     role: string;
     tabindex: string;
-    _startX: number;
-    _startY: number;
-    _active: number;
-    _rect: DOMRect | null;
-    get _min(): [number, number];
-    get _max(): [number, number];
     get _step(): [number, number];
     get _value(): [number, number];
     static get Listeners(): {

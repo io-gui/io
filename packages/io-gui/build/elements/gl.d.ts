@@ -2,6 +2,7 @@ import { IoElement } from '../core/element';
 import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
 import { IoThemeSingleton } from '../nodes/theme';
 export declare class IoGl extends IoElement {
+    #private;
     static get Style(): string;
     transparent: boolean;
     size: [number, number];
@@ -9,9 +10,6 @@ export declare class IoGl extends IoElement {
     pxRatio: number;
     theme: typeof IoThemeSingleton;
     reactivity: string;
-    needsResize: boolean;
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
     static get Vert(): string;
     static get GlUtils(): string;
     static get Frag(): string;
@@ -19,6 +17,7 @@ export declare class IoGl extends IoElement {
     initShader(): WebGLProgram;
     constructor(properties?: Record<string, any>);
     onResized(): void;
+    get ctx(): CanvasRenderingContext2D;
     themeMutated(): void;
     changed(): void;
     _onRender(): void;

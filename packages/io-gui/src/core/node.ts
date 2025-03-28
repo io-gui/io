@@ -63,6 +63,14 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       // eslint-disable-next-line constructor-super
       super(...args);
 
+      if (this._isIoElement) {
+        Object.defineProperty(this, '$', {
+          value: {},
+          writable: true,
+          enumerable: false,
+        });
+      }
+
       debug: {
         const constructor = Object.getPrototypeOf(this).constructor;
         if (this._protochain.constructors[0] !== constructor) {
@@ -290,7 +298,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      */
     onPropertyMutated(event: CustomEvent) {
       const object = event.detail.object;
-      const properties = event.target === window ? this._protochain.observedObjectProperties : this._protochain.observedIoNodeProperties;
+      // TODO: consider situations where node is listening to object-mutated events from multiple sources (window and property).
+      // This might cause multiple executions of the same handler.
+      // TODO: consider optimizing. This handler might be called a lot.
+      const properties = [...new Set([...this._protochain.observedObjectProperties, ...this._protochain.observedIoNodeProperties])];
       for (let i = 0; i < properties.length; i++) {
         const name = properties[i];
         const value = this._properties.get(name)!.value;

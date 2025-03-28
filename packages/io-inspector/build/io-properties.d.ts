@@ -14,6 +14,7 @@ export declare class ProtoObjectConfig extends Map<Constructor, Map<PropertyType
  **/
 export declare class IoProperties extends IoElement {
     static get Style(): string;
+    reactivity: 'none' | 'immediate' | 'debounced';
     value: Record<string, any> | any[];
     properties: string[];
     config: Record<string, any>;
@@ -23,8 +24,6 @@ export declare class IoProperties extends IoElement {
     _onValueInput(event: CustomEvent): void;
     valueMutated(): void;
     changed(): void;
-    _changedThrottled(): void;
-    _onChange(): void;
     Register(ioNodeConstructor: typeof IoNode): void;
 }
 export {};

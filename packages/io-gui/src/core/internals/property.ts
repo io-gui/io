@@ -199,11 +199,11 @@ export class PropertyInstance {
           if (this.type === Boolean && typeof this.value !== 'boolean' ||
               this.type === Number && typeof this.value !== 'number' ||
               this.type === String && typeof this.value !== 'string') {
-            console.warn(`Property: Incorrect value ${this.value} type for property ${name}!`);
+            console.warn(`Property: Incorrect value "${this.value}" type for property!`);
           }
         } else {
           if (typeof this.type === 'function' && !(this.value instanceof this.type)) {
-            console.warn(`Property: Incorrect value ${this.value} type for property ${name}!`);
+            console.warn(`Property: Incorrect value "${this.value}" type for property!`);
           }
         }
       }

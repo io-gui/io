@@ -70,9 +70,11 @@ export class IoGl extends IoElement {
   @Property('debounced')
   declare reactivity: string;
 
-  needsResize = false;
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
+  #needsResize = false;
+  #canvas: HTMLCanvasElement;
+  #ctx: CanvasRenderingContext2D;
+  #vecLengths: Record<string, number>;
+  #shader: WebGLProgram;
 
   static get Vert() {
     return /* glsl */`
@@ -116,10 +118,10 @@ export class IoGl extends IoElement {
       case Number:
         return 'uniform float ' + name + ';\n';
       case Array:
-        this._vecLengths[name] = property.value.length;
+        this.#vecLengths[name] = property.value.length;
         return 'uniform vec' + property.value.length + ' ' + name + ';\n';
       case Color:
-        this._vecLengths[name] = 4;
+        this.#vecLengths[name] = 4;
         return 'uniform vec4 ' + name + ';\n';
       default:
     }
@@ -172,41 +174,41 @@ export class IoGl extends IoElement {
   constructor(properties: Record<string, any> = {}) {
     super(properties);
 
-    this.canvas = document.createElement('canvas');
-    this.appendChild(this.canvas);
-    this.ctx = this.canvas.getContext('2d', {alpha: true}) as CanvasRenderingContext2D;
+    this.#canvas = document.createElement('canvas');
+    this.appendChild(this.#canvas);
+    this.#ctx = this.#canvas.getContext('2d', {alpha: true}) as CanvasRenderingContext2D;
 
     // TODO: improve code clarity
-    this._vecLengths = {};
+    this.#vecLengths = {};
     this.theme._properties.forEach((property, name) => {
       // TODO: consider making more type agnostic
       if (property.type === Color) {
-        this._vecLengths['io_' + name] = 4;
+        this.#vecLengths['io_' + name] = 4;
       }
     });
 
     this._properties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       if (property.type === Array) {
-        this._vecLengths[uname] = property.value.length;
+        this.#vecLengths[uname] = property.value.length;
       }
     });
 
     if (shadersCache.has(this.constructor)) {
-      this._shader = shadersCache.get(this.constructor);
+      this.#shader = shadersCache.get(this.constructor);
     } else {
-      this._shader = this.initShader();
-      shadersCache.set(this.constructor, this._shader);
+      this.#shader = this.initShader();
+      shadersCache.set(this.constructor, this.#shader);
     }
 
-    gl.linkProgram(this._shader);
+    gl.linkProgram(this.#shader);
 
-    const position = gl.getAttribLocation(this._shader, 'position');
+    const position = gl.getAttribLocation(this.#shader, 'position');
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuff);
     gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(position);
 
-    const uv = gl.getAttribLocation(this._shader, 'uv');
+    const uv = gl.getAttribLocation(this.#shader, 'uv');
     gl.bindBuffer(gl.ARRAY_BUFFER, uvBuff);
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(uv);
@@ -229,15 +231,18 @@ export class IoGl extends IoElement {
 
     if (hasResized) {
       // NOTE: Resizing only in inline CSS. Buffer resize postponed until `_onRender()`.`
-      this.canvas.style.width = Math.floor(width) + 'px';
-      this.canvas.style.height = Math.floor(height) + 'px';
-      this.needsResize = true;
+      this.#canvas.style.width = Math.floor(width) + 'px';
+      this.#canvas.style.height = Math.floor(height) + 'px';
+      this.#needsResize = true;
 
       this.setProperties({
         size: [width, height],
         pxRatio: pxRatio,
       });
     }
+  }
+  get ctx() {
+    return this.#ctx;
   }
   themeMutated() {
     this.updateThemeUniforms();
@@ -260,10 +265,10 @@ export class IoGl extends IoElement {
       this.updatePropertyUniform(uname, property);
     });
 
-    if (this.needsResize) {
-      this.canvas.width = width;
-      this.canvas.height = height;
-      this.needsResize = false;
+    if (this.#needsResize) {
+      this.#canvas.width = width;
+      this.#canvas.height = height;
+      this.#needsResize = false;
     }
 
     canvas.width = width;
@@ -273,17 +278,17 @@ export class IoGl extends IoElement {
     if (this.transparent) {
       gl.clearColor(0, 0, 0, 0);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      this.ctx.clearRect(0, 0, width, height);
+      this.#ctx.clearRect(0, 0, width, height);
     }
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    this.ctx.drawImage(canvas, 0, 0);
+    this.#ctx.drawImage(canvas, 0, 0);
   }
   setShaderProgram() {
-    if (currentProgram !== this._shader) {
-      currentProgram = this._shader;
-      gl.useProgram(this._shader);
+    if (currentProgram !== this.#shader) {
+      currentProgram = this.#shader;
+      gl.useProgram(this.#shader);
     }
   }
   updatePropertyUniform(name: string, property: PropertyInstance) {
@@ -296,7 +301,7 @@ export class IoGl extends IoElement {
     });
   }
   setUniform(name: string, value: any) {
-    const uniform = gl.getUniformLocation(this._shader, name);
+    const uniform = gl.getUniformLocation(this.#shader, name);
     if (uniform === null) return;
     let type: string = typeof value;
     if (value instanceof Array) type = 'array';
@@ -317,7 +322,7 @@ export class IoGl extends IoElement {
           else if (value.h !== undefined) _c = ['h', 's', 'v', 'a'];
           else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k'];
         }
-        switch (this._vecLengths[name]) {
+        switch (this.#vecLengths[name]) {
           case 2:
             if (value === undefined) {
               gl.uniform2f(uniform, 0, 0);
