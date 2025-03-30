@@ -1,6 +1,6 @@
 import { Register, IoElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import 'io-navigator';
+import 'io-navigation';
 
 const contentElements = [
   ['div', {id: 'devs', class: 'vertical'}, [
@@ -82,7 +82,7 @@ const contentOptions = new MenuOptions([
 contentOptions[0].selected = true;
 contentOptions[0].options[3].selected = true;
 
-export class IoNavigatorDemo extends IoElement {
+export class IoNavigationDemo extends IoElement {
   static get Style() {
     return /* css */`
       :host .row {
@@ -126,4 +126,4 @@ export class IoNavigatorDemo extends IoElement {
   }
 }
 
-Register(IoNavigatorDemo);
+Register(IoNavigationDemo);

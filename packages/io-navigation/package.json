@@ -1,5 +1,5 @@
 {
-  "name": "io-navigator",
+  "name": "io-navigation",
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
@@ -32,7 +32,7 @@
     "iogui",
     "io-gui",
     "navigator",
-    "io-navigator"
+    "io-navigation"
   ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",

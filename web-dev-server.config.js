@@ -10,7 +10,7 @@ const importMapsModules = {
   'io-editors': '/packages/io-editors/build/index.js?wds-import-map=0',
   'io-markdown': '/packages/io-markdown/build/index.js?wds-import-map=0',
   'io-menus': '/packages/io-menus/build/index.js?wds-import-map=0',
-  'io-navigator': '/packages/io-navigator/build/index.js?wds-import-map=0',
+  'io-navigation': '/packages/io-navigation/build/index.js?wds-import-map=0',
   'io-sliders': '/packages/io-sliders/build/index.js?wds-import-map=0',
 };
 

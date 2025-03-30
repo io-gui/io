@@ -69,7 +69,7 @@
           "io-editors": "./packages/io-editors/build/index.js",
           "io-markdown": "./packages/io-markdown/build/index.js",
           "io-menus": "./packages/io-menus/build/index.js",
-          "io-navigator": "./packages/io-navigator/build/index.js",
+          "io-navigation": "./packages/io-navigation/build/index.js",
           "io-sliders": "./packages/io-sliders/build/index.js"
         }
       }
@@ -101,7 +101,7 @@
 
     import { Register, IoStorage as $, IoThemeSingleton } from 'io-gui';
     import 'io-markdown';
-    import { IoNavigatorSelector } from 'io-navigator';
+    import { IoNavigatorSelector } from 'io-navigation';
     import 'io-sliders';
     import 'io-colors';
     import { MenuOptions, MenuItem } from 'io-menus';
@@ -137,7 +137,7 @@
         {label: 'io-colors', value: 'io-colors-demo'},
         {label: 'io-editors', value: 'io-editors-demo'},
         {label: 'io-menus', value: 'io-menus-demo'},
-        {label: 'io-navigator', value: 'io-navigator-demo'},
+        {label: 'io-navigation', value: 'io-navigation-demo'},
         'io-gui-theme-editor',
         'TODO MVC App',
         'io-element-demo',
@@ -188,7 +188,7 @@
                 ['io-colors-demo', {id: 'io-colors-demo', import: "./packages/io-colors/demos/io-colors-demo.js"}],
                 ['io-editors-demo', {id: 'io-editors-demo', import: "./packages/io-editors/demos/io-editors-demo.js"}],
                 ['io-menus-demo', {id: 'io-menus-demo', import: "./packages/io-menus/demos/io-menus-demo.js"}],
-                ['io-navigator-demo', {id: 'io-navigator-demo', import: "./packages/io-navigator/demos/io-navigator-demo.js"}],
+                ['io-navigation-demo', {id: 'io-navigation-demo', import: "./packages/io-navigation/demos/io-navigation-demo.js"}],
                 ['io-gui-theme-editor', {id: 'io-gui-theme-editor', import: './packages/io-gui/demos/io-gui-theme-editor.js'}],
                 ['iframe', {id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}],
                 ['io-element-demo', {id: 'io-element-demo', import: './demos/io-element-demo.js', element: 'io-slider'}],

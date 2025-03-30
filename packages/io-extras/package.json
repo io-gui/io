@@ -42,6 +42,6 @@
   "homepage": "https://iogui.dev",
   "peerDependencies": {
     "io-gui": "^2.0.0",
-    "io-navigator": "^2.0.0"
+    "io-navigation": "^2.0.0"
   }
 }

@@ -1,5 +1,5 @@
 import { Register, IoElement } from 'io-gui';
-import 'io-navigator';
+import 'io-navigation';
 
 const _dragicon = document.createElement('io-tab-dragicon') as any;
 const _dropzone = document.createElement('io-tab-dropzone') as any;
