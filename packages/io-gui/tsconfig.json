@@ -5,11 +5,7 @@
     "outDir": "./build",
     "paths": {
       "io-gui": ["."]
-    },
-    "types": [
-      "../../global.d.ts",
-      "../../node_modules/@types/mocha/index.d.ts"
-    ]
+    }
   },
   "include": [
     "./src"

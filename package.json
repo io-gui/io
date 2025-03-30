@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "clean:gui": "rm -rf ./packages/io-gui/build && rm -rf ./packages/io-gui/bundle",
-    "clean:color": "rm -rf ./packages/io-colors/build && rm -rf ./packages/io-colors/bundle",
+    "clean:colors": "rm -rf ./packages/io-colors/build && rm -rf ./packages/io-colors/bundle",
     "clean:iconset": "rm -rf ./packages/io-iconset/build && rm -rf ./packages/io-iconset/bundle",
     "clean:inputs": "rm -rf ./packages/io-inputs/build && rm -rf ./packages/io-inputs/bundle",
     "clean:inspector": "rm -rf ./packages/io-editors/build && rm -rf ./packages/io-editors/bundle",
@@ -16,7 +16,7 @@
     "clean:sliders": "rm -rf ./packages/io-sliders/build && rm -rf ./packages/io-sliders/bundle",
 
     "lint:gui": "eslint -c ./packages/io-gui/.eslintrc.js ./packages/io-gui/src --fix",
-    "lint:color": "eslint -c ./packages/io-colors/.eslintrc.js ./packages/io-colors/src --fix",
+    "lint:colors": "eslint -c ./packages/io-colors/.eslintrc.js ./packages/io-colors/src --fix",
     "lint:iconset": "eslint -c ./packages/io-iconset/.eslintrc.js ./packages/io-iconset/src --fix",
     "lint:inputs": "eslint -c ./packages/io-inputs/.eslintrc.js ./packages/io-inputs/src --fix",
     "lint:inspector": "eslint -c ./packages/io-editors/.eslintrc.js ./packages/io-editors/src --fix",
@@ -26,7 +26,7 @@
     "lint:sliders": "eslint -c ./packages/io-sliders/.eslintrc.js ./packages/io-sliders/src --fix",
 
     "bundle:gui": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build",
-    "bundle:color": "rollup -c ./packages/io-colors/rollup.config.js && find ./packages/io-colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-colors/build/* ./packages/io-colors/bundle && rm -rf ./packages/io-colors/build && mv ./packages/io-colors/bundle ./packages/io-colors/build",
+    "bundle:colors": "rollup -c ./packages/io-colors/rollup.config.js && find ./packages/io-colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-colors/build/* ./packages/io-colors/bundle && rm -rf ./packages/io-colors/build && mv ./packages/io-colors/bundle ./packages/io-colors/build",
     "bundle:iconset": "rollup -c ./packages/io-iconset/rollup.config.js && find ./packages/io-iconset/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-iconset/build/* ./packages/io-iconset/bundle && rm -rf ./packages/io-iconset/build && mv ./packages/io-iconset/bundle ./packages/io-iconset/build",
     "bundle:inputs": "rollup -c ./packages/io-inputs/rollup.config.js && find ./packages/io-inputs/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-inputs/build/* ./packages/io-inputs/bundle && rm -rf ./packages/io-inputs/build && mv ./packages/io-inputs/bundle ./packages/io-inputs/build",
     "bundle:inspector": "rollup -c ./packages/io-editors/rollup.config.js && find ./packages/io-editors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-editors/build/* ./packages/io-editors/bundle && rm -rf ./packages/io-editors/build && mv ./packages/io-editors/bundle ./packages/io-editors/build",
@@ -35,9 +35,9 @@
     "bundle:navigator": "rollup -c ./packages/io-navigation/rollup.config.js && find ./packages/io-navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-navigation/build/* ./packages/io-navigation/bundle && rm -rf ./packages/io-navigation/build && mv ./packages/io-navigation/bundle ./packages/io-navigation/build",
     "bundle:sliders": "rollup -c ./packages/io-sliders/rollup.config.js && find ./packages/io-sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-sliders/build/* ./packages/io-sliders/bundle && rm -rf ./packages/io-sliders/build && mv ./packages/io-sliders/bundle ./packages/io-sliders/build",
 
-    "build:all": "pnpm build:gui && pnpm build:color && pnpm build:iconset && pnpm build:inputs && pnpm build:inspector && pnpm build:markdown && pnpm build:menus && pnpm build:navigator && pnpm build:sliders",
+    "build:all": "pnpm build:gui && pnpm build:colors && pnpm build:iconset && pnpm build:inputs && pnpm build:inspector && pnpm build:markdown && pnpm build:menus && pnpm build:navigator && pnpm build:sliders",
     "build:gui": "pnpm clean:gui && pnpm lint:gui && tsc --project ./packages/io-gui/tsconfig.json && pnpm bundle:gui",
-    "build:color": "pnpm clean:color && pnpm lint:color && tsc --project ./packages/io-colors/tsconfig.json && pnpm bundle:color",
+    "build:colors": "pnpm clean:colors && pnpm lint:colors && tsc --project ./packages/io-colors/tsconfig.json && pnpm bundle:colors",
     "build:iconset": "pnpm clean:iconset && pnpm lint:iconset && tsc --project ./packages/io-iconset/tsconfig.json && pnpm bundle:iconset",
     "build:inputs": "pnpm clean:inputs && pnpm lint:inputs && tsc --project ./packages/io-inputs/tsconfig.json && pnpm bundle:inputs",
     "build:inspector": "pnpm clean:inspector && pnpm lint:inspector && tsc --project ./packages/io-editors/tsconfig.json && pnpm bundle:inspector",
@@ -47,7 +47,7 @@
     "build:sliders": "pnpm clean:sliders && pnpm lint:sliders && tsc --project ./packages/io-sliders/tsconfig.json && pnpm bundle:sliders",
 
     "dev:gui": "tsc -w --project ./packages/io-gui/tsconfig.json",
-    "dev:color": "tsc -w --project ./packages/io-colors/tsconfig.json",
+    "dev:colors": "tsc -w --project ./packages/io-colors/tsconfig.json",
     "dev:iconset": "tsc -w --project ./packages/io-iconset/tsconfig.json",
     "dev:inputs": "tsc -w --project ./packages/io-inputs/tsconfig.json",
     "dev:inspector": "tsc -w --project ./packages/io-editors/tsconfig.json",

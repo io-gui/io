@@ -7,11 +7,7 @@
       "io-gui": ["../io-gui/"],
       "io-menus": ["../io-menus/"],
       "io-markdown": ["../io-markdown/"]
-    },
-    "types": [
-      "../../global.d.ts",
-      "../../node_modules/@types/mocha/index.d.ts"
-    ]
+    }
   },
   "include": [
     "./src"

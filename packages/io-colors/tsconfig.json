@@ -6,11 +6,7 @@
     "paths": {
       "io-gui": ["../io-gui/"],
       "io-sliders": ["../io-sliders/"]
-    },
-    "types": [
-      "../../global.d.ts",
-      "../../node_modules/@types/mocha/index.d.ts"
-    ]
+    }
   },
   "include": [
     "./src"
