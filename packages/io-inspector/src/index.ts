@@ -11,6 +11,6 @@ export * from './io-vector.js';
 export * from './io-matrix.js';
 export * from './io-vectors-iconset.js';
 
-import 'io-color';
+import 'io-colors';
 import 'io-menus';
 import 'io-inputs';

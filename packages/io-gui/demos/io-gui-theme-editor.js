@@ -2,7 +2,7 @@ import { IoElement, Register, IoThemeSingleton } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 import 'io-inputs';
 import 'io-sliders';
-import 'io-color';
+import 'io-colors';
 
 export class IoGuiThemeEditor extends IoElement {
   static get Style() {

@@ -1,7 +1,7 @@
 import { Register, IoElement } from 'io-gui';
-import 'io-color';
+import 'io-colors';
 
-export class IoColorDemo extends IoElement {
+export class IoColorsDemo extends IoElement {
   static get Style() {
     return /* css */`
       :host .row {
@@ -47,4 +47,4 @@ export class IoColorDemo extends IoElement {
   }
 }
 
-Register(IoColorDemo);
+Register(IoColorsDemo);

@@ -1,7 +1,7 @@
 import { IoElement, IoGl, IoTheme, Color } from 'io-gui';
 import { Constructor, VDOMArray } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import 'io-color';
+import 'io-colors';
 import 'io-inputs';
 
 export type PropertyIdentifier = Constructor | string | null | undefined;

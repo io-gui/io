@@ -3,7 +3,7 @@ import { importMapsPlugin } from '@web/dev-server-import-maps';
 
 const importMapsModules = {
   'io-gui': '/packages/io-gui/build/index.js?wds-import-map=0',
-  'io-color': '/packages/io-color/build/index.js?wds-import-map=0',
+  'io-colors': '/packages/io-colors/build/index.js?wds-import-map=0',
   'io-extras': '/packages/io-extras/build/index.js?wds-import-map=0',
   'io-iconset': '/packages/io-iconset/build/index.js?wds-import-map=0',
   'io-inputs': '/packages/io-inputs/build/index.js?wds-import-map=0',

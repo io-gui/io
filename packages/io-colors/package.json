@@ -1,5 +1,5 @@
 {
-  "name": "io-color",
+  "name": "io-colors",
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
@@ -36,7 +36,7 @@
     "iogui",
     "io-gui",
     "color",
-    "io-color"
+    "io-colors"
   ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
