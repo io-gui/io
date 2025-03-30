@@ -1,5 +1,5 @@
 {
-  "name": "io-inspector",
+  "name": "io-editors",
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
@@ -33,7 +33,7 @@
     "inspector",
     "io-object",
     "io-properties",
-    "io-inspector"
+    "io-editors"
   ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",

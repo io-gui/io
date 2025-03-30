@@ -1,6 +1,6 @@
 import { Register, IoElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import 'io-inspector';
+import 'io-editors';
 import 'io-inputs';
 
 export class IoElementDemo extends IoElement {

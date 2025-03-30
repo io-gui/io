@@ -1,8 +1,8 @@
 import { Register, IoElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import 'io-inspector';
+import 'io-editors';
 
-export class IoInspectorDemo extends IoElement {
+export class IoEditorsDemo extends IoElement {
   static get Style() {
     return /* css */`
       :host .row {
@@ -96,7 +96,7 @@ export class IoInspectorDemo extends IoElement {
         }],
       ]],
       ['div', {class: 'row'}, [
-        ['io-inspector', {
+        ['io-editors', {
           value: this.object,
           // TODO: this.object.object displays broken "number" slider. Investigate!
           groups: {
@@ -120,4 +120,4 @@ export class IoInspectorDemo extends IoElement {
   }
 }
 
-Register(IoInspectorDemo);
+Register(IoEditorsDemo);
