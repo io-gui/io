@@ -1,7 +1,7 @@
-import js from "@eslint/js";
+import js from '@eslint/js';
 import tseslint from 'typescript-eslint'
-import tsParser from "@typescript-eslint/parser";
-import globals from "globals";
+import tsParser from '@typescript-eslint/parser';
+import globals from 'globals';
 
 export function makeConfig(projectPath) {
   return tseslint.config({

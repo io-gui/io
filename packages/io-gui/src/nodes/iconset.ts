@@ -7,7 +7,7 @@ export const IoIconsetDB: Record<string, Record<string, string>> = {};
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace` and `id` attribute.
  *
  * ```javascript
- * import {IoIconsetSingleton} from "./path_to/io-gui.js";
+ * import {IoIconsetSingleton} from './path_to/io-gui.js';
  * const svgString = `<svg><g id="myicon"><path d="..."/></g></svg>`;
  *
  * // register icons under "custom" namespace

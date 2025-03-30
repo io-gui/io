@@ -9,7 +9,7 @@ To quickly import Io-Gui and get started, continue reading this article.
 Here is a basic example of a reaciteve element `<my-element>` with a `message` property and a simple template.
 
 ```javascript
-import { IoElement, Register } from "io-gui";
+import { IoElement, Register } from 'io-gui';
 
 class MyElement extends IoElement {
   static get Properties() {
@@ -34,8 +34,8 @@ document.body.appendChild(myElement);
 Here is a quick way to make a simple website `<my-website>` with navigation and pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator, Register, MenuOptions } from "io-gui";
-import { IoStorage as $ } from "io-gui";
+import { IoNavigator, Register, MenuOptions } from 'io-gui';
+import { IoStorage as $ } from 'io-gui';
 
 export class MyWebsite extends IoNavigator {
   static get Properties() {
@@ -67,7 +67,7 @@ See [index.html] of iogui.dev for more advanced example.
 As mentioned above, you can import and use individual Io-Gui elements in your own application architecture. For example, here is how you would use `IoSlider` element:
 
 ```javascript
-import { IoSlider } from "io-gui";
+import { IoSlider } from 'io-gui';
 
 const slider = new IoSlider({value: 0, min: -1, max: 1, step: 0.1});
 
@@ -77,7 +77,7 @@ document.body.appendChild(slider);
 In the next example we use `IoContextMenu` to add an interactive context menu to our page:
 
 ```javascript
-import { IoContextMenu, MenuOptions } from "io-gui";
+import { IoContextMenu, MenuOptions } from 'io-gui';
 
 const menu = new IoContextMenu({
   options: new MenuOptions([
@@ -93,7 +93,7 @@ document.body.appendChild(menu);
 We can also use `IoInspector` to edit property values of any javascript object:
 
 ```javascript
-import { IoInspector } from "io-gui";
+import { IoInspector } from 'io-gui';
 
 // We can use IoInspector to edit `window.location` object.
 const inspector = new IoInspector({value: window.location});

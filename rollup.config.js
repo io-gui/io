@@ -1,7 +1,7 @@
 import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
-import terser from "@rollup/plugin-terser";
+import terser from '@rollup/plugin-terser';
 
 export function makeBundleTarget(src, target, externals = [], debug) {
 
