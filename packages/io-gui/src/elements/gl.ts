@@ -52,8 +52,8 @@ export class IoGl extends IoElement {
     `;
   }
 
-  @Property({type: Boolean, value: false})
-  declare transparent: boolean;
+  @Property({type: IoNode, value: IoThemeSingleton})
+  declare theme: typeof IoThemeSingleton;
 
   @Property({type: Array, init: [0, 0]})
   declare size: [number, number];
@@ -61,11 +61,11 @@ export class IoGl extends IoElement {
   @Property({type: Array, init: [1, 1, 1, 1]})
   declare color: [number, number, number, number];
 
+  @Property({type: Boolean, value: false})
+  declare transparent: boolean;
+
   @Property({type: Number, value: 1})
   declare pxRatio: number;
-
-  @Property({type: IoNode, value: IoThemeSingleton})
-  declare theme: typeof IoThemeSingleton;
 
   @Property('debounced')
   declare reactivity: string;

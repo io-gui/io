@@ -220,7 +220,7 @@ const compositeVariables = /* css */`
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
 @Register
-class IoTheme extends IoNode {
+export class IoTheme extends IoNode {
   static get Properties(): PropertyDefinitions {
     const props: PropertyDefinitions = {};
     for (const p in LIGHT_THEME) {
@@ -247,7 +247,6 @@ class IoTheme extends IoNode {
   init() {
     this.registerTheme('light', LIGHT_THEME);
     this.registerTheme('dark', DARK_THEME);
-    this.saveTheme = this.saveTheme.bind(this);
     this.themeIDChanged();
   }
   registerTheme(themeID: string, theme: Theme) {
@@ -309,9 +308,9 @@ class IoTheme extends IoNode {
       }, '');
 
       styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
-      this.debounce(this.saveTheme, undefined, 100);
+      this.debounce(this.onSaveTheme, undefined, 100);
   }
-  saveTheme() {
+  onSaveTheme() {
     $Themes.value = JSON.parse(JSON.stringify($Themes.value));
   }
 }

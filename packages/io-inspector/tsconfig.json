@@ -5,6 +5,7 @@
     "outDir": "./build",
     "paths": {
       "io-gui": ["../io-gui/"],
+      "io-menus": ["../io-menus/"]
     },
     "types": [
       "../../global.d.ts",

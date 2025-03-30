@@ -1,5 +1,6 @@
 import { IoElement } from 'io-gui';
 export declare class IoColorBase extends IoElement {
+    reactivity: string;
     value: {
         r: number;
         g: number;

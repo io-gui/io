@@ -1,25 +1,21 @@
 
-# Io-Gui: Experimental JavaScript Framework
+# Io-Gui: Simple and Fast UI library for JavaScript
 
 [![NPM Package][npm]][npm-url]
 [![DeepScan][deepscan]][deepscan-url]
 [![License][license]][license-url]
 
-> ⚠️ **WARNING!** Io-Gui is an experiment currently under development. This code is not production ready!
-
-Io-Gui is an experimental UI framework aimed at simplicity and performance. It lets you write fast and reactive custom elements that respond to state changes, data binding events and object mutations. It can support single page applications with routing, navigation and code splitting.
-
-The goal of this project is to provide a strong foundation for complex applications and tools such as 3D editors and demo tools for [threejs].
+Io-Gui is an UI framework focused on simplicity and performance. It allows you to create reactive nodes and custom elements that respond to state changes, data binding events and object mutations. It includes a built-in design system with various UI components, and uniquely supports WebGL-rendered elements using GLSL shaders. It's particularly well-suited for complex applications like 3D editors and demo tools for Three.js.
 
 To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
 
-You can also check out the collection of built-in [elements].
-
-Stay in touch on [github] and [twitter].
+Stay in touch on [github] and [bluesky].
 
 ## Design system
 
-Io-Gui includes a design system built with a simple and effective CSS framework. It's built-in element library includes editors for basic data types and **user input**, various types of **sliders**, **color editors**, configurable **object editors**, **menu systems**, **selectors** and **layout** elements.
+Io-Gui includes an accessible and productivity-centric design system with theming support. The [theme engine] uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
+
+It's built-in elements library includes elements for user input, object editing, menu systems, icons, routing, layout, navigation and much more.
 
 ## Reactive WebGL Elements
 
@@ -58,7 +54,7 @@ The files in `docs/tsdoc` are a work in progress. The files are automatically ge
 [license-url]: https://github.com/io-gui/io/blob/main/LICENSE
 
 [github]: https://github.com/io-gui/io/
-[twitter]: https://x.com/akirodic
+[bluesky]: https://bsky.app/profile/akirodic.com
 [threejs]: https://threejs.org
 [nodejs]: https://nodejs.org
 [yarn]: https://yarnpkg.com
@@ -68,4 +64,4 @@ The files in `docs/tsdoc` are a work in progress. The files are automatically ge
 [index.html]: https://github.com/io-gui/io/blob/main/index.html#L125
 [quick start]: https://iogui.dev/io/#path=Docs,Quick%20Start
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive
-[elements]: https://iogui.dev/io/#path=Demos,Elements
+[theme engine]: https://iogui.dev/io/#path=Demos,io-gui-theme-editor

@@ -64,7 +64,7 @@ export declare const DARK_THEME: Theme;
  *
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
-declare class IoTheme extends IoNode {
+export declare class IoTheme extends IoNode {
     static get Properties(): PropertyDefinitions;
     themeDefaults: Record<string, Theme>;
     themeID: string;
@@ -75,7 +75,7 @@ declare class IoTheme extends IoNode {
     themeIDChanged(): void;
     onPropertyMutated(event: CustomEvent): void;
     changed(): void;
-    saveTheme(): void;
+    onSaveTheme(): void;
 }
 declare const IoThemeSingleton: IoTheme;
 export { IoThemeSingleton };

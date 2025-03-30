@@ -35,6 +35,7 @@ export declare class IoMenuItem extends IoField {
     _onCollapseRoot(): void;
     expandedChanged(): void;
     itemChanged(): void;
+    itemMutated(): void;
     changed(): void;
 }
 type IoMenuElementType = IoMenuItem | IoMenuOptions;

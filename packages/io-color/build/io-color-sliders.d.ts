@@ -8,7 +8,7 @@ import { IoColorBase } from './io-color-base.js';
  * <io-element-demo element="io-color-slider-hs"
  * width="64px" height="64px"
  * properties='{"value": [1, 0.5, 0, 1], "horizontal": true}'
- * config='{"value": ["io-properties"]}
+ * config='{"value": ["io-property-editor"]}
  * '></io-element-demo>
  **/
 export declare class IoColorSlider extends IoColorBase {

@@ -20,7 +20,7 @@ export default class {
     this.element.labeled = true;
     this.element.expanded = false;
     this.element.value = {};
-    this.element.config = {};
+    this.element.config = new Map();
     this.element.properties = [];
   }
   run() {
@@ -42,7 +42,7 @@ export default class {
           expect(this.element.children[1]).to.equal(undefined);
           this.element.expanded = true;
           const properties = this.element.children[1];
-          expect(properties.localName).to.equal('io-properties');
+          expect(properties.localName).to.equal('io-property-editor');
           expect(properties.children[0].textContent).to.equal('number:');
           expect(properties.children[1].localName).to.equal('io-number');
           expect(properties.children[2].textContent).to.equal('string:');
@@ -90,10 +90,12 @@ export default class {
         });
         it('matches value with custom config', () => {
           this.element.value = testValue;
-          this.element.config = {
-            'number': ['io-slider', {step: 1}],
-            'type:boolean': ['io-string'],
-          };
+          this.element.config = new Map([
+            [Object, [
+              ['number', ['io-slider', {step: 1}]],
+              ['type:boolean', ['io-string']],
+            ]]
+          ]);
           this.element.expanded = true;
           const properties = this.element.children[1];
           expect(properties.children[1].localName).to.equal('io-slider');

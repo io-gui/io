@@ -1,7 +1,7 @@
 import { IoNode, Register, IoElement, Property, IoStorage as $ } from 'io-gui';
 import { ObjectGroups } from './models/object-groups.js';
 import { ObjectWidgets } from './models/object-widgets.js';
-import { ProtoObjectConfig } from './io-properties.js';
+import { getEditorConfig } from './models/editor-config.js';
 import './io-breadcrumbs.js';
 
 /**
@@ -64,7 +64,7 @@ export class IoInspector extends IoElement {
     :host > io-object {
       flex-basis: auto !important;
     }
-    :host > io-object > io-properties {
+    :host > io-object > io-property-editor {
       border-radius: var(--io_borderRadius);
       background-color: var(--io_bgColor) !important;
       border: var(--io_border);
@@ -72,16 +72,16 @@ export class IoInspector extends IoElement {
       padding: var(--io_spacing);
       overflow: hidden;
     }
-    :host > io-object > io-properties:not([horizontal])[labeled] {
+    :host > io-object > io-property-editor:not([horizontal])[labeled] {
       grid-template-columns: minmax(6em, min-content) minmax(12em, 1fr);
     }
-    :host > io-object > io-properties:not([horizontal])[labeled] > span.io-field {
+    :host > io-object > io-property-editor:not([horizontal])[labeled] > span.io-field {
       text-align: right;
     }
-    :host io-properties io-field.select {
+    :host io-property-editor io-field.select {
       color: var(--io_colorBlue) !important;
     }
-    :host io-properties io-field.select:hover {
+    :host io-property-editor io-field.select:hover {
       text-decoration: underline;
     }
     `;
@@ -92,9 +92,6 @@ export class IoInspector extends IoElement {
 
   @Property({})
   declare selected: Record<string, any> | any[];
-
-  @Property({type: Object})
-  declare config: Record<string, any>;
 
   @Property('')
   declare uuid: string;
@@ -143,8 +140,7 @@ export class IoInspector extends IoElement {
     this.throttle(this._onChange);
   }
   _onChange() {
-    const config = this.__proto__._protoConfig.getObjectConfig(this.selected);
-    Object.assign(config, this.config);
+    const config = getEditorConfig(this.selected);
 
     this._groups = this.__proto__._groups.getObjectGroups(this.selected, this.groups, Object.getOwnPropertyNames(config));
     this._widgets = this.__proto__._widgets.getObjectWidgets(this.selected, this.widgets);
@@ -177,24 +173,11 @@ export class IoInspector extends IoElement {
           expanded: $({value: true, storage: 'local', key: this.uuid + '-' + group}),
           value: this.selected,
           properties: this._groups[group],
-          config: config,
-          widget: this._widgets.groups[group] || [],
+          // widget: this._widgets.groups[group] || [],
         }],
       );
     }
     this.template(elements);
-  }
-  static get Config() {
-    return [
-      [Object, [
-        [null, ['io-field', {appearance: 'neutral', class: 'select'}]],
-        [undefined, ['io-string', {appearance: 'neutral'}]],
-        [String, ['io-string', {appearance: 'neutral'}]],
-        [Number, ['io-number', {appearance: 'neutral', step: 0.0001}]],
-        [Boolean, ['io-boolean']],
-        [Object, ['io-field', {appearance: 'neutral', class: 'select'}]],
-      ]],
-    ];
   }
   static get ObjectGroups() {
     return {
@@ -217,7 +200,6 @@ export class IoInspector extends IoElement {
 
   Register(ioNodeConstructor: typeof IoNode) {
     super.Register(ioNodeConstructor);
-    Object.defineProperty(ioNodeConstructor.prototype, '_protoConfig', {writable: true, value: new ProtoObjectConfig(ioNodeConstructor.prototype._protochain.constructors)});
     Object.defineProperty(ioNodeConstructor.prototype, '_groups', {writable: true, value: new ObjectGroups(ioNodeConstructor.prototype._protochain.constructors)});
     Object.defineProperty(ioNodeConstructor.prototype, '_widgets', {writable: true, value: new ObjectWidgets(ioNodeConstructor.prototype._protochain.constructors)});
   }

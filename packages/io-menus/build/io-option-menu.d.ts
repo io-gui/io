@@ -1,4 +1,5 @@
 import { IoElement, Change } from 'io-gui';
+import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import './io-menu-item.js';
 /**
@@ -8,7 +9,7 @@ import './io-menu-item.js';
  *   "label": "",
  *   "value": 0,
  *   "options": [1,2,3]}
- * ' config='{"type:object": ["io-properties"]}'></io-element-demo>
+ * ' config='{"type:object": ["io-property-editor"]}'></io-element-demo>
  *
  * <io-element-demo element="io-option-menu" properties='{
  *   "label": "",
@@ -19,7 +20,7 @@ import './io-menu-item.js';
  *     {"value": 2, "label": "two"},
  *     {"value": 3, "label": "three"}
  *   ]
- * }' config='{"type:object": ["io-properties"]}'></io-element-demo>
+ * }' config='{"type:object": ["io-property-editor"]}'></io-element-demo>
  *
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
@@ -28,7 +29,7 @@ export declare class IoOptionMenu extends IoElement {
     value: any;
     options: MenuOptions;
     role: string;
-    private _item;
+    item: MenuItem;
     _onLeafChanged(event: CustomEvent): void;
     optionsChanged(change: Change): void;
     changed(): void;

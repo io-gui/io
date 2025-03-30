@@ -4,11 +4,11 @@ import { IoThemeSingleton } from '../nodes/theme';
 export declare class IoGl extends IoElement {
     #private;
     static get Style(): string;
-    transparent: boolean;
+    theme: typeof IoThemeSingleton;
     size: [number, number];
     color: [number, number, number, number];
+    transparent: boolean;
     pxRatio: number;
-    theme: typeof IoThemeSingleton;
     reactivity: string;
     static get Vert(): string;
     static get GlUtils(): string;

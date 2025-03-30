@@ -15,6 +15,10 @@ export class IoInspectorDemo extends IoElement {
       :host .row > *:not(:last-child) {
         margin-right: var(--io_spacing);
       }
+      :host > .row > io-property-editor > .io-row > io-label {
+        min-width: 5em;
+        text-align: right;
+      }
     `;
   }
   static get Properties() {
@@ -40,34 +44,36 @@ export class IoInspectorDemo extends IoElement {
   init() {
     this.template([
       ['div', {class: 'row'}, [
-        ['io-properties', {
+        ['io-property-editor', {
           value: this.object,
         }],
-        ['io-properties', {
+        ['io-property-editor', {
           value: this.object,
-          config: {
-            'number': ['io-slider', {step: 0.1}],
-            'vector2': ['io-vector'],
-            'vector3': ['io-vector'],
-            'vector4': ['io-vector'],
-            'matrix2': ['io-matrix'],
-            'matrix3': ['io-matrix'],
-            'matrix4': ['io-matrix'],
-          },
+          config: new Map([
+            [Object, [
+              [Number, ['io-slider', {step: 0.1}]],
+              ['vector2', ['io-vector']],
+              ['vector3', ['io-vector']],
+              ['vector4', ['io-vector']],
+              ['matrix2', ['io-matrix']],
+              ['matrix3', ['io-matrix']],
+              ['matrix4', ['io-matrix']],
+            ]]
+          ]),
         }],
-        ['io-properties', {
+        ['io-property-editor', {
           value: this.object,
           properties: ['number', 'string', 'boolean'],
-          widget: ['io-field', {label: 'Widget Element'}],
-          // TODO: investigate listener warning
-          config: {
-            'boolean': ['io-switch'],
-            'number': ['io-option-menu', {options: new MenuOptions([
-              {label: 'zero', value: 0},
-              {label: 'half', value: 0.5},
-              {label: 'one', value: 1},
-            ])}],
-          },
+          // widget: ['io-field', {label: 'Widget Element'}],
+          config: new Map([
+            [Object, [
+              [Number, ['io-option-menu', {options: new MenuOptions([
+                {label: 'zero', value: 0},
+                {label: 'half', value: 0.5},
+                {label: 'one', value: 1},
+              ])}]],
+            ]]
+          ]),
         }],
       ]],
       ['div', {class: 'row'}, [
@@ -77,14 +83,16 @@ export class IoInspectorDemo extends IoElement {
         ['io-object', {
           value: this.object,
           expanded: true,
-          widget: ['io-field', {label: 'Widget Element'}],
+          // widget: ['io-field', {label: 'Widget Element'}],
           properties: ['number', 'string', 'boolean'],
         }],
         ['io-object', {
           value: this.object,
           expanded: true,
           properties: ['number'],
-          config: {'number': ['io-slider', {step: 0.1}]}
+          config: new Map([
+            [Number, ['io-slider', {step: 0.1}]],
+          ]),
         }],
       ]],
       ['div', {class: 'row'}, [
@@ -95,15 +103,17 @@ export class IoInspectorDemo extends IoElement {
             'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
             'Object|vectors and matrices': [/vector/i, /matrix/i],
           },
-          config: {
-            'vector2': ['io-vector', {linkable: true}],
-            'vector3': ['io-vector', {linkable: true}],
-            'vector4': ['io-vector', {linkable: true}],
-            'matrix2': ['io-matrix'],
-            'matrix3': ['io-matrix'],
-            'matrix4': ['io-matrix'],
-            'number': ['io-slider', {step: 0.1}],
-          },
+          config: new Map([
+            [Object, [
+              ['vector2', ['io-vector', {linkable: true}]],
+              ['vector3', ['io-vector', {linkable: true}]],
+              ['vector4', ['io-vector', {linkable: true}]],
+              ['matrix2', ['io-matrix']],
+              ['matrix3', ['io-matrix']],
+              ['matrix4', ['io-matrix']],
+              [Number, ['io-slider', {step: 0.1}]],
+            ]]
+          ]),
         }],
       ]],
     ]);

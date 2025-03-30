@@ -347,6 +347,9 @@ export class IoMenuItem extends IoField {
       disabled: this.item.bind('disabled'),
     });
   }
+  itemMutated() {
+    this.changed();
+  }
   changed() {
     if (this.$options !== undefined && this.item.options) {
       this.$options.options = this.item.options;

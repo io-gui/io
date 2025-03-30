@@ -7,7 +7,6 @@ export declare class IoInspector extends IoElement {
     static get Style(): string;
     value: Record<string, any> | any[];
     selected: Record<string, any> | any[];
-    config: Record<string, any>;
     uuid: string;
     search: string;
     groups: Record<string, any>;
@@ -22,20 +21,6 @@ export declare class IoInspector extends IoElement {
     changed(): void;
     _onChangedThrottled(): void;
     _onChange(): void;
-    static get Config(): (ObjectConstructor | ((string[] | BooleanConstructor)[] | ((string | {
-        appearance: string;
-        class: string;
-    })[] | null)[] | ((string | {
-        appearance: string;
-    })[] | undefined)[] | (StringConstructor | (string | {
-        appearance: string;
-    })[])[] | (NumberConstructor | (string | {
-        appearance: string;
-        step: number;
-    })[])[] | (ObjectConstructor | (string | {
-        appearance: string;
-        class: string;
-    })[])[])[])[][];
     static get ObjectGroups(): {
         'Object|hidden': RegExp[];
         'Array|main': RegExp[];

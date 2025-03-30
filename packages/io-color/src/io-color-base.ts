@@ -3,6 +3,9 @@ import { convert } from './lib/convert.js';
 
 export class IoColorBase extends IoElement {
 
+  @Property('debounced')
+  declare reactivity: string;
+
   @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number, g: number, b: number, a?: number};
 

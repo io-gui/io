@@ -1,5 +1,6 @@
-import { Register, IoElement, VDOMArray, Property } from 'io-gui';
-import './io-properties.js';
+import { Register, IoElement, VDOMArray, Property, Constructor } from 'io-gui';
+import './io-property-editor.js';
+import { PropertyConfig } from './models/editor-config.js';
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
@@ -39,11 +40,8 @@ export class IoObject extends IoElement {
   @Property({type: Array})
   declare properties: string[];
 
-  @Property({type: Object})
-  declare config: Record<string, any>;
-
-  @Property({type: Array})
-  declare widget: VDOMArray;
+  @Property({type: Map})
+  declare config: Map<Constructor, PropertyConfig[]>;
 
   @Property(true)
   declare labeled: boolean;
@@ -67,12 +65,11 @@ export class IoObject extends IoElement {
       value: this.bind('expanded')}
     ]);
     if (this.expanded) {
-      elements.push(['io-properties', {
+      elements.push(['io-property-editor', {
         value: this.value,
         properties: this.properties,
         config: this.config,
         labeled: this.labeled,
-        widget: this.widget,
       }]);
     }
     this.template(elements);

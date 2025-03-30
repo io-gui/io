@@ -6,7 +6,7 @@ import { IoColorBase } from './io-color-base.js';
  *
  * <io-element-demo element="io-color-swatch"
  * properties='{"value": [1, 0.5, 0, 1]}'
- * config='{"value": ["io-properties"]}
+ * config='{"value": ["io-property-editor"]}
  * '></io-element-demo>
  **/
 @Register
