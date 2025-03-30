@@ -1,13 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./build",
+    "outDir": "build",
     "paths": {
       "io-gui": ["../io-gui/"],
     }
   },
-  "include": [
-    "./src"
-  ]
+  "include": ["./src"]
 }
