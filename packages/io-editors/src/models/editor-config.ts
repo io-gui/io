@@ -59,7 +59,7 @@ const editorConfigSingleton: EditorConfig = new Map<Constructor, PropertyConfig[
 ]);
 
 export function getEditorConfig(object: object, editorConfig: EditorConfig = new Map()): PropertyConfigRecord {
-  debug: if (!(object instanceof Object)) {
+  debug: if (!(object instanceof Object) || object === null) {
     console.warn('`getObjectConfig` should be used with an Object instance');
     return {};
   }
@@ -87,7 +87,7 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
       let element: VDOMArray | undefined;
       if (typeof PropertyIdentifier === 'function' && value instanceof PropertyIdentifier) {
         element = elementCandidate;
-      } else if (typeof PropertyIdentifier === 'function' && value.constructor === PropertyIdentifier) {
+      } else if (typeof PropertyIdentifier === 'function' && value?.constructor === PropertyIdentifier) {
         element = elementCandidate;
       } else if (typeof PropertyIdentifier === 'string' && key === PropertyIdentifier) {
         element = elementCandidate;
