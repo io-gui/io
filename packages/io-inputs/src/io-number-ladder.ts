@@ -28,7 +28,7 @@ let lastFocus: Element | null = null;
  * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
  **/
 @Register
-export class IoNumberLadder extends IoElement {
+class IoNumberLadder extends IoElement {
   static get Style() {
     return /* css */`
       :host {

@@ -195,3 +195,4 @@ export class IoSelector extends IoElement {
     super.dispose();
   }
 }
+export const ioSelector = IoSelector.vDOM;

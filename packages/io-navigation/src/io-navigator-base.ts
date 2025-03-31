@@ -156,3 +156,4 @@ export class IoNavigatorBase extends IoElement {
     }
   }
 }
+export const ioNavigatorBase = IoNavigatorBase.vDOM;

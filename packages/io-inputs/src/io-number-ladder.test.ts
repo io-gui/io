@@ -1,14 +1,13 @@
-import { IoNumber, IoNumberLadder } from './index.js';
+import { IoNumber, IoNumberLadderSingleton } from './index.js';
 
 const element = new IoNumber();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
 
-const ladder = new IoNumberLadder();
+const ladder = IoNumberLadderSingleton;
 ladder.expanded = true;
 ladder.style.display = 'none';
 ladder.src = element;
-document.body.appendChild(ladder as unknown as HTMLElement);
 
 export default class {
   run() {

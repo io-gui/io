@@ -92,3 +92,4 @@ export class IoOptionMenu extends IoElement {
     this.template([['io-menu-item', {item: this.item, direction: 'down'}]]);
   }
 }
+export const ioOptionMenu = IoOptionMenu.vDOM;

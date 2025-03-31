@@ -218,3 +218,4 @@ export class IoMenuTree extends IoElement {
     this.template(elements);
   }
 }
+export const ioMenuTree = IoMenuTree.vDOM;

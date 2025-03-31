@@ -1,7 +1,7 @@
-import { IoColorPanel } from './index';
+import { IoColorPanelSingleton } from './index';
 // import { expect } from 'chai';
 
-const element = new IoColorPanel();
+const element = IoColorPanelSingleton;
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
 

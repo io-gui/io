@@ -91,3 +91,4 @@ export class IoSlider2d extends IoSliderBase {
     }`;
   }
 }
+export const ioSlider2d = IoSlider2d.vDOM;

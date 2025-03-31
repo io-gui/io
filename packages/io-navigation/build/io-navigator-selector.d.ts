@@ -6,4 +6,5 @@ export declare class IoNavigatorSelector extends IoNavigatorBase {
     precache: boolean;
     getSlotted(): VDOMArray;
 }
+export declare const ioNavigatorSelector: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-navigator-selector.d.ts.map

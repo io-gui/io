@@ -19,4 +19,5 @@ export declare class IoNumberSliderRange extends IoElement {
     init(): void;
     changed(): void;
 }
+export declare const ioNumberSliderRange: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-number-slider-range.d.ts.map

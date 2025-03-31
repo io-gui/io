@@ -17,3 +17,4 @@ export class IoNavigatorCombined extends IoNavigatorSelector {
     ]];
   }
 }
+export const ioNavigatorCombined = IoNavigatorCombined.vDOM;

@@ -220,3 +220,4 @@ export class IoNumber extends IoField {
     this.textNode = valueText;
   }
 }
+export const ioNumber = IoNumber.vDOM;

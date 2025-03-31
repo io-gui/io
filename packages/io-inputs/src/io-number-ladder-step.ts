@@ -88,3 +88,4 @@ export class IoNumberLadderStep extends IoField {
     this.setAttribute('aria-valuestep', this.value);
   }
 }
+export const ioNumberLadderStep = IoNumberLadderStep.vDOM;

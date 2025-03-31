@@ -50,3 +50,4 @@ export class IoBoolean extends IoField {
     ]);
   }
 }
+export const ioBoolean = IoBoolean.vDOM;

@@ -25,5 +25,4 @@ export class IoLabel extends IoElement {
     this.textNode = this.label;
   }
 }
-
-export const ioLabel = IoLabel._vDOMFactory;
+export const ioLabel = IoLabel.vDOM;

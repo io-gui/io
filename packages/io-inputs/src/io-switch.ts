@@ -78,3 +78,4 @@ export class IoSwitch extends IoBoolean {
     }
   }
 }
+export const ioSwitch = IoSwitch.vDOM;

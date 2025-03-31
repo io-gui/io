@@ -82,3 +82,4 @@ export class IoNumberSlider extends IoElement {
     ]);
   }
 }
+export const ioNumberSlider = IoNumberSlider.vDOM;

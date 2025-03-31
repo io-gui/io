@@ -47,7 +47,5 @@ export class IoColorsDemo extends IoElement {
     ]);
   }
 }
-
 Register(IoColorsDemo);
-
-export const ioColorsDemo = IoColorsDemo._vDOMFactory;
+export const ioColorsDemo = IoColorsDemo.vDOM;

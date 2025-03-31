@@ -76,3 +76,4 @@ export class IoObject extends IoElement {
     this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
+export const ioObject = IoObject.vDOM;

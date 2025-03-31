@@ -5,4 +5,5 @@ export declare class IoNavigatorMdView extends IoNavigatorBase {
     sanitize: boolean;
     getSlotted(): VDOMArray;
 }
+export declare const ioNavigatorMdView: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-navigator-md-view.d.ts.map

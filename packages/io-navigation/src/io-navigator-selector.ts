@@ -17,3 +17,4 @@ export class IoNavigatorSelector extends IoNavigatorBase {
     return ['io-selector', {options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}];
   }
 }
+export const ioNavigatorSelector = IoNavigatorSelector.vDOM;

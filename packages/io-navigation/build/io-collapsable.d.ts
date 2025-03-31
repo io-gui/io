@@ -13,4 +13,5 @@ export declare class IoCollapsable extends IoElement {
     role: string;
     changed(): void;
 }
+export declare const ioCollapsable: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-collapsable.d.ts.map

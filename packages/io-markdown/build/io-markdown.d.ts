@@ -2,7 +2,7 @@ import { IoElement } from 'io-gui';
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
-declare class IoMarkdown extends IoElement {
+export declare class IoMarkdown extends IoElement {
     static get Style(): string;
     role: string;
     src: string;
@@ -15,5 +15,5 @@ declare class IoMarkdown extends IoElement {
     srcChanged(): void;
     changed(): void;
 }
-export { IoMarkdown };
+export declare const ioMarkdown: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-markdown.d.ts.map

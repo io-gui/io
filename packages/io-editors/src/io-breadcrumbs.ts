@@ -88,6 +88,7 @@ export class IoBreadcrumbs extends IoElement {
     this.template(elements);
   }
 }
+export const ioBreadcrumbs = IoBreadcrumbs.vDOM;
 
 function getLabel(object: any) {
   if (object instanceof Array) {

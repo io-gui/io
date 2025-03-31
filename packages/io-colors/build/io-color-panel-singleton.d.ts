@@ -25,4 +25,4 @@ export declare class IoColorPanel extends IoColorBase {
     changed(): void;
 }
 export declare const IoColorPanelSingleton: IoColorPanel;
-//# sourceMappingURL=io-color-panel.d.ts.map
+//# sourceMappingURL=io-color-panel-singleton.d.ts.map

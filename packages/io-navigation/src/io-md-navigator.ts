@@ -86,3 +86,4 @@ export class IoMdNavigator extends IoElement {
     ]);
   }
 }
+export const ioMdNavigator = IoMdNavigator.vDOM;

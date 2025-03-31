@@ -96,3 +96,4 @@ export class IoPropertyEditor extends IoElement {
     this.template(elements);
   }
 }
+export const ioPropertyEditor = IoPropertyEditor.vDOM;

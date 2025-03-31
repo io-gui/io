@@ -88,7 +88,5 @@ export class IoGuiThemeEditor extends IoElement {
     ]);
   }
 }
-
 Register(IoGuiThemeEditor);
-
-export const ioGuiThemeEditor = IoGuiThemeEditor._vDOMFactory;
+export const ioGuiThemeEditor = IoGuiThemeEditor.vDOM;

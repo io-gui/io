@@ -110,4 +110,4 @@ export class IoSliderRange extends IoSliderBase {
     `;
   }
 }
-
+export const ioSliderRange = IoSliderRange.vDOM;

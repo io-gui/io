@@ -126,3 +126,4 @@ export class IoContextMenu extends IoElement {
   //   }
   // }
 }
+export const ioContextMenu = IoContextMenu.vDOM;

@@ -19,7 +19,7 @@ const marked = new Marked(
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 @Register
-class IoMarkdown extends IoElement {
+export class IoMarkdown extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -198,12 +198,11 @@ class IoMarkdown extends IoElement {
 
   changed() {}
 }
+export const ioMarkdown = IoMarkdown.vDOM;
 
 const styleElement = document.createElement('style');
 styleElement.id = 'io-highlight-theme';
 document.head.appendChild(styleElement);
-
-
 
 function setTheme() {
   if (IoThemeSingleton.themeID === 'dark') {
@@ -214,5 +213,3 @@ function setTheme() {
 }
 setTheme();
 IoThemeSingleton.addEventListener('themeID-changed', setTheme);
-
-export { IoMarkdown };

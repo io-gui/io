@@ -5,4 +5,5 @@ export declare class IoNavigatorCombined extends IoNavigatorSelector {
     static get Style(): string;
     getSlotted(): VDOMArray;
 }
+export declare const ioNavigatorCombined: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-navigator-combined.d.ts.map

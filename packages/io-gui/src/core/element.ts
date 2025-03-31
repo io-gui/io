@@ -326,7 +326,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
 
-  static _vDOMFactory: (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+  static vDOM: (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 
   Register(ioNodeConstructor: typeof IoNode) {
     super.Register(ioNodeConstructor);
@@ -394,7 +394,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
     document.head.appendChild(styleElement);
 
-    Object.defineProperty(ioNodeConstructor, '_vDOMFactory', {value: function(arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
+    Object.defineProperty(ioNodeConstructor, 'vDOM', {value: function(arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
       if (arg0 !== undefined) {
         if (arg1 !== undefined) {
           return [localName, arg0 as IoNodeArgs, arg1 as VDOMArray[]];
@@ -476,17 +476,17 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 }
 
 //TODO: test element vDOM factories!
-export const ioElement = IoElement._vDOMFactory;
+export const ioElement = IoElement.vDOM;
 
 const nativeElements = [
   'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside', 'audio', 'b', 'base', 'basefont', 'bdi', 'bdo', 'big', 'blockquote',
   'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn',
   'dialog', 'dir', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'head',
-  'header', 'hgroup', 'h1', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'main', 'map',
-  'mark', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param',
-  'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strike',
-  'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title',
-  'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
+  'header', 'hgroup', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend',
+   'li', 'link', 'main', 'map', 'mark', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option',
+  'output', 'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source',
+  'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead',
+  'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
 ];
 const nativeVDOMFactories: Record<string, (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray> = {};
 nativeElements.forEach((element) => {
@@ -508,9 +508,9 @@ export const {
   a, abbr, acronym, address, applet, area, article, aside, audio, b, base, basefont, bdi, bdo, big, blockquote,
   body, br, button, canvas, caption, center, cite, code, col, colgroup, data, datalist, dd, del, details, dfn,
   dialog, dir, div, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, frame, frameset, head,
-  header, hgroup, h1, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main, map,
-  mark, menu, menuitem, meta, meter, nav, noframes, noscript, object, ol, optgroup, option, output, p, param,
-  picture, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source, span, strike,
-  strong, style, sub, summary, sup, svg, table, tbody, td, template, textarea, tfoot, th, thead, time, title,
-  tr, track, tt, u, ul, video, wbr
+  header, hgroup, h1, h2, h3, h4, h5, h6, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li,
+  link, main, map, mark, menu, menuitem, meta, meter, nav, noframes, noscript, object, ol, optgroup, option,
+  output, p, param, picture, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
+  span, strike, strong, style, sub, summary, sup, svg, table, tbody, td, template, textarea, tfoot, th, thead,
+  time, title, tr, track, tt, u, ul, video, wbr
 } = nativeVDOMFactories;

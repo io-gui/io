@@ -13,4 +13,5 @@ export declare class IoPropertyEditor extends IoElement {
     valueMutated(): void;
     changed(): void;
 }
+export declare const ioPropertyEditor: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-property-editor.d.ts.map

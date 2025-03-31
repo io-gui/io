@@ -82,3 +82,4 @@ export class IoMatrix extends IoVector {
     }
   }
 }
+export const ioMatrix = IoMatrix.vDOM;

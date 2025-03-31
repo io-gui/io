@@ -18,4 +18,5 @@ export declare class IoSliderRange extends IoSliderBase {
     _onPointermoveThrottled(event: PointerEvent): void;
     static get Frag(): string;
 }
+export declare const ioSliderRange: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-slider-range.d.ts.map

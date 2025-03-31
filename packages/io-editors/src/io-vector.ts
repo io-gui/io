@@ -116,3 +116,4 @@ export class IoVector extends IoElement {
     return this.linkable ? ['io-boolicon', {value: this.bind('linked'), true: 'vectors:link', false: 'vectors:unlink'}] : null;
   }
 }
+export const ioVector = IoVector.vDOM;

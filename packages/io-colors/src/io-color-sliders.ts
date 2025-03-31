@@ -167,7 +167,7 @@ export class IoColorSlider extends IoColorBase {
     ]);
   }
 }
-
+export const ioColorSlider = IoColorSlider.vDOM;
 /**
  * A base class for 1D color slider.
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
@@ -284,6 +284,8 @@ export class IoColorSliderR extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderR = IoColorSliderR.vDOM;
+
 /**
  * A 1D slider for "green" color channel.
  **/
@@ -300,6 +302,8 @@ export class IoColorSliderG extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderG = IoColorSliderG.vDOM;
+
 /**
  * A 1D slider for "blue" color channel.
  **/
@@ -316,6 +320,7 @@ export class IoColorSliderB extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderB = IoColorSliderB.vDOM;
 /**
  * A 1D slider for "alpha" color channel.
  **/
@@ -337,6 +342,8 @@ export class IoColorSliderA extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderA = IoColorSliderA.vDOM;
+
 /**
  * A 1D slider for "hue" color channel.
  **/
@@ -353,6 +360,7 @@ export class IoColorSliderH extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderH = IoColorSliderH.vDOM;
 /**
  * A 1D slider for "saturation" color channel.
  **/
@@ -369,6 +377,8 @@ export class IoColorSliderS extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderS = IoColorSliderS.vDOM;
+
 /**
  * A 1D slider for "value" color channel.
  **/
@@ -385,6 +395,8 @@ export class IoColorSliderV extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderV = IoColorSliderV.vDOM;
+
 /**
  * A 1D slider for "level" color channel.
  **/
@@ -401,6 +413,8 @@ export class IoColorSliderL extends IoColorSliderBase {
     `;
   }
 }
+export const ioColorSliderL = IoColorSliderL.vDOM;
+
 /**
  * A 2D slider gor "hue" and "saturation" color channels.
  **/
@@ -414,6 +428,8 @@ export class IoColorSliderHs extends IoColorSlider2dBase {
     `;
   }
 }
+export const ioColorSliderHs = IoColorSliderHs.vDOM;
+
 /**
  * A 2D slider gor "saturation" and "value" color channels.
  **/
@@ -427,11 +443,13 @@ export class IoColorSliderSv extends IoColorSlider2dBase {
     `;
   }
 }
+export const ioColorSliderSv = IoColorSliderSv.vDOM;
+
 /**
  * A 2D slider gor "saturation" and "level" color channels.
  **/
 @Register
-export class IoColorSliderSL extends IoColorSlider2dBase {
+export class IoColorSliderSl extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
       vec3 geio_color(vec2 uv) {
@@ -440,3 +458,4 @@ export class IoColorSliderSL extends IoColorSlider2dBase {
     `;
   }
 }
+export const ioColorSliderSl = IoColorSliderSl.vDOM;

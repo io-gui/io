@@ -127,4 +127,4 @@ export class IoString extends IoField {
     }
   }
 }
-
+export const ioString = IoString.vDOM;

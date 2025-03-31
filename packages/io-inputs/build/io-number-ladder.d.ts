@@ -11,7 +11,7 @@ import './io-number-ladder-step';
  *
  * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
  **/
-export declare class IoNumberLadder extends IoElement {
+declare class IoNumberLadder extends IoElement {
     static get Style(): string;
     role: string;
     src?: IoNumber;
@@ -34,4 +34,5 @@ export declare class IoNumberLadder extends IoElement {
     changed(): void;
 }
 export declare const IoNumberLadderSingleton: IoNumberLadder;
+export {};
 //# sourceMappingURL=io-number-ladder.d.ts.map

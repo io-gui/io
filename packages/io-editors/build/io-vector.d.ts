@@ -29,4 +29,5 @@ export declare class IoVector extends IoElement {
     changed(): void;
     getSlotted(): Array<any> | null;
 }
+export declare const ioVector: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-vector.d.ts.map

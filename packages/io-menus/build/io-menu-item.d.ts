@@ -38,6 +38,7 @@ export declare class IoMenuItem extends IoField {
     itemMutated(): void;
     changed(): void;
 }
+export declare const ioMenuItem: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 export declare function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[];
 export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuItem | IoMenuOptions)[];

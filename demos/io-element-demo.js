@@ -69,4 +69,4 @@ export class IoElementDemo extends IoElement {
 }
 Register(IoElementDemo);
 
-export const ioElementDemo = IoElementDemo._vDOMFactory;
+export const ioElementDemo = IoElementDemo.vDOM;

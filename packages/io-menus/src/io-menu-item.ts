@@ -369,7 +369,7 @@ export class IoMenuItem extends IoField {
     ]);
   }
 }
-
+export const ioMenuItem = IoMenuItem.vDOM;
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 
 export function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[] {

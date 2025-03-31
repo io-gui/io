@@ -1,4 +1,4 @@
-import { Register, IoElement, IoIconsetDB } from 'io-gui';
+import { Register, IoElement, IoIconsetDB, ioIcon, h3 } from 'io-gui';
 import 'io-iconset';
 
 export class IoIconsetDemo extends IoElement {
@@ -7,10 +7,10 @@ export class IoIconsetDemo extends IoElement {
       (()=>{
         const icons = [];
         for (const set of Object.keys(IoIconsetDB)) {
-          icons.push(['h3', set]);
+          icons.push(h3(set));
           for (const icon of Object.keys(IoIconsetDB[set])) {
             const id = `${set}:${icon}`;
-            icons.push(['io-icon', {icon: id, title: id, name: id, label: id}]);
+            icons.push(ioIcon({icon: id, title: id, name: id, label: id}));
           }
         }
         return icons;
@@ -19,5 +19,4 @@ export class IoIconsetDemo extends IoElement {
   }
 }
 Register(IoIconsetDemo);
-
-export const ioIconsetDemo = IoIconsetDemo._vDOMFactory;
+export const ioIconsetDemo = IoIconsetDemo.vDOM;

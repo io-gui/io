@@ -74,3 +74,4 @@ export class IoButton extends IoField {
     ]);
   }
 }
+export const ioButton = IoButton.vDOM;

@@ -1,4 +1,4 @@
-import { IoElement, Constructor } from 'io-gui';
+import { IoElement, VDOMArray, Constructor } from 'io-gui';
 import './io-property-editor.js';
 import { PropertyConfig } from './models/editor-config.js';
 /**
@@ -15,4 +15,5 @@ export declare class IoObject extends IoElement {
     role: string;
     changed(): void;
 }
+export declare const ioObject: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-object.d.ts.map

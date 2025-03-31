@@ -33,4 +33,5 @@ export declare class IoInspector extends IoElement {
     static get ObjectWidgets(): {};
     Register(ioNodeConstructor: typeof IoNode): void;
 }
+export declare const ioInspector: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-inspector.d.ts.map

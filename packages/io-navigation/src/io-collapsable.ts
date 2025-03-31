@@ -84,3 +84,4 @@ export class IoCollapsable extends IoElement {
     ]);
   }
 }
+export const ioCollapsable = IoCollapsable.vDOM;

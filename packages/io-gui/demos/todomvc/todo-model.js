@@ -76,5 +76,4 @@ export class TodoModel extends IoNode {
     localStorage.setItem('todoapp', JSON.stringify(this.items));
   }
 }
-
 Register(TodoModel);

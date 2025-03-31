@@ -203,6 +203,7 @@ export class IoLayout extends IoElement {
     this.dispatchQueue();
   }
 }
+export const ioLayout = IoLayout.vDOM;
 
 @Register
 export class IoLayoutDivider extends IoElement {
@@ -275,3 +276,4 @@ export class IoLayoutDivider extends IoElement {
     ]);
   }
 }
+export const ioLayoutDivider = IoLayoutDivider.vDOM;

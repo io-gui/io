@@ -1,4 +1,4 @@
-import { IoElement, Register } from 'io-gui';
+import { IoElement, Register, span, ul, li, a, button } from 'io-gui';
 import {TodoModel} from './todo-model.js';
 
 export class TodoFooter extends IoElement {
@@ -20,21 +20,21 @@ export class TodoFooter extends IoElement {
     const activeLeft = this.model.getActiveCount();
     const completedCount = this.model.getCompletedCount();
     this.template([
-      ['span', {class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'],
-      ['ul', {class: 'filters'}, [
-        ['li', [
-          ['a', {'@click': this._onSetRoute, class: this.route === 'all' ? 'selected' : ''}, 'All'],
-        ]],
-        ['li', [
-          ['a', {'@click': this._onSetRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active'],
-        ]],
-        ['li', [
-          ['a', {'@click': this._onSetRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed'],
-        ]],
-      ]],
-      completedCount? ['button', {class: 'clear-completed', '@click': this._onClear}, 'Clear completed'] : null
+      span({class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'),
+      ul({class: 'filters'}, [
+        li([
+          a({'@click': this._onSetRoute, class: this.route === 'all' ? 'selected' : ''}, 'All')
+        ]),
+        li([
+          a({'@click': this._onSetRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active')
+        ]),
+        li([
+          a({'@click': this._onSetRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed')
+        ]),
+      ]),
+      completedCount ? button({class: 'clear-completed', '@click': this._onClear}, 'Clear completed') : null
     ]);
   }
 }
-
 Register(TodoFooter);
+export const todoFooter = TodoFooter.vDOM;

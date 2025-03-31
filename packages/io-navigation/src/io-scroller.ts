@@ -66,3 +66,4 @@ export class IoScroller extends IoElement {
     this._observer.disconnect();
   }
 }
+export const ioScroller = IoScroller.vDOM;

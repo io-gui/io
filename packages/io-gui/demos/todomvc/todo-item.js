@@ -57,5 +57,5 @@ export class TodoItem extends IoElement {
     }
   }
 }
-
 Register(TodoItem);
+export const todoItem = TodoItem.vDOM;

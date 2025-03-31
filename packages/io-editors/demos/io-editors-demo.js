@@ -119,7 +119,5 @@ export class IoEditorsDemo extends IoElement {
     ]);
   }
 }
-
 Register(IoEditorsDemo);
-
-export const ioEditorsDemo = IoEditorsDemo._vDOMFactory;
+export const ioEditorsDemo = IoEditorsDemo.vDOM;

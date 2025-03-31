@@ -204,6 +204,7 @@ export class IoInspector extends IoElement {
     Object.defineProperty(ioNodeConstructor.prototype, '_widgets', {writable: true, value: new ObjectWidgets(ioNodeConstructor.prototype._protochain.constructors)});
   }
 }
+export const ioInspector = IoInspector.vDOM;
 
 function genUUID(object: any) {
   let UUID = 'io-object-collapse-state-' + object.constructor.name;

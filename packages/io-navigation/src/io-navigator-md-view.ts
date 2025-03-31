@@ -17,3 +17,4 @@ export class IoNavigatorMdView extends IoNavigatorBase {
     ]];
   }
 }
+export const ioNavigatorMdView = IoNavigatorMdView.vDOM;

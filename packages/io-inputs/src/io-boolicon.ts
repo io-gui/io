@@ -14,3 +14,4 @@ export class IoBoolicon extends IoBoolean {
     ]);
   }
 }
+export const ioBoolicon = IoBoolicon.vDOM;
