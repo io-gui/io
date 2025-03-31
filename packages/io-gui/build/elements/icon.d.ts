@@ -9,4 +9,5 @@ export declare class IoIcon extends IoElement {
     stroke: boolean;
     iconChanged(): void;
 }
+export declare const ioIcon: (arg0?: import("..").IoNodeArgs | import("../core/element").VDOMArray[], arg1?: import("../core/element").VDOMArray[]) => import("../core/element").VDOMArray;
 //# sourceMappingURL=icon.d.ts.map

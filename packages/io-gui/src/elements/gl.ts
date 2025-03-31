@@ -373,3 +373,5 @@ export class IoGl extends IoElement {
     Object.defineProperty(ioNodeConstructor.prototype, '_glUtils', {enumerable: false, value: _glUtils});
   }
 }
+
+export const ioGl = IoGl._vDOMFactory;

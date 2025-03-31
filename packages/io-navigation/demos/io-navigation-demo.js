@@ -127,3 +127,5 @@ export class IoNavigationDemo extends IoElement {
 }
 
 Register(IoNavigationDemo);
+
+export const ioNavigationDemo = IoNavigationDemo._vDOMFactory;

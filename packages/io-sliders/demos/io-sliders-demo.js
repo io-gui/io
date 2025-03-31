@@ -53,3 +53,5 @@ export class IoSlidersDemo extends IoElement {
 }
 
 Register(IoSlidersDemo);
+
+export const ioSlidersDemo = IoSlidersDemo._vDOMFactory;

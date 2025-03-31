@@ -19,3 +19,5 @@ export class IoIconsetDemo extends IoElement {
   }
 }
 Register(IoIconsetDemo);
+
+export const ioIconsetDemo = IoIconsetDemo._vDOMFactory;

@@ -172,8 +172,8 @@ export class IoMenusDemo extends IoElement {
     ]);
   }
 }
-
 Register(IoMenusDemo);
+export const ioMenusDemo = IoMenusDemo._vDOMFactory;
 
 export class IoOptionsDemoView extends IoElement {
   static get Style() {
@@ -243,6 +243,7 @@ export class IoOptionsDemoView extends IoElement {
   }
 }
 Register(IoOptionsDemoView);
+export const ioOptionsDemoView = IoOptionsDemoView._vDOMFactory;
 
 export class IoItemDemoView extends IoElement {
   static get Style() {
@@ -284,6 +285,7 @@ export class IoItemDemoView extends IoElement {
   }
 }
 Register(IoItemDemoView);
+export const ioItemDemoView = IoItemDemoView._vDOMFactory;
 
 export class IoDemoMenuModel extends IoOptionsDemoView {
   static get Properties() {
@@ -325,3 +327,4 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
   }
 }
 Register(IoDemoMenuModel);
+export const ioDemoMenuModel = IoDemoMenuModel._vDOMFactory;

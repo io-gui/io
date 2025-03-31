@@ -327,3 +327,6 @@ export class IoField extends IoElement {
     ]);
   }
 }
+
+export const ioField = IoField._vDOMFactory;
+

@@ -30,4 +30,5 @@ export declare class IoField extends IoElement {
     setCaretPosition(position: number): void;
     changed(): void;
 }
+export declare const ioField: (arg0?: import("..").IoNodeArgs | import("../core/element").VDOMArray[], arg1?: import("../core/element").VDOMArray[]) => import("../core/element").VDOMArray;
 //# sourceMappingURL=field.d.ts.map

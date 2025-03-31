@@ -27,4 +27,5 @@ export declare class IoGl extends IoElement {
     setUniform(name: string, value: any): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
+export declare const ioGl: (arg0?: import("../core/node").IoNodeArgs | import("../core/element").VDOMArray[], arg1?: import("../core/element").VDOMArray[]) => import("../core/element").VDOMArray;
 //# sourceMappingURL=gl.d.ts.map

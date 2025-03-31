@@ -53,11 +53,11 @@ export class IoElementDemo extends IoElement {
     if (this.element) {
       this.template([
         ['div', {class: 'element-wrap'}, [
-          [this.element, {$: 'demo-element'}],
+          [this.element, {$: 'element'}],
         ]],
         ['io-property-editor', {$: 'properties'}]
       ]);
-      const element = this.$['demo-element'];
+      const element = this.$['element'];
       const properties = this.$['properties'];
       properties.value = element;
     } else {
@@ -68,3 +68,5 @@ export class IoElementDemo extends IoElement {
   }
 }
 Register(IoElementDemo);
+
+export const ioElementDemo = IoElementDemo._vDOMFactory;

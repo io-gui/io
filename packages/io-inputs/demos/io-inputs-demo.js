@@ -63,3 +63,6 @@ export class IoInputsDemo extends IoElement {
 }
 
 Register(IoInputsDemo);
+
+export const ioInputsDemo = IoInputsDemo._vDOMFactory;
+

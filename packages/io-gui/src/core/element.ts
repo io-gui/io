@@ -154,6 +154,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: any
  */
 @Register
 export class IoElement extends IoNodeMixin(HTMLElement) {
+
   static get Style(): string {
     return /* css */`
       :host {
@@ -212,6 +213,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
 
   constructor(...args: any[]) {
     super(...args);
+
     for (const name in this._protochain.properties) {
       const property = this._properties.get(name)!;
       const value = property.value;
@@ -323,6 +325,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }
   }
+
+  static _vDOMFactory: (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+
   Register(ioNodeConstructor: typeof IoNode) {
     super.Register(ioNodeConstructor);
     const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
@@ -388,7 +393,20 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     styleElement.innerHTML = styleString;
     styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
     document.head.appendChild(styleElement);
+
+    Object.defineProperty(ioNodeConstructor, '_vDOMFactory', {value: function(arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
+      if (arg0 !== undefined) {
+        if (arg1 !== undefined) {
+          return [localName, arg0 as IoNodeArgs, arg1 as VDOMArray[]];
+        } else {
+          return [localName, arg0 as IoNodeArgs | VDOMArray[]];
+        }
+      } else {
+        return [localName];
+      }
+    }});
   }
+
   /**
   * Helper function to flatten textContent into a single TextNode.
   * Update textContent via TextNode is better for layout performance.
@@ -456,3 +474,43 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
 }
+
+//TODO: test element vDOM factories!
+export const ioElement = IoElement._vDOMFactory;
+
+const nativeElements = [
+  'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside', 'audio', 'b', 'base', 'basefont', 'bdi', 'bdo', 'big', 'blockquote',
+  'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn',
+  'dialog', 'dir', 'div', 'dl', 'dt', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'head',
+  'header', 'hgroup', 'h1', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'main', 'map',
+  'mark', 'menu', 'menuitem', 'meta', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param',
+  'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source', 'span', 'strike',
+  'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title',
+  'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
+];
+const nativeVDOMFactories: Record<string, (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray> = {};
+nativeElements.forEach((element) => {
+  const vDOMFactory = function(arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
+    if (arg0 !== undefined) {
+      if (arg1 !== undefined) {
+        return [element, arg0 as IoNodeArgs, arg1 as VDOMArray[]];
+      } else {
+        return [element, arg0 as IoNodeArgs | VDOMArray[]];
+      }
+    } else {
+      return [element];
+    }
+  };
+  nativeVDOMFactories[element] = vDOMFactory;
+});
+
+export const {
+  a, abbr, acronym, address, applet, area, article, aside, audio, b, base, basefont, bdi, bdo, big, blockquote,
+  body, br, button, canvas, caption, center, cite, code, col, colgroup, data, datalist, dd, del, details, dfn,
+  dialog, dir, div, dl, dt, em, embed, fieldset, figcaption, figure, font, footer, form, frame, frameset, head,
+  header, hgroup, h1, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main, map,
+  mark, menu, menuitem, meta, meter, nav, noframes, noscript, object, ol, optgroup, option, output, p, param,
+  picture, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source, span, strike,
+  strong, style, sub, summary, sup, svg, table, tbody, td, template, textarea, tfoot, th, thead, time, title,
+  tr, track, tt, u, ul, video, wbr
+} = nativeVDOMFactories;

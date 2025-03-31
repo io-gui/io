@@ -53,3 +53,5 @@ export class IoIcon extends IoElement {
     }
   }
 }
+
+export const ioIcon = IoIcon._vDOMFactory;

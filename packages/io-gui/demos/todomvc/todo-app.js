@@ -35,3 +35,5 @@ export class TodoApp extends IoElement {
   }
 }
 Register(TodoApp);
+
+export const todoApp = TodoApp._vDOMFactory;
