@@ -56,12 +56,13 @@ export class IoSliderBase extends IoGl {
   @Property('0')
   declare tabindex: string;
 
-  #startX = 0;
-  #startY = 0;
-  #active = -1;
-  #rect: DOMRect | null = null;
+  _startX = 0;
+  _startY = 0;
+  _rect: DOMRect | null = null;
 
-  get #min(): [number, number] {
+  _active = -1;
+
+  get _min(): [number, number] {
     if (typeof this.min === 'number') {
       return [this.min, this.min];
     } else if (this.min instanceof Array) {
@@ -72,7 +73,7 @@ export class IoSliderBase extends IoGl {
     return [-Infinity, -Infinity];
   }
 
-  get #max(): [number, number] {
+  get _max(): [number, number] {
     if (typeof this.max === 'number') {
       return [this.max, this.max];
     } else if (this.max instanceof Array) {
@@ -125,28 +126,28 @@ export class IoSliderBase extends IoGl {
     event.preventDefault();
   }
   _onTouchstart(event: TouchEvent) {
-    this.#rect = this.getBoundingClientRect();
+    this._rect = this.getBoundingClientRect();
     this.addEventListener('touchmove', this._onTouchmove, {passive: false});
     this.addEventListener('touchend', this._onTouchend);
-    this.#startX = event.changedTouches[0].clientX;
-    this.#startY = event.changedTouches[0].clientY;
-    this.#active = this.noscroll ? 1 : -1;
+    this._startX = event.changedTouches[0].clientX;
+    this._startY = event.changedTouches[0].clientY;
+    this._active = this.noscroll ? 1 : -1;
   }
   _onTouchmove(event: TouchEvent) {
-    const dx = Math.abs(this.#startX - event.changedTouches[0].clientX);
-    const dy = Math.abs(this.#startY - event.changedTouches[0].clientY);
-    if (this.#active === -1) {
+    const dx = Math.abs(this._startX - event.changedTouches[0].clientX);
+    const dy = Math.abs(this._startY - event.changedTouches[0].clientY);
+    if (this._active === -1) {
       if (this.vertical) {
         if (dy > 5 && dy > dx) {
-          this.#active = (dy > dx && dx < 5) ? 1 : 0;
+          this._active = (dy > dx && dx < 5) ? 1 : 0;
         }
       } else {
         if (dx > 5 && dx > dy) {
-          this.#active = (dx > dy && dy < 5) ? 1 : 0;
+          this._active = (dx > dy && dy < 5) ? 1 : 0;
         }
       }
     }
-    if (this.#active === 1 && event.cancelable) {
+    if (this._active === 1 && event.cancelable) {
       event.preventDefault();
     }
   }
@@ -155,14 +156,14 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('touchend', this._onTouchend);
   }
   _onPointerdown(event: PointerEvent) {
-    this.#rect = this.getBoundingClientRect();
+    this._rect = this.getBoundingClientRect();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this._onPointermove);
     this.addEventListener('pointerup', this._onPointerup);
     this.addEventListener('pointercancel', this._onPointerup);
   }
   _onPointermove(event: PointerEvent) {
-    if (event.pointerType !== 'touch') this.#active = 1;
+    if (event.pointerType !== 'touch') this._active = 1;
     this.throttle(this._onPointermoveThrottled, event);
   }
   _onPointerup(event: PointerEvent) {
@@ -170,10 +171,10 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('pointermove', this._onPointermove);
     this.removeEventListener('pointerup', this._onPointerup);
     this.removeEventListener('pointercancel', this._onPointerup);
-    this.#active = -1;
+    this._active = -1;
   }
   _getPointerCoord(event: PointerEvent): [number, number] {
-    const rect = this.#rect || this.getBoundingClientRect();
+    const rect = this._rect || this.getBoundingClientRect();
     let x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
     let y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
     x = Math.pow(x, this.exponent);
@@ -182,14 +183,14 @@ export class IoSliderBase extends IoGl {
   }
   _getValueFromCoord(coord: [number, number]) {
     const value: [number, number] = [0, 0];
-    const min = this.#min;
-    const max = this.#max;
+    const min = this._min;
+    const max = this._max;
     value[0] = min[0] * (1 - coord[0]) + max[0] * coord[0];
     value[1] = min[1] * (1 - coord[1]) + max[1] * coord[1];
     return value;
   }
   _onPointermoveThrottled(event: PointerEvent) {
-    if (this.#active === 1) {
+    if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus();
       const coord = this._getPointerCoord(event);
       const value = this._getValueFromCoord(coord);
@@ -197,8 +198,8 @@ export class IoSliderBase extends IoGl {
     }
   }
   _inputValue(value: [number, number]) {
-    const min = this.#min;
-    const max = this.#max;
+    const min = this._min;
+    const max = this._max;
     const step = this._step;
 
     value[0] = clamp(value[0], max[0], min[0]);
@@ -277,11 +278,11 @@ export class IoSliderBase extends IoGl {
     this._inputValue(value);
   }
   _setMin() {
-    const min = this.#min;
+    const min = this._min;
     this._inputValue(min);
   }
   _setMax() {
-    const max = this.#max;
+    const max = this._max;
     this._inputValue(max);
   }
   _setUp() {

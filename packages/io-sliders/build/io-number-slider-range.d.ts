@@ -1,5 +1,6 @@
 import { IoElement } from 'io-gui';
 import './io-slider-range.js';
+import 'io-inputs';
 /**
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  *

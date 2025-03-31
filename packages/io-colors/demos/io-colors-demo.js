@@ -1,5 +1,6 @@
 import { Register, IoElement } from 'io-gui';
 import 'io-colors';
+import 'io-inputs';
 
 export class IoColorsDemo extends IoElement {
   static get Style() {

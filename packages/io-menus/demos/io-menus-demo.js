@@ -1,5 +1,9 @@
 import { Register, IoElement } from 'io-gui';
 import { MenuOptions, MenuItem } from 'io-menus';
+// TODO: remove dependencies on io-inputs and io-navigation.
+import 'io-inputs';
+import 'io-navigation';
+import 'io-iconset';
 
 const numberItems = [
   {value: 0, label: 'zero'},
@@ -78,6 +82,9 @@ export class IoMenusDemo extends IoElement {
       }
       :host .row > *:not(:last-child) {
         margin-right: var(--io_spacing);
+      }
+      :host .contextArea {
+        min-height: 200px;
       }
     `;
   }
@@ -216,6 +223,9 @@ export class IoOptionsDemoView extends IoElement {
       },
     };
   }
+  optionsMutated() {
+    this.changed();
+  }
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
@@ -253,6 +263,9 @@ export class IoItemDemoView extends IoElement {
         strict: true,
       },
     };
+  }
+  itemMutated() {
+    this.changed();
   }
   changed() {
     let selectElement = null;
@@ -305,6 +318,10 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
         ]}
       ])
     }};
+  }
+  init() {
+    // TODO: remove this. Why is it necessary in ./index.html?
+    this.changed();
   }
 }
 Register(IoDemoMenuModel);

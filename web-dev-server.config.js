@@ -18,6 +18,7 @@ export function wdsPluginFixImportMapsModules() {
   return {
     name: 'wds-plugin-fix-import-maps-modules',
     async resolveImport({ source }) {
+      console.log('resolveImport', source);
       if (Object.keys(importMapsModules).includes(source)) {
         return importMapsModules[source];
       }

@@ -1,5 +1,6 @@
 import { Register, IoElement, Property } from 'io-gui';
 import './io-slider.js';
+import 'io-inputs';
 
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`

@@ -3,6 +3,9 @@ import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import { IoMenuItem } from './io-menu-item.js';
 
+// TODO: remove dependency on io-collapsable from io-navigation.
+// TODO: remove dependency on io-boolean from io-inputs.
+
 export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
   const elements: VDOMArray[] = [];
   if (d <= depth) for (let i = 0; i < options.length; i++) {
@@ -10,6 +13,7 @@ export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
     if (item.options?.length) {
       const collapsableState = $({value: item.selected, storage: 'local', key: genObjectStorageID(item)});
       if (item.selected === true) collapsableState.value = true;
+      // TODO: remove dependency on io-collapsable from io-navigation.
       elements.push(['io-collapsable', {
         label: item.label,
         icon: item.icon,
