@@ -1,6 +1,5 @@
 import { IoElement } from 'io-gui';
 import { IoNumber } from './io-number';
-import './io-number-ladder-step';
 /**
  * Interactive number ladder.
  * When dragged horizontally, it changes the value in step increments.

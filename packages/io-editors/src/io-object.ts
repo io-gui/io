@@ -1,9 +1,11 @@
 import { Register, IoElement, VDOMArray, Property, Constructor } from 'io-gui';
 import './io-property-editor.js';
 import { PropertyConfig } from './models/editor-config.js';
+import { ioBoolean } from 'io-inputs';
+import { ioPropertyEditor } from './io-property-editor.js';
 
 /**
- * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
 @Register
 export class IoObject extends IoElement {
@@ -58,19 +60,19 @@ export class IoObject extends IoElement {
   changed() {
     const label = this.label || this.value.constructor.name;
     const elements: VDOMArray[] = [];
-    elements.push(['io-boolean', {
+    elements.push(ioBoolean({
       appearance: 'neutral',
       true: label,
       false: label,
       value: this.bind('expanded')}
-    ]);
+    ));
     if (this.expanded) {
-      elements.push(['io-property-editor', {
+      elements.push(ioPropertyEditor({
         value: this.value,
         properties: this.properties,
         config: this.config,
         labeled: this.labeled,
-      }]);
+      }));
     }
     this.template(elements);
     this.setAttribute('aria-expanded', String(this.expanded));

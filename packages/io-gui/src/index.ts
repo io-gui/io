@@ -8,13 +8,10 @@ export * from './core/decorators/register';
 export * from './core/decorators/property';
 export * from './core/node';
 export * from './core/element';
-export * from './nodes/iconset';
 export * from './nodes/storage';
 export * from './nodes/theme';
-export * from './elements/field';
 export * from './elements/gl';
 export * from './elements/gl.glsl';
-export * from './elements/icon';
 export * from './elements/label';
 export * from './elements/overlay';
 

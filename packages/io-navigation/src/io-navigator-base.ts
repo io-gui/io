@@ -1,5 +1,5 @@
 import { IoElement, VDOMArray, Property, Autobind } from 'io-gui';
-import { MenuOptions, MenuItem } from 'io-menus';
+import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 
 export class IoNavigatorBase extends IoElement {
   static get Style() {
@@ -121,7 +121,7 @@ export class IoNavigatorBase extends IoElement {
       depth: this.depth
     };
 
-    const hamburger = ['io-menu-item', {
+    const hamburger = ioMenuItem({
       depth: this.depth,
       role: 'navigation',
       class: 'hamburger',
@@ -131,27 +131,27 @@ export class IoNavigatorBase extends IoElement {
         icon: 'menu:hamburger',
         options: this.options,
       })
-    }];
+    });
 
     if (this.menu === 'top') {
       this.template([
-        ['io-menu-options', {horizontal: true, noPartialCollapse: this.collapsed, ...sharedMenuConfig}],
+        ioMenuOptions({horizontal: true, noPartialCollapse: this.collapsed, ...sharedMenuConfig}),
         this.getSlotted(),
       ]);
     } else if (this.menu === 'left') {
       this.template([
-        this.collapsed ? hamburger : ['io-menu-tree', {...sharedMenuConfig}],
+        this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
         this.getSlotted(),
       ]);
     } else if (this.menu === 'bottom') {
       this.template([
         this.getSlotted(),
-        ['io-menu-options', {horizontal: true, noPartialCollapse: this.collapsed, direction: 'up', ...sharedMenuConfig}],
+        ioMenuOptions({horizontal: true, noPartialCollapse: this.collapsed, direction: 'up', ...sharedMenuConfig}),
       ]);
     } else if (this.menu === 'right') {
       this.template([
         this.getSlotted(),
-        this.collapsed ? hamburger : ['io-menu-tree', {...sharedMenuConfig}],
+        this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
       ]);
     }
   }

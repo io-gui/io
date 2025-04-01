@@ -1,4 +1,4 @@
-import { IoField } from 'io-gui';
+import { IoField } from './io-field';
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
@@ -21,5 +21,5 @@ export declare class IoButton extends IoField {
     init(): void;
     changed(): void;
 }
-export declare const ioButton: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioButton: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-button.d.ts.map

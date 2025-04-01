@@ -30,21 +30,19 @@ export type IoElementArgs = IoNodeArgs & {
   disabled?: boolean;
   cache?: boolean;
   [key: string]: any, // TODO: remove and make specific types
+  src?: string; // TODO: move to IoMarkdown
 }
 
-// export type VDOMArray<T = Record<never, never>> =
-//   [string, Partial<T> & IoElementArgs | string | VDOMArray<T>[] ] |
-//   [string, Partial<T> & IoElementArgs | string, VDOMArray<T>[] | string ];
-
 export type VDOMArray =
+  null |
   [string] |
-  [string, IoElementArgs | string | VDOMArray[] ] |
-  [string, IoElementArgs | string, VDOMArray[] | string ];
+  [string, IoElementArgs | VDOMArray[] | string] |
+  [string, IoElementArgs, VDOMArray[] | string];
 
 export type VDOMElement = {
   name: string,
   props: IoElementArgs,
-  children: VDOMElement[]
+  children: VDOMElement[] | string
 }
 
 /** @license
@@ -71,17 +69,34 @@ export type VDOMElement = {
  * SOFTWARE.
  */
 
+const isArray = (x: any) => Array.isArray(x);
 const isString = (x: any) => typeof x === 'string';
-const isArray = Array.isArray;
-const isObject = (x: any) => typeof x === 'object' && !isArray(x);
+const isElementArgs = (object: IoElementArgs | VDOMArray[] | string | undefined) => {
+  return typeof object === 'object' && !Array.isArray(object);
+};
 
 const clense = (a: any, b: any) => !b ? a : isString(b[0]) ? [...a, b] : [...a, ...b];
 
-export const buildTree = () => (node: VDOMArray): any => isObject(node[1]) ? {
-  ['name']: node[0],
-  ['props']: node[1],
-  ['children']: isArray(node[2]) ? node[2].reduce(clense, []).map(buildTree()) : node[2]
-} : buildTree()([node[0], {}, node[1] as VDOMArray[] | string]);
+const buildTree = (node: VDOMArray): VDOMElement | null => {
+  if (isArray(node)) {
+    if (isElementArgs(node[1])) {
+      const vElement: VDOMElement = {
+        name: node[0],
+        props: node[1] as IoElementArgs,
+        children: []
+      };
+      if (isArray(node[2])) {
+        vElement.children = node[2].reduce(clense, []).map(buildTree);
+      } else if (isString(node[2])) {
+        vElement.children = node[2];
+      }
+      return vElement;
+    } else {
+      return buildTree([node[0], {}, node[1] as VDOMArray[]]);
+    }
+  }
+  return null;
+};
 
 /**
  * Creates an element from a virtual dom object.
@@ -211,6 +226,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
+  //TODO: add types
   constructor(...args: any[]) {
     super(...args);
 
@@ -255,7 +271,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
    * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
   template(vDOM: Array<any>, host?: HTMLElement, cache?: boolean) {
-    const vChildren = buildTree()(['first', vDOM]).children;
+    const vChildren = buildTree(['first', vDOM])?.children || [];
     host = (host || this) as any;
     if (host === (this as any)) this.$ = {};
     this.traverse(vChildren, host as HTMLElement, cache);
@@ -267,7 +283,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
    * @param {HTMLElement} [host] - Optional template target.
    * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  traverse(vChildren: Array<any>, host: HTMLElement, cache?: boolean) {
+  traverse(vChildren: Array<any> | string, host: HTMLElement, cache?: boolean) {
     const children = host.children;
     // remove trailing elements
     while (children.length > vChildren.length) {
@@ -318,7 +334,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);
           (child as IoElement)._textNode.nodeValue = String(vChildren[i].children);
-        } else if (typeof vChildren[i].children === 'object') {
+        } else if (vChildren[i].children.length > 0) {
           // Traverse deeper.
           this.traverse(vChildren[i].children, child as HTMLElement, cache);
         }
@@ -326,7 +342,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     }
   }
 
-  static vDOM: (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+  static vDOM: (arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 
   Register(ioNodeConstructor: typeof IoNode) {
     super.Register(ioNodeConstructor);
@@ -394,12 +410,12 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
     document.head.appendChild(styleElement);
 
-    Object.defineProperty(ioNodeConstructor, 'vDOM', {value: function(arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
+    Object.defineProperty(ioNodeConstructor, 'vDOM', {value: function(arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
       if (arg0 !== undefined) {
         if (arg1 !== undefined) {
-          return [localName, arg0 as IoNodeArgs, arg1 as VDOMArray[]];
+          return [localName, arg0 as IoElementArgs, arg1 as VDOMArray[]];
         } else {
-          return [localName, arg0 as IoNodeArgs | VDOMArray[]];
+          return [localName, arg0 as IoElementArgs | VDOMArray[]];
         }
       } else {
         return [localName];
@@ -488,14 +504,14 @@ const nativeElements = [
   'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead',
   'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
 ];
-const nativeVDOMFactories: Record<string, (arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray> = {};
+const nativeVDOMFactories: Record<string, (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray> = {};
 nativeElements.forEach((element) => {
-  const vDOMFactory = function(arg0?: IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
+  const vDOMFactory = function(arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string): VDOMArray {
     if (arg0 !== undefined) {
       if (arg1 !== undefined) {
-        return [element, arg0 as IoNodeArgs, arg1 as VDOMArray[]];
+        return [element, arg0 as IoElementArgs, arg1 as VDOMArray[] | string];
       } else {
-        return [element, arg0 as IoNodeArgs | VDOMArray[]];
+        return [element, arg0 as IoElementArgs | VDOMArray[] | string];
       }
     } else {
       return [element];

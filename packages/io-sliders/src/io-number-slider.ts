@@ -1,6 +1,6 @@
 import { Register, IoElement, Property } from 'io-gui';
-import './io-slider.js';
-import 'io-inputs';
+import {ioSlider} from './io-slider.js';
+import {ioNumber} from 'io-inputs';
 
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
@@ -61,15 +61,15 @@ export class IoNumberSlider extends IoElement {
   }
   changed() {
     this.template([
-      ['io-number', {
+      ioNumber({
         $: 'number',
         value: this.value,
         step: this.step,
         conversion: this.conversion,
         label: this.label,
         '@value-input': this._onNumberSet,
-      }],
-      ['io-slider', {
+      }),
+      ioSlider({
         $: 'slider',
         value: this.value * this.conversion,
         step: this.step * this.conversion,
@@ -78,7 +78,7 @@ export class IoNumberSlider extends IoElement {
         exponent: this.exponent,
         label: this.label,
         '@value-input': this._onSliderSet,
-      }]
+      }),
     ]);
   }
 }

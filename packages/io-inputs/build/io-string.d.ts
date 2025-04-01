@@ -1,4 +1,4 @@
-import { IoField } from 'io-gui';
+import { IoField } from './io-field';
 /**
  * Input element for `String` data type.
  **/
@@ -20,5 +20,5 @@ export declare class IoString extends IoField {
     changed(): void;
     valueChanged(): void;
 }
-export declare const ioString: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioString: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-string.d.ts.map

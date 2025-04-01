@@ -8,8 +8,4 @@ export * from './io-object.js';
 export * from './io-property-editor.js';
 export * from './io-vector.js';
 export * from './io-matrix.js';
-export * from './io-vectors-iconset.js';
-import 'io-colors';
-import 'io-menus';
-import 'io-inputs';
 //# sourceMappingURL=index.d.ts.map

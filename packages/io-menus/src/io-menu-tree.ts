@@ -1,30 +1,31 @@
-import { Register, IoElement, Property, VDOMArray, IoStorage as $, genObjectStorageID } from 'io-gui';
+import { Register, IoElement, Property, VDOMArray, IoStorage as $, genObjectStorageID, div } from 'io-gui';
+import { ioField } from 'io-inputs';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
-import { IoMenuItem } from './io-menu-item.js';
-
-// TODO: remove dependency on io-collapsable from io-navigation.
-// TODO: remove dependency on io-boolean from io-inputs.
+import { ioMenuItem, IoMenuItem } from './io-menu-item.js';
 
 export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
   const elements: VDOMArray[] = [];
   if (d <= depth) for (let i = 0; i < options.length; i++) {
     const item = options[i];
     if (item.options?.length) {
-      const collapsableState = $({value: item.selected, storage: 'local', key: genObjectStorageID(item)});
-      if (item.selected === true) collapsableState.value = true;
-      // TODO: remove dependency on io-collapsable from io-navigation.
-      elements.push(['io-collapsable', {
-        label: item.label,
-        icon: item.icon,
-        expanded: collapsableState,
-        elements: [...addMenuOptions(item.options, depth, d + 1)]
-      }]);
+      const collapsibleState = $({value: item.selected, storage: 'local', key: genObjectStorageID(item)});
+      if (item.selected === true) collapsibleState.value = true;
+      // TODO: remove dependency on io-collapsible from io-navigation.
+      elements.push(
+        div([...addMenuOptions(item.options, depth, d + 1)])
+        // ioCollapsible({
+        //   label: item.label,
+        //   icon: item.icon,
+        //   expanded: collapsibleState,
+        //   elements: [...addMenuOptions(item.options, depth, d + 1)]
+        // })
+      );
     } else {
-      elements.push(['io-menu-item', {
+      elements.push(ioMenuItem({
         item: item,
         depth: d
-      }]);
+      }));
     }
   }
   return elements;
@@ -41,10 +42,10 @@ export function filterOptions(options: MenuOptions, search: string, depth = 5, e
   search = search.toLowerCase();
   if (d <= depth) for (let i = 0; i < options.length; i++) {
     if (matchItem(options[i], search)) {
-      elements.push(['io-menu-item', {
+      elements.push(ioMenuItem({
         item: options[i],
         depth: 0
-      }]);
+      }));
     }
     if (options[i].options) {
       filterOptions(options[i].options, search, depth, elements, d + 1);
@@ -76,13 +77,13 @@ export class IoMenuTree extends IoElement {
       overflow: auto;
     }
 
-    :host io-collapsable {
+    :host io-collapsible {
       flex: 0 0 auto;
       border-color: transparent;
       border: 0;
       overflow: visible;
     }
-    :host io-collapsable > div.io-collapsable-content {
+    :host io-collapsible > div.io-collapsible-content {
       background-color: transparent;
       flex: 0 0 auto;
       border-radius: 0 !important;
@@ -126,15 +127,6 @@ export class IoMenuTree extends IoElement {
     }
     :host io-menu-item:first-of-type {
       /* margin-top: var(--io_spacing); */
-    }
-
-    /* Item dividers */
-    :host io-collapsable > io-boolean {
-      margin: 0;
-      margin-left: var(--io_borderWidth);
-      margin-right: var(--io_borderWidth);
-      z-index: 1;
-      overflow: visible;
     }
 
     /* Search field */
@@ -195,21 +187,21 @@ export class IoMenuTree extends IoElement {
     // TODO: fix depth.
 
     if (this.searchable) {
-      elements.push(['io-string', {
+      elements.push(ioField({
         $: 'search',
         role: 'search',
         class: 'search',
         value: this.bind('search'),
         placeholder: 'Search',
         live: true
-      }]);
+      }));
     }
 
     if (this.search) {
       const len = elements.length;
       filterOptions(this.options, this.search, this.depth, elements);
       if (len === elements.length) {
-        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', mode: 'none'})}]);
+        elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
       }
     } else {
       elements.push(...addMenuOptions(this.options, this.depth));

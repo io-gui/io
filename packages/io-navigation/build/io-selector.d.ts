@@ -1,4 +1,4 @@
-import { IoElement, VDOMArray } from 'io-gui';
+import { IoElement, VDOMArray, IoElementArgs } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 export declare class IoSelector extends IoElement {
     static get Style(): string;
@@ -18,5 +18,5 @@ export declare class IoSelector extends IoElement {
     onLoadPrecache(): void;
     dispose(): void;
 }
-export declare const ioSelector: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+export declare const ioSelector: (arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-selector.d.ts.map

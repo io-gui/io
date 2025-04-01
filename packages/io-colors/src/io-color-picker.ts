@@ -1,6 +1,6 @@
 import { Register, Property, IoElement, IoOverlaySingleton } from 'io-gui';
 import { IoColorPanelSingleton } from './io-color-panel-singleton.js';
-import './io-color-swatch.js';
+import { ioColorSwatch } from './io-color-swatch.js';
 
 @Register
 export class IoColorPicker extends IoElement {
@@ -76,7 +76,9 @@ export class IoColorPicker extends IoElement {
     IoColorPanelSingleton.expanded = false;
   }
   changed() {
-    this.template([['io-color-swatch', {$: 'swatch', value: this.value}]]);
+    this.template([
+      ioColorSwatch({$: 'swatch', value: this.value})
+    ]);
   }
 }
 export const ioColorPicker = IoColorPicker.vDOM;

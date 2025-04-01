@@ -1,6 +1,6 @@
-import { IoField } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuOptions } from './io-menu-options.js';
+import { IoField } from 'io-inputs';
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
@@ -38,7 +38,7 @@ export declare class IoMenuItem extends IoField {
     itemMutated(): void;
     changed(): void;
 }
-export declare const ioMenuItem: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioMenuItem: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 export declare function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[];
 export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuItem | IoMenuOptions)[];

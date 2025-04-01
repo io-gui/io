@@ -1,4 +1,5 @@
-import { Register, Property, IoField } from 'io-gui';
+import { Register, Property } from 'io-gui';
+import { IoField } from './io-field';
 
 @Register
 export class IoNumberLadderStep extends IoField {

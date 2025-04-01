@@ -1,6 +1,6 @@
 import { Register, Property, IoOverlaySingleton } from 'io-gui';
 import { IoColorBase } from './io-color-base.js';
-import './io-color-sliders.js';
+import { ioColorSlider } from './io-color-sliders.js';
 
 /**
  * Input element for color displayed as a set of sliders.
@@ -92,9 +92,9 @@ export class IoColorPanel extends IoColorBase {
     // TODO: fix nudge
     // TODO: fix initial change with empty channel
     this.template([
-      ['io-color-slider', {value: this.value, channel: 'sv', vertical: this.vertical, '@value-input': this.onValueSet}],
-      ['io-color-slider', {value: this.value, channel: 'h', vertical: !this.vertical, '@value-input': this.onValueSet}],
-      this.value.a !== undefined ? ['io-color-slider', {value: this.value, channel: 'a', '@value-input': this.onValueSet, vertical: !this.vertical}] : null,
+      ioColorSlider({value: this.value, channel: 'sv', vertical: this.vertical, '@value-input': this.onValueSet}),
+      ioColorSlider({value: this.value, channel: 'h', vertical: !this.vertical, '@value-input': this.onValueSet}),
+      this.value.a !== undefined ? ioColorSlider({value: this.value, channel: 'a', '@value-input': this.onValueSet, vertical: !this.vertical}) : null,
     ]);
   }
 }

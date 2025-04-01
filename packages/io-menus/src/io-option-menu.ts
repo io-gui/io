@@ -1,7 +1,7 @@
 import { Register, IoElement, Change, Property } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
-import './io-menu-item.js';
+import { ioMenuItem } from './io-menu-item.js';
 
 const dummyOptions = new MenuOptions();
 // TODO: fix tab-out without collapse
@@ -89,7 +89,7 @@ export class IoOptionMenu extends IoElement {
     this.item.options = this.options;
     this.item.icon = this.icon || '';
 
-    this.template([['io-menu-item', {item: this.item, direction: 'down'}]]);
+    this.template([ioMenuItem({item: this.item, direction: 'down'})]);
   }
 }
 export const ioOptionMenu = IoOptionMenu.vDOM;

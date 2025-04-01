@@ -1,6 +1,6 @@
-import { Register, Property, IoElement, IoOverlaySingleton, IoThemeSingleton } from 'io-gui';
+import { Register, Property, IoElement, IoOverlaySingleton, IoThemeSingleton, span } from 'io-gui';
 import { IoNumber } from './io-number';
-import './io-number-ladder-step';
+import { ioNumberLadderStep } from './io-number-ladder-step';
 
 let lastFocus: Element | null = null;
 {
@@ -197,7 +197,7 @@ class IoNumberLadder extends IoElement {
   }
   changed() {
     const range = this.max - this.min;
-    const hiddenItem = ['span', {class: 'io-number-ladder-empty'}];
+    const hiddenItem = span({class: 'io-number-ladder-empty'});
 
     // TODO: unhack
     let step = this.step / 10000;
@@ -222,15 +222,15 @@ class IoNumberLadder extends IoElement {
     const downLabel4 = Number((downStep4 * this.conversion).toFixed(6));
 
     this.template([
-      (range >= upStep4) ? ['io-number-ladder-step', {class: 'io-up4', value: upStep4, label: String(upLabel4)}] : hiddenItem,
-      (range >= upStep3) ? ['io-number-ladder-step', {class: 'io-up3', value: upStep3, label: String(upLabel3)}] : hiddenItem,
-      (range >= upStep2) ? ['io-number-ladder-step', {class: 'io-up2', value: upStep2, label: String(upLabel2)}] : hiddenItem,
-      (range >= upStep1) ? ['io-number-ladder-step', {class: 'io-up1', value: upStep1, label: String(upLabel1)}] : hiddenItem,
-      ['span', {class: 'io-number-ladder-center'}],
-      (this.step <= downStep1) ? ['io-number-ladder-step', {class: 'io-down1', value: downStep1, label: String(downLabel1)}] : hiddenItem,
-      (this.step <= downStep2) ? ['io-number-ladder-step', {class: 'io-down2', value: downStep2, label: String(downLabel2)}] : hiddenItem,
-      (this.step <= downStep3) ? ['io-number-ladder-step', {class: 'io-down3', value: downStep3, label: String(downLabel3)}] : hiddenItem,
-      (this.step <= downStep4) ? ['io-number-ladder-step', {class: 'io-down4', value: downStep4, label: String(downLabel4)}] : hiddenItem,
+      (range >= upStep4) ? ioNumberLadderStep({class: 'io-up4', value: upStep4, label: String(upLabel4)}) : hiddenItem,
+      (range >= upStep3) ? ioNumberLadderStep({class: 'io-up3', value: upStep3, label: String(upLabel3)}) : hiddenItem,
+      (range >= upStep2) ? ioNumberLadderStep({class: 'io-up2', value: upStep2, label: String(upLabel2)}) : hiddenItem,
+      (range >= upStep1) ? ioNumberLadderStep({class: 'io-up1', value: upStep1, label: String(upLabel1)}) : hiddenItem,
+      span({class: 'io-number-ladder-center'}),
+      (this.step <= downStep1) ? ioNumberLadderStep({class: 'io-down1', value: downStep1, label: String(downLabel1)}) : hiddenItem,
+      (this.step <= downStep2) ? ioNumberLadderStep({class: 'io-down2', value: downStep2, label: String(downLabel2)}) : hiddenItem,
+      (this.step <= downStep3) ? ioNumberLadderStep({class: 'io-down3', value: downStep3, label: String(downLabel3)}) : hiddenItem,
+      (this.step <= downStep4) ? ioNumberLadderStep({class: 'io-down4', value: downStep4, label: String(downLabel4)}) : hiddenItem,
     ]);
 
     this.setAttribute('aria-valuemin', this.min);

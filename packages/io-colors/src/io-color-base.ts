@@ -23,7 +23,7 @@ export class IoColorBase extends IoElement {
   }
 
   valueMutated() {
-    this.valueChanged();
+    this.debounce(this.valueChanged);
   }
 
   rgbFromHsv() {

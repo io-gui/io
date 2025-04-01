@@ -1,6 +1,5 @@
-import { Register, IoElement } from 'io-gui';
-import 'io-colors';
-import 'io-inputs';
+import { Register, IoElement, div } from 'io-gui';
+import { ioColorRgba, ioColorSlider } from 'io-colors';
 
 export class IoColorsDemo extends IoElement {
   static get Style() {
@@ -25,25 +24,25 @@ export class IoColorsDemo extends IoElement {
   }
   init() {
     this.template([
-      ['io-color-rgba', {value: this.rgba}],
-      ['io-color-rgba', {value: this.rgb}],
-      ['io-color-slider', {value: this.rgba, channel: 'r', step: 0.05}],
-      ['io-color-slider', {value: this.rgba, channel: 'g', step: 0.05}],
-      ['io-color-slider', {value: this.rgba, channel: 'b', step: 0.05}],
-      ['io-color-slider', {value: this.rgba, channel: 'a'}],
-      ['io-color-slider', {value: this.rgba, channel: 'h'}],
-      ['io-color-slider', {value: this.rgba, channel: 's'}],
-      ['io-color-slider', {value: this.rgba, channel: 'v'}],
-      ['io-color-slider', {value: this.rgba, channel: 'l'}],
-      ['div', {class: 'row'}, [
-        ['io-color-slider', {value: this.rgba, channel: 'hs'}],
-        ['io-color-slider', {value: this.rgba, channel: 'sl', step: 0.1}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'v'}],
-        ['io-color-slider', {value: this.rgba, vertical: true, channel: 'l'}],          
-      ]],
-      ['div', {class: 'row'}, [
-        ['io-color-panel', {expanded: true, value: this.rgba}]
-      ]],
+      ioColorRgba({value: this.rgba}),
+      ioColorRgba({value: this.rgb}),
+      ioColorSlider({value: this.rgba, channel: 'r', step: 0.05}),
+      ioColorSlider({value: this.rgba, channel: 'g', step: 0.05}),
+      ioColorSlider({value: this.rgba, channel: 'b', step: 0.05}),
+      ioColorSlider({value: this.rgba, channel: 'a'}),
+      ioColorSlider({value: this.rgba, channel: 'h'}),
+      ioColorSlider({value: this.rgba, channel: 's'}),
+      ioColorSlider({value: this.rgba, channel: 'v'}),
+      ioColorSlider({value: this.rgba, channel: 'l'}),
+      div({class: 'row'}, [
+        ioColorSlider({value: this.rgba, channel: 'hs'}),
+        ioColorSlider({value: this.rgba, channel: 'sl', step: 0.1}),
+        ioColorSlider({value: this.rgba, vertical: true, channel: 'v'}),
+        ioColorSlider({value: this.rgba, vertical: true, channel: 'l'}),
+      ]),
+      // div({class: 'row'}, [
+      //   ioColorPanel({expanded: true, value: this.rgba})
+      // ]),
     ]);
   }
 }

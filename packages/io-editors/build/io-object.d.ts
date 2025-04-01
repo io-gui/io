@@ -2,7 +2,7 @@ import { IoElement, VDOMArray, Constructor } from 'io-gui';
 import './io-property-editor.js';
 import { PropertyConfig } from './models/editor-config.js';
 /**
- * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsable element. It can be configured to use custom property editors and display only specified properties.
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
 export declare class IoObject extends IoElement {
     static get Style(): string;
@@ -15,5 +15,5 @@ export declare class IoObject extends IoElement {
     role: string;
     changed(): void;
 }
-export declare const ioObject: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+export declare const ioObject: (arg0?: import("io-gui").IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-object.d.ts.map

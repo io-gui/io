@@ -1,5 +1,6 @@
-import { IoElement, Property, Register, IoElementArgs, IoNode, Constructor } from 'io-gui';
+import { IoElement, Property, Register, IoElementArgs, IoNode, Constructor, ioLabel, div } from 'io-gui';
 import { getEditorConfig, PropertyConfig } from './models/editor-config.js';
+import { ioObject } from './io-object.js';
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
@@ -30,6 +31,9 @@ export class IoPropertyEditor extends IoElement {
     `;
   }
 
+  @Property('debounced')
+  declare reactivity: string;
+
   // TODO: remove any[] make array editor
   @Property({type: Object})
   declare value: Record<string, any> | any[];
@@ -50,10 +54,10 @@ export class IoPropertyEditor extends IoElement {
     event.stopImmediatePropagation();
     const prop = item.id as keyof typeof this.value;
     if (prop !== null) {
+      const value = event.detail.value;
+      const oldValue = event.detail.oldValue;
+      this.value[prop] = value;
       if (!(this.value as IoNode)._isIoNode) {
-        const value = event.detail.value;
-        const oldValue = event.detail.oldValue;
-        this.value[prop] = value;
         const detail = {object: this.value, property: prop, value: value, oldValue: oldValue};
         this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
       }
@@ -62,7 +66,7 @@ export class IoPropertyEditor extends IoElement {
     }
   }
   valueMutated() {
-    this.changed();
+    this.debounce(this.changed);
   }
   changed() {
     const config = getEditorConfig(this.value, this.config);
@@ -73,21 +77,21 @@ export class IoPropertyEditor extends IoElement {
       if (Object.prototype.hasOwnProperty.call(this.value, properties[i])) {
         const c = properties[i] as keyof typeof this.value;
         const value = this.value[c];
-        const tag = config[c][0];
-        const props = config[c][1] as (IoElementArgs | undefined) || {};
+        const tag = config[c]![0];
+        const props = config[c]![1] as (IoElementArgs | undefined) || {};
         const label = props.label || c;
         const finalProps: any = {title: label, id: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
         if (tag === 'io-object') {
-          elements.push(['div', {class: 'io-row'}, [
-            this.labeled ? ['io-label', {label: label}] : null,
+          elements.push(div({class: 'io-row'}, [
+            this.labeled ? ioLabel({label: label}) : null,
             [tag, finalProps],
-          ]]);
+          ]));
         } else {
-          elements.push(['div', {class: 'io-row'}, [
-            this.labeled ? ['io-label', {label: label}] : null,
+          elements.push(div({class: 'io-row'}, [
+            this.labeled ? ioLabel({label: label}) : null,
             [tag, finalProps],
-          ]]);
+          ]));
         }
       } else {
         debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);

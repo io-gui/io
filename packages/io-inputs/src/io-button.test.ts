@@ -1,4 +1,4 @@
-import { IoIconsetSingleton } from 'io-gui';
+import { IoIconsetSingleton } from 'io-icons';
 import { IoButton } from './index.js';
 
 const element = new IoButton();

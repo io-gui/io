@@ -1,5 +1,5 @@
 import { Register, IoElement } from 'io-gui';
-
+import { ioField } from 'io-inputs';
 /**
  * Breadcrumbs select element.
  * When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value.
@@ -78,12 +78,12 @@ export class IoBreadcrumbs extends IoElement {
   changed() {
     const elements = [];
     for (let i = 0; i < this.options.length; i++) {
-      elements.push(['io-field', {
+      elements.push(ioField({
         class: 'select',
         value: this.options[i],
         label: getLabel(this.options[i]),
         '@item-clicked': this._onClick,
-      }]);
+      }));
     }
     this.template(elements);
   }

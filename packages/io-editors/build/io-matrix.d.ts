@@ -15,5 +15,5 @@ export declare class IoMatrix extends IoVector {
     _onNumberValueInput(event: CustomEvent): void;
     valueChanged(): void;
 }
-export declare const ioMatrix: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioMatrix: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-matrix.d.ts.map

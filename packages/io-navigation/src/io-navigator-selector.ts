@@ -1,5 +1,6 @@
 import { VDOMArray, Register, Property } from 'io-gui';
 import { IoNavigatorBase } from './io-navigator-base.js';
+import { ioSelector } from './io-selector.js';
 
 @Register
 export class IoNavigatorSelector extends IoNavigatorBase {
@@ -14,7 +15,7 @@ export class IoNavigatorSelector extends IoNavigatorBase {
   declare precache: boolean;
 
   getSlotted(): VDOMArray {
-    return ['io-selector', {options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}];
+    return ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements});
   }
 }
 export const ioNavigatorSelector = IoNavigatorSelector.vDOM;

@@ -1,6 +1,6 @@
 import { Register, IoElement, Property } from 'io-gui';
-import './io-slider-range.js';
-import 'io-inputs';
+import {ioSliderRange} from './io-slider-range.js';
+import {ioNumber} from 'io-inputs';
 /**
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  *
@@ -63,15 +63,15 @@ export class IoNumberSliderRange extends IoElement {
   }
   changed() {
     this.template([
-      ['io-number', {
+      ioNumber({
         $: 'number0',
         value: this.value[0],
         step: this.step,
         conversion: this.conversion,
         label: this.label,
         '@value-input': this._onNumberSet,
-      }],
-      ['io-slider-range', {
+      }),
+      ioSliderRange({
         $: 'slider',
         value: this.value,
         step: this.step,
@@ -80,15 +80,15 @@ export class IoNumberSliderRange extends IoElement {
         exponent: this.exponent,
         label: this.label,
         '@value-input': this._onSliderSet,
-      }],
-      ['io-number', {
+      }),
+      ioNumber({
         $: 'number1',
         value: this.value[1],
         step: this.step,
         conversion: this.conversion,
         label: this.label,
         '@value-input': this._onNumberSet,
-      }],
+      }),
     ]);
   }
 }

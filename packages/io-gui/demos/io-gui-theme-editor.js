@@ -1,8 +1,8 @@
 import { IoElement, Register, IoThemeSingleton } from 'io-gui';
-import { MenuOptions } from 'io-menus';
-import 'io-inputs';
-import 'io-sliders';
-import 'io-colors';
+import { MenuOptions, ioOptionMenu } from 'io-menus';
+import { ioButton, ioField } from 'io-inputs';
+import { ioNumberSlider } from 'io-sliders';
+import { ioColorRgba } from 'io-colors';
 
 export class IoGuiThemeEditor extends IoElement {
   static get Style() {
@@ -19,72 +19,90 @@ export class IoGuiThemeEditor extends IoElement {
   constructor(props) {
     super(props);
     this.template([
-      ['io-option-menu', {value: IoThemeSingleton.bind('themeID'), options: new MenuOptions([
+      ioOptionMenu({value: IoThemeSingleton.bind('themeID'), options: new MenuOptions([
         {label: 'Light Theme', value: 'light'},
         {label: 'Dark Theme', value: 'dark'},
-      ])}],
-      ['io-button', {label: 'Reset', action: () => IoThemeSingleton.reset() }],
+      ])}),
+      ioButton({label: 'Reset', action: () => IoThemeSingleton.reset() }),
 
-      ['io-field', {appearance: 'neutral', label: 'spacing'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}],
+      ioField({appearance: 'neutral', label: 'spacing'}),
+      ioNumberSlider({value: IoThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}),
 
-      ['io-field', {appearance: 'neutral', label: 'lineHeight'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('lineHeight'), min: 10, max: 50, step: 1}],
+      ioField({appearance: 'neutral', label: 'lineHeight'}),
+      ioNumberSlider({value: IoThemeSingleton.bind('lineHeight'), min: 10, max: 50, step: 1}),
 
-      ['io-field', {appearance: 'neutral', label: 'fontSize'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1}],
+      ioField({appearance: 'neutral', label: 'fontSize'}),
+      ioNumberSlider({value: IoThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1}),
 
-      ['io-field', {appearance: 'neutral', label: 'borderRadius'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('borderRadius'), min: 0, max: 20, step: 1}],
-      ['io-field', {appearance: 'neutral', label: 'borderWidth'}],
-      ['io-number-slider', {value: IoThemeSingleton.bind('borderWidth'), min: 0, max: 5, step: 1}],
-      ['io-field', {appearance: 'neutral', label: 'borderColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('borderColor')}],
-      ['io-field', {appearance: 'neutral', label: 'borderColorLight'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('borderColorLight')}],
-      ['io-field', {appearance: 'neutral', label: 'borderColorDark'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('borderColorDark')}],
+      ioField({appearance: 'neutral', label: 'borderRadius'}),
+      ioNumberSlider({value: IoThemeSingleton.bind('borderRadius'), min: 0, max: 20, step: 1}),
 
-      ['io-field', {appearance: 'neutral', label: 'bgColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColor')}],
-      ['io-field', {appearance: 'neutral', label: 'bgColorStrong'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorStrong')}],
-      ['io-field', {appearance: 'neutral', label: 'bgColorDimmed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorDimmed')}],
-      ['io-field', {appearance: 'neutral', label: 'bgColorRed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorRed')}],
-      ['io-field', {appearance: 'neutral', label: 'bgColorGreen'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorGreen')}],
-      ['io-field', {appearance: 'neutral', label: 'bgColorBlue'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorBlue')}],
-      ['io-field', {appearance: 'neutral', label: 'bgColorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('bgColorField')}],
+      ioField({appearance: 'neutral', label: 'borderWidth'}),
+      ioNumberSlider({value: IoThemeSingleton.bind('borderWidth'), min: 0, max: 5, step: 1}),
 
-      ['io-field', {appearance: 'neutral', label: 'color'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('color')}],
-      ['io-field', {appearance: 'neutral', label: 'colorStrong'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorStrong')}],
-      ['io-field', {appearance: 'neutral', label: 'colorDimmed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorDimmed')}],
-      ['io-field', {appearance: 'neutral', label: 'colorRed'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorRed')}],
-      ['io-field', {appearance: 'neutral', label: 'colorGreen'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorGreen')}],
-      ['io-field', {appearance: 'neutral', label: 'colorBlue'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorBlue')}],
-      ['io-field', {appearance: 'neutral', label: 'colorWhite'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorWhite')}],
-      ['io-field', {appearance: 'neutral', label: 'colorField'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('colorField')}],
+      ioField({appearance: 'neutral', label: 'borderColor'}),
+      ioColorRgba({value: IoThemeSingleton.bind('borderColor')}),
+
+      ioField({appearance: 'neutral', label: 'borderColorLight'}),
+      ioColorRgba({value: IoThemeSingleton.bind('borderColorLight')}),
+
+      ioField({appearance: 'neutral', label: 'borderColorDark'}),
+      ioColorRgba({value: IoThemeSingleton.bind('borderColorDark')}),
+
+      ioField({appearance: 'neutral', label: 'bgColor'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColor')}),
+
+      ioField({appearance: 'neutral', label: 'bgColorStrong'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorStrong')}),
+
+      ioField({appearance: 'neutral', label: 'bgColorDimmed'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorDimmed')}),
+
+      ioField({appearance: 'neutral', label: 'bgColorRed'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorRed')}),
+
+      ioField({appearance: 'neutral', label: 'bgColorGreen'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorGreen')}),
+
+      ioField({appearance: 'neutral', label: 'bgColorBlue'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorBlue')}),
+
+      ioField({appearance: 'neutral', label: 'bgColorField'}),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorField')}),
+
+      ioField({appearance: 'neutral', label: 'color'}),
+      ioColorRgba({value: IoThemeSingleton.bind('color')}),
+
+      ioField({appearance: 'neutral', label: 'colorStrong'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorStrong')}),
+
+      ioField({appearance: 'neutral', label: 'colorDimmed'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorDimmed')}),
+
+      ioField({appearance: 'neutral', label: 'colorRed'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorRed')}),
+
+      ioField({appearance: 'neutral', label: 'colorGreen'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorGreen')}),
+
+      ioField({appearance: 'neutral', label: 'colorBlue'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorBlue')}),
+
+      ioField({appearance: 'neutral', label: 'colorWhite'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorWhite')}),
+
+      ioField({appearance: 'neutral', label: 'colorField'}),
+      ioColorRgba({value: IoThemeSingleton.bind('colorField')}),
 
 
-      ['io-field', {appearance: 'neutral', label: 'gradientColorStart'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('gradientColorStart')}],
-      ['io-field', {appearance: 'neutral', label: 'gradientColorEnd'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('gradientColorEnd')}],
+      ioField({appearance: 'neutral', label: 'gradientColorStart'}),
+      ioColorRgba({value: IoThemeSingleton.bind('gradientColorStart')}),
 
-      ['io-field', {appearance: 'neutral', label: 'shadowColor'}],
-      ['io-color-rgba', {value: IoThemeSingleton.bind('shadowColor')}],
+      ioField({appearance: 'neutral', label: 'gradientColorEnd'}),
+      ioColorRgba({value: IoThemeSingleton.bind('gradientColorEnd')}),
+
+      ioField({appearance: 'neutral', label: 'shadowColor'}),
+      ioColorRgba({value: IoThemeSingleton.bind('shadowColor')}),
     ]);
   }
 }

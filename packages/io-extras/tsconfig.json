@@ -4,6 +4,7 @@
     "outDir": "build",
     "paths": {
       "io-gui": ["../io-gui/"],
+      "io-inputs": ["../io-inputs/"],
       "io-navigation": ["../io-navigation/"]
     }
   },

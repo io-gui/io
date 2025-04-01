@@ -1,7 +1,6 @@
 import { IoNode, IoElement } from 'io-gui';
-import './io-breadcrumbs.js';
 /**
- * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 export declare class IoInspector extends IoElement {
     static get Style(): string;
@@ -33,5 +32,5 @@ export declare class IoInspector extends IoElement {
     static get ObjectWidgets(): {};
     Register(ioNodeConstructor: typeof IoNode): void;
 }
-export declare const ioInspector: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioInspector: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-inspector.d.ts.map

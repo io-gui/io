@@ -64,7 +64,7 @@
           "io-gui": "./packages/io-gui/build/index.js",
           "io-colors": "./packages/io-colors/build/index.js",
           "io-extras": "./packages/io-extras/build/index.js",
-          "io-iconset": "./packages/io-iconset/build/index.js",
+          "io-icons": "./packages/io-icons/build/index.js",
           "io-inputs": "./packages/io-inputs/build/index.js",
           "io-editors": "./packages/io-editors/build/index.js",
           "io-markdown": "./packages/io-markdown/build/index.js",
@@ -100,8 +100,8 @@
     <script type="module">
 
     import { Register, IoStorage as $, IoThemeSingleton, ioElement, div, iframe } from 'io-gui';
-    import 'io-markdown';
-    import { IoNavigatorSelector } from 'io-navigation';
+    import { ioMarkdown } from 'io-markdown';
+    import { IoNavigatorSelector, ioSelector, ioNavigatorScroller } from 'io-navigation';
     import 'io-sliders';
     import 'io-colors';
     import { MenuOptions, MenuItem } from 'io-menus';
@@ -109,7 +109,7 @@
     import 'io-inputs';
 
     import { ioInputsDemo } from './packages/io-inputs/demos/io-inputs-demo.js';
-    import { ioIconsetDemo } from './packages/io-iconset/demos/io-iconset-demo.js';
+    import { ioIconsDemo } from './packages/io-icons/demos/io-icons-demo.js';
     import { ioSlidersDemo } from './packages/io-sliders/demos/io-sliders-demo.js';
     import { ioColorsDemo } from './packages/io-colors/demos/io-colors-demo.js';
     import { ioEditorsDemo } from './packages/io-editors/demos/io-editors-demo.js';
@@ -142,7 +142,7 @@
       ]},
       {value: 'Demos', options: [
         {label: 'io-inputs', value: 'io-inputs-demo'},
-        {label: 'io-iconset', value: 'io-iconset-demo'},
+        {label: 'io-icons', value: 'io-icons-demo'},
         {label: 'io-sliders', value: 'io-sliders-demo'},
         {label: 'io-colors', value: 'io-colors-demo'},
         {label: 'io-editors', value: 'io-editors-demo'},
@@ -169,31 +169,31 @@
           cache: true,
           depth: 1,
           elements: [
-            ['io-markdown', {id: 'About', strip: [siteRoot], src: './README.md'}],
-            ['io-selector', {id: 'Docs',
+            ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
+            ioSelector({id: 'Docs',
               options: OPTIONS.getItem('Docs').options,
               cache: true,
               elements: [
-                ['io-navigator-scroller', {id: 'Quick Start',
+                ioNavigatorScroller({id: 'Quick Start',
                   options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
                   elements: [
-                    ['io-markdown', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
+                    ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
                   ]
-                }],
-                ['io-navigator-scroller', {id: 'Deep Dive',
+                }),
+                ioNavigatorScroller({id: 'Deep Dive',
                   options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
                   elements: [
-                    ['io-markdown', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
+                    ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}),
                   ]
-                }],
+                }),
               ]
-            }],
-            ['io-selector', {id: 'Demos',
+            }),
+            ioSelector({id: 'Demos',
               options: OPTIONS.getItem('Demos').options,
               cache: true,
               elements: [
                 ioInputsDemo({id: 'io-inputs-demo'}),
-                ioIconsetDemo({id: 'io-iconset-demo'}),
+                ioIconsDemo({id: 'io-icons-demo'}),
                 ioSlidersDemo({id: 'io-sliders-demo'}),
                 ioColorsDemo({id: 'io-colors-demo'}),
                 ioEditorsDemo({id: 'io-editors-demo'}),
@@ -203,7 +203,7 @@
                 ioElementDemo({id: 'io-element-demo', element: 'io-slider'}),
                 iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
               ]
-            }],
+            }),
           ]
         };
       }

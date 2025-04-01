@@ -1,5 +1,7 @@
 import { Register } from 'io-gui';
 import { IoColorBase } from './io-color-base.js';
+import { ioNumber } from 'io-inputs';
+import { ioColorPicker } from './io-color-picker.js';
 
 /**
  * Input element for color displayed as vector and an interactive picker.
@@ -53,11 +55,13 @@ export class IoColorRgba extends IoColorBase {
   changed() {
     this.template([
       // Consider removing global id collisions.
-      ['io-number', {$: 'r', id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}],
-      ['io-number', {$: 'g', id: 'g', value: this.value.g, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}],
-      ['io-number', {$: 'b', id: 'b', value: this.value.b, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}],
-      this.value.a !== undefined ? ['io-number', {$: 'a', id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput}] : null,
-      ['io-color-picker', {$: 'swatch', value: this.value}],
+      ioNumber({$: 'r', id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
+      ioNumber({$: 'g', id: 'g', value: this.value.g, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
+      ioNumber({$: 'b', id: 'b', value: this.value.b, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
+      this.value.a !== undefined
+        ? ioNumber({$: 'a', id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput})
+        : null,
+      ioColorPicker({$: 'swatch', value: this.value}),
     ]);
   }
 }

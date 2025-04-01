@@ -1,5 +1,4 @@
 import { IoColorBase } from './io-color-base.js';
-import './io-color-sliders.js';
 /**
  * Input element for color displayed as a set of sliders.
  *

@@ -45,6 +45,8 @@
     "io-gui": "^2.0.0",
     "io-inputs": "^2.0.0",
     "io-menus": "^2.0.0",
-    "io-colors": "^2.0.0"
+    "io-colors": "^2.0.0",
+    "io-sliders": "^2.0.0",
+    "io-navigation": "^2.0.0"
   }
 }

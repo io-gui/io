@@ -15,5 +15,5 @@ export declare class IoNavigatorBase extends IoElement {
     getSlotted(): VDOMArray | null;
     changed(): void;
 }
-export declare const ioNavigatorBase: (arg0?: import("io-gui").IoNodeArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+export declare const ioNavigatorBase: (arg0?: import("io-gui").IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-navigator-base.d.ts.map

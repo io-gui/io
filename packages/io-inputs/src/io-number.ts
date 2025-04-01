@@ -1,5 +1,6 @@
-import { Register, Property, IoField, IoOverlaySingleton } from 'io-gui';
+import { Register, Property, IoOverlaySingleton } from 'io-gui';
 import { IoNumberLadderSingleton } from './io-number-ladder.js';
+import { IoField } from './io-field';
 /**
  * Input element for `Number` data type.
  * It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment.

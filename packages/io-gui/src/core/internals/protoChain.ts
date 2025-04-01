@@ -184,7 +184,7 @@ export class ProtoChain {
     const names = Object.getOwnPropertyNames(proto);
     for (let j = 0; j < names.length; j++) {
       const fn = names[j];
-      if (/^on[A-Z]/.test(fn) || /^_on[A-Z]/.test(fn) || fn.endsWith('Changed') || fn.endsWith('Mutated')) {
+      if (/^on[A-Z]/.test(fn) || /^_on[A-Z]/.test(fn) || fn.endsWith('Changed') || fn.endsWith('Mutated') || fn === 'changed') {
         const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
         if (propDesr === undefined || propDesr.get || propDesr.set) continue;
         if (typeof proto[fn] === 'function') {

@@ -38,4 +38,5 @@ export declare class IoMenuOptions extends IoElement {
     _onClipHeight(): void;
     changed(): void;
 }
+export declare const ioMenuOptions: (arg0?: import("io-gui").IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
 //# sourceMappingURL=io-menu-options.d.ts.map

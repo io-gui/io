@@ -1,5 +1,4 @@
 import { IoElement } from 'io-gui';
-import './io-color-swatch.js';
 export declare class IoColorPicker extends IoElement {
     static get Style(): string;
     value: {
@@ -19,5 +18,5 @@ export declare class IoColorPicker extends IoElement {
     collapse(): void;
     changed(): void;
 }
-export declare const ioColorPicker: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioColorPicker: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-color-picker.d.ts.map

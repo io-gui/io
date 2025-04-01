@@ -1,6 +1,6 @@
 import { IoElement, VDOMArray, Register, Property } from 'io-gui';
-import { MenuOptions } from 'io-menus';
-import './io-selector.js';
+import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
+import { ioMarkdown } from 'io-markdown';
 
 @Register
 export class IoMdNavigator extends IoElement {
@@ -78,11 +78,11 @@ export class IoMdNavigator extends IoElement {
     };
 
     this.template([
-      this.menu === 'top' ? ['io-menu-options', {horizontal: true, ...sharedMenuConfig}] : null,
-      this.menu === 'left' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
-      this.options.last ? ['io-markdown', {src: this.options.last}] : null,
-      this.menu === 'right' ? ['io-menu-tree', {...sharedMenuConfig}] : null,
-      this.menu === 'bottom' ? ['io-menu-options', {horizontal: true, direction: 'up', ...sharedMenuConfig}] : null,
+      this.menu === 'top' ? ioMenuOptions({horizontal: true, ...sharedMenuConfig}) : null,
+      this.menu === 'left' ? ioMenuTree({...sharedMenuConfig}) : null,
+      this.options.last ? ioMarkdown({src: this.options.last}) : null,
+      this.menu === 'right' ? ioMenuTree({...sharedMenuConfig}) : null,
+      this.menu === 'bottom' ? ioMenuOptions({horizontal: true, direction: 'up', ...sharedMenuConfig}) : null,
     ]);
   }
 }

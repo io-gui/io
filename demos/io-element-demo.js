@@ -1,4 +1,5 @@
-import { Register, IoElement } from 'io-gui';
+import { Register, IoElement, ioLabel, div } from 'io-gui';
+import { ioPropertyEditor } from 'io-editors';
 
 export class IoElementDemo extends IoElement {
   static get Style() {
@@ -52,17 +53,17 @@ export class IoElementDemo extends IoElement {
   elementChanged() {
     if (this.element) {
       this.template([
-        ['div', {class: 'element-wrap'}, [
+        div({class: 'element-wrap'}, [
           [this.element, {$: 'element'}],
-        ]],
-        ['io-property-editor', {$: 'properties'}]
+        ]),
+        ioPropertyEditor({$: 'properties'})
       ]);
       const element = this.$['element'];
       const properties = this.$['properties'];
       properties.value = element;
     } else {
       this.template([
-        ['io-label', {label: 'Element property not set.'}],
+        ioLabel({label: 'Element property not set.'}),
       ]);
     }
   }

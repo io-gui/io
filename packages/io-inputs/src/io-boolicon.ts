@@ -1,4 +1,5 @@
-import { Register } from 'io-gui';
+import { Register, ioLabel } from 'io-gui';
+import { ioIcon } from 'io-icons';
 import { IoBoolean } from './io-boolean';
 
 @Register
@@ -9,8 +10,8 @@ export class IoBoolicon extends IoBoolean {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     const label = this.value ? this.true : this.false;
     this.template([
-      this.icon ? ['io-icon', {icon: this.icon, stroke: this.stroke}] : null,
-      ['io-icon', {icon: label, stroke: this.stroke}]
+      this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
+      label ? ioLabel({label: label}) : null
     ]);
   }
 }

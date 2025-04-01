@@ -1,11 +1,12 @@
-import { IoNode, Register, IoElement, Property, IoStorage as $ } from 'io-gui';
+import { IoNode, Register, IoElement, Property, IoStorage as $, div } from 'io-gui';
 import { ObjectGroups } from './models/object-groups.js';
 import { ObjectWidgets } from './models/object-widgets.js';
 import { getEditorConfig } from './models/editor-config.js';
-import './io-breadcrumbs.js';
-
+import { ioBreadcrumbs } from './io-breadcrumbs.js';
+import { ioObject } from './io-object.js';
+import { ioCollapsible } from 'io-navigation';
 /**
- * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsable` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 
 @Register
@@ -57,7 +58,7 @@ export class IoInspector extends IoElement {
       visibility: visible;
       opacity: 0.33;
     }
-    :host > io-collapsable > io-boolean,
+    :host > io-collapsible > io-boolean,
     :host > io-object > io-boolean {
       text-transform: capitalize;
     }
@@ -147,34 +148,34 @@ export class IoInspector extends IoElement {
 
     const uuid = this.uuid || genUUID(this.selected);
     const elements = [
-      ['div', {class: 'inspector-header'}, [
-        ['io-breadcrumbs', {value: this.value, selected: this.bind('selected')}],
+      div({class: 'inspector-header'}, [
+        ioBreadcrumbs({value: this.value, selected: this.bind('selected')}),
         // ['io-string', {$: 'search', value: this.bind('search'), live: true}],
-      ]],
+      ]),
       this._widgets.main ? this._widgets.main : null
     ];
 
     for (const group in this._widgets.groups) {
       if (!this._groups[group]) {
         elements.push(
-          ['io-collapsable', {
+          ioCollapsible({
             label: group,
             expanded: $({value: true, storage: 'local', key: uuid + '-' + group}),
             elements: [this._widgets.groups[group]],
-          }]
+          })
         );
       }
     }
 
     for (const group in this._groups) {
       elements.push(
-        ['io-object', {
+        ioObject({
           label: group,
           expanded: $({value: true, storage: 'local', key: this.uuid + '-' + group}),
           value: this.selected,
           properties: this._groups[group],
           // widget: this._widgets.groups[group] || [],
-        }],
+        }),
       );
     }
     this.template(elements);

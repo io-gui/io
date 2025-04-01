@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps, Property } from 'io-gui';
+import { Register, IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps, Property, span } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 const dummyElement = document.createElement('div');
 /**
@@ -122,10 +122,13 @@ export class IoSelector extends IoElement {
       if (!element) {
         const warning = `Could not find element with id: ${selected}!`;
         console.warn(`IoSelector: ${warning}!`);
-        element = ['span', warning];
+        element = span(warning);
       }
 
-      const args: IoElementArgs = typeof element[1] !== 'object' ? {} : element[1] as IoElementArgs;
+      let args: IoElementArgs = {};
+      if (element && typeof element[1] === 'object' && !Array.isArray(element[1])) {
+        args = element[1];
+      }
 
       const explicitlyCache = args.cache === true;
       const explicitlyDontCache = args.cache === false;
@@ -175,7 +178,10 @@ export class IoSelector extends IoElement {
     if (this.precache) {
       for (let i = 0; i < this.elements.length; i++) {
         const element = this.elements[i];
-        const args: IoElementArgs = typeof element[1] !== 'object' ? {} : element[1] as IoElementArgs;
+        let args: IoElementArgs = {};
+        if (element && typeof element[1] === 'object' && !Array.isArray(element[1])) {
+          args = element[1];
+        }
         if (!args.import && args.id && this._caches[args.id] === undefined) {
           this.template([element], dummyElement, true);
           this._caches[args.id] = dummyElement.childNodes[0] as HTMLElement;

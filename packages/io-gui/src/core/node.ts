@@ -20,9 +20,10 @@ export type CallbackFunction = (arg?: any) => void;
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
+// TODO: more specific Arg Types
 export type IoNodeArgs = {
   reactivity?: 'none' | 'immediate' | 'debounced';
-  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void)
+  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
 }
 
 /**

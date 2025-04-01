@@ -1,5 +1,6 @@
-import { Register, Property, IoField } from 'io-gui';
-
+import { Register, Property, ioLabel } from 'io-gui';
+import { ioIcon } from 'io-icons';
+import { IoField } from './io-field';
 /**
  * Input element for `Boolean` data type displayed as text.
  * It can be configured to display custom `true` or `false` string or icon depending on its `value`.
@@ -45,8 +46,8 @@ export class IoBoolean extends IoField {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     const label = this.value ? this.true : this.false;
     this.template([
-      this.icon ? ['io-icon', {icon: this.icon, stroke: this.stroke}] : null,
-      label ? ['io-label', {label: label}] : null
+      this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
+      label ? ioLabel({label: label}) : null
     ]);
   }
 }

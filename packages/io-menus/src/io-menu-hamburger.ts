@@ -1,4 +1,5 @@
 import { Register } from 'io-gui';
+import { ioIcon } from 'io-icons';
 import { IoMenuItem } from './io-menu-item.js';
 
 @Register
@@ -23,7 +24,7 @@ export class IoMenuHamburger extends IoMenuItem {
     this.setAttribute('selected', this.item.selected);
     this.setAttribute('hidden', this.item.hidden);
     this.disabled = this.item.disabled; // TODO: reconsider this
-    this.template([['io-icon', {icon: 'menu:hamburger'}]]);
+    this.template([ioIcon({icon: 'menu:hamburger'})]);
   }
 }
 export const ioMenuHamburger = IoMenuHamburger.vDOM;

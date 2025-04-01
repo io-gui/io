@@ -1,4 +1,4 @@
-import { IoField } from 'io-gui';
+import { IoField } from './io-field';
 /**
  * Input element for `Number` data type.
  * It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment.
@@ -32,5 +32,5 @@ export declare class IoNumber extends IoField {
     init(): void;
     changed(): void;
 }
-export declare const ioNumber: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioNumber: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-number.d.ts.map

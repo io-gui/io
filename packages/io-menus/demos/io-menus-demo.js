@@ -3,7 +3,7 @@ import { MenuOptions, MenuItem } from 'io-menus';
 // TODO: remove dependencies on io-inputs and io-navigation.
 import 'io-inputs';
 import 'io-navigation';
-import 'io-iconset';
+import 'io-icons';
 
 const numberItems = [
   {value: 0, label: 'zero'},

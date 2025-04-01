@@ -1,4 +1,4 @@
-import { Register } from 'io-gui';
+import { Register, div } from 'io-gui';
 import { IoColorBase } from './io-color-base.js';
 
 /**
@@ -32,7 +32,7 @@ export class IoColorSwatch extends IoColorBase {
   valueChanged() {
     super.valueChanged();
     this.template([
-      ['div', {style: {'background-color': `rgba(${this.rgba[0] * 255 },${this.rgba[1] * 255}, ${this.rgba[2] * 255}, ${this.rgba[3]})`}}]
+      div({style: {'background-color': `rgba(${this.rgba[0] * 255 },${this.rgba[1] * 255}, ${this.rgba[2] * 255}, ${this.rgba[3]})`}})
     ]);
   }
 }

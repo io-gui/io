@@ -1,5 +1,5 @@
 import { IoOptionMenu } from './io-option-menu.js';
-import { MenuOptions } from './models/menu-options.js';
+// import { MenuOptions } from './models/menu-options.js';
 
 const element = new IoOptionMenu();
 document.body.appendChild(element as unknown as HTMLElement);

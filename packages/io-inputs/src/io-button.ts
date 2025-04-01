@@ -1,4 +1,6 @@
-import { Register, Property, IoField } from 'io-gui';
+import { Register, Property, ioLabel } from 'io-gui';
+import { ioIcon } from 'io-icons';
+import { IoField } from './io-field';
 
 /**
  * Button element.
@@ -69,8 +71,8 @@ export class IoButton extends IoField {
   changed() {
     this.setAttribute('aria-pressed', String(this.pressed));
     this.template([
-      this.icon ? ['io-icon', {icon: this.icon}] : null,
-      this.label ? ['io-label', {label: this.label}] : null
+      this.icon ? ioIcon({icon: this.icon}) : null,
+      this.label ? ioLabel({label: this.label}) : null
     ]);
   }
 }

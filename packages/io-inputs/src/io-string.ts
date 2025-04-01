@@ -1,4 +1,5 @@
-import { Register, Property, IoField } from 'io-gui';
+import { Register, Property } from 'io-gui';
+import { IoField } from './io-field';
 
 /**
  * Input element for `String` data type.

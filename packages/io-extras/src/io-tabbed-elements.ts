@@ -1,4 +1,5 @@
 import { Register, IoElement } from 'io-gui';
+import { ioButton } from 'io-inputs';
 import 'io-navigation';
 
 const _dragicon = document.createElement('io-tab-dragicon') as any;
@@ -439,12 +440,12 @@ export class IoTabs extends IoElement {
         if (this.dropIndex === i) _class += ' io-tab-insert-before';
         if (this.dropIndex === i + 1) _class += ' io-tab-insert-after';
       }
-      const button = ['io-button', {
+      const button = ioButton({
         label: this.filter[i],
         value: this.filter[i],
         action: this.select,
         class: _class,
-      }];
+      });
       if (this.editable) (button[1] as any)['@pointerdown'] = this._onPointerdown;
       if (selected) selectedButton = button;
       buttons.push(button);

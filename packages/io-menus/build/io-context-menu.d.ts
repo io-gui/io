@@ -21,5 +21,5 @@ export declare class IoContextMenu extends IoElement {
     _onCollapse(): void;
     optionsChanged(): void;
 }
-export declare const ioContextMenu: (arg0?: import("io-gui").IoNodeArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioContextMenu: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-context-menu.d.ts.map

@@ -1,8 +1,10 @@
 import { Register, IoElement, Property, VDOMArray, IoOverlaySingleton, NudgeDirection, IoThemeSingleton } from 'io-gui';
+import { ioField } from 'io-inputs';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
-import { IoMenuItem } from './io-menu-item.js';
+import { ioMenuItem, IoMenuItem } from './io-menu-item.js';
 import { filterOptions } from './io-menu-tree.js';
+import { ioMenuHamburger } from './io-menu-hamburger.js';
 
 const rects = new WeakMap();
 
@@ -288,21 +290,21 @@ export class IoMenuOptions extends IoElement {
     const elements: VDOMArray[] = [...this.slotted];
 
     if (this.searchable) {
-      elements.push(['io-string', {
+      elements.push(ioField({
         $: 'search',
         role: 'search',
         class: 'search',
         value: this.bind('search'),
         placeholder: 'Search',
         live: true
-      }]);
+      }));
     }
 
     if (this.search) {
       const len = elements.length;
       filterOptions(this.options, this.search, this.depth, elements);
       if (len === elements.length) {
-        elements.push(['io-menu-item', {item: new MenuItem({label: 'No matches', mode: 'none'})}]);
+        elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
       }
     } else {
       let direction = this.horizontal ? 'down' : 'right';
@@ -310,12 +312,12 @@ export class IoMenuOptions extends IoElement {
         direction = 'up';
       }
       for (let i = 0; i < this.options.length; i++) {
-        elements.push(['io-menu-item', {
+        elements.push(ioMenuItem({
           class: 'item',
           item: this.options[i],
           direction: direction,
           depth: this.depth
-        }]);
+        }));
         if (i < this.options.length - 1) {
           elements.push(['span', {class: 'divider'}]);
         }
@@ -323,15 +325,16 @@ export class IoMenuOptions extends IoElement {
     }
 
     if (this.overflow) {
-      elements.push(['io-menu-hamburger', {
+      elements.push(ioMenuHamburger({
         depth: this.depth + 1,
         role: 'navigation',
         direction: 'down',
         item: new MenuItem({
           options: new MenuOptions(this._overflownItems),
         })
-      }]);
+      }));
     }
     this.template(elements);
   }
 }
+export const ioMenuOptions = IoMenuOptions.vDOM;

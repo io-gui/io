@@ -1,6 +1,7 @@
 import { VDOMArray, Register } from 'io-gui';
 import { IoNavigatorSelector } from './io-navigator-selector.js';
-import './io-scroller.js';
+import { ioScroller } from './io-scroller.js';
+import { ioSelector } from './io-selector.js';
 
 @Register
 export class IoNavigatorCombined extends IoNavigatorSelector {
@@ -12,9 +13,9 @@ export class IoNavigatorCombined extends IoNavigatorSelector {
     `;
   }
   getSlotted(): VDOMArray {
-    return ['io-scroller', {options: this.options}, [
-      ['io-selector', {options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}]
-    ]];
+    return ioScroller({options: this.options}, [
+      ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements})
+    ]);
   }
 }
 export const ioNavigatorCombined = IoNavigatorCombined.vDOM;

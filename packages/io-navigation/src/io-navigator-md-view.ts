@@ -1,5 +1,7 @@
 import { VDOMArray, Register, Property } from 'io-gui';
 import { IoNavigatorBase } from './io-navigator-base.js';
+import { ioScroller } from './io-scroller.js';
+import { ioMarkdown } from 'io-markdown';
 
 @Register
 export class IoNavigatorMdView extends IoNavigatorBase {
@@ -12,9 +14,9 @@ export class IoNavigatorMdView extends IoNavigatorBase {
 
   getSlotted(): VDOMArray {
     const src = this.options.last;
-    return ['io-scroller', {options: this.options}, [
-      ['io-markdown', {src, strip: this.strip, sanitize: this.sanitize}]
-    ]];
+    return ioScroller({options: this.options}, [
+      ioMarkdown({src, strip: this.strip, sanitize: this.sanitize})
+    ]);
   }
 }
 export const ioNavigatorMdView = IoNavigatorMdView.vDOM;

@@ -1,4 +1,5 @@
 import { Register, IoElement, Property } from 'io-gui';
+import { ioNumber, ioBoolicon } from 'io-inputs';
 
 /**
  * Input element for vector arrays and objects.
@@ -96,7 +97,7 @@ export class IoVector extends IoElement {
     const elements = [];
     for (const k of this.keys as [keyof typeof this.value]) {
       if (this.value[k] !== undefined) {
-        elements.push(['io-number', {
+        elements.push(ioNumber({
           id: k, // Consider removing global id collisions
           value: this.value[k],
           conversion: this.conversion,
@@ -106,14 +107,14 @@ export class IoVector extends IoElement {
           ladder: this.ladder,
           '@pointerdown': this._onNumberPointerDown,
           '@value-input': this._onNumberValueInput,
-        }]);
+        }));
       }
     }
     elements.push(this.getSlotted());
     this.template(elements);
   }
   getSlotted(): Array<any> | null {
-    return this.linkable ? ['io-boolicon', {value: this.bind('linked'), true: 'vectors:link', false: 'vectors:unlink'}] : null;
+    return this.linkable ? [ioBoolicon({value: this.bind('linked'), true: 'io:link', false: 'io:unlink'})] : null;
   }
 }
 export const ioVector = IoVector.vDOM;
