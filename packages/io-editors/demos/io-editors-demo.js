@@ -15,7 +15,7 @@ export class IoEditorsDemo extends IoElement {
       :host .row > *:not(:last-child) {
         margin-right: var(--io_spacing);
       }
-      :host > .row > io-property-editor > .io-row > io-label {
+      :host > .row > io-property-editor > .io-row > io-text {
         min-width: 5em;
         text-align: right;
       }

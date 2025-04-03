@@ -7,6 +7,7 @@ import { IoField } from 'io-inputs';
 export declare class IoMenuItem extends IoField {
     static get Style(): string;
     item: MenuItem;
+    hidden: boolean;
     expanded: boolean;
     direction: string;
     depth: number;
@@ -38,7 +39,7 @@ export declare class IoMenuItem extends IoField {
     itemMutated(): void;
     changed(): void;
 }
-export declare const ioMenuItem: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioMenuItem: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 export declare function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[];
 export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuItem | IoMenuOptions)[];

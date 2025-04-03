@@ -19,5 +19,5 @@ export declare class IoPropertyEditor extends IoElement {
      */
     toJSON(): any;
 }
-export declare const ioPropertyEditor: (arg0?: IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioPropertyEditor: (arg0?: IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-property-editor.d.ts.map

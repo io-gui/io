@@ -9,5 +9,5 @@ export declare class IoSlider2d extends IoSliderBase {
     static get GlUtils(): string;
     static get Frag(): string;
 }
-export declare const ioSlider2d: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioSlider2d: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-slider-2d.d.ts.map

@@ -193,22 +193,22 @@ export class IoOptionsDemoView extends IoElement {
       :host io-item-demo-view {
         margin-left: var(--io_spacing);
       }
-      :host io-label {
+      :host io-text {
         background-color: transparent;
         color: var(--io_color);
       }
-      :host io-label.first {
+      :host io-text.first {
         color: var(--io_colorBlue);
       }
-      :host io-label.path {
+      :host io-text.path {
         margin-left: 0.5em;
         color: var(--io_colorBlue);
       }
-      :host io-label.last {
+      :host io-text.last {
         margin-left: 0.5em;
         color: var(--io_colorBlue);
       }
-      :host io-label.scroll {
+      :host io-text.scroll {
         margin-left: 0.5em;
         color: var(--io_colorBlue);
       }
@@ -233,10 +233,10 @@ export class IoOptionsDemoView extends IoElement {
     }
     this.template([
       ['div', [
-        this.options.first ? [['io-label', {label: 'first:', class: 'first'}], ['io-label', {label: this.options.first}]] : null,
-        this.options.last ? [['io-label', {label: 'last:', class: 'last'}], ['io-label', {label: this.options.last}]] : null,
-        this.options.scroll ? [['io-label', {label: 'scroll:', class: 'scroll'}], ['io-label', {label: this.options.scroll}]] : null,
-        this.options.path ? [['io-label', {label: 'path:', class: 'path'}], ['io-label', {label: this.options.path}]] : null,
+        this.options.first ? [['io-text', {label: 'first:', class: 'first'}], ['io-text', {label: this.options.first}]] : null,
+        this.options.last ? [['io-text', {label: 'last:', class: 'last'}], ['io-text', {label: this.options.last}]] : null,
+        this.options.scroll ? [['io-text', {label: 'scroll:', class: 'scroll'}], ['io-text', {label: this.options.scroll}]] : null,
+        this.options.path ? [['io-text', {label: 'path:', class: 'path'}], ['io-text', {label: this.options.path}]] : null,
       ]],
       options
     ]);

@@ -19,5 +19,5 @@ export declare class IoMenuTree extends IoElement {
     _onCollapse(): void;
     changed(): void;
 }
-export declare const ioMenuTree: (arg0?: import("io-gui").IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+export declare const ioMenuTree: (arg0?: import("io-gui").IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-menu-tree.d.ts.map

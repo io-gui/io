@@ -1,7 +1,7 @@
 
-import { Register, Property, IoElement } from 'io-gui';
+import { Register, Property, IoElement, ioText } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { ioLabel } from './io-label';
+
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
 // function setBacktrack(element, dir, target) {
@@ -93,6 +93,9 @@ export class IoField extends IoElement {
 
   @Property('0')
   declare tabindex: string;
+
+  @Property({value: '', type: String, reflect: true})
+  declare name: string;
 
   @Property({type: String, reflect: true})
   declare value: any;
@@ -322,9 +325,8 @@ export class IoField extends IoElement {
       }
     }
     this.template([
-      this.label ? ioLabel({value: this.label}) : null,
       this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
-      value ? ioLabel({value: value}) : null
+      value ? ioText(value) : null
     ]);
   }
 }

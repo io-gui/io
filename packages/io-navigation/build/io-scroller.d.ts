@@ -11,5 +11,5 @@ export declare class IoScroller extends IoElement {
     _scrollToSelected(): void;
     dispose(): void;
 }
-export declare const ioScroller: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioScroller: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-scroller.d.ts.map

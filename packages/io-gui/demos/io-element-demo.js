@@ -1,13 +1,13 @@
-import { Register, IoElement, div, IoStorage as $ } from 'io-gui';
+import { Register, IoElement, div, IoStorage as $, ioText } from 'io-gui';
 import { ioPropertyEditor } from 'io-editors';
-import { ioLabel, ioField, ioNumber, ioString, ioBoolean, ioBoolicon, ioSwitch } from 'io-inputs';
+import { ioField, ioNumber, ioString, ioBoolean, ioBoolicon, ioSwitch } from 'io-inputs';
 import { ioOptionMenu, MenuOptions } from 'io-menus';
 import { ioSlider, ioSliderRange, ioSlider2d } from 'io-sliders';
 
 const options = new MenuOptions([{
   label: 'io-inputs',
   options: [
-    {value: ioField({label: 'label', icon: 'io:io', value: 'value'}), label: `io-field`},
+    {value: ioField({icon: 'io:io', value: 'value'}), label: `io-field`},
     {value: ioNumber(), label: `io-number`},
     {value: ioString(), label: `io-string`},
     {value: ioBoolean(), label: `io-boolean`},
@@ -57,7 +57,7 @@ export class IoElementDemo extends IoElement {
     :host io-property-editor > div.io-row:last-child {
       border-bottom: none;
     }
-    :host io-property-editor > div.io-row > io-label {
+    :host io-property-editor > div.io-row > io-text {
       width: 130px;
       text-align: right;
     }
@@ -89,11 +89,11 @@ export class IoElementDemo extends IoElement {
           this.element
         ]),
         ioPropertyEditor({$: 'properties'}),
-        ioPropertyEditor({$: 'attributes', config: [
+        ioPropertyEditor({$: 'attributes', config: new Map([
           [Object, [
             [String, ioField()],
           ]]
-        ]})
+        ])})
       ]);
       const element = this.querySelector('.element-wrap').children[0];
       
@@ -107,7 +107,7 @@ export class IoElementDemo extends IoElement {
       this.$['attributes'].value = attributes;
     } else {
       this.template([
-        ioLabel({value: 'Element property not set.'}),
+        ioText({value: 'Element property not set.'}),
       ]);
     }
   }

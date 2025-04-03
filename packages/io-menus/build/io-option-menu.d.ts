@@ -33,5 +33,5 @@ export declare class IoOptionMenu extends IoElement {
     optionsChanged(change: Change): void;
     changed(): void;
 }
-export declare const ioOptionMenu: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioOptionMenu: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-option-menu.d.ts.map

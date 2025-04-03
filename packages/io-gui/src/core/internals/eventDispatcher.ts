@@ -307,20 +307,6 @@ export class EventDispatcher {
       }
     }
   }
-  // /**
-  //  * Returns a JSON representation of the event dispatcher. This feature is used in testing.
-  //  * @return {Object} JSON representation of the event dispatcher.
-  //  */
-  // toJSON() {
-  //   return {
-  //     node: this.node.constructor.name,
-  //     nodeIsEventTarget: this.nodeIsEventTarget,
-  //     // TODO: Serialize listeners properly
-  //     protoListeners: this.protoListeners,
-  //     propListeners: this.propListeners,
-  //     addedListeners: this.addedListeners,
-  //   };
-  // }
   /**
    * Disconnects all event listeners and removes all references for garbage collection.
    * Use this when node is discarded.

@@ -1,7 +1,7 @@
-import { Register } from 'io-gui';
+import { Register, ioText } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoBoolean } from './io-boolean';
-import { ioLabel } from './io-label';
+
 @Register
 export class IoBoolicon extends IoBoolean {
   changed() {
@@ -11,7 +11,7 @@ export class IoBoolicon extends IoBoolean {
     const label = this.value ? this.true : this.false;
     this.template([
       this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
-      label ? ioLabel({value: label}) : null
+      label ? ioText(label) : null
     ]);
   }
 }

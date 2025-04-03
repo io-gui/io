@@ -15,5 +15,5 @@ export declare class IoObject extends IoElement {
     role: string;
     changed(): void;
 }
-export declare const ioObject: (arg0?: import("io-gui").IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+export declare const ioObject: (arg0?: import("io-gui").IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-object.d.ts.map

@@ -209,19 +209,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   declare role: string;
 
   @Property({value: '', type: String, reflect: true})
-  declare label: string;
-
-  @Property({value: '', type: String, reflect: true})
-  declare name: string;
-
-  @Property({value: '', type: String, reflect: true})
   declare title: string;
 
   @Property({value: '', type: String, reflect: true})
   declare id: string;
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare hidden: boolean;
 
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
@@ -394,13 +385,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
     }
   }
-  labelChanged() {
-    if (this.label) {
-      this.setAttribute('aria-label', this.label);
-    } else {
-      this.removeAttribute('aria-label');
-    }
-  }
   disabledChanged() {
     if (this.disabled) {
       this.setAttribute('aria-disabled', this.disabled);
@@ -416,7 +400,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     return serializeChild(this);
   }
 
-  static vDOM: (arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+  static vDOM: (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 
   Register(ioNodeConstructor: typeof IoNode) {
     super.Register(ioNodeConstructor);

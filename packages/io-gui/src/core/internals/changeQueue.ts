@@ -50,18 +50,6 @@ export class ChangeQueue {
       configurable: false,
     });
   }
-  // /**
-  //  * Returns a JSON representation of the change queue. This feature is used in testing.
-  //  * @return {Object} JSON representation of the change queue.
-  //  */
-  // toJSON() {
-  //   return {
-  //     node: this.node.constructor.name,
-  //     changes: this.changes,
-  //     dispatchedChange: this.dispatchedChange,
-  //     dispatching: this.dispatching,
-  //   };
-  // }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.
    * If the change is already in the queue, the new value is updated in-queue.

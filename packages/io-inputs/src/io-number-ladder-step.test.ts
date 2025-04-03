@@ -25,7 +25,7 @@ export default class {
         expect(step.getAttribute('type')).to.equal('number');
       });
       it('has correct default innerHTML', () => {
-        expect(step.innerHTML).to.equal('<io-label label="1" aria-label="1">1</io-label>');
+        expect(step.innerHTML).to.equal('<io-text label="1" aria-label="1">1</io-text>');
       });
       it('should set innerText to match value property', () => {
         step.value = 0;

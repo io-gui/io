@@ -7,9 +7,10 @@ import ElementTest from './core/element.test';
 import NodeTest from './core/node.test';
 import StorageTest from './nodes/storage.test';
 import ThemeTest from './nodes/theme.test';
+import FieldTest from './elements/field.test';
 import GLTest from './elements/gl.test';
 import OverlayTest from './elements/overlay.test';
-
+import TextTest from './elements/text.test';
 export default class {
   run() {
     new BindingTest().run();
@@ -21,7 +22,9 @@ export default class {
     new NodeTest().run();
     new StorageTest().run();
     new ThemeTest().run();
+    new FieldTest().run();
     new GLTest().run();
     new OverlayTest().run();
+    new TextTest().run();
   }
 }

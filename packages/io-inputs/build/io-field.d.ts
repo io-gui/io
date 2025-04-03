@@ -2,6 +2,7 @@ import { IoElement } from 'io-gui';
 export declare class IoField extends IoElement {
     static get Style(): string;
     tabindex: string;
+    name: string;
     value: any;
     icon: string;
     appearance: 'flush' | 'inset' | 'outset' | 'neutral';
@@ -31,5 +32,5 @@ export declare class IoField extends IoElement {
     setCaretPosition(position: number): void;
     changed(): void;
 }
-export declare const ioField: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioField: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-field.d.ts.map

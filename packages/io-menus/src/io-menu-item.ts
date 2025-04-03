@@ -19,6 +19,9 @@ export class IoMenuItem extends IoField {
         display: flex;
         user-select: none;
       }
+      :host[hidden] {
+        display: none;
+      }
       :host > * {
         pointer-events: none;
         text-overflow: ellipsis;
@@ -40,6 +43,9 @@ export class IoMenuItem extends IoField {
 
   @Property({type: MenuItem})
   declare item: MenuItem;
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare hidden: boolean;
 
   @Property({value: false, reflect: true})
   declare expanded: boolean;

@@ -66,7 +66,6 @@ export class IoNumberSlider extends IoElement {
         value: this.value,
         step: this.step,
         conversion: this.conversion,
-        label: this.label,
         '@value-input': this._onNumberSet,
       }),
       ioSlider({
@@ -76,7 +75,6 @@ export class IoNumberSlider extends IoElement {
         min: this.min * this.conversion,
         max: this.max * this.conversion,
         exponent: this.exponent,
-        label: this.label,
         '@value-input': this._onSliderSet,
       }),
     ]);

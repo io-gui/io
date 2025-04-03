@@ -15,5 +15,5 @@ export declare class IoMarkdown extends IoElement {
     srcChanged(): void;
     changed(): void;
 }
-export declare const ioMarkdown: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
+export declare const ioMarkdown: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-markdown.d.ts.map

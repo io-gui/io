@@ -1,7 +1,6 @@
-import { Register, Property } from 'io-gui';
+import { Register, Property, ioText } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField } from './io-field';
-import { ioLabel } from './io-label';
 
 /**
  * Input element for `Boolean` data type displayed as text.
@@ -52,7 +51,7 @@ export class IoBoolean extends IoField {
     const label = this.value ? this.true : this.false;
     this.template([
       this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
-      label ? ioLabel({value: label}) : null
+      label ? ioText(label) : null
     ]);
   }
 }

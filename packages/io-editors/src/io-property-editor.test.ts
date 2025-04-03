@@ -37,17 +37,15 @@ export default class {
         // console.log(children[0][2][0]);
         // console.log(children[0][2][1]);
 
-        expect(children[0][2][0]).to.eql(['io-label', {label: 'number', 'aria-label': 'number'}, 'number']);
+        expect(children[0][2][0]).to.eql(['io-text', {value: 'number'}, 'number']);
         expect(children[0][2][1]).to.eql(['io-number', {
           appearance: 'inset',
-          'aria-label': 'number',
           'aria-valuemax': 'Infinity',
           'aria-valuemin': '-Infinity',
           'aria-valuenow': '0.5',
           'aria-valuestep': '0.01',
           contenteditable: '',
           inputmode: 'numeric',
-          label: 'number',
           pattern: 'pattern="[0-9]*"',
           positive: '',
           role: 'textbox',
@@ -57,12 +55,10 @@ export default class {
           value: '0.5'},
           '0.5']);
 
-        expect(children[1][2][0]).to.eql(['io-label', {label: 'string', 'aria-label': 'string'}, 'string']);
+        expect(children[1][2][0]).to.eql(['io-text', {value: 'string'}, 'string']);
         expect(children[1][2][1]).to.eql(['io-string', {
           appearance: 'inset',
-          'aria-label': 'string',
           contenteditable: '',
-          label: 'string',
           role: 'textbox',
           spellcheck: 'false',
           tabindex: '0',

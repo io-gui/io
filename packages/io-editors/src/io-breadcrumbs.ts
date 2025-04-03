@@ -80,8 +80,7 @@ export class IoBreadcrumbs extends IoElement {
     for (let i = 0; i < this.options.length; i++) {
       elements.push(ioField({
         class: 'select',
-        value: this.options[i],
-        label: getLabel(this.options[i]),
+        value: getLabel(this.options[i]),
         '@item-clicked': this._onClick,
       }));
     }

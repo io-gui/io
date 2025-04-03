@@ -18,5 +18,5 @@ export declare class IoSelector extends IoElement {
     onLoadPrecache(): void;
     dispose(): void;
 }
-export declare const ioSelector: (arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
+export declare const ioSelector: (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-selector.d.ts.map

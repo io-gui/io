@@ -10,9 +10,11 @@ export * from './core/node';
 export * from './core/element';
 export * from './nodes/storage';
 export * from './nodes/theme';
+export * from './elements/field';
 export * from './elements/gl';
 export * from './elements/gl.glsl';
 export * from './elements/overlay';
+export * from './elements/text';
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic
  *
