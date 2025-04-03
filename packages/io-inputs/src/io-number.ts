@@ -23,9 +23,6 @@ export class IoNumber extends IoField {
     `;
   }
 
-  @Property('textbox')
-  declare role: string;
-
   @Property({value: 0, type: Number})
   declare value: number;
 
@@ -50,14 +47,14 @@ export class IoNumber extends IoField {
   @Property({value: 'number', type: String, reflect: true})
   declare type: string;
 
+  @Property({value: 'textbox', type: String})
+  declare role: string;
+
   @Property({value: 'pattern="[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
   @Property({value: 'numeric', type: String, reflect: true})
   declare inputmode: string;
-
-  @Property({value: 'false', type: String, reflect: true})
-  declare spellcheck: string;
 
   @Property({value: 'inset', type: String, reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset';
@@ -195,7 +192,6 @@ export class IoNumber extends IoField {
     this.changed();
   }
   changed() {
-    this.setAttribute('value', this.value);
     this.setAttribute('aria-valuenow', this.value);
     this.setAttribute('aria-valuemin', this.min);
     this.setAttribute('aria-valuemax', this.max);

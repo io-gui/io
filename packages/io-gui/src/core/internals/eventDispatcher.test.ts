@@ -63,7 +63,7 @@ export default class {
         expect(eventDispatcher.protoListeners).to.be.eql({event1:[[node.event1Handler]]});
         expect(eventDispatcher.propListeners).to.be.eql({});
         expect(eventDispatcher.addedListeners).to.be.eql({});
-        expect(eventDispatcher.isEventTarget).to.be.eql(false);
+        expect(eventDispatcher.nodeIsEventTarget).to.be.eql(false);
       });
       it('Should initialize listeners from ProtoChain', () => {
         const node1 = new MockIoNode1();

@@ -1,5 +1,4 @@
-import { Register } from '../core/decorators/register';
-import { IoElement } from '../core/element';
+import { Register, Property, IoElement } from 'io-gui';
 
 @Register
 export class IoLabel extends IoElement {
@@ -15,14 +14,17 @@ export class IoLabel extends IoElement {
       :host {
         @apply --ioLabel;
       }
-      :host:not([label]) {
+      :host:not([value]) {
         display: none;
       }
     `;
   }
-  labelChanged() {
-    super.labelChanged();
-    this.textNode = this.label;
+
+  @Property({value: '', type: String, reflect: true})
+  declare value: string;
+
+  valueChanged() {
+    this.textNode = this.value;
   }
 }
 export const ioLabel = IoLabel.vDOM;

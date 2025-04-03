@@ -30,7 +30,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
 export declare class ChangeQueue {
     readonly node: IoNode;
     readonly changes: Change[];
-    hasChanged: boolean;
+    dispatchedChange: boolean;
     dispatching: boolean;
     /**
      * Creates change queue for the specified owner instance of `IoNode`.

@@ -10,6 +10,7 @@ export declare class IoBoolean extends IoField {
     value: boolean;
     true: string;
     false: string;
+    type: string;
     role: string;
     _onClick(): void;
     toggle(): void;

@@ -1,6 +1,6 @@
-import { IoElement, Property, Register, IoElementArgs, IoNode, Constructor, ioLabel, div } from 'io-gui';
+import { IoElement, Property, Register, IoElementArgs, IoNode, Constructor, div } from 'io-gui';
 import { getEditorConfig, PropertyConfig } from './models/editor-config.js';
-import { ioObject } from './io-object.js';
+import { ioLabel } from 'io-inputs';
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
@@ -52,8 +52,10 @@ export class IoPropertyEditor extends IoElement {
     const item: any = event.composedPath()[0];
     if (item === this as any) return;
     event.stopImmediatePropagation();
-    const prop = item.id as keyof typeof this.value;
-    if (prop !== null) {
+
+    const prop = Object.keys(this.$).find(key => this.$[key] === event.target) as keyof typeof this.value | undefined;
+
+    if (prop !== undefined) {
       const value = event.detail.value;
       const oldValue = event.detail.oldValue;
       this.value[prop] = value;
@@ -80,16 +82,16 @@ export class IoPropertyEditor extends IoElement {
         const tag = config[c]![0];
         const props = config[c]![1] as (IoElementArgs | undefined) || {};
         const label = props.label || c;
-        const finalProps: any = {title: label, id: c, value: value, '@value-input': this._onValueInput};
+        const finalProps: any = {label: label, $: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
         if (tag === 'io-object') {
           elements.push(div({class: 'io-row'}, [
-            this.labeled ? ioLabel({label: label}) : null,
+            this.labeled ? ioLabel({value: label}) : null,
             [tag, finalProps],
           ]));
         } else {
           elements.push(div({class: 'io-row'}, [
-            this.labeled ? ioLabel({label: label}) : null,
+            this.labeled ? ioLabel({value: label}) : null,
             [tag, finalProps],
           ]));
         }
@@ -98,6 +100,14 @@ export class IoPropertyEditor extends IoElement {
       }
     }
     this.template(elements);
+  }
+  /**
+   * Returns a JSON representation of the property editor. This feature is used in testing.
+   * @return {Object} JSON representation of the property editor.
+   */
+  toJSON() {
+    const json = Object.assign({}, super.toJSON(), this);
+    return json;
   }
 }
 export const ioPropertyEditor = IoPropertyEditor.vDOM;

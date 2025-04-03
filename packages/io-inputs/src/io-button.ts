@@ -1,7 +1,7 @@
-import { Register, Property, ioLabel } from 'io-gui';
+import { Register, Property } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField } from './io-field';
-
+import { ioLabel } from './io-label';
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
@@ -72,7 +72,7 @@ export class IoButton extends IoField {
     this.setAttribute('aria-pressed', String(this.pressed));
     this.template([
       this.icon ? ioIcon({icon: this.icon}) : null,
-      this.label ? ioLabel({label: this.label}) : null
+      this.label ? ioLabel({value: this.label}) : null
     ]);
   }
 }

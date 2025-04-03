@@ -1,7 +1,7 @@
 
-import { Register, Property, IoElement, ioLabel } from 'io-gui';
+import { Register, Property, IoElement } from 'io-gui';
 import { ioIcon } from 'io-icons';
-
+import { ioLabel } from './io-label';
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
 // function setBacktrack(element, dir, target) {
@@ -94,13 +94,13 @@ export class IoField extends IoElement {
   @Property('0')
   declare tabindex: string;
 
-  @Property(undefined)
+  @Property({type: String, reflect: true})
   declare value: any;
 
   @Property({value: '', reflect: true})
   declare icon: string;
 
-  @Property({value: 'flush', reflect: true})
+  @Property({value: 'neutral', reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
 
   @Property({value: false, type: Boolean, reflect: true})
@@ -114,6 +114,9 @@ export class IoField extends IoElement {
 
   @Property({value: '', type: String, reflect: true})
   declare placeholder: string;
+
+  @Property({value: 'false', type: String, reflect: true})
+  declare spellcheck: string;
 
   static get Listeners() {
     return {
@@ -310,19 +313,18 @@ export class IoField extends IoElement {
     }
   }
   changed() {
-    let label = '';
-    if (this.label) {
-      label = this.label;
-    } else {
-      if (this.value && typeof this.value === 'object') {
-        label = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
+    let value = '';
+    if (this.value !== undefined) {
+      if (typeof this.value === 'object' && this.value !== null) {
+        value = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
       } else if (this.value !== undefined) {
-        label = String(this.value);
+        value = String(this.value);
       }
     }
     this.template([
+      this.label ? ioLabel({value: this.label}) : null,
       this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
-      ioLabel({label: label})
+      value ? ioLabel({value: value}) : null
     ]);
   }
 }

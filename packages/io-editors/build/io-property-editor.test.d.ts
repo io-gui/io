@@ -1,4 +1,4 @@
-import { IoPropertyEditor } from './io-property-editor.js';
+import { IoPropertyEditor } from './index';
 export default class {
     element: IoPropertyEditor;
     constructor();

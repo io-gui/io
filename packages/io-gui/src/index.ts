@@ -12,7 +12,6 @@ export * from './nodes/storage';
 export * from './nodes/theme';
 export * from './elements/gl';
 export * from './elements/gl.glsl';
-export * from './elements/label';
 export * from './elements/overlay';
 
 

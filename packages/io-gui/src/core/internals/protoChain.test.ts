@@ -80,6 +80,7 @@ class MockIoNode1 {
   static get Style() {
     return 'a';
   }
+  changed() {}
   function1() {}
   onFunction1() {}
   _onFunction1() {}
@@ -204,11 +205,11 @@ export default class {
       });
       it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
         let protoChain = new ProtoChain(IoNode1);
-        expect(protoChain.handlers).to.be.eql(['onPropertyMutated']);
+        expect(protoChain.handlers).to.be.eql(['changed', 'onPropertyMutated']);
         protoChain = new ProtoChain(MockIoNode1);
-        expect(protoChain.handlers).to.be.eql(['onFunction1', '_onFunction1']);
+        expect(protoChain.handlers).to.be.eql(['changed', 'onFunction1', '_onFunction1']);
         protoChain = new ProtoChain(MockIoNode2);
-        expect(protoChain.handlers).to.be.eql(['onFunction2', '_onFunction2', 'onFunction1', '_onFunction1']);
+        expect(protoChain.handlers).to.be.eql(['onFunction2', '_onFunction2', 'changed', 'onFunction1', '_onFunction1']);
       });
       it('Should bind auto-binding functions with `.autobindHandlers(node)` function', () => {
         const protoChain = new ProtoChain(MockIoNode2);

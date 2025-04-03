@@ -116,7 +116,7 @@
     import { ioMenusDemo } from './packages/io-menus/demos/io-menus-demo.js';
     import { ioNavigationDemo } from './packages/io-navigation/demos/io-navigation-demo.js';
     import { ioGuiThemeEditor } from './packages/io-gui/demos/io-gui-theme-editor.js';
-    import { ioElementDemo } from './demos/io-element-demo.js';
+    import { ioElementDemo } from './packages/io-gui/demos/io-element-demo.js';
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
@@ -200,7 +200,7 @@
                 ioMenusDemo({id: 'io-menus-demo'}),
                 ioNavigationDemo({id: 'io-navigation-demo'}),
                 ioGuiThemeEditor({id: 'io-gui-theme-editor'}),
-                ioElementDemo({id: 'io-element-demo', element: 'io-slider'}),
+                ioElementDemo({id: 'io-element-demo'}),
                 iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
               ]
             }),

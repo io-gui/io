@@ -2,6 +2,7 @@ import BooleanElementTest from './io-boolean.test';
 import BooliconElementTest from './io-boolicon.test';
 import ButtonElementTest from './io-button.test';
 import FieldElementTest from './io-field.test';
+import LabelElementTest from './io-label.test';
 import NumberElementTest from './io-number.test';
 import NumberLadderElementTest from './io-number-ladder.test';
 import NumberLadderStepElementTest from './io-number-ladder-step.test';
@@ -14,6 +15,7 @@ export default class {
     new BooliconElementTest().run();
     new ButtonElementTest().run();
     new FieldElementTest().run();
+    new LabelElementTest().run();
     new NumberElementTest().run();
     new NumberLadderElementTest().run();
     new NumberLadderStepElementTest().run();

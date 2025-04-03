@@ -34,7 +34,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
 export class ChangeQueue {
   declare readonly node: IoNode;
   declare readonly changes: Change[];
-  hasChanged = false;
+  dispatchedChange = false;
   dispatching = false;
   /**
    * Creates change queue for the specified owner instance of `IoNode`.
@@ -43,8 +43,25 @@ export class ChangeQueue {
   constructor(node: IoNode) {
     this.changes = [];
     this.node = node;
-    this.dispatch = this.dispatch.bind(this);
+    Object.defineProperty(this, 'dispatch', {
+      value: this.dispatch.bind(this),
+      enumerable: false,
+      writable: false,
+      configurable: false,
+    });
   }
+  // /**
+  //  * Returns a JSON representation of the change queue. This feature is used in testing.
+  //  * @return {Object} JSON representation of the change queue.
+  //  */
+  // toJSON() {
+  //   return {
+  //     node: this.node.constructor.name,
+  //     changes: this.changes,
+  //     dispatchedChange: this.dispatchedChange,
+  //     dispatching: this.dispatching,
+  //   };
+  // }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.
    * If the change is already in the queue, the new value is updated in-queue.
@@ -79,22 +96,22 @@ export class ChangeQueue {
       return;
     }
     this.dispatching = true;
-    this.hasChanged = false;
     while (this.changes.length) {
       const change = this.changes[0];
       this.changes.splice(0, 1);
       const property = change.property;
       if (change.value !== change.oldValue) {
-        this.hasChanged = true;
+        this.dispatchedChange = true;
         if (this.node[property + 'Changed']) this.node[property + 'Changed'](change);
         this.node.dispatchEvent(property + '-changed', change);
       }
     }
-    if (this.hasChanged) {
+    if (this.dispatchedChange) {
       // TODO: Consider including change details in the change handler and event payload.
       this.node.changed();
       this.node.dispatchEvent('object-mutated', {object: this.node});
     }
+    this.dispatchedChange = false;
     this.dispatching = false;
   }
   /**

@@ -13,6 +13,11 @@ export declare class IoPropertyEditor extends IoElement {
     _onValueInput(event: CustomEvent): void;
     valueMutated(): void;
     changed(): void;
+    /**
+     * Returns a JSON representation of the property editor. This feature is used in testing.
+     * @return {Object} JSON representation of the property editor.
+     */
+    toJSON(): any;
 }
 export declare const ioPropertyEditor: (arg0?: IoElementArgs | import("io-gui").VDOMArray[], arg1?: import("io-gui").VDOMArray[]) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-property-editor.d.ts.map

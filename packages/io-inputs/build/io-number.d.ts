@@ -7,7 +7,6 @@ import { IoField } from './io-field';
  **/
 export declare class IoNumber extends IoField {
     static get Style(): string;
-    role: string;
     value: number;
     conversion: number;
     step: number;
@@ -16,9 +15,9 @@ export declare class IoNumber extends IoField {
     ladder: boolean;
     contenteditable: boolean;
     type: string;
+    role: string;
     pattern: string;
     inputmode: string;
-    spellcheck: string;
     appearance: 'flush' | 'inset' | 'outset';
     private _pointer;
     _onBlur(event: FocusEvent): void;

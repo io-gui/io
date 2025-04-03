@@ -8,7 +8,6 @@ import NodeTest from './core/node.test';
 import StorageTest from './nodes/storage.test';
 import ThemeTest from './nodes/theme.test';
 import GLTest from './elements/gl.test';
-import LabelElementTest from './elements/label.test';
 import OverlayTest from './elements/overlay.test';
 
 export default class {
@@ -23,7 +22,6 @@ export default class {
     new StorageTest().run();
     new ThemeTest().run();
     new GLTest().run();
-    new LabelElementTest().run();
     new OverlayTest().run();
   }
 }

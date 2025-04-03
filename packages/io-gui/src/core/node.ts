@@ -413,6 +413,18 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       Object.defineProperty(this, '_disposed', {value: true});
     }
+    // /**
+    //  * Returns a JSON representation of the node. This feature is used in testing
+    //  * @return {Object} JSON representation of the node.
+    //  */
+    // toJSON() {
+    //   const json: Record<string, any> = Object.assign({}, this);
+    //   json._changeQueue = this._changeQueue;
+    //   json._properties = this._properties;
+    //   json._bindings = this._bindings;
+    //   json._eventDispatcher = this._eventDispatcher;
+    //   return json;
+    // }
     Register(ioNodeConstructor: typeof IoNode) {
       Object.defineProperty(ioNodeConstructor, '_isIoNode', {enumerable: false, value: true});
       Object.defineProperty(ioNodeConstructor.prototype, '_isIoNode', {enumerable: false, value: true});

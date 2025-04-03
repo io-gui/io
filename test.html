@@ -36,13 +36,13 @@
       import GuiTest from 'io-gui/index.test.js';
       import ColorsTest from 'io-colors/index.test.js';
       // import ExtrasTest from 'io-extras/index.test.js';
-      import IconsetTest from 'io-icons/index.test.js';
+      import IconsTest from 'io-icons/index.test.js';
       import InputsTest from 'io-inputs/index.test.js';
-      // import EditorsTest from 'io-editor/index.test.js';
+      import EditorsTest from 'io-editors/index.test.js';
       // import MarkdownTest from 'io-markdown/index.test.js';
-      import MenusTest from 'io-menus/index.test.js';
-      // import NavigatorTest from 'io-navigator/index.test.js';
-      import SlidersTest from 'io-sliders/index.test.js';
+      // import MenusTest from 'io-menus/index.test.js';
+      // import NavigationTest from 'io-navigation/index.test.js';
+      // import SlidersTest from 'io-sliders/index.test.js';
 
 
 
@@ -63,13 +63,13 @@
         new GuiTest().run();
         new ColorsTest().run();
         // new ExtrasTest().run();
-        new IconsetTest().run();
+        new IconsTest().run();
         new InputsTest().run();
-        // new EditorsTest().run();
+        new EditorsTest().run();
         // new MarkdownTest().run();
-        new MenusTest().run();
-        // new NavigatorTest().run();
-        new SlidersTest().run();
+        // new MenusTest().run();
+        // new NavigationTest().run();
+        // new SlidersTest().run();
 
         mocha.checkLeaks();
         mocha.run(() => {

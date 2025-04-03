@@ -40,6 +40,8 @@ export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOpt
  * It can be a string (function name), an event AnyEventListener function or a ListenerDefinition array.
  */
 export type ListenerDefinitionLoose = string | AnyEventListener | ListenerDefinition;
+export type Listener = [AnyEventListener, AddEventListenerOptions?];
+export type Listeners = Record<string, Listener[]>;
 /**
  * Converts a loose listener definition into a strongly typed ListenerDefinition array format.
  * This ensures consistent handling of listeners regardless of how they were initially defined.
@@ -57,8 +59,6 @@ export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefi
  * @return {Listener} Normalized [listener, options?] tuple
  */
 export declare const listenerFromDefinition: (node: IoNode | EventTarget, def: ListenerDefinition) => Listener;
-export type Listener = [AnyEventListener, AddEventListenerOptions?];
-export type Listeners = Record<string, Listener[]>;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `IoNode` class instances compatible with DOM events.
@@ -69,7 +69,7 @@ export type Listeners = Record<string, Listener[]>;
  */
 export declare class EventDispatcher {
     readonly node: IoNode | EventTarget;
-    readonly isEventTarget: boolean;
+    readonly nodeIsEventTarget: boolean;
     readonly protoListeners: Listeners;
     readonly propListeners: Listeners;
     readonly addedListeners: Listeners;

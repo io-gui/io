@@ -5,8 +5,9 @@ import { IoField } from './io-field';
 export declare class IoString extends IoField {
     static get Style(): string;
     live: boolean;
-    value: string | number | boolean;
+    value: string;
     contenteditable: boolean;
+    type: string;
     role: string;
     appearance: 'flush' | 'inset' | 'outset';
     _setFromTextNode(): void;

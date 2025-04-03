@@ -9,6 +9,7 @@ export declare class IoField extends IoElement {
     selected: boolean;
     invalid: boolean;
     placeholder: string;
+    spellcheck: string;
     static get Listeners(): {
         'focus-to': string;
         focus: string;

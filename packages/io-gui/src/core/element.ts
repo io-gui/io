@@ -261,7 +261,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   setProperty(name: string, value: any, debounce = false) {
     super.setProperty(name, value, debounce);
     const prop = this._properties.get(name)!;
-    if ((prop.reflect) && this._isIoElement) this.setAttribute(name, value);
+    if (prop.reflect) this.setAttribute(name, value);
   }
   // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**
@@ -340,6 +340,80 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         }
       }
     }
+  }
+
+  /**
+  * Helper function to flatten textContent into a single TextNode.
+  * Update textContent via TextNode is better for layout performance.
+  * @param {HTMLElement} element - Element to flatten.
+  */
+  _flattenTextNode(element: HTMLElement | IoElement) {
+    if (element.childNodes.length === 0) {
+      element.appendChild(document.createTextNode(''));
+    }
+    if (element.childNodes[0].nodeName !== '#text') {
+      element.innerHTML = '';
+      element.appendChild(document.createTextNode(''));
+    }
+    (element as IoElement)._textNode = element.childNodes[0];
+    if (element.childNodes.length > 1) {
+      const textContent = element.textContent;
+      for (let i = element.childNodes.length; i--;) {
+        if (i !== 0) element.removeChild(element.childNodes[i]);
+      }
+      (element as IoElement)._textNode.nodeValue = textContent;
+    }
+  }
+  get textNode() {
+    this._flattenTextNode(this);
+    return this._textNode.nodeValue;
+  }
+  set textNode(value) {
+    this._flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
+  }
+  applyProperties(props: any) {
+    super.applyProperties(props);
+    if (props['style']) {
+      for (const s in props['style']) {
+        this.style[s] = props['style'][s];
+      }
+    }
+  }
+  /**
+  * Alias for HTMLElement setAttribute where falsey values remove the attribute.
+  * @param {string} attr - Attribute name.
+  * @param {*} value - Attribute value.
+  */
+  setAttribute(attr: string, value: boolean | number | string) {
+    if (value === true) {
+      HTMLElement.prototype.setAttribute.call(this, attr, '');
+    } else if (value === false || value === '') {
+      this.removeAttribute(attr);
+    } else if (typeof value === 'string' || typeof value === 'number') {
+      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
+    }
+  }
+  labelChanged() {
+    if (this.label) {
+      this.setAttribute('aria-label', this.label);
+    } else {
+      this.removeAttribute('aria-label');
+    }
+  }
+  disabledChanged() {
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', this.disabled);
+    } else {
+      this.removeAttribute('aria-disabled');
+    }
+  }
+  /**
+   * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
+   * @return {Object} vDOM-like representation of the element.
+   */
+  serialize() {
+    return serializeChild(this);
   }
 
   static vDOM: (arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]) => VDOMArray;
@@ -422,74 +496,38 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
     }});
   }
-
-  /**
-  * Helper function to flatten textContent into a single TextNode.
-  * Update textContent via TextNode is better for layout performance.
-  * @param {HTMLElement} element - Element to flatten.
-  */
-  _flattenTextNode(element: HTMLElement | IoElement) {
-    if (element.childNodes.length === 0) {
-      element.appendChild(document.createTextNode(''));
-    }
-    if (element.childNodes[0].nodeName !== '#text') {
-      element.innerHTML = '';
-      element.appendChild(document.createTextNode(''));
-    }
-    (element as IoElement)._textNode = element.childNodes[0];
-    if (element.childNodes.length > 1) {
-      const textContent = element.textContent;
-      for (let i = element.childNodes.length; i--;) {
-        if (i !== 0) element.removeChild(element.childNodes[i]);
-      }
-      (element as IoElement)._textNode.nodeValue = textContent;
-    }
-  }
-  get textNode() {
-    this._flattenTextNode(this);
-    return this._textNode.nodeValue;
-  }
-  set textNode(value) {
-    this._flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
-  }
-  applyProperties(props: any) {
-    super.applyProperties(props);
-    if (props['style']) {
-      for (const s in props['style']) {
-        this.style[s] = props['style'][s];
-      }
-    }
-  }
-  /**
-  * Alias for HTMLElement setAttribute where falsey values remove the attribute.
-  * @param {string} attr - Attribute name.
-  * @param {*} value - Attribute value.
-  */
-  setAttribute(attr: string, value: boolean | number | string) {
-    if (value === true) {
-      HTMLElement.prototype.setAttribute.call(this, attr, '');
-    } else if (value === false || value === '') {
-      this.removeAttribute(attr);
-    } else if (typeof value === 'string' || typeof value === 'number') {
-      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
-    }
-  }
-  labelChanged() {
-    if (this.label) {
-      this.setAttribute('aria-label', this.label);
-    } else {
-      this.removeAttribute('aria-label');
-    }
-  }
-  disabledChanged() {
-    if (this.disabled) {
-      this.setAttribute('aria-disabled', this.disabled);
-    } else {
-      this.removeAttribute('aria-disabled');
-    }
-  }
 }
+
+const serializeChildren = function(htmlCollection: [IoElement | HTMLElement]): vDOMLike[] {
+  const children = [];
+  for (let i = 0; i < htmlCollection.length; i++) {
+    children.push(serializeChild(htmlCollection[i]));
+  }
+  return children;
+};
+
+const serializeAttributes = function(element: IoElement | HTMLElement): Record<string, any> {
+  const attributes: Record<string, any> = {};
+  for (let i = 0; i < element.attributes.length; i++) {
+    const name = element.attributes[i].name;
+    const value = element.getAttribute(name);
+    if (value !== null) {
+      attributes[name] = value;
+    }
+  }
+  return attributes;
+};
+
+type vDOMLike = [string, Record<string, any>, vDOMLike[]];
+
+const serializeChild = function(element: IoElement | HTMLElement): [string, Record<string, any>, vDOMLike[]] {
+  return [
+    element.localName,
+    serializeAttributes(element),
+    element.children.length > 0 ? serializeChildren((element as any).children) : element.textContent
+  ];
+};
+
 
 //TODO: test element vDOM factories!
 export const ioElement = IoElement.vDOM;

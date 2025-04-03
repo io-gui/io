@@ -22,10 +22,13 @@ export class IoString extends IoField {
   declare live: boolean;
 
   @Property('')
-  declare value: string | number | boolean;
+  declare value: string;
 
   @Property(true)
   declare contenteditable: boolean;
+
+  @Property({value: 'text', type: String, reflect: true})
+  declare type: string;
 
   @Property('textbox')
   declare role: string;
@@ -117,7 +120,6 @@ export class IoString extends IoField {
     }
   }
   changed() {
-    this.title = this.label;
     this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
   }
   valueChanged() {
