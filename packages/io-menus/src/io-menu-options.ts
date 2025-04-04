@@ -1,5 +1,5 @@
-import { Register, IoElement, Property, VDOMArray, IoOverlaySingleton, NudgeDirection, IoThemeSingleton } from 'io-gui';
-import { ioField } from 'io-inputs';
+import { Register, IoElement, Property, VDOMArray, IoOverlaySingleton, NudgeDirection, IoThemeSingleton, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { ioString } from 'io-inputs';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import { ioMenuItem, IoMenuItem } from './io-menu-item.js';
@@ -7,6 +7,19 @@ import { filterOptions } from './io-menu-tree.js';
 import { ioMenuHamburger } from './io-menu-hamburger.js';
 
 const rects = new WeakMap();
+
+export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
+  options?: MenuOptions;
+  expanded?: boolean;
+  horizontal?: boolean;
+  searchable?: boolean;
+  search?: string;
+  direction?: NudgeDirection;
+  depth?: number;
+  noPartialCollapse?: boolean;
+  inlayer?: boolean;
+  slotted?: VDOMArray[];
+}>;
 
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
@@ -290,7 +303,7 @@ export class IoMenuOptions extends IoElement {
     const elements: VDOMArray[] = [...this.slotted];
 
     if (this.searchable) {
-      elements.push(ioField({
+      elements.push(ioString({
         $: 'search',
         role: 'search',
         class: 'search',
@@ -307,7 +320,7 @@ export class IoMenuOptions extends IoElement {
         elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
       }
     } else {
-      let direction = this.horizontal ? 'down' : 'right';
+      let direction: 'left' | 'right' | 'up' | 'down' = this.horizontal ? 'down' : 'right';
       if (this.horizontal && this.direction === 'up') {
         direction = 'up';
       }
@@ -336,5 +349,6 @@ export class IoMenuOptions extends IoElement {
     }
     this.template(elements);
   }
+  static vDOM: (arg0?: IoMenuOptionsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioMenuOptions = IoMenuOptions.vDOM;

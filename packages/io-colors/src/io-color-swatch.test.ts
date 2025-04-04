@@ -11,7 +11,7 @@ export default class {
       describe('Initialization', () => {
         // it('Should have core API functions defined', () => {
         // });
-        // it('Should initialize property definitions correctly', () => {
+        // it('Should initialize properties correctly', () => {
         // });
         // it('has correct default attributes', () => {
         // });

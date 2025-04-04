@@ -1,4 +1,12 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
+    value?: {
+        r: number;
+        g: number;
+        b: number;
+        a?: number;
+    };
+}>;
 export declare class IoColorBase extends IoElement {
     reactivity: string;
     value: {
@@ -16,5 +24,6 @@ export declare class IoColorBase extends IoElement {
     rgbFromHsl(): void;
     valueFromRgb(): void;
     valueChanged(): void;
+    static vDOM: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-//# sourceMappingURL=io-color-base.d.ts.map
+//# sourceMappingURL=color-base.d.ts.map

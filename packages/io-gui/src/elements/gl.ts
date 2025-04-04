@@ -1,10 +1,10 @@
 import { Register } from '../core/decorators/register';
-import { IoElement } from '../core/element';
+import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
 import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
 import { Property } from '../core/decorators/property';
 import { IoThemeSingleton, Color } from '../nodes/theme';
 import { glsl } from './gl.glsl';
-import { IoNode } from '../core/node';
+import { IoNode, ArgsWithBinding } from '../core/node';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false}) as WebGLRenderingContext;
@@ -34,6 +34,11 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 
 const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
+
+
+export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
+  color?: [number, number, number, number];
+}>;
 
 @Register
 export class IoGl extends IoElement {
@@ -372,5 +377,6 @@ export class IoGl extends IoElement {
     }
     Object.defineProperty(ioNodeConstructor.prototype, '_glUtils', {enumerable: false, value: _glUtils});
   }
+  static vDOM: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioGl = IoGl.vDOM;

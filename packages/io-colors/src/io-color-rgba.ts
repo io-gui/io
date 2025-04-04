@@ -1,5 +1,5 @@
 import { Register } from 'io-gui';
-import { IoColorBase } from './io-color-base.js';
+import { IoColorBase } from './elements/color-base.js';
 import { ioNumber } from 'io-inputs';
 import { ioColorPicker } from './io-color-picker.js';
 

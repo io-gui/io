@@ -35,11 +35,11 @@ export type PropertyDefinitionLoose = string | number | boolean | Array<any> | n
  * @property {*} [init] Initialization arguments for constructing initial values.
  */
 export class ProtoProperty {
-  value?: any;
-  type?: Constructor;
-  binding?: Binding;
-  reflect?: boolean;
-  init?: any;
+  declare value?: any;
+  declare type?: Constructor;
+  declare binding?: Binding;
+  declare reflect?: boolean;
+  declare init?: any;
   /**
    * Creates a property definition from various input types.
    * @param {PropertyDefinitionLoose} def Input definition which can be:
@@ -64,14 +64,14 @@ export class ProtoProperty {
       this.binding = def;
     } else if (def && def.constructor === Object) {
       const d = def as PropertyDefinition;
-      this.value = d.value !== undefined ? d.value : undefined;
-      this.type = d.type !== undefined ? d.type : undefined;
+      if (Object.hasOwn(d, 'value')) this.value = d.value;
+      if (Object.hasOwn(d, 'type')) this.type = d.type;
       if (d.binding instanceof Binding) {
         this.binding = d.binding;
         this.value = this.binding.value;
       }
-      if (d.reflect !== undefined) this.reflect = d.reflect;
-      if (d.init !== undefined) this.init = d.init;
+      if (Object.hasOwn(d, 'reflect')) this.reflect = d.reflect;
+      if (Object.hasOwn(d, 'init')) this.init = d.init;
     } else if (!(def && def.constructor === Object)) {
       this.value = def;
     }
@@ -81,11 +81,11 @@ export class ProtoProperty {
    * @param {ProtoProperty} protoProp Source ProtoProperty
    */
   assign(protoProp: ProtoProperty) {
-    if (protoProp.value !== undefined) this.value = protoProp.value;
-    if (protoProp.type !== undefined) this.type = protoProp.type;
-    if (protoProp.reflect !== undefined) this.reflect = protoProp.reflect;
-    if (protoProp.init !== undefined) this.init = protoProp.init;
-    if (protoProp.binding !== undefined) this.binding = protoProp.binding;
+    if (Object.hasOwn(protoProp, 'value')) this.value = protoProp.value;
+    if (Object.hasOwn(protoProp, 'type')) this.type = protoProp.type;
+    if (Object.hasOwn(protoProp, 'reflect')) this.reflect = protoProp.reflect;
+    if (Object.hasOwn(protoProp, 'init')) this.init = protoProp.init;
+    if (Object.hasOwn(protoProp, 'binding')) this.binding = protoProp.binding;
   }
   /**
    * Creates a serializable representation of the property definition.
@@ -132,7 +132,7 @@ function decodeInitArgument(item: any, node: IoNode) {
  */
 export class PropertyInstance {
   // Property value.
-  value?: any = undefined;
+  value?: any;
   // Constructor of the property value.
   type?: Constructor;
   // Binding object.
@@ -163,7 +163,7 @@ export class PropertyInstance {
     this.value = propDef.value;
     this.type = propDef.type;
     this.binding = propDef.binding;
-    if (propDef.reflect !== undefined) this.reflect = propDef.reflect;
+    if (typeof propDef.reflect === 'boolean') this.reflect = propDef.reflect;
     if (propDef.init !== undefined) this.init = propDef.init;
 
     if (this.binding instanceof Binding) {

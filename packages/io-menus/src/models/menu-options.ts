@@ -1,4 +1,4 @@
-import { IoNodeMixin, IoNodeArgs, Property, Register } from 'io-gui';
+import { IoNodeMixin, IoNodeArgs, Property, Register, ArgsWithBinding } from 'io-gui';
 import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
 // TODO: document!
 
@@ -9,6 +9,14 @@ function _isNaN(value: any) {
 function _isSelectable(value: string) {
   return value === 'select' || value === 'scroll';
 }
+
+export type MenuOptionsArgs = IoNodeArgs & ArgsWithBinding<{
+  first?: any,
+  last?: any,
+  scroll?: string,
+  path?: string,
+  delimiter?: string,
+}>;
 
 @Register
 export class MenuOptions extends IoNodeMixin(Array) {

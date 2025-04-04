@@ -1,7 +1,8 @@
 import { EventDispatcher } from './internals/eventDispatcher';
-import { IoNode, IoNodeMixin, IoNodeArgs } from './node';
+import { IoNode, IoNodeMixin, IoNodeArgs, ArgsWithBinding } from './node';
 import { Property } from './decorators/property';
 import { Register } from './decorators/register';
+import { Binding } from './internals/binding';
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
 
@@ -17,31 +18,29 @@ const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-export type IoElementArgs = IoNodeArgs & {
-  tabindex?: string;
-  contenteditable?: boolean;
+export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
+  $?: string;
+  style?: Record<string, string>;
   class?: string;
-  role?: string;
-  label?: string;
-  name?: string;
   title?: string;
   id?: string;
-  hidden?: boolean;
-  disabled?: boolean;
-  cache?: boolean;
-  [key: string]: any, // TODO: remove and make specific types
-  src?: string; // TODO: move to IoMarkdown
+  role?: string;
+}>;
+
+// TODO: Consider making more specific types. Might be too complex.
+export type AnyIoArgs = {
+  [key: string]: any;
 }
 
 export type VDOMArray =
   null |
   [string] |
-  [string, IoElementArgs | VDOMArray[] | string] |
-  [string, IoElementArgs, VDOMArray[] | string];
+  [string, AnyIoArgs | VDOMArray[] | string] |
+  [string, AnyIoArgs, VDOMArray[] | string];
 
 export type VDOMElement = {
   name: string,
-  props: IoElementArgs,
+  props: AnyIoArgs,
   children: VDOMElement[] | string
 }
 
@@ -169,7 +168,6 @@ export const applyNativeElementProps = function(element: HTMLElement, props: any
  */
 @Register
 export class IoElement extends IoNodeMixin(HTMLElement) {
-
   static get Style(): string {
     return /* css */`
       :host {
@@ -178,10 +176,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       }
       :host[hidden] {
         display: none;
-      }
-      :host[disabled] {
-        pointer-events: none;
-        opacity: 0.5;
       }
       :host:focus {
         border-color: var(--io_colorBlue);
@@ -197,16 +191,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   declare $: Record<string, any>; // TODO: Add type safety.
 
   @Property({value: '', type: String, reflect: true})
-  declare tabindex: string;
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare contenteditable: boolean;
-
-  @Property({value: '', type: String, reflect: true})
   declare class: string;
-
-  @Property({value: '', type: String, reflect: true})
-  declare role: string;
 
   @Property({value: '', type: String, reflect: true})
   declare title: string;
@@ -214,8 +199,8 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   @Property({value: '', type: String, reflect: true})
   declare id: string;
 
-  @Property({value: false, type: Boolean, reflect: true})
-  declare disabled: boolean;
+  @Property({value: '', type: String, reflect: true})
+  declare role: string;
 
   //TODO: add types
   constructor(...args: any[]) {
@@ -385,13 +370,6 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
     }
   }
-  disabledChanged() {
-    if (this.disabled) {
-      this.setAttribute('aria-disabled', this.disabled);
-    } else {
-      this.removeAttribute('aria-disabled');
-    }
-  }
   /**
    * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
    * @return {Object} vDOM-like representation of the element.
@@ -516,6 +494,11 @@ const serializeChild = function(element: IoElement | HTMLElement): [string, Reco
 //TODO: test element vDOM factories!
 export const ioElement = IoElement.vDOM;
 
+export type NativeElementArgs = IoElementArgs & {
+  src?: string;
+  href?: string;
+}
+
 const nativeElements = [
   'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside', 'audio', 'b', 'base', 'basefont', 'bdi', 'bdo', 'big', 'blockquote',
   'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'data', 'datalist', 'dd', 'del', 'details', 'dfn',
@@ -526,7 +509,7 @@ const nativeElements = [
   'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead',
   'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
 ];
-const nativeVDOMFactories: Record<string, (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray> = {};
+const nativeVDOMFactories: Record<string, (arg0?: NativeElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray> = {};
 nativeElements.forEach((element) => {
   const vDOMFactory = function(arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string): VDOMArray {
     if (arg0 !== undefined) {

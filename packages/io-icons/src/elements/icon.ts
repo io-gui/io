@@ -1,9 +1,15 @@
-import { Register, Property, IoElement } from 'io-gui';
+import { Register, Property, IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { IoIconsetSingleton } from '../nodes/iconset';
+
+export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
+  value?: string;
+  stroke?: boolean;
+}>;
 
 /**
  * SVG icon element.
- * It displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
+ * It displays SVG content specified via `icon` parameter.
+ * Custom SVG assets need to be registered with `IoIconsetSingleton`.
  **/
 @Register
 export class IoIcon extends IoElement {
@@ -22,7 +28,7 @@ export class IoIcon extends IoElement {
       :host {
         @apply --ioIcon;
       }
-      :host:not([icon]) {
+      :host:not([value]) {
         display: none;
       }
       :host[stroke] {
@@ -38,17 +44,18 @@ export class IoIcon extends IoElement {
     `;
   }
   @Property({value: '', type: String, reflect: true})
-  declare icon: string;
+  declare value: string;
 
   @Property({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
-  iconChanged() {
-    if (this.icon.search(':') !== -1) {
-      this.innerHTML = IoIconsetSingleton.getIcon(this.icon);
+  valueChanged() {
+    if (this.value.search(':') !== -1) {
+      this.innerHTML = IoIconsetSingleton.getIcon(this.value);
     } else {
-      this.textNode = this.icon;
+      this.textNode = this.value;
     }
   }
+  static vDOM: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioIcon = IoIcon.vDOM;

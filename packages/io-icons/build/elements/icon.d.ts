@@ -1,13 +1,19 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
+    value?: string;
+    stroke?: boolean;
+}>;
 /**
  * SVG icon element.
- * It displays SVG content specified via `icon` parameter. Custom SVG assets need to be registered with `IoIconsetSingleton`.
+ * It displays SVG content specified via `icon` parameter.
+ * Custom SVG assets need to be registered with `IoIconsetSingleton`.
  **/
 export declare class IoIcon extends IoElement {
     static get Style(): string;
-    icon: string;
+    value: string;
     stroke: boolean;
-    iconChanged(): void;
+    valueChanged(): void;
+    static vDOM: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioIcon: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioIcon: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=icon.d.ts.map

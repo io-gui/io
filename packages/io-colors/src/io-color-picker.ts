@@ -1,6 +1,15 @@
-import { Register, Property, IoElement, IoOverlaySingleton } from 'io-gui';
-import { IoColorPanelSingleton } from './io-color-panel-singleton.js';
+import { Register, Property, IoElement, IoOverlaySingleton, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoColorPanelSingleton as Panel } from './elements/color-panel-singleton.js';
 import { ioColorSwatch } from './io-color-swatch.js';
+
+export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
+  value?: {
+    r: number;
+    g: number;
+    b: number;
+    a?: number;
+  }
+}>;
 
 @Register
 export class IoColorPicker extends IoElement {
@@ -21,39 +30,40 @@ export class IoColorPicker extends IoElement {
 
   static get Listeners(): any {
     return {
-      'click': '_onClick',
-      'keydown': '_onKeydown',
+      'click': 'onClick',
+      'keydown': 'onKeydown',
     };
   }
 
-  @Property('0')
+  @Property({value: '0', type: String, reflect: true})
   declare tabindex: string;
 
-  _onClick(event: FocusEvent) {
+  onClick() {
     this.toggle();
   }
   get expanded() {
-    return IoColorPanelSingleton.expanded && IoColorPanelSingleton.value === this.value;
+    return Panel.expanded && Panel.value === this.value;
   }
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     const rect = this.getBoundingClientRect();
-    const pRect = IoColorPanelSingleton.getBoundingClientRect();
+    const pRect = Panel.getBoundingClientRect();
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this.toggle();
-      if (this.expanded) IoColorPanelSingleton.firstChild.focus();
+      if (this.expanded) Panel.firstChild.focus();
     } else if (this.expanded && pRect.top >= rect.bottom && event.key === 'ArrowDown') {
       event.preventDefault();
-      IoColorPanelSingleton.firstChild.focus();
+      Panel.firstChild.focus();
     } else if (this.expanded && pRect.bottom <= rect.top && event.key === 'ArrowUp') {
       event.preventDefault();
-      IoColorPanelSingleton.firstChild.focus();
+      Panel.firstChild.focus();
     } else {
       this.collapse();
-      super._onKeydown(event);
+      // TODO: inherit from input-base
+      // super.onKeydown(event);
     }
   }
-  _onValueSet() {
+  onValueSet() {
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
   }
   toggle() {
@@ -63,22 +73,26 @@ export class IoColorPicker extends IoElement {
       this.expand();
     }
   }
+  onPanelCollapse() {
+    Panel.removeEventListener('value-input', this.onValueSet);
+    Panel.removeEventListener('expanded-changed', this.onPanelCollapse);
+  }
   expand() {
-    IoColorPanelSingleton.value = this.value;
-    IoColorPanelSingleton.expanded = true;
-    IoOverlaySingleton.setElementPosition(IoColorPanelSingleton as unknown as HTMLElement, 'down', this.getBoundingClientRect());
-    // hook up 'value-input' event dispatch
-    IoColorPanelSingleton.addEventListener('value-input', this._onValueSet);
-    IoColorPanelSingleton._targetValueSetHandler = this._onValueSet;
+    Panel.value = this.value;
+    Panel.expanded = true;
+    Panel.addEventListener('value-input', this.onValueSet);
+    Panel.addEventListener('expanded-changed', this.onPanelCollapse);
+    IoOverlaySingleton.setElementPosition(Panel as unknown as HTMLElement, 'down', this.getBoundingClientRect());
   }
   collapse() {
-    IoColorPanelSingleton.removeEventListener('value-input', IoColorPanelSingleton._targetValueSetHandler);
-    IoColorPanelSingleton.expanded = false;
+    Panel.expanded = false;
+    Panel.value = {r: 1, g: 1, b: 1, a: 1};
   }
-  changed() {
+  valueChanged() {
     this.template([
-      ioColorSwatch({$: 'swatch', value: this.value})
+      ioColorSwatch({value: this.value})
     ]);
   }
+  static vDOM: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioColorPicker = IoColorPicker.vDOM;

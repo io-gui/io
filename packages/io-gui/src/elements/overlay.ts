@@ -60,9 +60,9 @@ class IoOverlay extends IoElement {
     return {
       'pointerdown': ['stopPropagation', {passive: false}],
       'pointermove': ['stopPropagation', {passive: false}],
-      'pointerup': '_onPointerup',
-      'contextmenu': '_onContextmenu',
-      'focusin': '_onFocusIn',
+      'pointerup': 'onPointerup',
+      'contextmenu': 'onContextmenu',
+      'focusin': 'onFocusIn',
       'scroll': '_onScroll',
       'wheel': ['_onScroll', {passive: false}],
       'mousedown': ['stopPropagation', {passive: false}],
@@ -86,7 +86,7 @@ class IoOverlay extends IoElement {
   onResized() {
     this.expanded = false;
   }
-  _onPointerup(event: PointerEvent) {
+  onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
       this.throttle(this._onCollapse);
     }
@@ -94,10 +94,10 @@ class IoOverlay extends IoElement {
   _onCollapse() {
     this.expanded = false;
   }
-  _onContextmenu(event: Event) {
+  onContextmenu(event: Event) {
     event.preventDefault();
   }
-  _onFocusIn(event: FocusEvent) {
+  onFocusIn(event: FocusEvent) {
     event.stopPropagation();
   }
   _onScroll(event: Event) {

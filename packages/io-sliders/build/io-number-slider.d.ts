@@ -1,4 +1,12 @@
-import { IoElement } from 'io-gui';
+import { IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
+    value?: number;
+    step?: number;
+    min?: number;
+    max?: number;
+    exponent?: number;
+    conversion?: number;
+}>;
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  *
@@ -18,6 +26,7 @@ export declare class IoNumberSlider extends IoElement {
     _onSliderSet(event: CustomEvent): void;
     init(): void;
     changed(): void;
+    static vDOM: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioNumberSlider: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioNumberSlider: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-number-slider.d.ts.map

@@ -1,25 +1,36 @@
-import { IoField } from './io-field';
+import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoInputBase, IoInputBaseArgs } from './io-input-base';
+export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
+    live?: boolean;
+    value?: string;
+    placeholder?: string;
+    spellcheck?: 'true' | 'false';
+}>;
 /**
  * Input element for `String` data type.
  **/
-export declare class IoString extends IoField {
+export declare class IoString extends IoInputBase {
     static get Style(): string;
     live: boolean;
     value: string;
-    contenteditable: boolean;
     type: string;
     role: string;
     appearance: 'flush' | 'inset' | 'outset';
+    placeholder: string;
+    spellcheck: string;
     _setFromTextNode(): void;
     _tryParseFromTextNode(): void;
-    _onBlur(event: FocusEvent): void;
-    _onPointerdown(event: PointerEvent): void;
-    _onPointermove(event: PointerEvent): void;
-    _onPointerup(event: PointerEvent): void;
-    _onKeydown(event: KeyboardEvent): void;
-    _onKeyup(event: KeyboardEvent): void;
+    onBlur(event: FocusEvent): void;
+    onPointerdown(event: PointerEvent): void;
+    onPointermove(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
+    onKeydown(event: KeyboardEvent): void;
+    onKeyup(event: KeyboardEvent): void;
+    init(): void;
+    disabledChanged(): void;
     changed(): void;
     valueChanged(): void;
+    static vDOM: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioString: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioString: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-string.d.ts.map

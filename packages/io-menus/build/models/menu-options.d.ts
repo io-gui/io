@@ -1,5 +1,12 @@
-import { IoNodeArgs } from 'io-gui';
+import { IoNodeArgs, ArgsWithBinding } from 'io-gui';
 import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
+export type MenuOptionsArgs = IoNodeArgs & ArgsWithBinding<{
+    first?: any;
+    last?: any;
+    scroll?: string;
+    path?: string;
+    delimiter?: string;
+}>;
 declare const MenuOptions_base: {
     new (...args: any[]): {
         [x: string]: any;
@@ -8,7 +15,7 @@ declare const MenuOptions_base: {
         readonly _bindings: Map<string, import("io-gui").Binding>;
         readonly _changeQueue: import("io-gui").ChangeQueue;
         readonly _eventDispatcher: import("io-gui").EventDispatcher;
-        applyProperties(props: any): void;
+        applyProperties(props: any, skipDispatch?: boolean): void;
         setProperties(props: any): void;
         setProperty(name: string, value: any, debounce?: boolean): void;
         inputValue(value: any): void;

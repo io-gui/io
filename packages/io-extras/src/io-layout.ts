@@ -257,10 +257,10 @@ export class IoLayoutDivider extends IoElement {
   }
   static get Listeners() {
     return {
-      'pointermove': '_onPointermove'
+      'pointermove': 'onPointermove'
     };
   }
-  _onPointermove(event: PointerEvent) {
+  onPointermove(event: PointerEvent) {
     if (event.buttons) {
       event.preventDefault();
       this.setPointerCapture(event.pointerId);

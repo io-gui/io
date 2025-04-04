@@ -1,4 +1,12 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
+    value?: {
+        r: number;
+        g: number;
+        b: number;
+        a?: number;
+    };
+}>;
 export declare class IoColorPicker extends IoElement {
     static get Style(): string;
     value: {
@@ -9,14 +17,16 @@ export declare class IoColorPicker extends IoElement {
     };
     static get Listeners(): any;
     tabindex: string;
-    _onClick(event: FocusEvent): void;
+    onClick(): void;
     get expanded(): boolean;
-    _onKeydown(event: KeyboardEvent): void;
-    _onValueSet(): void;
+    onKeydown(event: KeyboardEvent): void;
+    onValueSet(): void;
     toggle(): void;
+    onPanelCollapse(): void;
     expand(): void;
     collapse(): void;
-    changed(): void;
+    valueChanged(): void;
+    static vDOM: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioColorPicker: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioColorPicker: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-color-picker.d.ts.map

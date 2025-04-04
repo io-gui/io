@@ -1,12 +1,10 @@
-import { IoVector } from './io-vector.js';
+import { ArgsWithBinding, VDOMArray } from 'io-gui';
+import { IoVector, IoVectorArgs } from './io-vector.js';
+export type IoMatrixArgs = IoVectorArgs & ArgsWithBinding<{
+    columns?: number;
+}>;
 /**
  * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
- *
- * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 1]}'></io-element-demo>
- *
- * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 1, 0, 0, 0, 1]}'></io-element-demo>
- *
- * <io-element-demo element="io-matrix" properties='{"value": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]}'></io-element-demo>
  **/
 export declare class IoMatrix extends IoVector {
     static get Style(): string;
@@ -14,6 +12,7 @@ export declare class IoMatrix extends IoVector {
     columns: number;
     _onNumberValueInput(event: CustomEvent): void;
     valueChanged(): void;
+    static vDOM: (arg0?: IoMatrixArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioMatrix: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioMatrix: (arg0?: IoMatrixArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-matrix.d.ts.map

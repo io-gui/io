@@ -1,6 +1,7 @@
-import { Register, Property, IoElement, IoOverlaySingleton, IoThemeSingleton, span } from 'io-gui';
+import { Register, Property, IoElement, IoElementArgs, IoOverlaySingleton, IoThemeSingleton, span, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { IoNumber } from './io-number';
 import { ioNumberLadderStep } from './io-number-ladder-step';
+import { IoInputBaseArgs } from './io-input-base';
 
 let lastFocus: Element | null = null;
 {
@@ -16,6 +17,10 @@ let lastFocus: Element | null = null;
   }, {capture: true});
 }
 
+export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
+  src?: IoNumber;
+  expanded?: boolean;
+}>;
 
 /**
  * Interactive number ladder.
@@ -123,7 +128,7 @@ class IoNumberLadder extends IoElement {
     return {
       'ladder-step-change': '_onLadderStepChange',
       'ladder-step-collapse': '_onLadderStepCollapse',
-      'focusin': '_onFocusIn',
+      'focusin': 'onFocusIn',
     };
   }
   get value() {
@@ -141,10 +146,10 @@ class IoNumberLadder extends IoElement {
   get conversion() {
     return this.src ? this.src.conversion : 1;
   }
-  _onFocusIn(event: FocusEvent) {
+  onFocusIn(event: FocusEvent) {
     event.stopPropagation();
   }
-  _onFocusTo(event: CustomEvent) {
+  onFocusTo(event: CustomEvent) {
     event.stopPropagation();
     const srcStep = event.composedPath()[0];
     const src = this.src;
@@ -157,7 +162,7 @@ class IoNumberLadder extends IoElement {
         return;
       }
     }
-    super._onFocusTo(event);
+    super.onFocusTo(event);
   }
   _onLadderStepChange(event: CustomEvent) {
     const src = this.src;
@@ -247,6 +252,7 @@ class IoNumberLadder extends IoElement {
       steps[i].changed();
     }
   }
+  static vDOM: (arg0?: IoNumberLadderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 
 export const IoNumberLadderSingleton = new IoNumberLadder();

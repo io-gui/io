@@ -1,22 +1,20 @@
-import { IoGl } from 'io-gui';
+import { IoGl, IoGlArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
+    value?: number | [number, number];
+    step?: number | [number, number];
+    min?: number | [number, number];
+    max?: number | [number, number];
+    exponent?: number;
+    vertical?: boolean;
+    noscroll?: boolean;
+    tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+}>;
 export declare class IoSliderBase extends IoGl {
     static get Style(): string;
-    value: number | [number, number] | {
-        x: number;
-        y: number;
-    };
-    step: number | [number, number] | {
-        x: number;
-        y: number;
-    };
-    min: number | [number, number] | {
-        x: number;
-        y: number;
-    };
-    max: number | [number, number] | {
-        x: number;
-        y: number;
-    };
+    value: number | [number, number];
+    step: number | [number, number];
+    min: number | [number, number];
+    max: number | [number, number];
     exponent: number;
     vertical: boolean;
     noscroll: boolean;
@@ -38,20 +36,20 @@ export declare class IoSliderBase extends IoGl {
             passive: boolean;
         })[];
     };
-    _onFocus(): void;
-    _onBlur(): void;
-    _onContextmenu(event: Event): void;
-    _onTouchstart(event: TouchEvent): void;
-    _onTouchmove(event: TouchEvent): void;
-    _onTouchend(): void;
-    _onPointerdown(event: PointerEvent): void;
-    _onPointermove(event: PointerEvent): void;
-    _onPointerup(event: PointerEvent): void;
+    onFocus(): void;
+    onBlur(): void;
+    onContextmenu(event: Event): void;
+    onTouchstart(event: TouchEvent): void;
+    onTouchmove(event: TouchEvent): void;
+    onTouchend(): void;
+    onPointerdown(event: PointerEvent): void;
+    onPointermove(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
     _getPointerCoord(event: PointerEvent): [number, number];
     _getValueFromCoord(coord: [number, number]): [number, number];
-    _onPointermoveThrottled(event: PointerEvent): void;
+    onPointermoveThrottled(event: PointerEvent): void;
     _inputValue(value: [number, number]): void;
-    _onKeydown(event: KeyboardEvent): void;
+    onKeydown(event: KeyboardEvent): void;
     _setIncrease(): void;
     _setDecrease(): void;
     _setMin(): void;
@@ -62,5 +60,6 @@ export declare class IoSliderBase extends IoGl {
     _setRight(): void;
     init(): void;
     changed(): void;
+    static vDOM: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 //# sourceMappingURL=io-slider-base.d.ts.map

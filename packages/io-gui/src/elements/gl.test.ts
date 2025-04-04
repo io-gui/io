@@ -23,7 +23,7 @@ export default class {
         expect(element.updateThemeUniforms).to.be.a('function');
         expect(element.setUniform).to.be.a('function');
       });
-      it('Should initialize property definitions correctly', () => {
+      it('Should initialize properties correctly', () => {
         element.onResized();
         expect(element.size).to.be.eql([0, 0]);
         expect(element.color).to.be.eql([0, 0, 0, 0]);

@@ -1,18 +1,26 @@
-import { Register, Property, IoOverlaySingleton as Overlay, span } from 'io-gui';
+import { Register, Property, IoOverlaySingleton as Overlay, span, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuOptions } from './io-menu-options.js';
-import { IoField } from 'io-inputs';
+import { IoInputBase, IoInputBaseArgs } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 
 const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
+
+export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
+  item?: MenuItem;
+  expanded?: boolean;
+  direction?: 'left' | 'right' | 'up' | 'down';
+  depth?: number;
+}>;
+
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
-export class IoMenuItem extends IoField {
+export class IoMenuItem extends IoInputBase {
   static get Style() {
     return /* css */`
       :host {
@@ -43,9 +51,6 @@ export class IoMenuItem extends IoField {
 
   @Property({type: MenuItem})
   declare item: MenuItem;
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare hidden: boolean;
 
   @Property({value: false, reflect: true})
   declare expanded: boolean;
@@ -91,10 +96,10 @@ export class IoMenuItem extends IoField {
     if (this.$options && this.$options.inlayer) Overlay.removeChild(this.$options as unknown as HTMLElement);
   }
   _onOverlayPointermove(event: PointerEvent) {
-    if (!this.inlayer && this.expanded) this._onPointermove(event);
+    if (!this.inlayer && this.expanded) this.onPointermove(event);
   }
   _onOverlayPointerup(event: PointerEvent) {
-    if (!this.inlayer && this.expanded) this._onPointerupAction(event);
+    if (!this.inlayer && this.expanded) this.onPointerupAction(event);
   }
   _onClick() {
     const item = this.item;
@@ -129,15 +134,15 @@ export class IoMenuItem extends IoField {
     }
     if (this.expanded) this.throttle(this._onCollapse);
   }
-  _onPointerdown(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     event.stopPropagation();
     event.preventDefault(); // Prevents focus
     this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerup', this._onPointerup);
-    this._onPointerdownAction(event);
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerup', this.onPointerup);
+    this.onPointerdownAction(event);
   }
-  _onPointerdownAction(event: PointerEvent) {
+  onPointerdownAction(event: PointerEvent) {
     // TODO: why is this needed?
     if (this.expanded || event.pointerType === 'mouse' || this.inlayer) {
       this.focus();
@@ -150,11 +155,11 @@ export class IoMenuItem extends IoField {
     this._x = event.clientX;
     this._y = event.clientY;
   }
-  _onPointermove(event: PointerEvent) {
+  onPointermove(event: PointerEvent) {
     event.stopPropagation();
-    this._onPointermoveAction(event);
+    this.onPointermoveAction(event);
   }
-  _onPointermoveAction(event: PointerEvent) {
+  onPointermoveAction(event: PointerEvent) {
     // TODO: why is this needed?
     if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) return;
 
@@ -187,13 +192,13 @@ export class IoMenuItem extends IoField {
       prevHovered = hovered;
     }
   }
-  _onPointerup(event: PointerEvent) {
+  onPointerup(event: PointerEvent) {
     event.stopPropagation();
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
-    this._onPointerupAction(event);
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerup', this.onPointerup);
+    this.onPointerupAction(event);
   }
-  _onPointerupAction(event: PointerEvent, skipCollapse = false) {
+  onPointerupAction(event: PointerEvent, skipCollapse = false) {
     const item = this._gethovered(event);
     if (item) {
       item.focus();
@@ -241,7 +246,7 @@ export class IoMenuItem extends IoField {
       }
     }
   }
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this._onClick();
@@ -303,7 +308,7 @@ export class IoMenuItem extends IoField {
           break;
       }
     } else {
-      super._onKeydown(event);
+      super.onKeydown(event);
     }
   }
   _onCollapse() {
@@ -367,17 +372,19 @@ export class IoMenuItem extends IoField {
     this.setAttribute('hidden', this.item.hidden);
     this.setAttribute('hasmore', this.hasmore);
     this.template([
-      this.hasmore && this.direction === 'left' ? ioIcon({class: 'hasmore', icon: 'menu:triangle_left'}) : null,
-      this.hasmore && this.direction === 'up' ? ioIcon({class: 'hasmore', icon: 'menu:triangle_up'}) : null,
-      icon ? ioIcon({icon: icon}) : null,
+      this.hasmore && this.direction === 'left' ? ioIcon({value: 'menu:triangle_left', class: 'hasmore'}) : null,
+      this.hasmore && this.direction === 'up' ? ioIcon({value: 'menu:triangle_up', class: 'hasmore'}) : null,
+      icon ? ioIcon({value: icon}) : null,
       this.item.label ? span({class: 'label'}, this.item.label) : null,
       this.item.hint ? span({class: 'hint'}, this.item.hint) : null,
-      this.hasmore && this.direction === 'right' ? ioIcon({class: 'hasmore', icon: 'menu:triangle_right'}) : null,
-      this.hasmore && this.direction === 'down' ? ioIcon({class: 'hasmore', icon: 'menu:triangle_down'}) : null,
+      this.hasmore && this.direction === 'right' ? ioIcon({value: 'menu:triangle_right', class: 'hasmore'}) : null,
+      this.hasmore && this.direction === 'down' ? ioIcon({value: 'menu:triangle_down', class: 'hasmore'}) : null,
     ]);
   }
+  static vDOM: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioMenuItem = IoMenuItem.vDOM;
+
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 
 export function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[] {

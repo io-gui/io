@@ -1,6 +1,6 @@
-import { IoElement, Register, IoThemeSingleton } from 'io-gui';
+import { IoElement, Register, IoThemeSingleton, ioField } from 'io-gui';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
-import { ioButton, ioField } from 'io-inputs';
+import { ioButton } from 'io-inputs';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 
@@ -25,83 +25,82 @@ export class IoGuiThemeEditor extends IoElement {
       ])}),
       ioButton({label: 'Reset', action: () => IoThemeSingleton.reset() }),
 
-      ioField({appearance: 'neutral', label: 'spacing'}),
+      ioField('spacing'),
       ioNumberSlider({value: IoThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}),
 
-      ioField({appearance: 'neutral', label: 'lineHeight'}),
+      ioField('lineHeight'),
       ioNumberSlider({value: IoThemeSingleton.bind('lineHeight'), min: 10, max: 50, step: 1}),
 
-      ioField({appearance: 'neutral', label: 'fontSize'}),
+      ioField('fontSize'),
       ioNumberSlider({value: IoThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1}),
 
-      ioField({appearance: 'neutral', label: 'borderRadius'}),
+      ioField('borderRadius'),
       ioNumberSlider({value: IoThemeSingleton.bind('borderRadius'), min: 0, max: 20, step: 1}),
 
-      ioField({appearance: 'neutral', label: 'borderWidth'}),
+      ioField('borderWidth'),
       ioNumberSlider({value: IoThemeSingleton.bind('borderWidth'), min: 0, max: 5, step: 1}),
 
-      ioField({appearance: 'neutral', label: 'borderColor'}),
+      ioField('borderColor'),
       ioColorRgba({value: IoThemeSingleton.bind('borderColor')}),
 
-      ioField({appearance: 'neutral', label: 'borderColorLight'}),
+      ioField('borderColorLight'),
       ioColorRgba({value: IoThemeSingleton.bind('borderColorLight')}),
 
-      ioField({appearance: 'neutral', label: 'borderColorDark'}),
+      ioField('borderColorDark'),
       ioColorRgba({value: IoThemeSingleton.bind('borderColorDark')}),
 
-      ioField({appearance: 'neutral', label: 'bgColor'}),
+      ioField('bgColor'),
       ioColorRgba({value: IoThemeSingleton.bind('bgColor')}),
 
-      ioField({appearance: 'neutral', label: 'bgColorStrong'}),
+      ioField('bgColorStrong'),
       ioColorRgba({value: IoThemeSingleton.bind('bgColorStrong')}),
 
-      ioField({appearance: 'neutral', label: 'bgColorDimmed'}),
+      ioField('bgColorDimmed'),
       ioColorRgba({value: IoThemeSingleton.bind('bgColorDimmed')}),
 
-      ioField({appearance: 'neutral', label: 'bgColorRed'}),
+      ioField('bgColorRed'),
       ioColorRgba({value: IoThemeSingleton.bind('bgColorRed')}),
 
-      ioField({appearance: 'neutral', label: 'bgColorGreen'}),
+      ioField('bgColorGreen'),
       ioColorRgba({value: IoThemeSingleton.bind('bgColorGreen')}),
 
-      ioField({appearance: 'neutral', label: 'bgColorBlue'}),
+      ioField('bgColorBlue'),
       ioColorRgba({value: IoThemeSingleton.bind('bgColorBlue')}),
 
-      ioField({appearance: 'neutral', label: 'bgColorField'}),
-      ioColorRgba({value: IoThemeSingleton.bind('bgColorField')}),
+      ioField('bgColorInput'),
+      ioColorRgba({value: IoThemeSingleton.bind('bgColorInput')}),
 
-      ioField({appearance: 'neutral', label: 'color'}),
+      ioField('color'),
       ioColorRgba({value: IoThemeSingleton.bind('color')}),
 
-      ioField({appearance: 'neutral', label: 'colorStrong'}),
+      ioField('colorStrong'),
       ioColorRgba({value: IoThemeSingleton.bind('colorStrong')}),
 
-      ioField({appearance: 'neutral', label: 'colorDimmed'}),
+      ioField('colorDimmed'),
       ioColorRgba({value: IoThemeSingleton.bind('colorDimmed')}),
 
-      ioField({appearance: 'neutral', label: 'colorRed'}),
+      ioField('colorRed'),
       ioColorRgba({value: IoThemeSingleton.bind('colorRed')}),
 
-      ioField({appearance: 'neutral', label: 'colorGreen'}),
+      ioField('colorGreen'),
       ioColorRgba({value: IoThemeSingleton.bind('colorGreen')}),
 
-      ioField({appearance: 'neutral', label: 'colorBlue'}),
+      ioField('colorBlue'),
       ioColorRgba({value: IoThemeSingleton.bind('colorBlue')}),
 
-      ioField({appearance: 'neutral', label: 'colorWhite'}),
+      ioField('colorWhite'),
       ioColorRgba({value: IoThemeSingleton.bind('colorWhite')}),
 
-      ioField({appearance: 'neutral', label: 'colorField'}),
-      ioColorRgba({value: IoThemeSingleton.bind('colorField')}),
+      ioField('colorInput'),
+      ioColorRgba({value: IoThemeSingleton.bind('colorInput')}),
 
-
-      ioField({appearance: 'neutral', label: 'gradientColorStart'}),
+      ioField('gradientColorStart'),
       ioColorRgba({value: IoThemeSingleton.bind('gradientColorStart')}),
 
-      ioField({appearance: 'neutral', label: 'gradientColorEnd'}),
+      ioField('gradientColorEnd'),
       ioColorRgba({value: IoThemeSingleton.bind('gradientColorEnd')}),
 
-      ioField({appearance: 'neutral', label: 'shadowColor'}),
+      ioField('shadowColor'),
       ioColorRgba({value: IoThemeSingleton.bind('shadowColor')}),
     ]);
   }

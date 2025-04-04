@@ -1,6 +1,16 @@
-import { Register, IoElement, Property } from 'io-gui';
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import {ioSliderRange} from './io-slider-range.js';
 import {ioNumber} from 'io-inputs';
+
+export type IoNumberSliderRangeArgs = IoElementArgs & ArgsWithBinding<{
+  value?: [number, number];
+  step?: number;
+  min?: number;
+  max?: number;
+  exponent?: number;
+  conversion?: number;
+}>;
+
 /**
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  *

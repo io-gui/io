@@ -1,14 +1,23 @@
-import { IoNode, Register, IoElement, Property, IoStorage as $, div } from 'io-gui';
+import { IoNode, Register, IoElement, Property, IoStorage as $, div, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ObjectGroups } from './models/object-groups.js';
 import { ObjectWidgets } from './models/object-widgets.js';
 import { getEditorConfig } from './models/editor-config.js';
 import { ioBreadcrumbs } from './io-breadcrumbs.js';
 import { ioObject } from './io-object.js';
 import { ioCollapsible } from 'io-navigation';
+
+export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
+  value?: Record<string, any> | any[];
+  selected?: Record<string, any> | any[];
+  uuid?: string;
+  search?: string;
+  groups?: Record<string, any>;
+  widgets?: Record<string, any>;
+}>;
+
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
-
 @Register
 export class IoInspector extends IoElement {
   static get Style() {
@@ -76,13 +85,13 @@ export class IoInspector extends IoElement {
     :host > io-object > io-property-editor:not([horizontal])[labeled] {
       grid-template-columns: minmax(6em, min-content) minmax(12em, 1fr);
     }
-    :host > io-object > io-property-editor:not([horizontal])[labeled] > span.io-field {
+    :host > io-object > io-property-editor:not([horizontal])[labeled] > span.io-input-base {
       text-align: right;
     }
-    :host io-property-editor io-field.select {
+    :host io-property-editor io-input-base.select {
       color: var(--io_colorBlue) !important;
     }
-    :host io-property-editor io-field.select:hover {
+    :host io-property-editor io-input-base.select:hover {
       text-decoration: underline;
     }
     `;
@@ -111,7 +120,7 @@ export class IoInspector extends IoElement {
 
   static get Listeners() {
     return {
-      'io-field-clicked': '_onItemClicked',
+      'io-input-base-clicked': '_onItemClicked',
     };
   }
   _onItemClicked(event: CustomEvent) {
@@ -194,8 +203,8 @@ export class IoInspector extends IoElement {
   }
   static get ObjectWidgets() {
     return {
-      // 'Object': ['io-field', {label: 'This is a main widget'}],
-      // 'Object|main': ['io-field', {label: 'This is a main group widget'}],
+      // 'Object': ['io-input-base', {label: 'This is a main widget'}],
+      // 'Object|main': ['io-input-base', {label: 'This is a main group widget'}],
     };
   }
 
@@ -204,6 +213,7 @@ export class IoInspector extends IoElement {
     Object.defineProperty(ioNodeConstructor.prototype, '_groups', {writable: true, value: new ObjectGroups(ioNodeConstructor.prototype._protochain.constructors)});
     Object.defineProperty(ioNodeConstructor.prototype, '_widgets', {writable: true, value: new ObjectWidgets(ioNodeConstructor.prototype._protochain.constructors)});
   }
+  static vDOM: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioInspector = IoInspector.vDOM;
 

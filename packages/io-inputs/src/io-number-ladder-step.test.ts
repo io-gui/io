@@ -7,7 +7,7 @@ document.body.appendChild(step as unknown as HTMLElement);
 export default class {
   run() {
     describe('io-number-ladder-step.test', () => {
-      it('Should initialize property definitions correctly', () => {
+      it('Should initialize properties correctly', () => {
         expect(step.value).to.equal(1);
         expect(step.role).to.equal('spinbutton');
         expect(step.type).to.equal('number');
@@ -25,17 +25,18 @@ export default class {
         expect(step.getAttribute('type')).to.equal('number');
       });
       it('has correct default innerHTML', () => {
-        expect(step.innerHTML).to.equal('<io-text label="1" aria-label="1">1</io-text>');
+        step.label = '1';
+        expect(step.innerHTML).to.equal('<io-text>1</io-text>');
       });
-      it('should set innerText to match value property', () => {
-        step.value = 0;
+      it('should set innerText to match label property', () => {
+        step.label = '0';
         expect(step.textContent).to.equal('0');
-        step.value = 1;
+        step.label = '1';
       });
       it('has no reactive attributes', () => {
-        step.value = 2;
-        expect(step.getAttribute('value')).to.equal(null);
-        step.value = 1;
+        step.label = '2';
+        expect(step.getAttribute('label')).to.equal(null);
+        step.label = '1';
       });
     });
   }

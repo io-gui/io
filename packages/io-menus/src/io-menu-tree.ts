@@ -1,5 +1,5 @@
-import { Register, IoElement, Property, VDOMArray, IoStorage as $, genObjectStorageID, div } from 'io-gui';
-import { ioField } from 'io-inputs';
+import { Register, IoElement, Property, VDOMArray, IoStorage as $, genObjectStorageID, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { ioString } from 'io-inputs';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import { ioMenuItem, IoMenuItem } from './io-menu-item.js';
@@ -53,6 +53,14 @@ export function filterOptions(options: MenuOptions, search: string, depth = 5, e
   }
 }
 
+export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
+  options?: MenuOptions;
+  searchable?: boolean;
+  search?: string;
+  depth?: number;
+  slotted?: VDOMArray[];
+}>;
+
 @Register
 export class IoMenuTree extends IoElement {
   static get Style() {
@@ -68,7 +76,7 @@ export class IoMenuTree extends IoElement {
       border-radius: var(--io_borderRadius);
       border: var(--io_border);
       border-color: var(--io_borderColorOutset);
-      color: var(--io_colorField);
+      color: var(--io_colorInput);
       background-color: var(--io_bgColorDimmed);
       padding: var(--io_spacing) 0;
       align-self: flex-start;
@@ -187,7 +195,7 @@ export class IoMenuTree extends IoElement {
     // TODO: fix depth.
 
     if (this.searchable) {
-      elements.push(ioField({
+      elements.push(ioString({
         $: 'search',
         role: 'search',
         class: 'search',
@@ -209,5 +217,6 @@ export class IoMenuTree extends IoElement {
 
     this.template(elements);
   }
+  static vDOM: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioMenuTree = IoMenuTree.vDOM;

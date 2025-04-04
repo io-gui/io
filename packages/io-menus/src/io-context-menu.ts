@@ -1,6 +1,12 @@
-import { Register, IoElement, Property, IoOverlaySingleton as Overlay } from 'io-gui';
+import { Register, IoElement, Property, IoOverlaySingleton as Overlay, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './models/menu-options.js';
 import { IoMenuOptions } from './io-menu-options.js';
+
+export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
+  options?: MenuOptions;
+  expanded?: boolean;
+  button?: number;
+}>;
 
 /**
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
@@ -26,18 +32,18 @@ export class IoContextMenu extends IoElement {
     super.connectedCallback();
     Overlay.addEventListener('pointermove', this._onOverlayPointermove);
     this._parent = this.parentElement;
-    this._parent.addEventListener('pointerdown', this._onPointerdown);
+    this._parent.addEventListener('pointerdown', this.onPointerdown);
     this._parent.addEventListener('click', this._onClick);
-    this._parent.addEventListener('contextmenu', this._onContextmenu);
+    this._parent.addEventListener('contextmenu', this.onContextmenu);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.$options && this.$options.parentElement) Overlay.removeChild(this.$options);
     Overlay.removeEventListener('pointermove', this._onOverlayPointermove);
-    this._parent.removeEventListener('pointerdown', this._onPointerdown);
-    this._parent.removeEventListener('contextmenu', this._onContextmenu);
-    this._parent.removeEventListener('pointermove', this._onPointermove);
-    this._parent.removeEventListener('pointerup', this._onPointerup);
+    this._parent.removeEventListener('pointerdown', this.onPointerdown);
+    this._parent.removeEventListener('contextmenu', this.onContextmenu);
+    this._parent.removeEventListener('pointermove', this.onPointermove);
+    this._parent.removeEventListener('pointerup', this.onPointerup);
     this._parent.removeEventListener('click', this._onClick);
     delete this._parent;
   }
@@ -53,14 +59,14 @@ export class IoContextMenu extends IoElement {
       this.throttle(this._onCollapse);
     }
   }
-  _onContextmenu(event: MouseEvent) {
+  onContextmenu(event: MouseEvent) {
     if (this.button === 2) event.preventDefault();
   }
-  _onPointerdown(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     Overlay.x = event.clientX;
     Overlay.y = event.clientY;
-    this._parent.addEventListener('pointermove', this._onPointermove);
-    this._parent.addEventListener('pointerup', this._onPointerup);
+    this._parent.addEventListener('pointermove', this.onPointermove);
+    this._parent.addEventListener('pointerup', this.onPointerup);
 
     clearTimeout(this._contextTimeout);
     if (event.pointerType !== 'touch') {
@@ -77,23 +83,23 @@ export class IoContextMenu extends IoElement {
       }, 150);
     }
   }
-  _onPointermove(event: PointerEvent) {
+  onPointermove(event: PointerEvent) {
     clearTimeout(this._contextTimeout);
     if (this.expanded) {
-      this.$options?.querySelector('io-menu-item')?._onPointermoveAction(event);
+      this.$options?.querySelector('io-menu-item')?.onPointermoveAction(event);
     }
   }
-  _onPointerup(event: PointerEvent) {
+  onPointerup(event: PointerEvent) {
     clearTimeout(this._contextTimeout);
     this.releasePointerCapture(event.pointerId);
     if (this.expanded) {
-      this.$options?.querySelector('io-menu-item')?._onPointerupAction(event, true);
+      this.$options?.querySelector('io-menu-item')?.onPointerupAction(event, true);
     }
-    this._parent.removeEventListener('pointermove', this._onPointermove);
-    this._parent.removeEventListener('pointerup', this._onPointerup);
+    this._parent.removeEventListener('pointermove', this.onPointermove);
+    this._parent.removeEventListener('pointerup', this.onPointerup);
   }
   _onOverlayPointermove(event: PointerEvent) {
-    if (this.expanded) this._onPointermove(event);
+    if (this.expanded) this.onPointermove(event);
   }
   _onClick(event: MouseEvent) {
     if (event.button === this.button && event.button !== 2) this.expanded = true;
@@ -125,5 +131,6 @@ export class IoContextMenu extends IoElement {
   //     }
   //   }
   // }
+  static vDOM: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioContextMenu = IoContextMenu.vDOM;

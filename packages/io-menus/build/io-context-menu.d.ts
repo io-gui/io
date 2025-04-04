@@ -1,5 +1,10 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './models/menu-options.js';
+export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
+    options?: MenuOptions;
+    expanded?: boolean;
+    button?: number;
+}>;
 /**
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
  **/
@@ -12,14 +17,15 @@ export declare class IoContextMenu extends IoElement {
     disconnectedCallback(): void;
     getBoundingClientRect(): any;
     _onItemClicked(event: CustomEvent): void;
-    _onContextmenu(event: MouseEvent): void;
-    _onPointerdown(event: PointerEvent): void;
-    _onPointermove(event: PointerEvent): void;
-    _onPointerup(event: PointerEvent): void;
+    onContextmenu(event: MouseEvent): void;
+    onPointerdown(event: PointerEvent): void;
+    onPointermove(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
     _onOverlayPointermove(event: PointerEvent): void;
     _onClick(event: MouseEvent): void;
     _onCollapse(): void;
     optionsChanged(): void;
+    static vDOM: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioContextMenu: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioContextMenu: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-context-menu.d.ts.map

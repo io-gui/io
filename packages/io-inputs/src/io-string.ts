@@ -1,11 +1,18 @@
-import { Register, Property } from 'io-gui';
-import { IoField } from './io-field';
+import { Register, Property, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoInputBase, IoInputBaseArgs } from './io-input-base';
+
+export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
+  live?: boolean;
+  value?: string;
+  placeholder?: string;
+  spellcheck?: 'true' | 'false';
+}>;
 
 /**
  * Input element for `String` data type.
  **/
 @Register
-export class IoString extends IoField {
+export class IoString extends IoInputBase {
   static get Style() {
     return /* css */`
       :host {
@@ -13,8 +20,13 @@ export class IoString extends IoField {
         user-select: text;
         -webkit-user-select: text;
         -webkit-touch-callout: default;
-        padding-left: var(--io_spacing3);
-        padding-right: var(--io_spacing3);
+      }
+      :host[placeholder]:empty:before {
+        content: attr(placeholder);
+        visibility: visible;
+        color: var(--io_colorInput);
+        padding: 0 calc(var(--io_spacing) + var(--io_borderWidth));
+        opacity: 0.5;
       }
     `;
   }
@@ -24,9 +36,6 @@ export class IoString extends IoField {
   @Property('')
   declare value: string;
 
-  @Property(true)
-  declare contenteditable: boolean;
-
   @Property({value: 'text', type: String, reflect: true})
   declare type: string;
 
@@ -35,6 +44,12 @@ export class IoString extends IoField {
 
   @Property({value: 'inset', reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset';
+
+  @Property({value: '', type: String, reflect: true})
+  declare placeholder: string;
+
+  @Property({value: 'false', type: String, reflect: true})
+  declare spellcheck: string;
 
   _setFromTextNode() {
     const textNode = this.textNode;
@@ -53,29 +68,29 @@ export class IoString extends IoField {
       this._setFromTextNode();
     }
   }
-  _onBlur(event: FocusEvent) {
-    super._onBlur(event);
+  onBlur(event: FocusEvent) {
+    super.onBlur(event);
     this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
 
-  _onPointerdown(event: PointerEvent) {
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerup', this._onPointerup);
+  onPointerdown(event: PointerEvent) {
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerup', this.onPointerup);
   }
 
-  _onPointermove(event: PointerEvent) {}
+  onPointermove(event: PointerEvent) {}
 
-  _onPointerup(event: PointerEvent) {
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
+  onPointerup(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerup', this.onPointerup);
     if (document.activeElement !== this as unknown as Element) {
       this.focus();
       this.setCaretPosition(this.textNode.length);
     }
   }
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     const rng = (window.getSelection() as Selection).getRangeAt(0);
     const start = rng.startOffset;
     const end = rng.endOffset;
@@ -111,12 +126,22 @@ export class IoString extends IoField {
       }
     }
   }
-  _onKeyup(event: KeyboardEvent) {
-    super._onKeyup(event);
+  onKeyup(event: KeyboardEvent) {
+    super.onKeyup(event);
     if (this.live) {
       const carretPosition = this.getCaretPosition();
       this._setFromTextNode();
       this.setCaretPosition(carretPosition);
+    }
+  }
+  init() {
+    this.disabledChanged();
+  }
+  disabledChanged() {
+    if (this.disabled) {
+      this.removeAttribute('contenteditable');
+    } else {
+      this.setAttribute('contenteditable', true);
     }
   }
   changed() {
@@ -129,5 +154,6 @@ export class IoString extends IoField {
       this.removeAttribute('aria-invalid');
     }
   }
+  static vDOM: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioString = IoString.vDOM;

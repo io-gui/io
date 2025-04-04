@@ -1,5 +1,8 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
 import { MenuOptions } from 'io-menus';
+export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
+    options?: MenuOptions;
+}>;
 export declare class IoScroller extends IoElement {
     static get Style(): string;
     options: MenuOptions;
@@ -10,6 +13,7 @@ export declare class IoScroller extends IoElement {
     optionsMutated(): void;
     _scrollToSelected(): void;
     dispose(): void;
+    static vDOM: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioScroller: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioScroller: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-scroller.d.ts.map

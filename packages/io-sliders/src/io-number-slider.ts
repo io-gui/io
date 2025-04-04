@@ -1,6 +1,15 @@
-import { Register, IoElement, Property } from 'io-gui';
+import { Register, IoElement, Property, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import {ioSlider} from './io-slider.js';
 import {ioNumber} from 'io-inputs';
+
+export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
+  value?: number;
+  step?: number;
+  min?: number;
+  max?: number;
+  exponent?: number;
+  conversion?: number;
+}>;
 
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
@@ -79,5 +88,6 @@ export class IoNumberSlider extends IoElement {
       }),
     ]);
   }
+  static vDOM: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioNumberSlider = IoNumberSlider.vDOM;

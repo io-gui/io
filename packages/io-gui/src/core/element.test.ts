@@ -27,62 +27,14 @@ export default class {
         expect(element.traverse).to.be.a('function');
         expect(element.setAttribute).to.be.a('function');
       });
-      it('Should initialize property definitions correctly', () => {
+      it('Should initialize properties correctly', () => {
         // Default properties
-        expect(element.tabindex).to.be.equal('');
-        expect(element.contenteditable).to.be.equal(false);
         expect(element.class).to.be.equal('');
-        expect(element.role).to.be.equal('');
-        expect(element.label).to.be.equal('');
-        expect(element.name).to.be.equal('');
         expect(element.title).to.be.equal('');
         expect(element.id).to.be.equal('');
-        expect(element.hidden).to.be.equal(false);
-        expect(element.disabled).to.be.equal(false);
+        expect(element.role).to.be.equal('');
 
-        expect(element._properties.get('tabindex')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('contenteditable')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: Boolean,
-          value: false,
-        });
         expect(element._properties.get('class')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('role')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('label')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('name')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('title')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,
@@ -96,67 +48,43 @@ export default class {
           type: String,
           value: '',
         });
-        expect(element._properties.get('hidden')).to.eql({
+        expect(element._properties.get('title')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,
-          type: Boolean,
-          value: false,
+          type: String,
+          value: '',
         });
-        expect(element._properties.get('disabled')).to.eql({
+        expect(element._properties.get('role')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,
-          type: Boolean,
-          value: false,
+          type: String,
+          value: '',
         });
 
         expect(terstElement.prop0).to.equal(0);
         expect(terstElement.getAttribute('prop0')).to.equal('0');
       });
       it('Has correct default attributes', () => {
-        expect(element.getAttribute('tabindex')).to.equal(null);
-        expect(element.getAttribute('contenteditable')).to.equal(null);
         expect(element.getAttribute('class')).to.equal(null);
-        expect(element.getAttribute('role')).to.equal(null);
-        expect(element.getAttribute('label')).to.equal(null);
-        expect(element.getAttribute('name')).to.equal(null);
-        expect(element.getAttribute('title')).to.equal(null);
         expect(element.getAttribute('id')).to.equal(null);
-        expect(element.getAttribute('hidden')).to.equal(null);
-        expect(element.getAttribute('disabled')).to.equal(null);
+        expect(element.getAttribute('title')).to.equal(null);
+        expect(element.getAttribute('role')).to.equal(null);
       });
       it('Has reactive attributes', () => {
-        element.tabindex = '1';
-        expect(element.getAttribute('tabindex')).to.equal('1');
-        element.tabindex = '';
-        element.contenteditable = true;
-        expect(element.getAttribute('contenteditable')).to.equal('');
-        element.contenteditable = false;
         element.class = 'foo';
         expect(element.getAttribute('class')).to.equal('foo');
         element.class = '';
-        element.role = 'button';
-        expect(element.getAttribute('role')).to.equal('button');
-        element.role = '';
-        element.label = 'text';
-        expect(element.getAttribute('label')).to.equal('text');
-        element.label = '';
-        element.name = 'name';
-        expect(element.getAttribute('name')).to.equal('name');
-        element.name = '';
-        element.title = 'title';
-        expect(element.getAttribute('title')).to.equal('title');
-        element.title = '';
         element.id = 'one';
         expect(element.getAttribute('id')).to.equal('one');
         element.id = '';
-        element.hidden = true;
-        expect(element.getAttribute('hidden')).to.equal('');
-        element.hidden = false;
-        element.disabled = true;
-        expect(element.getAttribute('disabled')).to.equal('');
-        element.disabled = false;
+        element.title = 'title';
+        expect(element.getAttribute('title')).to.equal('title');
+        element.title = '';
+        element.role = 'button';
+        expect(element.getAttribute('role')).to.equal('button');
+        element.role = '';
       });
       it('Invokes change events and functions', () => {
         class TestNode extends IoNode {
@@ -423,50 +351,40 @@ export default class {
         expect(targetElement.$.testElement.prop2).to.be.equal(sourceElement.prop2).to.be.equal(targetElement.prop2).to.be.equal('final2');
         expect(targetElement.$.testElement.prop3).to.be.equal(sourceElement.prop3).to.be.equal(targetElement.prop3).to.be.equal('final3');
       });
-      it('Has a11y attributes', () => {
-        expect(element.getAttribute('aria-label')).to.equal(null);
-        element.label = 'label';
-        expect(element.getAttribute('aria-label')).to.equal('label');
-        element.label = '';
-        expect(element.getAttribute('aria-label')).to.equal(null);
-        element.disabled = true;
-        expect(element.getAttribute('aria-disabled')).to.equal('');
-        element.disabled = false;
-      });
       it('Should bind and unbind correctly', () => {
         const element1 = new IoElement();
         const element2 = new IoElement();
-        element2.label = element1.bind('label') as unknown as string;
-        element1.label = 'one';
-        expect(element1.label).to.equal('one');
-        expect(element2.label).to.equal('one');
-        element2.label = 'two';
-        expect(element1.label).to.equal('two');
-        expect(element2.label).to.equal('two');
+        element2.title = element1.bind('title') as unknown as string;
+        element1.title = 'one';
+        expect(element1.title).to.equal('one');
+        expect(element2.title).to.equal('one');
+        element2.title = 'two';
+        expect(element1.title).to.equal('two');
+        expect(element2.title).to.equal('two');
         // unbind
-        element1.unbind('label');
-        element1.label = 'three';
-        expect(element1.label).to.equal('three');
-        expect(element2.label).to.equal('two');
-        element2.label = element1.bind('label') as unknown as string;
-        expect(element2.label).to.equal('three');
-        element1.label = 'four';
-        expect(element1.label).to.equal('four');
-        expect(element2.label).to.equal('four');
-        element2.unbind('label');
-        element1.label = 'five';
-        expect(element1.label).to.equal('five');
-        expect(element2.label).to.equal('four');
+        element1.unbind('title');
+        element1.title = 'three';
+        expect(element1.title).to.equal('three');
+        expect(element2.title).to.equal('two');
+        element2.title = element1.bind('title') as unknown as string;
+        expect(element2.title).to.equal('three');
+        element1.title = 'four';
+        expect(element1.title).to.equal('four');
+        expect(element2.title).to.equal('four');
+        element2.unbind('title');
+        element1.title = 'five';
+        expect(element1.title).to.equal('five');
+        expect(element2.title).to.equal('four');
       });
       it('Should bind from constructor', () => {
         const element1 = new IoElement();
-        const element2 = new IoElement({label: element1.bind('label')});
-        element1.label = 'one';
-        expect(element2.label).to.equal('one');
-        element2.unbind('label');
-        element1.label = 'two';
-        expect(element1.label).to.equal('two');
-        expect(element2.label).to.equal('one');
+        const element2 = new IoElement({title: element1.bind('title')});
+        element1.title = 'one';
+        expect(element2.title).to.equal('one');
+        element2.unbind('title');
+        element1.title = 'two';
+        expect(element1.title).to.equal('two');
+        expect(element2.title).to.equal('one');
       });
     });
   }

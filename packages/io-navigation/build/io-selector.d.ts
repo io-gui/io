@@ -1,5 +1,15 @@
-import { IoElement, VDOMArray, IoElementArgs } from 'io-gui';
+import { IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
+export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
+    options?: MenuOptions;
+    select?: 'first' | 'last';
+    elements?: VDOMArray[];
+    cache?: boolean;
+    precache?: boolean;
+    precacheDelay?: number;
+    loading?: boolean;
+    import?: string;
+}>;
 export declare class IoSelector extends IoElement {
     static get Style(): string;
     options: MenuOptions;
@@ -17,6 +27,7 @@ export declare class IoSelector extends IoElement {
     protected renderSelected(): void;
     onLoadPrecache(): void;
     dispose(): void;
+    static vDOM: (arg0?: IoSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioSelector: (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioSelector: (arg0?: IoSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-selector.d.ts.map

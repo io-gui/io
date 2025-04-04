@@ -1,10 +1,21 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
+    value?: {
+        x: number;
+        y: number;
+        z?: number;
+        w?: number;
+    } | number[];
+    conversion?: number;
+    step?: number;
+    min?: number;
+    max?: number;
+    linkable?: boolean;
+    linked?: boolean;
+    ladder?: boolean;
+}>;
 /**
  * Input element for vector arrays and objects.
- *
- * <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
- *
- * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
  **/
 export declare class IoVector extends IoElement {
     static get Style(): string;
@@ -28,6 +39,7 @@ export declare class IoVector extends IoElement {
     valueChanged(): void;
     changed(): void;
     getSlotted(): Array<any> | null;
+    static vDOM: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioVector: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioVector: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-vector.d.ts.map

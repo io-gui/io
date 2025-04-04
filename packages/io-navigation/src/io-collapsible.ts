@@ -1,6 +1,14 @@
-import { IoElement, VDOMArray, Register, Property, div } from 'io-gui';
+import { IoElement, VDOMArray, Register, Property, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
+import { ioIcon } from 'io-icons';
 
+export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
+  elements?: VDOMArray[];
+  label?: string;
+  direction?: 'column' | 'row';
+  icon?: string;
+  expanded?: boolean;
+}>;
 /**
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
@@ -80,9 +88,11 @@ export class IoCollapsible extends IoElement {
   changed() {
     this.template([
       // TODO: consider implementing caching
-      ioBoolean({true: this.label, false: this.label, icon: this.icon, value: this.bind('expanded')}),
+      this.icon ? ioIcon({value: this.icon}) : null,
+      ioBoolean({true: this.label, false: this.label, value: this.bind('expanded')}),
       div({class: 'io-collapsible-content'}, this.expanded ? this.elements : []),
     ]);
   }
+  static vDOM: (arg0?: IoCollapsibleArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioCollapsible = IoCollapsible.vDOM;

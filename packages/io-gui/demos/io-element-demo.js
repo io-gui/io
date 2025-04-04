@@ -1,17 +1,16 @@
 import { Register, IoElement, div, IoStorage as $, ioText } from 'io-gui';
 import { ioPropertyEditor } from 'io-editors';
-import { ioField, ioNumber, ioString, ioBoolean, ioBoolicon, ioSwitch } from 'io-inputs';
+import { ioInputBase, ioNumber, ioString, ioBoolean, ioSwitch } from 'io-inputs';
 import { ioOptionMenu, MenuOptions } from 'io-menus';
 import { ioSlider, ioSliderRange, ioSlider2d } from 'io-sliders';
 
 const options = new MenuOptions([{
   label: 'io-inputs',
   options: [
-    {value: ioField({icon: 'io:io', value: 'value'}), label: `io-field`},
+    {value: ioInputBase(), label: `io-input-base`},
     {value: ioNumber(), label: `io-number`},
     {value: ioString(), label: `io-string`},
     {value: ioBoolean(), label: `io-boolean`},
-    {value: ioBoolicon(), label: `io-boolicon`},
     {value: ioSwitch(), label: `io-switch`},
   ]
 }, {
@@ -22,7 +21,7 @@ const options = new MenuOptions([{
     {value: ioSlider2d(), label: `io-slider-2d`},
   ]}
 ], {
-  last: $({key: 'element-demo', storage: 'hash', value: 'io-field'}),
+  last: $({key: 'element-demo', storage: 'hash', value: 'io-input-base'}),
 });
 
 export class IoElementDemo extends IoElement {
@@ -91,7 +90,7 @@ export class IoElementDemo extends IoElement {
         ioPropertyEditor({$: 'properties'}),
         ioPropertyEditor({$: 'attributes', config: new Map([
           [Object, [
-            [String, ioField()],
+            [String, ioString({disabled: true})],
           ]]
         ])})
       ]);

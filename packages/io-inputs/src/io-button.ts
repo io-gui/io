@@ -1,6 +1,14 @@
-import { Register, Property, ioText } from 'io-gui';
+import { Register, Property, ioText, ArgsWithBinding } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoField } from './io-field';
+import { IoInputBase, IoInputBaseArgs } from './io-input-base';
+
+export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
+  action?: Function;
+  label?: string;
+  icon?: string;
+  pressed?: boolean;
+}>;
+
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
@@ -8,7 +16,7 @@ import { IoField } from './io-field';
  * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
  **/
 @Register
-export class IoButton extends IoField {
+export class IoButton extends IoInputBase {
   static get Style() {
     return /* css */`
       :host {
@@ -20,13 +28,25 @@ export class IoButton extends IoField {
       :host[pressed] {
         border-color: var(--io_borderColorInset);
       }
+      :host > io-icon {
+        margin-right: var(--io_spacing);
+      }
+      :host > io-text {
+        vertical-align: top;
+      }
     `;
   }
 
   @Property(undefined)
-  declare action?: any;
+  declare action?: Function;
 
-  @Property(undefined)
+  @Property({type: String, value: '', reflect: true})
+  declare label: string;
+
+  @Property({type: String, value: '', reflect: true})
+  declare icon: string;
+
+  @Property({value: undefined, type: undefined, reflect: false})
   declare value: any;
 
   @Property({value: 'outset', type: String, reflect: true})
@@ -38,29 +58,29 @@ export class IoButton extends IoField {
   @Property('button')
   declare role: string;
 
-  _onPointerdown(event: PointerEvent) {
-    super._onPointerdown(event);
+  onPointerdown(event: PointerEvent) {
+    super.onPointerdown(event);
     this.pressed = true;
   }
-  _onPointerleave(event: PointerEvent) {
-    super._onPointerleave(event);
+  onPointerleave(event: PointerEvent) {
+    super.onPointerleave(event);
     this.pressed = false;
   }
-  _onPointerup(event: PointerEvent) {
-    super._onPointerup(event);
+  onPointerup(event: PointerEvent) {
+    super.onPointerup(event);
     this.pressed = false;
   }
-  _onKeydown(event: KeyboardEvent) {
-    super._onKeydown(event);
+  onKeydown(event: KeyboardEvent) {
+    super.onKeydown(event);
     if (event.key === 'Enter' || event.key === ' ') {
       this.pressed = true;
     }
   }
-  _onKeyup(event: KeyboardEvent) {
-    super._onKeyup(event);
+  onKeyup(event: KeyboardEvent) {
+    super.onKeyup(event);
     this.pressed = false;
   }
-  _onClick() {
+  onClick() {
     if (typeof this.action === 'function') this.action(this.value);
     this.dispatchEvent('io-button-clicked', {value: this.value}, true);
   }
@@ -70,7 +90,7 @@ export class IoButton extends IoField {
   changed() {
     this.setAttribute('aria-pressed', String(this.pressed));
     this.template([
-      this.icon ? ioIcon({icon: this.icon}) : null,
+      this.icon ? ioIcon({value: this.icon}) : null,
       this.label ? ioText(this.label) : null
     ]);
   }

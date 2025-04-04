@@ -59,7 +59,7 @@ export type Theme = {
   bgColorRed: Color;
   bgColorGreen: Color;
   bgColorBlue: Color;
-  bgColorField: Color;
+  bgColorInput: Color;
 
   color: Color;
   colorStrong: Color;
@@ -68,7 +68,7 @@ export type Theme = {
   colorGreen: Color;
   colorBlue: Color;
   colorWhite: Color;
-  colorField: Color;
+  colorInput: Color;
 
   gradientColorStart: Color;
   gradientColorEnd: Color;
@@ -113,7 +113,7 @@ export const LIGHT_THEME: Theme = {
   bgColorRed: new Color(1, 0.5, 0.3, 1),
   bgColorGreen: new Color(0.2, 0.9, 0.3, 1),
   bgColorBlue: new Color(0.2, 0.5, 0.9, 1),
-  bgColorField: new Color(0.95, 0.96, 0.95, 1),
+  bgColorInput: new Color(0.95, 0.96, 0.95, 1),
 
   color: new Color(0.25, 0.25, 0.2, 1),
   colorStrong: new Color(0, 0, 0, 1),
@@ -122,7 +122,7 @@ export const LIGHT_THEME: Theme = {
   colorGreen: new Color(0, 0.6, 0.1, 1),
   colorBlue: new Color(0.2, 0.3, 1, 1),
   colorWhite: new Color(1, 1, 1, 1),
-  colorField: new Color(0, 0.05, 0.02, 1),
+  colorInput: new Color(0, 0.05, 0.02, 1),
 
   gradientColorStart: new Color(0.9, 0.9, 0.9, 1),
   gradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
@@ -167,7 +167,7 @@ export const DARK_THEME: Theme = {
   bgColorRed: new Color(0.7, 0.2, 0.1, 1),
   bgColorGreen: new Color(0.1, 0.5, 0.2, 1),
   bgColorBlue: new Color(0, 0.3, 0.65, 1),
-  bgColorField: new Color(0.02, 0.02, 0.02, 1),
+  bgColorInput: new Color(0.02, 0.02, 0.02, 1),
 
   color: new Color(0.6, 0.6, 0.6, 1),
   colorStrong: new Color(0.86, 0.86, 0.86, 1),
@@ -176,7 +176,7 @@ export const DARK_THEME: Theme = {
   colorGreen: new Color(0.4, 0.95, 0.3, 1),
   colorBlue: new Color(0.6, 0.9, 1, 1),
   colorWhite: new Color(1, 1, 1, 1),
-  colorField: new Color(0.65, 0.7, 0.68, 1),
+  colorInput: new Color(0.65, 0.7, 0.68, 1),
 
   gradientColorStart: new Color(0.45, 0.45, 0.45, 1),
   gradientColorEnd: new Color(0.2, 0.2, 0.2, 1),

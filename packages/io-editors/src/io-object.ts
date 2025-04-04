@@ -1,8 +1,17 @@
-import { Register, IoElement, VDOMArray, Property, Constructor } from 'io-gui';
+import { Register, IoElement, VDOMArray, Property, Constructor, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import './io-property-editor.js';
 import { PropertyConfig } from './models/editor-config.js';
 import { ioBoolean } from 'io-inputs';
 import { ioPropertyEditor } from './io-property-editor.js';
+
+export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
+  value?: Record<string, any> | any[];
+  properties?: string[];
+  config?: Map<Constructor, PropertyConfig[]>;
+  labeled?: boolean;
+  label?: string;
+  expanded?: boolean;
+}>;
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
@@ -17,7 +26,7 @@ export class IoObject extends IoElement {
       flex-direction: column; */
       padding-left: var(--io_spacing);
       padding-right: var(--io_spacing);
-      color: var(--io_colorField);
+      color: var(--io_colorInput);
       background-color: var(--io_bgColor);
     }
     :host > io-boolean {
@@ -77,5 +86,6 @@ export class IoObject extends IoElement {
     this.template(elements);
     this.setAttribute('aria-expanded', String(this.expanded));
   }
+  static vDOM: (arg0?: IoObjectArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioObject = IoObject.vDOM;

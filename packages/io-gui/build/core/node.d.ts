@@ -14,10 +14,13 @@ export interface IoNodeConstructor<T> {
 }
 export type CallbackFunction = (arg?: any) => void;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
-export type IoNodeArgs = {
+export type ArgsWithBinding<T> = {
+    [K in keyof T]: T[K] | Binding;
+};
+export type IoNodeArgs = ArgsWithBinding<{
     reactivity?: 'none' | 'immediate' | 'debounced';
     [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
-};
+}>;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -36,7 +39,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * [property]-changed` events will be broadcast in the end.
          * @param {Object} props - Map of property names and values.
          */
-        applyProperties(props: any): void;
+        applyProperties(props: any, skipDispatch?: boolean): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.
@@ -152,7 +155,7 @@ declare const IoNode_base: {
          * [property]-changed` events will be broadcast in the end.
          * @param {Object} props - Map of property names and values.
          */
-        applyProperties(props: any): void;
+        applyProperties(props: any, skipDispatch?: boolean): void;
         /**
          * Sets multiple properties in batch.
          * [property]-changed` events will be broadcast in the end.

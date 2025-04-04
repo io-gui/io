@@ -1,16 +1,18 @@
-import { Register, Property, glsl } from 'io-gui';
+import { Register, Property, glsl, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { IoSlider, IoSlider2d } from 'io-sliders';
-import { IoColorBase } from './io-color-base.js';
+import { IoColorBase, IoColorBaseArgs } from './elements/color-base.js';
+
+export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
+  color?: [number, number, number, number];
+  step?: number;
+  channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
+  vertical?: boolean;
+}>;
+
 /**
  * A generic color slider element.
  * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
  * For example, setting `channel: 'h'` will instantiate a slider for "hue" color channel and hook up necessary conversions, bindings and event callbacks.
- *
- * <io-element-demo element="io-color-slider-hs"
- * width="64px" height="64px"
- * properties='{"value": [1, 0.5, 0, 1], "horizontal": true}'
- * config='{"value": ["io-property-editor"]}
- * '></io-element-demo>
  **/
 @Register
 export class IoColorSlider extends IoColorBase {
@@ -22,14 +24,15 @@ export class IoColorSlider extends IoColorBase {
     `;
   }
 
+  // Is this needed? Perhgaps value can be used in glsl?
   @Property({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
   @Property(0.01)
   declare step: number;
 
-  @Property('')
-  declare channel: string;
+  @Property('a')
+  declare channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
 
   @Property({value: false, reflect: true})
   declare vertical: boolean;
@@ -97,6 +100,7 @@ export class IoColorSlider extends IoColorBase {
 
     debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'c', 'm', 'y', 'k', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
       console.warn('IoColorSlider: Incorrect channel value!', c);
+      console.log(this.value, this.channel, this);
     }
 
     const sliderInputTagName = `io-color-slider-${c}`;
@@ -166,6 +170,7 @@ export class IoColorSlider extends IoColorBase {
       [sliderInputTagName, {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput}],
     ]);
   }
+  static vDOM: (arg0?: IoColorSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioColorSlider = IoColorSlider.vDOM;
 /**
@@ -196,7 +201,7 @@ export class IoColorSliderBase extends IoSlider {
       float valueInRange = (uValue - uMin) / (uMax - uMin);
 
       // Colors
-      vec3 finalCol = io_bgColorField.rgb;
+      vec3 finalCol = io_bgColorInput.rgb;
       vec3 startCol = getStartColor(uv);
       vec3 gridCol = io_bgColorDimmed.rgb;
       vec3 endCol = getEndColor(uv);
@@ -215,7 +220,7 @@ export class IoColorSliderBase extends IoSlider {
       // Slider
       float sliderShape = rectangle(position, vec2(size.x * valueInRange, size.y));
       finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
-      finalCol = compose(finalCol, vec4(io_bgColorField.rgb, gridShape * sliderShape * 0.125));
+      finalCol = compose(finalCol, vec4(io_bgColorInput.rgb, gridShape * sliderShape * 0.125));
 
       gl_FragColor = vec4(finalCol, 1.0);
     }`;

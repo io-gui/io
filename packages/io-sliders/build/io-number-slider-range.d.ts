@@ -1,4 +1,12 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
+export type IoNumberSliderRangeArgs = IoElementArgs & ArgsWithBinding<{
+    value?: [number, number];
+    step?: number;
+    min?: number;
+    max?: number;
+    exponent?: number;
+    conversion?: number;
+}>;
 /**
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  *
@@ -17,5 +25,5 @@ export declare class IoNumberSliderRange extends IoElement {
     init(): void;
     changed(): void;
 }
-export declare const ioNumberSliderRange: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioNumberSliderRange: (arg0?: IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-number-slider-range.d.ts.map

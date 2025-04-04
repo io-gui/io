@@ -39,7 +39,7 @@ export class IoSlider extends IoSliderBase {
       float expValueInRange = pow(abs(valueInRange), 1./uExponent) * valueSign;
 
       // Colors
-      vec3 finalCol = io_bgColorField.rgb;
+      vec3 finalCol = io_bgColorInput.rgb;
       vec3 gridCol = io_bgColorDimmed.rgb;
       vec3 sliderCol = io_bgColorBlue.rgb;
       vec3 lineCol1 = io_color.rgb;
@@ -54,7 +54,7 @@ export class IoSlider extends IoSliderBase {
       // Slider
       float sliderShape = rectangle(expPosition, vec2(size.x * valueInRange, size.y));
       finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
-      finalCol = compose(finalCol, vec4(io_bgColorField.rgb, gridShape * sliderShape * 0.125));
+      finalCol = compose(finalCol, vec4(io_bgColorInput.rgb, gridShape * sliderShape * 0.125));
 
       // Lines
       float lineShape1 = lineVertical(translate(position, expValueInRange * size.x, 0.0), io_borderWidth);

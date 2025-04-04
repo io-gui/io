@@ -1,9 +1,10 @@
-import { IoNode, IoElementArgs } from 'io-gui';
+import { IoNode, IoNodeArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './menu-options.js';
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
 export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
-export type MenuItemArgs = IoElementArgs & {
+export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
     value?: any;
+    label?: string;
     icon?: string;
     hint?: string;
     action?: () => void;
@@ -12,7 +13,7 @@ export type MenuItemArgs = IoElementArgs & {
     disabled?: boolean;
     selected?: boolean;
     options?: MenuItemArgsLoose[] | MenuOptions;
-};
+}>;
 export declare class MenuItem extends IoNode {
     value: any;
     label: string;

@@ -11,7 +11,7 @@ ladder.src = element;
 
 export default class {
   run() {
-    describe('io-number-ladder-step.test', () => {
+    describe('io-number-ladder.test', () => {
       const $ = (selector: string) => { return ladder.querySelector(selector); };
       it('should set innerText to match value property', () => {
         expect($('.io-up1').value).to.equal(1);

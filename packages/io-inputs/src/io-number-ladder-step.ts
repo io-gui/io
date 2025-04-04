@@ -1,8 +1,13 @@
-import { Register, Property } from 'io-gui';
-import { IoField } from './io-field';
+import { Register, Property, ioText, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoInputBase, IoInputBaseArgs } from './io-input-base';
+
+export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
+  value?: number;
+  label?: string;
+}>;
 
 @Register
-export class IoNumberLadderStep extends IoField {
+export class IoNumberLadderStep extends IoInputBase {
   static get Style() {
     return /* css */`
       :host {
@@ -32,13 +37,16 @@ export class IoNumberLadderStep extends IoField {
   @Property({value: 1, type: Number})
   declare value: number;
 
+  @Property({value: '', type: String})
+  declare label: string;
+
   @Property({value: 'number', type: String, reflect: true})
   declare type: string;
 
   @Property({value: 'spinbutton', type: String})
   declare role: string;
 
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     let stepMove = 0;
     if (event.key === 'Escape' || event.key === ' ') {
       this.dispatchEvent('ladder-step-collapse', {}, true);
@@ -59,13 +67,13 @@ export class IoNumberLadderStep extends IoField {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
-  _onPointerdown(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerup', this._onPointerup);
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerup', this.onPointerup);
     this._startX = event.clientX;
   }
-  _onPointermove(event: PointerEvent) {
+  onPointermove(event: PointerEvent) {
     const deltaX = event.clientX - this._startX;
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 2) * deltaX < 0 ? -1: 1;
@@ -75,18 +83,22 @@ export class IoNumberLadderStep extends IoField {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
-  _onPointerup(event: PointerEvent) {
+  onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerup', this.onPointerup);
     this.dispatchEvent('ladder-step-collapse', {}, true);
   }
   init() {
     this.changed();
   }
   changed() {
-    super.changed();
-    this.setAttribute('aria-valuestep', this.value);
+    this.template([
+      ioText(this.label)
+    ]);
+    this.setAttribute('aria-label', this.label);
+    this.setAttribute('aria-valuestep', this.label);
   }
+  static vDOM: (arg0?: IoNumberLadderStepArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioNumberLadderStep = IoNumberLadderStep.vDOM;

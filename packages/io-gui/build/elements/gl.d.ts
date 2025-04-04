@@ -1,6 +1,10 @@
-import { IoElement } from '../core/element';
+import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
 import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
 import { IoThemeSingleton } from '../nodes/theme';
+import { ArgsWithBinding } from '../core/node';
+export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
+    color?: [number, number, number, number];
+}>;
 export declare class IoGl extends IoElement {
     #private;
     static get Style(): string;
@@ -26,6 +30,7 @@ export declare class IoGl extends IoElement {
     updateThemeUniforms(): void;
     setUniform(name: string, value: any): void;
     Register(ioNodeConstructor: typeof IoElement): void;
+    static vDOM: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioGl: (arg0?: import("../core/element").IoElementArgs | import("../core/element").VDOMArray[] | string, arg1?: import("../core/element").VDOMArray[] | string) => import("../core/element").VDOMArray;
+export declare const ioGl: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=gl.d.ts.map

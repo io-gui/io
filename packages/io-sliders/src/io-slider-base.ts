@@ -1,8 +1,19 @@
-import { Property, IoGl } from 'io-gui';
+import { Property, IoGl, IoGlArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
+
+export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
+  value?:  number | [number, number];
+  step?:  number | [number, number];
+  min?: number | [number, number];
+  max?: number | [number, number];
+  exponent?: number;
+  vertical?: boolean;
+  noscroll?: boolean;
+  tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+}>;
 
 export class IoSliderBase extends IoGl {
   static get Style() {
@@ -30,16 +41,16 @@ export class IoSliderBase extends IoGl {
   }
 
   @Property({value: 0})
-  declare value: number | [number, number] | {x: number, y: number};
+  declare value: number | [number, number];
 
   @Property(0.01)
-  declare step: number | [number, number] | {x: number, y: number};
+  declare step: number | [number, number];
 
   @Property(0)
-  declare min: number | [number, number] | {x: number, y: number};
+  declare min: number | [number, number];
 
   @Property(1)
-  declare max: number | [number, number] | {x: number, y: number};
+  declare max: number | [number, number];
 
   @Property(1)
   declare exponent: number;
@@ -67,8 +78,6 @@ export class IoSliderBase extends IoGl {
       return [this.min, this.min];
     } else if (this.min instanceof Array) {
       return [...this.min];
-    } else if (typeof this.min === 'object') {
-      return [this.min.x, this.min.y];
     }
     return [-Infinity, -Infinity];
   }
@@ -78,8 +87,6 @@ export class IoSliderBase extends IoGl {
       return [this.max, this.max];
     } else if (this.max instanceof Array) {
       return [...this.max];
-    } else if (typeof this.max === 'object') {
-      return [this.max.x, this.max.y];
     }
     return [Infinity, Infinity];
   }
@@ -89,8 +96,6 @@ export class IoSliderBase extends IoGl {
       return [this.step, this.step];
     } else if (this.step instanceof Array) {
       return [...this.step];
-    } else if (typeof this.step === 'object') {
-      return [this.step.x, this.step.y];
     }
     return [0.01, 0.01];
   }
@@ -100,40 +105,38 @@ export class IoSliderBase extends IoGl {
       return [this.value, this.value];
     } else if (this.value instanceof Array) {
       return [...this.value];
-    } else if (typeof this.value === 'object') {
-      return [this.value.x, this.value.y];
     }
     return [NaN, NaN];
   }
 
   static get Listeners() {
     return {
-      'focus': '_onFocus',
-      'contextmenu': '_onContextmenu',
-      'pointerdown': '_onPointerdown',
-      'touchstart': ['_onTouchstart', {passive: false}],
+      'focus': 'onFocus',
+      'contextmenu': 'onContextmenu',
+      'pointerdown': 'onPointerdown',
+      'touchstart': ['onTouchstart', {passive: false}],
     };
   }
-  _onFocus() {
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
+  onFocus() {
+    this.addEventListener('blur', this.onBlur);
+    this.addEventListener('keydown', this.onKeydown);
   }
-  _onBlur() {
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
+  onBlur() {
+    this.removeEventListener('blur', this.onBlur);
+    this.removeEventListener('keydown', this.onKeydown);
   }
-  _onContextmenu(event: Event) {
+  onContextmenu(event: Event) {
     event.preventDefault();
   }
-  _onTouchstart(event: TouchEvent) {
+  onTouchstart(event: TouchEvent) {
     this._rect = this.getBoundingClientRect();
-    this.addEventListener('touchmove', this._onTouchmove, {passive: false});
-    this.addEventListener('touchend', this._onTouchend);
+    this.addEventListener('touchmove', this.onTouchmove, {passive: false});
+    this.addEventListener('touchend', this.onTouchend);
     this._startX = event.changedTouches[0].clientX;
     this._startY = event.changedTouches[0].clientY;
     this._active = this.noscroll ? 1 : -1;
   }
-  _onTouchmove(event: TouchEvent) {
+  onTouchmove(event: TouchEvent) {
     const dx = Math.abs(this._startX - event.changedTouches[0].clientX);
     const dy = Math.abs(this._startY - event.changedTouches[0].clientY);
     if (this._active === -1) {
@@ -151,26 +154,26 @@ export class IoSliderBase extends IoGl {
       event.preventDefault();
     }
   }
-  _onTouchend() {
-    this.removeEventListener('touchmove', this._onTouchmove);
-    this.removeEventListener('touchend', this._onTouchend);
+  onTouchend() {
+    this.removeEventListener('touchmove', this.onTouchmove);
+    this.removeEventListener('touchend', this.onTouchend);
   }
-  _onPointerdown(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     this._rect = this.getBoundingClientRect();
     this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerup', this._onPointerup);
-    this.addEventListener('pointercancel', this._onPointerup);
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerup', this.onPointerup);
+    this.addEventListener('pointercancel', this.onPointerup);
   }
-  _onPointermove(event: PointerEvent) {
+  onPointermove(event: PointerEvent) {
     if (event.pointerType !== 'touch') this._active = 1;
-    this.throttle(this._onPointermoveThrottled, event);
+    this.throttle(this.onPointermoveThrottled, event);
   }
-  _onPointerup(event: PointerEvent) {
+  onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
-    this.removeEventListener('pointercancel', this._onPointerup);
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerup', this.onPointerup);
+    this.removeEventListener('pointercancel', this.onPointerup);
     this._active = -1;
   }
   _getPointerCoord(event: PointerEvent): [number, number] {
@@ -189,7 +192,7 @@ export class IoSliderBase extends IoGl {
     value[1] = min[1] * (1 - coord[1]) + max[1] * coord[1];
     return value;
   }
-  _onPointermoveThrottled(event: PointerEvent) {
+  onPointermoveThrottled(event: PointerEvent) {
     if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus();
       const coord = this._getPointerCoord(event);
@@ -224,7 +227,7 @@ export class IoSliderBase extends IoGl {
       this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     }
   }
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     const oneDimension = typeof this.value === 'number';
     switch (event.key) {
       case 'ArrowLeft':
@@ -325,5 +328,6 @@ export class IoSliderBase extends IoGl {
     }
     this.setAttribute('aria-valuenow', JSON.stringify(this.value));
   }
+  static vDOM: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 

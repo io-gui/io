@@ -20,11 +20,15 @@ export type CallbackFunction = (arg?: any) => void;
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
-// TODO: more specific Arg Types
-export type IoNodeArgs = {
+// Utility type to add Binding to all properties of a type
+export type ArgsWithBinding<T> = {
+  [K in keyof T]: T[K] | Binding;
+};
+
+export type IoNodeArgs = ArgsWithBinding<{
   reactivity?: 'none' | 'immediate' | 'debounced';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
-}
+}>;
 
 /**
  * Core mixin for `Node` classes.
@@ -109,20 +113,22 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
       }
 
-      this.applyProperties(properties);
+      this.applyProperties(properties, true);
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onPropertyMutated as EventListener);
       }
 
       this.init();
+
+      this.dispatchQueue();
     }
     /**
      * Sets multiple properties in batch.
      * [property]-changed` events will be broadcast in the end.
      * @param {Object} props - Map of property names and values.
      */
-    applyProperties(props: any) {
+    applyProperties(props: any, skipDispatch = false) {
       for (const name in props) {
         if (!this._properties.has(name)) {
           // TODO: document!
@@ -134,7 +140,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this.setProperty(name, props[name], true);
       }
       this._eventDispatcher.applyPropListeners(props);
-      this.dispatchQueue();
+      if (!skipDispatch) this.dispatchQueue();
     }
     /**
      * Sets multiple properties in batch.

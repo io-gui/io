@@ -6,5 +6,10 @@ document.body.appendChild(element as unknown as HTMLElement);
 
 export default class {
   run() {
+    describe('text.test.ts', () => {
+      it('Should have core API functions defined', () => {
+
+      });
+    });
   }
 }

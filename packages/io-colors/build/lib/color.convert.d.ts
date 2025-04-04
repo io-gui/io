@@ -20,6 +20,8 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-declare const convert: any;
-export { convert };
-//# sourceMappingURL=convert.d.ts.map
+export declare const rgb2hsl: (rgb: number[]) => number[];
+export declare const rgb2hsv: (rgb: number[]) => number[];
+export declare const hsl2rgb: (hsl: number[]) => number[];
+export declare const hsv2rgb: (hsv: number[]) => number[];
+//# sourceMappingURL=color.convert.d.ts.map

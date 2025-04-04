@@ -1,5 +1,15 @@
-import { IoElement, VDOMArray, Property, Autobind } from 'io-gui';
+import { IoElement, VDOMArray, Property, Autobind, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
+
+export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
+  options?: MenuOptions;
+  slotted?: VDOMArray[];
+  elements?: VDOMArray[];
+  menu?: 'top' | 'left' | 'bottom' | 'right';
+  depth?: number;
+  collapsed?: boolean;
+  collapseWidth?: number;
+}>;
 
 export class IoNavigatorBase extends IoElement {
   static get Style() {
@@ -155,5 +165,6 @@ export class IoNavigatorBase extends IoElement {
       ]);
     }
   }
+  static vDOM: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioNavigatorBase = IoNavigatorBase.vDOM;

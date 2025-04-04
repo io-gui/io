@@ -1,5 +1,13 @@
-import { Register, Property } from 'io-gui';
-import { IoSliderBase } from './io-slider-base.js';
+import { Register, Property, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoSliderBase, IoSliderBaseArgs } from './io-slider-base.js';
+
+export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{
+  // TODO TS does not support narrowing of the type values here? :/
+  // value?: [number, number];
+  // step?: [number, number];
+  // min?: [number, number];
+  // max?: [number, number];
+}>;
 
 @Register
 export class IoSlider2d extends IoSliderBase {
@@ -66,7 +74,7 @@ export class IoSlider2d extends IoSliderBase {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = io_bgColorField.rgb;
+      vec3 finalCol = io_bgColorInput.rgb;
       vec3 gridCol = io_bgColorDimmed.rgb;
       vec3 sliderCol = io_bgColorBlue.rgb;
       vec3 lineCol1 = io_color.rgb;
@@ -90,5 +98,6 @@ export class IoSlider2d extends IoSliderBase {
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
   }
+  static vDOM: (arg0?: IoSlider2dArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioSlider2d = IoSlider2d.vDOM;

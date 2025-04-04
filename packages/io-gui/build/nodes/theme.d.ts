@@ -39,7 +39,7 @@ export type Theme = {
     bgColorRed: Color;
     bgColorGreen: Color;
     bgColorBlue: Color;
-    bgColorField: Color;
+    bgColorInput: Color;
     color: Color;
     colorStrong: Color;
     colorDimmed: Color;
@@ -47,7 +47,7 @@ export type Theme = {
     colorGreen: Color;
     colorBlue: Color;
     colorWhite: Color;
-    colorField: Color;
+    colorInput: Color;
     gradientColorStart: Color;
     gradientColorEnd: Color;
     shadowColor: Color;

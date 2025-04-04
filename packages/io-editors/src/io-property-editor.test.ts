@@ -44,7 +44,6 @@ export default class {
           'aria-valuemin': '-Infinity',
           'aria-valuenow': '0.5',
           'aria-valuestep': '0.01',
-          contenteditable: '',
           inputmode: 'numeric',
           pattern: 'pattern="[0-9]*"',
           positive: '',
@@ -58,7 +57,6 @@ export default class {
         expect(children[1][2][0]).to.eql(['io-text', {value: 'string'}, 'string']);
         expect(children[1][2][1]).to.eql(['io-string', {
           appearance: 'inset',
-          contenteditable: '',
           role: 'textbox',
           spellcheck: 'false',
           tabindex: '0',

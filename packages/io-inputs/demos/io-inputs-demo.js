@@ -25,16 +25,16 @@ export class IoInputsDemo extends IoElement {
   init() {
     this.template([
       ['div', {class: 'row'}, [
-        ['io-field', {value: this.bind('string')}],
-        ['io-field', {value: this.bind('string'), appearance: 'outset'}],
-        ['io-field', {value: this.bind('string'), appearance: 'inset'}],
-        ['io-field', {value: this.bind('string'), appearance: 'neutral'}],
+        ['io-input-base', {value: this.bind('string')}],
+        ['io-input-base', {value: this.bind('string'), appearance: 'outset'}],
+        ['io-input-base', {value: this.bind('string'), appearance: 'inset'}],
+        ['io-input-base', {value: this.bind('string'), appearance: 'neutral'}],
       ]],
       ['div', {class: 'row'}, [
-        ['io-field', {value: this.bind('string'), invalid: true}],
-        ['io-field', {value: this.bind('string'), class: 'green'}],
-        ['io-field', {value: this.bind('string'), selected: this.bind('boolean')}],
-        ['io-field', {icon: 'io:io'}],
+        ['io-input-base', {value: this.bind('string'), invalid: true}],
+        ['io-input-base', {value: this.bind('string'), class: 'green'}],
+        ['io-input-base', {value: this.bind('string'), selected: this.bind('boolean')}],
+        ['io-input-base', {icon: 'io:io'}],
       ]],
       ['div', {class: 'row'}, [
         ['io-string', {value: this.bind('string'), placeholder: 'io-string'}],

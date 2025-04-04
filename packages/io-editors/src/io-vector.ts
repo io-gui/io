@@ -1,12 +1,18 @@
-import { Register, IoElement, Property } from 'io-gui';
-import { ioNumber, ioBoolicon } from 'io-inputs';
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { ioNumber, ioBoolean } from 'io-inputs';
 
+export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
+  value?: {x: number, y: number, z?: number, w?: number} | number[];
+  conversion?: number;
+  step?: number;
+  min?: number;
+  max?: number;
+  linkable?: boolean;
+  linked?: boolean;
+  ladder?: boolean;
+}>;
 /**
  * Input element for vector arrays and objects.
- *
- * <io-element-demo element="io-vector" properties='{"value": {"x": 1, "y": 0.5}, "linkable": false}'></io-element-demo>
- *
- * <io-element-demo element="io-vector" properties='{"value": [0, 0.5, 1], "linkable": true}'></io-element-demo>
  **/
 @Register
 export class IoVector extends IoElement {
@@ -114,7 +120,8 @@ export class IoVector extends IoElement {
     this.template(elements);
   }
   getSlotted(): Array<any> | null {
-    return this.linkable ? [ioBoolicon({value: this.bind('linked'), true: 'io:link', false: 'io:unlink'})] : null;
+    return this.linkable ? [ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'})] : null;
   }
+  static vDOM: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioVector = IoVector.vDOM;

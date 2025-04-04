@@ -40,9 +40,9 @@ export default class {
         expect(this.element.getAttribute('aria-invalid')).to.equal(null);
       });
       it('has title attribute', () => {
-        this.element.label = 'Enter text';
+        this.element.title = 'Enter text';
         expect(this.element.getAttribute('title')).to.equal('Enter text');
-        this.element.label = '';
+        this.element.title = '';
       });
     });
   }

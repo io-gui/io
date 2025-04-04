@@ -1,8 +1,15 @@
-import { IoElement, VDOMArray } from 'io-gui';
+import { IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './models/menu-options.js';
 import { IoMenuItem } from './io-menu-item.js';
 export declare function addMenuOptions(options: MenuOptions, depth: number, d?: number): VDOMArray[];
 export declare function filterOptions(options: MenuOptions, search: string, depth?: number, elements?: VDOMArray[], d?: number): any;
+export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
+    options?: MenuOptions;
+    searchable?: boolean;
+    search?: string;
+    depth?: number;
+    slotted?: VDOMArray[];
+}>;
 export declare class IoMenuTree extends IoElement {
     static get Style(): string;
     options: MenuOptions;
@@ -18,6 +25,7 @@ export declare class IoMenuTree extends IoElement {
     _onItemClicked(event: CustomEvent): void;
     _onCollapse(): void;
     changed(): void;
+    static vDOM: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioMenuTree: (arg0?: import("io-gui").IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioMenuTree: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-menu-tree.d.ts.map

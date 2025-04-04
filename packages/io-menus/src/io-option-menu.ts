@@ -1,4 +1,4 @@
-import { Register, IoElement, Change, Property } from 'io-gui';
+import { Register, IoElement, Change, Property, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import { ioMenuItem } from './io-menu-item.js';
@@ -6,26 +6,14 @@ import { ioMenuItem } from './io-menu-item.js';
 const dummyOptions = new MenuOptions();
 // TODO: fix tab-out without collapse
 
+export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
+  value?: any;
+  options?: MenuOptions;
+  item?: MenuItem;
+}>;
+
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
- *
- * <io-element-demo element="io-option-menu" properties='{
- *   "label": "",
- *   "value": 0,
- *   "options": [1,2,3]}
- * ' config='{"type:object": ["io-property-editor"]}'></io-element-demo>
- *
- * <io-element-demo element="io-option-menu" properties='{
- *   "label": "",
- *   "value": 0,
- *   "options": [
- *     {"value": 0, "label": "zero"},
- *     {"value": 1, "label": "one"},
- *     {"value": 2, "label": "two"},
- *     {"value": 3, "label": "three"}
- *   ]
- * }' config='{"type:object": ["io-property-editor"]}'></io-element-demo>
- *
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 @Register
@@ -87,9 +75,9 @@ export class IoOptionMenu extends IoElement {
     this.item = this.item || new MenuItem({});
     this.item.label = selectedItem?.label || String(this.value);
     this.item.options = this.options;
-    this.item.icon = this.icon || '';
 
     this.template([ioMenuItem({item: this.item, direction: 'down'})]);
   }
+  static vDOM: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioOptionMenu = IoOptionMenu.vDOM;

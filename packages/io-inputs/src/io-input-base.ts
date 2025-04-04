@@ -1,6 +1,5 @@
 
-import { Register, Property, IoElement, ioText } from 'io-gui';
-import { ioIcon } from 'io-icons';
+import { Register, Property, IoField, IoFieldArgs, VDOMArray, ArgsWithBinding, ioText } from 'io-gui';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -10,160 +9,85 @@ import { ioIcon } from 'io-icons';
 //   focusBacktrack.set(element, backtrack);
 // }
 
+export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
+  tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+  name?: string;
+  value?: any;
+  type?: string;
+}>;
+
 @Register
-export class IoField extends IoElement {
+export class IoInputBase extends IoField {
   static get Style() {
     return /* css */`
-      --ioField: {
-        display: flex;
-
+      :host {
         cursor: pointer;
         user-select: none;
         -webkit-touch-callout: none;
-
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-
-        height: var(--io_fieldHeight);
-        line-height: var(--io_lineHeight);
-
-        font-size: var(--io_fontSize);
-        border: var(--io_border);
         border-radius: var(--io_borderRadius);
-        border-color: transparent;
-        color: var(--io_colorField);
-        background-color: var(--io_bgColorField);
-        padding-top: var(--io_spacing);
-        padding-bottom: var(--io_spacing);
-        padding-left: var(--io_spacing);
-        padding-right: var(--io_spacing);
+        color: var(--io_colorInput);
+        background-color: var(--io_bgColorInput);
         transition: background-color 0.25s;
-      }
-      :host {
-        @apply --ioField;
-      }
-      :host[appearance=neutral] {
-        color: var(--io_color);
-        background-color: transparent;
-      }
-      :host[appearance=inset] {
-        border-color: var(--io_borderColorInset);
-        padding-top: calc(var(--io_spacing) + 0.05em);
-        padding-bottom: calc(var(--io_spacing) - 0.05em);
-      }
-      :host[appearance=outset] {
-        border-color: var(--io_borderColorOutset);
-        background-image: var(--io_gradientOutset);
-      }
-      :host.red,
-      :host[invalid] {
-        color: var(--io_colorWhite);
-        background-color: var(--io_bgColorRed);
-        border-color: var(--io_colorRed);
-      }
-      :host.green {
-        color: var(--io_colorWhite);
-        background-color: var(--io_bgColorGreen);
-        border-color: var(--io_colorGreen);
-      }
-
-      :host.blue,
-      :host[selected] {
-        color: var(--io_colorWhite);
-        background-color: var(--io_bgColorBlue);
-        border-color: var(--io_colorBlue);
-      }
-      :host:focus {
-        text-overflow: inherit;
-      }
-      :host[placeholder]:empty:before {
-        content: attr(placeholder);
-        visibility: visible;
-        color: var(--io_colorField);
-        padding: 0 calc(var(--io_spacing) + var(--io_borderWidth));
-        opacity: 0.5;
-      }
-      :host[appearance=inset] io-icon {
-        margin-top: -0.05em;
-        margin-bottom: 0.05em;
       }
     `;
   }
 
-  @Property('0')
+  @Property({value: '0', type: String, reflect: true})
   declare tabindex: string;
 
   @Property({value: '', type: String, reflect: true})
   declare name: string;
 
-  @Property({type: String, reflect: true})
+  @Property({value: ''})
   declare value: any;
 
-  @Property({value: '', reflect: true})
-  declare icon: string;
-
-  @Property({value: 'neutral', reflect: true})
-  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare stroke: boolean;
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare selected: boolean;
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare invalid: boolean;
-
   @Property({value: '', type: String, reflect: true})
-  declare placeholder: string;
-
-  @Property({value: 'false', type: String, reflect: true})
-  declare spellcheck: string;
+  declare type: string;
 
   static get Listeners() {
     return {
-      'focus-to': '_onFocusTo',
-      'focus': '_onFocus',
-      'pointerdown': '_onPointerdown',
-      'click': '_onClick',
+      'focus-to': 'onFocusTo',
+      'focus': 'onFocus',
+      'pointerdown': 'onPointerdown',
+      'click': 'onClick',
     };
   }
-  _onFocus(event: FocusEvent) {
-    this.addEventListener('blur', this._onBlur);
-    this.addEventListener('keydown', this._onKeydown);
-    this.addEventListener('keyup', this._onKeyup);
-  }
-  _onBlur(event: FocusEvent) {
-    this.removeEventListener('blur', this._onBlur);
-    this.removeEventListener('keydown', this._onKeydown);
-    this.removeEventListener('keyup', this._onKeyup);
-  }
-  _onPointerdown(event: PointerEvent) {
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerleave', this._onPointerleave);
-    this.addEventListener('pointerup', this._onPointerup);
-  }
-  _onPointermove(event: PointerEvent) {}
 
-  _onPointerleave(event: PointerEvent) {
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerleave', this._onPointerleave);
-    this.removeEventListener('pointerup', this._onPointerup);
+  onFocus(event: FocusEvent) {
+    this.addEventListener('blur', this.onBlur);
+    this.addEventListener('keydown', this.onKeydown);
+    this.addEventListener('keyup', this.onKeyup);
   }
-  _onPointerup(event: PointerEvent) {
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerleave', this._onPointerleave);
-    this.removeEventListener('pointerup', this._onPointerup);
+  onBlur(event: FocusEvent) {
+    this.removeEventListener('blur', this.onBlur);
+    this.removeEventListener('keydown', this.onKeydown);
+    this.removeEventListener('keyup', this.onKeyup);
+  }
+  onPointerdown(event: PointerEvent) {
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerleave', this.onPointerleave);
+    this.addEventListener('pointerup', this.onPointerup);
+  }
+  onPointermove(event: PointerEvent) {}
+
+  onPointerleave(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerleave', this.onPointerleave);
+    this.removeEventListener('pointerup', this.onPointerup);
+  }
+  onPointerup(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerleave', this.onPointerleave);
+    this.removeEventListener('pointerup', this.onPointerup);
     this.focus();
   }
-  _onClick() {
-    this.dispatchEvent('io-field-clicked', {value: this.value}, true);
+  onClick() {
+    this.dispatchEvent('io-input-base-clicked', {value: this.value}, true);
   }
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this._onClick();
+      this.onClick();
     }
     else if (event.key === 'ArrowLeft') {
       event.preventDefault();
@@ -179,8 +103,8 @@ export class IoField extends IoElement {
       this.focusTo('down');
     }
   }
-  _onKeyup(event: KeyboardEvent) {}
-  _onFocusTo(event: CustomEvent) {
+  onKeyup(event: KeyboardEvent) {}
+  onFocusTo(event: CustomEvent) {
     const src = event.composedPath()[0];
     const dir = event.detail.dir;
     const rect = event.detail.rect;
@@ -316,19 +240,12 @@ export class IoField extends IoElement {
     }
   }
   changed() {
-    let value = '';
-    if (this.value !== undefined) {
-      if (typeof this.value === 'object' && this.value !== null) {
-        value = `${this.value.constructor.name}` + (this.value instanceof Array ? `(${this.value.length})` : '');
-      } else if (this.value !== undefined) {
-        value = String(this.value);
-      }
-    }
     this.template([
-      this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
-      value ? ioText(value) : null
+      this.label ? ioText(this.label) : null,
+      this.value ? ioText(this.value) : null,
     ]);
   }
+  static vDOM: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioField = IoField.vDOM;
+export const ioInputBase = IoInputBase.vDOM;
 

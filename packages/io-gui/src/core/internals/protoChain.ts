@@ -116,9 +116,9 @@ export class ProtoChain {
   addPropertiesFromDecorators(ioNodeConstructor: IoNodeConstructor<any>) {
     const props = propertyDecorators.get(ioNodeConstructor);
     if (props) for (const name in props) {
-      const hardPropDef = new ProtoProperty(props[name]);
-      if (!this.properties[name]) this.properties[name] = hardPropDef;
-      this.properties[name].assign(hardPropDef);
+      const protoProperty = new ProtoProperty(props[name]);
+      if (!this.properties[name]) this.properties[name] = protoProperty;
+      this.properties[name].assign(protoProperty);
     }
   }
   /**

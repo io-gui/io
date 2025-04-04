@@ -8,7 +8,7 @@ document.body.appendChild(element as unknown as HTMLElement);
 export default class {
   run() {
     describe('io-button.test', () => {
-      it('Should initialize property definitions correctly', () => {
+      it('Should initialize properties correctly', () => {
         expect(element.action).to.equal(undefined);
         expect(element.value).to.equal(undefined);
         expect(element.pressed).to.equal(false);
@@ -18,14 +18,14 @@ export default class {
           init: undefined,
           reflect: false,
           type: undefined,
-          value: undefined,
+          value: undefined
         });
         expect(element._properties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: undefined,
-          value: undefined,
+          value: undefined
         });
         expect(element._properties.get('pressed')).to.eql({
           binding: undefined,
@@ -50,7 +50,7 @@ export default class {
         element.label = '';
       });
       it('should set icon to match icon property', () => {
-        element.icon = 'icons:io_logo';
+        element.icon = 'io:io_logo';
         expect(element.innerHTML).to.equal(`<io-icon icon="${element.icon}">${IoIconsetSingleton.getIcon(element.icon)}</io-icon>`);
         element.icon = '';
         expect(element.innerHTML).to.equal('');

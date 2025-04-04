@@ -14,5 +14,5 @@ export declare class IoSlider extends IoSliderBase {
     max: number;
     static get Frag(): string;
 }
-export declare const ioSlider: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioSlider: (arg0?: import("./io-slider-base.js").IoSliderBaseArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-slider.d.ts.map

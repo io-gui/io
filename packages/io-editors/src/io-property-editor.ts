@@ -1,5 +1,12 @@
-import { IoElement, Property, Register, IoElementArgs, IoNode, ioText, Constructor, div } from 'io-gui';
+import { IoElement, Property, Register, IoElementArgs, IoNode, ioText, Constructor, div, ArgsWithBinding, VDOMArray } from 'io-gui';
 import { getEditorConfig, PropertyConfig } from './models/editor-config.js';
+
+export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
+  value?: Record<string, any> | any[];
+  properties?: string[];
+  config?: Map<Constructor, PropertyConfig[]>;
+  labeled?: boolean;
+}>;
 
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
@@ -11,7 +18,7 @@ export class IoPropertyEditor extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      color: var(--io_colorField);
+      color: var(--io_colorInput);
       background-color: var(--io_bgColor);
     }
     :host > .io-row {
@@ -81,17 +88,16 @@ export class IoPropertyEditor extends IoElement {
         const value = this.value[c];
         const tag = config[c]![0];
         const props = config[c]![1] as (IoElementArgs | undefined) || {};
-        const label = props.label || c;
         const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
         if (tag === 'io-object') {
           elements.push(div({class: 'io-row'}, [
-            this.labeled ? ioText(label) : null,
+            this.labeled ? ioText(c) : null,
             [tag, finalProps],
           ]));
         } else {
           elements.push(div({class: 'io-row'}, [
-            this.labeled ? ioText(label) : null,
+            this.labeled ? ioText(c) : null,
             [tag, finalProps],
           ]));
         }
@@ -109,5 +115,6 @@ export class IoPropertyEditor extends IoElement {
     const json = Object.assign({}, super.toJSON(), this);
     return json;
   }
+  static vDOM: (arg0?: IoPropertyEditorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioPropertyEditor = IoPropertyEditor.vDOM;

@@ -1,5 +1,9 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { IoNumber } from './io-number';
+export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
+    src?: IoNumber;
+    expanded?: boolean;
+}>;
 /**
  * Interactive number ladder.
  * When dragged horizontally, it changes the value in step increments.
@@ -25,12 +29,13 @@ declare class IoNumberLadder extends IoElement {
     get max(): number;
     get step(): number;
     get conversion(): number;
-    _onFocusIn(event: FocusEvent): void;
-    _onFocusTo(event: CustomEvent): void;
+    onFocusIn(event: FocusEvent): void;
+    onFocusTo(event: CustomEvent): void;
     _onLadderStepChange(event: CustomEvent): void;
     _onLadderStepCollapse(): void;
     expandedChanged(): void;
     changed(): void;
+    static vDOM: (arg0?: IoNumberLadderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const IoNumberLadderSingleton: IoNumberLadder;
 export {};

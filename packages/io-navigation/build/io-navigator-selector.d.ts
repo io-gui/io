@@ -1,10 +1,16 @@
-import { VDOMArray } from 'io-gui';
-import { IoNavigatorBase } from './io-navigator-base.js';
+import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoNavigatorBase, IoNavigatorBaseArgs } from './io-navigator-base.js';
+export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
+    select?: 'first' | 'last';
+    cache?: boolean;
+    precache?: boolean;
+}>;
 export declare class IoNavigatorSelector extends IoNavigatorBase {
     select: 'first' | 'last';
     cache: boolean;
     precache: boolean;
     getSlotted(): VDOMArray;
+    static vDOM: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioNavigatorSelector: (arg0?: import("io-gui").IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioNavigatorSelector: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-navigator-selector.d.ts.map

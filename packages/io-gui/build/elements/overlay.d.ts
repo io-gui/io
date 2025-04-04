@@ -52,10 +52,10 @@ declare class IoOverlay extends IoElement {
     constructor(properties?: Record<string, any>);
     stopPropagation(event: Event): void;
     onResized(): void;
-    _onPointerup(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
     _onCollapse(): void;
-    _onContextmenu(event: Event): void;
-    _onFocusIn(event: FocusEvent): void;
+    onContextmenu(event: Event): void;
+    onFocusIn(event: FocusEvent): void;
     _onScroll(event: Event): void;
     nudgeDown(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean): boolean;
     nudgeUp(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean): boolean;

@@ -17,7 +17,7 @@ document.body.appendChild(element as unknown as HTMLElement);
 export default class {
   run() {
     describe('io-number.test', () => {
-      it('Should initialize property definitions correctly', () => {
+      it('Should initialize properties correctly', () => {
         expect(element.role).to.equal('textbox');
         expect(element.value).to.equal(0);
         expect(element.conversion).to.equal(1);

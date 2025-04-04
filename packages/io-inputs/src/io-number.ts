@@ -1,6 +1,16 @@
-import { Register, Property, IoOverlaySingleton } from 'io-gui';
+import { Register, Property, IoOverlaySingleton, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { IoNumberLadderSingleton } from './io-number-ladder.js';
-import { IoField } from './io-field';
+import { IoInputBase, IoInputBaseArgs } from './io-input-base';
+
+export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
+  value?: number;
+  conversion?: number;
+  step?: number;
+  min?: number;
+  max?: number;
+  ladder?: boolean;
+}>;
+
 /**
  * Input element for `Number` data type.
  * It clamps the `value` to `min` / `max` and rounds it to the nearest `step` increment.
@@ -8,7 +18,7 @@ import { IoField } from './io-field';
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
 @Register
-export class IoNumber extends IoField {
+export class IoNumber extends IoInputBase {
   static get Style() {
     return /* css */`
       :host {
@@ -17,8 +27,13 @@ export class IoNumber extends IoField {
         -webkit-user-select: text;
         -webkit-touch-callout: default;
         font-family: monospace;
-        padding-left: var(--io_spacing3);
-        padding-right: var(--io_spacing3);
+      }
+      :host[placeholder]:empty:before {
+        content: attr(placeholder);
+        visibility: visible;
+        color: var(--io_colorInput);
+        padding: 0 calc(var(--io_spacing) + var(--io_borderWidth));
+        opacity: 0.5;
       }
     `;
   }
@@ -41,9 +56,6 @@ export class IoNumber extends IoField {
   @Property({value: false, type: Boolean})
   declare ladder: boolean;
 
-  @Property({value: true, type: Boolean})
-  declare contenteditable: boolean;
-
   @Property({value: 'number', type: String, reflect: true})
   declare type: string;
 
@@ -59,10 +71,16 @@ export class IoNumber extends IoField {
   @Property({value: 'inset', type: String, reflect: true})
   declare appearance: 'flush' | 'inset' | 'outset';
 
+  @Property({value: '', type: String, reflect: true})
+  declare placeholder: string;
+
+  @Property({value: 'false', type: String, reflect: true})
+  declare spellcheck: string;
+
   private _pointer = '';
 
-  _onBlur(event: FocusEvent) {
-    super._onBlur(event);
+  onBlur(event: FocusEvent) {
+    super.onBlur(event);
     this._setFromTextNode();
     this.scrollTop = 0;
     this.scrollLeft = 0;
@@ -73,16 +91,16 @@ export class IoNumber extends IoField {
       }
     });
   }
-  _onPointerdown(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     if (this._pointer === 'touch') event.preventDefault();
-    this.addEventListener('pointermove', this._onPointermove);
-    this.addEventListener('pointerup', this._onPointerup);
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerup', this.onPointerup);
     if (document.activeElement === this as unknown as Element && event.button === 0) return;
     this._pointer = event.pointerType;
   }
-  _onPointerup(event: PointerEvent) {
-    this.removeEventListener('pointermove', this._onPointermove);
-    this.removeEventListener('pointerup', this._onPointerup);
+  onPointerup(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerup', this.onPointerup);
     if (this.ladder || event.button === 1) {
       if (this._pointer === 'touch') {
         event.preventDefault();
@@ -101,8 +119,8 @@ export class IoNumber extends IoField {
       }
     }
   }
-  _onFocus(event: FocusEvent) {
-    super._onFocus(event);
+  onFocus(event: FocusEvent) {
+    super.onFocus(event);
     if (this._pointer === 'touch') {
       IoNumberLadderSingleton.expanded = false;
     }
@@ -111,7 +129,7 @@ export class IoNumber extends IoField {
     IoNumberLadderSingleton.src = this;
     IoNumberLadderSingleton.expanded = true;
   }
-  _onKeydown(event: KeyboardEvent) {
+  onKeydown(event: KeyboardEvent) {
     const rng = (window.getSelection() as Selection).getRangeAt(0);
     const start = rng.startOffset;
     const end = rng.endOffset;
@@ -171,7 +189,7 @@ export class IoNumber extends IoField {
       }
     }
   }
-  _onKeyup(event: KeyboardEvent) {
+  onKeyup(event: KeyboardEvent) {
     if (event.which === 17) { // ctrl
       this._expandLadder();
     } else if (event.which === 27 || event.which === 13 || event.which === 32) { // esc || enter || space
@@ -189,7 +207,15 @@ export class IoNumber extends IoField {
     else this.textNode = 'NaN';
   }
   init() {
+    this.disabledChanged();
     this.changed();
+  }
+  disabledChanged() {
+    if (this.disabled) {
+      this.removeAttribute('contenteditable');
+    } else {
+      this.setAttribute('contenteditable', true);
+    }
   }
   changed() {
     this.setAttribute('aria-valuenow', this.value);
@@ -216,5 +242,6 @@ export class IoNumber extends IoField {
     this.setAttribute('positive', this.value >= 0);
     this.textNode = valueText;
   }
+  static vDOM: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioNumber = IoNumber.vDOM;

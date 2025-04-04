@@ -1,6 +1,16 @@
-import { IoElement, Property } from 'io-gui';
-import { convert } from './lib/convert.js';
+import { IoElement, IoElementArgs, Property, Register, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js';
 
+export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
+  value?: {
+    r: number;
+    g: number;
+    b: number;
+    a?: number;
+  }
+}>;
+
+@Register
 export class IoColorBase extends IoElement {
 
   @Property('debounced')
@@ -19,15 +29,13 @@ export class IoColorBase extends IoElement {
   declare hsl: [number, number, number];
 
   init() {
-    this.valueChanged();
+    this.debounce(this.valueChanged);
   }
-
   valueMutated() {
     this.debounce(this.valueChanged);
   }
-
   rgbFromHsv() {
-    const rgb = convert.hsv.rgb([
+    const rgb = hsv2rgb([
       this.hsv[0] * 360,
       this.hsv[1] * 100,
       this.hsv[2] * 100,
@@ -37,7 +45,7 @@ export class IoColorBase extends IoElement {
     this.rgba[2] = rgb[2] / 255;
   }
   rgbFromHsl() {
-    const rgb = convert.hsl.rgb([
+    const rgb = hsl2rgb([
       this.hsl[0] * 360,
       this.hsl[1] * 100,
       this.hsl[2] * 100,
@@ -51,7 +59,6 @@ export class IoColorBase extends IoElement {
     this.value.g = this.rgba[1];
     this.value.b = this.rgba[2];
   }
-
   valueChanged() {
     debug: {
       const c = Object.keys(this.value);
@@ -61,8 +68,8 @@ export class IoColorBase extends IoElement {
     }
 
     const rgb = [this.value.r * 255, this.value.g * 255, this.value.b * 255];
-    const hsv = convert.rgb.hsv(rgb);
-    const hsl = convert.rgb.hsl(rgb);
+    const hsv = rgb2hsv(rgb);
+    const hsl = rgb2hsl(rgb);
 
     // Prevent color conversion from flippping hue 360.
     if (hsv[0] === 0 || hsv[0] === 360) hsv[0] = this.hsv[0] * 360;
@@ -85,4 +92,5 @@ export class IoColorBase extends IoElement {
       hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
     });
   }
+  static vDOM: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }

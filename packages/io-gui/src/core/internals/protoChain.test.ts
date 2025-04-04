@@ -147,39 +147,40 @@ export default class {
         let protoChain = new ProtoChain(MockIoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
         expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: false},
+          prop1:{init: false},
         });
         protoChain = new ProtoChain(MockIoNode2);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
         expect(protoChain.properties).to.be.eql({
-          prop1:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: false},
-          prop2:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: undefined},
+          prop1:{type: Object, init: false},
+          prop2:{},
         });
       });
       it('Should include all properties declared in Property decorator', () => {
         let protoChain = new ProtoChain(IoNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          reactivity:{value: 'immediate', type: String, binding: undefined, reflect: undefined, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: false},
-          prop2:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: undefined},
+          reactivity:{value: 'immediate', type: String},
+          prop1:{init: false},
+          prop2:{type: Object},
         });
         protoChain = new ProtoChain(IoNode3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
+        console.log(protoChain.properties);
         expect(protoChain.properties).to.be.eql({
-          reactivity:{value: 'immediate', type: String, binding: undefined, reflect: undefined, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reflect: true, init: true},
-          prop2:{value: 'foo', type: Object, binding: undefined, reflect: false, init: undefined},
-          prop3:{value: undefined, type: undefined, binding: undefined, reflect: true, init: undefined},
+          reactivity:{value: 'immediate', type: String},
+          prop1:{reflect: true, init: true},
+          prop2:{value: 'foo', type: Object, reflect: false},
+          prop3:{reflect: true},
         });
       });
       it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
         const protoChain = new ProtoChain(IoNode4);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
-          reactivity:{value: 'immediate', type: String, binding: undefined, reflect: undefined, init: undefined},
-          prop1:{value: undefined, type: undefined, binding: undefined, reflect: undefined, init: true},
-          prop2:{value: undefined, type: Object, binding: undefined, reflect: undefined, init: undefined},
+          reactivity:{value: 'immediate', type: String},
+          prop1:{init: true},
+          prop2:{type: Object},
         });
       });
       it('Should include all listners declared in `static get Listeners()` return oject', () => {

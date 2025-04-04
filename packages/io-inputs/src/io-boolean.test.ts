@@ -11,7 +11,7 @@ export default class {
       it('Should have core API functions defined', () => {
         expect(element.toggle).to.be.a('function');
       });
-      it('Should initialize property definitions correctly', () => {
+      it('Should initialize properties correctly', () => {
         expect(element.value).to.equal(false);
         expect(element.true).to.equal('true');
         expect(element.false).to.equal('false');
@@ -44,7 +44,7 @@ export default class {
         expect(element.getAttribute('aria-checked')).to.equal('false');
       });
       it('has correct default innerHTML', () => {
-        expect(element.innerHTML).to.equal('<io-text label="false" aria-label="false">false</io-text>');
+        expect(element.innerHTML).to.equal('<io-text>false</io-text>');
       });
       it('should set innerText to match value property', () => {
         expect(element.innerText).to.equal(element.false);
@@ -58,12 +58,6 @@ export default class {
         element.value = false;
         element.true = 'true';
         element.false = 'false';
-      });
-      it('should set icon to match icon property', () => {
-        element.icon = 'icons:io_logo';
-        expect(element.innerHTML).to.equal(`<io-icon icon="${element.icon}">${IoIconsetSingleton.getIcon(element.icon)}</io-icon><io-text label="false" aria-label="false">${element.false}</io-text>`);
-        element.icon = '';
-        expect(element.innerHTML).to.equal(`<io-text label="false" aria-label="false">${element.false}</io-text>`);
       });
       it('should not render innerHTML if no value string is computed', () => {
         element.true = '';

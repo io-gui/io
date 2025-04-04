@@ -7,7 +7,7 @@ export default class {
   run() {
     describe('IoSlider', () => {
       describe('Initialization', () => {
-        it('Should initialize property definitions correctly', () => {
+        it('Should initialize properties correctly', () => {
           expect(element.value).to.equal(0);
           expect(element.step).to.equal(0.01);
           expect(element.min).to.equal(0);

@@ -1,4 +1,4 @@
-import { IoColorBase } from './io-color-base.js';
+import { IoColorBase } from './elements/color-base.js';
 /**
  * Element displaying colored square.
  *
@@ -11,5 +11,5 @@ export declare class IoColorSwatch extends IoColorBase {
     static get Style(): string;
     valueChanged(): void;
 }
-export declare const ioColorSwatch: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioColorSwatch: (arg0?: import("./elements/color-base.js").IoColorBaseArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
 //# sourceMappingURL=io-color-swatch.d.ts.map

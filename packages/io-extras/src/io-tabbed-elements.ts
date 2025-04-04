@@ -345,15 +345,15 @@ export class IoTabs extends IoElement {
     this.onResized();
     this.changed();
   }
-  _onPointerdown(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     const target = event.target as any;
     target.setPointerCapture(event.pointerId);
-    target.addEventListener('pointermove', this._onPointermove);
-    target.addEventListener('pointerup', this._onPointerup);
+    target.addEventListener('pointermove', this.onPointermove);
+    target.addEventListener('pointerup', this.onPointerup);
     this._X = event.clientX;
     this._Y = event.clientY;
   }
-  _onPointermove(event: PointerEvent) {
+  onPointermove(event: PointerEvent) {
     event.preventDefault();
     event.stopImmediatePropagation();
     const target = event.target as any;
@@ -396,13 +396,13 @@ export class IoTabs extends IoElement {
     // TODO: unhack
     _dropzone._hovered = false;
   }
-  _onPointerup(event: PointerEvent) {
+  onPointerup(event: PointerEvent) {
     event.preventDefault();
     event.stopImmediatePropagation();
     const target = event.target as any;
     target.releasePointerCapture(event.pointerId);
-    target.removeEventListener('pointermove', this._onPointermove);
-    target.removeEventListener('pointerup', this._onPointerup);
+    target.removeEventListener('pointermove', this.onPointermove);
+    target.removeEventListener('pointerup', this.onPointerup);
     if (_dragicon.parentNode === document.body) document.body.removeChild(_dragicon);
     if (_dropzone.parentNode === document.body) document.body.removeChild(_dropzone);
     const dist = Math.sqrt(Math.pow(this._X - event.clientX, 2) + Math.pow(this._Y - event.clientY, 2));
@@ -446,7 +446,7 @@ export class IoTabs extends IoElement {
         action: this.select,
         class: _class,
       });
-      if (this.editable) (button[1] as any)['@pointerdown'] = this._onPointerdown;
+      if (this.editable) (button[1] as any)['@pointerdown'] = this.onPointerdown;
       if (selected) selectedButton = button;
       buttons.push(button);
     }

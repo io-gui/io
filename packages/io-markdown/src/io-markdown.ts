@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoThemeSingleton } from 'io-gui';
+import { Register, IoElement, Property, IoThemeSingleton, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -14,6 +14,13 @@ const marked = new Marked(
     }
   })
 );
+
+export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
+  src?: string;
+  strip?: string[];
+  loading?: boolean;
+  sanitize?: boolean;
+}>;
 
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
@@ -195,8 +202,8 @@ export class IoMarkdown extends IoElement {
       .then(response => response.text())
       .then(text => { this._parseMarkdown(text); });
   }
-
   changed() {}
+  static vDOM: (arg0?: IoMarkdownArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioMarkdown = IoMarkdown.vDOM;
 

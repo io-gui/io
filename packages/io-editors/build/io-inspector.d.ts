@@ -1,4 +1,12 @@
-import { IoNode, IoElement } from 'io-gui';
+import { IoNode, IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
+    value?: Record<string, any> | any[];
+    selected?: Record<string, any> | any[];
+    uuid?: string;
+    search?: string;
+    groups?: Record<string, any>;
+    widgets?: Record<string, any>;
+}>;
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
@@ -11,7 +19,7 @@ export declare class IoInspector extends IoElement {
     groups: Record<string, any>;
     widgets: Record<string, any>;
     static get Listeners(): {
-        'io-field-clicked': string;
+        'io-input-base-clicked': string;
     };
     _onItemClicked(event: CustomEvent): void;
     valueChanged(): void;
@@ -31,6 +39,7 @@ export declare class IoInspector extends IoElement {
     };
     static get ObjectWidgets(): {};
     Register(ioNodeConstructor: typeof IoNode): void;
+    static vDOM: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export declare const ioInspector: (arg0?: import("io-gui").IoElementArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioInspector: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-inspector.d.ts.map

@@ -1,12 +1,13 @@
-import { IoNode, Register, IoElementArgs, Property } from 'io-gui';
+import { IoNode, Register, IoNodeArgs, Property, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './menu-options.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
 
 export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
 
-export type MenuItemArgs = IoElementArgs & {
+export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
   value?: any,
+  label?: string,
   icon?: string,
   hint?: string,
   action?: () => void,
@@ -15,7 +16,7 @@ export type MenuItemArgs = IoElementArgs & {
   disabled?: boolean,
   selected?: boolean,
   options?: MenuItemArgsLoose[] | MenuOptions
-};
+}>;
 
 // TODO: documentation!
 
@@ -95,11 +96,11 @@ export class MenuItem extends IoNode {
         if (args.options instanceof MenuOptions) {
           item.options = args.options;
         } else {
-          item.options = new MenuOptions(args.options);
+          item.options = new MenuOptions(args.options as MenuItemArgsLoose[]);
         }
       }
       if (item.selected === undefined && (args.mode === 'select' || args.mode === undefined) && item.options) {
-        item.selected = !!item.options.find((item: MenuItem) => item.selected && item.mode === 'select');
+        item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
       }
     }
 

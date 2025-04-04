@@ -1,10 +1,18 @@
-import { IoElement, VDOMArray, Register, Property } from 'io-gui';
+import { IoElement, VDOMArray, Register, Property, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
 import { ioMarkdown } from 'io-markdown';
 
+export type IoMdNavigatorArgs = IoElementArgs & ArgsWithBinding<{
+  options?: MenuOptions;
+  slotted?: VDOMArray[];
+  menu?: 'top' | 'left' | 'bottom' | 'right';
+  depth?: number;
+  collapsed?: boolean;
+  collapseWidth?: number;
+}>;
+
 @Register
 export class IoMdNavigator extends IoElement {
-
   static get Style() {
     return /* css */`
       :host {
@@ -85,5 +93,6 @@ export class IoMdNavigator extends IoElement {
       this.menu === 'bottom' ? ioMenuOptions({horizontal: true, direction: 'up', ...sharedMenuConfig}) : null,
     ]);
   }
+  static vDOM: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioMdNavigator = IoMdNavigator.vDOM;

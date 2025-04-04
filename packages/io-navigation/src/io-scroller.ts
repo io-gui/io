@@ -1,5 +1,9 @@
-import { Register, IoElement, Property, Autobind } from 'io-gui';
+import { Register, IoElement, Property, Autobind, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
 import { MenuOptions } from 'io-menus';
+
+export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
+  options?: MenuOptions;
+}>;
 
 @Register
 export class IoScroller extends IoElement {
@@ -60,10 +64,10 @@ export class IoScroller extends IoElement {
       }
     }
   }
-
   dispose() {
     super.dispose();
     this._observer.disconnect();
   }
+  static vDOM: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioScroller = IoScroller.vDOM;

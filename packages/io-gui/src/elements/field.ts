@@ -1,24 +1,97 @@
 
 import { Register } from '../core/decorators/register';
-import { IoElement } from '../core/element';
+import { Property } from '../core/decorators/property';
+import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
+import { ArgsWithBinding } from '../core/node';
+
+export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
+  appearance?: 'flush' | 'inset' | 'outset' | 'neutral';
+  selected?: boolean;
+  invalid?: boolean;
+  disabled?: boolean;
+}>;
 
 @Register
-export class IoFiiiiiiiiield extends IoElement {
+export class IoField extends IoElement {
   static get Style() {
     return /* css */`
-      --ioFiiiiiiiiield: {
+      --ioField: {
         height: var(--io_fieldHeight);
         line-height: var(--io_lineHeight);
         font-size: var(--io_fontSize);
         border: var(--io_border);
-        padding: var(--io_spacing);
+        border-color: transparent;
+        padding: var(--io_spacing) var(--io_spacing3);
         color: var(--io_color);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       :host {
-        @apply --ioFiiiiiiiiield;
+        @apply --ioField;
+      }
+      :host[appearance=neutral] {
+        color: var(--io_color);
+        background-color: transparent;
+      }
+      :host[appearance=inset] {
+        border-color: var(--io_borderColorInset);
+        padding-top: calc(var(--io_spacing) + 0.05em);
+        padding-bottom: calc(var(--io_spacing) - 0.05em);
+      }
+      :host[appearance=outset] {
+        border-color: var(--io_borderColorOutset);
+        background-image: var(--io_gradientOutset);
+      }
+      :host.red,
+      :host[invalid] {
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorRed);
+        border-color: var(--io_colorRed);
+      }
+      :host.green {
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorGreen);
+        border-color: var(--io_colorGreen);
+      }
+
+      :host.blue,
+      :host[selected] {
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorBlue);
+        border-color: var(--io_colorBlue);
+      }
+      :host:focus {
+        text-overflow: inherit;
+      }
+      :host[disabled] {
+        pointer-events: none !important;
+        opacity: 0.5;
+        user-select: none;
       }
     `;
   }
+  @Property({value: 'neutral', reflect: true})
+  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare selected: boolean;
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare invalid: boolean;
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare disabled: boolean;
+
+  disabledChanged() {
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', this.disabled);
+    } else {
+      this.removeAttribute('aria-disabled');
+    }
+  }
+
+  static vDOM: (arg0?: IoFieldArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioFiiiiiiiiield = IoFiiiiiiiiield.vDOM;
+export const ioField = IoField.vDOM;
 

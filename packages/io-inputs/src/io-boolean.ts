@@ -1,6 +1,12 @@
-import { Register, Property, ioText } from 'io-gui';
+import { Register, Property, ioText, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoField } from './io-field';
+import { IoInputBase, IoInputBaseArgs } from './io-input-base';
+
+export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
+  value?: boolean;
+  true?: string;
+  false?: string;
+}>;
 
 /**
  * Input element for `Boolean` data type displayed as text.
@@ -9,7 +15,7 @@ import { IoField } from './io-field';
  * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
  **/
 @Register
-export class IoBoolean extends IoField {
+export class IoBoolean extends IoInputBase {
   static get Style() {
     return /* css */`
       :host {
@@ -34,7 +40,7 @@ export class IoBoolean extends IoField {
   @Property({value: 'switch', type: String})
   declare role: string;
 
-  _onClick() {
+  onClick() {
     this.toggle();
     this.dispatchEvent('io-boolean-clicked', {value: this.value}, true);
   }
@@ -50,9 +56,10 @@ export class IoBoolean extends IoField {
     this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
     const label = this.value ? this.true : this.false;
     this.template([
-      this.icon ? ioIcon({icon: this.icon, stroke: this.stroke}) : null,
+      this.icon ? ioIcon({value: this.icon, stroke: this.stroke}) : null,
       label ? ioText(label) : null
     ]);
   }
+  static vDOM: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioBoolean = IoBoolean.vDOM;

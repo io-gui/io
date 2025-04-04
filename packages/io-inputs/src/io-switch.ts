@@ -27,7 +27,7 @@ export class IoSwitch extends IoBoolean {
         border-radius: var(--io_lineHeight);
         border: var(--io_border);
         border-color: var(--io_borderColorInset);
-        background-color: var(--io_bgColorField);
+        background-color: var(--io_bgColorInput);
         box-shadow: var(--io_shadowInset);
         transition: background-color 0.4s;
       }
@@ -65,9 +65,6 @@ export class IoSwitch extends IoBoolean {
   }
   init() {
     this.setAttribute('aria-checked', String(!!this.value));
-  }
-  changed() {
-    this.title = this.label;
   }
   valueChanged() {
     this.setAttribute('aria-checked', String(!!this.value));

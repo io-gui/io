@@ -6,7 +6,8 @@
       "io-gui": ["../io-gui/"],
       "io-menus": ["../io-menus/"],
       "io-markdown": ["../io-markdown/"],
-      "io-inputs": ["../io-inputs/"]
+      "io-inputs": ["../io-inputs/"],
+      "io-icons": ["../io-icons/"]
     }
   },
   "include": ["./src"]

@@ -35,7 +35,8 @@
     "bundle:navigation": "rollup -c ./packages/io-navigation/rollup.config.js && find ./packages/io-navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-navigation/build/* ./packages/io-navigation/bundle && rm -rf ./packages/io-navigation/build && mv ./packages/io-navigation/bundle ./packages/io-navigation/build",
     "bundle:sliders": "rollup -c ./packages/io-sliders/rollup.config.js && find ./packages/io-sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-sliders/build/* ./packages/io-sliders/bundle && rm -rf ./packages/io-sliders/build && mv ./packages/io-sliders/bundle ./packages/io-sliders/build",
 
-    "build:all": "pnpm build:gui && pnpm build:colors && pnpm build:icons && pnpm build:inputs && pnpm build:editors && pnpm build:markdown && pnpm build:menus && pnpm build:navigation && pnpm build:sliders",
+    "build:all": "pnpm build:gui && pnpm build:inputs && pnpm build:sliders && pnpm build:menus &&pnpm build:colors && pnpm build:icons && pnpm build:editors && pnpm build:markdown && pnpm build:navigation",
+
     "build:gui": "pnpm clean:gui && pnpm lint:gui && tsc --project ./packages/io-gui/tsconfig.json && pnpm bundle:gui",
     "build:colors": "pnpm clean:colors && pnpm lint:colors && tsc --project ./packages/io-colors/tsconfig.json && pnpm bundle:colors",
     "build:icons": "pnpm clean:icons && pnpm lint:icons && tsc --project ./packages/io-icons/tsconfig.json && pnpm bundle:icons",

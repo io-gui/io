@@ -1,5 +1,13 @@
-import { Register, Property } from 'io-gui';
-import { IoSliderBase } from './io-slider-base.js';
+import { Register, Property, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoSliderBase, IoSliderBaseArgs } from './io-slider-base.js';
+
+export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{
+  // TODO TS does not support narrowing of the type values here? :/
+  // value?: [number, number];
+  // step?: number;
+  // min?: number;
+  // max?: number;
+}>;
 
 /**
  * Input element for `Array(2)` data type displayed as slider.
@@ -34,14 +42,14 @@ export class IoSliderRange extends IoSliderBase {
     coord[1] = (value[1] - min[1]) / (max[1] - min[1]);
     return coord;
   }
-  _onPointerdown(event: PointerEvent) {
-    super._onPointerdown(event);
+  onPointerdown(event: PointerEvent) {
+    super.onPointerdown(event);
     const value = this._value;
     const p = this._getPointerCoord(event);
     const c = this._getCoordFromValue(value);
     this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1;
   }
-  _onPointermoveThrottled(event: PointerEvent) {
+  onPointermoveThrottled(event: PointerEvent) {
     if (this._active === 1) {
       if (document.activeElement !== this as unknown as Element) this.focus();
       const value = this._value;
@@ -74,7 +82,7 @@ export class IoSliderRange extends IoSliderBase {
       float signRange = sign(valueInRangeWidth);
 
       // Colors
-      vec3 finalCol = io_bgColorField.rgb;
+      vec3 finalCol = io_bgColorInput.rgb;
       vec3 gridCol = io_bgColorDimmed.rgb;
       vec3 sliderCol = signRange > 0.0 ? io_bgColorBlue.rgb : io_bgColorRed.rgb;
       vec3 lineCol1 = io_color.rgb;
@@ -89,7 +97,7 @@ export class IoSliderRange extends IoSliderBase {
       // Slider
       float sliderShape = rectangle(translate(expPosition, size.x * valueInRangeCenter, 0.0), vec2(size.x * abs(valueInRangeWidth) * 0.5, size.y));
       finalCol = compose(finalCol, vec4(sliderCol, sliderShape));
-      finalCol = compose(finalCol, vec4(io_bgColorField.rgb, gridShape * sliderShape * 0.125));
+      finalCol = compose(finalCol, vec4(io_bgColorInput.rgb, gridShape * sliderShape * 0.125));
 
       // Lines
       float maxPos = expValueInRange[0];
@@ -109,5 +117,6 @@ export class IoSliderRange extends IoSliderBase {
     }
     `;
   }
+  static vDOM: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export const ioSliderRange = IoSliderRange.vDOM;
