@@ -1,18 +1,18 @@
 import { Binding } from './binding';
-import { Constructor, IoNode } from '../node';
+import { AnyConstructor, IoNode } from '../node';
 
 /**
  * Configuration for a property of an IoNode class.
  * @typedef {Object} PropertyDefinition
  * @property {*} [value] The property's value. Can be any type unless `type` is specified.
- * @property {Constructor} [type] Constructor function defining the property's type.
+ * @property {AnyConstructor} [type] Constructor function defining the property's type.
  * @property {Binding} [binding] Binding object for two-way data synchronization.
  * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
  * @property {*} [init] Initialization arguments for constructing initial value.
  */
 export type PropertyDefinition = {
   value?: any;
-  type?: Constructor;
+  type?: AnyConstructor;
   binding?: Binding;
   reflect?: boolean;
   init?: any;
@@ -22,21 +22,21 @@ export type PropertyDefinition = {
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
  * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
-export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | Constructor | Binding | PropertyDefinition;
+export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | PropertyDefinition;
 
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
  * It facilitates merging of inherited property definitions from the prototype chain.
  * @class
  * @property {*} [value] The property's value. Can be any type.
- * @property {Constructor} [type] Constructor function defining the property's type.
+ * @property {AnyConstructor} [type] Constructor function defining the property's type.
  * @property {Binding} [binding] Binding object for two-way data synchronization.
  * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
  * @property {*} [init] Initialization arguments for constructing initial values.
  */
 export class ProtoProperty {
   declare value?: any;
-  declare type?: Constructor;
+  declare type?: AnyConstructor;
   declare binding?: Binding;
   declare reflect?: boolean;
   declare init?: any;
@@ -44,7 +44,7 @@ export class ProtoProperty {
    * Creates a property definition from various input types.
    * @param {PropertyDefinitionLoose} def Input definition which can be:
    * - `undefined` or `null`: Sets as value
-   * - `Constructor`: Sets as type
+   * - `AnyConstructor`: Sets as type
    * - `Binding`: Sets value from binding and stores binding reference
    * - `PropertyDefinition`: Copies all defined fields
    * - Other values: Sets as value
@@ -134,7 +134,7 @@ export class PropertyInstance {
   // Property value.
   value?: any;
   // Constructor of the property value.
-  type?: Constructor;
+  type?: AnyConstructor;
   // Binding object.
   binding?: Binding;
   // Reflects to HTML attribute.

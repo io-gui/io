@@ -1,10 +1,10 @@
-import { IoElement, Property, Register, IoElementArgs, IoNode, ioText, Constructor, div, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { IoElement, Property, Register, IoElementArgs, IoNode, ioText, AnyConstructor, div, ArgsWithBinding, VDOMArray } from 'io-gui';
 import { getEditorConfig, PropertyConfig } from './models/editor-config.js';
 
 export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
-  config?: Map<Constructor, PropertyConfig[]>;
+  config?: Map<AnyConstructor, PropertyConfig[]>;
   labeled?: boolean;
 }>;
 
@@ -50,7 +50,7 @@ export class IoPropertyEditor extends IoElement {
   declare properties: string[];
 
   @Property({type: Map})
-  declare config: Map<Constructor, PropertyConfig[]>;
+  declare config: Map<AnyConstructor, PropertyConfig[]>;
 
   @Property(true)
   declare labeled: boolean;

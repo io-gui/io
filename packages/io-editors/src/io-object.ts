@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMArray, Property, Constructor, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, VDOMArray, Property, AnyConstructor, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import './io-property-editor.js';
 import { PropertyConfig } from './models/editor-config.js';
 import { ioBoolean } from 'io-inputs';
@@ -7,7 +7,7 @@ import { ioPropertyEditor } from './io-property-editor.js';
 export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
-  config?: Map<Constructor, PropertyConfig[]>;
+  config?: Map<AnyConstructor, PropertyConfig[]>;
   labeled?: boolean;
   label?: string;
   expanded?: boolean;
@@ -52,7 +52,7 @@ export class IoObject extends IoElement {
   declare properties: string[];
 
   @Property({type: Map})
-  declare config: Map<Constructor, PropertyConfig[]>;
+  declare config: Map<AnyConstructor, PropertyConfig[]>;
 
   @Property(true)
   declare labeled: boolean;

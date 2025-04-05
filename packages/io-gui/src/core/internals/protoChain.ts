@@ -1,13 +1,13 @@
 import { ProtoProperty } from './property';
 import { ListenerDefinition, hardenListenerDefinition } from './eventDispatcher';
-import { IoNode, IoNodeConstructor, Constructor, PropertyDefinitions, ListenerDefinitions } from '../node';
+import { IoNode, IoNodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../node';
 
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = { [property: string]: ProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
 
-export const propertyDecorators: WeakMap<Constructor, PropertyDefinitions> = new WeakMap();
+export const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions> = new WeakMap();
 
 const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
 function isNonIoNodeConstructor(constructor: any) {

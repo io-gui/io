@@ -3,9 +3,10 @@ import { Binding } from './internals/binding';
 import { ChangeQueue } from './internals/changeQueue';
 import { PropertyInstance, PropertyDefinitionLoose } from './internals/property';
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from './internals/eventDispatcher';
+import { throttle, CallbackFunction } from './internals/queue';
 import { Register } from './decorators/register';
 
-export type Constructor = new (...args: any[]) => unknown;
+export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 
@@ -15,8 +16,6 @@ export interface IoNodeConstructor<T> {
   Listeners?: ListenerDefinitions;
   Style?: string;
 }
-
-export type CallbackFunction = (arg?: any) => void;
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
@@ -52,11 +51,6 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     declare readonly _eventDispatcher: EventDispatcher;
 
      /**
-     * Creates a class instance and initializes the internals.
-     * @overload
-     * @constructor
-     * @param {...any} args - Additional arguments
-     *
      * Creates a class instance and initializes the internals with properties.
      * @overload
      * @constructor
@@ -432,95 +426,3 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
  */
 @Register
 export class IoNode extends IoNodeMixin(Object) {}
-
-interface QueueOptions {
-  node: IoNode | undefined;
-  arg: any;
-  timeout: number;
-}
-
-const throttleQueueSync: CallbackFunction[] = [];
-const throttleQueue0: CallbackFunction[] = [];
-const throttleQueue1: CallbackFunction[] = [];
-const throttleQueueOptions0: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
-const throttleQueueOptions1: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
-let throttleQueue = throttleQueue0;
-let throttleQueueOptions = throttleQueueOptions0;
-
-export async function nextQueue(): Promise<void> {
-  return new Promise((resolve) => {
-    throttleQueue.push(resolve);
-    throttleQueueOptions.set(resolve, {
-      arg: undefined,
-      timeout: Date.now() + 1,
-      node: undefined,
-    });
-  });
-}
-
-function throttle(node: IoNode, func: CallbackFunction, arg: any = undefined, timeout = 1) {
-  if (timeout === 0) {
-    if (throttleQueueSync.indexOf(func) === -1) {
-      throttleQueueSync.push(func);
-      try {
-        func(arg);
-      } catch (e) {
-        console.error(e);
-      }
-      return;
-    } else {
-      timeout = 1;
-    }
-  }
-  if (throttleQueue.indexOf(func) === -1) {
-    throttleQueue.push(func);
-  }
-  if (!throttleQueueOptions.has(func)) {
-    throttleQueueOptions.set(func, {
-      node: node,
-      arg: arg,
-      timeout: Date.now() + timeout,
-    });
-  } else {
-    throttleQueueOptions.get(func)!.arg = arg;
-    // throttleQueueOptions.get(func)!.timeout = Date.now() + timeout;
-  }
-}
-
-function animate () {
-  throttleQueueSync.length = 0;
-
-  const activeThrottleQueue = throttleQueue;
-  const activeThrottleQueueOptions = throttleQueueOptions;
-  throttleQueue = throttleQueue === throttleQueue0 ? throttleQueue1 : throttleQueue0;
-  throttleQueueOptions = throttleQueueOptions === throttleQueueOptions0 ? throttleQueueOptions1 : throttleQueueOptions0;
-
-  const time = Date.now();
-  for (let i = 0; i < activeThrottleQueue.length; i++) {
-    const func = activeThrottleQueue[i];
-    const options = activeThrottleQueueOptions.get(func)!;
-    activeThrottleQueueOptions.delete(func);
-
-    if (options === undefined) {
-      console.warn(func);
-    }
-    if (options.timeout > time) {
-      if (throttleQueue.indexOf(func) === -1) {
-        throttleQueue.push(func);
-      }
-      throttleQueueOptions.set(func, options);
-      continue;
-    }
-
-    if (options.node?._disposed) continue;
-    try {
-      if (options.arg !== undefined) func(options.arg);
-      else func();
-    } catch (e) {
-      console.error(e);
-    }
-  }
-  activeThrottleQueue.length = 0;
-  requestAnimationFrame(animate);
-}
-requestAnimationFrame(animate);

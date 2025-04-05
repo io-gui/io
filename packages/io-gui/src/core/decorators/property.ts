@@ -1,6 +1,6 @@
 import { PropertyDefinitionLoose } from '../internals/property';
 import { propertyDecorators } from '../internals/protoChain';
-import { IoNode, Constructor } from '../node';
+import { IoNode, AnyConstructor } from '../node';
 
 /**
  * Allows property definitions using decorator pattern.
@@ -9,7 +9,7 @@ import { IoNode, Constructor } from '../node';
  */
 export const Property = function(propertyDefinition: PropertyDefinitionLoose) {
   return (target: IoNode, propertyName: string) => {
-    const constructor = target.constructor as Constructor;
+    const constructor = target.constructor as AnyConstructor;
     const _Properties = propertyDecorators.get(constructor) || {};
     propertyDecorators.set(constructor, _Properties);
     _Properties[propertyName] = propertyDefinition;

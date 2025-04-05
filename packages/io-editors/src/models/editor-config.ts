@@ -1,5 +1,5 @@
 import { IoElement, IoGl, IoTheme, Color } from 'io-gui';
-import { Constructor, VDOMArray } from 'io-gui';
+import { AnyConstructor, VDOMArray } from 'io-gui';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
@@ -7,13 +7,13 @@ import { ioObject } from '../io-object';
 import { ioVector } from '../io-vector';
 import { ioString, ioNumber, ioBoolean, ioSwitch, ioInputBase } from 'io-inputs';
 
-export type PropertyIdentifier = Constructor | string | null | undefined;
+export type PropertyIdentifier = AnyConstructor | string | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMArray];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMArray>;
 export type PropertyConfigRecord = Record<string, VDOMArray>;
-export type EditorConfig = Map<Constructor, PropertyConfig[]>
+export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
-const editorConfigSingleton: EditorConfig = new Map<Constructor, PropertyConfig[]>([
+const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
   [Object, [
     [String, ioString()],
     [Number, ioNumber({step: 0.01})],

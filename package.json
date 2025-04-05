@@ -201,7 +201,7 @@
       ] 
     },
     "build:markdown": {
-      "command": "tsc --project ./packages/io-markdown/tsconfig.json && cp -r ./packages/io-markdown/src/lib ./packages/io-markdown/build/lib",
+      "command": "tsc --project ./packages/io-markdown/tsconfig.json",
       "dependencies": [
         "build:gui",
         "clean:markdown",

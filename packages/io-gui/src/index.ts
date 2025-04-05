@@ -3,6 +3,7 @@ export * from './core/internals/eventDispatcher';
 export * from './core/internals/property';
 export * from './core/internals/binding';
 export * from './core/internals/protoChain';
+export * from './core/internals/queue';
 export * from './core/decorators/autobind';
 export * from './core/decorators/register';
 export * from './core/decorators/property';
