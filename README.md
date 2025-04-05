@@ -1,5 +1,5 @@
 
-# Io-Gui: Simple and Fast UI library for JavaScript
+# Io-Gui: UI Framework for JavaScript
 
 [![NPM Package][npm]][npm-url]
 [![DeepScan][deepscan]][deepscan-url]
@@ -13,7 +13,11 @@ Stay in touch on [github] and [bluesky].
 
 ## Design system
 
-Io-Gui includes an accessible and productivity-centric design system with theming support. The [theme engine] uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
+Io-Gui includes an accessible and productivity-centric design system.
+
+## Styling and Theming
+
+The [theme engine] uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
 
 It's built-in elements library includes elements for user input, object editing, menu systems, icons, routing, layout, navigation and much more.
 
@@ -29,10 +33,10 @@ To download and develop Io-Gui locally:
 
 ```bash
 git clone https://github.com/io-gui/io.git && cd io
-yarn && yarn dev
+pnpm i && pnpm dev:gui
 ```
 
-This will install dev dependencies and start the typescript watch script. You will also need to **run a static file server** of your choice.
+This will install dev dependencies and start the typescript watch script. You will also need to run `pnpm serve` to run @web/dev-server.
 
 ```bash
 yarn build
