@@ -30,6 +30,7 @@ export class IoPropertyEditor extends IoElement {
     }
     :host > .io-row > io-text:after {
       display: inline-block;
+      padding-right: var(--io_spacing2);
       content: ':';
     }
     :host io-object > io-property-editor {

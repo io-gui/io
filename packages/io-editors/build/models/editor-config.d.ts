@@ -1,6 +1,4 @@
 import { Constructor, VDOMArray } from 'io-gui';
-import 'io-colors';
-import 'io-inputs';
 export type PropertyIdentifier = Constructor | string | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMArray];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMArray>;

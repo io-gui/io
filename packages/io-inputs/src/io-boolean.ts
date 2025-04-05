@@ -20,7 +20,6 @@ export class IoBoolean extends IoInputBase {
     return /* css */`
       :host {
         background-color: transparent;
-        padding: var(--io_spacing) var(--io_spacing);
       }
     `;
   }

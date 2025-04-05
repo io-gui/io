@@ -1,11 +1,11 @@
 import { Binding } from '../core/internals/binding';
-import { IoNode } from '../core/node';
-interface StorageProps {
+import { IoNode, IoNodeArgs } from '../core/node';
+export type StorageProps = IoNodeArgs & {
     key: string;
     value?: any;
     default?: any;
     storage?: 'hash' | 'local' | 'none';
-}
+};
 export declare function genObjectStorageID(object: Record<string, any>): string;
 export declare class IoStorageNode extends IoNode {
     key: string;
@@ -24,5 +24,4 @@ export declare const IoStorage: ((props: StorageProps) => Binding) & {
     permit(): void;
     unpermit(): void;
 };
-export {};
 //# sourceMappingURL=storage.d.ts.map

@@ -1,8 +1,11 @@
 import { IoElement, IoGl, IoTheme, Color } from 'io-gui';
 import { Constructor, VDOMArray } from 'io-gui';
-import { MenuOptions } from 'io-menus';
-import 'io-colors';
-import 'io-inputs';
+import { MenuOptions, ioOptionMenu } from 'io-menus';
+import { ioNumberSlider } from 'io-sliders';
+import { ioColorRgba } from 'io-colors';
+import { ioObject } from '../io-object';
+import { ioVector } from '../io-vector';
+import { ioString, ioNumber, ioBoolean, ioSwitch, ioInputBase } from 'io-inputs';
 
 export type PropertyIdentifier = Constructor | string | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMArray];
@@ -12,49 +15,47 @@ export type EditorConfig = Map<Constructor, PropertyConfig[]>
 
 const editorConfigSingleton: EditorConfig = new Map<Constructor, PropertyConfig[]>([
   [Object, [
-    [String, ['io-string', {}]],
-    [Number, ['io-number', {step: 0.01}]],
-    [Boolean, ['io-switch']],
-    [Object, ['io-object']],
-    [null, ['io-input-base', {appearance: 'neutral'}]],
-    [undefined, ['io-input-base', {appearance: 'neutral'}]],
+    [String, ioString()],
+    [Number, ioNumber({step: 0.01})],
+    [Boolean, ioSwitch()],
+    [Object, ioObject()],
+    [null, ioInputBase()],
+    [undefined, ioInputBase()],
   ]],
   [Array, [
-    [Number, ['io-number', {step: 0.01}]],
+    [Number, ioNumber({step: 0.01})],
   ]],
   [IoElement, [
-    ['reactivity', ['io-option-menu', {options: new MenuOptions(['none', 'debounced', 'immediate'])}]],
-    ['tabindex', ['io-option-menu', {options: new MenuOptions([{label: 'None', value: ''}, '-1', '0', '1', '2', '3'])}]],
-    ['contenteditable', ['io-boolean', {}]],
-    ['role', ['io-option-menu', {options: new MenuOptions(['alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary','contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img','link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio','navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader','scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term','textbox','timer','toolbar','tooltip','tree','treegrid','treeitem'])}]],
+    ['reactivity', ioOptionMenu({options: new MenuOptions(['none', 'debounced', 'immediate'])})],
+    ['tabindex', ioOptionMenu({options: new MenuOptions([{label: 'None', value: ''}, '-1', '0', '1', '2', '3'])})],
+    ['role', ioOptionMenu({options: new MenuOptions(['alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary','contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img','link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio','navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader','scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term','textbox','timer','toolbar','tooltip','tree','treegrid','treeitem'])})],
   ]],
   [IoGl, [
-    ['size', ['io-vector', {step: 1}]],
-    ['color', ['io-vector', {step: 1}]],
-    ['transparent', ['io-boolean', {}]],
-    ['pxRatio', ['io-number', {step: 0.0001}]],
+    ['size', ioVector({step: 1})],
+    ['color', ioVector({step: 1})],
+    ['pxRatio', ioNumber({step: 0.0001})],
   ]],
   [IoTheme, [
-    ['themeID', ['io-option-menu', {options: new MenuOptions(['light', 'dark'])}]],
-    [Number, ['io-number-slider', {step: 1, min: 0, max: 20}]],
-    ['spacing2', ['io-input-base', {appearance: 'neutral'}]],
-    ['spacing3', ['io-input-base', {appearance: 'neutral'}]],
-    ['spacing5', ['io-input-base', {appearance: 'neutral'}]],
-    ['spacing8', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight2', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight3', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight4', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight5', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight6', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight7', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight8', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight9', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight10', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight11', ['io-input-base', {appearance: 'neutral'}]],
-    ['fieldHeight12', ['io-input-base', {appearance: 'neutral'}]],
-    ['borderRadius2', ['io-input-base', {appearance: 'neutral'}]],
-    [Color, ['io-color-rgba']],
+    [Number, ioNumberSlider({step: 1, min: 0, max: 20})],
+    ['themeID', ioOptionMenu({options: new MenuOptions(['light', 'dark'])})],
+    ['spacing2', ioInputBase()],
+    ['spacing3', ioInputBase()],
+    ['spacing5', ioInputBase()],
+    ['spacing8', ioInputBase()],
+    ['fieldHeight', ioInputBase()],
+    ['fieldHeight2', ioInputBase()],
+    ['fieldHeight3', ioInputBase()],
+    ['fieldHeight4', ioInputBase()],
+    ['fieldHeight5', ioInputBase()],
+    ['fieldHeight6', ioInputBase()],
+    ['fieldHeight7', ioInputBase()],
+    ['fieldHeight8', ioInputBase()],
+    ['fieldHeight9', ioInputBase()],
+    ['fieldHeight10', ioInputBase()],
+    ['fieldHeight11', ioInputBase()],
+    ['fieldHeight12', ioInputBase()],
+    ['borderRadius2', ioInputBase()],
+    [Color, ioColorRgba()],
   ]]
 ]);
 

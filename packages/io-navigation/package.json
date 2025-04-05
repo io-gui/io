@@ -44,6 +44,7 @@
     "io-gui": "^2.0.0",
     "io-menus": "^2.0.0",
     "io-markdown": "^2.0.0",
+    "io-inputs": "^2.0.0",
     "io-icons": "^2.0.0"
   }
 }

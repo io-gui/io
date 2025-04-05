@@ -242,7 +242,7 @@ export class IoInputBase extends IoField {
   changed() {
     this.template([
       this.label ? ioText(this.label) : null,
-      this.value ? ioText(this.value) : null,
+      this.value !== undefined ? ioText(String(this.value)) : null,
     ]);
   }
   static vDOM: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;

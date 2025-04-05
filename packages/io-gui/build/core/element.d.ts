@@ -74,7 +74,7 @@ export declare class IoElement extends IoElement_base {
     title: string;
     id: string;
     role: string;
-    constructor(...args: any[]);
+    constructor(args?: any);
     /**
     * Add resize listener if `onResized()` is defined in subclass.
     */

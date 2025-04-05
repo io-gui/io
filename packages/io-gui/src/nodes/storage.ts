@@ -1,7 +1,7 @@
 import { Binding } from '../core/internals/binding';
 import { Property } from '../core/decorators/property';
 import { Register } from '../core/decorators/register';
-import { IoNode } from '../core/node';
+import { IoNode, IoNodeArgs, ArgsWithBinding } from '../core/node';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
@@ -95,12 +95,12 @@ const nodes: StorageNodes = {
 
 let hashValues: Record<string, any> = {};
 
-interface StorageProps {
+export type StorageProps = IoNodeArgs & {
   key: string,
   value?: any,
   default?: any,
   storage?: 'hash' | 'local' | 'none',
-}
+};
 
 export function genObjectStorageID(object: Record<string, any>) {
   const string = JSON.stringify(object);

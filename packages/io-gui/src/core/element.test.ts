@@ -88,7 +88,7 @@ export default class {
       });
       it('Invokes change events and functions', () => {
         class TestNode extends IoNode {
-          static get Properties(): any {
+          static get Properties(): PropertyDefinitions {
             return {
               prop0: 0,
               prop1: '',
@@ -107,7 +107,7 @@ export default class {
         Register(TestNode);
 
         class TestSubelement extends IoElement {
-          static get Properties(): any {
+          static get Properties(): PropertyDefinitions {
             return {
               prop0: 0,
               prop1: '',
@@ -117,7 +117,7 @@ export default class {
         Register(TestSubelement);
 
         class TestElement1 extends IoElement {
-          static get Properties(): any {
+          static get Properties(): PropertyDefinitions {
             return {
               prop0: -1,
               prop1: {
@@ -231,7 +231,7 @@ export default class {
         eventStack.length = 0;
 
         class TestElement2 extends IoElement {
-          static get Properties(): any {
+          static get Properties(): PropertyDefinitions {
             return {
               prop0: -1,
               prop1: {

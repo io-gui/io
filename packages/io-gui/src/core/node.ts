@@ -1,8 +1,8 @@
-import {ProtoChain} from './internals/protoChain';
-import {Binding} from './internals/binding';
-import {ChangeQueue} from './internals/changeQueue';
-import {PropertyInstance, PropertyDefinitionLoose} from './internals/property';
-import {EventDispatcher, ListenerDefinitionLoose, AnyEventListener} from './internals/eventDispatcher';
+import { ProtoChain } from './internals/protoChain';
+import { Binding } from './internals/binding';
+import { ChangeQueue } from './internals/changeQueue';
+import { PropertyInstance, PropertyDefinitionLoose } from './internals/property';
+import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from './internals/eventDispatcher';
 import { Register } from './decorators/register';
 
 export type Constructor = new (...args: any[]) => unknown;
@@ -63,7 +63,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * @param {IoNodeArgs} properties - Initial property values
      * @param {...any} args - Additional arguments
      */
-    constructor(...args: any[]);
+    constructor(...args: any[]); // TODO: remove this after fixing types.
     constructor(properties: IoNodeArgs = {}, ...args: any[]) {
       // eslint-disable-next-line constructor-super
       super(...args);

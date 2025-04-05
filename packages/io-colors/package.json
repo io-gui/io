@@ -46,6 +46,7 @@
   "homepage": "https://iogui.dev",
   "peerDependencies": {
     "io-gui": "^2.0.0",
+    "io-inputs": "^2.0.0",
     "io-sliders": "^2.0.0"
   }
 }

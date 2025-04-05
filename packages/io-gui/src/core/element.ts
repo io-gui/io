@@ -203,9 +203,9 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   declare role: string;
 
   //TODO: add types
-  constructor(...args: any[]) {
-    super(...args);
-
+  // constructor(args?: IoElementArgs) {
+    constructor(args?: any) { // TODO: remove after fixing types!
+    super(args);
     for (const name in this._protochain.properties) {
       const property = this._properties.get(name)!;
       const value = property.value;
