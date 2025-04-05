@@ -13,6 +13,7 @@ export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoContextMenu extends IoElement {
+  static vConstructor: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 
   @Property({type: MenuOptions})
   declare options: MenuOptions;
@@ -131,6 +132,5 @@ export class IoContextMenu extends IoElement {
   //     }
   //   }
   // }
-  static vDOM: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioContextMenu = IoContextMenu.vDOM;
+export const ioContextMenu = IoContextMenu.vConstructor;

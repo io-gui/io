@@ -39,4 +39,4 @@ export class TodoList extends IoElement {
   }
 }
 Register(TodoList);
-export const todoList = TodoList.vDOM;
+export const todoList = TodoList.vConstructor;

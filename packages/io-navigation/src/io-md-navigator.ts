@@ -13,6 +13,8 @@ export type IoMdNavigatorArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoMdNavigator extends IoElement {
+  static vConstructor: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
       :host {
@@ -93,6 +95,5 @@ export class IoMdNavigator extends IoElement {
       this.menu === 'bottom' ? ioMenuOptions({horizontal: true, direction: 'up', ...sharedMenuConfig}) : null,
     ]);
   }
-  static vDOM: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioMdNavigator = IoMdNavigator.vDOM;
+export const ioMdNavigator = IoMdNavigator.vConstructor;

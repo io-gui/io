@@ -37,4 +37,4 @@ export class TodoNewItem extends IoElement {
   }
 }
 Register(TodoNewItem);
-export const todoNewItem = TodoNewItem.vDOM;
+export const todoNewItem = TodoNewItem.vConstructor;

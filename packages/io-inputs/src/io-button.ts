@@ -95,4 +95,4 @@ export class IoButton extends IoInputBase {
     ]);
   }
 }
-export const ioButton = IoButton.vDOM;
+export const ioButton = IoButton.vConstructor;

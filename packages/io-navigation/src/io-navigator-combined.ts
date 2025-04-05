@@ -18,4 +18,4 @@ export class IoNavigatorCombined extends IoNavigatorSelector {
     ]);
   }
 }
-export const ioNavigatorCombined = IoNavigatorCombined.vDOM;
+export const ioNavigatorCombined = IoNavigatorCombined.vConstructor;

@@ -18,4 +18,4 @@ export class IoText extends IoElement {
     `;
   }
 }
-export const ioText = IoText.vDOM;
+export const ioText = IoText.vConstructor;

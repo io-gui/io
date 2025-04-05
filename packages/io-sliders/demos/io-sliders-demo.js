@@ -54,4 +54,4 @@ export class IoSlidersDemo extends IoElement {
 
 Register(IoSlidersDemo);
 
-export const ioSlidersDemo = IoSlidersDemo.vDOM;
+export const ioSlidersDemo = IoSlidersDemo.vConstructor;

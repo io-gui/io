@@ -7,6 +7,8 @@ export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoScroller extends IoElement {
+  static vConstructor: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
       :host {
@@ -68,6 +70,5 @@ export class IoScroller extends IoElement {
     super.dispose();
     this._observer.disconnect();
   }
-  static vDOM: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioScroller = IoScroller.vDOM;
+export const ioScroller = IoScroller.vConstructor;

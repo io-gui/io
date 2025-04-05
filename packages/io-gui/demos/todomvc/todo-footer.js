@@ -37,4 +37,4 @@ export class TodoFooter extends IoElement {
   }
 }
 Register(TodoFooter);
-export const todoFooter = TodoFooter.vDOM;
+export const todoFooter = TodoFooter.vConstructor;

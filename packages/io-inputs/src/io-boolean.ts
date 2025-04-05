@@ -16,6 +16,7 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoBoolean extends IoInputBase {
+  static vConstructor: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -59,6 +60,5 @@ export class IoBoolean extends IoInputBase {
       label ? ioText(label) : null
     ]);
   }
-  static vDOM: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioBoolean = IoBoolean.vDOM;
+export const ioBoolean = IoBoolean.vConstructor;

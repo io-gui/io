@@ -63,6 +63,8 @@ export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoMenuTree extends IoElement {
+  static vConstructor: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
     :host {
@@ -217,6 +219,5 @@ export class IoMenuTree extends IoElement {
 
     this.template(elements);
   }
-  static vDOM: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioMenuTree = IoMenuTree.vDOM;
+export const ioMenuTree = IoMenuTree.vConstructor;

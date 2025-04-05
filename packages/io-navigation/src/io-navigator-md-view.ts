@@ -10,6 +10,7 @@ export type IoNavigatorMdViewArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNavigatorMdView extends IoNavigatorBase {
+  static vConstructor: (arg0?: IoNavigatorMdViewArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 
   @Property({type: Array})
   declare strip: string[];
@@ -23,6 +24,5 @@ export class IoNavigatorMdView extends IoNavigatorBase {
       ioMarkdown({src, strip: this.strip, sanitize: this.sanitize})
     ]);
   }
-  static vDOM: (arg0?: IoNavigatorMdViewArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioNavigatorMdView = IoNavigatorMdView.vDOM;
+export const ioNavigatorMdView = IoNavigatorMdView.vConstructor;

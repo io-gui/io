@@ -3,7 +3,7 @@ import { MenuOptions } from './menu-options.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
 
-export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
+export type MenuItemDefLoose = undefined | null | string | number | MenuItemArgs;
 
 export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
   value?: any,
@@ -15,7 +15,7 @@ export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
   hidden?: boolean,
   disabled?: boolean,
   selected?: boolean,
-  options?: MenuItemArgsLoose[] | MenuOptions
+  options?: MenuItemDefLoose[] | MenuOptions
 }>;
 
 // TODO: documentation!
@@ -61,7 +61,7 @@ export class MenuItem extends IoNode {
     return this.options?.getItem(value);
   }
 
-  constructor(args?: MenuItemArgsLoose) {
+  constructor(args?: MenuItemDefLoose) {
     const item: MenuItemArgs = {
       value: '',
       label: '',
@@ -96,7 +96,7 @@ export class MenuItem extends IoNode {
         if (args.options instanceof MenuOptions) {
           item.options = args.options;
         } else {
-          item.options = new MenuOptions(args.options as MenuItemArgsLoose[]);
+          item.options = new MenuOptions(args.options as MenuItemDefLoose[]);
         }
       }
       if (item.selected === undefined && (args.mode === 'select' || args.mode === undefined) && item.options) {

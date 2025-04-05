@@ -8,6 +8,7 @@ export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNumberLadderStep extends IoInputBase {
+  static vConstructor: (arg0?: IoNumberLadderStepArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -99,6 +100,5 @@ export class IoNumberLadderStep extends IoInputBase {
     this.setAttribute('aria-label', this.label);
     this.setAttribute('aria-valuestep', this.label);
   }
-  static vDOM: (arg0?: IoNumberLadderStepArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioNumberLadderStep = IoNumberLadderStep.vDOM;
+export const ioNumberLadderStep = IoNumberLadderStep.vConstructor;

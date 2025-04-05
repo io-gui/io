@@ -20,6 +20,8 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoNumberSlider extends IoElement {
+  static vConstructor: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
     :host {
@@ -88,6 +90,5 @@ export class IoNumberSlider extends IoElement {
       }),
     ]);
   }
-  static vDOM: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioNumberSlider = IoNumberSlider.vDOM;
+export const ioNumberSlider = IoNumberSlider.vConstructor;

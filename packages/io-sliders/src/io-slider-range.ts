@@ -19,6 +19,7 @@ export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoSliderRange extends IoSliderBase {
+  static vConstructor: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 
   @Property({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
@@ -117,6 +118,5 @@ export class IoSliderRange extends IoSliderBase {
     }
     `;
   }
-  static vDOM: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioSliderRange = IoSliderRange.vDOM;
+export const ioSliderRange = IoSliderRange.vConstructor;

@@ -27,6 +27,7 @@ export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
  */
 @Register
 export class IoMarkdown extends IoElement {
+  static vConstructor: (arg0?: IoMarkdownArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -203,9 +204,8 @@ export class IoMarkdown extends IoElement {
       .then(text => { this._parseMarkdown(text); });
   }
   changed() {}
-  static vDOM: (arg0?: IoMarkdownArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioMarkdown = IoMarkdown.vDOM;
+export const ioMarkdown = IoMarkdown.vConstructor;
 
 const styleElement = document.createElement('style');
 styleElement.id = 'io-highlight-theme';

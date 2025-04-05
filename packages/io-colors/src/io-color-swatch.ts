@@ -36,4 +36,4 @@ export class IoColorSwatch extends IoColorBase {
     ]);
   }
 }
-export const ioColorSwatch = IoColorSwatch.vDOM;
+export const ioColorSwatch = IoColorSwatch.vConstructor;

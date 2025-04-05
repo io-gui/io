@@ -4,6 +4,7 @@ export * from './core/internals/property';
 export * from './core/internals/binding';
 export * from './core/internals/protoChain';
 export * from './core/internals/queue';
+export * from './core/internals/vDOM';
 export * from './core/decorators/autobind';
 export * from './core/decorators/register';
 export * from './core/decorators/property';
@@ -14,6 +15,7 @@ export * from './nodes/theme';
 export * from './elements/field';
 export * from './elements/gl';
 export * from './elements/gl.glsl';
+export * from './elements/native';
 export * from './elements/overlay';
 export * from './elements/text';
 

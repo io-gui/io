@@ -1,4 +1,4 @@
-import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
+import { MenuItem, MenuItemDefLoose } from './menu-item.js';
 import { MenuOptions } from './menu-options.js';
 
 const testOptions = [
@@ -22,7 +22,7 @@ const testOptions = [
     {value: 'scroll2', mode: 'scroll'},
     {value: 'scroll3', mode: 'scroll'},
   ]},
-] as MenuItemArgsLoose[];
+] as MenuItemDefLoose[];
 
 const eventStack: string[] = [];
 

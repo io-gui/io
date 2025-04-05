@@ -24,6 +24,8 @@ export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoSelector extends IoElement {
+  static vConstructor: (arg0?: IoSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
       :host {
@@ -212,6 +214,5 @@ export class IoSelector extends IoElement {
     }
     super.dispose();
   }
-  static vDOM: (arg0?: IoSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioSelector = IoSelector.vDOM;
+export const ioSelector = IoSelector.vConstructor;

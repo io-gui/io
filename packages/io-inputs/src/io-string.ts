@@ -13,6 +13,7 @@ export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoString extends IoInputBase {
+  static vConstructor: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -154,6 +155,5 @@ export class IoString extends IoInputBase {
       this.removeAttribute('aria-invalid');
     }
   }
-  static vDOM: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioString = IoString.vDOM;
+export const ioString = IoString.vConstructor;

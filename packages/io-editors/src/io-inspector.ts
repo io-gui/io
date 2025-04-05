@@ -20,6 +20,7 @@ export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoInspector extends IoElement {
+  static vConstructor: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -213,9 +214,8 @@ export class IoInspector extends IoElement {
     Object.defineProperty(ioNodeConstructor.prototype, '_groups', {writable: true, value: new ObjectGroups(ioNodeConstructor.prototype._protochain.constructors)});
     Object.defineProperty(ioNodeConstructor.prototype, '_widgets', {writable: true, value: new ObjectWidgets(ioNodeConstructor.prototype._protochain.constructors)});
   }
-  static vDOM: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioInspector = IoInspector.vDOM;
+export const ioInspector = IoInspector.vConstructor;
 
 function genUUID(object: any) {
   let UUID = 'io-object-collapse-state-' + object.constructor.name;

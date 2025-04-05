@@ -12,6 +12,7 @@ export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
 }>;
 
 export class IoNavigatorBase extends IoElement {
+  static vConstructor: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -165,6 +166,5 @@ export class IoNavigatorBase extends IoElement {
       ]);
     }
   }
-  static vDOM: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioNavigatorBase = IoNavigatorBase.vDOM;
+export const ioNavigatorBase = IoNavigatorBase.vConstructor;

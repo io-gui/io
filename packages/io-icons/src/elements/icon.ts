@@ -13,6 +13,7 @@ export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoIcon extends IoElement {
+  static vConstructor: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       --ioIcon: {
@@ -56,6 +57,5 @@ export class IoIcon extends IoElement {
       this.textNode = this.value;
     }
   }
-  static vDOM: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioIcon = IoIcon.vDOM;
+export const ioIcon = IoIcon.vConstructor;

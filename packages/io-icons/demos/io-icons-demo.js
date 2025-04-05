@@ -19,4 +19,4 @@ export class IoIconsDemo extends IoElement {
   }
 }
 Register(IoIconsDemo);
-export const ioIconsDemo = IoIconsDemo.vDOM;
+export const ioIconsDemo = IoIconsDemo.vConstructor;

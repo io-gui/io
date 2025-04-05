@@ -13,6 +13,7 @@ export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoBreadcrumbs extends IoElement {
+  static vConstructor: (arg0?: IoBreadcrumbsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -91,9 +92,8 @@ export class IoBreadcrumbs extends IoElement {
     }
     this.template(elements);
   }
-  static vDOM: (arg0?: IoBreadcrumbsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioBreadcrumbs = IoBreadcrumbs.vDOM;
+export const ioBreadcrumbs = IoBreadcrumbs.vConstructor;
 
 function getLabel(object: any): string {
   if (object instanceof Array) {

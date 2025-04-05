@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Register, IoElement, IoNode, Change, PropertyDefinitions } from '../index';;
 const element = new IoElement();
 element.style.display = 'none';

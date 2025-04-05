@@ -99,4 +99,4 @@ export class IoNumberSliderRange extends IoElement {
     ]);
   }
 }
-export const ioNumberSliderRange = IoNumberSliderRange.vDOM;
+export const ioNumberSliderRange = IoNumberSliderRange.vConstructor;

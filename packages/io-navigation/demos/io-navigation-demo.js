@@ -126,4 +126,4 @@ export class IoNavigationDemo extends IoElement {
   }
 }
 Register(IoNavigationDemo);
-export const ioNavigationDemo = IoNavigationDemo.vDOM;
+export const ioNavigationDemo = IoNavigationDemo.vConstructor;

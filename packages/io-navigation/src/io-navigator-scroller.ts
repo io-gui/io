@@ -8,4 +8,4 @@ export class IoNavigatorScroller extends IoNavigatorBase {
     return ioScroller({options: this.options}, this.elements);
   }
 }
-export const ioNavigatorScroller = IoNavigatorScroller.vDOM;
+export const ioNavigatorScroller = IoNavigatorScroller.vConstructor;

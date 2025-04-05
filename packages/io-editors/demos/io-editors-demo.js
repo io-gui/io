@@ -120,4 +120,4 @@ export class IoEditorsDemo extends IoElement {
   }
 }
 Register(IoEditorsDemo);
-export const ioEditorsDemo = IoEditorsDemo.vDOM;
+export const ioEditorsDemo = IoEditorsDemo.vConstructor;

@@ -12,6 +12,7 @@ export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoColorBase extends IoElement {
+  static vConstructor: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 
   @Property('debounced')
   declare reactivity: string;
@@ -92,5 +93,4 @@ export class IoColorBase extends IoElement {
       hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
     });
   }
-  static vDOM: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }

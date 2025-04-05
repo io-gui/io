@@ -16,6 +16,7 @@ export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoVector extends IoElement {
+  static vConstructor: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -100,7 +101,7 @@ export class IoVector extends IoElement {
     }
   }
   changed() {
-    const elements = [];
+    const elements: VDOMArray[] = [];
     for (const k of this.keys as [keyof typeof this.value]) {
       if (this.value[k] !== undefined) {
         elements.push(ioNumber({
@@ -119,9 +120,8 @@ export class IoVector extends IoElement {
     elements.push(this.getSlotted());
     this.template(elements);
   }
-  getSlotted(): Array<any> | null {
-    return this.linkable ? [ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'})] : null;
+  getSlotted(): VDOMArray | null {
+    return this.linkable ? ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'}) : null;
   }
-  static vDOM: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioVector = IoVector.vDOM;
+export const ioVector = IoVector.vConstructor;

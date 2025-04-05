@@ -106,4 +106,4 @@ export class IoGuiThemeEditor extends IoElement {
   }
 }
 Register(IoGuiThemeEditor);
-export const ioGuiThemeEditor = IoGuiThemeEditor.vDOM;
+export const ioGuiThemeEditor = IoGuiThemeEditor.vConstructor;

@@ -220,7 +220,7 @@ export class IoSelectorTabs extends IoElement {
     ]);
   }
 }
-export const ioSelectorTabs = IoSelectorTabs.vDOM;
+export const ioSelectorTabs = IoSelectorTabs.vConstructor;
 
 @Register
 export class IoTabs extends IoElement {
@@ -477,7 +477,7 @@ export class IoTabs extends IoElement {
     this.template(elements);
   }
 }
-export const ioTabs = IoTabs.vDOM;
+export const ioTabs = IoTabs.vConstructor;
 
 @Register
 export class IoTabDragicon extends IoElement {
@@ -507,7 +507,7 @@ export class IoTabDragicon extends IoElement {
     `;
   }
 }
-export const ioTabDragicon = IoTabDragicon.vDOM;
+export const ioTabDragicon = IoTabDragicon.vConstructor;
 
 @Register
 export class IoTabDropzone extends IoElement {
@@ -535,4 +535,4 @@ export class IoTabDropzone extends IoElement {
     `;
   }
 }
-export const ioTabDropzone = IoTabDropzone.vDOM;
+export const ioTabDropzone = IoTabDropzone.vConstructor;

@@ -34,6 +34,7 @@ export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 class IoNumberLadder extends IoElement {
+  static vConstructor: (arg0?: IoNumberLadderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -252,7 +253,6 @@ class IoNumberLadder extends IoElement {
       steps[i].changed();
     }
   }
-  static vDOM: (arg0?: IoNumberLadderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 
 export const IoNumberLadderSingleton = new IoNumberLadder();

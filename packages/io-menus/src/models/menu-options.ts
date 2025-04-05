@@ -1,5 +1,5 @@
 import { IoNodeMixin, IoNodeArgs, Property, Register, ArgsWithBinding } from 'io-gui';
-import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
+import { MenuItem, MenuItemDefLoose } from './menu-item.js';
 // TODO: document!
 
 function _isNaN(value: any) {
@@ -36,9 +36,16 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(',')
   declare delimiter: string;
 
-  push(...items: MenuItem[]) {
+  push(...items: MenuItem[] | MenuItemDefLoose[]) {
     for (let i = 0; i < items.length; i++) {
-      const item = items[i];
+
+      let item: MenuItem;
+      if (items[i] instanceof MenuItem) {
+        item = items[i] as MenuItem;
+      } else {
+        item = new MenuItem(items[i]);
+      }
+
       debug: if (!(item instanceof MenuItem)) {
         console.warn('MenuOptions.push: item is not a MenuItem!');
       }
@@ -51,6 +58,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
         super.push(item);
       }
     }
+    return this;
   }
 
   getItem(value: any, deep = false) {
@@ -64,17 +72,17 @@ export class MenuOptions extends IoNodeMixin(Array) {
     return null;
   }
 
-  constructor(args: MenuItemArgsLoose[] = [], properties: IoNodeArgs = {}) {
-    const _args: MenuItem[] = [];
-    for (let i = 0; i < args.length; i++) {
-      if (args[i] instanceof MenuItem) {
-        _args.push(args[i] as MenuItem);
+  constructor(items: MenuItemDefLoose[] = [], properties: MenuOptionsArgs = {}) {
+    const _items: MenuItem[] = [];
+    for (let i = 0; i < items.length; i++) {
+      if (items[i] instanceof MenuItem) {
+        _items.push(items[i] as MenuItem);
       } else {
-        _args.push(new MenuItem(args[i]));
+        _items.push(new MenuItem(items[i]));
       }
     }
 
-    super(properties, ..._args);
+    super(properties, ..._items);
 
     if (this.path !== '') this.pathChanged();
     if (this.first !== undefined) this.firstChanged();
@@ -99,7 +107,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   }
 
   // TODO: consider preventing built-in Array functions like push, pop, etc.
-  protected addItems(items: MenuItemArgsLoose[]) {
+  protected addItems(items: MenuItemDefLoose[]) {
     for (let i = 0; i < items.length; i++) {
       let item: MenuItem;
       if (items[i] instanceof MenuItem) {
@@ -180,7 +188,6 @@ export class MenuOptions extends IoNodeMixin(Array) {
         ) {
           // TODO: test this?
           console.warn(`MenuOptions.lastChanged: last property value "${this.last}" diverged from item specified by path!`);
-          console.log(this.path, this.last);
         }
       } else {
         console.warn(`MenuOptions.lastChanged: last property value set "${this.last}" but path is empty!`);

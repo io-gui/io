@@ -176,4 +176,4 @@ export class IoLayoutBlock extends IoElement {
     }
   }
 }
-export const ioLayoutBlock = IoLayoutBlock.vDOM;
+export const ioLayoutBlock = IoLayoutBlock.vConstructor;

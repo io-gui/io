@@ -18,6 +18,7 @@ export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoObject extends IoElement {
+  static vConstructor: (arg0?: IoObjectArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -86,6 +87,5 @@ export class IoObject extends IoElement {
     this.template(elements);
     this.setAttribute('aria-expanded', String(this.expanded));
   }
-  static vDOM: (arg0?: IoObjectArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioObject = IoObject.vDOM;
+export const ioObject = IoObject.vConstructor;

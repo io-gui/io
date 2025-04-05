@@ -16,6 +16,8 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
 }>;
 
 export class IoSliderBase extends IoGl {
+  static vConstructor: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
       :host {
@@ -328,6 +330,5 @@ export class IoSliderBase extends IoGl {
     }
     this.setAttribute('aria-valuenow', JSON.stringify(this.value));
   }
-  static vDOM: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 

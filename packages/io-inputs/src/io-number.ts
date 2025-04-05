@@ -19,6 +19,7 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoNumber extends IoInputBase {
+  static vConstructor: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -242,6 +243,5 @@ export class IoNumber extends IoInputBase {
     this.setAttribute('positive', this.value >= 0);
     this.textNode = valueText;
   }
-  static vDOM: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioNumber = IoNumber.vDOM;
+export const ioNumber = IoNumber.vConstructor;

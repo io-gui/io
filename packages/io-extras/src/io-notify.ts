@@ -79,5 +79,5 @@ export class IoNotify extends IoElement {
     this.expanded = false;
   }
 }
-export const ioNotify = IoNotify.vDOM;
+export const ioNotify = IoNotify.vConstructor;
 if ((IoStorage as any).permitted === null) document.body.appendChild(new IoNotify() as unknown as Node);

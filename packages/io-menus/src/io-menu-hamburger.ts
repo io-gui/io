@@ -27,4 +27,4 @@ export class IoMenuHamburger extends IoMenuItem {
     this.template([ioIcon({value: 'menu:hamburger'})]);
   }
 }
-export const ioMenuHamburger = IoMenuHamburger.vDOM;
+export const ioMenuHamburger = IoMenuHamburger.vConstructor;

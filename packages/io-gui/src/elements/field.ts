@@ -13,6 +13,7 @@ export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoField extends IoElement {
+  static vConstructor: (arg0?: IoFieldArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       --ioField: {
@@ -91,7 +92,6 @@ export class IoField extends IoElement {
     }
   }
 
-  static vDOM: (arg0?: IoFieldArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioField = IoField.vDOM;
+export const ioField = IoField.vConstructor;
 

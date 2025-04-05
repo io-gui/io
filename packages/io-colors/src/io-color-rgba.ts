@@ -65,4 +65,4 @@ export class IoColorRgba extends IoColorBase {
     ]);
   }
 }
-export const ioColorRgba = IoColorRgba.vDOM;
+export const ioColorRgba = IoColorRgba.vConstructor;

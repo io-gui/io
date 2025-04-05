@@ -18,6 +18,7 @@ export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoOptionMenu extends IoElement {
+  static vConstructor: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -78,6 +79,5 @@ export class IoOptionMenu extends IoElement {
 
     this.template([ioMenuItem({item: this.item, direction: 'down'})]);
   }
-  static vDOM: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioOptionMenu = IoOptionMenu.vDOM;
+export const ioOptionMenu = IoOptionMenu.vConstructor;

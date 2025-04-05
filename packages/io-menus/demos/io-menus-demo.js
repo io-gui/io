@@ -173,7 +173,7 @@ export class IoMenusDemo extends IoElement {
   }
 }
 Register(IoMenusDemo);
-export const ioMenusDemo = IoMenusDemo.vDOM;
+export const ioMenusDemo = IoMenusDemo.vConstructor;
 
 export class IoOptionsDemoView extends IoElement {
   static get Style() {
@@ -243,7 +243,7 @@ export class IoOptionsDemoView extends IoElement {
   }
 }
 Register(IoOptionsDemoView);
-export const ioOptionsDemoView = IoOptionsDemoView.vDOM;
+export const ioOptionsDemoView = IoOptionsDemoView.vConstructor;
 
 export class IoItemDemoView extends IoElement {
   static get Style() {
@@ -285,7 +285,7 @@ export class IoItemDemoView extends IoElement {
   }
 }
 Register(IoItemDemoView);
-export const ioItemDemoView = IoItemDemoView.vDOM;
+export const ioItemDemoView = IoItemDemoView.vConstructor;
 
 export class IoDemoMenuModel extends IoOptionsDemoView {
   static get Properties() {
@@ -327,4 +327,4 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
   }
 }
 Register(IoDemoMenuModel);
-export const ioDemoMenuModel = IoDemoMenuModel.vDOM;
+export const ioDemoMenuModel = IoDemoMenuModel.vConstructor;

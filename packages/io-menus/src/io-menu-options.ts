@@ -26,6 +26,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoMenuOptions extends IoElement {
+  static vConstructor: (arg0?: IoMenuOptionsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -349,6 +350,5 @@ export class IoMenuOptions extends IoElement {
     }
     this.template(elements);
   }
-  static vDOM: (arg0?: IoMenuOptionsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioMenuOptions = IoMenuOptions.vDOM;
+export const ioMenuOptions = IoMenuOptions.vConstructor;

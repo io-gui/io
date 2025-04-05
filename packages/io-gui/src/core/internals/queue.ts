@@ -1,4 +1,4 @@
-import { IoNode } from "../node";
+import { IoNode } from '../node';
 
 export type CallbackFunction = (arg?: any) => void;
 

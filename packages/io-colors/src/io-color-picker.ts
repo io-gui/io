@@ -13,6 +13,7 @@ export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoColorPicker extends IoElement {
+  static vConstructor: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -93,6 +94,5 @@ export class IoColorPicker extends IoElement {
       ioColorSwatch({value: this.value})
     ]);
   }
-  static vDOM: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioColorPicker = IoColorPicker.vDOM;
+export const ioColorPicker = IoColorPicker.vConstructor;

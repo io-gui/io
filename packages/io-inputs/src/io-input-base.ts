@@ -18,6 +18,7 @@ export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
 
 @Register
 export class IoInputBase extends IoField {
+  static vConstructor: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -245,7 +246,6 @@ export class IoInputBase extends IoField {
       this.value !== undefined ? ioText(String(this.value)) : null,
     ]);
   }
-  static vDOM: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioInputBase = IoInputBase.vDOM;
+export const ioInputBase = IoInputBase.vConstructor;
 

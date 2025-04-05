@@ -21,6 +21,7 @@ export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoMenuItem extends IoInputBase {
+  static vConstructor: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -381,9 +382,8 @@ export class IoMenuItem extends IoInputBase {
       this.hasmore && this.direction === 'down' ? ioIcon({value: 'menu:triangle_down', class: 'hasmore'}) : null,
     ]);
   }
-  static vDOM: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioMenuItem = IoMenuItem.vDOM;
+export const ioMenuItem = IoMenuItem.vConstructor;
 
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 

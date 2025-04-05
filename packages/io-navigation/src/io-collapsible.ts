@@ -16,6 +16,7 @@ export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoCollapsible extends IoElement {
+  static vConstructor: (arg0?: IoCollapsibleArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -93,6 +94,5 @@ export class IoCollapsible extends IoElement {
       div({class: 'io-collapsible-content'}, this.expanded ? this.elements : []),
     ]);
   }
-  static vDOM: (arg0?: IoCollapsibleArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioCollapsible = IoCollapsible.vDOM;
+export const ioCollapsible = IoCollapsible.vConstructor;

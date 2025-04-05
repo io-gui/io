@@ -11,6 +11,7 @@ export type IoMatrixArgs = IoVectorArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoMatrix extends IoVector {
+  static vConstructor: (arg0?: IoMatrixArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -81,6 +82,5 @@ export class IoMatrix extends IoVector {
       }
     }
   }
-  static vDOM: (arg0?: IoMatrixArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioMatrix = IoMatrix.vDOM;
+export const ioMatrix = IoMatrix.vConstructor;

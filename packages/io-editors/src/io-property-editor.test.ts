@@ -33,7 +33,7 @@ export default class {
       it('matches values', async () => {
         this.element.value = testValue;
         await nextQueue();
-        const children = this.element.serialize()[2];
+        const children = this.element.toVDOM()[2];
         // console.log(children[0][2][0]);
         // console.log(children[0][2][1]);
 

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, propertyDecorators } from '../../index';
 
 class Object1 {

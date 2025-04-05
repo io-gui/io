@@ -113,4 +113,4 @@ export class IoElementDemo extends IoElement {
 }
 Register(IoElementDemo);
 
-export const ioElementDemo = IoElementDemo.vDOM;
+export const ioElementDemo = IoElementDemo.vConstructor;

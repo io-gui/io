@@ -13,6 +13,7 @@ export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoPropertyEditor extends IoElement {
+  static vConstructor: (arg0?: IoPropertyEditorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
     :host {
@@ -116,6 +117,5 @@ export class IoPropertyEditor extends IoElement {
     const json = Object.assign({}, super.toJSON(), this);
     return json;
   }
-  static vDOM: (arg0?: IoPropertyEditorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioPropertyEditor = IoPropertyEditor.vDOM;
+export const ioPropertyEditor = IoPropertyEditor.vConstructor;

@@ -4,4 +4,4 @@ export class IoMarkdownDemo extends IoElement {
   init() {}
 }
 Register(IoMarkdownDemo);
-export const ioMarkdownDemo = IoMarkdownDemo.vDOM;
+export const ioMarkdownDemo = IoMarkdownDemo.vConstructor;

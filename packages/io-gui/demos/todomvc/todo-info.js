@@ -10,4 +10,4 @@ export class TodoInfo extends IoElement {
   }
 }
 Register(TodoInfo);
-export const todoInfo = TodoInfo.vDOM;
+export const todoInfo = TodoInfo.vConstructor;

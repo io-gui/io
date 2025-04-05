@@ -10,6 +10,7 @@ export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNavigatorSelector extends IoNavigatorBase {
+  static vConstructor: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 
   @Property('first')
   declare select: 'first' | 'last';
@@ -23,6 +24,5 @@ export class IoNavigatorSelector extends IoNavigatorBase {
   getSlotted(): VDOMArray {
     return ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements});
   }
-  static vDOM: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioNavigatorSelector = IoNavigatorSelector.vDOM;
+export const ioNavigatorSelector = IoNavigatorSelector.vConstructor;

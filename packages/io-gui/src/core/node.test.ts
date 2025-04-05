@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../index';;
 
 export default class {

@@ -42,6 +42,7 @@ export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoGl extends IoElement {
+  static vConstructor: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
   static get Style() {
     return /* css */`
       :host {
@@ -377,6 +378,5 @@ export class IoGl extends IoElement {
     }
     Object.defineProperty(ioNodeConstructor.prototype, '_glUtils', {enumerable: false, value: _glUtils});
   }
-  static vDOM: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioGl = IoGl.vDOM;
+export const ioGl = IoGl.vConstructor;

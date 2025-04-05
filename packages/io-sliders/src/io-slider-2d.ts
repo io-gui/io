@@ -11,6 +11,8 @@ export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoSlider2d extends IoSliderBase {
+  static vConstructor: (arg0?: IoSlider2dArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+
   static get Style() {
     return /* css */`
       :host {
@@ -98,6 +100,5 @@ export class IoSlider2d extends IoSliderBase {
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
   }
-  static vDOM: (arg0?: IoSlider2dArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
-export const ioSlider2d = IoSlider2d.vDOM;
+export const ioSlider2d = IoSlider2d.vConstructor;
