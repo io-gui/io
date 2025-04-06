@@ -42,7 +42,7 @@ const contentElements = [
 ];
 
 const contentOptions = new MenuOptions([
-  {value: 'devs', options: [
+  {value: 'devs', options: new MenuOptions([
     {value: 'dev1', mode: 'scroll'},
     {value: 'dev2', mode: 'scroll'},
     {value: 'dev3', mode: 'scroll'},
@@ -50,8 +50,8 @@ const contentOptions = new MenuOptions([
     {value: 'dev5', mode: 'scroll'},
     {value: 'dev6', mode: 'scroll'},
     {value: 'dev7', mode: 'scroll'},
-  ]},
-  {value: 'foos', options: [
+  ])},
+  {value: 'foos', options: new MenuOptions([
     {value: 'foo1', mode: 'scroll'},
     {value: 'foo2', mode: 'scroll'},
     {value: 'foo3', mode: 'scroll'},
@@ -59,8 +59,8 @@ const contentOptions = new MenuOptions([
     {value: 'foo5', mode: 'scroll'},
     {value: 'foo6', mode: 'scroll'},
     {value: 'foo7', mode: 'scroll'},
-  ]},
-  {value: 'bazs', options: [
+  ])},
+  {value: 'bazs', options: new MenuOptions([
     {value: 'baz1', mode: 'scroll'},
     {value: 'baz2', mode: 'scroll'},
     {value: 'baz3', mode: 'scroll'},
@@ -68,8 +68,8 @@ const contentOptions = new MenuOptions([
     {value: 'baz5', mode: 'scroll'},
     {value: 'baz6', mode: 'scroll'},
     {value: 'baz7', mode: 'scroll'},
-  ]},
-  {value: 'bars', options: [
+  ])},
+  {value: 'bars', options: new MenuOptions([
     {value: 'bar1', mode: 'scroll'},
     {value: 'bar2', mode: 'scroll'},
     {value: 'bar3', mode: 'scroll'},
@@ -77,7 +77,7 @@ const contentOptions = new MenuOptions([
     {value: 'bar5', mode: 'scroll'},
     {value: 'bar6', mode: 'scroll'},
     {value: 'bar7', mode: 'scroll'},
-  ]},
+  ])},
 ]);
 contentOptions[0].selected = true;
 contentOptions[0].options[3].selected = true;

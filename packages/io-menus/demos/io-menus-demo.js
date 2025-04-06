@@ -14,60 +14,60 @@ const numberItems = [
 ];
 
 const options = new MenuOptions([
-  {label: 'Red', icon: '❤️', options: [
+  {label: 'Red', icon: '❤️', options: new MenuOptions([
     'Red1',
     'Red2',
     'Red3',
-  ]},
-  {label: 'Green', icon: '💚', options: [
+  ])},
+  {label: 'Green', icon: '💚', options: new MenuOptions([
     'Green1',
     'Green2',
     'Green3',
-  ]},
-  {label: 'Blue', icon: '💙', options: [
+  ])},
+  {label: 'Blue', icon: '💙', options: new MenuOptions([
     'Blue1',
     'Blue2',
     'Blue3',
-  ]},
-  {label: 'Numbers', options: [
+  ])},
+  {label: 'Numbers', options: new MenuOptions([
     {label: 'one', value: 1},
     {label: 'two', value: 2},
     {label: 'three', value: 3},
     {label: 'four', value: 4},
     {label: 'five', value: 5},
-  ]},
+  ])},
 ]);
 
 const optionsDeep = new MenuOptions([
-  {label: 'Deep Menu', options: [
+  {label: 'Deep Menu', options: new MenuOptions([
     {value: 'Level 1 Item One'},
     {value: 'Level 1 Item Two'},
-    {value: 'Level 1 Item Three', options: [
+    {value: 'Level 1 Item Three', options: new MenuOptions([
       {value: 'Level 2 Item One'},
       {value: 'Level 2 Item Two'},
-      {value: 'Level 2 Item Three', options: [
+      {value: 'Level 2 Item Three', options: new MenuOptions([
         {value: 'Level 3 Item One'},
         {value: 'Level 3 Item Two'},
-        {value: 'Level 3 Item Three', options: [
+        {value: 'Level 3 Item Three', options: new MenuOptions([
           {value: 'Level 4 Item One'},
           {value: 'Level 4 Item Two'},
-          {value: 'Level 4 Item Three', options: [
+          {value: 'Level 4 Item Three', options: new MenuOptions([
             {value: 'Level 5 Item One'},
             {value: 'Level 5 Item Two'},
-            {value: 'Level 5 Item Three', options: [
+            {value: 'Level 5 Item Three', options: new MenuOptions([
               {value: 'Level 6 Item One'},
               {value: 'Level 6 Item Two'},
-              {value: 'Level 6 Item Three', options: [
+              {value: 'Level 6 Item Three', options: new MenuOptions([
                 {value: 'Level 7 Item One'},
                 {value: 'Level 7 Item Two'},
                 {value: 'Level 7 Item Three'},
-              ]},
-            ]},
-          ]},
-        ]},
-      ]},
-    ]},
-  ]}
+              ])},
+            ])},
+          ])},
+        ])},
+      ])},
+    ])},
+  ])},
 ]);
 
 export class IoMenusDemo extends IoElement {
@@ -99,7 +99,7 @@ export class IoMenusDemo extends IoElement {
       ioMenuTree({
         options: options,
       }),
-      ioMenuItem({label: 'menu item', item: new MenuItem('item')}),
+      ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),
       ioMenuItem({label: 'menu item', item: new MenuItem({
         selected: true,
         value: 'value',
@@ -168,7 +168,7 @@ export class IoMenusDemo extends IoElement {
           button: 2,
         }),
       ]),
-      ioDemoMenuModel({name: 'Menu Model'}),
+      ioDemoMenuModel(),
     ]);
   }
 }
@@ -292,32 +292,32 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
     return {
       options: {value: new MenuOptions([
         {value: 'home'}, 
-        {value: 'food', options: [
-          {value: 'fruits', options: [
+        {value: 'food', options: new MenuOptions([
+          {value: 'fruits', options: new MenuOptions([
             {value: 'apples', selected: true},
             {value: 'mangos'},
             {value: 'bannanas'},
-          ]}
-        ]}, 
-        {value: 'mixed', options: [
-          {value: 'scrolls', options: [
+          ])}
+        ])},
+        {value: 'mixed', options: new MenuOptions([
+          {value: 'scrolls', options: new MenuOptions([
             {value: 'scroll1', mode: 'scroll'},
             {value: 'scroll2', mode: 'scroll'},
             {value: 'scroll3', mode: 'scroll'},
             {value: 'scroll4', mode: 'scroll'},
-          ]},
-          {value: 'togglables', mode: 'none', options: [
+          ])},
+          {value: 'togglables', mode: 'none', options: new MenuOptions([
             {value: 'toggle1', mode: 'toggle'},
             {value: 'toggle2', mode: 'toggle'},
             {value: 'toggle3', mode: 'toggle'},
             {value: 'toggle4', mode: 'toggle'},
-          ]},
-          {value: 'selectable', options: [
+          ])},
+          {value: 'selectable', options: new MenuOptions([
             {value: 'toggle', mode: 'toggle'},
             {value: 'scroll', mode: 'scroll'},
             {value: 'selectable'},
-          ]},
-        ]}
+          ])},
+        ])},
       ])
     }};
   }

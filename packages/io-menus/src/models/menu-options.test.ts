@@ -2,26 +2,26 @@ import { MenuItem, MenuItemDefLoose } from './menu-item.js';
 import { MenuOptions } from './menu-options.js';
 
 const testOptions = [
-  {value: 1, options: [
-    {value: 'foo', options: [null, undefined, NaN]},
-    {value: 'bar', options: [null, undefined, NaN]},
-    {value: 'buzz', options: [null, undefined, NaN]},
-  ]},
-  {value: 2, options: [
-    {value: 'foo', options: [null, undefined, NaN]},
-    {value: 'bar', options: [null, undefined, NaN]},
-    {value: 'buzz', options: [null, undefined, NaN]},
-  ]},
-  {value: 3, options: [
-    {value: 'foo', options: [null, undefined, NaN]},
-    {value: 'bar', options: [null, undefined, NaN]},
-    {value: 'buzz', options: [null, undefined, NaN]},
-  ]},
-  {value: 'scrolls', options: [
+  {value: 1, options: new MenuOptions([
+    {value: 'foo', options: new MenuOptions([null, undefined, NaN])},
+    {value: 'bar', options: new MenuOptions([null, undefined, NaN])},
+    {value: 'buzz', options: new MenuOptions([null, undefined, NaN])},
+  ])},
+  {value: 2, options: new MenuOptions([
+    {value: 'foo', options: new MenuOptions([null, undefined, NaN])},
+    {value: 'bar', options: new MenuOptions([null, undefined, NaN])},
+    {value: 'buzz', options: new MenuOptions([null, undefined, NaN])},
+  ])},
+  {value: 3, options: new MenuOptions([
+    {value: 'foo', options: new MenuOptions([null, undefined, NaN])},
+    {value: 'bar', options: new MenuOptions([null, undefined, NaN])},
+    {value: 'buzz', options: new MenuOptions([null, undefined, NaN])},
+  ])},
+  {value: 'scrolls', options: new MenuOptions([
     {value: 'scroll1', mode: 'scroll'},
     {value: 'scroll2', mode: 'scroll'},
     {value: 'scroll3', mode: 'scroll'},
-  ]},
+  ])},
 ] as MenuItemDefLoose[];
 
 const eventStack: string[] = [];
@@ -75,7 +75,7 @@ export default class {
         expect(options[0].selected).to.be.eql(true);
       });
       it('Should initialize suboptions from constructor arguments', () => {
-        const options = new MenuOptions([{options: [1, '2', null]}]);
+        const options = new MenuOptions([{value: undefined, options: new MenuOptions([1, '2', null])}]);
         expect(options.length).to.be.equal(1);
         expect(options[0].hasmore).to.be.equal(true);
         expect(options[0].options.length).to.be.equal(3);
@@ -84,8 +84,8 @@ export default class {
         expect(options[0].options[2].value).to.be.equal(null);
       });
       it('Should return item with specified value using `.getItem([value])`', () => {
-        const subItem1 = new MenuItem(1);
-        const subItem2 = new MenuItem(2);
+        const subItem1 = new MenuItem({value: 1});
+        const subItem2 = new MenuItem({value: 2});
         const options = new MenuOptions([subItem1, subItem2]);
         expect(options.getItem(1)).to.be.equal(subItem1);
         expect(options.getItem(2)).to.be.equal(subItem2);

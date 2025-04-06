@@ -122,16 +122,16 @@
 
     const OPTIONS = new MenuOptions([
       {value: 'About', icon: 'icons:io_logo'},
-      {value: 'Docs', options: [
-        {value: 'Quick Start', options: [
-        // {label: 'Quick Start', value: './docs/quick-start.md', options: [
+      {value: 'Docs', options: new MenuOptions([
+        {value: 'Quick Start', options: new MenuOptions([
+        // {label: 'Quick Start', value: './docs/quick-start.md', options: new MenuOptions([
           {label: 'Usage', value: 'usage', mode: 'scroll'},
           {label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'},
           {label: 'Making a Website', value: 'making-a-website', mode: 'scroll'},
           {label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'},
-        ]},
-        {value: 'Deep Dive', options: [
-        // {label: 'Deep Dive', value: './docs/deep-dive.md', options: [
+        ])},
+        {value: 'Deep Dive', options: new MenuOptions([
+        // {label: 'Deep Dive', value: './docs/deep-dive.md', options: new MenuOptions([
           {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'},
           {label: 'Properties', value: 'properties', mode: 'scroll'},
           {label: 'Styling', value: 'styling', mode: 'scroll'},
@@ -140,9 +140,9 @@
           {label: 'Template Syntax', value: 'template-syntax', mode: 'scroll'},
           {label: 'Data Binding', value: 'data-binding', mode: 'scroll'},
           {label: 'Helper Methods', value: 'helper-methods', mode: 'scroll'},
-        ]},
-      ]},
-      {value: 'Demos', options: [
+        ])},
+      ])},
+      {value: 'Demos', options: new MenuOptions([
         {label: 'io-inputs', value: 'io-inputs-demo'},
         {label: 'io-icons', value: 'io-icons-demo'},
         {label: 'io-sliders', value: 'io-sliders-demo'},
@@ -153,7 +153,7 @@
         'io-gui-theme-editor',
         'io-element-demo',
         'TODO MVC App',
-      ]},
+      ])},
     ], {
       path: $({key: 'path', storage: 'hash', value: 'About'}),
     });

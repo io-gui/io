@@ -1,10 +1,10 @@
 import { MenuItem } from './menu-item.js';
-
+import { MenuOptions } from './menu-options.js';
 export default class {
   run() {
     describe('MenuItem', () => {
       it('Should initialize with correct default values', () => {
-        const item = new MenuItem();
+        const item = new MenuItem({});
         expect(item.value).to.be.equal(undefined);
         expect(item.label).to.be.equal('undefined');
         expect(item.icon).to.be.equal('');
@@ -16,7 +16,7 @@ export default class {
         expect(item.options).to.be.eql(undefined);
       });
       it('Should initialize correctly from constructor arguments', () => {
-        let item = new MenuItem(1);
+        let item = new MenuItem({value: 1});
         expect(item.value).to.be.equal(1);
         expect(item.label).to.be.equal('1');
         expect(item.icon).to.be.equal('');
@@ -26,10 +26,10 @@ export default class {
         expect(item.mode).to.be.equal('select');
         expect(item.selected).to.be.equal(false);
         expect(item.options).to.be.eql(undefined);
-        item = new MenuItem('foo');
+        item = new MenuItem({value: 'foo'});
         expect(item.value).to.be.equal('foo');
         expect(item.label).to.be.equal('foo');
-        item = new MenuItem(null);
+        item = new MenuItem({value: null});
         expect(item.value).to.be.equal(null);
         expect(item.label).to.be.equal('null');
         item = new MenuItem({value: null});
@@ -59,11 +59,11 @@ export default class {
         expect(item.options).to.be.eql(undefined);
       });
       it('Should initialize suboptions from constructor arguments', () => {
-        let item = new MenuItem({options: []});
+        let item = new MenuItem({options: new MenuOptions([])});
         expect(item.hasmore).to.be.equal(false);
         expect(item.options).to.be.eql([]);
         expect(item.options?.length).to.be.equal(0);
-        item = new MenuItem({options: [1, '2', null]});
+        item = new MenuItem({options: new MenuOptions([1, '2', null])});
         expect(item.hasmore).to.be.equal(true);
         expect((item.options as any)[0].value).to.be.equal(1);
         expect((item.options as any)[0].label).to.be.equal('1');
@@ -71,28 +71,28 @@ export default class {
         expect((item.options as any)[1].label).to.be.equal('2');
         expect((item.options as any)[2].value).to.be.equal(null);
         expect((item.options as any)[2].label).to.be.equal('null');
-        item = new MenuItem({options: [1, {value: '2', label: 'two'}, undefined]});
+        item = new MenuItem({options: new MenuOptions([1, {value: '2', label: 'two'}, undefined])});
         expect((item.options as any)[0].value).to.be.equal(1);
         expect((item.options as any)[0].label).to.be.equal('1');
         expect((item.options as any)[1].value).to.be.equal('2');
         expect((item.options as any)[1].label).to.be.equal('two');
         expect((item.options as any)[2].value).to.be.equal(undefined);
         expect((item.options as any)[2].label).to.be.equal('undefined');
-        item = new MenuItem({options: [1]});
+        item = new MenuItem({options: new MenuOptions([1])});
         expect((item.options as any)[0].value).to.be.equal(1);
         expect((item.options as any)[0].label).to.be.equal('1');
       });
       it('Should return `options.path` from path getter', () => {
-        let item = new MenuItem();
+        let item = new MenuItem({});
         expect(item.options).to.be.equal(undefined);
-        item = new MenuItem({options: []});
+        item = new MenuItem({options: new MenuOptions([])});
         expect(item.options?.path).to.be.eql('');
         // TODO: test longer paths
       });
       it('Should return subitem with specified value using `.getSubitem([value])`', () => {
-        const subItem1 = new MenuItem(1);
-        const subItem2 = new MenuItem(2);
-        const item = new MenuItem({options: [subItem1, subItem2]});
+        const subItem1 = new MenuItem({value: 1});
+        const subItem2 = new MenuItem({value: 2});
+        const item = new MenuItem({options: new MenuOptions([subItem1, subItem2])});
         expect(item.getSubitem(1)).to.be.equal(subItem1);
         expect(item.getSubitem(2)).to.be.equal(subItem2);
       });

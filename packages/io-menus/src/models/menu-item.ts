@@ -15,7 +15,7 @@ export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
   hidden?: boolean,
   disabled?: boolean,
   selected?: boolean,
-  options?: MenuItemDefLoose[] | MenuOptions
+  options?: MenuOptions
 }>;
 
 // TODO: documentation!
@@ -61,47 +61,24 @@ export class MenuItem extends IoNode {
     return this.options?.getItem(value);
   }
 
-  constructor(args?: MenuItemDefLoose) {
-    const item: MenuItemArgs = {
-      value: '',
-      label: '',
-    };
+  constructor(args: MenuItemArgs = {}) {
 
-    if (typeof args !== 'object' || args === null) {
-      item.value = args;
-      item.label = String(args);
-    } else {
-      item.value = args.value;
-      if (args.label === undefined) {
-        if (typeof item.value === 'object') {
-          if (item.value === null) {
-            item.label = 'null';
-          } else {
-            item.label = `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
-          }
+    const item: MenuItemArgs = {...args};
+
+    if (args.label === undefined) {
+      if (typeof item.value === 'object') {
+        if (item.value === null) {
+          item.label = 'null';
         } else {
-          item.label = String(item.value);
+          item.label = `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
         }
       } else {
-        item.label = args.label;
+        item.label = String(item.value);
       }
-      if (args.icon !== undefined) item.icon = args.icon;
-      if (args.hint !== undefined) item.hint = args.hint;
-      if (args.hidden !== undefined) item.hidden = args.hidden;
-      if (args.disabled !== undefined) item.disabled = args.disabled;
-      if (args.action !== undefined) item.action = args.action;
-      if (args.mode !== undefined) item.mode = args.mode;
-      if (args.selected !== undefined) item.selected = args.selected;
-      if (args.options !== undefined) {
-        if (args.options instanceof MenuOptions) {
-          item.options = args.options;
-        } else {
-          item.options = new MenuOptions(args.options as MenuItemDefLoose[]);
-        }
-      }
-      if (item.selected === undefined && (args.mode === 'select' || args.mode === undefined) && item.options) {
-        item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
-      }
+    }
+
+    if (item.selected === undefined && (args.mode === 'select' || args.mode === undefined) && item.options) {
+      item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
     }
 
     debug: {

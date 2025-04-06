@@ -6,20 +6,19 @@ import { ioSlider, ioSliderRange, ioSlider2d } from 'io-sliders';
 
 const options = new MenuOptions([{
   label: 'io-inputs',
-  options: [
+  options: new MenuOptions([
     {value: ioInputBase(), label: `io-input-base`},
     {value: ioNumber(), label: `io-number`},
     {value: ioString(), label: `io-string`},
     {value: ioBoolean(), label: `io-boolean`},
     {value: ioSwitch(), label: `io-switch`},
-  ]
-}, {
+  ])},{
   label: 'io-sliders',
-  options: [
+  options: new MenuOptions([
     {value: ioSlider(), label: `io-slider`},
     {value: ioSliderRange(), label: `io-slider-range`},
     {value: ioSlider2d(), label: `io-slider-2d`},
-  ]}
+  ])},
 ], {
   last: $({key: 'element-demo', storage: 'local', value: 'io-input-base'}),
 });

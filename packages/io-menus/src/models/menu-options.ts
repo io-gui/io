@@ -1,5 +1,5 @@
 import { IoNodeMixin, IoNodeArgs, Property, Register, ArgsWithBinding } from 'io-gui';
-import { MenuItem, MenuItemDefLoose } from './menu-item.js';
+import { MenuItem, MenuItemArgs, MenuItemDefLoose } from './menu-item.js';
 // TODO: document!
 
 function _isNaN(value: any) {
@@ -42,8 +42,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
       let item: MenuItem;
       if (items[i] instanceof MenuItem) {
         item = items[i] as MenuItem;
+      } else if (items[i] instanceof Object) {
+        item = new MenuItem(items[i] as MenuItemArgs);
       } else {
-        item = new MenuItem(items[i]);
+        item = new MenuItem({value: items[i]});
       }
 
       debug: if (!(item instanceof MenuItem)) {
@@ -58,6 +60,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
         super.push(item);
       }
     }
+
+    if (this.path !== '') this.pathChanged();
+    if (this.first !== undefined) this.firstChanged();
+
     return this;
   }
 
@@ -73,37 +79,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
   }
 
   constructor(items: MenuItemDefLoose[] = [], properties: MenuOptionsArgs = {}) {
-    const _items: MenuItem[] = [];
-    for (let i = 0; i < items.length; i++) {
-      if (items[i] instanceof MenuItem) {
-        _items.push(items[i] as MenuItem);
-      } else {
-        _items.push(new MenuItem(items[i]));
-      }
-    }
-
-    super(properties, ..._items);
-
-    if (this.path !== '') this.pathChanged();
-    if (this.first !== undefined) this.firstChanged();
-    for (let i = 0; i < this.length; i++) {
-      const item = this[i];
-      debug: {
-        if (!(item instanceof MenuItem)) {
-          console.warn('MenuOptions.constructor: item is not a MenuItem!');
-        }
-        // TODO check if same item is at other index
-        if (this.find((otherItem: MenuItem) => otherItem !== item && otherItem.label === item.label)) {
-          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
-        }
-      }
-      item.addEventListener('selected-changed', this._onItemSelectedChanged);
-      item.addEventListener('path-changed', this._onSubOptionsPathChanged);
-      if (item.selected && item.mode === 'select') {
-        this.updatePaths(item);
-        continue;
-      }
-    }
+    super(properties);
+    this.push(...items);
   }
 
   // TODO: consider preventing built-in Array functions like push, pop, etc.
@@ -112,8 +89,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
       let item: MenuItem;
       if (items[i] instanceof MenuItem) {
         item = items[i] as MenuItem;
+      } else if (items[i] instanceof Object) {
+        item = new MenuItem(items[i] as MenuItemArgs);
       } else {
-        item = new MenuItem(items[i]);
+        item = new MenuItem({value: items[i]});
       }
       debug: if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
         console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);

@@ -75,7 +75,7 @@ export class IoOptionMenu extends IoElement {
   changed() {
     const selectedItem = this.options.getItem(this.value);
 
-    this.item = this.item || new MenuItem({});
+    this.item = this.item || new MenuItem({}); // {value: this.value}
     this.item.label = selectedItem?.label || String(this.value);
     this.item.options = this.options;
 
