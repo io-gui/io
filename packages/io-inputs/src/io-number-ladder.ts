@@ -148,9 +148,7 @@ class IoNumberLadder extends IoElement {
     return this.src ? this.src.conversion : 1;
   }
 
-  constructor(properties: IoNumberLadderArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoNumberLadderArgs = {}) { super(args); }
 
   onFocusIn(event: FocusEvent) {
     event.stopPropagation();

@@ -47,9 +47,7 @@ export class IoNumberLadderStep extends IoInputBase {
   @Property({value: 'spinbutton', type: String})
   declare role: string;
 
-  constructor(properties: IoNumberLadderStepArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoNumberLadderStepArgs = {}) { super(args); }
 
   onKeydown(event: KeyboardEvent) {
     let stepMove = 0;

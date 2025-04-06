@@ -80,9 +80,7 @@ export class IoNumber extends IoInputBase {
 
   private _pointer = '';
 
-  constructor(properties: IoNumberArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoNumberArgs = {}) { super(args); }
 
   onBlur(event: FocusEvent) {
     super.onBlur(event);

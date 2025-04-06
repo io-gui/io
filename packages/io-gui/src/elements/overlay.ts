@@ -80,8 +80,8 @@ class IoOverlay extends IoElement {
       'keyup': ['stopPropagation', {passive: false}],
     };
   }
-  constructor(properties: IoOverlayArgs = {}) {
-    super(properties);
+  constructor(args: IoOverlayArgs = {}) {
+    super(args);
     Object.defineProperty(this, 'x', {value: 0, writable: true});
     Object.defineProperty(this, 'y', {value: 0, writable: true});
   }

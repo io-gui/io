@@ -55,9 +55,7 @@ export class IoNumberSliderRange extends IoElement {
   @Property(1)
   declare conversion: number;
 
-  constructor(properties: IoNumberSliderRangeArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoNumberSliderRangeArgs = {}) { super(args); }
 
   _onNumberSet(event: CustomEvent) {
     const item = event.composedPath()[0];

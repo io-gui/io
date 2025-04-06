@@ -84,9 +84,7 @@ export class IoField extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
-  constructor(properties: IoFieldArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoFieldArgs = {}) { super(args); }
 
   disabledChanged() {
     if (this.disabled) {

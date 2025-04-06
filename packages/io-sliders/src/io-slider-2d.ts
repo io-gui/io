@@ -48,9 +48,7 @@ export class IoSlider2d extends IoSliderBase {
   @Property(true)
   declare noscroll: boolean;
 
-  constructor(properties: IoSlider2dArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoSlider2dArgs = {}) { super(args); }
 
   static get GlUtils() {
     return /* glsl */`

@@ -378,7 +378,7 @@ Io-Gui elements use hypertext-like array structures to express virtual DOM templ
 Here is a simple element expressed in the Io-Gui template syntax:
 
 ```javascript
-['my-element', {prop: "propvalue"}, "Hello io!"]
+myElement({prop: "propvalue"}, "Hello io!")
 ```
 
 DOM output:
@@ -393,10 +393,10 @@ Here is a slightly more complex vDOM tree with array iterator:
 
 ```javascript
 this.template([
-  ['h4', 'Array indices:'],
-  ['div', [
-    this.items.map(i => ['span', {class: 'item'}, i])
-  ]]
+  h4('Array indices:'),
+  div([
+    this.items.map(i => span({class: 'item'}, i))
+  ])
 ]);
 ```
 
@@ -442,7 +442,7 @@ new IoSlider({value: myNode.bind('value')});
 Or we can assign it to an element using template syntax:
 
 ```javascript
-this.template([['io-slider', {value: this.bind('value')}]]);
+this.template([ioSldier({value: this.bind('value')})]);
 ```
 
 The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.

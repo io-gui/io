@@ -70,9 +70,7 @@ export class IoMenuItem extends IoInputBase {
     };
   }
 
-  constructor(properties: IoMenuItemArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoMenuItemArgs = {}) { super(args); }
 
   preventDefault(event: Event) {
     event.stopPropagation();

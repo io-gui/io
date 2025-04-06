@@ -58,9 +58,7 @@ export class IoNumberSlider extends IoElement {
   @Property(1)
   declare conversion: number;
 
-  constructor(properties: IoNumberSliderArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoNumberSliderArgs = {}) { super(args); }
 
   _onNumberSet(event: CustomEvent) {
     this.value = event.detail.value;

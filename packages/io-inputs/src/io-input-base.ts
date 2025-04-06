@@ -63,9 +63,7 @@ export class IoInputBase extends IoField {
     };
   }
 
-  constructor(properties: IoInputBaseArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoInputBaseArgs = {}) { super(args); }
 
   onFocus(event: FocusEvent) {
     this.addEventListener('blur', this.onBlur);

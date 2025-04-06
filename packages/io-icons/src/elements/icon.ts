@@ -50,9 +50,7 @@ export class IoIcon extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
-  constructor(properties: IoIconArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoIconArgs = {}) { super(args); }
 
   valueChanged() {
     if (this.value.search(':') !== -1) {

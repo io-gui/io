@@ -52,9 +52,7 @@ export class IoString extends IoInputBase {
   @Property({value: 'false', type: String, reflect: true})
   declare spellcheck: string;
 
-  constructor(properties: IoStringArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoStringArgs = {}) { super(args); }
 
   _setFromTextNode() {
     const textNode = this.textNode;

@@ -50,9 +50,7 @@ export class IoButton extends IoInputBase {
   @Property('button')
   declare role: string;
 
-  constructor(properties: IoButtonArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoButtonArgs = {}) { super(args); }
 
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);

@@ -54,13 +54,13 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Creates a class instance and initializes the internals with properties.
      * @overload
      * @constructor
-     * @param {IoNodeArgs} properties - Initial property values
-     * @param {...any} args - Additional arguments
+     * @param {IoNodeArgs} args - Initial property values
+     * @param {...any} superArgs - Additional arguments
      */
-    constructor(...args: any[]); // TODO: remove this after fixing types.
-    constructor(properties: IoNodeArgs = {}, ...args: any[]) {
+    constructor(...superArgs: any[]); // TODO: remove this after fixing types.
+    constructor(args: IoNodeArgs = {}, ...superArgs: any[]) {
       // eslint-disable-next-line constructor-super
-      super(...args);
+      super(...superArgs);
 
       if (this._isIoElement) {
         Object.defineProperty(this, '$', {
@@ -107,7 +107,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         }
       }
 
-      this.applyProperties(properties, true);
+      this.applyProperties(args, true);
 
       if (this._protochain.observedObjectProperties.length) {
         window.addEventListener('object-mutated', this.onPropertyMutated as EventListener);

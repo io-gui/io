@@ -34,8 +34,8 @@ document.body.appendChild(myElement);
 Here is a quick way to make a simple website `<my-website>` with navigation and pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator, Register, MenuOptions } from 'io-gui';
-import { IoStorage as $ } from 'io-gui';
+import { IoNavigator, Register, MenuOptions, IoStorage as $ } from 'io-gui';
+import { ioMarkdown } from 'io-markdown';
 
 export class MyWebsite extends IoNavigator {
   static get Properties() {
@@ -48,11 +48,11 @@ export class MyWebsite extends IoNavigator {
         }
       ),
       elements: [
-        ['io-md-view', {id: 'About', src: './page/about.md'}],
-        ['io-md-view', {id: 'Products', src: './page/products.md'}],
-        ['io-md-view', {id: 'Services', src: './page/services.md'}],
-        ['io-md-view', {id: 'Testemonials', src: './page/testemonials.md'}],
-        ['io-md-view', {id: 'Contact', src: './page/contact.md'}],
+        ioMarkdown({id: 'About', src: './page/about.md'}),
+        ioMarkdown({id: 'Products', src: './page/products.md'}),
+        ioMarkdown({id: 'Services', src: './page/services.md'}),
+        ioMarkdown({id: 'Testemonials', src: './page/testemonials.md'}),
+        ioMarkdown({id: 'Contact', src: './page/contact.md'}),
       ]
     };
   }

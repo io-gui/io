@@ -3,7 +3,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
 import terser from '@rollup/plugin-terser';
 
-export function makeBundleTarget(src, target, externals = [], debug) {
+export function makeBundleTarget(src, target, externals = []) {
 
   externals.forEach(function(part, index) {
     externals[index] = path.resolve(externals[index]);
@@ -15,7 +15,7 @@ export function makeBundleTarget(src, target, externals = [], debug) {
       nodeResolve(),
       strip({
         functions: [],
-        labels: debug ? [] : ['debug']
+        labels: ['debug']
       }),
       terser({
         keep_classnames: true,
@@ -42,5 +42,5 @@ export function makeBundleTarget(src, target, externals = [], debug) {
 
 export default [
   makeBundleTarget('build/io-gui.js', 'bundle/io-gui.js', []),
-  makeBundleTarget('build/io-gui.test.js', 'bundle/io-gui.test.js', ['build/io-gui.js'], true),
+  makeBundleTarget('build/io-gui.test.js', 'bundle/io-gui.test.js', ['build/io-gui.js']),
 ];

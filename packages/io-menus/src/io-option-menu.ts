@@ -56,9 +56,7 @@ export class IoOptionMenu extends IoElement {
   @Property(MenuItem)
   declare item: MenuItem;
 
-  constructor(properties: IoOptionMenuArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoOptionMenuArgs = {}) { super(args); }
 
   _onLeafChanged(event: CustomEvent) {
     this.inputValue(event.detail.value);

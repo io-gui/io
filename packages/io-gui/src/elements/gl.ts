@@ -177,8 +177,8 @@ export class IoGl extends IoElement {
 
     return program;
   }
-  constructor(properties: IoGlArgs = {}) {
-    super(properties);
+  constructor(args: IoGlArgs = {}) {
+    super(args);
 
     this.#canvas = document.createElement('canvas');
     this.appendChild(this.#canvas);

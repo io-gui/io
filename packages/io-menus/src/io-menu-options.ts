@@ -173,9 +173,7 @@ export class IoMenuOptions extends IoElement {
     };
   }
 
-  constructor(properties: IoMenuOptionsArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoMenuOptionsArgs = {}) { super(args); }
 
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;

@@ -40,9 +40,7 @@ export class IoBoolean extends IoInputBase {
   @Property({value: 'switch', type: String})
   declare role: string;
 
-  constructor(properties: IoBooleanArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoBooleanArgs = {}) { super(args); }
 
   onClick() {
     this.toggle();

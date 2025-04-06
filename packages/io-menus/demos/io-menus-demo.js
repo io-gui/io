@@ -1,5 +1,5 @@
 import { Register, IoElement, div, span, ioText } from 'io-gui';
-import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions } from 'io-menus';
+import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu } from 'io-menus';
 // TODO: remove dependencies on io-inputs and io-navigation.
 import { ioSwitch, ioInputBase } from 'io-inputs';
 import 'io-navigation';

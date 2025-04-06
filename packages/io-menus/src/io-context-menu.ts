@@ -30,9 +30,7 @@ export class IoContextMenu extends IoElement {
     };
   }
 
-  constructor(properties: IoContextMenuArgs = {}) {
-    super(properties);
-  }
+  constructor(args: IoContextMenuArgs = {}) { super(args); }
 
   connectedCallback() {
     super.connectedCallback();
