@@ -1,4 +1,6 @@
-import { IoObject } from './io-object.js';
+import { ioString } from 'io-inputs';
+import { ioSlider } from 'io-sliders';
+import { IoObject } from './index';
 
 const testValue = {
   'number': 0.5,
@@ -92,8 +94,8 @@ export default class {
           this.element.value = testValue;
           this.element.config = new Map([
             [Object, [
-              ['number', ['io-slider', {step: 1}]],
-              ['type:boolean', ['io-string']],
+              ['number', ioSlider({step: 1})],
+              ['boolean', ioString()],
             ]]
           ]);
           this.element.expanded = true;

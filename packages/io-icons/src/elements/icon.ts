@@ -50,6 +50,10 @@ export class IoIcon extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
+  constructor(properties: IoIconArgs = {}) {
+    super(properties);
+  }
+
   valueChanged() {
     if (this.value.search(':') !== -1) {
       this.innerHTML = IoIconsetSingleton.getIcon(this.value);

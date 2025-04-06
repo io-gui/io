@@ -1,4 +1,5 @@
-import { IoElement, Register, IoStorage } from 'io-gui';
+import { IoElement, Register, IoStorage, span } from 'io-gui';
+import { ioBoolean } from 'io-inputs';
 
 /*
 
@@ -62,11 +63,11 @@ export class IoNotify extends IoElement {
   constructor(props?: any) {
     super(props);
     this.template([
-      ['span', 'This app uses cookies for user interface customization.'],
-      ['span', 'Agree'],
-      ['io-boolean', {'@value-input': this._onAgree}],
-      ['span', 'Disagree'],
-      ['io-boolean', {'@value-input': this._onDisgree}],
+      span('This app uses cookies for user interface customization.'),
+      span('Agree'),
+      ioBoolean({ '@value-input': this._onAgree }),
+      span('Disagree'),
+      ioBoolean({ '@value-input': this._onDisgree }),
     ]);
   }
   _onAgree(event: CustomEvent) {

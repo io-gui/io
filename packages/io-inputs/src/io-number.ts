@@ -80,6 +80,10 @@ export class IoNumber extends IoInputBase {
 
   private _pointer = '';
 
+  constructor(properties: IoNumberArgs = {}) {
+    super(properties);
+  }
+
   onBlur(event: FocusEvent) {
     super.onBlur(event);
     this._setFromTextNode();

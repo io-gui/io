@@ -1,6 +1,8 @@
-import { Register, IoElement } from 'io-gui';
+import { Register, IoElement, div } from 'io-gui';
 import { ioButton } from 'io-inputs';
+import { ioOptionMenu } from 'io-menus';
 import 'io-navigation';
+import { ioSelector } from 'io-navigation';
 
 const _dragicon = document.createElement('io-tab-dragicon') as any;
 const _dropzone = document.createElement('io-tab-dropzone') as any;
@@ -203,20 +205,20 @@ export class IoSelectorTabs extends IoElement {
   }
   changed() {
     this.template([
-      ['io-tabs', {
+      ioTabs({
         $: 'tabs',
         elements: this.elements,
         filter: this.filter,
         selected: this.bind('selected'),
         editable: this.editable,
-      }],
-      ['io-selector', {
+      }),
+      ioSelector({
         $: 'content',
         elements: this.elements,
         selected: this.selected,
         cache: this.cache,
         role: this.role,
-      }],
+      }),
     ]);
   }
 }
@@ -452,12 +454,12 @@ export class IoTabs extends IoElement {
     }
     const elements = [];
     if (this.overflow) {
-      elements.push(['io-option-menu', {
+      elements.push(ioOptionMenu({
         label: '☰',
         title: 'select tab menu',
         value: this.bind('selected'),
         options: this.filter
-      }]);
+      }));
       if (selectedButton) {
         elements.push(selectedButton);
       }
@@ -465,13 +467,13 @@ export class IoTabs extends IoElement {
     elements.push(...buttons);
 
     if (this.editable) {
-      elements.push(['div', {
+      elements.push(div({
         class: 'edit-spacer'
-      }], ['io-option-menu', {
+      }), ioOptionMenu({
         class: 'edit-option',
         label: '⚙️',
         options: options,
-      }]);
+      }));
     }
 
     this.template(elements);

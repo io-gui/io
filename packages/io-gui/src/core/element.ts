@@ -86,9 +86,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   @Property({value: '', type: String, reflect: true})
   declare role: string;
 
-  //TODO: add types
-  // constructor(args?: IoElementArgs) {
-  constructor(args?: any) { // TODO: remove after fixing types!
+  constructor(args?: IoElementArgs) {
     super(args);
     for (const name in this._protochain.properties) {
       const property = this._properties.get(name)!;

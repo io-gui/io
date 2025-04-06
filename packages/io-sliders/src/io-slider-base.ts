@@ -119,6 +119,11 @@ export class IoSliderBase extends IoGl {
       'touchstart': ['onTouchstart', {passive: false}],
     };
   }
+
+  constructor(properties: IoSliderBaseArgs = {}) {
+    super(properties);
+  }
+
   onFocus() {
     this.addEventListener('blur', this.onBlur);
     this.addEventListener('keydown', this.onKeydown);

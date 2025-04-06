@@ -48,6 +48,10 @@ export class IoSlider2d extends IoSliderBase {
   @Property(true)
   declare noscroll: boolean;
 
+  constructor(properties: IoSlider2dArgs = {}) {
+    super(properties);
+  }
+
   static get GlUtils() {
     return /* glsl */`
       vec3 paintKnob(vec3 dstCol, vec2 p, vec2 center, vec3 color) {

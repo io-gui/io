@@ -65,7 +65,7 @@ export class IoEditorsDemo extends IoElement {
         ioPropertyEditor({
           value: this.object,
           properties: ['number', 'string', 'boolean'],
-          // widget: ['io-input-base', {label: 'Widget Element'}],
+          // widget: ioInputBase({label: 'Widget Element'}),
           config: new Map([
             [Object, [
               [Number, ioOptionMenu({options: new MenuOptions([
@@ -84,7 +84,7 @@ export class IoEditorsDemo extends IoElement {
         ioObject({
           value: this.object,
           expanded: true,
-          // widget: ['io-input-base', {label: 'Widget Element'}],
+          // widget: ioInputBase({label: 'Widget Element'}),
           properties: ['number', 'string', 'boolean'],
         }),
         ioObject({

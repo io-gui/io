@@ -1,4 +1,4 @@
-import { Register, Property, IoOverlaySingleton as Overlay, span, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoOverlaySingleton as Overlay, span, VDOMArray, ArgsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuOptions } from './io-menu-options.js';
 import { IoInputBase, IoInputBaseArgs } from 'io-inputs';
@@ -57,7 +57,7 @@ export class IoMenuItem extends IoInputBase {
   declare expanded: boolean;
 
   @Property({value: 'right', reflect: true})
-  declare direction: string;
+  declare direction: NudgeDirection;
 
   @Property({value: 1000, reflect: true})
   declare depth: number;
@@ -69,6 +69,11 @@ export class IoMenuItem extends IoInputBase {
       'click': 'preventDefault',
     };
   }
+
+  constructor(properties: IoMenuItemArgs = {}) {
+    super(properties);
+  }
+
   preventDefault(event: Event) {
     event.stopPropagation();
     event.preventDefault();

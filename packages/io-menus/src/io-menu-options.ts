@@ -5,7 +5,7 @@ import { MenuOptions } from './models/menu-options.js';
 import { ioMenuItem, IoMenuItem } from './io-menu-item.js';
 import { filterOptions } from './io-menu-tree.js';
 import { ioMenuHamburger } from './io-menu-hamburger.js';
-
+import { IoContextMenu } from './io-context-menu.js';
 const rects = new WeakMap();
 
 export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
@@ -19,6 +19,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
   noPartialCollapse?: boolean;
   inlayer?: boolean;
   slotted?: VDOMArray[];
+  $parent?: IoMenuItem | IoContextMenu;
 }>;
 
 /**
@@ -170,6 +171,10 @@ export class IoMenuOptions extends IoElement {
       'item-clicked': '_onItemClicked',
       'touchstart': ['_stopPropagation', {passive: false}],
     };
+  }
+
+  constructor(properties: IoMenuOptionsArgs = {}) {
+    super(properties);
   }
 
   _onItemClicked(event: CustomEvent) {

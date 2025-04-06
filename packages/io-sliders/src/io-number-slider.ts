@@ -58,6 +58,10 @@ export class IoNumberSlider extends IoElement {
   @Property(1)
   declare conversion: number;
 
+  constructor(properties: IoNumberSliderArgs = {}) {
+    super(properties);
+  }
+
   _onNumberSet(event: CustomEvent) {
     this.value = event.detail.value;
     this.dispatchEvent('value-input', event.detail, false);

@@ -174,6 +174,10 @@ export class IoMenuTree extends IoElement {
     };
   }
 
+  constructor(properties: IoMenuTreeArgs = {}) {
+    super(properties);
+  }
+
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
     const d = event.detail as MenuItem;

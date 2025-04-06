@@ -40,6 +40,10 @@ export class IoBoolean extends IoInputBase {
   @Property({value: 'switch', type: String})
   declare role: string;
 
+  constructor(properties: IoBooleanArgs = {}) {
+    super(properties);
+  }
+
   onClick() {
     this.toggle();
     this.dispatchEvent('io-boolean-clicked', {value: this.value}, true);

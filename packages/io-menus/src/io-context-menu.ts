@@ -29,6 +29,11 @@ export class IoContextMenu extends IoElement {
       $options: null,
     };
   }
+
+  constructor(properties: IoContextMenuArgs = {}) {
+    super(properties);
+  }
+
   connectedCallback() {
     super.connectedCallback();
     Overlay.addEventListener('pointermove', this._onOverlayPointermove);

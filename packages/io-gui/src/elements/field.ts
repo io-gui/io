@@ -84,6 +84,10 @@ export class IoField extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
+  constructor(properties: IoFieldArgs = {}) {
+    super(properties);
+  }
+
   disabledChanged() {
     if (this.disabled) {
       this.setAttribute('aria-disabled', this.disabled);

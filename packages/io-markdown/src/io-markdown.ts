@@ -172,6 +172,10 @@ export class IoMarkdown extends IoElement {
   @Property(true)
   declare sanitize: boolean;
 
+  constructor(properties: IoMarkdownArgs = {}) {
+    super(properties);
+  }
+
   protected _strip(innerHTML: string) {
     for (let i = 0; i < this.strip.length; i++) {
       innerHTML = innerHTML.replace(new RegExp(this.strip[i], 'g'),'');

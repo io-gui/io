@@ -1,4 +1,5 @@
-import { Register, IoElement } from 'io-gui';
+import { Register, IoElement, p, div } from 'io-gui';
+import { ioSelectorTabs } from './io-tabbed-elements';
 
 /*
 
@@ -63,32 +64,32 @@ export class IoLayout extends IoElement {
         'flex-shrink': flexBasis ? 0 : 1,
       };
       if (split.tabs) {
-        children.push(['io-selector-tabs', {
+        children.push(ioSelectorTabs({
           elements: this.elements,
           filter: split.tabs, // TODO: reimplement
           selected: split.selected,
           editable: this.editable,
           style: style,
           '@selected-changed': this._onSelectedChanged
-        }]);
+        }));
         // children.push(['div', {style: style}, ' ' + split.size]);
       } else if (split.splits) {
-        children.push(['io-layout', {
+        children.push(ioLayout({
           elements: this.elements,
           splits: split.splits,
           orientation: split.orientation,
           editable: this.editable,
           style: style,
-        }]);
+        }));
       } else {
         // TODO: Improve data validation.
-        children.push(['p', 'Malformed layout data.']);
+        children.push(p('Malformed layout data.'));
       }
       if (i < this.splits.length - 1) {
-        children.push(['io-layout-divider', {
+        children.push(ioLayoutDivider({
           orientation: this.orientation || 'horizontal',
           index: i
-        }]);
+        }));
       }
     }
     this.template([children]);
@@ -116,13 +117,13 @@ export class IoLayout extends IoElement {
   //   else if ((hor && target == 'up') || (ver && target == 'left')) divideIndex = 0;
   //   else if ((hor && target == 'down') || (ver && target == 'right')) divideIndex = 1;
   //
-  //   let newBlock = ['io-layout', {'tabs': [elementID], 'selected': 0}];
+  //   let newBlock = ioLayout({'tabs': [elementID], 'selected': 0});
   //   if (divideIndex !== -1) {
   //     let split = this.splits[spliceIndex];
-  //     this.splits.splice(spliceIndex, 1, ['io-layout', {'orientation': hor ? 'vertical' : 'horizontal', 'splits': [
+  //     this.splits.splice(spliceIndex, 1, ioLayout({'orientation': hor ? 'vertical' : 'horizontal', 'splits': [
   //       divideIndex ? split : newBlock,
   //       divideIndex ? newBlock : split
-  //     ]}]);
+  //     ]}));
   //   } else {
   //     this.splits.splice(spliceIndex, 0, newBlock);
   //   }
@@ -272,7 +273,7 @@ export class IoLayoutDivider extends IoElement {
   }
   changed() {
     this.template([
-      ['div', {class: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯']
+      div({class: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯')
     ]);
   }
 }

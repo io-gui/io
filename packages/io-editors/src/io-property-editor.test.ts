@@ -1,4 +1,6 @@
-import { nextQueue } from 'io-gui';
+//@ts-nocheck
+import { ioText, nextQueue } from 'io-gui';
+import { ioNumber, ioString } from 'io-inputs';
 import { IoPropertyEditor } from './index';
 
 const testValue = {
@@ -37,8 +39,8 @@ export default class {
         // console.log(children[0][2][0]);
         // console.log(children[0][2][1]);
 
-        expect(children[0][2][0]).to.eql(['io-text', {value: 'number'}, 'number']);
-        expect(children[0][2][1]).to.eql(['io-number', {
+        expect(children[0][2][0]).to.eql(ioText('number'));
+        expect(children[0][2][1]).to.eql(ioNumber({
           appearance: 'inset',
           'aria-valuemax': 'Infinity',
           'aria-valuemin': '-Infinity',
@@ -52,17 +54,17 @@ export default class {
           tabindex: '0',
           type: 'number',
           value: '0.5'},
-          '0.5']);
+        '0.5'));
 
-        expect(children[1][2][0]).to.eql(['io-text', {value: 'string'}, 'string']);
-        expect(children[1][2][1]).to.eql(['io-string', {
+        expect(children[1][2][0]).to.eql(ioText('string'));
+        expect(children[1][2][1]).to.eql(ioString({
           appearance: 'inset',
           role: 'textbox',
           spellcheck: 'false',
           tabindex: '0',
           type: 'text',
           value: 'hello'},
-        'hello']);
+        'hello'));
 
         expect(this.element.children[1].children[1].textContent).to.equal('hello');
         expect(this.element.children[1].children[1].localName).to.equal('io-string');
@@ -102,8 +104,8 @@ export default class {
       //   // this.element.value = testValue;
       //   this.element.config = new Map([
       //     [Object, [
-      //       [Number, ['io-slider', {step: 1}]],
-      //       [Boolean, ['io-string']],
+      //       [Number, ioSlider({step: 1})],
+      //       [Boolean, ioString()],
       //     ]]
       //   ]);
       //   expect(this.element.children[1].localName).to.equal('io-slider');

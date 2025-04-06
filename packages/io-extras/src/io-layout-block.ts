@@ -1,4 +1,5 @@
 import { Register, IoElement } from 'io-gui';
+import { ioTabs } from './io-tabbed-elements';
 // import "./layout-tab.js";
 // import "./layout-tabs.js";
 
@@ -60,7 +61,7 @@ export class IoLayoutBlock extends IoElement {
   }
   changed() {
     this.template([
-      ['io-layout-tabs', {$: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}],
+      ioTabs({$: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}),
       this.elements[this.tabs[this.selected]]
     ]);
   }

@@ -160,7 +160,7 @@ export class IoInspector extends IoElement {
     const elements = [
       div({class: 'inspector-header'}, [
         ioBreadcrumbs({value: this.value, selected: this.bind('selected')}),
-        // ['io-string', {$: 'search', value: this.bind('search'), live: true}],
+        // ioString({$: 'search', value: this.bind('search'), live: true}),
       ]),
       this._widgets.main ? this._widgets.main : null
     ];
@@ -204,8 +204,8 @@ export class IoInspector extends IoElement {
   }
   static get ObjectWidgets() {
     return {
-      // 'Object': ['io-input-base', {label: 'This is a main widget'}],
-      // 'Object|main': ['io-input-base', {label: 'This is a main group widget'}],
+      // 'Object': ioInputBase({label: 'This is a main widget'}),
+      // 'Object|main': ioInputBase({label: 'This is a main group widget'}),
     };
   }
 
