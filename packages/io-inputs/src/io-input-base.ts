@@ -1,5 +1,6 @@
 
 import { Register, Property, IoField, IoFieldArgs, VDOMArray, ArgsWithBinding, ioText } from 'io-gui';
+import { ioIcon } from '../../io-icons/build/elements/icon';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -12,7 +13,9 @@ import { Register, Property, IoField, IoFieldArgs, VDOMArray, ArgsWithBinding, i
 export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
   tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
   name?: string;
+  label?: string;
   value?: any;
+  icon?: string;
   type?: string;
 }>;
 
@@ -39,8 +42,14 @@ export class IoInputBase extends IoField {
   @Property({value: '', type: String, reflect: true})
   declare name: string;
 
+  @Property({type: String, value: '', reflect: true})
+  declare label: string;
+
   @Property({value: ''})
   declare value: any;
+
+  @Property({type: String, value: '', reflect: true})
+  declare icon: string;
 
   @Property({value: '', type: String, reflect: true})
   declare type: string;
@@ -242,6 +251,7 @@ export class IoInputBase extends IoField {
   }
   changed() {
     this.template([
+      this.icon ? ioIcon(this.icon) : null,
       this.label ? ioText(this.label) : null,
       this.value !== undefined ? ioText(String(this.value)) : null,
     ]);

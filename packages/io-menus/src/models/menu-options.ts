@@ -169,6 +169,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   }
 
   lastChanged() {
+    // TODO: this function does nothing. Its only for debugging.
     debug: if (this.last !== undefined) {
       const path = this.path ? [...this.path.split(this.delimiter)] : [];
       if (path.length) {
@@ -191,6 +192,8 @@ export class MenuOptions extends IoNodeMixin(Array) {
         }
       } else {
         console.warn(`MenuOptions.lastChanged: last property value set "${this.last}" but path is empty!`);
+        // TODO: this case happens in io-element-demo.js options. Consider updating paths on lastChanged.
+        // TODO: running updatePaths() here breaks the demo - value "[element-name]" becomes "element-name" for some reason.
       }
     }
   }
@@ -263,6 +266,7 @@ export class MenuOptions extends IoNodeMixin(Array) {
   bind(prop: string) {
     debug: if (prop === 'last' || prop === 'scroll') {
       console.warn('MenuPath: Binding to `last` or `scroll` property is not recommended!');
+      // TODO: remove this warning and test edge cases. Binding to last is useful for nested options.
     }
     return super.bind(prop);
   }

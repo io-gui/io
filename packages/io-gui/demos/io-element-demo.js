@@ -21,7 +21,7 @@ const options = new MenuOptions([{
     {value: ioSlider2d(), label: `io-slider-2d`},
   ]}
 ], {
-  last: $({key: 'element-demo', storage: 'hash', value: 'io-input-base'}),
+  last: $({key: 'element-demo', storage: 'local', value: 'io-input-base'}),
 });
 
 export class IoElementDemo extends IoElement {
@@ -74,6 +74,9 @@ export class IoElementDemo extends IoElement {
       reactivity: 'debounced'
     };
   }
+  optionsMutated() {
+    this.changed();
+  }
   elementMutated() {
     this.changed();
   }
@@ -106,7 +109,7 @@ export class IoElementDemo extends IoElement {
       this.$['attributes'].value = attributes;
     } else {
       this.template([
-        ioText({value: 'Element property not set.'}),
+        ioText('Element property not set.'),
       ]);
     }
   }

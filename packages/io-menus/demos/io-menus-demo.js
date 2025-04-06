@@ -1,7 +1,7 @@
-import { Register, IoElement } from 'io-gui';
-import { MenuOptions, MenuItem } from 'io-menus';
+import { Register, IoElement, div, span, ioText } from 'io-gui';
+import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions } from 'io-menus';
 // TODO: remove dependencies on io-inputs and io-navigation.
-import 'io-inputs';
+import { ioSwitch, ioInputBase } from 'io-inputs';
 import 'io-navigation';
 import 'io-icons';
 
@@ -96,51 +96,51 @@ export class IoMenusDemo extends IoElement {
   }
   init() {
     this.template([
-      ['io-menu-tree', {
+      ioMenuTree({
         options: options,
-      }],
-      ['io-menu-item', {label: 'menu item', item: new MenuItem('item')}],
-      ['io-menu-item', {label: 'menu item', item: new MenuItem({
+      }),
+      ioMenuItem({label: 'menu item', item: new MenuItem('item')}),
+      ioMenuItem({label: 'menu item', item: new MenuItem({
         selected: true,
         value: 'value',
         hint: 'selected',
         label: 'menu item label',
         icon: 'io:code',
-      })}],
-      ['io-menu-item', {label: 'menu item', item: new MenuItem({
+      })}),
+      ioMenuItem({label: 'menu item', item: new MenuItem({
         selected: false,
         value: 'value',
         hint: 'not selected',
         label: 'menu item label',
         icon: 'io:circle_fill_plus',
-      })}],
-      ['io-menu-options', {
+      })}),
+      ioMenuOptions({
         horizontal: true,
         searchable: true,
         options: new MenuOptions(numberItems, {
           first: this.bind('menuRoot')
         }),
-      }],
-      ['io-menu-options', {
+      }),
+      ioMenuOptions({
         horizontal: true,
         noPartialCollapse: true,
         options: new MenuOptions(numberItems, {
           first: this.bind('menuRoot')
         }),
-      }],
+      }),
       ['div', {class: 'row'}, [
-        ['io-menu-options', {
+        ioMenuOptions({
           searchable: true,
           options: new MenuOptions(numberItems, {
             first: this.bind('menuRoot')
           }),
-        }],
-        ['io-menu-options', {
+        }),
+        ioMenuOptions({
           options: new MenuOptions([...numberItems].reverse(), {
             first: this.bind('menuRoot')
           }),
-        }],
-        ['io-menu-options', {
+        }),
+        ioMenuOptions({
           options: new MenuOptions([
             new MenuItem({value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:layers'}),
             new MenuItem({value: 1, label: 'one', hint: 'Number(1)', icon: 'io:layers'}),
@@ -149,26 +149,26 @@ export class IoMenusDemo extends IoElement {
           ], {
             first: this.bind('menuRoot')
           }),
-        }],
-        ['io-menu-options', {
+        }),
+        ioMenuOptions({
           options: optionsDeep,
-        }],
+        }),
       ]],
-      ['div', {class: 'contextArea'}, [
-        ['span', 'Context Area'],
-        ['io-context-menu', {
+      div({class: 'contextArea'}, [
+        span('Context Area'),
+        ioContextMenu({
           options: new MenuOptions([...optionsDeep, ...numberItems, ...options]),
-        }],
-        ['io-context-menu', {
+        }),
+        ioContextMenu({
           options: new MenuOptions([...options]),
           button: 1,
-        }],
-        ['io-context-menu', {
+        }),
+        ioContextMenu({
           options: new MenuOptions([...numberItems]),
           button: 2,
-        }],
-      ]],
-      ['io-demo-menu-model', {name: 'Menu Model'}],
+        }),
+      ]),
+      ioDemoMenuModel({name: 'Menu Model'}),
     ]);
   }
 }
@@ -229,15 +229,15 @@ export class IoOptionsDemoView extends IoElement {
   changed() {
     const options = [];
     for (let i = 0; i < this.options.length; i++) {
-      options.push(['io-item-demo-view', {item: this.options[i]}]);
+      options.push(ioItemDemoView({item: this.options[i]}));
     }
     this.template([
-      ['div', [
-        this.options.first ? [['io-text', {label: 'first:', class: 'first'}], ['io-text', {label: this.options.first}]] : null,
-        this.options.last ? [['io-text', {label: 'last:', class: 'last'}], ['io-text', {label: this.options.last}]] : null,
-        this.options.scroll ? [['io-text', {label: 'scroll:', class: 'scroll'}], ['io-text', {label: this.options.scroll}]] : null,
-        this.options.path ? [['io-text', {label: 'path:', class: 'path'}], ['io-text', {label: this.options.path}]] : null,
-      ]],
+      div([
+        this.options.first ? [ioText({label: 'first:', class: 'first'}), ioText({label: this.options.first})] : null,
+        this.options.last ? [ioText({label: 'last:', class: 'last'}), ioText({label: this.options.last})] : null,
+        this.options.scroll ? [ioText({label: 'scroll:', class: 'scroll'}), ioText({label: this.options.scroll})] : null,
+        this.options.path ? [ioText({label: 'path:', class: 'path'}), ioText({label: this.options.path})] : null,
+      ]),
       options
     ]);
   }
@@ -271,16 +271,16 @@ export class IoItemDemoView extends IoElement {
   changed() {
     let selectElement = null;
     if (this.item.mode === 'toggle') {
-      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'}];
+      selectElement = ioSwitch({value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
     } else if (this.item.mode === 'select' || this.item.mode === 'scroll') {
-      selectElement = ['io-boolicon', {value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'}];
+      selectElement = ioSwitch({value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
     }
     this.template([
-      ['div', [
+      div([
         selectElement,
-        ['io-input-base', {value: this.item.label, appearance: 'neutral'}],
-      ]],
-      this.item.hasmore ? ['io-options-demo-view', {options: this.item.options}] : null
+        ioInputBase({value: this.item.label, appearance: 'neutral'}),
+      ]),
+      this.item.hasmore ? ioOptionsDemoView({options: this.item.options}) : null
     ]);
   }
 }

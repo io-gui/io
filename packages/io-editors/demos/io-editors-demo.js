@@ -1,6 +1,7 @@
-import { Register, IoElement } from 'io-gui';
-import { MenuOptions } from 'io-menus';
-import 'io-editors';
+import { Register, IoElement, div } from 'io-gui';
+import { MenuOptions, ioOptionMenu } from 'io-menus';
+import { ioPropertyEditor, ioObject, ioVector, ioMatrix, ioInspector } from 'io-editors';
+import { ioSlider } from 'io-sliders';
 
 export class IoEditorsDemo extends IoElement {
   static get Style() {
@@ -43,60 +44,60 @@ export class IoEditorsDemo extends IoElement {
   }
   init() {
     this.template([
-      ['div', {class: 'row'}, [
-        ['io-property-editor', {
+      div({class: 'row'}, [
+        ioPropertyEditor({
           value: this.object,
-        }],
-        ['io-property-editor', {
+        }),
+        ioPropertyEditor({
           value: this.object,
           config: new Map([
             [Object, [
-              [Number, ['io-slider', {step: 0.1}]],
-              ['vector2', ['io-vector']],
-              ['vector3', ['io-vector']],
-              ['vector4', ['io-vector']],
-              ['matrix2', ['io-matrix']],
-              ['matrix3', ['io-matrix']],
-              ['matrix4', ['io-matrix']],
+              [Number, ioSlider({step: 0.1})],
+              ['vector2', ioVector()],
+              ['vector3', ioVector()],
+              ['vector4', ioVector()],
+              ['matrix2', ioMatrix()],
+              ['matrix3', ioMatrix()],
+              ['matrix4', ioMatrix()],
             ]]
           ]),
-        }],
-        ['io-property-editor', {
+        }),
+        ioPropertyEditor({
           value: this.object,
           properties: ['number', 'string', 'boolean'],
           // widget: ['io-input-base', {label: 'Widget Element'}],
           config: new Map([
             [Object, [
-              [Number, ['io-option-menu', {options: new MenuOptions([
+              [Number, ioOptionMenu({options: new MenuOptions([
                 {label: 'zero', value: 0},
                 {label: 'half', value: 0.5},
                 {label: 'one', value: 1},
-              ])}]],
+              ])})],
             ]]
           ]),
-        }],
-      ]],
-      ['div', {class: 'row'}, [
-        ['io-object', {
+        }),
+      ]),
+      div({class: 'row'}, [
+        ioObject({
           value: this.object,
-        }],
-        ['io-object', {
+        }),
+        ioObject({
           value: this.object,
           expanded: true,
           // widget: ['io-input-base', {label: 'Widget Element'}],
           properties: ['number', 'string', 'boolean'],
-        }],
-        ['io-object', {
+        }),
+        ioObject({
           value: this.object,
           expanded: true,
           properties: ['number'],
           config: new Map([
-            [Number, ['io-slider', {step: 0.1}]],
+            [Number, ioSlider({step: 0.1})],
           ]),
-        }],
-      ]],
-      ['div', {class: 'row'}, [
-        ['io-editors', {
+        }),
+      ]),
+      div({class: 'row'}, [
+        ioInspector({
           value: this.object,
           // TODO: this.object.object displays broken "number" slider. Investigate!
           groups: {
@@ -105,17 +106,17 @@ export class IoEditorsDemo extends IoElement {
           },
           config: new Map([
             [Object, [
-              ['vector2', ['io-vector', {linkable: true}]],
-              ['vector3', ['io-vector', {linkable: true}]],
-              ['vector4', ['io-vector', {linkable: true}]],
-              ['matrix2', ['io-matrix']],
-              ['matrix3', ['io-matrix']],
-              ['matrix4', ['io-matrix']],
-              [Number, ['io-slider', {step: 0.1}]],
+              ['vector2', ioVector({linkable: true})],
+              ['vector3', ioVector({linkable: true})],
+              ['vector4', ioVector({linkable: true})],
+              ['matrix2', ioMatrix()],
+              ['matrix3', ioMatrix()],
+              ['matrix4', ioMatrix()],
+              [Number, ioSlider({step: 0.1})],
             ]]
           ]),
-        }],
-      ]],
+        }),
+      ]),
     ]);
   }
 }

@@ -1,4 +1,5 @@
 import { Register, IoElement } from 'io-gui';
+import { ioInputBase, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 
 export class IoInputsDemo extends IoElement {
   static get Style() {
@@ -25,38 +26,38 @@ export class IoInputsDemo extends IoElement {
   init() {
     this.template([
       ['div', {class: 'row'}, [
-        ['io-input-base', {value: this.bind('string')}],
-        ['io-input-base', {value: this.bind('string'), appearance: 'outset'}],
-        ['io-input-base', {value: this.bind('string'), appearance: 'inset'}],
-        ['io-input-base', {value: this.bind('string'), appearance: 'neutral'}],
+        ioInputBase({value: this.bind('string')}),
+        ioInputBase({value: this.bind('string'), appearance: 'outset'}),
+        ioInputBase({value: this.bind('string'), appearance: 'inset'}),
+        ioInputBase({value: this.bind('string'), appearance: 'neutral'}),
       ]],
       ['div', {class: 'row'}, [
-        ['io-input-base', {value: this.bind('string'), invalid: true}],
-        ['io-input-base', {value: this.bind('string'), class: 'green'}],
-        ['io-input-base', {value: this.bind('string'), selected: this.bind('boolean')}],
-        ['io-input-base', {icon: 'io:io'}],
+        ioInputBase({value: this.bind('string'), invalid: true}),
+        ioInputBase({value: this.bind('string'), class: 'green'}),
+        ioInputBase({value: this.bind('string'), selected: this.bind('boolean')}),
+        ioInputBase({icon: 'io:io'}),
       ]],
       ['div', {class: 'row'}, [
-        ['io-string', {value: this.bind('string'), placeholder: 'io-string'}],
-        ['io-string', {value: this.bind('string'), placeholder: 'io-string', live: true}],
+        ioString({value: this.bind('string'), placeholder: 'io-string'}),
+        ioString({value: this.bind('string'), placeholder: 'io-string', live: true}),
       ]],
       ['div', {class: 'row'}, [
-        ['io-number', {value: this.bind('number')}],
-        ['io-number', {ladder: true, value: this.bind('number')}],
-        ['io-number', {conversion: 2, value: this.bind('number')}],
+        ioNumber({value: this.bind('number')}),
+        ioNumber({ladder: true, value: this.bind('number')}),
+        ioNumber({conversion: 2, value: this.bind('number')}),
       ]],
       ['div', {class: 'row'}, [
-        ['io-boolicon', {value: this.bind('boolean'), true: 'io:io', false: 'io:io_logo'}],
-        ['io-boolean', {value: this.bind('boolean')}],
+        ioBoolean({value: this.bind('boolean'), true: 'io:io', false: 'io:io_logo'}),
+        ioBoolean({value: this.bind('boolean')}),
       ]],
       ['div', {class: 'row'}, [
-        ['io-switch', {value: this.bind('boolean')}],
+        ioSwitch({value: this.bind('boolean')}),
       ]],
       ['div', {class: 'row'}, [
-        ['io-button', {label: 'Button', icon: 'io:check'}],
-        ['io-button', {label: 'Button', icon: 'io:check', appearance: 'inset'}],
-        ['io-button', {label: 'Button', icon: 'io:check', appearance: 'flush'}],
-        ['io-button', {label: 'Button', icon: 'io:check', appearance: 'neutral'}],
+        ioButton({label: 'Button', icon: 'io:check'}),
+        ioButton({label: 'Button', icon: 'io:check', appearance: 'inset'}),
+        ioButton({label: 'Button', icon: 'io:check', appearance: 'flush'}),
+        ioButton({label: 'Button', icon: 'io:check', appearance: 'neutral'}),
       ]],
     ]);
   }

@@ -1,6 +1,6 @@
 import { Register, IoElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import 'io-navigation';
+import { ioNavigatorSelector, ioNavigatorScroller, ioSelector } from 'io-navigation';
 
 const contentElements = [
   ['div', {id: 'devs', class: 'vertical'}, [
@@ -106,22 +106,22 @@ export class IoNavigationDemo extends IoElement {
   }
   init() {
     this.template([
-      ['io-navigator-scroller', {
+      ioNavigatorScroller({
         menu: 'left',
         collapseWidth: 100,
         options: contentOptions[0].options,
         elements: [contentElements[0]]
-      }],
-      ['io-navigator-selector', {
+      }),
+      ioNavigatorSelector({
         menu: 'top',
         depth: 0,
         options: contentOptions,
         elements: contentElements
-      }],
-      ['io-selector', {
+      }),
+      ioSelector({
         elements: contentElements,
         options: contentOptions,
-      }]
+      }),
     ]);
   }
 }

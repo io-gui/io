@@ -4,8 +4,6 @@ import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 
 export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
   action?: Function;
-  label?: string;
-  icon?: string;
   pressed?: boolean;
 }>;
 
@@ -39,12 +37,6 @@ export class IoButton extends IoInputBase {
 
   @Property(undefined)
   declare action?: Function;
-
-  @Property({type: String, value: '', reflect: true})
-  declare label: string;
-
-  @Property({type: String, value: '', reflect: true})
-  declare icon: string;
 
   @Property({value: undefined, type: undefined, reflect: false})
   declare value: any;
