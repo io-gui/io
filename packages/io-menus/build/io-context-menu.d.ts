@@ -9,10 +9,12 @@ export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
  **/
 export declare class IoContextMenu extends IoElement {
+    static vConstructor: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     options: MenuOptions;
     expanded: boolean;
     button: number;
     static get Properties(): any;
+    constructor(args?: IoContextMenuArgs);
     connectedCallback(): void;
     disconnectedCallback(): void;
     getBoundingClientRect(): any;
@@ -25,7 +27,6 @@ export declare class IoContextMenu extends IoElement {
     _onClick(event: MouseEvent): void;
     _onCollapse(): void;
     optionsChanged(): void;
-    static vDOM: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioContextMenu: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-context-menu.d.ts.map

@@ -1,4 +1,3 @@
-import { IoIconsetSingleton } from 'io-icons';
 import { IoBoolean } from './index.js';
 
 const element = new IoBoolean();

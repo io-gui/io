@@ -11,15 +11,16 @@ export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 export declare class IoOptionMenu extends IoElement {
+    static vConstructor: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: any;
     options: MenuOptions;
     role: string;
     item: MenuItem;
+    constructor(args?: IoOptionMenuArgs);
     _onLeafChanged(event: CustomEvent): void;
     optionsChanged(change: Change): void;
     changed(): void;
-    static vDOM: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioOptionMenu: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-option-menu.d.ts.map

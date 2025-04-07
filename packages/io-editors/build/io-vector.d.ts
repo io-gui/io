@@ -18,6 +18,7 @@ export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
  * Input element for vector arrays and objects.
  **/
 export declare class IoVector extends IoElement {
+    static vConstructor: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: {
         x: number;
@@ -38,8 +39,7 @@ export declare class IoVector extends IoElement {
     _onNumberValueInput(event: CustomEvent): void;
     valueChanged(): void;
     changed(): void;
-    getSlotted(): Array<any> | null;
-    static vDOM: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    getSlotted(): VDOMArray | null;
 }
 export declare const ioVector: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-vector.d.ts.map

@@ -6,11 +6,11 @@ export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
     precache?: boolean;
 }>;
 export declare class IoNavigatorSelector extends IoNavigatorBase {
+    static vConstructor: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     select: 'first' | 'last';
     cache: boolean;
     precache: boolean;
     getSlotted(): VDOMArray;
-    static vDOM: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioNavigatorSelector: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-navigator-selector.d.ts.map

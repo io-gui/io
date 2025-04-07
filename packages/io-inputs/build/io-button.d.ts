@@ -2,8 +2,6 @@ import { ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
     action?: Function;
-    label?: string;
-    icon?: string;
     pressed?: boolean;
 }>;
 /**
@@ -15,12 +13,11 @@ export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
 export declare class IoButton extends IoInputBase {
     static get Style(): string;
     action?: Function;
-    label: string;
-    icon: string;
     value: any;
     appearance: 'flush' | 'inset' | 'outset' | 'neutral';
     pressed: boolean;
     role: string;
+    constructor(args?: IoButtonArgs);
     onPointerdown(event: PointerEvent): void;
     onPointerleave(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;

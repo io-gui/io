@@ -7,6 +7,7 @@ export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
 }>;
 export declare class IoGl extends IoElement {
     #private;
+    static vConstructor: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     theme: typeof IoThemeSingleton;
     size: [number, number];
@@ -19,7 +20,7 @@ export declare class IoGl extends IoElement {
     static get Frag(): string;
     initPropertyUniform(name: string, property: PropertyDefinition): string;
     initShader(): WebGLProgram;
-    constructor(properties?: Record<string, any>);
+    constructor(args?: IoGlArgs);
     onResized(): void;
     get ctx(): CanvasRenderingContext2D;
     themeMutated(): void;
@@ -30,7 +31,6 @@ export declare class IoGl extends IoElement {
     updateThemeUniforms(): void;
     setUniform(name: string, value: any): void;
     Register(ioNodeConstructor: typeof IoElement): void;
-    static vDOM: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioGl: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=gl.d.ts.map

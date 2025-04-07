@@ -9,6 +9,7 @@ export type IoMdNavigatorArgs = IoElementArgs & ArgsWithBinding<{
     collapseWidth?: number;
 }>;
 export declare class IoMdNavigator extends IoElement {
+    static vConstructor: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     slotted: VDOMArray[];
     options: MenuOptions;
@@ -18,7 +19,6 @@ export declare class IoMdNavigator extends IoElement {
     collapseWidth: number;
     onResized(): void;
     changed(): void;
-    static vDOM: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioMdNavigator: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-md-navigator.d.ts.map

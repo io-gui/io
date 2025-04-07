@@ -1,6 +1,6 @@
 import { IoElement, IoGl, IoTheme, Color } from 'io-gui';
 import { AnyConstructor, VDOMArray } from 'io-gui';
-import { MenuItem, MenuOptions, ioOptionMenu } from 'io-menus';
+import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 import { ioObject } from '../io-object';
@@ -74,7 +74,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
 ]);
 
 export function getEditorConfig(object: object, editorConfig: EditorConfig = new Map()): PropertyConfigRecord {
-  debug: if (!(object instanceof Object) || object === null) {
+  debug: if (!object || !(object instanceof Object)) {
     console.warn('`getObjectConfig` should be used with an Object instance');
     return {};
   }

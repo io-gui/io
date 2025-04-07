@@ -15,6 +15,7 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
 export declare class IoNumber extends IoInputBase {
+    static vConstructor: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: number;
     conversion: number;
@@ -30,6 +31,7 @@ export declare class IoNumber extends IoInputBase {
     placeholder: string;
     spellcheck: string;
     private _pointer;
+    constructor(args?: IoNumberArgs);
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
@@ -41,7 +43,6 @@ export declare class IoNumber extends IoInputBase {
     init(): void;
     disabledChanged(): void;
     changed(): void;
-    static vDOM: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioNumber: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-number.d.ts.map

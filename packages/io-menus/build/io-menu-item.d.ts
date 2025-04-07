@@ -1,4 +1,4 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMArray, ArgsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuOptions } from './io-menu-options.js';
 import { IoInputBase, IoInputBaseArgs } from 'io-inputs';
@@ -12,13 +12,15 @@ export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
 export declare class IoMenuItem extends IoInputBase {
+    static vConstructor: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     item: MenuItem;
     expanded: boolean;
-    direction: string;
+    direction: NudgeDirection;
     depth: number;
     $options?: IoMenuOptions;
     static get Listeners(): any;
+    constructor(args?: IoMenuItemArgs);
     preventDefault(event: Event): void;
     get hasmore(): boolean;
     get inlayer(): boolean;
@@ -44,7 +46,6 @@ export declare class IoMenuItem extends IoInputBase {
     itemChanged(): void;
     itemMutated(): void;
     changed(): void;
-    static vDOM: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioMenuItem: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 type IoMenuElementType = IoMenuItem | IoMenuOptions;

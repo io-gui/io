@@ -92,17 +92,10 @@ export class IoPropertyEditor extends IoElement {
         const props = config[c]![1] as (IoElementArgs | undefined) || {};
         const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
-        if (tag === 'io-object') {
-          elements.push(div({class: 'io-row'}, [
-            this.labeled ? ioText(c) : null,
-            [tag, finalProps],
-          ]));
-        } else {
-          elements.push(div({class: 'io-row'}, [
-            this.labeled ? ioText(c) : null,
-            [tag, finalProps],
-          ]));
-        }
+        elements.push(div({class: 'io-row'}, [
+          this.labeled ? ioText(c) : null,
+          [tag, finalProps],
+        ]));
       } else {
         debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
       }

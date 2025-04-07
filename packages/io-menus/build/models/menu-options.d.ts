@@ -1,14 +1,15 @@
 import { IoNodeArgs, ArgsWithBinding } from 'io-gui';
-import { MenuItem, MenuItemArgsLoose } from './menu-item.js';
+import { MenuItem, MenuItemDefLoose } from './menu-item.js';
 export type MenuOptionsArgs = IoNodeArgs & ArgsWithBinding<{
     first?: any;
     last?: any;
     scroll?: string;
     path?: string;
     delimiter?: string;
+    items?: MenuItem[];
 }>;
 declare const MenuOptions_base: {
-    new (...args: any[]): {
+    new (...superArgs: any[]): {
         [x: string]: any;
         readonly _protochain: import("io-gui").ProtoChain;
         readonly _properties: Map<string, import("io-gui").PropertyInstance>;
@@ -43,10 +44,11 @@ export declare class MenuOptions extends MenuOptions_base {
     scroll: any;
     path: string;
     delimiter: string;
-    push(...items: MenuItem[]): void;
+    items: MenuItem[];
     getItem(value: any, deep?: boolean): any;
-    constructor(args?: MenuItemArgsLoose[], properties?: IoNodeArgs);
-    protected addItems(items: MenuItemArgsLoose[]): void;
+    constructor(properties?: MenuOptionsArgs);
+    fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
+    initItems(items: MenuItem[]): void;
     pathChanged(): void;
     firstChanged(): void;
     lastChanged(): void;

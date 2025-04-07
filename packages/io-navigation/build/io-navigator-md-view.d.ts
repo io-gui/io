@@ -5,10 +5,10 @@ export type IoNavigatorMdViewArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
     sanitize?: boolean;
 }>;
 export declare class IoNavigatorMdView extends IoNavigatorBase {
+    static vConstructor: (arg0?: IoNavigatorMdViewArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     strip: string[];
     sanitize: boolean;
     getSlotted(): VDOMArray;
-    static vDOM: (arg0?: IoNavigatorMdViewArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioNavigatorMdView: (arg0?: IoNavigatorMdViewArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-navigator-md-view.d.ts.map

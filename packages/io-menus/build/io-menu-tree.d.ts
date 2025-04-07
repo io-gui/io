@@ -11,6 +11,7 @@ export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
     slotted?: VDOMArray[];
 }>;
 export declare class IoMenuTree extends IoElement {
+    static vConstructor: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     options: MenuOptions;
     searchable: boolean;
@@ -22,10 +23,10 @@ export declare class IoMenuTree extends IoElement {
     static get Listeners(): {
         'item-clicked': string;
     };
+    constructor(args?: IoMenuTreeArgs);
     _onItemClicked(event: CustomEvent): void;
     _onCollapse(): void;
     changed(): void;
-    static vDOM: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-menu-tree.d.ts.map

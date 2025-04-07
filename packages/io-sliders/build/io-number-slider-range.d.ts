@@ -20,6 +20,7 @@ export declare class IoNumberSliderRange extends IoElement {
     max: number;
     exponent: number;
     conversion: number;
+    constructor(args?: IoNumberSliderRangeArgs);
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;
     init(): void;

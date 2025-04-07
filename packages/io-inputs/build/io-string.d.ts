@@ -10,6 +10,7 @@ export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
  * Input element for `String` data type.
  **/
 export declare class IoString extends IoInputBase {
+    static vConstructor: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     live: boolean;
     value: string;
@@ -18,6 +19,7 @@ export declare class IoString extends IoInputBase {
     appearance: 'flush' | 'inset' | 'outset';
     placeholder: string;
     spellcheck: string;
+    constructor(args?: IoStringArgs);
     _setFromTextNode(): void;
     _tryParseFromTextNode(): void;
     onBlur(event: FocusEvent): void;
@@ -30,7 +32,6 @@ export declare class IoString extends IoInputBase {
     disabledChanged(): void;
     changed(): void;
     valueChanged(): void;
-    static vDOM: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioString: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-string.d.ts.map

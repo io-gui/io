@@ -2,7 +2,6 @@ import { EventDispatcher } from './internals/eventDispatcher';
 import { IoNode, IoNodeMixin, IoNodeArgs, ArgsWithBinding } from './node';
 import { Property } from './decorators/property';
 import { Register } from './decorators/register';
-import { Binding } from './internals/binding';
 import { applyNativeElementProps, buildTree, constructVDOMElement, disposeElementDeep, toVDOM } from './internals/vDOM';
 
 // Global mixin record

@@ -3,7 +3,8 @@ import { Binding } from './internals/binding';
 import { ChangeQueue } from './internals/changeQueue';
 import { PropertyInstance, PropertyDefinitionLoose } from './internals/property';
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from './internals/eventDispatcher';
-export type Constructor = new (...args: any[]) => unknown;
+import { CallbackFunction } from './internals/queue';
+export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 export interface IoNodeConstructor<T> {
@@ -12,7 +13,6 @@ export interface IoNodeConstructor<T> {
     Listeners?: ListenerDefinitions;
     Style?: string;
 }
-export type CallbackFunction = (arg?: any) => void;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type ArgsWithBinding<T> = {
     [K in keyof T]: T[K] | Binding;
@@ -27,7 +27,7 @@ export type IoNodeArgs = ArgsWithBinding<{
  * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
  */
 export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T): {
-    new (...args: any[]): {
+    new (...superArgs: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
         readonly _properties: Map<string, PropertyInstance>;
@@ -143,7 +143,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
     readonly Properties: PropertyDefinitions;
 };
 declare const IoNode_base: {
-    new (...args: any[]): {
+    new (...superArgs: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
         readonly _properties: Map<string, PropertyInstance>;
@@ -263,6 +263,5 @@ declare const IoNode_base: {
  */
 export declare class IoNode extends IoNode_base {
 }
-export declare function nextQueue(): Promise<void>;
 export {};
 //# sourceMappingURL=node.d.ts.map

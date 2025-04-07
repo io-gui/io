@@ -12,17 +12,18 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
  **/
 export declare class IoBoolean extends IoInputBase {
+    static vConstructor: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: boolean;
     true: string;
     false: string;
     type: string;
     role: string;
+    constructor(args?: IoBooleanArgs);
     onClick(): void;
     toggle(): void;
     init(): void;
     changed(): void;
-    static vDOM: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioBoolean: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-boolean.d.ts.map

@@ -15,6 +15,7 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  * <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.1, "conversion": 0.2, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
  **/
 export declare class IoNumberSlider extends IoElement {
+    static vConstructor: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: number;
     step: number;
@@ -22,11 +23,11 @@ export declare class IoNumberSlider extends IoElement {
     max: number;
     exponent: number;
     conversion: number;
+    constructor(args?: IoNumberSliderArgs);
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;
     init(): void;
     changed(): void;
-    static vDOM: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioNumberSlider: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-number-slider.d.ts.map

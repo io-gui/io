@@ -10,6 +10,7 @@ export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
     collapseWidth?: number;
 }>;
 export declare class IoNavigatorBase extends IoElement {
+    static vConstructor: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     slotted: VDOMArray[];
     elements: VDOMArray[];
@@ -23,7 +24,6 @@ export declare class IoNavigatorBase extends IoElement {
     _computeCollapsed(): void;
     getSlotted(): VDOMArray | null;
     changed(): void;
-    static vDOM: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioNavigatorBase: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-navigator-base.d.ts.map

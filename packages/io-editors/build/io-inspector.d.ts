@@ -11,6 +11,7 @@ export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 export declare class IoInspector extends IoElement {
+    static vConstructor: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: Record<string, any> | any[];
     selected: Record<string, any> | any[];
@@ -39,7 +40,6 @@ export declare class IoInspector extends IoElement {
     };
     static get ObjectWidgets(): {};
     Register(ioNodeConstructor: typeof IoNode): void;
-    static vDOM: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioInspector: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-inspector.d.ts.map

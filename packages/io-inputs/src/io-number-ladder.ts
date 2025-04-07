@@ -1,7 +1,6 @@
 import { Register, Property, IoElement, IoElementArgs, IoOverlaySingleton, IoThemeSingleton, span, VDOMArray, ArgsWithBinding } from 'io-gui';
 import { IoNumber } from './io-number';
 import { ioNumberLadderStep } from './io-number-ladder-step';
-import { IoInputBaseArgs } from './io-input-base';
 
 let lastFocus: Element | null = null;
 {

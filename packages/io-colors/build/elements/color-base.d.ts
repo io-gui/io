@@ -8,6 +8,7 @@ export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
     };
 }>;
 export declare class IoColorBase extends IoElement {
+    static vConstructor: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     reactivity: string;
     value: {
         r: number;
@@ -24,6 +25,5 @@ export declare class IoColorBase extends IoElement {
     rgbFromHsl(): void;
     valueFromRgb(): void;
     valueChanged(): void;
-    static vDOM: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 //# sourceMappingURL=color-base.d.ts.map

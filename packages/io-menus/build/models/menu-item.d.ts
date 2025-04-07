@@ -1,7 +1,7 @@
 import { IoNode, IoNodeArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './menu-options.js';
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
-export type MenuItemArgsLoose = undefined | null | string | number | MenuItemArgs;
+export type MenuItemDefLoose = undefined | null | string | number | MenuItemArgs;
 export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
     value?: any;
     label?: string;
@@ -12,7 +12,7 @@ export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
     hidden?: boolean;
     disabled?: boolean;
     selected?: boolean;
-    options?: MenuItemArgsLoose[] | MenuOptions;
+    options?: MenuOptions | MenuItemDefLoose[];
 }>;
 export declare class MenuItem extends IoNode {
     value: any;
@@ -27,7 +27,8 @@ export declare class MenuItem extends IoNode {
     options?: MenuOptions;
     get hasmore(): boolean;
     getSubitem(value: any): any;
-    constructor(args?: MenuItemArgsLoose);
+    constructor(args?: MenuItemArgs);
+    fromJSON(looseDef: MenuItemDefLoose): this;
     toJSON(): Record<string, any>;
     _onSubItemSelected(): void;
     _onOptionsPathChanged(event: CustomEvent): void;

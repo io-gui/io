@@ -1,5 +1,9 @@
-import { IoElement } from '../core/element';
+import { IoElement, IoElementArgs } from '../core/element';
+import { ArgsWithBinding } from '../core/node';
 export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
+export type IoOverlayArgs = IoElementArgs & ArgsWithBinding<{
+    expanded?: boolean;
+}>;
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
  * It is a pointer-blocking element covering the entire window at a very high z-index.
@@ -49,7 +53,7 @@ declare class IoOverlay extends IoElement {
             passive: boolean;
         })[];
     };
-    constructor(properties?: Record<string, any>);
+    constructor(args?: IoOverlayArgs);
     stopPropagation(event: Event): void;
     onResized(): void;
     onPointerup(event: PointerEvent): void;

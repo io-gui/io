@@ -10,16 +10,17 @@ export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{}>;
  * <io-element-demo element="io-slider-range" properties='{"value": [0, 1], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>
  **/
 export declare class IoSliderRange extends IoSliderBase {
+    static vConstructor: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     value: [number, number];
     step: number;
     min: number;
     max: number;
     _index: number;
+    constructor(args?: IoSliderRangeArgs);
     _getCoordFromValue(value: [number, number]): number[];
     onPointerdown(event: PointerEvent): void;
     onPointermoveThrottled(event: PointerEvent): void;
     static get Frag(): string;
-    static vDOM: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioSliderRange: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-slider-range.d.ts.map

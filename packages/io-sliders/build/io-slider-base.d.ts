@@ -10,6 +10,7 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
     tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
 }>;
 export declare class IoSliderBase extends IoGl {
+    static vConstructor: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: number | [number, number];
     step: number | [number, number];
@@ -36,6 +37,7 @@ export declare class IoSliderBase extends IoGl {
             passive: boolean;
         })[];
     };
+    constructor(args?: IoSliderBaseArgs);
     onFocus(): void;
     onBlur(): void;
     onContextmenu(event: Event): void;
@@ -60,6 +62,5 @@ export declare class IoSliderBase extends IoGl {
     _setRight(): void;
     init(): void;
     changed(): void;
-    static vDOM: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 //# sourceMappingURL=io-slider-base.d.ts.map

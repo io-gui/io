@@ -13,6 +13,7 @@ export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
  * For example, setting `channel: 'h'` will instantiate a slider for "hue" color channel and hook up necessary conversions, bindings and event callbacks.
  **/
 export declare class IoColorSlider extends IoColorBase {
+    static vConstructor: (arg0?: IoColorSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     color: [number, number, number, number];
     step: number;
@@ -20,7 +21,6 @@ export declare class IoColorSlider extends IoColorBase {
     vertical: boolean;
     _onValueInput(event: CustomEvent): void;
     changed(): void;
-    static vDOM: (arg0?: IoColorSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioColorSlider: (arg0?: IoColorSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 /**

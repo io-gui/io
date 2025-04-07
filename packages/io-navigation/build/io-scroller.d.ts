@@ -4,6 +4,7 @@ export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
     options?: MenuOptions;
 }>;
 export declare class IoScroller extends IoElement {
+    static vConstructor: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     options: MenuOptions;
     private _observer;
@@ -13,7 +14,6 @@ export declare class IoScroller extends IoElement {
     optionsMutated(): void;
     _scrollToSelected(): void;
     dispose(): void;
-    static vDOM: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioScroller: (arg0?: IoScrollerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-scroller.d.ts.map

@@ -1,5 +1,4 @@
 import { IoInputBase } from './index';
-import { IoIconsetSingleton } from 'io-icons';
 
 const element = new IoInputBase();
 element.style.display = 'none';

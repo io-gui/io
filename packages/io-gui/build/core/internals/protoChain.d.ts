@@ -1,6 +1,6 @@
 import { ProtoProperty } from './property';
 import { ListenerDefinition } from './eventDispatcher';
-import { IoNode, IoNodeConstructor, Constructor, PropertyDefinitions, ListenerDefinitions } from '../node';
+import { IoNode, IoNodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../node';
 type ProtoConstructors = Array<IoNodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = {
@@ -9,7 +9,7 @@ type ProtoProperties = {
 type ProtoListeners = {
     [property: string]: ListenerDefinition[];
 };
-export declare const propertyDecorators: WeakMap<Constructor, PropertyDefinitions>;
+export declare const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions>;
 /**
  * ProtoChain manages class inheritance metadata and configuration.
  *

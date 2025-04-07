@@ -8,6 +8,7 @@ export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
     };
 }>;
 export declare class IoColorPicker extends IoElement {
+    static vConstructor: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: {
         r: number;
@@ -26,7 +27,6 @@ export declare class IoColorPicker extends IoElement {
     expand(): void;
     collapse(): void;
     valueChanged(): void;
-    static vDOM: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioColorPicker: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=io-color-picker.d.ts.map

@@ -9,11 +9,12 @@ export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
  * Custom SVG assets need to be registered with `IoIconsetSingleton`.
  **/
 export declare class IoIcon extends IoElement {
+    static vConstructor: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
     static get Style(): string;
     value: string;
     stroke: boolean;
+    constructor(args?: IoIconArgs);
     valueChanged(): void;
-    static vDOM: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 }
 export declare const ioIcon: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
 //# sourceMappingURL=icon.d.ts.map
