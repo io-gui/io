@@ -1,11 +1,11 @@
 import { IoElement, IoGl, IoTheme, Color } from 'io-gui';
 import { AnyConstructor, VDOMArray } from 'io-gui';
-import { MenuOptions, ioOptionMenu } from 'io-menus';
+import { MenuItem, MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 import { ioObject } from '../io-object';
 import { ioVector } from '../io-vector';
-import { ioString, ioNumber, ioBoolean, ioSwitch, ioInputBase } from 'io-inputs';
+import { ioString, ioNumber, ioSwitch, ioInputBase } from 'io-inputs';
 
 export type PropertyIdentifier = AnyConstructor | string | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMArray];
@@ -26,9 +26,20 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     [Number, ioNumber({step: 0.01})],
   ]],
   [IoElement, [
-    ['reactivity', ioOptionMenu({options: new MenuOptions(['none', 'debounced', 'immediate'])})],
-    ['tabindex', ioOptionMenu({options: new MenuOptions([{label: 'None', value: ''}, '-1', '0', '1', '2', '3'])})],
-    ['role', ioOptionMenu({options: new MenuOptions(['alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary','contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img','link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio','navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader','scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term','textbox','timer','toolbar','tooltip','tree','treegrid','treeitem'])})],
+    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'none', 'debounced', 'immediate',
+    ])})],
+    ['tabindex', ioOptionMenu({options: new MenuOptions().fromJSON([
+      {value: '', label: 'none'}, '-1', '0', '1', '2', '3',
+    ])})],
+    ['role', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary',
+      'contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img',
+      'link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio',
+      'navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader',
+      'scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term',
+      'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
+    ])})],
   ]],
   [IoGl, [
     ['size', ioVector({step: 1})],
@@ -37,7 +48,10 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]],
   [IoTheme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],
-    ['themeID', ioOptionMenu({options: new MenuOptions(['light', 'dark'])})],
+    ['themeID', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'light',
+      'dark',
+    ])})],
     ['spacing2', ioInputBase()],
     ['spacing3', ioInputBase()],
     ['spacing5', ioInputBase()],

@@ -1,6 +1,6 @@
 
 import { Register, Property, IoField, IoFieldArgs, VDOMArray, ArgsWithBinding, ioText } from 'io-gui';
-import { ioIcon } from '../../io-icons/build/elements/icon';
+import { ioIcon } from 'io-icons';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};

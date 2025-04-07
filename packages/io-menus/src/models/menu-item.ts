@@ -3,6 +3,7 @@ import { MenuOptions } from './menu-options.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
 
+// TODO: MenuItemArgs options shoudl be array of MenuItemDefLoose
 export type MenuItemDefLoose = undefined | null | string | number | MenuItemArgs;
 
 export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
@@ -15,7 +16,7 @@ export type MenuItemArgs = IoNodeArgs & ArgsWithBinding<{
   hidden?: boolean,
   disabled?: boolean,
   selected?: boolean,
-  options?: MenuOptions
+  options?: MenuOptions | MenuItemDefLoose[]
 }>;
 
 // TODO: documentation!
@@ -61,11 +62,11 @@ export class MenuItem extends IoNode {
     return this.options?.getItem(value);
   }
 
-  constructor(args: MenuItemArgs = {}) {
+  constructor(args?: MenuItemArgs) {
 
     const item: MenuItemArgs = {...args};
 
-    if (args.label === undefined) {
+    if (item.label === undefined) {
       if (typeof item.value === 'object') {
         if (item.value === null) {
           item.label = 'null';
@@ -77,7 +78,7 @@ export class MenuItem extends IoNode {
       }
     }
 
-    if (item.selected === undefined && (args.mode === 'select' || args.mode === undefined) && item.options) {
+    if (item.selected === undefined && (item.mode === 'select' || item.mode === undefined) && item.options) {
       item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
     }
 
@@ -102,6 +103,67 @@ export class MenuItem extends IoNode {
       this.options.addEventListener('item-selected', this._onSubItemSelected);
       this.options.addEventListener('path-changed', this._onOptionsPathChanged);
     }
+  }
+
+  fromJSON(looseDef: MenuItemDefLoose) {
+
+    const item: MenuItemArgs = {};
+    if (typeof looseDef === 'object' && looseDef !== null) {
+      if (Object.hasOwn(looseDef, 'value')) item.value = looseDef.value;
+      if (Object.hasOwn(looseDef, 'label')) item.label = looseDef.label;
+      if (Object.hasOwn(looseDef, 'icon')) item.icon = looseDef.icon;
+      if (Object.hasOwn(looseDef, 'hint')) item.hint = looseDef.hint;
+      if (Object.hasOwn(looseDef, 'hidden')) item.hidden = looseDef.hidden;
+      if (Object.hasOwn(looseDef, 'disabled')) item.disabled = looseDef.disabled;
+      if (Object.hasOwn(looseDef, 'action')) item.action = looseDef.action;
+      if (Object.hasOwn(looseDef, 'mode')) item.mode = looseDef.mode;
+      if (Object.hasOwn(looseDef, 'selected')) item.selected = looseDef.selected;
+      if (Object.hasOwn(looseDef, 'options')) {
+        item.options = new MenuOptions().fromJSON(looseDef.options as MenuItemDefLoose[]);
+      }
+    } else {
+      item.value = looseDef;
+    }
+
+    if (item.label === undefined) {
+      if (typeof item.value === 'object') {
+        if (item.value === null) {
+          item.label = 'null';
+        } else {
+          item.label = `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
+        }
+      } else {
+        item.label = String(item.value);
+      }
+    }
+
+    if (item.selected === undefined && (item.mode === 'select' || item.mode === undefined) && item.options) {
+      item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
+    }
+
+    debug: {
+      if (item.mode && (item.mode === 'toggle') && item.options) {
+        console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
+      }
+      if (item.mode && (item.mode === 'scroll') && item.options) {
+        console.warn('MenuItem: cannot have suboptions when `mode === "scroll"`');
+      }
+      if (item.mode && ['select', 'toggle', 'scroll', 'link', 'none'].indexOf(item.mode as string) === -1) {
+        console.warn('MenuItem: unknown `mode` property!', item.mode);
+      }
+      if (item.action && typeof item.action !== 'function') {
+        console.warn('MenuItem: invalid type of `action` property!', typeof item.action);
+      }
+    }
+
+    this.applyProperties(item);
+
+    if (this.options) {
+      this.options.addEventListener('item-selected', this._onSubItemSelected);
+      this.options.addEventListener('path-changed', this._onOptionsPathChanged);
+    }
+
+    return this;
   }
 
   toJSON() {

@@ -59,7 +59,7 @@ export class IoBoolean extends IoInputBase {
     const label = this.value ? this.true : this.false;
     this.template([
       this.icon ? ioIcon({value: this.icon, stroke: this.stroke}) : null,
-      label ? ioText(label) : null
+      label ? label.includes('io:') ? ioIcon({value: label}) : ioText(label) : null
     ]);
   }
 }

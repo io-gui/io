@@ -1,6 +1,5 @@
 import { IoNodeMixin, IoNodeArgs, Property, Register, ArgsWithBinding } from 'io-gui';
-import { MenuItem, MenuItemArgs, MenuItemDefLoose } from './menu-item.js';
-// TODO: document!
+import { MenuItem, MenuItemDefLoose } from './menu-item.js';
 
 function _isNaN(value: any) {
   return typeof value === 'number' && isNaN(value);
@@ -16,11 +15,11 @@ export type MenuOptionsArgs = IoNodeArgs & ArgsWithBinding<{
   scroll?: string,
   path?: string,
   delimiter?: string,
+  items?: MenuItem[],
 }>;
 
 @Register
 export class MenuOptions extends IoNodeMixin(Array) {
-
   @Property(undefined)
   declare first: any;
 
@@ -36,37 +35,10 @@ export class MenuOptions extends IoNodeMixin(Array) {
   @Property(',')
   declare delimiter: string;
 
-  push(...items: MenuItem[] | MenuItemDefLoose[]) {
-    for (let i = 0; i < items.length; i++) {
+  @Property([])
+  declare items: MenuItem[];
 
-      let item: MenuItem;
-      if (items[i] instanceof MenuItem) {
-        item = items[i] as MenuItem;
-      } else if (items[i] instanceof Object) {
-        item = new MenuItem(items[i] as MenuItemArgs);
-      } else {
-        item = new MenuItem({value: items[i]});
-      }
-
-      debug: if (!(item instanceof MenuItem)) {
-        console.warn('MenuOptions.push: item is not a MenuItem!');
-      }
-      if (item instanceof MenuItem) {
-        debug: if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
-          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
-        }
-        item.addEventListener('selected-changed', this._onItemSelectedChanged);
-        item.addEventListener('path-changed', this._onSubOptionsPathChanged);
-        super.push(item);
-      }
-    }
-
-    if (this.path !== '') this.pathChanged();
-    if (this.first !== undefined) this.firstChanged();
-
-    return this;
-  }
-
+  // TODO: change to `find` and add find by id and label.
   getItem(value: any, deep = false) {
     for (let i = 0; i < this.length; i++) {
       if (this[i].value === value) return this[i];
@@ -78,28 +50,55 @@ export class MenuOptions extends IoNodeMixin(Array) {
     return null;
   }
 
-  constructor(items: MenuItemDefLoose[] = [], properties: MenuOptionsArgs = {}) {
+  constructor(properties: MenuOptionsArgs = {}) {
     super(properties);
-    this.push(...items);
+    this.push(...this.items);
+
+    if (this.path !== '') this.pathChanged();
+    if (this.first !== undefined) this.firstChanged();
+
+    this.initItems(this.items);
   }
 
-  // TODO: consider preventing built-in Array functions like push, pop, etc.
-  protected addItems(items: MenuItemDefLoose[]) {
+  fromJSON(menuItemDefLoose: MenuItemDefLoose[]) {
+    this.length = 0;
+    const items: MenuItem[] = [];
+    for (let i = 0; i < menuItemDefLoose.length; i++) {
+      items.push(new MenuItem().fromJSON(menuItemDefLoose[i]));
+    }
+    this.items = items;
+    this.push(...items);
+
+    if (this.path !== '') this.pathChanged();
+    if (this.first !== undefined) this.firstChanged();
+
+    this.initItems(items);
+    return this;
+  }
+
+  initItems(items: MenuItem[]) {
     for (let i = 0; i < items.length; i++) {
-      let item: MenuItem;
-      if (items[i] instanceof MenuItem) {
-        item = items[i] as MenuItem;
-      } else if (items[i] instanceof Object) {
-        item = new MenuItem(items[i] as MenuItemArgs);
-      } else {
-        item = new MenuItem({value: items[i]});
+      let item = items[i];
+      if (!(item instanceof MenuItem)) {
+        item = new MenuItem().fromJSON(item);
       }
-      debug: if (this.find((otherItem: MenuItem) => otherItem.label === item.label)) {
-        console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+      debug: {
+        if (!(item instanceof MenuItem)) {
+          console.warn('MenuOptions.constructor: item is not a MenuItem!');
+        }
+        // TODO check if same item is at other index
+        if (this.find((otherItem: MenuItem) => otherItem !== item && otherItem.label === item.label)) {
+          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+        }
       }
-      this.push(item);
       item.addEventListener('selected-changed', this._onItemSelectedChanged);
       item.addEventListener('path-changed', this._onSubOptionsPathChanged);
+
+      // TODO move updatePaths to MenuItem. Handle setProperties better.
+      if (item.selected && item.mode === 'select') {
+        this.updatePaths(item);
+        continue;
+      }
     }
   }
 

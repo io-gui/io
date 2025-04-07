@@ -37,7 +37,7 @@ jobs:
         run: pnpm install
       - name: Building
         run: pnpm build
+      - name: Bundling
+        run: pnpm bundle
       - name: Running tests
         run: pnpm test
-      - name: Generating docs
-        run: pnpm run docs

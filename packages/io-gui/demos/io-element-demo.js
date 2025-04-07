@@ -1,27 +1,29 @@
 import { Register, IoElement, div, IoStorage as $, ioText } from 'io-gui';
 import { ioPropertyEditor } from 'io-editors';
 import { ioInputBase, ioNumber, ioString, ioBoolean, ioSwitch } from 'io-inputs';
-import { ioOptionMenu, MenuOptions } from 'io-menus';
+import { ioOptionMenu, MenuOptions, MenuItem } from 'io-menus';
 import { ioSlider, ioSliderRange, ioSlider2d } from 'io-sliders';
 
-const options = new MenuOptions([{
+// TODO: Implement IDs in menu options. use ID for selection
+const options = new MenuOptions({
+  last: $({key: 'element-demo', storage: 'local', value: ioInputBase()})
+}).fromJSON([{
   label: 'io-inputs',
-  options: new MenuOptions([
+  options: [
     {value: ioInputBase(), label: `io-input-base`},
     {value: ioNumber(), label: `io-number`},
     {value: ioString(), label: `io-string`},
     {value: ioBoolean(), label: `io-boolean`},
     {value: ioSwitch(), label: `io-switch`},
-  ])},{
+  ]
+}, {
   label: 'io-sliders',
-  options: new MenuOptions([
+  options: [
     {value: ioSlider(), label: `io-slider`},
     {value: ioSliderRange(), label: `io-slider-range`},
     {value: ioSlider2d(), label: `io-slider-2d`},
-  ])},
-], {
-  last: $({key: 'element-demo', storage: 'local', value: 'io-input-base'}),
-});
+  ]
+}]);
 
 export class IoElementDemo extends IoElement {
   static get Style() {

@@ -120,42 +120,40 @@
 
     $.permit();
 
-    const OPTIONS = new MenuOptions([
-      {value: 'About', icon: 'icons:io_logo'},
-      {value: 'Docs', options: new MenuOptions([
-        {value: 'Quick Start', options: new MenuOptions([
-        // {label: 'Quick Start', value: './docs/quick-start.md', options: new MenuOptions([
-          {label: 'Usage', value: 'usage', mode: 'scroll'},
-          {label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'},
-          {label: 'Making a Website', value: 'making-a-website', mode: 'scroll'},
-          {label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'},
-        ])},
-        {value: 'Deep Dive', options: new MenuOptions([
-        // {label: 'Deep Dive', value: './docs/deep-dive.md', options: new MenuOptions([
-          {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'},
-          {label: 'Properties', value: 'properties', mode: 'scroll'},
-          {label: 'Styling', value: 'styling', mode: 'scroll'},
-          {label: 'Listeners', value: 'listeners', mode: 'scroll'},
-          {label: 'Reactivity', value: 'reactivity', mode: 'scroll'},
-          {label: 'Template Syntax', value: 'template-syntax', mode: 'scroll'},
-          {label: 'Data Binding', value: 'data-binding', mode: 'scroll'},
-          {label: 'Helper Methods', value: 'helper-methods', mode: 'scroll'},
-        ])},
-      ])},
-      {value: 'Demos', options: new MenuOptions([
-        {label: 'io-inputs', value: 'io-inputs-demo'},
-        {label: 'io-icons', value: 'io-icons-demo'},
-        {label: 'io-sliders', value: 'io-sliders-demo'},
-        {label: 'io-colors', value: 'io-colors-demo'},
-        {label: 'io-editors', value: 'io-editors-demo'},
-        {label: 'io-menus', value: 'io-menus-demo'},
-        {label: 'io-navigation', value: 'io-navigation-demo'},
-        'io-gui-theme-editor',
-        'io-element-demo',
-        'TODO MVC App',
-      ])},
-    ], {
-      path: $({key: 'path', storage: 'hash', value: 'About'}),
+    const OPTIONS = new MenuOptions({items: [
+      new MenuItem( {value: 'About', icon: 'icons:io_logo'}),
+      new MenuItem({value: 'Docs', options: new MenuOptions({items: [
+        new MenuItem({value: 'Quick Start', options: new MenuOptions({items: [
+          new MenuItem({label: 'Usage', value: 'usage', mode: 'scroll'}),
+          new MenuItem({label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'}),
+          new MenuItem({label: 'Making a Website', value: 'making-a-website', mode: 'scroll'}),
+          new MenuItem({label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'}),
+        ]})}),
+        new MenuItem({value: 'Deep Dive', options: new MenuOptions({items: [
+          new MenuItem({label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'}),
+          new MenuItem({label: 'Properties', value: 'properties', mode: 'scroll'}),
+          new MenuItem({label: 'Styling', value: 'styling', mode: 'scroll'}),
+          new MenuItem({label: 'Listeners', value: 'listeners', mode: 'scroll'}),
+          new MenuItem({label: 'Reactivity', value: 'reactivity', mode: 'scroll'}),
+          new MenuItem({label: 'Template Syntax', value: 'template-syntax', mode: 'scroll'}),
+          new MenuItem({label: 'Data Binding', value: 'data-binding', mode: 'scroll'}),
+          new MenuItem({label: 'Helper Methods', value: 'helper-methods', mode: 'scroll'}),
+        ]})}),
+      ]})}),
+      new MenuItem({value: 'Demos', options: new MenuOptions({items: [
+        new MenuItem({label: 'io-inputs', value: 'io-inputs-demo'}),
+        new MenuItem({label: 'io-icons', value: 'io-icons-demo'}),
+        new MenuItem({label: 'io-sliders', value: 'io-sliders-demo'}),
+        new MenuItem({label: 'io-colors', value: 'io-colors-demo'}),
+        new MenuItem({label: 'io-editors', value: 'io-editors-demo'}),
+        new MenuItem({label: 'io-menus', value: 'io-menus-demo'}),
+        new MenuItem({label: 'io-navigation', value: 'io-navigation-demo'}),
+        new MenuItem({label: 'io-gui-theme-editor', value: 'io-gui-theme-editor'}),
+        new MenuItem({label: 'io-element-demo', value: 'io-element-demo'}),
+        new MenuItem({label: 'TODO MVC App', value: 'TODO MVC App'}),
+      ]})}),
+    ],
+      path: $({key: 'path', storage: 'hash', value: 'About'})
     });
 
     const siteRoot = 'https://iogui.dev/io/';

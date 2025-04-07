@@ -347,7 +347,9 @@ export class IoMenuOptions extends IoElement {
         role: 'navigation',
         direction: 'down',
         item: new MenuItem({
-          options: new MenuOptions(this._overflownItems),
+          options: new MenuOptions({
+            items: this._overflownItems,
+          }),
         })
       }));
     }

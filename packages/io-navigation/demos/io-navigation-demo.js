@@ -1,5 +1,5 @@
 import { Register, IoElement } from 'io-gui';
-import { MenuOptions } from 'io-menus';
+import { MenuOptions, MenuItem } from 'io-menus';
 import { ioNavigatorSelector, ioNavigatorScroller, ioSelector } from 'io-navigation';
 
 const contentElements = [
@@ -41,8 +41,8 @@ const contentElements = [
   ]],
 ];
 
-const contentOptions = new MenuOptions([
-  {value: 'devs', options: new MenuOptions([
+const contentOptions = new MenuOptions().fromJSON([
+  {value: 'devs', options: [
     {value: 'dev1', mode: 'scroll'},
     {value: 'dev2', mode: 'scroll'},
     {value: 'dev3', mode: 'scroll'},
@@ -50,8 +50,8 @@ const contentOptions = new MenuOptions([
     {value: 'dev5', mode: 'scroll'},
     {value: 'dev6', mode: 'scroll'},
     {value: 'dev7', mode: 'scroll'},
-  ])},
-  {value: 'foos', options: new MenuOptions([
+  ]},
+  {value: 'foos', options: [
     {value: 'foo1', mode: 'scroll'},
     {value: 'foo2', mode: 'scroll'},
     {value: 'foo3', mode: 'scroll'},
@@ -59,8 +59,8 @@ const contentOptions = new MenuOptions([
     {value: 'foo5', mode: 'scroll'},
     {value: 'foo6', mode: 'scroll'},
     {value: 'foo7', mode: 'scroll'},
-  ])},
-  {value: 'bazs', options: new MenuOptions([
+  ]},
+  {value: 'bazs', options: [
     {value: 'baz1', mode: 'scroll'},
     {value: 'baz2', mode: 'scroll'},
     {value: 'baz3', mode: 'scroll'},
@@ -68,8 +68,8 @@ const contentOptions = new MenuOptions([
     {value: 'baz5', mode: 'scroll'},
     {value: 'baz6', mode: 'scroll'},
     {value: 'baz7', mode: 'scroll'},
-  ])},
-  {value: 'bars', options: new MenuOptions([
+  ]},
+  {value: 'bars', options: [
     {value: 'bar1', mode: 'scroll'},
     {value: 'bar2', mode: 'scroll'},
     {value: 'bar3', mode: 'scroll'},
@@ -77,7 +77,7 @@ const contentOptions = new MenuOptions([
     {value: 'bar5', mode: 'scroll'},
     {value: 'bar6', mode: 'scroll'},
     {value: 'bar7', mode: 'scroll'},
-  ])},
+  ]},
 ]);
 contentOptions[0].selected = true;
 contentOptions[0].options[3].selected = true;

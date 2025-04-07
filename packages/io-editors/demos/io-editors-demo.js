@@ -68,7 +68,7 @@ export class IoEditorsDemo extends IoElement {
           // widget: ioInputBase({label: 'Widget Element'}),
           config: new Map([
             [Object, [
-              [Number, ioOptionMenu({options: new MenuOptions([
+              [Number, ioOptionMenu({options: new MenuOptions().fromJSON([
                 {label: 'zero', value: 0},
                 {label: 'half', value: 0.5},
                 {label: 'one', value: 1},

@@ -40,6 +40,7 @@ import { ioMarkdown } from 'io-markdown';
 export class MyWebsite extends IoNavigator {
   static get Properties() {
     return {
+      // TODO: update!
       menu: 'top', // This can also be 'left', 'right' or 'bottom'.
       options: new MenuOptions(
         ['About', 'Products', 'Services', 'Testemonials', 'Contact'], {
