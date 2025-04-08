@@ -1,7 +1,8 @@
 
 import { Register } from '../core/decorators/register';
 import { Property } from '../core/decorators/property';
-import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
+import { VDOMArray } from '../core/internals/vDOM';
+import { IoElement, IoElementArgs } from '../core/element';
 import { ArgsWithBinding } from '../core/node';
 
 export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{

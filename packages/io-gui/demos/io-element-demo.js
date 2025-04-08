@@ -1,7 +1,7 @@
 import { Register, IoElement, div, IoStorage as $, ioText } from 'io-gui';
 import { ioPropertyEditor } from 'io-editors';
 import { ioInputBase, ioNumber, ioString, ioBoolean, ioSwitch } from 'io-inputs';
-import { ioOptionMenu, MenuOptions, MenuItem } from 'io-menus';
+import { ioOptionMenu, MenuOptions } from 'io-menus';
 import { ioSlider, ioSliderRange, ioSlider2d } from 'io-sliders';
 
 // TODO: Implement IDs in menu options. use ID for selection

@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMArray, IoElementArgs, disposeElementDeep, applyNativeElementProps, Property, span, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, VDOMArray, IoElementArgs, disposeChildren, applyNativeElementProps, Property, span, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -210,7 +210,7 @@ export class IoSelector extends IoElement {
   dispose() {
     // TODO: check for garbage collection!
     for (const key in this._caches) {
-      disposeElementDeep(this._caches[key] as unknown as IoElement);
+      disposeChildren(this._caches[key] as unknown as IoElement);
     }
     super.dispose();
   }

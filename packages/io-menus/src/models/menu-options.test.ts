@@ -1,66 +1,66 @@
 import { MenuItem } from './menu-item.js';
-import { MenuOptions, MenuOptionsArgs } from './menu-options.js';
+import { MenuOptions } from './menu-options.js';
 
-const testOptions = {items: [
-  new MenuItem({value: 1, options: new MenuOptions({items: [
-    new MenuItem({value: 'foo', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN}),
-    ]})}),
-    new MenuItem({value: 'bar', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN}),
-    ]})}),
-    new MenuItem({value: 'buzz', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN}),
-    ]})}),
-  ]})}),
-  new MenuItem({value: 2, options: new MenuOptions({items: [
-    new MenuItem({value: 'foo', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN})
-    ]})}),
-    new MenuItem({value: 'bar', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN})
-    ]})}),
-    new MenuItem({value: 'buzz', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN})
-    ]})}),
-  ]})}),
-  new MenuItem({value: 3, options: new MenuOptions({items: [
-    new MenuItem({value: 'foo', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN})
-    ]})}),
-    new MenuItem({value: 'bar', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN})
-    ]})}),
-    new MenuItem({value: 'buzz', options: new MenuOptions({items: [
-      new MenuItem({value: null}),
-      new MenuItem({value: undefined}),
-      new MenuItem({value: NaN})
-    ]})}),
-  ]})}),
-  new MenuItem({value: 'scrolls', options: new MenuOptions({items: [
-    new MenuItem({value: 'scroll1', mode: 'scroll'}),
-    new MenuItem({value: 'scroll2', mode: 'scroll'}),
-    new MenuItem({value: 'scroll3', mode: 'scroll'}),
-  ]})}),
-]} as MenuOptionsArgs;
+// const testOptions = {items: [
+//   new MenuItem({value: 1, options: new MenuOptions({items: [
+//     new MenuItem({value: 'foo', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN}),
+//     ]})}),
+//     new MenuItem({value: 'bar', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN}),
+//     ]})}),
+//     new MenuItem({value: 'buzz', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN}),
+//     ]})}),
+//   ]})}),
+//   new MenuItem({value: 2, options: new MenuOptions({items: [
+//     new MenuItem({value: 'foo', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN})
+//     ]})}),
+//     new MenuItem({value: 'bar', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN})
+//     ]})}),
+//     new MenuItem({value: 'buzz', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN})
+//     ]})}),
+//   ]})}),
+//   new MenuItem({value: 3, options: new MenuOptions({items: [
+//     new MenuItem({value: 'foo', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN})
+//     ]})}),
+//     new MenuItem({value: 'bar', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN})
+//     ]})}),
+//     new MenuItem({value: 'buzz', options: new MenuOptions({items: [
+//       new MenuItem({value: null}),
+//       new MenuItem({value: undefined}),
+//       new MenuItem({value: NaN})
+//     ]})}),
+//   ]})}),
+//   new MenuItem({value: 'scrolls', options: new MenuOptions({items: [
+//     new MenuItem({value: 'scroll1', mode: 'scroll'}),
+//     new MenuItem({value: 'scroll2', mode: 'scroll'}),
+//     new MenuItem({value: 'scroll3', mode: 'scroll'}),
+//   ]})}),
+// ]} as MenuOptionsArgs;
 
-const eventStack: string[] = [];
+// const eventStack: string[] = [];
 
 export default class {
   run() {

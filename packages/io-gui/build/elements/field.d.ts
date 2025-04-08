@@ -1,4 +1,5 @@
-import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
+import { VDOMArray } from '../core/internals/vDOM';
+import { IoElement, IoElementArgs } from '../core/element';
 import { ArgsWithBinding } from '../core/node';
 export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
     appearance?: 'flush' | 'inset' | 'outset' | 'neutral';

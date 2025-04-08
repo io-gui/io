@@ -1,6 +1,6 @@
 import { EventDispatcher } from './eventDispatcher';
 import { IoNode } from '../node';
-import { VDOMElement, VDOMArray, IoElementArgs, IoElement } from '../element';
+import { IoElementArgs, IoElement } from '../element';
 
 /** @license
  * MIT License
@@ -26,6 +26,22 @@ import { VDOMElement, VDOMArray, IoElementArgs, IoElement } from '../element';
  * SOFTWARE.
  */
 
+// TODO: Consider making more specific types. Might be too complex.
+export type AnyIoArgs = {
+  [key: string]: any;
+}
+
+export type VDOMArray =
+  null |
+  [string] |
+  [string, AnyIoArgs | VDOMArray[] | string] |
+  [string, AnyIoArgs, VDOMArray[] | string];
+
+export type VDOMElement = {
+  name: string,
+  props: AnyIoArgs,
+  children: VDOMElement[] | string
+}
 
 const isArray = (x: any) => Array.isArray(x);
 const isString = (x: any) => typeof x === 'string';
@@ -56,9 +72,16 @@ export const buildTree = (node: VDOMArray): VDOMElement | null => {
   return null;
 };
 
+// TODO: Consider expanding support for more attributes.
 /**
- * Sets element properties.
- * @param {HTMLElement} element - Element to set properties on.
+ * Sets native element's properties. Supported properties:
+ * - style: formatted as Object.
+ * - class: shorthand for className.
+ * - name: for name attribute.
+ * - src: for src attribute.
+ * - "@" + event: name for event listener.
+ * - Any other property: set as property.
+ * @param {HTMLElement} element - Native HTMLElement to apply properties to.
  * @param {Object} props - Element properties.
  */
 export const applyNativeElementProps = function(element: HTMLElement, props: any) {
@@ -81,7 +104,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: any
  * @param {VDOMElement} vDOMElement - Virtual dom object.
  * @return {HTMLElement} - Created element.
  */
-export const constructVDOMElement = function(vDOMElement: VDOMElement) {
+export const constructElement = function(vDOMElement: VDOMElement) {
   // IoElement classes constructed with constructor.
   const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.name) : null;
   if (ConstructorClass && (ConstructorClass as any)._isIoElement) {
@@ -93,8 +116,12 @@ export const constructVDOMElement = function(vDOMElement: VDOMElement) {
   return element;
 };
 
-export const disposeElementDeep = function(element: IoElement) {
-  // NOTE: This timeout ensures that element's change queue is emptied before disposing.
+/**
+ * Disposes the element's children.
+ * @param {IoElement} element - Element to dispose children of.
+ */
+export const disposeChildren = function(element: IoElement) {
+  // NOTE: This rAF ensures that element's change queue is emptied before disposing.
   requestAnimationFrame(() => {
     const elements = [...(element.querySelectorAll('*')), element] as IoElement[];
     for (let i = elements.length; i--;) {
@@ -108,29 +135,7 @@ export const disposeElementDeep = function(element: IoElement) {
   });
 };
 
-const superCreateElement = document.createElement;
-document.createElement = function(tagName: string, options?: ElementCreationOptions) {
-  if (tagName.startsWith('io-')) {
-    const constructor = customElements.get(tagName);
-    if (constructor) {
-      return new constructor();
-    } else {
-      return superCreateElement.apply(this, [tagName, options]);
-    }
-  } else  {
-    return superCreateElement.apply(this, [tagName, options]);
-  }
-};
-
-const toVDOMChildren = function(htmlCollection: [IoElement | HTMLElement]): vDOMLike[] {
-  const children = [];
-  for (let i = 0; i < htmlCollection.length; i++) {
-    children.push(toVDOM(htmlCollection[i]));
-  }
-  return children;
-};
-
-const serializeAttributes = function(element: IoElement | HTMLElement): Record<string, any> {
+const vDOMAttributes = function(element: IoElement | HTMLElement): Record<string, any> {
   const attributes: Record<string, any> = {};
   for (let i = 0; i < element.attributes.length; i++) {
     const name = element.attributes[i].name;
@@ -142,12 +147,24 @@ const serializeAttributes = function(element: IoElement | HTMLElement): Record<s
   return attributes;
 };
 
-type vDOMLike = [string, Record<string, any>, vDOMLike[]];
+const toVDOMChildren = function(htmlCollection: [IoElement | HTMLElement]): VDOMElement[] {
+  const children = [];
+  for (let i = 0; i < htmlCollection.length; i++) {
+    children.push(toVDOM(htmlCollection[i]));
+  }
+  return children;
+};
 
-export const toVDOM = function(element: IoElement | HTMLElement): [string, Record<string, any>, vDOMLike[]] {
-  return [
-    element.localName,
-    serializeAttributes(element),
-    element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent
-  ];
+/**
+ * Converts an element to a virtual dom object.
+ * NODE: This vDOM contains elements only attributes (not properties).
+ * @param {IoElement | HTMLElement} element - Element to convert.
+ * @return {VDOMElement} - Virtual dom object.
+ */
+export const toVDOM = function(element: IoElement | HTMLElement): VDOMElement {
+  return {
+    name: element.localName,
+    props: vDOMAttributes(element),
+    children: element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent
+  };
 };

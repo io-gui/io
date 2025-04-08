@@ -794,7 +794,6 @@ export default class {
             };
           }
         }
-        const node = new TestNode();
 
         @Register
         class TestNodeTarget extends IoNode {

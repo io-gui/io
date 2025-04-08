@@ -1,5 +1,5 @@
-import { EventDispatcher } from './internals/eventDispatcher';
 import { IoNode, IoNodeArgs, ArgsWithBinding } from './node';
+import { VDOMArray } from './internals/vDOM';
 export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
     $?: string;
     style?: Record<string, string>;
@@ -8,24 +8,6 @@ export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
     id?: string;
     role?: string;
 }>;
-export type AnyIoArgs = {
-    [key: string]: any;
-};
-export type VDOMArray = null | [
-    string
-] | [
-    string,
-    AnyIoArgs | VDOMArray[] | string
-] | [
-    string,
-    AnyIoArgs,
-    VDOMArray[] | string
-];
-export type VDOMElement = {
-    name: string;
-    props: AnyIoArgs;
-    children: VDOMElement[] | string;
-};
 declare const IoElement_base: {
     new (...superArgs: any[]): {
         [x: string]: any;
@@ -33,7 +15,7 @@ declare const IoElement_base: {
         readonly _properties: Map<string, import("..").PropertyInstance>;
         readonly _bindings: Map<string, import("..").Binding>;
         readonly _changeQueue: import("..").ChangeQueue;
-        readonly _eventDispatcher: EventDispatcher;
+        readonly _eventDispatcher: import("..").EventDispatcher;
         applyProperties(props: any, skipDispatch?: boolean): void;
         setProperties(props: any): void;
         setProperty(name: string, value: any, debounce?: boolean): void;
@@ -47,8 +29,8 @@ declare const IoElement_base: {
         onPropertyMutated(event: CustomEvent): void;
         bind(name: string): import("..").Binding;
         unbind(name: string): void;
-        addEventListener(type: string, listener: import("./internals/eventDispatcher").AnyEventListener, options?: AddEventListenerOptions): void;
-        removeEventListener(type: string, listener?: import("./internals/eventDispatcher").AnyEventListener, options?: AddEventListenerOptions): void;
+        addEventListener(type: string, listener: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
+        removeEventListener(type: string, listener?: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         dispose(): void;
         Register(ioNodeConstructor: typeof IoNode): void;
@@ -111,7 +93,7 @@ export declare class IoElement extends IoElement_base {
      * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
      * @return {Object} vDOM-like representation of the element.
      */
-    toVDOM(): [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, [string, Record<string, any>, /*elided*/ any[]][]][]][]][]][]][]][]][]][]][]][]];
+    toVDOM(): import("./internals/vDOM").VDOMElement;
     Register(ioNodeConstructor: typeof IoNode): void;
 }
 export declare const ioElement: (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;

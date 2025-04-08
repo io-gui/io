@@ -1,5 +1,6 @@
 import { Register } from '../core/decorators/register';
-import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
+import { IoElement, IoElementArgs } from '../core/element';
+import { VDOMArray } from '../core/internals/vDOM';
 import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
 import { Property } from '../core/decorators/property';
 import { IoThemeSingleton, Color } from '../nodes/theme';

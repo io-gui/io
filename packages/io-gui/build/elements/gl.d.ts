@@ -1,4 +1,5 @@
-import { IoElement, IoElementArgs, VDOMArray } from '../core/element';
+import { IoElement, IoElementArgs } from '../core/element';
+import { VDOMArray } from '../core/internals/vDOM';
 import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
 import { IoThemeSingleton } from '../nodes/theme';
 import { ArgsWithBinding } from '../core/node';

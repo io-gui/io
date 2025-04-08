@@ -1,4 +1,5 @@
-import { VDOMArray, IoElementArgs } from '../core/element';
+import { IoElementArgs } from '../core/element';
+import { VDOMArray } from '../core/internals/vDOM';
 export type NativeElementArgs = IoElementArgs & {
     src?: string;
     href?: string;

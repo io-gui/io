@@ -1,8 +1,7 @@
-import { EventDispatcher } from './internals/eventDispatcher';
 import { IoNode, IoNodeMixin, IoNodeArgs, ArgsWithBinding } from './node';
 import { Property } from './decorators/property';
 import { Register } from './decorators/register';
-import { applyNativeElementProps, buildTree, constructVDOMElement, disposeElementDeep, toVDOM } from './internals/vDOM';
+import { applyNativeElementProps, buildTree, constructElement, disposeChildren, VDOMArray, toVDOM } from './internals/vDOM';
 
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
@@ -27,23 +26,6 @@ export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
   id?: string;
   role?: string;
 }>;
-
-// TODO: Consider making more specific types. Might be too complex.
-export type AnyIoArgs = {
-  [key: string]: any;
-}
-
-export type VDOMArray =
-  null |
-  [string] |
-  [string, AnyIoArgs | VDOMArray[] | string] |
-  [string, AnyIoArgs, VDOMArray[] | string];
-
-export type VDOMElement = {
-  name: string,
-  props: AnyIoArgs,
-  children: VDOMElement[] | string
-}
 
 /**
  * Core `IoElement` class.
@@ -146,7 +128,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
       host.removeChild(child);
-      if (!cache) disposeElementDeep(child as unknown as IoElement);
+      if (!cache) disposeChildren(child as unknown as IoElement);
     }
     // replace elements
     for (let i = 0; i < children.length; i++) {
@@ -154,10 +136,10 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
       // replace existing elements
       if (child.localName !== vChildren[i].name || cache) {
         const oldElement = child as unknown as HTMLElement;
-        const element = constructVDOMElement(vChildren[i]);
+        const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
-        if (!cache) disposeElementDeep(oldElement as unknown as IoElement);
+        if (!cache) disposeChildren(oldElement as unknown as IoElement);
       // update existing elements
       } else {
         child.removeAttribute('className');
@@ -175,7 +157,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     if (children.length < vChildren.length) {
       const frag = document.createDocumentFragment();
       for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructVDOMElement(vChildren[i]);
+        const element = constructElement(vChildren[i]);
         frag.appendChild(element);
       }
       host.appendChild(frag);
