@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import {ioSlider} from './io-slider.js';
 import {ioNumber} from 'io-inputs';
 
@@ -20,7 +20,7 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoNumberSlider extends IoElement {
-  static vConstructor: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`

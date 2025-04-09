@@ -1,4 +1,4 @@
-import { Property, IoGl, IoGlArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Property, IoGl, IoGlArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -16,7 +16,7 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
 }>;
 
 export class IoSliderBase extends IoGl {
-  static vConstructor: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`

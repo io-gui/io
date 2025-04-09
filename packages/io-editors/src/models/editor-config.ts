@@ -1,5 +1,5 @@
 import { IoElement, IoGl, IoTheme, Color } from 'io-gui';
-import { AnyConstructor, VDOMArray } from 'io-gui';
+import { AnyConstructor, VDOMElement } from 'io-gui';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
@@ -8,9 +8,9 @@ import { ioVector } from '../io-vector';
 import { ioString, ioNumber, ioSwitch, ioInputBase } from 'io-inputs';
 
 export type PropertyIdentifier = AnyConstructor | string | null | undefined;
-export type PropertyConfig = [PropertyIdentifier, VDOMArray];
-export type PropertyConfigMap = Map<PropertyIdentifier, VDOMArray>;
-export type PropertyConfigRecord = Record<string, VDOMArray>;
+export type PropertyConfig = [PropertyIdentifier, VDOMElement];
+export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
+export type PropertyConfigRecord = Record<string, VDOMElement>;
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
 const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
@@ -99,7 +99,7 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
   const configRecord: PropertyConfigRecord = {};
   for (const [key, value] of Object.entries(object)) {
     for (const [PropertyIdentifier, elementCandidate] of aggregatedConfig) {
-      let element: VDOMArray | undefined;
+      let element: VDOMElement | undefined;
       if (typeof PropertyIdentifier === 'function' && value instanceof PropertyIdentifier) {
         element = elementCandidate;
       } else if (typeof PropertyIdentifier === 'function' && value?.constructor === PropertyIdentifier) {

@@ -1,4 +1,4 @@
-import {IoNode, Register} from 'io-gui';
+import { IoNode, Register } from 'io-gui';
 
 export class TodoModel extends IoNode {
   static get Properties() {

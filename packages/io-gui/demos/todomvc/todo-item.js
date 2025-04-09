@@ -1,5 +1,5 @@
-import { IoElement, Register } from 'io-gui';
-import {TodoModel} from './todo-model.js';
+import { IoElement, Register, input, label, li, div, button } from 'io-gui';
+import { TodoModel } from './todo-model.js';
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
@@ -23,14 +23,14 @@ export class TodoItem extends IoElement {
   }
   changed() {
     this.template([
-      ['li', {class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
-        ['div', {class: 'view'}, [
-          ['input', {type: 'checkbox', class: 'toggle', checked: this.item.completed, '@click': this.onToggleItem}],
-          ['label', {'@dblclick': this.onStartEdit}, this.item.title],
-          ['button', {class: 'destroy', '@click': this.onDestroyItem}],
-        ]],
-        ['input', {$: 'input', class: 'edit', value: this.item.title, '@blur': this.onEndEdit, '@keyup': this.onInputKey}]
-      ]]
+      li({class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
+        div({class: 'view'}, [
+          input({type: 'checkbox', class: 'toggle', checked: this.item.completed, '@click': this.onToggleItem}),
+          label({'@dblclick': this.onStartEdit}, this.item.title),
+          button({class: 'destroy', '@click': this.onDestroyItem}),
+        ]),
+        input({$: 'input', class: 'edit', value: this.item.title, '@blur': this.onEndEdit, '@keyup': this.onInputKey})
+      ])
     ]);
   }
   onDestroyItem() {

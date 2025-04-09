@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMArray, Property, AnyConstructor, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, AnyConstructor, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 import './io-property-editor.js';
 import { PropertyConfig } from './models/editor-config.js';
 import { ioBoolean } from 'io-inputs';
@@ -18,7 +18,7 @@ export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoObject extends IoElement {
-  static vConstructor: (arg0?: IoObjectArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoObjectArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -69,7 +69,7 @@ export class IoObject extends IoElement {
 
   changed() {
     const label = this.label || this.value.constructor.name;
-    const elements: VDOMArray[] = [];
+    const elements: VDOMElement[] = [];
     elements.push(ioBoolean({
       appearance: 'neutral',
       true: label,

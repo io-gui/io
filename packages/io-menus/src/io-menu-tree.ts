@@ -1,11 +1,11 @@
-import { Register, IoElement, Property, VDOMArray, IoStorage as $, genObjectStorageID, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoStorage as $, genObjectStorageID, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import { ioMenuItem, IoMenuItem } from './io-menu-item.js';
 
 export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
-  const elements: VDOMArray[] = [];
+  const elements: VDOMElement[] = [];
   if (d <= depth) for (let i = 0; i < options.length; i++) {
     const item = options[i];
     if (item.options?.length) {
@@ -38,7 +38,7 @@ function matchItem(item: MenuItem, search: string) {
   return false;
 }
 
-export function filterOptions(options: MenuOptions, search: string, depth = 5, elements: VDOMArray[] = [], d = 0): any {
+export function filterOptions(options: MenuOptions, search: string, depth = 5, elements: VDOMElement[] = [], d = 0): any {
   search = search.toLowerCase();
   if (d <= depth) for (let i = 0; i < options.length; i++) {
     if (matchItem(options[i], search)) {
@@ -58,12 +58,12 @@ export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
   searchable?: boolean;
   search?: string;
   depth?: number;
-  slotted?: VDOMArray[];
+  slotted?: VDOMElement[];
 }>;
 
 @Register
 export class IoMenuTree extends IoElement {
-  static vConstructor: (arg0?: IoMenuTreeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoMenuTreeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -160,7 +160,7 @@ export class IoMenuTree extends IoElement {
   declare depth: number;
 
   @Property({type: Array})
-  declare slotted: VDOMArray[];
+  declare slotted: VDOMElement[];
 
   @Property('listbox')
   declare role: string;
@@ -194,7 +194,7 @@ export class IoMenuTree extends IoElement {
   }
 
   changed() {
-    const elements: VDOMArray[] = [...this.slotted];
+    const elements: VDOMElement[] = [...this.slotted];
 
     // TODO: fix depth.
 

@@ -1,6 +1,6 @@
 import { Register } from '../core/decorators/register';
 import { IoElement, IoElementArgs } from '../core/element';
-import { VDOMArray } from '../core/internals/vDOM';
+import { VDOMElement } from '../core/internals/vDOM';
 import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
 import { Property } from '../core/decorators/property';
 import { IoThemeSingleton, Color } from '../nodes/theme';
@@ -43,7 +43,7 @@ export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoGl extends IoElement {
-  static vConstructor: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

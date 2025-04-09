@@ -1,4 +1,4 @@
-import { IoElement, IoElementArgs, Property, Register, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoElement, IoElementArgs, Property, Register, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js';
 
 export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
@@ -12,7 +12,7 @@ export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoColorBase extends IoElement {
-  static vConstructor: (arg0?: IoColorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoColorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property('debounced')
   declare reactivity: string;

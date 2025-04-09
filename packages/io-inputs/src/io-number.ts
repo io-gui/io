@@ -1,4 +1,4 @@
-import { Register, Property, IoOverlaySingleton, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoOverlaySingleton, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoNumberLadderSingleton } from './io-number-ladder.js';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 
@@ -19,7 +19,7 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoNumber extends IoInputBase {
-  static vConstructor: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

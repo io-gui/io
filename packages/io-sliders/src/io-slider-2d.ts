@@ -1,4 +1,4 @@
-import { Register, Property, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoSliderBase, IoSliderBaseArgs } from './io-slider-base.js';
 
 export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{
@@ -11,7 +11,7 @@ export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoSlider2d extends IoSliderBase {
-  static vConstructor: (arg0?: IoSlider2dArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`

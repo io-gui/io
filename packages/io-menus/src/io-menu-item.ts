@@ -1,4 +1,4 @@
-import { Register, Property, IoOverlaySingleton as Overlay, span, VDOMArray, ArgsWithBinding, NudgeDirection } from 'io-gui';
+import { Register, Property, IoOverlaySingleton as Overlay, span, VDOMElement, ArgsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { IoMenuOptions } from './io-menu-options.js';
 import { IoInputBase, IoInputBaseArgs } from 'io-inputs';
@@ -21,7 +21,7 @@ export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoMenuItem extends IoInputBase {
-  static vConstructor: (arg0?: IoMenuItemArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

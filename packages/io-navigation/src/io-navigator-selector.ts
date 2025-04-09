@@ -1,4 +1,4 @@
-import { VDOMArray, Register, Property, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, Register, Property, ArgsWithBinding } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseArgs } from './io-navigator-base.js';
 import { ioSelector } from './io-selector.js';
 
@@ -10,7 +10,7 @@ export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNavigatorSelector extends IoNavigatorBase {
-  static vConstructor: (arg0?: IoNavigatorSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNavigatorSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property('first')
   declare select: 'first' | 'last';
@@ -21,7 +21,7 @@ export class IoNavigatorSelector extends IoNavigatorBase {
   @Property(false)
   declare precache: boolean;
 
-  getSlotted(): VDOMArray {
+  getSlotted(): VDOMElement {
     return ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements});
   }
 }

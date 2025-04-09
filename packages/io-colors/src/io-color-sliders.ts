@@ -1,4 +1,4 @@
-import { Register, Property, glsl, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, glsl, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoSlider, IoSlider2d } from 'io-sliders';
 import { IoColorBase, IoColorBaseArgs } from './elements/color-base.js';
 
@@ -16,7 +16,7 @@ export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoColorSlider extends IoColorBase {
-  static vConstructor: (arg0?: IoColorSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoColorSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -167,9 +167,10 @@ export class IoColorSlider extends IoColorBase {
         break;
     }
 
-    this.template([
-      [sliderInputTagName, {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput}],
-    ]);
+    this.template([{
+      name: sliderInputTagName,
+      props: {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput}
+    }]);
   }
 }
 export const ioColorSlider = IoColorSlider.vConstructor;

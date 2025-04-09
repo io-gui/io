@@ -1,5 +1,5 @@
 
-import { Register, Property, IoField, IoFieldArgs, VDOMArray, ArgsWithBinding, ioText } from 'io-gui';
+import { Register, Property, IoField, IoFieldArgs, VDOMElement, ArgsWithBinding, ioText } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 // let focusBacktrack = new WeakMap();
@@ -21,7 +21,7 @@ export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
 
 @Register
 export class IoInputBase extends IoField {
-  static vConstructor: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMArray, IoElementArgs, disposeChildren, applyNativeElementProps, Property, span, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementArgs, disposeChildren, applyNativeElementProps, Property, span, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -14,7 +14,7 @@ const IMPORTED_PATHS: Record<string, any> = {};
 export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
   options?: MenuOptions;
   select?: 'first' | 'last';
-  elements?: VDOMArray[];
+  elements?: VDOMElement[];
   cache?: boolean;
   precache?: boolean;
   precacheDelay?: number;
@@ -24,7 +24,7 @@ export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoSelector extends IoElement {
-  static vConstructor: (arg0?: IoSelectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -67,7 +67,7 @@ export class IoSelector extends IoElement {
   declare select: 'first' | 'last';
 
   @Property(Array)
-  declare elements: VDOMArray[];
+  declare elements: VDOMElement[];
 
   @Property({value: false})
   declare cache: boolean;
@@ -131,7 +131,8 @@ export class IoSelector extends IoElement {
 
     } else if (this.childNodes[0]?.id !== selected) {
 
-      let element = this.elements.find((element: any) => {return element[1].id === selected;}) as VDOMArray;
+      //TODO: VDOMARRAY
+      let element = this.elements.find((element: any) => {return element.props.id === selected;}) as VDOMElement;
 
       if (!element) {
         const warning = `Could not find element with id: ${selected}!`;
@@ -139,10 +140,7 @@ export class IoSelector extends IoElement {
         element = span(warning);
       }
 
-      let args: IoSelectorArgs = {};
-      if (element && typeof element[1] === 'object' && !Array.isArray(element[1])) {
-        args = element[1];
-      }
+      let args: IoSelectorArgs = element.props || {};
 
       const explicitlyCache = args.cache === true;
       const explicitlyDontCache = args.cache === false;
@@ -170,14 +168,14 @@ export class IoSelector extends IoElement {
           this.loading = false;
         }
       } else if (!importPath) {
-        this.template([element], this as unknown as HTMLElement, cache);
+        this.template([element], this, cache);
         this._caches[selected] = this.childNodes[0];
         this.loading = false;
       } else {
         this.loading = true;
         void this.importModule(importPath as string).then(() => {
           if (this.loading) {
-            this.template([element], this as unknown as HTMLElement, cache);
+            this.template([element], this, cache);
             this._caches[selected] = this.childNodes[0];
           }
           this.loading = false;
@@ -192,10 +190,7 @@ export class IoSelector extends IoElement {
     if (this.precache) {
       for (let i = 0; i < this.elements.length; i++) {
         const element = this.elements[i];
-        let args: IoSelectorArgs = {};
-        if (element && typeof element[1] === 'object' && !Array.isArray(element[1])) {
-          args = element[1];
-        }
+        let args: IoSelectorArgs = element.props || {};
         if (!args.import && args.id && this._caches[args.id as string] === undefined) {
           this.template([element], dummyElement, true);
           this._caches[args.id as string] = dummyElement.childNodes[0] as HTMLElement;

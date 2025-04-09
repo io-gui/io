@@ -1,4 +1,4 @@
-import { Register, Property, ioText, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, ioText, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 
@@ -16,7 +16,7 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoBoolean extends IoInputBase {
-  static vConstructor: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

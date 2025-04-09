@@ -1,4 +1,4 @@
-import { Register, Property, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 
 export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
@@ -13,7 +13,7 @@ export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoString extends IoInputBase {
-  static vConstructor: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

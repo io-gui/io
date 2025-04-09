@@ -1,5 +1,5 @@
 import { IoElementArgs } from '../core/element';
-import { VDOMArray } from '../core/internals/vDOM';
+import { VDOMElement } from '../core/internals/vDOM';
 
 export type NativeElementArgs = IoElementArgs & {
   src?: string;
@@ -16,18 +16,31 @@ const nativeElements = [
   'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead',
   'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
 ];
-const nativeVDOMConstructors: Record<string, (arg0?: NativeElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray> = {};
+const nativeVDOMConstructors: Record<string, (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement> = {};
 nativeElements.forEach((element) => {
-  const vConstructor = function(arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string): VDOMArray {
+  // TODO: Define all overloads with type guards.
+  // TODO: Add runtime debuf type checks.
+  // TODO: Test thoroughly.
+  const vConstructor = function(arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
+    const vDOMElement: VDOMElement = {name: element};
     if (arg0 !== undefined) {
-      if (arg1 !== undefined) {
-        return [element, arg0 as IoElementArgs, arg1 as VDOMArray[] | string];
-      } else {
-        return [element, arg0 as IoElementArgs | VDOMArray[] | string];
+      if (typeof arg0 === 'string') {
+        vDOMElement.children = arg0;
+      } else if (arg0 instanceof Array) {
+        vDOMElement.children = arg0;
+      } else if (typeof arg0 === 'object') {
+        vDOMElement.props = arg0;
       }
-    } else {
-      return [element];
+      if (arg1 !== undefined) {
+        if (typeof arg1 === 'string') {
+          vDOMElement.children = arg1;
+        } else if (arg1 instanceof Array) {
+          vDOMElement.children = arg1;
+        }
+      }
     }
+    return vDOMElement;
+
   };
   nativeVDOMConstructors[element] = vConstructor;
 });

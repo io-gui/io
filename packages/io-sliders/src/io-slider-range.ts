@@ -1,4 +1,4 @@
-import { Register, Property, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoSliderBase, IoSliderBaseArgs } from './io-slider-base.js';
 
 export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{
@@ -19,7 +19,7 @@ export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoSliderRange extends IoSliderBase {
-  static vConstructor: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoSliderRangeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];

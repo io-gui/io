@@ -1,10 +1,10 @@
-import { IoElement, VDOMArray, Property, Autobind, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Property, Autobind, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 
 export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
   options?: MenuOptions;
-  slotted?: VDOMArray[];
-  elements?: VDOMArray[];
+  slotted?: VDOMElement[];
+  elements?: VDOMElement[];
   menu?: 'top' | 'left' | 'bottom' | 'right';
   depth?: number;
   collapsed?: boolean;
@@ -12,7 +12,7 @@ export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
 }>;
 
 export class IoNavigatorBase extends IoElement {
-  static vConstructor: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -87,10 +87,10 @@ export class IoNavigatorBase extends IoElement {
   }
 
   @Property(Array)
-  declare slotted: VDOMArray[];
+  declare slotted: VDOMElement[];
 
   @Property(Array)
-  declare elements: VDOMArray[];
+  declare elements: VDOMElement[];
 
   @Property({type: MenuOptions})
   declare options: MenuOptions;
@@ -121,7 +121,7 @@ export class IoNavigatorBase extends IoElement {
     this.collapsed = this.offsetWidth < this.collapseWidth;
   }
 
-  getSlotted(): VDOMArray | null {
+  getSlotted(): VDOMElement | null {
     return null;
   }
 

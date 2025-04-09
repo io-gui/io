@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMArray, IoOverlaySingleton, NudgeDirection, IoThemeSingleton, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoOverlaySingleton, NudgeDirection, IoThemeSingleton, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
@@ -18,7 +18,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
   depth?: number;
   noPartialCollapse?: boolean;
   inlayer?: boolean;
-  slotted?: VDOMArray[];
+  slotted?: VDOMElement[];
   $parent?: IoMenuItem | IoContextMenu;
 }>;
 
@@ -27,7 +27,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoMenuOptions extends IoElement {
-  static vConstructor: (arg0?: IoMenuOptionsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoMenuOptionsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -154,7 +154,7 @@ export class IoMenuOptions extends IoElement {
   declare inlayer: boolean;
 
   @Property({type: Array})
-  declare slotted: VDOMArray[];
+  declare slotted: VDOMElement[];
 
   @Property('listbox')
   declare role: string;
@@ -304,7 +304,7 @@ export class IoMenuOptions extends IoElement {
   }
 
   changed() {
-    const elements: VDOMArray[] = [...this.slotted];
+    const elements: VDOMElement[] = [...this.slotted];
 
     if (this.searchable) {
       elements.push(ioString({
@@ -336,7 +336,7 @@ export class IoMenuOptions extends IoElement {
           depth: this.depth
         }));
         if (i < this.options.length - 1) {
-          elements.push(['span', {class: 'divider'}]);
+          elements.push({name: 'span', props: {class: 'divider'}});
         }
       }
     }

@@ -1,9 +1,9 @@
-import { IoElement, VDOMArray, Register, Property, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Register, Property, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 
 export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
-  elements?: VDOMArray[];
+  elements?: VDOMElement[];
   label?: string;
   direction?: 'column' | 'row';
   icon?: string;
@@ -16,7 +16,7 @@ export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoCollapsible extends IoElement {
-  static vConstructor: (arg0?: IoCollapsibleArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoCollapsibleArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -69,7 +69,7 @@ export class IoCollapsible extends IoElement {
   }
 
   @Property(Array)
-  declare elements: VDOMArray[];
+  declare elements: VDOMElement[];
 
   @Property('')
   declare label: string;

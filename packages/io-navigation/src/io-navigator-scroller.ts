@@ -1,10 +1,10 @@
-import { VDOMArray, Register } from 'io-gui';
+import { VDOMElement, Register } from 'io-gui';
 import { IoNavigatorBase } from './io-navigator-base.js';
 import { ioScroller } from './io-scroller.js';
 
 @Register
 export class IoNavigatorScroller extends IoNavigatorBase {
-  getSlotted(): VDOMArray {
+  getSlotted(): VDOMElement {
     return ioScroller({options: this.options}, this.elements);
   }
 }

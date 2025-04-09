@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
 export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
@@ -16,7 +16,7 @@ export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoVector extends IoElement {
-  static vConstructor: (arg0?: IoVectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoVectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -101,7 +101,7 @@ export class IoVector extends IoElement {
     }
   }
   changed() {
-    const elements: VDOMArray[] = [];
+    const elements: Array<VDOMElement | null> = [];
     for (const k of this.keys as [keyof typeof this.value]) {
       if (this.value[k] !== undefined) {
         elements.push(ioNumber({
@@ -120,7 +120,7 @@ export class IoVector extends IoElement {
     elements.push(this.getSlotted());
     this.template(elements);
   }
-  getSlotted(): VDOMArray | null {
+  getSlotted(): VDOMElement | null {
     return this.linkable ? ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'}) : null;
   }
 }

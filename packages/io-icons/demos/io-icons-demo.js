@@ -3,7 +3,7 @@ import { IoIconsetDB, ioIcon } from 'io-icons';
 
 export class IoIconsDemo extends IoElement {
   init() {
-    this.template([
+    this.template(
       (()=>{
         const icons = [];
         for (const set of Object.keys(IoIconsetDB)) {
@@ -15,7 +15,7 @@ export class IoIconsDemo extends IoElement {
         }
         return icons;
       })(),
-    ])
+    )
   }
 }
 Register(IoIconsDemo);

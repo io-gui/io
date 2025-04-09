@@ -1,4 +1,4 @@
-import { Register, IoElement, ioField, Property, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { Register, IoElement, ioField, Property, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 
 export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
   value?: Record<string, any> | any[];
@@ -13,7 +13,7 @@ export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoBreadcrumbs extends IoElement {
-  static vConstructor: (arg0?: IoBreadcrumbsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {

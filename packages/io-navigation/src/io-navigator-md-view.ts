@@ -1,4 +1,4 @@
-import { VDOMArray, Register, Property, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, Register, Property, ArgsWithBinding } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseArgs } from './io-navigator-base.js';
 import { ioScroller } from './io-scroller.js';
 import { ioMarkdown } from 'io-markdown';
@@ -10,7 +10,7 @@ export type IoNavigatorMdViewArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNavigatorMdView extends IoNavigatorBase {
-  static vConstructor: (arg0?: IoNavigatorMdViewArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNavigatorMdViewArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property({type: Array})
   declare strip: string[];
@@ -18,7 +18,7 @@ export class IoNavigatorMdView extends IoNavigatorBase {
   @Property(true)
   declare sanitize: boolean;
 
-  getSlotted(): VDOMArray {
+  getSlotted(): VDOMElement {
     const src = this.options.last;
     return ioScroller({options: this.options}, [
       ioMarkdown({src, strip: this.strip, sanitize: this.sanitize})

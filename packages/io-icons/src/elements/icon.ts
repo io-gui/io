@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoElement, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoIconsetSingleton } from '../nodes/iconset';
 
 export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
@@ -13,7 +13,7 @@ export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoIcon extends IoElement {
-  static vConstructor: (arg0?: IoIconArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoIconArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       --ioIcon: {

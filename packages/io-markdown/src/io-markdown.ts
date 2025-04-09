@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoThemeSingleton, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { Register, IoElement, Property, IoThemeSingleton, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -27,7 +27,7 @@ export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
  */
 @Register
 export class IoMarkdown extends IoElement {
-  static vConstructor: (arg0?: IoMarkdownArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoMarkdownArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

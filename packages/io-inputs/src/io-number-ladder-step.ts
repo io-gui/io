@@ -1,4 +1,4 @@
-import { Register, Property, ioText, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, ioText, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 
 export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
@@ -8,7 +8,7 @@ export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNumberLadderStep extends IoInputBase {
-  static vConstructor: (arg0?: IoNumberLadderStepArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

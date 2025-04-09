@@ -1,4 +1,4 @@
-import { IoNode, Register, IoElement, Property, IoStorage as $, div, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoNode, Register, IoElement, Property, IoStorage as $, div, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ObjectGroups } from './models/object-groups.js';
 import { ObjectWidgets } from './models/object-widgets.js';
 import { getEditorConfig } from './models/editor-config.js';
@@ -20,7 +20,7 @@ export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoInspector extends IoElement {
-  static vConstructor: (arg0?: IoInspectorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoInspectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -117,7 +117,7 @@ export class IoInspector extends IoElement {
   declare widgets: Record<string, any>;
 
   // @Property({type: Array})
-  // declare widget: VDOMArray;
+  // declare widget: VDOMElement;
 
   static get Listeners() {
     return {

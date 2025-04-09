@@ -1,6 +1,6 @@
-import { IoElement, Register } from 'io-gui';
-import {TodoModel} from './todo-model.js';
-import './todo-item.js';
+import { IoElement, Register, section, input, label, ul } from 'io-gui';
+import { TodoModel } from './todo-model.js';
+import { todoItem } from './todo-item.js';
 
 export class TodoList extends IoElement {
   static get Style() {
@@ -28,13 +28,13 @@ export class TodoList extends IoElement {
     const itemsInRoute = this.model.items.filter(this.model.filters[this.route]);
 
     this.template([
-      ['section', {class: 'main'}, [
-        ['input', {type: 'checkbox', $: 'toggle-all', class: 'toggle-all', checked: allCompleted}],
-        this.model.items.length ? ['label', {for: 'toggle-all', '@click': this.model.toggleAll}, 'Mark all as complete'] : null,
-        ['ul', {class: 'todo-list'}, [
-          itemsInRoute.map((item) => ['todo-item', {item: item, model: this.model}])
-        ]]
-      ]],
+      section({class: 'main'}, [
+        input({type: 'checkbox', $: 'toggle-all', class: 'toggle-all', checked: allCompleted}),
+        this.model.items.length ? label({for: 'toggle-all', '@click': this.model.toggleAll}, 'Mark all as complete') : null,
+        ul({class: 'todo-list'},
+          itemsInRoute.map((item) => todoItem({item: item, model: this.model}))
+        )
+      ]),
     ]);
   }
 }

@@ -1,4 +1,4 @@
-import { Register, IoElement, Change, Property, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Change, Property, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { MenuItem } from './models/menu-item.js';
 import { MenuOptions } from './models/menu-options.js';
 import { ioMenuItem } from './io-menu-item.js';
@@ -18,7 +18,7 @@ export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoOptionMenu extends IoElement {
-  static vConstructor: (arg0?: IoOptionMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoOptionMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -75,7 +75,8 @@ export class IoOptionMenu extends IoElement {
   changed() {
     const selectedItem = this.options.getItem(this.value);
 
-    this.item = this.item || new MenuItem({}); // {value: this.value}
+    // TODO: Implement id in menu items
+    this.item = this.item || new MenuItem({value: this.value});
     this.item.label = selectedItem?.label || String(this.value);
     this.item.options = this.options;
 

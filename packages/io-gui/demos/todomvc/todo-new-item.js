@@ -1,5 +1,5 @@
-import { IoElement, Register } from 'io-gui';
-import {TodoModel} from './todo-model.js';
+import { IoElement, Register, input, Autobind } from 'io-gui';
+import { TodoModel } from './todo-model.js';
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
@@ -32,7 +32,7 @@ export class TodoNewItem extends IoElement {
   }
   changed() {
     this.template([
-      ['input', {$: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true}],
+      input({$: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true}),
     ]);
   }
 }

@@ -2,6 +2,13 @@ import { IoElement, Register, span, ul, li, a, button } from 'io-gui';
 import {TodoModel} from './todo-model.js';
 
 export class TodoFooter extends IoElement {
+  static get Style() {
+    return /* css */`
+      :host a {
+        cursor: pointer;
+      }
+    `;
+  }
   static get Properties() {
     return {
       model: {

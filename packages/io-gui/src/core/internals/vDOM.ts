@@ -1,76 +1,17 @@
 import { EventDispatcher } from './eventDispatcher';
 import { IoNode } from '../node';
-import { IoElementArgs, IoElement } from '../element';
-
-/** @license
- * MIT License
- *
- * Copyright (c) 2019 Luke Jackson
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
+import { IoElement } from '../element';
 
 // TODO: Consider making more specific types. Might be too complex.
 export type AnyIoArgs = {
   [key: string]: any;
 }
 
-export type VDOMArray =
-  null |
-  [string] |
-  [string, AnyIoArgs | VDOMArray[] | string] |
-  [string, AnyIoArgs, VDOMArray[] | string];
-
 export type VDOMElement = {
   name: string,
-  props: AnyIoArgs,
-  children: VDOMElement[] | string
+  props?: AnyIoArgs,
+  children?: Array<VDOMElement | null> | string
 }
-
-const isArray = (x: any) => Array.isArray(x);
-const isString = (x: any) => typeof x === 'string';
-const isElementArgs = (object: IoElementArgs | VDOMArray[] | string | undefined) => {
-  return typeof object === 'object' && !Array.isArray(object);
-};
-
-const clense = (a: any, b: any) => !b ? a : isString(b[0]) ? [...a, b] : [...a, ...b];
-
-export const buildTree = (node: VDOMArray): VDOMElement | null => {
-  if (isArray(node)) {
-    if (isElementArgs(node[1])) {
-      const vElement: VDOMElement = {
-        name: node[0],
-        props: node[1] as IoElementArgs,
-        children: []
-      };
-      if (isArray(node[2])) {
-        vElement.children = node[2].reduce(clense, []).map(buildTree);
-      } else if (isString(node[2])) {
-        vElement.children = node[2];
-      }
-      return vElement;
-    } else {
-      return buildTree([node[0], {}, node[1] as VDOMArray[]]);
-    }
-  }
-  return null;
-};
 
 // TODO: Consider expanding support for more attributes.
 /**

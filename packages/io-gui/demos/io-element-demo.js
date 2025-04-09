@@ -10,18 +10,18 @@ const options = new MenuOptions({
 }).fromJSON([{
   label: 'io-inputs',
   options: [
-    {value: ioInputBase(), label: `io-input-base`},
-    {value: ioNumber(), label: `io-number`},
-    {value: ioString(), label: `io-string`},
-    {value: ioBoolean(), label: `io-boolean`},
-    {value: ioSwitch(), label: `io-switch`},
+    {value: ioInputBase(), label: 'io-input-base'},
+    {value: ioNumber(), label: 'io-number'},
+    {value: ioString(), label: 'io-string'},
+    {value: ioBoolean(), label: 'io-boolean'},
+    {value: ioSwitch(), label: 'io-switch'},
   ]
 }, {
   label: 'io-sliders',
   options: [
-    {value: ioSlider(), label: `io-slider`},
-    {value: ioSliderRange(), label: `io-slider-range`},
-    {value: ioSlider2d(), label: `io-slider-2d`},
+    {value: ioSlider(), label: 'io-slider'},
+    {value: ioSliderRange(), label: 'io-slider-range'},
+    {value: ioSlider2d(), label: 'io-slider-2d'},
   ]
 }]);
 

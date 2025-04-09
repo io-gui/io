@@ -1,4 +1,4 @@
-import { Register, Property, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { Register, Property, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { IoVector, IoVectorArgs } from './io-vector.js';
 
 export type IoMatrixArgs = IoVectorArgs & ArgsWithBinding<{
@@ -11,7 +11,7 @@ export type IoMatrixArgs = IoVectorArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoMatrix extends IoVector {
-  static vConstructor: (arg0?: IoMatrixArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoMatrixArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

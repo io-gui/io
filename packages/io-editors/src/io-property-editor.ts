@@ -1,4 +1,4 @@
-import { IoElement, Property, Register, IoElementArgs, IoNode, ioText, AnyConstructor, div, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { IoElement, Property, Register, IoElementArgs, IoNode, ioText, AnyConstructor, div, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { getEditorConfig, PropertyConfig } from './models/editor-config.js';
 
 export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
@@ -13,7 +13,7 @@ export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoPropertyEditor extends IoElement {
-  static vConstructor: (arg0?: IoPropertyEditorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoPropertyEditorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -88,13 +88,13 @@ export class IoPropertyEditor extends IoElement {
       if (Object.prototype.hasOwnProperty.call(this.value, properties[i])) {
         const c = properties[i] as keyof typeof this.value;
         const value = this.value[c];
-        const tag = config[c]![0];
-        const props = config[c]![1] as (IoElementArgs | undefined) || {};
+        const tag = config[c]!.name;
+        const props = config[c]!.props as (IoElementArgs | undefined) || {};
         const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
         elements.push(div({class: 'io-row'}, [
           this.labeled ? ioText(c) : null,
-          [tag, finalProps],
+          {name: tag, props: finalProps},
         ]));
       } else {
         debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);

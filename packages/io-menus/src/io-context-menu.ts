@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoOverlaySingleton as Overlay, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, IoOverlaySingleton as Overlay, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from './models/menu-options.js';
 import { IoMenuOptions } from './io-menu-options.js';
 
@@ -13,7 +13,7 @@ export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoContextMenu extends IoElement {
-  static vConstructor: (arg0?: IoContextMenuArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoContextMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property({type: MenuOptions})
   declare options: MenuOptions;

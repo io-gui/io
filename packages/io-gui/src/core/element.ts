@@ -1,7 +1,7 @@
 import { IoNode, IoNodeMixin, IoNodeArgs, ArgsWithBinding } from './node';
 import { Property } from './decorators/property';
 import { Register } from './decorators/register';
-import { applyNativeElementProps, buildTree, constructElement, disposeChildren, VDOMArray, toVDOM } from './internals/vDOM';
+import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM } from './internals/vDOM';
 
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
@@ -32,7 +32,7 @@ export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
  */
 @Register
 export class IoElement extends IoNodeMixin(HTMLElement) {
-  static vConstructor: (arg0?: IoElementArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -105,24 +105,24 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**
    * Renders DOM from virtual DOM arrays.
-   * @param {Array} VDOMElements - Array of VDOMElement[] children.
+   * @param {Array} vDOMElements - Array of VDOMElement[] children.
    * @param {HTMLElement} [host] - Optional template target.
    * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  template(VDOMElements: VDOMArray[], host?: HTMLElement, cache?: boolean) {
-    const vChildren = buildTree(['first', VDOMElements])?.children || [];
+  template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, cache?: boolean) {
     host = (host || this) as any;
     if (host === (this as any)) this.$ = {};
-    this.traverse(vChildren, host as HTMLElement, cache);
+    const vDOMElementsOnly = vDOMElements.filter(item => item !== null);
+    this.traverse(vDOMElementsOnly, host as HTMLElement, cache);
   }
   /**
    * Recurively traverses virtual DOM elements.
    * TODO: test element.traverse() function!
-   * @param {Array} vChildren - Array of vDOM children converted by `buildTree()` for easier parsing.
+   * @param {Array} vDOMElements - Array of VDOMElements elements.
    * @param {HTMLElement} [host] - Optional template target.
    * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
    */
-  traverse(vChildren: Array<any> | string, host: HTMLElement, cache?: boolean) {
+  traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, cache?: boolean) {
     const children = host.children;
     // remove trailing elements
     while (children.length > vChildren.length) {
@@ -142,17 +142,21 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
         if (!cache) disposeChildren(oldElement as unknown as IoElement);
       // update existing elements
       } else {
+        // TODO: improve setting/removal/cleanup of native element properties/attributes.
         child.removeAttribute('className');
-        if ((child as IoElement)._isIoElement) {
-          // Set IoElement element properties
-          (child as IoElement).applyProperties(vChildren[i].props);
-        } else {
-          // Set native HTML element properties
-          applyNativeElementProps(child as HTMLElement, vChildren[i].props);
+        if (vChildren[i].props) {
+          if ((child as IoElement)._isIoElement) {
+            // Set IoElement element properties
+            (child as IoElement).applyProperties(vChildren[i].props);
+          } else {
+            // Set native HTML element properties
+            applyNativeElementProps(child as HTMLElement, vChildren[i].props);
+          }
         }
       }
     }
-    // TODO: doing this before "replace elements" cached elements to be created twice. Consider making a unit test for this.
+    // TODO: doing this before "replace elements" cached elements to be created twice.
+    // TODO: test
     // create new elements after existing
     if (children.length < vChildren.length) {
       const frag = document.createDocumentFragment();
@@ -165,17 +169,18 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
       const child = children[i] as HTMLElement | IoElement;
-      if (vChildren[i].props.$) {
-        this.$[vChildren[i].props.$] = child;
+      if (vChildren[i].props?.$) {
+        this.$[vChildren[i].props!.$] = child;
       }
-      if (vChildren[i].children !== undefined) {
+      if (vChildren[i].children) {
         if (typeof vChildren[i].children === 'string') {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);
           (child as IoElement)._textNode.nodeValue = String(vChildren[i].children);
-        } else if (vChildren[i].children.length > 0) {
+        } else if (vChildren[i].children instanceof Array && vChildren[i].children!.length > 0) {
           // Traverse deeper.
-          this.traverse(vChildren[i].children, child as HTMLElement, cache);
+          const vDOMElementsOnly = (vChildren[i].children as Array<VDOMElement | null>).filter(item => item !== null);
+          this.traverse(vDOMElementsOnly, child as HTMLElement, cache);
         }
       }
     }
@@ -306,16 +311,28 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
     styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
     document.head.appendChild(styleElement);
 
-    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementArgs | VDOMArray[], arg1?: VDOMArray[]): VDOMArray {
+    // TODO: Define all overloads with type guards.
+    // TODO: Add runtime debuf type checks.
+    // TODO: Test thoroughly.
+    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
+      const vDOMElement: VDOMElement = {name: localName};
       if (arg0 !== undefined) {
-        if (arg1 !== undefined) {
-          return [localName, arg0 as IoElementArgs, arg1 as VDOMArray[]];
-        } else {
-          return [localName, arg0 as IoElementArgs | VDOMArray[]];
+        if (typeof arg0 === 'string') {
+          vDOMElement.children = arg0;
+        } else if (arg0 instanceof Array) {
+          vDOMElement.children = arg0;
+        } else if (typeof arg0 === 'object') {
+          vDOMElement.props = arg0;
         }
-      } else {
-        return [localName];
+        if (arg1 !== undefined) {
+          if (typeof arg1 === 'string') {
+            vDOMElement.children = arg1;
+          } else if (arg1 instanceof Array) {
+            vDOMElement.children = arg1;
+          }
+        }
       }
+      return vDOMElement;
     }});
   }
 }

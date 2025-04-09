@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoOverlaySingleton, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoElement, IoOverlaySingleton, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { IoColorPanelSingleton as Panel } from './elements/color-panel-singleton.js';
 import { ioColorSwatch } from './io-color-swatch.js';
 
@@ -13,7 +13,7 @@ export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoColorPicker extends IoElement {
-  static vConstructor: (arg0?: IoColorPickerArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoColorPickerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

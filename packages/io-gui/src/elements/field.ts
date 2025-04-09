@@ -1,7 +1,7 @@
 
 import { Register } from '../core/decorators/register';
 import { Property } from '../core/decorators/property';
-import { VDOMArray } from '../core/internals/vDOM';
+import { VDOMElement } from '../core/internals/vDOM';
 import { IoElement, IoElementArgs } from '../core/element';
 import { ArgsWithBinding } from '../core/node';
 
@@ -14,7 +14,7 @@ export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoField extends IoElement {
-  static vConstructor: (arg0?: IoFieldArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       --ioField: {

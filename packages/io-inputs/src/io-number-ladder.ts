@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoElementArgs, IoOverlaySingleton, IoThemeSingleton, span, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoElement, IoElementArgs, IoOverlaySingleton, IoThemeSingleton, span, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoNumber } from './io-number';
 import { ioNumberLadderStep } from './io-number-ladder-step';
 
@@ -33,7 +33,7 @@ export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 class IoNumberLadder extends IoElement {
-  static vConstructor: (arg0?: IoNumberLadderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+  static vConstructor: (arg0?: IoNumberLadderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

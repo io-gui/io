@@ -119,7 +119,7 @@ export class IoMenusDemo extends IoElement {
           first: this.bind('menuRoot')
         }),
       }),
-      ['div', {class: 'row'}, [
+      div({class: 'row'}, [
         ioMenuOptions({
           searchable: true,
           options: new MenuOptions({
@@ -144,7 +144,7 @@ export class IoMenusDemo extends IoElement {
         ioMenuOptions({
           options: optionsDeep,
         }),
-      ]],
+      ]),
       div({class: 'contextArea'}, [
         span('Context Area'),
         ioContextMenu({
@@ -225,12 +225,12 @@ export class IoOptionsDemoView extends IoElement {
     }
     this.template([
       div([
-        this.options.first ? [ioText({class: 'first'}, 'first:'), ioText(this.options.first)] : null,
-        this.options.last ? [ioText({class: 'last'}, 'last:'), ioText(this.options.last)] : null,
-        this.options.scroll ? [ioText({class: 'scroll'}, 'scroll:'), ioText(this.options.scroll)] : null,
-        this.options.path ? [ioText({class: 'path'}, 'path:'), ioText(this.options.path)] : null,
+        this.options.first ? ioText({class: 'first'}, `first: ${this.options.first}`) : null,
+        this.options.last ? ioText({class: 'last'}, `last: ${this.options.last}`) : null,
+        this.options.path ? ioText({class: 'path'}, `path: ${this.options.path}`) : null,
+        this.options.scroll ? ioText({class: 'scroll'}, `scroll: ${this.options.scroll}`) : null,
       ]),
-      options
+      ...options
     ]);
   }
 }
