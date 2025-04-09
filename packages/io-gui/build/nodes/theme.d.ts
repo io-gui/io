@@ -1,4 +1,4 @@
-import { PropertyDefinitions, IoNode } from '../nodes/node';
+import { PropertyDefinitions, IoNode } from '../nodes/Node';
 export declare class Color {
     r: number;
     g: number;
@@ -79,4 +79,4 @@ export declare class IoTheme extends IoNode {
 }
 declare const IoThemeSingleton: IoTheme;
 export { IoThemeSingleton };
-//# sourceMappingURL=theme.d.ts.map
+//# sourceMappingURL=Theme.d.ts.map

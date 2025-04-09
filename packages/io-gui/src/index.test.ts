@@ -1,16 +1,16 @@
-import BindingTest from './internals/binding.test';
-import ChangeQueueTest from './internals/changeQueue.test';
-import EventDispatcherTest from './internals/eventDispatcher.test';
-import PropertyTest from './internals/property.test';
-import ProtoChainTest from './internals/protoChain.test';
-import ElementTest from './elements/element.test';
-import NodeTest from './nodes/node.test';
-import StorageTest from './nodes/storage.test';
-import ThemeTest from './nodes/theme.test';
-import FieldTest from './elements/field.test';
-import GLTest from './elements/gl.test';
-import OverlayTest from './elements/overlay.test';
-import TextTest from './elements/text.test';
+import BindingTest from './core/Binding.test';
+import ChangeQueueTest from './core/ChangeQueue.test';
+import EventDispatcherTest from './core/EventDispatcher.test';
+import PropertyTest from './core/Property.test';
+import ProtoChainTest from './core/ProtoChain.test';
+import NodeTest from './nodes/Node.test';
+import StorageTest from './nodes/Storage.test';
+import ThemeTest from './nodes/Theme.test';
+import IoElementTest from './elements/IoElement.test';
+import IoFieldTest from './elements/IoField.test';
+import IoGLTest from './elements/IoGL.test';
+import IoOverlayTest from './elements/IoOverlay.test';
+import IoTextTest from './elements/IoText.test';
 export default class {
   run() {
     new BindingTest().run();
@@ -18,13 +18,13 @@ export default class {
     new EventDispatcherTest().run();
     new PropertyTest().run();
     new ProtoChainTest().run();
-    new ElementTest().run();
     new NodeTest().run();
     new StorageTest().run();
     new ThemeTest().run();
-    new FieldTest().run();
-    new GLTest().run();
-    new OverlayTest().run();
-    new TextTest().run();
+    new IoElementTest().run();
+    new IoFieldTest().run();
+    new IoGLTest().run();
+    new IoOverlayTest().run();
+    new IoTextTest().run();
   }
 }

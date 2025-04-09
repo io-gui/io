@@ -11,4 +11,4 @@ export declare const Autobind: (target: Object, propertyKey: string | symbol, de
     get(): any;
     set(value: any): void;
 };
-//# sourceMappingURL=autobind.d.ts.map
+//# sourceMappingURL=Autobind.d.ts.map

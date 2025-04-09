@@ -1,10 +1,10 @@
-import { ProtoChain } from '../internals/protoChain';
-import { Binding } from '../internals/binding';
-import { ChangeQueue } from '../internals/changeQueue';
-import { PropertyInstance, PropertyDefinitionLoose } from '../internals/property';
-import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../internals/eventDispatcher';
-import { throttle, CallbackFunction } from '../internals/queue';
-import { Register } from '../decorators/register';
+import { Register } from '../decorators/Register';
+import { ProtoChain } from '../core/ProtoChain';
+import { Binding } from '../core/Binding';
+import { ChangeQueue } from '../core/ChangeQueue';
+import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property';
+import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
+import { throttle, CallbackFunction } from '../core/Queue';
 
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
@@ -51,7 +51,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     declare readonly _eventDispatcher: EventDispatcher;
 
      /**
-     * Creates a class instance and initializes the internals with properties.
+     * Creates a class instance and initializes the core with properties.
      * @overload
      * @constructor
      * @param {IoNodeArgs} args - Initial property values
@@ -126,7 +126,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       for (const name in props) {
         if (!this._properties.has(name)) {
           // TODO: document!
-          debug: if (!name.startsWith('@') && name !== 'style' && name !== 'config' && name !== '$') {
+          debug: if (!name.startsWith('@') && name !== 'style' && name !== '$') {
             console.warn(`Property "${name}" is not defined`, this);
           }
           continue;
@@ -375,7 +375,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     /**
-     * Disposes all internals.
+     * Disposes all core.
      * Use this when instance is no longer needed.
      */
     dispose() {

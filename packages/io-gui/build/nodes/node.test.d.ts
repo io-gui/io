@@ -1,4 +1,4 @@
 export default class {
     run(): void;
 }
-//# sourceMappingURL=node.test.d.ts.map
+//# sourceMappingURL=Node.test.d.ts.map

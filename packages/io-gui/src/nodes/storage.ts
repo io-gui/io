@@ -1,7 +1,7 @@
-import { Binding } from '../internals/binding';
-import { Property } from '../decorators/property';
-import { Register } from '../decorators/register';
-import { IoNode, IoNodeArgs } from '../nodes/node';
+import { Property } from '../decorators/Property';
+import { Register } from '../decorators/Register';
+import { Binding } from '../core/Binding';
+import { IoNode, IoNodeArgs } from '../nodes/Node';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;

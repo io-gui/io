@@ -163,80 +163,80 @@
     "build:colors": {
       "command": "tsc --project ./packages/io-colors/tsconfig.json",
       "dependencies": [
+        "clean:colors",
+        "lint:colors",
         "build:gui",
         "build:inputs",
-        "build:sliders",
-        "clean:colors",
-        "lint:colors"
+        "build:sliders"
       ]
     },
     "build:icons": {
       "command": "tsc --project ./packages/io-icons/tsconfig.json",
       "dependencies": [
-        "build:gui",
         "clean:icons",
-        "lint:icons"
+        "lint:icons",
+        "build:gui"
       ]
     },
     "build:inputs": {
       "command": "tsc --project ./packages/io-inputs/tsconfig.json",
       "dependencies": [
-        "build:gui",
-        "build:icons",
         "clean:inputs",
-        "lint:inputs"
+        "lint:inputs",
+        "build:gui",
+        "build:icons"
       ] 
     },
     "build:editors": {
       "command": "tsc --project ./packages/io-editors/tsconfig.json",
       "dependencies": [
+        "clean:editors",
+        "lint:editors",
         "build:gui",
         "build:inputs",
         "build:sliders",
         "build:colors",
         "build:menus",
-        "build:navigation",
-        "clean:editors",
-        "lint:editors"
+        "build:navigation"
       ] 
     },
     "build:markdown": {
       "command": "tsc --project ./packages/io-markdown/tsconfig.json",
       "dependencies": [
-        "build:gui",
         "clean:markdown",
-        "lint:markdown"
+        "lint:markdown",
+        "build:gui"
       ]
     },
     "build:menus": {
       "command": "tsc --project ./packages/io-menus/tsconfig.json",
       "dependencies": [
+        "clean:menus",
+        "lint:menus",
         "build:gui",
         "build:icons",
-        "build:inputs",
-        "clean:menus",
-        "lint:menus"
+        "build:inputs"
       ]
     },
     "build:navigation": {
       "command": "tsc --project ./packages/io-navigation/tsconfig.json",
       "dependencies": [
+        "clean:navigation",
+        "lint:navigation",
         "build:gui",
         "build:icons",  
         "build:inputs",
         "build:menus",
-        "build:markdown",
-        "clean:navigation",
-        "lint:navigation"
+        "build:markdown"
       ]
     },
     "build:sliders": {
       "command": "tsc --project ./packages/io-sliders/tsconfig.json",
       "dependencies": [
-        "build:gui",
-        "build:inputs",
         "clean:sliders",
-        "lint:sliders"
+        "lint:sliders",
+        "build:gui",
+        "build:inputs"
       ]
     },
     "bundle": {

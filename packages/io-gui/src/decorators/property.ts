@@ -1,6 +1,6 @@
-import { PropertyDefinitionLoose } from '../internals/property';
-import { propertyDecorators } from '../internals/protoChain';
-import { IoNode, AnyConstructor } from '../nodes/node';
+import { PropertyDefinitionLoose } from '../core/Property';
+import { propertyDecorators } from '../core/ProtoChain';
+import { IoNode, AnyConstructor } from '../nodes/Node';
 
 /**
  * Allows property definitions using decorator pattern.

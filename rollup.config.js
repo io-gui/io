@@ -3,11 +3,14 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
 import terser from '@rollup/plugin-terser';
 
-export function makeBundleTarget(src, target, externals = []) {
+// const externals = [];
+const externals = ['io-gui', 'io-markdown', 'io-menus', 'io-inputs', 'io-icons', 'io-colors', 'io-extras', 'io-editors', 'io-sliders'];
 
-  externals.forEach(function(part, index) {
-    externals[index] = path.resolve(externals[index]);
-  });
+export function makeBundleTarget(src, target) {
+
+  const _externals = [...externals];
+
+  externals.push(path.resolve(src));
 
   return {
     input: src,
@@ -32,15 +35,10 @@ export function makeBundleTarget(src, target, externals = []) {
       file: target,
       indent: '  '
     }],
-    external: externals,
+    external: _externals,
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);
     }
   };
 }
-
-export default [
-  makeBundleTarget('build/io-gui.js', 'bundle/io-gui.js', []),
-  makeBundleTarget('build/io-gui.test.js', 'bundle/io-gui.test.js', ['build/io-gui.js']),
-];

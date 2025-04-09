@@ -1,9 +1,9 @@
-import { ProtoChain } from '../internals/protoChain';
-import { Binding } from '../internals/binding';
-import { ChangeQueue } from '../internals/changeQueue';
-import { PropertyInstance, PropertyDefinitionLoose } from '../internals/property';
-import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../internals/eventDispatcher';
-import { CallbackFunction } from '../internals/queue';
+import { ProtoChain } from '../core/ProtoChain';
+import { Binding } from '../core/Binding';
+import { ChangeQueue } from '../core/ChangeQueue';
+import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property';
+import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
+import { CallbackFunction } from '../core/Queue';
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
@@ -133,7 +133,7 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          */
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         /**
-         * Disposes all internals.
+         * Disposes all core.
          * Use this when instance is no longer needed.
          */
         dispose(): void;
@@ -249,7 +249,7 @@ declare const IoNode_base: {
          */
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         /**
-         * Disposes all internals.
+         * Disposes all core.
          * Use this when instance is no longer needed.
          */
         dispose(): void;
@@ -264,4 +264,4 @@ declare const IoNode_base: {
 export declare class IoNode extends IoNode_base {
 }
 export {};
-//# sourceMappingURL=node.d.ts.map
+//# sourceMappingURL=Node.d.ts.map

@@ -1,4 +1,4 @@
-import { IoNode } from '../nodes/node';
+import { IoNode } from '../nodes/Node';
 
 /**
  * Register function to be called once per class.

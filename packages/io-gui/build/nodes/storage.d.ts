@@ -1,5 +1,5 @@
-import { Binding } from '../internals/binding';
-import { IoNode, IoNodeArgs } from '../nodes/node';
+import { Binding } from '../core/Binding';
+import { IoNode, IoNodeArgs } from '../nodes/Node';
 export type StorageProps = IoNodeArgs & {
     key: string;
     value?: any;
@@ -24,4 +24,4 @@ export declare const IoStorage: ((props: StorageProps) => Binding) & {
     permit(): void;
     unpermit(): void;
 };
-//# sourceMappingURL=storage.d.ts.map
+//# sourceMappingURL=Storage.d.ts.map
