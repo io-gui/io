@@ -241,6 +241,7 @@
     },
     "bundle": {
       "dependencies": [
+        "clean",
         "bundle:gui",
         "bundle:colors",
         "bundle:icons",
