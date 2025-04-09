@@ -1,3 +1,3 @@
 export * from './nodes/iconset';
-export * from './elements/icon';
+export * from './elements/io-icon';
 //# sourceMappingURL=index.d.ts.map

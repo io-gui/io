@@ -1,11 +1,11 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
     value?: number;
     label?: string;
 }>;
 export declare class IoNumberLadderStep extends IoInputBase {
-    static vConstructor: (arg0?: IoNumberLadderStepArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     label: string;
@@ -19,5 +19,5 @@ export declare class IoNumberLadderStep extends IoInputBase {
     init(): void;
     changed(): void;
 }
-export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-number-ladder-step.d.ts.map

@@ -1,19 +1,19 @@
-import { IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
     options?: MenuOptions;
-    slotted?: VDOMArray[];
-    elements?: VDOMArray[];
+    slotted?: VDOMElement[];
+    elements?: VDOMElement[];
     menu?: 'top' | 'left' | 'bottom' | 'right';
     depth?: number;
     collapsed?: boolean;
     collapseWidth?: number;
 }>;
 export declare class IoNavigatorBase extends IoElement {
-    static vConstructor: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    slotted: VDOMArray[];
-    elements: VDOMArray[];
+    slotted: VDOMElement[];
+    elements: VDOMElement[];
     options: MenuOptions;
     menu: 'top' | 'left' | 'bottom' | 'right';
     depth: number;
@@ -22,8 +22,8 @@ export declare class IoNavigatorBase extends IoElement {
     init(): void;
     onResized(): void;
     _computeCollapsed(): void;
-    getSlotted(): VDOMArray | null;
+    getSlotted(): VDOMElement | null;
     changed(): void;
 }
-export declare const ioNavigatorBase: (arg0?: IoNavigatorBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioNavigatorBase: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-navigator-base.d.ts.map

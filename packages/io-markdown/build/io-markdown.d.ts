@@ -1,4 +1,4 @@
-import { IoElement, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { IoElement, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
     src?: string;
     strip?: string[];
@@ -9,7 +9,7 @@ export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 export declare class IoMarkdown extends IoElement {
-    static vConstructor: (arg0?: IoMarkdownArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoMarkdownArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     role: string;
     src: string;
@@ -23,5 +23,5 @@ export declare class IoMarkdown extends IoElement {
     srcChanged(): void;
     changed(): void;
 }
-export declare const ioMarkdown: (arg0?: IoMarkdownArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioMarkdown: (arg0?: IoMarkdownArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-markdown.d.ts.map

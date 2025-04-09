@@ -1,7 +1,7 @@
-import { Property } from '../core/decorators/property';
-import { Register } from '../core/decorators/register';
-import { IoElement, IoElementArgs } from '../core/element';
-import { ArgsWithBinding } from '../core/node';
+import { Property } from '../decorators/property';
+import { Register } from '../decorators/register';
+import { IoElement, IoElementArgs } from '../elements/element';
+import { ArgsWithBinding } from '../nodes/node';
 
 let lastFocus: Element | null = null;
 

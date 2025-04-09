@@ -1,8 +1,8 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoSliderBase, IoSliderBaseArgs } from './io-slider-base.js';
 export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{}>;
 export declare class IoSlider2d extends IoSliderBase {
-    static vConstructor: (arg0?: IoSlider2dArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: [number, number];
     step: [number, number];
@@ -13,5 +13,5 @@ export declare class IoSlider2d extends IoSliderBase {
     static get GlUtils(): string;
     static get Frag(): string;
 }
-export declare const ioSlider2d: (arg0?: IoSlider2dArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioSlider2d: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-slider-2d.d.ts.map

@@ -27,5 +27,5 @@ export declare class IoButton extends IoInputBase {
     init(): void;
     changed(): void;
 }
-export declare const ioButton: (arg0?: IoInputBaseArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioButton: (arg0?: IoInputBaseArgs | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;
 //# sourceMappingURL=io-button.d.ts.map

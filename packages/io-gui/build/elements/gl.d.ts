@@ -1,14 +1,14 @@
-import { IoElement, IoElementArgs } from '../core/element';
-import { VDOMArray } from '../core/internals/vDOM';
-import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
+import { IoElement, IoElementArgs } from '../elements/element';
+import { VDOMElement } from '../internals/vDOM';
+import { PropertyInstance, PropertyDefinition } from '../internals/property';
 import { IoThemeSingleton } from '../nodes/theme';
-import { ArgsWithBinding } from '../core/node';
+import { ArgsWithBinding } from '../nodes/node';
 export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
     color?: [number, number, number, number];
 }>;
 export declare class IoGl extends IoElement {
     #private;
-    static vConstructor: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     theme: typeof IoThemeSingleton;
     size: [number, number];
@@ -33,5 +33,5 @@ export declare class IoGl extends IoElement {
     setUniform(name: string, value: any): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
-export declare const ioGl: (arg0?: IoGlArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioGl: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=gl.d.ts.map

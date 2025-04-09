@@ -1,4 +1,4 @@
-import { IoField, IoFieldArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoField, IoFieldArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
     tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
     name?: string;
@@ -8,7 +8,7 @@ export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
     type?: string;
 }>;
 export declare class IoInputBase extends IoField {
-    static vConstructor: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     tabindex: string;
     name: string;
@@ -38,5 +38,5 @@ export declare class IoInputBase extends IoField {
     setCaretPosition(position: number): void;
     changed(): void;
 }
-export declare const ioInputBase: (arg0?: IoInputBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioInputBase: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-input-base.d.ts.map

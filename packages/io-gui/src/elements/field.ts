@@ -1,9 +1,9 @@
 
-import { Register } from '../core/decorators/register';
-import { Property } from '../core/decorators/property';
-import { VDOMElement } from '../core/internals/vDOM';
-import { IoElement, IoElementArgs } from '../core/element';
-import { ArgsWithBinding } from '../core/node';
+import { Register } from '../decorators/register';
+import { Property } from '../decorators/property';
+import { VDOMElement } from '../internals/vDOM';
+import { IoElement, IoElementArgs } from '../elements/element';
+import { ArgsWithBinding } from '../nodes/node';
 
 export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
   appearance?: 'flush' | 'inset' | 'outset' | 'neutral';

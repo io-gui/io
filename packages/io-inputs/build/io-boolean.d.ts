@@ -1,4 +1,4 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
     value?: boolean;
@@ -12,7 +12,7 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
  **/
 export declare class IoBoolean extends IoInputBase {
-    static vConstructor: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: boolean;
     true: string;
@@ -25,5 +25,5 @@ export declare class IoBoolean extends IoInputBase {
     init(): void;
     changed(): void;
 }
-export declare const ioBoolean: (arg0?: IoBooleanArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioBoolean: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-boolean.d.ts.map

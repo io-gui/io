@@ -1,4 +1,4 @@
-import { IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
 export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
     value?: number;
     step?: number;
@@ -15,7 +15,7 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  * <io-element-demo element="io-number-slider" properties='{"value": 0, "step": 0.1, "conversion": 0.2, "min": -0.5, "max": 0.5, "exponent": 1}'></io-element-demo>
  **/
 export declare class IoNumberSlider extends IoElement {
-    static vConstructor: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     step: number;
@@ -29,5 +29,5 @@ export declare class IoNumberSlider extends IoElement {
     init(): void;
     changed(): void;
 }
-export declare const ioNumberSlider: (arg0?: IoNumberSliderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioNumberSlider: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-number-slider.d.ts.map

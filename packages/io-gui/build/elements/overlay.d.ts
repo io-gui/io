@@ -1,5 +1,5 @@
-import { IoElement, IoElementArgs } from '../core/element';
-import { ArgsWithBinding } from '../core/node';
+import { IoElement, IoElementArgs } from '../elements/element';
+import { ArgsWithBinding } from '../nodes/node';
 export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
 export type IoOverlayArgs = IoElementArgs & ArgsWithBinding<{
     expanded?: boolean;

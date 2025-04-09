@@ -11,5 +11,5 @@ export declare class IoColorSwatch extends IoColorBase {
     static get Style(): string;
     valueChanged(): void;
 }
-export declare const ioColorSwatch: (arg0?: import("./elements/color-base.js").IoColorBaseArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioColorSwatch: (arg0?: import("./elements/color-base.js").IoColorBaseArgs | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;
 //# sourceMappingURL=io-color-swatch.d.ts.map

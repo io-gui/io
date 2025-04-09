@@ -1,5 +1,5 @@
-import { IoElementArgs } from '../core/element';
-import { VDOMElement } from '../core/internals/vDOM';
+import { IoElementArgs } from '../elements/element';
+import { VDOMElement } from '../internals/vDOM';
 
 export type NativeElementArgs = IoElementArgs & {
   src?: string;

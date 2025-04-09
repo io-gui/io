@@ -1,17 +1,17 @@
-import { IoElement, VDOMArray, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 export type IoMdNavigatorArgs = IoElementArgs & ArgsWithBinding<{
     options?: MenuOptions;
-    slotted?: VDOMArray[];
+    slotted?: VDOMElement[];
     menu?: 'top' | 'left' | 'bottom' | 'right';
     depth?: number;
     collapsed?: boolean;
     collapseWidth?: number;
 }>;
 export declare class IoMdNavigator extends IoElement {
-    static vConstructor: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoMdNavigatorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    slotted: VDOMArray[];
+    slotted: VDOMElement[];
     options: MenuOptions;
     menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
     depth: number;
@@ -20,5 +20,5 @@ export declare class IoMdNavigator extends IoElement {
     onResized(): void;
     changed(): void;
 }
-export declare const ioMdNavigator: (arg0?: IoMdNavigatorArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioMdNavigator: (arg0?: IoMdNavigatorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-md-navigator.d.ts.map

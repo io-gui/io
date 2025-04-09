@@ -1,6 +1,6 @@
-import { VDOMArray } from '../core/internals/vDOM';
-import { IoElement, IoElementArgs } from '../core/element';
-import { ArgsWithBinding } from '../core/node';
+import { VDOMElement } from '../internals/vDOM';
+import { IoElement, IoElementArgs } from '../elements/element';
+import { ArgsWithBinding } from '../nodes/node';
 export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
     appearance?: 'flush' | 'inset' | 'outset' | 'neutral';
     selected?: boolean;
@@ -8,7 +8,7 @@ export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
     disabled?: boolean;
 }>;
 export declare class IoField extends IoElement {
-    static vConstructor: (arg0?: IoFieldArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     appearance: 'flush' | 'inset' | 'outset' | 'neutral';
     selected: boolean;
@@ -17,5 +17,5 @@ export declare class IoField extends IoElement {
     constructor(args?: IoFieldArgs);
     disabledChanged(): void;
 }
-export declare const ioField: (arg0?: IoFieldArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioField: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=field.d.ts.map

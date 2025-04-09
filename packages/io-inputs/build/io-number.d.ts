@@ -1,4 +1,4 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
     value?: number;
@@ -15,7 +15,7 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
 export declare class IoNumber extends IoInputBase {
-    static vConstructor: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     conversion: number;
@@ -44,5 +44,5 @@ export declare class IoNumber extends IoInputBase {
     disabledChanged(): void;
     changed(): void;
 }
-export declare const ioNumber: (arg0?: IoNumberArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioNumber: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-number.d.ts.map

@@ -1,11 +1,11 @@
-import { Register } from '../core/decorators/register';
-import { IoElement, IoElementArgs } from '../core/element';
-import { VDOMElement } from '../core/internals/vDOM';
-import { PropertyInstance, PropertyDefinition } from '../core/internals/property';
-import { Property } from '../core/decorators/property';
+import { Register } from '../decorators/register';
+import { IoElement, IoElementArgs } from '../elements/element';
+import { VDOMElement } from '../internals/vDOM';
+import { PropertyInstance, PropertyDefinition } from '../internals/property';
+import { Property } from '../decorators/property';
 import { IoThemeSingleton, Color } from '../nodes/theme';
 import { glsl } from './gl.glsl';
-import { IoNode, ArgsWithBinding } from '../core/node';
+import { IoNode, ArgsWithBinding } from '../nodes/node';
 
 const canvas = document.createElement('canvas');
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false}) as WebGLRenderingContext;

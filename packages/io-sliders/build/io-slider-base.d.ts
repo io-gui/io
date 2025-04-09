@@ -1,4 +1,4 @@
-import { IoGl, IoGlArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoGl, IoGlArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
     value?: number | [number, number];
     step?: number | [number, number];
@@ -10,7 +10,7 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
     tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
 }>;
 export declare class IoSliderBase extends IoGl {
-    static vConstructor: (arg0?: IoSliderBaseArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number | [number, number];
     step: number | [number, number];

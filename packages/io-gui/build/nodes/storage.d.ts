@@ -1,5 +1,5 @@
-import { Binding } from '../core/internals/binding';
-import { IoNode, IoNodeArgs } from '../core/node';
+import { Binding } from '../internals/binding';
+import { IoNode, IoNodeArgs } from '../nodes/node';
 export type StorageProps = IoNodeArgs & {
     key: string;
     value?: any;

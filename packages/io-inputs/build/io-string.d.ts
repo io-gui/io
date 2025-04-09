@@ -1,4 +1,4 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './io-input-base';
 export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
     live?: boolean;
@@ -10,7 +10,7 @@ export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
  * Input element for `String` data type.
  **/
 export declare class IoString extends IoInputBase {
-    static vConstructor: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     live: boolean;
     value: string;
@@ -33,5 +33,5 @@ export declare class IoString extends IoInputBase {
     changed(): void;
     valueChanged(): void;
 }
-export declare const ioString: (arg0?: IoStringArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioString: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-string.d.ts.map

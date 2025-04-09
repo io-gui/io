@@ -9,5 +9,5 @@ export declare class IoSwitch extends IoBoolean {
     init(): void;
     valueChanged(): void;
 }
-export declare const ioSwitch: (arg0?: import("./io-boolean").IoBooleanArgs | import("io-gui").VDOMArray[] | string, arg1?: import("io-gui").VDOMArray[] | string) => import("io-gui").VDOMArray;
+export declare const ioSwitch: (arg0?: import("./io-boolean").IoBooleanArgs | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;
 //# sourceMappingURL=io-switch.d.ts.map

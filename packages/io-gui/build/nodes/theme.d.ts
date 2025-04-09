@@ -1,4 +1,4 @@
-import { PropertyDefinitions, IoNode } from '../core/node';
+import { PropertyDefinitions, IoNode } from '../nodes/node';
 export declare class Color {
     r: number;
     g: number;

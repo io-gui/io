@@ -1,4 +1,4 @@
-import { IoElement, IoElementArgs, VDOMArray, ArgsWithBinding } from 'io-gui';
+import { IoElement, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoNumber } from './io-number';
 export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
     src?: IoNumber;
@@ -15,7 +15,7 @@ export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
  * <io-element-demo element="io-ladder" expanded properties='{"value": 0, "step": 0.0001, "conversion": 1, "min": -10000, "max": 10000, "expanded": true}'></io-element-demo>
  **/
 declare class IoNumberLadder extends IoElement {
-    static vConstructor: (arg0?: IoNumberLadderArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoNumberLadderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     role: string;
     src?: IoNumber;

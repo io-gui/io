@@ -1,4 +1,4 @@
-import { IoElement, IoElementArgs, ArgsWithBinding, VDOMArray } from 'io-gui';
+import { IoElement, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
     value?: Record<string, any> | any[];
     selected?: any;
@@ -10,7 +10,7 @@ export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
  * Optionally, it can trim the `options` array to selected option index.
  **/
 export declare class IoBreadcrumbs extends IoElement {
-    static vConstructor: (arg0?: IoBreadcrumbsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: Record<string, any> | any[];
     selected: any;
@@ -20,5 +20,5 @@ export declare class IoBreadcrumbs extends IoElement {
     selectedChanged(): void;
     changed(): void;
 }
-export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-breadcrumbs.d.ts.map

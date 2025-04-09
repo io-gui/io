@@ -1,4 +1,4 @@
-import { VDOMArray, ArgsWithBinding } from 'io-gui';
+import { VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoSliderBase, IoSliderBaseArgs } from './io-slider-base.js';
 export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{}>;
 /**
@@ -10,7 +10,7 @@ export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{}>;
  * <io-element-demo element="io-slider-range" properties='{"value": [0, 1], "step": 0.1, "min": -1, "max": 2, "exponent": 1}'></io-element-demo>
  **/
 export declare class IoSliderRange extends IoSliderBase {
-    static vConstructor: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+    static vConstructor: (arg0?: IoSliderRangeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     value: [number, number];
     step: number;
     min: number;
@@ -22,5 +22,5 @@ export declare class IoSliderRange extends IoSliderBase {
     onPointermoveThrottled(event: PointerEvent): void;
     static get Frag(): string;
 }
-export declare const ioSliderRange: (arg0?: IoSliderRangeArgs | VDOMArray[] | string, arg1?: VDOMArray[] | string) => VDOMArray;
+export declare const ioSliderRange: (arg0?: IoSliderRangeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=io-slider-range.d.ts.map

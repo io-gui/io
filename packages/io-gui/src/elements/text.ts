@@ -1,5 +1,5 @@
-import { Register } from '../core/decorators/register';
-import { IoElement } from '../core/element';
+import { Register } from '../decorators/register';
+import { IoElement } from '../elements/element';
 
 @Register
 export class IoText extends IoElement {
