@@ -7,10 +7,8 @@ import NodeTest from './nodes/Node.test';
 import StorageTest from './nodes/Storage.test';
 import ThemeTest from './nodes/Theme.test';
 import IoElementTest from './elements/IoElement.test';
-import IoFieldTest from './elements/IoField.test';
 import IoGLTest from './elements/IoGL.test';
 import IoOverlayTest from './elements/IoOverlay.test';
-import IoTextTest from './elements/IoText.test';
 export default class {
   run() {
     new BindingTest().run();
@@ -22,9 +20,7 @@ export default class {
     new StorageTest().run();
     new ThemeTest().run();
     new IoElementTest().run();
-    new IoFieldTest().run();
     new IoGLTest().run();
     new IoOverlayTest().run();
-    new IoTextTest().run();
   }
 }

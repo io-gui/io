@@ -1,6 +1,6 @@
 import { VDOMElement } from '../core/VDOM';
-import { IoNode, IoNodeArgs, ArgsWithBinding } from '../nodes/Node';
-export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
+import { Node, NodeArgs, ArgsWithBinding } from '../nodes/Node';
+export type IoElementArgs = NodeArgs & ArgsWithBinding<{
     $?: string;
     style?: Record<string, string>;
     class?: string;
@@ -33,7 +33,7 @@ declare const IoElement_base: {
         removeEventListener(type: string, listener?: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         dispose(): void;
-        Register(ioNodeConstructor: typeof IoNode): void;
+        Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
     readonly Properties: import("../nodes/Node").PropertyDefinitions;
@@ -94,7 +94,7 @@ export declare class IoElement extends IoElement_base {
      * @return {Object} vDOM-like representation of the element.
      */
     toVDOM(): VDOMElement;
-    Register(ioNodeConstructor: typeof IoNode): void;
+    Register(ioNodeConstructor: typeof Node): void;
 }
 export declare const ioElement: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export {};

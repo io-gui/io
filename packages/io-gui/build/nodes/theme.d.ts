@@ -1,4 +1,4 @@
-import { PropertyDefinitions, IoNode } from '../nodes/Node';
+import { PropertyDefinitions, Node } from '../nodes/Node';
 export declare class Color {
     r: number;
     g: number;
@@ -7,7 +7,7 @@ export declare class Color {
     constructor(r: number, g: number, b: number, a: number);
     toCss(): string;
 }
-export type Theme = {
+export type ThemeVars = {
     spacing: number;
     spacing2: number;
     spacing3: number;
@@ -52,31 +52,31 @@ export type Theme = {
     gradientColorEnd: Color;
     shadowColor: Color;
 };
-export declare const LIGHT_THEME: Theme;
-export declare const DARK_THEME: Theme;
+export declare const LIGHT_THEME: ThemeVars;
+export declare const DARK_THEME: ThemeVars;
 /**
- * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
+ * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
  * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
  *
  * ```javascript
- * IoThemeSingleton.themeID = 'dark';
+ * ThemeSingleton.themeID = 'dark';
  * ```
  *
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
-export declare class IoTheme extends IoNode {
+export declare class Theme extends Node {
     static get Properties(): PropertyDefinitions;
-    themeDefaults: Record<string, Theme>;
+    themeDefaults: Record<string, ThemeVars>;
     themeID: string;
     reactivity: string;
     init(): void;
-    registerTheme(themeID: string, theme: Theme): void;
+    registerTheme(themeID: string, theme: ThemeVars): void;
     reset(): void;
     themeIDChanged(): void;
     onPropertyMutated(event: CustomEvent): void;
     changed(): void;
     onSaveTheme(): void;
 }
-declare const IoThemeSingleton: IoTheme;
-export { IoThemeSingleton };
+declare const ThemeSingleton: Theme;
+export { ThemeSingleton };
 //# sourceMappingURL=Theme.d.ts.map

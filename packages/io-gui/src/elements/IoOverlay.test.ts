@@ -2,7 +2,7 @@ import { IoOverlaySingleton } from '../index';;
 
 export default class {
   run() {
-    describe('overlay.test.ts', () => {
+    describe('IoOverlay', () => {
       it('Should have core API functions defined', () => {
         expect(IoOverlaySingleton.nudgeDown).to.be.a('function');
         expect(IoOverlaySingleton.nudgeUp).to.be.a('function');

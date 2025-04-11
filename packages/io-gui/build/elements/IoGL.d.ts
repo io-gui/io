@@ -1,7 +1,7 @@
 import { PropertyInstance, PropertyDefinition } from '../core/Property';
 import { VDOMElement } from '../core/VDOM';
 import { ArgsWithBinding } from '../nodes/Node';
-import { IoThemeSingleton } from '../nodes/Theme';
+import { ThemeSingleton } from '../nodes/Theme';
 import { IoElement, IoElementArgs } from './IoElement';
 export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
     color?: [number, number, number, number];
@@ -10,7 +10,7 @@ export declare class IoGl extends IoElement {
     #private;
     static vConstructor: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    theme: typeof IoThemeSingleton;
+    theme: typeof ThemeSingleton;
     size: [number, number];
     color: [number, number, number, number];
     transparent: boolean;

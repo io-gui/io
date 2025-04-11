@@ -1,5 +1,5 @@
 import { IoElement, Register, span, ul, li, a, button } from 'io-gui';
-import {TodoModel} from './todo-model.js';
+import {TodoModel} from './TodoModel.js';
 
 export class TodoFooter extends IoElement {
   static get Style() {

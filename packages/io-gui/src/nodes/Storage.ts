@@ -1,7 +1,7 @@
 import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { Binding } from '../core/Binding';
-import { IoNode, IoNodeArgs } from '../nodes/Node';
+import { Node, NodeArgs } from '../nodes/Node';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
@@ -12,36 +12,36 @@ class EmulatedLocalStorage {
   }
   get permitted(): boolean {
     try {
-      return self.localStorage.getItem('IoStorage:user-permitted') === 'true';
+      return self.localStorage.getItem('Storage:user-permitted') === 'true';
     } catch (error) {
-      console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
+      console.warn('Storage: Cannot access localStorage. Check browser privacy settings!');
     }
     return false;
   }
   set permitted(permitted: boolean) {
     try {
       if (permitted) {
-        console.log('IoStorage: localStorage permission granted.');
-        this.store.set('IoStorage:user-permitted', String(permitted));
+        console.log('Storage: localStorage permission granted.');
+        this.store.set('Storage:user-permitted', String(permitted));
         this.store.forEach((value: unknown, key: string) => {
           self.localStorage.setItem(key, String(value));
           this.store.delete(key);
         });
       } else {
-        console.log('IoStorage: localStorage permission revoked.');
-        self.localStorage.setItem('IoStorage:user-permitted', String(permitted));
+        console.log('Storage: localStorage permission revoked.');
+        self.localStorage.setItem('Storage:user-permitted', String(permitted));
         new Map(Object.entries(self.localStorage)).forEach((value: unknown, key: string) => {
           this.store.set(key, value);
         });
         self.localStorage.clear();
       }
     } catch (error) {
-      console.warn('IoStorage: Cannot access localStorage. Check browser privacy settings!');
+      console.warn('Storage: Cannot access localStorage. Check browser privacy settings!');
     }
   }
   setItem(key: string, value: unknown) {
     const strValue = typeof value === 'object' ? JSON.stringify(value) : String(value);
-    if (key === 'IoStorage:user-permitted') {
+    if (key === 'Storage:user-permitted') {
       this.permitted = value === 'true';
       return;
     }
@@ -50,7 +50,7 @@ class EmulatedLocalStorage {
     } else {
       this.store.set(key, strValue);
       if (!this.warned && !this.permitted) {
-        console.warn('IoStorage: localStorage permission not set.');
+        console.warn('Storage: localStorage permission not set.');
         this.warned = true;
       }
     }
@@ -82,9 +82,9 @@ class EmulatedLocalStorage {
 const localStorage = new EmulatedLocalStorage();
 
 type StorageNodes = {
-  local: Map<string, IoStorageNode>,
-  hash: Map<string, IoStorageNode>,
-  none: Map<string, IoStorageNode>
+  local: Map<string, StorageNode>,
+  hash: Map<string, StorageNode>,
+  none: Map<string, StorageNode>
 }
 
 const nodes: StorageNodes = {
@@ -95,7 +95,7 @@ const nodes: StorageNodes = {
 
 let hashValues: Record<string, any> = {};
 
-export type StorageProps = IoNodeArgs & {
+export type StorageProps = NodeArgs & {
   key: string,
   value?: any,
   default?: any,
@@ -112,7 +112,7 @@ export function genObjectStorageID(object: Record<string, any>) {
 }
 
 @Register
-export class IoStorageNode extends IoNode {
+export class StorageNode extends Node {
 
   @Property({value: '', type: String})
   declare key: string;
@@ -131,17 +131,17 @@ export class IoStorageNode extends IoNode {
   constructor(props: StorageProps) {
     debug: {
       if (typeof props !== 'object') {
-        console.warn('Ivalid IoStorage arguments!');
+        console.warn('Ivalid Storage arguments!');
       } else {
         if (typeof props.key !== 'string' || !props.key)
-          console.warn('Ivalid IoStorage key!');
+          console.warn('Ivalid Storage key!');
         if (props.storage && ['hash', 'local', 'none'].indexOf(props.storage) === -1)
-          console.warn('Ivalid IoStorage storage!');
+          console.warn('Ivalid Storage storage!');
       }
     }
     const s = (props.storage || 'none') as keyof StorageNodes;
     if (nodes[s].has(props.key)) {
-      return nodes[s].get(props.key) as IoStorageNode;
+      return nodes[s].get(props.key) as StorageNode;
     } else {
       const def = props.default || props.value;
       switch (props.storage) {
@@ -157,7 +157,7 @@ export class IoStorageNode extends IoNode {
           break;
         }
         case 'local': {
-          const localValue = localStorage.getItem('IoStorage:' + props.key);
+          const localValue = localStorage.getItem('Storage:' + props.key);
           if (localValue) {
             props.value = JSON.parse(localValue);
           }
@@ -190,7 +190,7 @@ export class IoStorageNode extends IoNode {
         break;
       }
       case 'local': {
-        localStorage.removeItem('IoStorage:' + this.key);
+        localStorage.removeItem('Storage:' + this.key);
         break;
       }
     }
@@ -205,9 +205,9 @@ export class IoStorageNode extends IoNode {
       }
       case 'local': {
         if (this.value === null || this.value === undefined || this.value === this.default) {
-          localStorage.removeItem('IoStorage:' + this.key);
+          localStorage.removeItem('Storage:' + this.key);
         } else {
-          localStorage.setItem('IoStorage:' + this.key, JSON.stringify(this.value));
+          localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value));
         }
         break;
       }
@@ -260,9 +260,9 @@ export class IoStorageNode extends IoNode {
 }
 
 
-export const IoStorage = Object.assign(
+export const Storage = Object.assign(
   (props: StorageProps) => {
-    const storageNode = new IoStorageNode(props);
+    const storageNode = new StorageNode(props);
     return storageNode.binding;
   }, {
     permit() {
@@ -300,7 +300,7 @@ function updateAllFromHash() {
   hashValues = parseHash(self.location.hash);
   for (const h in hashValues) {
     if (nodes.hash.has(h)) {
-      const node = nodes.hash.get(h) as IoStorageNode;
+      const node = nodes.hash.get(h) as StorageNode;
       try {
         node.value = JSON.parse(hashValues[h]);
       } catch (error) {

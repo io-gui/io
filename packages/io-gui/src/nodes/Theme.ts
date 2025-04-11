@@ -1,7 +1,7 @@
 import { Register } from '../decorators/Register';
 import { Property } from '../decorators/Property';
-import { PropertyDefinitions, IoNode } from '../nodes/Node';
-import { IoStorage as $ } from '../nodes/Storage';
+import { PropertyDefinitions, Node } from '../nodes/Node';
+import { Storage as $ } from '../nodes/Storage';
 
 const THEME_VERSION = 'v0.10';
 const styleElement = document.createElement('style');
@@ -31,7 +31,7 @@ export class Color {
   }
 }
 
-export type Theme = {
+export type ThemeVars = {
   spacing: number;
   spacing2: number;
   spacing3: number;
@@ -85,7 +85,7 @@ export type Theme = {
   shadowColor: Color;
 }
 
-export const LIGHT_THEME: Theme = {
+export const LIGHT_THEME: ThemeVars = {
   spacing: 2,
   spacing2: 0,
   spacing3: 0,
@@ -139,7 +139,7 @@ export const LIGHT_THEME: Theme = {
   shadowColor: new Color(0, 0, 0, 0.2),
 };
 
-export const DARK_THEME: Theme = {
+export const DARK_THEME: ThemeVars = {
   spacing: 2,
   spacing2: 0,
   spacing3: 0,
@@ -219,17 +219,17 @@ const compositeVariables = /* css */`
 `;
 
 /**
- * `IoTheme` is designed to be used as `IoThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
+ * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
  * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
  *
  * ```javascript
- * IoThemeSingleton.themeID = 'dark';
+ * ThemeSingleton.themeID = 'dark';
  * ```
  *
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
 @Register
-export class IoTheme extends IoNode {
+export class Theme extends Node {
   static get Properties(): PropertyDefinitions {
     const props: PropertyDefinitions = {};
     for (const p in LIGHT_THEME) {
@@ -245,7 +245,7 @@ export class IoTheme extends IoNode {
 
   // Default theme values
   @Property({type: Object})
-  declare themeDefaults: Record<string, Theme>;
+  declare themeDefaults: Record<string, ThemeVars>;
 
   @Property({type: String, binding: $ThemeID})
   declare themeID: string;
@@ -258,7 +258,7 @@ export class IoTheme extends IoNode {
     this.registerTheme('dark', DARK_THEME);
     this.themeIDChanged();
   }
-  registerTheme(themeID: string, theme: Theme) {
+  registerTheme(themeID: string, theme: ThemeVars) {
     // Save default theme
     this.themeDefaults[themeID] = theme;
     this.setProperty('themeDefaults', JSON.parse(JSON.stringify(this.themeDefaults)), true);
@@ -306,7 +306,7 @@ export class IoTheme extends IoNode {
 
     this.borderRadius2 = this.borderRadius + this.spacing;
 
-    const propertyVariables = Array.from(Object.keys(LIGHT_THEME) as Array<keyof Theme>).reduce(
+    const propertyVariables = Array.from(Object.keys(LIGHT_THEME) as Array<keyof ThemeVars>).reduce(
       (result, prop) => {
         $Themes.value[this.themeID][prop] = this[prop];
         if (typeof this[prop] === 'object') {
@@ -324,5 +324,5 @@ export class IoTheme extends IoNode {
   }
 }
 
-const IoThemeSingleton = new IoTheme();
-export { IoThemeSingleton };
+const ThemeSingleton = new Theme();
+export { ThemeSingleton };

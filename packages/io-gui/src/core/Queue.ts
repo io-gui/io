@@ -1,10 +1,9 @@
-import { IoNode } from '../nodes/Node';
+import { Node } from '../nodes/Node';
 
 export type CallbackFunction = (arg?: any) => void;
 
-
 interface QueueOptions {
-  node: IoNode | undefined;
+  node: Node | undefined;
   arg: any;
   timeout: number;
 }
@@ -28,7 +27,7 @@ export async function nextQueue(): Promise<void> {
   });
 }
 
-export function throttle(node: IoNode, func: CallbackFunction, arg: any = undefined, timeout = 1) {
+export function throttle(node: Node, func: CallbackFunction, arg: any = undefined, timeout = 1) {
   if (timeout === 0) {
     if (queueSync.indexOf(func) === -1) {
       queueSync.push(func);

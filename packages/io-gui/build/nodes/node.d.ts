@@ -7,7 +7,7 @@ import { CallbackFunction } from '../core/Queue';
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
-export interface IoNodeConstructor<T> {
+export interface NodeConstructor<T> {
     new (...args: any[]): T;
     Properties?: PropertyDefinitions;
     Listeners?: ListenerDefinitions;
@@ -17,16 +17,16 @@ type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${T
 export type ArgsWithBinding<T> = {
     [K in keyof T]: T[K] | Binding;
 };
-export type IoNodeArgs = ArgsWithBinding<{
+export type NodeArgs = ArgsWithBinding<{
     reactivity?: 'none' | 'immediate' | 'debounced';
     [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 }>;
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
-export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T): {
+export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T): {
     new (...superArgs: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
@@ -90,13 +90,13 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          */
         debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
         /**
-         * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
-         * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
-         * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+         * Event handler for 'object-mutated' events emitted from the properties which are Node instances.
+         * Aditionally, it handles events emitted from the `window` object (used for observing non-Node object properties).
+         * NOTE: non-Node objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
          * This is used to evoke '[propName]Mutated()' mutation handler
          * @param {Object} event - Event payload.
          * @param {EventTarget} event.target - Node that emitted the event.
-         * @param {IoNode} event.detail.object - Mutated node.
+         * @param {Node} event.detail.object - Mutated node.
          */
         onPropertyMutated(event: CustomEvent): void;
         /**
@@ -137,12 +137,12 @@ export declare function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass
          * Use this when instance is no longer needed.
          */
         dispose(): void;
-        Register(ioNodeConstructor: typeof IoNode): void;
+        Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
     readonly Properties: PropertyDefinitions;
 };
-declare const IoNode_base: {
+declare const Node_base: {
     new (...superArgs: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
@@ -206,13 +206,13 @@ declare const IoNode_base: {
          */
         debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
         /**
-         * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
-         * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
-         * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+         * Event handler for 'object-mutated' events emitted from the properties which are Node instances.
+         * Aditionally, it handles events emitted from the `window` object (used for observing non-Node object properties).
+         * NOTE: non-Node objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
          * This is used to evoke '[propName]Mutated()' mutation handler
          * @param {Object} event - Event payload.
          * @param {EventTarget} event.target - Node that emitted the event.
-         * @param {IoNode} event.detail.object - Mutated node.
+         * @param {Node} event.detail.object - Mutated node.
          */
         onPropertyMutated(event: CustomEvent): void;
         /**
@@ -253,15 +253,15 @@ declare const IoNode_base: {
          * Use this when instance is no longer needed.
          */
         dispose(): void;
-        Register(ioNodeConstructor: typeof IoNode): void;
+        Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
     readonly Properties: PropertyDefinitions;
 };
 /**
- * IoNodeMixin applied to `Object` class.
+ * NodeMixin applied to `Object` class.
  */
-export declare class IoNode extends IoNode_base {
+export declare class Node extends Node_base {
 }
 export {};
 //# sourceMappingURL=Node.d.ts.map

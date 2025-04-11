@@ -1,5 +1,4 @@
-import { ProtoChain, IoNode, IoNodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../index';
-
+import { ProtoChain, Node, NodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../index';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -14,7 +13,7 @@ class HTMLElement2 extends HTMLElement1 {}
 class HTMLElement3 extends HTMLElement2 {}
 
 @Register
-class IoNode1 extends IoNode {
+class Node1 extends Node {
   static get Properties(): PropertyDefinitions {
     return {
       prop1: {
@@ -29,7 +28,7 @@ class IoNode1 extends IoNode {
 }
 
 @Register
-class IoNode3 extends IoNode1 {
+class Node3 extends Node1 {
   static get Properties(): PropertyDefinitions {
     return {
       prop1: {
@@ -50,7 +49,7 @@ class IoNode3 extends IoNode1 {
 }
 
 @Register
-class IoNode4 extends IoNode1 {
+class Node4 extends Node1 {
   @Property({init: true})
   declare prop1: any;
 
@@ -59,9 +58,9 @@ class IoNode4 extends IoNode1 {
 }
 
 class IoElement1 extends IoElement {}
-class IoNode2 extends IoNodeMixin(Object3) {}
+class Node2 extends NodeMixin(Object3) {}
 
-class MockIoNode1 {
+class MockNode1 {
   static get Properties(): PropertyDefinitions {
     return {
       prop1: {
@@ -86,7 +85,7 @@ class MockIoNode1 {
   _onFunction1() {}
 }
 
-class MockIoNode2 extends MockIoNode1 {
+class MockNode2 extends MockNode1 {
   function2() {}
   onFunction2() {}
   _onFunction2() {}
@@ -109,16 +108,16 @@ class MockIoNode2 extends MockIoNode1 {
     return 'b';
   }
 }
-class MockIoNode3 extends MockIoNode2 {}
+class MockNode3 extends MockNode2 {}
 
-class MockIoNode4 extends MockIoNode2 {
+class MockNode4 extends MockNode2 {
   static get Properties(): PropertyDefinitions {
     return {
       prop3: {
-        type: IoNode,
+        type: Node,
       },
       prop4: {
-        value: new IoNode(),
+        value: new Node(),
       }
     };
   }
@@ -126,7 +125,7 @@ class MockIoNode4 extends MockIoNode2 {
 
 export default class {
   run() {
-    describe('protoChain.test.ts', () => {
+    describe('ProtoChain', () => {
       it('Should include an array of inherited class constructors', () => {
         let constructors = new ProtoChain(Array3).constructors;
         expect(constructors).to.be.eql([Array3, Array2, Array1]);
@@ -134,22 +133,22 @@ export default class {
         expect(constructors).to.be.eql([Object3, Object2, Object1]);
         constructors = new ProtoChain(HTMLElement3).constructors;
         expect(constructors).to.be.eql([HTMLElement3, HTMLElement2, HTMLElement1]);
-        constructors = new ProtoChain(IoNode).constructors;
-        expect(constructors).to.be.eql([IoNode, Object.getPrototypeOf(IoNode)]);
-        constructors = new ProtoChain(IoNode1).constructors;
-        expect(constructors).to.be.eql([IoNode1, IoNode, Object.getPrototypeOf(IoNode)]);
+        constructors = new ProtoChain(Node).constructors;
+        expect(constructors).to.be.eql([Node, Object.getPrototypeOf(Node)]);
+        constructors = new ProtoChain(Node1).constructors;
+        expect(constructors).to.be.eql([Node1, Node, Object.getPrototypeOf(Node)]);
         constructors = new ProtoChain(IoElement1).constructors;
         expect(constructors).to.be.eql([IoElement1, IoElement, Object.getPrototypeOf(IoElement)]);
-        constructors = new ProtoChain(IoNode2).constructors;
-        expect(constructors).to.be.eql([IoNode2, Object.getPrototypeOf(IoNode2), Object3, Object2, Object1]);
+        constructors = new ProtoChain(Node2).constructors;
+        expect(constructors).to.be.eql([Node2, Object.getPrototypeOf(Node2), Object3, Object2, Object1]);
       });
       it('Should include all properties declared in `static get Properties()` return oject', () => {
-        let protoChain = new ProtoChain(MockIoNode1);
+        let protoChain = new ProtoChain(MockNode1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
         expect(protoChain.properties).to.be.eql({
           prop1:{init: false},
         });
-        protoChain = new ProtoChain(MockIoNode2);
+        protoChain = new ProtoChain(MockNode2);
         expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
         expect(protoChain.properties).to.be.eql({
           prop1:{type: Object, init: false},
@@ -157,14 +156,14 @@ export default class {
         });
       });
       it('Should include all properties declared in Property decorator', () => {
-        let protoChain = new ProtoChain(IoNode1);
+        let protoChain = new ProtoChain(Node1);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{init: false},
           prop2:{type: Object},
         });
-        protoChain = new ProtoChain(IoNode3);
+        protoChain = new ProtoChain(Node3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
         console.log(protoChain.properties);
         expect(protoChain.properties).to.be.eql({
@@ -175,7 +174,7 @@ export default class {
         });
       });
       it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
-        const protoChain = new ProtoChain(IoNode4);
+        const protoChain = new ProtoChain(Node4);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.properties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
@@ -184,12 +183,12 @@ export default class {
         });
       });
       it('Should include all listners declared in `static get Listeners()` return oject', () => {
-        let protoChain = new ProtoChain(MockIoNode1);
+        let protoChain = new ProtoChain(MockNode1);
         expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4']);
         expect(protoChain.listeners['listener1']).to.be.eql([['function1']]);
         expect(protoChain.listeners['listener3']).to.be.eql([['_onFunction1', {capture: true}]]);
         expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
-        protoChain = new ProtoChain(MockIoNode2);
+        protoChain = new ProtoChain(MockNode2);
         expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4', 'listener2']);
         expect(protoChain.listeners['listener1']).to.be.eql([['function1'], ['_onFunction2']]);
         expect(protoChain.listeners['listener2']).to.be.eql([['function2', {capture: true, passive: true}]]);
@@ -197,25 +196,25 @@ export default class {
         expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
       });
       it('Should include all style strings declared in `static get Style()` return string', () => {
-        let protoChain = new ProtoChain(MockIoNode1);
+        let protoChain = new ProtoChain(MockNode1);
         expect(protoChain.styles).to.be.equal('a\n');
-        protoChain = new ProtoChain(MockIoNode2);
+        protoChain = new ProtoChain(MockNode2);
         expect(protoChain.styles).to.be.equal('a\nb\n');
-        protoChain = new ProtoChain(MockIoNode3);
+        protoChain = new ProtoChain(MockNode3);
         expect(protoChain.styles).to.be.equal('a\nb\n');
       });
       it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
-        let protoChain = new ProtoChain(IoNode1);
+        let protoChain = new ProtoChain(Node1);
         expect(protoChain.handlers).to.be.eql(['changed', 'onPropertyMutated']);
-        protoChain = new ProtoChain(MockIoNode1);
+        protoChain = new ProtoChain(MockNode1);
         expect(protoChain.handlers).to.be.eql(['changed', 'onFunction1', '_onFunction1']);
-        protoChain = new ProtoChain(MockIoNode2);
+        protoChain = new ProtoChain(MockNode2);
         expect(protoChain.handlers).to.be.eql(['onFunction2', '_onFunction2', 'changed', 'onFunction1', '_onFunction1']);
       });
       it('Should bind auto-binding functions with `.autobindHandlers(node)` function', () => {
-        const protoChain = new ProtoChain(MockIoNode2);
-        const node = new MockIoNode2();
-        protoChain.autobindHandlers(node as unknown as IoNode);
+        const protoChain = new ProtoChain(MockNode2);
+        const node = new MockNode2();
+        protoChain.autobindHandlers(node as unknown as Node);
         expect(node.function1.name).to.be.equal('function1');
         expect(node.onFunction1.name).to.be.equal('bound onFunction1');
         expect(node._onFunction1.name).to.be.equal('bound _onFunction1');
@@ -224,13 +223,13 @@ export default class {
         expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
       });
       it('Should include property names of mutation-observed object properties', () => {
-        let protoChain = new ProtoChain(MockIoNode1);
+        let protoChain = new ProtoChain(MockNode1);
         expect(protoChain.observedObjectProperties).to.be.eql([]);
-        protoChain = new ProtoChain(MockIoNode2);
+        protoChain = new ProtoChain(MockNode2);
         expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
-        protoChain = new ProtoChain(MockIoNode4);
+        protoChain = new ProtoChain(MockNode4);
         expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
-        expect(protoChain.observedIoNodeProperties).to.be.eql(['prop3', 'prop4']);
+        expect(protoChain.observedNodeProperties).to.be.eql(['prop3', 'prop4']);
       });
     });
   }

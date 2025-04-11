@@ -1,5 +1,5 @@
 import { EventDispatcher } from './EventDispatcher';
-import { IoNode } from '../nodes/Node';
+import { Node } from '../nodes/Node';
 import { IoElement } from '../elements/IoElement';
 
 export type VDOMElement = {
@@ -30,7 +30,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Rec
     else if (p.startsWith('data-')) element.setAttribute(p, prop);
   }
   if (!(element as unknown as IoElement)._eventDispatcher) {
-    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoNode)});
+    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as Node)});
   }
   (element as unknown as IoElement)._eventDispatcher.applyPropListeners(props);
 };

@@ -1,8 +1,8 @@
 import { Binding } from './Binding';
-import { AnyConstructor, IoNode } from '../nodes/Node';
+import { AnyConstructor, Node } from '../nodes/Node';
 
 /**
- * Configuration for a property of an IoNode class.
+ * Configuration for a property of an Node class.
  * @typedef {Object} PropertyDefinition
  * @property {*} [value] The property's value. Can be any type unless `type` is specified.
  * @property {AnyConstructor} [type] Constructor function defining the property's type.
@@ -113,7 +113,7 @@ export class ProtoProperty {
   }
 }
 
-function decodeInitArgument(item: any, node: IoNode) {
+function decodeInitArgument(item: any, node: Node) {
   if (item === 'this') {
     return node;
   } else if (typeof item === 'string' && item.startsWith('this.')) {
@@ -143,10 +143,10 @@ export class PropertyInstance {
   init?: any = undefined;
   /**
    * Creates the property configuration object and copies values from `ProtoProperty`.
-   * @param node owner IoNode instance
+   * @param node owner Node instance
    * @param propDef ProtoProperty object
    */
-  constructor(node: IoNode, propDef: ProtoProperty) {
+  constructor(node: Node, propDef: ProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {

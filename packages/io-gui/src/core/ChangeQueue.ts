@@ -1,4 +1,4 @@
-import { IoNode } from '../nodes/Node';
+import { Node } from '../nodes/Node';
 
 export interface Change {
   property: string;
@@ -11,13 +11,13 @@ export interface Changes {
 }
 
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-  readonly target: IoNode;
+  readonly target: Node;
   readonly detail: Change;
-  readonly path: IoNode[];
+  readonly path: Node[];
 }
 
 /**
- * A queue system for managing and batching property changes in `IoNode` and `IoElement` nodes.
+ * A queue system for managing and batching property changes in `Node` and `IoElement` nodes.
  *
  * This class implements a First-In-First-Out (FIFO) queue that:
  * - Collects property changes and their associated values
@@ -32,15 +32,15 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * times within a single execution cycle.
  */
 export class ChangeQueue {
-  declare readonly node: IoNode;
+  declare readonly node: Node;
   declare readonly changes: Change[];
   dispatchedChange = false;
   dispatching = false;
   /**
-   * Creates change queue for the specified owner instance of `IoNode`.
-   * @param {IoNode} node - Owner node.
+   * Creates change queue for the specified owner instance of `Node`.
+   * @param {Node} node - Owner node.
    */
-  constructor(node: IoNode) {
+  constructor(node: Node) {
     this.changes = [];
     this.node = node;
     Object.defineProperty(this, 'dispatch', {

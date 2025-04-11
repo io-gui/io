@@ -1,8 +1,8 @@
 import { ProtoProperty } from './Property';
 import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher';
-import { IoNode, IoNodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { Node, NodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
 
-type ProtoConstructors = Array<IoNodeConstructor<any>>;
+type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = { [property: string]: ProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
@@ -10,25 +10,25 @@ type ProtoListeners = { [property: string]: ListenerDefinition[] };
 export const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions> = new WeakMap();
 
 const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
-function isNonIoNodeConstructor(constructor: any) {
+function isNonNodeConstructor(constructor: any) {
   if (typeof constructor !== 'function') return false;
   let proto = constructor.prototype;
   while (proto) {
     if (NON_OBSERVED.includes(constructor)) return false;
-    if (proto.constructor.name === 'IoNodeMixinConstructor') return false;
+    if (proto.constructor.name === 'NodeMixinConstructor') return false;
     if (proto === Object.prototype) return true;
     proto = Object.getPrototypeOf(proto);
   }
   return false;
 }
-function isNonIoNodeObject(value: any) {
-  return (typeof value === 'object' && value !== null && !value._isIoNode);
+function isNonNodeObject(value: any) {
+  return (typeof value === 'object' && value !== null && !value._isNode);
 }
-function isIoNodeObjectConstructor(constructor: any) {
+function isNodeObjectConstructor(constructor: any) {
   if (typeof constructor !== 'function') return false;
   let proto = constructor.prototype;
   while (proto) {
-    if (proto.constructor.name === 'IoNodeMixinConstructor') return true;
+    if (proto.constructor.name === 'NodeMixinConstructor') return true;
     proto = Object.getPrototypeOf(proto);
   }
   return false;
@@ -71,14 +71,14 @@ export class ProtoChain {
    */
   observedObjectProperties: string[] = [];
   /**
-   * Array of property names of mutation-observed IoNode properties.
+   * Array of property names of mutation-observed Node properties.
    */
-  observedIoNodeProperties: string[] = [];
+  observedNodeProperties: string[] = [];
   /**
    * Creates an instance of `ProtoChain` for specified class constructor.
-   * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
+   * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
    */
-  constructor(ioNodeConstructor: IoNodeConstructor<any>) {
+  constructor(ioNodeConstructor: NodeConstructor<any>) {
     let proto = ioNodeConstructor.prototype;
     // Iterate through the prototype chain to aggregate inheritance information.
     // Terminates at `HTMLElement`, `Object` or `Array`.
@@ -104,14 +104,14 @@ export class ProtoChain {
     }
 
     this.observedObjectProperties = this.getObservedObjectProperties();
-    this.observedIoNodeProperties = this.getObservedIoNodeProperties();
+    this.observedNodeProperties = this.getObservedNodeProperties();
     debug: this.validateProperties();
   }
   /**
    * Adds properties defined in decorators to the properties array.
-   * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
+   * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
    */
-  addPropertiesFromDecorators(ioNodeConstructor: IoNodeConstructor<any>) {
+  addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>) {
     const props = propertyDecorators.get(ioNodeConstructor);
     if (props) for (const name in props) {
       const protoProperty = new ProtoProperty(props[name]);
@@ -176,9 +176,9 @@ export class ProtoChain {
   };
   /**
    * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
-   * @param {IoNode} proto - Prototype object to search for handlers
+   * @param {Node} proto - Prototype object to search for handlers
    */
-  addHandlers(proto: IoNode) {
+  addHandlers(proto: Node) {
     const names = Object.getOwnPropertyNames(proto);
     for (let j = 0; j < names.length; j++) {
       const fn = names[j];
@@ -202,26 +202,26 @@ export class ProtoChain {
     for (const name in this.properties) {
       const value = this.properties[name].value;
       const type = this.properties[name].type;
-      if(isNonIoNodeObject(value) || isNonIoNodeConstructor(type)) {
+      if(isNonNodeObject(value) || isNonNodeConstructor(type)) {
         observedObjectProperties.push(name);
       }
     }
     return observedObjectProperties;
   }
   /**
-   * Creates observedIoNodeProperties array.
-   * @returns {string[]} - Array of property names that are observed as IoNode objects.
+   * Creates observedNodeProperties array.
+   * @returns {string[]} - Array of property names that are observed as Node objects.
    */
-  getObservedIoNodeProperties() {
-    const observedIoNodeProperties: string[] = [];
+  getObservedNodeProperties() {
+    const observedNodeProperties: string[] = [];
     for (const name in this.properties) {
       const value = this.properties[name].value;
       const type = this.properties[name].type;
-      if(value?._isIoNode || isIoNodeObjectConstructor(type)) {
-        observedIoNodeProperties.push(name);
+      if(value?._isNode || isNodeObjectConstructor(type)) {
+        observedNodeProperties.push(name);
       }
     }
-    return observedIoNodeProperties;
+    return observedNodeProperties;
   }
   /**
    * Debug only.
@@ -250,9 +250,9 @@ export class ProtoChain {
   /**
    * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
    * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-   * @param {IoNode} node - Target node instance
+   * @param {Node} node - Target node instance
    */
-  autobindHandlers(node: IoNode) {
+  autobindHandlers(node: Node) {
     debug: if (node.constructor !== this.constructors[0]) {
       console.warn('`autobindHandlers` should be used on', this.constructors[0].name, 'instance');
     }

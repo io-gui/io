@@ -1,10 +1,10 @@
-import { IoElement, Register, input, Autobind } from 'io-gui';
-import { TodoModel } from './todo-model.js';
+import { IoElement, Register, input } from 'io-gui';
+import { TodoModel } from './TodoModel.js';
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;
 
-export class TodoNewItem extends IoElement {
+export class TodoInput extends IoElement {
   static get Style() {
     return /* css */`
     :host {
@@ -36,5 +36,5 @@ export class TodoNewItem extends IoElement {
     ]);
   }
 }
-Register(TodoNewItem);
-export const todoNewItem = TodoNewItem.vConstructor;
+Register(TodoInput);
+export const todoInput = TodoInput.vConstructor;

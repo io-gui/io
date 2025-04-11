@@ -1,5 +1,5 @@
 import { IoElement, Register, input, label, li, div, button } from 'io-gui';
-import { TodoModel } from './todo-model.js';
+import { TodoModel } from './TodoModel.js';
 
 const ENTER_KEY = 13;
 const ESCAPE_KEY = 27;

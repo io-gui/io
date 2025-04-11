@@ -1,4 +1,4 @@
-import { Register, IoElement, div, IoStorage as $, ioText } from 'io-gui';
+import { Register, IoElement, div, Storage as $, span } from 'io-gui';
 import { ioPropertyEditor } from 'io-editors';
 import { ioInputBase, ioNumber, ioString, ioBoolean, ioSwitch } from 'io-inputs';
 import { ioOptionMenu, MenuOptions } from 'io-menus';
@@ -110,7 +110,7 @@ export class IoElementDemo extends IoElement {
       this.$['attributes'].value = attributes;
     } else {
       this.template([
-        ioText('Element property not set.'),
+        span('Element property not set.'),
       ]);
     }
   }

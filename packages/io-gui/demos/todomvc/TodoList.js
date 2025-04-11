@@ -1,6 +1,6 @@
 import { IoElement, Register, section, input, label, ul } from 'io-gui';
-import { TodoModel } from './todo-model.js';
-import { todoItem } from './todo-item.js';
+import { TodoModel } from './TodoModel.js';
+import { todoItem } from './TodoItem.js';
 
 export class TodoList extends IoElement {
   static get Style() {

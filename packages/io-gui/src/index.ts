@@ -12,12 +12,10 @@ export * from './nodes/Node';
 export * from './nodes/Storage';
 export * from './nodes/Theme';
 export * from './elements/IoElement';
-export * from './elements/IoField';
 export * from './elements/IoGL';
 export * from './elements/IoGL.glsl';
 export * from './elements/IoNative';
 export * from './elements/IoOverlay';
-export * from './elements/IoText';
 
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic

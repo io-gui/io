@@ -1,6 +1,6 @@
-import { IoNode, Register } from 'io-gui';
+import { Node, Register } from 'io-gui';
 
-export class TodoModel extends IoNode {
+export class TodoModel extends Node {
   static get Properties() {
     return {
       items: Array,

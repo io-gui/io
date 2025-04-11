@@ -1,7 +1,7 @@
 import { ProtoProperty } from './Property';
 import { ListenerDefinition } from './EventDispatcher';
-import { IoNode, IoNodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
-type ProtoConstructors = Array<IoNodeConstructor<any>>;
+import { Node, NodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = {
     [property: string]: ProtoProperty;
@@ -47,19 +47,19 @@ export declare class ProtoChain {
      */
     observedObjectProperties: string[];
     /**
-     * Array of property names of mutation-observed IoNode properties.
+     * Array of property names of mutation-observed Node properties.
      */
-    observedIoNodeProperties: string[];
+    observedNodeProperties: string[];
     /**
      * Creates an instance of `ProtoChain` for specified class constructor.
-     * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
+     * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
      */
-    constructor(ioNodeConstructor: IoNodeConstructor<any>);
+    constructor(ioNodeConstructor: NodeConstructor<any>);
     /**
      * Adds properties defined in decorators to the properties array.
-     * @param {IoNodeConstructor<any>} ioNodeConstructor - Owner `IoNode` constructor.
+     * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
      */
-    addPropertiesFromDecorators(ioNodeConstructor: IoNodeConstructor<any>): void;
+    addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>): void;
     /**
      * Adds static properties from `static get Properties()` to the properties array.
      * Only process properties if they differ from superclass.
@@ -81,19 +81,19 @@ export declare class ProtoChain {
     addStyles(style?: string): void;
     /**
      * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
-     * @param {IoNode} proto - Prototype object to search for handlers
+     * @param {Node} proto - Prototype object to search for handlers
      */
-    addHandlers(proto: IoNode): void;
+    addHandlers(proto: Node): void;
     /**
      * Creates observedObjectProperties array.
      * @returns {string[]} - Array of property names that are observed as native objects.
      */
     getObservedObjectProperties(): string[];
     /**
-     * Creates observedIoNodeProperties array.
-     * @returns {string[]} - Array of property names that are observed as IoNode objects.
+     * Creates observedNodeProperties array.
+     * @returns {string[]} - Array of property names that are observed as Node objects.
      */
-    getObservedIoNodeProperties(): string[];
+    getObservedNodeProperties(): string[];
     /**
      * Debug only.
      * Validates property definitions.
@@ -104,9 +104,9 @@ export declare class ProtoChain {
     /**
      * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
      * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-     * @param {IoNode} node - Target node instance
+     * @param {Node} node - Target node instance
      */
-    autobindHandlers(node: IoNode): void;
+    autobindHandlers(node: Node): void;
 }
 export {};
 //# sourceMappingURL=ProtoChain.d.ts.map

@@ -1,4 +1,4 @@
-import { IoGl, IoNode, IoThemeSingleton } from '../index';;
+import { IoGl, Node, ThemeSingleton } from '../index';;
 
 const element = new IoGl();
 element.size = [0, 0];
@@ -13,7 +13,7 @@ document.body.appendChild(element as unknown as HTMLElement);
 
 export default class {
   run() {
-    describe('gl.test.ts', () => {
+    describe('IoGL', () => {
       it('Should have core API functions defined', () => {
         expect(element.initShader).to.be.a('function');
         expect(element.onResized).to.be.a('function');
@@ -28,7 +28,7 @@ export default class {
         expect(element.size).to.be.eql([0, 0]);
         expect(element.color).to.be.eql([0, 0, 0, 0]);
         expect(element.pxRatio).to.be.equal(window.devicePixelRatio);
-        expect(element.theme).to.be.equal(IoThemeSingleton);
+        expect(element.theme).to.be.equal(ThemeSingleton);
 
         expect(element._properties.get('size')).to.eql({
           binding: undefined,
@@ -58,8 +58,8 @@ export default class {
           binding: undefined,
           init: undefined,
           reflect: false,
-          type: IoNode,
-          value: IoThemeSingleton,
+          type: Node,
+          value: ThemeSingleton,
         });
       });
       it('has <canvas> element', () => {

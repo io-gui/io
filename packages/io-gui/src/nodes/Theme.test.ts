@@ -1,11 +1,11 @@
-import { IoThemeSingleton } from '../index';;
+import { ThemeSingleton } from '../index';;
 
-const theme = IoThemeSingleton;
+const theme = ThemeSingleton;
 const binding = theme._properties.get('themeID')!.binding;
 
 export default class {
   run() {
-    describe('theme.test.ts', () => {
+    describe('Theme', () => {
       it('Should register property definitions correctly', () => {
         expect(theme._properties.get('themeID')).to.eql({
           binding: binding,

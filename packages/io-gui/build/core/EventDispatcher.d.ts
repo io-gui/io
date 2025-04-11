@@ -1,5 +1,5 @@
 import { ChangeEvent } from './ChangeQueue';
-import { IoNode } from '../nodes/Node';
+import { Node } from '../nodes/Node';
 /**
  * Event listener types.
  */
@@ -24,8 +24,8 @@ export interface ChangeEventListener {
 export interface IoEventListener {
     (event: {
         detail: any;
-        target: IoNode;
-        path: IoNode[];
+        target: Node;
+        path: Node[];
     }): void;
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener;
@@ -54,37 +54,37 @@ export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefi
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {IoNode | EventTarget} node - The node instance containing potential method references
+ * @param {Node | EventTarget} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
-export declare const listenerFromDefinition: (node: IoNode | EventTarget, def: ListenerDefinition) => Listener;
+export declare const listenerFromDefinition: (node: Node | EventTarget, def: ListenerDefinition) => Listener;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
- * It makes events of all `IoNode` class instances compatible with DOM events.
+ * It makes events of all `Node` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
  *  - `protoListeners` specified as `get Listeners()` return value of class.
  *  - `propListeners` specified as inline properties prefixed with "@".
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export declare class EventDispatcher {
-    readonly node: IoNode | EventTarget;
+    readonly node: Node | EventTarget;
     readonly nodeIsEventTarget: boolean;
     readonly protoListeners: Listeners;
     readonly propListeners: Listeners;
     readonly addedListeners: Listeners;
     /**
-     * Creates an instance of `EventDispatcher` for specified `IoNode` instance.
+     * Creates an instance of `EventDispatcher` for specified `Node` instance.
      * It initializes `protoListeners` from `ProtoChain`.
-     * @param {IoNode} node owner IoNode
+     * @param {Node} node owner Node
      */
-    constructor(node: IoNode | EventTarget);
+    constructor(node: Node | EventTarget);
     /**
      * Sets `protoListeners` specified as `get Listeners()` class definitions.
      * Definitions from subclass replace the ones from parent class.
-     * @param {IoNode} node owner IoNode
+     * @param {Node} node owner Node
      */
-    setProtoListeners(node: IoNode): void;
+    setProtoListeners(node: Node): void;
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
@@ -116,7 +116,7 @@ export declare class EventDispatcher {
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: EventTarget | IoNode): void;
+    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: EventTarget | Node): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.

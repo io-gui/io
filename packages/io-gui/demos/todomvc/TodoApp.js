@@ -1,10 +1,10 @@
-import { IoElement, Register, IoStorage as $, section, header, h1 } from 'io-gui';
+import { IoElement, Register, Storage as $, section, header, h1 } from 'io-gui';
 
-import { TodoModel } from './todo-model.js';
-import { todoNewItem } from './todo-new-item.js';
-import { todoList } from './todo-list.js';
-import { todoFooter } from './todo-footer.js';
-import { todoInfo } from './todo-info.js';
+import { TodoModel } from './TodoModel.js';
+import { todoInput } from './TodoInput.js';
+import { todoList } from './TodoList.js';
+import { todoFooter } from './TodoFooter.js';
+import { todoInfo } from './TodoInfo.js';
 
 export class TodoApp extends IoElement {
   static get Properties() {
@@ -25,7 +25,7 @@ export class TodoApp extends IoElement {
       section({class: 'todoapp'}, [
         header({class: 'header'}, [
           h1('todos'),
-          todoNewItem({model: this.model}),
+          todoInput({model: this.model}),
         ]),
         todoList({class: 'todo-list', model: this.model, route: this.route}),
         itemCount ? todoFooter({class: 'footer', model: this.model, route: this.bind('route')}) : null,

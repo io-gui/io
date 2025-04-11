@@ -1,7 +1,7 @@
 import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM } from '../core/VDOM';
-import { IoNode, IoNodeMixin, IoNodeArgs, ArgsWithBinding } from '../nodes/Node';
+import { Node, NodeMixin, NodeArgs, ArgsWithBinding } from '../nodes/Node';
 
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
@@ -18,7 +18,7 @@ const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
+export type IoElementArgs = NodeArgs & ArgsWithBinding<{
   $?: string;
   style?: Record<string, string>;
   class?: string;
@@ -31,7 +31,7 @@ export type IoElementArgs = IoNodeArgs & ArgsWithBinding<{
  * Core `IoElement` class.
  */
 @Register
-export class IoElement extends IoNodeMixin(HTMLElement) {
+export class IoElement extends NodeMixin(HTMLElement) {
   static vConstructor: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
@@ -245,7 +245,7 @@ export class IoElement extends IoNodeMixin(HTMLElement) {
   toVDOM() {
     return toVDOM(this);
   }
-  Register(ioNodeConstructor: typeof IoNode) {
+  Register(ioNodeConstructor: typeof Node) {
     super.Register(ioNodeConstructor);
     const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
 

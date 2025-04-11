@@ -1,5 +1,4 @@
-//@ts-nocheck
-import { Binding, ProtoProperty, PropertyInstance, Property, IoNode, Register, PropertyDefinitions, propertyDecorators } from '../index';
+import { Binding, ProtoProperty, PropertyInstance, Property, Node, Register, PropertyDefinitions, propertyDecorators } from '../index';
 
 class Object1 {
   constructor(init?: any) {
@@ -11,7 +10,7 @@ class Object1 {
 }
 
 @Register
-class TestIoNode extends IoNode {
+class TestNode extends Node {
   static get Properties(): PropertyDefinitions {
     return {
       label: 'default'
@@ -19,11 +18,11 @@ class TestIoNode extends IoNode {
   }
 }
 
-const dummy = new TestIoNode();
+const dummy = new TestNode();
 
 export default class {
   run() {
-    describe('property.test.ts', () => {
+    describe('Property', () => {
       it('Should initialize correct property definitions and values from loosely typed property definitions', () => {
         let propDef, prop;
         // initialize with empty object as property definition
@@ -440,7 +439,7 @@ export default class {
         });
       });
       it('Should register property definitions from decorators.', () => {
-        class TestClass extends IoNode {
+        class TestClass extends Node {
           @Property('value1')
           declare prop1: string;
           @Property({value: 'value2', type: String})
@@ -455,7 +454,7 @@ export default class {
       });
       it('Should initialize properties with binding correctly', () => {
         let propDef, prop;
-        let binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
+        let binding = new Binding(new TestNode({label: 'lorem'}), 'label');
 
         propDef = new ProtoProperty(binding);
         prop = new PropertyInstance(dummy, propDef);
@@ -472,7 +471,7 @@ export default class {
           init: undefined,
         });
 
-        binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
+        binding = new Binding(new TestNode({label: 'lorem'}), 'label');
 
         propDef = new ProtoProperty({binding: binding, value: 'ipsum'});
         prop = new PropertyInstance(dummy, propDef);
@@ -490,7 +489,7 @@ export default class {
         });
       });
       it('Should assign property definitions correctly', () => {
-        const binding = new Binding(new TestIoNode({label: 'lorem'}), 'label');
+        const binding = new Binding(new TestNode({label: 'lorem'}), 'label');
         let propDef1 = new ProtoProperty({});
         let propDef2 = new ProtoProperty({
           value: 'lorem',

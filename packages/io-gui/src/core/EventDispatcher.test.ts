@@ -1,11 +1,11 @@
-import { IoNode, Register, ListenerDefinitions, EventDispatcher } from '../index';
+import { Node, Register, ListenerDefinitions, EventDispatcher } from '../index';
 
 const handlerFunction = (event: CustomEvent) => {
-  (event.target as unknown as MockIoNode1).eventStack.push(`handlerFunction ${event.detail}`);
+  (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`);
 };
 
 @Register
-class MockIoNode1 extends IoNode {
+class MockNode1 extends Node {
   eventStack: string[] = [];
   static get Listeners(): ListenerDefinitions {
     return {
@@ -18,7 +18,7 @@ class MockIoNode1 extends IoNode {
 }
 
 @Register
-class MockIoNode2 extends MockIoNode1 {
+class MockNode2 extends MockNode1 {
   eventStack: string[] = [];
   static get Listeners(): ListenerDefinitions {
     return {
@@ -31,7 +31,7 @@ class MockIoNode2 extends MockIoNode1 {
 }
 
 @Register
-class MockIoNode3 extends MockIoNode2 {
+class MockNode3 extends MockNode2 {
   eventStack: string[] = [];
   static get Listeners(): ListenerDefinitions {
     return {
@@ -55,9 +55,9 @@ window.customElements.define('test-div', TestDiv);
 
 export default class {
   run() {
-    describe('eventDispatcher.test.ts', () => {
+    describe('EventDispatcher', () => {
       it('Should initialize with correct values', () => {
-        const node = new MockIoNode1();
+        const node = new MockNode1();
         let eventDispatcher = new EventDispatcher(node);
         expect(eventDispatcher.node).to.be.equal(node);
         expect(eventDispatcher.protoListeners).to.be.eql({event1:[[node.event1Handler]]});
@@ -66,18 +66,18 @@ export default class {
         expect(eventDispatcher.nodeIsEventTarget).to.be.eql(false);
       });
       it('Should initialize listeners from ProtoChain', () => {
-        const node1 = new MockIoNode1();
+        const node1 = new MockNode1();
         let eventDispatcher = new EventDispatcher(node1);
         expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node1.event1Handler]],
         });
-        const node2 = new MockIoNode2();
+        const node2 = new MockNode2();
         eventDispatcher = new EventDispatcher(node2);
         expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node1.event1Handler]],
           event2:[[node2.event2Handler, {capture:true}]]
         });
-        const node3 = new MockIoNode3();
+        const node3 = new MockNode3();
         eventDispatcher = new EventDispatcher(node3);
         expect(eventDispatcher.protoListeners).to.be.eql({
           event1:[[node3.event3Handler]],
@@ -86,7 +86,7 @@ export default class {
         });
       });
       it('Should applyPropListeners() correctly', () => {
-        const node3 = new MockIoNode3();
+        const node3 = new MockNode3();
         let eventDispatcher = new EventDispatcher(node3);
         const handler4 = () => {};
         const handler5 = () => {};
@@ -106,7 +106,7 @@ export default class {
         expect(eventDispatcher.propListeners).to.be.eql({});
       });
       it('Should add/remove listeners correctly', () => {
-        const node2 = new MockIoNode2();
+        const node2 = new MockNode2();
         let eventDispatcher = new EventDispatcher(node2);
         const listener1 = () => {};
         const listener2 = () => {};
@@ -123,7 +123,7 @@ export default class {
         expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should not add listeners if already added', () => {
-        const node2 = new MockIoNode2();
+        const node2 = new MockNode2();
         let eventDispatcher = new EventDispatcher(node2);
         const listener1 = () => {};
         const listener2 = () => {};
@@ -135,7 +135,7 @@ export default class {
         });
       });
       it('Should remove correct listener', () => {
-        const node2 = new MockIoNode2();
+        const node2 = new MockNode2();
         let eventDispatcher = new EventDispatcher(node2);
         const listener1 = () => {};
         const listener2 = () => {};
@@ -149,13 +149,13 @@ export default class {
         expect(eventDispatcher.addedListeners).to.be.eql({});
       });
       it('Should dispatch added events with correct payloads', () => {
-        const node3 = new MockIoNode3();
+        const node3 = new MockNode3();
         let eventDispatcher = new EventDispatcher(node3);
         const handler4 = (event: CustomEvent) => {
-          (event.target as unknown as MockIoNode3).eventStack.push(`handler4 ${event.detail}`);
+          (event.target as unknown as MockNode3).eventStack.push(`handler4 ${event.detail}`);
         };
         const handler5 = (event: CustomEvent) => {
-          (event.target as unknown as MockIoNode3).eventStack.push(`handler5 ${event.detail}`);
+          (event.target as unknown as MockNode3).eventStack.push(`handler5 ${event.detail}`);
         };
         eventDispatcher.applyPropListeners({'@event3': 'event3Handler', '@event4': handler4});
         eventDispatcher.addEventListener('event5', handler5);
@@ -249,7 +249,7 @@ export default class {
         expect(target).to.be.eql(element2);
       });
       it('Should dispose correctly', () => {
-        const node = new MockIoNode1();
+        const node = new MockNode1();
         const eventDispatcher = new EventDispatcher(node);
         eventDispatcher.dispose();
         expect(eventDispatcher.node).to.be.equal(undefined);

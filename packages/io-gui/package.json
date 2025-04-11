@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-Gui core library, a UI framework for web development.",
+  "description": "Io-Gui is a lightweight library that provides core features for Io-Gui components (nodes and elements)",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",

@@ -1,8 +1,8 @@
 import { ChangeEvent } from './ChangeQueue';
-import { IoNode } from '../nodes/Node';
+import { Node } from '../nodes/Node';
 
 type Properties = string[];
-type TargetProperties = WeakMap<IoNode, Properties>;
+type TargetProperties = WeakMap<Node, Properties>;
 
 // This helper checks if both values are NaN to prevent infinite update loops.
 const bothAreNaNs = function(value: any, oldValue: any) {
@@ -10,7 +10,7 @@ const bothAreNaNs = function(value: any, oldValue: any) {
 };
 
 /**
- * Property binding class that enables two-way data synchronization between `IoNode` and `IoElement` nodes.
+ * Property binding class that enables two-way data synchronization between `Node` and `IoElement` nodes.
  *
  * It manages bindings between a source node's property and one or more target nodes and properties.
  * Using a hub-and-spoke pub/sub event system, it maintains data consistency by automatically propagating
@@ -33,17 +33,17 @@ const bothAreNaNs = function(value: any, oldValue: any) {
  * binding.addTarget(nodeB, 'value');
  */
 export class Binding {
-  readonly node: IoNode;
+  readonly node: Node;
   readonly property: string = '';
-  readonly targets: IoNode[] = [];
+  readonly targets: Node[] = [];
   readonly targetProperties: TargetProperties = new WeakMap();
   /**
    * Creates a binding object for specified source `node` and `property`.
    * It attaches a `[propName]-changed` listener to the source node.
-   * @param {IoNode} node - Source node
+   * @param {Node} node - Source node
    * @param {string} property - Name of the sourceproperty
    */
-  constructor(node: IoNode, property: string) {
+  constructor(node: Node, property: string) {
     this.node = node;
     this.property = property;
     this.onSourceChanged = this.onSourceChanged.bind(this);
@@ -79,10 +79,10 @@ export class Binding {
   /**
    * Helper function to get target properties from WeakMap
    * Retrieves a list of target properties for specified target node.
-   * @param {IoNode} target - Target node.
+   * @param {Node} target - Target node.
    * @return {Properties} list of target property names.
    */
-  getTargetProperties(target: IoNode): Properties {
+  getTargetProperties(target: Node): Properties {
     if (!this.targetProperties.has(target)) this.targetProperties.set(target, []);
     return this.targetProperties.get(target)!;
   }
@@ -90,10 +90,10 @@ export class Binding {
    * Adds a target node and property.
    * Sets itself as the binding reference on the target `PropertyInstance`.
    * Adds a `[propName]-changed` listener to the target node.
-   * @param {IoNode} target - Target node
+   * @param {Node} target - Target node
    * @param {string} property - Target property
    */
-  addTarget(target: IoNode, property: string) {
+  addTarget(target: Node, property: string) {
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
 
     const targetProperties = this.getTargetProperties(target);
@@ -124,10 +124,10 @@ export class Binding {
    * If `property` is not specified, it removes all target properties.
    * Removes binding reference from the target `PropertyInstance`.
    * Removes `[propName]-changed` listener from the target node.
-   * @param {IoNode} target - Target node
+   * @param {Node} target - Target node
    * @param {string} property - Target property
    */
-  removeTarget(target: IoNode, property?: string) {
+  removeTarget(target: Node, property?: string) {
     const targetProperties = this.getTargetProperties(target);
 
     if (property) {

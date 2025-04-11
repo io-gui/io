@@ -10,7 +10,7 @@ export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 
-export interface IoNodeConstructor<T> {
+export interface NodeConstructor<T> {
   new (...args: any[]): T;
   Properties?: PropertyDefinitions;
   Listeners?: ListenerDefinitions;
@@ -24,7 +24,7 @@ export type ArgsWithBinding<T> = {
   [K in keyof T]: T[K] | Binding;
 };
 
-export type IoNodeArgs = ArgsWithBinding<{
+export type NodeArgs = ArgsWithBinding<{
   reactivity?: 'none' | 'immediate' | 'debounced';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
 }>;
@@ -32,10 +32,10 @@ export type IoNodeArgs = ArgsWithBinding<{
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
- * @return {function} - Extended class constructor with `IoNodeMixin` applied to it.
+ * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
-export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
-  return class IoNodeMixinConstructor extends (superclass as any) {
+export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
+  return class NodeMixinConstructor extends (superclass as any) {
     static get Properties(): PropertyDefinitions {
       return {
         reactivity: {
@@ -54,11 +54,11 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
      * Creates a class instance and initializes the core with properties.
      * @overload
      * @constructor
-     * @param {IoNodeArgs} args - Initial property values
+     * @param {NodeArgs} args - Initial property values
      * @param {...any} superArgs - Additional arguments
      */
     constructor(...superArgs: any[]); // TODO: remove this after fixing types.
-    constructor(args: IoNodeArgs = {}, ...superArgs: any[]) {
+    constructor(args: NodeArgs = {}, ...superArgs: any[]) {
       // eslint-disable-next-line constructor-super
       super(...superArgs);
 
@@ -90,7 +90,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
             return this._properties.get(name).value;
           },
           set: function(value) {
-            (this as IoNode).setProperty(name, value);
+            (this as Node).setProperty(name, value);
           },
           configurable: true,
           enumerable: true,
@@ -102,7 +102,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this._properties.set(name, property);
 
         if (property.binding) property.binding.addTarget(this, name);
-        if (property.value?._isIoNode) {
+        if (property.value?._isNode) {
           property.value.addEventListener('object-mutated', this.onPropertyMutated);
         }
       }
@@ -187,10 +187,10 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
         // TODO: test removal of event listeners.
         if (value !== oldValue) {
-          if (value?._isIoNode) {
+          if (value?._isNode) {
             value.addEventListener('object-mutated', this.onPropertyMutated);
           }
-          if (oldValue?._isIoNode) {
+          if (oldValue?._isNode) {
             oldValue.removeEventListener('object-mutated', this.onPropertyMutated);
           }
         }
@@ -268,7 +268,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
         this._changeQueue.dispatch();
       }
       debug: if (['none', 'immediate', 'debounced'].indexOf(this.reactivity) === -1) {
-        console.warn(`IoNode.dispatchQueue(): Invalid reactivity property value: "${this.reactivity}". Expected one of: "none", "immediate", "debounced".`);
+        console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${this.reactivity}". Expected one of: "none", "immediate", "debounced".`);
       }
     }
     /**
@@ -289,20 +289,20 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
       throttle(this, func, arg, timeout);
     }
     /**
-     * Event handler for 'object-mutated' events emitted from the properties which are IoNode instances.
-     * Aditionally, it handles events emitted from the `window` object (used for observing non-IoNode object properties).
-     * NOTE: non-IoNode objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
+     * Event handler for 'object-mutated' events emitted from the properties which are Node instances.
+     * Aditionally, it handles events emitted from the `window` object (used for observing non-Node object properties).
+     * NOTE: non-Node objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
      * This is used to evoke '[propName]Mutated()' mutation handler
      * @param {Object} event - Event payload.
      * @param {EventTarget} event.target - Node that emitted the event.
-     * @param {IoNode} event.detail.object - Mutated node.
+     * @param {Node} event.detail.object - Mutated node.
      */
     onPropertyMutated(event: CustomEvent) {
       const object = event.detail.object;
       // TODO: consider situations where node is listening to object-mutated events from multiple sources (window and property).
       // This might cause multiple executions of the same handler.
       // TODO: consider optimizing. This handler might be called a lot.
-      const properties = [...new Set([...this._protochain.observedObjectProperties, ...this._protochain.observedIoNodeProperties])];
+      const properties = [...new Set([...this._protochain.observedObjectProperties, ...this._protochain.observedNodeProperties])];
       for (let i = 0; i < properties.length; i++) {
         const name = properties[i];
         const value = this._properties.get(name)!.value;
@@ -381,7 +381,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
     dispose() {
       debug: if (this._disposed) {
         // TODO: figure out how to prevent redundant disposals from nested io-selectors with cache:false
-        // console.warn('IoNode.dispose(): Already disposed!', this.constructor.name);
+        // console.warn('Node.dispose(): Already disposed!', this.constructor.name);
       }
       if (this._disposed) return;
 
@@ -401,7 +401,7 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       this._properties.forEach((property, name) => {
         property.binding?.removeTarget(this, name);
-        if (property.value?._isIoNode) {
+        if (property.value?._isNode) {
           property.value.removeEventListener('object-mutated', this.onPropertyMutated);
         }
       });
@@ -413,16 +413,16 @@ export function IoNodeMixin<T extends IoNodeConstructor<any>>(superclass: T) {
 
       Object.defineProperty(this, '_disposed', {value: true});
     }
-    Register(ioNodeConstructor: typeof IoNode) {
-      Object.defineProperty(ioNodeConstructor, '_isIoNode', {enumerable: false, value: true});
-      Object.defineProperty(ioNodeConstructor.prototype, '_isIoNode', {enumerable: false, value: true});
+    Register(ioNodeConstructor: typeof Node) {
+      Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true});
+      Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true});
       Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
     }
   };
 }
 
 /**
- * IoNodeMixin applied to `Object` class.
+ * NodeMixin applied to `Object` class.
  */
 @Register
-export class IoNode extends IoNodeMixin(Object) {}
+export class Node extends NodeMixin(Object) {}

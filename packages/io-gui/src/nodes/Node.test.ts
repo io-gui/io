@@ -1,11 +1,10 @@
-//@ts-nocheck
-import { Change, Binding, IoNode, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../index';;
+import { Change, Binding, Node, Register, PropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../index';
 
 export default class {
   run() {
-    describe('node.test.ts', () => {
+    describe('Node', () => {
       it('Should have core API functions defined', () => {
-        const node = new IoNode();
+        const node = new Node();
         expect(node.setProperty).to.be.a('function');
         expect(node.applyProperties).to.be.a('function');
         expect(node.setProperties).to.be.a('function');
@@ -26,7 +25,7 @@ export default class {
       });
       it('Should register property definitions correctly', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop0: { type: String },
@@ -138,7 +137,7 @@ export default class {
       });
       it('Should aggregate property definitions from protochain', () => {
         @Register
-        class Object1 extends IoNode {
+        class Object1 extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: {
@@ -213,7 +212,7 @@ export default class {
       });
       it('Should correctly register properties with bindigs', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): any {
             return {
               label: ''
@@ -226,7 +225,7 @@ export default class {
         const binding3 = new Binding(new TestNode({label: 'label3'}), 'label');
 
         @Register
-        class Object1 extends IoNode {
+        class Object1 extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: binding1,
@@ -264,7 +263,7 @@ export default class {
       });
       it('Should correctly get/set properties', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: {
@@ -285,7 +284,7 @@ export default class {
       it('Should correctly get/set bound properties', () => {
 
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               label: '',
@@ -297,7 +296,7 @@ export default class {
         const binding2 = new Binding(new TestNode({label: 'label2'}), 'label');
 
         @Register
-        class TestNode2 extends IoNode {
+        class TestNode2 extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: binding1
@@ -344,7 +343,7 @@ export default class {
       });
       it('Should dipatch "[propName]-changed" events correctly', async () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               propChangedEvents: Array,
@@ -474,7 +473,7 @@ export default class {
       });
       it('Should execute throttle/debounce queue in FIFO order', async () => {
         let order: number[] = [];
-        const node = new IoNode();
+        const node = new Node();
         node.debounce(() => {
           order.push(1);
         });
@@ -490,9 +489,9 @@ export default class {
         await nextQueue();
         expect(order).to.be.eql([0, 1, 2, 0]);
       });
-      it('Should add/remove "object-mutated" event listeners to properties of IoNode type', async () => {
+      it('Should add/remove "object-mutated" event listeners to properties of Node type', async () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop: Number,
@@ -517,7 +516,7 @@ export default class {
         expect(subnode2._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node.onPropertyMutated);
 
         @Register
-        class TestNode2 extends IoNode {
+        class TestNode2 extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop: TestNode,
@@ -555,7 +554,7 @@ export default class {
       });
       it('Should corectly invoke handler functions on change', async () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           changedCounter = 0;
           prop1Changes: Change[] = [];
           prop2Changes: Change[] = [];
@@ -669,7 +668,7 @@ export default class {
       });
       it('should invoke property mutation handler functions on mutation event', async () => {
         @Register
-        class TestSubNode extends IoNode {
+        class TestSubNode extends Node {
           static get Properties(): any {
             return {
               a: {
@@ -680,7 +679,7 @@ export default class {
         }
 
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           changedCounter = 0;
           obj1MutatedCounter = 0;
           obj2MutatedCounter = 0;
@@ -736,7 +735,7 @@ export default class {
       });
       it('should correctly bind properties', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: String,
@@ -785,7 +784,7 @@ export default class {
       });
       it('Should correctly set values when setProperties() is used to re-set multiple bindings', async () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: 'subnode1',
@@ -796,7 +795,7 @@ export default class {
         }
 
         @Register
-        class TestNodeTarget extends IoNode {
+        class TestNodeTarget extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               subnode: TestNode,
@@ -859,7 +858,7 @@ export default class {
       });
       it('Should add/remove targets and targetProperties when assigned to values', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: String,
@@ -905,7 +904,7 @@ export default class {
       });
       it('Should return existing binding or create a new on "bind()"', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: String,
@@ -920,7 +919,7 @@ export default class {
       });
       it('Should dispose bindings correctly', () => {
         @Register
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop1: String,

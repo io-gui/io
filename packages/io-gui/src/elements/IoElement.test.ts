@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, IoNode, Change, PropertyDefinitions } from '../index';;
+import { Register, IoElement, Node, Change, PropertyDefinitions } from '../index';;
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
@@ -22,7 +22,7 @@ const terstElement = new TestElement();
 
 export default class {
   run() {
-    describe('element.test.ts', () => {
+    describe('IoElement', () => {
       it('Should have core API functions defined', () => {
         expect(element.template).to.be.a('function');
         expect(element.traverse).to.be.a('function');
@@ -88,7 +88,7 @@ export default class {
         element.role = '';
       });
       it('Invokes change events and functions', () => {
-        class TestNode extends IoNode {
+        class TestNode extends Node {
           static get Properties(): PropertyDefinitions {
             return {
               prop0: 0,
@@ -134,10 +134,11 @@ export default class {
           }
           constructor(...initProps: any[]) {
             super(...initProps);
-            this.template([['test-subelement', {$: 'subelement',
+            this.template([{name: 'test-subelement', props: {
+              $: 'subelement',
               prop0: this.bind('prop0'),
               prop1: this.bind('prop1'),
-            }]]);
+            }}]);
             this.subnode = new TestNode({
               prop0: this.bind('prop0'),
               prop1: this.bind('prop1'),
@@ -241,10 +242,10 @@ export default class {
             };
           }
           changed() {
-            this.template([['test-subelement', {$: 'subelement',
+            this.template([{name: 'test-subelement', props: {$: 'subelement',
               prop0: this.bind('prop0'),
               prop1: this.bind('prop1'),
-            }]]);
+            }}]);
           }
         }
         Register(TestElement2);
@@ -303,12 +304,12 @@ export default class {
             this.changed();
           }
           changed() {
-            this.template([['test-binding-element', {
+            this.template([{name: 'test-binding-element', props: {
               $: 'testElement',
               prop1: this.bind('prop1'),
               prop2: this.bind('prop2'),
               prop3: this.bind('prop3'),
-            }]]);
+            }}]);
           }
         }
 

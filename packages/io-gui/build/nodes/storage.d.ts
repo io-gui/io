@@ -1,13 +1,13 @@
 import { Binding } from '../core/Binding';
-import { IoNode, IoNodeArgs } from '../nodes/Node';
-export type StorageProps = IoNodeArgs & {
+import { Node, NodeArgs } from '../nodes/Node';
+export type StorageProps = NodeArgs & {
     key: string;
     value?: any;
     default?: any;
     storage?: 'hash' | 'local' | 'none';
 };
 export declare function genObjectStorageID(object: Record<string, any>): string;
-export declare class IoStorageNode extends IoNode {
+export declare class StorageNode extends Node {
     key: string;
     value: any;
     default: any;
@@ -20,7 +20,7 @@ export declare class IoStorageNode extends IoNode {
     removeValueToHash(): void;
     saveValueToHash(): void;
 }
-export declare const IoStorage: ((props: StorageProps) => Binding) & {
+export declare const Storage: ((props: StorageProps) => Binding) & {
     permit(): void;
     unpermit(): void;
 };

@@ -2,8 +2,8 @@ import { Register } from '../decorators/Register';
 import { Property } from '../decorators/Property';
 import { PropertyInstance, PropertyDefinition } from '../core/Property';
 import { VDOMElement } from '../core/VDOM';
-import { IoNode, ArgsWithBinding } from '../nodes/Node';
-import { IoThemeSingleton, Color } from '../nodes/Theme';
+import { Node, ArgsWithBinding } from '../nodes/Node';
+import { ThemeSingleton, Color } from '../nodes/Theme';
 import { IoElement, IoElementArgs } from './IoElement';
 import { glsl } from './IoGL.glsl';
 
@@ -59,8 +59,8 @@ export class IoGl extends IoElement {
     `;
   }
 
-  @Property({type: IoNode, value: IoThemeSingleton})
-  declare theme: typeof IoThemeSingleton;
+  @Property({type: Node, value: ThemeSingleton})
+  declare theme: typeof ThemeSingleton;
 
   @Property({type: Array, init: [0, 0]})
   declare size: [number, number];

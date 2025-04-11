@@ -1,4 +1,4 @@
-import { IoStorageNode, IoStorage, Binding } from '../index';;
+import { StorageNode, Storage, Binding } from '../index';;
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {
@@ -8,20 +8,20 @@ async function afterHashChange(): Promise<void> {
   });
 }
 
-localStorage.removeItem('IoStorage:test2');
-localStorage.removeItem('IoStorage:test3');
-localStorage.removeItem('IoStorage:test4');
-localStorage.removeItem('IoStorage:test5');
+localStorage.removeItem('Storage:test2');
+localStorage.removeItem('Storage:test3');
+localStorage.removeItem('Storage:test4');
+localStorage.removeItem('Storage:test5');
 
-const permited = localStorage.getItem('IoStorage:user-permitted');
+const permited = localStorage.getItem('Storage:user-permitted');
 
-localStorage.setItem('IoStorage:user-permitted', 'true');
+localStorage.setItem('Storage:user-permitted', 'true');
 
 export default class {
   run() {
-    describe('storage.test.ts', () => {
+    describe('Storage.test.ts', () => {
       it('Should register property definitions correctly', () => {
-        const node = new IoStorageNode({key: 'test', value: 'foo'});
+        const node = new StorageNode({key: 'test', value: 'foo'});
         expect(node.key).to.be.equal('test');
         expect(node.value).to.be.equal('foo');
         expect(node.default).to.be.equal('foo');
@@ -61,8 +61,8 @@ export default class {
         node.dispose();
       });
       it('Should initialize property value from localStorage store if exists', () => {
-        localStorage.setItem('IoStorage:test2', '"asd"');
-        const node = new IoStorageNode({key: 'test2', value: 'buzz', storage: 'local'});
+        localStorage.setItem('Storage:test2', '"asd"');
+        const node = new StorageNode({key: 'test2', value: 'buzz', storage: 'local'});
         expect(node.key).to.be.equal('test2');
         expect(node.value).to.be.equal('asd');
         expect(node.default).to.be.equal('buzz');
@@ -71,7 +71,7 @@ export default class {
       });
       it('Should initialize property value from location.hash store if exists', async () => {
         self.location.hash = self.location.hash + '&testhash=foo';
-        const node = new IoStorageNode({key: 'testhash', value: 'buzz', storage: 'hash'});
+        const node = new StorageNode({key: 'testhash', value: 'buzz', storage: 'hash'});
         expect(node.key).to.be.equal('testhash');
         expect(node.value).to.be.equal('foo');
         expect(node.default).to.be.equal('buzz');
@@ -79,10 +79,10 @@ export default class {
         node.dispose();
       });
       it('Should return a new instance only if key and store are unique', () => {
-        const node1 = new IoStorageNode({key: 'test3', storage: 'local'});
-        const node2 = new IoStorageNode({key: 'test3', storage: 'local'});
-        const node3 = new IoStorageNode({key: 'test3', storage: 'hash'});
-        const node4 = new IoStorageNode({key: 'test4', storage: 'local'});
+        const node1 = new StorageNode({key: 'test3', storage: 'local'});
+        const node2 = new StorageNode({key: 'test3', storage: 'local'});
+        const node3 = new StorageNode({key: 'test3', storage: 'hash'});
+        const node4 = new StorageNode({key: 'test4', storage: 'local'});
         expect(node1).to.be.equal(node2);
         expect(node1).to.not.be.equal(node3);
         expect(node1).to.not.be.equal(node4);
@@ -91,20 +91,20 @@ export default class {
         node4.dispose();
       });
       it('Should update localStorage store when value changes', () => {
-        const node = new IoStorageNode({key: 'test5', value: 'one', storage: 'local'});
-        expect(localStorage.getItem('IoStorage:test5')).to.be.equal(null);
+        const node = new StorageNode({key: 'test5', value: 'one', storage: 'local'});
+        expect(localStorage.getItem('Storage:test5')).to.be.equal(null);
         node.value = 'two';
-        expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"two"');
+        expect(localStorage.getItem('Storage:test5')).to.be.equal('"two"');
         node.value = '2';
-        expect(localStorage.getItem('IoStorage:test5')).to.be.equal('"2"');
+        expect(localStorage.getItem('Storage:test5')).to.be.equal('"2"');
         node.value = 2;
-        expect(localStorage.getItem('IoStorage:test5')).to.be.equal('2');
+        expect(localStorage.getItem('Storage:test5')).to.be.equal('2');
         node.value = 'one';
-        expect(localStorage.getItem('IoStorage:test5')).to.be.equal(null);
+        expect(localStorage.getItem('Storage:test5')).to.be.equal(null);
         node.dispose();
       });
       it('Should update location.hash store when value changes to non-default', async () => {
-        const node = new IoStorageNode({key: 'test6', value: 'one', storage: 'hash'});
+        const node = new StorageNode({key: 'test6', value: 'one', storage: 'hash'});
         node.value = 'two';
         expect(self.location.hash).to.include('test6=two');
         node.value = '2';
@@ -140,10 +140,10 @@ export default class {
 
         node.dispose();
 
-        if (!permited || permited === 'false') localStorage.setItem('IoStorage:user-permitted', 'false');
+        if (!permited || permited === 'false') localStorage.setItem('Storage:user-permitted', 'false');
       });
-      it('IoStorage should return binding to IoStorageNode Node', () => {
-        const storage = IoStorage({key: 'test', storage: 'hash'});
+      it('Storage should return binding to StorageNode Node', () => {
+        const storage = Storage({key: 'test', storage: 'hash'});
         storage.value = 'foo';
         expect(storage).to.be.instanceOf(Binding);
         storage.dispose();

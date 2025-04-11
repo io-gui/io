@@ -1,7 +1,7 @@
 import { Binding } from './Binding';
-import { AnyConstructor, IoNode } from '../nodes/Node';
+import { AnyConstructor, Node } from '../nodes/Node';
 /**
- * Configuration for a property of an IoNode class.
+ * Configuration for a property of an Node class.
  * @typedef {Object} PropertyDefinition
  * @property {*} [value] The property's value. Can be any type unless `type` is specified.
  * @property {AnyConstructor} [type] Constructor function defining the property's type.
@@ -78,9 +78,9 @@ export declare class PropertyInstance {
     init?: any;
     /**
      * Creates the property configuration object and copies values from `ProtoProperty`.
-     * @param node owner IoNode instance
+     * @param node owner Node instance
      * @param propDef ProtoProperty object
      */
-    constructor(node: IoNode, propDef: ProtoProperty);
+    constructor(node: Node, propDef: ProtoProperty);
 }
 //# sourceMappingURL=Property.d.ts.map
