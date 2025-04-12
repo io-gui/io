@@ -58,7 +58,7 @@ This document is a rough draft.
 
 # Core Classes
 
-* IoThemeSingleton for themes with property-bound CSS variables.
+* ThemeSingleton for themes with property-bound CSS variables.
 
 * IoOverlaySingleton Singleton for top-level 
 

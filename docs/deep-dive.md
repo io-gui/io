@@ -1,18 +1,18 @@
 # Nodes and Elements
 
-In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use features provided by the `IoNodeMixin` such as reactivity, data binding and various helper methods.
+In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use features provided by the `NodeMixin` such as reactivity, data binding and various helper methods.
 
-A **node** is any `Object` that has been extended with the `IoNodeMixin` or an object that extends `IoNode`.
+A **node** is any `Object` that has been extended with the `NodeMixin` or an object that extends `Node`.
 
 ```javascript
-class IoNode extends IoNodeMixin(Object) {}
-class MyNode extends IoNode {}
+class Node extends NodeMixin(Object) {}
+class MyNode extends Node {}
 ```
 
-An **element** is a custom element that extends `IoElement` which is essentially `IoNodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is automatically assigned as kebab-case version of the CamelCase class name. For Example `MyElement` class name will register with `<my-element>` HTML tagName.
+An **element** is a custom element that extends `IoElement` which is essentially `NodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is automatically assigned as kebab-case version of the CamelCase class name. For Example `MyElement` class name will register with `<my-element>` HTML tagName.
 
 ```javascript
-class IoElement extends IoNodeMixin(HTMLElement) { ... }
+class IoElement extends NodeMixin(HTMLElement) { ... }
 class MyElement extends IoElement {}
 ```
 
@@ -26,7 +26,7 @@ All new classes must be registered before use.
 
 ```javascript
 // Javascript flavor
-class MyNode extends IoNode {}
+class MyNode extends Node {}
 Register(MyNode);
 
 class MyElement extends IoElement {}
@@ -36,7 +36,7 @@ Register(MyElement);
 ```typescript
 // Typescript flavor with experimentalDecorators: true
 @Register
-class MyNode extends IoNode {}
+class MyNode extends Node {}
 
 @Register
 class MyElement extends IoElement {}
@@ -50,7 +50,7 @@ In the following example, we define a boolean property called `selected` by spec
 
 ```javascript
 // Javascript version with `static get Properties()` object
-class MyNode extends IoNode {
+class MyNode extends Node {
   static get Properties() {
     return {
       selected: false
@@ -63,7 +63,7 @@ Here we do the same using decorator syntax in typescript. Note that we use `decl
 
 ```typescript
 // Typescript version with `@Property({})` decorator
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(false)
   declare selected: boolean;
 }
@@ -74,7 +74,7 @@ class MyNode extends IoNode {
 Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` respectively. In other words, when no initial value is specified, it will be inferred from the specified type.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(Boolean)
   declare selected: boolean;
 }
@@ -85,7 +85,7 @@ Just like initial property value can be inferred from type, a property type can 
 When property type is a custom object class the initial value will NOT be inferred. Instead, the users are expected to provide the initial value in the constructor. Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(Color)
   declare color: Color;
 }
@@ -97,7 +97,7 @@ new MyNode({color: new Color()});
 While it is possible to specify object instances as values in property declaration it is important to note that such initial values will be shared across all instances of the class.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   // This is not recommended!
   @Property({value: new Color()})
   declare color: Color;
@@ -110,7 +110,7 @@ new MyNode().color === new MyNode().color
 We can also declare a property with a declaration object. In the following example we declare the `selected` property with a fully specified declaration object. Note that the final result is exactly the same as before as all of the fields in this example are defaults. We will get into each specific field later.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property({
     value: false,
     type: Boolean,
@@ -127,7 +127,7 @@ class MyNode extends IoNode {
 Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyNode` will inherit explicit property declaration from `MySuperNode` but it will override the initial value to `true`. 
 
 ```typescript
-class MySuperNode extends IoNode {
+class MySuperNode extends Node {
   @Property({
     value: false,
     reactive: true,
@@ -281,7 +281,7 @@ Here is an example of a node fully rigged to handle changes of its `selected` pr
 
 ```typescript
 @Register
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(false)
   declare selected: boolean;
   selectedChanged(change: Change) {

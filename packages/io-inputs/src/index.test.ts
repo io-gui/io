@@ -1,11 +1,12 @@
-import BooleanElementTest from './io-boolean.test';
-import ButtonElementTest from './io-button.test';
-import InputBaseElementTest from './io-input-base.test';
-import NumberElementTest from './io-number.test';
-import NumberLadderElementTest from './io-number-ladder.test';
-import NumberLadderStepElementTest from './io-number-ladder-step.test';
-import StringElementTest from './io-string.test';
-import SwitchElementTest from './io-switch.test';
+import BooleanElementTest from './elements/IoBoolean.test';
+import ButtonElementTest from './elements/IoButton.test';
+import InputBaseElementTest from './elements/IoInputBase.test';
+import NumberElementTest from './elements/IoNumber.test';
+import NumberLadderElementTest from './elements/IoNumberLadder.test';
+import NumberLadderStepElementTest from './elements/IoNumberLadderStep.test';
+import StringElementTest from './elements/IoString.test';
+import SwitchElementTest from './elements/IoSwitch.test';
+import FieldElementTest from './elements/IoField.test';
 
 export default class {
   run() {
@@ -17,5 +18,6 @@ export default class {
     new NumberLadderStepElementTest().run();
     new StringElementTest().run();
     new SwitchElementTest().run();
+    new FieldElementTest().run();
   }
 }

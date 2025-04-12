@@ -1,3 +1,3 @@
-export * from './io-markdown.js';
-export * from './io-markdown-theme.js';
+export * from './elements/IoMarkdown.js';
+export * from './elements/IoMarkdownTheme.js';
 //# sourceMappingURL=index.d.ts.map

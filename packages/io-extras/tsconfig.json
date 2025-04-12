@@ -3,10 +3,10 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-gui": ["../io-gui/"],
-      "io-inputs": ["../io-inputs/"],
-      "io-navigation": ["../io-navigation/"],
-      "io-menus": ["../io-menus/"]
+      "io-gui": ["../io-gui"],
+      "io-inputs": ["../io-inputs"],
+      "io-navigation": ["../io-navigation"],
+      "io-menus": ["../io-menus"]
     }
   },
   "include": ["./src"]

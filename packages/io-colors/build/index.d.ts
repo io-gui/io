@@ -1,7 +1,7 @@
-export * from './elements/color-base.js';
-export * from './elements/color-panel-singleton.js';
-export * from './io-color-picker.js';
-export * from './io-color-rgba.js';
-export * from './io-color-sliders.js';
-export * from './io-color-swatch.js';
+export * from './elements/IoColorBase';
+export * from './elements/IoColorPanelSingleton';
+export * from './elements/IoColorPicker';
+export * from './elements/IoColorRgba';
+export * from './elements/IoColorSliders';
+export * from './elements/IoColorSwatch';
 //# sourceMappingURL=index.d.ts.map

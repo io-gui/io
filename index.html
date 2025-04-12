@@ -4,16 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <title>Io-Gui - Web Framework</title>
+    <title>Io-Gui: The Artisinal Web Framework</title>
 
-    <meta name="description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
-    <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, javascript, web development, webdev" />
-
+    <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, framework, javascript, web development, webdev" />
+    
     <meta itemprop="name" content="Io-Gui, a UI framework for web development." />
-    <meta itemprop="description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
+    <meta name="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta itemprop="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
 
     <!-- Web application enable -->
-    <!-- <link rel="manifest" href="/manifest.json" -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
@@ -44,15 +43,15 @@
 
     <!-- Social sharing data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Io-Gui: Documentation" />
-    <meta name="twitter:description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
+    <meta name="twitter:title" content="Io-Gui: The Artisinal Web Framework" />
+    <meta name="twitter:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
     <meta name="twitter:site" content="iogui.dev" />
     <meta name="twitter:creator" content="akirodic" />
     <meta name="twitter:image" content="https://iogui.dev/io/images/logo/io-512.png?002">
-    <meta name="twitter:image:alt" content="Io-Gui">
+    <meta name="twitter:image:alt" content="Io-Gui: The Artisinal Web Framework">
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Io-Gui: Documentation" />
-    <meta property="og:description" content="Io-Gui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. Io-Gui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. Io-Gui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. Io-Gui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta property="og:title" content="Io-Gui: The Artisinal Web Framework" />
+    <meta property="og:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
@@ -99,24 +98,20 @@
   <body>
     <script type="module">
 
-    import { Register, IoStorage as $, IoThemeSingleton, ioElement, div, iframe } from 'io-gui';
+    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe } from 'io-gui';
     import { ioMarkdown } from 'io-markdown';
     import { IoNavigatorSelector, ioSelector, ioNavigatorScroller } from 'io-navigation';
-    import 'io-sliders';
-    import 'io-colors';
     import { MenuOptions, MenuItem } from 'io-menus';
-    import 'io-editors';
-    import 'io-inputs';
 
-    import { ioInputsDemo } from './packages/io-inputs/demos/io-inputs-demo.js';
-    import { ioIconsDemo } from './packages/io-icons/demos/io-icons-demo.js';
-    import { ioSlidersDemo } from './packages/io-sliders/demos/io-sliders-demo.js';
-    import { ioColorsDemo } from './packages/io-colors/demos/io-colors-demo.js';
-    import { ioEditorsDemo } from './packages/io-editors/demos/io-editors-demo.js';
-    import { ioMenusDemo } from './packages/io-menus/demos/io-menus-demo.js';
-    import { ioNavigationDemo } from './packages/io-navigation/demos/io-navigation-demo.js';
-    import { ioGuiThemeEditor } from './packages/io-gui/demos/io-gui-theme-editor.js';
-    import { ioElementDemo } from './packages/io-gui/demos/io-element-demo.js';
+    import { ioInputsDemo } from './packages/io-inputs/demos/IoInputsDemo.js';
+    import { ioIconsDemo } from './packages/io-icons/demos/IoIconsDemo.js';
+    import { ioSlidersDemo } from './packages/io-sliders/demos/IoSlidersDemo.js';
+    import { ioColorsDemo } from './packages/io-colors/demos/IoColorsDemo.js';
+    import { ioEditorsDemo } from './packages/io-editors/demos/IoEditorsDemo.js';
+    import { ioMenusDemo } from './packages/io-menus/demos/IoMenusDemo.js';
+    import { ioNavigationDemo } from './packages/io-navigation/demos/IoNavigationDemo.js';
+    import { ioGuiThemeEditor } from './packages/io-gui/demos/IoGuiThemeEditor.js';
+    import { ioElementDemo } from './packages/io-gui/demos/IoElementDemo.js';
 
     $.permit();
 

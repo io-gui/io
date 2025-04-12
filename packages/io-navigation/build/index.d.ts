@@ -1,9 +1,9 @@
-export * from './io-collapsible.js';
-export * from './io-selector.js';
-export * from './io-scroller.js';
-export * from './io-navigator-base.js';
-export * from './io-navigator-combined.js';
-export * from './io-navigator-md-view.js';
-export * from './io-navigator-scroller.js';
-export * from './io-navigator-selector.js';
+export * from './elements/IoCollapsible.js';
+export * from './elements/IoSelector.js';
+export * from './elements/IoScroller.js';
+export * from './elements/IoNavigatorBase.js';
+export * from './elements/IoNavigatorCombined.js';
+export * from './elements/IoNavigatorMdView.js';
+export * from './elements/IoNavigatorScroller.js';
+export * from './elements/IoNavigatorSelector.js';
 //# sourceMappingURL=index.d.ts.map

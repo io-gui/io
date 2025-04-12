@@ -3,43 +3,23 @@
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-inspector, a set of object inspector elements for Io-Gui.",
+  "description": "A set of object inspector elements for Io-Gui.",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./build/index.d.ts",
-      "import": "./build/index.js"
-    }
-  },
   "files": [
-    "/src/",
-    "/build/",
-    "/demos/",
+    "/build",
+    "/demos",
+    "/src",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/io-gui/io.git"
-  },
-  "keywords": [
-    "io",
-    "gui",
-    "iogui",
-    "io-gui",
-    "inspector",
-    "io-object",
-    "io-properties",
-    "io-editors"
-  ],
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["io","gui","iogui","io-gui","inspector","io-object","io-properties","io-editors"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/iogui/iogui/issues"
-  },
+  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
     "io-gui": "^2.0.0",

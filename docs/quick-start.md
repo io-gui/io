@@ -1,6 +1,6 @@
 # Usage
 
-There are many ways to use Io-Gui. You can use its core classes `IoNode` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to a complex single-page application, or you can simply import and use one of its nodes or elements in your own web architecture. You can learn more about nodes and elements in the [deep dive] guide.
+There are many ways to use Io-Gui. You can use its core classes `Node` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to a complex single-page application, or you can simply import and use one of its nodes or elements in your own web architecture. You can learn more about nodes and elements in the [deep dive] guide.
 
 To quickly import Io-Gui and get started, continue reading this article.
 
@@ -34,7 +34,7 @@ document.body.appendChild(myElement);
 Here is a quick way to make a simple website `<my-website>` with navigation and pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator, Register, MenuOptions, IoStorage as $ } from 'io-gui';
+import { IoNavigator, Register, MenuOptions, Storage as $ } from 'io-gui';
 import { ioMarkdown } from 'io-markdown';
 
 export class MyWebsite extends IoNavigator {

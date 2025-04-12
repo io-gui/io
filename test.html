@@ -38,10 +38,10 @@
       import ColorsTest from 'io-colors/index.test.js';
       // import ExtrasTest from 'io-extras/index.test.js';
       import IconsTest from 'io-icons/index.test.js';
-      // import EditorsTest from 'io-editors/index.test.js';
-      // import MarkdownTest from 'io-markdown/index.test.js';
-      // import MenusTest from 'io-menus/index.test.js';
-      // import NavigationTest from 'io-navigation/index.test.js';
+      import EditorsTest from 'io-editors/index.test.js';
+      import MarkdownTest from 'io-markdown/index.test.js';
+      import MenusTest from 'io-menus/index.test.js';
+      import NavigationTest from 'io-navigation/index.test.js';
       import SlidersTest from 'io-sliders/index.test.js';
 
 
@@ -60,16 +60,16 @@
       }
 
       try {
-        // new GuiTest().run();
-        // new InputsTest().run();
+        new GuiTest().run();
+        new InputsTest().run();
         new ColorsTest().run();
         // new ExtrasTest().run();
-        // new IconsTest().run();
-        // new EditorsTest().run();
-        // new MarkdownTest().run();
-        // new MenusTest().run();
-        // new NavigationTest().run();
-        // new SlidersTest().run();
+        new IconsTest().run();
+        new EditorsTest().run();
+        new MarkdownTest().run();
+        new MenusTest().run();
+        new NavigationTest().run();
+        new SlidersTest().run();
 
         mocha.checkLeaks();
         mocha.run(() => {
@@ -87,67 +87,45 @@
         color: var(--io_color);
       }
       #mocha {
-        font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-        margin: 0 1em;
-        position: relative;
+        font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0.5em;
       }
-
-      #mocha-stats {
-        display: flex;
-        flex-direction: row;
-      }
-      #mocha-stats .progress-contain {
-        display: flex;
-        margin-right: auto;
-        margin-left: 1em;
-      }
-      #mocha-stats .progress {
-        display: none;
-      }
-      #mocha-stats .progress-element {
-        margin-top: 0.2em;
-        margin-right: 1em;
-      }
-      #mocha-stats a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      #mocha-stats .passes {
-        margin-right: var(--io_lineHeight);
-        color: var(--io_colorGreen);
-      }
-      #mocha-stats .failures {
-        margin-right: var(--io_lineHeight);
-        color: var(--io_colorRed);
-      }
-
-      #mocha .replay {
-        display: none !important;
-      }
-
       #mocha ul,
       #mocha li {
         margin: 0;
         padding: 0;
         list-style: none;
       }
-
+      #mocha-stats {
+        display: flex;
+        flex-direction: row;
+      }
+      #mocha-stats a,
+      #mocha h1 a {
+        text-decoration: none;
+        color: inherit;
+      }
+      #mocha-stats li {
+        margin-right: 1em;
+      }
+      #mocha-stats .passes {
+        color: var(--io_colorGreen);
+      }
+      #mocha-stats .failures {
+        color: var(--io_colorRed);
+      }
+      #mocha-stats .progress,
+      #mocha .replay {
+        display: none !important;
+      }
       #mocha h1,
       #mocha h2 {
         margin: 0;
       }
       #mocha h1 {
-        margin-top: 1em;
+        margin-top: 0.5em;
         font-size: 1em;
         font-weight: 200;
-      }
-      #mocha h1 a {
-        text-decoration: none;
-        color: inherit;
-      }
-      #mocha h1 a:hover {
-        text-decoration: underline;
       }
       #mocha h2 {
         font-size: 0.75em;
@@ -155,23 +133,19 @@
         padding-left: 1em !important;
         cursor: pointer;
       }
-
-      #mocha .hidden {
-        display: none;
+      #mocha .duration {
+        margin-left: 0.5em;
+        opacity: 0.5;
       }
-
       #mocha .test > pre {
         background: var(--io_bgColorDimmed);
         font-size: var(--io_fontSize);
-        margin: var(--io_lineHeight);
-        margin-top: 0.25em;
-        padding: var(--io_lineHeight);
+        margin: 0.25em var(--io_lineHeight);
+        padding: var(--io_spacing3);
         overflow: auto;
         border: var(--io_border);
-        border-radius: var(--io_borderRadius2);
-        max-width: calc(100% - 42px);
+        border-radius: var(--io_borderRadius);
       }
-
       #mocha .test.fail h2::before {
         content: '✖';
         font-size: 1em;
@@ -184,22 +158,21 @@
         margin: 0 0.5em 0 0;
         color: var(--io_colorGreen);
       }
-
       #mocha .test.fail pre.error {
         border: var(--io_borderFail);
       }
-
       #mocha code .comment { color: #ddd; }
       #mocha code .init { color: #2f6fad; }
       #mocha code .string { color: #5890ad; }
       #mocha code .keyword { color: #8a6343; }
       #mocha code .number { color: #2f6fad; }
-
       @media screen and (max-width: 550px) {
+        #mocha {
+          font-size: 16px;
+        }
         #mocha-stats .progress-contain {
           display: none;
         }
-
         #mocha .test > pre {
           font-size: 0.5em;
         }

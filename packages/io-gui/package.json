@@ -3,20 +3,10 @@
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-Gui is a lightweight library that provides core features for Io-Gui components (nodes and elements)",
+  "description": "A lightweight library that provides core features for Io-Gui components (nodes and elements).",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./build/index.d.ts",
-      "import": "./build/index.js"
-    },
-    "./index.test.js": {
-      "types": "./types/index.test.d.ts",
-      "import": "./build/index.test.js"
-    }
-  },
   "files": [
     "/build",
     "/demos",

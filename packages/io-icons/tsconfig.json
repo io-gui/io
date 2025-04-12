@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-gui": ["../io-gui/"]
+      "io-gui": ["../io-gui"]
     }
   },
   "include": ["./src"]

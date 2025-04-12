@@ -1,5 +1,4 @@
-import PropertyEditorTest from './io-property-editor.test.js';
-
+import PropertyEditorTest from './elements/IoPropertyEditor.test';
 
 export default class {
   run() {

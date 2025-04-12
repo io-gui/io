@@ -3,16 +3,10 @@
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-sliders, a set of sliders for Io-Gui.",
+  "description": "A set of sliders for Io-Gui.",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./build/index.d.ts",
-      "import": "./build/index.js"
-    }
-  },
   "files": [
     "/src/",
     "/build/",
@@ -21,24 +15,11 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/io-gui/io.git"
-  },
-  "keywords": [
-    "io",
-    "gui",
-    "md",
-    "iogui",
-    "io-gui",
-    "sliders",
-    "io-sliders"
-  ],
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["io","gui","md","iogui","io-gui","sliders","io-sliders"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/iogui/iogui/issues"
-  },
+  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
     "io-gui": "^2.0.0",

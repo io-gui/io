@@ -3,12 +3,12 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-gui": ["../io-gui/"],
-      "io-menus": ["../io-menus/"],
-      "io-colors": ["../io-colors/"],
-      "io-navigation": ["../io-navigation/"],
-      "io-sliders": ["../io-sliders/"],
-      "io-inputs": ["../io-inputs/"]
+      "io-gui": ["../io-gui"],
+      "io-menus": ["../io-menus"],
+      "io-colors": ["../io-colors"],
+      "io-navigation": ["../io-navigation"],
+      "io-sliders": ["../io-sliders"],
+      "io-inputs": ["../io-inputs"]
     }
   },
   "include": ["./src"]

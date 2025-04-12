@@ -1,10 +1,10 @@
 import ColorConvertTest from './lib/color.convert.test.js';
-import ColorBaseTest from './elements/color-base.test.js';
-import ColorPanelTest from './elements/color-panel-singleton.test.js';
-import ColorPickerTest from './io-color-picker.test.js';
-import ColorRgbaTest from './io-color-rgba.test.js';
-import ColorSlidersTest from './io-color-sliders.test.js';
-import ColorSwatchTest from './io-color-swatch.test.js';
+import ColorBaseTest from './elements/IoColorBase.test.js';
+import ColorPanelTest from './elements/IoColorPanelSingleton.test.js';
+import ColorPickerTest from './elements/IoColorPicker.test.js';
+import ColorRgbaTest from './elements/IoColorRgba.test.js';
+import ColorSlidersTest from './elements/IoColorSliders.test.js';
+import ColorSwatchTest from './elements/IoColorSwatch.test.js';
 
 export default class {
   run() {
