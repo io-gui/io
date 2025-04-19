@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "paths": {
+      "io-gui": ["../io-gui"],
+      "io-menus": ["../io-menus"],
+      "io-colors": ["../io-colors"],
+      "io-navigation": ["../io-navigation"],
+      "io-sliders": ["../io-sliders"],
+      "io-inputs": ["../io-inputs"],
+      "io-markdown": ["../io-markdown"],
+      "io-editors": ["../io-editors"],
+      "io-icons": ["../io-icons"]
+    }
+  },
+  "include": ["./src"]
+}

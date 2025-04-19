@@ -4,18 +4,18 @@ import strip from '@rollup/plugin-strip';
 import terser from '@rollup/plugin-terser';
 
 // const externals = [];
-const externals = ['io-gui', 'io-markdown', 'io-menus', 'io-inputs', 'io-icons', 'io-colors', 'io-extras', 'io-editors', 'io-sliders'];
+const externals = ['io-gui', 'io-markdown', 'io-menus', 'io-inputs', 'io-icons', 'io-colors', 'io-extras', 'io-editors', 'io-navigation', 'io-sliders'];
 
-export function makeBundleTarget(src, target) {
-
+export function makeBundleTarget(src, target, skipExternals = true) {
   const _externals = [...externals];
-
   externals.push(path.resolve(src));
 
   return {
     input: src,
     plugins: [
-      nodeResolve(),
+      nodeResolve({
+        moduleDirectories: ['node_modules', 'packages'],
+      }),
       strip({
         functions: [],
         labels: ['debug']
@@ -35,7 +35,7 @@ export function makeBundleTarget(src, target) {
       file: target,
       indent: '  '
     }],
-    external: _externals,
+    external: skipExternals ? _externals : [],
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);

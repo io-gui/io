@@ -15,6 +15,7 @@
     "clean:menus": "wireit",
     "clean:navigation": "wireit",
     "clean:sliders": "wireit",
+    "clean:monolith": "wireit",
     "lint": "wireit",
     "lint:gui": "wireit",
     "lint:colors": "wireit",
@@ -25,6 +26,7 @@
     "lint:menus": "wireit",
     "lint:navigation": "wireit",
     "lint:sliders": "wireit",
+    "lint:monolith": "wireit",
     "build": "wireit",
     "build:gui": "wireit",
     "build:colors": "wireit",
@@ -35,6 +37,7 @@
     "build:menus": "wireit",
     "build:navigation": "wireit",
     "build:sliders": "wireit",
+    "build:monolith": "wireit",
     "bundle": "wireit",
     "bundle:gui": "wireit",
     "bundle:colors": "wireit",
@@ -45,6 +48,7 @@
     "bundle:menus": "wireit",
     "bundle:navigation": "wireit",
     "bundle:sliders": "wireit",
+    "bundle:monolith": "wireit",
     "dev": "wireit",
     "dev:gui": "wireit",
     "dev:colors": "wireit",
@@ -55,6 +59,7 @@
     "dev:menus": "wireit",
     "dev:navigation": "wireit",
     "dev:sliders": "wireit",
+    "dev:monolith": "wireit",
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --watch",
     "serve": "wds --watch"
@@ -70,7 +75,8 @@
         "clean:markdown",
         "clean:menus",
         "clean:navigation",
-        "clean:sliders"
+        "clean:sliders",
+        "clean:monolith"
       ]
     },
     "clean:gui": {
@@ -100,6 +106,9 @@
     "clean:sliders": {
       "command": "rm -rf ./packages/io-sliders/build && rm -rf ./packages/io-sliders/bundle"
     },
+    "clean:monolith": {
+      "command": "rm -rf ./packages/io-monolith/build && rm -rf ./packages/io-monolith/bundle"
+    },
     "lint": {
       "dependencies": [
         "lint:gui",
@@ -110,7 +119,8 @@
         "lint:markdown",
         "lint:menus",
         "lint:navigation",
-        "lint:sliders"
+        "lint:sliders",
+        "lint:monolith"
       ]
     },
     "lint:gui": {
@@ -140,6 +150,9 @@
     "lint:sliders": {
       "command": "eslint -c ./packages/io-sliders/.eslintrc.js ./packages/io-sliders/src --fix"
     },
+    "lint:monolith": {
+      "command": "eslint -c ./packages/io-monolith/.eslintrc.js ./packages/io-monolith/src --fix"
+    },
     "build": {
       "dependencies": [
         "build:gui",
@@ -150,7 +163,8 @@
         "build:menus",
         "build:markdown",
         "build:navigation",
-        "build:editors"
+        "build:editors",
+        "build:monolith"
       ]
     },
     "build:gui": {
@@ -185,7 +199,7 @@
         "lint:inputs",
         "build:gui",
         "build:icons"
-      ] 
+      ]
     },
     "build:editors": {
       "command": "tsc --project ./packages/io-editors/tsconfig.json",
@@ -198,7 +212,7 @@
         "build:colors",
         "build:menus",
         "build:navigation"
-      ] 
+      ]
     },
     "build:markdown": {
       "command": "tsc --project ./packages/io-markdown/tsconfig.json",
@@ -224,7 +238,7 @@
         "clean:navigation",
         "lint:navigation",
         "build:gui",
-        "build:icons",  
+        "build:icons",
         "build:inputs",
         "build:menus",
         "build:markdown"
@@ -239,6 +253,22 @@
         "build:inputs"
       ]
     },
+    "build:monolith": {
+      "command": "tsc --project ./packages/io-monolith/tsconfig.json",
+      "dependencies": [
+        "clean:monolith",
+        "lint:monolith",
+        "build:gui",
+        "build:colors",
+        "build:icons",
+        "build:inputs",
+        "build:editors",
+        "build:markdown",
+        "build:menus",
+        "build:navigation",
+        "build:sliders"
+      ]
+    },
     "bundle": {
       "dependencies": [
         "clean",
@@ -250,7 +280,8 @@
         "bundle:markdown",
         "bundle:menus",
         "bundle:navigation",
-        "bundle:sliders"
+        "bundle:sliders",
+        "bundle:monolith"
       ]
     },
     "bundle:gui": {
@@ -307,6 +338,12 @@
         "build:sliders"
       ]
     },
+    "bundle:monolith": {
+      "command": "rollup -c ./packages/io-monolith/rollup.config.js && find ./packages/io-monolith/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-monolith/build/* ./packages/io-monolith/bundle && rm -rf ./packages/io-monolith/build && mv ./packages/io-monolith/bundle ./packages/io-monolith/build && ./node_modules/.bin/dts-bundle-generator -o packages/io-monolith/build/index.d.ts packages/io-monolith/build/index.d.ts",
+      "dependencies": [
+        "build:monolith"
+      ]
+    },
     "dev": {
       "dependencies": [
         "dev:gui",
@@ -317,7 +354,8 @@
         "dev:markdown",
         "dev:menus",
         "dev:navigation",
-        "dev:sliders"
+        "dev:sliders",
+        "dev:monolith"
       ]
     },
     "dev:gui": {
@@ -355,6 +393,10 @@
     "dev:sliders": {
       "command": "tsc -w --project ./packages/io-sliders/tsconfig.json",
       "service": true
+    },
+    "dev:monolith": {
+      "command": "tsc -w --project ./packages/io-monolith/tsconfig.json",
+      "service": true
     }
   },
   "repository": {
@@ -389,6 +431,7 @@
     "@web/test-runner-mocha": "^0.9.0",
     "chai": "^5.2.0",
     "dompurify": "^3.2.4",
+    "dts-bundle-generator": "^9.5.1",
     "eslint": "^9.21.0",
     "eslint-plugin-html": "^8.1.2",
     "globals": "^16.0.0",

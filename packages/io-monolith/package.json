@@ -1,0 +1,34 @@
+{
+  "name": "io-monolith",
+  "version": "2.0.0",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "Monolitic build of all Io-Gui packages.",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "/build",
+    "/src",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": true,
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["io","gui","iogui","io-gui","inspector","io-object","io-properties","io-monolith"],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT",
+  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-gui": "^2.0.0",
+    "io-inputs": "^2.0.0",
+    "io-menus": "^2.0.0",
+    "io-colors": "^2.0.0",
+    "io-sliders": "^2.0.0",
+    "io-navigation": "^2.0.0",
+    "io-markdown": "^2.0.0",
+    "io-editors": "^2.0.0",
+    "io-icons": "^2.0.0"
+  }
+}
