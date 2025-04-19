@@ -38,7 +38,7 @@ export class IoVector extends IoElement {
     `;
   }
 
-  @Property({})
+  @Property({type: Object})
   declare value: {x: number, y: number, z?: number, w?: number} | number[];
 
   @Property(1)
@@ -99,6 +99,9 @@ export class IoVector extends IoElement {
     debug: if (this.keys.find(k => ['0', '1', '2', '3', 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v'].indexOf(k) === -1)) {
       console.warn('IoVector: Unrecognized vector type!');
     }
+  }
+  valueMutated() {
+    this.debounce(this.changed);
   }
   changed() {
     const elements: Array<VDOMElement | null> = [];

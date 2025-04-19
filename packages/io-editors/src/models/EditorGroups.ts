@@ -1,17 +1,17 @@
-export class ObjectGroups {
+export class EditorGroups {
     constructor(prototypes: any) {
       for (let i = 0; i < prototypes.length; i++) {
-        this.registerObjectGroups(prototypes[i].ObjectGroups || {});
+        this.registerEditorGroups(prototypes[i].EditorGroups || {});
       }
     }
-    registerObjectGroups(groups: any) {
+    registerEditorGroups(groups: any) {
       for (const g in groups) {
         const self = this as any;
         self[g] = self[g] || [];
         self[g] = [...self[g], ...groups[g]];
       }
     }
-    getObjectGroups(object: any, customGroups: any, keys: any) {
+    getEditorGroups(object: any, customGroups: any, keys: any) {
       const prototypes = [];
 
       let proto = object.__proto__;

@@ -1,10 +1,10 @@
-import { IoElement, Property, Register, IoElementArgs, Node, span, AnyConstructor, div, ArgsWithBinding, VDOMElement } from 'io-gui';
-import { getEditorConfig, PropertyConfig } from '../models/EditorConfig';
+import { IoElement, Property, Register, IoElementArgs, Node, span, div, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { getEditorConfig, EditorConfig } from '../models/EditorConfig';
 
 export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
-  config?: Map<AnyConstructor, PropertyConfig[]>;
+  config?: EditorConfig;
   labeled?: boolean;
 }>;
 
@@ -22,14 +22,14 @@ export class IoPropertyEditor extends IoElement {
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
     }
-    :host > .io-row {
+    :host > .row {
       display: flex;
       flex-direction: row;
     }
-    :host > .io-row > span {
+    :host > .row > span {
       margin-top: calc(var(--io_spacing) + var(--io_borderWidth));
     }
-    :host > .io-row > span:after {
+    :host > .row > span:after {
       display: inline-block;
       padding-right: var(--io_spacing2);
       content: ':';
@@ -51,7 +51,7 @@ export class IoPropertyEditor extends IoElement {
   declare properties: string[];
 
   @Property({type: Map})
-  declare config: Map<AnyConstructor, PropertyConfig[]>;
+  declare config: EditorConfig;
 
   @Property(true)
   declare labeled: boolean;
@@ -68,6 +68,8 @@ export class IoPropertyEditor extends IoElement {
       const value = event.detail.value;
       const oldValue = event.detail.oldValue;
       this.value[prop] = value;
+
+
       if (!(this.value as Node)._isNode) {
         const detail = {object: this.value, property: prop, value: value, oldValue: oldValue};
         this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
@@ -92,7 +94,7 @@ export class IoPropertyEditor extends IoElement {
         const props = config[c]!.props as (IoElementArgs | undefined) || {};
         const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
-        elements.push(div({class: 'io-row'}, [
+        elements.push(div({class: 'row'}, [
           this.labeled ? span(c) : null,
           {name: tag, props: finalProps},
         ]));

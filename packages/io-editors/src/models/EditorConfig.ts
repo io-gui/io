@@ -1,11 +1,10 @@
-import { IoElement, IoGl, Theme, Color } from 'io-gui';
-import { AnyConstructor, VDOMElement } from 'io-gui';
+import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node } from 'io-gui';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 import { ioObject } from '../elements/IoObject';
 import { ioVector } from '../elements/IoVector';
-import { ioString, ioNumber, ioSwitch, ioInputBase } from 'io-inputs';
+import { ioString, ioNumber, ioSwitch, ioInputBase, ioField } from 'io-inputs';
 
 export type PropertyIdentifier = AnyConstructor | string | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
@@ -24,6 +23,11 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]],
   [Array, [
     [Number, ioNumber({step: 0.01})],
+  ]],
+  [Node, [
+    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'none', 'debounced', 'immediate',
+    ])})],
   ]],
   [IoElement, [
     ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
@@ -52,23 +56,23 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'light',
       'dark',
     ])})],
-    ['spacing2', ioInputBase()],
-    ['spacing3', ioInputBase()],
-    ['spacing5', ioInputBase()],
-    ['spacing8', ioInputBase()],
-    ['fieldHeight', ioInputBase()],
-    ['fieldHeight2', ioInputBase()],
-    ['fieldHeight3', ioInputBase()],
-    ['fieldHeight4', ioInputBase()],
-    ['fieldHeight5', ioInputBase()],
-    ['fieldHeight6', ioInputBase()],
-    ['fieldHeight7', ioInputBase()],
-    ['fieldHeight8', ioInputBase()],
-    ['fieldHeight9', ioInputBase()],
-    ['fieldHeight10', ioInputBase()],
-    ['fieldHeight11', ioInputBase()],
-    ['fieldHeight12', ioInputBase()],
-    ['borderRadius2', ioInputBase()],
+    ['spacing2', ioField({disabled: true})],
+    ['spacing3', ioField({disabled: true})],
+    ['spacing5', ioField({disabled: true})],
+    ['spacing8', ioField({disabled: true})],
+    ['fieldHeight', ioField({disabled: true})],
+    ['fieldHeight2', ioField({disabled: true})],
+    ['fieldHeight3', ioField({disabled: true})],
+    ['fieldHeight4', ioField({disabled: true})],
+    ['fieldHeight5', ioField({disabled: true})],
+    ['fieldHeight6', ioField({disabled: true})],
+    ['fieldHeight7', ioField({disabled: true})],
+    ['fieldHeight8', ioField({disabled: true})],
+    ['fieldHeight9', ioField({disabled: true})],
+    ['fieldHeight10', ioField({disabled: true})],
+    ['fieldHeight11', ioField({disabled: true})],
+    ['fieldHeight12', ioField({disabled: true})],
+    ['borderRadius2', ioField({disabled: true})],
     [Color, ioColorRgba()],
   ]]
 ]);

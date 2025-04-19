@@ -1,6 +1,6 @@
 import { Node, Register, IoElement, Property, Storage as $, div, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ioCollapsible } from 'io-navigation';
-import { ObjectGroups } from '../models/ObjectGroups';
+import { EditorGroups } from '../models/EditorGroups';
 import { ObjectWidgets } from '../models/ObjectWidgets';
 import { getEditorConfig } from '../models/EditorConfig';
 import { ioBreadcrumbs } from './IoBreadcrumbs';
@@ -153,7 +153,7 @@ export class IoInspector extends IoElement {
   _onChange() {
     const config = getEditorConfig(this.selected);
 
-    this._groups = this.__proto__._groups.getObjectGroups(this.selected, this.groups, Object.getOwnPropertyNames(config));
+    this._groups = this.__proto__._groups.getEditorGroups(this.selected, this.groups, Object.getOwnPropertyNames(config));
     this._widgets = this.__proto__._widgets.getObjectWidgets(this.selected, this.widgets);
 
     const uuid = this.uuid || genUUID(this.selected);
@@ -190,7 +190,7 @@ export class IoInspector extends IoElement {
     }
     this.template(elements);
   }
-  static get ObjectGroups() {
+  static get EditorGroups() {
     return {
       'Object|hidden': [/^_/],
       'Array|main': [/^[0-9]+$/],
@@ -211,7 +211,7 @@ export class IoInspector extends IoElement {
 
   Register(ioNodeConstructor: typeof Node) {
     super.Register(ioNodeConstructor);
-    Object.defineProperty(ioNodeConstructor.prototype, '_groups', {writable: true, value: new ObjectGroups(ioNodeConstructor.prototype._protochain.constructors)});
+    Object.defineProperty(ioNodeConstructor.prototype, '_groups', {writable: true, value: new EditorGroups(ioNodeConstructor.prototype._protochain.constructors)});
     Object.defineProperty(ioNodeConstructor.prototype, '_widgets', {writable: true, value: new ObjectWidgets(ioNodeConstructor.prototype._protochain.constructors)});
   }
 }
