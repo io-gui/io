@@ -1,17 +1,22 @@
 import { Register, IoElement, div } from 'io-gui';
-import { ioInputBase, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
+import { ioInputBase, ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 
 export class IoInputsDemo extends IoElement {
   static get Style() {
     return /* css */`
+      :host {
+        margin: var(--io_spacing2);
+      }
       :host .row {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        overflow: hidden;
-        margin-bottom: var(--io_spacing);
+        padding: var(--io_spacing);
+        margin: var(--io_spacing);
+        margin-bottom: 0;
+        background-color: var(--io_bgColorDimmed);
       }
-      :host .row > *:not(:last-child) {
+      :host .row > * {
         margin-right: var(--io_spacing);
       }
     `;
@@ -26,20 +31,22 @@ export class IoInputsDemo extends IoElement {
   init() {
     this.template([
       div({class: 'row'}, [
-        ioInputBase({value: this.bind('string')}),
-        ioInputBase({value: this.bind('string'), appearance: 'outset'}),
-        ioInputBase({value: this.bind('string'), appearance: 'inset'}),
-        ioInputBase({value: this.bind('string'), appearance: 'neutral'}),
+        ioField({value: this.bind('string'), disabled: true}),
+        ioField({value: this.bind('string')}),
+        ioField({value: this.bind('string'), appearance: 'outset'}),
+        ioField({value: this.bind('string'), appearance: 'inset'}),
+        ioField({value: this.bind('string'), appearance: 'neutral', label: 'Label', icon: 'io:io', title: 'Title'}),
       ]),
       div({class: 'row'}, [
-        ioInputBase({value: this.bind('string'), invalid: true}),
+        ioInputBase({value: this.bind('string'), disabled: true}),
+        ioInputBase({value: this.bind('string'), invalid: this.bind('boolean')}),
         ioInputBase({value: this.bind('string'), class: 'green'}),
         ioInputBase({value: this.bind('string'), selected: this.bind('boolean')}),
-        ioInputBase({icon: 'io:io'}),
+        ioInputBase({label: 'icon', icon: 'io:io'}), // TODO
       ]),
       div({class: 'row'}, [
         ioString({value: this.bind('string'), placeholder: 'io-string'}),
-        ioString({value: this.bind('string'), placeholder: 'io-string', live: true}),
+        ioString({value: this.bind('string'), placeholder: 'io-string', label: 'live', live: true}),
       ]),
       div({class: 'row'}, [
         ioNumber({value: this.bind('number')}),
@@ -47,11 +54,12 @@ export class IoInputsDemo extends IoElement {
         ioNumber({conversion: 2, value: this.bind('number')}),
       ]),
       div({class: 'row'}, [
-        ioBoolean({value: this.bind('boolean'), true: 'io:io', false: 'io:io_logo'}),
-        ioBoolean({value: this.bind('boolean')}),
+        ioBoolean({value: this.bind('boolean'), true: 'io:circle_fill', false: 'io:circle_fill_checked'}),
+        ioBoolean({value: this.bind('boolean'), icon: 'io:io'}),
       ]),
       div({class: 'row'}, [
         ioSwitch({value: this.bind('boolean')}),
+        ioSwitch({value: this.bind('boolean'), icon: 'io:io'}),
       ]),
       div({class: 'row'}, [
         ioButton({label: 'Button', icon: 'io:check'}),

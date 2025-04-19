@@ -57,26 +57,23 @@ export class IoNumber extends IoInputBase {
   @Property({value: false, type: Boolean})
   declare ladder: boolean;
 
-  @Property({value: 'number', type: String, reflect: true})
-  declare type: string;
-
-  @Property({value: 'textbox', type: String})
-  declare role: string;
-
   @Property({value: 'pattern="[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
   @Property({value: 'numeric', type: String, reflect: true})
   declare inputmode: string;
 
-  @Property({value: 'inset', type: String, reflect: true})
-  declare appearance: 'flush' | 'inset' | 'outset';
-
   @Property({value: '', type: String, reflect: true})
   declare placeholder: string;
 
   @Property({value: 'false', type: String, reflect: true})
   declare spellcheck: string;
+
+  @Property({value: 'inset', type: String, reflect: true})
+  declare appearance: 'neutral' | 'inset' | 'outset';
+
+  @Property({value: 'textbox', type: String})
+  declare role: string;
 
   private _pointer = '';
 
@@ -214,6 +211,7 @@ export class IoNumber extends IoInputBase {
     this.changed();
   }
   disabledChanged() {
+    super.disabledChanged();
     if (this.disabled) {
       this.removeAttribute('contenteditable');
     } else {

@@ -1,10 +1,15 @@
-import { Register, Property, VDOMElement, ArgsWithBinding, IoElement, IoElementArgs } from 'io-gui';
+import { Register, Property, VDOMElement, ArgsWithBinding, IoElement, IoElementArgs, span } from 'io-gui';
+import { ioIcon } from 'io-icons';
 
 export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
-  appearance?: 'flush' | 'inset' | 'outset' | 'neutral';
+  value?: any;
+  icon?: string;
+  label?: string;
   selected?: boolean;
   invalid?: boolean;
   disabled?: boolean;
+  tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+  appearance?: 'neutral' | 'inset' | 'outset';
 }>;
 
 @Register
@@ -27,6 +32,17 @@ export class IoField extends IoElement {
       :host {
         @apply --ioField;
       }
+      :host :not(:last-child) {
+        margin-right: var(--io_spacing2);
+      }
+      :host span {
+        display: inline-block;
+        height: var(--io_lineHeight);
+        line-height: var(--io_lineHeight);
+        font-size: var(--io_fontSize);
+        color: var(--io_color);
+        vertical-align: top;
+      }
       :host[appearance=neutral] {
         color: var(--io_color);
         background-color: transparent;
@@ -35,10 +51,12 @@ export class IoField extends IoElement {
         border-color: var(--io_borderColorInset);
         padding-top: calc(var(--io_spacing) + 0.05em);
         padding-bottom: calc(var(--io_spacing) - 0.05em);
+        box-shadow: var(--io_shadowInset);
       }
       :host[appearance=outset] {
         border-color: var(--io_borderColorOutset);
         background-image: var(--io_gradientOutset);
+        box-shadow: var(--io_shadowOutset);
       }
       :host.red,
       :host[invalid] {
@@ -68,8 +86,15 @@ export class IoField extends IoElement {
       }
     `;
   }
-  @Property({value: 'neutral', reflect: true})
-  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
+
+  @Property({value: '', type: String})
+  declare value: any;
+
+  @Property({type: String, value: ''})
+  declare icon: string;
+
+  @Property({type: String, value: '', reflect: true})
+  declare label: string;
 
   @Property({value: false, type: Boolean, reflect: true})
   declare selected: boolean;
@@ -80,14 +105,54 @@ export class IoField extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
+  @Property({value: '0', type: String, reflect: true})
+  declare tabindex: string;
+
+  @Property({value: 'neutral', reflect: true})
+  declare appearance: 'neutral' | 'inset' | 'outset';
+
   constructor(args: IoFieldArgs = {}) { super(args); }
+
+  labelChanged() {
+    if (this.label) {
+      this.setAttribute('aria-label', this.label);
+    } else {
+      this.removeAttribute('aria-label');
+    }
+  }
+
+  selectedChanged() {
+    if (this.selected) {
+      this.setAttribute('aria-selected', 'true');
+    } else {
+      this.removeAttribute('aria-selected');
+    }
+  }
+
+  invalidChanged() {
+    if (this.invalid) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
+  }
 
   disabledChanged() {
     if (this.disabled) {
-      this.setAttribute('aria-disabled', this.disabled);
+      this.tabindex = '';
+      this.setAttribute('aria-disabled', 'true');
     } else {
+      this.tabindex = '0';
       this.removeAttribute('aria-disabled');
     }
+  }
+
+  changed() {
+    this.template([
+      this.icon ? ioIcon({value: this.icon}) : null,
+      this.label ? span(this.label) : null,
+      this.value !== undefined ? span(String(this.value)) : null,
+    ]);
   }
 
 }

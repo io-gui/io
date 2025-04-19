@@ -31,26 +31,23 @@ export class IoString extends IoInputBase {
       }
     `;
   }
-  @Property(false)
-  declare live: boolean;
-
-  @Property('')
+  @Property({value: '', type: String})
   declare value: string;
 
-  @Property({value: 'text', type: String})
-  declare type: string;
-
-  @Property('textbox')
-  declare role: string;
-
-  @Property({value: 'inset', reflect: true})
-  declare appearance: 'flush' | 'inset' | 'outset';
+  @Property({value: false, type: Boolean})
+  declare live: boolean;
 
   @Property({value: '', type: String, reflect: true})
   declare placeholder: string;
 
   @Property({value: 'false', type: String, reflect: true})
   declare spellcheck: string;
+
+  @Property({value: 'inset', reflect: true})
+  declare appearance: 'neutral' | 'inset' | 'outset';
+
+  @Property('textbox')
+  declare role: string;
 
   constructor(args: IoStringArgs = {}) { super(args); }
 
@@ -140,7 +137,15 @@ export class IoString extends IoInputBase {
   init() {
     this.disabledChanged();
   }
+  valueChanged() {
+    if (typeof this.value !== 'string') {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
+  }
   disabledChanged() {
+    super.disabledChanged();
     if (this.disabled) {
       this.removeAttribute('contenteditable');
     } else {
@@ -149,13 +154,6 @@ export class IoString extends IoInputBase {
   }
   changed() {
     this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
-  }
-  valueChanged() {
-    if (typeof this.value !== 'string') {
-      this.setAttribute('aria-invalid', 'true');
-    } else {
-      this.removeAttribute('aria-invalid');
-    }
   }
 }
 export const ioString = IoString.vConstructor;

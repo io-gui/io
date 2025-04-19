@@ -4,14 +4,11 @@ import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
 
 export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
   action?: Function;
-  pressed?: boolean;
 }>;
 
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
- *
- * <io-element-demo element="io-button" properties='{"label": "Button", "action": "null"}'></io-element-demo>
  **/
 @Register
 export class IoButton extends IoInputBase {
@@ -23,9 +20,6 @@ export class IoButton extends IoInputBase {
         padding-right: calc(2 * var(--io_spacing));
         color: var(--io_colorStrong);
       }
-      :host[pressed] {
-        border-color: var(--io_borderColorInset);
-      }
       :host > io-icon {
         margin-right: var(--io_spacing);
       }
@@ -34,18 +28,14 @@ export class IoButton extends IoInputBase {
       }
     `;
   }
+  @Property({value: undefined, type: undefined, reflect: false})
+  declare value: any;
 
   @Property(undefined)
   declare action?: Function;
 
-  @Property({value: undefined, type: undefined, reflect: false})
-  declare value: any;
-
   @Property({value: 'outset', type: String, reflect: true})
-  declare appearance: 'flush' | 'inset' | 'outset' | 'neutral';
-
-  @Property({value: false, type: Boolean, reflect: true})
-  declare pressed: boolean;
+  declare appearance: 'inset' | 'outset' | 'neutral';
 
   @Property('button')
   declare role: string;
@@ -53,16 +43,8 @@ export class IoButton extends IoInputBase {
   constructor(args: IoButtonArgs = {}) { super(args); }
 
   onPointerdown(event: PointerEvent) {
+    event.preventDefault();
     super.onPointerdown(event);
-    this.pressed = true;
-  }
-  onPointerleave(event: PointerEvent) {
-    super.onPointerleave(event);
-    this.pressed = false;
-  }
-  onPointerup(event: PointerEvent) {
-    super.onPointerup(event);
-    this.pressed = false;
   }
   onKeydown(event: KeyboardEvent) {
     super.onKeydown(event);
@@ -74,7 +56,7 @@ export class IoButton extends IoInputBase {
     super.onKeyup(event);
     this.pressed = false;
   }
-  onClick() {
+  onClick(event: MouseEvent) {
     if (typeof this.action === 'function') this.action(this.value);
     this.dispatchEvent('io-button-clicked', {value: this.value}, true);
   }

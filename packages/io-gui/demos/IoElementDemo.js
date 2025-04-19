@@ -57,7 +57,7 @@ export class IoElementDemo extends IoElement {
     :host io-property-editor > div.io-row:last-child {
       border-bottom: none;
     }
-    :host io-property-editor > div.io-row > io-text {
+    :host io-property-editor > div.io-row > span {
       width: 130px;
       text-align: right;
     }

@@ -1,6 +1,4 @@
-
-import { Register, Property, VDOMElement, ArgsWithBinding, span } from 'io-gui';
-import { ioIcon } from 'io-icons';
+import { Property, Register, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoField, IoFieldArgs } from './IoField';
 
 // let focusBacktrack = new WeakMap();
@@ -12,12 +10,7 @@ import { IoField, IoFieldArgs } from './IoField';
 // }
 
 export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
-  tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
-  name?: string;
-  label?: string;
-  value?: any;
-  icon?: string;
-  type?: string;
+  pressed?: boolean;
 }>;
 
 @Register
@@ -34,33 +27,12 @@ export class IoInputBase extends IoField {
         background-color: var(--io_bgColorInput);
         transition: background-color 0.25s;
       }
-      :host span {
-        display: inline-block;
-        height: var(--io_lineHeight);
-        line-height: var(--io_lineHeight);
-        font-size: var(--io_fontSize);
-        color: var(--io_color);
+      :host[pressed] {
+        border-color: var(--io_borderColorInset);
+        box-shadow: var(--io_shadowInset);
       }
     `;
   }
-
-  @Property({value: '0', type: String, reflect: true})
-  declare tabindex: string;
-
-  @Property({value: '', type: String, reflect: true})
-  declare name: string;
-
-  @Property({type: String, value: '', reflect: true})
-  declare label: string;
-
-  @Property({value: ''})
-  declare value: any;
-
-  @Property({type: String, value: '', reflect: true})
-  declare icon: string;
-
-  @Property({value: '', type: String, reflect: true})
-  declare type: string;
 
   static get Listeners() {
     return {
@@ -70,6 +42,9 @@ export class IoInputBase extends IoField {
       'click': 'onClick',
     };
   }
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare pressed: boolean;
 
   constructor(args: IoInputBaseArgs = {}) { super(args); }
 
@@ -87,6 +62,7 @@ export class IoInputBase extends IoField {
     this.addEventListener('pointermove', this.onPointermove);
     this.addEventListener('pointerleave', this.onPointerleave);
     this.addEventListener('pointerup', this.onPointerup);
+    this.pressed = true;
   }
   onPointermove(event: PointerEvent) {}
 
@@ -94,14 +70,15 @@ export class IoInputBase extends IoField {
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
+    this.pressed = false;
   }
   onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
-    this.focus();
+    this.pressed = false;
   }
-  onClick() {
+  onClick(event?: MouseEvent) {
     this.dispatchEvent('io-input-base-clicked', {value: this.value}, true);
   }
   onKeydown(event: KeyboardEvent) {
@@ -258,13 +235,6 @@ export class IoInputBase extends IoField {
       selection.removeAllRanges();
       selection.addRange(range);
     }
-  }
-  changed() {
-    this.template([
-      this.icon ? ioIcon(this.icon) : null,
-      this.label ? span(this.label) : null,
-      this.value !== undefined ? span(String(this.value)) : null,
-    ]);
   }
 }
 export const ioInputBase = IoInputBase.vConstructor;

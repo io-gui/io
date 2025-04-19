@@ -10,13 +10,19 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
 
 /**
  * Input element for `Boolean` data type displayed as text.
- * It can be configured to display custom `true` or `false` string or icon depending on its `value`.
- *
- * <io-element-demo element="io-boolean" properties='{"value": true, "true": "true", "false": "false"}'></io-element-demo>
+ * It can be configured to display custom `true` or `false` strings.
  **/
 @Register
 export class IoBoolean extends IoInputBase {
   static vConstructor: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+
+  static get Style() {
+    return /* css */`
+      :host {
+        padding: var(--io_spacing);
+      }
+    `;
+  }
 
   @Property({value: false, type: Boolean, reflect: true})
   declare value: boolean;
@@ -28,13 +34,14 @@ export class IoBoolean extends IoInputBase {
   declare false: string;
 
   @Property({value: 'checkbox', type: String, reflect: true})
-  declare type: string;
-
-  @Property({value: 'switch', type: String})
   declare role: string;
 
   constructor(args: IoBooleanArgs = {}) { super(args); }
 
+  onPointerdown(event: PointerEvent) {
+    event.preventDefault();
+    super.onPointerdown(event);
+  }
   onClick() {
     this.toggle();
     this.dispatchEvent('io-boolean-clicked', {value: this.value}, true);
@@ -43,16 +50,19 @@ export class IoBoolean extends IoInputBase {
     this.inputValue(!this.value);
   }
   init() {
+    this.valueChanged();
     this.changed();
   }
-  changed() {
-    this.setAttribute('value', Boolean(this.value));
+  valueChanged() {
+    this.invalid = typeof this.value !== 'boolean';
     this.setAttribute('aria-checked', String(!!this.value));
-    this.setAttribute('aria-invalid', typeof this.value !== 'boolean' ? 'true' : false);
-    const label = this.value ? this.true : this.false;
+  }
+  changed() {
+    const value = this.value ? this.true : this.false;
     this.template([
-      this.icon ? ioIcon({value: this.icon, stroke: this.stroke}) : null,
-      label ? label.includes('io:') ? ioIcon({value: label}) : span(label) : null
+      this.icon ? ioIcon({value: this.icon}) : null,
+      this.label ? span(this.label + ':') : null,
+      value ? value.includes('io:') ? ioIcon({value: value}) : span(value) : null
     ]);
   }
 }

@@ -6,17 +6,26 @@ import { ioSlider } from 'io-sliders';
 export class IoEditorsDemo extends IoElement {
   static get Style() {
     return /* css */`
-      :host .row {
+      :host {
+        margin: var(--io_spacing2);
+      }
+      :host .row,
+      :host .column {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        overflow: hidden;
-        margin-bottom: var(--io_spacing);
+        padding: var(--io_spacing2);
+        margin: var(--io_spacing2);
+        margin-bottom: 0;
+        background-color: var(--io_bgColorDimmed);
       }
-      :host .row > *:not(:last-child) {
-        margin-right: var(--io_spacing);
+      :host .column {
+        flex-direction: column;
       }
-      :host > .row > io-property-editor > .io-row > io-text {
+      :host .row > * {
+        margin-right: var(--io_spacing2);
+      }
+      :host > .row > io-property-editor > .io-row > span {
         min-width: 5em;
         text-align: right;
       }

@@ -16,7 +16,7 @@ export class IoNumberLadderStep extends IoInputBase {
         display: inline-block;
         cursor: ew-resize;
         text-align: center;
-        background-color: var(--io_bgColorStrong);
+        background-color: var(--io_bgColorStrong) !important;
         color: var(--io_color);
         align-self: stretch;
         touch-action: none;
@@ -40,9 +40,6 @@ export class IoNumberLadderStep extends IoInputBase {
 
   @Property({value: '', type: String})
   declare label: string;
-
-  @Property({value: 'number', type: String, reflect: true})
-  declare type: string;
 
   @Property({value: 'spinbutton', type: String})
   declare role: string;

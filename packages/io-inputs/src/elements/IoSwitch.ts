@@ -1,10 +1,9 @@
-import { Register } from 'io-gui';
+import { span, Register } from 'io-gui';
 import { IoBoolean } from './IoBoolean';
+import { ioIcon } from 'io-icons';
 
 /**
  * Input element for `Boolean` data type displayed as switch.
- *
- * <io-element-demo element="io-switch" properties='{"value": true}'></io-element-demo>
  **/
 @Register
 export class IoSwitch extends IoBoolean {
@@ -12,15 +11,18 @@ export class IoSwitch extends IoBoolean {
     return /* css */`
       :host {
         position: relative;
-        width: calc(1.5 * var(--io_fieldHeight));
         overflow: visible;
+        padding: var(--io_spacing) var(--io_spacing);
       }
-      :host:before {
+      :host > span {
+        position: relative;
+        width: calc(1.5 * var(--io_fieldHeight));
+      }
+      :host > span:before {
         content: '';
         box-sizing: border-box;
         position: absolute;
         visibility: visible;
-        top: var(--io_spacing);
         left: 0;
         width: 100%;
         height: var(--io_lineHeight);
@@ -31,12 +33,12 @@ export class IoSwitch extends IoBoolean {
         box-shadow: var(--io_shadowInset);
         transition: background-color 0.4s;
       }
-      :host:after {
+      :host > span:after {
         content: '';
         box-sizing: border-box;
         position: absolute;
         visibility: visible;
-        top: calc(var(--io_borderWidth) + var(--io_spacing));
+        top: var(--io_borderWidth);
         left: var(--io_borderWidth);
         height: calc(var(--io_lineHeight) - calc(2 * var(--io_borderWidth)));
         width: calc(var(--io_lineHeight) - calc(2 * var(--io_borderWidth)));
@@ -48,31 +50,26 @@ export class IoSwitch extends IoBoolean {
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
       }
-      :host[value]:after {
+      :host[value] > span:after {
         background-color: var(--io_bgColorBlue);
         left: calc(100% - calc(var(--io_lineHeight) - var(--io_borderWidth)));
       }
-      :host:focus:before {
+      :host:focus > span:before {
         border-color: var(--io_colorBlue);
         outline: 1px auto var(--io_colorBlue);
         outline: 1px auto -webkit-focus-ring-color;
       }
-      :host:focus {
+      :host > span:focus {
         outline: 0;
         border-color: transparent;
       }
     `;
   }
-  init() {
-    this.setAttribute('aria-checked', String(!!this.value));
-  }
-  valueChanged() {
-    this.setAttribute('aria-checked', String(!!this.value));
-    if (typeof this.value !== 'boolean') {
-      this.setAttribute('aria-invalid', 'true');
-    } else {
-      this.removeAttribute('aria-invalid');
-    }
+  changed() {
+    this.template([
+      this.icon ? ioIcon({value: this.icon, stroke: this.stroke}) : null,
+      span()
+    ]);
   }
 }
 export const ioSwitch = IoSwitch.vConstructor;
