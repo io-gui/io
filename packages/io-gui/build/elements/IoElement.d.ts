@@ -5,6 +5,7 @@ export type IoElementArgs = NodeArgs & ArgsWithBinding<{
     style?: Record<string, string>;
     class?: string;
     title?: string;
+    name?: string;
     id?: string;
     role?: string;
 }>;
@@ -47,6 +48,7 @@ export declare class IoElement extends IoElement_base {
     $: Record<string, any>;
     class: string;
     title: string;
+    name: string;
     id: string;
     role: string;
     constructor(args?: IoElementArgs);

@@ -38,6 +38,7 @@ export declare class IoVector extends IoElement {
     _onNumberPointerDown(event: PointerEvent): void;
     _onNumberValueInput(event: CustomEvent): void;
     valueChanged(): void;
+    valueMutated(): void;
     changed(): void;
     getSlotted(): VDOMElement | null;
 }

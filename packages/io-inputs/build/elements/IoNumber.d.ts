@@ -23,13 +23,12 @@ export declare class IoNumber extends IoInputBase {
     min: number;
     max: number;
     ladder: boolean;
-    type: string;
-    role: string;
     pattern: string;
     inputmode: string;
-    appearance: 'flush' | 'inset' | 'outset';
     placeholder: string;
     spellcheck: string;
+    appearance: 'neutral' | 'inset' | 'outset';
+    role: string;
     private _pointer;
     constructor(args?: IoNumberArgs);
     onBlur(event: FocusEvent): void;

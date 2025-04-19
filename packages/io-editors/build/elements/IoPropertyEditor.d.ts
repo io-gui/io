@@ -1,9 +1,9 @@
-import { IoElement, IoElementArgs, AnyConstructor, ArgsWithBinding, VDOMElement } from 'io-gui';
-import { PropertyConfig } from '../models/EditorConfig';
+import { IoElement, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { EditorConfig } from '../models/EditorConfig';
 export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
     value?: Record<string, any> | any[];
     properties?: string[];
-    config?: Map<AnyConstructor, PropertyConfig[]>;
+    config?: EditorConfig;
     labeled?: boolean;
 }>;
 /**
@@ -15,7 +15,7 @@ export declare class IoPropertyEditor extends IoElement {
     reactivity: string;
     value: Record<string, any> | any[];
     properties: string[];
-    config: Map<AnyConstructor, PropertyConfig[]>;
+    config: EditorConfig;
     labeled: boolean;
     _onValueInput(event: CustomEvent): void;
     valueMutated(): void;

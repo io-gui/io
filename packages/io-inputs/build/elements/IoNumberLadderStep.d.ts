@@ -9,7 +9,6 @@ export declare class IoNumberLadderStep extends IoInputBase {
     static get Style(): string;
     value: number;
     label: string;
-    type: string;
     role: string;
     constructor(args?: IoNumberLadderStepArgs);
     onKeydown(event: KeyboardEvent): void;

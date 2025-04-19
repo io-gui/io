@@ -29,7 +29,7 @@ export declare class IoInspector extends IoElement {
     changed(): void;
     _onChangedThrottled(): void;
     _onChange(): void;
-    static get ObjectGroups(): {
+    static get EditorGroups(): {
         'Object|hidden': RegExp[];
         'Array|main': RegExp[];
         'HTMLElement|main': (string | RegExp)[];
