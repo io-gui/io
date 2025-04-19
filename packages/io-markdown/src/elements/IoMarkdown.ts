@@ -2,7 +2,7 @@ import { Register, IoElement, Property, ThemeSingleton, IoElementArgs, ArgsWithB
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
-import { DARK_THEME, LIGHT_THEME } from './IoMarkdownTheme.js';
+import { MD_DARK_THEME, MD_LIGHT_THEME } from './IoMarkdownTheme.js';
 import hljs from '../../lib/highlight.min.js';
 
 const marked = new Marked(
@@ -215,9 +215,9 @@ document.head.appendChild(styleElement);
 
 function setTheme() {
   if (ThemeSingleton.themeID === 'dark') {
-    styleElement.innerHTML = DARK_THEME;
+    styleElement.innerHTML = MD_DARK_THEME;
   } else {
-    styleElement.innerHTML = LIGHT_THEME;
+    styleElement.innerHTML = MD_LIGHT_THEME;
   }
 }
 setTheme();

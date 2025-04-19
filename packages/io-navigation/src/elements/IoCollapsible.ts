@@ -1,6 +1,5 @@
 import { IoElement, VDOMElement, Register, Property, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
-import { ioIcon } from 'io-icons';
 
 export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
   elements?: VDOMElement[];
@@ -89,8 +88,7 @@ export class IoCollapsible extends IoElement {
   changed() {
     this.template([
       // TODO: consider implementing caching
-      this.icon ? ioIcon({value: this.icon}) : null,
-      ioBoolean({true: this.label, false: this.label, value: this.bind('expanded')}),
+      ioBoolean({icon: this.icon, true: this.label, false: this.label, value: this.bind('expanded')}),
       div({class: 'io-collapsible-content'}, this.expanded ? this.elements : []),
     ]);
   }

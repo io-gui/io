@@ -23,6 +23,7 @@ export type IoElementArgs = NodeArgs & ArgsWithBinding<{
   style?: Record<string, string>;
   class?: string;
   title?: string;
+  name?: string;
   id?: string;
   role?: string;
 }>;
@@ -45,7 +46,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
       :host:focus {
         border-color: var(--io_colorBlue);
         outline: 1px auto var(--io_colorBlue);
-        outline: 1px auto -webkit-focus-ring-color;
       }
       :host[aria-invalid] {
         border: var(--io_borderFail);
@@ -60,6 +60,9 @@ export class IoElement extends NodeMixin(HTMLElement) {
 
   @Property({value: '', type: String, reflect: true})
   declare title: string;
+
+  @Property({value: '', type: String, reflect: true})
+  declare name: string;
 
   @Property({value: '', type: String, reflect: true})
   declare id: string;

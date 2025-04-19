@@ -1,4 +1,4 @@
-export const LIGHT_THEME = /* css */`
+export const MD_LIGHT_THEME = /* css */`
 /* a11y-light theme */
 /* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */
 /* @author: ericwbailey */
@@ -64,7 +64,7 @@ export const LIGHT_THEME = /* css */`
 }
 `;
 
-export const DARK_THEME = /* css */`
+export const MD_DARK_THEME = /* css */`
 /* a11y-dark theme */
 /* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */
 /* @author: ericwbailey */

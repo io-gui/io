@@ -213,7 +213,7 @@ const compositeVariables = /* css */`
     --io_gradientOutset: linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%);
     --io_gradientInset: linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%);
     --io_shadow: 2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor);
-    --io_shadowInset: 1px 1px 1px inset var(--io_shadowColor);
+    --io_shadowInset: 0.75px 0.75px 2px inset var(--io_shadowColor);
     --io_shadowOutset: 1px 1px 2px var(--io_shadowColor);
   }
 `;

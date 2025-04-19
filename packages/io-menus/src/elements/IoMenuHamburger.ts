@@ -24,7 +24,7 @@ export class IoMenuHamburger extends IoMenuItem {
     this.setAttribute('selected', this.item.selected);
     this.setAttribute('hidden', this.item.hidden);
     this.disabled = this.item.disabled; // TODO: reconsider this
-    this.template([ioIcon({value: 'menu:hamburger'})]);
+    this.template([ioIcon({value: 'io:hamburger'})]);
   }
 }
 export const ioMenuHamburger = IoMenuHamburger.vConstructor;

@@ -376,13 +376,13 @@ export class IoMenuItem extends IoInputBase {
     this.setAttribute('hidden', this.item.hidden);
     this.setAttribute('hasmore', this.hasmore);
     this.template([
-      this.hasmore && this.direction === 'left' ? ioIcon({value: 'menu:triangle_left', class: 'hasmore'}) : null,
-      this.hasmore && this.direction === 'up' ? ioIcon({value: 'menu:triangle_up', class: 'hasmore'}) : null,
+      this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
+      this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
       icon ? ioIcon({value: icon}) : null,
       this.item.label ? span({class: 'label'}, this.item.label) : null,
       this.item.hint ? span({class: 'hint'}, this.item.hint) : null,
-      this.hasmore && this.direction === 'right' ? ioIcon({value: 'menu:triangle_right', class: 'hasmore'}) : null,
-      this.hasmore && this.direction === 'down' ? ioIcon({value: 'menu:triangle_down', class: 'hasmore'}) : null,
+      this.hasmore && this.direction === 'right' ? ioIcon({value: 'io:triangle_right', class: 'hasmore'}) : null,
+      this.hasmore && this.direction === 'down' ? ioIcon({value: 'io:triangle_down', class: 'hasmore'}) : null,
     ]);
   }
 }
