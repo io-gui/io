@@ -17,7 +17,7 @@
   "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
   "keywords": ["io","gui","iogui","io-gui","inspector","io-object","io-properties","io-monolith"],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT",
+  "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {

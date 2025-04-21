@@ -410,7 +410,7 @@
     "io-gui"
   ],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT",
+  "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {
     "url": "https://github.com/iogui/iogui/issues"
   },
