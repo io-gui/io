@@ -1,10 +1,11 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
-import { ioField } from 'io-inputs';
-
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement, div } from 'io-gui';
+import { ioPropertyLink } from './IoPropertyLink';
+import { ioButton, ioString } from 'io-inputs';
 export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
-  value?: Record<string, any> | any[];
-  selected?: any;
-  options?: Record<string, any> | any[];
+  value?: Object;
+  selected?: Object;
+  crumbs?: Array<Object>;
+  search?: string;
 }>;
 
 /**
@@ -19,89 +20,102 @@ export class IoBreadcrumbs extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      flex: 0 0 auto;
+      overflow: hidden;
+    }
+    :host > div {
+      display: flex;
       flex-direction: row;
-      align-self: stretch;
-      justify-self: stretch;
-      border-radius: var(--io_borderRadius);
+      align-items: center;
+      flex: 1 1 auto;
       border: var(--io_border);
       border-color: var(--io_borderColorInset);
-      padding: var(--io_spacing);
+      border-radius: var(--io_borderRadius);
       background-color: var(--io_bgColorInput);
-      overflow-x: hidden;
+      overflow: hidden;
     }
-    :host > io-input-base {
+    :host > io-button {
       padding-left: var(--io_spacing);
       padding-right: var(--io_spacing);
-      color: var(--io_colorBlue);
+      flex: 0 0 auto;
     }
-    :host > io-input-base:hover {
-      text-decoration: underline;
+    :host:not([search]) > io-button.clear-button {
+      display: none;
     }
-    :host > io-input-base:first-of-type {
-      overflow: visible;
+    :host > div > io-property-link:last-of-type {
+      flex-shrink: 0;
+    }
+    :host > div > io-property-link:last-of-type > span {
+      flex-shrink: 0;
       text-overflow: clip;
-      margin-left: var(--io_spacing);
     }
-    :host > io-input-base:last-of-type {
-      overflow: visible;
-      text-overflow: clip;
-      margin-right: var(--io_spacing);
-    }
-    :host > io-input-base:not(:first-of-type):before {
+    :host > div > io-property-link:not(:first-of-type):before {
       content: '>';
-      margin: 0 var(--io_spacing);
-      padding: 0 var(--io_spacing) 0 0;
-      opacity: 0.25;
+      padding-right: calc(var(--io_fontSize) / 2);
+      color: var(--io_colorStrong);
+      opacity: 0.5;
+    }
+    :host > .search-input {
+      flex: 0 0 auto;
+      overflow: hidden;
+      min-width: calc(var(--io_fieldHeight) + var(--io_borderWidth) * 2);
+      height: calc(var(--io_fieldHeight) + var(--io_borderWidth) * 2);
+    }
+    :host > .search-input:empty::before {
+      content: '🔍';
+      font-size: calc(var(--io_lineHeight) / 2);
     }
     `;
   }
   @Property({type: Object})
-  declare value: Record<string, any> | any[];
+  declare value: Object;
 
-  @Property(null)
-  declare selected: any;
+  @Property({type: Object})
+  declare selected: Object;
 
   @Property({type: Array})
-  declare options: any[];
+  declare crumbs: Array<Object>;
 
-  _onClick(event: CustomEvent) {
-    this.setProperty('selected', this.options[event.detail.value]);
-  }
+  @Property({type: String, reflect: true})
+  declare search: string;
+
   valueChanged() {
-    this.options.length = 0;
-    // TODO: check for memory leaks
-    this.options.push(this.value);
+    this.crumbs.length = 0;
+    this.crumbs.push(this.value);
   }
   selectedChanged() {
-    const index = this.options.indexOf(this.selected);
+    const index = this.crumbs.indexOf(this.selected);
     if (index !== -1) {
-      // TODO: check for memory leaks
-      this.options.length = index + 1;
+      this.crumbs.length = index + 1;
     } else {
-      // TODO: check for memory leaks
-      this.options.push(this.selected);
+      this.crumbs.push(this.selected);
     }
+  }
+  onClearSearch() {
+    this.search = '';
   }
   changed() {
     const elements = [];
-    for (let i = 0; i < this.options.length; i++) {
-      elements.push(ioField({
-        class: 'select',
-        '@item-clicked': this._onClick,
-      }, getLabel(this.options[i] as any)));
+    if (this.crumbs.length > 1) {
+      elements.push(ioButton({
+        icon: 'io:arrow_left',
+        class: 'back-button',
+        value: this.crumbs[this.crumbs.length - 2],
+      }));
     }
+    const crumbs = div();
+    crumbs.children = [];
+    for (let i = Math.max(0, this.crumbs.length - 2); i < this.crumbs.length; i++) {
+      crumbs.children.push(ioPropertyLink({
+        value: this.crumbs[i],
+        showName: i === this.crumbs.length - 1,
+      }));
+    }
+    elements.push(
+      crumbs,
+      ioButton({icon: 'io:close', class: 'clear-button', action: this.onClearSearch}),
+      ioString({$: 'search', class: 'search-input', value: this.bind('search'), live: true}),
+    );
     this.template(elements);
   }
 }
 export const ioBreadcrumbs = IoBreadcrumbs.vConstructor;
-
-function getLabel(object: any): string {
-  if (object instanceof Array) {
-    return String(`${object.constructor.name} (${object.length})`);
-  } else if (typeof object === 'object') {
-    return String(`${object.constructor.name}`);
-  } else {
-    return String(object);
-  }
-}

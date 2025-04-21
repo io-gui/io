@@ -50,21 +50,21 @@ export class IoElementDemo extends IoElement {
       border-top: none;
       padding: 0 var(--io_spacing2);
     }
-    :host io-property-editor > div.io-row {
+    :host io-property-editor > div.row {
       border-bottom: var(--io_border);
       padding: var(--io_spacing2) 0;
     }
-    :host io-property-editor > div.io-row:last-child {
+    :host io-property-editor > div.row:last-child {
       border-bottom: none;
     }
-    :host io-property-editor > div.io-row > span {
+    :host io-property-editor > div.row > span {
       width: 130px;
       text-align: right;
     }
-    :host io-property-editor > div.io-row > io-number {
+    :host io-property-editor > div.row > io-number {
       min-width: 60px;
     }
-    :host io-property-editor > div.io-row > io-string {
+    :host io-property-editor > div.row > io-string {
       min-width: 120px;
     }
     `;

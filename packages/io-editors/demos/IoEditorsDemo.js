@@ -2,32 +2,40 @@ import { Register, IoElement, div } from 'io-gui';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioPropertyEditor, ioObject, ioVector, ioMatrix, ioInspector } from 'io-editors';
 import { ioSlider } from 'io-sliders';
-
+import { ioString, ioNumber } from 'io-inputs';
 export class IoEditorsDemo extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
+        flex-direction: row;
         margin: var(--io_spacing2);
       }
-      :host .row,
-      :host .column {
+      :host > .column {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        padding: var(--io_spacing2);
-        margin: var(--io_spacing2);
-        margin-bottom: 0;
-        background-color: var(--io_bgColorDimmed);
+        margin: 0;
+        margin-bottom: var(--io_lineHeight);
+        margin-left: var(--io_lineHeight);
       }
       :host .column {
         flex-direction: column;
       }
-      :host .row > * {
-        margin-right: var(--io_spacing2);
+      :host > .column > * {
+        margin-bottom: var(--io_lineHeight);
       }
-      :host > .row > io-property-editor > .io-row > span {
-        min-width: 5em;
-        text-align: right;
+      :host io-property-editor.array {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 0;
+        max-width: 20rem;
+      }
+      :host io-property-editor.array > .row {
+        padding: 0;
+        margin: 0;
+        margin: var(--io_spacing) var(--io_spacing) 0 0;
       }
     `;
   }
@@ -38,8 +46,17 @@ export class IoEditorsDemo extends IoElement {
         string: 'hello',
         boolean: true,
         object: {
-          prop1: 1,
-          prop2: 2,
+          name: 'nested object',
+          number: 1,
+          string: 'world',
+          object: {
+            name: 'another nested object',
+            mixedArray: [false, 2, 'three'],
+            object: {
+              name: 'the last object',
+              boolean: true,
+            },
+          },
         },
         array: [...Array(32).keys()],
         vector2: [0, 1],
@@ -53,30 +70,61 @@ export class IoEditorsDemo extends IoElement {
   }
   init() {
     this.template([
-      div({class: 'row'}, [
+      ioInspector({
+        value: this.object,
+        // TODO: this.object.object displays broken "number" slider. Investigate!
+        groups: new Map([
+          [Object, {
+            'Object Properties': ['object', 'array', 'mixedArray'],
+            'Vectors and Matrices': [/vector/i, /matrix/i],
+          }],
+        ]),
+        config: new Map([
+          [Object, [
+            [Number, ioSlider({step: 0.1})],
+            [Array, ioPropertyEditor({labeled: false, class: 'array', config: new Map([
+              [Array, [
+                [Number, ioNumber({live: true})],
+              ]]
+            ])})],
+            ['vector2', ioVector({linkable: true})],
+            ['vector3', ioVector({linkable: true})],
+            ['vector4', ioVector({linkable: true})],
+            ['matrix2', ioMatrix()],
+            ['matrix3', ioMatrix()],
+            ['matrix4', ioMatrix()],
+          ]]
+        ]),
+      }),
+      div({class: 'column'}, [
         ioPropertyEditor({
           value: this.object,
-        }),
-        ioPropertyEditor({
-          value: this.object,
+          properties: ['number', 'string', 'boolean', 'object'],
           config: new Map([
             [Object, [
-              [Number, ioSlider({step: 0.1})],
-              ['vector2', ioVector()],
-              ['vector3', ioVector()],
-              ['vector4', ioVector()],
-              ['matrix2', ioMatrix()],
-              ['matrix3', ioMatrix()],
-              ['matrix4', ioMatrix()],
+              [String, ioString({live: true})],
+              [Number, ioNumber({live: true})],
             ]]
           ]),
         }),
         ioPropertyEditor({
           value: this.object,
+          style: {width: '10rem'},
           properties: ['number', 'string', 'boolean'],
+          config: new Map([
+            [Object, [
+              [String, ioString({live: true})],
+              [Number, ioSlider({step: 0.1})],
+            ]]
+          ]),
+        }),
+        ioPropertyEditor({
+          value: this.object,
+          properties: ['number', 'string'],
           // widget: ioInputBase({label: 'Widget Element'}),
           config: new Map([
             [Object, [
+              [String, ioString({live: true})],
               [Number, ioOptionMenu({options: new MenuOptions().fromJSON([
                 {label: 'zero', value: 0},
                 {label: 'half', value: 0.5},
@@ -86,10 +134,7 @@ export class IoEditorsDemo extends IoElement {
           ]),
         }),
       ]),
-      div({class: 'row'}, [
-        ioObject({
-          value: this.object,
-        }),
+      div({class: 'column'}, [
         ioObject({
           value: this.object,
           expanded: true,
@@ -104,24 +149,18 @@ export class IoEditorsDemo extends IoElement {
             [Number, ioSlider({step: 0.1})],
           ]),
         }),
-      ]),
-      div({class: 'row'}, [
-        ioInspector({
+        ioObject({
           value: this.object,
-          // TODO: this.object.object displays broken "number" slider. Investigate!
-          groups: {
-            'Object|properties': ['number', 'string', 'boolean', 'object', 'array'],
-            'Object|vectors and matrices': [/vector/i, /matrix/i],
-          },
+          label: 'Object (All Properties)',
           config: new Map([
             [Object, [
-              ['vector2', ioVector({linkable: true})],
-              ['vector3', ioVector({linkable: true})],
-              ['vector4', ioVector({linkable: true})],
-              ['matrix2', ioMatrix()],
-              ['matrix3', ioMatrix()],
-              ['matrix4', ioMatrix()],
-              [Number, ioSlider({step: 0.1})],
+              [Array, ioPropertyEditor({labeled: false, class: 'array'})],
+              ['vector2', ioPropertyEditor({labeled: false, class: 'array'})],
+              ['vector3', ioPropertyEditor({labeled: false, class: 'array'})],
+              ['vector4', ioPropertyEditor({labeled: false, class: 'array'})],
+              ['matrix2', ioPropertyEditor({labeled: false, class: 'array'})],
+              ['matrix3', ioPropertyEditor({labeled: false, class: 'array'})],
+              ['matrix4', ioPropertyEditor({labeled: false, class: 'array'})],
             ]]
           ]),
         }),

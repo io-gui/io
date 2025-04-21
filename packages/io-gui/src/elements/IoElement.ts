@@ -47,9 +47,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
         border-color: var(--io_colorBlue);
         outline: 1px auto var(--io_colorBlue);
       }
-      :host[aria-invalid] {
-        border: var(--io_borderFail);
-      }
     `;
   }
 

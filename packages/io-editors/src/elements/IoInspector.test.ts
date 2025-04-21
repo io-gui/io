@@ -7,8 +7,8 @@ export default class {
     document.body.appendChild(this.element as unknown as HTMLElement);
   }
   reset() {
-    this.element.value = {};
-    this.element.config = {};
+    // this.element.value = {};
+    // this.element.config = {};
   }
   run() {
     describe('IoInspector', () => {

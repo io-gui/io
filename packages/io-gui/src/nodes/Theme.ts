@@ -175,7 +175,7 @@ export const DARK_THEME: ThemeVars = {
   bgColorDimmed: new Color(0.25, 0.25, 0.25, 1),
   bgColorRed: new Color(0.7, 0.2, 0.1, 1),
   bgColorGreen: new Color(0.1, 0.5, 0.2, 1),
-  bgColorBlue: new Color(0, 0.3, 0.65, 1),
+  bgColorBlue: new Color(0.4, 0.3, 0.65, 1),
   bgColorInput: new Color(0.02, 0.02, 0.02, 1),
 
   color: new Color(0.6, 0.6, 0.6, 1),

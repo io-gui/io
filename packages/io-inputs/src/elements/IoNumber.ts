@@ -4,6 +4,7 @@ import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
 
 export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
   value?: number;
+  live?: boolean;
   conversion?: number;
   step?: number;
   min?: number;
@@ -41,6 +42,9 @@ export class IoNumber extends IoInputBase {
 
   @Property({value: 0, type: Number})
   declare value: number;
+
+  @Property({value: false, type: Boolean})
+  declare live: boolean;
 
   @Property({value: 1, type: Number})
   declare conversion: number;
@@ -190,10 +194,17 @@ export class IoNumber extends IoInputBase {
     }
   }
   onKeyup(event: KeyboardEvent) {
+    // TODO: depricate which
     if (event.which === 17) { // ctrl
       this._expandLadder();
     } else if (event.which === 27 || event.which === 13 || event.which === 32) { // esc || enter || space
       IoOverlaySingleton.expanded = false;
+    }
+
+    if (this.live) {
+      const carretPosition = this.getCaretPosition();
+      this._setFromTextNode();
+      this.setCaretPosition(carretPosition);
     }
   }
   _setFromTextNode() {
@@ -203,8 +214,16 @@ export class IoNumber extends IoInputBase {
     valueNumber = Math.round(valueNumber / this.step) * this.step;
     const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)));
     valueNumber = Number(valueNumber.toFixed(d));
-    if (!isNaN(valueNumber)) this.inputValue(valueNumber);
-    else this.textNode = 'NaN';
+    if (!isNaN(valueNumber)) {
+      this._properties.get('invalid')!.value = false;
+      this.removeAttribute('invalid');
+      this.removeAttribute('aria-invalid');
+      this.inputValue(valueNumber);
+    } else {
+      this._properties.get('invalid')!.value = true;
+      this.setAttribute('invalid', 'true');
+      this.setAttribute('aria-invalid', 'true');
+    }
   }
   init() {
     this.disabledChanged();
@@ -224,8 +243,10 @@ export class IoNumber extends IoInputBase {
     this.setAttribute('aria-valuemax', this.max);
     this.setAttribute('aria-valuestep', this.step);
     if (typeof this.value !== 'number' || isNaN(this.value)) {
+      this.setAttribute('invalid', 'true');
       this.setAttribute('aria-invalid', 'true');
     } else {
+      this.removeAttribute('invalid');
       this.removeAttribute('aria-invalid');
     }
     let value = this.value;

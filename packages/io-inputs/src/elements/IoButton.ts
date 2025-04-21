@@ -1,4 +1,4 @@
-import { Register, Property, span, ArgsWithBinding } from 'io-gui';
+import { Register, Property, span, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
 
@@ -12,12 +12,11 @@ export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoButton extends IoInputBase {
+  static vConstructor: (arg0?: IoButtonArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
         text-align: center;
-        padding-left: calc(2 * var(--io_spacing));
-        padding-right: calc(2 * var(--io_spacing));
         color: var(--io_colorStrong);
       }
       :host > io-icon {

@@ -40,7 +40,6 @@ export class IoField extends IoElement {
         height: var(--io_lineHeight);
         line-height: var(--io_lineHeight);
         font-size: var(--io_fontSize);
-        color: var(--io_color);
         vertical-align: top;
       }
       :host[appearance=neutral] {

@@ -78,9 +78,7 @@ export class IoInputBase extends IoField {
     this.removeEventListener('pointerup', this.onPointerup);
     this.pressed = false;
   }
-  onClick(event?: MouseEvent) {
-    this.dispatchEvent('io-input-base-clicked', {value: this.value}, true);
-  }
+  onClick(event?: MouseEvent) {}
   onKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();

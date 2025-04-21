@@ -21,12 +21,12 @@ export class IoVector extends IoElement {
     return /* css */`
       :host {
         display: flex;
-        flex: 0 1 auto;
+        flex: 1 1 auto;
         min-width: var(--io_fieldHeight5);
         width: var(--io_fieldHeight8);
       }
       :host > io-number {
-        flex: 1 1 100%;
+        flex: 1 1 auto;
       }
       :host > *:not(:last-child) {
         margin-right: var(--io_spacing);

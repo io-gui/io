@@ -1,12 +1,13 @@
-import { Register, IoElement, Property, AnyConstructor, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
-import { PropertyConfig } from '../models/EditorConfig';
 import { ioPropertyEditor } from './IoPropertyEditor';
-
+import { EditorConfig } from '../utils/EditorConfig';
+import { EditorGroups } from '../utils/EditorGroups';
 export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
-  config?: Map<AnyConstructor, PropertyConfig[]>;
+  config?: EditorConfig;
+  groups?: EditorGroups;
   labeled?: boolean;
   label?: string;
   expanded?: boolean;
@@ -21,17 +22,14 @@ export class IoObject extends IoElement {
   static get Style() {
     return /* css */`
     :host {
-      /* Panel */
       display: flex;
-      flex-direction: column; */
-      padding-left: var(--io_spacing);
-      padding-right: var(--io_spacing);
+      flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
+      border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
     }
     :host > io-boolean {
-      padding-left: 0;
-      padding-right: 0;
+      padding: var(--io_spacing) var(--io_spacing2);
       align-self: stretch;
     }
     :host > io-boolean:before {
@@ -41,6 +39,11 @@ export class IoObject extends IoElement {
     }
     :host > io-boolean[value]:before {
       content: "▾";
+    }
+    :host > io-property-editor {
+      margin: var(--io_spacing);
+      border: var(--io_border);
+      border-color: var(--io_borderColorInset);
     }
     `;
   }
@@ -52,7 +55,10 @@ export class IoObject extends IoElement {
   declare properties: string[];
 
   @Property({type: Map})
-  declare config: Map<AnyConstructor, PropertyConfig[]>;
+  declare config: EditorConfig;
+
+  @Property({type: Map})
+  declare groups: EditorGroups;
 
   @Property(true)
   declare labeled: boolean;
@@ -80,6 +86,7 @@ export class IoObject extends IoElement {
         value: this.value,
         properties: this.properties,
         config: this.config,
+        groups: this.groups,
         labeled: this.labeled,
       }));
     }

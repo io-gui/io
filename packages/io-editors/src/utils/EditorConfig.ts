@@ -2,11 +2,11 @@ import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node } from
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
-import { ioObject } from '../elements/IoObject';
 import { ioVector } from '../elements/IoVector';
 import { ioString, ioNumber, ioSwitch, ioInputBase, ioField } from 'io-inputs';
+import { ioObject } from '../elements/IoObject';
 
-export type PropertyIdentifier = AnyConstructor | string | null | undefined;
+type PropertyIdentifier = AnyConstructor | string | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
 export type PropertyConfigRecord = Record<string, VDOMElement>;
