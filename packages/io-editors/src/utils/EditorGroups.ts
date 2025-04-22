@@ -5,19 +5,113 @@ export type PropertyGroups = Record<string, Array<PropertyIdentifier>>;
 export type PropertyGroupsRecord = Record<string, Array<string>>;
 export type EditorGroups = Map<AnyConstructor, PropertyGroups>
 
+export function getAllPropertyNames(obj: object) {
+  const allProps: string[] = [];
+  let curr = obj;
+  do {
+    const debugProps: any[] = [];
+    const props = Object.getOwnPropertyNames(curr);
+    props.forEach((prop) => {
+      if (prop !== '$' && prop !== 'textNode') {
+        if (allProps.indexOf(prop) === -1 && typeof (obj as any)[prop] !== 'function') {
+          allProps.push(prop);
+          debugProps.push(prop);
+        }
+      }
+    });
+    console.log(curr.constructor);
+    console.log(JSON.stringify(debugProps, null, 2));
+    if (curr.constructor === Node) break;
+    //@ts-ignore no-cond-assign
+  } while ((curr = Object.getPrototypeOf(curr)));
+  return allProps;
+}
+
 const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
   [Object, {
-    hidden: [/^_/],
+    Hidden: [new RegExp(/^_/)],
   }],
-  [Array, {
-    main: [/^[0-9]+$/],
+  [Node, {
+    Main: [
+      'nodeName','nodeValue','textContent',
+    ],
+    Hierarchy: [
+      'isConnected','ownerDocument','parentNode','parentElement','childNodes','firstChild','lastChild','previousSibling',
+      'nextSibling',
+    ],
+    Hidden: [
+      'ELEMENT_NODE','ATTRIBUTE_NODE','TEXT_NODE','CDATA_SECTION_NODE','ENTITY_REFERENCE_NODE','ENTITY_NODE',
+      'PROCESSING_INSTRUCTION_NODE','COMMENT_NODE','DOCUMENT_NODE','DOCUMENT_TYPE_NODE','DOCUMENT_FRAGMENT_NODE',
+      'NOTATION_NODE','DOCUMENT_POSITION_DISCONNECTED','DOCUMENT_POSITION_PRECEDING','DOCUMENT_POSITION_FOLLOWING',
+      'DOCUMENT_POSITION_CONTAINS','DOCUMENT_POSITION_CONTAINED_BY','DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC',
+      'baseURI', 'nodeType'
+    ],
+  }],
+  [CharacterData, {
+    Main: [
+      'data','length',
+    ],
+    Hierarchy: [
+      'previousElementSibling','nextElementSibling',
+    ],
+  }],
+  [Text, {
+    Main: [
+      'wholeText',
+    ],
+    Hierarchy: [
+      'assignedSlot',
+    ],
+  }],
+  [Element, {
+    Main: [
+      'localName','tagName','id','className','classList','slot','attributes','innerHTML','outerHTML','role',
+    ],
+    Layout: [
+      'scrollTop','scrollLeft','scrollWidth','scrollHeight','clientTop', 'clientLeft','clientWidth','clientHeight','currentCSSZoom'
+    ],
+    Hidden: [
+      'ariaAtomic','ariaAutoComplete','ariaBusy','ariaBrailleLabel','ariaBrailleRoleDescription','ariaChecked','ariaColCount',
+      'ariaColIndex','ariaColSpan','ariaCurrent','ariaDescription','ariaDisabled','ariaExpanded','ariaHasPopup','ariaHidden',
+      'ariaInvalid','ariaKeyShortcuts','ariaLabel','ariaLevel','ariaLive','ariaModal','ariaMultiLine','ariaMultiSelectable',
+      'ariaOrientation','ariaPlaceholder','ariaPosInSet','ariaPressed','ariaReadOnly','ariaRelevant','ariaRequired',
+      'ariaRoleDescription','ariaRowCount','ariaRowIndex','ariaRowSpan','ariaSelected','ariaSetSize','ariaSort','ariaValueMax',
+      'ariaValueMin','ariaValueNow','ariaValueText','ariaColIndexText','ariaRowIndexText','ariaActiveDescendantElement',
+      'ariaControlsElements','ariaDescribedByElements','ariaDetailsElements','ariaErrorMessageElements','ariaFlowToElements',
+      'ariaLabelledByElements','onbeforecopy','onbeforecut','onbeforepaste','onsearch','onfullscreenchange',
+      'onfullscreenerror','onwebkitfullscreenchange','onwebkitfullscreenerror','namespaceURI','prefix'
+    ],
+    Hierarchy: [
+      'part','shadowRoot','children','firstElementChild','lastElementChild', 'childElementCount','previousElementSibling',
+      'nextElementSibling','assignedSlot','elementTiming',
+    ],
   }],
   [HTMLElement, {
-    main: ['localName', 'tagName', 'nodeName', /class/i, /attribute/i],
-    hidden: [/^on/, /^[A-Z0-9_]*$/, 'childElementCount'],
-    content: [/content/i, /inner/i, /outer/i],
-    display: [/width/i, /height/i, /top/i, /left/i, /scroll/i, /style/i],
-    hierarchy: [/parent/i, /child/i, /element/i, /root/i, /slot/i, /sibling/i, /document/i],
+    Main: [
+      'title','hidden','innerText','outerText','dataset','nonce','autofocus','tabIndex','style','attributeStyleMap',
+    ],
+    Input: [
+      'lang','translate','dir','inert','accessKey','draggable','writingSuggestions','spellcheck','autocapitalize','editContext',
+      'contentEditable','enterKeyHint','isContentEditable','inputMode','virtualKeyboardPolicy',
+    ],
+    Offset: [
+      'offsetParent','offsetTop','offsetLeft','offsetWidth','offsetHeight'
+    ],
+    Hidden: [
+      'onbeforexrselect','onabort','onbeforeinput','onbeforematch','onbeforetoggle','onblur','oncancel','oncanplay',
+      'oncanplaythrough','onchange','onclick','onclose','oncontentvisibilityautostatechange','oncontextlost','oncontextmenu',
+      'oncontextrestored','oncuechange','ondblclick','ondrag','ondragend','ondragenter','ondragleave','ondragover','ondragstart',
+      'ondrop','ondurationchange','onemptied','onended','onerror','onfocus','onformdata','oninput','oninvalid','onkeydown',
+      'onkeypress','onkeyup','onload','onloadeddata','onloadedmetadata','onloadstart','onmousedown','onmouseenter','onmouseleave',
+      'onmousemove','onmouseout','onmouseover','onmouseup','onmousewheel','onpause','onplay','onplaying','onprogress',
+      'onratechange','onreset','onresize','onscroll','onsecuritypolicyviolation','onseeked','onseeking','onselect','onslotchange',
+      'onstalled','onsubmit','onsuspend','ontimeupdate','ontoggle','onvolumechange','onwaiting','onwebkitanimationend',
+      'onwebkitanimationiteration','onwebkitanimationstart','onwebkittransitionend','onwheel','onauxclick','ongotpointercapture',
+      'onlostpointercapture','onpointerdown','onpointermove','onpointerrawupdate','onpointerup','onpointercancel','onpointerover',
+      'onpointerout','onpointerenter','onpointerleave','onselectstart','onselectionchange','onanimationend','onanimationiteration',
+      'onanimationstart','ontransitionrun','ontransitionstart','ontransitionend','ontransitioncancel','oncopy','oncut','onpaste',
+      'oncommand','onscrollend','onscrollsnapchange','onscrollsnapchangin','onscrollsnapchanging','popover'
+    ],
   }],
 ]);
 
@@ -28,7 +122,7 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
   }
 
   const aggregatedGroups: PropertyGroups = {
-    main: [],
+    Main: [],
   };
 
   function aggregateGroups(editorGroups: EditorGroups) {
@@ -38,11 +132,11 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
           aggregatedGroups[g] = aggregatedGroups[g] || [];
           aggregatedGroups[g].push(...groups[g]);
           // Remove duplicate identifiers that exist in other groups.
-          for (const og in aggregatedGroups) {
-            if (og !== g) {
+          for (const ag in aggregatedGroups) {
+            if (ag !== g) {
               for (const identifier of groups[g]) {
-                if (aggregatedGroups[og].includes(identifier)) {
-                  aggregatedGroups[og].splice(aggregatedGroups[og].indexOf(identifier), 1);
+                if (aggregatedGroups[ag].includes(identifier)) {
+                  aggregatedGroups[ag].splice(aggregatedGroups[ag].indexOf(identifier), 1);
                 }
               }
             }
@@ -56,27 +150,48 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
   aggregateGroups(editorGroups);
 
   const groupsRecord: PropertyGroupsRecord = {
-    main: [],
+    Main: [],
   };
 
-  for (const key of Object.keys(object)) {
+
+  for (const key of getAllPropertyNames(object)) {
     let included = false;
-    for (const g in aggregatedGroups) {
-      const identifiers = aggregatedGroups[g];
-      for (const identifier of identifiers) {
-        const reg = new RegExp(identifier);
-        if (reg.exec(key)) {
-          groupsRecord[g] = groupsRecord[g] || [];
+    for (const g of Object.keys(aggregatedGroups)) {
+      groupsRecord[g] = groupsRecord[g] || [];
+      for (const identifier of aggregatedGroups[g]) {
+        if (identifier === key) {
+          groupsRecord[g].push(key);
+          included = true;
+          continue;
+        } else if (identifier instanceof RegExp && identifier.test(key)) {
           groupsRecord[g].push(key);
           included = true;
         }
       }
     }
     if (!included) {
-      groupsRecord.main.push(key);
+      groupsRecord.Main.push(key);
     }
   }
   // TODO: make sure no property belongs to multiple groups.
-
   return groupsRecord;
+}
+
+export function registerEditorGroups(constructor: AnyConstructor, groups: PropertyGroups) {
+  const existingGroups = editorGroupsSingleton.get(constructor) || {};
+  for (const group in groups) {
+    existingGroups[group] = existingGroups[group] || [];
+    existingGroups[group].push(...groups[group]);
+    // Remove duplicate identifiers that exist in other groups.
+    for (const g in existingGroups) {
+      if (g !== group) {
+        for (const identifier of groups[group]) {
+          if (existingGroups[g].includes(identifier)) {
+            existingGroups[g].splice(existingGroups[g].indexOf(identifier), 1);
+          }
+        }
+      }
+    }
+  }
+  editorGroupsSingleton.set(constructor, existingGroups);
 }

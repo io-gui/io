@@ -280,10 +280,17 @@ export class Theme extends Node {
     }
     this.setProperties(values);
   }
+
   onPropertyMutated(event: CustomEvent) {
     super.onPropertyMutated(event);
     this.changed();
     this.dispatchEvent('object-mutated', {object: this});
+  }
+  fontSizeChanged() {
+    this.lineHeight = Math.max(this.fontSize, this.lineHeight);
+  }
+  lineHeightChanged() {
+    this.fontSize = Math.min(this.lineHeight, this.fontSize);
   }
   changed() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth);

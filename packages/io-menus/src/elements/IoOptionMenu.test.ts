@@ -32,8 +32,8 @@ export default class {
         // expect(element.textContent).to.equal('1 ▾');
         // this.reset();
       });
-      it('has tabindex attribute', () => {
-        // expect(element.getAttribute('tabindex')).to.equal('0');
+      it('has tabIndex attribute', () => {
+        // expect(element.getAttribute('tabIndex')).to.equal('0');
       });
       it('has a11y attributes', () => {
         // expect(element.getAttribute('role')).to.equal('button');

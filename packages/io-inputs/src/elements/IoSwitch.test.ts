@@ -11,11 +11,11 @@ export default class {
       it('has default values', () => {
         expect(this.element.value).to.equal(false);
       });
-      it('has tabindex attribute', () => {
-        expect(this.element.getAttribute('tabindex')).to.equal('0');
+      it('has tabIndex attribute', () => {
+        expect(this.element.getAttribute('tabIndex')).to.equal('0');
       });
       it('has a11y attributes', () => {
-        expect(this.element.getAttribute('role')).to.equal('switch');
+        expect(this.element.getAttribute('role')).to.equal('checkbox');
         expect(this.element.getAttribute('aria-label')).to.equal(null);
       });
       it('has value attribute when value is true', () => {

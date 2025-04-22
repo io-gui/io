@@ -31,14 +31,14 @@ export class IoInputsDemo extends IoElement {
   init() {
     this.template([
       div({class: 'row'}, [
-        ioField({value: this.bind('string'), disabled: true}),
+        ioField({value: this.bind('string'), inert: true}),
         ioField({value: this.bind('string')}),
         ioField({value: this.bind('string'), appearance: 'outset'}),
         ioField({value: this.bind('string'), appearance: 'inset'}),
         ioField({value: this.bind('string'), appearance: 'neutral', label: 'Label', icon: 'io:io', title: 'Title'}),
       ]),
       div({class: 'row'}, [
-        ioInputBase({value: this.bind('string'), disabled: true}),
+        ioInputBase({value: this.bind('string'), inert: true}),
         ioInputBase({value: this.bind('string'), invalid: this.bind('boolean')}),
         ioInputBase({value: this.bind('string'), class: 'green'}),
         ioInputBase({value: this.bind('string'), selected: this.bind('boolean')}),

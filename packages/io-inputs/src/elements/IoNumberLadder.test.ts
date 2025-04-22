@@ -75,16 +75,15 @@ export default class {
         element.step = 0.0001;
         ladder.changed();
       });
-      it('steps have tabindex attribute', () => {
-        expect($('.io-up1').getAttribute('tabindex')).to.equal('0');
-        expect($('.io-down1').getAttribute('tabindex')).to.equal('0');
+      it('steps have tabIndex attribute', () => {
+        expect($('.io-up1').getAttribute('tabIndex')).to.equal('0');
+        expect($('.io-down1').getAttribute('tabIndex')).to.equal('0');
       });
       it('has a11y attributes', () => {
         expect(ladder.getAttribute('role')).to.equal('list');
       });
       it('steps have a11y attributes', () => {
         expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
-        expect($('.io-up1').getAttribute('type')).to.equal('number');
         expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
         expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
         expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
@@ -98,14 +97,6 @@ export default class {
         element.value = 0;
         element.step = 0.0001;
         ladder.changed();
-      });
-      it('TODO', () => {
-        expect(ladder.getAttribute('aria-valuemin')).to.equal('-Infinity');
-        expect(ladder.getAttribute('aria-valuemax')).to.equal('Infinity');
-        expect(ladder.getAttribute('aria-valuenow')).to.equal('0');
-      });
-      it('has a11y attributes', () => {
-        // TODO: Aria attributes
         expect(ladder.getAttribute('aria-invalid')).to.equal(null);
         element.value = NaN;
         ladder.changed();

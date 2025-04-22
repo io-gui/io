@@ -13,7 +13,7 @@ export default class {
         expect(element.max).to.equal(1);
       });
       it('has correct default attributes', () => {
-        expect(element.getAttribute('tabindex')).to.equal('0');
+        expect(element.getAttribute('tabIndex')).to.equal('0');
         expect(element.getAttribute('contenteditable')).to.equal(null);
       });
       it('has correct default innerHTML', () => {

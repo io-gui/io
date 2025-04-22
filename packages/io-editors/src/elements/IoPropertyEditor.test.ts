@@ -48,7 +48,7 @@ export default class {
         //   positive: '',
         //   role: 'textbox',
         //   spellcheck: 'false',
-        //   tabindex: '0',
+        //   tabIndex: '0',
         //   type: 'number',
         //   value: '0.5'},
         // '0.5'));
@@ -58,7 +58,7 @@ export default class {
         //   appearance: 'inset',
         //   role: 'textbox',
         //   spellcheck: 'false',
-        //   tabindex: '0',
+        //   tabIndex: '0',
         //   type: 'text',
         //   value: 'hello'},
         // 'hello'));

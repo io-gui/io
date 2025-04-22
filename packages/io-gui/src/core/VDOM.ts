@@ -8,7 +8,9 @@ export type VDOMElement = {
   children?: Array<VDOMElement | null> | string
 }
 
-const attributes = ['tabindex', 'contenteditable', 'spellcheck', 'autocomplete', 'autocorrect', 'autocapitalize'];
+const attributes = ['tabIndex', 'contenteditable', 'spellcheck', 'autocomplete', 'autocorrect', 'autocapitalize'];
+
+//TODO: Make sure that properties are reset to defaults if they are not in the props when the element is updated after initial applyNativeElementProps.
 
 /**
  * Sets native element's properties and attributes.

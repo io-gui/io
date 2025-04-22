@@ -3,11 +3,14 @@ import { ioBoolean } from 'io-inputs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
 import { EditorGroups } from '../utils/EditorGroups';
+import { EditorWidgets } from '../utils/EditorWidgets';
+
 export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
   config?: EditorConfig;
   groups?: EditorGroups;
+  widgets?: EditorWidgets;
   labeled?: boolean;
   label?: string;
   expanded?: boolean;
@@ -60,6 +63,9 @@ export class IoObject extends IoElement {
   @Property({type: Map})
   declare groups: EditorGroups;
 
+  @Property({type: Map})
+  declare widgets: EditorWidgets;
+
   @Property(true)
   declare labeled: boolean;
 
@@ -87,6 +93,7 @@ export class IoObject extends IoElement {
         properties: this.properties,
         config: this.config,
         groups: this.groups,
+        widgets: this.widgets,
         labeled: this.labeled,
       }));
     }

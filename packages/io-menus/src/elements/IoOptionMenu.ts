@@ -29,8 +29,6 @@ export class IoOptionMenu extends IoElement {
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorDimmed);
       background-image: var(--io_gradientOutset);
-      /* padding-left: calc(2 * var(--io_spacing)); */
-      /* padding-right: calc(2 * var(--io_spacing)); */
       text-align: left;
     }
     :host > io-menu-item {
@@ -58,16 +56,17 @@ export class IoOptionMenu extends IoElement {
 
   constructor(args: IoOptionMenuArgs = {}) { super(args); }
 
-  _onLeafChanged(event: CustomEvent) {
+  _onLastChanged(event: CustomEvent) {
+    if (this._disposed) return;
     this.inputValue(event.detail.value);
   }
 
   optionsChanged(change: Change) {
     if (change.oldValue && change.oldValue !== dummyOptions) {
-      change.oldValue.removeEventListener('last-changed', this._onLeafChanged);
+      change.oldValue.removeEventListener('last-changed', this._onLastChanged);
     }
     if (change.value) {
-      change.value.addEventListener('last-changed', this._onLeafChanged);
+      change.value.addEventListener('last-changed', this._onLastChanged);
     }
     const selectedItem = this.options.getItem(this.value);
     if (selectedItem) selectedItem.selected = true;

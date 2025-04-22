@@ -14,7 +14,7 @@ export default class {
         expect(element.value).to.equal(false);
         expect(element.true).to.equal('true');
         expect(element.false).to.equal('false');
-        expect(element.role).to.equal('switch');
+        expect(element.role).to.equal('checkbox');
         expect(element._properties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
@@ -38,7 +38,7 @@ export default class {
         });
       });
       it('has correct default attributes', () => {
-        expect(element.getAttribute('role')).to.equal('switch');
+        expect(element.getAttribute('role')).to.equal('checkbox');
         expect(element.getAttribute('value')).to.equal(null);
         expect(element.getAttribute('aria-checked')).to.equal('false');
       });

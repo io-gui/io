@@ -2,7 +2,8 @@ import { Register, IoElement, Property, VDOMElement, IoElementArgs, ArgsWithBind
 import { ioBreadcrumbs } from './IoBreadcrumbs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
-import { EditorGroups } from '../utils/EditorGroups';
+import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
+import { EditorWidgets } from '../utils/EditorWidgets';
 import { ioPropertyLink } from './IoPropertyLink';
 
 export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
@@ -10,6 +11,7 @@ export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
   selected?: Record<string, any> | any[];
   config?: EditorConfig;
   groups?: EditorGroups;
+  widgets?: EditorWidgets;
   search?: string;
 }>;
 
@@ -51,6 +53,9 @@ export class IoInspector extends IoElement {
 
   @Property({type: Map})
   declare groups: EditorGroups;
+
+  @Property({type: Map})
+  declare widgets: EditorWidgets;
 
   @Property('')
   declare search: string;
@@ -100,7 +105,7 @@ export class IoInspector extends IoElement {
 
     const properties = [];
     if (this.search) {
-      for (const [key] of Object.entries(this.selected)) {
+      for (const [key] of getAllPropertyNames(this.selected)) {
         if (key.toLowerCase().includes(this.search.toLowerCase())) {
           properties.push(key);
         }
@@ -117,6 +122,7 @@ export class IoInspector extends IoElement {
           value: this.selected,
           config: config,
           groups: this.groups,
+          widgets: this.widgets,
           properties: properties,
         }),
       );

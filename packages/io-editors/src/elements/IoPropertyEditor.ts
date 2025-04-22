@@ -1,6 +1,8 @@
 import { IoElement, Property, Register, IoElementArgs, Node, span, div, ArgsWithBinding, VDOMElement, Storage as $ } from 'io-gui';
-import { getEditorConfig, EditorConfig } from '../utils/EditorConfig';
-import { EditorGroups, getEditorGroups } from '../utils/EditorGroups';
+import { EditorConfig, getEditorConfig } from '../utils/EditorConfig';
+import { EditorGroups, getAllPropertyNames, getEditorGroups } from '../utils/EditorGroups';
+import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets';
+
 import { ioObject } from './IoObject';
 
 export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
@@ -8,6 +10,7 @@ export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
   properties?: string[];
   config?: EditorConfig;
   groups?: EditorGroups;
+  widgets?: EditorWidgets;
   labeled?: boolean;
 }>;
 
@@ -41,7 +44,11 @@ export class IoPropertyEditor extends IoElement {
     :host > .row > span {
       margin: var(--io_spacing);
       margin-left: var(--io_spacing2);
+      line-height: var(--io_lineHeight);
+      height: var(--io_lineHeight);
       text-wrap: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     :host > .row > span:after {
       display: inline-block;
@@ -69,6 +76,9 @@ export class IoPropertyEditor extends IoElement {
 
   @Property({type: Map})
   declare groups: EditorGroups;
+
+  @Property({type: Map})
+  declare widgets: EditorWidgets;
 
   @Property(true)
   declare labeled: boolean;
@@ -101,6 +111,7 @@ export class IoPropertyEditor extends IoElement {
   changed() {
     const config = getEditorConfig(this.value, this.config);
     const groups = getEditorGroups(this.value, this.groups);
+    const widget = getEditorWidget(this.value, this.widgets);
 
     const properties = [];
     const elements = [];
@@ -108,11 +119,21 @@ export class IoPropertyEditor extends IoElement {
     if (this.properties.length) {
       properties.push(...this.properties);
     } else {
-      properties.push(...groups.main);
+      if (widget) {
+        const widgetWithValue = {
+          name: widget.name,
+          props: Object.assign({value: this.value}, widget.props),
+          children: widget.children
+        };
+        elements.push(widgetWithValue);
+      }
+      properties.push(...groups.Main);
     }
 
+    const allProps = getAllPropertyNames(this.value);
+
     for (let i = 0; i < properties.length; i++) {
-      if (Object.prototype.hasOwnProperty.call(this.value, properties[i])) {
+      if (allProps.includes(properties[i])) {
         const c = properties[i] as keyof typeof this.value;
         const value = this.value[c];
         const tag = config[c]!.name;
@@ -137,7 +158,7 @@ export class IoPropertyEditor extends IoElement {
 
     if (!this.properties.length) {
       for (const group in groups) {
-        if (group !== 'main' && groups[group].length) {
+        if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
           elements.push(
             ioObject({
               label: group,

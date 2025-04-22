@@ -2,10 +2,11 @@ import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
 import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
 
 export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
-  live?: boolean;
   value?: string;
+  live?: boolean;
   placeholder?: string;
-  spellcheck?: 'true' | 'false';
+  appearance?: 'neutral' | 'inset' | 'outset';
+  role?: string;
 }>;
 
 /**
@@ -39,9 +40,6 @@ export class IoString extends IoInputBase {
 
   @Property({value: '', type: String, reflect: true})
   declare placeholder: string;
-
-  @Property({value: 'false', type: String, reflect: true})
-  declare spellcheck: string;
 
   @Property({value: 'inset', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
@@ -142,14 +140,6 @@ export class IoString extends IoInputBase {
       this.setAttribute('aria-invalid', 'true');
     } else {
       this.removeAttribute('aria-invalid');
-    }
-  }
-  disabledChanged() {
-    super.disabledChanged();
-    if (this.disabled) {
-      this.removeAttribute('contenteditable');
-    } else {
-      this.setAttribute('contenteditable', true);
     }
   }
   changed() {

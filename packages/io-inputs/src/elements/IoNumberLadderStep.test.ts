@@ -10,19 +10,10 @@ export default class {
       it('Should initialize properties correctly', () => {
         expect(step.value).to.equal(1);
         expect(step.role).to.equal('spinbutton');
-        expect(step.type).to.equal('number');
-        expect(step._properties.get('type')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: 'number',
-        });
       });
       it('has correct default attributes', () => {
         expect(step.getAttribute('value')).to.equal(null);
         expect(step.getAttribute('role')).to.equal('spinbutton');
-        expect(step.getAttribute('type')).to.equal('number');
       });
       it('has correct default innerHTML', () => {
         step.label = '1';

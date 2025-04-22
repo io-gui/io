@@ -15,7 +15,6 @@ export default class {
         expect(element.min).to.equal(-Infinity);
         expect(element.max).to.equal(Infinity);
         expect(element.ladder).to.equal(false);
-        expect(element.type).to.equal('number');
         expect(element.pattern).to.equal('pattern="[0-9]*"');
         expect(element.inputmode).to.equal('numeric');
         expect(element.spellcheck).to.equal('false');
@@ -47,13 +46,6 @@ export default class {
           type: Number,
           value: Infinity,
         });
-        expect(element._properties.get('type')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: 'number',
-        });
         expect(element._properties.get('pattern')).to.eql({
           binding: undefined,
           init: undefined,
@@ -79,7 +71,6 @@ export default class {
       it('has correct default attributes', () => {
         expect(element.getAttribute('value')).to.equal('0');
         expect(element.getAttribute('role')).to.equal('textbox');
-        expect(element.getAttribute('type')).to.equal('number');
         expect(element.getAttribute('pattern')).to.equal('pattern="[0-9]*"');
         expect(element.getAttribute('inputmode')).to.equal('numeric');
         expect(element.getAttribute('spellcheck')).to.equal('false');

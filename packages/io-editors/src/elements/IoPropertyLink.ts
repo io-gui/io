@@ -17,7 +17,7 @@ export class IoPropertyLink extends IoButton {
     :host > span {
       color: var(--io_colorBlue);
       flex: 0 1 auto;
-      overflow-x: hidden;
+      overflow: hidden;
       text-overflow: ellipsis;
     }
     :host:hover > span {

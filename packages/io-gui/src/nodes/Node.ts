@@ -87,6 +87,9 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       for (const name in this._protochain.properties) {
         Object.defineProperty(this, name, {
           get: function() {
+            if (this._properties === undefined) {
+              console.warn('Node.properties is undefined', name, this);
+            }
             return this._properties.get(name).value;
           },
           set: function(value) {
@@ -103,7 +106,11 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
 
         if (property.binding) property.binding.addTarget(this, name);
         if (property.value?._isNode) {
-          property.value.addEventListener('object-mutated', this.onPropertyMutated);
+          let hasSameValueAtOtherProperty = false;
+          this._properties.forEach((p, n) => {
+            if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true;
+          });
+          if (!hasSameValueAtOtherProperty) property.value.addEventListener('object-mutated', this.onPropertyMutated);
         }
       }
 
@@ -185,13 +192,19 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
 
         prop.value = value;
 
-        // TODO: test removal of event listeners.
+        // TODO: test!
         if (value !== oldValue) {
+          let hasNewValueAtOtherProperty = false;
+          let hasOldValueAtOtherProperty = false;
+          this._properties.forEach((property, n) => {
+            if (property.value === value && n !== name) hasNewValueAtOtherProperty = true;
+            if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true;
+          });
           if (value?._isNode) {
-            value.addEventListener('object-mutated', this.onPropertyMutated);
+            if (!hasNewValueAtOtherProperty) value.addEventListener('object-mutated', this.onPropertyMutated);
           }
           if (oldValue?._isNode) {
-            oldValue.removeEventListener('object-mutated', this.onPropertyMutated);
+            if (!hasOldValueAtOtherProperty && !oldValue._disposed) oldValue.removeEventListener('object-mutated', this.onPropertyMutated);
           }
         }
 
@@ -399,10 +412,12 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       this._changeQueue.dispose();
       delete (this as any)._changeQueue;
 
+      let removed: Node[] = [];
       this._properties.forEach((property, name) => {
         property.binding?.removeTarget(this, name);
-        if (property.value?._isNode) {
+        if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
           property.value.removeEventListener('object-mutated', this.onPropertyMutated);
+          removed.push(property.value);
         }
       });
 

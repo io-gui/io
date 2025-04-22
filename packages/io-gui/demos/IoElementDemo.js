@@ -1,12 +1,12 @@
 import { Register, IoElement, div, Storage as $, span } from 'io-gui';
-import { ioPropertyEditor } from 'io-editors';
+import { ioInspector } from 'io-editors';
 import { ioInputBase, ioNumber, ioString, ioBoolean, ioSwitch } from 'io-inputs';
 import { ioOptionMenu, MenuOptions } from 'io-menus';
 import { ioSlider, ioSliderRange, ioSlider2d } from 'io-sliders';
 
 // TODO: Implement IDs in menu options. use ID for selection
 const options = new MenuOptions({
-  last: $({key: 'element-demo', storage: 'local', value: ioInputBase()})
+  last: $({key: 'element-demo', storage: 'local', value: ioSlider()})
 }).fromJSON([{
   label: 'io-inputs',
   options: [
@@ -75,6 +75,7 @@ export class IoElementDemo extends IoElement {
       reactivity: 'debounced'
     };
   }
+
   optionsMutated() {
     this.changed();
   }
@@ -91,23 +92,14 @@ export class IoElementDemo extends IoElement {
         div({class: 'element-wrap'}, [
           this.element
         ]),
-        ioPropertyEditor({$: 'properties'}),
-        ioPropertyEditor({$: 'attributes', config: new Map([
-          [Object, [
-            [String, ioString({disabled: true})],
-          ]]
-        ])})
+        ioInspector({$: 'inspector'}),
       ]);
       const element = this.querySelector('.element-wrap').children[0];
-      
-      const properties = this.$['properties'];
-      properties.value = element;
-
-      const attributes = {};
-      for (let i = 0; i < element.attributes.length; i++) {
-        attributes[element.attributes[i].name] = element.getAttribute(element.attributes[i].name);
+      const inspector = this.$['inspector'];
+      if (inspector.value !== element) {
+        // inspector.value = element;
+        inspector.value = document.createElement('io-element');
       }
-      this.$['attributes'].value = attributes;
     } else {
       this.template([
         span('Element property not set.'),

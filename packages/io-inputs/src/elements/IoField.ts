@@ -8,7 +8,7 @@ export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
   selected?: boolean;
   invalid?: boolean;
   disabled?: boolean;
-  tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+  tabIndex?: '-1' | '0' | '' | '1' | '2' | '3';
   appearance?: 'neutral' | 'inset' | 'outset';
 }>;
 
@@ -20,7 +20,6 @@ export class IoField extends IoElement {
       --ioField: {
         height: var(--io_fieldHeight);
         line-height: var(--io_lineHeight);
-        font-size: var(--io_fontSize);
         border: var(--io_border);
         border-color: transparent;
         padding: var(--io_spacing) var(--io_spacing3);
@@ -38,8 +37,6 @@ export class IoField extends IoElement {
       :host span {
         display: inline-block;
         height: var(--io_lineHeight);
-        line-height: var(--io_lineHeight);
-        font-size: var(--io_fontSize);
         vertical-align: top;
       }
       :host[appearance=neutral] {
@@ -86,7 +83,7 @@ export class IoField extends IoElement {
     `;
   }
 
-  @Property({value: '', type: String})
+  @Property({value: ''})
   declare value: any;
 
   @Property({type: String, value: ''})
@@ -105,7 +102,7 @@ export class IoField extends IoElement {
   declare disabled: boolean;
 
   @Property({value: '0', type: String, reflect: true})
-  declare tabindex: string;
+  declare tabIndex: string;
 
   @Property({value: 'neutral', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
@@ -137,11 +134,10 @@ export class IoField extends IoElement {
   }
 
   disabledChanged() {
+    this.inert = this.disabled;
     if (this.disabled) {
-      this.tabindex = '';
       this.setAttribute('aria-disabled', 'true');
     } else {
-      this.tabindex = '0';
       this.removeAttribute('aria-disabled');
     }
   }

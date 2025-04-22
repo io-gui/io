@@ -1,12 +1,14 @@
 import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node } from 'io-gui';
+import { ioString, ioNumber, ioSwitch, ioInputBase, ioField } from 'io-inputs';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 import { ioVector } from '../elements/IoVector';
-import { ioString, ioNumber, ioSwitch, ioInputBase, ioField } from 'io-inputs';
 import { ioObject } from '../elements/IoObject';
+import { getAllPropertyNames } from '../utils/EditorGroups';
 
-type PropertyIdentifier = AnyConstructor | string | null | undefined;
+
+type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
 export type PropertyConfigRecord = Record<string, VDOMElement>;
@@ -24,16 +26,13 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   [Array, [
     [Number, ioNumber({step: 0.01})],
   ]],
-  [Node, [
-    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
-      'none', 'debounced', 'immediate',
-    ])})],
+  [window.Node, [
+    ['nodeName', ioField({disabled: true})],
+    [null, ioField({disabled: true})],
+    [undefined, ioField({disabled: true})],
   ]],
-  [IoElement, [
-    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
-      'none', 'debounced', 'immediate',
-    ])})],
-    ['tabindex', ioOptionMenu({options: new MenuOptions().fromJSON([
+  [HTMLElement, [
+    ['tabIndex', ioOptionMenu({options: new MenuOptions().fromJSON([
       {value: '', label: 'none'}, '-1', '0', '1', '2', '3',
     ])})],
     ['role', ioOptionMenu({options: new MenuOptions().fromJSON([
@@ -43,6 +42,43 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader',
       'scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term',
       'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
+    ])})],
+    ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],
+    ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],
+    ['autocapitalize', ioOptionMenu({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', label: 'None'}])})],
+    ['writingSuggestions', ioOptionMenu({options: new MenuOptions().fromJSON(['true', 'false'])})],
+    ['dir', ioOptionMenu({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', label: 'None'}])})],
+    ['virtualKeyboardPolicy', ioOptionMenu({options: new MenuOptions().fromJSON(['manual','auto',{value:'', label: 'None'}])})],
+    ['enterKeyHint', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'enter','done','go','next','previous','search','send',{value:'', label: 'None'}])})
+    ],
+    ['contentEditable', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'true','false','plaintext-only','inherit'])})
+    ],
+    ['inputMode', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'decimal','email','numeric','tel','search','url','text',{value:'', label: 'None'}])})
+    ],
+    ['lang', ioOptionMenu({options: new MenuOptions().fromJSON([
+      {value: '', label: 'None'},
+      'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu','be','bn','bh','bi','bs','br','bg','my','ca','ch','ce',
+      'ny','zh','zh-ans','zh-ant','cv','kw','co','cr','hr','cs','da','dv','nl','dz','en','eo','et','ee','fo','fj','fi','fr','ff','gl','gd',
+      'ka','de','el','kl','gn','gu','ht','ha','he','hz','hi','ho','hu','is','io','ig','id in','ia','ie','iu','ik','ga','it','ja','jv','kn',
+      'kr','ks','kk','km','ki','rw','rn','ky','kv','kg','ko','ku','kj','lo','la','lv','li','ln','lt','lu','lg','lb','gv','mk','mg','ms','ml','mt',
+      'mi','mr','mh','mo','mn','na','nv','ng','nd','ne','no','nb','nn','oc','oj','cu','or','om','os','pi','ps','fa','pl','pt','pa','qu','rm',
+      'ro','ru','se','sm','sg','sa','sr','sh','st','tn','sn','ii','sd','si','ss','sk','sl','so','nr','es','su','sw','sv','tl','ty','tg','ta',
+      'tt','te','th','bo','ti','to','ts','tr','tk','tw','ug','uk','ur','uz','ve','vi','vo','wa','cy','wo','fy','xh','yi','ji','yo','za','zu'
+    ])})],
+    ['localName', ioField({disabled: true})],
+    ['tagName', ioField({disabled: true})],
+  ]],
+  [Node, [
+    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'none', 'debounced', 'immediate',
+    ])})],
+  ]],
+  [IoElement, [
+    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'none', 'debounced', 'immediate',
     ])})],
   ]],
   [IoGl, [
@@ -101,7 +137,8 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
   }
 
   const configRecord: PropertyConfigRecord = {};
-  for (const [key, value] of Object.entries(object)) {
+  for (const key of getAllPropertyNames(object)) {
+    const value = (object as any)[key];
     for (const [PropertyIdentifier, elementCandidate] of aggregatedConfig) {
       let element: VDOMElement | undefined;
       if (typeof PropertyIdentifier === 'function' && value instanceof PropertyIdentifier) {
@@ -109,6 +146,8 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
       } else if (typeof PropertyIdentifier === 'function' && value?.constructor === PropertyIdentifier) {
         element = elementCandidate;
       } else if (typeof PropertyIdentifier === 'string' && key === PropertyIdentifier) {
+        element = elementCandidate;
+      } else if (PropertyIdentifier instanceof RegExp && PropertyIdentifier.test(key)) {
         element = elementCandidate;
       } else if (PropertyIdentifier === null && value === null) {
         element = elementCandidate;
@@ -121,9 +160,23 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
     }
   }
 
-  debug: for (const [key, value] of Object.entries(object)) {
+  debug: for (const key of getAllPropertyNames(object)) {
+    const value = (object as any)[key];
     if (!configRecord[key]) console.warn('No config found for', key, value);
   }
 
   return configRecord;
+}
+
+export function registerEditorConfig(constructor: AnyConstructor, propertyTypes: PropertyConfig[]) {
+  const existingConfigs = editorConfigSingleton.get(constructor) || [];
+  for (const [PropertyIdentifier, elementCandidate] of propertyTypes) {
+    const existingConfig = existingConfigs.find(config => config[0] === PropertyIdentifier);
+    if (existingConfig) {
+      existingConfig[1] = elementCandidate;
+    } else {
+      existingConfigs.push([PropertyIdentifier, elementCandidate]);
+    }
+  }
+  editorConfigSingleton.set(constructor, existingConfigs);
 }

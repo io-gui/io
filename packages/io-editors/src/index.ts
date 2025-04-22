@@ -1,6 +1,6 @@
 export * from './utils/EditorConfig';
 export * from './utils/EditorGroups';
-export * from './utils/ObjectWidgets';
+export * from './utils/EditorWidgets';
 export * from './elements/IoBreadcrumbs';
 export * from './elements/IoInspector';
 export * from './elements/IoObject';

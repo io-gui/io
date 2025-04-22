@@ -26,8 +26,8 @@ export default class {
         expect(this.element.textContent).to.equal('123');
         this.element.value = '';
       });
-      it('has tabindex attribute', () => {
-        expect(this.element.getAttribute('tabindex')).to.equal('0');
+      it('has tabIndex attribute', () => {
+        expect(this.element.getAttribute('tabIndex')).to.equal('0');
       });
       it('has contenteditable attribute', () => {
         expect(this.element.getAttribute('contenteditable')).to.equal('');

@@ -34,10 +34,10 @@ export default class {
         this.element.value = [0, 0.001];
         expect(this.element.$.number1.innerText).to.equal('0');
       });
-      it('has tabindex attribute', () => {
+      it('has tabIndex attribute', () => {
         this.reset();
-        expect(this.element.$.number0.getAttribute('tabindex')).to.equal('0');
-        expect(this.element.$.slider.getAttribute('tabindex')).to.equal('0');
+        expect(this.element.$.number0.getAttribute('tabIndex')).to.equal('0');
+        expect(this.element.$.slider.getAttribute('tabIndex')).to.equal('0');
       });
       it('has contenteditable attribute on number field', () => {
         this.reset();

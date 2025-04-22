@@ -11,6 +11,7 @@ import { IoField, IoFieldArgs } from './IoField';
 
 export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
   pressed?: boolean;
+  spellcheck?: 'true' | 'false';
 }>;
 
 @Register
@@ -45,6 +46,12 @@ export class IoInputBase extends IoField {
 
   @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean;
+
+  @Property({value: true, type: Boolean, reflect: true})
+  declare contentEditable: boolean;
+
+  @Property({value: 'false', type: String, reflect: true})
+  declare spellcheck: string;
 
   constructor(args: IoInputBaseArgs = {}) { super(args); }
 
@@ -118,7 +125,7 @@ export class IoInputBase extends IoField {
       //   return;
       // }
 
-      const siblings = this.querySelectorAll('[tabindex="0"]:not([disabled])');
+      const siblings = this.querySelectorAll('[tabIndex="0"]:not([disabled])');
 
       for (let i = siblings.length; i--;) {
 

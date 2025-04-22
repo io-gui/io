@@ -23,8 +23,8 @@ export default class {
         expect(this.element.min).to.equal(0);
         expect(this.element.max).to.equal(1);
       });
-      it('has tabindex attribute', () => {
-        expect(this.element.getAttribute('tabindex')).to.equal('0');
+      it('has tabIndex attribute', () => {
+        expect(this.element.getAttribute('tabIndex')).to.equal('0');
       });
       it('has contenteditable attribute on number field', () => {
         expect(this.element.getAttribute('contenteditable')).to.equal(null);

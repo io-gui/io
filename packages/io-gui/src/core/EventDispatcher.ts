@@ -205,7 +205,7 @@ export class EventDispatcher {
     // Check for duplicate listener
     const existingIndex = this.addedListeners[name].findIndex(l => l[0] === listener);
     if (existingIndex !== -1) {
-      debug: console.warn(`EventDispatcher.addEventListener: Listener for '${name}' event already added`);
+      debug: console.warn(`EventDispatcher.addEventListener: Listener for '${name}' event already added`, this.node);
       return;
     }
 

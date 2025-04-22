@@ -70,9 +70,6 @@ export class IoNumber extends IoInputBase {
   @Property({value: '', type: String, reflect: true})
   declare placeholder: string;
 
-  @Property({value: 'false', type: String, reflect: true})
-  declare spellcheck: string;
-
   @Property({value: 'inset', type: String, reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
@@ -228,14 +225,6 @@ export class IoNumber extends IoInputBase {
   init() {
     this.disabledChanged();
     this.changed();
-  }
-  disabledChanged() {
-    super.disabledChanged();
-    if (this.disabled) {
-      this.removeAttribute('contenteditable');
-    } else {
-      this.setAttribute('contenteditable', true);
-    }
   }
   changed() {
     this.setAttribute('aria-valuenow', this.value);

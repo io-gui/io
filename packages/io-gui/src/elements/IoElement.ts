@@ -39,6 +39,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
       :host {
         box-sizing: border-box;
         display: block;
+        font-size: var(--io_fontSize);
       }
       :host[hidden] {
         display: none;
@@ -100,7 +101,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
   setProperty(name: string, value: any, debounce = false) {
     super.setProperty(name, value, debounce);
     const prop = this._properties.get(name)!;
-    if (prop.reflect) this.setAttribute(name, value);
+    if (prop.reflect) this.setAttribute(name.toLowerCase(), value);
   }
   // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**

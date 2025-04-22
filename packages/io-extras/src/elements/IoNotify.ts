@@ -28,7 +28,6 @@ export class IoNotify extends IoElement {
       cursor: default;
       box-sizing: border-box;
       line-height: var(--io_lineHeight);
-      font-size: var(--io_fontSize);
       color: var(--io_color);
       padding: 0 var(--io_spacing);
     }

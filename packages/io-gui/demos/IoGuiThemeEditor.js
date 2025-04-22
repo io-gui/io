@@ -29,7 +29,7 @@ export class IoGuiThemeEditor extends IoElement {
       ioNumberSlider({value: ThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1}),
 
       ioField('lineHeight'),
-      ioNumberSlider({value: ThemeSingleton.bind('lineHeight'), min: 10, max: 50, step: 1}),
+      ioNumberSlider({value: ThemeSingleton.bind('lineHeight'), min: ThemeSingleton.bind('fontSize'), max: 50, step: 1}),
 
       ioField('fontSize'),
       ioNumberSlider({value: ThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1}),

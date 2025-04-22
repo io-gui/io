@@ -62,7 +62,6 @@ export class IoBreadcrumbs extends IoElement {
     }
     :host > .search-input:empty::before {
       content: '🔍';
-      font-size: calc(var(--io_lineHeight) / 2);
     }
     `;
   }

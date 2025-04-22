@@ -38,9 +38,9 @@ export default class {
         await nextQueue();
         expect(this.element.$.number.innerText).to.equal('0');
       });
-      it('has tabindex attribute', () => {
-        expect(this.element.$.number.getAttribute('tabindex')).to.equal('0');
-        expect(this.element.$.slider.getAttribute('tabindex')).to.equal('0');
+      it('has tabIndex attribute', () => {
+        expect(this.element.$.number.getAttribute('tabIndex')).to.equal('0');
+        expect(this.element.$.slider.getAttribute('tabIndex')).to.equal('0');
       });
       it('has contenteditable attribute on number field', () => {
         expect(this.element.getAttribute('contenteditable')).to.equal(null);

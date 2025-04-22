@@ -37,7 +37,7 @@ export class IoColorPicker extends IoElement {
   }
 
   @Property({value: '0', type: String, reflect: true})
-  declare tabindex: string;
+  declare tabIndex: string;
 
   onClick() {
     this.toggle();

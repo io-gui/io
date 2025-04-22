@@ -22,7 +22,6 @@ export class IoIcon extends IoElement {
         height: var(--io_lineHeight);
         min-width: var(--io_lineHeight);
         line-height: var(--io_lineHeight);
-        font-size: var(--io_fontSize);
         text-align: center;
         fill: var(--io_color);
       }

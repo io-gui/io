@@ -12,7 +12,7 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
   exponent?: number;
   vertical?: boolean;
   noscroll?: boolean;
-  tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+  tabIndex?: '-1' | '0' | '' | '1' | '2' | '3';
 }>;
 
 export class IoSliderBase extends IoGl {
@@ -31,13 +31,20 @@ export class IoSliderBase extends IoGl {
       }
       :host:not([vertical]) {
         width: var(--io_fieldHeight10);
+        height: var(--io_fieldHeight);
       }
       :host[vertical] {
         cursor: ns-resize;
+        width: var(--io_fieldHeight);
         height: var(--io_fieldHeight5);
         min-height: var(--io_fieldHeight5);
         flex-basis: var(--io_fieldHeight);
         flex-grow: 0;
+      }
+      :host[invalid] {
+        color: var(--io_colorWhite);
+        background-color: var(--io_bgColorRed);
+        border-color: var(--io_colorRed);
       }
     `;
   }
@@ -60,6 +67,12 @@ export class IoSliderBase extends IoGl {
   @Property({value: false, reflect: true})
   declare vertical: boolean;
 
+  @Property({value: false, reflect: true})
+  declare disabled: boolean;
+
+  @Property({value: false, reflect: true})
+  declare invalid: boolean;
+
   @Property(false)
   declare noscroll: boolean;
 
@@ -67,7 +80,7 @@ export class IoSliderBase extends IoGl {
   declare role: string;
 
   @Property({value: '0', type: String, reflect: true})
-  declare tabindex: string;
+  declare tabIndex: string;
 
   _startX = 0;
   _startY = 0;
@@ -319,6 +332,23 @@ export class IoSliderBase extends IoGl {
   }
   init() {
     this.changed();
+  }
+  disabledChanged() {
+    this.inert = this.disabled;
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', 'true');
+    } else {
+      this.removeAttribute('aria-disabled');
+    }
+  }
+  valueChanged() {
+    let invalid = false;
+    if (this.value instanceof Array) {
+      invalid = isNaN(this.value[0]) || isNaN(this.value[1]);
+    } else if (isNaN(this.value)) {
+      invalid = true;
+    }
+    this.invalid = invalid;
   }
   changed() {
     super.changed();
