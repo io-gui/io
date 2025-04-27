@@ -1,7 +1,7 @@
-import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoSliderBase, IoSliderBaseArgs } from './IoSliderBase';
+import { Register, Property, VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
-export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{
+export type IoSlider2dProps = IoSliderBaseProps & PropsWithBinding<{
   // TODO TS does not support narrowing of the type values here? :/
   // value?: [number, number];
   // step?: [number, number];
@@ -11,7 +11,7 @@ export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoSlider2d extends IoSliderBase {
-  static vConstructor: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -48,7 +48,7 @@ export class IoSlider2d extends IoSliderBase {
   @Property(true)
   declare noscroll: boolean;
 
-  constructor(args: IoSlider2dArgs = {}) { super(args); }
+  constructor(args: IoSlider2dProps = {}) { super(args); }
 
   static get GlUtils() {
     return /* glsl */`

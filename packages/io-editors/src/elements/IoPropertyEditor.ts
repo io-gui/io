@@ -1,11 +1,11 @@
-import { IoElement, Property, Register, IoElementArgs, Node, span, div, ArgsWithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
+import { IoElement, Property, Register, IoElementProps, Node, span, div, PropsWithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig';
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets';
 
 import { ioObject } from './IoObject';
 
-export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
+export type IoPropertyEditorProps = IoElementProps & PropsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
   config?: EditorConfig;
@@ -19,7 +19,7 @@ export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoPropertyEditor extends IoElement {
-  static vConstructor: (arg0?: IoPropertyEditorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -136,7 +136,7 @@ export class IoPropertyEditor extends IoElement {
         const c = properties[i] as keyof typeof this.value;
         const value = this.value[c];
         const tag = config[c]!.name;
-        const props = config[c]!.props as (IoElementArgs | undefined) || {};
+        const props = config[c]!.props as (IoElementProps | undefined) || {};
         const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
 

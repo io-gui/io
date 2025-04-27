@@ -57,7 +57,7 @@ import { MenuItem, MenuOptions } from '../index';
 //     new MenuItem({value: 'scroll2', mode: 'scroll'}),
 //     new MenuItem({value: 'scroll3', mode: 'scroll'}),
 //   ]})}),
-// ]} as MenuOptionsArgs;
+// ]} as MenuOptionsProps;
 
 // const eventStack: string[] = [];
 

@@ -1,14 +1,14 @@
-import { ArgsWithBinding, Property, Register, span, VDOMElement } from 'io-gui';
-import { IoButton, IoButtonArgs } from 'io-inputs';
+import { PropsWithBinding, Property, Register, span, VDOMElement } from 'io-gui';
+import { IoButton, IoButtonProps } from 'io-inputs';
 
-export type IoPropertyLinkArgs = IoButtonArgs & ArgsWithBinding<{
+export type IoPropertyLinkProps = IoButtonProps & PropsWithBinding<{
   value?: Object;
   showName?: boolean;
 }>;
 
 @Register
 export class IoPropertyLink extends IoButton {
-  static vConstructor: (arg0?: IoPropertyLinkArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoPropertyLinkProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {

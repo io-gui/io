@@ -1,14 +1,14 @@
-import { Register, Property, span, VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
+import { Register, Property, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { IoInputBase, IoInputBaseProps } from './IoInputBase';
 
-export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoNumberLadderStepProps = IoInputBaseProps & PropsWithBinding<{
   value?: number;
   label?: string;
 }>;
 
 @Register
 export class IoNumberLadderStep extends IoInputBase {
-  static vConstructor: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -41,10 +41,10 @@ export class IoNumberLadderStep extends IoInputBase {
   @Property({value: '', type: String})
   declare label: string;
 
-  @Property({value: 'spinbutton', type: String})
+  @Default('spinbutton')
   declare role: string;
 
-  constructor(args: IoNumberLadderStepArgs = {}) { super(args); }
+  constructor(args: IoNumberLadderStepProps = {}) { super(args); }
 
   onKeydown(event: KeyboardEvent) {
     let stepMove = 0;

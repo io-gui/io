@@ -1,8 +1,8 @@
-import { IoElement, VDOMElement, Register, Property, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Register, Property, IoElementProps, PropsWithBinding } from 'io-gui';
 import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
 import { ioMarkdown } from 'io-markdown';
 
-export type IoMdNavigatorArgs = IoElementArgs & ArgsWithBinding<{
+export type IoMdNavigatorProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
   slotted?: VDOMElement[];
   menu?: 'top' | 'left' | 'bottom' | 'right';
@@ -13,7 +13,7 @@ export type IoMdNavigatorArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoMdNavigator extends IoElement {
-  static vConstructor: (arg0?: IoMdNavigatorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoMdNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`

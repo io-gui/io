@@ -1,7 +1,7 @@
-import { IoElement, VDOMElement, Property, Autobind, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Property, Autobind, IoElementProps, PropsWithBinding } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 
-export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
+export type IoNavigatorBaseProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
   slotted?: VDOMElement[];
   elements?: VDOMElement[];
@@ -12,7 +12,7 @@ export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
 }>;
 
 export class IoNavigatorBase extends IoElement {
-  static vConstructor: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

@@ -1,8 +1,8 @@
-import { Register, IoElement, Property, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoElementProps, PropsWithBinding } from 'io-gui';
 import {ioSlider} from './IoSlider';
 import {ioNumber} from 'io-inputs';
 
-export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
+export type IoNumberSliderProps = IoElementProps & PropsWithBinding<{
   value?: number;
   step?: number;
   min?: number;
@@ -16,7 +16,7 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoNumberSlider extends IoElement {
-  static vConstructor: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -54,7 +54,7 @@ export class IoNumberSlider extends IoElement {
   @Property(1)
   declare conversion: number;
 
-  constructor(args: IoNumberSliderArgs = {}) { super(args); }
+  constructor(args: IoNumberSliderProps = {}) { super(args); }
 
   _onNumberSet(event: CustomEvent) {
     this.value = event.detail.value;

@@ -1,13 +1,13 @@
-import { Register, Property, IoOverlaySingleton as Overlay, span, VDOMElement, ArgsWithBinding, NudgeDirection } from 'io-gui';
+import { Register, Property, Default, IoOverlaySingleton as Overlay, span, VDOMElement, PropsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-import { IoInputBase, IoInputBaseArgs } from 'io-inputs';
+import { IoInputBase, IoInputBaseProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 
 const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
 
-export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
   item?: MenuItem;
   expanded?: boolean;
   direction?: 'left' | 'right' | 'up' | 'down';
@@ -21,7 +21,7 @@ export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoMenuItem extends IoInputBase {
-  static vConstructor: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -56,14 +56,14 @@ export class IoMenuItem extends IoInputBase {
   @Property({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: false})
-  declare contentEditable: boolean;
-
   @Property({value: 'right', reflect: true})
   declare direction: NudgeDirection;
 
   @Property({value: 1000, reflect: true})
   declare depth: number;
+
+  @Default('false')
+  declare contentEditable: boolean;
 
   declare $options?: IoMenuOptions;
 
@@ -73,7 +73,7 @@ export class IoMenuItem extends IoInputBase {
     };
   }
 
-  constructor(args: IoMenuItemArgs = {}) { super(args); }
+  constructor(args: IoMenuItemProps = {}) { super(args); }
 
   preventDefault(event: Event) {
     event.stopPropagation();

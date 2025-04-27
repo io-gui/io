@@ -2,9 +2,9 @@ import { Register } from '../decorators/Register';
 import { Property } from '../decorators/Property';
 import { PropertyInstance, PropertyDefinition } from '../core/Property';
 import { VDOMElement } from '../vdom/VDOM';
-import { Node, ArgsWithBinding } from '../nodes/Node';
+import { Node, PropsWithBinding } from '../nodes/Node';
 import { ThemeSingleton, Color } from '../nodes/Theme';
-import { IoElement, IoElementArgs } from './IoElement';
+import { IoElement, IoElementProps } from './IoElement';
 import { glsl } from './IoGL.glsl';
 
 const canvas = document.createElement('canvas');
@@ -37,13 +37,13 @@ const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
 
 
-export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
+export type IoGlProps = IoElementProps & PropsWithBinding<{
   color?: [number, number, number, number];
 }>;
 
 @Register
 export class IoGl extends IoElement {
-  static vConstructor: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoGlProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -178,7 +178,7 @@ export class IoGl extends IoElement {
 
     return program;
   }
-  constructor(args: IoGlArgs = {}) {
+  constructor(args: IoGlProps = {}) {
     super(args);
 
     this.#canvas = document.createElement('canvas');

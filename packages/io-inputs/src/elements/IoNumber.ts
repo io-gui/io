@@ -1,8 +1,8 @@
-import { Register, Property, IoOverlaySingleton, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoOverlaySingleton, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 import { IoNumberLadderSingleton } from './IoNumberLadder';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
+import { IoInputBase, IoInputBaseProps } from './IoInputBase';
 
-export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
   value?: number;
   live?: boolean;
   conversion?: number;
@@ -20,7 +20,7 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoNumber extends IoInputBase {
-  static vConstructor: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -73,12 +73,12 @@ export class IoNumber extends IoInputBase {
   @Property({value: 'inset', type: String, reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Property({value: 'textbox', type: String})
+  @Default('textbox')
   declare role: string;
 
   private _pointer = '';
 
-  constructor(args: IoNumberArgs = {}) { super(args); }
+  constructor(args: IoNumberProps = {}) { super(args); }
 
   get textNode() {
     this._flattenTextNode(this);

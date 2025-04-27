@@ -1,13 +1,13 @@
-import { Register, IoElement, Property, Autobind, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, IoElement, Property, Autobind, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
-export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
+export type IoScrollerProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
 }>;
 
 @Register
 export class IoScroller extends IoElement {
-  static vConstructor: (arg0?: IoScrollerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`

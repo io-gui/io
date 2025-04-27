@@ -1,8 +1,8 @@
-import { Register, Property, glsl, VDOMElement, ArgsWithBinding, Node } from 'io-gui';
-import { IoColorBase, IoColorBaseArgs } from './IoColorBase';
+import { Register, Property, glsl, VDOMElement, PropsWithBinding, Node } from 'io-gui';
+import { IoColorBase, IoColorBaseProps } from './IoColorBase';
 import { IoSlider, IoSlider2d } from 'io-sliders';
 
-export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
+export type IoColorSliderProps = IoColorBaseProps & PropsWithBinding<{
   color?: [number, number, number, number];
   step?: number;
   channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
@@ -16,7 +16,7 @@ export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoColorSlider extends IoColorBase {
-  static vConstructor: (arg0?: IoColorSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoColorSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

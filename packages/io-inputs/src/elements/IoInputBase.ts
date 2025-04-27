@@ -1,5 +1,5 @@
-import { Property, Register, VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoField, IoFieldArgs } from './IoField';
+import { Property, Default, Register, VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
 
 // let focusBacktrack = new WeakMap();
 // const backtrackDir = {'left': 'right', 'right': 'left', 'down': 'up', 'up': 'down'};
@@ -9,14 +9,13 @@ import { IoField, IoFieldArgs } from './IoField';
 //   focusBacktrack.set(element, backtrack);
 // }
 
-export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
+export type IoInputBaseProps = IoFieldProps & PropsWithBinding<{
   pressed?: boolean;
-  spellcheck?: 'true' | 'false';
 }>;
 
 @Register
 export class IoInputBase extends IoField {
-  static vConstructor: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoInputBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -47,13 +46,13 @@ export class IoInputBase extends IoField {
   @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean;
 
-  @Property({value: true, type: Boolean, reflect: true})
+  @Default('false')
   declare contentEditable: boolean;
 
-  @Property({value: 'false', type: String, reflect: true})
+  @Default('false')
   declare spellcheck: string;
 
-  constructor(args: IoInputBaseArgs = {}) { super(args); }
+  constructor(args: IoInputBaseProps = {}) { super(args); }
 
   onFocus(event: FocusEvent) {
     this.addEventListener('blur', this.onBlur);

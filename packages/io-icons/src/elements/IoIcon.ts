@@ -1,7 +1,7 @@
-import { Register, Property, IoElement, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
 import { IconsetSingleton } from '../nodes/Iconset';
 
-export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
+export type IoIconProps = IoElementProps & PropsWithBinding<{
   value?: string;
   stroke?: boolean;
 }>;
@@ -13,7 +13,7 @@ export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoIcon extends IoElement {
-  static vConstructor: (arg0?: IoIconArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       --ioIcon: {
@@ -49,7 +49,7 @@ export class IoIcon extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
-  constructor(args: IoIconArgs = {}) { super(args); }
+  constructor(args: IoIconProps = {}) { super(args); }
 
   valueChanged() {
     if (this.value.search(':') !== -1) {

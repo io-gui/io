@@ -218,6 +218,7 @@ export default class {
               label: ''
             };
           }
+          constructor(args?: any) {super(args);}
         }
 
         const binding1 = new Binding(new TestNode({label: 'label1'}), 'label');
@@ -290,6 +291,7 @@ export default class {
               label: '',
             };
           }
+          constructor(args?: any) {super(args);}
         }
 
         const binding1 = new Binding(new TestNode({label: 'label1'}), 'label');
@@ -355,6 +357,7 @@ export default class {
               'prop-changed': 'onPropChanged',
             };
           }
+          constructor(args?: any) {super(args);}
           onPropChanged(event: CustomEvent) {
             this.propChangedEvents.push(event.detail);
           }
@@ -497,6 +500,7 @@ export default class {
               prop: Number,
             };
           }
+          constructor(args?: any) {super(args);}
         }
 
         const subnode = new TestNode();
@@ -742,6 +746,7 @@ export default class {
               prop2: String,
             };
           }
+          constructor(args?: any) {super(args);}
         }
 
         const node = new TestNode();
@@ -792,6 +797,7 @@ export default class {
               prop3: 'subnode3',
             };
           }
+          constructor(args?: any) {super(args);}
         }
 
         @Register
@@ -865,6 +871,7 @@ export default class {
               prop2: String,
             };
           }
+          constructor(args?: any) {super(args);}
         }
 
         const srcNode = new TestNode();

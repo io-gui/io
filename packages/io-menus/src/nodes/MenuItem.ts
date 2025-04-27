@@ -1,12 +1,12 @@
-import { Node, Register, NodeArgs, Property, ArgsWithBinding } from 'io-gui';
+import { Node, Register, NodeProps, Property, PropsWithBinding } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
 
-// TODO: MenuItemArgs options shoudl be array of MenuItemDefLoose
-export type MenuItemDefLoose = undefined | null | string | number | MenuItemArgs;
+// TODO: MenuItemProps options shoudl be array of MenuItemDefLoose
+export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
 
-export type MenuItemArgs = NodeArgs & ArgsWithBinding<{
+export type MenuItemProps = NodeProps & PropsWithBinding<{
   value?: any,
   label?: string,
   icon?: string,
@@ -62,9 +62,9 @@ export class MenuItem extends Node {
     return this.options?.getItem(value);
   }
 
-  constructor(args?: MenuItemArgs) {
+  constructor(args?: MenuItemProps) {
 
-    const item: MenuItemArgs = {...args};
+    const item: MenuItemProps = {...args};
 
     if (item.label === undefined) {
       if (typeof item.value === 'object') {
@@ -107,7 +107,7 @@ export class MenuItem extends Node {
 
   fromJSON(looseDef: MenuItemDefLoose) {
 
-    const item: MenuItemArgs = {};
+    const item: MenuItemProps = {};
     if (typeof looseDef === 'object' && looseDef !== null) {
       if (Object.hasOwn(looseDef, 'value')) item.value = looseDef.value;
       if (Object.hasOwn(looseDef, 'label')) item.label = looseDef.label;

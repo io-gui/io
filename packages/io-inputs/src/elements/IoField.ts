@@ -1,20 +1,19 @@
-import { Register, Property, VDOMElement, ArgsWithBinding, IoElement, IoElementArgs, span } from 'io-gui';
+import { Register, Property, VDOMElement, PropsWithBinding, IoElement, IoElementProps, span, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
-export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
+export type IoFieldProps = IoElementProps & PropsWithBinding<{
   value?: any;
   icon?: string;
   label?: string;
   selected?: boolean;
   invalid?: boolean;
   disabled?: boolean;
-  tabIndex?: '-1' | '0' | '' | '1' | '2' | '3';
   appearance?: 'neutral' | 'inset' | 'outset';
 }>;
 
 @Register
 export class IoField extends IoElement {
-  static vConstructor: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       --ioField: {
@@ -101,13 +100,13 @@ export class IoField extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
-  @Property({value: '0', type: String, reflect: true})
-  declare tabIndex: string;
-
   @Property({value: 'neutral', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  constructor(args: IoFieldArgs = {}) { super(args); }
+  @Default('0')
+  declare tabIndex: string;
+
+  constructor(args: IoFieldProps = {}) { super(args); }
 
   labelChanged() {
     if (this.label) {

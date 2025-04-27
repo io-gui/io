@@ -1,7 +1,7 @@
 import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
-import { ArgsWithBinding } from '../nodes/Node';
-import { IoElement, IoElementArgs } from './IoElement';
+import { PropsWithBinding } from '../nodes/Node';
+import { IoElement, IoElementProps } from './IoElement';
 
 let lastFocus: Element | null = null;
 
@@ -19,7 +19,7 @@ window.addEventListener('blur', () => {
 
 export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
 
-export type IoOverlayArgs = IoElementArgs & ArgsWithBinding<{
+export type IoOverlayProps = IoElementProps & PropsWithBinding<{
   expanded?: boolean;
 }>;
 
@@ -80,7 +80,7 @@ class IoOverlay extends IoElement {
       'keyup': ['stopPropagation', {passive: false}],
     };
   }
-  constructor(args: IoOverlayArgs = {}) {
+  constructor(args: IoOverlayProps = {}) {
     super(args);
     Object.defineProperty(this, 'x', {value: 0, writable: true});
     Object.defineProperty(this, 'y', {value: 0, writable: true});

@@ -1,8 +1,8 @@
-import { VDOMElement, Register, Property, ArgsWithBinding } from 'io-gui';
-import { IoNavigatorBase, IoNavigatorBaseArgs } from './IoNavigatorBase.js';
+import { VDOMElement, Register, Property, PropsWithBinding } from 'io-gui';
+import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioSelector } from './IoSelector.js';
 
-export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
+export type IoNavigatorSelectorProps = IoNavigatorBaseProps & PropsWithBinding<{
   select?: 'first' | 'last';
   cache?: boolean;
   precache?: boolean;
@@ -10,7 +10,7 @@ export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
 
 @Register
 export class IoNavigatorSelector extends IoNavigatorBase {
-  static vConstructor: (arg0?: IoNavigatorSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property('first')
   declare select: 'first' | 'last';

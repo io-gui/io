@@ -20,11 +20,11 @@ export interface NodeConstructor<T> {
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
 // Utility type to add Binding to all properties of a type
-export type ArgsWithBinding<T> = {
+export type PropsWithBinding<T> = {
   [K in keyof T]: T[K] | Binding;
 };
 
-export type NodeArgs = ArgsWithBinding<{
+export type NodeProps = PropsWithBinding<{
   reactivity?: 'none' | 'immediate' | 'debounced';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
 }>;
@@ -54,13 +54,13 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      * Creates a class instance and initializes the core with properties.
      * @overload
      * @constructor
-     * @param {NodeArgs} args - Initial property values
-     * @param {...any} superArgs - Additional arguments
+     * @param {NodeProps} args - Initial property values
+     * @param {...any} superProps - Additional arguments
      */
-    constructor(...superArgs: any[]); // TODO: remove this after fixing types.
-    constructor(args: NodeArgs = {}, ...superArgs: any[]) {
+    // constructor(...superProps: any[]); // TODO: remove this after fixing types.
+    constructor(args: NodeProps = {}, ...superProps: any[]) {
       // eslint-disable-next-line constructor-super
-      super(...superArgs);
+      super(...superProps);
 
       if (this._isIoElement) {
         Object.defineProperty(this, '$', {
@@ -115,7 +115,9 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       }
 
       for (const name in this._protochain.defaults) {
-        this[name] = this._protochain.defaults[name];
+        let defaultValue = this._protochain.defaults[name];
+        if (typeof defaultValue === 'function') defaultValue = new defaultValue();
+        this[name] = defaultValue;
       }
 
       this.applyProperties(args, true);
@@ -137,10 +139,10 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       for (const name in props) {
         if (!this._properties.has(name)) {
           // TODO: document!
-          debug: if (!name.startsWith('@') && name !== 'style' && name !== '$') {
-            console.warn(`Property "${name}" is not defined`, this);
+          if (!name.startsWith('@')) {
+            // console.warn(`Property "${name}" is not defined`, this);
+            // this[name] = props[name];
           }
-          continue;
         }
         this.setProperty(name, props[name], true);
       }

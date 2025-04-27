@@ -1,8 +1,8 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, Node } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, PropsWithBinding, Node } from 'io-gui';
 import {ioSliderRange} from './IoSliderRange';
 import {ioNumber} from 'io-inputs';
 
-export type IoNumberSliderRangeArgs = IoElementArgs & ArgsWithBinding<{
+export type IoNumberSliderRangeProps = IoElementProps & PropsWithBinding<{
   value?: [number, number];
   step?: number;
   min?: number;
@@ -53,7 +53,7 @@ export class IoNumberSliderRange extends IoElement {
   @Property(1)
   declare conversion: number;
 
-  constructor(args: IoNumberSliderRangeArgs = {}) { super(args); }
+  constructor(args: IoNumberSliderRangeProps = {}) { super(args); }
 
   _onNumberSet(event: CustomEvent) {
     const item = event.composedPath()[0];

@@ -1,8 +1,8 @@
-import { Register, Property, span, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, Property, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
+import { IoInputBase, IoInputBaseProps } from './IoInputBase';
 
-export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
   value?: boolean;
   true?: string;
   false?: string;
@@ -14,7 +14,7 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoBoolean extends IoInputBase {
-  static vConstructor: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -33,10 +33,10 @@ export class IoBoolean extends IoInputBase {
   @Property({value: 'false', type: String})
   declare false: string;
 
-  @Property({value: 'checkbox', type: String, reflect: true})
+  @Default('checkbox')
   declare role: string;
 
-  constructor(args: IoBooleanArgs = {}) { super(args); }
+  constructor(args: IoBooleanProps = {}) { super(args); }
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault();

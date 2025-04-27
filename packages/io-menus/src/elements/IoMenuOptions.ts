@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementProps, PropsWithBinding, Default } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -8,7 +8,7 @@ import { ioMenuHamburger } from './IoMenuHamburger.js';
 import { IoContextMenu } from './IoContextMenu.js';
 const rects = new WeakMap();
 
-export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
+export type IoMenuOptionsProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
   expanded?: boolean;
   horizontal?: boolean;
@@ -27,7 +27,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoMenuOptions extends IoElement {
-  static vConstructor: (arg0?: IoMenuOptionsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -156,11 +156,11 @@ export class IoMenuOptions extends IoElement {
   @Property({type: Array})
   declare slotted: VDOMElement[];
 
-  @Property('listbox')
-  declare role: string;
-
   @Property(undefined)
   declare $parent?: IoMenuItem;
+
+  @Default('listbox')
+  declare role: string;
 
   // TODO: make non-reactive
   @Property({type: Array})
@@ -173,7 +173,7 @@ export class IoMenuOptions extends IoElement {
     };
   }
 
-  constructor(args: IoMenuOptionsArgs = {}) { super(args); }
+  constructor(args: IoMenuOptionsProps = {}) { super(args); }
 
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;

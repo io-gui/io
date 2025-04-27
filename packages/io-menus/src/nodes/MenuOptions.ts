@@ -1,4 +1,4 @@
-import { NodeMixin, NodeArgs, Property, Register, ArgsWithBinding } from 'io-gui';
+import { NodeMixin, NodeProps, Property, Register, PropsWithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
 
 function _isNaN(value: any) {
@@ -9,7 +9,7 @@ function _isSelectable(value: string) {
   return value === 'select' || value === 'scroll';
 }
 
-export type MenuOptionsArgs = NodeArgs & ArgsWithBinding<{
+export type MenuOptionsProps = NodeProps & PropsWithBinding<{
   first?: any,
   last?: any,
   scroll?: string,
@@ -50,7 +50,7 @@ export class MenuOptions extends NodeMixin(Array) {
     return null;
   }
 
-  constructor(properties: MenuOptionsArgs = {}) {
+  constructor(properties: MenuOptionsProps = {}) {
     super(properties);
     this.push(...this.items);
 

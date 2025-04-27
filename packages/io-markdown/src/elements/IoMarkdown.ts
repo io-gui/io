@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, ThemeSingleton, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, IoElement, Property, ThemeSingleton, IoElementProps, PropsWithBinding, VDOMElement, Default } from 'io-gui';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -15,7 +15,7 @@ const marked = new Marked(
   })
 );
 
-export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
+export type IoMarkdownProps = IoElementProps & PropsWithBinding<{
   src?: string;
   strip?: string[];
   loading?: boolean;
@@ -27,7 +27,7 @@ export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
  */
 @Register
 export class IoMarkdown extends IoElement {
-  static vConstructor: (arg0?: IoMarkdownArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoMarkdownProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -157,9 +157,6 @@ export class IoMarkdown extends IoElement {
     `;
   }
 
-  @Property('document')
-  declare role: string;
-
   @Property({value: '', reflect: true})
   declare src: string;
 
@@ -172,7 +169,10 @@ export class IoMarkdown extends IoElement {
   @Property(true)
   declare sanitize: boolean;
 
-  constructor(args: IoMarkdownArgs = {}) { super(args); }
+  @Default('document')
+  declare role: string;
+
+  constructor(args: IoMarkdownProps = {}) { super(args); }
 
   protected _strip(innerHTML: string) {
     for (let i = 0; i < this.strip.length; i++) {

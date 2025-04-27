@@ -1,7 +1,7 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement, div } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, div } from 'io-gui';
 import { ioPropertyLink } from './IoPropertyLink';
 import { ioButton, ioString } from 'io-inputs';
-export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
+export type IoBreadcrumbsProps = IoElementProps & PropsWithBinding<{
   value?: Object;
   selected?: Object;
   crumbs?: Array<Object>;
@@ -15,7 +15,7 @@ export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoBreadcrumbs extends IoElement {
-  static vConstructor: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {

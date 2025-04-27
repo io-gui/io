@@ -1,7 +1,7 @@
 import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { Binding } from '../core/Binding';
-import { Node, NodeArgs } from '../nodes/Node';
+import { Node, NodeProps } from '../nodes/Node';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
@@ -95,7 +95,7 @@ const nodes: StorageNodes = {
 
 let hashValues: Record<string, any> = {};
 
-export type StorageProps = NodeArgs & {
+export type StorageProps = NodeProps & {
   key: string,
   value?: any,
   default?: any,

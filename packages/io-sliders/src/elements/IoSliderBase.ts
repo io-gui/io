@@ -1,10 +1,10 @@
-import { Property, IoGl, IoGlArgs, VDOMElement, ArgsWithBinding, Default } from 'io-gui';
+import { Property, IoGl, IoGlProps, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
 
-export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
+export type IoSliderBaseProps = IoGlProps & PropsWithBinding<{
   value?:  number | [number, number];
   step?:  number | [number, number];
   min?: number | [number, number];
@@ -12,11 +12,10 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
   exponent?: number;
   vertical?: boolean;
   noscroll?: boolean;
-  tabIndex?: '-1' | '0' | '' | '1' | '2' | '3';
 }>;
 
 export class IoSliderBase extends IoGl {
-  static vConstructor: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -52,9 +51,6 @@ export class IoSliderBase extends IoGl {
     `;
   }
 
-  @Default(true)
-  declare inert: boolean;
-
   @Property({value: 0})
   declare value: number | [number, number];
 
@@ -82,10 +78,10 @@ export class IoSliderBase extends IoGl {
   @Property(false)
   declare noscroll: boolean;
 
-  @Property('slider')
+  @Default('slider')
   declare role: string;
 
-  @Property({value: '0', type: String, reflect: true})
+  @Default('0')
   declare tabIndex: string;
 
   _startX = 0;
@@ -139,7 +135,7 @@ export class IoSliderBase extends IoGl {
     };
   }
 
-  constructor(args: IoSliderBaseArgs = {}) { super(args); }
+  constructor(args: IoSliderBaseProps = {}) { super(args); }
 
   onFocus() {
     this.addEventListener('blur', this.onBlur);

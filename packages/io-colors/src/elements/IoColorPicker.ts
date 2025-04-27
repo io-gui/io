@@ -1,8 +1,8 @@
-import { Register, Property, IoElement, IoOverlaySingleton, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, Property, IoElement, IoOverlaySingleton, IoElementProps, PropsWithBinding, VDOMElement, Default } from 'io-gui';
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton';
 import { ioColorSwatch } from './IoColorSwatch';
 
-export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
+export type IoColorPickerProps = IoElementProps & PropsWithBinding<{
   value?: {
     r: number;
     g: number;
@@ -13,7 +13,7 @@ export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoColorPicker extends IoElement {
-  static vConstructor: (arg0?: IoColorPickerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -41,7 +41,7 @@ export class IoColorPicker extends IoElement {
     };
   }
 
-  @Property({value: '0', type: String, reflect: true})
+  @Default('0')
   declare tabIndex: string;
 
   onClick() {

@@ -16,6 +16,7 @@ class TestNode extends Node {
       label: 'default'
     };
   }
+  constructor(args?: any) {super(args);}
 }
 
 const dummy = new TestNode();

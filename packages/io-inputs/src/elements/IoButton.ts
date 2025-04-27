@@ -1,8 +1,8 @@
-import { Register, Property, span, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, Property, span, PropsWithBinding, VDOMElement, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
+import { IoInputBase, IoInputBaseProps } from './IoInputBase';
 
-export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoButtonProps = IoInputBaseProps & PropsWithBinding<{
   action?: Function;
 }>;
 
@@ -12,7 +12,7 @@ export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoButton extends IoInputBase {
-  static vConstructor: (arg0?: IoButtonArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -36,10 +36,10 @@ export class IoButton extends IoInputBase {
   @Property({value: 'outset', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral';
 
-  @Property('button')
+  @Default('button')
   declare role: string;
 
-  constructor(args: IoButtonArgs = {}) { super(args); }
+  constructor(args: IoButtonProps = {}) { super(args); }
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault();

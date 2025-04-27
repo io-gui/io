@@ -1,16 +1,16 @@
-import { VDOMElement, Register, Property, ArgsWithBinding } from 'io-gui';
-import { IoNavigatorBase, IoNavigatorBaseArgs } from './IoNavigatorBase.js';
+import { VDOMElement, Register, Property, PropsWithBinding } from 'io-gui';
+import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioScroller } from './IoScroller.js';
 import { ioMarkdown } from 'io-markdown';
 
-export type IoNavigatorMdViewArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
+export type IoNavigatorMdViewProps = IoNavigatorBaseProps & PropsWithBinding<{
   strip?: string[];
   sanitize?: boolean;
 }>;
 
 @Register
 export class IoNavigatorMdView extends IoNavigatorBase {
-  static vConstructor: (arg0?: IoNavigatorMdViewArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property({type: Array})
   declare strip: string[];

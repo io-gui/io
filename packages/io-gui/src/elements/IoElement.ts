@@ -1,7 +1,8 @@
 import { Property } from '../decorators/Property';
+import { Default } from '../decorators/Default';
 import { Register } from '../decorators/Register';
-import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM } from '../vdom/VDOM';
-import { Node, NodeMixin, NodeArgs, ArgsWithBinding } from '../nodes/Node';
+import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM';
+import { Node, NodeMixin, NodeProps, PropsWithBinding } from '../nodes/Node';
 
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
@@ -18,14 +19,9 @@ const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-export type IoElementArgs = NodeArgs & ArgsWithBinding<{
-  $?: string;
-  style?: Record<string, string>;
-  class?: string;
-  title?: string;
+export type IoElementProps = NativeElementProps & NodeProps & PropsWithBinding<{
   name?: string;
-  id?: string;
-  role?: string;
+  $?: string; // Special property to access elements by $ value.
 }>;
 
 /**
@@ -33,7 +29,7 @@ export type IoElementArgs = NodeArgs & ArgsWithBinding<{
  */
 @Register
 export class IoElement extends NodeMixin(HTMLElement) {
-  static vConstructor: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -44,6 +40,9 @@ export class IoElement extends NodeMixin(HTMLElement) {
       :host[hidden] {
         display: none;
       }
+      :host[inert] {
+        opacity: 0.5;
+      }
       :host:focus {
         border-color: var(--io_colorBlue);
         outline: 1px auto var(--io_colorBlue);
@@ -51,24 +50,16 @@ export class IoElement extends NodeMixin(HTMLElement) {
     `;
   }
 
-  declare $: Record<string, any>; // TODO: Add type safety.
-
-  @Property({value: '', type: String, reflect: true})
-  declare class: string;
-
-  @Property({value: '', type: String, reflect: true})
-  declare title: string;
-
   @Property({value: '', type: String, reflect: true})
   declare name: string;
 
-  @Property({value: '', type: String, reflect: true})
+  @Default('')
   declare id: string;
 
-  @Property({value: '', type: String, reflect: true})
-  declare role: string;
+  @Default(Object)
+  declare $: Record<string, HTMLElement | IoElement>;
 
-  constructor(args?: IoElementArgs) {
+  constructor(args?: IoElementProps) {
     super(args);
     for (const name in this._protochain.properties) {
       const property = this._properties.get(name)!;
@@ -112,7 +103,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
    */
   template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, cache?: boolean) {
     host = (host || this) as any;
-    if (host === (this as any)) this.$ = {};
     const vDOMElementsOnly = vDOMElements.filter(item => item !== null);
     this.traverse(vDOMElementsOnly, host as HTMLElement, cache);
   }
@@ -209,13 +199,33 @@ export class IoElement extends NodeMixin(HTMLElement) {
       (element as IoElement)._textNode.nodeValue = textContent;
     }
   }
-  applyProperties(props: any) {
-    super.applyProperties(props);
-    if (props['style']) {
-      for (const s in props['style']) {
-        this.style[s] = props['style'][s];
+  /**
+   * Sets multiple properties in batch.
+   * [property]-changed` events will be broadcast in the end.
+   * @param {Object} props - Map of property names and values.
+   */
+  applyProperties(props: any, skipDispatch = false) {
+    for (const name in props) {
+      if (name === 'class') {
+        this.className = props[name];
+      } else if (name === 'style') {
+        for (const s in props[name]) {
+          this.style[s] = props[name][s];
+        }
+      } else if (this._properties.has(name)) {
+        this.setProperty(name, props[name], true);
+      } else {
+        if (!name.startsWith('@') && name !== '$') {
+          // TODO: test
+          this[name] = props[name];
+          if (props[name] === undefined && this.hasAttribute(name)) {
+            this.removeAttribute(name);
+          }
+        }
       }
     }
+    this._eventDispatcher.applyPropListeners(props);
+    if (!skipDispatch) this.dispatchQueue();
   }
   /**
   * Alias for HTMLElement setAttribute where falsey values remove the attribute.
@@ -307,7 +317,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
     // TODO: Define all overloads with type guards.
     // TODO: Add runtime debuf type checks.
     // TODO: Test thoroughly.
-    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
+    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
       const vDOMElement: VDOMElement = {name: localName};
       if (arg0 !== undefined) {
         if (typeof arg0 === 'string') {

@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, IoElementArgs, ArgsWithBinding, span } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoElementProps, PropsWithBinding, span, a } from 'io-gui';
 import { ioBreadcrumbs } from './IoBreadcrumbs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
@@ -6,7 +6,7 @@ import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
 import { EditorWidgets } from '../utils/EditorWidgets';
 import { ioPropertyLink } from './IoPropertyLink';
 
-export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
+export type IoInspectorProps = IoElementProps & PropsWithBinding<{
   value?: Record<string, any> | any[];
   selected?: Record<string, any> | any[];
   config?: EditorConfig;
@@ -20,7 +20,7 @@ export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoInspector extends IoElement {
-  static vConstructor: (arg0?: IoInspectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoInspectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -96,6 +96,7 @@ export class IoInspector extends IoElement {
   _onChange() {
     const elements = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
+      a({href: 'https://www.google.com', target: '_blank', rel: 'noopener noreferrer'}, 'Google'),
     ];
 
     const config = new Map(this.config);

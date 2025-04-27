@@ -1,7 +1,7 @@
-import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoSliderBase, IoSliderBaseArgs } from './IoSliderBase';
+import { Register, Property, VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
-export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{
+export type IoSliderRangeProps = IoSliderBaseProps & PropsWithBinding<{
   // TODO TS does not support narrowing of the type values here? :/
   // value?: [number, number];
   // step?: number;
@@ -15,7 +15,7 @@ export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoSliderRange extends IoSliderBase {
-  static vConstructor: (arg0?: IoSliderRangeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoSliderRangeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
@@ -31,7 +31,7 @@ export class IoSliderRange extends IoSliderBase {
 
   _index = 0;
 
-  constructor(args: IoSliderRangeArgs = {}) { super(args); }
+  constructor(args: IoSliderRangeProps = {}) { super(args); }
 
   _getCoordFromValue(value: [number, number]) {
     const coord = [0, 0];

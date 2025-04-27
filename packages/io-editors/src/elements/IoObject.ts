@@ -1,11 +1,11 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, Default } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
 import { EditorGroups } from '../utils/EditorGroups';
 import { EditorWidgets } from '../utils/EditorWidgets';
 
-export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
+export type IoObjectProps = IoElementProps & PropsWithBinding<{
   value?: Record<string, any> | any[];
   properties?: string[];
   config?: EditorConfig;
@@ -21,7 +21,7 @@ export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoObject extends IoElement {
-  static vConstructor: (arg0?: IoObjectArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -75,7 +75,7 @@ export class IoObject extends IoElement {
   @Property({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property('region')
+  @Default('region')
   declare role: string;
 
   changed() {

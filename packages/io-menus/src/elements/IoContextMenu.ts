@@ -1,8 +1,8 @@
-import { Register, IoElement, Property, IoOverlaySingleton as Overlay, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, IoOverlaySingleton as Overlay, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 
-export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
+export type IoContextMenuProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
   expanded?: boolean;
   button?: number;
@@ -13,7 +13,7 @@ export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoContextMenu extends IoElement {
-  static vConstructor: (arg0?: IoContextMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoContextMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @Property({type: MenuOptions})
   declare options: MenuOptions;
@@ -30,7 +30,7 @@ export class IoContextMenu extends IoElement {
     };
   }
 
-  constructor(args: IoContextMenuArgs = {}) { super(args); }
+  constructor(args: IoContextMenuProps = {}) { super(args); }
 
   connectedCallback() {
     super.connectedCallback();

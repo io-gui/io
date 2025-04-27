@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoElementArgs, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, Property, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 import { IoNumber } from './IoNumber';
 import { ioNumberLadderStep } from './IoNumberLadderStep';
 
@@ -16,7 +16,7 @@ let lastFocus: Element | null = null;
   }, {capture: true});
 }
 
-export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
+export type IoNumberLadderProps = IoElementProps & PropsWithBinding<{
   src?: IoNumber;
   expanded?: boolean;
 }>;
@@ -31,7 +31,7 @@ export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 class IoNumberLadder extends IoElement {
-  static vConstructor: (arg0?: IoNumberLadderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoNumberLadderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -121,7 +121,7 @@ class IoNumberLadder extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: 'list', type: String})
+  @Default('listbox')
   declare role: string;
 
   static get Listeners() {
@@ -147,7 +147,7 @@ class IoNumberLadder extends IoElement {
     return this.src ? this.src.conversion : 1;
   }
 
-  constructor(args: IoNumberLadderArgs = {}) { super(args); }
+  constructor(args: IoNumberLadderProps = {}) { super(args); }
 
   onFocusIn(event: FocusEvent) {
     event.stopPropagation();

@@ -1,7 +1,7 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement, Node } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, Node } from 'io-gui';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
-export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
+export type IoVectorProps = IoElementProps & PropsWithBinding<{
   value?: {x: number, y: number, z?: number, w?: number} | number[];
   conversion?: number;
   step?: number;
@@ -16,7 +16,7 @@ export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoVector extends IoElement {
-  static vConstructor: (arg0?: IoVectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

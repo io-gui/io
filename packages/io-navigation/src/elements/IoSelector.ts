@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementArgs, disposeChildren, applyNativeElementProps, Property, span, ArgsWithBinding, NativeElementProps } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, Property, span, PropsWithBinding, NativeElementProps } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -11,7 +11,7 @@ const dummyElement = document.createElement('div');
 
 const IMPORTED_PATHS: Record<string, any> = {};
 
-export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
+export type IoSelectorProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
   select?: 'first' | 'last';
   elements?: VDOMElement[];
@@ -24,7 +24,7 @@ export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoSelector extends IoElement {
-  static vConstructor: (arg0?: IoSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -140,7 +140,7 @@ export class IoSelector extends IoElement {
         element = span(warning);
       }
 
-      let args: IoSelectorArgs = element.props || {};
+      let args: IoSelectorProps = element.props || {};
 
       const explicitlyCache = args.cache === true;
       const explicitlyDontCache = args.cache === false;
@@ -190,7 +190,7 @@ export class IoSelector extends IoElement {
     if (this.precache) {
       for (let i = 0; i < this.elements.length; i++) {
         const element = this.elements[i];
-        let args: IoSelectorArgs = element.props || {};
+        let args: IoSelectorProps = element.props || {};
         if (!args.import && args.id && this._caches[args.id as string] === undefined) {
           this.template([element], dummyElement, true);
           this._caches[args.id as string] = dummyElement.childNodes[0] as HTMLElement;

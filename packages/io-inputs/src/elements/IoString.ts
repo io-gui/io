@@ -1,7 +1,7 @@
-import { Register, Property, VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
+import { Register, Property, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { IoInputBase, IoInputBaseProps } from './IoInputBase';
 
-export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoStringProps = IoInputBaseProps & PropsWithBinding<{
   value?: string;
   live?: boolean;
   placeholder?: string;
@@ -14,7 +14,7 @@ export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoString extends IoInputBase {
-  static vConstructor: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -44,10 +44,10 @@ export class IoString extends IoInputBase {
   @Property({value: 'inset', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Property('textbox')
+  @Default('textbox')
   declare role: string;
 
-  constructor(args: IoStringArgs = {}) { super(args); }
+  constructor(args: IoStringProps = {}) { super(args); }
 
   get textNode() {
     this._flattenTextNode(this);

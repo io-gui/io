@@ -1,4 +1,4 @@
-import { Register, IoElement, Change, Property, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Change, Property, IoElementProps, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem } from './IoMenuItem.js';
@@ -6,7 +6,7 @@ import { ioMenuItem } from './IoMenuItem.js';
 const dummyOptions = new MenuOptions();
 // TODO: fix tab-out without collapse
 
-export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
+export type IoOptionMenuProps = IoElementProps & PropsWithBinding<{
   value?: any;
   options?: MenuOptions;
   item?: MenuItem;
@@ -18,7 +18,7 @@ export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
  **/
 @Register
 export class IoOptionMenu extends IoElement {
-  static vConstructor: (arg0?: IoOptionMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoOptionMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -48,13 +48,13 @@ export class IoOptionMenu extends IoElement {
   @Property({value: dummyOptions, type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
-  @Property('button')
-  declare role: string;
-
   @Property(MenuItem)
   declare item: MenuItem;
 
-  constructor(args: IoOptionMenuArgs = {}) { super(args); }
+  @Default('button')
+  declare role: string;
+
+  constructor(args: IoOptionMenuProps = {}) { super(args); }
 
   _onLastChanged(event: CustomEvent) {
     if (this._disposed) return;

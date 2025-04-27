@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, Storage as $, genObjectStorageID, div, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, Storage as $, genObjectStorageID, div, IoElementProps, PropsWithBinding, Default } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -53,7 +53,7 @@ export function filterOptions(options: MenuOptions, search: string, depth = 5, e
   }
 }
 
-export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
+export type IoMenuTreeProps = IoElementProps & PropsWithBinding<{
   options?: MenuOptions;
   searchable?: boolean;
   search?: string;
@@ -63,7 +63,7 @@ export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
 
 @Register
 export class IoMenuTree extends IoElement {
-  static vConstructor: (arg0?: IoMenuTreeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -162,11 +162,11 @@ export class IoMenuTree extends IoElement {
   @Property({type: Array})
   declare slotted: VDOMElement[];
 
-  @Property('listbox')
-  declare role: string;
-
   @Property(undefined)
   declare $parent?: IoMenuItem;
+
+  @Default('listbox')
+  declare role: string;
 
   static get Listeners() {
     return {
@@ -174,7 +174,7 @@ export class IoMenuTree extends IoElement {
     };
   }
 
-  constructor(args: IoMenuTreeArgs = {}) { super(args); }
+  constructor(args: IoMenuTreeProps = {}) { super(args); }
 
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
