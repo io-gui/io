@@ -50,6 +50,10 @@ export class IoSlider2d extends IoSliderBase {
 
   constructor(args: IoSlider2dProps = {}) { super(args); }
 
+  valueMutated() {
+    this.changed();
+  }
+
   static get GlUtils() {
     return /* glsl */`
       vec3 paintKnob(vec3 dstCol, vec2 p, vec2 center, vec3 color) {

@@ -233,16 +233,21 @@ export class IoSliderBase extends IoGl {
     value[0] = Number(value[0].toFixed(5));
     value[1] = Number(value[1].toFixed(5));
     if (typeof this.value === 'number') {
+      if (this.value === value[0]) return;
       this.inputValue(value[0]);
     } else if (this.value instanceof Array) {
+      const oldValue = JSON.stringify(this.value);
       this.value[0] = value[0];
       this.value[1] = value[1];
+      if (oldValue === JSON.stringify(this.value)) return;
       this.inputValue(this.value);
       this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     } else if (typeof this.value === 'object') {
+      const oldValue = JSON.stringify(this.value);
       const $value = this.value as {x: number, y: number};
       $value.x = value[0];
       $value.y = value[1];
+      if (oldValue === JSON.stringify(this.value)) return;
       this.inputValue(this.value);
       this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     }

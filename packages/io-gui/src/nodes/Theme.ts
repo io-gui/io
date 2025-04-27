@@ -282,9 +282,12 @@ export class Theme extends Node {
   }
 
   onPropertyMutated(event: CustomEvent) {
-    super.onPropertyMutated(event);
-    this.changed();
-    this.dispatchEvent('object-mutated', {object: this});
+    const mutated = super.onPropertyMutated(event);
+    if (mutated) {
+      this.changed();
+      this.dispatchEvent('object-mutated', {object: this});
+      return true;
+    }
   }
   fontSizeChanged() {
     this.lineHeight = Math.max(this.fontSize, this.lineHeight);

@@ -40,6 +40,7 @@ export class IoColorSlider extends IoColorBase {
 
   _onValueInput(event: CustomEvent) {
     const v = event.detail.value;
+    const oldValue = JSON.stringify(this.value);
     switch (this.channel) {
       case 'r':
         this.value.r = v;
@@ -92,6 +93,7 @@ export class IoColorSlider extends IoColorBase {
         this.valueFromRgb();
         break;
     }
+    if (oldValue === JSON.stringify(this.value)) return;
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
     if (!(this.value as unknown as Node)._isNode) {
       // TODO: add oldValue/value

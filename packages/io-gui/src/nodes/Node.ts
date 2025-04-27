@@ -329,7 +329,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
           if (typeof this[name + 'Mutated'] === 'function') {
             this.throttle(this[name + 'Mutated']);
           }
-          return;
+          return true;
         }
       }
     };
