@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementArgs, disposeChildren, applyNativeElementProps, Property, span, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementArgs, disposeChildren, applyNativeElementProps, Property, span, ArgsWithBinding, NativeElementProps } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -162,7 +162,7 @@ export class IoSelector extends IoElement {
             cachedElement.applyProperties(args);
           } else {
             // Set native HTML element properties
-            applyNativeElementProps(cachedElement as unknown as HTMLElement, args);
+            applyNativeElementProps(cachedElement as unknown as HTMLElement, args as NativeElementProps);
           }
 
           this.loading = false;

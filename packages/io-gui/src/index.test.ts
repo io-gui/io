@@ -3,6 +3,7 @@ import ChangeQueueTest from './core/ChangeQueue.test';
 import EventDispatcherTest from './core/EventDispatcher.test';
 import PropertyTest from './core/Property.test';
 import ProtoChainTest from './core/ProtoChain.test';
+import VDOMTest from './vdom/VDOM.test';
 import NodeTest from './nodes/Node.test';
 import StorageTest from './nodes/Storage.test';
 import ThemeTest from './nodes/Theme.test';
@@ -16,6 +17,7 @@ export default class {
     new EventDispatcherTest().run();
     new PropertyTest().run();
     new ProtoChainTest().run();
+    new VDOMTest().run();
     new NodeTest().run();
     new StorageTest().run();
     new ThemeTest().run();

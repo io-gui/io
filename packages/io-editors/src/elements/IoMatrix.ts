@@ -1,4 +1,4 @@
-import { Register, Property, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, Property, ArgsWithBinding, VDOMElement, Node } from 'io-gui';
 import { IoVector, IoVectorArgs } from './IoVector';
 
 export type IoMatrixArgs = IoVectorArgs & ArgsWithBinding<{
@@ -47,8 +47,10 @@ export class IoMatrix extends IoVector {
     const value = event.detail.value;
     const oldValue = event.detail.oldValue;
     this.value[id] = value;
-    const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-    this.dispatchEvent('object-mutated', detail, false, window);
+    if (!(this.value as unknown as Node)._isNode) {
+      const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
+      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+    }
   }
 
   valueChanged() {

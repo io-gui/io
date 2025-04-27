@@ -1,4 +1,4 @@
-import { Register, Property, glsl, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Register, Property, glsl, VDOMElement, ArgsWithBinding, Node } from 'io-gui';
 import { IoColorBase, IoColorBaseArgs } from './IoColorBase';
 import { IoSlider, IoSlider2d } from 'io-sliders';
 
@@ -92,8 +92,12 @@ export class IoColorSlider extends IoColorBase {
         this.valueFromRgb();
         break;
     }
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
+    if (!(this.value as unknown as Node)._isNode) {
+      // TODO: add oldValue/value
+      const detail = {object: this.value};
+      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+    }
   }
 
   changed() {

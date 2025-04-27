@@ -1,10 +1,11 @@
-import { AnyConstructor, VDOMElement } from 'io-gui';
-import { ioField } from 'io-inputs';
+import { AnyConstructor, div, VDOMElement } from 'io-gui';
 
 export type EditorWidgets = Map<AnyConstructor, VDOMElement>
 
 const editorWidgetsSingleton: EditorWidgets = new Map<AnyConstructor, VDOMElement>([
-  [HTMLElement, ioField()],
+  [HTMLElement, {name: 'io-property-editor', props: {properties: ['outerHTML'], config: new Map([
+    [HTMLElement, [['outerHTML', div()]]]
+  ]), labeled: false}}],
 ]);
 
 export function getEditorWidget(object: object, editorWidgets: EditorWidgets = new Map()): VDOMElement | null {

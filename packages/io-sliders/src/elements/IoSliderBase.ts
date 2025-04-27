@@ -1,4 +1,4 @@
-import { Property, IoGl, IoGlArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { Property, IoGl, IoGlArgs, VDOMElement, ArgsWithBinding, Default } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -41,6 +41,9 @@ export class IoSliderBase extends IoGl {
         flex-basis: var(--io_fieldHeight);
         flex-grow: 0;
       }
+      :host[disabled] {
+        opacity: 0.5;
+      }
       :host[invalid] {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorRed);
@@ -48,6 +51,9 @@ export class IoSliderBase extends IoGl {
       }
     `;
   }
+
+  @Default(true)
+  declare inert: boolean;
 
   @Property({value: 0})
   declare value: number | [number, number];

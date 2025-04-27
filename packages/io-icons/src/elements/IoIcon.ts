@@ -55,7 +55,7 @@ export class IoIcon extends IoElement {
     if (this.value.search(':') !== -1) {
       this.innerHTML = IconsetSingleton.getIcon(this.value);
     } else {
-      this.textNode = this.value;
+      this.innerText = this.value;
     }
   }
 }

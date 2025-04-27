@@ -1,6 +1,6 @@
 import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
-import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM } from '../core/VDOM';
+import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM } from '../vdom/VDOM';
 import { Node, NodeMixin, NodeArgs, ArgsWithBinding } from '../nodes/Node';
 
 // Global mixin record
@@ -208,14 +208,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
       }
       (element as IoElement)._textNode.nodeValue = textContent;
     }
-  }
-  get textNode() {
-    this._flattenTextNode(this);
-    return this._textNode.nodeValue;
-  }
-  set textNode(value) {
-    this._flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
   }
   applyProperties(props: any) {
     super.applyProperties(props);

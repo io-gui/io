@@ -1,6 +1,6 @@
-import { IoElement, Property, Register, IoElementArgs, Node, span, div, ArgsWithBinding, VDOMElement, Storage as $ } from 'io-gui';
+import { IoElement, Property, Register, IoElementArgs, Node, span, div, ArgsWithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig';
-import { EditorGroups, getAllPropertyNames, getEditorGroups } from '../utils/EditorGroups';
+import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets';
 
 import { ioObject } from './IoObject';
@@ -96,7 +96,6 @@ export class IoPropertyEditor extends IoElement {
       const oldValue = event.detail.oldValue;
       this.value[prop] = value;
 
-
       if (!(this.value as Node)._isNode) {
         const detail = {object: this.value, property: prop, value: value, oldValue: oldValue};
         this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
@@ -141,13 +140,18 @@ export class IoPropertyEditor extends IoElement {
         const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
 
+        let children: string | undefined = undefined;
+        if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
+          children = value;
+        }
+
         if (tag === 'io-object' || tag === 'io-property-editor') {
           finalProps.config = finalProps.config || this.config;
           finalProps.groups = finalProps.groups || this.groups;
         }
         elements.push(div({class: 'row'}, [
           this.labeled ? span(c) : null,
-          {name: tag, props: finalProps},
+          {name: tag, props: finalProps, children: children},
         ]));
       } else {
         debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
@@ -162,7 +166,7 @@ export class IoPropertyEditor extends IoElement {
           elements.push(
             ioObject({
               label: group,
-              expanded: $({value: true, storage: 'local', key: uuid + '-' + group}),
+              expanded: $({value: false, storage: 'local', key: uuid + '-' + group}),
               value: this.value,
               properties: groups[group],
               config: this.config,

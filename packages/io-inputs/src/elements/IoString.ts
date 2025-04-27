@@ -49,6 +49,15 @@ export class IoString extends IoInputBase {
 
   constructor(args: IoStringArgs = {}) { super(args); }
 
+  get textNode() {
+    this._flattenTextNode(this);
+    return this._textNode.nodeValue;
+  }
+  set textNode(value) {
+    this._flattenTextNode(this);
+    this._textNode.nodeValue = String(value);
+  }
+
   _setFromTextNode() {
     const textNode = this.textNode;
     if (typeof this.value === 'string' && textNode !== String(this.value)) {
@@ -136,14 +145,10 @@ export class IoString extends IoInputBase {
     this.disabledChanged();
   }
   valueChanged() {
-    if (typeof this.value !== 'string') {
-      this.setAttribute('aria-invalid', 'true');
-    } else {
-      this.removeAttribute('aria-invalid');
-    }
+    this.invalid = (typeof this.value !== 'string' && this.value !== null && this.value !== undefined);
   }
   changed() {
-    this.textNode = String(this.value).replace(new RegExp(' ', 'g'), '\u00A0');
+    this.textNode = String(this.value || '').replace(new RegExp(' ', 'g'), '\u00A0');
   }
 }
 export const ioString = IoString.vConstructor;

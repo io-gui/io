@@ -56,6 +56,9 @@ export class IoMenuItem extends IoInputBase {
   @Property({value: false, reflect: true})
   declare expanded: boolean;
 
+  @Property({value: false})
+  declare contentEditable: boolean;
+
   @Property({value: 'right', reflect: true})
   declare direction: NudgeDirection;
 

@@ -1,7 +1,7 @@
 import { Register } from '../decorators/Register';
 import { Property } from '../decorators/Property';
 import { PropertyInstance, PropertyDefinition } from '../core/Property';
-import { VDOMElement } from '../core/VDOM';
+import { VDOMElement } from '../vdom/VDOM';
 import { Node, ArgsWithBinding } from '../nodes/Node';
 import { ThemeSingleton, Color } from '../nodes/Theme';
 import { IoElement, IoElementArgs } from './IoElement';

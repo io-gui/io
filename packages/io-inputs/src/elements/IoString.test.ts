@@ -15,13 +15,13 @@ export default class {
         this.element.value = 'hello';
         expect(this.element.textContent).to.equal('hello');
         (this.element as any).value = false;
-        expect(this.element.textContent).to.equal('false');
+        expect(this.element.textContent).to.equal('');
         (this.element as any).value = null;
-        expect(this.element.textContent).to.equal('null');
+        expect(this.element.textContent).to.equal('');
         (this.element as any).value = undefined;
-        expect(this.element.textContent).to.equal('undefined');
+        expect(this.element.textContent).to.equal('');
         (this.element as any).value = NaN;
-        expect(this.element.textContent).to.equal('NaN');
+        expect(this.element.textContent).to.equal('');
         (this.element as any).value = 123;
         expect(this.element.textContent).to.equal('123');
         this.element.value = '';

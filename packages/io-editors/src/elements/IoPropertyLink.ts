@@ -26,7 +26,7 @@ export class IoPropertyLink extends IoButton {
     `;
   }
 
-  @Property({type: Object})
+  @Property()
   declare value: Object;
 
   @Property({value: false, type: Boolean})

@@ -1,4 +1,4 @@
-import { Register } from 'io-gui';
+import { Register, Node } from 'io-gui';
 import { ioNumber } from 'io-inputs';
 import { IoColorBase } from './IoColorBase';
 import { ioColorPicker } from './IoColorPicker';
@@ -48,8 +48,11 @@ export class IoColorRgba extends IoColorBase {
     const value = this.value as any;
     value[id] = newValue;
 
-    const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-    this.dispatchEvent('object-mutated', detail, false, window);
+    if (!(this.value as unknown as Node)._isNode) {
+      // TODO: add oldValue/value
+      const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
+      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+    }
   }
 
   changed() {

@@ -1,13 +1,14 @@
 import { ProtoProperty } from './Property';
 import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher';
-import { Node, NodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { Node, NodeConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { propertyDecorators } from '../decorators/Property';
+import { propertyDefaults } from '../decorators/Default';
 
 type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = { [property: string]: ProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
 
-export const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions> = new WeakMap();
 
 const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
 function isNonNodeConstructor(constructor: any) {
@@ -51,13 +52,19 @@ export class ProtoChain {
    */
   constructors: ProtoConstructors = [];
   /**
-   * Aggregated property definition declared in `static get Properties()`
+   * Aggregated property definition declared in `static get Properties()` or @Property() decorators
    */
   properties: ProtoProperties = {};
   /**
    * Aggregated listener definition declared in `static get Listeners()`
    */
   listeners: ProtoListeners = {};
+  /**
+   * Aggregated default value for properties declared in `static get Defaults()` or @Default() decorators
+  */
+  // TODO: static get Defaults()
+  // TODO: test
+  defaults: Record<string, any> = {};
   /**
    * Aggregated CSS style definition declared in `static get Style()`
    */
@@ -101,6 +108,11 @@ export class ProtoChain {
       this.addPropertiesFromDecorators(ioNodeConstructor);
       propHash = this.addStaticProperties(ioNodeConstructor.Properties, propHash);
       this.addListeners(ioNodeConstructor.Listeners);
+
+      const defaults = propertyDefaults.get(ioNodeConstructor);
+      if (defaults) for (const name in defaults) {
+        this.defaults[name] = defaults[name];
+      }
     }
 
     this.observedObjectProperties = this.getObservedObjectProperties();

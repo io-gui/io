@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, Node } from 'io-gui';
 import {ioSliderRange} from './IoSliderRange';
 import {ioNumber} from 'io-inputs';
 
@@ -24,13 +24,13 @@ export class IoNumberSliderRange extends IoElement {
       width: var(--io_fieldHeight10);
     }
     :host > io-number {
-      flex: 0 0 3.25em;
+      flex: 0 0 3.5em;
     }
     :host > io-slider-range {
       margin-left: var(--io_spacing);
       margin-right: var(--io_spacing);
-      flex: 1 1 3.25em;
-      min-width: 3.25em;
+      flex: 1 1 3.5em;
+      min-width: 3.5em;
     }
     `;
   }
@@ -59,16 +59,21 @@ export class IoNumberSliderRange extends IoElement {
     const item = event.composedPath()[0];
     if (item === this.$.number0) this.value[0] = event.detail.value;
     if (item === this.$.number1) this.value[1] = event.detail.value;
-    event.detail.value = this.value;
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    this.dispatchEvent('value-input', event.detail, false);
+    if (!(this.value as unknown as Node)._isNode) {
+      // TODO: add oldValue/value
+      const detail = {object: this.value};
+      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+    }
   }
   _onSliderSet(event: CustomEvent) {
     this.value = event.detail.value;
-    this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+    // this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', event.detail, false);
   }
   init() {
+    this.changed();
+  }
+  valueMutated() {
     this.changed();
   }
   changed() {

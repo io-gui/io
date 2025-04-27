@@ -20,7 +20,7 @@ export default class {
           binding: undefined,
           init: undefined,
           reflect: false,
-          type: String,
+          type: undefined,
           value: '',
         });
         expect(element._properties.get('selected')).to.eql({

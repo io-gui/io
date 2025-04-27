@@ -114,6 +114,10 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         }
       }
 
+      for (const name in this._protochain.defaults) {
+        this[name] = this._protochain.defaults[name];
+      }
+
       this.applyProperties(args, true);
 
       if (this._protochain.observedObjectProperties.length) {

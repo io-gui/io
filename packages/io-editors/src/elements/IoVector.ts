@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { Register, IoElement, Property, IoElementArgs, ArgsWithBinding, VDOMElement, Node } from 'io-gui';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
 export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
@@ -89,8 +89,10 @@ export class IoVector extends IoElement {
         if (k !== id && this._ratios[k]) value[k] = value[id] * this._ratios[k];
       }
     }
-    const detail = this.linked ? {object: this.value} : {object: this.value, property: id, value: value, oldValue: oldValue};
-    this.dispatchEvent('object-mutated', detail, false, window);
+    if (!(this.value as unknown as Node)._isNode) {
+      const detail = this.linked ? {object: this.value} : {object: this.value, property: id, value: value, oldValue: oldValue};
+      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+    }
   }
 
   valueChanged() {

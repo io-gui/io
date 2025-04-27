@@ -1,12 +1,11 @@
-import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node } from 'io-gui';
-import { ioString, ioNumber, ioSwitch, ioInputBase, ioField } from 'io-inputs';
+import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from 'io-gui';
+import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
 import { MenuOptions, ioOptionMenu } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 import { ioVector } from '../elements/IoVector';
 import { ioObject } from '../elements/IoObject';
-import { getAllPropertyNames } from '../utils/EditorGroups';
-
+import { getAllPropertyNames } from './EditorGroups';
 
 type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
@@ -14,37 +13,28 @@ export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
 export type PropertyConfigRecord = Record<string, VDOMElement>;
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
+function optionMenu(options: any[]) {
+  return ioOptionMenu({options: new MenuOptions().fromJSON(options)});
+}
+
 const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
   [Object, [
     [String, ioString()],
     [Number, ioNumber({step: 0.01})],
     [Boolean, ioSwitch()],
     [Object, ioObject()],
-    [null, ioInputBase()],
-    [undefined, ioInputBase()],
+    [null, ioField({disabled: true})],
+    [undefined, ioField({disabled: true})],
   ]],
   [Array, [
     [Number, ioNumber({step: 0.01})],
   ]],
   [window.Node, [
-    ['nodeName', ioField({disabled: true})],
-    [null, ioField({disabled: true})],
-    [undefined, ioField({disabled: true})],
-  ]],
-  [HTMLElement, [
     ['tabIndex', ioOptionMenu({options: new MenuOptions().fromJSON([
       {value: '', label: 'none'}, '-1', '0', '1', '2', '3',
     ])})],
-    ['role', ioOptionMenu({options: new MenuOptions().fromJSON([
-      'alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary',
-      'contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img',
-      'link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio',
-      'navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader',
-      'scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term',
-      'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
-    ])})],
-    ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],
-    ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],
+    ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
+    ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
     ['autocapitalize', ioOptionMenu({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', label: 'None'}])})],
     ['writingSuggestions', ioOptionMenu({options: new MenuOptions().fromJSON(['true', 'false'])})],
     ['dir', ioOptionMenu({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', label: 'None'}])})],
@@ -68,8 +58,61 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'ro','ru','se','sm','sg','sa','sr','sh','st','tn','sn','ii','sd','si','ss','sk','sl','so','nr','es','su','sw','sv','tl','ty','tg','ta',
       'tt','te','th','bo','ti','to','ts','tr','tk','tw','ug','uk','ur','uz','ve','vi','vo','wa','cy','wo','fy','xh','yi','ji','yo','za','zu'
     ])})],
-    ['localName', ioField({disabled: true})],
-    ['tagName', ioField({disabled: true})],
+    ['role', ioOptionMenu({options: new MenuOptions().fromJSON([
+      'alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary',
+      'contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img',
+      'link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio',
+      'navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader',
+      'scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term',
+      'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
+    ])})],
+    ['ariaAtomic', optionMenu(['true','false', null])],
+    ['ariaAutoComplete', ioOptionMenu({options: new MenuOptions().fromJSON(['inline','list','both','none'])})],
+    ['ariaBusy', optionMenu(['true','false', null])],
+    ['ariaBrailleLabel', ioString()],
+    ['ariaBrailleRoleDescription', ioString()],
+    ['ariaChecked', optionMenu(['true','false','mixed', null])],
+    ['ariaColCount', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaColIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaColSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaCurrent', optionMenu(['true','false','page','step','location','date','time', null])],
+    ['ariaDescription', ioString()],
+    ['ariaDisabled', optionMenu(['true','false', null])],
+    ['ariaExpanded', optionMenu(['true','false', null])],
+    ['ariaHasPopup', optionMenu(['true','false','menu','listbox','tree','grid','dialog', null])],
+    ['ariaHidden', optionMenu(['true','false', null])],
+    ['ariaInvalid', optionMenu(['true','false','grammar','spelling', null])],
+    ['ariaKeyShortcuts', ioString()],
+    ['ariaLabel', ioString()],
+    ['ariaLevel', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaLive', ioOptionMenu({options: new MenuOptions().fromJSON(['assertive','polite','off'])})],
+    ['ariaModal', optionMenu(['true','false', null])],
+    ['ariaMultiLine', optionMenu(['true','false', null])],
+    ['ariaMultiSelectable', optionMenu(['true','false', null])],
+    ['ariaOrientation', ioOptionMenu({options: new MenuOptions().fromJSON(['horizontal','vertical','undefined'])})],
+    ['ariaPlaceholder', ioString()],
+    ['ariaPosInSet', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaPressed', optionMenu(['true','false','mixed', null])],
+    ['ariaReadOnly', optionMenu(['true','false', null])],
+    ['ariaRequired', optionMenu(['true','false', null])],
+    ['ariaRelevant', ioOptionMenu({options: new MenuOptions().fromJSON(['additions','all','removals','text'])})],
+    ['ariaRoleDescription', ioString()],
+    ['ariaRowCount', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaRowIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaRowSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaSelected', optionMenu(['true','false', null])],
+    ['ariaSetSize', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaSort', ioOptionMenu({options: new MenuOptions().fromJSON(['none','ascending','descending','other'])})],
+    ['ariaValueMax', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaValueMin', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaValueNow', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaValueText', ioString()],
+    ['ariaColIndexText', ioString()],
+    ['ariaRowIndexText', ioString()],
+  ]],
+  [Element, [
+  ]],
+  [HTMLElement, [
   ]],
   [Node, [
     ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
@@ -113,6 +156,27 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]]
 ]);
 
+editorConfigSingleton.forEach((propertyTypes, constructor) => {
+  const descriptors = Object.getOwnPropertyDescriptors(constructor.prototype);
+  for (const [key, descriptor] of Object.entries(descriptors)) {
+    const isWritable = descriptor.writable !== false;
+    const hasGetter = descriptor.get !== undefined;
+    const hasSetter = descriptor.set !== undefined;
+    if ((hasGetter && !hasSetter) || !isWritable) {
+      const hasType = propertyTypes.find(propertyType => propertyType[0] === key);
+      if (hasType) {
+        debug: {
+          console.warn(constructor, `.${key} has getter but no setter or is not writable. Invalidating editor config.`);
+        }
+        (hasType as any).length = 0;
+        hasType.push(key, ioField({disabled: true}));
+      } else {
+        propertyTypes.push([key, ioField({disabled: true})]);
+      }
+    }
+  }
+});
+
 export function getEditorConfig(object: object, editorConfig: EditorConfig = new Map()): PropertyConfigRecord {
   debug: if (!object || !(object instanceof Object)) {
     console.warn('`getObjectConfig` should be used with an Object instance');
@@ -146,7 +210,10 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
       } else if (typeof PropertyIdentifier === 'function' && value?.constructor === PropertyIdentifier) {
         element = elementCandidate;
       } else if (typeof PropertyIdentifier === 'string' && key === PropertyIdentifier) {
-        element = elementCandidate;
+        // ignore io-field elements assigned to read-only object properties
+        if (!(typeof value === 'object' && value !== null && elementCandidate.name === 'io-field')) {
+          element = elementCandidate;
+        }
       } else if (PropertyIdentifier instanceof RegExp && PropertyIdentifier.test(key)) {
         element = elementCandidate;
       } else if (PropertyIdentifier === null && value === null) {
@@ -161,6 +228,7 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
   }
 
   debug: for (const key of getAllPropertyNames(object)) {
+    if (key === 'textNode') continue;
     const value = (object as any)[key];
     if (!configRecord[key]) console.warn('No config found for', key, value);
   }

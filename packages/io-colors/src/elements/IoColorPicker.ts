@@ -17,11 +17,16 @@ export class IoColorPicker extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        position: relative;
         height: var(--io_fieldHeight);
         border: var(--io_border);
         border-color: var(--io_borderColorInset);
         border-radius: var(--io_borderRadius);
         overflow: hidden;
+      }
+      :host > io-color-swatch {
+        width: 100%;
+        height: 100%;
       }
     `;
   }
@@ -88,6 +93,9 @@ export class IoColorPicker extends IoElement {
   collapse() {
     Panel.expanded = false;
     Panel.value = {r: 1, g: 1, b: 1, a: 1};
+  }
+  init() {
+    this.valueChanged();
   }
   valueChanged() {
     this.template([
