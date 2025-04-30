@@ -30,7 +30,7 @@ export default class {
         expect(this.element.getAttribute('tabIndex')).to.equal('0');
       });
       it('has contenteditable attribute', () => {
-        expect(this.element.getAttribute('contenteditable')).to.equal('');
+        expect(this.element.getAttribute('contenteditable')).to.equal('true');
       });
       it('has a11y attributes', () => {
         expect(this.element.getAttribute('role')).to.equal('textbox');

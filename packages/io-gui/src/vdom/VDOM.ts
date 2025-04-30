@@ -269,7 +269,7 @@ export type NativeElementProps = AriaProps & PropsWithUndefined<{
   inert?: any,
   accessKey?: any,
   draggable?: any,
-  spellcheck?: Boolean,
+  spellcheck?: boolean,
   autocapitalize?: any,
   contentEditable?: Boolean,
   enterKeyHint?: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send',

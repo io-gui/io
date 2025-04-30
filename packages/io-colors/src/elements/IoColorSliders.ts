@@ -96,21 +96,33 @@ export class IoColorSlider extends IoColorBase {
     if (oldValue === JSON.stringify(this.value)) return;
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
     if (!(this.value as unknown as Node)._isNode) {
-      // TODO: add oldValue/value
       const detail = {object: this.value};
       this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
     }
   }
 
   changed() {
-    const c = this.channel as keyof typeof this.value;
+    const c = this.channel;
 
-    debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'c', 'm', 'y', 'k', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
+    debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
       console.warn('IoColorSlider: Incorrect channel value!', c);
       console.log(this.value, this.channel, this);
     }
 
-    const sliderInputTagName = `io-color-slider-${c}`;
+    let slider = null;
+    switch (c) {
+      case 'r': slider = ioColorSliderR(); break;
+      case 'g': slider = ioColorSliderG(); break;
+      case 'b': slider = ioColorSliderB(); break;
+      case 'a': slider = ioColorSliderA(); break;
+      case 'h': slider = ioColorSliderH(); break;
+      case 's': slider = ioColorSliderS(); break;
+      case 'v': slider = ioColorSliderV(); break;
+      case 'l': slider = ioColorSliderL(); break;
+      case 'hs': slider = ioColorSliderHs(); break;
+      case 'sv': slider = ioColorSliderSv(); break;
+      case 'sl': slider = ioColorSliderSl(); break;
+    }
     let value: number | [number, number] = 0;
     let color: [number, number, number, number] = [0, 0, 0, 0];
     let min: number | [number, number] = 0;
@@ -173,10 +185,14 @@ export class IoColorSlider extends IoColorBase {
         break;
     }
 
-    this.template([{
-      name: sliderInputTagName,
-      props: {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput}
-    }]);
+    // TODO: values are always new objects which causes double rendering when interacting with the slider.
+    // This causes change() to be called so does valueMutated() from the slider itself.
+    // TODO: Fix!
+    slider.props = {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput};
+
+    this.template([
+      slider,
+    ]);
   }
 }
 export const ioColorSlider = IoColorSlider.vConstructor;
@@ -184,7 +200,7 @@ export const ioColorSlider = IoColorSlider.vConstructor;
  * A base class for 1D color slider.
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
-export class IoColorSliderBase extends IoSlider {
+class IoColorSliderBase extends IoSlider {
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
@@ -232,13 +248,15 @@ export class IoColorSliderBase extends IoSlider {
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
   }
+  // TODO: temp fix
+  valueMutated() {}
 }
 
 /**
  * A base class for 2D color slider.
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
-export class IoColorSlider2dBase extends IoSlider2d {
+class IoColorSlider2dBase extends IoSlider2d {
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
@@ -278,6 +296,8 @@ export class IoColorSlider2dBase extends IoSlider2d {
       gl_FragColor = vec4(finalCol, 1.0);
     }`;
   }
+  // TODO: temp fix
+  valueMutated() {}
 }
 
 /**

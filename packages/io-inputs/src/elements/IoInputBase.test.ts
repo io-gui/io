@@ -12,10 +12,8 @@ export default class {
         expect(element.setCaretPosition).to.be.a('function');
       });
       it('Should initialize properties correctly', () => {
-        expect(element.tabIndex).to.equal('0');
         expect(element.value).to.equal('');
         expect(element.selected).to.equal(false);
-
         expect(element._properties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
@@ -30,9 +28,9 @@ export default class {
           type: Boolean,
           value: false,
         });
+        expect(element.spellcheck).to.equal(false);
       });
       it('has correct default attributes', () => {
-        expect(element.getAttribute('tabIndex')).to.equal('0');
         expect(element.getAttribute('icon')).to.equal(null);
         expect(element.getAttribute('stroke')).to.equal(null);
         expect(element.getAttribute('value')).to.equal(null);

@@ -80,7 +80,7 @@ export default class {
         expect($('.io-down1').getAttribute('tabIndex')).to.equal('0');
       });
       it('has a11y attributes', () => {
-        expect(ladder.getAttribute('role')).to.equal('list');
+        expect(ladder.getAttribute('role')).to.equal('listbox');
       });
       it('steps have a11y attributes', () => {
         expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');

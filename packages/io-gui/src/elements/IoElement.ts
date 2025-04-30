@@ -53,9 +53,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
   @Property({value: '', type: String, reflect: true})
   declare name: string;
 
-  @Default('')
-  declare id: string;
-
   @Default(Object)
   declare $: Record<string, HTMLElement | IoElement>;
 
@@ -206,16 +203,16 @@ export class IoElement extends NodeMixin(HTMLElement) {
    */
   applyProperties(props: any, skipDispatch = false) {
     for (const name in props) {
-      if (name === 'class') {
-        this.className = props[name];
-      } else if (name === 'style') {
-        for (const s in props[name]) {
-          this.style[s] = props[name][s];
-        }
-      } else if (this._properties.has(name)) {
+      if (this._properties.has(name)) {
         this.setProperty(name, props[name], true);
       } else {
-        if (!name.startsWith('@') && name !== '$') {
+        if (name === 'class') {
+          this.className = props[name];
+        } else if (name === 'style') {
+          for (const s in props[name]) {
+            this.style[s] = props[name][s];
+          }
+        } else if (!name.startsWith('@') && name !== '$') {
           // TODO: test
           this[name] = props[name];
           if (props[name] === undefined && this.hasAttribute(name)) {
@@ -243,7 +240,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
   }
   /**
    * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
-   * @return {Object} vDOM-like representation of the element.
    */
   toVDOM() {
     return toVDOM(this);

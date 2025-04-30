@@ -44,6 +44,9 @@ export class IoString extends IoInputBase {
   @Property({value: 'inset', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
+  @Default(true)
+  declare contentEditable: boolean;
+
   @Default('textbox')
   declare role: string;
 

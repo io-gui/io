@@ -8,7 +8,6 @@ export default class {
   run() {
     describe('IoNumber.test', () => {
       it('Should initialize properties correctly', () => {
-        expect(element.role).to.equal('textbox');
         expect(element.value).to.equal(0);
         expect(element.conversion).to.equal(1);
         expect(element.step).to.equal(0.0001);
@@ -16,8 +15,10 @@ export default class {
         expect(element.max).to.equal(Infinity);
         expect(element.ladder).to.equal(false);
         expect(element.pattern).to.equal('pattern="[0-9]*"');
-        expect(element.inputmode).to.equal('numeric');
-        expect(element.spellcheck).to.equal('false');
+        expect(element.inputMode).to.equal('numeric');
+        expect(element.role).to.equal('textbox');
+        expect(element.spellcheck).to.equal(false);
+
         expect(element._properties.get('conversion')).to.eql({
           binding: undefined,
           init: undefined,
@@ -45,27 +46,6 @@ export default class {
           reflect: false,
           type: Number,
           value: Infinity,
-        });
-        expect(element._properties.get('pattern')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: 'pattern="[0-9]*"',
-        });
-        expect(element._properties.get('inputmode')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: 'numeric',
-        });
-        expect(element._properties.get('spellcheck')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: 'false',
         });
       });
       it('has correct default attributes', () => {
@@ -153,6 +133,9 @@ export default class {
         element.value = 0;
         expect(element.getAttribute('value')).to.equal('0');
         expect(element.getAttribute('positive')).to.equal('');
+      });
+      it('has contenteditable attribute', () => {
+        expect(element.getAttribute('contenteditable')).to.equal('true');
       });
       it('has a11y attributes', () => {
         (element as any).value = '';

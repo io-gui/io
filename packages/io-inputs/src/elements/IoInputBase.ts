@@ -46,11 +46,11 @@ export class IoInputBase extends IoField {
   @Property({value: false, type: Boolean, reflect: true})
   declare pressed: boolean;
 
-  @Default('false')
-  declare contentEditable: boolean;
+  @Property({value: '', type: String, reflect: true})
+  declare pattern: string;
 
-  @Default('false')
-  declare spellcheck: string;
+  @Default(false)
+  declare spellcheck: boolean;
 
   constructor(args: IoInputBaseProps = {}) { super(args); }
 

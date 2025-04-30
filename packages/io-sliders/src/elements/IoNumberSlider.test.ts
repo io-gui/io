@@ -44,7 +44,7 @@ export default class {
       });
       it('has contenteditable attribute on number field', () => {
         expect(this.element.getAttribute('contenteditable')).to.equal(null);
-        expect(this.element.$.number.getAttribute('contenteditable')).to.equal('');
+        expect(this.element.$.number.getAttribute('contenteditable')).to.equal('true');
         expect(this.element.$.slider.getAttribute('contenteditable')).to.equal(null);
       });
       it('has a11y attributes', async () => {

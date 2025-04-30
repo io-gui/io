@@ -1,5 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, Node, Change, PropertyDefinitions } from '../index';;
+import { Register, IoElement, Node, Change, PropertyDefinitions } from '../index';
+
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
@@ -27,65 +28,28 @@ export default class {
         expect(element.template).to.be.a('function');
         expect(element.traverse).to.be.a('function');
         expect(element.setAttribute).to.be.a('function');
+        expect(element.$).to.be.a('object');
       });
       it('Should initialize properties correctly', () => {
         // Default properties
-        expect(element.class).to.be.equal('');
-        expect(element.title).to.be.equal('');
-        expect(element.id).to.be.equal('');
-        expect(element.role).to.be.equal('');
-
-        expect(element._properties.get('class')).to.eql({
+        expect(element.name).to.be.equal('');
+        expect(element._properties.get('name')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,
           type: String,
           value: '',
         });
-        expect(element._properties.get('id')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('title')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-        expect(element._properties.get('role')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
-
         expect(terstElement.prop0).to.equal(0);
         expect(terstElement.getAttribute('prop0')).to.equal('0');
       });
       it('Has correct default attributes', () => {
-        expect(element.getAttribute('class')).to.equal(null);
-        expect(element.getAttribute('id')).to.equal(null);
-        expect(element.getAttribute('title')).to.equal(null);
-        expect(element.getAttribute('role')).to.equal(null);
+        expect(element.getAttribute('name')).to.equal(null);
       });
       it('Has reactive attributes', () => {
-        element.class = 'foo';
-        expect(element.getAttribute('class')).to.equal('foo');
-        element.class = '';
-        element.id = 'one';
-        expect(element.getAttribute('id')).to.equal('one');
-        element.id = '';
-        element.title = 'title';
-        expect(element.getAttribute('title')).to.equal('title');
-        element.title = '';
-        element.role = 'button';
-        expect(element.getAttribute('role')).to.equal('button');
-        element.role = '';
+        element.name = 'name';
+        expect(element.getAttribute('name')).to.equal('name');
+        element.name = '';
       });
       it('Invokes change events and functions', () => {
         class TestNode extends Node {
@@ -356,37 +320,37 @@ export default class {
       it('Should bind and unbind correctly', () => {
         const element1 = new IoElement();
         const element2 = new IoElement();
-        element2.title = element1.bind('title') as unknown as string;
-        element1.title = 'one';
-        expect(element1.title).to.equal('one');
-        expect(element2.title).to.equal('one');
-        element2.title = 'two';
-        expect(element1.title).to.equal('two');
-        expect(element2.title).to.equal('two');
+        element2.name = element1.bind('name') as unknown as string;
+        element1.name = 'one';
+        expect(element1.name).to.equal('one');
+        expect(element2.name).to.equal('one');
+        element2.name = 'two';
+        expect(element1.name).to.equal('two');
+        expect(element2.name).to.equal('two');
         // unbind
-        element1.unbind('title');
-        element1.title = 'three';
-        expect(element1.title).to.equal('three');
-        expect(element2.title).to.equal('two');
-        element2.title = element1.bind('title') as unknown as string;
-        expect(element2.title).to.equal('three');
-        element1.title = 'four';
-        expect(element1.title).to.equal('four');
-        expect(element2.title).to.equal('four');
-        element2.unbind('title');
-        element1.title = 'five';
-        expect(element1.title).to.equal('five');
-        expect(element2.title).to.equal('four');
+        element1.unbind('name');
+        element1.name = 'three';
+        expect(element1.name).to.equal('three');
+        expect(element2.name).to.equal('two');
+        element2.name = element1.bind('name') as unknown as string;
+        expect(element2.name).to.equal('three');
+        element1.name = 'four';
+        expect(element1.name).to.equal('four');
+        expect(element2.name).to.equal('four');
+        element2.unbind('name');
+        element1.name = 'five';
+        expect(element1.name).to.equal('five');
+        expect(element2.name).to.equal('four');
       });
       it('Should bind from constructor', () => {
         const element1 = new IoElement();
-        const element2 = new IoElement({title: element1.bind('title')});
-        element1.title = 'one';
-        expect(element2.title).to.equal('one');
-        element2.unbind('title');
-        element1.title = 'two';
-        expect(element1.title).to.equal('two');
-        expect(element2.title).to.equal('one');
+        const element2 = new IoElement({name: element1.bind('name')});
+        element1.name = 'one';
+        expect(element2.name).to.equal('one');
+        element2.unbind('name');
+        element1.name = 'two';
+        expect(element1.name).to.equal('two');
+        expect(element2.name).to.equal('one');
       });
     });
   }

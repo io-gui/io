@@ -61,17 +61,17 @@ export class IoNumber extends IoInputBase {
   @Property({value: false, type: Boolean})
   declare ladder: boolean;
 
+  @Property({value: 'inset', type: String, reflect: true})
+  declare appearance: 'neutral' | 'inset' | 'outset';
+
+  @Default(true)
+  declare contentEditable: boolean;
+
   @Property({value: 'pattern="[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
-  @Property({value: 'numeric', type: String, reflect: true})
-  declare inputmode: string;
-
-  @Property({value: '', type: String, reflect: true})
-  declare placeholder: string;
-
-  @Property({value: 'inset', type: String, reflect: true})
-  declare appearance: 'neutral' | 'inset' | 'outset';
+  @Default('numeric')
+  declare inputMode: string;
 
   @Default('textbox')
   declare role: string;
