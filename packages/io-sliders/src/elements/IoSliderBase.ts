@@ -45,6 +45,10 @@ export class IoSliderBase extends IoGl {
         background-color: var(--io_bgColorRed);
         border-color: var(--io_colorRed);
       }
+      :host:focus {
+        border-color: var(--io_colorBlue);
+        outline: 1px auto var(--io_colorBlue);
+      }
     `;
   }
 

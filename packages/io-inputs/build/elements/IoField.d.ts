@@ -4,7 +4,6 @@ export type IoFieldProps = IoElementProps & PropsWithBinding<{
     icon?: string;
     label?: string;
     selected?: boolean;
-    invalid?: boolean;
     disabled?: boolean;
     appearance?: 'neutral' | 'inset' | 'outset';
 }>;

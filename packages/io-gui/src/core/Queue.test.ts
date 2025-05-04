@@ -13,7 +13,7 @@ export default class {
       });
       it('Should exectute throttled function with correct argument', async () => {
         let arg = '';
-        const func = (a: string) => { arg = a };
+        const func = (a: string) => { arg = a; };
         throttle(func, 'first');
         throttle(func, 'second');
         expect(arg).to.be.equal('first');
@@ -71,7 +71,7 @@ export default class {
       });
       it('Should exectute debounced function with correct argument', async () => {
         let arg = '';
-        const func = (a: string) => { arg = a };
+        const func = (a: string) => { arg = a; };
         debounce(func, 'first');
         debounce(func, 'second');
         await nextQueue();

@@ -1,8 +1,7 @@
-import { Property } from '../decorators/Property';
 import { Default } from '../decorators/Default';
 import { Register } from '../decorators/Register';
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM';
-import { Node, NodeMixin, NodeProps, PropsWithBinding } from '../nodes/Node';
+import { Node, NodeMixin, NodeProps } from '../nodes/Node';
 
 // Global mixin record
 const mixinRecord: Record<string, string> = {};
@@ -31,11 +30,6 @@ export class IoElement extends NodeMixin(HTMLElement) {
       :host {
         box-sizing: border-box;
         display: block;
-        font-size: var(--io_fontSize);
-      }
-      :host:focus {
-        border-color: var(--io_colorBlue);
-        outline: 1px auto var(--io_colorBlue);
       }
     `;
   }

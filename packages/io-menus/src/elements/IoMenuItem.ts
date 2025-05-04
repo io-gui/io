@@ -434,7 +434,7 @@ export function getMenuRoot(element: IoMenuElementType) {
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (MenuElementTags.indexOf(element.localName) !== -1) {
-    // TODO: hidden in no longer a property. 
+    // TODO: hidden in no longer a property.
     if (!element.disabled && !element.hidden) {
       if (!element.inlayer || (element.parentElement.expanded && Overlay.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.

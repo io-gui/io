@@ -10,13 +10,15 @@ export declare function nextQueue(): Promise<void>;
  * @param {CallbackFunction} func - Function to throttle.
  * @param {*} [arg] - Optional argument for throttled function.
  * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
  */
-export declare function throttle(func: CallbackFunction, arg?: any, node?: Node, timeout?: number): void;
+export declare function throttle(func: CallbackFunction, arg?: any, node?: Node, delay?: number): void;
 /**
  * Debounces function execution to next frame (rAF).
  * @param {CallbackFunction} func - Function to debounce.
  * @param {*} [arg] - Optional argument for debounced function.
  * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
  */
-export declare function debounce(func: CallbackFunction, arg?: any, node?: Node, timeout?: number): void;
+export declare function debounce(func: CallbackFunction, arg?: any, node?: Node, delay?: number): void;
 //# sourceMappingURL=Queue.d.ts.map

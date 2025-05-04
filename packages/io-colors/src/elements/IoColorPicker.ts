@@ -24,6 +24,10 @@ export class IoColorPicker extends IoElement {
         border-radius: var(--io_borderRadius);
         overflow: hidden;
       }
+      :host:focus {
+        border-color: var(--io_colorBlue);
+        outline: 1px auto var(--io_colorBlue);
+      }
       :host > io-color-swatch {
         width: 100%;
         height: 100%;

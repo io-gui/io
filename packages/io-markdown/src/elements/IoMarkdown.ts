@@ -44,6 +44,7 @@ export class IoMarkdown extends IoElement {
         padding-bottom: var(--io_lineHeight);
         color: var(--io_color);
         background-color: var(--io_bgColor);
+        font-size: var(--io_fontSize);
       }
       :host p {
         line-height: 1.45em;

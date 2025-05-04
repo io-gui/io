@@ -424,15 +424,17 @@ export declare function nextQueue(): Promise<void>;
  * @param {CallbackFunction} func - Function to throttle.
  * @param {*} [arg] - Optional argument for throttled function.
  * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
  */
-export declare function throttle(func: CallbackFunction, arg?: any, node?: Node$1, timeout?: number): void;
+export declare function throttle(func: CallbackFunction, arg?: any, node?: Node$1, delay?: number): void;
 /**
  * Debounces function execution to next frame (rAF).
  * @param {CallbackFunction} func - Function to debounce.
  * @param {*} [arg] - Optional argument for debounced function.
  * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
  */
-export declare function debounce(func: CallbackFunction, arg?: any, node?: Node$1, timeout?: number): void;
+export declare function debounce(func: CallbackFunction, arg?: any, node?: Node$1, delay?: number): void;
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
@@ -754,10 +756,7 @@ export declare class ChangeQueue {
 	 */
 	dispose(): void;
 }
-export type IoElementProps = NativeElementProps & NodeProps & PropsWithBinding<{
-	name?: string;
-	$?: string;
-}>;
+export type IoElementProps = NativeElementProps & NodeProps;
 declare const IoElement_base: {
 	new (args?: PropsWithBinding<{
 		[key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
@@ -797,7 +796,6 @@ declare const IoElement_base: {
 export declare class IoElement extends IoElement_base {
 	static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
-	name: string;
 	$: Record<string, HTMLElement | IoElement>;
 	constructor(args?: IoElementProps);
 	/**
@@ -1636,9 +1634,8 @@ export declare class IoSliderBase extends IoGl {
 	];
 	exponent: number;
 	vertical: boolean;
-	disabled: boolean;
-	invalid: boolean;
 	noscroll: boolean;
+	invalid: boolean;
 	role: string;
 	tabIndex: string;
 	_startX: number;
@@ -1705,8 +1702,8 @@ export declare class IoSliderBase extends IoGl {
 	_setLeft(): void;
 	_setRight(): void;
 	init(): void;
-	disabledChanged(): void;
 	valueChanged(): void;
+	invalidChanged(): void;
 	changed(): void;
 }
 export type IoSlider2dProps = IoSliderBaseProps & PropsWithBinding<{}>;
@@ -2157,7 +2154,6 @@ export type IoFieldProps = IoElementProps & PropsWithBinding<{
 	icon?: string;
 	label?: string;
 	selected?: boolean;
-	invalid?: boolean;
 	disabled?: boolean;
 	appearance?: "neutral" | "inset" | "outset";
 }>;

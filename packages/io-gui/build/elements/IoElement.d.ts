@@ -1,11 +1,8 @@
 import { VDOMElement, NativeElementProps } from '../vdom/VDOM';
-import { Node, NodeProps, PropsWithBinding } from '../nodes/Node';
-export type IoElementProps = NativeElementProps & NodeProps & PropsWithBinding<{
-    name?: string;
-    $?: string;
-}>;
+import { Node, NodeProps } from '../nodes/Node';
+export type IoElementProps = NativeElementProps & NodeProps;
 declare const IoElement_base: {
-    new (args?: PropsWithBinding<{
+    new (args?: import("../nodes/Node").PropsWithBinding<{
         [key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
         reactivity?: "none" | "immediate" | "throttled" | "debounced";
     }>, ...superProps: any[]): {
@@ -43,7 +40,6 @@ declare const IoElement_base: {
 export declare class IoElement extends IoElement_base {
     static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    name: string;
     $: Record<string, HTMLElement | IoElement>;
     constructor(args?: IoElementProps);
     /**

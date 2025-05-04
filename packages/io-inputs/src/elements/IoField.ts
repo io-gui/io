@@ -15,7 +15,7 @@ export class IoField extends IoElement {
   static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
-      --ioField: {
+      :host {
         height: var(--io_fieldHeight);
         line-height: var(--io_lineHeight);
         border: var(--io_border);
@@ -25,9 +25,7 @@ export class IoField extends IoElement {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-      }
-      :host {
-        @apply --ioField;
+        font-size: var(--io_fontSize);
       }
       :host[disabled] {
         opacity: 0.5;
@@ -74,6 +72,8 @@ export class IoField extends IoElement {
       }
       :host:focus {
         text-overflow: inherit;
+        border-color: var(--io_colorBlue);
+        outline: 1px auto var(--io_colorBlue);
       }
     `;
   }

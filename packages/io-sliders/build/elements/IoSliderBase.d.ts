@@ -17,9 +17,8 @@ export declare class IoSliderBase extends IoGl {
     max: number | [number, number];
     exponent: number;
     vertical: boolean;
-    disabled: boolean;
-    invalid: boolean;
     noscroll: boolean;
+    invalid: boolean;
     role: string;
     tabIndex: string;
     _startX: number;
@@ -62,8 +61,8 @@ export declare class IoSliderBase extends IoGl {
     _setLeft(): void;
     _setRight(): void;
     init(): void;
-    disabledChanged(): void;
     valueChanged(): void;
+    invalidChanged(): void;
     changed(): void;
 }
 //# sourceMappingURL=IoSliderBase.d.ts.map

@@ -28,6 +28,7 @@ export class IoPropertyEditor extends IoElement {
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
+      font-size: var(--io_fontSize);
     }
     :host > .row {
       display: flex;
