@@ -1,24 +1,27 @@
-import { VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
-export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
-    live?: boolean;
+import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoInputBase, IoInputBaseProps } from './IoInputBase';
+export type IoStringProps = IoInputBaseProps & PropsWithBinding<{
     value?: string;
+    live?: boolean;
     placeholder?: string;
-    spellcheck?: 'true' | 'false';
+    appearance?: 'neutral' | 'inset' | 'outset';
+    role?: string;
 }>;
 /**
  * Input element for `String` data type.
  **/
 export declare class IoString extends IoInputBase {
-    static vConstructor: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: string;
     live: boolean;
     placeholder: string;
-    spellcheck: string;
     appearance: 'neutral' | 'inset' | 'outset';
+    contentEditable: boolean;
     role: string;
-    constructor(args?: IoStringArgs);
+    constructor(args?: IoStringProps);
+    get textNode(): any;
+    set textNode(value: any);
     _setFromTextNode(): void;
     _tryParseFromTextNode(): void;
     onBlur(event: FocusEvent): void;
@@ -29,8 +32,7 @@ export declare class IoString extends IoInputBase {
     onKeyup(event: KeyboardEvent): void;
     init(): void;
     valueChanged(): void;
-    disabledChanged(): void;
     changed(): void;
 }
-export declare const ioString: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioString: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoString.d.ts.map

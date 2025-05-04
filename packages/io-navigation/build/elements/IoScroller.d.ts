@@ -1,10 +1,10 @@
-import { IoElement, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
+import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
+export type IoScrollerProps = IoElementProps & PropsWithBinding<{
     options?: MenuOptions;
 }>;
 export declare class IoScroller extends IoElement {
-    static vConstructor: (arg0?: IoScrollerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     options: MenuOptions;
     private _observer;
@@ -15,5 +15,5 @@ export declare class IoScroller extends IoElement {
     _scrollToSelected(): void;
     dispose(): void;
 }
-export declare const ioScroller: (arg0?: IoScrollerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioScroller: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoScroller.d.ts.map

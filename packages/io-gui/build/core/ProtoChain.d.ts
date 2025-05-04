@@ -1,6 +1,6 @@
 import { ProtoProperty } from './Property';
 import { ListenerDefinition } from './EventDispatcher';
-import { Node, NodeConstructor, AnyConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { Node, NodeConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
 type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ProtoProperties = {
@@ -9,7 +9,6 @@ type ProtoProperties = {
 type ProtoListeners = {
     [property: string]: ListenerDefinition[];
 };
-export declare const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions>;
 /**
  * ProtoChain manages class inheritance metadata and configuration.
  *
@@ -27,13 +26,17 @@ export declare class ProtoChain {
      */
     constructors: ProtoConstructors;
     /**
-     * Aggregated property definition declared in `static get Properties()`
+     * Aggregated property definition declared in `static get Properties()` or @Property() decorators
      */
     properties: ProtoProperties;
     /**
      * Aggregated listener definition declared in `static get Listeners()`
      */
     listeners: ProtoListeners;
+    /**
+     * Aggregated default value for properties declared in `static get Defaults()` or @Default() decorators
+    */
+    defaults: Record<string, any>;
     /**
      * Aggregated CSS style definition declared in `static get Style()`
      */

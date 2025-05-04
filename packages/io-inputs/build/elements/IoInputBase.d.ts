@@ -1,10 +1,10 @@
-import { VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoField, IoFieldArgs } from './IoField';
-export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
+import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
+export type IoInputBaseProps = IoFieldProps & PropsWithBinding<{
     pressed?: boolean;
 }>;
 export declare class IoInputBase extends IoField {
-    static vConstructor: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoInputBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     static get Listeners(): {
         'focus-to': string;
@@ -13,7 +13,9 @@ export declare class IoInputBase extends IoField {
         click: string;
     };
     pressed: boolean;
-    constructor(args?: IoInputBaseArgs);
+    pattern: string;
+    spellcheck: boolean;
+    constructor(args?: IoInputBaseProps);
     onFocus(event: FocusEvent): void;
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
@@ -28,5 +30,5 @@ export declare class IoInputBase extends IoField {
     getCaretPosition(): number;
     setCaretPosition(position: number): void;
 }
-export declare const ioInputBase: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioInputBase: (arg0?: IoInputBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoInputBase.d.ts.map

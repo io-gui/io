@@ -1,5 +1,5 @@
-import { IoElement, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
-export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
+import { IoElement, VDOMElement, IoElementProps, PropsWithBinding } from 'io-gui';
+export type IoNumberSliderProps = IoElementProps & PropsWithBinding<{
     value?: number;
     step?: number;
     min?: number;
@@ -11,7 +11,7 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  **/
 export declare class IoNumberSlider extends IoElement {
-    static vConstructor: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     step: number;
@@ -19,11 +19,11 @@ export declare class IoNumberSlider extends IoElement {
     max: number;
     exponent: number;
     conversion: number;
-    constructor(args?: IoNumberSliderArgs);
+    constructor(args?: IoNumberSliderProps);
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;
     init(): void;
     changed(): void;
 }
-export declare const ioNumberSlider: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNumberSlider: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoNumberSlider.d.ts.map

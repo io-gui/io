@@ -1,5 +1,5 @@
-import { IoGl, IoGlArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
-export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
+import { IoGl, IoGlProps, VDOMElement, PropsWithBinding } from 'io-gui';
+export type IoSliderBaseProps = IoGlProps & PropsWithBinding<{
     value?: number | [number, number];
     step?: number | [number, number];
     min?: number | [number, number];
@@ -7,10 +7,9 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
     exponent?: number;
     vertical?: boolean;
     noscroll?: boolean;
-    tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
 }>;
 export declare class IoSliderBase extends IoGl {
-    static vConstructor: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number | [number, number];
     step: number | [number, number];
@@ -18,9 +17,11 @@ export declare class IoSliderBase extends IoGl {
     max: number | [number, number];
     exponent: number;
     vertical: boolean;
+    disabled: boolean;
+    invalid: boolean;
     noscroll: boolean;
     role: string;
-    tabindex: string;
+    tabIndex: string;
     _startX: number;
     _startY: number;
     _rect: DOMRect | null;
@@ -37,7 +38,7 @@ export declare class IoSliderBase extends IoGl {
             passive: boolean;
         })[];
     };
-    constructor(args?: IoSliderBaseArgs);
+    constructor(args?: IoSliderBaseProps);
     onFocus(): void;
     onBlur(): void;
     onContextmenu(event: Event): void;
@@ -61,6 +62,8 @@ export declare class IoSliderBase extends IoGl {
     _setLeft(): void;
     _setRight(): void;
     init(): void;
+    disabledChanged(): void;
+    valueChanged(): void;
     changed(): void;
 }
 //# sourceMappingURL=IoSliderBase.d.ts.map

@@ -1,6 +1,6 @@
 import { Binding } from '../core/Binding';
-import { Node, NodeArgs } from '../nodes/Node';
-export type StorageProps = NodeArgs & {
+import { Node, NodeProps } from '../nodes/Node';
+export type StorageProps = NodeProps & {
     key: string;
     value?: any;
     default?: any;

@@ -1,7 +1,7 @@
-import { ArgsWithBinding } from '../nodes/Node';
-import { IoElement, IoElementArgs } from './IoElement';
+import { PropsWithBinding } from '../nodes/Node';
+import { IoElement, IoElementProps } from './IoElement';
 export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
-export type IoOverlayArgs = IoElementArgs & ArgsWithBinding<{
+export type IoOverlayProps = IoElementProps & PropsWithBinding<{
     expanded?: boolean;
 }>;
 /**
@@ -53,7 +53,7 @@ declare class IoOverlay extends IoElement {
             passive: boolean;
         })[];
     };
-    constructor(args?: IoOverlayArgs);
+    constructor(args?: IoOverlayProps);
     stopPropagation(event: Event): void;
     onResized(): void;
     onPointerup(event: PointerEvent): void;

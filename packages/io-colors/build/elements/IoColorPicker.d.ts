@@ -1,5 +1,5 @@
-import { IoElement, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
-export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
+import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
+export type IoColorPickerProps = IoElementProps & PropsWithBinding<{
     value?: {
         r: number;
         g: number;
@@ -8,7 +8,7 @@ export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
     };
 }>;
 export declare class IoColorPicker extends IoElement {
-    static vConstructor: (arg0?: IoColorPickerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: {
         r: number;
@@ -17,7 +17,7 @@ export declare class IoColorPicker extends IoElement {
         a?: number;
     };
     static get Listeners(): any;
-    tabindex: string;
+    tabIndex: string;
     onClick(): void;
     get expanded(): boolean;
     onKeydown(event: KeyboardEvent): void;
@@ -26,7 +26,8 @@ export declare class IoColorPicker extends IoElement {
     onPanelCollapse(): void;
     expand(): void;
     collapse(): void;
+    init(): void;
     valueChanged(): void;
 }
-export declare const ioColorPicker: (arg0?: IoColorPickerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorPicker: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoColorPicker.d.ts.map

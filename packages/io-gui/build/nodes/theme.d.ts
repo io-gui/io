@@ -73,7 +73,9 @@ export declare class Theme extends Node {
     registerTheme(themeID: string, theme: ThemeVars): void;
     reset(): void;
     themeIDChanged(): void;
-    onPropertyMutated(event: CustomEvent): void;
+    onPropertyMutated(event: CustomEvent): true | undefined;
+    fontSizeChanged(): void;
+    lineHeightChanged(): void;
     changed(): void;
     onSaveTheme(): void;
 }

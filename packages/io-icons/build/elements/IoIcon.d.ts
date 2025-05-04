@@ -1,5 +1,5 @@
-import { IoElement, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
-export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
+import { IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
+export type IoIconProps = IoElementProps & PropsWithBinding<{
     value?: string;
     stroke?: boolean;
 }>;
@@ -9,12 +9,12 @@ export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
  * Custom SVG assets need to be registered with `IconsetSingleton`.
  **/
 export declare class IoIcon extends IoElement {
-    static vConstructor: (arg0?: IoIconArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: string;
     stroke: boolean;
-    constructor(args?: IoIconArgs);
+    constructor(args?: IoIconProps);
     valueChanged(): void;
 }
-export declare const ioIcon: (arg0?: IoIconArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioIcon: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoIcon.d.ts.map

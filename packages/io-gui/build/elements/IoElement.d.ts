@@ -1,16 +1,14 @@
-import { VDOMElement } from '../core/VDOM';
-import { Node, NodeArgs, ArgsWithBinding } from '../nodes/Node';
-export type IoElementArgs = NodeArgs & ArgsWithBinding<{
-    $?: string;
-    style?: Record<string, string>;
-    class?: string;
-    title?: string;
+import { VDOMElement, NativeElementProps } from '../vdom/VDOM';
+import { Node, NodeProps, PropsWithBinding } from '../nodes/Node';
+export type IoElementProps = NativeElementProps & NodeProps & PropsWithBinding<{
     name?: string;
-    id?: string;
-    role?: string;
+    $?: string;
 }>;
 declare const IoElement_base: {
-    new (...superArgs: any[]): {
+    new (args?: PropsWithBinding<{
+        [key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
+        reactivity?: "none" | "immediate" | "throttled" | "debounced";
+    }>, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: import("..").ProtoChain;
         readonly _properties: Map<string, import("..").PropertyInstance>;
@@ -25,9 +23,9 @@ declare const IoElement_base: {
         init(): void;
         queue(name: string, value: any, oldValue: any): void;
         dispatchQueue(debounce?: boolean): void;
-        throttle(func: import("..").CallbackFunction, arg?: any): void;
+        throttle(func: import("..").CallbackFunction, arg?: any, timeout?: number): void;
         debounce(func: import("..").CallbackFunction, arg?: any, timeout?: number): void;
-        onPropertyMutated(event: CustomEvent): void;
+        onPropertyMutated(event: CustomEvent): true | undefined;
         bind(name: string): import("..").Binding;
         unbind(name: string): void;
         addEventListener(type: string, listener: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
@@ -43,15 +41,11 @@ declare const IoElement_base: {
  * Core `IoElement` class.
  */
 export declare class IoElement extends IoElement_base {
-    static vConstructor: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    $: Record<string, any>;
-    class: string;
-    title: string;
     name: string;
-    id: string;
-    role: string;
-    constructor(args?: IoElementArgs);
+    $: Record<string, HTMLElement | IoElement>;
+    constructor(args?: IoElementProps);
     /**
     * Add resize listener if `onResized()` is defined in subclass.
     */
@@ -82,9 +76,12 @@ export declare class IoElement extends IoElement_base {
     * @param {HTMLElement} element - Element to flatten.
     */
     _flattenTextNode(element: HTMLElement | IoElement): void;
-    get textNode(): any;
-    set textNode(value: any);
-    applyProperties(props: any): void;
+    /**
+     * Sets multiple properties in batch.
+     * [property]-changed` events will be broadcast in the end.
+     * @param {Object} props - Map of property names and values.
+     */
+    applyProperties(props: any, skipDispatch?: boolean): void;
     /**
     * Alias for HTMLElement setAttribute where falsey values remove the attribute.
     * @param {string} attr - Attribute name.
@@ -93,11 +90,10 @@ export declare class IoElement extends IoElement_base {
     setAttribute(attr: string, value: boolean | number | string): void;
     /**
      * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
-     * @return {Object} vDOM-like representation of the element.
      */
     toVDOM(): VDOMElement;
     Register(ioNodeConstructor: typeof Node): void;
 }
-export declare const ioElement: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export {};
 //# sourceMappingURL=IoElement.d.ts.map

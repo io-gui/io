@@ -1,8 +1,9 @@
-import { IoElement, IoElementArgs, ArgsWithBinding, VDOMElement } from 'io-gui';
-export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
-    value?: Record<string, any> | any[];
-    selected?: any;
-    options?: Record<string, any> | any[];
+import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
+export type IoBreadcrumbsProps = IoElementProps & PropsWithBinding<{
+    value?: Object;
+    selected?: Object;
+    crumbs?: Array<Object>;
+    search?: string;
 }>;
 /**
  * Breadcrumbs select element.
@@ -10,15 +11,16 @@ export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
  * Optionally, it can trim the `options` array to selected option index.
  **/
 export declare class IoBreadcrumbs extends IoElement {
-    static vConstructor: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    value: Record<string, any> | any[];
-    selected: any;
-    options: any[];
-    _onClick(event: CustomEvent): void;
+    value: Object;
+    selected: Object;
+    crumbs: Array<Object>;
+    search: string;
     valueChanged(): void;
     selectedChanged(): void;
+    onClearSearch(): void;
     changed(): void;
 }
-export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoBreadcrumbs.d.ts.map
