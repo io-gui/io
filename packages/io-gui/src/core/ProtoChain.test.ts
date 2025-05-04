@@ -165,7 +165,6 @@ export default class {
         });
         protoChain = new ProtoChain(Node3);
         expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
-        console.log(protoChain.properties);
         expect(protoChain.properties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{reflect: true, init: true},

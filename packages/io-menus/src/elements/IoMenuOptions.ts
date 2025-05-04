@@ -83,8 +83,7 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Item divider */
-    :host > [hidden] ~ span.divider {
-      border-color: red;
+    :host > io-menu-item[hidden] ~ span.divider {
       display: none;
     }
     :host > span.divider {

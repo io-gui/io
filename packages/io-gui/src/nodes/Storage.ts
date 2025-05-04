@@ -21,14 +21,14 @@ class EmulatedLocalStorage {
   set permitted(permitted: boolean) {
     try {
       if (permitted) {
-        console.log('Storage: localStorage permission granted.');
+        console.info('Storage: localStorage permission granted.');
         this.store.set('Storage:user-permitted', String(permitted));
         this.store.forEach((value: unknown, key: string) => {
           self.localStorage.setItem(key, String(value));
           this.store.delete(key);
         });
       } else {
-        console.log('Storage: localStorage permission revoked.');
+        console.info('Storage: localStorage permission revoked.');
         self.localStorage.setItem('Storage:user-permitted', String(permitted));
         new Map(Object.entries(self.localStorage)).forEach((value: unknown, key: string) => {
           this.store.set(key, value);

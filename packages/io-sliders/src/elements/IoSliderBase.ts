@@ -40,9 +40,6 @@ export class IoSliderBase extends IoGl {
         flex-basis: var(--io_fieldHeight);
         flex-grow: 0;
       }
-      :host[disabled] {
-        opacity: 0.5;
-      }
       :host[invalid] {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorRed);
@@ -69,14 +66,11 @@ export class IoSliderBase extends IoGl {
   @Property({value: false, reflect: true})
   declare vertical: boolean;
 
-  @Property({value: false, reflect: true})
-  declare disabled: boolean;
-
-  @Property({value: false, reflect: true})
-  declare invalid: boolean;
-
   @Property(false)
   declare noscroll: boolean;
+
+  @Property({value: false, type: Boolean, reflect: true})
+  declare invalid: boolean;
 
   @Default('slider')
   declare role: string;
@@ -340,14 +334,6 @@ export class IoSliderBase extends IoGl {
   init() {
     this.changed();
   }
-  disabledChanged() {
-    this.inert = this.disabled;
-    if (this.disabled) {
-      this.setAttribute('aria-disabled', 'true');
-    } else {
-      this.removeAttribute('aria-disabled');
-    }
-  }
   valueChanged() {
     let invalid = false;
     if (this.value instanceof Array) {
@@ -356,6 +342,13 @@ export class IoSliderBase extends IoGl {
       invalid = true;
     }
     this.invalid = invalid;
+  }
+  invalidChanged() {
+    if (this.invalid) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
   changed() {
     super.changed();

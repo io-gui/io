@@ -20,7 +20,6 @@ const resizeObserver = new ResizeObserver((entries: any) => {
 });
 
 export type IoElementProps = NativeElementProps & NodeProps & PropsWithBinding<{
-  name?: string;
   $?: string; // Special property to access elements by $ value.
 }>;
 
@@ -37,21 +36,12 @@ export class IoElement extends NodeMixin(HTMLElement) {
         display: block;
         font-size: var(--io_fontSize);
       }
-      :host[hidden] {
-        display: none;
-      }
-      :host[inert] {
-        opacity: 0.5;
-      }
       :host:focus {
         border-color: var(--io_colorBlue);
         outline: 1px auto var(--io_colorBlue);
       }
     `;
   }
-
-  @Property({value: '', type: String, reflect: true})
-  declare name: string;
 
   @Default(Object)
   declare $: Record<string, HTMLElement | IoElement>;

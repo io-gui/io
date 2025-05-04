@@ -112,7 +112,6 @@ export class IoElementDemo extends IoElement {
     this.changed();
   }
   changed() {
-    console.log('asd');
     if (this.element) {
       this.template([
         ioOptionMenu({

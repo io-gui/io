@@ -32,24 +32,8 @@ export default class {
       });
       it('Should initialize properties correctly', () => {
         // Default properties
-        expect(element.name).to.be.equal('');
-        expect(element._properties.get('name')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: String,
-          value: '',
-        });
         expect(terstElement.prop0).to.equal(0);
         expect(terstElement.getAttribute('prop0')).to.equal('0');
-      });
-      it('Has correct default attributes', () => {
-        expect(element.getAttribute('name')).to.equal(null);
-      });
-      it('Has reactive attributes', () => {
-        element.name = 'name';
-        expect(element.getAttribute('name')).to.equal('name');
-        element.name = '';
       });
       it('Invokes change events and functions', () => {
         class TestNode extends Node {
@@ -318,39 +302,39 @@ export default class {
         expect(targetElement.$.testElement.prop3).to.be.equal(sourceElement.prop3).to.be.equal(targetElement.prop3).to.be.equal('final3');
       });
       it('Should bind and unbind correctly', () => {
-        const element1 = new IoElement();
-        const element2 = new IoElement();
-        element2.name = element1.bind('name') as unknown as string;
-        element1.name = 'one';
-        expect(element1.name).to.equal('one');
-        expect(element2.name).to.equal('one');
-        element2.name = 'two';
-        expect(element1.name).to.equal('two');
-        expect(element2.name).to.equal('two');
+        const element1 = new TestElement();
+        const element2 = new TestElement();
+        element2.prop0 = element1.bind('prop0') as unknown as string;
+        element1.prop0 = 1;
+        expect(element1.prop0).to.equal(1);
+        expect(element2.prop0).to.equal(1);
+        element2.prop0 = 2;
+        expect(element1.prop0).to.equal(2);
+        expect(element2.prop0).to.equal(2);
         // unbind
-        element1.unbind('name');
-        element1.name = 'three';
-        expect(element1.name).to.equal('three');
-        expect(element2.name).to.equal('two');
-        element2.name = element1.bind('name') as unknown as string;
-        expect(element2.name).to.equal('three');
-        element1.name = 'four';
-        expect(element1.name).to.equal('four');
-        expect(element2.name).to.equal('four');
-        element2.unbind('name');
-        element1.name = 'five';
-        expect(element1.name).to.equal('five');
-        expect(element2.name).to.equal('four');
+        element1.unbind('prop0');
+        element1.prop0 = 3;
+        expect(element1.prop0).to.equal(3);
+        expect(element2.prop0).to.equal(2);
+        element2.prop0 = element1.bind('prop0') as unknown as string;
+        expect(element2.prop0).to.equal(3);
+        element1.prop0 = 4;
+        expect(element1.prop0).to.equal(4);
+        expect(element2.prop0).to.equal(4);
+        element2.unbind('prop0');
+        element1.prop0 = 5;
+        expect(element1.prop0).to.equal(5);
+        expect(element2.prop0).to.equal(4);
       });
       it('Should bind from constructor', () => {
-        const element1 = new IoElement();
-        const element2 = new IoElement({name: element1.bind('name')});
-        element1.name = 'one';
-        expect(element2.name).to.equal('one');
-        element2.unbind('name');
-        element1.name = 'two';
-        expect(element1.name).to.equal('two');
-        expect(element2.name).to.equal('one');
+        const element1 = new TestElement();
+        const element2 = new TestElement({prop0: element1.bind('prop0')});
+        element1.prop0 = 1;
+        expect(element2.prop0).to.equal(1);
+        element2.unbind('prop0');
+        element1.prop0 = 2;
+        expect(element1.prop0).to.equal(2);
+        expect(element2.prop0).to.equal(1);
       });
     });
   }

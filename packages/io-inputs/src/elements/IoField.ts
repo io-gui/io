@@ -6,7 +6,6 @@ export type IoFieldProps = IoElementProps & PropsWithBinding<{
   icon?: string;
   label?: string;
   selected?: boolean;
-  invalid?: boolean;
   disabled?: boolean;
   appearance?: 'neutral' | 'inset' | 'outset';
 }>;
@@ -29,6 +28,9 @@ export class IoField extends IoElement {
       }
       :host {
         @apply --ioField;
+      }
+      :host[disabled] {
+        opacity: 0.5;
       }
       :host :not(:last-child) {
         margin-right: var(--io_spacing2);
@@ -64,7 +66,6 @@ export class IoField extends IoElement {
         background-color: var(--io_bgColorGreen);
         border-color: var(--io_colorGreen);
       }
-
       :host.blue,
       :host[selected] {
         color: var(--io_colorWhite);
@@ -73,11 +74,6 @@ export class IoField extends IoElement {
       }
       :host:focus {
         text-overflow: inherit;
-      }
-      :host[disabled] {
-        pointer-events: none !important;
-        opacity: 0.5;
-        user-select: none;
       }
     `;
   }
@@ -115,7 +111,6 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-label');
     }
   }
-
   selectedChanged() {
     if (this.selected) {
       this.setAttribute('aria-selected', 'true');
@@ -123,7 +118,6 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-selected');
     }
   }
-
   invalidChanged() {
     if (this.invalid) {
       this.setAttribute('aria-invalid', 'true');
@@ -131,7 +125,6 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-invalid');
     }
   }
-
   disabledChanged() {
     this.inert = this.disabled;
     if (this.disabled) {
@@ -140,7 +133,6 @@ export class IoField extends IoElement {
       this.removeAttribute('aria-disabled');
     }
   }
-
   changed() {
     this.template([
       this.icon ? ioIcon({value: this.icon}) : null,

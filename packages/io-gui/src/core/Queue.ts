@@ -38,10 +38,12 @@ export async function nextQueue(): Promise<void> {
  * @param {CallbackFunction} func - Function to throttle.
  * @param {*} [arg] - Optional argument for throttled function.
  * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
  */
-export function throttle(func: CallbackFunction, arg?: any, node?: Node, timeout = 1) {
+export function throttle(func: CallbackFunction, arg?: any, node?: Node, delay = 1) {
   if (queueSync.indexOf(func) === -1) {
     queueSync.push(func);
+    if (node?._disposed) return;
     try {
       func(arg);
     } catch (e) {
@@ -56,7 +58,7 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node, timeout
     queueOptions.set(func, {
       arg: arg,
       node: node,
-      frame: currentFrame + timeout,
+      frame: currentFrame + delay,
     });
   } else {
     queueOptions.get(func)!.arg = arg;
@@ -68,8 +70,9 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node, timeout
  * @param {CallbackFunction} func - Function to debounce.
  * @param {*} [arg] - Optional argument for debounced function.
  * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
  */
-export function debounce(func: CallbackFunction, arg?: any, node?: Node, timeout = 1) {
+export function debounce(func: CallbackFunction, arg?: any, node?: Node, delay = 1) {
   if (queue.indexOf(func) === -1) {
     queue.push(func);
   }
@@ -77,13 +80,13 @@ export function debounce(func: CallbackFunction, arg?: any, node?: Node, timeout
     queueOptions.set(func, {
       arg: arg,
       node: node,
-      frame: currentFrame + timeout,
+      frame: currentFrame + delay,
     });
   } else {
     const options = queueOptions.get(func)!;
     options.arg = arg;
     options.node = node;
-    options.frame = currentFrame + timeout;
+    options.frame = currentFrame + delay;
   }
 }
 
@@ -109,7 +112,7 @@ function executeQueue () {
     if (options === undefined) {
       console.warn(func);
     }
-    if (options.frame >= currentFrame) {
+    if (options.frame > currentFrame) {
       if (queue.indexOf(func) === -1) {
         queue.push(func);
       }

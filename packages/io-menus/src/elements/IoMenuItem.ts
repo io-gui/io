@@ -377,7 +377,7 @@ export class IoMenuItem extends IoInputBase {
     const icon = this.icon || this.item.icon;
 
     this.setAttribute('hidden', this.item.hidden);
-    this.setAttribute('hasmore', this.hasmore);
+
     this.template([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
@@ -434,6 +434,7 @@ export function getMenuRoot(element: IoMenuElementType) {
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (MenuElementTags.indexOf(element.localName) !== -1) {
+    // TODO: hidden in no longer a property. 
     if (!element.disabled && !element.hidden) {
       if (!element.inlayer || (element.parentElement.expanded && Overlay.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.

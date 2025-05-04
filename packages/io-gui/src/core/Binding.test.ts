@@ -1,13 +1,11 @@
-import { Binding, Node, Register, PropertyDefinitions } from '../index';
+import { Binding, Node, Register, Property } from '../index';
 
 @Register
 class TestNode extends Node {
-  static get Properties(): PropertyDefinitions {
-    return {
-      prop1: 0,
-      prop2: 0,
-    };
-  }
+  @Property(0)
+  declare prop1: number;
+  @Property(0)
+  declare prop2: number;
 }
 
 export default class {
