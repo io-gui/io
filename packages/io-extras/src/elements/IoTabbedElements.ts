@@ -206,14 +206,14 @@ export class IoSelectorTabs extends IoElement {
   changed() {
     this.template([
       ioTabs({
-        $: 'tabs',
+        id: 'tabs',
         elements: this.elements,
         filter: this.filter,
         selected: this.bind('selected'),
         editable: this.editable,
       }),
       ioSelector({
-        $: 'content',
+        id: 'content',
         elements: this.elements,
         selected: this.selected,
         cache: this.cache,

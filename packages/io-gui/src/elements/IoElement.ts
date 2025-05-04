@@ -19,10 +19,7 @@ const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
 });
 
-export type IoElementProps = NativeElementProps & NodeProps & PropsWithBinding<{
-  $?: string; // Special property to access elements by $ value.
-}>;
-
+export type IoElementProps = NativeElementProps & NodeProps;
 /**
  * Core `IoElement` class.
  */
@@ -147,8 +144,8 @@ export class IoElement extends NodeMixin(HTMLElement) {
     for (let i = 0; i < vChildren.length; i++) {
       // Update this.$ map of ids.
       const child = children[i] as HTMLElement | IoElement;
-      if (vChildren[i].props?.$) {
-        this.$[vChildren[i].props!.$] = child;
+      if (vChildren[i].props?.id) {
+        this.$[vChildren[i].props!.id] = child;
       }
       if (vChildren[i].children) {
         if (typeof vChildren[i].children === 'string') {
@@ -202,7 +199,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
           for (const s in props[name]) {
             this.style[s] = props[name][s];
           }
-        } else if (!name.startsWith('@') && name !== '$') {
+        } else if (!name.startsWith('@')) {
           // TODO: test
           this[name] = props[name];
           if (props[name] === undefined && this.hasAttribute(name)) {

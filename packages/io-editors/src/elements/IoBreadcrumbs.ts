@@ -112,7 +112,7 @@ export class IoBreadcrumbs extends IoElement {
     elements.push(
       crumbs,
       ioButton({icon: 'io:close', class: 'clear-button', action: this.onClearSearch}),
-      ioString({$: 'search', class: 'search-input', value: this.bind('search'), live: true}),
+      ioString({id: 'search', class: 'search-input', value: this.bind('search'), live: true}),
     );
     this.template(elements);
   }

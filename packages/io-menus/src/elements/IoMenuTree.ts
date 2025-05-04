@@ -200,7 +200,7 @@ export class IoMenuTree extends IoElement {
 
     if (this.searchable) {
       elements.push(ioString({
-        $: 'search',
+        id: 'search',
         role: 'search',
         class: 'search',
         value: this.bind('search'),

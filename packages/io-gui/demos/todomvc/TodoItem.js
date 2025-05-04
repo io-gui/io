@@ -29,7 +29,7 @@ export class TodoItem extends IoElement {
           label({'@dblclick': this.onStartEdit}, this.item.title),
           button({class: 'destroy', '@click': this.onDestroyItem}),
         ]),
-        input({$: 'input', class: 'edit', value: this.item.title, '@blur': this.onEndEdit, '@keyup': this.onInputKey})
+        input({id: 'input', class: 'edit', value: this.item.title, '@blur': this.onEndEdit, '@keyup': this.onInputKey})
       ])
     ]);
   }

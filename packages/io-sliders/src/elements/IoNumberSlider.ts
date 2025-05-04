@@ -71,14 +71,14 @@ export class IoNumberSlider extends IoElement {
   changed() {
     this.template([
       ioNumber({
-        $: 'number',
+        id: 'number',
         value: this.value,
         step: this.step,
         conversion: this.conversion,
         '@value-input': this._onNumberSet,
       }),
       ioSlider({
-        $: 'slider',
+        id: 'slider',
         value: this.value * this.conversion,
         step: this.step * this.conversion,
         min: this.min * this.conversion,

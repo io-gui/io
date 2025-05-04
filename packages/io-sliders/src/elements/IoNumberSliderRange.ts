@@ -79,14 +79,14 @@ export class IoNumberSliderRange extends IoElement {
   changed() {
     this.template([
       ioNumber({
-        $: 'number0',
+        id: 'number0',
         value: this.value[0],
         step: this.step,
         conversion: this.conversion,
         '@value-input': this._onNumberSet,
       }),
       ioSliderRange({
-        $: 'slider',
+        id: 'slider',
         value: this.value,
         step: this.step,
         min: this.min,
@@ -95,7 +95,7 @@ export class IoNumberSliderRange extends IoElement {
         '@value-input': this._onSliderSet,
       }),
       ioNumber({
-        $: 'number1',
+        id: 'number1',
         value: this.value[1],
         step: this.step,
         conversion: this.conversion,

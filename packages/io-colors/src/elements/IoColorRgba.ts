@@ -58,13 +58,13 @@ export class IoColorRgba extends IoColorBase {
   changed() {
     this.template([
       // Consider removing global id collisions.
-      ioNumber({$: 'r', id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
-      ioNumber({$: 'g', id: 'g', value: this.value.g, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
-      ioNumber({$: 'b', id: 'b', value: this.value.b, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
+      ioNumber({id: 'r', value: this.value.r, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
+      ioNumber({id: 'g', value: this.value.g, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
+      ioNumber({id: 'b', value: this.value.b, min: 0, max: 1, step: 0.001, ladder: true, '@value-input': this._onNumberValueInput}),
       this.value.a !== undefined
-        ? ioNumber({$: 'a', id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput})
+        ? ioNumber({id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput})
         : null,
-      ioColorPicker({$: 'swatch', value: this.value}),
+      ioColorPicker({id: 'swatch', value: this.value}),
     ]);
   }
 }
