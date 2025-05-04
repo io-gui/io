@@ -14,7 +14,7 @@ export default class {
         expect(element.valueFromRgb).to.be.a('function');
       });
       it('Should initialize properties correctly', () => {
-        expect(element.reactivity).to.equal('debounced');
+        expect(element.reactivity).to.equal('throttled');
         expect(element.value).to.deep.equal({r: 1, g: 1, b: 1, a: 1});
         expect(element.rgba).to.deep.equal([1, 1, 1, 1]);
         expect(element.hsv).to.deep.equal([1, 0, 1]);

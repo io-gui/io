@@ -327,7 +327,7 @@ export class Theme extends Node {
       }, '');
 
       styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
-      this.debounce(this.onSaveTheme, undefined, 100);
+      this.debounce(this.onSaveTheme, undefined, 60);
   }
   onSaveTheme() {
     $Themes.value = JSON.parse(JSON.stringify($Themes.value));

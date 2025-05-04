@@ -88,7 +88,7 @@ export class IoMenusDemo extends IoElement {
       ioMenuTree({
         options: options,
       }),
-      ioMenuItem({label: 'menu item', item: new MenuItem('item')}),
+      ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),
       ioMenuItem({label: 'menu item', item: new MenuItem({
         selected: true,
         value: 'value',

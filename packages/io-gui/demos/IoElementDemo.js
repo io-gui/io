@@ -102,7 +102,9 @@ export class IoElementDemo extends IoElement {
       reactivity: 'debounced'
     };
   }
-
+  init() {
+    this.changed();
+  }
   optionsMutated() {
     this.changed();
   }
@@ -110,6 +112,7 @@ export class IoElementDemo extends IoElement {
     this.changed();
   }
   changed() {
+    console.log('asd');
     if (this.element) {
       this.template([
         ioOptionMenu({

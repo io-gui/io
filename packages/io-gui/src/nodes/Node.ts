@@ -4,7 +4,7 @@ import { Binding } from '../core/Binding';
 import { ChangeQueue } from '../core/ChangeQueue';
 import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property';
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
-import { throttle, CallbackFunction } from '../core/Queue';
+import { throttle, debounce, CallbackFunction } from '../core/Queue';
 
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
@@ -25,7 +25,7 @@ export type PropsWithBinding<T> = {
 };
 
 export type NodeProps = PropsWithBinding<{
-  reactivity?: 'none' | 'immediate' | 'debounced';
+  reactivity?: 'none' | 'immediate' | 'throttled' | 'debounced';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
 }>;
 
@@ -283,29 +283,30 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
     dispatchQueue(debounce = false) {
       if (this.reactivity === 'debounced' || debounce || this._changeQueue.dispatching) {
         this.debounce(this._changeQueue.dispatch);
+      } else if (this.reactivity === 'throttled') {
+        this.throttle(this._changeQueue.dispatch);
       } else if (this.reactivity === 'immediate') {
         this._changeQueue.dispatch();
       }
-      debug: if (['none', 'immediate', 'debounced'].indexOf(this.reactivity) === -1) {
-        console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${this.reactivity}". Expected one of: "none", "immediate", "debounced".`);
+      debug: if (['none', 'immediate', 'throttled', 'debounced'].indexOf(this.reactivity) === -1) {
+        console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${this.reactivity}". Expected one of: "none", "immediate", "throttled", "debounced".`);
       }
     }
     /**
      * Throttles function execution once per frame (rAF).
-     * @param {function} func - Function to throttle.
-     * @param {*} arg - argument for throttled function.
+     * @param {CallbackFunction} func - Function to throttle.
+     * @param {*} [arg] - Optional argument for throttled function.
      */
-    throttle(func: CallbackFunction, arg: any = undefined) {
-      throttle(this, func, arg, 0);
+    throttle(func: CallbackFunction, arg?: any, timeout = 1) {
+      throttle(func, arg, this, timeout);
     }
     /**
      * Debounces function execution to next frame (rAF).
-     * @param {function} func - Function to throttle.
-     * @param {*} arg - argument for debounced function.
-     * @param {number} timeout - minimum delay in ms before executing the function.
+     * @param {CallbackFunction} func - Function to debounce.
+     * @param {*} [arg] - Optional argument for debounced function.
      */
-    debounce(func: CallbackFunction, arg: any = undefined, timeout = 1) {
-      throttle(this, func, arg, timeout);
+    debounce(func: CallbackFunction, arg?: any, timeout = 1) {
+      debounce(func, arg, this, timeout);
     }
     /**
      * Event handler for 'object-mutated' events emitted from the properties which are Node instances.
