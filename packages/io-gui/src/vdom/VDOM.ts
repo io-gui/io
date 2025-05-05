@@ -3,7 +3,7 @@ import { Node } from '../nodes/Node';
 import { IoElement } from '../elements/IoElement';
 
 export type VDOMElement = {
-  name: string,
+  tag: string,
   props?: Record<string, any>,
   children?: Array<VDOMElement | null> | string
 }
@@ -356,12 +356,12 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
 export const constructElement = function(vDOMElement: VDOMElement) {
   const props = vDOMElement.props || {};
   // IoElement classes constructed with constructor.
-  const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.name) : null;
+  const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null;
   if (ConstructorClass && (ConstructorClass as any)._isIoElement) {
     return new ConstructorClass(props);
   }
   // Other element classes constructed with document.createElement.
-  const element = document.createElement(vDOMElement.name);
+  const element = document.createElement(vDOMElement.tag);
   applyNativeElementProps(element, props);
   return element;
 };
@@ -412,7 +412,7 @@ const toVDOMChildren = function(htmlCollection: [IoElement | HTMLElement]): VDOM
  */
 export const toVDOM = function(element: IoElement | HTMLElement): VDOMElement {
   return {
-    name: element.localName,
+    tag: element.localName,
     props: vDOMAttributes(element),
     children: element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent
   };

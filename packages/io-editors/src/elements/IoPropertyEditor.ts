@@ -116,7 +116,7 @@ export class IoPropertyEditor extends IoElement {
     } else {
       if (widget) {
         const widgetWithValue = {
-          name: widget.name,
+          tag: widget.tag,
           props: Object.assign({value: this.value}, widget.props),
           children: widget.children
         };
@@ -131,7 +131,7 @@ export class IoPropertyEditor extends IoElement {
       if (allProps.includes(properties[i])) {
         const id = properties[i] as keyof typeof this.value;
         const value = this.value[id];
-        const tag = config[id]!.name;
+        const tag = config[id]!.tag;
         const props = config[id]!.props as (IoElementProps | undefined) || {};
         const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
@@ -147,7 +147,7 @@ export class IoPropertyEditor extends IoElement {
         }
         elements.push(div({class: 'row'}, [
           this.labeled ? span(id) : null,
-          {name: tag, props: finalProps, children: children},
+          {tag: tag, props: finalProps, children: children},
         ]));
       } else {
         debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);

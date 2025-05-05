@@ -82,7 +82,7 @@ export default class {
           }
           constructor(...initProps: any[]) {
             super(...initProps);
-            this.template([{name: 'test-subelement', props: {
+            this.template([{tag: 'test-subelement', props: {
               id: 'subelement',
               prop0: this.bind('prop0'),
               prop1: this.bind('prop1'),
@@ -190,7 +190,7 @@ export default class {
             };
           }
           changed() {
-            this.template([{name: 'test-subelement', props: {id: 'subelement',
+            this.template([{tag: 'test-subelement', props: {id: 'subelement',
               prop0: this.bind('prop0'),
               prop1: this.bind('prop1'),
             }}]);
@@ -252,7 +252,7 @@ export default class {
             this.changed();
           }
           changed() {
-            this.template([{name: 'test-binding-element', props: {
+            this.template([{tag: 'test-binding-element', props: {
               id: 'testElement',
               prop1: this.bind('prop1'),
               prop2: this.bind('prop2'),

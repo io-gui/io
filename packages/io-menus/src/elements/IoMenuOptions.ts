@@ -335,7 +335,7 @@ export class IoMenuOptions extends IoElement {
           depth: this.depth
         }));
         if (i < this.options.length - 1) {
-          elements.push({name: 'span', props: {class: 'divider'}});
+          elements.push({tag: 'span', props: {class: 'divider'}});
         }
       }
     }

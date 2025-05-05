@@ -211,7 +211,7 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
         element = elementCandidate;
       } else if (typeof PropertyIdentifier === 'string' && key === PropertyIdentifier) {
         // ignore io-field elements assigned to read-only object properties
-        if (!(typeof value === 'object' && value !== null && elementCandidate.name === 'io-field')) {
+        if (!(typeof value === 'object' && value !== null && elementCandidate.tag === 'io-field')) {
           element = elementCandidate;
         }
       } else if (PropertyIdentifier instanceof RegExp && PropertyIdentifier.test(key)) {

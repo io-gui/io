@@ -19,6 +19,7 @@ const resizeObserver = new ResizeObserver((entries: any) => {
 });
 
 export type IoElementProps = NativeElementProps & NodeProps;
+
 /**
  * Core `IoElement` class.
  */
@@ -103,7 +104,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
       // replace existing elements
-      if (child.localName !== vChildren[i].name || cache) {
+      if (child.localName !== vChildren[i].tag || cache) {
         const oldElement = child as unknown as HTMLElement;
         const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement);
@@ -295,7 +296,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
     // TODO: Add runtime debuf type checks.
     // TODO: Test thoroughly.
     Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
-      const vDOMElement: VDOMElement = {name: localName};
+      const vDOMElement: VDOMElement = {tag: localName};
       if (arg0 !== undefined) {
         if (typeof arg0 === 'string') {
           vDOMElement.children = arg0;
