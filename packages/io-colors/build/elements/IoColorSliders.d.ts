@@ -47,56 +47,56 @@ declare class IoColorSlider2dBase extends IoSlider2d {
 export declare class IoColorSliderR extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderR: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderR: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "green" color channel.
  **/
 export declare class IoColorSliderG extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderG: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderG: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "blue" color channel.
  **/
 export declare class IoColorSliderB extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderB: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderB: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "alpha" color channel.
  **/
 export declare class IoColorSliderA extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderA: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderA: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "hue" color channel.
  **/
 export declare class IoColorSliderH extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderH: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderH: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "saturation" color channel.
  **/
 export declare class IoColorSliderS extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderS: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderS: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "value" color channel.
  **/
 export declare class IoColorSliderV extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderV: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderV: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "level" color channel.
  **/
 export declare class IoColorSliderL extends IoColorSliderBase {
     static get GlUtils(): string;
 }
-export declare const ioColorSliderL: (arg0?: import("io-sliders").IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderL: (arg0?: import("io-sliders").IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 2D slider gor "hue" and "saturation" color channels.
  **/

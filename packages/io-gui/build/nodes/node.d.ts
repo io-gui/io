@@ -15,7 +15,7 @@ export interface NodeConstructor<T> {
 }
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type PropsWithBinding<T> = {
-    [K in keyof T]: T[K] | Binding;
+    [K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
 };
 export type NodeProps = PropsWithBinding<{
     reactivity?: 'none' | 'immediate' | 'throttled' | 'debounced';
@@ -31,7 +31,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
         [x: string]: any;
         readonly _protochain: ProtoChain;
         readonly _properties: Map<string, PropertyInstance>;
-        readonly _bindings: Map<string, Binding>;
+        readonly _bindings: Map<string, Binding<any>>;
         readonly _changeQueue: ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
         /**
@@ -103,7 +103,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
          * @param {string} name - Property name to bind to.
          * @return {Binding} Binding object.
          */
-        bind(name: string): Binding;
+        bind<T_1>(name: string): Binding<T_1>;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} name - Property name to unbind.
@@ -149,7 +149,7 @@ declare const Node_base: {
         [x: string]: any;
         readonly _protochain: ProtoChain;
         readonly _properties: Map<string, PropertyInstance>;
-        readonly _bindings: Map<string, Binding>;
+        readonly _bindings: Map<string, Binding<any>>;
         readonly _changeQueue: ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
         /**
@@ -221,7 +221,7 @@ declare const Node_base: {
          * @param {string} name - Property name to bind to.
          * @return {Binding} Binding object.
          */
-        bind(name: string): Binding;
+        bind<T>(name: string): Binding<T>;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} name - Property name to unbind.

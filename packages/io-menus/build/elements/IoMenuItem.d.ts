@@ -1,8 +1,8 @@
 import { VDOMElement, PropsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-import { IoInputBase, IoInputBaseProps } from 'io-inputs';
-export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
+import { IoField, IoFieldProps } from 'io-inputs';
+export type IoMenuItemProps = IoFieldProps & PropsWithBinding<{
     item?: MenuItem;
     expanded?: boolean;
     direction?: 'left' | 'right' | 'up' | 'down';
@@ -11,7 +11,7 @@ export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
-export declare class IoMenuItem extends IoInputBase {
+export declare class IoMenuItem extends IoField {
     static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     item: MenuItem;

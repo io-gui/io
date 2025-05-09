@@ -22,10 +22,10 @@ type TargetProperties = WeakMap<Node, Properties>;
  *
  * @example
  * // Create a two-way binding between nodeA.value and nodeB.value
- * const binding = new Binding(nodeA, 'value');
+ * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export declare class Binding {
+export declare class Binding<T extends unknown> {
     readonly node: Node;
     readonly property: string;
     readonly targets: Node[];
@@ -37,8 +37,8 @@ export declare class Binding {
      * @param {string} property - Name of the sourceproperty
      */
     constructor(node: Node, property: string);
-    set value(value: any);
-    get value(): any;
+    set value(value: T);
+    get value(): T;
     /**
      * Returns a JSON representation of the binding.
      * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.

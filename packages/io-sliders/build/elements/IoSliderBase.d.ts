@@ -17,8 +17,8 @@ export declare class IoSliderBase extends IoGl {
     max: number | [number, number];
     exponent: number;
     vertical: boolean;
-    noscroll: boolean;
     invalid: boolean;
+    noscroll: boolean;
     role: string;
     tabIndex: string;
     _startX: number;

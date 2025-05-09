@@ -1,16 +1,15 @@
-import { VDOMElement, PropsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
-export type IoStringProps = IoInputBaseProps & PropsWithBinding<{
-    value?: string;
-    live?: boolean;
-    placeholder?: string;
+import { VDOMElement, Binding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
+export type IoStringProps = Omit<IoFieldProps, 'value'> & {
+    value?: string | Binding<string>;
+    live?: boolean | Binding<boolean>;
+    placeholder?: string | Binding<string>;
     appearance?: 'neutral' | 'inset' | 'outset';
-    role?: string;
-}>;
+};
 /**
  * Input element for `String` data type.
  **/
-export declare class IoString extends IoInputBase {
+export declare class IoString extends IoField {
     static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: string;

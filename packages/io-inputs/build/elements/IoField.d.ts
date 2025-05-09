@@ -1,12 +1,13 @@
-import { VDOMElement, PropsWithBinding, IoElement, IoElementProps } from 'io-gui';
-export type IoFieldProps = IoElementProps & PropsWithBinding<{
-    value?: any;
-    icon?: string;
-    label?: string;
-    selected?: boolean;
-    disabled?: boolean;
+import { VDOMElement, Binding, IoElement, IoElementProps } from 'io-gui';
+export type IoFieldProps = IoElementProps & {
+    value?: any | Binding<any>;
+    icon?: string | Binding<string>;
+    label?: string | Binding<string>;
+    selected?: boolean | Binding<boolean>;
+    disabled?: boolean | Binding<boolean>;
     appearance?: 'neutral' | 'inset' | 'outset';
-}>;
+    pattern?: string;
+};
 export declare class IoField extends IoElement {
     static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
@@ -16,9 +17,28 @@ export declare class IoField extends IoElement {
     selected: boolean;
     invalid: boolean;
     disabled: boolean;
+    pressed: boolean;
     appearance: 'neutral' | 'inset' | 'outset';
+    pattern: string;
+    spellcheck: boolean;
     tabIndex: string;
+    static get Listeners(): {
+        focus: string;
+        pointerdown: string;
+        click: string;
+    };
     constructor(args?: IoFieldProps);
+    onFocus(event: FocusEvent): void;
+    onBlur(event: FocusEvent): void;
+    onPointerdown(event: PointerEvent): void;
+    onPointermove(event: PointerEvent): void;
+    onPointerleave(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
+    onClick(event?: MouseEvent): void;
+    onKeydown(event: KeyboardEvent): void;
+    onKeyup(event: KeyboardEvent): void;
+    getCaretPosition(): number;
+    setCaretPosition(position: number): void;
     labelChanged(): void;
     selectedChanged(): void;
     invalidChanged(): void;

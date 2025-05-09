@@ -1,6 +1,6 @@
 import { IoElement } from '../elements/IoElement';
 export type VDOMElement = {
-    name: string;
+    tag: string;
     props?: Record<string, any>;
     children?: Array<VDOMElement | null> | string;
 };

@@ -1,10 +1,10 @@
 import { VDOMElement, PropsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
-export type IoNumberLadderStepProps = IoInputBaseProps & PropsWithBinding<{
+import { IoField, IoFieldProps } from './IoField';
+export type IoNumberLadderStepProps = IoFieldProps & PropsWithBinding<{
     value?: number;
     label?: string;
 }>;
-export declare class IoNumberLadderStep extends IoInputBase {
+export declare class IoNumberLadderStep extends IoField {
     static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;

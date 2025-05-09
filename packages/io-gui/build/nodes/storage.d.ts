@@ -12,7 +12,7 @@ export declare class StorageNode extends Node {
     value: any;
     default: any;
     storage: 'hash' | 'local' | 'none';
-    binding: Binding;
+    binding: Binding<any>;
     constructor(props: StorageProps);
     dispose(): void;
     _clearStorage(): void;
@@ -20,7 +20,7 @@ export declare class StorageNode extends Node {
     removeValueToHash(): void;
     saveValueToHash(): void;
 }
-export declare const Storage: ((props: StorageProps) => Binding) & {
+export declare const Storage: ((props: StorageProps) => Binding<any>) & {
     permit(): void;
     unpermit(): void;
 };

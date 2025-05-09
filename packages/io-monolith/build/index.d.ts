@@ -22,10 +22,10 @@ export type TargetProperties = WeakMap<Node$1, Properties>;
  *
  * @example
  * // Create a two-way binding between nodeA.value and nodeB.value
- * const binding = new Binding(nodeA, 'value');
+ * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export declare class Binding {
+export declare class Binding<T extends unknown> {
 	readonly node: Node$1;
 	readonly property: string;
 	readonly targets: Node$1[];
@@ -37,8 +37,8 @@ export declare class Binding {
 	 * @param {string} property - Name of the sourceproperty
 	 */
 	constructor(node: Node$1, property: string);
-	set value(value: any);
-	get value(): any;
+	set value(value: T);
+	get value(): T;
 	/**
 	 * Returns a JSON representation of the binding.
 	 * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
@@ -103,15 +103,15 @@ export declare class Binding {
 type PropertyDefinition$1 = {
 	value?: any;
 	type?: AnyConstructor;
-	binding?: Binding;
+	binding?: Binding<any>;
 	reflect?: boolean;
 	init?: any;
 };
 /**
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
-export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | PropertyDefinition$1;
+export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | PropertyDefinition$1;
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
  * It facilitates merging of inherited property definitions from the prototype chain.
@@ -125,7 +125,7 @@ export type PropertyDefinitionLoose = string | number | boolean | Array<any> | n
 export declare class ProtoProperty {
 	value?: any;
 	type?: AnyConstructor;
-	binding?: Binding;
+	binding?: Binding<any>;
 	reflect?: boolean;
 	init?: any;
 	/**
@@ -164,7 +164,7 @@ export declare class ProtoProperty {
 export declare class PropertyInstance {
 	value?: any;
 	type?: AnyConstructor;
-	binding?: Binding;
+	binding?: Binding<any>;
 	reflect: boolean;
 	init?: any;
 	/**
@@ -446,7 +446,7 @@ export interface NodeConstructor<T> {
 }
 export type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type PropsWithBinding<T> = {
-	[K in keyof T]: T[K] | Binding;
+	[K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
 };
 export type NodeProps = PropsWithBinding<{
 	reactivity?: "none" | "immediate" | "throttled" | "debounced";
@@ -462,7 +462,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -534,7 +534,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 		 * @param {string} name - Property name to bind to.
 		 * @return {Binding} Binding object.
 		 */
-		bind(name: string): Binding;
+		bind<T_1>(name: string): Binding<T_1>;
 		/**
 		 * Unbinds a binding to a specified property`.
 		 * @param {string} name - Property name to unbind.
@@ -580,7 +580,7 @@ declare const Node_base: {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -652,7 +652,7 @@ declare const Node_base: {
 		 * @param {string} name - Property name to bind to.
 		 * @return {Binding} Binding object.
 		 */
-		bind(name: string): Binding;
+		bind<T>(name: string): Binding<T>;
 		/**
 		 * Unbinds a binding to a specified property`.
 		 * @param {string} name - Property name to unbind.
@@ -765,7 +765,7 @@ declare const IoElement_base: {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		applyProperties(props: any, skipDispatch?: boolean): void;
@@ -779,7 +779,7 @@ declare const IoElement_base: {
 		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onPropertyMutated(event: CustomEvent): true | undefined;
-		bind(name: string): Binding;
+		bind<T>(name: string): Binding<T>;
 		unbind(name: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -847,8 +847,10 @@ export declare class IoElement extends IoElement_base {
 	Register(ioNodeConstructor: typeof Node$1): void;
 }
 export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type Direction = "left" | "right" | "down" | "up";
+export declare function focusTo(srcElement: IoElement | HTMLElement, dir: Direction): void;
 export type VDOMElement = {
-	name: string;
+	tag: string;
 	props?: Record<string, any>;
 	children?: Array<VDOMElement | null> | string;
 };
@@ -1193,7 +1195,7 @@ export declare class StorageNode extends Node$1 {
 	value: any;
 	default: any;
 	storage: "hash" | "local" | "none";
-	binding: Binding;
+	binding: Binding<any>;
 	constructor(props: StorageProps);
 	dispose(): void;
 	_clearStorage(): void;
@@ -1201,7 +1203,7 @@ export declare class StorageNode extends Node$1 {
 	removeValueToHash(): void;
 	saveValueToHash(): void;
 }
-declare const Storage$1: ((props: StorageProps) => Binding) & {
+declare const Storage$1: ((props: StorageProps) => Binding<any>) & {
 	permit(): void;
 	unpermit(): void;
 };
@@ -1634,8 +1636,8 @@ export declare class IoSliderBase extends IoGl {
 	];
 	exponent: number;
 	vertical: boolean;
-	noscroll: boolean;
 	invalid: boolean;
+	noscroll: boolean;
 	role: string;
 	tabIndex: string;
 	_startX: number;
@@ -1759,18 +1761,68 @@ export declare class IoSliderRange extends IoSliderBase {
 	static get Frag(): string;
 }
 export declare const ioSliderRange: (arg0?: IoSliderRangeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoSliderProps = IoGlProps & {
+	value?: number | Binding<number>;
+	step?: number;
+	min?: number;
+	max?: number;
+	exponent?: number;
+	vertical?: boolean;
+	disabled?: boolean;
+	noscroll?: boolean;
+};
 /**
  * Input element for `Number` data type displayed as slider.
  * It can be configured to clamp the `value` to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
  **/
-export declare class IoSlider extends IoSliderBase {
+export declare class IoSlider extends IoGl {
+	#private;
+	static vConstructor: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static get Style(): string;
 	value: number;
 	step: number;
 	min: number;
 	max: number;
+	exponent: number;
+	vertical: boolean;
+	invalid: boolean;
+	disabled: boolean;
+	noscroll: boolean;
+	role: string;
+	tabIndex: string;
 	static get Frag(): string;
+	static get Listeners(): {
+		focus: string;
+		contextmenu: string;
+		pointerdown: string;
+		touchstart: (string | {
+			passive: boolean;
+		})[];
+	};
+	constructor(args?: IoSliderProps);
+	onFocus(): void;
+	onBlur(): void;
+	onContextmenu(event: Event): void;
+	onTouchstart(event: TouchEvent): void;
+	onTouchmove(event: TouchEvent): void;
+	onTouchend(): void;
+	onPointerdown(event: PointerEvent): void;
+	onPointermove(event: PointerEvent): void;
+	onPointerup(event: PointerEvent): void;
+	_getPointerCoord(event: PointerEvent): number;
+	_getValueFromCoord(coord: number): number;
+	onPointermoveThrottled(event: PointerEvent): void;
+	_incrementValue(value: number): void;
+	_inputValue(value: number): void;
+	onKeydown(event: KeyboardEvent): void;
+	init(): void;
+	invalidChanged(): void;
+	disabledChanged(): void;
+	valueChanged(): void;
+	minChanged(): void;
+	maxChanged(): void;
 }
-export declare const ioSlider: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioSlider: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type IoColorSliderProps = IoColorBaseProps & PropsWithBinding<{
 	color?: [
 		number,
@@ -1819,56 +1871,56 @@ declare class IoColorSlider2dBase extends IoSlider2d {
 export declare class IoColorSliderR extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderR: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderR: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "green" color channel.
  **/
 export declare class IoColorSliderG extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderG: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderG: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "blue" color channel.
  **/
 export declare class IoColorSliderB extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderB: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderB: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "alpha" color channel.
  **/
 export declare class IoColorSliderA extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderA: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderA: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "hue" color channel.
  **/
 export declare class IoColorSliderH extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderH: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderH: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "saturation" color channel.
  **/
 export declare class IoColorSliderS extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderS: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderS: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "value" color channel.
  **/
 export declare class IoColorSliderV extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderV: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderV: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "level" color channel.
  **/
 export declare class IoColorSliderL extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderL: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderL: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 2D slider gor "hue" and "saturation" color channels.
  **/
@@ -2149,14 +2201,15 @@ export declare class IoIcon extends IoElement {
 	valueChanged(): void;
 }
 export declare const ioIcon: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoFieldProps = IoElementProps & PropsWithBinding<{
-	value?: any;
-	icon?: string;
-	label?: string;
-	selected?: boolean;
-	disabled?: boolean;
+export type IoFieldProps = IoElementProps & {
+	value?: any | Binding<any>;
+	icon?: string | Binding<string>;
+	label?: string | Binding<string>;
+	selected?: boolean | Binding<boolean>;
+	disabled?: boolean | Binding<boolean>;
 	appearance?: "neutral" | "inset" | "outset";
-}>;
+	pattern?: string;
+};
 export declare class IoField extends IoElement {
 	static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
@@ -2166,32 +2219,17 @@ export declare class IoField extends IoElement {
 	selected: boolean;
 	invalid: boolean;
 	disabled: boolean;
+	pressed: boolean;
 	appearance: "neutral" | "inset" | "outset";
+	pattern: string;
+	spellcheck: boolean;
 	tabIndex: string;
-	constructor(args?: IoFieldProps);
-	labelChanged(): void;
-	selectedChanged(): void;
-	invalidChanged(): void;
-	disabledChanged(): void;
-	changed(): void;
-}
-export declare const ioField: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoInputBaseProps = IoFieldProps & PropsWithBinding<{
-	pressed?: boolean;
-}>;
-export declare class IoInputBase extends IoField {
-	static vConstructor: (arg0?: IoInputBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-	static get Style(): string;
 	static get Listeners(): {
-		"focus-to": string;
 		focus: string;
 		pointerdown: string;
 		click: string;
 	};
-	pressed: boolean;
-	pattern: string;
-	spellcheck: boolean;
-	constructor(args?: IoInputBaseProps);
+	constructor(args?: IoFieldProps);
 	onFocus(event: FocusEvent): void;
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
@@ -2201,13 +2239,16 @@ export declare class IoInputBase extends IoField {
 	onClick(event?: MouseEvent): void;
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
-	onFocusTo(event: CustomEvent): void;
-	focusTo(dir: string): void;
 	getCaretPosition(): number;
 	setCaretPosition(position: number): void;
+	labelChanged(): void;
+	selectedChanged(): void;
+	invalidChanged(): void;
+	disabledChanged(): void;
+	changed(): void;
 }
-export declare const ioInputBase: (arg0?: IoInputBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
+export declare const ioField: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoBooleanProps = Omit<IoFieldProps, "value"> & PropsWithBinding<{
 	value?: boolean;
 	true?: string;
 	false?: string;
@@ -2216,7 +2257,7 @@ export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
  * Input element for `Boolean` data type displayed as text.
  * It can be configured to display custom `true` or `false` strings.
  **/
-export declare class IoBoolean extends IoInputBase {
+export declare class IoBoolean extends IoField {
 	static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: boolean;
@@ -2232,14 +2273,14 @@ export declare class IoBoolean extends IoInputBase {
 	changed(): void;
 }
 export declare const ioBoolean: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoButtonProps = IoInputBaseProps & PropsWithBinding<{
+export type IoButtonProps = IoFieldProps & PropsWithBinding<{
 	action?: Function;
 }>;
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
  **/
-export declare class IoButton extends IoInputBase {
+export declare class IoButton extends IoField {
 	static vConstructor: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: any;
@@ -2255,7 +2296,7 @@ export declare class IoButton extends IoInputBase {
 	changed(): void;
 }
 export declare const ioButton: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
+export type IoNumberProps = Omit<IoFieldProps, "value"> & PropsWithBinding<{
 	value?: number;
 	live?: boolean;
 	conversion?: number;
@@ -2270,7 +2311,7 @@ export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
  * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
-export declare class IoNumber extends IoInputBase {
+export declare class IoNumber extends IoField {
 	static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number;
@@ -2330,11 +2371,11 @@ declare class IoNumberLadder extends IoElement {
 	changed(): void;
 }
 export declare const IoNumberLadderSingleton: IoNumberLadder;
-export type IoNumberLadderStepProps = IoInputBaseProps & PropsWithBinding<{
+export type IoNumberLadderStepProps = IoFieldProps & PropsWithBinding<{
 	value?: number;
 	label?: string;
 }>;
-export declare class IoNumberLadderStep extends IoInputBase {
+export declare class IoNumberLadderStep extends IoField {
 	static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number;
@@ -2349,17 +2390,16 @@ export declare class IoNumberLadderStep extends IoInputBase {
 	changed(): void;
 }
 export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoStringProps = IoInputBaseProps & PropsWithBinding<{
-	value?: string;
-	live?: boolean;
-	placeholder?: string;
+export type IoStringProps = Omit<IoFieldProps, "value"> & {
+	value?: string | Binding<string>;
+	live?: boolean | Binding<boolean>;
+	placeholder?: string | Binding<string>;
 	appearance?: "neutral" | "inset" | "outset";
-	role?: string;
-}>;
+};
 /**
  * Input element for `String` data type.
  **/
-export declare class IoString extends IoInputBase {
+export declare class IoString extends IoField {
 	static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: string;
@@ -2405,7 +2445,7 @@ declare const MenuOptions_base: {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		applyProperties(props: any, skipDispatch?: boolean): void;
@@ -2419,7 +2459,7 @@ declare const MenuOptions_base: {
 		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		onPropertyMutated(event: CustomEvent): true | undefined;
-		bind(name: string): Binding;
+		bind<T_1>(name: string): Binding<T_1>;
 		unbind(name: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -2448,7 +2488,6 @@ export declare class MenuOptions extends MenuOptions_base {
 	_onItemSelectedChanged(event: CustomEvent): void;
 	_onSubOptionsPathChanged(event: CustomEvent): void;
 	selectDefault(): boolean;
-	bind(prop: string): Binding;
 	dispose(): void;
 }
 export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
@@ -2569,7 +2608,7 @@ export declare class IoMenuOptions extends IoElement {
 	changed(): void;
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
+export type IoMenuItemProps = IoFieldProps & PropsWithBinding<{
 	item?: MenuItem;
 	expanded?: boolean;
 	direction?: "left" | "right" | "up" | "down";
@@ -2578,7 +2617,7 @@ export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
-export declare class IoMenuItem extends IoInputBase {
+export declare class IoMenuItem extends IoField {
 	static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	item: MenuItem;

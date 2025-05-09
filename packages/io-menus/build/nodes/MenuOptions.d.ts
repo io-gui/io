@@ -13,7 +13,7 @@ declare const MenuOptions_base: {
         [x: string]: any;
         readonly _protochain: import("io-gui").ProtoChain;
         readonly _properties: Map<string, import("io-gui").PropertyInstance>;
-        readonly _bindings: Map<string, import("io-gui").Binding>;
+        readonly _bindings: Map<string, import("io-gui").Binding<any>>;
         readonly _changeQueue: import("io-gui").ChangeQueue;
         readonly _eventDispatcher: import("io-gui").EventDispatcher;
         applyProperties(props: any, skipDispatch?: boolean): void;
@@ -27,7 +27,7 @@ declare const MenuOptions_base: {
         throttle(func: import("io-gui").CallbackFunction, arg?: any, timeout?: number): void;
         debounce(func: import("io-gui").CallbackFunction, arg?: any, timeout?: number): void;
         onPropertyMutated(event: CustomEvent): true | undefined;
-        bind(name: string): import("io-gui").Binding;
+        bind<T_1>(name: string): import("io-gui").Binding<T_1>;
         unbind(name: string): void;
         addEventListener(type: string, listener: import("io-gui").AnyEventListener, options?: AddEventListenerOptions): void;
         removeEventListener(type: string, listener?: import("io-gui").AnyEventListener, options?: AddEventListenerOptions): void;
@@ -56,7 +56,6 @@ export declare class MenuOptions extends MenuOptions_base {
     _onItemSelectedChanged(event: CustomEvent): void;
     _onSubOptionsPathChanged(event: CustomEvent): void;
     selectDefault(): boolean;
-    bind(prop: string): import("io-gui").Binding;
     dispose(): void;
 }
 export {};

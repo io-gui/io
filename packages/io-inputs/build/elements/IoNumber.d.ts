@@ -1,6 +1,6 @@
 import { VDOMElement, PropsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
-export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
+import { IoField, IoFieldProps } from './IoField';
+export type IoNumberProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
     value?: number;
     live?: boolean;
     conversion?: number;
@@ -15,7 +15,7 @@ export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
  * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
-export declare class IoNumber extends IoInputBase {
+export declare class IoNumber extends IoField {
     static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;

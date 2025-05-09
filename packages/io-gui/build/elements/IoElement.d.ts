@@ -9,7 +9,7 @@ declare const IoElement_base: {
         [x: string]: any;
         readonly _protochain: import("..").ProtoChain;
         readonly _properties: Map<string, import("..").PropertyInstance>;
-        readonly _bindings: Map<string, import("..").Binding>;
+        readonly _bindings: Map<string, import("..").Binding<any>>;
         readonly _changeQueue: import("..").ChangeQueue;
         readonly _eventDispatcher: import("..").EventDispatcher;
         applyProperties(props: any, skipDispatch?: boolean): void;
@@ -23,7 +23,7 @@ declare const IoElement_base: {
         throttle(func: import("..").CallbackFunction, arg?: any, timeout?: number): void;
         debounce(func: import("..").CallbackFunction, arg?: any, timeout?: number): void;
         onPropertyMutated(event: CustomEvent): true | undefined;
-        bind(name: string): import("..").Binding;
+        bind<T>(name: string): import("..").Binding<T>;
         unbind(name: string): void;
         addEventListener(type: string, listener: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
         removeEventListener(type: string, listener?: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
@@ -91,5 +91,7 @@ export declare class IoElement extends IoElement_base {
     Register(ioNodeConstructor: typeof Node): void;
 }
 export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+type Direction = 'left' | 'right' | 'down' | 'up';
+export declare function focusTo(srcElement: IoElement | HTMLElement, dir: Direction): void;
 export {};
 //# sourceMappingURL=IoElement.d.ts.map

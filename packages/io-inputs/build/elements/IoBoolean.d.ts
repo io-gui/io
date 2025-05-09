@@ -1,6 +1,6 @@
 import { VDOMElement, PropsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
-export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
+import { IoField, IoFieldProps } from './IoField';
+export type IoBooleanProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
     value?: boolean;
     true?: string;
     false?: string;
@@ -9,7 +9,7 @@ export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
  * Input element for `Boolean` data type displayed as text.
  * It can be configured to display custom `true` or `false` strings.
  **/
-export declare class IoBoolean extends IoInputBase {
+export declare class IoBoolean extends IoField {
     static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: boolean;
