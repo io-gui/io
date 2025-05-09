@@ -1,7 +1,8 @@
-import { VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
-export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
+import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
+export type IoNumberProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
     value?: number;
+    live?: boolean;
     conversion?: number;
     step?: number;
     min?: number;
@@ -14,23 +15,25 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
-export declare class IoNumber extends IoInputBase {
-    static vConstructor: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoNumber extends IoField {
+    static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
+    live: boolean;
     conversion: number;
     step: number;
     min: number;
     max: number;
     ladder: boolean;
-    pattern: string;
-    inputmode: string;
-    placeholder: string;
-    spellcheck: string;
     appearance: 'neutral' | 'inset' | 'outset';
+    contentEditable: boolean;
+    pattern: string;
+    inputMode: string;
     role: string;
     private _pointer;
-    constructor(args?: IoNumberArgs);
+    constructor(args?: IoNumberProps);
+    get textNode(): any;
+    set textNode(value: any);
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
@@ -40,8 +43,7 @@ export declare class IoNumber extends IoInputBase {
     onKeyup(event: KeyboardEvent): void;
     _setFromTextNode(): void;
     init(): void;
-    disabledChanged(): void;
     changed(): void;
 }
-export declare const ioNumber: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNumber: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoNumber.d.ts.map

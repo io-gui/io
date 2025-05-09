@@ -56,6 +56,13 @@ export class IoGl extends IoElement {
         pointer-events: none;
         image-rendering: pixelated;
       }
+      :host > span {
+        position: absolute;
+        text-shadow: 0 0 3px var(--io_bgColorStrong), 0 0 3px var(--io_bgColorStrong), 0 0 3px var(--io_bgColorStrong);
+        left: 3px;
+        pointer-events: none;
+        color: var(--io_colorStrong);
+      }
     `;
   }
 
@@ -74,11 +81,12 @@ export class IoGl extends IoElement {
   @Property({type: Number, value: 1})
   declare pxRatio: number;
 
-  @Property('debounced')
+  @Property('throttled')
   declare reactivity: string;
 
   #needsResize = false;
   #canvas: HTMLCanvasElement;
+  // #counter: HTMLSpanElement;
   #ctx: CanvasRenderingContext2D;
   #vecLengths: Record<string, number>;
   #shader: WebGLProgram;
@@ -185,6 +193,10 @@ export class IoGl extends IoElement {
     this.appendChild(this.#canvas);
     this.#ctx = this.#canvas.getContext('2d', {alpha: true}) as CanvasRenderingContext2D;
 
+    // this.#counter = document.createElement('span');
+    // this.#counter.innerText = '0';
+    // this.appendChild(this.#counter);
+
     // TODO: improve code clarity
     this.#vecLengths = {};
     this.theme._properties.forEach((property, name) => {
@@ -253,10 +265,10 @@ export class IoGl extends IoElement {
   }
   themeMutated() {
     this.updateThemeUniforms();
-    this.debounce(this._onRender);
+    this.throttle(this._onRender);
   }
   changed() {
-    this.debounce(this._onRender);
+    this.throttle(this._onRender);
   }
   _onRender() {
     const width = Math.floor(this.size[0] * this.pxRatio);
@@ -291,6 +303,8 @@ export class IoGl extends IoElement {
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
     this.#ctx.drawImage(canvas, 0, 0);
+
+    // this.#counter.innerText = String(Number(this.#counter.innerText) + 1);
   }
   setShaderProgram() {
     if (currentProgram !== this.#shader) {

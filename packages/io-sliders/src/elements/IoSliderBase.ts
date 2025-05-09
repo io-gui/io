@@ -1,4 +1,4 @@
-import { Property, IoGl, IoGlProps, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { Property, IoGl, IoGlProps, VDOMElement, PropsWithBinding, Default, focusTo } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -40,13 +40,14 @@ export class IoSliderBase extends IoGl {
         flex-basis: var(--io_fieldHeight);
         flex-grow: 0;
       }
-      :host[disabled] {
-        opacity: 0.5;
-      }
       :host[invalid] {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorRed);
         border-color: var(--io_colorRed);
+      }
+      :host:focus {
+        border-color: var(--io_colorBlue);
+        outline: 1px auto var(--io_colorBlue);
       }
     `;
   }
@@ -69,13 +70,10 @@ export class IoSliderBase extends IoGl {
   @Property({value: false, reflect: true})
   declare vertical: boolean;
 
-  @Property({value: false, reflect: true})
-  declare disabled: boolean;
-
-  @Property({value: false, reflect: true})
+  @Property({value: false, type: Boolean, reflect: true})
   declare invalid: boolean;
 
-  @Property(false)
+  @Default(false)
   declare noscroll: boolean;
 
   @Default('slider')
@@ -260,7 +258,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setDecrease() : this._setLeft();
         } else {
-          this.focusTo('left');
+          focusTo(this, 'left');
         }
         break;
       case 'ArrowUp':
@@ -268,7 +266,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setIncrease() : this._setUp();
         } else {
-          this.focusTo('up');
+          focusTo(this, 'up');
         }
         break;
       case 'ArrowRight':
@@ -276,7 +274,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setIncrease() : this._setRight();
         } else {
-          this.focusTo('right');
+          focusTo(this, 'right');
         }
         break;
       case 'ArrowDown':
@@ -284,7 +282,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setDecrease() : this._setDown();
         } else {
-          this.focusTo('down');
+          focusTo(this, 'down');
         }
         break;
       default:
@@ -340,14 +338,6 @@ export class IoSliderBase extends IoGl {
   init() {
     this.changed();
   }
-  disabledChanged() {
-    this.inert = this.disabled;
-    if (this.disabled) {
-      this.setAttribute('aria-disabled', 'true');
-    } else {
-      this.removeAttribute('aria-disabled');
-    }
-  }
   valueChanged() {
     let invalid = false;
     if (this.value instanceof Array) {
@@ -356,6 +346,13 @@ export class IoSliderBase extends IoGl {
       invalid = true;
     }
     this.invalid = invalid;
+  }
+  invalidChanged() {
+    if (this.invalid) {
+      this.setAttribute('aria-invalid', 'true');
+    } else {
+      this.removeAttribute('aria-invalid');
+    }
   }
   changed() {
     super.changed();

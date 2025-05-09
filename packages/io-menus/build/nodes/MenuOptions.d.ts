@@ -1,6 +1,6 @@
-import { NodeArgs, ArgsWithBinding } from 'io-gui';
+import { NodeProps, PropsWithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
-export type MenuOptionsArgs = NodeArgs & ArgsWithBinding<{
+export type MenuOptionsProps = NodeProps & PropsWithBinding<{
     first?: any;
     last?: any;
     scroll?: string;
@@ -9,11 +9,11 @@ export type MenuOptionsArgs = NodeArgs & ArgsWithBinding<{
     items?: MenuItem[];
 }>;
 declare const MenuOptions_base: {
-    new (...superArgs: any[]): {
+    new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: import("io-gui").ProtoChain;
         readonly _properties: Map<string, import("io-gui").PropertyInstance>;
-        readonly _bindings: Map<string, import("io-gui").Binding>;
+        readonly _bindings: Map<string, import("io-gui").Binding<any>>;
         readonly _changeQueue: import("io-gui").ChangeQueue;
         readonly _eventDispatcher: import("io-gui").EventDispatcher;
         applyProperties(props: any, skipDispatch?: boolean): void;
@@ -24,10 +24,10 @@ declare const MenuOptions_base: {
         init(): void;
         queue(name: string, value: any, oldValue: any): void;
         dispatchQueue(debounce?: boolean): void;
-        throttle(func: import("io-gui").CallbackFunction, arg?: any): void;
+        throttle(func: import("io-gui").CallbackFunction, arg?: any, timeout?: number): void;
         debounce(func: import("io-gui").CallbackFunction, arg?: any, timeout?: number): void;
-        onPropertyMutated(event: CustomEvent): void;
-        bind(name: string): import("io-gui").Binding;
+        onPropertyMutated(event: CustomEvent): true | undefined;
+        bind<T_1>(name: string): import("io-gui").Binding<T_1>;
         unbind(name: string): void;
         addEventListener(type: string, listener: import("io-gui").AnyEventListener, options?: AddEventListenerOptions): void;
         removeEventListener(type: string, listener?: import("io-gui").AnyEventListener, options?: AddEventListenerOptions): void;
@@ -46,7 +46,7 @@ export declare class MenuOptions extends MenuOptions_base {
     delimiter: string;
     items: MenuItem[];
     getItem(value: any, deep?: boolean): any;
-    constructor(properties?: MenuOptionsArgs);
+    constructor(properties?: MenuOptionsProps);
     fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
     initItems(items: MenuItem[]): void;
     pathChanged(): void;
@@ -56,7 +56,6 @@ export declare class MenuOptions extends MenuOptions_base {
     _onItemSelectedChanged(event: CustomEvent): void;
     _onSubOptionsPathChanged(event: CustomEvent): void;
     selectDefault(): boolean;
-    bind(prop: string): import("io-gui").Binding;
     dispose(): void;
 }
 export {};

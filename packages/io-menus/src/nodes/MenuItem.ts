@@ -27,31 +27,31 @@ export class MenuItem extends Node {
   @Property(undefined)
   declare value: any;
 
-  @Property('')
+  @Property({value: '', type: String})
   declare label: string;
 
-  @Property('')
+  @Property({value: '', type: String})
   declare icon: string;
 
-  @Property('')
+  @Property({value: '', type: String})
   declare hint: string;
 
-  @Property(false)
+  @Property({value: false, type: Boolean})
   declare hidden: boolean;
 
-  @Property(false)
+  @Property({value: false, type: Boolean})
   declare disabled: boolean;
 
-  @Property(undefined)
+  @Property({value: undefined, type: Function, init: null})
   declare action?: (value?: any) => void;
 
-  @Property('select')
+  @Property({value: 'select', type: String})
   declare mode: MenuItemSelectType;
 
-  @Property(false)
+  @Property({value: false, type: Boolean})
   declare selected: boolean;
 
-  @Property(undefined)
+  @Property({value: undefined, type: MenuOptions, init: null})
   declare options?: MenuOptions;
 
   get hasmore() {

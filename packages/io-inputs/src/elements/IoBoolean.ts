@@ -1,8 +1,8 @@
 import { Register, Property, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
+import { IoField, IoFieldProps } from './IoField';
 
-export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
+export type IoBooleanProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
   value?: boolean;
   true?: string;
   false?: string;
@@ -13,7 +13,7 @@ export type IoBooleanProps = IoInputBaseProps & PropsWithBinding<{
  * It can be configured to display custom `true` or `false` strings.
  **/
 @Register
-export class IoBoolean extends IoInputBase {
+export class IoBoolean extends IoField {
   static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {

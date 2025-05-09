@@ -5,8 +5,10 @@ export type CallbackFunction = (arg?: any) => void;
 interface QueueOptions {
   node: Node | undefined;
   arg: any;
-  timeout: number;
+  frame: number;
 }
+
+let currentFrame = 0;
 
 const queueSync: CallbackFunction[] = [];
 const queue0: CallbackFunction[] = [];
@@ -16,54 +18,92 @@ const queueOptions1: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
 let queue = queue0;
 let queueOptions = queueOptions0;
 
+/**
+ * Returns a promise that resolves when the next frame is rendered.
+ * @returns {Promise<void>}
+ */
 export async function nextQueue(): Promise<void> {
   return new Promise((resolve) => {
     queue.push(resolve);
     queueOptions.set(resolve, {
       arg: undefined,
-      timeout: Date.now() + 1,
       node: undefined,
+      frame: currentFrame + 1,
     });
   });
 }
 
-export function throttle(node: Node, func: CallbackFunction, arg: any = undefined, timeout = 1) {
-  if (timeout === 0) {
-    if (queueSync.indexOf(func) === -1) {
-      queueSync.push(func);
-      try {
-        func(arg);
-      } catch (e) {
-        console.error(e);
-      }
-      return;
-    } else {
-      timeout = 1;
+/**
+ * Throttles function execution once per frame (rAF).
+ * @param {CallbackFunction} func - Function to throttle.
+ * @param {*} [arg] - Optional argument for throttled function.
+ * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
+ */
+export function throttle(func: CallbackFunction, arg?: any, node?: Node, delay = 1) {
+  if (queueSync.indexOf(func) === -1) {
+    queueSync.push(func);
+    if (node?._disposed) return;
+    try {
+      func(arg);
+    } catch (e) {
+      console.error(e);
     }
+    return;
   }
   if (queue.indexOf(func) === -1) {
     queue.push(func);
   }
   if (!queueOptions.has(func)) {
     queueOptions.set(func, {
-      node: node,
       arg: arg,
-      timeout: Date.now() + timeout,
+      node: node,
+      frame: currentFrame + delay,
     });
   } else {
     queueOptions.get(func)!.arg = arg;
   }
 }
 
+/**
+ * Debounces function execution to next frame (rAF).
+ * @param {CallbackFunction} func - Function to debounce.
+ * @param {*} [arg] - Optional argument for debounced function.
+ * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
+ */
+export function debounce(func: CallbackFunction, arg?: any, node?: Node, delay = 1) {
+  if (queue.indexOf(func) === -1) {
+    queue.push(func);
+  }
+  if (!queueOptions.has(func)) {
+    queueOptions.set(func, {
+      arg: arg,
+      node: node,
+      frame: currentFrame + delay,
+    });
+  } else {
+    const options = queueOptions.get(func)!;
+    options.arg = arg;
+    options.node = node;
+    options.frame = currentFrame + delay;
+  }
+}
+
+/**
+ * Executes the queue of throttled/debounced functions.
+ * Internally it swaps between two queues to avoid allocating new queue items to a queue that is currently being executed.
+ * Therfore, functions queued from another queued function will always move to the next queue.
+ */
 function executeQueue () {
   queueSync.length = 0;
+  currentFrame++;
 
   const activeThrottleQueue = queue;
   const activeThrottleQueueOptions = queueOptions;
   queue = queue === queue0 ? queue1 : queue0;
   queueOptions = queueOptions === queueOptions0 ? queueOptions1 : queueOptions0;
 
-  const time = Date.now();
   for (let i = 0; i < activeThrottleQueue.length; i++) {
     const func = activeThrottleQueue[i];
     const options = activeThrottleQueueOptions.get(func)!;
@@ -72,7 +112,7 @@ function executeQueue () {
     if (options === undefined) {
       console.warn(func);
     }
-    if (options.timeout > time) {
+    if (options.frame > currentFrame) {
       if (queue.indexOf(func) === -1) {
         queue.push(func);
       }

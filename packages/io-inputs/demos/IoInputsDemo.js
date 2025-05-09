@@ -1,5 +1,5 @@
 import { Register, IoElement, div } from 'io-gui';
-import { ioInputBase, ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
+import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 
 export class IoInputsDemo extends IoElement {
   static get Style() {
@@ -38,11 +38,11 @@ export class IoInputsDemo extends IoElement {
         ioField({value: this.bind('string'), appearance: 'neutral', label: 'Label', icon: 'io:io', title: 'Title'}),
       ]),
       div({class: 'row'}, [
-        ioInputBase({value: this.bind('string'), inert: true}),
-        ioInputBase({value: this.bind('string'), invalid: this.bind('boolean')}),
-        ioInputBase({value: this.bind('string'), class: 'green'}),
-        ioInputBase({value: this.bind('string'), selected: this.bind('boolean')}),
-        ioInputBase({label: 'icon', icon: 'io:io'}), // TODO
+        ioField({value: this.bind('string'), inert: true}),
+        ioField({value: this.bind('string'), invalid: this.bind('boolean')}),
+        ioField({value: this.bind('string'), class: 'green'}),
+        ioField({value: this.bind('string'), selected: this.bind('boolean')}),
+        ioField({label: 'icon', icon: 'io:io'}), // TODO
       ]),
       div({class: 'row'}, [
         ioString({value: this.bind('string'), placeholder: 'io-string'}),

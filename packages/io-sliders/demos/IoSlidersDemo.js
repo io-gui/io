@@ -35,12 +35,14 @@ export class IoSlidersDemo extends IoElement {
     this.template([
       div({class: 'column'}, [
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1}),
+        ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1, disabled: true}),
+        ioSlider({value: 'string', min: 0, max: 2, step: 0.1}),
         ioSlider({value: this.bind('number'), min: -1.3, max: 3, step: 1}),
         ioSlider({value: this.bind('number'), min: 0, max: 4.3, step: 1}),
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1, exponent: 3}),
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.01, exponent: 5}),
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1, exponent: 0.3}),
-        ioSlider({value: this.bind('number'), min: 2, max: 0, step: 0.1, exponent: 0.1}),
+        ioSlider({value: this.bind('number'), min: 2, max: 0, step: 0.1, exponent: 0.1, noscroll: true}),
       ]),
       div({class: 'column'}, [
         ioSliderRange({value: this.array2, min: 0, max: 2, step: 0.1}),

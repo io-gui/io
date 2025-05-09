@@ -14,7 +14,7 @@ export type IoColorBaseProps = IoElementProps & PropsWithBinding<{
 export class IoColorBase extends IoElement {
   static vConstructor: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
-  @Property('debounced')
+  @Property('throttled')
   declare reactivity: string;
 
   @Property({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
@@ -30,10 +30,12 @@ export class IoColorBase extends IoElement {
   declare hsl: [number, number, number];
 
   init() {
-    this.debounce(this.valueChanged);
+    // this.throttle(this.valueChanged);
+    this.valueChanged();
   }
   valueMutated() {
-    this.debounce(this.valueChanged);
+    // this.throttle(this.valueChanged);
+    this.valueChanged();
   }
   rgbFromHsv() {
     const rgb = hsv2rgb([

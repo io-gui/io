@@ -1,16 +1,15 @@
-import { VDOMElement, ArgsWithBinding, IoElement, IoElementArgs } from 'io-gui';
-export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
-    value?: any;
-    icon?: string;
-    label?: string;
-    selected?: boolean;
-    invalid?: boolean;
-    disabled?: boolean;
-    tabindex?: '-1' | '0' | '' | '1' | '2' | '3';
+import { VDOMElement, Binding, IoElement, IoElementProps } from 'io-gui';
+export type IoFieldProps = IoElementProps & {
+    value?: any | Binding<any>;
+    icon?: string | Binding<string>;
+    label?: string | Binding<string>;
+    selected?: boolean | Binding<boolean>;
+    disabled?: boolean | Binding<boolean>;
     appearance?: 'neutral' | 'inset' | 'outset';
-}>;
+    pattern?: string;
+};
 export declare class IoField extends IoElement {
-    static vConstructor: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: any;
     icon: string;
@@ -18,14 +17,33 @@ export declare class IoField extends IoElement {
     selected: boolean;
     invalid: boolean;
     disabled: boolean;
-    tabindex: string;
+    pressed: boolean;
     appearance: 'neutral' | 'inset' | 'outset';
-    constructor(args?: IoFieldArgs);
+    pattern: string;
+    spellcheck: boolean;
+    tabIndex: string;
+    static get Listeners(): {
+        focus: string;
+        pointerdown: string;
+        click: string;
+    };
+    constructor(args?: IoFieldProps);
+    onFocus(event: FocusEvent): void;
+    onBlur(event: FocusEvent): void;
+    onPointerdown(event: PointerEvent): void;
+    onPointermove(event: PointerEvent): void;
+    onPointerleave(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
+    onClick(event?: MouseEvent): void;
+    onKeydown(event: KeyboardEvent): void;
+    onKeyup(event: KeyboardEvent): void;
+    getCaretPosition(): number;
+    setCaretPosition(position: number): void;
     labelChanged(): void;
     selectedChanged(): void;
     invalidChanged(): void;
     disabledChanged(): void;
     changed(): void;
 }
-export declare const ioField: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioField: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoField.d.ts.map

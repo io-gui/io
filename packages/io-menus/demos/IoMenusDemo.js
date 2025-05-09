@@ -1,7 +1,7 @@
 import { Register, IoElement, div, span } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu } from 'io-menus';
 // TODO: remove dependencies on io-inputs and io-navigation.
-import { ioSwitch, ioInputBase, ioBoolean } from 'io-inputs';
+import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
 import 'io-navigation';
 import 'io-icons';
 
@@ -88,7 +88,7 @@ export class IoMenusDemo extends IoElement {
       ioMenuTree({
         options: options,
       }),
-      ioMenuItem({label: 'menu item', item: new MenuItem('item')}),
+      ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),
       ioMenuItem({label: 'menu item', item: new MenuItem({
         selected: true,
         value: 'value',
@@ -270,7 +270,7 @@ export class IoItemDemoView extends IoElement {
     this.template([
       div([
         selectElement,
-        ioInputBase({value: this.item.label, appearance: 'neutral'}),
+        ioField({value: this.item.label, appearance: 'neutral'}),
       ]),
       this.item.hasmore ? ioOptionsDemoView({options: this.item.options}) : null
     ]);

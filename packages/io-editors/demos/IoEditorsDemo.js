@@ -121,7 +121,7 @@ export class IoEditorsDemo extends IoElement {
         ioPropertyEditor({
           value: this.object,
           properties: ['number', 'string'],
-          // widget: ioInputBase({label: 'Widget Element'}),
+          // widget: IoField({label: 'Widget Element'}),
           config: new Map([
             [Object, [
               [String, ioString({live: true})],
@@ -138,7 +138,7 @@ export class IoEditorsDemo extends IoElement {
         ioObject({
           value: this.object,
           expanded: true,
-          // widget: ioInputBase({label: 'Widget Element'}),
+          // widget: IoField({label: 'Widget Element'}),
           properties: ['number', 'string', 'boolean'],
         }),
         ioObject({

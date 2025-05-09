@@ -61,7 +61,7 @@ export class IoLayoutBlock extends IoElement {
   }
   changed() {
     this.template([
-      ioTabs({$: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}),
+      ioTabs({id: 'tabs', elements: this.elements, tabs: this.tabs, selected: this.bind('selected')}),
       this.elements[this.tabs[this.selected]]
     ]);
   }

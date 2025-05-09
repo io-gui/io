@@ -14,11 +14,11 @@ export interface NodeConstructor<T> {
     Style?: string;
 }
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
-export type ArgsWithBinding<T> = {
-    [K in keyof T]: T[K] | Binding;
+export type PropsWithBinding<T> = {
+    [K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
 };
-export type NodeArgs = ArgsWithBinding<{
-    reactivity?: 'none' | 'immediate' | 'debounced';
+export type NodeProps = PropsWithBinding<{
+    reactivity?: 'none' | 'immediate' | 'throttled' | 'debounced';
     [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 }>;
 /**
@@ -27,11 +27,11 @@ export type NodeArgs = ArgsWithBinding<{
  * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
 export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T): {
-    new (...superArgs: any[]): {
+    new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
         readonly _properties: Map<string, PropertyInstance>;
-        readonly _bindings: Map<string, Binding>;
+        readonly _bindings: Map<string, Binding<any>>;
         readonly _changeQueue: ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
         /**
@@ -78,15 +78,14 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
         dispatchQueue(debounce?: boolean): void;
         /**
          * Throttles function execution once per frame (rAF).
-         * @param {function} func - Function to throttle.
-         * @param {*} arg - argument for throttled function.
+         * @param {CallbackFunction} func - Function to throttle.
+         * @param {*} [arg] - Optional argument for throttled function.
          */
-        throttle(func: CallbackFunction, arg?: any): void;
+        throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
         /**
          * Debounces function execution to next frame (rAF).
-         * @param {function} func - Function to throttle.
-         * @param {*} arg - argument for debounced function.
-         * @param {number} timeout - minimum delay in ms before executing the function.
+         * @param {CallbackFunction} func - Function to debounce.
+         * @param {*} [arg] - Optional argument for debounced function.
          */
         debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
         /**
@@ -98,13 +97,13 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
          * @param {EventTarget} event.target - Node that emitted the event.
          * @param {Node} event.detail.object - Mutated node.
          */
-        onPropertyMutated(event: CustomEvent): void;
+        onPropertyMutated(event: CustomEvent): true | undefined;
         /**
          * Returns a binding to a specified property`.
          * @param {string} name - Property name to bind to.
          * @return {Binding} Binding object.
          */
-        bind(name: string): Binding;
+        bind<T_1>(name: string): Binding<T_1>;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} name - Property name to unbind.
@@ -143,11 +142,14 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
     readonly Properties: PropertyDefinitions;
 };
 declare const Node_base: {
-    new (...superArgs: any[]): {
+    new (args?: PropsWithBinding<{
+        [key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
+        reactivity?: "none" | "immediate" | "throttled" | "debounced";
+    }>, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
         readonly _properties: Map<string, PropertyInstance>;
-        readonly _bindings: Map<string, Binding>;
+        readonly _bindings: Map<string, Binding<any>>;
         readonly _changeQueue: ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
         /**
@@ -194,15 +196,14 @@ declare const Node_base: {
         dispatchQueue(debounce?: boolean): void;
         /**
          * Throttles function execution once per frame (rAF).
-         * @param {function} func - Function to throttle.
-         * @param {*} arg - argument for throttled function.
+         * @param {CallbackFunction} func - Function to throttle.
+         * @param {*} [arg] - Optional argument for throttled function.
          */
-        throttle(func: CallbackFunction, arg?: any): void;
+        throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
         /**
          * Debounces function execution to next frame (rAF).
-         * @param {function} func - Function to throttle.
-         * @param {*} arg - argument for debounced function.
-         * @param {number} timeout - minimum delay in ms before executing the function.
+         * @param {CallbackFunction} func - Function to debounce.
+         * @param {*} [arg] - Optional argument for debounced function.
          */
         debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
         /**
@@ -214,13 +215,13 @@ declare const Node_base: {
          * @param {EventTarget} event.target - Node that emitted the event.
          * @param {Node} event.detail.object - Mutated node.
          */
-        onPropertyMutated(event: CustomEvent): void;
+        onPropertyMutated(event: CustomEvent): true | undefined;
         /**
          * Returns a binding to a specified property`.
          * @param {string} name - Property name to bind to.
          * @return {Binding} Binding object.
          */
-        bind(name: string): Binding;
+        bind<T>(name: string): Binding<T>;
         /**
          * Unbinds a binding to a specified property`.
          * @param {string} name - Property name to unbind.

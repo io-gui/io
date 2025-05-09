@@ -102,7 +102,9 @@ export class IoElementDemo extends IoElement {
       reactivity: 'debounced'
     };
   }
-
+  init() {
+    this.changed();
+  }
   optionsMutated() {
     this.changed();
   }
@@ -119,7 +121,7 @@ export class IoElementDemo extends IoElement {
         div({class: 'element-wrap'}, [
           this.element
         ]),
-        ioInspector({$: 'inspector'}),
+        ioInspector({id: 'inspector'}),
       ]);
       const element = this.querySelector('.element-wrap').children[0];
       const inspector = this.$['inspector'];

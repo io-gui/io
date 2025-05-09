@@ -97,7 +97,6 @@ export class IoLayout extends IoElement {
   //   //     this.splits[i][1].selected = event.detail.selected;
   //   //     // if (event.detail.tabs.length === 0) {
   //   //     //   this.splits.splice(i, 1);
-  //   //     //   console.log(event.detail.tabs);
   //   //     // }
   //   //   }
   //   // }
@@ -173,7 +172,6 @@ export class IoLayout extends IoElement {
     const dp = prev.size === undefined ? undefined : (prev.size + event.detail.movement);
     const dn = next.size === undefined ? undefined : (next.size - event.detail.movement);
 
-    // console.log(dp, dn);
     if ((dp !== undefined && dp >= 0) && (dn === undefined || dn >= 0)) {
       this.splits[pi].size = Math.max(0, dp);
     }

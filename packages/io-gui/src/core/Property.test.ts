@@ -1,4 +1,4 @@
-import { Binding, ProtoProperty, PropertyInstance, Property, Node, Register, PropertyDefinitions, propertyDecorators } from '../index';
+import { Binding, ProtoProperty, PropertyInstance, Property, Node, Register, propertyDecorators } from '../index';
 
 class Object1 {
   constructor(init?: any) {
@@ -11,11 +11,8 @@ class Object1 {
 
 @Register
 class TestNode extends Node {
-  static get Properties(): PropertyDefinitions {
-    return {
-      label: 'default'
-    };
-  }
+  @Property('default')
+  declare label: string;
   constructor(args?: any) {super(args);}
 }
 

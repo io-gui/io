@@ -1,6 +1,7 @@
 import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, div } from 'io-gui';
 import { ioPropertyLink } from './IoPropertyLink';
 import { ioButton, ioString } from 'io-inputs';
+
 export type IoBreadcrumbsProps = IoElementProps & PropsWithBinding<{
   value?: Object;
   selected?: Object;
@@ -112,7 +113,7 @@ export class IoBreadcrumbs extends IoElement {
     elements.push(
       crumbs,
       ioButton({icon: 'io:close', class: 'clear-button', action: this.onClearSearch}),
-      ioString({$: 'search', class: 'search-input', value: this.bind('search'), live: true}),
+      ioString({id: 'search', class: 'search-input', value: this.bind('search'), live: true}),
     );
     this.template(elements);
   }

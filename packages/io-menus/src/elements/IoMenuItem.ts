@@ -1,13 +1,13 @@
 import { Register, Property, Default, IoOverlaySingleton as Overlay, span, VDOMElement, PropsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-import { IoInputBase, IoInputBaseProps } from 'io-inputs';
+import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 
 const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
 
-export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
+export type IoMenuItemProps = IoFieldProps & PropsWithBinding<{
   item?: MenuItem;
   expanded?: boolean;
   direction?: 'left' | 'right' | 'up' | 'down';
@@ -20,7 +20,7 @@ export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
 
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
-export class IoMenuItem extends IoInputBase {
+export class IoMenuItem extends IoField {
   static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
@@ -377,7 +377,7 @@ export class IoMenuItem extends IoInputBase {
     const icon = this.icon || this.item.icon;
 
     this.setAttribute('hidden', this.item.hidden);
-    this.setAttribute('hasmore', this.hasmore);
+
     this.template([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
@@ -434,6 +434,7 @@ export function getMenuRoot(element: IoMenuElementType) {
 
 function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (MenuElementTags.indexOf(element.localName) !== -1) {
+    // TODO: hidden in no longer a property.
     if (!element.disabled && !element.hidden) {
       if (!element.inlayer || (element.parentElement.expanded && Overlay.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.

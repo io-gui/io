@@ -12,15 +12,15 @@ import { AnyConstructor, Node } from '../nodes/Node';
 export type PropertyDefinition = {
     value?: any;
     type?: AnyConstructor;
-    binding?: Binding;
+    binding?: Binding<any>;
     reflect?: boolean;
     init?: any;
 };
 /**
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
-export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | PropertyDefinition;
+export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | PropertyDefinition;
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
  * It facilitates merging of inherited property definitions from the prototype chain.
@@ -34,7 +34,7 @@ export type PropertyDefinitionLoose = string | number | boolean | Array<any> | n
 export declare class ProtoProperty {
     value?: any;
     type?: AnyConstructor;
-    binding?: Binding;
+    binding?: Binding<any>;
     reflect?: boolean;
     init?: any;
     /**
@@ -73,7 +73,7 @@ export declare class ProtoProperty {
 export declare class PropertyInstance {
     value?: any;
     type?: AnyConstructor;
-    binding?: Binding;
+    binding?: Binding<any>;
     reflect: boolean;
     init?: any;
     /**

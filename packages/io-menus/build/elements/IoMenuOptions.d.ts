@@ -1,8 +1,8 @@
-import { IoElement, VDOMElement, NudgeDirection, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, NudgeDirection, IoElementProps, PropsWithBinding } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
-export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
+export type IoMenuOptionsProps = IoElementProps & PropsWithBinding<{
     options?: MenuOptions;
     expanded?: boolean;
     horizontal?: boolean;
@@ -19,7 +19,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/
 export declare class IoMenuOptions extends IoElement {
-    static vConstructor: (arg0?: IoMenuOptionsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     options: MenuOptions;
     expanded: boolean;
@@ -32,8 +32,8 @@ export declare class IoMenuOptions extends IoElement {
     overflow: string;
     inlayer: boolean;
     slotted: VDOMElement[];
-    role: string;
     $parent?: IoMenuItem;
+    role: string;
     private _overflownItems;
     static get Listeners(): {
         'item-clicked': string;
@@ -41,7 +41,7 @@ export declare class IoMenuOptions extends IoElement {
             passive: boolean;
         })[];
     };
-    constructor(args?: IoMenuOptionsArgs);
+    constructor(args?: IoMenuOptionsProps);
     _onItemClicked(event: CustomEvent): void;
     _stopPropagation(event: MouseEvent): void;
     init(): void;
@@ -54,5 +54,5 @@ export declare class IoMenuOptions extends IoElement {
     _onClipHeight(): void;
     changed(): void;
 }
-export declare const ioMenuOptions: (arg0?: IoMenuOptionsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoMenuOptions.d.ts.map

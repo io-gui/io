@@ -28,6 +28,7 @@ export class IoPropertyEditor extends IoElement {
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
+      font-size: var(--io_fontSize);
     }
     :host > .row {
       display: flex;
@@ -84,20 +85,15 @@ export class IoPropertyEditor extends IoElement {
   declare labeled: boolean;
 
   _onValueInput(event: CustomEvent) {
-    if (event.detail.object) return; // TODO: unhack/remove?
-    const item: any = event.composedPath()[0];
-    if (item === this as any) return;
     event.stopImmediatePropagation();
-
-    const prop = Object.keys(this.$).find(key => this.$[key] === event.target) as keyof typeof this.value | undefined;
-
-    if (prop !== undefined) {
+    const id = (event.target as HTMLElement).id as keyof typeof this.value;
+    if (id !== undefined) {
       const value = event.detail.value;
       const oldValue = event.detail.oldValue;
-      this.value[prop] = value;
+      this.value[id] = value;
 
       if (!(this.value as Node)._isNode) {
-        const detail = {object: this.value, property: prop, value: value, oldValue: oldValue};
+        const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
         this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
       }
     } else {
@@ -120,7 +116,7 @@ export class IoPropertyEditor extends IoElement {
     } else {
       if (widget) {
         const widgetWithValue = {
-          name: widget.name,
+          tag: widget.tag,
           props: Object.assign({value: this.value}, widget.props),
           children: widget.children
         };
@@ -133,11 +129,11 @@ export class IoPropertyEditor extends IoElement {
 
     for (let i = 0; i < properties.length; i++) {
       if (allProps.includes(properties[i])) {
-        const c = properties[i] as keyof typeof this.value;
-        const value = this.value[c];
-        const tag = config[c]!.name;
-        const props = config[c]!.props as (IoElementProps | undefined) || {};
-        const finalProps: any = {$: c, value: value, '@value-input': this._onValueInput};
+        const id = properties[i] as keyof typeof this.value;
+        const value = this.value[id];
+        const tag = config[id]!.tag;
+        const props = config[id]!.props as (IoElementProps | undefined) || {};
+        const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput};
         Object.assign(finalProps, props);
 
         let children: string | undefined = undefined;
@@ -150,8 +146,8 @@ export class IoPropertyEditor extends IoElement {
           finalProps.groups = finalProps.groups || this.groups;
         }
         elements.push(div({class: 'row'}, [
-          this.labeled ? span(c) : null,
-          {name: tag, props: finalProps, children: children},
+          this.labeled ? span(id) : null,
+          {tag: tag, props: finalProps, children: children},
         ]));
       } else {
         debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);

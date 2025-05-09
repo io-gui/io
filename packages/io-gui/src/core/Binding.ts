@@ -29,10 +29,10 @@ const bothAreNaNs = function(value: any, oldValue: any) {
  *
  * @example
  * // Create a two-way binding between nodeA.value and nodeB.value
- * const binding = new Binding(nodeA, 'value');
+ * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export class Binding {
+export class Binding<T extends unknown> {
   readonly node: Node;
   readonly property: string = '';
   readonly targets: Node[] = [];
@@ -50,10 +50,10 @@ export class Binding {
     this.onTargetChanged = this.onTargetChanged.bind(this);
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged);
   }
-  set value(value) {
+  set value(value: T) {
     this.node[this.property] = value;
   }
-  get value() {
+  get value(): T {
     return this.node[this.property];
   }
   /**
@@ -96,22 +96,34 @@ export class Binding {
   addTarget(target: Node, property: string) {
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
 
-    const targetProperties = this.getTargetProperties(target);
+    const targetProps = this.getTargetProperties(target);
 
-    if (targetProperties.indexOf(property) === -1) {
-      targetProperties.push(property);
+    if (targetProps.indexOf(property) === -1) {
+      targetProps.push(property);
 
-      const propertyInstance = target._properties.get(property)!;
-      if (propertyInstance.binding && propertyInstance.binding !== this) {
+      const targetP = target._properties.get(property)!;
+      if (targetP.binding && targetP.binding !== this) {
         debug: {
           console.warn('Binding: improper usage detected!');
           console.info('Binding: target property is already a target of another binding. Undinding previous binding!');
         }
-        propertyInstance.binding.removeTarget(target, property);
+        targetP.binding.removeTarget(target, property);
       }
-      propertyInstance.binding = this;
+      targetP.binding = this;
+
+      debug: {
+        const srcP = this.node._properties.get(this.property)!;
+        const valueMismatch = srcP.value !== undefined && targetP.value !== undefined && typeof srcP.value !== typeof targetP.value;
+        const typeMismatch = srcP.type !== undefined && targetP.type !== undefined && srcP.type !== targetP.type;
+        if (valueMismatch || typeMismatch) {
+          console.warn(`Binding: source property "${this.property}" does not match type of target property ${property}!`);
+          console.info(`Source "${this.property}" value: ${srcP.value} type: ${srcP.type} typeof: ${typeof srcP.value}`);
+          console.info(`Target "${property}" value: ${targetP.value} type: ${targetP.type} typeof: ${typeof targetP.value}`);
+        }
+      }
+
       target.addEventListener(`${property}-changed`, this.onTargetChanged);
-      target.setProperty(property, this.node[this.property], true);
+      target.setProperty(property, this.value, true);
 
     } else debug: {
 
@@ -170,11 +182,12 @@ export class Binding {
     debug: if (this.targets.indexOf(event.target) === -1) {
       console.error('onTargetChanged() should never fire if target is not accounted for');
     }
-    const oldValue = this.node[this.property];
+    const oldValue = this.value;
     const value = event.detail.value;
     if (oldValue !== value) {
       if (bothAreNaNs(value, oldValue)) return;
-      this.node.setProperty(this.property, value);
+      // this.node.setProperty(this.property, value);
+      this.value = value;
     }
   };
   /**
@@ -194,7 +207,8 @@ export class Binding {
         const oldValue = target[propName];
         if (oldValue !== value) {
           if (bothAreNaNs(value, oldValue)) continue;
-          target.setProperty(propName, value);
+          // target.setProperty(propName, value);
+          target[propName] = value;
         }
       }
     }

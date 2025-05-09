@@ -106,7 +106,6 @@ export class IoColorSlider extends IoColorBase {
 
     debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
       console.warn('IoColorSlider: Incorrect channel value!', c);
-      console.log(this.value, this.channel, this);
     }
 
     let slider = null;

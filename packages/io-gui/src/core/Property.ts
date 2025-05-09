@@ -1,6 +1,8 @@
 import { Binding } from './Binding';
 import { AnyConstructor, Node } from '../nodes/Node';
 
+// TODO: make init: null default.
+
 /**
  * Configuration for a property of an Node class.
  * @typedef {Object} PropertyDefinition
@@ -10,19 +12,19 @@ import { AnyConstructor, Node } from '../nodes/Node';
  * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
  * @property {*} [init] Initialization arguments for constructing initial value.
  */
-export type PropertyDefinition = {
+export type PropertyDefinition= {
   value?: any;
   type?: AnyConstructor;
-  binding?: Binding;
+  binding?: Binding<any>;
   reflect?: boolean;
   init?: any;
 };
 
 /**
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
-export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | PropertyDefinition;
+export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | PropertyDefinition;
 
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
@@ -37,7 +39,7 @@ export type PropertyDefinitionLoose = string | number | boolean | Array<any> | n
 export class ProtoProperty {
   declare value?: any;
   declare type?: AnyConstructor;
-  declare binding?: Binding;
+  declare binding?: Binding<any>;
   declare reflect?: boolean;
   declare init?: any;
   /**
@@ -58,7 +60,7 @@ export class ProtoProperty {
     if (def === undefined || def === null) {
       this.value = def;
     } else if (typeof def === 'function') {
-      this.type = def;
+      this.type = def as AnyConstructor;
     } else if (def instanceof Binding) {
       this.value = def.value;
       this.binding = def;
@@ -136,7 +138,7 @@ export class PropertyInstance {
   // Constructor of the property value.
   type?: AnyConstructor;
   // Binding object.
-  binding?: Binding;
+  binding?: Binding<any>;
   // Reflects to HTML attribute.
   reflect = false;
   // Initialize property with provided constructor arguments. `null` prevents initialization.

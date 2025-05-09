@@ -2,7 +2,6 @@ import { nextQueue } from 'io-gui';
 import { IoColorPanelSingleton } from '../index';
 
 const element = IoColorPanelSingleton;
-element.expanded = true;
 
 export default class {
   run() {

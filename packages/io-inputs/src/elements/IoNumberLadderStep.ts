@@ -1,13 +1,13 @@
-import { Register, Property, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
+import { Register, Property, span, VDOMElement, PropsWithBinding, Default, focusTo } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
 
-export type IoNumberLadderStepProps = IoInputBaseProps & PropsWithBinding<{
+export type IoNumberLadderStepProps = IoFieldProps & PropsWithBinding<{
   value?: number;
   label?: string;
 }>;
 
 @Register
-export class IoNumberLadderStep extends IoInputBase {
+export class IoNumberLadderStep extends IoField {
   static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
@@ -55,13 +55,13 @@ export class IoNumberLadderStep extends IoInputBase {
       stepMove = this.value * -1;
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      this.focusTo('up');
+      focusTo(this, 'up');
     } else if (event.key === 'ArrowRight' || event.key === 'Enter') {
       event.preventDefault();
       stepMove = this.value * 1;
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      this.focusTo('down');
+      focusTo(this, 'down');
     }
     if (stepMove !== 0) {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);

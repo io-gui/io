@@ -1,14 +1,14 @@
 import { PropertyInstance, PropertyDefinition } from '../core/Property';
-import { VDOMElement } from '../core/VDOM';
-import { ArgsWithBinding } from '../nodes/Node';
+import { VDOMElement } from '../vdom/VDOM';
+import { PropsWithBinding } from '../nodes/Node';
 import { ThemeSingleton } from '../nodes/Theme';
-import { IoElement, IoElementArgs } from './IoElement';
-export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
+import { IoElement, IoElementProps } from './IoElement';
+export type IoGlProps = IoElementProps & PropsWithBinding<{
     color?: [number, number, number, number];
 }>;
 export declare class IoGl extends IoElement {
     #private;
-    static vConstructor: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoGlProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     theme: typeof ThemeSingleton;
     size: [number, number];
@@ -21,7 +21,7 @@ export declare class IoGl extends IoElement {
     static get Frag(): string;
     initPropertyUniform(name: string, property: PropertyDefinition): string;
     initShader(): WebGLProgram;
-    constructor(args?: IoGlArgs);
+    constructor(args?: IoGlProps);
     onResized(): void;
     get ctx(): CanvasRenderingContext2D;
     themeMutated(): void;
@@ -33,5 +33,5 @@ export declare class IoGl extends IoElement {
     setUniform(name: string, value: any): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
-export declare const ioGl: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioGl: (arg0?: IoGlProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoGL.d.ts.map

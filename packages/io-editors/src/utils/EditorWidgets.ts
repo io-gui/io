@@ -3,7 +3,7 @@ import { AnyConstructor, div, VDOMElement } from 'io-gui';
 export type EditorWidgets = Map<AnyConstructor, VDOMElement>
 
 const editorWidgetsSingleton: EditorWidgets = new Map<AnyConstructor, VDOMElement>([
-  [HTMLElement, {name: 'io-property-editor', props: {properties: ['outerHTML'], config: new Map([
+  [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: new Map([
     [HTMLElement, [['outerHTML', div()]]]
   ]), labeled: false}}],
 ]);

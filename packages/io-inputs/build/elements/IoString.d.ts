@@ -1,24 +1,26 @@
-import { VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
-export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
-    live?: boolean;
-    value?: string;
-    placeholder?: string;
-    spellcheck?: 'true' | 'false';
-}>;
+import { VDOMElement, Binding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
+export type IoStringProps = Omit<IoFieldProps, 'value'> & {
+    value?: string | Binding<string>;
+    live?: boolean | Binding<boolean>;
+    placeholder?: string | Binding<string>;
+    appearance?: 'neutral' | 'inset' | 'outset';
+};
 /**
  * Input element for `String` data type.
  **/
-export declare class IoString extends IoInputBase {
-    static vConstructor: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoString extends IoField {
+    static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: string;
     live: boolean;
     placeholder: string;
-    spellcheck: string;
     appearance: 'neutral' | 'inset' | 'outset';
+    contentEditable: boolean;
     role: string;
-    constructor(args?: IoStringArgs);
+    constructor(args?: IoStringProps);
+    get textNode(): any;
+    set textNode(value: any);
     _setFromTextNode(): void;
     _tryParseFromTextNode(): void;
     onBlur(event: FocusEvent): void;
@@ -29,8 +31,7 @@ export declare class IoString extends IoInputBase {
     onKeyup(event: KeyboardEvent): void;
     init(): void;
     valueChanged(): void;
-    disabledChanged(): void;
     changed(): void;
 }
-export declare const ioString: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioString: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoString.d.ts.map

@@ -1,7 +1,7 @@
-import { IoElement, Change, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { IoElement, Change, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
-export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
+export type IoOptionMenuProps = IoElementProps & PropsWithBinding<{
     value?: any;
     options?: MenuOptions;
     item?: MenuItem;
@@ -11,16 +11,16 @@ export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 export declare class IoOptionMenu extends IoElement {
-    static vConstructor: (arg0?: IoOptionMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoOptionMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: any;
     options: MenuOptions;
-    role: string;
     item: MenuItem;
-    constructor(args?: IoOptionMenuArgs);
-    _onLeafChanged(event: CustomEvent): void;
+    role: string;
+    constructor(args?: IoOptionMenuProps);
+    _onLastChanged(event: CustomEvent): void;
     optionsChanged(change: Change): void;
     changed(): void;
 }
-export declare const ioOptionMenu: (arg0?: IoOptionMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioOptionMenu: (arg0?: IoOptionMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoOptionMenu.d.ts.map

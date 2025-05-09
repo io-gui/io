@@ -1,8 +1,8 @@
-import { VDOMElement, ArgsWithBinding, NudgeDirection } from 'io-gui';
+import { VDOMElement, PropsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-import { IoInputBase, IoInputBaseArgs } from 'io-inputs';
-export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
+import { IoField, IoFieldProps } from 'io-inputs';
+export type IoMenuItemProps = IoFieldProps & PropsWithBinding<{
     item?: MenuItem;
     expanded?: boolean;
     direction?: 'left' | 'right' | 'up' | 'down';
@@ -11,16 +11,17 @@ export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
-export declare class IoMenuItem extends IoInputBase {
-    static vConstructor: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoMenuItem extends IoField {
+    static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     item: MenuItem;
     expanded: boolean;
     direction: NudgeDirection;
     depth: number;
+    contentEditable: boolean;
     $options?: IoMenuOptions;
     static get Listeners(): any;
-    constructor(args?: IoMenuItemArgs);
+    constructor(args?: IoMenuItemProps);
     preventDefault(event: Event): void;
     get hasmore(): boolean;
     get inlayer(): boolean;
@@ -47,7 +48,7 @@ export declare class IoMenuItem extends IoInputBase {
     itemMutated(): void;
     changed(): void;
 }
-export declare const ioMenuItem: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuItem: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 type IoMenuElementType = IoMenuItem | IoMenuOptions;
 export declare function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[];
 export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuItem | IoMenuOptions)[];

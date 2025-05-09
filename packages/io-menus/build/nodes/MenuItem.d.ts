@@ -1,8 +1,8 @@
-import { Node, NodeArgs, ArgsWithBinding } from 'io-gui';
+import { Node, NodeProps, PropsWithBinding } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
-export type MenuItemDefLoose = undefined | null | string | number | MenuItemArgs;
-export type MenuItemArgs = NodeArgs & ArgsWithBinding<{
+export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
+export type MenuItemProps = NodeProps & PropsWithBinding<{
     value?: any;
     label?: string;
     icon?: string;
@@ -27,7 +27,7 @@ export declare class MenuItem extends Node {
     options?: MenuOptions;
     get hasmore(): boolean;
     getSubitem(value: any): any;
-    constructor(args?: MenuItemArgs);
+    constructor(args?: MenuItemProps);
     fromJSON(looseDef: MenuItemDefLoose): this;
     toJSON(): Record<string, any>;
     _onSubItemSelected(): void;

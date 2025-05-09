@@ -1,16 +1,16 @@
-import { VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
-export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
+import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
+export type IoNumberLadderStepProps = IoFieldProps & PropsWithBinding<{
     value?: number;
     label?: string;
 }>;
-export declare class IoNumberLadderStep extends IoInputBase {
-    static vConstructor: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoNumberLadderStep extends IoField {
+    static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     label: string;
     role: string;
-    constructor(args?: IoNumberLadderStepArgs);
+    constructor(args?: IoNumberLadderStepProps);
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
@@ -18,5 +18,5 @@ export declare class IoNumberLadderStep extends IoInputBase {
     init(): void;
     changed(): void;
 }
-export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoNumberLadderStep.d.ts.map

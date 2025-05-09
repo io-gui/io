@@ -1,6 +1,6 @@
-import { IoElement, IoElementArgs, VDOMElement, ArgsWithBinding } from 'io-gui';
+import { IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
 import { IoNumber } from './IoNumber';
-export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
+export type IoNumberLadderProps = IoElementProps & PropsWithBinding<{
     src?: IoNumber;
     expanded?: boolean;
 }>;
@@ -13,7 +13,7 @@ export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
  * If shift key is pressed, value is rounded to the nearest step incement.
  **/
 declare class IoNumberLadder extends IoElement {
-    static vConstructor: (arg0?: IoNumberLadderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoNumberLadderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     src?: IoNumber;
     expanded: boolean;
@@ -28,7 +28,7 @@ declare class IoNumberLadder extends IoElement {
     get max(): number;
     get step(): number;
     get conversion(): number;
-    constructor(args?: IoNumberLadderArgs);
+    constructor(args?: IoNumberLadderProps);
     onFocusIn(event: FocusEvent): void;
     onFocusTo(event: CustomEvent): void;
     _onLadderStepChange(event: CustomEvent): void;

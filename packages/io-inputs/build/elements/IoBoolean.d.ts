@@ -1,6 +1,6 @@
-import { VDOMElement, ArgsWithBinding } from 'io-gui';
-import { IoInputBase, IoInputBaseArgs } from './IoInputBase';
-export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
+import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
+export type IoBooleanProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
     value?: boolean;
     true?: string;
     false?: string;
@@ -9,14 +9,14 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  * Input element for `Boolean` data type displayed as text.
  * It can be configured to display custom `true` or `false` strings.
  **/
-export declare class IoBoolean extends IoInputBase {
-    static vConstructor: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoBoolean extends IoField {
+    static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: boolean;
     true: string;
     false: string;
     role: string;
-    constructor(args?: IoBooleanArgs);
+    constructor(args?: IoBooleanProps);
     onPointerdown(event: PointerEvent): void;
     onClick(): void;
     toggle(): void;
@@ -24,5 +24,5 @@ export declare class IoBoolean extends IoInputBase {
     valueChanged(): void;
     changed(): void;
 }
-export declare const ioBoolean: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioBoolean: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoBoolean.d.ts.map

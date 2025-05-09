@@ -22,10 +22,10 @@ export type TargetProperties = WeakMap<Node$1, Properties>;
  *
  * @example
  * // Create a two-way binding between nodeA.value and nodeB.value
- * const binding = new Binding(nodeA, 'value');
+ * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export declare class Binding {
+export declare class Binding<T extends unknown> {
 	readonly node: Node$1;
 	readonly property: string;
 	readonly targets: Node$1[];
@@ -37,8 +37,8 @@ export declare class Binding {
 	 * @param {string} property - Name of the sourceproperty
 	 */
 	constructor(node: Node$1, property: string);
-	set value(value: any);
-	get value(): any;
+	set value(value: T);
+	get value(): T;
 	/**
 	 * Returns a JSON representation of the binding.
 	 * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
@@ -103,15 +103,15 @@ export declare class Binding {
 type PropertyDefinition$1 = {
 	value?: any;
 	type?: AnyConstructor;
-	binding?: Binding;
+	binding?: Binding<any>;
 	reflect?: boolean;
 	init?: any;
 };
 /**
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|Constructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
  */
-export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | PropertyDefinition$1;
+export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | PropertyDefinition$1;
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
  * It facilitates merging of inherited property definitions from the prototype chain.
@@ -125,7 +125,7 @@ export type PropertyDefinitionLoose = string | number | boolean | Array<any> | n
 export declare class ProtoProperty {
 	value?: any;
 	type?: AnyConstructor;
-	binding?: Binding;
+	binding?: Binding<any>;
 	reflect?: boolean;
 	init?: any;
 	/**
@@ -164,7 +164,7 @@ export declare class ProtoProperty {
 export declare class PropertyInstance {
 	value?: any;
 	type?: AnyConstructor;
-	binding?: Binding;
+	binding?: Binding<any>;
 	reflect: boolean;
 	init?: any;
 	/**
@@ -311,7 +311,6 @@ export type ProtoProperties = {
 export type ProtoListeners = {
 	[property: string]: ListenerDefinition[];
 };
-export declare const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions>;
 /**
  * ProtoChain manages class inheritance metadata and configuration.
  *
@@ -329,13 +328,17 @@ export declare class ProtoChain {
 	 */
 	constructors: ProtoConstructors;
 	/**
-	 * Aggregated property definition declared in `static get Properties()`
+	 * Aggregated property definition declared in `static get Properties()` or @Property() decorators
 	 */
 	properties: ProtoProperties;
 	/**
 	 * Aggregated listener definition declared in `static get Listeners()`
 	 */
 	listeners: ProtoListeners;
+	/**
+	 * Aggregated default value for properties declared in `static get Defaults()` or @Default() decorators
+	*/
+	defaults: Record<string, any>;
 	/**
 	 * Aggregated CSS style definition declared in `static get Style()`
 	 */
@@ -411,8 +414,27 @@ export declare class ProtoChain {
 	autobindHandlers(node: Node$1): void;
 }
 export type CallbackFunction = (arg?: any) => void;
+/**
+ * Returns a promise that resolves when the next frame is rendered.
+ * @returns {Promise<void>}
+ */
 export declare function nextQueue(): Promise<void>;
-export declare function throttle(node: Node$1, func: CallbackFunction, arg?: any, timeout?: number): void;
+/**
+ * Throttles function execution once per frame (rAF).
+ * @param {CallbackFunction} func - Function to throttle.
+ * @param {*} [arg] - Optional argument for throttled function.
+ * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
+ */
+export declare function throttle(func: CallbackFunction, arg?: any, node?: Node$1, delay?: number): void;
+/**
+ * Debounces function execution to next frame (rAF).
+ * @param {CallbackFunction} func - Function to debounce.
+ * @param {*} [arg] - Optional argument for debounced function.
+ * @param {Node} [node] - Node instance.
+ * @param {number} [delay] - Delay in frames.
+ */
+export declare function debounce(func: CallbackFunction, arg?: any, node?: Node$1, delay?: number): void;
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
@@ -423,11 +445,11 @@ export interface NodeConstructor<T> {
 	Style?: string;
 }
 export type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
-export type ArgsWithBinding<T> = {
-	[K in keyof T]: T[K] | Binding;
+export type PropsWithBinding<T> = {
+	[K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
 };
-export type NodeArgs = ArgsWithBinding<{
-	reactivity?: "none" | "immediate" | "debounced";
+export type NodeProps = PropsWithBinding<{
+	reactivity?: "none" | "immediate" | "throttled" | "debounced";
 	[key: prefix<string, "@">]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 }>;
 /**
@@ -436,11 +458,11 @@ export type NodeArgs = ArgsWithBinding<{
  * @return {function} - Extended class constructor with `NodeMixin` applied to it.
  */
 export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T): {
-	new (...superArgs: any[]): {
+	new (args?: NodeProps, ...superProps: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -487,15 +509,14 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 		dispatchQueue(debounce?: boolean): void;
 		/**
 		 * Throttles function execution once per frame (rAF).
-		 * @param {function} func - Function to throttle.
-		 * @param {*} arg - argument for throttled function.
+		 * @param {CallbackFunction} func - Function to throttle.
+		 * @param {*} [arg] - Optional argument for throttled function.
 		 */
-		throttle(func: CallbackFunction, arg?: any): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
 		 * Debounces function execution to next frame (rAF).
-		 * @param {function} func - Function to throttle.
-		 * @param {*} arg - argument for debounced function.
-		 * @param {number} timeout - minimum delay in ms before executing the function.
+		 * @param {CallbackFunction} func - Function to debounce.
+		 * @param {*} [arg] - Optional argument for debounced function.
 		 */
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
@@ -507,13 +528,13 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 		 * @param {EventTarget} event.target - Node that emitted the event.
 		 * @param {Node} event.detail.object - Mutated node.
 		 */
-		onPropertyMutated(event: CustomEvent): void;
+		onPropertyMutated(event: CustomEvent): true | undefined;
 		/**
 		 * Returns a binding to a specified property`.
 		 * @param {string} name - Property name to bind to.
 		 * @return {Binding} Binding object.
 		 */
-		bind(name: string): Binding;
+		bind<T_1>(name: string): Binding<T_1>;
 		/**
 		 * Unbinds a binding to a specified property`.
 		 * @param {string} name - Property name to unbind.
@@ -552,11 +573,14 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 	readonly Properties: PropertyDefinitions;
 };
 declare const Node_base: {
-	new (...superArgs: any[]): {
+	new (args?: PropsWithBinding<{
+		[key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
+		reactivity?: "none" | "immediate" | "throttled" | "debounced";
+	}>, ...superProps: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		/**
@@ -603,15 +627,14 @@ declare const Node_base: {
 		dispatchQueue(debounce?: boolean): void;
 		/**
 		 * Throttles function execution once per frame (rAF).
-		 * @param {function} func - Function to throttle.
-		 * @param {*} arg - argument for throttled function.
+		 * @param {CallbackFunction} func - Function to throttle.
+		 * @param {*} [arg] - Optional argument for throttled function.
 		 */
-		throttle(func: CallbackFunction, arg?: any): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
 		 * Debounces function execution to next frame (rAF).
-		 * @param {function} func - Function to throttle.
-		 * @param {*} arg - argument for debounced function.
-		 * @param {number} timeout - minimum delay in ms before executing the function.
+		 * @param {CallbackFunction} func - Function to debounce.
+		 * @param {*} [arg] - Optional argument for debounced function.
 		 */
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 		/**
@@ -623,13 +646,13 @@ declare const Node_base: {
 		 * @param {EventTarget} event.target - Node that emitted the event.
 		 * @param {Node} event.detail.object - Mutated node.
 		 */
-		onPropertyMutated(event: CustomEvent): void;
+		onPropertyMutated(event: CustomEvent): true | undefined;
 		/**
 		 * Returns a binding to a specified property`.
 		 * @param {string} name - Property name to bind to.
 		 * @return {Binding} Binding object.
 		 */
-		bind(name: string): Binding;
+		bind<T>(name: string): Binding<T>;
 		/**
 		 * Unbinds a binding to a specified property`.
 		 * @param {string} name - Property name to unbind.
@@ -733,21 +756,16 @@ export declare class ChangeQueue {
 	 */
 	dispose(): void;
 }
-export type IoElementArgs = NodeArgs & ArgsWithBinding<{
-	$?: string;
-	style?: Record<string, string>;
-	class?: string;
-	title?: string;
-	name?: string;
-	id?: string;
-	role?: string;
-}>;
+export type IoElementProps = NativeElementProps & NodeProps;
 declare const IoElement_base: {
-	new (...superArgs: any[]): {
+	new (args?: PropsWithBinding<{
+		[key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
+		reactivity?: "none" | "immediate" | "throttled" | "debounced";
+	}>, ...superProps: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		applyProperties(props: any, skipDispatch?: boolean): void;
@@ -758,10 +776,10 @@ declare const IoElement_base: {
 		init(): void;
 		queue(name: string, value: any, oldValue: any): void;
 		dispatchQueue(debounce?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-		onPropertyMutated(event: CustomEvent): void;
-		bind(name: string): Binding;
+		onPropertyMutated(event: CustomEvent): true | undefined;
+		bind<T>(name: string): Binding<T>;
 		unbind(name: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -776,15 +794,10 @@ declare const IoElement_base: {
  * Core `IoElement` class.
  */
 export declare class IoElement extends IoElement_base {
-	static vConstructor: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
-	$: Record<string, any>;
-	class: string;
-	title: string;
-	name: string;
-	id: string;
-	role: string;
-	constructor(args?: IoElementArgs);
+	$: Record<string, HTMLElement | IoElement>;
+	constructor(args?: IoElementProps);
 	/**
 	* Add resize listener if `onResized()` is defined in subclass.
 	*/
@@ -815,9 +828,12 @@ export declare class IoElement extends IoElement_base {
 	* @param {HTMLElement} element - Element to flatten.
 	*/
 	_flattenTextNode(element: HTMLElement | IoElement): void;
-	get textNode(): any;
-	set textNode(value: any);
-	applyProperties(props: any): void;
+	/**
+	 * Sets multiple properties in batch.
+	 * [property]-changed` events will be broadcast in the end.
+	 * @param {Object} props - Map of property names and values.
+	 */
+	applyProperties(props: any, skipDispatch?: boolean): void;
 	/**
 	* Alias for HTMLElement setAttribute where falsey values remove the attribute.
 	* @param {string} attr - Attribute name.
@@ -826,17 +842,287 @@ export declare class IoElement extends IoElement_base {
 	setAttribute(attr: string, value: boolean | number | string): void;
 	/**
 	 * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
-	 * @return {Object} vDOM-like representation of the element.
 	 */
 	toVDOM(): VDOMElement;
 	Register(ioNodeConstructor: typeof Node$1): void;
 }
-export declare const ioElement: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type Direction = "left" | "right" | "down" | "up";
+export declare function focusTo(srcElement: IoElement | HTMLElement, dir: Direction): void;
 export type VDOMElement = {
-	name: string;
+	tag: string;
 	props?: Record<string, any>;
 	children?: Array<VDOMElement | null> | string;
 };
+export type IntegerNumeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32;
+export type IntegerString = `${IntegerNumeric}`;
+export type IntegerAny = IntegerNumeric | IntegerString;
+type Boolean$1 = boolean | "true" | "false";
+export type Lang = "ab" | "aa" | "af" | "ak" | "sq" | "am" | "ar" | "an" | "hy" | "as" | "av" | "ae" | "ay" | "az" | "bm" | "ba" | "eu" | "be" | "bn" | "bh" | "bi" | "bs" | "br" | "bg" | "my" | "ca" | "ch" | "ce" | "ny" | "zh" | "zh-ans" | "zh-ant" | "cv" | "kw" | "co" | "cr" | "hr" | "cs" | "da" | "dv" | "nl" | "dz" | "en" | "eo" | "et" | "ee" | "fo" | "fj" | "fi" | "fr" | "ff" | "gl" | "gd" | "ka" | "de" | "el" | "kl" | "gn" | "gu" | "ht" | "ha" | "he" | "hz" | "hi" | "ho" | "hu" | "is" | "io" | "ig" | "id in" | "ia" | "ie" | "iu" | "ik" | "ga" | "it" | "ja" | "jv" | "kn" | "kr" | "ks" | "kk" | "km" | "ki" | "rw" | "rn" | "ky" | "kv" | "kg" | "ko" | "ku" | "kj" | "lo" | "la" | "lv" | "li" | "ln" | "lt" | "lu" | "lg" | "lb" | "gv" | "mk" | "mg" | "ms" | "ml" | "mt" | "mi" | "mr" | "mh" | "mo" | "mn" | "na" | "nv" | "ng" | "nd" | "ne" | "no" | "nb" | "nn" | "oc" | "oj" | "cu" | "or" | "om" | "os" | "pi" | "ps" | "fa" | "pl" | "pt" | "pa" | "qu" | "rm" | "ro" | "ru" | "se" | "sm" | "sg" | "sa" | "sr" | "sh" | "st" | "tn" | "sn" | "ii" | "sd" | "si" | "ss" | "sk" | "sl" | "so" | "nr" | "es" | "su" | "sw" | "sv" | "tl" | "ty" | "tg" | "ta" | "tt" | "te" | "th" | "bo" | "ti" | "to" | "ts" | "tr" | "tk" | "tw" | "ug" | "uk" | "ur" | "uz" | "ve" | "vi" | "vo" | "wa" | "cy" | "wo" | "fy" | "xh" | "yi" | "ji" | "yo" | "za" | "zu";
+export type PropsWithUndefined<T> = {
+	[K in keyof T]: T[K] | undefined;
+};
+export type AriaProps = PropsWithUndefined<{
+	role?: "alert" | "alertdialog" | "application" | "article" | "banner" | "button" | "cell" | "checkbox" | "columnheader" | "combobox" | "complementary" | "contentinfo" | "definition" | "dialog" | "directory" | "document" | "feed" | "figure" | "form" | "grid" | "gridcell" | "group" | "heading" | "img" | "link" | "list" | "listbox" | "listitem" | "log" | "main" | "marquee" | "math" | "menu" | "menubar" | "menuitem" | "menuitemcheckbox" | "menuitemradio" | "navigation" | "none" | "note" | "option" | "presentation" | "progressbar" | "radio" | "radiogroup" | "region" | "row" | "rowgroup" | "rowheader" | "scrollbar" | "search" | "searchbox" | "separator" | "slider" | "spinbutton" | "status" | "switch" | "tab" | "table" | "tablist" | "tabpanel" | "term" | "textbox" | "timer" | "toolbar" | "tooltip" | "tree" | "treegrid" | "treeitem";
+	ariaAtomic?: Boolean$1;
+	ariaAutoComplete?: "inline" | "list" | "both" | "none";
+	ariaBusy?: Boolean$1;
+	ariaBrailleLabel?: string;
+	ariaBrailleRoleDescription?: string;
+	ariaChecked?: Boolean$1 | "mixed";
+	ariaColCount?: IntegerAny;
+	ariaColIndex?: IntegerAny;
+	ariaColSpan?: IntegerAny;
+	ariaCurrent?: Boolean$1 | "page" | "step" | "location" | "date" | "time" | "true" | "false";
+	ariaDescription?: string;
+	ariaDisabled?: Boolean$1;
+	ariaExpanded?: Boolean$1 | "undefined";
+	ariaHasPopup?: Boolean$1 | "menu" | "listbox" | "tree" | "grid" | "dialog";
+	ariaHidden?: Boolean$1 | "undefined";
+	ariaInvalid?: Boolean$1 | "grammar" | "spelling";
+	ariaKeyShortcuts?: string;
+	ariaLabel?: string;
+	ariaLevel?: IntegerAny;
+	ariaLive?: "assertive" | "polite" | "off";
+	ariaModal?: Boolean$1;
+	ariaMultiLine?: Boolean$1;
+	ariaMultiSelectable?: Boolean$1;
+	ariaOrientation?: "horizontal" | "vertical" | "undefined";
+	ariaPlaceholder?: string;
+	ariaPosInSet?: IntegerAny;
+	ariaPressed?: Boolean$1 | "mixed" | "undefined";
+	ariaReadOnly?: Boolean$1;
+	ariaRequired?: Boolean$1;
+	ariaRelevant?: "additions" | "all" | "removals" | "text";
+	ariaRoleDescription?: string;
+	ariaRowCount?: IntegerAny;
+	ariaRowIndex?: IntegerAny;
+	ariaRowSpan?: IntegerAny;
+	ariaSelected?: Boolean$1 | "undefined";
+	ariaSetSize?: IntegerAny;
+	ariaSort?: "none" | "ascending" | "descending" | "other";
+	ariaValueMax?: number | `${number}`;
+	ariaValueMin?: number | `${number}`;
+	ariaValueNow?: number | `${number}`;
+	ariaValueText?: string;
+	ariaColIndexText?: string;
+	ariaRowIndexText?: string;
+	ariaActiveDescendantElement?: HTMLElement;
+	ariaControlsElements?: HTMLElement;
+	ariaDescribedByElements?: HTMLElement;
+	ariaDetailsElements?: HTMLElement;
+	ariaErrorMessageElements?: HTMLElement;
+	ariaFlowToElements?: HTMLElement;
+	ariaLabelledByElements?: HTMLElement;
+}>;
+export type OtherHTMLElementProps = PropsWithUndefined<{
+	target?: "_blank" | "_self" | "_parent" | "_top" | string;
+	download?: string;
+	ping?: string;
+	rel?: string;
+	relList?: DOMTokenList;
+	hreflang?: Lang;
+	type?: string;
+	referrerPolicy?: "no-referrer" | "no-referrer-when-downgrade" | "origin" | "origin-when-cross-origin" | "same-origin" | "strict-origin" | "strict-origin-when-cross-origin" | "unsafe-url";
+	text?: string;
+	coords?: string;
+	charset?: string;
+	name?: string;
+	rev?: string;
+	shape?: "rect" | "circle" | "poly" | "default";
+	protocol?: string;
+	username?: string;
+	password?: string;
+	host?: string;
+	hostname?: string;
+	port?: string;
+	pathname?: string;
+	search?: string;
+	hash?: string;
+	href?: string;
+	attributionSrc?: string;
+	alt?: string;
+	noHref?: boolean;
+	cite?: string;
+	clear?: "left" | "right" | "both" | "all" | "none";
+	disabled?: boolean;
+	formAction?: string;
+	formEnctype?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+	formMethod?: "get" | "post" | "dialog";
+	formNoValidate?: boolean;
+	formTarget?: "_blank" | "_self" | "_parent" | "_top" | string;
+	value?: string | number;
+	commandForElement?: string;
+	command?: string;
+	width?: number | string;
+	height?: number | string;
+	span?: number;
+	ch?: string;
+	chOff?: string;
+	vAlign?: "top" | "middle" | "bottom" | "baseline";
+	dateTime?: string;
+	open?: boolean;
+	returnValue?: string;
+	closedBy?: string;
+	compact?: boolean;
+	src?: string;
+	color?: string;
+	face?: string;
+	size?: number | string;
+	acceptCharset?: string;
+	action?: string;
+	autocomplete?: "on" | "off";
+	enctype?: "application/x-www-form-urlencoded" | "multipart/form-data" | "text/plain";
+	encoding?: string;
+	method?: "get" | "post" | "dialog";
+	noValidate?: boolean;
+	scrolling?: "yes" | "no" | "auto";
+	frameBorder?: "0" | "1";
+	longDesc?: string;
+	noResize?: boolean;
+	marginHeight?: number | string;
+	marginWidth?: number | string;
+	cols?: number | string;
+	rows?: number | string;
+	noShade?: boolean;
+	version?: string;
+	srcdoc?: string;
+	sandbox?: string;
+	allowFullscreen?: boolean;
+	csp?: string;
+	allow?: string;
+	loading?: "eager" | "lazy";
+	credentialless?: boolean;
+	allowPaymentRequest?: boolean;
+	privateToken?: boolean;
+	browsingTopics?: boolean;
+	adAuctionHeaders?: boolean;
+	sharedStorageWritable?: boolean;
+	srcset?: string;
+	sizes?: string;
+	crossOrigin?: "anonymous" | "use-credentials" | "";
+	useMap?: string;
+	isMap?: boolean;
+	decoding?: "sync" | "async" | "auto";
+	fetchPriority?: "high" | "low" | "auto";
+	lowsrc?: string;
+	hspace?: number | string;
+	vspace?: number | string;
+	border?: number | string;
+	accept?: string;
+	defaultChecked?: boolean;
+	checked?: boolean;
+	dirName?: string;
+	files?: FileList;
+	indeterminate?: boolean;
+	max?: number | string;
+	maxLength?: number;
+	min?: number | string;
+	minLength?: number;
+	multiple?: boolean;
+	pattern?: string;
+	placeholder?: string;
+	readOnly?: boolean;
+	required?: boolean;
+	step?: number | string;
+	defaultValue?: string;
+	valueAsDate?: Date | null;
+	valueAsNumber?: number;
+	selectionStart?: number;
+	selectionEnd?: number;
+	selectionDirection?: "forward" | "backward" | "none";
+	webkitdirectory?: boolean;
+	incremental?: boolean;
+	htmlFor?: string;
+	media?: string;
+	as?: string;
+	imageSrcset?: string;
+	imageSizes?: string;
+	integrity?: string;
+	blocking?: boolean;
+	httpEquiv?: string;
+	content?: string;
+	scheme?: string;
+	low?: number | string;
+	high?: number | string;
+	optimum?: number | string;
+	data?: string;
+	archive?: string;
+	code?: string;
+	declare?: boolean;
+	standby?: string;
+	codeBase?: string;
+	codeType?: string;
+	reversed?: boolean;
+	start?: number;
+	label?: string;
+	defaultSelected?: boolean;
+	selected?: boolean;
+	valueType?: string;
+	noModule?: boolean;
+	async?: boolean;
+	defer?: boolean;
+	event?: string;
+	length?: number;
+	selectedIndex?: number;
+	caption?: string;
+	tHead?: string;
+	tFoot?: string;
+	frame?: string;
+	rules?: string;
+	summary?: string;
+	cellPadding?: string;
+	cellSpacing?: string;
+	colSpan?: number;
+	rowSpan?: number;
+	headers?: string;
+	axis?: string;
+	noWrap?: boolean;
+	abbr?: string;
+	scope?: "row" | "col" | "rowgroup" | "colgroup";
+	shadowRootMode?: "open" | "closed";
+	shadowRootDelegatesFocus?: boolean;
+	shadowRootClonable?: boolean;
+	shadowRootSerializable?: boolean;
+	wrap?: "soft" | "hard";
+	kind?: string;
+	srclang?: Lang;
+	default?: boolean;
+	poster?: string;
+	playsInline?: boolean;
+	disablePictureInPicture?: boolean;
+}>;
+export type NativeElementProps = AriaProps & PropsWithUndefined<{
+	title?: string;
+	lang?: Lang;
+	translate?: any;
+	dir?: any;
+	hidden?: any;
+	inert?: any;
+	accessKey?: any;
+	draggable?: any;
+	spellcheck?: boolean;
+	autocapitalize?: any;
+	contentEditable?: Boolean$1;
+	enterKeyHint?: "enter" | "done" | "go" | "next" | "previous" | "search" | "send";
+	inputMode?: "decimal" | "email" | "numeric" | "tel" | "search" | "url" | "text";
+	virtualKeyboardPolicy?: "manual" | "auto";
+	innerText?: string;
+	outerText?: string;
+	writingSuggestions?: Boolean$1;
+	autofocus?: boolean;
+	tabIndex?: IntegerAny | -1 | "-1";
+	style?: Record<string, string>;
+	id?: string;
+	class?: string;
+	innerHTML?: string;
+	outerHTML?: string;
+	scrollTop?: number;
+	scrollLeft?: number;
+	scrollWidth?: number;
+	scrollHeight?: number;
+	textContent?: string;
+}>;
 /**
  * Sets native element's properties and attributes.
  * - style: formatted as Object.
@@ -845,7 +1131,7 @@ export type VDOMElement = {
  * @param {HTMLElement} element - Native HTMLElement to apply properties to.
  * @param {Object} props - Element properties.
  */
-export declare const applyNativeElementProps: (element: HTMLElement, props: Record<string, any>) => void;
+export declare const applyNativeElementProps: (element: HTMLElement, props: NativeElementProps) => void;
 /**
  * Creates an element from a virtual DOM object.
  * @param {VDOMElement} vDOMElement - Virtual DOM object.
@@ -878,18 +1164,26 @@ export declare const Autobind: (target: Object, propertyKey: string | symbol, de
 	get(): any;
 	set(value: any): void;
 };
+export declare const propertyDefaults: WeakMap<AnyConstructor, Record<string, any>>;
+/**
+ * Sets a default value for a property.
+ * @param {any} defaultValue - Default value.
+ * @return {Function} Property decorator function.
+ */
+export declare const Default: (defaultValue: any) => (target: Node$1, propertyName: string) => void;
 /**
  * Register function to be called once per class.
  * @param {Node} ioNodeConstructor - Node class to register.
  */
 export declare function Register(ioNodeConstructor: typeof Node$1): void;
+export declare const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions>;
 /**
  * Allows property definitions using decorator pattern.
  * @param {PropertyDefinitionLoose} propertyDefinition - Property definition.
  * @return {Function} Property decorator function.
  */
-export declare const Property: (propertyDefinition: PropertyDefinitionLoose) => (target: Node$1, propertyName: string) => void;
-export type StorageProps = NodeArgs & {
+export declare const Property: (propertyDefinition?: PropertyDefinitionLoose) => (target: Node$1, propertyName: string) => void;
+export type StorageProps = NodeProps & {
 	key: string;
 	value?: any;
 	default?: any;
@@ -901,7 +1195,7 @@ export declare class StorageNode extends Node$1 {
 	value: any;
 	default: any;
 	storage: "hash" | "local" | "none";
-	binding: Binding;
+	binding: Binding<any>;
 	constructor(props: StorageProps);
 	dispose(): void;
 	_clearStorage(): void;
@@ -909,7 +1203,7 @@ export declare class StorageNode extends Node$1 {
 	removeValueToHash(): void;
 	saveValueToHash(): void;
 }
-declare const Storage$1: ((props: StorageProps) => Binding) & {
+declare const Storage$1: ((props: StorageProps) => Binding<any>) & {
 	permit(): void;
 	unpermit(): void;
 };
@@ -987,12 +1281,14 @@ export declare class Theme extends Node$1 {
 	registerTheme(themeID: string, theme: ThemeVars): void;
 	reset(): void;
 	themeIDChanged(): void;
-	onPropertyMutated(event: CustomEvent): void;
+	onPropertyMutated(event: CustomEvent): true | undefined;
+	fontSizeChanged(): void;
+	lineHeightChanged(): void;
 	changed(): void;
 	onSaveTheme(): void;
 }
 export declare const ThemeSingleton: Theme;
-export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
+export type IoGlProps = IoElementProps & PropsWithBinding<{
 	color?: [
 		number,
 		number,
@@ -1002,7 +1298,7 @@ export type IoGlArgs = IoElementArgs & ArgsWithBinding<{
 }>;
 export declare class IoGl extends IoElement {
 	#private;
-	static vConstructor: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoGlProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	theme: typeof ThemeSingleton;
 	size: [
@@ -1023,7 +1319,7 @@ export declare class IoGl extends IoElement {
 	static get Frag(): string;
 	initPropertyUniform(name: string, property: PropertyDefinition$1): string;
 	initShader(): WebGLProgram;
-	constructor(args?: IoGlArgs);
+	constructor(args?: IoGlProps);
 	onResized(): void;
 	get ctx(): CanvasRenderingContext2D;
 	themeMutated(): void;
@@ -1035,7 +1331,7 @@ export declare class IoGl extends IoElement {
 	setUniform(name: string, value: any): void;
 	Register(ioNodeConstructor: typeof IoElement): void;
 }
-export declare const ioGl: (arg0?: IoGlArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioGl: (arg0?: IoGlProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare const glsl: {
 	saturate: string;
 	translate: string;
@@ -1054,13 +1350,10 @@ export declare const glsl: {
 	hsv2rgb: string;
 	hsl2rgb: string;
 };
-export type NativeElementArgs = IoElementArgs & {
-	src?: string;
-	href?: string;
-};
-export declare const a: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, abbr: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, acronym: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, address: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, applet: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, area: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, article: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, aside: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, audio: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, b: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, base: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, basefont: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, bdi: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, bdo: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, big: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, blockquote: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, body: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, br: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, button: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, canvas: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, caption: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, center: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, cite: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, code: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, col: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, colgroup: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, data: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, datalist: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dd: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, del: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, details: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dfn: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dialog: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dir: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, div: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dl: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dt: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, em: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, embed: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, fieldset: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, figcaption: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, figure: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, font: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, footer: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, form: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, frame: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, frameset: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, head: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, header: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, hgroup: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h1: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h2: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h3: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h4: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h5: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h6: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, hr: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, html: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, i: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, iframe: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, img: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, input: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ins: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, kbd: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, keygen: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, label: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, legend: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, li: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, link: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, main: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, map: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, mark: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, menu: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, menuitem: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, meta: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, meter: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, nav: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, noframes: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, noscript: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, object: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ol: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, optgroup: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, option: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, output: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, p: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, param: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, picture: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, pre: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, progress: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, q: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, rp: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, rt: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ruby: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, s: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, samp: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, script: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, section: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, select: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, small: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, source: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, span: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, strike: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, strong: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, style: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, sub: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, summary: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, sup: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, svg: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, table: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tbody: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, td: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, template: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, textarea: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tfoot: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, th: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, thead: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, time: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, title: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tr: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, track: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tt: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, u: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ul: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, video: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, wbr: (arg0?: NativeElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const HTML_ELEMENTS: string[];
+export declare const a: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, abbr: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, acronym: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, address: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, applet: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, area: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, article: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, aside: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, audio: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, b: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, base: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, basefont: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, bdi: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, bdo: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, big: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, blockquote: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, body: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, br: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, button: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, canvas: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, caption: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, center: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, cite: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, code: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, col: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, colgroup: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, data: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, datalist: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dd: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, del: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, details: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dfn: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dialog: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dir: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, div: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dl: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, dt: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, em: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, embed: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, fieldset: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, figcaption: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, figure: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, font: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, footer: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, form: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, frame: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, frameset: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, head: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, header: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, hgroup: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h1: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h2: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h3: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h4: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h5: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, h6: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, hr: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, html: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, i: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, iframe: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, img: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, input: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ins: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, kbd: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, keygen: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, label: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, legend: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, li: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, link: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, main: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, map: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, mark: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, menu: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, menuitem: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, meta: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, meter: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, nav: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, noframes: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, noscript: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, object: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ol: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, optgroup: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, option: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, output: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, p: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, param: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, picture: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, pre: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, progress: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, q: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, rp: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, rt: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ruby: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, s: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, samp: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, script: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, section: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, select: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, small: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, source: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, span: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, strike: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, strong: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, style: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, sub: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, summary: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, sup: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, svg: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, table: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tbody: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, td: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, template: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, textarea: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tfoot: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, th: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, thead: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, time: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, title: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tr: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, track: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, tt: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, u: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, ul: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, video: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement, wbr: (arg0?: (NativeElementProps & OtherHTMLElementProps) | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type NudgeDirection = "none" | "pointer" | "up" | "left" | "down" | "right";
-export type IoOverlayArgs = IoElementArgs & ArgsWithBinding<{
+export type IoOverlayProps = IoElementProps & PropsWithBinding<{
 	expanded?: boolean;
 }>;
 declare class IoOverlay extends IoElement {
@@ -1105,7 +1398,7 @@ declare class IoOverlay extends IoElement {
 			passive: boolean;
 		})[];
 	};
-	constructor(args?: IoOverlayArgs);
+	constructor(args?: IoOverlayProps);
 	stopPropagation(event: Event): void;
 	onResized(): void;
 	onPointerup(event: PointerEvent): void;
@@ -1150,7 +1443,7 @@ export declare const IoOverlaySingleton: IoOverlay;
  * THE SOFTWARE.
  */
 export declare const LICENSE = "MIT";
-export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
+export type IoColorBaseProps = IoElementProps & PropsWithBinding<{
 	value?: {
 		r: number;
 		g: number;
@@ -1159,7 +1452,7 @@ export type IoColorBaseArgs = IoElementArgs & ArgsWithBinding<{
 	};
 }>;
 export declare class IoColorBase extends IoElement {
-	static vConstructor: (arg0?: IoColorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	reactivity: string;
 	value: {
 		r: number;
@@ -1201,7 +1494,7 @@ declare class IoColorPanel extends IoColorBase {
 	changed(): void;
 }
 export declare const IoColorPanelSingleton: IoColorPanel;
-export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
+export type IoColorPickerProps = IoElementProps & PropsWithBinding<{
 	value?: {
 		r: number;
 		g: number;
@@ -1210,7 +1503,7 @@ export type IoColorPickerArgs = IoElementArgs & ArgsWithBinding<{
 	};
 }>;
 export declare class IoColorPicker extends IoElement {
-	static vConstructor: (arg0?: IoColorPickerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: {
 		r: number;
@@ -1219,7 +1512,7 @@ export declare class IoColorPicker extends IoElement {
 		a?: number;
 	};
 	static get Listeners(): any;
-	tabindex: string;
+	tabIndex: string;
 	onClick(): void;
 	get expanded(): boolean;
 	onKeydown(event: KeyboardEvent): void;
@@ -1228,9 +1521,10 @@ export declare class IoColorPicker extends IoElement {
 	onPanelCollapse(): void;
 	expand(): void;
 	collapse(): void;
+	init(): void;
 	valueChanged(): void;
 }
-export declare const ioColorPicker: (arg0?: IoColorPickerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorPicker: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * Input element for color displayed as vector and an interactive picker.
  **/
@@ -1239,8 +1533,8 @@ export declare class IoColorRgba extends IoColorBase {
 	_onNumberValueInput(event: CustomEvent): void;
 	changed(): void;
 }
-export declare const ioColorRgba: (arg0?: IoColorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNumberSliderRangeArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioColorRgba: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNumberSliderRangeProps = IoElementProps & PropsWithBinding<{
 	value?: [
 		number,
 		number
@@ -1265,14 +1559,15 @@ export declare class IoNumberSliderRange extends IoElement {
 	max: number;
 	exponent: number;
 	conversion: number;
-	constructor(args?: IoNumberSliderRangeArgs);
+	constructor(args?: IoNumberSliderRangeProps);
 	_onNumberSet(event: CustomEvent): void;
 	_onSliderSet(event: CustomEvent): void;
 	init(): void;
+	valueMutated(): void;
 	changed(): void;
 }
-export declare const ioNumberSliderRange: (arg0?: IoElementArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioNumberSliderRange: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNumberSliderProps = IoElementProps & PropsWithBinding<{
 	value?: number;
 	step?: number;
 	min?: number;
@@ -1284,7 +1579,7 @@ export type IoNumberSliderArgs = IoElementArgs & ArgsWithBinding<{
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  **/
 export declare class IoNumberSlider extends IoElement {
-	static vConstructor: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number;
 	step: number;
@@ -1292,14 +1587,14 @@ export declare class IoNumberSlider extends IoElement {
 	max: number;
 	exponent: number;
 	conversion: number;
-	constructor(args?: IoNumberSliderArgs);
+	constructor(args?: IoNumberSliderProps);
 	_onNumberSet(event: CustomEvent): void;
 	_onSliderSet(event: CustomEvent): void;
 	init(): void;
 	changed(): void;
 }
-export declare const ioNumberSlider: (arg0?: IoNumberSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
+export declare const ioNumberSlider: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoSliderBaseProps = IoGlProps & PropsWithBinding<{
 	value?: number | [
 		number,
 		number
@@ -1319,10 +1614,9 @@ export type IoSliderBaseArgs = IoGlArgs & ArgsWithBinding<{
 	exponent?: number;
 	vertical?: boolean;
 	noscroll?: boolean;
-	tabindex?: "-1" | "0" | "" | "1" | "2" | "3";
 }>;
 export declare class IoSliderBase extends IoGl {
-	static vConstructor: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number | [
 		number,
@@ -1342,9 +1636,10 @@ export declare class IoSliderBase extends IoGl {
 	];
 	exponent: number;
 	vertical: boolean;
+	invalid: boolean;
 	noscroll: boolean;
 	role: string;
-	tabindex: string;
+	tabIndex: string;
 	_startX: number;
 	_startY: number;
 	_rect: DOMRect | null;
@@ -1373,7 +1668,7 @@ export declare class IoSliderBase extends IoGl {
 			passive: boolean;
 		})[];
 	};
-	constructor(args?: IoSliderBaseArgs);
+	constructor(args?: IoSliderBaseProps);
 	onFocus(): void;
 	onBlur(): void;
 	onContextmenu(event: Event): void;
@@ -1409,11 +1704,13 @@ export declare class IoSliderBase extends IoGl {
 	_setLeft(): void;
 	_setRight(): void;
 	init(): void;
+	valueChanged(): void;
+	invalidChanged(): void;
 	changed(): void;
 }
-export type IoSlider2dArgs = IoSliderBaseArgs & ArgsWithBinding<{}>;
+export type IoSlider2dProps = IoSliderBaseProps & PropsWithBinding<{}>;
 export declare class IoSlider2d extends IoSliderBase {
-	static vConstructor: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: [
 		number,
@@ -1432,18 +1729,19 @@ export declare class IoSlider2d extends IoSliderBase {
 		number
 	];
 	noscroll: boolean;
-	constructor(args?: IoSlider2dArgs);
+	constructor(args?: IoSlider2dProps);
+	valueMutated(): void;
 	static get GlUtils(): string;
 	static get Frag(): string;
 }
-export declare const ioSlider2d: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoSliderRangeArgs = IoSliderBaseArgs & ArgsWithBinding<{}>;
+export declare const ioSlider2d: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoSliderRangeProps = IoSliderBaseProps & PropsWithBinding<{}>;
 /**
  * Input element for `Array(2)` data type displayed as slider.
  * It can be configured to clamp the `value` compoents to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
  **/
 export declare class IoSliderRange extends IoSliderBase {
-	static vConstructor: (arg0?: IoSliderRangeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoSliderRangeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	value: [
 		number,
 		number
@@ -1452,7 +1750,8 @@ export declare class IoSliderRange extends IoSliderBase {
 	min: number;
 	max: number;
 	_index: number;
-	constructor(args?: IoSliderRangeArgs);
+	constructor(args?: IoSliderRangeProps);
+	valueMutated(): void;
 	_getCoordFromValue(value: [
 		number,
 		number
@@ -1461,20 +1760,70 @@ export declare class IoSliderRange extends IoSliderBase {
 	onPointermoveThrottled(event: PointerEvent): void;
 	static get Frag(): string;
 }
-export declare const ioSliderRange: (arg0?: IoSliderRangeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioSliderRange: (arg0?: IoSliderRangeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoSliderProps = IoGlProps & {
+	value?: number | Binding<number>;
+	step?: number;
+	min?: number;
+	max?: number;
+	exponent?: number;
+	vertical?: boolean;
+	disabled?: boolean;
+	noscroll?: boolean;
+};
 /**
  * Input element for `Number` data type displayed as slider.
  * It can be configured to clamp the `value` to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.
  **/
-export declare class IoSlider extends IoSliderBase {
+export declare class IoSlider extends IoGl {
+	#private;
+	static vConstructor: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static get Style(): string;
 	value: number;
 	step: number;
 	min: number;
 	max: number;
+	exponent: number;
+	vertical: boolean;
+	invalid: boolean;
+	disabled: boolean;
+	noscroll: boolean;
+	role: string;
+	tabIndex: string;
 	static get Frag(): string;
+	static get Listeners(): {
+		focus: string;
+		contextmenu: string;
+		pointerdown: string;
+		touchstart: (string | {
+			passive: boolean;
+		})[];
+	};
+	constructor(args?: IoSliderProps);
+	onFocus(): void;
+	onBlur(): void;
+	onContextmenu(event: Event): void;
+	onTouchstart(event: TouchEvent): void;
+	onTouchmove(event: TouchEvent): void;
+	onTouchend(): void;
+	onPointerdown(event: PointerEvent): void;
+	onPointermove(event: PointerEvent): void;
+	onPointerup(event: PointerEvent): void;
+	_getPointerCoord(event: PointerEvent): number;
+	_getValueFromCoord(coord: number): number;
+	onPointermoveThrottled(event: PointerEvent): void;
+	_incrementValue(value: number): void;
+	_inputValue(value: number): void;
+	onKeydown(event: KeyboardEvent): void;
+	init(): void;
+	invalidChanged(): void;
+	disabledChanged(): void;
+	valueChanged(): void;
+	minChanged(): void;
+	maxChanged(): void;
 }
-export declare const ioSlider: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
+export declare const ioSlider: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoColorSliderProps = IoColorBaseProps & PropsWithBinding<{
 	color?: [
 		number,
 		number,
@@ -1491,7 +1840,7 @@ export type IoColorSliderArgs = IoColorBaseArgs & ArgsWithBinding<{
  * For example, setting `channel: 'h'` will instantiate a slider for "hue" color channel and hook up necessary conversions, bindings and event callbacks.
  **/
 export declare class IoColorSlider extends IoColorBase {
-	static vConstructor: (arg0?: IoColorSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoColorSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	color: [
 		number,
@@ -1505,22 +1854,16 @@ export declare class IoColorSlider extends IoColorBase {
 	_onValueInput(event: CustomEvent): void;
 	changed(): void;
 }
-export declare const ioColorSlider: (arg0?: IoColorSliderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-/**
- * A base class for 1D color slider.
- * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
- **/
-export declare class IoColorSliderBase extends IoSlider {
+export declare const ioColorSlider: (arg0?: IoColorSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+declare class IoColorSliderBase extends IoSlider {
 	static get GlUtils(): string;
 	static get Frag(): string;
+	valueMutated(): void;
 }
-/**
- * A base class for 2D color slider.
- * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
- **/
-export declare class IoColorSlider2dBase extends IoSlider2d {
+declare class IoColorSlider2dBase extends IoSlider2d {
 	static get GlUtils(): string;
 	static get Frag(): string;
+	valueMutated(): void;
 }
 /**
  * A 1D slider for "red" color channel.
@@ -1528,77 +1871,77 @@ export declare class IoColorSlider2dBase extends IoSlider2d {
 export declare class IoColorSliderR extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderR: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderR: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "green" color channel.
  **/
 export declare class IoColorSliderG extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderG: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderG: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "blue" color channel.
  **/
 export declare class IoColorSliderB extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderB: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderB: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "alpha" color channel.
  **/
 export declare class IoColorSliderA extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderA: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderA: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "hue" color channel.
  **/
 export declare class IoColorSliderH extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderH: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderH: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "saturation" color channel.
  **/
 export declare class IoColorSliderS extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderS: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderS: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "value" color channel.
  **/
 export declare class IoColorSliderV extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderV: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderV: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 1D slider for "level" color channel.
  **/
 export declare class IoColorSliderL extends IoColorSliderBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderL: (arg0?: IoSliderBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderL: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 2D slider gor "hue" and "saturation" color channels.
  **/
 export declare class IoColorSliderHs extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderHs: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderHs: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 2D slider gor "saturation" and "value" color channels.
  **/
 export declare class IoColorSliderSv extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderSv: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderSv: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * A 2D slider gor "saturation" and "level" color channels.
  **/
 export declare class IoColorSliderSl extends IoColorSlider2dBase {
 	static get GlUtils(): string;
 }
-export declare const ioColorSliderSl: (arg0?: IoSlider2dArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioColorSliderSl: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * Element displaying colored square.
  *
@@ -1611,8 +1954,8 @@ export declare class IoColorSwatch extends IoColorBase {
 	static get Style(): string;
 	valueChanged(): void;
 }
-export declare const ioColorSwatch: (arg0?: IoColorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type PropertyIdentifier = AnyConstructor | string | null | undefined;
+export declare const ioColorSwatch: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
 export type PropertyConfig = [
 	PropertyIdentifier,
 	VDOMElement
@@ -1621,23 +1964,23 @@ export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
 export type PropertyConfigRecord = Record<string, VDOMElement>;
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>;
 export declare function getEditorConfig(object: object, editorConfig?: EditorConfig): PropertyConfigRecord;
-export declare class EditorGroups {
-	constructor(prototypes: any);
-	registerEditorGroups(groups: any): void;
-	getEditorGroups(object: any, customGroups: any, keys: any): any;
-}
-export declare class ObjectWidgets {
-	constructor(prototypes: any);
-	registerObjectWidgets(widgets: any): void;
-	getObjectWidgets(object: any): {
-		main: any;
-		groups: any;
-	};
-}
-export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
-	value?: Record<string, any> | any[];
-	selected?: any;
-	options?: Record<string, any> | any[];
+export declare function registerEditorConfig(constructor: AnyConstructor, propertyTypes: PropertyConfig[]): void;
+export declare const SKIPPED_PROPERTIES: string[];
+export declare function getAllPropertyNames(obj: object): string[];
+type PropertyIdentifier$1 = string | RegExp;
+export type PropertyGroups = Record<string, Array<PropertyIdentifier$1>>;
+export type PropertyGroupsRecord = Record<string, Array<string>>;
+export type EditorGroups = Map<AnyConstructor, PropertyGroups>;
+export declare function getEditorGroups(object: object, editorGroups?: EditorGroups): PropertyGroupsRecord;
+export declare function registerEditorGroups(constructor: AnyConstructor, groups: PropertyGroups): void;
+export type EditorWidgets = Map<AnyConstructor, VDOMElement>;
+export declare function getEditorWidget(object: object, editorWidgets?: EditorWidgets): VDOMElement | null;
+export declare function registerEditorWidget(constructor: AnyConstructor, widget: VDOMElement): void;
+export type IoBreadcrumbsProps = IoElementProps & PropsWithBinding<{
+	value?: Object;
+	selected?: Object;
+	crumbs?: Array<Object>;
+	search?: string;
 }>;
 /**
  * Breadcrumbs select element.
@@ -1645,64 +1988,56 @@ export type IoBreadcrumbsArgs = IoElementArgs & ArgsWithBinding<{
  * Optionally, it can trim the `options` array to selected option index.
  **/
 export declare class IoBreadcrumbs extends IoElement {
-	static vConstructor: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
-	value: Record<string, any> | any[];
-	selected: any;
-	options: any[];
-	_onClick(event: CustomEvent): void;
+	value: Object;
+	selected: Object;
+	crumbs: Array<Object>;
+	search: string;
 	valueChanged(): void;
 	selectedChanged(): void;
+	onClearSearch(): void;
 	changed(): void;
 }
-export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoInspectorArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoInspectorProps = IoElementProps & PropsWithBinding<{
 	value?: Record<string, any> | any[];
 	selected?: Record<string, any> | any[];
-	uuid?: string;
+	config?: EditorConfig;
+	groups?: EditorGroups;
+	widgets?: EditorWidgets;
 	search?: string;
-	groups?: Record<string, any>;
-	widgets?: Record<string, any>;
 }>;
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 export declare class IoInspector extends IoElement {
-	static vConstructor: (arg0?: IoInspectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoInspectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: Record<string, any> | any[];
 	selected: Record<string, any> | any[];
-	uuid: string;
+	config: EditorConfig;
+	groups: EditorGroups;
+	widgets: EditorWidgets;
 	search: string;
-	groups: Record<string, any>;
-	widgets: Record<string, any>;
 	static get Listeners(): {
-		"io-input-base-clicked": string;
+		"io-button-clicked": string;
 	};
-	_onItemClicked(event: CustomEvent): void;
+	onLinkClicked(event: CustomEvent): void;
 	valueChanged(): void;
-	advancedChanged(): void;
+	selectedChanged(): void;
 	selectedMutated(): void;
 	changed(): void;
 	_onChangedThrottled(): void;
 	_onChange(): void;
-	static get EditorGroups(): {
-		"Object|hidden": RegExp[];
-		"Array|main": RegExp[];
-		"HTMLElement|main": (string | RegExp)[];
-		"HTMLElement|hidden": (string | RegExp)[];
-		"HTMLElement|content": RegExp[];
-		"HTMLElement|display": RegExp[];
-		"HTMLElement|hierarchy": RegExp[];
-	};
-	static get ObjectWidgets(): {};
-	Register(ioNodeConstructor: typeof Node$1): void;
 }
-export declare const ioInspector: (arg0?: IoInspectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioInspector: (arg0?: IoInspectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoObjectProps = IoElementProps & PropsWithBinding<{
 	value?: Record<string, any> | any[];
 	properties?: string[];
-	config?: Map<AnyConstructor, PropertyConfig[]>;
+	config?: EditorConfig;
+	groups?: EditorGroups;
+	widgets?: EditorWidgets;
 	labeled?: boolean;
 	label?: string;
 	expanded?: boolean;
@@ -1711,34 +2046,40 @@ export type IoObjectArgs = IoElementArgs & ArgsWithBinding<{
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
 export declare class IoObject extends IoElement {
-	static vConstructor: (arg0?: IoObjectArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: Record<string, any> | any[];
 	properties: string[];
-	config: Map<AnyConstructor, PropertyConfig[]>;
+	config: EditorConfig;
+	groups: EditorGroups;
+	widgets: EditorWidgets;
 	labeled: boolean;
 	label: string;
 	expanded: boolean;
 	role: string;
 	changed(): void;
 }
-export declare const ioObject: (arg0?: IoObjectArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoPropertyEditorArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioObject: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoPropertyEditorProps = IoElementProps & PropsWithBinding<{
 	value?: Record<string, any> | any[];
 	properties?: string[];
 	config?: EditorConfig;
+	groups?: EditorGroups;
+	widgets?: EditorWidgets;
 	labeled?: boolean;
 }>;
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
 export declare class IoPropertyEditor extends IoElement {
-	static vConstructor: (arg0?: IoPropertyEditorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	reactivity: string;
-	value: Record<string, any> | any[];
+	value: Object;
 	properties: string[];
 	config: EditorConfig;
+	groups: EditorGroups;
+	widgets: EditorWidgets;
 	labeled: boolean;
 	_onValueInput(event: CustomEvent): void;
 	valueMutated(): void;
@@ -1749,8 +2090,8 @@ export declare class IoPropertyEditor extends IoElement {
 	 */
 	toJSON(): any;
 }
-export declare const ioPropertyEditor: (arg0?: IoPropertyEditorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoVectorProps = IoElementProps & PropsWithBinding<{
 	value?: {
 		x: number;
 		y: number;
@@ -1769,7 +2110,7 @@ export type IoVectorArgs = IoElementArgs & ArgsWithBinding<{
  * Input element for vector arrays and objects.
  **/
 export declare class IoVector extends IoElement {
-	static vConstructor: (arg0?: IoVectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: {
 		x: number;
@@ -1793,23 +2134,23 @@ export declare class IoVector extends IoElement {
 	changed(): void;
 	getSlotted(): VDOMElement | null;
 }
-export declare const ioVector: (arg0?: IoVectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoMatrixArgs = IoVectorArgs & ArgsWithBinding<{
+export declare const ioVector: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoMatrixProps = IoVectorProps & PropsWithBinding<{
 	columns?: number;
 }>;
 /**
  * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
  **/
 export declare class IoMatrix extends IoVector {
-	static vConstructor: (arg0?: IoMatrixArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoMatrixProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number[];
 	columns: number;
 	_onNumberValueInput(event: CustomEvent): void;
 	valueChanged(): void;
 }
-export declare const ioMatrix: (arg0?: IoMatrixArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioMatrix: (arg0?: IoMatrixProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoMarkdownProps = IoElementProps & PropsWithBinding<{
 	src?: string;
 	strip?: string[];
 	loading?: boolean;
@@ -1819,21 +2160,21 @@ export type IoMarkdownArgs = IoElementArgs & ArgsWithBinding<{
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */
 export declare class IoMarkdown extends IoElement {
-	static vConstructor: (arg0?: IoMarkdownArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoMarkdownProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
-	role: string;
 	src: string;
 	strip: string[];
 	loading: boolean;
 	sanitize: boolean;
-	constructor(args?: IoMarkdownArgs);
+	role: string;
+	constructor(args?: IoMarkdownProps);
 	protected _strip(innerHTML: string): string;
 	protected _parseMarkdown(markdown: string): void;
 	onResized(): void;
 	srcChanged(): void;
 	changed(): void;
 }
-export declare const ioMarkdown: (arg0?: IoMarkdownArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMarkdown: (arg0?: IoMarkdownProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare const MD_LIGHT_THEME = "\n/* a11y-light theme */\n/* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */\n/* @author: ericwbailey */\n\n/* Comment */\n.hljs-comment, .hljs-quote {\n  color: #666;\n}\n\n/* Red */\n.hljs-variable, .hljs-template-variable, .hljs-tag, .hljs-name, .hljs-selector-id, .hljs-selector-class, .hljs-regexp, .hljs-deletion {\n  color: #d91e18;\n}\n\n/* Orange */\n.hljs-number, .hljs-built_in, .hljs-builtin-name, .hljs-literal, .hljs-type, .hljs-params, .hljs-meta, .hljs-link {\n  color: #aa5d00;\n}\n\n/* Yellow */\n.hljs-attribute {\n  color: #aa5d00;\n}\n\n/* Green */\n.hljs-string, .hljs-symbol, .hljs-bullet, .hljs-addition {\n  color: #008000;\n}\n\n/* Blue */\n.hljs-title, .hljs-section {\n  color: #007faa;\n}\n\n/* Purple */\n.hljs-keyword, .hljs-selector-tag {\n  color: #c928a1;\n}\n\n.hljs {\n  display: block;\n  overflow-x: auto;\n  background: #fefefe;\n  color: #545454;\n  padding: 0.5em;\n}\n\n.hljs-emphasis {\n  font-style: italic;\n}\n\n.hljs-strong {\n  font-weight: bold;\n}\n\n@media screen and (-ms-high-contrast: active) {\n  .hljs-addition, .hljs-attribute, .hljs-built_in, .hljs-builtin-name, .hljs-bullet, .hljs-comment, .hljs-link, .hljs-literal, .hljs-meta, .hljs-number, .hljs-params, .hljs-string, .hljs-symbol, .hljs-type, .hljs-quote {\n    color: highlight;\n  }\n  .hljs-keyword, .hljs-selector-tag {\n      font-weight: bold;\n  }\n}\n";
 export declare const MD_DARK_THEME = "\n/* a11y-dark theme */\n/* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */\n/* @author: ericwbailey */\n\n/* Comment */\n.hljs-comment, .hljs-quote {\n  color: #d4d0ab;\n}\n\n/* Red */\n.hljs-variable, .hljs-template-variable, .hljs-tag, .hljs-name, .hljs-selector-id, .hljs-selector-class, .hljs-regexp, .hljs-deletion {\n  color: #ffa07a;\n}\n\n/* Orange */\n.hljs-number, .hljs-built_in, .hljs-builtin-name, .hljs-literal, .hljs-type, .hljs-params, .hljs-meta, .hljs-link {\n  color: #f5ab35;\n}\n\n/* Yellow */\n.hljs-attribute {\n  color: #ffd700;\n}\n\n/* Green */\n.hljs-string, .hljs-symbol, .hljs-bullet, .hljs-addition {\n  color: #abe338;\n}\n\n/* Blue */\n.hljs-title, .hljs-section {\n  color: #00e0e0;\n}\n\n/* Purple */\n.hljs-keyword, .hljs-selector-tag {\n  color: #dcc6e0;\n}\n\n.hljs {\n  display: block;\n  overflow-x: auto;\n  background: #2b2b2b;\n  color: #f8f8f2;\n  padding: 0.5em;\n}\n\n.hljs-emphasis {\n  font-style: italic;\n}\n\n.hljs-strong {\n  font-weight: bold;\n}\n\n@media screen and (-ms-high-contrast: active) {\n  .hljs-addition, .hljs-attribute, .hljs-built_in, .hljs-builtin-name, .hljs-bullet, .hljs-comment, .hljs-link, .hljs-literal, .hljs-meta, .hljs-number, .hljs-params, .hljs-string, .hljs-symbol, .hljs-type, .hljs-quote {\n    color: highlight;\n  }\n  .hljs-keyword, .hljs-selector-tag {\n    font-weight: bold;\n  }\n}\n";
 export declare const IconsetDB: Record<string, Record<string, string>>;
@@ -1842,7 +2183,7 @@ declare class Iconset extends Node$1 {
 	getIcon(icon: string): string;
 }
 export declare const IconsetSingleton: Iconset;
-export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
+export type IoIconProps = IoElementProps & PropsWithBinding<{
 	value?: string;
 	stroke?: boolean;
 }>;
@@ -1852,26 +2193,25 @@ export type IoIconArgs = IoElementArgs & ArgsWithBinding<{
  * Custom SVG assets need to be registered with `IconsetSingleton`.
  **/
 export declare class IoIcon extends IoElement {
-	static vConstructor: (arg0?: IoIconArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: string;
 	stroke: boolean;
-	constructor(args?: IoIconArgs);
+	constructor(args?: IoIconProps);
 	valueChanged(): void;
 }
-export declare const ioIcon: (arg0?: IoIconArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoFieldArgs = IoElementArgs & ArgsWithBinding<{
-	value?: any;
-	icon?: string;
-	label?: string;
-	selected?: boolean;
-	invalid?: boolean;
-	disabled?: boolean;
-	tabindex?: "-1" | "0" | "" | "1" | "2" | "3";
+export declare const ioIcon: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoFieldProps = IoElementProps & {
+	value?: any | Binding<any>;
+	icon?: string | Binding<string>;
+	label?: string | Binding<string>;
+	selected?: boolean | Binding<boolean>;
+	disabled?: boolean | Binding<boolean>;
 	appearance?: "neutral" | "inset" | "outset";
-}>;
+	pattern?: string;
+};
 export declare class IoField extends IoElement {
-	static vConstructor: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: any;
 	icon: string;
@@ -1879,30 +2219,17 @@ export declare class IoField extends IoElement {
 	selected: boolean;
 	invalid: boolean;
 	disabled: boolean;
-	tabindex: string;
+	pressed: boolean;
 	appearance: "neutral" | "inset" | "outset";
-	constructor(args?: IoFieldArgs);
-	labelChanged(): void;
-	selectedChanged(): void;
-	invalidChanged(): void;
-	disabledChanged(): void;
-	changed(): void;
-}
-export declare const ioField: (arg0?: IoFieldArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoInputBaseArgs = IoFieldArgs & ArgsWithBinding<{
-	pressed?: boolean;
-}>;
-export declare class IoInputBase extends IoField {
-	static vConstructor: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-	static get Style(): string;
+	pattern: string;
+	spellcheck: boolean;
+	tabIndex: string;
 	static get Listeners(): {
-		"focus-to": string;
 		focus: string;
 		pointerdown: string;
 		click: string;
 	};
-	pressed: boolean;
-	constructor(args?: IoInputBaseArgs);
+	constructor(args?: IoFieldProps);
 	onFocus(event: FocusEvent): void;
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
@@ -1912,13 +2239,16 @@ export declare class IoInputBase extends IoField {
 	onClick(event?: MouseEvent): void;
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
-	onFocusTo(event: CustomEvent): void;
-	focusTo(dir: string): void;
 	getCaretPosition(): number;
 	setCaretPosition(position: number): void;
+	labelChanged(): void;
+	selectedChanged(): void;
+	invalidChanged(): void;
+	disabledChanged(): void;
+	changed(): void;
 }
-export declare const ioInputBase: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
+export declare const ioField: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoBooleanProps = Omit<IoFieldProps, "value"> & PropsWithBinding<{
 	value?: boolean;
 	true?: string;
 	false?: string;
@@ -1927,14 +2257,14 @@ export type IoBooleanArgs = IoInputBaseArgs & ArgsWithBinding<{
  * Input element for `Boolean` data type displayed as text.
  * It can be configured to display custom `true` or `false` strings.
  **/
-export declare class IoBoolean extends IoInputBase {
-	static vConstructor: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoBoolean extends IoField {
+	static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: boolean;
 	true: string;
 	false: string;
 	role: string;
-	constructor(args?: IoBooleanArgs);
+	constructor(args?: IoBooleanProps);
 	onPointerdown(event: PointerEvent): void;
 	onClick(): void;
 	toggle(): void;
@@ -1942,21 +2272,22 @@ export declare class IoBoolean extends IoInputBase {
 	valueChanged(): void;
 	changed(): void;
 }
-export declare const ioBoolean: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoButtonArgs = IoInputBaseArgs & ArgsWithBinding<{
+export declare const ioBoolean: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoButtonProps = IoFieldProps & PropsWithBinding<{
 	action?: Function;
 }>;
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
  **/
-export declare class IoButton extends IoInputBase {
+export declare class IoButton extends IoField {
+	static vConstructor: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: any;
 	action?: Function;
 	appearance: "inset" | "outset" | "neutral";
 	role: string;
-	constructor(args?: IoButtonArgs);
+	constructor(args?: IoButtonProps);
 	onPointerdown(event: PointerEvent): void;
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
@@ -1964,9 +2295,10 @@ export declare class IoButton extends IoInputBase {
 	init(): void;
 	changed(): void;
 }
-export declare const ioButton: (arg0?: IoInputBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
+export declare const ioButton: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNumberProps = Omit<IoFieldProps, "value"> & PropsWithBinding<{
 	value?: number;
+	live?: boolean;
 	conversion?: number;
 	step?: number;
 	min?: number;
@@ -1979,23 +2311,25 @@ export type IoNumberArgs = IoInputBaseArgs & ArgsWithBinding<{
  * If `ladder` property is enabled, it displays an interactive float ladder element when clicked/taped.
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
-export declare class IoNumber extends IoInputBase {
-	static vConstructor: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoNumber extends IoField {
+	static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number;
+	live: boolean;
 	conversion: number;
 	step: number;
 	min: number;
 	max: number;
 	ladder: boolean;
-	pattern: string;
-	inputmode: string;
-	placeholder: string;
-	spellcheck: string;
 	appearance: "neutral" | "inset" | "outset";
+	contentEditable: boolean;
+	pattern: string;
+	inputMode: string;
 	role: string;
 	private _pointer;
-	constructor(args?: IoNumberArgs);
+	constructor(args?: IoNumberProps);
+	get textNode(): any;
+	set textNode(value: any);
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
 	onPointerup(event: PointerEvent): void;
@@ -2005,16 +2339,15 @@ export declare class IoNumber extends IoInputBase {
 	onKeyup(event: KeyboardEvent): void;
 	_setFromTextNode(): void;
 	init(): void;
-	disabledChanged(): void;
 	changed(): void;
 }
-export declare const ioNumber: (arg0?: IoNumberArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNumberLadderArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioNumber: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNumberLadderProps = IoElementProps & PropsWithBinding<{
 	src?: IoNumber;
 	expanded?: boolean;
 }>;
 declare class IoNumberLadder extends IoElement {
-	static vConstructor: (arg0?: IoNumberLadderArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoNumberLadderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	src?: IoNumber;
 	expanded: boolean;
@@ -2029,7 +2362,7 @@ declare class IoNumberLadder extends IoElement {
 	get max(): number;
 	get step(): number;
 	get conversion(): number;
-	constructor(args?: IoNumberLadderArgs);
+	constructor(args?: IoNumberLadderProps);
 	onFocusIn(event: FocusEvent): void;
 	onFocusTo(event: CustomEvent): void;
 	_onLadderStepChange(event: CustomEvent): void;
@@ -2038,17 +2371,17 @@ declare class IoNumberLadder extends IoElement {
 	changed(): void;
 }
 export declare const IoNumberLadderSingleton: IoNumberLadder;
-export type IoNumberLadderStepArgs = IoInputBaseArgs & ArgsWithBinding<{
+export type IoNumberLadderStepProps = IoFieldProps & PropsWithBinding<{
 	value?: number;
 	label?: string;
 }>;
-export declare class IoNumberLadderStep extends IoInputBase {
-	static vConstructor: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoNumberLadderStep extends IoField {
+	static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: number;
 	label: string;
 	role: string;
-	constructor(args?: IoNumberLadderStepArgs);
+	constructor(args?: IoNumberLadderStepProps);
 	onKeydown(event: KeyboardEvent): void;
 	onPointerdown(event: PointerEvent): void;
 	onPointermove(event: PointerEvent): void;
@@ -2056,26 +2389,28 @@ export declare class IoNumberLadderStep extends IoInputBase {
 	init(): void;
 	changed(): void;
 }
-export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoStringArgs = IoInputBaseArgs & ArgsWithBinding<{
-	live?: boolean;
-	value?: string;
-	placeholder?: string;
-	spellcheck?: "true" | "false";
-}>;
+export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoStringProps = Omit<IoFieldProps, "value"> & {
+	value?: string | Binding<string>;
+	live?: boolean | Binding<boolean>;
+	placeholder?: string | Binding<string>;
+	appearance?: "neutral" | "inset" | "outset";
+};
 /**
  * Input element for `String` data type.
  **/
-export declare class IoString extends IoInputBase {
-	static vConstructor: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoString extends IoField {
+	static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: string;
 	live: boolean;
 	placeholder: string;
-	spellcheck: string;
 	appearance: "neutral" | "inset" | "outset";
+	contentEditable: boolean;
 	role: string;
-	constructor(args?: IoStringArgs);
+	constructor(args?: IoStringProps);
+	get textNode(): any;
+	set textNode(value: any);
 	_setFromTextNode(): void;
 	_tryParseFromTextNode(): void;
 	onBlur(event: FocusEvent): void;
@@ -2086,10 +2421,9 @@ export declare class IoString extends IoInputBase {
 	onKeyup(event: KeyboardEvent): void;
 	init(): void;
 	valueChanged(): void;
-	disabledChanged(): void;
 	changed(): void;
 }
-export declare const ioString: (arg0?: IoStringArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioString: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 /**
  * Input element for `Boolean` data type displayed as switch.
  **/
@@ -2097,8 +2431,8 @@ export declare class IoSwitch extends IoBoolean {
 	static get Style(): string;
 	changed(): void;
 }
-export declare const ioSwitch: (arg0?: IoBooleanArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type MenuOptionsArgs = NodeArgs & ArgsWithBinding<{
+export declare const ioSwitch: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type MenuOptionsProps = NodeProps & PropsWithBinding<{
 	first?: any;
 	last?: any;
 	scroll?: string;
@@ -2107,11 +2441,11 @@ export type MenuOptionsArgs = NodeArgs & ArgsWithBinding<{
 	items?: MenuItem[];
 }>;
 declare const MenuOptions_base: {
-	new (...superArgs: any[]): {
+	new (args?: NodeProps, ...superProps: any[]): {
 		[x: string]: any;
 		readonly _protochain: ProtoChain;
 		readonly _properties: Map<string, PropertyInstance>;
-		readonly _bindings: Map<string, Binding>;
+		readonly _bindings: Map<string, Binding<any>>;
 		readonly _changeQueue: ChangeQueue;
 		readonly _eventDispatcher: EventDispatcher;
 		applyProperties(props: any, skipDispatch?: boolean): void;
@@ -2122,10 +2456,10 @@ declare const MenuOptions_base: {
 		init(): void;
 		queue(name: string, value: any, oldValue: any): void;
 		dispatchQueue(debounce?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any): void;
+		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-		onPropertyMutated(event: CustomEvent): void;
-		bind(name: string): Binding;
+		onPropertyMutated(event: CustomEvent): true | undefined;
+		bind<T_1>(name: string): Binding<T_1>;
 		unbind(name: string): void;
 		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -2144,7 +2478,7 @@ export declare class MenuOptions extends MenuOptions_base {
 	delimiter: string;
 	items: MenuItem[];
 	getItem(value: any, deep?: boolean): any;
-	constructor(properties?: MenuOptionsArgs);
+	constructor(properties?: MenuOptionsProps);
 	fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
 	initItems(items: MenuItem[]): void;
 	pathChanged(): void;
@@ -2154,12 +2488,11 @@ export declare class MenuOptions extends MenuOptions_base {
 	_onItemSelectedChanged(event: CustomEvent): void;
 	_onSubOptionsPathChanged(event: CustomEvent): void;
 	selectDefault(): boolean;
-	bind(prop: string): Binding;
 	dispose(): void;
 }
 export type MenuItemSelectType = "select" | "scroll" | "toggle" | "link" | "none";
-export type MenuItemDefLoose = undefined | null | string | number | MenuItemArgs;
-export type MenuItemArgs = NodeArgs & ArgsWithBinding<{
+export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
+export type MenuItemProps = NodeProps & PropsWithBinding<{
 	value?: any;
 	label?: string;
 	icon?: string;
@@ -2184,7 +2517,7 @@ export declare class MenuItem extends Node$1 {
 	options?: MenuOptions;
 	get hasmore(): boolean;
 	getSubitem(value: any): any;
-	constructor(args?: MenuItemArgs);
+	constructor(args?: MenuItemProps);
 	fromJSON(looseDef: MenuItemDefLoose): this;
 	toJSON(): Record<string, any>;
 	_onSubItemSelected(): void;
@@ -2193,7 +2526,7 @@ export declare class MenuItem extends Node$1 {
 	selectedChanged(): void;
 	dispose(): void;
 }
-export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
+export type IoContextMenuProps = IoElementProps & PropsWithBinding<{
 	options?: MenuOptions;
 	expanded?: boolean;
 	button?: number;
@@ -2202,12 +2535,12 @@ export type IoContextMenuArgs = IoElementArgs & ArgsWithBinding<{
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
  **/
 export declare class IoContextMenu extends IoElement {
-	static vConstructor: (arg0?: IoContextMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoContextMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	options: MenuOptions;
 	expanded: boolean;
 	button: number;
 	static get Properties(): any;
-	constructor(args?: IoContextMenuArgs);
+	constructor(args?: IoContextMenuProps);
 	connectedCallback(): void;
 	disconnectedCallback(): void;
 	getBoundingClientRect(): any;
@@ -2221,8 +2554,8 @@ export declare class IoContextMenu extends IoElement {
 	_onCollapse(): void;
 	optionsChanged(): void;
 }
-export declare const ioContextMenu: (arg0?: IoContextMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioContextMenu: (arg0?: IoContextMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoMenuOptionsProps = IoElementProps & PropsWithBinding<{
 	options?: MenuOptions;
 	expanded?: boolean;
 	horizontal?: boolean;
@@ -2239,7 +2572,7 @@ export type IoMenuOptionsArgs = IoElementArgs & ArgsWithBinding<{
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/
 export declare class IoMenuOptions extends IoElement {
-	static vConstructor: (arg0?: IoMenuOptionsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	options: MenuOptions;
 	expanded: boolean;
@@ -2252,8 +2585,8 @@ export declare class IoMenuOptions extends IoElement {
 	overflow: string;
 	inlayer: boolean;
 	slotted: VDOMElement[];
-	role: string;
 	$parent?: IoMenuItem;
+	role: string;
 	private _overflownItems;
 	static get Listeners(): {
 		"item-clicked": string;
@@ -2261,7 +2594,7 @@ export declare class IoMenuOptions extends IoElement {
 			passive: boolean;
 		})[];
 	};
-	constructor(args?: IoMenuOptionsArgs);
+	constructor(args?: IoMenuOptionsProps);
 	_onItemClicked(event: CustomEvent): void;
 	_stopPropagation(event: MouseEvent): void;
 	init(): void;
@@ -2274,8 +2607,8 @@ export declare class IoMenuOptions extends IoElement {
 	_onClipHeight(): void;
 	changed(): void;
 }
-export declare const ioMenuOptions: (arg0?: IoMenuOptionsArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
+export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoMenuItemProps = IoFieldProps & PropsWithBinding<{
 	item?: MenuItem;
 	expanded?: boolean;
 	direction?: "left" | "right" | "up" | "down";
@@ -2284,16 +2617,17 @@ export type IoMenuItemArgs = IoInputBaseArgs & ArgsWithBinding<{
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
-export declare class IoMenuItem extends IoInputBase {
-	static vConstructor: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoMenuItem extends IoField {
+	static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	item: MenuItem;
 	expanded: boolean;
 	direction: NudgeDirection;
 	depth: number;
+	contentEditable: boolean;
 	$options?: IoMenuOptions;
 	static get Listeners(): any;
-	constructor(args?: IoMenuItemArgs);
+	constructor(args?: IoMenuItemProps);
 	preventDefault(event: Event): void;
 	get hasmore(): boolean;
 	get inlayer(): boolean;
@@ -2320,7 +2654,7 @@ export declare class IoMenuItem extends IoInputBase {
 	itemMutated(): void;
 	changed(): void;
 }
-export declare const ioMenuItem: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuItem: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type IoMenuElementType = IoMenuItem | IoMenuOptions;
 export declare function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[];
 export declare function getMenuAncestors(element: IoMenuElementType): (IoMenuItem | IoMenuOptions)[];
@@ -2329,10 +2663,10 @@ export declare class IoMenuHamburger extends IoMenuItem {
 	static get Style(): string;
 	changed(): void;
 }
-export declare const ioMenuHamburger: (arg0?: IoMenuItemArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuHamburger: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare function addMenuOptions(options: MenuOptions, depth: number, d?: number): VDOMElement[];
 export declare function filterOptions(options: MenuOptions, search: string, depth?: number, elements?: VDOMElement[], d?: number): any;
-export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
+export type IoMenuTreeProps = IoElementProps & PropsWithBinding<{
 	options?: MenuOptions;
 	searchable?: boolean;
 	search?: string;
@@ -2340,25 +2674,25 @@ export type IoMenuTreeArgs = IoElementArgs & ArgsWithBinding<{
 	slotted?: VDOMElement[];
 }>;
 export declare class IoMenuTree extends IoElement {
-	static vConstructor: (arg0?: IoMenuTreeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	options: MenuOptions;
 	searchable: boolean;
 	search: string;
 	depth: number;
 	slotted: VDOMElement[];
-	role: string;
 	$parent?: IoMenuItem;
+	role: string;
 	static get Listeners(): {
 		"item-clicked": string;
 	};
-	constructor(args?: IoMenuTreeArgs);
+	constructor(args?: IoMenuTreeProps);
 	_onItemClicked(event: CustomEvent): void;
 	_onCollapse(): void;
 	changed(): void;
 }
-export declare const ioMenuTree: (arg0?: IoMenuTreeArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioMenuTree: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoOptionMenuProps = IoElementProps & PropsWithBinding<{
 	value?: any;
 	options?: MenuOptions;
 	item?: MenuItem;
@@ -2368,19 +2702,19 @@ export type IoOptionMenuArgs = IoElementArgs & ArgsWithBinding<{
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 export declare class IoOptionMenu extends IoElement {
-	static vConstructor: (arg0?: IoOptionMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoOptionMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	value: any;
 	options: MenuOptions;
-	role: string;
 	item: MenuItem;
-	constructor(args?: IoOptionMenuArgs);
-	_onLeafChanged(event: CustomEvent): void;
+	role: string;
+	constructor(args?: IoOptionMenuProps);
+	_onLastChanged(event: CustomEvent): void;
 	optionsChanged(change: Change): void;
 	changed(): void;
 }
-export declare const ioOptionMenu: (arg0?: IoOptionMenuArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioOptionMenu: (arg0?: IoOptionMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoCollapsibleProps = IoElementProps & PropsWithBinding<{
 	elements?: VDOMElement[];
 	label?: string;
 	direction?: "column" | "row";
@@ -2392,7 +2726,7 @@ export type IoCollapsibleArgs = IoElementArgs & ArgsWithBinding<{
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
  **/
 export declare class IoCollapsible extends IoElement {
-	static vConstructor: (arg0?: IoCollapsibleArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoCollapsibleProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	elements: VDOMElement[];
 	label: string;
@@ -2402,8 +2736,8 @@ export declare class IoCollapsible extends IoElement {
 	role: string;
 	changed(): void;
 }
-export declare const ioCollapsible: (arg0?: IoCollapsibleArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioCollapsible: (arg0?: IoCollapsibleProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoSelectorProps = IoElementProps & PropsWithBinding<{
 	options?: MenuOptions;
 	select?: "first" | "last";
 	elements?: VDOMElement[];
@@ -2414,7 +2748,7 @@ export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
 	import?: string;
 }>;
 export declare class IoSelector extends IoElement {
-	static vConstructor: (arg0?: IoSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	options: MenuOptions;
 	select: "first" | "last";
@@ -2432,12 +2766,12 @@ export declare class IoSelector extends IoElement {
 	onLoadPrecache(): void;
 	dispose(): void;
 }
-export declare const ioSelector: (arg0?: IoSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoScrollerArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioSelector: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoScrollerProps = IoElementProps & PropsWithBinding<{
 	options?: MenuOptions;
 }>;
 export declare class IoScroller extends IoElement {
-	static vConstructor: (arg0?: IoScrollerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	options: MenuOptions;
 	private _observer;
@@ -2448,8 +2782,8 @@ export declare class IoScroller extends IoElement {
 	_scrollToSelected(): void;
 	dispose(): void;
 }
-export declare const ioScroller: (arg0?: IoScrollerArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
+export declare const ioScroller: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNavigatorBaseProps = IoElementProps & PropsWithBinding<{
 	options?: MenuOptions;
 	slotted?: VDOMElement[];
 	elements?: VDOMElement[];
@@ -2459,7 +2793,7 @@ export type IoNavigatorBaseArgs = IoElementArgs & ArgsWithBinding<{
 	collapseWidth?: number;
 }>;
 export declare class IoNavigatorBase extends IoElement {
-	static vConstructor: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	slotted: VDOMElement[];
 	elements: VDOMElement[];
@@ -2474,40 +2808,40 @@ export declare class IoNavigatorBase extends IoElement {
 	getSlotted(): VDOMElement | null;
 	changed(): void;
 }
-export declare const ioNavigatorBase: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNavigatorSelectorArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
+export declare const ioNavigatorBase: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNavigatorSelectorProps = IoNavigatorBaseProps & PropsWithBinding<{
 	select?: "first" | "last";
 	cache?: boolean;
 	precache?: boolean;
 }>;
 export declare class IoNavigatorSelector extends IoNavigatorBase {
-	static vConstructor: (arg0?: IoNavigatorSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	select: "first" | "last";
 	cache: boolean;
 	precache: boolean;
 	getSlotted(): VDOMElement;
 }
-export declare const ioNavigatorSelector: (arg0?: IoNavigatorSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNavigatorSelector: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare class IoNavigatorCombined extends IoNavigatorSelector {
 	static get Style(): string;
 	getSlotted(): VDOMElement;
 }
-export declare const ioNavigatorCombined: (arg0?: IoNavigatorSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNavigatorMdViewArgs = IoNavigatorBaseArgs & ArgsWithBinding<{
+export declare const ioNavigatorCombined: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoNavigatorMdViewProps = IoNavigatorBaseProps & PropsWithBinding<{
 	strip?: string[];
 	sanitize?: boolean;
 }>;
 export declare class IoNavigatorMdView extends IoNavigatorBase {
-	static vConstructor: (arg0?: IoNavigatorMdViewArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static vConstructor: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	strip: string[];
 	sanitize: boolean;
 	getSlotted(): VDOMElement;
 }
-export declare const ioNavigatorMdView: (arg0?: IoNavigatorMdViewArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNavigatorMdView: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare class IoNavigatorScroller extends IoNavigatorBase {
 	getSlotted(): VDOMElement;
 }
-export declare const ioNavigatorScroller: (arg0?: IoNavigatorBaseArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNavigatorScroller: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
 export {
 	Node$1 as Node,

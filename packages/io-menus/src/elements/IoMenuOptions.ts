@@ -83,8 +83,7 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Item divider */
-    :host > [hidden] ~ span.divider {
-      border-color: red;
+    :host > io-menu-item[hidden] ~ span.divider {
       display: none;
     }
     :host > span.divider {
@@ -308,7 +307,7 @@ export class IoMenuOptions extends IoElement {
 
     if (this.searchable) {
       elements.push(ioString({
-        $: 'search',
+        id: 'search',
         role: 'search',
         class: 'search',
         value: this.bind('search'),
@@ -336,7 +335,7 @@ export class IoMenuOptions extends IoElement {
           depth: this.depth
         }));
         if (i < this.options.length - 1) {
-          elements.push({name: 'span', props: {class: 'divider'}});
+          elements.push({tag: 'span', props: {class: 'divider'}});
         }
       }
     }

@@ -1,6 +1,6 @@
-import { IoElement, VDOMElement, IoElementArgs, ArgsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementProps, PropsWithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
+export type IoSelectorProps = IoElementProps & PropsWithBinding<{
     options?: MenuOptions;
     select?: 'first' | 'last';
     elements?: VDOMElement[];
@@ -11,7 +11,7 @@ export type IoSelectorArgs = IoElementArgs & ArgsWithBinding<{
     import?: string;
 }>;
 export declare class IoSelector extends IoElement {
-    static vConstructor: (arg0?: IoSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+    static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     options: MenuOptions;
     select: 'first' | 'last';
@@ -29,5 +29,5 @@ export declare class IoSelector extends IoElement {
     onLoadPrecache(): void;
     dispose(): void;
 }
-export declare const ioSelector: (arg0?: IoSelectorArgs | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioSelector: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoSelector.d.ts.map
