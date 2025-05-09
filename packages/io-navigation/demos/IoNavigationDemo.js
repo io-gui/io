@@ -1,5 +1,5 @@
 import { Register, IoElement, div, span } from 'io-gui';
-import { MenuOptions, MenuItem } from 'io-menus';
+import { MenuOptions } from 'io-menus';
 import { ioNavigatorSelector, ioNavigatorScroller, ioSelector } from 'io-navigation';
 
 const contentElements = [

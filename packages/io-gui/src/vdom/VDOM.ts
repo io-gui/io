@@ -308,10 +308,8 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
   const _element = (element as unknown as IoElement);
 
   let defaultPropValues: NativeElementProps = defaultPropsMap.get(element) || {};
-  if (!defaultPropValues) {
-    defaultPropValues = {};
-    defaultPropsMap.set(element, defaultPropValues);
-  }
+  defaultPropsMap.set(element, defaultPropValues);
+
   for (const _p in props) {
     const p = _p as keyof NativeElementProps;
     const prop: any = props[p];
