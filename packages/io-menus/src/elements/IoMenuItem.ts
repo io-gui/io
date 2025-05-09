@@ -1,13 +1,13 @@
 import { Register, Property, Default, IoOverlaySingleton as Overlay, span, VDOMElement, PropsWithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-import { IoInputBase, IoInputBaseProps } from 'io-inputs';
+import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 
 const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
 
-export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
+export type IoMenuItemProps = IoFieldProps & PropsWithBinding<{
   item?: MenuItem;
   expanded?: boolean;
   direction?: 'left' | 'right' | 'up' | 'down';
@@ -20,7 +20,7 @@ export type IoMenuItemProps = IoInputBaseProps & PropsWithBinding<{
 
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
-export class IoMenuItem extends IoInputBase {
+export class IoMenuItem extends IoField {
   static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`

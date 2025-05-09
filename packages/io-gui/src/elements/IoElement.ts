@@ -31,6 +31,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
       :host {
         box-sizing: border-box;
         display: block;
+        -webkit-touch-callout: none;
       }
     `;
   }
@@ -318,3 +319,114 @@ export class IoElement extends NodeMixin(HTMLElement) {
   }
 }
 export const ioElement = IoElement.vConstructor;
+
+let focusBacktrack = new WeakMap();
+type Direction = 'left' | 'right' | 'down' | 'up';
+const backtrackDir: Record<Direction, Direction> = {
+  left: 'right',
+  right: 'left',
+  down: 'up',
+  up: 'down'
+};
+
+function setBacktrack(element: IoElement | HTMLElement, dir: Direction, source: IoElement | HTMLElement) {
+  focusBacktrack.set(element, {
+    dir: backtrackDir[dir],
+    source: source
+  });
+}
+
+export function focusTo(srcElement: IoElement | HTMLElement, dir: Direction) {
+  const srcRect = srcElement.getBoundingClientRect();
+
+  let closestElement = srcElement;
+  let closestDistance = Infinity;
+
+  const backtrack = focusBacktrack.get(srcElement);
+
+  if (backtrack && backtrack.dir === dir) {
+    const source = backtrack.source;
+    let visible = true;
+    if (!source.offsetParent || source === srcElement) {
+      visible = false;
+    } else {
+      const sStyle = window.getComputedStyle(source);
+      if (sStyle.visibility !== 'visible' || sStyle.display === 'none') {
+        visible = false;
+      }
+    }
+    if (visible) {
+      source.focus();
+      setBacktrack(source, dir, srcElement);
+      return;
+    }
+
+  }
+
+  const focusable = Array.from(document.querySelectorAll(`[tabIndex="${srcElement.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
+
+  for (let i = focusable.length; i--;) {
+
+    if (!focusable[i].offsetParent || focusable[i] === srcElement) {
+      continue;
+    }
+    const sStyle = window.getComputedStyle(focusable[i]);
+    if (sStyle.visibility !== 'visible' || sStyle.display === 'none') {
+      continue;
+    }
+
+    const rect = focusable[i].getBoundingClientRect();
+
+    switch (dir) {
+      case 'right': {
+        const srcCenter = {x: srcRect.right, y: srcRect.y + srcRect.height / 2};
+        const center = {x: rect.left, y: rect.y + rect.height / 2};
+        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
+        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+        if (delta.x >= 0 && Math.abs(delta.y) <= Math.abs(delta.x) && dist < closestDistance) {
+          closestElement = focusable[i];
+          closestDistance = dist;
+        }
+        break;
+      }
+      case 'left': {
+        const srcCenter = {x: srcRect.left, y: srcRect.y + srcRect.height / 2};
+        const center = {x: rect.right, y: rect.y + rect.height / 2};
+        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
+        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+        if (delta.x <= 0 && Math.abs(delta.y) <= Math.abs(delta.x) && dist < closestDistance) {
+          closestElement = focusable[i];
+          closestDistance = dist;
+        }
+        break;
+      }
+      case 'down': {
+        const srcCenter = {x: srcRect.x + srcRect.width / 2, y: srcRect.bottom};
+        const center = {x: rect.x + rect.width / 2, y: rect.top};
+        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
+        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+        if (delta.y >= 0 && dist < closestDistance) {
+          closestElement = focusable[i];
+          closestDistance = dist;
+        }
+        break;
+      }
+      case 'up': {
+        const srcCenter = {x: srcRect.x + srcRect.width / 2, y: srcRect.top};
+        const center = {x: rect.x + rect.width / 2, y: rect.bottom};
+        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
+        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+        if (delta.y <= 0 && dist < closestDistance) {
+          closestElement = focusable[i];
+          closestDistance = dist;
+        }
+        break;
+      }
+    }
+  }
+
+  if (closestElement !== srcElement) {
+    (closestElement as any).focus();
+    setBacktrack(closestElement, dir, srcElement);
+  }
+}

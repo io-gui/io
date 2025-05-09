@@ -126,7 +126,7 @@ export class StorageNode extends Node {
   @Property({value: 'none', type: String})
   declare storage: 'hash' | 'local' | 'none';
 
-  declare binding: Binding;
+  declare binding: Binding<any>;
 
   constructor(props: StorageProps) {
     debug: {

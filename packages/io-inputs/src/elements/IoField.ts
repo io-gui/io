@@ -1,14 +1,15 @@
-import { Register, Property, VDOMElement, PropsWithBinding, IoElement, IoElementProps, span, Default } from 'io-gui';
+import { Register, Property, VDOMElement, Binding, IoElement, IoElementProps, span, Default, focusTo } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
-export type IoFieldProps = IoElementProps & PropsWithBinding<{
-  value?: any;
-  icon?: string;
-  label?: string;
-  selected?: boolean;
-  disabled?: boolean;
+export type IoFieldProps = IoElementProps & {
+  value?: any | Binding<any>;
+  icon?: string | Binding<string>;
+  label?: string| Binding<string>;
+  selected?: boolean | Binding<boolean>;
+  disabled?: boolean | Binding<boolean>;
   appearance?: 'neutral' | 'inset' | 'outset';
-}>;
+  pattern?: string;
+};
 
 @Register
 export class IoField extends IoElement {
@@ -16,19 +17,26 @@ export class IoField extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        cursor: pointer;
         height: var(--io_fieldHeight);
         line-height: var(--io_lineHeight);
         border: var(--io_border);
         border-color: transparent;
+        border-radius: var(--io_borderRadius);
         padding: var(--io_spacing) var(--io_spacing3);
         color: var(--io_color);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: var(--io_fontSize);
+        user-select: none;
       }
       :host[disabled] {
         opacity: 0.5;
+      }
+      :host[pressed] {
+        border-color: var(--io_borderColorInset);
+        box-shadow: var(--io_shadowInset);
       }
       :host :not(:last-child) {
         margin-right: var(--io_spacing2);
@@ -43,6 +51,8 @@ export class IoField extends IoElement {
         background-color: transparent;
       }
       :host[appearance=inset] {
+        color: var(--io_colorInput);
+        background-color: var(--io_bgColorInput);
         border-color: var(--io_borderColorInset);
         padding-top: calc(var(--io_spacing) + 0.05em);
         padding-bottom: calc(var(--io_spacing) - 0.05em);
@@ -96,13 +106,108 @@ export class IoField extends IoElement {
   @Property({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
+  @Property({value: false, type: Boolean, reflect: true})
+  declare pressed: boolean;
+
   @Property({value: 'neutral', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
+
+  @Property({value: '', type: String, reflect: true})
+  declare pattern: string;
+
+  @Default(false)
+  declare spellcheck: boolean;
 
   @Default('0')
   declare tabIndex: string;
 
+  static get Listeners() {
+    return {
+      'focus': 'onFocus',
+      'pointerdown': 'onPointerdown',
+      'click': 'onClick',
+    };
+  }
+
   constructor(args: IoFieldProps = {}) { super(args); }
+
+  onFocus(event: FocusEvent) {
+    this.addEventListener('blur', this.onBlur);
+    this.addEventListener('keydown', this.onKeydown);
+    this.addEventListener('keyup', this.onKeyup);
+  }
+  onBlur(event: FocusEvent) {
+    this.removeEventListener('blur', this.onBlur);
+    this.removeEventListener('keydown', this.onKeydown);
+    this.removeEventListener('keyup', this.onKeyup);
+  }
+  onPointerdown(event: PointerEvent) {
+    this.addEventListener('pointermove', this.onPointermove);
+    this.addEventListener('pointerleave', this.onPointerleave);
+    this.addEventListener('pointerup', this.onPointerup);
+    this.pressed = true;
+  }
+  onPointermove(event: PointerEvent) {
+  }
+  onPointerleave(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerleave', this.onPointerleave);
+    this.removeEventListener('pointerup', this.onPointerup);
+    this.pressed = false;
+  }
+  onPointerup(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerleave', this.onPointerleave);
+    this.removeEventListener('pointerup', this.onPointerup);
+    this.pressed = false;
+  }
+  onClick(event?: MouseEvent) {
+  }
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.onClick();
+    }
+    else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      focusTo(this, 'left');
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      focusTo(this, 'up');
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      focusTo(this, 'right');
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      focusTo(this, 'down');
+    }
+  }
+  onKeyup(event: KeyboardEvent) {}
+
+  getCaretPosition() {
+    let position = 0;
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount) {
+      const range = selection.getRangeAt(0);
+      const selected = range.toString().length;
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(this as unknown as Node);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      position = preCaretRange.toString().length - selected;
+    }
+    return position;
+  }
+  setCaretPosition(position: number){
+    if (!position) return;
+    const selection = window.getSelection();
+    if (selection) {
+      const range = document.createRange();
+      range.setStart(this.firstChild, position);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
 
   labelChanged() {
     if (this.label) {

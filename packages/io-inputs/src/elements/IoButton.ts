@@ -1,8 +1,8 @@
 import { Register, Property, span, PropsWithBinding, VDOMElement, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
+import { IoField, IoFieldProps } from './IoField';
 
-export type IoButtonProps = IoInputBaseProps & PropsWithBinding<{
+export type IoButtonProps = IoFieldProps & PropsWithBinding<{
   action?: Function;
 }>;
 
@@ -11,7 +11,7 @@ export type IoButtonProps = IoInputBaseProps & PropsWithBinding<{
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
  **/
 @Register
-export class IoButton extends IoInputBase {
+export class IoButton extends IoField {
   static vConstructor: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`

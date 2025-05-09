@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement, PropsWithBinding } from 'io-gui';
+import { Register, Property, VDOMElement, PropsWithBinding, Default } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
 export type IoSlider2dProps = IoSliderBaseProps & PropsWithBinding<{
@@ -45,7 +45,7 @@ export class IoSlider2d extends IoSliderBase {
   @Property({value: null, type: Array, init: [1, 1]})
   declare max: [number, number];
 
-  @Property(true)
+  @Default(true)
   declare noscroll: boolean;
 
   constructor(args: IoSlider2dProps = {}) { super(args); }

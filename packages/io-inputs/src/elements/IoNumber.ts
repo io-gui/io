@@ -1,8 +1,8 @@
-import { Register, Property, IoOverlaySingleton, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { Register, Property, IoOverlaySingleton, VDOMElement, PropsWithBinding, Default, focusTo } from 'io-gui';
 import { IoNumberLadderSingleton } from './IoNumberLadder';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
+import { IoField, IoFieldProps } from './IoField';
 
-export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
+export type IoNumberProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
   value?: number;
   live?: boolean;
   conversion?: number;
@@ -19,7 +19,7 @@ export type IoNumberProps = IoInputBaseProps & PropsWithBinding<{
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
 @Register
-export class IoNumber extends IoInputBase {
+export class IoNumber extends IoField {
   static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
@@ -146,16 +146,16 @@ export class IoNumber extends IoInputBase {
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
     const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this as unknown as Node);
 
-    if (event.which === 27 || event.which === 13 || event.which === 32) { //  esc || enter || space
+    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       this._setFromTextNode();
-    } else if (event.which === 36) { // home
+    } else if (event.key === 'Home') { // home
       this.textNode = this.min;
       this._setFromTextNode();
-    } else if (event.which === 35) { // end
+    } else if (event.key === 'End') { // end
       this.textNode = this.max;
       this._setFromTextNode();
-    } else if (event.which === 33) { // pgup
+    } else if (event.key === 'PageUp') { // pgup
       const valueNumber = Number(this.textNode);
       if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
         this.textNode = Number(this.textNode) + this.step;
@@ -163,7 +163,7 @@ export class IoNumber extends IoInputBase {
         this.textNode = this.step;
       }
       this._setFromTextNode();
-    } else if (event.which === 34) { // pgdown
+    } else if (event.key === 'PageDown') { // pgdown
       const valueNumber = Number(this.textNode);
       if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
         this.textNode = Number(this.textNode) - this.step;
@@ -171,39 +171,38 @@ export class IoNumber extends IoInputBase {
         this.textNode = -this.step;
       }
       this._setFromTextNode();
-    } else if (event.which === 37) { // left
+    } else if (event.key === 'ArrowLeft') { // left
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        this.focusTo('left');
+        focusTo(this, 'left');
       }
-    } else if (event.which === 38) { // up
+    } else if (event.key === 'ArrowUp') { // up
       if (IoNumberLadderSingleton.expanded) {
         const upStep = IoNumberLadderSingleton.querySelector('.io-up1');
         if (upStep) upStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        this.focusTo('up');
+        focusTo(this, 'up');
       }
-    } else if (event.which === 39) { // right
+    } else if (event.key === 'ArrowRight') { // right
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        this.focusTo('right');
+        focusTo(this, 'right');
       }
-    } else if (event.which === 40) { // down
+    } else if (event.key === 'ArrowDown') { // down
       if (IoNumberLadderSingleton.expanded) {
         const downStep = IoNumberLadderSingleton.querySelector('.io-down1');
         if (downStep) downStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        this.focusTo('down');
+        focusTo(this, 'down');
       }
     }
   }
   onKeyup(event: KeyboardEvent) {
-    // TODO: depricate which
-    if (event.which === 17) { // ctrl
-      this._expandLadder();
-    } else if (event.which === 27 || event.which === 13 || event.which === 32) { // esc || enter || space
+    if (event.key === 'Control') { // ctrl
+      this._expandLadder(); // TODO: toggle ladder
+    } else if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
       IoOverlaySingleton.expanded = false;
     }
 

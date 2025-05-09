@@ -21,7 +21,7 @@ type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${T
 
 // Utility type to add Binding to all properties of a type
 export type PropsWithBinding<T> = {
-  [K in keyof T]: T[K] | Binding;
+  [K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
 };
 
 export type NodeProps = PropsWithBinding<{
@@ -46,7 +46,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
     }
     declare readonly _protochain: ProtoChain;
     declare readonly _properties: Map<string, PropertyInstance>;
-    declare readonly _bindings: Map<string, Binding>;
+    declare readonly _bindings: Map<string, Binding<any>>;
     declare readonly _changeQueue: ChangeQueue;
     declare readonly _eventDispatcher: EventDispatcher;
 
@@ -339,14 +339,14 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      * @param {string} name - Property name to bind to.
      * @return {Binding} Binding object.
      */
-    bind(name: string): Binding {
+    bind<T>(name: string) {
       debug: if (!this._properties.has(name)) {
         console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`);
       }
       if (!this._bindings.has(name)) {
-        this._bindings.set(name, new Binding(this, name));
+        this._bindings.set(name, new Binding<T>(this, name));
       }
-      return this._bindings.get(name) as Binding;
+      return this._bindings.get(name)! as Binding<T>;
     }
     /**
      * Unbinds a binding to a specified property`.

@@ -241,13 +241,13 @@ export class MenuOptions extends NodeMixin(Array) {
     return false;
   }
 
-  bind(prop: string) {
-    debug: if (prop === 'last' || prop === 'scroll') {
-      console.warn('MenuPath: Binding to `last` or `scroll` property is not recommended!');
-      // TODO: remove this warning and test edge cases. Binding to last is useful for nested options.
-    }
-    return super.bind(prop);
-  }
+  // bind<T>(prop: string): Binding<T> {
+  //   debug: if (prop === 'last' || prop === 'scroll') {
+  //     console.warn('MenuPath: Binding to `last` or `scroll` property is not recommended!');
+  //     // TODO: remove this warning and test edge cases. Binding to last is useful for nested options.
+  //   }
+  //   return super.bind<T>(prop);
+  // }
 
   dispose() {
     for (let i = 0; i < this.length; i++) {

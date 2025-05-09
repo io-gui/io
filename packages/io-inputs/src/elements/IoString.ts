@@ -1,19 +1,18 @@
-import { Register, Property, VDOMElement, PropsWithBinding, Default } from 'io-gui';
-import { IoInputBase, IoInputBaseProps } from './IoInputBase';
+import { Register, Property, VDOMElement, Default, focusTo, Binding } from 'io-gui';
+import { IoField, IoFieldProps } from './IoField';
 
-export type IoStringProps = IoInputBaseProps & PropsWithBinding<{
-  value?: string;
-  live?: boolean;
-  placeholder?: string;
+export type IoStringProps = Omit<IoFieldProps, 'value'> & {
+  value?: string | Binding<string>;
+  live?: boolean | Binding<boolean>;
+  placeholder?: string | Binding<string>;
   appearance?: 'neutral' | 'inset' | 'outset';
-  role?: string;
-}>;
+};
 
 /**
  * Input element for `String` data type.
  **/
 @Register
-export class IoString extends IoInputBase {
+export class IoString extends IoField {
   static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
@@ -117,22 +116,22 @@ export class IoString extends IoInputBase {
     } else if (event.key === 'ArrowLeft') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        this.focusTo('left');
+        focusTo(this, 'left');
       }
     } else if (event.key === 'ArrowUp') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        this.focusTo('up');
+        focusTo(this, 'up');
       }
     } else if (event.key === 'ArrowRight') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        this.focusTo('right');
+        focusTo(this, 'right');
       }
     } else if (event.key === 'ArrowDown') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        this.focusTo('down');
+        focusTo(this, 'down');
       }
     }
   }
