@@ -42,7 +42,7 @@ export class MenuItem extends Node {
   @Property({value: false, type: Boolean})
   declare disabled: boolean;
 
-  @Property({value: undefined, type: Function})
+  @Property({value: undefined, type: Function, init: null})
   declare action?: (value?: any) => void;
 
   @Property({value: 'select', type: String})

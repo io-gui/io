@@ -292,6 +292,9 @@ export class IoSlider extends IoGl {
     }
   }
   init() {
+    this.valueChanged();
+    this.minChanged();
+    this.maxChanged();
     this.changed();
   }
   invalidChanged() {
@@ -303,13 +306,13 @@ export class IoSlider extends IoGl {
   }
   valueChanged() {
     this.invalid = isNaN(this.value);
-    this.ariaValuenow = this.value;
+    this.ariaValueNow = this.value;
   }
   minChanged() {
-    this.ariaValuemin = this.min;
+    this.ariaValueMin = this.min;
   }
   maxChanged() {
-    this.ariaValuemax = this.max;
+    this.ariaValueMax = this.max;
   }
 }
 export const ioSlider = IoSlider.vConstructor;

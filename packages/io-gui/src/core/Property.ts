@@ -1,6 +1,8 @@
 import { Binding } from './Binding';
 import { AnyConstructor, Node } from '../nodes/Node';
 
+// TODO: make init: null default.
+
 /**
  * Configuration for a property of an Node class.
  * @typedef {Object} PropertyDefinition

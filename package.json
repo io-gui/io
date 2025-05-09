@@ -293,48 +293,72 @@
     "bundle:colors": {
       "command": "rollup -c ./packages/io-colors/rollup.config.js && find ./packages/io-colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-colors/build/* ./packages/io-colors/bundle && rm -rf ./packages/io-colors/build && mv ./packages/io-colors/bundle ./packages/io-colors/build",
       "dependencies": [
+        "bundle:gui",
+        "bundle:inputs",
+        "bundle:sliders",
         "build:colors"
       ]
     },
     "bundle:icons": {
       "command": "rollup -c ./packages/io-icons/rollup.config.js && find ./packages/io-icons/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-icons/build/* ./packages/io-icons/bundle && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
       "dependencies": [
+        "bundle:gui",
         "build:icons"
       ]
     },
     "bundle:inputs": {
       "command": "rollup -c ./packages/io-inputs/rollup.config.js && find ./packages/io-inputs/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-inputs/build/* ./packages/io-inputs/bundle && rm -rf ./packages/io-inputs/build && mv ./packages/io-inputs/bundle ./packages/io-inputs/build",
       "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
         "build:inputs"
       ]
     },
     "bundle:editors": {
       "command": "rollup -c ./packages/io-editors/rollup.config.js && find ./packages/io-editors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-editors/build/* ./packages/io-editors/bundle && rm -rf ./packages/io-editors/build && mv ./packages/io-editors/bundle ./packages/io-editors/build",
       "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:sliders",
+        "bundle:colors",
+        "bundle:menus",
+        "bundle:navigation",
         "build:editors"
       ]
     },
     "bundle:markdown": {
       "command": "rollup -c ./packages/io-markdown/rollup.config.js && find ./packages/io-markdown/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-markdown/build/* ./packages/io-markdown/bundle && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
       "dependencies": [
+        "bundle:gui",
         "build:markdown"
       ]
     },
     "bundle:menus": {
       "command": "rollup -c ./packages/io-menus/rollup.config.js && find ./packages/io-menus/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-menus/build/* ./packages/io-menus/bundle && rm -rf ./packages/io-menus/build && mv ./packages/io-menus/bundle ./packages/io-menus/build",
       "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
         "build:menus"
       ]
     },
     "bundle:navigation": {
       "command": "rollup -c ./packages/io-navigation/rollup.config.js && find ./packages/io-navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-navigation/build/* ./packages/io-navigation/bundle && rm -rf ./packages/io-navigation/build && mv ./packages/io-navigation/bundle ./packages/io-navigation/build",
       "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:menus",
+        "bundle:markdown",
         "build:navigation"
       ]
     },
     "bundle:sliders": {
       "command": "rollup -c ./packages/io-sliders/rollup.config.js && find ./packages/io-sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-sliders/build/* ./packages/io-sliders/bundle && rm -rf ./packages/io-sliders/build && mv ./packages/io-sliders/bundle ./packages/io-sliders/build",
       "dependencies": [
+        "bundle:gui",
+        "bundle:inputs",
         "build:sliders"
       ]
     },
