@@ -1,10 +1,10 @@
-import { ProtoProperty } from './Property';
+import { ReactiveProtoProperty } from './ReactiveProperty';
 import { ListenerDefinition } from './EventDispatcher';
-import { Node, NodeConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
 type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
-type ProtoProperties = {
-    [property: string]: ProtoProperty;
+type ReactiveProtoProperties = {
+    [property: string]: ReactiveProtoProperty;
 };
 type ProtoListeners = {
     [property: string]: ListenerDefinition[];
@@ -26,17 +26,17 @@ export declare class ProtoChain {
      */
     constructors: ProtoConstructors;
     /**
-     * Aggregated property definition declared in `static get Properties()` or @Property() decorators
+     * Aggregated property definition declared in `static get ProtoProperties()` or @ReactiveProperty() decorators
      */
-    properties: ProtoProperties;
+    reactiveProperties: ReactiveProtoProperties;
     /**
      * Aggregated listener definition declared in `static get Listeners()`
      */
     listeners: ProtoListeners;
     /**
-     * Aggregated default value for properties declared in `static get Defaults()` or @Default() decorators
+     * Aggregated initial value for properties declared in `static get ReactiveProperties()` or @Property() decorators
     */
-    defaults: Record<string, any>;
+    properties: Record<string, any>;
     /**
      * Aggregated CSS style definition declared in `static get Style()`
      */
@@ -64,14 +64,14 @@ export declare class ProtoChain {
      */
     addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>): void;
     /**
-     * Adds static properties from `static get Properties()` to the properties array.
+     * Adds static properties from `static get ReactiveProperties()` to the properties array.
      * Only process properties if they differ from superclass.
-     * This prevents 'static get Properties()' from overriding subclass properties defined in decorators.
-     * @param {PropertyDefinitions} properties - Properties to add
+     * This prevents 'static get ReactiveProperties()' from overriding subclass properties defined in decorators.
+     * @param {ReactivePropertyDefinitions} properties - Properties to add
      * @param {string} prevHash - Previous properties hash
      * @returns {string} - Updated properties hash
      */
-    addStaticProperties(properties?: PropertyDefinitions, prevHash?: string): string;
+    addStaticProperties(properties?: ReactivePropertyDefinitions, prevHash?: string): string;
     /**
      * Merges or appends a listener definitions to the existing listeners array.
      * @param {ListenerDefinitions} listenerDefs - Listener definitions to add

@@ -5,7 +5,7 @@ Io-Gui is a lightweight (~16KB gzipped) library that provides core features for 
 At the core of IoGui there are two basic classes. First, there is `Node` - essentially an `Object` with core Io-Gui features built-in. Second, there is `IoElement` - a custom `HTMLElement` with all of the same features as well as some DOM-specific ones. You can extend these classes to create your own nodes and custom elements.
 
 ### Reactive Properties
-Simply define properties using `@Property()` decorator or in the `static get Properties() {}` function, and your components will automatically dispatch `'[propertyName]-changed'` events and invoke `.[propertyName]Changed(change)` handlers. Lastly, `changed()` handler will be invoked.
+Simply define properties using `@Property()` decorator or in the `static get ReactiveProperties() {}` function, and your components will automatically dispatch `'[propertyName]-changed'` events and invoke `.[propertyName]Changed(change)` handlers. Lastly, `changed()` handler will be invoked.
 
 ### Observed Object Mutations
 If a property is defined with a type of `Node` or `IoElement`, it will automatically be observed for mutations. After object mutation, the `'[propertyName]Mutated()'` handler will be invoked. While properties of other object types are also observed for mutations, the `'object-mutated'` event must be manually dispatched by the component responsible for the mutation.

@@ -1,20 +1,20 @@
-import { IoElement, VDOMElement, NudgeDirection, IoElementProps, PropsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, NudgeDirection, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
-export type IoMenuOptionsProps = IoElementProps & PropsWithBinding<{
+export type IoMenuOptionsProps = IoElementProps & {
     options?: MenuOptions;
-    expanded?: boolean;
+    expanded?: WithBinding<boolean>;
     horizontal?: boolean;
     searchable?: boolean;
-    search?: string;
+    search?: WithBinding<string>;
     direction?: NudgeDirection;
     depth?: number;
     noPartialCollapse?: boolean;
     inlayer?: boolean;
     slotted?: VDOMElement[];
     $parent?: IoMenuItem | IoContextMenu;
-}>;
+};
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/

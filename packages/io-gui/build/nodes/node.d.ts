@@ -1,26 +1,24 @@
 import { ProtoChain } from '../core/ProtoChain';
 import { Binding } from '../core/Binding';
 import { ChangeQueue } from '../core/ChangeQueue';
-import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property';
+import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty';
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
 import { CallbackFunction } from '../core/Queue';
 export type AnyConstructor = new (...args: any[]) => unknown;
-export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
+export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 export interface NodeConstructor<T> {
     new (...args: any[]): T;
-    Properties?: PropertyDefinitions;
+    ReactiveProperties?: ReactivePropertyDefinitions;
     Listeners?: ListenerDefinitions;
     Style?: string;
 }
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
-export type PropsWithBinding<T> = {
-    [K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
-};
-export type NodeProps = PropsWithBinding<{
+export type WithBinding<T> = T | Binding<T>;
+export type NodeProps = {
     reactivity?: 'none' | 'immediate' | 'throttled' | 'debounced';
     [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
-}>;
+};
 /**
  * Core mixin for `Node` classes.
  * @param {function} superclass - Class to extend.
@@ -30,7 +28,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
     new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
-        readonly _properties: Map<string, PropertyInstance>;
+        readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
         readonly _bindings: Map<string, Binding<any>>;
         readonly _changeQueue: ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
@@ -139,16 +137,13 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
         Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
-    readonly Properties: PropertyDefinitions;
+    readonly ReactiveProperties: ReactivePropertyDefinitions;
 };
 declare const Node_base: {
-    new (args?: PropsWithBinding<{
-        [key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
-        reactivity?: "none" | "immediate" | "throttled" | "debounced";
-    }>, ...superProps: any[]): {
+    new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: ProtoChain;
-        readonly _properties: Map<string, PropertyInstance>;
+        readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
         readonly _bindings: Map<string, Binding<any>>;
         readonly _changeQueue: ChangeQueue;
         readonly _eventDispatcher: EventDispatcher;
@@ -257,7 +252,7 @@ declare const Node_base: {
         Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
-    readonly Properties: PropertyDefinitions;
+    readonly ReactiveProperties: ReactivePropertyDefinitions;
 };
 /**
  * NodeMixin applied to `Object` class.

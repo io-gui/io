@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
-export type IoVectorProps = IoElementProps & PropsWithBinding<{
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-gui';
+export type IoVectorProps = IoElementProps & {
     value?: {
         x: number;
         y: number;
@@ -11,9 +11,9 @@ export type IoVectorProps = IoElementProps & PropsWithBinding<{
     min?: number;
     max?: number;
     linkable?: boolean;
-    linked?: boolean;
+    linked?: WithBinding<boolean>;
     ladder?: boolean;
-}>;
+};
 /**
  * Input element for vector arrays and objects.
  **/

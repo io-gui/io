@@ -1,9 +1,9 @@
-import { PropsWithBinding, VDOMElement } from 'io-gui';
+import { VDOMElement } from 'io-gui';
 import { IoButton, IoButtonProps } from 'io-inputs';
-export type IoPropertyLinkProps = IoButtonProps & PropsWithBinding<{
+export type IoPropertyLinkProps = IoButtonProps & {
     value?: Object;
     showName?: boolean;
-}>;
+};
 export declare class IoPropertyLink extends IoButton {
     static vConstructor: (arg0?: IoPropertyLinkProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;

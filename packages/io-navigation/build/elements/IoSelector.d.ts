@@ -1,15 +1,15 @@
-import { IoElement, VDOMElement, IoElementProps, PropsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-export type IoSelectorProps = IoElementProps & PropsWithBinding<{
+export type IoSelectorProps = IoElementProps & {
     options?: MenuOptions;
     select?: 'first' | 'last';
     elements?: VDOMElement[];
     cache?: boolean;
     precache?: boolean;
     precacheDelay?: number;
-    loading?: boolean;
+    loading?: WithBinding<boolean>;
     import?: string;
-}>;
+};
 export declare class IoSelector extends IoElement {
     static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;

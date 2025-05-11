@@ -1,10 +1,10 @@
-import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
-export type IoMarkdownProps = IoElementProps & PropsWithBinding<{
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-gui';
+export type IoMarkdownProps = IoElementProps & {
     src?: string;
     strip?: string[];
-    loading?: boolean;
+    loading?: WithBinding<boolean>;
     sanitize?: boolean;
-}>;
+};
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
  */

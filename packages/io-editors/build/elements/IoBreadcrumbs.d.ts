@@ -1,10 +1,9 @@
-import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
-export type IoBreadcrumbsProps = IoElementProps & PropsWithBinding<{
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-gui';
+export type IoBreadcrumbsProps = IoElementProps & {
     value?: Object;
-    selected?: Object;
-    crumbs?: Array<Object>;
-    search?: string;
-}>;
+    selected?: WithBinding<Object>;
+    search?: WithBinding<string>;
+};
 /**
  * Breadcrumbs select element.
  * When breadcrumb item is clicked or activated by space/enter key, it sets the value to corresponding option value.
@@ -15,8 +14,8 @@ export declare class IoBreadcrumbs extends IoElement {
     static get Style(): string;
     value: Object;
     selected: Object;
-    crumbs: Array<Object>;
     search: string;
+    _crumbs: Array<Object>;
     valueChanged(): void;
     selectedChanged(): void;
     onClearSearch(): void;

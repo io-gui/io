@@ -1,8 +1,8 @@
-import { PropsWithBinding, VDOMElement } from 'io-gui';
+import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
-export type IoButtonProps = IoFieldProps & PropsWithBinding<{
+export type IoButtonProps = IoFieldProps & {
     action?: Function;
-}>;
+};
 /**
  * Button element.
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.

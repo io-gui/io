@@ -1,18 +1,18 @@
-import { NodeProps, PropsWithBinding } from 'io-gui';
+import { NodeProps, WithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
-export type MenuOptionsProps = NodeProps & PropsWithBinding<{
-    first?: any;
-    last?: any;
-    scroll?: string;
+export type MenuOptionsProps = NodeProps & {
+    first?: WithBinding<any>;
+    last?: WithBinding<any>;
+    scroll?: WithBinding<string>;
     path?: string;
     delimiter?: string;
     items?: MenuItem[];
-}>;
+};
 declare const MenuOptions_base: {
     new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: import("io-gui").ProtoChain;
-        readonly _properties: Map<string, import("io-gui").PropertyInstance>;
+        readonly _reactiveProperties: Map<string, import("io-gui").ReactivePropertyInstance>;
         readonly _bindings: Map<string, import("io-gui").Binding<any>>;
         readonly _changeQueue: import("io-gui").ChangeQueue;
         readonly _eventDispatcher: import("io-gui").EventDispatcher;
@@ -36,7 +36,7 @@ declare const MenuOptions_base: {
         Register(ioNodeConstructor: typeof import("io-gui").Node): void;
     };
     [x: string]: any;
-    readonly Properties: import("io-gui").PropertyDefinitions;
+    readonly ReactiveProperties: import("io-gui").ReactivePropertyDefinitions;
 };
 export declare class MenuOptions extends MenuOptions_base {
     first: any;

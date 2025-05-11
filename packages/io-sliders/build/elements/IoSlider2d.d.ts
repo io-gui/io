@@ -1,6 +1,6 @@
-import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { VDOMElement } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
-export type IoSlider2dProps = IoSliderBaseProps & PropsWithBinding<{}>;
+export type IoSlider2dProps = IoSliderBaseProps & {};
 export declare class IoSlider2d extends IoSliderBase {
     static vConstructor: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;

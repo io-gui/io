@@ -1,9 +1,9 @@
-import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { VDOMElement } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
-export type IoNavigatorMdViewProps = IoNavigatorBaseProps & PropsWithBinding<{
+export type IoNavigatorMdViewProps = IoNavigatorBaseProps & {
     strip?: string[];
     sanitize?: boolean;
-}>;
+};
 export declare class IoNavigatorMdView extends IoNavigatorBase {
     static vConstructor: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     strip: string[];

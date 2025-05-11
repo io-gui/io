@@ -1,11 +1,11 @@
-import { IoElement, VDOMElement, IoElementProps, PropsWithBinding } from 'io-gui';
-export type IoCollapsibleProps = IoElementProps & PropsWithBinding<{
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
+export type IoCollapsibleProps = IoElementProps & {
     elements?: VDOMElement[];
     label?: string;
     direction?: 'column' | 'row';
     icon?: string;
-    expanded?: boolean;
-}>;
+    expanded?: WithBinding<boolean>;
+};
 /**
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.

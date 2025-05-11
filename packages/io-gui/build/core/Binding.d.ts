@@ -60,7 +60,7 @@ export declare class Binding<T extends unknown> {
     getTargetProperties(target: Node): Properties;
     /**
      * Adds a target node and property.
-     * Sets itself as the binding reference on the target `PropertyInstance`.
+     * Sets itself as the binding reference on the target `ReactivePropertyInstance`.
      * Adds a `[propName]-changed` listener to the target node.
      * @param {Node} target - Target node
      * @param {string} property - Target property
@@ -69,7 +69,7 @@ export declare class Binding<T extends unknown> {
     /**
      * Removes target node and property.
      * If `property` is not specified, it removes all target properties.
-     * Removes binding reference from the target `PropertyInstance`.
+     * Removes binding reference from the target `ReactivePropertyInstance`.
      * Removes `[propName]-changed` listener from the target node.
      * @param {Node} target - Target node
      * @param {string} property - Target property

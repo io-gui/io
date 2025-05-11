@@ -1,6 +1,6 @@
-import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { VDOMElement } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
-export type IoSliderRangeProps = IoSliderBaseProps & PropsWithBinding<{}>;
+export type IoSliderRangeProps = IoSliderBaseProps & {};
 /**
  * Input element for `Array(2)` data type displayed as slider.
  * It can be configured to clamp the `value` compoents to `min` / `max` and round it to the nearest `step` increment. `exponent` property can be changed for non-linear scale.

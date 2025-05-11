@@ -2,13 +2,10 @@ import { VDOMElement, NativeElementProps } from '../vdom/VDOM';
 import { Node, NodeProps } from '../nodes/Node';
 export type IoElementProps = NativeElementProps & NodeProps;
 declare const IoElement_base: {
-    new (args?: import("../nodes/Node").PropsWithBinding<{
-        [key: `@${string}`]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
-        reactivity?: "none" | "immediate" | "throttled" | "debounced";
-    }>, ...superProps: any[]): {
+    new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
         readonly _protochain: import("..").ProtoChain;
-        readonly _properties: Map<string, import("..").PropertyInstance>;
+        readonly _reactiveProperties: Map<string, import("..").ReactivePropertyInstance>;
         readonly _bindings: Map<string, import("..").Binding<any>>;
         readonly _changeQueue: import("..").ChangeQueue;
         readonly _eventDispatcher: import("..").EventDispatcher;
@@ -32,7 +29,7 @@ declare const IoElement_base: {
         Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
-    readonly Properties: import("../nodes/Node").PropertyDefinitions;
+    readonly ReactiveProperties: import("../nodes/Node").ReactivePropertyDefinitions;
 };
 /**
  * Core `IoElement` class.

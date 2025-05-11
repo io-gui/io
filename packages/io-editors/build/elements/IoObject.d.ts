@@ -1,17 +1,17 @@
-import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-gui';
 import { EditorConfig } from '../utils/EditorConfig';
 import { EditorGroups } from '../utils/EditorGroups';
 import { EditorWidgets } from '../utils/EditorWidgets';
-export type IoObjectProps = IoElementProps & PropsWithBinding<{
+export type IoObjectProps = IoElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[];
+    labeled?: boolean;
+    label?: string;
+    expanded?: WithBinding<boolean>;
     config?: EditorConfig;
     groups?: EditorGroups;
     widgets?: EditorWidgets;
-    labeled?: boolean;
-    label?: string;
-    expanded?: boolean;
-}>;
+};
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
@@ -20,12 +20,12 @@ export declare class IoObject extends IoElement {
     static get Style(): string;
     value: Record<string, any> | any[];
     properties: string[];
-    config: EditorConfig;
-    groups: EditorGroups;
-    widgets: EditorWidgets;
     labeled: boolean;
     label: string;
     expanded: boolean;
+    config: EditorConfig;
+    groups: EditorGroups;
+    widgets: EditorWidgets;
     role: string;
     changed(): void;
 }

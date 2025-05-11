@@ -1,11 +1,11 @@
-import { IoElement, Change, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoElement, Change, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
-export type IoOptionMenuProps = IoElementProps & PropsWithBinding<{
-    value?: any;
+export type IoOptionMenuProps = IoElementProps & {
+    value?: WithBinding<any>;
     options?: MenuOptions;
     item?: MenuItem;
-}>;
+};
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
  * When clicked or activated by space/enter key, it expands a menu with selectable options.

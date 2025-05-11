@@ -1,9 +1,9 @@
-import { IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoElement, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
 import { IoNumber } from './IoNumber';
-export type IoNumberLadderProps = IoElementProps & PropsWithBinding<{
+export type IoNumberLadderProps = IoElementProps & {
     src?: IoNumber;
-    expanded?: boolean;
-}>;
+    expanded?: WithBinding<boolean>;
+};
 /**
  * Interactive number ladder.
  * When dragged horizontally, it changes the value in step increments.

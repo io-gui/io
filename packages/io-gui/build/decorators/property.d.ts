@@ -1,10 +1,9 @@
-import { PropertyDefinitionLoose } from '../core/Property';
-import { Node, AnyConstructor, PropertyDefinitions } from '../nodes/Node';
-export declare const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions>;
+import { Node, AnyConstructor } from '../nodes/Node';
+export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>>;
 /**
- * Allows property definitions using decorator pattern.
- * @param {PropertyDefinitionLoose} propertyDefinition - Property definition.
+ * Sets a initial value for a property.
+ * @param {any} initialValue - Initial value.
  * @return {Function} Property decorator function.
  */
-export declare const Property: (propertyDefinition?: PropertyDefinitionLoose) => (target: Node, propertyName: string) => void;
+export declare const Property: (initialValue: any) => (target: Node, propertyName: string) => void;
 //# sourceMappingURL=Property.d.ts.map

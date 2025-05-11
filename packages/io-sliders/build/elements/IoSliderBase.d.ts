@@ -1,13 +1,13 @@
-import { IoGl, IoGlProps, VDOMElement, PropsWithBinding } from 'io-gui';
-export type IoSliderBaseProps = IoGlProps & PropsWithBinding<{
-    value?: number | [number, number];
+import { IoGl, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
+export type IoSliderBaseProps = IoElementProps & {
+    value?: WithBinding<number | [number, number]>;
     step?: number | [number, number];
     min?: number | [number, number];
     max?: number | [number, number];
     exponent?: number;
     vertical?: boolean;
     noscroll?: boolean;
-}>;
+};
 export declare class IoSliderBase extends IoGl {
     static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;

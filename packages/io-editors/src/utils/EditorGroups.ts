@@ -52,9 +52,9 @@ export function getAllPropertyNames(obj: object): string[] {
 type PropertyIdentifier = string | RegExp;
 export type PropertyGroups = Record<string, Array<PropertyIdentifier>>;
 export type PropertyGroupsRecord = Record<string, Array<string>>;
-export type EditorGroups = Map<AnyConstructor, ReactivePropertyGroups>
+export type EditorGroups = Map<AnyConstructor, PropertyGroups>
 
-const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, ReactivePropertyGroups>([
+const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
   [Object, {
     Hidden: [new RegExp(/^_/)],
   }],

@@ -1,8 +1,8 @@
-import { IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
-export type IoIconProps = IoElementProps & PropsWithBinding<{
+import { IoElement, IoElementProps, VDOMElement } from 'io-gui';
+export type IoIconProps = IoElementProps & {
     value?: string;
     stroke?: boolean;
-}>;
+};
 /**
  * SVG icon element.
  * It displays SVG content specified via `icon` parameter.

@@ -1,9 +1,9 @@
-import { VDOMElement, Binding } from 'io-gui';
+import { VDOMElement, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 export type IoStringProps = Omit<IoFieldProps, 'value'> & {
-    value?: string | Binding<string>;
-    live?: boolean | Binding<boolean>;
-    placeholder?: string | Binding<string>;
+    value?: WithBinding<string>;
+    live?: boolean;
+    placeholder?: string;
     appearance?: 'neutral' | 'inset' | 'outset';
 };
 /**

@@ -1,5 +1,5 @@
-import { IoGl, IoGlProps, Binding, VDOMElement } from 'io-gui';
-export type IoSliderProps = IoGlProps & {
+import { IoGl, IoElementProps, Binding, VDOMElement } from 'io-gui';
+export type IoSliderProps = IoElementProps & {
     value?: number | Binding<number>;
     step?: number;
     min?: number;

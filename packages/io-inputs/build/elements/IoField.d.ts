@@ -1,10 +1,10 @@
-import { VDOMElement, Binding, IoElement, IoElementProps } from 'io-gui';
+import { VDOMElement, IoElement, IoElementProps, WithBinding } from 'io-gui';
 export type IoFieldProps = IoElementProps & {
-    value?: any | Binding<any>;
-    icon?: string | Binding<string>;
-    label?: string | Binding<string>;
-    selected?: boolean | Binding<boolean>;
-    disabled?: boolean | Binding<boolean>;
+    value?: WithBinding<any>;
+    icon?: string;
+    label?: string;
+    selected?: boolean;
+    disabled?: boolean;
     appearance?: 'neutral' | 'inset' | 'outset';
     pattern?: string;
 };

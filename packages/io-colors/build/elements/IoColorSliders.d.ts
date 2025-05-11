@@ -1,12 +1,12 @@
-import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { VDOMElement, WithBinding } from 'io-gui';
 import { IoColorBase, IoColorBaseProps } from './IoColorBase';
 import { IoSlider, IoSlider2d } from 'io-sliders';
-export type IoColorSliderProps = IoColorBaseProps & PropsWithBinding<{
-    color?: [number, number, number, number];
+export type IoColorSliderProps = IoColorBaseProps & {
+    color?: WithBinding<[number, number, number, number]>;
     step?: number;
     channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
     vertical?: boolean;
-}>;
+};
 /**
  * A generic color slider element.
  * It is a wrapper for channel-specific sliders which are added as a child of this element depending on the `channel` property.
@@ -28,6 +28,7 @@ export declare const ioColorSlider: (arg0?: IoColorSliderProps | Array<VDOMEleme
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 declare class IoColorSliderBase extends IoSlider {
+    color: [number, number, number, number];
     static get GlUtils(): string;
     static get Frag(): string;
     valueMutated(): void;
@@ -37,6 +38,7 @@ declare class IoColorSliderBase extends IoSlider {
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 declare class IoColorSlider2dBase extends IoSlider2d {
+    color: [number, number, number, number];
     static get GlUtils(): string;
     static get Frag(): string;
     valueMutated(): void;

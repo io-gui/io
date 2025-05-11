@@ -1,12 +1,12 @@
-import { IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
-export type IoColorBaseProps = IoElementProps & PropsWithBinding<{
-    value?: {
+import { IoElement, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
+export type IoColorBaseProps = IoElementProps & {
+    value?: WithBinding<{
         r: number;
         g: number;
         b: number;
         a?: number;
-    };
-}>;
+    }>;
+};
 export declare class IoColorBase extends IoElement {
     static vConstructor: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     reactivity: string;

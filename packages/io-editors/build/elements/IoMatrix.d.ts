@@ -1,8 +1,8 @@
-import { PropsWithBinding, VDOMElement } from 'io-gui';
+import { VDOMElement } from 'io-gui';
 import { IoVector, IoVectorProps } from './IoVector';
-export type IoMatrixProps = IoVectorProps & PropsWithBinding<{
+export type IoMatrixProps = IoVectorProps & {
     columns?: number;
-}>;
+};
 /**
  * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
  **/

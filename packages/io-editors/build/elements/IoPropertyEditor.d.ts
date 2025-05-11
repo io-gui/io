@@ -1,15 +1,15 @@
-import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
+import { IoElement, IoElementProps, VDOMElement } from 'io-gui';
 import { EditorConfig } from '../utils/EditorConfig';
 import { EditorGroups } from '../utils/EditorGroups';
 import { EditorWidgets } from '../utils/EditorWidgets';
-export type IoPropertyEditorProps = IoElementProps & PropsWithBinding<{
+export type IoPropertyEditorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[];
+    labeled?: boolean;
     config?: EditorConfig;
     groups?: EditorGroups;
     widgets?: EditorWidgets;
-    labeled?: boolean;
-}>;
+};
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
@@ -19,10 +19,10 @@ export declare class IoPropertyEditor extends IoElement {
     reactivity: string;
     value: Object;
     properties: string[];
+    labeled: boolean;
     config: EditorConfig;
     groups: EditorGroups;
     widgets: EditorWidgets;
-    labeled: boolean;
     _onValueInput(event: CustomEvent): void;
     valueMutated(): void;
     changed(): void;

@@ -1,12 +1,12 @@
-import { IoElement, IoElementProps, PropsWithBinding } from 'io-gui';
-export type IoNumberSliderRangeProps = IoElementProps & PropsWithBinding<{
-    value?: [number, number];
+import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+export type IoNumberSliderRangeProps = IoElementProps & {
+    value?: WithBinding<[number, number]>;
     step?: number;
     min?: number;
     max?: number;
     exponent?: number;
     conversion?: number;
-}>;
+};
 /**
  * Input element for `Array(2)` data type combining `IoNumber` and `IoSliderRange`
  **/

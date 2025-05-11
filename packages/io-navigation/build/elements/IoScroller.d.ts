@@ -1,8 +1,8 @@
-import { IoElement, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
+import { IoElement, IoElementProps, VDOMElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-export type IoScrollerProps = IoElementProps & PropsWithBinding<{
+export type IoScrollerProps = IoElementProps & {
     options?: MenuOptions;
-}>;
+};
 export declare class IoScroller extends IoElement {
     static vConstructor: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;

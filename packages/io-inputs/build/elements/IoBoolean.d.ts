@@ -1,10 +1,10 @@
-import { VDOMElement, PropsWithBinding } from 'io-gui';
+import { VDOMElement, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
-export type IoBooleanProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
-    value?: boolean;
+export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
+    value?: WithBinding<boolean>;
     true?: string;
     false?: string;
-}>;
+};
 /**
  * Input element for `Boolean` data type displayed as text.
  * It can be configured to display custom `true` or `false` strings.
