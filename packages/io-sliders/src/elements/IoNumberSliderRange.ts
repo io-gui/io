@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementProps, WithBinding, Node } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Node } from 'io-gui';
 import {ioSliderRange} from './IoSliderRange';
 import {ioNumber} from 'io-inputs';
 
@@ -35,22 +35,22 @@ export class IoNumberSliderRange extends IoElement {
     `;
   }
 
-  @Property({type: Array, init: [0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0]})
   declare value: [number, number];
 
-  @Property(0.01)
+  @ReactiveProperty(0.01)
   declare step: number;
 
-  @Property(0)
+  @ReactiveProperty(0)
   declare min: number;
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare max: number;
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare exponent: number;
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare conversion: number;
 
   constructor(args: IoNumberSliderRangeProps = {}) { super(args); }

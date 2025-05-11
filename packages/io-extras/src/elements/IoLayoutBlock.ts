@@ -45,7 +45,7 @@ export class IoLayoutBlock extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       elements: Object,
       tabs: Array,

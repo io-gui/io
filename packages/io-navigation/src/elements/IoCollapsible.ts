@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Register, Property, div, IoElementProps, WithBinding, Default } from 'io-gui';
+import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
 
 export type IoCollapsibleProps = IoElementProps & {
@@ -67,22 +67,22 @@ export class IoCollapsible extends IoElement {
     `;
   }
 
-  @Property(Array)
+  @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @Property('')
+  @ReactiveProperty('')
   declare label: string;
 
-  @Property({value: 'column', reflect: true})
+  @ReactiveProperty({value: 'column', reflect: true})
   declare direction: 'column' | 'row';
 
-  @Property('')
+  @ReactiveProperty('')
   declare icon: string;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Default('region')
+  @Property('region')
   declare role: string;
 
   changed() {

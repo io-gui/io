@@ -1,4 +1,4 @@
-import { Default } from '../decorators/Default';
+import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM';
 import { Node, NodeMixin, NodeProps } from '../nodes/Node';
@@ -36,13 +36,13 @@ export class IoElement extends NodeMixin(HTMLElement) {
     `;
   }
 
-  @Default(Object)
+  @Property(Object)
   declare $: Record<string, HTMLElement | IoElement>;
 
   constructor(args?: IoElementProps) {
     super(args);
-    for (const name in this._protochain.properties) {
-      const property = this._properties.get(name)!;
+    for (const name in this._protochain.reactiveProperties) {
+      const property = this._reactiveProperties.get(name)!;
       const value = property.value;
       if (value !== undefined && value !== null) {
         if (property.reflect) {
@@ -71,7 +71,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
 
   setProperty(name: string, value: any, debounce = false) {
     super.setProperty(name, value, debounce);
-    const prop = this._properties.get(name)!;
+    const prop = this._reactiveProperties.get(name)!;
     if (prop.reflect) this.setAttribute(name.toLowerCase(), value);
   }
   // TODO: Reconsider cache parameter. Does it belong in the code class?
@@ -186,7 +186,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
    */
   applyProperties(props: any, skipDispatch = false) {
     for (const name in props) {
-      if (this._properties.has(name)) {
+      if (this._reactiveProperties.has(name)) {
         this.setProperty(name, props[name], true);
       } else {
         if (name === 'class') {

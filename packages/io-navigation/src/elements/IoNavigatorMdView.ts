@@ -1,4 +1,4 @@
-import { VDOMElement, Register, Property } from 'io-gui';
+import { VDOMElement, Register, ReactiveProperty } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioScroller } from './IoScroller.js';
 import { ioMarkdown } from 'io-markdown';
@@ -12,10 +12,10 @@ export type IoNavigatorMdViewProps = IoNavigatorBaseProps & {
 export class IoNavigatorMdView extends IoNavigatorBase {
   static vConstructor: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare strip: string[];
 
-  @Property(true)
+  @ReactiveProperty(true)
   declare sanitize: boolean;
 
   getSlotted(): VDOMElement {

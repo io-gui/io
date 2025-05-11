@@ -96,7 +96,7 @@ export class IoElementDemo extends IoElement {
     }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       element: options.bind('last'),
       reactivity: 'debounced'

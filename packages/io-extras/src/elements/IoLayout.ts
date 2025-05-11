@@ -19,7 +19,7 @@ export class IoLayout extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       elements: Array,
       splits: {
@@ -241,7 +241,7 @@ export class IoLayoutDivider extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       orientation: {
         value: 'horizontal',

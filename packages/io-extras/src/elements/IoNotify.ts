@@ -47,7 +47,7 @@ export class IoNotify extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       expanded: {
         value: true,

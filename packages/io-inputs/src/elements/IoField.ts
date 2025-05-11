@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement, IoElement, IoElementProps, span, Default, focusTo, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, span, Property, focusTo, WithBinding } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
@@ -88,37 +88,37 @@ export class IoField extends IoElement {
     `;
   }
 
-  @Property({value: ''})
+  @ReactiveProperty({value: ''})
   declare value: any;
 
-  @Property({type: String, value: ''})
+  @ReactiveProperty({type: String, value: ''})
   declare icon: string;
 
-  @Property({type: String, value: '', reflect: true})
+  @ReactiveProperty({type: String, value: '', reflect: true})
   declare label: string;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare selected: boolean;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare invalid: boolean;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare pressed: boolean;
 
-  @Property({value: 'neutral', reflect: true})
+  @ReactiveProperty({value: 'neutral', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Property({value: '', type: String, reflect: true})
+  @ReactiveProperty({value: '', type: String, reflect: true})
   declare pattern: string;
 
-  @Default(false)
+  @Property(false)
   declare spellcheck: boolean;
 
-  @Default('0')
+  @Property('0')
   declare tabIndex: string;
 
   static get Listeners() {

@@ -1,4 +1,4 @@
-import { NodeMixin, NodeProps, Property, Register, WithBinding } from 'io-gui';
+import { NodeMixin, NodeProps, ReactiveProperty, Register, WithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
 
 function _isNaN(value: any) {
@@ -20,22 +20,22 @@ export type MenuOptionsProps = NodeProps & {
 
 @Register
 export class MenuOptions extends NodeMixin(Array) {
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare first: any;
 
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare last: any;
 
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare scroll: any;
 
-  @Property('')
+  @ReactiveProperty('')
   declare path: string;
 
-  @Property(',')
+  @ReactiveProperty(',')
   declare delimiter: string;
 
-  @Property([])
+  @ReactiveProperty([])
   declare items: MenuItem[];
 
   // TODO: change to `find` and add find by id and label.

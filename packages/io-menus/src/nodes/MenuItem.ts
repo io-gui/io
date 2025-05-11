@@ -1,4 +1,4 @@
-import { Node, Register, NodeProps, Property, WithBinding } from 'io-gui';
+import { Node, Register, NodeProps, ReactiveProperty, WithBinding } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
@@ -24,34 +24,34 @@ export type MenuItemProps = NodeProps & {
 @Register
 export class MenuItem extends Node {
 
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare value: any;
 
-  @Property({value: '', type: String})
+  @ReactiveProperty({value: '', type: String})
   declare label: string;
 
-  @Property({value: '', type: String})
+  @ReactiveProperty({value: '', type: String})
   declare icon: string;
 
-  @Property({value: '', type: String})
+  @ReactiveProperty({value: '', type: String})
   declare hint: string;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare hidden: boolean;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare disabled: boolean;
 
-  @Property({value: undefined, type: Function, init: null})
+  @ReactiveProperty({value: undefined, type: Function, init: null})
   declare action?: (value?: any) => void;
 
-  @Property({value: 'select', type: String})
+  @ReactiveProperty({value: 'select', type: String})
   declare mode: MenuItemSelectType;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare selected: boolean;
 
-  @Property({value: undefined, type: MenuOptions, init: null})
+  @ReactiveProperty({value: undefined, type: MenuOptions, init: null})
   declare options?: MenuOptions;
 
   get hasmore() {

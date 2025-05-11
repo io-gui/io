@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementProps, WithBinding, VDOMElement, div, Default } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, div, Property } from 'io-gui';
 import { ioPropertyLink } from './IoPropertyLink';
 import { ioButton, ioString } from 'io-inputs';
 
@@ -65,16 +65,16 @@ export class IoBreadcrumbs extends IoElement {
     }
     `;
   }
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare value: Object;
 
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare selected: Object;
 
-  @Property({type: String, reflect: true})
+  @ReactiveProperty({type: String, reflect: true})
   declare search: string;
 
-  @Default([])
+  @Property([])
   declare _crumbs: Array<Object>;
 
   valueChanged() {

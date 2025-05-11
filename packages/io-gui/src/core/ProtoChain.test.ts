@@ -1,4 +1,4 @@
-import { ProtoChain, Node, NodeMixin, Property, PropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../index';
+import { ProtoChain, Node, NodeMixin, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../index';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -14,7 +14,7 @@ class HTMLElement3 extends HTMLElement2 {}
 
 @Register
 class Node1 extends Node {
-  static get Properties(): PropertyDefinitions {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop1: {
         init: false
@@ -23,13 +23,13 @@ class Node1 extends Node {
     };
   }
 
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare prop2: Object;
 }
 
 @Register
 class Node3 extends Node1 {
-  static get Properties(): PropertyDefinitions {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop1: {
         init: true,
@@ -38,22 +38,22 @@ class Node3 extends Node1 {
     };
   }
 
-  @Property({init: true})
+  @ReactiveProperty({init: true})
   declare prop1: any;
 
-  @Property({value: 'foo', reflect: false})
+  @ReactiveProperty({value: 'foo', reflect: false})
   declare prop2: any;
 
-  @Property({reflect: true})
+  @ReactiveProperty({reflect: true})
   declare prop3: any;
 }
 
 @Register
 class Node4 extends Node1 {
-  @Property({init: true})
+  @ReactiveProperty({init: true})
   declare prop1: any;
 
-  @Property({})
+  @ReactiveProperty({})
   declare prop2: any;
 }
 
@@ -61,7 +61,7 @@ class IoElement1 extends IoElement {}
 class Node2 extends NodeMixin(Object3) {}
 
 class MockNode1 {
-  static get Properties(): PropertyDefinitions {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop1: {
         init: false
@@ -89,7 +89,7 @@ class MockNode2 extends MockNode1 {
   function2() {}
   onFunction2() {}
   _onFunction2() {}
-  static get Properties(): PropertyDefinitions {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop1: {
         type: Object,
@@ -111,7 +111,7 @@ class MockNode2 extends MockNode1 {
 class MockNode3 extends MockNode2 {}
 
 class MockNode4 extends MockNode2 {
-  static get Properties(): PropertyDefinitions {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop3: {
         type: Node,
@@ -142,40 +142,40 @@ export default class {
         constructors = new ProtoChain(Node2).constructors;
         expect(constructors).to.be.eql([Node2, Object.getPrototypeOf(Node2), Object3, Object2, Object1]);
       });
-      it('Should include all properties declared in `static get Properties()` return oject', () => {
+      it('Should include all properties declared in `static get ReactiveProperties()` return oject', () => {
         let protoChain = new ProtoChain(MockNode1);
-        expect(Object.keys(protoChain.properties)).to.be.eql(['prop1']);
-        expect(protoChain.properties).to.be.eql({
+        expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['prop1']);
+        expect(protoChain.reactiveProperties).to.be.eql({
           prop1:{init: false},
         });
         protoChain = new ProtoChain(MockNode2);
-        expect(Object.keys(protoChain.properties)).to.be.eql(['prop1', 'prop2']);
-        expect(protoChain.properties).to.be.eql({
+        expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['prop1', 'prop2']);
+        expect(protoChain.reactiveProperties).to.be.eql({
           prop1:{type: Object, init: false},
           prop2:{},
         });
       });
       it('Should include all properties declared in Property decorator', () => {
         let protoChain = new ProtoChain(Node1);
-        expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
-        expect(protoChain.properties).to.be.eql({
+        expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
+        expect(protoChain.reactiveProperties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{init: false},
           prop2:{type: Object},
         });
         protoChain = new ProtoChain(Node3);
-        expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
-        expect(protoChain.properties).to.be.eql({
+        expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
+        expect(protoChain.reactiveProperties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{reflect: true, init: true},
           prop2:{value: 'foo', type: Object, reflect: false},
           prop3:{reflect: true},
         });
       });
-      it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
+      it('Should not override properties declared in Property decorator with inherited `static get ReactiveProperties()` return oject', () => {
         const protoChain = new ProtoChain(Node4);
-        expect(Object.keys(protoChain.properties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
-        expect(protoChain.properties).to.be.eql({
+        expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
+        expect(protoChain.reactiveProperties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{init: true},
           prop2:{type: Object},

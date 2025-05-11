@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, Property, span, WithBinding, NativeElementProps } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, span, WithBinding, NativeElementProps } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -60,28 +60,28 @@ export class IoSelector extends IoElement {
     `;
   }
 
-  @Property({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
-  @Property('first')
+  @ReactiveProperty('first')
   declare select: 'first' | 'last';
 
-  @Property(Array)
+  @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @Property({value: false})
+  @ReactiveProperty({value: false})
   declare cache: boolean;
 
-  @Property({value: false})
+  @ReactiveProperty({value: false})
   declare precache: boolean;
 
-  @Property({value: 1000})
+  @ReactiveProperty({value: 1000})
   declare precacheDelay: number;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare loading: boolean;
 
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare private _caches: Record<string, HTMLElement>;
 
   private _selected?: any;

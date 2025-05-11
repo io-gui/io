@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
 export type IoSliderRangeProps = IoSliderBaseProps & {
@@ -17,16 +17,16 @@ export type IoSliderRangeProps = IoSliderBaseProps & {
 export class IoSliderRange extends IoSliderBase {
   static vConstructor: (arg0?: IoSliderRangeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
-  @Property({value: null, type: Array, init: [0, 0]})
+  @ReactiveProperty({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
 
-  @Property(0.01)
+  @ReactiveProperty(0.01)
   declare step: number;
 
-  @Property(0)
+  @ReactiveProperty(0)
   declare min: number;
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare max: number;
 
   _index = 0;

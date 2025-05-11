@@ -39,7 +39,7 @@ export class IoEditorsDemo extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       object: {value: {
         number: 0.5,

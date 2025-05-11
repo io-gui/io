@@ -1,4 +1,4 @@
-import { Register, Property, span, VDOMElement, Default, focusTo } from 'io-gui';
+import { Register, ReactiveProperty, span, VDOMElement, Property, focusTo } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 
 export type IoNumberLadderStepProps = IoFieldProps & {
@@ -35,13 +35,13 @@ export class IoNumberLadderStep extends IoField {
     `;
   }
 
-  @Property({value: 1, type: Number})
+  @ReactiveProperty({value: 1, type: Number})
   declare value: number;
 
-  @Property({value: '', type: String})
+  @ReactiveProperty({value: '', type: String})
   declare label: string;
 
-  @Default('spinbutton')
+  @Property('spinbutton')
   declare role: string;
 
   constructor(args: IoNumberLadderStepProps = {}) { super(args); }

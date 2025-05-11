@@ -77,7 +77,7 @@ export class IoMenusDemo extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       menuPath: '',
       menuRoot: 0,
@@ -207,7 +207,7 @@ export class IoOptionsDemoView extends IoElement {
 
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       options: {
         type: MenuOptions,
@@ -249,7 +249,7 @@ export class IoItemDemoView extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       item: {
         type: MenuItem,
@@ -280,7 +280,7 @@ Register(IoItemDemoView);
 export const ioItemDemoView = IoItemDemoView.vConstructor;
 
 export class IoDemoMenuModel extends IoOptionsDemoView {
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       options: {value: new MenuOptions().fromJSON([
         'home', 

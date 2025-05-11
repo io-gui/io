@@ -12,7 +12,7 @@ Here is a basic example of a reaciteve element `<my-element>` with a `message` p
 import { IoElement, Register } from 'io-gui';
 
 class MyElement extends IoElement {
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       message: ''
     };
@@ -38,7 +38,7 @@ import { IoNavigator, Register, MenuOptions, Storage as $ } from 'io-gui';
 import { ioMarkdown } from 'io-markdown';
 
 export class MyWebsite extends IoNavigator {
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       // TODO: update!
       menu: 'top', // This can also be 'left', 'right' or 'bottom'.

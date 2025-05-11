@@ -97,7 +97,7 @@ export class IoNavigationDemo extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       string: 'Hello!',
       number: 1,

@@ -7,7 +7,7 @@ import { todoFooter } from './TodoFooter.js';
 import { todoInfo } from './TodoInfo.js';
 
 export class TodoApp extends IoElement {
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       model: {
         type: TodoModel,

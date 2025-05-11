@@ -1,10 +1,10 @@
-import { Binding, Node, Register, Property } from '../index';
+import { Binding, Node, Register, ReactiveProperty } from '../index';
 
 @Register
 class TestNode extends Node {
-  @Property(0)
+  @ReactiveProperty(0)
   declare prop1: number;
-  @Property(0)
+  @ReactiveProperty(0)
   declare prop2: number;
 }
 
@@ -75,10 +75,10 @@ export default class {
         expect(binding1.targets[1]).to.be.equal(dstNode1);
         expect(binding1.targets[2]).to.be.equal(undefined);
 
-        expect(dstNode0._properties.get('prop1')!.binding).to.be.equal(binding0);
-        expect(dstNode0._properties.get('prop2')!.binding).to.be.equal(binding1);
-        expect(dstNode1._properties.get('prop1')!.binding).to.be.equal(binding1);
-        expect(dstNode1._properties.get('prop2')!.binding).to.be.equal(binding1);
+        expect(dstNode0._reactiveProperties.get('prop1')!.binding).to.be.equal(binding0);
+        expect(dstNode0._reactiveProperties.get('prop2')!.binding).to.be.equal(binding1);
+        expect(dstNode1._reactiveProperties.get('prop1')!.binding).to.be.equal(binding1);
+        expect(dstNode1._reactiveProperties.get('prop2')!.binding).to.be.equal(binding1);
 
         const binding0target0Props = binding0.getTargetProperties(dstNode0);
         const binding0target1Props = binding0.getTargetProperties(dstNode1);
@@ -97,7 +97,7 @@ export default class {
         binding1.removeTarget(dstNode1, 'prop1');
         expect(binding1target1Props[0]).to.be.equal('prop2');
         expect(binding1target1Props.length).to.be.equal(1);
-        expect(dstNode1._properties.get('prop1')!.binding).to.be.equal(undefined);
+        expect(dstNode1._reactiveProperties.get('prop1')!.binding).to.be.equal(undefined);
 
         expect(dstNode1._eventDispatcher.addedListeners).to.be.eql({
           'prop2-changed': [[binding1.onTargetChanged]]
@@ -105,11 +105,11 @@ export default class {
 
         binding1.addTarget(dstNode1, 'prop1');
         expect(binding1target1Props.length).to.be.equal(2);
-        expect(dstNode1._properties.get('prop1')!.binding).to.be.equal(binding1);
+        expect(dstNode1._reactiveProperties.get('prop1')!.binding).to.be.equal(binding1);
         binding1.removeTarget(dstNode1);
         expect(binding1target1Props.length).to.be.equal(0);
-        expect(dstNode1._properties.get('prop1')!.binding).to.be.equal(undefined);
-        expect(dstNode1._properties.get('prop2')!.binding).to.be.equal(undefined);
+        expect(dstNode1._reactiveProperties.get('prop1')!.binding).to.be.equal(undefined);
+        expect(dstNode1._reactiveProperties.get('prop2')!.binding).to.be.equal(undefined);
 
         expect(dstNode1._eventDispatcher.addedListeners).to.be.eql({});
       });
@@ -152,7 +152,7 @@ export default class {
         expect(binding.property).to.be.equal(undefined);
         expect(binding.targets).to.be.equal(undefined);
         expect(binding.targetProperties).to.be.equal(undefined);
-        expect(dstNode._properties.get('prop1')!.binding).to.be.equal(undefined);
+        expect(dstNode._reactiveProperties.get('prop1')!.binding).to.be.equal(undefined);
 
         expect(node._eventDispatcher.addedListeners).to.be.eql({});
 

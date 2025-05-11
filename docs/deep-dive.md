@@ -44,14 +44,14 @@ class MyElement extends IoElement {}
 
 # Properties
 
-Properties can be defined using property declarations in the `static get Properties()` object or the `@Property({})` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
+Properties can be defined using property declarations in the `static get ReactiveProperties()` object or the `@Property({})` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
 
 In the following example, we define a boolean property called `selected` by specifying only the default value `false`.
 
 ```javascript
-// Javascript version with `static get Properties()` object
+// Javascript version with `static get ReactiveProperties()` object
 class MyNode extends Node {
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       selected: false
     }

@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, IoElementProps, WithBinding, span, a } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoElementProps, WithBinding, span, a } from 'io-gui';
 import { ioBreadcrumbs } from './IoBreadcrumbs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
@@ -42,22 +42,22 @@ export class IoInspector extends IoElement {
     }
     `;
   }
-  @Property()
+  @ReactiveProperty()
   declare value: Record<string, any> | any[];
 
-  @Property()
+  @ReactiveProperty()
   declare selected: Record<string, any> | any[];
 
-  @Property('')
+  @ReactiveProperty('')
   declare search: string;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare config: EditorConfig;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare groups: EditorGroups;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare widgets: EditorWidgets;
 
   static get Listeners() {

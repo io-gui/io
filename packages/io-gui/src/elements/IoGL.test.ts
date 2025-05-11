@@ -1,8 +1,8 @@
-import { IoGl, Node, ThemeSingleton, Property, Register } from '../index';;
+import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from '../index';;
 
 @Register
 class IoGlTest extends IoGl {
-  @Property({type: Array, init: [0, 0, 0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
   static get Frag() {
     return /* glsl */`
@@ -41,7 +41,7 @@ export default class {
         expect(element.pxRatio).to.be.equal(window.devicePixelRatio);
         expect(element.theme).to.be.equal(ThemeSingleton);
 
-        expect(element._properties.get('size')).to.eql({
+        expect(element._reactiveProperties.get('size')).to.eql({
           binding: undefined,
           init: [0, 0],
           reflect: false,
@@ -49,7 +49,7 @@ export default class {
           value: [0, 0],
         });
 
-        expect(element._properties.get('pxRatio')).to.eql({
+        expect(element._reactiveProperties.get('pxRatio')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
@@ -57,7 +57,7 @@ export default class {
           value: window.devicePixelRatio,
         });
 
-        expect(element._properties.get('theme')).to.eql({
+        expect(element._reactiveProperties.get('theme')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,

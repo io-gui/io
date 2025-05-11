@@ -27,7 +27,7 @@ export default class {
         expect(node.default).to.be.equal('foo');
         expect(node.storage).to.be.equal('none');
 
-        expect(node._properties.get('key')).to.eql({
+        expect(node._reactiveProperties.get('key')).to.eql({
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -35,7 +35,7 @@ export default class {
           value: 'test',
         });
 
-        expect(node._properties.get('value')).to.eql({
+        expect(node._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -43,7 +43,7 @@ export default class {
           value: 'foo',
         });
 
-        expect(node._properties.get('default')).to.eql({
+        expect(node._reactiveProperties.get('default')).to.eql({
           binding: undefined,
           reflect: false,
           init: undefined,
@@ -51,7 +51,7 @@ export default class {
           value: 'foo',
         });
 
-        expect(node._properties.get('storage')).to.eql({
+        expect(node._reactiveProperties.get('storage')).to.eql({
           binding: undefined,
           reflect: false,
           init: undefined,

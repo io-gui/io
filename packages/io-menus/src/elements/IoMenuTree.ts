@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, Storage as $, genObjectStorageID, div, IoElementProps, WithBinding, Default } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, genObjectStorageID, div, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -147,25 +147,25 @@ export class IoMenuTree extends IoElement {
     `;
   }
 
-  @Property({type: MenuOptions, reflect: true})
+  @ReactiveProperty({type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare searchable: boolean;
 
-  @Property('')
+  @ReactiveProperty('')
   declare search: string;
 
-  @Property(Infinity)
+  @ReactiveProperty(Infinity)
   declare depth: number;
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare slotted: VDOMElement[];
 
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare $parent?: IoMenuItem;
 
-  @Default('listbox')
+  @Property('listbox')
   declare role: string;
 
   static get Listeners() {

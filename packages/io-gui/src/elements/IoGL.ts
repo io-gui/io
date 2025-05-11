@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register';
-import { Property } from '../decorators/Property';
-import { PropertyInstance, PropertyDefinition } from '../core/Property';
+import { ReactiveProperty } from '../decorators/ReactiveProperty';
+import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty';
 import { VDOMElement } from '../vdom/VDOM';
 import { Node } from '../nodes/Node';
 import { ThemeSingleton, Color } from '../nodes/Theme';
@@ -61,16 +61,16 @@ export class IoGl extends IoElement {
     `;
   }
 
-  @Property({type: Node, value: ThemeSingleton})
+  @ReactiveProperty({type: Node, value: ThemeSingleton})
   declare theme: typeof ThemeSingleton;
 
-  @Property({type: Array, init: [0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0]})
   declare size: [number, number];
 
-  @Property({type: Number, value: 1})
+  @ReactiveProperty({type: Number, value: 1})
   declare pxRatio: number;
 
-  @Property('throttled')
+  @ReactiveProperty('throttled')
   declare reactivity: string;
 
   #needsResize = false;
@@ -114,7 +114,7 @@ export class IoGl extends IoElement {
         gl_FragColor = io_color;
       }\n\n`;
   }
-  initPropertyUniform(name: string, property: PropertyDefinition) {
+  initPropertyUniform(name: string, property: ReactivePropertyDefinition) {
     const type = property.value.constructor;
     switch (type) {
       case Boolean:
@@ -136,13 +136,13 @@ export class IoGl extends IoElement {
     #extension GL_OES_standard_derivatives : enable
     precision highp float;\n`;
 
-    this.theme._properties.forEach((property, name) => {
+    this.theme._reactiveProperties.forEach((property, name) => {
       frag += this.initPropertyUniform('io_' + name, property);
     });
 
     frag += '\n';
 
-    this._properties.forEach((property, prop) => {
+    this._reactiveProperties.forEach((property, prop) => {
       const name = 'u' + prop.charAt(0).toUpperCase() + prop.slice(1);
       frag += this.initPropertyUniform(name, property);
     });
@@ -188,14 +188,14 @@ export class IoGl extends IoElement {
 
     // TODO: improve code clarity
     this.#vecLengths = {};
-    this.theme._properties.forEach((property, name) => {
+    this.theme._reactiveProperties.forEach((property, name) => {
       // TODO: consider making more type agnostic
       if (property.type === Color) {
         this.#vecLengths['io_' + name] = 4;
       }
     });
 
-    this._properties.forEach((property, name) => {
+    this._reactiveProperties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       if (property.type === Array) {
         this.#vecLengths[uname] = property.value.length;
@@ -268,7 +268,7 @@ export class IoGl extends IoElement {
     this.setShaderProgram();
 
     // TODO: dont brute-force uniform update.
-    this._properties.forEach((property, name) => {
+    this._reactiveProperties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1);
       this.updatePropertyUniform(uname, property);
     });
@@ -299,12 +299,12 @@ export class IoGl extends IoElement {
       gl.useProgram(this.#shader);
     }
   }
-  updatePropertyUniform(name: string, property: PropertyInstance) {
+  updatePropertyUniform(name: string, property: ReactivePropertyInstance) {
     this.setShaderProgram();
     this.setUniform(name, property.value);
   }
   updateThemeUniforms() {
-    this.theme._properties.forEach((property, name) => {
+    this.theme._reactiveProperties.forEach((property, name) => {
       this.updatePropertyUniform('io_' + name, property);
     });
   }

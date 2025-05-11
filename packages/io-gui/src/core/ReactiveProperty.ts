@@ -5,14 +5,14 @@ import { AnyConstructor, Node } from '../nodes/Node';
 
 /**
  * Configuration for a property of an Node class.
- * @typedef {Object} PropertyDefinition
+ * @typedef {Object} ReactivePropertyDefinition
  * @property {*} [value] The property's value. Can be any type unless `type` is specified.
  * @property {AnyConstructor} [type] Constructor function defining the property's type.
  * @property {Binding} [binding] Binding object for two-way data synchronization.
  * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
  * @property {*} [init] Initialization arguments for constructing initial value.
  */
-export type PropertyDefinition= {
+export type ReactivePropertyDefinition= {
   value?: any;
   type?: AnyConstructor;
   binding?: Binding<any>;
@@ -22,9 +22,9 @@ export type PropertyDefinition= {
 
 /**
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
- * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|PropertyDefinition)} PropertyDefinitionLoose
+ * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|ReactivePropertyDefinition)} ReactivePropertyDefinitionLoose
  */
-export type PropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | PropertyDefinition;
+export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | ReactivePropertyDefinition;
 
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
@@ -36,7 +36,7 @@ export type PropertyDefinitionLoose = string | number | boolean | Array<any> | n
  * @property {boolean} [reflect] Whether to reflect the property to an HTML attribute.
  * @property {*} [init] Initialization arguments for constructing initial values.
  */
-export class ProtoProperty {
+export class ReactiveProtoProperty {
   declare value?: any;
   declare type?: AnyConstructor;
   declare binding?: Binding<any>;
@@ -44,19 +44,19 @@ export class ProtoProperty {
   declare init?: any;
   /**
    * Creates a property definition from various input types.
-   * @param {PropertyDefinitionLoose} def Input definition which can be:
+   * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
    * - `undefined` or `null`: Sets as value
    * - `AnyConstructor`: Sets as type
    * - `Binding`: Sets value from binding and stores binding reference
-   * - `PropertyDefinition`: Copies all defined fields
+   * - `ReactivePropertyDefinition`: Copies all defined fields
    * - Other values: Sets as value
    * @example
-   * new ProtoProperty(String) // {type: String}
-   * new ProtoProperty('hello') // {value: 'hello'}
-   * new ProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
-   * new ProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
+   * new ReactiveProtoProperty(String) // {type: String}
+   * new ReactiveProtoProperty('hello') // {value: 'hello'}
+   * new ReactiveProtoProperty({value: 42, type: Number}) // {value: 42, type: Number}
+   * new ReactiveProtoProperty(new Binding(node, 'value')) // {value: node.value, binding: ...}
    */
-  constructor(def: PropertyDefinitionLoose) {
+  constructor(def: ReactivePropertyDefinitionLoose) {
     if (def === undefined || def === null) {
       this.value = def;
     } else if (typeof def === 'function') {
@@ -65,7 +65,7 @@ export class ProtoProperty {
       this.value = def.value;
       this.binding = def;
     } else if (def && def.constructor === Object) {
-      const d = def as PropertyDefinition;
+      const d = def as ReactivePropertyDefinition;
       if (Object.hasOwn(d, 'value')) this.value = d.value;
       if (Object.hasOwn(d, 'type')) this.type = d.type;
       if (d.binding instanceof Binding) {
@@ -79,10 +79,10 @@ export class ProtoProperty {
     }
   }
   /**
-   * Assigns values of another ProtoProperty to itself, unless they are default values.
-   * @param {ProtoProperty} protoProp Source ProtoProperty
+   * Assigns values of another ReactiveProtoProperty to itself, unless they are default values.
+   * @param {ReactiveProtoProperty} protoProp Source ReactiveProtoProperty
    */
-  assign(protoProp: ProtoProperty) {
+  assign(protoProp: ReactiveProtoProperty) {
     if (Object.hasOwn(protoProp, 'value')) this.value = protoProp.value;
     if (Object.hasOwn(protoProp, 'type')) this.type = protoProp.type;
     if (Object.hasOwn(protoProp, 'reflect')) this.reflect = protoProp.reflect;
@@ -125,14 +125,14 @@ function decodeInitArgument(item: any, node: Node) {
       target = target[keys[i]];
     }
     if (target) return target;
-    debug: console.warn(`PropertyInstance: Invalid path ${item}`);
+    debug: console.warn(`ReactivePropertyInstance: Invalid path ${item}`);
   } else return item;
 }
 
 /**
- * PropertyInstance object constructed from `ProtoProperty`.
+ * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
  */
-export class PropertyInstance {
+export class ReactivePropertyInstance {
   // Property value.
   value?: any;
   // Constructor of the property value.
@@ -144,15 +144,15 @@ export class PropertyInstance {
   // Initialize property with provided constructor arguments. `null` prevents initialization.
   init?: any = undefined;
   /**
-   * Creates the property configuration object and copies values from `ProtoProperty`.
+   * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
    * @param node owner Node instance
-   * @param propDef ProtoProperty object
+   * @param propDef ReactiveProtoProperty object
    */
-  constructor(node: Node, propDef: ProtoProperty) {
+  constructor(node: Node, propDef: ReactiveProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {
-          console.warn(`ProtoProperty: Invalid field ${key}`);
+          console.warn(`ReactiveProtoProperty: Invalid field ${key}`);
         }
       });
       if (propDef.type !== undefined) {

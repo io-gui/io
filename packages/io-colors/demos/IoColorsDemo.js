@@ -25,7 +25,7 @@ export class IoColorsDemo extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       rgb: {value: {r: 0, g: 1, b: 0.5}},
       rgba: {value: {r: 1, g: 0.5, b: 1, a: 1}},

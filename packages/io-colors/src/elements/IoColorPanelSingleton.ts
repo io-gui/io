@@ -1,4 +1,4 @@
-import { Register, Property, IoOverlaySingleton } from 'io-gui';
+import { Register, ReactiveProperty, IoOverlaySingleton } from 'io-gui';
 import { IoColorBase } from './IoColorBase';
 import { ioColorSlider } from './IoColorSliders';
 
@@ -28,7 +28,7 @@ class IoColorPanel extends IoColorBase {
     `;
   }
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
   static get Listeners() {

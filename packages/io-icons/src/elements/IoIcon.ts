@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoElementProps, VDOMElement } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement } from 'io-gui';
 import { IconsetSingleton } from '../nodes/Iconset';
 
 export type IoIconProps = IoElementProps & {
@@ -43,10 +43,10 @@ export class IoIcon extends IoElement {
       }
     `;
   }
-  @Property({value: '', type: String, reflect: true})
+  @ReactiveProperty({value: '', type: String, reflect: true})
   declare value: string;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
   constructor(args: IoIconProps = {}) { super(args); }

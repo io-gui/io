@@ -1,4 +1,4 @@
-import { IoElement, Property, Register, IoElementProps, Node, span, div, WithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, WithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig';
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets';
@@ -63,25 +63,25 @@ export class IoPropertyEditor extends IoElement {
     `;
   }
 
-  @Property('debounced')
+  @ReactiveProperty('debounced')
   declare reactivity: string;
 
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare value: Object;
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare properties: string[];
 
-  @Property(true)
+  @ReactiveProperty(true)
   declare labeled: boolean;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare config: EditorConfig;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare groups: EditorGroups;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare widgets: EditorWidgets;
 
   _onValueInput(event: CustomEvent) {

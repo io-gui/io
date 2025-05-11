@@ -11,13 +11,13 @@ type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
 export type PropertyConfigRecord = Record<string, VDOMElement>;
-export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
+export type EditorConfig = Map<AnyConstructor, ReactivePropertyConfig[]>
 
 function optionMenu(options: any[]) {
   return ioOptionMenu({options: new MenuOptions().fromJSON(options)});
 }
 
-const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
+const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, ReactivePropertyConfig[]>([
   [Object, [
     [String, ioString()],
     [Number, ioNumber({step: 0.01})],

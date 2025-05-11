@@ -25,7 +25,7 @@ export class IoSlidersDemo extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       number: 1,
       array2: [0, 1],

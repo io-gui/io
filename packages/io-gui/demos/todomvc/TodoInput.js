@@ -12,7 +12,7 @@ export class TodoInput extends IoElement {
     }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       model: {
         type: TodoModel,

@@ -1,4 +1,4 @@
-import { Register, Property, glsl, VDOMElement, WithBinding, Node } from 'io-gui';
+import { Register, ReactiveProperty, glsl, VDOMElement, WithBinding, Node } from 'io-gui';
 import { IoColorBase, IoColorBaseProps } from './IoColorBase';
 import { IoSlider, IoSlider2d } from 'io-sliders';
 
@@ -26,16 +26,16 @@ export class IoColorSlider extends IoColorBase {
   }
 
   // Is this needed? Perhgaps value can be used in glsl?
-  @Property({type: Array, init: [0, 0, 0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
-  @Property(0.01)
+  @ReactiveProperty(0.01)
   declare step: number;
 
-  @Property('a')
+  @ReactiveProperty('a')
   declare channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare vertical: boolean;
 
   _onValueInput(event: CustomEvent) {
@@ -200,7 +200,7 @@ export const ioColorSlider = IoColorSlider.vConstructor;
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSliderBase extends IoSlider {
-  @Property({type: Array, init: [0, 0, 0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
   static get GlUtils() {
@@ -259,7 +259,7 @@ class IoColorSliderBase extends IoSlider {
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSlider2dBase extends IoSlider2d {
-  @Property({type: Array, init: [0, 0, 0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
   static get GlUtils() {

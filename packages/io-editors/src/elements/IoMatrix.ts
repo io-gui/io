@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement, Node } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, Node } from 'io-gui';
 import { IoVector, IoVectorProps } from './IoVector';
 
 export type IoMatrixProps = IoVectorProps & {
@@ -34,10 +34,10 @@ export class IoMatrix extends IoVector {
     `;
   }
 
-  @Property({type: Array, init: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
+  @ReactiveProperty({type: Array, init: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]})
   declare value: number[];
 
-  @Property({value: 4, reflect: true})
+  @ReactiveProperty({value: 4, reflect: true})
   declare columns: number;
 
   _onNumberValueInput(event: CustomEvent) {

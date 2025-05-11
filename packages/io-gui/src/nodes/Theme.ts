@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register';
-import { Property } from '../decorators/Property';
-import { PropertyDefinitions, Node } from '../nodes/Node';
+import { ReactiveProperty } from '../decorators/ReactiveProperty';
+import { ReactivePropertyDefinitions, Node } from '../nodes/Node';
 import { Storage as $ } from '../nodes/Storage';
 
 const THEME_VERSION = 'v0.10';
@@ -230,8 +230,8 @@ const compositeVariables = /* css */`
  */
 @Register
 export class Theme extends Node {
-  static get Properties(): PropertyDefinitions {
-    const props: PropertyDefinitions = {};
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    const props: ReactivePropertyDefinitions = {};
     for (const p in LIGHT_THEME) {
       const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME];
       if (prop instanceof Object) {
@@ -244,13 +244,13 @@ export class Theme extends Node {
   }
 
   // Default theme values
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare themeDefaults: Record<string, ThemeVars>;
 
-  @Property({type: String, binding: $ThemeID})
+  @ReactiveProperty({type: String, binding: $ThemeID})
   declare themeID: string;
 
-  @Property('debounced')
+  @ReactiveProperty('debounced')
   declare reactivity: string;
 
   init() {

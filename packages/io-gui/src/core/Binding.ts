@@ -88,7 +88,7 @@ export class Binding<T extends unknown> {
   }
   /**
    * Adds a target node and property.
-   * Sets itself as the binding reference on the target `PropertyInstance`.
+   * Sets itself as the binding reference on the target `ReactivePropertyInstance`.
    * Adds a `[propName]-changed` listener to the target node.
    * @param {Node} target - Target node
    * @param {string} property - Target property
@@ -101,7 +101,7 @@ export class Binding<T extends unknown> {
     if (targetProps.indexOf(property) === -1) {
       targetProps.push(property);
 
-      const targetP = target._properties.get(property)!;
+      const targetP = target._reactiveProperties.get(property)!;
       if (targetP.binding && targetP.binding !== this) {
         debug: {
           console.warn('Binding: improper usage detected!');
@@ -112,7 +112,7 @@ export class Binding<T extends unknown> {
       targetP.binding = this;
 
       debug: {
-        const srcP = this.node._properties.get(this.property)!;
+        const srcP = this.node._reactiveProperties.get(this.property)!;
         const valueMismatch = srcP.value !== undefined && targetP.value !== undefined && typeof srcP.value !== typeof targetP.value;
         const typeMismatch = srcP.type !== undefined && targetP.type !== undefined && srcP.type !== targetP.type;
         if (valueMismatch || typeMismatch) {
@@ -134,7 +134,7 @@ export class Binding<T extends unknown> {
   /**
    * Removes target node and property.
    * If `property` is not specified, it removes all target properties.
-   * Removes binding reference from the target `PropertyInstance`.
+   * Removes binding reference from the target `ReactivePropertyInstance`.
    * Removes `[propName]-changed` listener from the target node.
    * @param {Node} target - Target node
    * @param {string} property - Target property
@@ -150,7 +150,7 @@ export class Binding<T extends unknown> {
       }
       targetProperties.splice(i, 1);
 
-      const propertyInstance = target._properties.get(property)!;
+      const propertyInstance = target._reactiveProperties.get(property)!;
       debug: if (propertyInstance.binding !== this) {
         console.error('Binding: target property has a different binding!');
       }
@@ -161,7 +161,7 @@ export class Binding<T extends unknown> {
 
       for (let i = targetProperties.length; i--;) {
         const prop = targetProperties[i];
-        const propertyInstance = target._properties.get(prop)!;
+        const propertyInstance = target._reactiveProperties.get(prop)!;
         debug: if (propertyInstance.binding !== this) {
           console.error('Binding: target property has a different binding!');
         }

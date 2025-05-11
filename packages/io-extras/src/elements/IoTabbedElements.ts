@@ -53,7 +53,7 @@ export class IoSelectorTabs extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       elements: Array,
       filter: null,
@@ -298,7 +298,7 @@ export class IoTabs extends IoElement {
     }
     `;
   }
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       elements: Array,
       filter: null,

@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Default } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -122,47 +122,47 @@ export class IoMenuOptions extends IoElement {
     `;
   }
 
-  @Property({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare horizontal: boolean;
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare searchable: boolean;
 
-  @Property('')
+  @ReactiveProperty('')
   declare search: string;
 
-  @Property({value: 'none', reflect: true})
+  @ReactiveProperty({value: 'none', reflect: true})
   declare direction: NudgeDirection;
 
-  @Property(100)
+  @ReactiveProperty(100)
   declare depth: number;
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare noPartialCollapse: boolean;
 
-  @Property({value: '', reflect: true})
+  @ReactiveProperty({value: '', reflect: true})
   declare overflow: string;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare inlayer: boolean;
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare slotted: VDOMElement[];
 
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare $parent?: IoMenuItem;
 
-  @Default('listbox')
+  @Property('listbox')
   declare role: string;
 
   // TODO: make non-reactive
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare private _overflownItems: MenuItem[];
 
   static get Listeners() {

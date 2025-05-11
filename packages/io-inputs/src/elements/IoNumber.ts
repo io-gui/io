@@ -1,4 +1,4 @@
-import { Register, Property, IoOverlaySingleton, VDOMElement, WithBinding, Default, focusTo } from 'io-gui';
+import { Register, ReactiveProperty, IoOverlaySingleton, VDOMElement, WithBinding, Property, focusTo } from 'io-gui';
 import { IoNumberLadderSingleton } from './IoNumberLadder';
 import { IoField, IoFieldProps } from './IoField';
 
@@ -40,40 +40,40 @@ export class IoNumber extends IoField {
     `;
   }
 
-  @Property({value: 0, type: Number})
+  @ReactiveProperty({value: 0, type: Number})
   declare value: number;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare live: boolean;
 
-  @Property({value: 1, type: Number})
+  @ReactiveProperty({value: 1, type: Number})
   declare conversion: number;
 
-  @Property({value: 0.0001, type: Number})
+  @ReactiveProperty({value: 0.0001, type: Number})
   declare step: number;
 
-  @Property({value: -Infinity, type: Number})
+  @ReactiveProperty({value: -Infinity, type: Number})
   declare min: number;
 
-  @Property({value: Infinity, type: Number})
+  @ReactiveProperty({value: Infinity, type: Number})
   declare max: number;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare ladder: boolean;
 
-  @Property({value: 'inset', type: String, reflect: true})
+  @ReactiveProperty({value: 'inset', type: String, reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Default(true)
+  @Property(true)
   declare contentEditable: boolean;
 
-  @Property({value: 'pattern="[0-9]*"', type: String, reflect: true})
+  @ReactiveProperty({value: 'pattern="[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
-  @Default('numeric')
+  @Property('numeric')
   declare inputMode: string;
 
-  @Default('textbox')
+  @Property('textbox')
   declare role: string;
 
   private _pointer = '';
@@ -220,12 +220,12 @@ export class IoNumber extends IoField {
     const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)));
     valueNumber = Number(valueNumber.toFixed(d));
     if (!isNaN(valueNumber)) {
-      this._properties.get('invalid')!.value = false;
+      this._reactiveProperties.get('invalid')!.value = false;
       this.removeAttribute('invalid');
       this.removeAttribute('aria-invalid');
       this.inputValue(valueNumber);
     } else {
-      this._properties.get('invalid')!.value = true;
+      this._reactiveProperties.get('invalid')!.value = true;
       this.setAttribute('invalid', 'true');
       this.setAttribute('aria-invalid', 'true');
     }

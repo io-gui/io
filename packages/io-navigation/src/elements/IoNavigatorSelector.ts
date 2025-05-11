@@ -1,4 +1,4 @@
-import { VDOMElement, Register, Property } from 'io-gui';
+import { VDOMElement, Register, ReactiveProperty } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioSelector } from './IoSelector.js';
 
@@ -12,13 +12,13 @@ export type IoNavigatorSelectorProps = IoNavigatorBaseProps & {
 export class IoNavigatorSelector extends IoNavigatorBase {
   static vConstructor: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
-  @Property('first')
+  @ReactiveProperty('first')
   declare select: 'first' | 'last';
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare cache: boolean;
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare precache: boolean;
 
   getSlotted(): VDOMElement {

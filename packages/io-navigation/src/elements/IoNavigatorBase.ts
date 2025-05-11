@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Property, Autobind, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, ReactiveProperty, Autobind, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 
 export type IoNavigatorBaseProps = IoElementProps & {
@@ -86,25 +86,25 @@ export class IoNavigatorBase extends IoElement {
     `;
   }
 
-  @Property(Array)
+  @ReactiveProperty(Array)
   declare slotted: VDOMElement[];
 
-  @Property(Array)
+  @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @Property({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
-  @Property({value: 'left', reflect: true})
+  @ReactiveProperty({value: 'left', reflect: true})
   declare menu: 'top' | 'left' | 'bottom' | 'right';
 
-  @Property(Infinity)
+  @ReactiveProperty(Infinity)
   declare depth: number;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare collapsed: boolean;
 
-  @Property(580)
+  @ReactiveProperty(580)
   declare collapseWidth: number;
 
   init() {

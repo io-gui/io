@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoOverlaySingleton, IoElementProps, VDOMElement, Default, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoOverlaySingleton, IoElementProps, VDOMElement, Property, WithBinding } from 'io-gui';
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton';
 import { ioColorSwatch } from './IoColorSwatch';
 
@@ -30,7 +30,7 @@ export class IoColorPicker extends IoElement {
     `;
   }
 
-  @Property({value: {r: 1, g: 1, b: 1, a: 1}})
+  @ReactiveProperty({value: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number, g: number, b: number, a?: number};
 
   static get Listeners(): any {
@@ -40,7 +40,7 @@ export class IoColorPicker extends IoElement {
     };
   }
 
-  @Default('0')
+  @Property('0')
   declare tabIndex: string;
 
   onClick() {

@@ -1,18 +1,17 @@
-import { PropertyDefinitionLoose } from '../core/Property';
-import { Node, AnyConstructor, PropertyDefinitions } from '../nodes/Node';
+import { Node, AnyConstructor } from '../nodes/Node';
 
-export const propertyDecorators: WeakMap<AnyConstructor, PropertyDefinitions> = new WeakMap();
+export const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>> = new WeakMap();
 
 /**
- * Allows property definitions using decorator pattern.
- * @param {PropertyDefinitionLoose} propertyDefinition - Property definition.
+ * Sets a initial value for a property.
+ * @param {any} initialValue - Initial value.
  * @return {Function} Property decorator function.
  */
-export const Property = function(propertyDefinition: PropertyDefinitionLoose = {}) {
+export const Property = function(initialValue: any) {
   return (target: Node, propertyName: string) => {
     const constructor = target.constructor as AnyConstructor;
-    const _Properties = propertyDecorators.get(constructor) || {};
-    propertyDecorators.set(constructor, _Properties);
-    _Properties[propertyName] = propertyDefinition;
+    const _values = propertyDecorators.get(constructor) || {};
+    propertyDecorators.set(constructor, _values);
+    _values[propertyName] = initialValue;
   };
 };

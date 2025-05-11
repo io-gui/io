@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementProps, WithBinding, VDOMElement, Default } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
@@ -51,31 +51,31 @@ export class IoObject extends IoElement {
     `;
   }
 
-  @Property()
+  @ReactiveProperty()
   declare value: Record<string, any> | any[];
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare properties: string[];
 
-  @Property(true)
+  @ReactiveProperty(true)
   declare labeled: boolean;
 
-  @Property('')
+  @ReactiveProperty('')
   declare label: string;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare config: EditorConfig;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare groups: EditorGroups;
 
-  @Property({type: Map})
+  @ReactiveProperty({type: Map})
   declare widgets: EditorWidgets;
 
-  @Default('region')
+  @Property('region')
   declare role: string;
 
   changed() {

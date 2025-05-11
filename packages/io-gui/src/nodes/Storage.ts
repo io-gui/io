@@ -1,4 +1,4 @@
-import { Property } from '../decorators/Property';
+import { ReactiveProperty } from '../decorators/ReactiveProperty';
 import { Register } from '../decorators/Register';
 import { Binding } from '../core/Binding';
 import { Node, NodeProps } from '../nodes/Node';
@@ -114,16 +114,16 @@ export function genObjectStorageID(object: Record<string, any>) {
 @Register
 export class StorageNode extends Node {
 
-  @Property({value: '', type: String})
+  @ReactiveProperty({value: '', type: String})
   declare key: string;
 
-  @Property({value: undefined})
+  @ReactiveProperty({value: undefined})
   declare value: any;
 
-  @Property({value: undefined})
+  @ReactiveProperty({value: undefined})
   declare default: any;
 
-  @Property({value: 'none', type: String})
+  @ReactiveProperty({value: 'none', type: String})
   declare storage: 'hash' | 'local' | 'none';
 
   declare binding: Binding<any>;

@@ -1,4 +1,4 @@
-import { Property, Register, span, VDOMElement } from 'io-gui';
+import { ReactiveProperty, Register, span, VDOMElement } from 'io-gui';
 import { IoButton, IoButtonProps } from 'io-inputs';
 
 export type IoPropertyLinkProps = IoButtonProps & {
@@ -26,13 +26,13 @@ export class IoPropertyLink extends IoButton {
     `;
   }
 
-  @Property()
+  @ReactiveProperty()
   declare value: Object;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare showName: boolean;
 
-  @Property({value: 'neutral', type: String, reflect: true})
+  @ReactiveProperty({value: 'neutral', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral';
 
   valueMutated() {

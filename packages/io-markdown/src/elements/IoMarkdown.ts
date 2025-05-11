@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, ThemeSingleton, IoElementProps, WithBinding, VDOMElement, Default } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, VDOMElement, Property } from 'io-gui';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -158,19 +158,19 @@ export class IoMarkdown extends IoElement {
     `;
   }
 
-  @Property({value: '', reflect: true})
+  @ReactiveProperty({value: '', reflect: true})
   declare src: string;
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare strip: string[];
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare loading: boolean;
 
-  @Property(true)
+  @ReactiveProperty(true)
   declare sanitize: boolean;
 
-  @Default('document')
+  @Property('document')
   declare role: string;
 
   constructor(args: IoMarkdownProps = {}) { super(args); }

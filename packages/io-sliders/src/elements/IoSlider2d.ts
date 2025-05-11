@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement, Default } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, Property } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
 export type IoSlider2dProps = IoSliderBaseProps & {
@@ -33,19 +33,19 @@ export class IoSlider2d extends IoSliderBase {
     `;
   }
 
-  @Property({value: null, type: Array, init: [0, 0]})
+  @ReactiveProperty({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
 
-  @Property({value: null, type: Array, init: [0.01, 0.01]})
+  @ReactiveProperty({value: null, type: Array, init: [0.01, 0.01]})
   declare step: [number, number];
 
-  @Property({value: null, type: Array, init: [-1, -1]})
+  @ReactiveProperty({value: null, type: Array, init: [-1, -1]})
   declare min: [number, number];
 
-  @Property({value: null, type: Array, init: [1, 1]})
+  @ReactiveProperty({value: null, type: Array, init: [1, 1]})
   declare max: [number, number];
 
-  @Default(true)
+  @Property(true)
   declare noscroll: boolean;
 
   constructor(args: IoSlider2dProps = {}) { super(args); }

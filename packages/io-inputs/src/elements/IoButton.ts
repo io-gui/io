@@ -1,4 +1,4 @@
-import { Register, Property, span, VDOMElement, Default } from 'io-gui';
+import { Register, ReactiveProperty, span, VDOMElement, Property } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField, IoFieldProps } from './IoField';
 
@@ -27,16 +27,16 @@ export class IoButton extends IoField {
       }
     `;
   }
-  @Property({value: undefined, type: undefined, reflect: false})
+  @ReactiveProperty({value: undefined, type: undefined, reflect: false})
   declare value: any;
 
-  @Property(undefined)
+  @ReactiveProperty(undefined)
   declare action?: Function;
 
-  @Property({value: 'outset', type: String, reflect: true})
+  @ReactiveProperty({value: 'outset', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral';
 
-  @Default('button')
+  @Property('button')
   declare role: string;
 
   constructor(args: IoButtonProps = {}) { super(args); }

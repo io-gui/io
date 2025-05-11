@@ -1,4 +1,4 @@
-import { Register, Property, VDOMElement, Default, focusTo, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, Property, focusTo, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 
 export type IoStringProps = Omit<IoFieldProps, 'value'> & {
@@ -31,22 +31,22 @@ export class IoString extends IoField {
       }
     `;
   }
-  @Property({value: '', type: String})
+  @ReactiveProperty({value: '', type: String})
   declare value: string;
 
-  @Property({value: false, type: Boolean})
+  @ReactiveProperty({value: false, type: Boolean})
   declare live: boolean;
 
-  @Property({value: '', type: String, reflect: true})
+  @ReactiveProperty({value: '', type: String, reflect: true})
   declare placeholder: string;
 
-  @Property({value: 'inset', reflect: true})
+  @ReactiveProperty({value: 'inset', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Default(true)
+  @Property(true)
   declare contentEditable: boolean;
 
-  @Default('textbox')
+  @Property('textbox')
   declare role: string;
 
   constructor(args: IoStringProps = {}) { super(args); }

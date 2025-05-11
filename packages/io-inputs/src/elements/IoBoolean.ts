@@ -1,4 +1,4 @@
-import { Register, Property, span, VDOMElement, WithBinding, Default } from 'io-gui';
+import { Register, ReactiveProperty, span, VDOMElement, WithBinding, Property } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField, IoFieldProps } from './IoField';
 
@@ -24,16 +24,16 @@ export class IoBoolean extends IoField {
     `;
   }
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare value: boolean;
 
-  @Property({value: 'true', type: String})
+  @ReactiveProperty({value: 'true', type: String})
   declare true: string;
 
-  @Property({value: 'false', type: String})
+  @ReactiveProperty({value: 'false', type: String})
   declare false: string;
 
-  @Default('checkbox')
+  @Property('checkbox')
   declare role: string;
 
   constructor(args: IoBooleanProps = {}) { super(args); }

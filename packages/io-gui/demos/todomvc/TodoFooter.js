@@ -9,7 +9,7 @@ export class TodoFooter extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       model: {
         type: TodoModel,

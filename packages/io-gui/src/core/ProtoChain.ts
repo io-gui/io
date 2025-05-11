@@ -1,12 +1,12 @@
-import { ProtoProperty } from './Property';
+import { ReactiveProtoProperty } from './ReactiveProperty';
 import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher';
-import { Node, NodeConstructor, PropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { reactivePropertyDecorators } from '../decorators/ReactiveProperty';
 import { propertyDecorators } from '../decorators/Property';
-import { propertyDefaults } from '../decorators/Default';
 
 type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
-type ProtoProperties = { [property: string]: ProtoProperty };
+type ReactiveProtoProperties = { [property: string]: ReactiveProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
 
 
@@ -52,19 +52,19 @@ export class ProtoChain {
    */
   constructors: ProtoConstructors = [];
   /**
-   * Aggregated property definition declared in `static get Properties()` or @Property() decorators
+   * Aggregated property definition declared in `static get ProtoProperties()` or @ReactiveProperty() decorators
    */
-  properties: ProtoProperties = {};
+  reactiveProperties: ReactiveProtoProperties = {};
   /**
    * Aggregated listener definition declared in `static get Listeners()`
    */
   listeners: ProtoListeners = {};
   /**
-   * Aggregated default value for properties declared in `static get Defaults()` or @Default() decorators
+   * Aggregated initial value for properties declared in `static get ReactiveProperties()` or @Property() decorators
   */
-  // TODO: static get Defaults()
+  // TODO: static get ReactiveProperties()
   // TODO: test
-  defaults: Record<string, any> = {};
+  properties: Record<string, any> = {};
   /**
    * Aggregated CSS style definition declared in `static get Style()`
    */
@@ -106,12 +106,13 @@ export class ProtoChain {
     for (let i = this.constructors.length; i--;) {
       ioNodeConstructor = this.constructors[i];
       this.addPropertiesFromDecorators(ioNodeConstructor);
-      propHash = this.addStaticProperties(ioNodeConstructor.Properties, propHash);
+      propHash = this.addStaticProperties(ioNodeConstructor.ReactiveProperties, propHash);
       this.addListeners(ioNodeConstructor.Listeners);
 
-      const defaults = propertyDefaults.get(ioNodeConstructor);
-      if (defaults) for (const name in defaults) {
-        this.defaults[name] = defaults[name];
+      // TODO: normalize with reactiveProperties
+      const properties = propertyDecorators.get(ioNodeConstructor);
+      if (properties) for (const name in properties) {
+        this.properties[name] = properties[name];
       }
     }
 
@@ -124,35 +125,35 @@ export class ProtoChain {
    * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
    */
   addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>) {
-    const props = propertyDecorators.get(ioNodeConstructor);
+    const props = reactivePropertyDecorators.get(ioNodeConstructor);
     if (props) for (const name in props) {
-      const protoProperty = new ProtoProperty(props[name]);
-      if (!this.properties[name]) this.properties[name] = protoProperty;
-      this.properties[name].assign(protoProperty);
+      const protoProperty = new ReactiveProtoProperty(props[name]);
+      if (!this.reactiveProperties[name]) this.reactiveProperties[name] = protoProperty;
+      this.reactiveProperties[name].assign(protoProperty);
     }
   }
   /**
-   * Adds static properties from `static get Properties()` to the properties array.
+   * Adds static properties from `static get ReactiveProperties()` to the properties array.
    * Only process properties if they differ from superclass.
-   * This prevents 'static get Properties()' from overriding subclass properties defined in decorators.
-   * @param {PropertyDefinitions} properties - Properties to add
+   * This prevents 'static get ReactiveProperties()' from overriding subclass properties defined in decorators.
+   * @param {ReactivePropertyDefinitions} properties - Properties to add
    * @param {string} prevHash - Previous properties hash
    * @returns {string} - Updated properties hash
    */
-  addStaticProperties(properties: PropertyDefinitions = {}, prevHash = ''): string {
-    const protoProperties: Record<string, ProtoProperty> = {};
+  addStaticProperties(properties: ReactivePropertyDefinitions = {}, prevHash = ''): string {
+    const reativeProtoProperties: Record<string, ReactiveProtoProperty> = {};
     for (const name in properties) {
-      protoProperties[name] = new ProtoProperty(properties[name]);
+      reativeProtoProperties[name] = new ReactiveProtoProperty(properties[name]);
     }
     /**
      * Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
      * this does not provide completely accurate signiture of the binding but it's good enough.
      */
-    const newHash = JSON.stringify(protoProperties);
+    const newHash = JSON.stringify(reativeProtoProperties);
     if (newHash !== prevHash) {
       for (const name in properties) {
-       if (!this.properties[name]) this.properties[name] = protoProperties[name];
-       else this.properties[name].assign(protoProperties[name]);
+       if (!this.reactiveProperties[name]) this.reactiveProperties[name] = reativeProtoProperties[name];
+       else this.reactiveProperties[name].assign(reativeProtoProperties[name]);
        prevHash = newHash;
      }
     }
@@ -211,9 +212,9 @@ export class ProtoChain {
    */
   getObservedObjectProperties() {
     const observedObjectProperties: string[] = [];
-    for (const name in this.properties) {
-      const value = this.properties[name].value;
-      const type = this.properties[name].type;
+    for (const name in this.reactiveProperties) {
+      const value = this.reactiveProperties[name].value;
+      const type = this.reactiveProperties[name].type;
       if(isNonNodeObject(value) || isNonNodeConstructor(type)) {
         observedObjectProperties.push(name);
       }
@@ -226,9 +227,9 @@ export class ProtoChain {
    */
   getObservedNodeProperties() {
     const observedNodeProperties: string[] = [];
-    for (const name in this.properties) {
-      const value = this.properties[name].value;
-      const type = this.properties[name].type;
+    for (const name in this.reactiveProperties) {
+      const value = this.reactiveProperties[name].value;
+      const type = this.reactiveProperties[name].type;
       if(value?._isNode || isNodeObjectConstructor(type)) {
         observedNodeProperties.push(name);
       }
@@ -242,8 +243,8 @@ export class ProtoChain {
    * @returns {void}
    */
   validateProperties() {
-    for (const name in this.properties) {
-      const prop = this.properties[name];
+    for (const name in this.reactiveProperties) {
+      const prop = this.reactiveProperties[name];
       if ([String, Number, Boolean].indexOf(prop.type as any) !== -1) {
         if (prop.type === Boolean && prop.value !== undefined && typeof prop.value !== 'boolean' ||
             prop.type === Number && prop.value !== undefined && typeof prop.value !== 'number' ||

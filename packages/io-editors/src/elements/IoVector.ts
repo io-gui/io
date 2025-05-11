@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, IoElementProps, WithBinding, VDOMElement, Node } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from 'io-gui';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
 export type IoVectorProps = IoElementProps & {
@@ -38,31 +38,31 @@ export class IoVector extends IoElement {
     `;
   }
 
-  @Property({type: Object})
+  @ReactiveProperty({type: Object})
   declare value: {x: number, y: number, z?: number, w?: number} | number[];
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare conversion: number;
 
-  @Property(0.001)
+  @ReactiveProperty(0.001)
   declare step: number;
 
-  @Property(-Infinity)
+  @ReactiveProperty(-Infinity)
   declare min: number;
 
-  @Property(Infinity)
+  @ReactiveProperty(Infinity)
   declare max: number;
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare linkable: boolean;
 
-  @Property(false)
+  @ReactiveProperty(false)
   declare linked: boolean;
 
-  @Property(true)
+  @ReactiveProperty(true)
   declare ladder: boolean;
 
-  @Property({type: Array})
+  @ReactiveProperty({type: Array})
   declare keys: string[];
 
   private _ratios: Record<string, number> = {};

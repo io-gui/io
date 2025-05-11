@@ -1,4 +1,4 @@
-import { Property } from '../decorators/Property';
+import { ReactiveProperty } from '../decorators/ReactiveProperty';
 import { Register } from '../decorators/Register';
 import { IoElement, IoElementProps } from './IoElement';
 
@@ -53,7 +53,7 @@ class IoOverlay extends IoElement {
       }
     `;
   }
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
 
   static get Listeners() {

@@ -12,7 +12,7 @@ export class TodoItem extends IoElement {
     }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       item: Object,
       model: {

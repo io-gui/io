@@ -13,21 +13,21 @@ export default class {
         expect(element.value).to.equal(undefined);
         expect(element.pressed).to.equal(false);
         expect(element.role).to.equal('button');
-        expect(element._properties.get('action')).to.eql({
+        expect(element._reactiveProperties.get('action')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: undefined,
           value: undefined
         });
-        expect(element._properties.get('value')).to.eql({
+        expect(element._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: undefined,
           value: undefined
         });
-        expect(element._properties.get('pressed')).to.eql({
+        expect(element._reactiveProperties.get('pressed')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,

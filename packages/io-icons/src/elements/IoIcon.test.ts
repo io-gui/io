@@ -10,14 +10,14 @@ export default class {
       it('Should initialize properties correctly', () => {
         expect(element.value).to.equal('');
         expect(element.stroke).to.equal(false);
-        expect(element._properties.get('value')).to.eql({
+        expect(element._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,
           type: String,
           value: '',
         });
-        expect(element._properties.get('stroke')).to.eql({
+        expect(element._reactiveProperties.get('stroke')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,

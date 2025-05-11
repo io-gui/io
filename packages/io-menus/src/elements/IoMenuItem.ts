@@ -1,4 +1,4 @@
-import { Register, Property, Default, IoOverlaySingleton as Overlay, span, VDOMElement, WithBinding, NudgeDirection } from 'io-gui';
+import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, VDOMElement, WithBinding, NudgeDirection } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoField, IoFieldProps } from 'io-inputs';
@@ -50,19 +50,19 @@ export class IoMenuItem extends IoField {
     `;
   }
 
-  @Property({type: MenuItem})
+  @ReactiveProperty({type: MenuItem})
   declare item: MenuItem;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
-  @Property({value: 'right', reflect: true})
+  @ReactiveProperty({value: 'right', reflect: true})
   declare direction: NudgeDirection;
 
-  @Property({value: 1000, reflect: true})
+  @ReactiveProperty({value: 1000, reflect: true})
   declare depth: number;
 
-  @Default('false')
+  @Property('false')
   declare contentEditable: boolean;
 
   declare $options?: IoMenuOptions;

@@ -7,7 +7,7 @@ debug: {
 
 @Register
 export class IoServiceLoader extends Node {
-  static get Properties(): any {
+  static get ReactiveProperties(): any {
     return {
       path: 'service.js',
       serviceWorker: undefined,

@@ -15,7 +15,7 @@ export default class {
       });
       it('Should initialize properties correctly', () => {
         expect(IoOverlaySingleton.expanded).to.be.eql(false);
-        expect(IoOverlaySingleton._properties.get('expanded')).to.eql({
+        expect(IoOverlaySingleton._reactiveProperties.get('expanded')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,

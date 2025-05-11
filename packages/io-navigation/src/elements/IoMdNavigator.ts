@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Register, Property, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Register, ReactiveProperty, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
 import { ioMarkdown } from 'io-markdown';
 
@@ -57,23 +57,23 @@ export class IoMdNavigator extends IoElement {
     `;
   }
 
-  @Property(Array)
+  @ReactiveProperty(Array)
   declare slotted: VDOMElement[];
 
-  @Property({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
-  @Property({value: 'none', reflect: true})
+  @ReactiveProperty({value: 'none', reflect: true})
   declare menu: 'none' | 'top' | 'left' | 'bottom' | 'right';
 
-  @Property(Infinity)
+  @ReactiveProperty(Infinity)
   declare depth: number;
 
   // TODO: implement
-  @Property(false)
+  @ReactiveProperty(false)
   declare collapsed: boolean;
 
-  @Property(420)
+  @ReactiveProperty(420)
   declare collapseWidth: number;
 
   onResized() {

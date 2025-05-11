@@ -15,21 +15,21 @@ export default class {
         expect(element.true).to.equal('true');
         expect(element.false).to.equal('false');
         expect(element.role).to.equal('checkbox');
-        expect(element._properties.get('value')).to.eql({
+        expect(element._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,
           type: Boolean,
           value: false,
         });
-        expect(element._properties.get('true')).to.eql({
+        expect(element._reactiveProperties.get('true')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: String,
           value: 'true',
         });
-        expect(element._properties.get('false')).to.eql({
+        expect(element._reactiveProperties.get('false')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,

@@ -2,17 +2,17 @@ import { Register } from '../decorators/Register';
 import { ProtoChain } from '../core/ProtoChain';
 import { Binding } from '../core/Binding';
 import { ChangeQueue } from '../core/ChangeQueue';
-import { PropertyInstance, PropertyDefinitionLoose } from '../core/Property';
+import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty';
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
 import { throttle, debounce, CallbackFunction } from '../core/Queue';
 
 export type AnyConstructor = new (...args: any[]) => unknown;
-export type PropertyDefinitions = Record<string, PropertyDefinitionLoose>;
+export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 
 export interface NodeConstructor<T> {
   new (...args: any[]): T;
-  Properties?: PropertyDefinitions;
+  ReactiveProperties?: ReactivePropertyDefinitions;
   Listeners?: ListenerDefinitions;
   Style?: string;
 }
@@ -34,7 +34,7 @@ export type NodeProps = {
  */
 export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
   return class NodeMixinConstructor extends (superclass as any) {
-    static get Properties(): PropertyDefinitions {
+    static get ReactiveProperties(): ReactivePropertyDefinitions {
       return {
         reactivity: {
           value: 'immediate',
@@ -43,7 +43,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       };
     }
     declare readonly _protochain: ProtoChain;
-    declare readonly _properties: Map<string, PropertyInstance>;
+    declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
     declare readonly _bindings: Map<string, Binding<any>>;
     declare readonly _changeQueue: ChangeQueue;
     declare readonly _eventDispatcher: EventDispatcher;
@@ -78,17 +78,16 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       this._protochain.autobindHandlers(this);
 
       Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
-      Object.defineProperty(this, '_properties', {enumerable: false, configurable: true, value: new Map()});
+      Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
       Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
-      for (const name in this._protochain.properties) {
+
+      // TODO: move in loop below
+      for (const name in this._protochain.reactiveProperties) {
         Object.defineProperty(this, name, {
           get: function() {
-            if (this._properties === undefined) {
-              console.warn('Node.properties is undefined', name, this);
-            }
-            return this._properties.get(name).value;
+            return this._reactiveProperties.get(name).value;
           },
           set: function(value) {
             (this as Node).setProperty(name, value);
@@ -98,24 +97,30 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         });
       }
 
-      for (const name in this._protochain.properties) {
-        const property = new PropertyInstance(this, this._protochain.properties[name]);
-        this._properties.set(name, property);
+      for (const name in this._protochain.reactiveProperties) {
+        const property = new ReactivePropertyInstance(this, this._protochain.reactiveProperties[name]);
+        this._reactiveProperties.set(name, property);
 
         if (property.binding) property.binding.addTarget(this, name);
         if (property.value?._isNode) {
           let hasSameValueAtOtherProperty = false;
-          this._properties.forEach((p, n) => {
+          this._reactiveProperties.forEach((p, n) => {
             if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true;
           });
           if (!hasSameValueAtOtherProperty) property.value.addEventListener('object-mutated', this.onPropertyMutated);
         }
       }
 
-      for (const name in this._protochain.defaults) {
-        let defaultValue = this._protochain.defaults[name];
-        if (typeof defaultValue === 'function') defaultValue = new defaultValue();
-        this[name] = defaultValue;
+      for (const name in this._protochain.properties) {
+        let initialValue = this._protochain.properties[name];
+        if (typeof initialValue === 'function') {
+          initialValue = initialValue();
+        } else if (initialValue instanceof Array) {
+          initialValue = initialValue.slice();
+        } else if (typeof initialValue === 'object') {
+          initialValue = Object.assign({}, initialValue);
+        }
+        this[name] = initialValue;
       }
 
       this.applyProperties(args, true);
@@ -135,7 +140,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      */
     applyProperties(props: any, skipDispatch = false) {
       for (const name in props) {
-        if (!this._properties.has(name)) {
+        if (!this._reactiveProperties.has(name)) {
           // TODO: document!
           if (!name.startsWith('@')) {
             // console.warn(`Property "${name}" is not defined`, this);
@@ -154,7 +159,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      */
     setProperties(props: any) {
       for (const name in props) {
-        if (!this._properties.has(name)) {
+        if (!this._reactiveProperties.has(name)) {
           debug: console.warn(`Property "${name}" is not defined`, this);
           continue;
         }
@@ -169,7 +174,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      * @param {boolean} [debounce] flag to skip event dispatch.
      */
     setProperty(name: string, value: any, debounce = false) {
-      const prop = this._properties.get(name)!;
+      const prop = this._reactiveProperties.get(name)!;
       const oldValue = prop.value;
 
       if (value !== oldValue) {
@@ -200,7 +205,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         if (value !== oldValue) {
           let hasNewValueAtOtherProperty = false;
           let hasOldValueAtOtherProperty = false;
-          this._properties.forEach((property, n) => {
+          this._reactiveProperties.forEach((property, n) => {
             if (property.value === value && n !== name) hasNewValueAtOtherProperty = true;
             if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true;
           });
@@ -323,7 +328,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       const properties = [...new Set([...this._protochain.observedObjectProperties, ...this._protochain.observedNodeProperties])];
       for (let i = 0; i < properties.length; i++) {
         const name = properties[i];
-        const value = this._properties.get(name)!.value;
+        const value = this._reactiveProperties.get(name)!.value;
         if (value === object) {
           if (typeof this[name + 'Mutated'] === 'function') {
             this.throttle(this[name + 'Mutated']);
@@ -338,7 +343,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      * @return {Binding} Binding object.
      */
     bind<T>(name: string) {
-      debug: if (!this._properties.has(name)) {
+      debug: if (!this._reactiveProperties.has(name)) {
         console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`);
       }
       if (!this._bindings.has(name)) {
@@ -357,7 +362,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         this._bindings.delete(name);
       }
 
-      const property = this._properties.get(name);
+      const property = this._reactiveProperties.get(name);
       property?.binding?.removeTarget(this, name);
     }
     /**
@@ -418,7 +423,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       delete (this as any)._changeQueue;
 
       let removed: Node[] = [];
-      this._properties.forEach((property, name) => {
+      this._reactiveProperties.forEach((property, name) => {
         property.binding?.removeTarget(this, name);
         if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
           property.value.removeEventListener('object-mutated', this.onPropertyMutated);
@@ -429,7 +434,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._eventDispatcher.dispose();
       delete (this as any)._eventDispatcher;
-      delete (this as any)._properties;
+      delete (this as any)._reactiveProperties;
 
       Object.defineProperty(this, '_disposed', {value: true});
     }

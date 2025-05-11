@@ -10,7 +10,7 @@ export class TodoList extends IoElement {
       }
     `;
   }
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       model: {
         type: TodoModel,

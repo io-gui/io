@@ -14,14 +14,14 @@ export default class {
       it('Should initialize properties correctly', () => {
         expect(element.value).to.equal('');
         expect(element.selected).to.equal(false);
-        expect(element._properties.get('value')).to.eql({
+        expect(element._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: undefined,
           value: '',
         });
-        expect(element._properties.get('selected')).to.eql({
+        expect(element._reactiveProperties.get('selected')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: true,

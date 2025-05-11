@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, Autobind, IoElementProps, VDOMElement } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, Autobind, IoElementProps, VDOMElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 export type IoScrollerProps = IoElementProps & {
@@ -27,7 +27,7 @@ export class IoScroller extends IoElement {
     `;
   }
 
-  @Property({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
   declare private _observer: MutationObserver;

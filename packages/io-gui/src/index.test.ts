@@ -1,7 +1,7 @@
 import BindingTest from './core/Binding.test';
 import ChangeQueueTest from './core/ChangeQueue.test';
 import EventDispatcherTest from './core/EventDispatcher.test';
-import PropertyTest from './core/Property.test';
+import ReactivePropertyTest from './core/ReactiveProperty.test';
 import ProtoChainTest from './core/ProtoChain.test';
 import QueueTest from './core/Queue.test';
 import VDOMTest from './vdom/VDOM.test';
@@ -16,7 +16,7 @@ export default class {
     new BindingTest().run();
     new ChangeQueueTest().run();
     new EventDispatcherTest().run();
-    new PropertyTest().run();
+    new ReactivePropertyTest().run();
     new ProtoChainTest().run();
     new QueueTest().run();
     new VDOMTest().run();

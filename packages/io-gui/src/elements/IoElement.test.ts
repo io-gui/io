@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, Node, Change, PropertyDefinitions } from '../index';
+import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from '../index';
 
 const element = new IoElement();
 element.style.display = 'none';
@@ -8,7 +8,7 @@ document.body.appendChild(element as unknown as HTMLElement);
 const eventStack: string[] = [];
 
 class TestElement extends IoElement {
-  static get Properties(): PropertyDefinitions {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop0: {
         reflect: true,
@@ -37,7 +37,7 @@ export default class {
       });
       it('Invokes change events and functions', () => {
         class TestNode extends Node {
-          static get Properties(): PropertyDefinitions {
+          static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
               prop0: 0,
               prop1: '',
@@ -56,7 +56,7 @@ export default class {
         Register(TestNode);
 
         class TestSubelement extends IoElement {
-          static get Properties(): PropertyDefinitions {
+          static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
               prop0: 0,
               prop1: '',
@@ -66,7 +66,7 @@ export default class {
         Register(TestSubelement);
 
         class TestElement1 extends IoElement {
-          static get Properties(): PropertyDefinitions {
+          static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
               prop0: -1,
               prop1: {
@@ -181,7 +181,7 @@ export default class {
         eventStack.length = 0;
 
         class TestElement2 extends IoElement {
-          static get Properties(): PropertyDefinitions {
+          static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
               prop0: -1,
               prop1: {
@@ -230,7 +230,7 @@ export default class {
       it('Should correctly set values when setProperties() is used to re-set multiple bindings', async () => {
         @Register
         class TestBindingElement extends IoElement {
-          static get Properties(): PropertyDefinitions {
+          static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
               prop1: 'subnode1',
               prop2: 'subnode2',
@@ -241,7 +241,7 @@ export default class {
 
         @Register
         class TestBindingElementTarget extends IoElement {
-          static get Properties(): PropertyDefinitions {
+          static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
               prop1: 'target1',
               prop2: 'target2',

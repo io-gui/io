@@ -19,28 +19,28 @@ export default class {
         expect(element.role).to.equal('textbox');
         expect(element.spellcheck).to.equal(false);
 
-        expect(element._properties.get('conversion')).to.eql({
+        expect(element._reactiveProperties.get('conversion')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: Number,
           value: 1,
         });
-        expect(element._properties.get('step')).to.eql({
+        expect(element._reactiveProperties.get('step')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: Number,
           value: 0.0001,
         });
-        expect(element._properties.get('min')).to.eql({
+        expect(element._reactiveProperties.get('min')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,
           type: Number,
           value: -Infinity,
         });
-        expect(element._properties.get('max')).to.eql({
+        expect(element._reactiveProperties.get('max')).to.eql({
           binding: undefined,
           init: undefined,
           reflect: false,

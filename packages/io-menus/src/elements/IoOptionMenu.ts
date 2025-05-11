@@ -1,4 +1,4 @@
-import { Register, IoElement, Change, Property, IoElementProps, VDOMElement, WithBinding, Default } from 'io-gui';
+import { Register, IoElement, Change, ReactiveProperty, IoElementProps, VDOMElement, WithBinding, Property } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem } from './IoMenuItem.js';
@@ -42,16 +42,16 @@ export class IoOptionMenu extends IoElement {
     `;
   }
 
-  @Property({value: undefined, reflect: true})
+  @ReactiveProperty({value: undefined, reflect: true})
   declare value: any;
 
-  @Property({value: dummyOptions, type: MenuOptions, reflect: true})
+  @ReactiveProperty({value: dummyOptions, type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
-  @Property(MenuItem)
+  @ReactiveProperty(MenuItem)
   declare item: MenuItem;
 
-  @Default('button')
+  @Property('button')
   declare role: string;
 
   constructor(args: IoOptionMenuProps = {}) { super(args); }

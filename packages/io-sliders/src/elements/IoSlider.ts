@@ -1,4 +1,4 @@
-import { Register, Property,  IoGl, IoElementProps, Binding, VDOMElement, Default, focusTo } from 'io-gui';
+import { Register, ReactiveProperty,  IoGl, IoElementProps, Binding, VDOMElement, Property, focusTo } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -58,37 +58,37 @@ export class IoSlider extends IoGl {
     `;
   }
 
-  @Property(0)
+  @ReactiveProperty(0)
   declare value: number;
 
-  @Property(0.01)
+  @ReactiveProperty(0.01)
   declare step: number;
 
-  @Property(0)
+  @ReactiveProperty(0)
   declare min: number;
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare max: number;
 
-  @Property(1)
+  @ReactiveProperty(1)
   declare exponent: number;
 
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare vertical: boolean;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare invalid: boolean;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 
-  @Default(false)
+  @Property(false)
   declare noscroll: boolean;
 
-  @Default('slider')
+  @Property('slider')
   declare role: string;
 
-  @Default('0')
+  @Property('0')
   declare tabIndex: string;
 
   #startX = 0;

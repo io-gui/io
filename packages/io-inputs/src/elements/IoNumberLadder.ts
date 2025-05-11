@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, WithBinding, Default } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, WithBinding, Property } from 'io-gui';
 import { IoNumber } from './IoNumber';
 import { ioNumberLadderStep } from './IoNumberLadderStep';
 
@@ -115,13 +115,13 @@ class IoNumberLadder extends IoElement {
     `;
   }
   // TODO: rename
-  @Property({value: undefined, type: IoElement})
+  @ReactiveProperty({value: undefined, type: IoElement})
   declare src?: IoNumber;
 
-  @Property({value: false, type: Boolean, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
 
-  @Default('listbox')
+  @Property('listbox')
   declare role: string;
 
   static get Listeners() {

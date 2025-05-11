@@ -1,7 +1,7 @@
 import { Node, Register } from 'io-gui';
 
 export class TodoModel extends Node {
-  static get Properties() {
+  static get ReactiveProperties() {
     return {
       items: Array,
     };
