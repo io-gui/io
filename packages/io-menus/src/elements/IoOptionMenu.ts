@@ -1,4 +1,4 @@
-import { Register, IoElement, Change, Property, IoElementProps, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { Register, IoElement, Change, Property, IoElementProps, VDOMElement, WithBinding, Default } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem } from './IoMenuItem.js';
@@ -6,11 +6,11 @@ import { ioMenuItem } from './IoMenuItem.js';
 const dummyOptions = new MenuOptions();
 // TODO: fix tab-out without collapse
 
-export type IoOptionMenuProps = IoElementProps & PropsWithBinding<{
-  value?: any;
-  options?: MenuOptions;
-  item?: MenuItem;
-}>;
+export type IoOptionMenuProps = IoElementProps & {
+  value?: WithBinding<any>,
+  options?: MenuOptions,
+  item?: MenuItem,
+};
 
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.

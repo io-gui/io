@@ -1,4 +1,4 @@
-import { Node, Register, NodeProps, Property, PropsWithBinding } from 'io-gui';
+import { Node, Register, NodeProps, Property, WithBinding } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
 
 export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
@@ -6,7 +6,7 @@ export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none
 // TODO: MenuItemProps options shoudl be array of MenuItemDefLoose
 export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
 
-export type MenuItemProps = NodeProps & PropsWithBinding<{
+export type MenuItemProps = NodeProps & {
   value?: any,
   label?: string,
   icon?: string,
@@ -15,9 +15,9 @@ export type MenuItemProps = NodeProps & PropsWithBinding<{
   mode?: MenuItemSelectType,
   hidden?: boolean,
   disabled?: boolean,
-  selected?: boolean,
+  selected?: WithBinding<boolean>,
   options?: MenuOptions | MenuItemDefLoose[]
-}>;
+};
 
 // TODO: documentation!
 

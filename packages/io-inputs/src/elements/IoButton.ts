@@ -1,10 +1,10 @@
-import { Register, Property, span, PropsWithBinding, VDOMElement, Default } from 'io-gui';
+import { Register, Property, span, VDOMElement, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField, IoFieldProps } from './IoField';
 
-export type IoButtonProps = IoFieldProps & PropsWithBinding<{
-  action?: Function;
-}>;
+export type IoButtonProps = IoFieldProps & {
+  action?: Function,
+};
 
 /**
  * Button element.

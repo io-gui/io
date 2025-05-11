@@ -1,11 +1,11 @@
-import { Register, Property, VDOMElement, Default, focusTo, Binding } from 'io-gui';
+import { Register, Property, VDOMElement, Default, focusTo, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 
 export type IoStringProps = Omit<IoFieldProps, 'value'> & {
-  value?: string | Binding<string>;
-  live?: boolean | Binding<boolean>;
-  placeholder?: string | Binding<string>;
-  appearance?: 'neutral' | 'inset' | 'outset';
+  value?: WithBinding<string>,
+  live?: boolean,
+  placeholder?: string,
+  appearance?: 'neutral' | 'inset' | 'outset',
 };
 
 /**

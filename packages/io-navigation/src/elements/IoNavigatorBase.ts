@@ -1,15 +1,15 @@
-import { IoElement, VDOMElement, Property, Autobind, IoElementProps, PropsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Property, Autobind, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 
-export type IoNavigatorBaseProps = IoElementProps & PropsWithBinding<{
-  options?: MenuOptions;
-  slotted?: VDOMElement[];
-  elements?: VDOMElement[];
-  menu?: 'top' | 'left' | 'bottom' | 'right';
-  depth?: number;
-  collapsed?: boolean;
-  collapseWidth?: number;
-}>;
+export type IoNavigatorBaseProps = IoElementProps & {
+  options?: MenuOptions,
+  slotted?: VDOMElement[],
+  elements?: VDOMElement[],
+  menu?: 'top' | 'left' | 'bottom' | 'right',
+  depth?: number,
+  collapsed?: WithBinding<boolean>,
+  collapseWidth?: number,
+};
 
 export class IoNavigatorBase extends IoElement {
   static vConstructor: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

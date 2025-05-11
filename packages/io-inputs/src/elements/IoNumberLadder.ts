@@ -1,4 +1,4 @@
-import { Register, Property, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { Register, Property, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, WithBinding, Default } from 'io-gui';
 import { IoNumber } from './IoNumber';
 import { ioNumberLadderStep } from './IoNumberLadderStep';
 
@@ -16,10 +16,10 @@ let lastFocus: Element | null = null;
   }, {capture: true});
 }
 
-export type IoNumberLadderProps = IoElementProps & PropsWithBinding<{
-  src?: IoNumber;
-  expanded?: boolean;
-}>;
+export type IoNumberLadderProps = IoElementProps & {
+  src?: IoNumber,
+  expanded?: WithBinding<boolean>,
+};
 
 /**
  * Interactive number ladder.

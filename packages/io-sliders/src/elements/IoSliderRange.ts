@@ -1,13 +1,13 @@
-import { Register, Property, VDOMElement, PropsWithBinding } from 'io-gui';
+import { Register, Property, VDOMElement } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
-export type IoSliderRangeProps = IoSliderBaseProps & PropsWithBinding<{
+export type IoSliderRangeProps = IoSliderBaseProps & {
   // TODO TS does not support narrowing of the type values here? :/
-  // value?: [number, number];
-  // step?: number;
-  // min?: number;
-  // max?: number;
-}>;
+  // value?: [number, number],
+  // step?: number,
+  // min?: number,
+  // max?: number,
+};
 
 /**
  * Input element for `Array(2)` data type displayed as slider.

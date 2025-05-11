@@ -1,14 +1,14 @@
-import { Register, Property, VDOMElement, Binding, IoElement, IoElementProps, span, Default, focusTo } from 'io-gui';
+import { Register, Property, VDOMElement, IoElement, IoElementProps, span, Default, focusTo, WithBinding } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
-  value?: any | Binding<any>;
-  icon?: string | Binding<string>;
-  label?: string| Binding<string>;
-  selected?: boolean | Binding<boolean>;
-  disabled?: boolean | Binding<boolean>;
-  appearance?: 'neutral' | 'inset' | 'outset';
-  pattern?: string;
+  value?: WithBinding<any>,
+  icon?: string,
+  label?: string,
+  selected?: boolean,
+  disabled?: boolean,
+  appearance?: 'neutral' | 'inset' | 'outset',
+  pattern?: string,
 };
 
 @Register

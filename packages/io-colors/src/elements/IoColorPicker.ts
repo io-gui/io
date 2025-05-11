@@ -1,15 +1,10 @@
-import { Register, Property, IoElement, IoOverlaySingleton, IoElementProps, PropsWithBinding, VDOMElement, Default } from 'io-gui';
+import { Register, Property, IoElement, IoOverlaySingleton, IoElementProps, VDOMElement, Default, WithBinding } from 'io-gui';
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton';
 import { ioColorSwatch } from './IoColorSwatch';
 
-export type IoColorPickerProps = IoElementProps & PropsWithBinding<{
-  value?: {
-    r: number;
-    g: number;
-    b: number;
-    a?: number;
-  }
-}>;
+export type IoColorPickerProps = IoElementProps &{
+  value?: WithBinding<{ r: number, g: number, b: number, a?: number }>,
+};
 
 @Register
 export class IoColorPicker extends IoElement {

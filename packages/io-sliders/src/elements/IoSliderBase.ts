@@ -1,18 +1,18 @@
-import { Property, IoGl, IoGlProps, VDOMElement, PropsWithBinding, Default, focusTo } from 'io-gui';
+import { Property, IoGl, IoElementProps, VDOMElement, WithBinding, Default, focusTo } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
 
-export type IoSliderBaseProps = IoGlProps & PropsWithBinding<{
-  value?:  number | [number, number];
-  step?:  number | [number, number];
-  min?: number | [number, number];
-  max?: number | [number, number];
-  exponent?: number;
-  vertical?: boolean;
-  noscroll?: boolean;
-}>;
+export type IoSliderBaseProps = IoElementProps & {
+  value?:  WithBinding<number | [number, number]>,
+  step?:  number | [number, number],
+  min?: number | [number, number],
+  max?: number | [number, number],
+  exponent?: number,
+  vertical?: boolean,
+  noscroll?: boolean,
+};
 
 export class IoSliderBase extends IoGl {
   static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

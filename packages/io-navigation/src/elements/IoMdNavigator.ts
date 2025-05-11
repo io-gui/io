@@ -1,15 +1,15 @@
-import { IoElement, VDOMElement, Register, Property, IoElementProps, PropsWithBinding } from 'io-gui';
+import { IoElement, VDOMElement, Register, Property, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
 import { ioMarkdown } from 'io-markdown';
 
-export type IoMdNavigatorProps = IoElementProps & PropsWithBinding<{
-  options?: MenuOptions;
-  slotted?: VDOMElement[];
-  menu?: 'top' | 'left' | 'bottom' | 'right';
-  depth?: number;
-  collapsed?: boolean;
-  collapseWidth?: number;
-}>;
+export type IoMdNavigatorProps = IoElementProps & {
+  options?: MenuOptions,
+  slotted?: VDOMElement[],
+  menu?: 'top' | 'left' | 'bottom' | 'right',
+  depth?: number,
+  collapsed?: WithBinding<boolean>,
+  collapseWidth?: number,
+};
 
 @Register
 export class IoMdNavigator extends IoElement {

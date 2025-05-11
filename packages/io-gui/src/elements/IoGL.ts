@@ -2,7 +2,7 @@ import { Register } from '../decorators/Register';
 import { Property } from '../decorators/Property';
 import { PropertyInstance, PropertyDefinition } from '../core/Property';
 import { VDOMElement } from '../vdom/VDOM';
-import { Node, PropsWithBinding } from '../nodes/Node';
+import { Node } from '../nodes/Node';
 import { ThemeSingleton, Color } from '../nodes/Theme';
 import { IoElement, IoElementProps } from './IoElement';
 import { glsl } from './IoGL.glsl';
@@ -36,14 +36,9 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 const shadersCache = new WeakMap();
 let currentProgram: WebGLProgram | null;
 
-
-export type IoGlProps = IoElementProps & PropsWithBinding<{
-  color?: [number, number, number, number];
-}>;
-
 @Register
 export class IoGl extends IoElement {
-  static vConstructor: (arg0?: IoGlProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -71,12 +66,6 @@ export class IoGl extends IoElement {
 
   @Property({type: Array, init: [0, 0]})
   declare size: [number, number];
-
-  @Property({type: Array, init: [1, 1, 1, 1]})
-  declare color: [number, number, number, number];
-
-  @Property({type: Boolean, value: false})
-  declare transparent: boolean;
 
   @Property({type: Number, value: 1})
   declare pxRatio: number;
@@ -122,7 +111,7 @@ export class IoGl extends IoElement {
   static get Frag() {
     return /* glsl */`
       void main(void) {
-        gl_FragColor = uColor;
+        gl_FragColor = io_color;
       }\n\n`;
   }
   initPropertyUniform(name: string, property: PropertyDefinition) {
@@ -186,7 +175,7 @@ export class IoGl extends IoElement {
 
     return program;
   }
-  constructor(args: IoGlProps = {}) {
+  constructor(args: IoElementProps = {}) {
     super(args);
 
     this.#canvas = document.createElement('canvas');
@@ -294,11 +283,9 @@ export class IoGl extends IoElement {
     canvas.height = height;
     gl.viewport(0, 0, width, height);
 
-    if (this.transparent) {
-      gl.clearColor(0, 0, 0, 0);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      this.#ctx.clearRect(0, 0, width, height);
-    }
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    this.#ctx.clearRect(0, 0, width, height);
 
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 

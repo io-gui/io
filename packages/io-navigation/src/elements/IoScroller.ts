@@ -1,9 +1,9 @@
-import { Register, IoElement, Property, Autobind, IoElementProps, PropsWithBinding, VDOMElement } from 'io-gui';
+import { Register, IoElement, Property, Autobind, IoElementProps, VDOMElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
-export type IoScrollerProps = IoElementProps & PropsWithBinding<{
-  options?: MenuOptions;
-}>;
+export type IoScrollerProps = IoElementProps & {
+  options?: MenuOptions,
+};
 
 @Register
 export class IoScroller extends IoElement {

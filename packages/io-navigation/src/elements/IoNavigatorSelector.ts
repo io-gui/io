@@ -1,12 +1,12 @@
-import { VDOMElement, Register, Property, PropsWithBinding } from 'io-gui';
+import { VDOMElement, Register, Property } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioSelector } from './IoSelector.js';
 
-export type IoNavigatorSelectorProps = IoNavigatorBaseProps & PropsWithBinding<{
-  select?: 'first' | 'last';
-  cache?: boolean;
-  precache?: boolean;
-}>;
+export type IoNavigatorSelectorProps = IoNavigatorBaseProps & {
+  select?: 'first' | 'last',
+  cache?: boolean,
+  precache?: boolean,
+};
 
 @Register
 export class IoNavigatorSelector extends IoNavigatorBase {

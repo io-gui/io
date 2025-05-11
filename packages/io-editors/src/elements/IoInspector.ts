@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, IoElementProps, PropsWithBinding, span, a } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoElementProps, WithBinding, span, a } from 'io-gui';
 import { ioBreadcrumbs } from './IoBreadcrumbs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
@@ -6,14 +6,14 @@ import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
 import { EditorWidgets } from '../utils/EditorWidgets';
 import { ioPropertyLink } from './IoPropertyLink';
 
-export type IoInspectorProps = IoElementProps & PropsWithBinding<{
-  value?: Record<string, any> | any[];
-  selected?: Record<string, any> | any[];
-  config?: EditorConfig;
-  groups?: EditorGroups;
-  widgets?: EditorWidgets;
-  search?: string;
-}>;
+export type IoInspectorProps = IoElementProps & {
+  value?: Record<string, any> | any[],
+  selected?: WithBinding<Record<string, any> | any[]>,
+  search?: WithBinding<string>,
+  config?: EditorConfig,
+  groups?: EditorGroups,
+  widgets?: EditorWidgets,
+};
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
@@ -48,6 +48,9 @@ export class IoInspector extends IoElement {
   @Property()
   declare selected: Record<string, any> | any[];
 
+  @Property('')
+  declare search: string;
+
   @Property({type: Map})
   declare config: EditorConfig;
 
@@ -56,9 +59,6 @@ export class IoInspector extends IoElement {
 
   @Property({type: Map})
   declare widgets: EditorWidgets;
-
-  @Property('')
-  declare search: string;
 
   static get Listeners() {
     return {

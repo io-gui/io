@@ -29,8 +29,8 @@ export class IoElement extends NodeMixin(HTMLElement) {
   static get Style() {
     return /* css */`
       :host {
-        box-sizing: border-box;
         display: block;
+        box-sizing: border-box;
         -webkit-touch-callout: none;
       }
     `;

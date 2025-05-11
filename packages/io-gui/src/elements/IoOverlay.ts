@@ -1,6 +1,5 @@
 import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
-import { PropsWithBinding } from '../nodes/Node';
 import { IoElement, IoElementProps } from './IoElement';
 
 let lastFocus: Element | null = null;
@@ -18,10 +17,6 @@ window.addEventListener('blur', () => {
 }, {capture: true});
 
 export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
-
-export type IoOverlayProps = IoElementProps & PropsWithBinding<{
-  expanded?: boolean;
-}>;
 
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
@@ -80,7 +75,7 @@ class IoOverlay extends IoElement {
       'keyup': ['stopPropagation', {passive: false}],
     };
   }
-  constructor(args: IoOverlayProps = {}) {
+  constructor(args: IoElementProps = {}) {
     super(args);
     Object.defineProperty(this, 'x', {value: 0, writable: true});
     Object.defineProperty(this, 'y', {value: 0, writable: true});

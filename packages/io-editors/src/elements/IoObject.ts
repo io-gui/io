@@ -1,20 +1,20 @@
-import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, Default } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, WithBinding, VDOMElement, Default } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';
 import { EditorGroups } from '../utils/EditorGroups';
 import { EditorWidgets } from '../utils/EditorWidgets';
 
-export type IoObjectProps = IoElementProps & PropsWithBinding<{
-  value?: Record<string, any> | any[];
-  properties?: string[];
-  config?: EditorConfig;
-  groups?: EditorGroups;
-  widgets?: EditorWidgets;
-  labeled?: boolean;
-  label?: string;
-  expanded?: boolean;
-}>;
+export type IoObjectProps = IoElementProps & {
+  value?: Record<string, any> | any[],
+  properties?: string[],
+  labeled?: boolean,
+  label?: string,
+  expanded?: WithBinding<boolean>,
+  config?: EditorConfig,
+  groups?: EditorGroups,
+  widgets?: EditorWidgets,
+};
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
@@ -57,15 +57,6 @@ export class IoObject extends IoElement {
   @Property({type: Array})
   declare properties: string[];
 
-  @Property({type: Map})
-  declare config: EditorConfig;
-
-  @Property({type: Map})
-  declare groups: EditorGroups;
-
-  @Property({type: Map})
-  declare widgets: EditorWidgets;
-
   @Property(true)
   declare labeled: boolean;
 
@@ -74,6 +65,15 @@ export class IoObject extends IoElement {
 
   @Property({value: false, reflect: true})
   declare expanded: boolean;
+
+  @Property({type: Map})
+  declare config: EditorConfig;
+
+  @Property({type: Map})
+  declare groups: EditorGroups;
+
+  @Property({type: Map})
+  declare widgets: EditorWidgets;
 
   @Default('region')
   declare role: string;

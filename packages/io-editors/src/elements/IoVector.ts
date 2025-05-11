@@ -1,16 +1,16 @@
-import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, Node } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, WithBinding, VDOMElement, Node } from 'io-gui';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
-export type IoVectorProps = IoElementProps & PropsWithBinding<{
-  value?: {x: number, y: number, z?: number, w?: number} | number[];
-  conversion?: number;
-  step?: number;
-  min?: number;
-  max?: number;
-  linkable?: boolean;
-  linked?: boolean;
-  ladder?: boolean;
-}>;
+export type IoVectorProps = IoElementProps & {
+  value?: {x: number, y: number, z?: number, w?: number} | number[],
+  conversion?: number,
+  step?: number,
+  min?: number,
+  max?: number,
+  linkable?: boolean,
+  linked?: WithBinding<boolean>,
+  ladder?: boolean,
+};
 /**
  * Input element for vector arrays and objects.
  **/

@@ -1,13 +1,13 @@
-import { Register, Property, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { Register, Property, VDOMElement, Default } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
 
-export type IoSlider2dProps = IoSliderBaseProps & PropsWithBinding<{
+export type IoSlider2dProps = IoSliderBaseProps & {
   // TODO TS does not support narrowing of the type values here? :/
-  // value?: [number, number];
-  // step?: [number, number];
-  // min?: [number, number];
-  // max?: [number, number];
-}>;
+  // value?: [number, number],
+  // step?: [number, number],
+  // min?: [number, number],
+  // max?: [number, number],
+};
 
 @Register
 export class IoSlider2d extends IoSliderBase {

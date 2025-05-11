@@ -1,10 +1,10 @@
-import { PropsWithBinding, Property, Register, span, VDOMElement } from 'io-gui';
+import { Property, Register, span, VDOMElement } from 'io-gui';
 import { IoButton, IoButtonProps } from 'io-inputs';
 
-export type IoPropertyLinkProps = IoButtonProps & PropsWithBinding<{
-  value?: Object;
-  showName?: boolean;
-}>;
+export type IoPropertyLinkProps = IoButtonProps & {
+  value?: Object,
+  showName?: boolean,
+};
 
 @Register
 export class IoPropertyLink extends IoButton {

@@ -1,16 +1,16 @@
-import { Register, Property, IoOverlaySingleton, VDOMElement, PropsWithBinding, Default, focusTo } from 'io-gui';
+import { Register, Property, IoOverlaySingleton, VDOMElement, WithBinding, Default, focusTo } from 'io-gui';
 import { IoNumberLadderSingleton } from './IoNumberLadder';
 import { IoField, IoFieldProps } from './IoField';
 
-export type IoNumberProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
-  value?: number;
+export type IoNumberProps = Omit<IoFieldProps, 'value'> & {
+  value?: WithBinding<number>;
   live?: boolean;
   conversion?: number;
   step?: number;
   min?: number;
   max?: number;
   ladder?: boolean;
-}>;
+};
 
 /**
  * Input element for `Number` data type.

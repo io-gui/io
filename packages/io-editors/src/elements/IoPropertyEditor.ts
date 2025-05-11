@@ -1,18 +1,18 @@
-import { IoElement, Property, Register, IoElementProps, Node, span, div, PropsWithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
+import { IoElement, Property, Register, IoElementProps, Node, span, div, WithBinding, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig';
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets';
 
 import { ioObject } from './IoObject';
 
-export type IoPropertyEditorProps = IoElementProps & PropsWithBinding<{
-  value?: Record<string, any> | any[];
-  properties?: string[];
-  config?: EditorConfig;
-  groups?: EditorGroups;
-  widgets?: EditorWidgets;
-  labeled?: boolean;
-}>;
+export type IoPropertyEditorProps = IoElementProps & {
+  value?: Record<string, any> | any[],
+  properties?: string[],
+  labeled?: boolean,
+  config?: EditorConfig,
+  groups?: EditorGroups,
+  widgets?: EditorWidgets,
+};
 
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
@@ -72,6 +72,9 @@ export class IoPropertyEditor extends IoElement {
   @Property({type: Array})
   declare properties: string[];
 
+  @Property(true)
+  declare labeled: boolean;
+
   @Property({type: Map})
   declare config: EditorConfig;
 
@@ -80,9 +83,6 @@ export class IoPropertyEditor extends IoElement {
 
   @Property({type: Map})
   declare widgets: EditorWidgets;
-
-  @Property(true)
-  declare labeled: boolean;
 
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation();

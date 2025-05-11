@@ -1,10 +1,10 @@
-import { Register, Property, span, VDOMElement, PropsWithBinding, Default, focusTo } from 'io-gui';
+import { Register, Property, span, VDOMElement, Default, focusTo } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 
-export type IoNumberLadderStepProps = IoFieldProps & PropsWithBinding<{
-  value?: number;
-  label?: string;
-}>;
+export type IoNumberLadderStepProps = IoFieldProps & {
+  value?: number,
+  label?: string,
+};
 
 @Register
 export class IoNumberLadderStep extends IoField {

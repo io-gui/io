@@ -1,8 +1,19 @@
-import { IoGl, Node, ThemeSingleton } from '../index';;
+import { IoGl, Node, ThemeSingleton, Property, Register } from '../index';;
 
-const element = new IoGl();
+@Register
+class IoGlTest extends IoGl {
+  @Property({type: Array, init: [0, 0, 0, 0]})
+  declare color: [number, number, number, number];
+  static get Frag() {
+    return /* glsl */`
+      void main(void) {
+        gl_FragColor = uColor;
+      }\n\n`;
+  }
+}
+
+const element = new IoGlTest();
 element.size = [0, 0];
-element.color = [0, 0, 0, 0];
 element.pxRatio = 1;
 element.style.visibility = 'hidden';
 element.style.position = 'fixed';
@@ -38,14 +49,6 @@ export default class {
           value: [0, 0],
         });
 
-        expect(element._properties.get('color')).to.eql({
-          binding: undefined,
-          init: [1, 1, 1, 1],
-          reflect: false,
-          type: Array,
-          value: [0, 0, 0, 0],
-        });
-
         expect(element._properties.get('pxRatio')).to.eql({
           binding: undefined,
           init: undefined,
@@ -75,14 +78,13 @@ export default class {
         expect(element.pxRatio).to.equal(window.devicePixelRatio);
       });
       it('has correct color', () => {
-        let color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data;
+        let color = element.ctx.getImageData(0, 0, 1, 1).data;
         expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
         element.color = [1, 0.5, 0.25, 1];
         element._onRender();
-        color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data;
+        color = element.ctx.getImageData(0, 0, 1, 1).data;
         expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
 
-        element.transparent = true;
         element.color = [1, 0.25, 0.5, 0.5];
         element._onRender();
         color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data;

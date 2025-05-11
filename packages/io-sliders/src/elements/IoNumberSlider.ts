@@ -1,15 +1,15 @@
-import { Register, IoElement, Property, VDOMElement, IoElementProps, PropsWithBinding } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
 import {ioSlider} from './IoSlider';
 import {ioNumber} from 'io-inputs';
 
-export type IoNumberSliderProps = IoElementProps & PropsWithBinding<{
-  value?: number;
-  step?: number;
-  min?: number;
-  max?: number;
-  exponent?: number;
-  conversion?: number;
-}>;
+export type IoNumberSliderProps = IoElementProps & {
+  value?: WithBinding<number>,
+  step?: number,
+  min?: number,
+  max?: number,
+  exponent?: number,
+  conversion?: number,
+};
 
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`

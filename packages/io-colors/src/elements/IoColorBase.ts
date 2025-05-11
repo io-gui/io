@@ -1,14 +1,9 @@
-import { IoElement, IoElementProps, Property, Register, VDOMElement, PropsWithBinding } from 'io-gui';
+import { IoElement, IoElementProps, Property, Register, VDOMElement, WithBinding } from 'io-gui';
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js';
 
-export type IoColorBaseProps = IoElementProps & PropsWithBinding<{
-  value?: {
-    r: number;
-    g: number;
-    b: number;
-    a?: number;
-  }
-}>;
+export type IoColorBaseProps = IoElementProps & {
+  value?: WithBinding<{ r: number, g: number, b: number, a?: number }>,
+};
 
 @Register
 export class IoColorBase extends IoElement {

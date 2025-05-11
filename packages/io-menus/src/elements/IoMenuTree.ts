@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, Storage as $, genObjectStorageID, div, IoElementProps, PropsWithBinding, Default } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, Storage as $, genObjectStorageID, div, IoElementProps, WithBinding, Default } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -53,13 +53,13 @@ export function filterOptions(options: MenuOptions, search: string, depth = 5, e
   }
 }
 
-export type IoMenuTreeProps = IoElementProps & PropsWithBinding<{
-  options?: MenuOptions;
-  searchable?: boolean;
-  search?: string;
-  depth?: number;
-  slotted?: VDOMElement[];
-}>;
+export type IoMenuTreeProps = IoElementProps & {
+  options?: MenuOptions,
+  searchable?: boolean,
+  search?: WithBinding<string>,
+  depth?: number,
+  slotted?: VDOMElement[],
+};
 
 @Register
 export class IoMenuTree extends IoElement {

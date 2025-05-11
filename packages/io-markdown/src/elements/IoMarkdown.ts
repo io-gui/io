@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, ThemeSingleton, IoElementProps, PropsWithBinding, VDOMElement, Default } from 'io-gui';
+import { Register, IoElement, Property, ThemeSingleton, IoElementProps, WithBinding, VDOMElement, Default } from 'io-gui';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';
@@ -15,12 +15,12 @@ const marked = new Marked(
   })
 );
 
-export type IoMarkdownProps = IoElementProps & PropsWithBinding<{
-  src?: string;
-  strip?: string[];
-  loading?: boolean;
-  sanitize?: boolean;
-}>;
+export type IoMarkdownProps = IoElementProps & {
+  src?: string,
+  strip?: string[],
+  loading?: WithBinding<boolean>,
+  sanitize?: boolean,
+};
 
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.

@@ -1,13 +1,13 @@
-import { Register, Property, glsl, VDOMElement, PropsWithBinding, Node } from 'io-gui';
+import { Register, Property, glsl, VDOMElement, WithBinding, Node } from 'io-gui';
 import { IoColorBase, IoColorBaseProps } from './IoColorBase';
 import { IoSlider, IoSlider2d } from 'io-sliders';
 
-export type IoColorSliderProps = IoColorBaseProps & PropsWithBinding<{
-  color?: [number, number, number, number];
-  step?: number;
-  channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
-  vertical?: boolean;
-}>;
+export type IoColorSliderProps = IoColorBaseProps & {
+  color?: WithBinding<[number, number, number, number]>,
+  step?: number,
+  channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl',
+  vertical?: boolean,
+};
 
 /**
  * A generic color slider element.
@@ -200,6 +200,9 @@ export const ioColorSlider = IoColorSlider.vConstructor;
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSliderBase extends IoSlider {
+  @Property({type: Array, init: [0, 0, 0, 0]})
+  declare color: [number, number, number, number];
+
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!
@@ -256,6 +259,9 @@ class IoColorSliderBase extends IoSlider {
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSlider2dBase extends IoSlider2d {
+  @Property({type: Array, init: [0, 0, 0, 0]})
+  declare color: [number, number, number, number];
+
   static get GlUtils() {
     return /* glsl */`
       // Note: Implement in subclass!

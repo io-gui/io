@@ -1,13 +1,12 @@
-import { Register, IoElement, Property, IoElementProps, PropsWithBinding, VDOMElement, div } from 'io-gui';
+import { Register, IoElement, Property, IoElementProps, WithBinding, VDOMElement, div, Default } from 'io-gui';
 import { ioPropertyLink } from './IoPropertyLink';
 import { ioButton, ioString } from 'io-inputs';
 
-export type IoBreadcrumbsProps = IoElementProps & PropsWithBinding<{
-  value?: Object;
-  selected?: Object;
-  crumbs?: Array<Object>;
-  search?: string;
-}>;
+export type IoBreadcrumbsProps = IoElementProps & {
+  value?: Object,
+  selected?: WithBinding<Object>,
+  search?: WithBinding<string>,
+};
 
 /**
  * Breadcrumbs select element.
@@ -72,22 +71,22 @@ export class IoBreadcrumbs extends IoElement {
   @Property({type: Object})
   declare selected: Object;
 
-  @Property({type: Array})
-  declare crumbs: Array<Object>;
-
   @Property({type: String, reflect: true})
   declare search: string;
 
+  @Default([])
+  declare _crumbs: Array<Object>;
+
   valueChanged() {
-    this.crumbs.length = 0;
-    this.crumbs.push(this.value);
+    this._crumbs.length = 0;
+    this._crumbs.push(this.value);
   }
   selectedChanged() {
-    const index = this.crumbs.indexOf(this.selected);
+    const index = this._crumbs.indexOf(this.selected);
     if (index !== -1) {
-      this.crumbs.length = index + 1;
+      this._crumbs.length = index + 1;
     } else {
-      this.crumbs.push(this.selected);
+      this._crumbs.push(this.selected);
     }
   }
   onClearSearch() {
@@ -95,19 +94,19 @@ export class IoBreadcrumbs extends IoElement {
   }
   changed() {
     const elements = [];
-    if (this.crumbs.length > 1) {
+    if (this._crumbs.length > 1) {
       elements.push(ioButton({
         icon: 'io:arrow_left',
         class: 'back-button',
-        value: this.crumbs[this.crumbs.length - 2],
+        value: this._crumbs[this._crumbs.length - 2],
       }));
     }
     const crumbs = div();
     crumbs.children = [];
-    for (let i = Math.max(0, this.crumbs.length - 2); i < this.crumbs.length; i++) {
+    for (let i = Math.max(0, this._crumbs.length - 2); i < this._crumbs.length; i++) {
       crumbs.children.push(ioPropertyLink({
-        value: this.crumbs[i],
-        showName: i === this.crumbs.length - 1,
+        value: this._crumbs[i],
+        showName: i === this._crumbs.length - 1,
       }));
     }
     elements.push(

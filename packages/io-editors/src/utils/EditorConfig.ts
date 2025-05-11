@@ -127,7 +127,6 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   [IoGl, [
     ['size', ioVector({step: 1})],
     ['color', ioVector({step: 1})],
-    ['pxRatio', ioNumber({step: 0.0001})],
   ]],
   [Theme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],

@@ -20,14 +20,12 @@ export interface NodeConstructor<T> {
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 
 // Utility type to add Binding to all properties of a type
-export type PropsWithBinding<T> = {
-  [K in keyof T]: Exclude<T[K], undefined> | Binding<Exclude<T[K], undefined>>;
-};
+export type WithBinding<T> = T | Binding<T>;
 
-export type NodeProps = PropsWithBinding<{
+export type NodeProps = {
   reactivity?: 'none' | 'immediate' | 'throttled' | 'debounced';
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
-}>;
+};
 
 /**
  * Core mixin for `Node` classes.

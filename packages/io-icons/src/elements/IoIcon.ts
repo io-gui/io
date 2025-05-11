@@ -1,10 +1,10 @@
-import { Register, Property, IoElement, IoElementProps, VDOMElement, PropsWithBinding } from 'io-gui';
+import { Register, Property, IoElement, IoElementProps, VDOMElement } from 'io-gui';
 import { IconsetSingleton } from '../nodes/Iconset';
 
-export type IoIconProps = IoElementProps & PropsWithBinding<{
-  value?: string;
-  stroke?: boolean;
-}>;
+export type IoIconProps = IoElementProps & {
+  value?: string,
+  stroke?: boolean,
+};
 
 /**
  * SVG icon element.

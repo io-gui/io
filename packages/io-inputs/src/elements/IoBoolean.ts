@@ -1,12 +1,12 @@
-import { Register, Property, span, VDOMElement, PropsWithBinding, Default } from 'io-gui';
+import { Register, Property, span, VDOMElement, WithBinding, Default } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField, IoFieldProps } from './IoField';
 
-export type IoBooleanProps = Omit<IoFieldProps, 'value'> & PropsWithBinding<{
-  value?: boolean;
-  true?: string;
-  false?: string;
-}>;
+export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
+  value?: WithBinding<boolean>,
+  true?: string,
+  false?: string,
+};
 
 /**
  * Input element for `Boolean` data type displayed as text.

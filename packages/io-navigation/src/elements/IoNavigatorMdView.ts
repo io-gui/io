@@ -1,12 +1,12 @@
-import { VDOMElement, Register, Property, PropsWithBinding } from 'io-gui';
+import { VDOMElement, Register, Property } from 'io-gui';
 import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioScroller } from './IoScroller.js';
 import { ioMarkdown } from 'io-markdown';
 
-export type IoNavigatorMdViewProps = IoNavigatorBaseProps & PropsWithBinding<{
-  strip?: string[];
-  sanitize?: boolean;
-}>;
+export type IoNavigatorMdViewProps = IoNavigatorBaseProps & {
+  strip?: string[],
+  sanitize?: boolean,
+};
 
 @Register
 export class IoNavigatorMdView extends IoNavigatorBase {

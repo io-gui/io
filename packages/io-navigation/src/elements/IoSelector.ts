@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, Property, span, PropsWithBinding, NativeElementProps } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, Property, span, WithBinding, NativeElementProps } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -11,16 +11,16 @@ const dummyElement = document.createElement('div');
 
 const IMPORTED_PATHS: Record<string, any> = {};
 
-export type IoSelectorProps = IoElementProps & PropsWithBinding<{
-  options?: MenuOptions;
-  select?: 'first' | 'last';
-  elements?: VDOMElement[];
-  cache?: boolean;
-  precache?: boolean;
-  precacheDelay?: number;
-  loading?: boolean;
-  import?: string; // TODO: move to core?
-}>;
+export type IoSelectorProps = IoElementProps & {
+  options?: MenuOptions,
+  select?: 'first' | 'last',
+  elements?: VDOMElement[],
+  cache?: boolean,
+  precache?: boolean,
+  precacheDelay?: number,
+  loading?: WithBinding<boolean>,
+  import?: string, // TODO: move to core?
+};
 
 @Register
 export class IoSelector extends IoElement {

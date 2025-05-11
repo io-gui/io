@@ -1,4 +1,4 @@
-import { Register, IoElement, Property, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementProps, PropsWithBinding, Default } from 'io-gui';
+import { Register, IoElement, Property, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Default } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -8,19 +8,19 @@ import { ioMenuHamburger } from './IoMenuHamburger.js';
 import { IoContextMenu } from './IoContextMenu.js';
 const rects = new WeakMap();
 
-export type IoMenuOptionsProps = IoElementProps & PropsWithBinding<{
-  options?: MenuOptions;
-  expanded?: boolean;
-  horizontal?: boolean;
-  searchable?: boolean;
-  search?: string;
-  direction?: NudgeDirection;
-  depth?: number;
-  noPartialCollapse?: boolean;
-  inlayer?: boolean;
-  slotted?: VDOMElement[];
-  $parent?: IoMenuItem | IoContextMenu;
-}>;
+export type IoMenuOptionsProps = IoElementProps & {
+  options?: MenuOptions,
+  expanded?: WithBinding<boolean>,
+  horizontal?: boolean,
+  searchable?: boolean,
+  search?: WithBinding<string>,
+  direction?: NudgeDirection,
+  depth?: number,
+  noPartialCollapse?: boolean,
+  inlayer?: boolean,
+  slotted?: VDOMElement[],
+  $parent?: IoMenuItem | IoContextMenu,
+};
 
 /**
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
