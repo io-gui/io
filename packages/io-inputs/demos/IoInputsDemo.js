@@ -45,7 +45,7 @@ export class IoInputsDemo extends IoElement {
         ioField({label: 'icon', icon: 'io:io'}), // TODO
       ]),
       div({class: 'row'}, [
-        ioString({value: this.bind('string'), placeholder: 'io-string'}),
+        ioString({value: this.bind('string'), placeholder: this.bind('string')}),
         ioString({value: this.bind('string'), placeholder: 'io-string', label: 'live', live: true}),
       ]),
       div({class: 'row'}, [

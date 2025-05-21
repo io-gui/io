@@ -4,31 +4,23 @@ import { Node } from '../nodes/Node';
 type Properties = string[];
 type TargetProperties = WeakMap<Node, Properties>;
 
-// This helper checks if both values are NaN to prevent infinite update loops.
+// This helper checks if both values are NaN because NaN === NaN is false.
 const bothAreNaNs = function(value: any, oldValue: any) {
   return typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue);
 };
 
 /**
- * Property binding class that enables two-way data synchronization between `Node` and `IoElement` nodes.
- *
- * It manages bindings between a source node's property and one or more target nodes and properties.
- * Using a hub-and-spoke pub/sub event system, it maintains data consistency by automatically propagating
- * changes to all bound nodes and properties.
+ * This class is used internally by the framework to enable two-way data synchronization between reactive properties.
+ * It manages bindings between a source node's reactive property and one or more target nodes and reactive properties.
+ * It uses hub-and-spoke pub/sub event system and maintains data consistency by automatically propagating changes to all bound nodes and properties.
  *
  * Key features:
  * - Listens for `[propName]-changed` events to detect changes
- * - Sets properties using `node.setProperty(propName, value)` method
  * - Supports one-to-many property bindings
  * - Prevents circular update loops
  * - Automatically cleans up listeners when disposed
  *
- * Note: `debug: {}` code blocks are used in dev/debug builds for sanity checks.
- * They print error messages if unexpected state is detected.
- * In theory, they should never be reached.
- *
  * @example
- * // Create a two-way binding between nodeA.value and nodeB.value
  * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
@@ -44,6 +36,10 @@ export class Binding<T extends unknown> {
    * @param {string} property - Name of the sourceproperty
    */
   constructor(node: Node, property: string) {
+    debug: {
+      if (!node._isNode) console.warn('Binding: Source node is not a Node instance!');
+      if (!node._reactiveProperties.has(property)) console.warn(`Binding: Source node does not have a reactive property "${property}"!`);
+    }
     this.node = node;
     this.property = property;
     this.onSourceChanged = this.onSourceChanged.bind(this);
@@ -57,36 +53,6 @@ export class Binding<T extends unknown> {
     return this.node[this.property];
   }
   /**
-   * Returns a JSON representation of the binding.
-   * This is required for `JSON.stringify(protoProperties)` in `ProtoChain` to work more accurately.
-   * NOTE: this does not provide completely accurate signiture of the binding but it's good enough.
-   * @return {string} JSON representation of the binding.
-   */
-  toJSON() {
-    const targetProperties: Record<string, Properties> = {};
-    for (let i = 0; i < this.targets.length; i++) {
-      const target = this.targets[i];
-      const props = this.getTargetProperties(target);
-      targetProperties[target.constructor.name] = props;
-    }
-    return {
-      node: this.node.constructor.name,
-      property: this.property,
-      targets: this.targets.map(t => t.constructor.name),
-      targetProperties: targetProperties,
-    };
-  }
-  /**
-   * Helper function to get target properties from WeakMap
-   * Retrieves a list of target properties for specified target node.
-   * @param {Node} target - Target node.
-   * @return {Properties} list of target property names.
-   */
-  getTargetProperties(target: Node): Properties {
-    if (!this.targetProperties.has(target)) this.targetProperties.set(target, []);
-    return this.targetProperties.get(target)!;
-  }
-  /**
    * Adds a target node and property.
    * Sets itself as the binding reference on the target `ReactivePropertyInstance`.
    * Adds a `[propName]-changed` listener to the target node.
@@ -94,10 +60,15 @@ export class Binding<T extends unknown> {
    * @param {string} property - Target property
    */
   addTarget(target: Node, property: string) {
-    if (this.targets.indexOf(target) === -1) this.targets.push(target);
-
     const targetProps = this.getTargetProperties(target);
 
+    debug: {
+      if (!target._isNode) console.warn('Binding: Target node is not a Node instance!');
+      if (!target._reactiveProperties.has(property)) console.warn(`Binding: Target node does not have a reactive property "${property}"!`);
+      if (targetProps.indexOf(property) !== -1) console.error(`Binding: target property "${property}" already added!`);
+    }
+
+    if (this.targets.indexOf(target) === -1) this.targets.push(target);
     if (targetProps.indexOf(property) === -1) {
       targetProps.push(property);
 
@@ -124,11 +95,6 @@ export class Binding<T extends unknown> {
 
       target.addEventListener(`${property}-changed`, this.onTargetChanged);
       target.setProperty(property, this.value, true);
-
-    } else debug: {
-
-      console.error('Binding: target property already added!');
-
     }
   }
   /**
@@ -186,10 +152,9 @@ export class Binding<T extends unknown> {
     const value = event.detail.value;
     if (oldValue !== value) {
       if (bothAreNaNs(value, oldValue)) return;
-      // this.node.setProperty(this.property, value);
-      this.value = value;
+      this.node[this.property] = value;
     }
-  };
+  }
   /**
    * Event handler that updates bound properties on target nodes when source node emits `[propName]-changed` event.
    * @param {ChangeEvent} event - Property change event.
@@ -207,15 +172,41 @@ export class Binding<T extends unknown> {
         const oldValue = target[propName];
         if (oldValue !== value) {
           if (bothAreNaNs(value, oldValue)) continue;
-          // target.setProperty(propName, value);
           target[propName] = value;
         }
       }
     }
-  };
+  }
   /**
-   * Dispose of the binding by removing all targets and listeners.
-   * Use this when node is no longer needed.
+   * Returns a list of target properties for specified target node.
+   * @param {Node} target - Target node.
+   * @return {Properties} list of target property names.
+   */
+  getTargetProperties(target: Node): Properties {
+    if (!this.targetProperties.has(target)) this.targetProperties.set(target, []);
+    return this.targetProperties.get(target)!;
+  }
+  /**
+   * Returns a JSON representation of the binding.
+   * This is required for `JSON.stringify(protoProperties)` in `ProtoChain`.
+   * @return {string} JSON representation of the binding.
+   */
+  toJSON() {
+    const targetProperties: Record<string, Properties> = {};
+    for (let i = 0; i < this.targets.length; i++) {
+      const target = this.targets[i];
+      const props = this.getTargetProperties(target);
+      targetProperties[target.constructor.name] = props;
+    }
+    return {
+      node: this.node.constructor.name,
+      property: this.property,
+      targets: this.targets.map(t => t.constructor.name),
+      targetProperties: targetProperties,
+    };
+  }
+  /**
+   * Disposes the binding and removes all targets and listeners.
    */
   dispose() {
     this.node.removeEventListener(`${this.property}-changed`, this.onSourceChanged);

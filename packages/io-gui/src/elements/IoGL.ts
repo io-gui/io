@@ -1,5 +1,5 @@
 import { Register } from '../decorators/Register';
-import { ReactiveProperty } from '../decorators/ReactiveProperty';
+import { ReactiveProperty } from '../decorators/Property';
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty';
 import { VDOMElement } from '../vdom/VDOM';
 import { Node } from '../nodes/Node';

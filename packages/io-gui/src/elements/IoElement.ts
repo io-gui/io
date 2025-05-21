@@ -2,17 +2,8 @@ import { Property } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM';
 import { Node, NodeMixin, NodeProps } from '../nodes/Node';
-
-// Global mixin record
-const mixinRecord: Record<string, string> = {};
-
-// Regular expressions for style string processing.
-const commentsRegex =  new RegExp('(\\/\\*[\\s\\S]*?\\*\\/)', 'gi');
-const keyframeRegex =  new RegExp('((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
-const mediaQueryRegex =  new RegExp('((@media [\\s\\S]*?){([\\s\\S]*?}\\s*?)})', 'gi');
-const mixinRegex = new RegExp('(( --[\\s\\S]*?): {([\\s\\S]*?)})', 'gi');
-const applyRegex = new RegExp('(@apply\\s.*?;)', 'gi');
-const cssRegex =  new RegExp('((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})', 'gi');
+import { Binding } from '../core/Binding';
+import { applyElementStyleToDocument } from '../core/Style';
 
 const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();
@@ -43,11 +34,8 @@ export class IoElement extends NodeMixin(HTMLElement) {
     super(args);
     for (const name in this._protochain.reactiveProperties) {
       const property = this._reactiveProperties.get(name)!;
-      const value = property.value;
-      if (value !== undefined && value !== null) {
-        if (property.reflect) {
-          this.setAttribute(name, value);
-        }
+      if (property.reflect && property.value !== undefined && property.value !== null) {
+        this.setAttribute(name, property.value);
       }
     }
   }
@@ -196,8 +184,11 @@ export class IoElement extends NodeMixin(HTMLElement) {
             this.style[s] = props[name][s];
           }
         } else if (!name.startsWith('@')) {
-          // TODO: test
+          debug: if (props[name] instanceof Binding) {
+            console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`);
+          }
           this[name] = props[name];
+          // TODO: test and check if type can be attribute.
           if (props[name] === undefined && this.hasAttribute(name)) {
             this.removeAttribute(name);
           }
@@ -240,61 +231,10 @@ export class IoElement extends NodeMixin(HTMLElement) {
 
     window.customElements.define(localName, ioNodeConstructor as unknown as CustomElementConstructor);
 
-    let mixinsString = '';
-    const mixins = ioNodeConstructor.prototype._protochain.styles.match(mixinRegex);
-    if (mixins) {
-      for (let i = 0; i < mixins.length; i++) {
-        // TODO: improve mixing regex and string handling.
-        const m = mixins[i].split(': {');
-        const name = m[0].replace(' --', '--');
-        const value = m[1].replace(/}/g, '').trim().replace(/^ +/gm, '');
-        mixinRecord[name] = value;
-        mixinsString += mixins[i].replace(' --', '.').replace(': {', ' {');
-      }
-    }
-
-    // Remove mixins
-    let styleString = ioNodeConstructor.prototype._protochain.styles.replace(mixinRegex, '');
-    // Apply mixins
-    const apply = styleString.match(applyRegex);
-    if (apply) {
-      for (let i = 0; i < apply.length; i++) {
-        const name = apply[i].split('@apply ')[1].replace(';', '');
-        if (mixinRecord[name]) {
-          styleString = styleString.replace(apply[i], mixinRecord[name]);
-        } else {
-          console.warn('IoElement: cound not find mixin:', name);
-        }
-      }
-    }
-
-    debug: {
-      let styleStringStripped = styleString;
-      styleStringStripped = styleStringStripped.replace(commentsRegex, '');
-      styleStringStripped = styleStringStripped.replace(keyframeRegex, '');
-      styleStringStripped = styleStringStripped.replace(mediaQueryRegex, '');
-      const match = styleStringStripped.match(cssRegex);
-      if (match) {
-        match.map((selector: any) => {
-          selector = selector.trim();
-          if (!selector.startsWith(':host')) {
-            console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!');
-            console.warn(selector);
-          }
-        });
-      }
-    }
-
-    // Replace `:host` with element tag and add mixin CSS variables.
-    styleString = mixinsString + styleString.replace(new RegExp(':host', 'g'), localName);
-
-    const styleElement = document.createElement('style');
-    styleElement.innerHTML = styleString;
-    styleElement.setAttribute('id', 'io-style-' + localName.replace('io-', ''));
-    document.head.appendChild(styleElement);
+    applyElementStyleToDocument(localName, ioNodeConstructor.prototype._protochain.style);
 
     // TODO: Define all overloads with type guards.
-    // TODO: Add runtime debuf type checks.
+    // TODO: Add runtime debug type checks.
     // TODO: Test thoroughly.
     Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
       const vDOMElement: VDOMElement = {tag: localName};
@@ -319,114 +259,3 @@ export class IoElement extends NodeMixin(HTMLElement) {
   }
 }
 export const ioElement = IoElement.vConstructor;
-
-let focusBacktrack = new WeakMap();
-type Direction = 'left' | 'right' | 'down' | 'up';
-const backtrackDir: Record<Direction, Direction> = {
-  left: 'right',
-  right: 'left',
-  down: 'up',
-  up: 'down'
-};
-
-function setBacktrack(element: IoElement | HTMLElement, dir: Direction, source: IoElement | HTMLElement) {
-  focusBacktrack.set(element, {
-    dir: backtrackDir[dir],
-    source: source
-  });
-}
-
-export function focusTo(srcElement: IoElement | HTMLElement, dir: Direction) {
-  const srcRect = srcElement.getBoundingClientRect();
-
-  let closestElement = srcElement;
-  let closestDistance = Infinity;
-
-  const backtrack = focusBacktrack.get(srcElement);
-
-  if (backtrack && backtrack.dir === dir) {
-    const source = backtrack.source;
-    let visible = true;
-    if (!source.offsetParent || source === srcElement) {
-      visible = false;
-    } else {
-      const sStyle = window.getComputedStyle(source);
-      if (sStyle.visibility !== 'visible' || sStyle.display === 'none') {
-        visible = false;
-      }
-    }
-    if (visible) {
-      source.focus();
-      setBacktrack(source, dir, srcElement);
-      return;
-    }
-
-  }
-
-  const focusable = Array.from(document.querySelectorAll(`[tabIndex="${srcElement.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
-
-  for (let i = focusable.length; i--;) {
-
-    if (!focusable[i].offsetParent || focusable[i] === srcElement) {
-      continue;
-    }
-    const sStyle = window.getComputedStyle(focusable[i]);
-    if (sStyle.visibility !== 'visible' || sStyle.display === 'none') {
-      continue;
-    }
-
-    const rect = focusable[i].getBoundingClientRect();
-
-    switch (dir) {
-      case 'right': {
-        const srcCenter = {x: srcRect.right, y: srcRect.y + srcRect.height / 2};
-        const center = {x: rect.left, y: rect.y + rect.height / 2};
-        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
-        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
-        if (delta.x >= 0 && Math.abs(delta.y) <= Math.abs(delta.x) && dist < closestDistance) {
-          closestElement = focusable[i];
-          closestDistance = dist;
-        }
-        break;
-      }
-      case 'left': {
-        const srcCenter = {x: srcRect.left, y: srcRect.y + srcRect.height / 2};
-        const center = {x: rect.right, y: rect.y + rect.height / 2};
-        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
-        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
-        if (delta.x <= 0 && Math.abs(delta.y) <= Math.abs(delta.x) && dist < closestDistance) {
-          closestElement = focusable[i];
-          closestDistance = dist;
-        }
-        break;
-      }
-      case 'down': {
-        const srcCenter = {x: srcRect.x + srcRect.width / 2, y: srcRect.bottom};
-        const center = {x: rect.x + rect.width / 2, y: rect.top};
-        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
-        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
-        if (delta.y >= 0 && dist < closestDistance) {
-          closestElement = focusable[i];
-          closestDistance = dist;
-        }
-        break;
-      }
-      case 'up': {
-        const srcCenter = {x: srcRect.x + srcRect.width / 2, y: srcRect.top};
-        const center = {x: rect.x + rect.width / 2, y: rect.bottom};
-        const delta = {x: center.x - srcCenter.x, y: center.y - srcCenter.y};
-        const dist = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
-        if (delta.y <= 0 && dist < closestDistance) {
-          closestElement = focusable[i];
-          closestDistance = dist;
-        }
-        break;
-      }
-    }
-  }
-
-  if (closestElement !== srcElement) {
-    (closestElement as any).focus();
-    setBacktrack(closestElement, dir, srcElement);
-  }
-}

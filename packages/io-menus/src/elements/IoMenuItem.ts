@@ -3,8 +3,10 @@ import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
+import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, isPointerAboveIoMenuItem } from '../utils/MenuHierarchy.js';
 
-const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu'];
+const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu', 'io-string'];
+
 const MenuElementTagsSelector = MenuElementTags.join(', ');
 
 export type IoMenuItemProps = IoFieldProps & {
@@ -13,6 +15,9 @@ export type IoMenuItemProps = IoFieldProps & {
   direction?: 'left' | 'right' | 'up' | 'down',
   depth?: number,
 };
+
+let hovered: IoMenuElementType | undefined;
+let prevHovered: IoMenuElementType | undefined;
 
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
@@ -70,10 +75,16 @@ export class IoMenuItem extends IoField {
   static get Listeners(): any {
     return {
       'click': 'preventDefault',
+      'focus': 'onFocus',
+      'blur': 'onBlur',
     };
   }
 
-  constructor(args: IoMenuItemProps = {}) { super(args); }
+  constructor(args: IoMenuItemProps = {}) {
+    super(args);
+    this.collapse = this.collapse.bind(this);
+    this.collapseRoot = this.collapseRoot.bind(this);
+  }
 
   preventDefault(event: Event) {
     event.stopPropagation();
@@ -130,7 +141,7 @@ export class IoMenuItem extends IoField {
         window.open(item.value, '_blank');
       }
       this.dispatchEvent('item-clicked', item, true);
-      this.throttle(this._onCollapse);
+      this.debounce(this.collapse);
     }
   }
   _onItemClicked(event: PointerEvent) {
@@ -139,7 +150,7 @@ export class IoMenuItem extends IoField {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', event.detail, true);
     }
-    if (this.expanded) this.throttle(this._onCollapse);
+    if (this.expanded) this.debounce(this.collapse);
   }
   onPointerdown(event: PointerEvent) {
     event.stopPropagation();
@@ -153,7 +164,6 @@ export class IoMenuItem extends IoField {
     // TODO: why is this needed?
     if (this.expanded || event.pointerType === 'mouse' || this.inlayer) {
       this.focus();
-      if (this.item.options) this.expanded = true;
     }
 
     // hovered = this;
@@ -211,10 +221,33 @@ export class IoMenuItem extends IoField {
       item.focus();
       item._onClick(event);
     } else if (!skipCollapse) {
-      this.throttle(this._onCollapseRoot);
+      this.debounce(this.collapseRoot);
     }
     hovered = undefined;
     prevHovered = undefined;
+  }
+  onFocus(event: FocusEvent) {
+    super.onFocus(event);
+    if (this.hasmore && !this.expanded) this.expanded = true;
+  }
+  onBlur(event: FocusEvent) {
+    super.onBlur(event);
+    this.debounce(this._onBlurDebounced);
+  }
+  _onBlurDebounced() {
+    const descendants = getMenuDescendants(this);
+    const siblings = getMenuSiblings(this);
+    const ancestors = getMenuAncestors(this);
+    const descendantIsFocused = descendants.some(descendant => descendant === document.activeElement as unknown as IoMenuElementType);
+    const siblingIsFocused = siblings.some(sibling => sibling === document.activeElement as unknown as IoMenuElementType);
+    const ancestorIsFocused = ancestors.some(ancestor => ancestor === document.activeElement as unknown as IoMenuElementType);
+
+    if (descendantIsFocused || siblingIsFocused) return;
+    if (ancestorIsFocused) {
+      this.debounce(this.collapse);
+    } else {
+      this.debounce(this.collapseRoot);
+    }
   }
   _gethovered(event: PointerEvent) {
     const items = getMenuDescendants(getMenuRoot(this));
@@ -254,55 +287,53 @@ export class IoMenuItem extends IoField {
     }
   }
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this._onClick();
-      return;
-    } else if (event.key === 'Escape') {
-      event.preventDefault();
-      this.throttle(this._onCollapseRoot);
-      return;
-    }
-
     let command = '';
-    if (this.direction === 'left' || this.direction === 'right') {
-      if (event.key === 'ArrowUp') command = 'prev';
-      if (event.key === 'ArrowRight') command = 'in';
-      if (event.key === 'ArrowDown') command = 'next';
-      if (event.key === 'ArrowLeft') command = 'out';
-    } else {
-      if (event.key === 'ArrowUp') command = 'out';
-      if (event.key === 'ArrowRight') command = 'next';
-      if (event.key === 'ArrowDown') command = 'in';
-      if (event.key === 'ArrowLeft') command = 'prev';
+    if (event.key === 'Enter' || event.key === ' ') {
+      if (this.hasmore) {
+        command = 'in';
+      } else {
+        event.preventDefault();
+        this._onClick();
+        return;
+      }
+    } else if (event.key === 'Escape') {
+      if (this.expanded) {
+        command = 'collapse';
+      } else {
+        command = 'out';
+      }
     }
-    if (this.inlayer && event.key === 'Tab') command = 'next';
 
-    const siblings = this.$parent ? [...this.$parent.children] : [];
-    const index = siblings.indexOf(this);
+    if (this.hasmore) {
+      if (this.direction === 'left' && event.key === 'ArrowLeft') {
+        command = 'in';
+      } else if (this.direction === 'right' && event.key === 'ArrowRight') {
+        command = 'in';
+      } else if (this.direction === 'up' && event.key === 'ArrowUp') {
+        command = 'in';
+      } else if (this.direction === 'down' && event.key === 'ArrowDown') {
+        command = 'in';
+      }
+    }
+
+    if (this.inlayer && event.key === 'Tab') {
+      event.preventDefault();
+      if (this.direction === 'left' || this.direction === 'right') {
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
+      } else {
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
+      }
+    }
+
     if (command) {
-    // if (command && (this.inlayer || this.expanded)) {
       event.preventDefault();
       switch (command) {
-        case 'prev': {
-          const prev = siblings[(index + siblings.length - 1) % (siblings.length)];
+        case 'collapse': {
           this.expanded = false;
-          if (prev) {
-            if (prev.hasmore) prev.expanded = true;
-            prev.focus();
-          }
-          break;
-        }
-        case 'next': {
-          const next = siblings[(index + 1) % (siblings.length)];
-          this.expanded = false;
-          if (next) {
-            if (next.hasmore) next.expanded = true;
-            next.focus();
-          }
           break;
         }
         case 'in':
+          this.expanded = true;
           if (this.$options && this.$options.children.length) this.$options.children[0].focus();
           break;
         case 'out':
@@ -318,11 +349,12 @@ export class IoMenuItem extends IoField {
       super.onKeydown(event);
     }
   }
-  _onCollapse() {
+  collapse() {
     this.expanded = false;
   }
-  _onCollapseRoot() {
-    getMenuRoot(this as unknown as IoMenuItem).expanded = false;
+  collapseRoot() {
+    const root = getMenuRoot(this);
+    root.collapse();
   }
   expandedChanged() {
     if (this.expanded && this.depth > 0) {
@@ -391,63 +423,6 @@ export class IoMenuItem extends IoField {
 }
 export const ioMenuItem = IoMenuItem.vConstructor;
 
-type IoMenuElementType = IoMenuItem | IoMenuOptions;
 
-export function getMenuDescendants(element: IoMenuElementType): IoMenuElementType[] {
-  const descendants = [];
-  if (element.$options) {
-    if (element.expanded) {
-      descendants.push(element.$options);
-      const items = element.$options.querySelectorAll(MenuElementTagsSelector);
-      for (let i = items.length; i--;) {
-        descendants.push(items[i]);
-        if (items[i].expanded) descendants.push(...getMenuDescendants(items[i]));
-      }
-    }
-  } else {
-    const items = element.querySelectorAll(MenuElementTagsSelector);
-    for (let i = items.length; i--;) {
-      descendants.push(items[i]);
-      if (items[i].expanded) descendants.push(...getMenuDescendants(items[i]));
-    }
-  }
-  return descendants;
-}
 
-export function getMenuAncestors(element: IoMenuElementType) {
-  const ancestors = [];
-  let item = element;
-  while (item && item.$parent) {
-    item = item.$parent;
-    if (item) ancestors.push(item);
-  }
-  return ancestors;
-}
 
-export function getMenuRoot(element: IoMenuElementType) {
-  let first = element;
-  while (first && first.$parent) {
-    first = first.$parent;
-  }
-  return first;
-}
-
-function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
-  if (MenuElementTags.indexOf(element.localName) !== -1) {
-    // TODO: hidden in no longer a property.
-    if (!element.disabled && !element.hidden) {
-      if (!element.inlayer || (element.parentElement.expanded && Overlay.expanded)) {
-        const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
-        const r = element.getBoundingClientRect();
-        const x = event.clientX;
-        const y = event.clientY;
-        const hovered = (r.top <= y+bw && r.bottom >= y-bw && r.left <= x+bw && r.right >= x-bw );
-        return hovered;
-      }
-    }
-  }
-  return null;
-}
-
-let hovered: IoMenuElementType | undefined;
-let prevHovered: IoMenuElementType | undefined;

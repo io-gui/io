@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, VDOMElement, Property, focusTo } from 'io-gui';
+import { Register, ReactiveProperty, span, VDOMElement, Property } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 
 export type IoNumberLadderStepProps = IoFieldProps & {
@@ -55,13 +55,13 @@ export class IoNumberLadderStep extends IoField {
       stepMove = this.value * -1;
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      focusTo(this, 'up');
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
     } else if (event.key === 'ArrowRight' || event.key === 'Enter') {
       event.preventDefault();
       stepMove = this.value * 1;
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      focusTo(this, 'down');
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
     }
     if (stepMove !== 0) {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoOverlaySingleton, VDOMElement, WithBinding, Property, focusTo } from 'io-gui';
+import { Register, ReactiveProperty, IoOverlaySingleton, VDOMElement, WithBinding, Property } from 'io-gui';
 import { IoNumberLadderSingleton } from './IoNumberLadder';
 import { IoField, IoFieldProps } from './IoField';
 
@@ -174,7 +174,7 @@ export class IoNumber extends IoField {
     } else if (event.key === 'ArrowLeft') { // left
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        focusTo(this, 'left');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
       }
     } else if (event.key === 'ArrowUp') { // up
       if (IoNumberLadderSingleton.expanded) {
@@ -182,12 +182,12 @@ export class IoNumber extends IoField {
         if (upStep) upStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        focusTo(this, 'up');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
       }
     } else if (event.key === 'ArrowRight') { // right
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        focusTo(this, 'right');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
       }
     } else if (event.key === 'ArrowDown') { // down
       if (IoNumberLadderSingleton.expanded) {
@@ -195,7 +195,7 @@ export class IoNumber extends IoField {
         if (downStep) downStep.focus();
       } else if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        focusTo(this, 'down');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
       }
     }
   }

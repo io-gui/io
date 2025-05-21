@@ -1,5 +1,5 @@
 import { Register } from '../decorators/Register';
-import { ReactiveProperty } from '../decorators/ReactiveProperty';
+import { ReactiveProperty } from '../decorators/Property';
 import { ReactivePropertyDefinitions, Node } from '../nodes/Node';
 import { Storage as $ } from '../nodes/Storage';
 

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, span, Property, focusTo, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, span, Property, WithBinding } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
@@ -170,16 +170,16 @@ export class IoField extends IoElement {
     }
     else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      focusTo(this, 'left');
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      focusTo(this, 'up');
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
     } else if (event.key === 'ArrowRight') {
       event.preventDefault();
-      focusTo(this, 'right');
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      focusTo(this, 'down');
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
     }
   }
   onKeyup(event: KeyboardEvent) {}

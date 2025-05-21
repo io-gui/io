@@ -270,7 +270,7 @@ export class IoItemDemoView extends IoElement {
     this.template([
       div([
         selectElement,
-        ioField({value: this.item.label, appearance: 'neutral'}),
+        ioField({value: this.item.label, inert: true, appearance: 'neutral'}),
       ]),
       this.item.hasmore ? ioOptionsDemoView({options: this.item.options}) : null
     ]);

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, Autobind, IoElementProps, VDOMElement } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, VDOMElement } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 export type IoScrollerProps = IoElementProps & {
@@ -35,6 +35,7 @@ export class IoScroller extends IoElement {
   init() {
     this._observer = new MutationObserver(this._onDomMutated);
     this._observer.observe(this as unknown as HTMLElement, {attributes: false, childList: true, subtree: true});
+    this._scrollToSelected = this._scrollToSelected.bind(this);
   }
   connectedCallback() {
     super.connectedCallback();
@@ -47,7 +48,6 @@ export class IoScroller extends IoElement {
     this.throttle(this._scrollToSelected);
   }
 
-  @Autobind
   _scrollToSelected() {
     if (this.scrollHeight <= this.clientHeight) return;
 

@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, ReactiveProperty, Autobind, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 
 export type IoNavigatorBaseProps = IoElementProps & {
@@ -108,6 +108,7 @@ export class IoNavigatorBase extends IoElement {
   declare collapseWidth: number;
 
   init() {
+    this._computeCollapsed = this._computeCollapsed.bind(this);
     this.throttle(this._computeCollapsed);
     this.changed();
   }
@@ -116,7 +117,6 @@ export class IoNavigatorBase extends IoElement {
     this.throttle(this._computeCollapsed);
   }
 
-  @Autobind
   _computeCollapsed() {
     this.collapsed = this.offsetWidth < this.collapseWidth;
   }

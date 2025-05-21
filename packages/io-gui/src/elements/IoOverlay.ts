@@ -1,4 +1,4 @@
-import { ReactiveProperty } from '../decorators/ReactiveProperty';
+import { ReactiveProperty } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { IoElement, IoElementProps } from './IoElement';
 

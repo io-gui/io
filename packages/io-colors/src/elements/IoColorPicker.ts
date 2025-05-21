@@ -2,6 +2,9 @@ import { Register, ReactiveProperty, IoElement, IoOverlaySingleton, IoElementPro
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton';
 import { ioColorSwatch } from './IoColorSwatch';
 
+// TODO: focus picker on expand.
+// TODO: collapse picker on blur.
+
 export type IoColorPickerProps = IoElementProps &{
   value?: WithBinding<{ r: number, g: number, b: number, a?: number }>,
 };

@@ -1,7 +1,7 @@
 import { ReactiveProtoProperty } from './ReactiveProperty';
 import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher';
 import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
-import { reactivePropertyDecorators } from '../decorators/ReactiveProperty';
+import { reactivePropertyDecorators } from '../decorators/Property';
 import { propertyDecorators } from '../decorators/Property';
 
 type ProtoConstructors = Array<NodeConstructor<any>>;
@@ -52,7 +52,11 @@ export class ProtoChain {
    */
   constructors: ProtoConstructors = [];
   /**
-   * Aggregated property definition declared in `static get ProtoProperties()` or @ReactiveProperty() decorators
+   * Aggregated initial value for properties declared in `static get Properties()` or @Property() decorators
+  */
+  properties: Record<string, any> = {};
+  /**
+   * Aggregated reactive property definition declared in `static get ReactiveProperties()` or @ReactiveProperty() decorators
    */
   reactiveProperties: ReactiveProtoProperties = {};
   /**
@@ -60,15 +64,9 @@ export class ProtoChain {
    */
   listeners: ProtoListeners = {};
   /**
-   * Aggregated initial value for properties declared in `static get ReactiveProperties()` or @Property() decorators
-  */
-  // TODO: static get ReactiveProperties()
-  // TODO: test
-  properties: Record<string, any> = {};
-  /**
    * Aggregated CSS style definition declared in `static get Style()`
    */
-  styles: string = '';
+  style: string = '';
   /**
    * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
    */
@@ -87,7 +85,7 @@ export class ProtoChain {
    */
   constructor(ioNodeConstructor: NodeConstructor<any>) {
     let proto = ioNodeConstructor.prototype;
-    // Iterate through the prototype chain to aggregate inheritance information.
+    // Iterate through the prototype chain to aggregate constructors.
     // Terminates at `HTMLElement`, `Object` or `Array`.
     while (
       proto
@@ -95,36 +93,53 @@ export class ProtoChain {
       && (ioNodeConstructor) !== Object
       && (ioNodeConstructor) !== Array) {
         this.constructors.push(ioNodeConstructor);
-        this.addHandlers(proto);
-        this.addStyles(ioNodeConstructor.Style);
         proto = Object.getPrototypeOf(proto);
         ioNodeConstructor = proto.constructor;
     }
 
     // Iterate through the prototype chain in reverse to aggregate inherited properties and listeners.
-    let propHash = '';
+    let reactivePropertyHash = '';
+    let propertyHash = '';
     for (let i = this.constructors.length; i--;) {
       ioNodeConstructor = this.constructors[i];
       this.addPropertiesFromDecorators(ioNodeConstructor);
-      propHash = this.addStaticProperties(ioNodeConstructor.ReactiveProperties, propHash);
+      propertyHash = this.addProperties(ioNodeConstructor.Properties, propertyHash);
+      this.addReactivePropertiesFromDecorators(ioNodeConstructor);
+      reactivePropertyHash = this.addReactiveProperties(ioNodeConstructor.ReactiveProperties, reactivePropertyHash);
       this.addListeners(ioNodeConstructor.Listeners);
-
-      // TODO: normalize with reactiveProperties
-      const properties = propertyDecorators.get(ioNodeConstructor);
-      if (properties) for (const name in properties) {
-        this.properties[name] = properties[name];
-      }
+      this.addStyle(ioNodeConstructor.Style);
+      this.addHandlers(ioNodeConstructor.prototype);
     }
 
     this.observedObjectProperties = this.getObservedObjectProperties();
     this.observedNodeProperties = this.getObservedNodeProperties();
-    debug: this.validateProperties();
+    debug: this.validateReactiveProperties();
   }
   /**
    * Adds properties defined in decorators to the properties array.
    * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
    */
   addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>) {
+    const props = propertyDecorators.get(ioNodeConstructor);
+    if (props) for (const name in props) {
+      this.properties[name] = props[name];
+    }
+  }
+  addProperties(properties: Record<string, any> = {}, prevHash = ''): string {
+    const newHash = JSON.stringify(properties);
+    if (newHash !== prevHash) {
+      for (const name in properties) {
+        this.properties[name] = properties[name];
+      }
+      prevHash = newHash;
+    }
+    return prevHash;
+  }
+  /**
+   * Adds reactive properties defined in decorators to the properties array.
+   * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
+   */
+  addReactivePropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>) {
     const props = reactivePropertyDecorators.get(ioNodeConstructor);
     if (props) for (const name in props) {
       const protoProperty = new ReactiveProtoProperty(props[name]);
@@ -133,29 +148,25 @@ export class ProtoChain {
     }
   }
   /**
-   * Adds static properties from `static get ReactiveProperties()` to the properties array.
+   * Adds reactive properties from `static get ReactiveProperties()` to the properties array.
    * Only process properties if they differ from superclass.
    * This prevents 'static get ReactiveProperties()' from overriding subclass properties defined in decorators.
    * @param {ReactivePropertyDefinitions} properties - Properties to add
    * @param {string} prevHash - Previous properties hash
    * @returns {string} - Updated properties hash
    */
-  addStaticProperties(properties: ReactivePropertyDefinitions = {}, prevHash = ''): string {
+  addReactiveProperties(properties: ReactivePropertyDefinitions = {}, prevHash = ''): string {
     const reativeProtoProperties: Record<string, ReactiveProtoProperty> = {};
     for (const name in properties) {
       reativeProtoProperties[name] = new ReactiveProtoProperty(properties[name]);
     }
-    /**
-     * Note: JSON.stringify() is used to create a unique fingerprint of the properties object.
-     * this does not provide completely accurate signiture of the binding but it's good enough.
-     */
     const newHash = JSON.stringify(reativeProtoProperties);
     if (newHash !== prevHash) {
       for (const name in properties) {
-       if (!this.reactiveProperties[name]) this.reactiveProperties[name] = reativeProtoProperties[name];
-       else this.reactiveProperties[name].assign(reativeProtoProperties[name]);
-       prevHash = newHash;
-     }
+        if (!this.reactiveProperties[name]) this.reactiveProperties[name] = reativeProtoProperties[name];
+        else this.reactiveProperties[name].assign(reativeProtoProperties[name]);
+      }
+      prevHash = newHash;
     }
     return prevHash;
   }
@@ -182,9 +193,9 @@ export class ProtoChain {
    * Adds a style string to the styles array.
    * @param {string} style - Style string to add
    */
-  addStyles(style?: string) {
-    if (style && this.styles.indexOf(style) === -1) {
-      this.styles = style + '\n' + this.styles;
+  addStyle(style?: string) {
+    if (style && this.style.indexOf(style) === -1) {
+      this.style = this.style ? this.style + '\n' + style : style;
     }
   };
   /**
@@ -237,12 +248,28 @@ export class ProtoChain {
     return observedNodeProperties;
   }
   /**
-   * Debug only.
-   * Validates property definitions.
+   * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+   * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
+   * @param {Node} node - Target node instance
+   */
+  autobindHandlers(node: Node) {
+    debug: if (node.constructor !== this.constructors[0]) {
+      console.warn('`autobindHandlers` should be used on', this.constructors[0].name, 'instance');
+    }
+    for (let i = this.handlers.length; i--;) {
+      Object.defineProperty(node, this.handlers[i], {
+        value: node[this.handlers[i]].bind(node),
+        writable: true,
+        configurable: true
+      });
+    }
+  }
+  /**
+   * Validates reactive property definitions in debug mode.
    * Logs warnings for incorrect property definitions.
    * @returns {void}
    */
-  validateProperties() {
+  validateReactiveProperties() {
     for (const name in this.reactiveProperties) {
       const prop = this.reactiveProperties[name];
       if ([String, Number, Boolean].indexOf(prop.type as any) !== -1) {
@@ -258,23 +285,6 @@ export class ProtoChain {
             console.warn(`Property "${name}" in ProtoChain: Incorrect value type for ${prop.type} property!`);
         }
       }
-    }
-  }
-  /**
-   * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
-   * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-   * @param {Node} node - Target node instance
-   */
-  autobindHandlers(node: Node) {
-    debug: if (node.constructor !== this.constructors[0]) {
-      console.warn('`autobindHandlers` should be used on', this.constructors[0].name, 'instance');
-    }
-    for (let i = this.handlers.length; i--;) {
-      Object.defineProperty(node, this.handlers[i], {
-        value: node[this.handlers[i]].bind(node),
-        writable: true,
-        configurable: true
-      });
     }
   }
 }

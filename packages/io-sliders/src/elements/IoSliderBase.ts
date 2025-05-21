@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, VDOMElement, WithBinding, Property, focusTo } from 'io-gui';
+import { ReactiveProperty, IoGl, IoElementProps, VDOMElement, WithBinding, Property } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -258,7 +258,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setDecrease() : this._setLeft();
         } else {
-          focusTo(this, 'left');
+          this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
         }
         break;
       case 'ArrowUp':
@@ -266,7 +266,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setIncrease() : this._setUp();
         } else {
-          focusTo(this, 'up');
+          this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
         }
         break;
       case 'ArrowRight':
@@ -274,7 +274,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setIncrease() : this._setRight();
         } else {
-          focusTo(this, 'right');
+          this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
         }
         break;
       case 'ArrowDown':
@@ -282,7 +282,7 @@ export class IoSliderBase extends IoGl {
         if (event.shiftKey) {
           oneDimension ? this._setDecrease() : this._setDown();
         } else {
-          focusTo(this, 'down');
+          this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
         }
         break;
       default:

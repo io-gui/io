@@ -1,6 +1,7 @@
 import { EventDispatcher } from '../core/EventDispatcher';
 import { Node } from '../nodes/Node';
 import { IoElement } from '../elements/IoElement';
+import { Binding } from '../core/Binding';
 
 export type VDOMElement = {
   tag: string,
@@ -313,9 +314,13 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
   for (const _p in props) {
     const p = _p as keyof NativeElementProps;
     const prop: any = props[p];
-    if (!Object.hasOwn(defaultPropValues, p)) {
-      defaultPropValues[p] = _element[p];
+
+    debug: if (prop instanceof Binding) {
+      console.warn(`VDOM: Cannot set binding on "${element.localName}.${_p}"`);
     }
+
+    if (!Object.hasOwn(defaultPropValues, p)) defaultPropValues[p] = _element[p];
+
     if (p === 'style') {
       for (const s in prop) {
         element.style.setProperty(s, prop[s]);
@@ -329,8 +334,9 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
         _element[p] = prop;
       }
     }
+
     if (prop === undefined) element.removeAttribute(p);
-    if (prop === defaultPropValues[p]) element.removeAttribute(p);
+    else if (prop === defaultPropValues[p]) element.removeAttribute(p);
   }
   // Reset properties to defaults if they are not in the props.
   for (const _p in defaultPropValues) {

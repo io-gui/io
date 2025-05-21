@@ -1,4 +1,4 @@
-import { ProtoChain, Node, NodeMixin, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register } from '../index';
+import { ProtoChain, Node, NodeMixin, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '../index';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -20,6 +20,12 @@ class Node1 extends Node {
         init: false
       },
       prop2: {}
+    };
+  }
+
+  static get Properties(): Record<string, any> {
+    return {
+      sprop1: 'foo'
     };
   }
 
@@ -46,6 +52,9 @@ class Node3 extends Node1 {
 
   @ReactiveProperty({reflect: true})
   declare prop3: any;
+
+  @Property('bar')
+  declare sprop2: any;
 }
 
 @Register
@@ -55,6 +64,9 @@ class Node4 extends Node1 {
 
   @ReactiveProperty({})
   declare prop2: any;
+
+  @Property('baz')
+  declare sprop1: string;
 }
 
 class IoElement1 extends IoElement {}
@@ -142,7 +154,14 @@ export default class {
         constructors = new ProtoChain(Node2).constructors;
         expect(constructors).to.be.eql([Node2, Object.getPrototypeOf(Node2), Object3, Object2, Object1]);
       });
-      it('Should include all properties declared in `static get ReactiveProperties()` return oject', () => {
+      it('Should include properties declared in `static get Properties()` return oject', () => {
+        let protoChain = new ProtoChain(Node1);
+        expect(Object.keys(protoChain.properties)).to.be.eql(['sprop1']);
+        expect(protoChain.properties).to.be.eql({
+          sprop1: 'foo'
+        });
+      });
+      it('Should include reactive properties declared in `static get ReactiveProperties()` return oject', () => {
         let protoChain = new ProtoChain(MockNode1);
         expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['prop1']);
         expect(protoChain.reactiveProperties).to.be.eql({
@@ -155,7 +174,15 @@ export default class {
           prop2:{},
         });
       });
-      it('Should include all properties declared in Property decorator', () => {
+      it('Should include properties declared in Property decorator', () => {
+        let protoChain = new ProtoChain(Node3);
+        expect(Object.keys(protoChain.properties)).to.be.eql(['sprop1', 'sprop2']);
+        expect(protoChain.properties).to.be.eql({
+          sprop1: 'foo',
+          sprop2: 'bar'
+        });
+      });
+      it('Should include reactive properties declared in ReactiveProperty decorator', () => {
         let protoChain = new ProtoChain(Node1);
         expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.reactiveProperties).to.be.eql({
@@ -172,7 +199,14 @@ export default class {
           prop3:{reflect: true},
         });
       });
-      it('Should not override properties declared in Property decorator with inherited `static get ReactiveProperties()` return oject', () => {
+      it('Should not override properties declared in Property decorator with inherited `static get Properties()` return oject', () => {
+        const protoChain = new ProtoChain(Node4);
+        expect(Object.keys(protoChain.properties)).to.be.eql(['sprop1']);
+        expect(protoChain.properties).to.be.eql({
+          sprop1: 'baz',
+        });
+      });
+      it('Should not override reactive properties declared in ReactiveProperty decorator with inherited `static get ReactiveProperties()` return oject', () => {
         const protoChain = new ProtoChain(Node4);
         expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['reactivity', 'prop2', 'prop1']);
         expect(protoChain.reactiveProperties).to.be.eql({
@@ -181,7 +215,7 @@ export default class {
           prop2:{type: Object},
         });
       });
-      it('Should include all listners declared in `static get Listeners()` return oject', () => {
+      it('Should include listners declared in `static get Listeners()` return oject', () => {
         let protoChain = new ProtoChain(MockNode1);
         expect(Object.keys(protoChain.listeners)).to.be.eql(['listener1', 'listener3', 'listener4']);
         expect(protoChain.listeners['listener1']).to.be.eql([['function1']]);
@@ -194,13 +228,13 @@ export default class {
         expect(protoChain.listeners['listener3']).to.be.eql([['_onFunction1', {capture: true, passive: true}]]);
         expect(String(protoChain.listeners['listener4'])).to.be.eql(String([[() => { }]]));
       });
-      it('Should include all style strings declared in `static get Style()` return string', () => {
+      it('Should include style strings declared in `static get Style()` return string', () => {
         let protoChain = new ProtoChain(MockNode1);
-        expect(protoChain.styles).to.be.equal('a\n');
+        expect(protoChain.style).to.be.equal('a');
         protoChain = new ProtoChain(MockNode2);
-        expect(protoChain.styles).to.be.equal('a\nb\n');
+        expect(protoChain.style).to.be.equal('a\nb');
         protoChain = new ProtoChain(MockNode3);
-        expect(protoChain.styles).to.be.equal('a\nb\n');
+        expect(protoChain.style).to.be.equal('a\nb');
       });
       it('Should include an array of handler names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding', () => {
         let protoChain = new ProtoChain(Node1);
@@ -208,7 +242,7 @@ export default class {
         protoChain = new ProtoChain(MockNode1);
         expect(protoChain.handlers).to.be.eql(['changed', 'onFunction1', '_onFunction1']);
         protoChain = new ProtoChain(MockNode2);
-        expect(protoChain.handlers).to.be.eql(['onFunction2', '_onFunction2', 'changed', 'onFunction1', '_onFunction1']);
+        expect(protoChain.handlers).to.be.eql(['changed', 'onFunction1', '_onFunction1', 'onFunction2', '_onFunction2']);
       });
       it('Should bind auto-binding functions with `.autobindHandlers(node)` function', () => {
         const protoChain = new ProtoChain(MockNode2);

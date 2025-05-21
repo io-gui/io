@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, Property, focusTo, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, Property, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField';
 
 export type IoStringProps = Omit<IoFieldProps, 'value'> & {
@@ -116,22 +116,22 @@ export class IoString extends IoField {
     } else if (event.key === 'ArrowLeft') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        focusTo(this, 'left');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
       }
     } else if (event.key === 'ArrowUp') {
       if (event.ctrlKey || (rngInside && start === end && start === 0)) {
         event.preventDefault();
-        focusTo(this, 'up');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
       }
     } else if (event.key === 'ArrowRight') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        focusTo(this, 'right');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
       }
     } else if (event.key === 'ArrowDown') {
       if (event.ctrlKey || (rngInside && start === end && start === length)) {
         event.preventDefault();
-        focusTo(this, 'down');
+        this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
       }
     }
   }

@@ -6,7 +6,11 @@ import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { filterOptions } from './IoMenuTree.js';
 import { ioMenuHamburger } from './IoMenuHamburger.js';
 import { IoContextMenu } from './IoContextMenu.js';
+import { getMenuDescendants } from '../utils/MenuHierarchy.js';
 const rects = new WeakMap();
+
+// TODO: collapse menu on blur via keybard.
+// TODO: improve focusto nav and in-layer navigation.
 
 export type IoMenuOptionsProps = IoElementProps & {
   options?: MenuOptions,
@@ -172,7 +176,10 @@ export class IoMenuOptions extends IoElement {
     };
   }
 
-  constructor(args: IoMenuOptionsProps = {}) { super(args); }
+  constructor(args: IoMenuOptionsProps = {}) {
+    super(args);
+    this.collapse = this.collapse.bind(this);
+  }
 
   _onItemClicked(event: CustomEvent) {
     const item = event.composedPath()[0] as unknown as IoMenuItem;
@@ -184,7 +191,7 @@ export class IoMenuOptions extends IoElement {
     if (item !== (this as any)) {
       event.stopImmediatePropagation();
       this.dispatchEvent('item-clicked', d, true);
-      this.throttle(this._onCollapse);
+      this.throttle(this.collapse);
     }
   }
   _stopPropagation(event: MouseEvent) {
@@ -242,11 +249,14 @@ export class IoMenuOptions extends IoElement {
       this.overflow = '';
     }
   }
-  _onCollapse() {
+  collapse() {
     const focusSearch = this.selectable && !!this.search && !this.inlayer;
     this.setProperties({
       search: '',
       expanded: false,
+    });
+    getMenuDescendants(this).forEach(descendant => {
+      descendant.expanded = false;
     });
     if (focusSearch) this.$.search.focus();
   }

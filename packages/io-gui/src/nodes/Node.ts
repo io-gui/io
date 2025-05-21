@@ -13,6 +13,7 @@ export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 export interface NodeConstructor<T> {
   new (...args: any[]): T;
   ReactiveProperties?: ReactivePropertyDefinitions;
+  Properties?: Record<string, any>;
   Listeners?: ListenerDefinitions;
   Style?: string;
 }
@@ -143,8 +144,10 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         if (!this._reactiveProperties.has(name)) {
           // TODO: document!
           if (!name.startsWith('@')) {
-            // console.warn(`Property "${name}" is not defined`, this);
             // this[name] = props[name];
+            debug: if (props[name] instanceof Binding) {
+              console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on "${this.constructor.name}"`);
+            }
           }
         }
         this.setProperty(name, props[name], true);
