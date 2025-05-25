@@ -168,26 +168,10 @@ export class IoMenuTree extends IoElement {
   @Property('listbox')
   declare role: string;
 
-  static get Listeners() {
-    return {
-      'item-clicked': '_onItemClicked',
-    };
-  }
-
   constructor(args: IoMenuTreeProps = {}) { super(args); }
 
-  _onItemClicked(event: CustomEvent) {
-    const item = event.composedPath()[0] as unknown as IoMenuItem;
-    const d = event.detail as MenuItem;
-   if (item !== this as any) {
-      event.stopImmediatePropagation();
-      this.dispatchEvent('item-clicked', d, true);
-      this.throttle(this._onCollapse);
-    }
-  }
-
   // TODO: fix UX. This shouldselect search field on collapse by click.
-  _onCollapse() {
+  onCollapse() {
     const focusSearch = this.searchable && this.search;
     this.search = '';
     if (focusSearch) this.$.search.focus();

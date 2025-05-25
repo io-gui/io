@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoOverlaySingleton, IoElementProps, VDOMElement, Property, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, Property, WithBinding, nudge } from 'io-gui';
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton';
 import { ioColorSwatch } from './IoColorSwatch';
 
@@ -90,7 +90,7 @@ export class IoColorPicker extends IoElement {
     Panel.expanded = true;
     Panel.addEventListener('value-input', this.onValueSet);
     Panel.addEventListener('expanded-changed', this.onPanelCollapse);
-    IoOverlaySingleton.setElementPosition(Panel as unknown as HTMLElement, 'down', this.getBoundingClientRect());
+    nudge(Panel, this, 'down');
   }
   collapse() {
     Panel.expanded = false;

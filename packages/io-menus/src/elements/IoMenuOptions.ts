@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Property, nudge } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -6,10 +6,9 @@ import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { filterOptions } from './IoMenuTree.js';
 import { ioMenuHamburger } from './IoMenuHamburger.js';
 import { IoContextMenu } from './IoContextMenu.js';
-import { getMenuDescendants } from '../utils/MenuHierarchy.js';
+import { getMenuDescendants, getMenuSiblings } from '../utils/MenuHierarchy.js';
 const rects = new WeakMap();
 
-// TODO: collapse menu on blur via keybard.
 // TODO: improve focusto nav and in-layer navigation.
 
 export type IoMenuOptionsProps = IoElementProps & {
@@ -21,7 +20,6 @@ export type IoMenuOptionsProps = IoElementProps & {
   direction?: NudgeDirection,
   depth?: number,
   noPartialCollapse?: boolean,
-  inlayer?: boolean,
   slotted?: VDOMElement[],
   $parent?: IoMenuItem | IoContextMenu,
 };
@@ -49,14 +47,10 @@ export class IoMenuOptions extends IoElement {
       flex-direction: column;
       padding: var(--io_spacing) 0;
     }
-    :host[inlayer] {
-      min-width: 8em;
-    }
-    :host[inlayer]:not([expanded]) {
+    :host[inoverlay]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
     }
-
     /* Menu Items */
     :host > io-menu-item {
       background-color: transparent;
@@ -153,9 +147,6 @@ export class IoMenuOptions extends IoElement {
   @ReactiveProperty({value: '', reflect: true})
   declare overflow: string;
 
-  @ReactiveProperty({value: false, reflect: true})
-  declare inlayer: boolean;
-
   @ReactiveProperty({type: Array})
   declare slotted: VDOMElement[];
 
@@ -171,41 +162,83 @@ export class IoMenuOptions extends IoElement {
 
   static get Listeners() {
     return {
-      'item-clicked': '_onItemClicked',
-      'touchstart': ['_stopPropagation', {passive: false}],
+      'touchstart': ['stopPropagation', {passive: false}],
+      'io-focus-to': 'onIoFocusTo',
     };
   }
-
+  get inoverlay() {
+    return Overlay.contains(this.parentElement);
+  }
   constructor(args: IoMenuOptionsProps = {}) {
     super(args);
-    this.collapse = this.collapse.bind(this);
+    this.clipHeight = this.clipHeight.bind(this);
+    this.setOverflow = this.setOverflow.bind(this);
+    this.debounce(this.setOverflow);
   }
-
-  _onItemClicked(event: CustomEvent) {
-    const item = event.composedPath()[0] as unknown as IoMenuItem;
-    const d = event.detail as MenuItem;
-    if (item.localName === 'io-string') {
-      event.stopImmediatePropagation();
-      return;
-    }
-    if (item !== (this as any)) {
-      event.stopImmediatePropagation();
-      this.dispatchEvent('item-clicked', d, true);
-      this.throttle(this.collapse);
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.inoverlay) {
+      this.setAttribute('inoverlay', 'true');
     }
   }
-  _stopPropagation(event: MouseEvent) {
-    // Prevents IoOverlay from stopping scroll in clipped options
+  stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
-  init() {
-    this.throttle(this._onSetOverflow);
+  onIoFocusTo(event: CustomEvent) {
+    const source = event.detail.source;
+    const direction = event.detail.direction;
+    const siblings = getMenuSiblings(source);
+    const index = siblings.indexOf(source);
+
+    const inoverlay = this.inoverlay;
+
+    let parentIsAbove = false;
+    let parentIsBelow = false;
+    let parentIsLeft = false;
+    let parentIsRight = false;
+
+    if (this.$parent) {
+      const rect = this.getBoundingClientRect();
+      const parentRect = this.$parent.getBoundingClientRect();
+      parentIsAbove = rect.top > parentRect.top;
+      parentIsBelow = rect.bottom < parentRect.bottom;
+      parentIsLeft = rect.left > parentRect.left;
+      parentIsRight = rect.right < parentRect.right;
+    }
+
+    let command = '';
+
+    if (this.horizontal) {
+      if (direction === 'right' && inoverlay) command = 'next';
+      if (direction === 'left' && inoverlay) command = 'prev';
+      if (direction === 'left' && index === 0 && parentIsLeft) command = 'out';
+      if (direction === 'right' && index === siblings.length - 1 && parentIsRight) command = 'out';
+      if (direction === 'up' && parentIsAbove) command = 'out';
+      if (direction === 'down' && parentIsBelow) command = 'out';
+    } else {
+      if (direction === 'down' && inoverlay) command = 'next';
+      if (direction === 'up' && inoverlay) command = 'prev';
+      if (direction === 'up' && index === 0 && parentIsAbove) command = 'out';
+      if (direction === 'down' && index === siblings.length - 1 && parentIsBelow) command = 'out';
+      if (direction === 'left' && parentIsLeft) command = 'out';
+      if (direction === 'right' && parentIsRight) command = 'out';
+    }
+
+    if (command) {
+      if (command === 'next') {
+        siblings[(index + 1) % siblings.length].focus();
+      } else if (command === 'prev') {
+        siblings[(index - 1 + siblings.length) % siblings.length].focus();
+      } else if (command === 'out') {
+        if (this.$parent) this.$parent.focus();
+      }
+      event.stopPropagation();
+    }
   }
   onResized() {
-    this.throttle(this._onSetOverflow);
+    this.debounce(this.setOverflow);
   }
-
-  _onSetOverflow() {
+  setOverflow() {
     if (this._disposed) return;
     const items = this.querySelectorAll('.item');
     this._overflownItems.length = 0;
@@ -250,20 +283,21 @@ export class IoMenuOptions extends IoElement {
     }
   }
   collapse() {
-    const focusSearch = this.selectable && !!this.search && !this.inlayer;
+    getMenuDescendants(this).forEach(descendant => {
+      descendant.expanded = false;
+    });
     this.setProperties({
       search: '',
       expanded: false,
     });
-    getMenuDescendants(this).forEach(descendant => {
-      descendant.expanded = false;
-    });
+    // TODO: investigate why is this UX is needed?
+    const focusSearch = this.selectable && !!this.search && !this.inoverlay;
     if (focusSearch) this.$.search.focus();
   }
   expandedChanged() {
     if (this.expanded) {
-      if (this.inlayer) {
-        this.throttle(this._onExpandInOverlay);
+      if (this.inoverlay) {
+        this.debounce(this.onExpandInOverlay);
       }
     } else {
       this.style.top = null;
@@ -274,24 +308,19 @@ export class IoMenuOptions extends IoElement {
     }
   }
   searchChanged() {
-    if (this.inlayer && this.$parent) {
-      this.throttle(this._onClipHeight);
+    if (this.inoverlay && this.$parent) {
+      this.debounce(this.clipHeight);
     }
-    this.throttle(this._onSetOverflow);
+    this.debounce(this.setOverflow);
   }
-  _onExpandInOverlay() {
-    debug: {
-      if (!this.$parent) {
-        console.warn('IoMenuOptions: $parent property mandatory when expanding inside `IoOverlaySingleton`.');
-      }
-    }
+  // TODO: Move functionality to Overlay
+  onExpandInOverlay() {
     if (this.$parent) {
-      const pRect = this.$parent.getBoundingClientRect();
-      IoOverlaySingleton.setElementPosition(this as unknown as HTMLElement, this.direction, pRect);
-      this._onClipHeight();
+      nudge(this, this.$parent, this.direction);
+      this.clipHeight();
     }
   }
-  _onClipHeight() {
+  clipHeight() {
     this.scrollTop = 0;
     if (!this.firstChild) return;
 

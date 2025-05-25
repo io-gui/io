@@ -1,5 +1,6 @@
 import { IoElement } from '../elements/IoElement';
 import { ThemeSingleton } from '../nodes/Theme';
+import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay';
 
 let focusBacktrack = new WeakMap();
 type Direction = 'left' | 'right' | 'down' | 'up';
@@ -43,6 +44,8 @@ function onIoFocusTo(event: CustomEvent) {
   const srcRect = src.getBoundingClientRect();
   const dir = event.detail.direction;
 
+  const inoverlay = Overlay.contains(src);
+
   let closestElement = src;
   let closestDistance = Infinity;
   let closestCenterDistance = Infinity;
@@ -67,7 +70,8 @@ function onIoFocusTo(event: CustomEvent) {
     }
   }
 
-  const focusableCandidates = Array.from(document.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
+  const root = inoverlay ? Overlay as unknown as HTMLElement : document;
+  const focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
 
   for (let i = focusableCandidates.length; i--;) {
 

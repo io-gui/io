@@ -12,7 +12,7 @@ const MenuElementTagsSelector = MenuElementTags.join(', ');
 export type IoMenuItemProps = IoFieldProps & {
   item?: MenuItem,
   expanded?: WithBinding<boolean>,
-  direction?: 'left' | 'right' | 'up' | 'down',
+  direction?: NudgeDirection,
   depth?: number,
 };
 
@@ -80,11 +80,7 @@ export class IoMenuItem extends IoField {
     };
   }
 
-  constructor(args: IoMenuItemProps = {}) {
-    super(args);
-    this.collapse = this.collapse.bind(this);
-    this.collapseRoot = this.collapseRoot.bind(this);
-  }
+  constructor(args: IoMenuItemProps = {}) { super(args); }
 
   preventDefault(event: Event) {
     event.stopPropagation();
@@ -93,33 +89,32 @@ export class IoMenuItem extends IoField {
   get hasmore() {
     return this.item.hasmore && this.depth > 0;
   }
-  get inlayer() {
-    return !!this.$parent && !!this.$parent.inlayer;
+  get inoverlay() {
+    return Overlay.contains(this.parentElement.parentElement);
   }
   get $parent() {
     return this.parentElement;
   }
-
   connectedCallback() {
     super.connectedCallback();
     // TODO: remove event listeners and find a better way to handle this.
-    Overlay.addEventListener('pointermove', this._onOverlayPointermove);
-    Overlay.addEventListener('pointerup', this._onOverlayPointerup);
+    Overlay.addEventListener('pointermove', this.onOverlayPointermove);
+    Overlay.addEventListener('pointerup', this.onOverlayPointerup);
     if (this.$options) Overlay.appendChild(this.$options as unknown as HTMLElement);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    Overlay.removeEventListener('pointermove', this._onOverlayPointermove);
-    Overlay.removeEventListener('pointerup', this._onOverlayPointerup);
-    if (this.$options && this.$options.inlayer) Overlay.removeChild(this.$options as unknown as HTMLElement);
+    Overlay.removeEventListener('pointermove', this.onOverlayPointermove);
+    Overlay.removeEventListener('pointerup', this.onOverlayPointerup);
+    if (this.$options) Overlay.removeChild(this.$options as unknown as HTMLElement);
   }
-  _onOverlayPointermove(event: PointerEvent) {
-    if (!this.inlayer && this.expanded) this.onPointermove(event);
+  onOverlayPointermove(event: PointerEvent) {
+    if (!this.inoverlay && this.expanded) this.onPointermove(event);
   }
-  _onOverlayPointerup(event: PointerEvent) {
-    if (!this.inlayer && this.expanded) this.onPointerupAction(event);
+  onOverlayPointerup(event: PointerEvent) {
+    if (!this.inoverlay && this.expanded) this.onPointerupAction(event);
   }
-  _onClick() {
+  onClick() {
     const item = this.item;
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true;
@@ -128,6 +123,7 @@ export class IoMenuItem extends IoField {
     } else {
       if (item.action) {
         item.action.apply(null, [item.value]);
+        this.collapseRoot();
       }
       if (item.mode === 'select') {
         if (item.hasmore && item.options && this.depth <= 0) {
@@ -135,42 +131,30 @@ export class IoMenuItem extends IoField {
         } else {
           item.selected = true;
         }
+        this.collapseRoot();
       } else if (item.mode === 'scroll') {
         item.selected = true;
+        this.collapseRoot();
       } else if (item.mode === 'link') {
         window.open(item.value, '_blank');
+        this.collapseRoot();
       }
-      this.dispatchEvent('item-clicked', item, true);
-      this.debounce(this.collapse);
     }
-  }
-  _onItemClicked(event: PointerEvent) {
-    const item = event.composedPath()[0];
-    if (item !== (this as any)) {
-      event.stopImmediatePropagation();
-      this.dispatchEvent('item-clicked', event.detail, true);
-    }
-    if (this.expanded) this.debounce(this.collapse);
   }
   onPointerdown(event: PointerEvent) {
+    super.onPointerdown(event);
     event.stopPropagation();
     event.preventDefault(); // Prevents focus
     this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this.onPointermove);
-    this.addEventListener('pointerup', this.onPointerup);
     this.onPointerdownAction(event);
   }
   onPointerdownAction(event: PointerEvent) {
     // TODO: why is this needed?
-    if (this.expanded || event.pointerType === 'mouse' || this.inlayer) {
+    if (this.expanded || event.pointerType === 'mouse' || this.inoverlay) {
       this.focus();
     }
-
     // hovered = this;
     // hoveredParent = this.parentElement;
-    // TODO: Safari temp fix for event.movement = 0
-    this._x = event.clientX;
-    this._y = event.clientY;
   }
   onPointermove(event: PointerEvent) {
     event.stopPropagation();
@@ -178,78 +162,80 @@ export class IoMenuItem extends IoField {
   }
   onPointermoveAction(event: PointerEvent) {
     // TODO: why is this needed?
-    if (!this.expanded && event.pointerType === 'touch' && !this.inlayer) return;
+    if (!this.expanded && event.pointerType === 'touch' && !this.inoverlay) return;
 
     const clipped = !!this.$parent && !!this.$parent.style.height;
 
     if (event.pointerType === 'touch' && clipped) return;
 
-    // TODO: Safari temp fix for event.movement = 0
-    const movementX = event.clientX - this._x;
-    const movementY = event.clientY - this._y;
-    this._x = event.clientX;
-    this._y = event.clientY;
-
-    Overlay.x = event.clientX;
-    Overlay.y = event.clientY;
     clearTimeout(this._timeoutOpen);
-    hovered = this._gethovered(event);
-    if (hovered) {
-      const v = Math.abs(movementY) - Math.abs(movementX);
+    hovered = this.getHovered(event);
+    if (hovered && hovered !== prevHovered) {
+      const v = Math.abs(event.movementY) - Math.abs(event.movementX);
       const h = hovered.parentElement.horizontal;
       if (prevHovered?.parentElement !== hovered.parentElement) {
-        this._expandHovered();
+        prevHovered = hovered;
+        this.expandHovered();
       } else if (h ? v < -0.25 : v > 0.25) {
-        this._expandHovered();
+        prevHovered = hovered;
+        this.expandHovered();
       } else {
         this._timeoutOpen = setTimeout(() => {
-          this._expandHovered();
+          prevHovered = hovered;
+          this.expandHovered();
         }, 100);
       }
-      prevHovered = hovered;
     }
   }
   onPointerup(event: PointerEvent) {
+    super.onPointerup(event);
     event.stopPropagation();
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerup', this.onPointerup);
     this.onPointerupAction(event);
   }
-  onPointerupAction(event: PointerEvent, skipCollapse = false) {
-    const item = this._gethovered(event);
+  onPointerupAction(event: PointerEvent) {
+    const item = this.getHovered(event);
     if (item) {
       item.focus();
-      item._onClick(event);
-    } else if (!skipCollapse) {
-      this.debounce(this.collapseRoot);
+      item.onClick(event);
     }
     hovered = undefined;
     prevHovered = undefined;
   }
   onFocus(event: FocusEvent) {
     super.onFocus(event);
-    if (this.hasmore && !this.expanded) this.expanded = true;
+    if (this.hasmore && this.inoverlay) this.expanded = true;
+    const $allitems = getMenuDescendants(getMenuRoot(this));
+    const $ancestoritems = getMenuAncestors(this);
+    for (let i = $allitems.length; i--;) {
+      if ($allitems[i] !== this && $allitems[i] !== this.$options && $ancestoritems.indexOf($allitems[i]) === -1 && $allitems[i].expanded) {
+        $allitems[i].collapse();
+      }
+    }
   }
   onBlur(event: FocusEvent) {
     super.onBlur(event);
-    this.debounce(this._onBlurDebounced);
+    this.debounce(this.onBlurDebounced);
   }
-  _onBlurDebounced() {
+  onBlurDebounced() {
+    // TODO: rewrite this.
     const descendants = getMenuDescendants(this);
     const siblings = getMenuSiblings(this);
     const ancestors = getMenuAncestors(this);
     const descendantIsFocused = descendants.some(descendant => descendant === document.activeElement as unknown as IoMenuElementType);
     const siblingIsFocused = siblings.some(sibling => sibling === document.activeElement as unknown as IoMenuElementType);
     const ancestorIsFocused = ancestors.some(ancestor => ancestor === document.activeElement as unknown as IoMenuElementType);
+    const nothingIsFocused = document.activeElement === document.body;
 
-    if (descendantIsFocused || siblingIsFocused) return;
-    if (ancestorIsFocused) {
-      this.debounce(this.collapse);
-    } else {
-      this.debounce(this.collapseRoot);
+    const fucusLeftOverlay = !Overlay.contains(document.activeElement);
+
+    if (descendantIsFocused || nothingIsFocused) return;
+    if (ancestorIsFocused || siblingIsFocused) {
+      this.collapse();
+    } else if (fucusLeftOverlay) {
+      this.collapseRoot();
     }
   }
-  _gethovered(event: PointerEvent) {
+  getHovered(event: PointerEvent) {
     const items = getMenuDescendants(getMenuRoot(this));
     const hovered: IoMenuElementType[] = [];
     for (let i = items.length; i--;) {
@@ -265,7 +251,7 @@ export class IoMenuItem extends IoField {
     }
     return undefined;
   }
-  _expandHovered() {
+  expandHovered() {
     if (hovered) {
       hovered.focus();
       if (hovered.hasmore) {
@@ -287,41 +273,70 @@ export class IoMenuItem extends IoField {
     }
   }
   onKeydown(event: KeyboardEvent) {
+    const inoverlay = this.inoverlay;
+    let direction = this.direction;
+
+    // Determine relative position of expanded options. If they are nudged to the opposite direction, flip direction.
+    let optionsAreAbove = false;
+    let optionsAreBelow = false;
+    let optionsAreLeft = false;
+    let optionsAreRight = false;
+    if (this.expanded && this.$options) {
+      const rect = this.getBoundingClientRect();
+      const optionsRect = this.$options.getBoundingClientRect();
+      optionsAreAbove = rect.top > optionsRect.top;
+      optionsAreBelow = rect.bottom < optionsRect.bottom;
+      optionsAreLeft = rect.left > optionsRect.left;
+      optionsAreRight = rect.right < optionsRect.right;
+    }
+    // Flip direction if options are nudged to the opposite direction.
+    if (direction === 'up' && optionsAreBelow) direction = 'down';
+    if (direction === 'down' && optionsAreAbove) direction = 'up';
+    if (direction === 'left' && optionsAreRight) direction = 'right';
+    if (direction === 'right' && optionsAreLeft) direction = 'left';
+
     let command = '';
+
     if (event.key === 'Enter' || event.key === ' ') {
       if (this.hasmore) {
         command = 'in';
       } else {
         event.preventDefault();
-        this._onClick();
+        this.onClick();
         return;
       }
     } else if (event.key === 'Escape') {
-      if (this.expanded) {
-        command = 'collapse';
-      } else {
-        command = 'out';
-      }
-    }
-
-    if (this.hasmore) {
-      if (this.direction === 'left' && event.key === 'ArrowLeft') {
-        command = 'in';
-      } else if (this.direction === 'right' && event.key === 'ArrowRight') {
-        command = 'in';
-      } else if (this.direction === 'up' && event.key === 'ArrowUp') {
-        command = 'in';
-      } else if (this.direction === 'down' && event.key === 'ArrowDown') {
-        command = 'in';
-      }
-    }
-
-    if (this.inlayer && event.key === 'Tab') {
+      command = 'out';
+    } else if (event.key === 'Tab') {
       event.preventDefault();
-      if (this.direction === 'left' || this.direction === 'right') {
+      if (direction === 'left' || direction === 'right') {
         this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
       } else {
         this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
+      }
+    } else if (event.key === 'ArrowLeft' && (inoverlay || this.expanded)) {
+      if (this.hasmore && direction === 'left') {
+        command = 'in';
+      } else if (direction === 'right') {
+        command = 'out';
+      }
+    } else if (event.key === 'ArrowRight' && (inoverlay || this.expanded)) {
+      if (this.hasmore && direction === 'right') {
+        command = 'in';
+      } else if (direction === 'left') {
+        command = 'out';
+      }
+    } else if (event.key === 'ArrowUp' && (inoverlay || this.expanded)) {
+      if (this.hasmore && direction === 'up') {
+        command = 'in';
+      } else if (direction === 'down') {
+        command = 'out';
+      }
+    } else if (event.key === 'ArrowDown' && (inoverlay || this.expanded)) {
+      if (this.hasmore && direction === 'down') {
+        command = 'in';
+      } else if (direction === 'up') {
+        command = 'out';
       }
     }
 
@@ -329,17 +344,18 @@ export class IoMenuItem extends IoField {
       event.preventDefault();
       switch (command) {
         case 'collapse': {
-          this.expanded = false;
+          this.collapse();
           break;
         }
         case 'in':
-          this.expanded = true;
+          if (this.hasmore) this.expanded = true;
           if (this.$options && this.$options.children.length) this.$options.children[0].focus();
           break;
         case 'out':
-          this.expanded = false;
+          this.collapse();
           if (this.$parent && this.$parent.$parent) {
             this.$parent.$parent.focus();
+            this.$parent.$parent.collapse();
           }
           break;
         default:
@@ -350,48 +366,13 @@ export class IoMenuItem extends IoField {
     }
   }
   collapse() {
+    getMenuDescendants(this).forEach(descendant => {
+      descendant.expanded = false;
+    });
     this.expanded = false;
   }
   collapseRoot() {
-    const root = getMenuRoot(this);
-    root.collapse();
-  }
-  expandedChanged() {
-    if (this.expanded && this.depth > 0) {
-
-      if (this.item.options && this.$options === undefined) {
-        this.$options = new IoMenuOptions({
-          expanded: this.bind('expanded'),
-          inlayer: true,
-          depth: this.depth - 1,
-          options: this.item.options,
-          direction: this.direction,
-          $parent: this,
-        });
-      }
-
-      // Colapse all siblings and their ancestors
-      const $allitems = getMenuDescendants(getMenuRoot(this));
-      const $ancestoritems = getMenuAncestors(this);
-      const $descendants = getMenuDescendants(this);
-
-      for (let i = $allitems.length; i--;) {
-        if ($allitems[i] !== this && $ancestoritems.indexOf($allitems[i]) === -1 && $descendants.indexOf($allitems[i]) === -1) {
-          $allitems[i].expanded = false;
-        }
-      }
-    }
-
-    if (this.$options) {
-      if (this.expanded) {
-        if (this.$options.parentElement !== Overlay) Overlay.appendChild(this.$options as unknown as HTMLElement);
-        this.$options.addEventListener('item-clicked', this._onItemClicked);
-      } else {
-        this.$options.removeEventListener('item-clicked', this._onItemClicked);
-      }
-      const $descendants = getMenuDescendants(this.$options);
-      for (let i = $descendants.length; i--;) $descendants[i].expanded = false;
-    }
+    getMenuRoot(this).collapse();
   }
   itemChanged() {
     this.setProperties({
@@ -403,9 +384,21 @@ export class IoMenuItem extends IoField {
     this.changed();
   }
   changed() {
-    if (this.$options !== undefined && this.item.options) {
-      this.$options.options = this.item.options;
+    if (this.item.options && this.depth > 0) {
+      if (this.$options === undefined) {
+        this.$options = new IoMenuOptions({
+          expanded: this.bind('expanded'),
+          depth: this.depth - 1,
+          options: this.item.options,
+          direction: this.direction,
+          $parent: this,
+        });
+        Overlay.appendChild(this.$options as unknown as HTMLElement);
+      } else {
+        this.$options.options = this.item.options;
+      }
     }
+
     const icon = this.icon || this.item.icon;
 
     this.setAttribute('hidden', this.item.hidden);

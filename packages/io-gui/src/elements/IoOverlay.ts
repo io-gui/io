@@ -2,21 +2,7 @@ import { ReactiveProperty } from '../decorators/Property';
 import { Register } from '../decorators/Register';
 import { IoElement, IoElementProps } from './IoElement';
 
-let lastFocus: Element | null = null;
-
-window.addEventListener('focusin', () => {
-  lastFocus = document.activeElement;
-}, {capture: false});
-
-window.addEventListener('blur', () => {
-  setTimeout(() => {
-    if (document.activeElement === document.body) {
-      lastFocus = null;
-    }
-  });
-}, {capture: true});
-
-export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
+let focusRestoreTarget: Element | null = null;
 
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
@@ -44,12 +30,15 @@ class IoOverlay extends IoElement {
         background: transparent;
       }
       :host[expanded] {
+        background: rgba(0, 0, 0, 0.25);
         pointer-events: all;
       }
       :host > * {
         position: absolute !important;
-        touch-action: none;
         box-shadow: var(--io_shadow);
+      }
+      :host * {
+        touch-action: none;
       }
     `;
   }
@@ -62,9 +51,6 @@ class IoOverlay extends IoElement {
       'pointermove': ['stopPropagation', {passive: false}],
       'pointerup': 'onPointerup',
       'contextmenu': 'onContextmenu',
-      'focusin': 'onFocusIn',
-      'scroll': '_onScroll',
-      'wheel': ['_onScroll', {passive: false}],
       'mousedown': ['stopPropagation', {passive: false}],
       'mousemove': ['stopPropagation', {passive: false}],
       'mouseup': ['stopPropagation', {passive: false}],
@@ -73,155 +59,86 @@ class IoOverlay extends IoElement {
       'touchend': ['stopPropagation', {passive: false}],
       'keydown': ['stopPropagation', {passive: false}],
       'keyup': ['stopPropagation', {passive: false}],
+      'focusin': ['stopPropagation', {passive: false}],
+      'blur': ['stopPropagation', {passive: false}],
+      'scroll': 'onScroll',
+      'wheel': ['onScroll', {passive: false}],
     };
   }
   constructor(args: IoElementProps = {}) {
     super(args);
-    Object.defineProperty(this, 'x', {value: 0, writable: true});
-    Object.defineProperty(this, 'y', {value: 0, writable: true});
+    this.expandAsChildren = this.expandAsChildren.bind(this);
   }
   stopPropagation(event: Event) {
     event.stopPropagation();
   }
-  onResized() {
-    this.expanded = false;
-  }
   onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
-      this.throttle(this._onCollapse);
+      this.collapse();
     }
-  }
-  _onCollapse() {
-    this.expanded = false;
+    event.stopPropagation();
   }
   onContextmenu(event: Event) {
     event.preventDefault();
-  }
-  onFocusIn(event: FocusEvent) {
     event.stopPropagation();
   }
-  _onScroll(event: Event) {
+  onScroll(event: Event) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
-      this.throttle(this._onCollapse);
+      this.collapse();
     }
   }
-  nudgeDown(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
-    x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
-    const fits = y + elemRect.height < window.innerHeight;
-    if (fits || force) {
-      if (!fits) y = window.innerHeight - elemRect.height;
-      element.style.left = x + 'px';
-      element.style.top = y + 'px';
-      return true;
-    }
-    return false;
-  }
-  nudgeUp(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
-    x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
-    const fits = y - elemRect.height > 0;
-    if (fits || force) {
-      if (!fits) y = 0;
-      element.style.left = x + 'px';
-      element.style.top = y - elemRect.height + 'px';
-      return true;
-    }
-    return false;
-  }
-  nudgeRight(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
-    const fits = x + elemRect.width < window.innerWidth;
-    if (fits || force) {
-      if (!fits) x = window.innerWidth - elemRect.width;
-      element.style.left = x + 'px';
-      element.style.top = Math.min(y, window.innerHeight - elemRect.height) + 'px';
-      return true;
-    }
-    return false;
-  }
-  nudgeLeft(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean) {
-    const fits = x - elemRect.width > 0;
-    if (fits || force) {
-      if (!fits) x = 0;
-      element.style.left = x - elemRect.width + 'px';
-      element.style.top = Math.min(y, window.innerHeight - elemRect.height) + 'px';
-      return true;
-    }
-    return false;
-  }
-  nudgePointer(element: HTMLElement, x: number, y: number, elemRect: DOMRect) {
-    element.style.left = Math.max(0, Math.min(x, window.innerWidth - elemRect.width)) + 'px';
-    element.style.top = Math.max(0, Math.min(y, window.innerHeight - elemRect.height)) + 'px';
-    return true;
-  }
-  setElementPosition(element: HTMLElement, direction: NudgeDirection, srcRect: DOMRect) {
-    const elemRect = element.getBoundingClientRect();
-    const left = srcRect.left;
-    const top = srcRect.top;
-    const right = srcRect.right;
-    const bottom = srcRect.bottom;
-    const bottomToHeight = window.innerHeight - bottom;
-    const rightToWidth = window.innerWidth - right;
-    switch (direction) {
-      case 'pointer':
-        this.nudgePointer(element, this.x + 5, this.y + 5, elemRect);
-        break;
-      case 'up':
-        this.nudgeUp(element, left, top, elemRect) ||
-        this.nudgeDown(element, left, bottom, elemRect) ||
-        this.nudgeUp(element, left, top, elemRect, top > bottomToHeight) ||
-        this.nudgeDown(element, left, bottom, elemRect, top <= bottomToHeight);
-        break;
-      case 'left':
-        this.nudgeLeft(element, left, top, elemRect) ||
-        this.nudgeRight(element, right, top, elemRect) ||
-        this.nudgeLeft(element, left, top, elemRect, left > rightToWidth) ||
-        this.nudgeRight(element, right, top, elemRect, left <= rightToWidth);
-        break;
-      case 'down':
-        this.nudgeDown(element, left, bottom, elemRect) ||
-        this.nudgeUp(element, left, top, elemRect) ||
-        this.nudgeDown(element, left, bottom, elemRect, bottomToHeight > top) ||
-        this.nudgeUp(element, left, top, elemRect, bottomToHeight <= top);
-        break;
-      case 'right':
-      default:
-        this.nudgeRight(element, right, top, elemRect) ||
-        this.nudgeLeft(element, left, top, elemRect) ||
-        this.nudgeRight(element, right, top, elemRect, rightToWidth > left) ||
-        this.nudgeLeft(element, left, top, elemRect, rightToWidth <= left);
-        break;
-    }
+  onResized() {
+    this.collapse();
   }
   appendChild(child: HTMLElement) {
     super.appendChild(child);
-    child.addEventListener('expanded-changed', this.onChildExpanded);
-    this.onChildExpanded();
+    child.addEventListener('expanded-changed', this.onChildExpandedChanged);
+    this.debounce(this.expandAsChildren);
   }
   removeChild(child: HTMLElement) {
     super.removeChild(child);
-    child.removeEventListener('expanded-changed', this.onChildExpanded);
-    this.onChildExpanded();
+    child.removeEventListener('expanded-changed', this.onChildExpandedChanged);
+    this.debounce(this.expandAsChildren);
   }
-  onChildExpanded() {
-    this.throttle(this.onChildExpandedDelayed);
+  onChildExpandedChanged() {
+    this.debounce(this.expandAsChildren);
+    // this.debounce(this.expandAsChildren, undefined, 5);
   }
-  onChildExpandedDelayed() {
+  collapse() {
+    for (let i = this.children.length; i--;) {
+      this.expanded = false;
+    }
+    this.expanded = false;
+  }
+  expandAsChildren() {
     for (let i = this.children.length; i--;) {
       if (this.children[i].expanded) {
         this.expanded = true;
         return;
       }
     }
-    this.throttle(this._onCollapse);
+    this.expanded = false;
   }
   expandedChanged() {
     if (!this.expanded) {
       for (let i = this.children.length; i--;) {
         this.children[i].expanded = false;
       }
-      if (lastFocus) (lastFocus as HTMLElement).focus();
+      if (focusRestoreTarget) (focusRestoreTarget as HTMLElement).focus();
     }
   }
 }
 
 export const IoOverlaySingleton = new IoOverlay();
 document.body.appendChild(IoOverlaySingleton as unknown as HTMLElement);
+
+// TODO: Test
+window.addEventListener('focusin', () => {
+  focusRestoreTarget = document.activeElement;
+}, {capture: false});
+window.addEventListener('blur', () => {
+  if (IoOverlaySingleton.expanded) return;
+  if (document.activeElement === document.body) {
+    focusRestoreTarget = null;
+  }
+}, {capture: true});

@@ -139,6 +139,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      * [property]-changed` events will be broadcast in the end.
      * @param {Object} props - Map of property names and values.
      */
+    // TODO: add types
     applyProperties(props: any, skipDispatch = false) {
       for (const name in props) {
         if (!this._reactiveProperties.has(name)) {
@@ -160,6 +161,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
      * [property]-changed` events will be broadcast in the end.
      * @param {Object} props - Map of property names and values.
      */
+    // TODO: add types
     setProperties(props: any) {
       for (const name in props) {
         if (!this._reactiveProperties.has(name)) {

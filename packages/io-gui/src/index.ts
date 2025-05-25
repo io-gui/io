@@ -1,7 +1,6 @@
 export * from './core/Binding';
 export * from './core/ChangeQueue';
 export * from './core/EventDispatcher';
-export * from './core/Focus';
 export * from './core/ProtoChain';
 export * from './core/Queue';
 export * from './core/ReactiveProperty';
@@ -16,6 +15,8 @@ export * from './elements/IoGL';
 export * from './elements/IoGL.glsl';
 export * from './elements/IoNative';
 export * from './elements/IoOverlay';
+export * from './utils/Focus';
+export * from './utils/Nudge';
 
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic
