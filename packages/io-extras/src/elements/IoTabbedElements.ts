@@ -1,6 +1,6 @@
 import { Register, IoElement, div } from 'io-gui';
 import { ioButton } from 'io-inputs';
-import { ioOptionMenu } from 'io-menus';
+import { ioOptionSelect } from 'io-menus';
 import 'io-navigation';
 import { ioSelector } from 'io-navigation';
 
@@ -277,7 +277,7 @@ export class IoTabs extends IoElement {
     :host > io-button.io-selected-tab.io-tab-insert-after {
       background-image: linear-gradient(270deg, var(--io_bgColorBlue) 0.3em, transparent 0.31em);
     }
-    :host > io-option-menu {
+    :host > io-option-select {
       background: none !important;
       border: none;
       padding-left: calc(2 * var(--io_spacing));
@@ -454,7 +454,7 @@ export class IoTabs extends IoElement {
     }
     const elements = [];
     if (this.overflow) {
-      elements.push(ioOptionMenu({
+      elements.push(ioOptionSelect({
         label: '☰',
         title: 'select tab menu',
         value: this.bind('selected'),
@@ -469,7 +469,7 @@ export class IoTabs extends IoElement {
     if (this.editable) {
       elements.push(div({
         class: 'edit-spacer'
-      }), ioOptionMenu({
+      }), ioOptionSelect({
         class: 'edit-option',
         label: '⚙️',
         options: options,

@@ -19,6 +19,7 @@ export class IoField extends IoElement {
       :host {
         cursor: pointer;
         height: var(--io_fieldHeight);
+        min-height: var(--io_fieldHeight);
         line-height: var(--io_lineHeight);
         border: var(--io_border);
         border-color: transparent;
@@ -147,8 +148,7 @@ export class IoField extends IoElement {
     this.addEventListener('pointerup', this.onPointerup);
     this.pressed = true;
   }
-  onPointermove(event: PointerEvent) {
-  }
+  onPointermove(event: PointerEvent) {}
   onPointerleave(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);

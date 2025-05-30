@@ -1,6 +1,6 @@
 import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from 'io-gui';
 import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
-import { MenuOptions, ioOptionMenu } from 'io-menus';
+import { MenuOptions, ioOptionSelect } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 import { ioVector } from '../elements/IoVector';
@@ -14,7 +14,7 @@ export type PropertyConfigRecord = Record<string, VDOMElement>;
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
 function optionMenu(options: any[]) {
-  return ioOptionMenu({options: new MenuOptions().fromJSON(options)});
+  return ioOptionSelect({options: new MenuOptions().fromJSON(options)});
 }
 
 const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
@@ -30,25 +30,25 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     [Number, ioNumber({step: 0.01})],
   ]],
   [window.Node, [
-    ['tabIndex', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['tabIndex', ioOptionSelect({options: new MenuOptions().fromJSON([
       {value: '', label: 'none'}, '-1', '0', '1', '2', '3',
     ])})],
     ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
     ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
-    ['autocapitalize', ioOptionMenu({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', label: 'None'}])})],
-    ['writingSuggestions', ioOptionMenu({options: new MenuOptions().fromJSON(['true', 'false'])})],
-    ['dir', ioOptionMenu({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', label: 'None'}])})],
-    ['virtualKeyboardPolicy', ioOptionMenu({options: new MenuOptions().fromJSON(['manual','auto',{value:'', label: 'None'}])})],
-    ['enterKeyHint', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['autocapitalize', ioOptionSelect({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', label: 'None'}])})],
+    ['writingSuggestions', ioOptionSelect({options: new MenuOptions().fromJSON(['true', 'false'])})],
+    ['dir', ioOptionSelect({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', label: 'None'}])})],
+    ['virtualKeyboardPolicy', ioOptionSelect({options: new MenuOptions().fromJSON(['manual','auto',{value:'', label: 'None'}])})],
+    ['enterKeyHint', ioOptionSelect({options: new MenuOptions().fromJSON([
       'enter','done','go','next','previous','search','send',{value:'', label: 'None'}])})
     ],
-    ['contentEditable', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['contentEditable', ioOptionSelect({options: new MenuOptions().fromJSON([
       'true','false','plaintext-only','inherit'])})
     ],
-    ['inputMode', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['inputMode', ioOptionSelect({options: new MenuOptions().fromJSON([
       'decimal','email','numeric','tel','search','url','text',{value:'', label: 'None'}])})
     ],
-    ['lang', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['lang', ioOptionSelect({options: new MenuOptions().fromJSON([
       {value: '', label: 'None'},
       'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu','be','bn','bh','bi','bs','br','bg','my','ca','ch','ce',
       'ny','zh','zh-ans','zh-ant','cv','kw','co','cr','hr','cs','da','dv','nl','dz','en','eo','et','ee','fo','fj','fi','fr','ff','gl','gd',
@@ -58,7 +58,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'ro','ru','se','sm','sg','sa','sr','sh','st','tn','sn','ii','sd','si','ss','sk','sl','so','nr','es','su','sw','sv','tl','ty','tg','ta',
       'tt','te','th','bo','ti','to','ts','tr','tk','tw','ug','uk','ur','uz','ve','vi','vo','wa','cy','wo','fy','xh','yi','ji','yo','za','zu'
     ])})],
-    ['role', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['role', ioOptionSelect({options: new MenuOptions().fromJSON([
       'alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary',
       'contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img',
       'link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio',
@@ -67,7 +67,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
     ])})],
     ['ariaAtomic', optionMenu(['true','false', null])],
-    ['ariaAutoComplete', ioOptionMenu({options: new MenuOptions().fromJSON(['inline','list','both','none'])})],
+    ['ariaAutoComplete', ioOptionSelect({options: new MenuOptions().fromJSON(['inline','list','both','none'])})],
     ['ariaBusy', optionMenu(['true','false', null])],
     ['ariaBrailleLabel', ioString()],
     ['ariaBrailleRoleDescription', ioString()],
@@ -85,24 +85,24 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     ['ariaKeyShortcuts', ioString()],
     ['ariaLabel', ioString()],
     ['ariaLevel', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaLive', ioOptionMenu({options: new MenuOptions().fromJSON(['assertive','polite','off'])})],
+    ['ariaLive', ioOptionSelect({options: new MenuOptions().fromJSON(['assertive','polite','off'])})],
     ['ariaModal', optionMenu(['true','false', null])],
     ['ariaMultiLine', optionMenu(['true','false', null])],
     ['ariaMultiSelectable', optionMenu(['true','false', null])],
-    ['ariaOrientation', ioOptionMenu({options: new MenuOptions().fromJSON(['horizontal','vertical','undefined'])})],
+    ['ariaOrientation', ioOptionSelect({options: new MenuOptions().fromJSON(['horizontal','vertical','undefined'])})],
     ['ariaPlaceholder', ioString()],
     ['ariaPosInSet', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
     ['ariaPressed', optionMenu(['true','false','mixed', null])],
     ['ariaReadOnly', optionMenu(['true','false', null])],
     ['ariaRequired', optionMenu(['true','false', null])],
-    ['ariaRelevant', ioOptionMenu({options: new MenuOptions().fromJSON(['additions','all','removals','text'])})],
+    ['ariaRelevant', ioOptionSelect({options: new MenuOptions().fromJSON(['additions','all','removals','text'])})],
     ['ariaRoleDescription', ioString()],
     ['ariaRowCount', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
     ['ariaRowIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
     ['ariaRowSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
     ['ariaSelected', optionMenu(['true','false', null])],
     ['ariaSetSize', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaSort', ioOptionMenu({options: new MenuOptions().fromJSON(['none','ascending','descending','other'])})],
+    ['ariaSort', ioOptionSelect({options: new MenuOptions().fromJSON(['none','ascending','descending','other'])})],
     ['ariaValueMax', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
     ['ariaValueMin', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
     ['ariaValueNow', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
@@ -115,12 +115,12 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   [HTMLElement, [
   ]],
   [Node, [
-    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['reactivity', ioOptionSelect({options: new MenuOptions().fromJSON([
       'none', 'debounced', 'immediate',
     ])})],
   ]],
   [IoElement, [
-    ['reactivity', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['reactivity', ioOptionSelect({options: new MenuOptions().fromJSON([
       'none', 'debounced', 'immediate',
     ])})],
   ]],
@@ -130,7 +130,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]],
   [Theme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],
-    ['themeID', ioOptionMenu({options: new MenuOptions().fromJSON([
+    ['themeID', ioOptionSelect({options: new MenuOptions().fromJSON([
       'light',
       'dark',
     ])})],

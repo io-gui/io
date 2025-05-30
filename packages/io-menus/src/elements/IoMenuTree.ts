@@ -3,6 +3,7 @@ import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
+import { getMenuDescendants } from '../utils/MenuHierarchy.js';
 
 export function addMenuOptions(options: MenuOptions, depth: number, d = 0) {
   const elements: VDOMElement[] = [];
@@ -170,11 +171,17 @@ export class IoMenuTree extends IoElement {
 
   constructor(args: IoMenuTreeProps = {}) { super(args); }
 
-  // TODO: fix UX. This shouldselect search field on collapse by click.
-  onCollapse() {
-    const focusSearch = this.searchable && this.search;
-    this.search = '';
-    if (focusSearch) this.$.search.focus();
+  collapse() {
+    const itemWasFocused = this.contains(document.activeElement);
+    const searchHadInput = this.searchable && !!this.search;
+    getMenuDescendants(this).forEach(descendant => {
+      descendant.expanded = false;
+    });
+    this.expanded = false;
+    if (searchHadInput && itemWasFocused && !this.inoverlay) {
+      this.search = '';
+      this.$.search.focus();
+    }
   }
 
   changed() {
@@ -197,7 +204,10 @@ export class IoMenuTree extends IoElement {
       const len = elements.length;
       filterOptions(this.options, this.search, this.depth, elements);
       if (len === elements.length) {
-        elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
+        elements.push(ioMenuItem({
+          item: new MenuItem({label: 'No matches', mode: 'none'}),
+          $parent: this,
+        }));
       }
     } else {
       elements.push(...addMenuOptions(this.options, this.depth));

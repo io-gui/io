@@ -12,7 +12,7 @@ const rects = new WeakMap();
 // TODO: improve focusto nav and in-layer navigation.
 
 export type IoMenuOptionsProps = IoElementProps & {
-  options?: MenuOptions,
+  options?: WithBinding<MenuOptions>,
   expanded?: WithBinding<boolean>,
   horizontal?: boolean,
   searchable?: boolean,
@@ -34,6 +34,8 @@ export class IoMenuOptions extends IoElement {
     return /* css */`
     :host {
       display: flex;
+      flex-direction: column;
+      align-self: stretch;
       border-radius: var(--io_borderRadius);
       background-color: var(--io_bgColorDimmed);
       position: relative;
@@ -46,6 +48,9 @@ export class IoMenuOptions extends IoElement {
     :host:not([horizontal]) {
       flex-direction: column;
       padding: var(--io_spacing) 0;
+    }
+    :host[inoverlay] {
+      overflow-y: auto;
     }
     :host[inoverlay]:not([expanded]) {
       visibility: hidden;
@@ -98,12 +103,13 @@ export class IoMenuOptions extends IoElement {
     }
 
     /* Search field */
-    :host:not([horizontal]) > .search {
+    :host:not([horizontal]) > #search {
       margin: var(--io_spacing);
       margin-top: 0;
     }
-    :host[horizontal] > .search {
-      margin-right: var(--io_borderWidth);
+    :host[horizontal] > #search {
+      margin: var(--io_spacing);
+      margin-left: 0;
       flex: 0 0 10em;
     }
 
@@ -171,9 +177,11 @@ export class IoMenuOptions extends IoElement {
   }
   constructor(args: IoMenuOptionsProps = {}) {
     super(args);
-    this.clipHeight = this.clipHeight.bind(this);
     this.setOverflow = this.setOverflow.bind(this);
     this.debounce(this.setOverflow);
+  }
+  stopPropagation(event: MouseEvent) {
+    event.stopPropagation();
   }
   connectedCallback() {
     super.connectedCallback();
@@ -181,8 +189,8 @@ export class IoMenuOptions extends IoElement {
       this.setAttribute('inoverlay', 'true');
     }
   }
-  stopPropagation(event: MouseEvent) {
-    event.stopPropagation();
+  disconnectedCallback() {
+    super.disconnectedCallback();
   }
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
@@ -283,16 +291,16 @@ export class IoMenuOptions extends IoElement {
     }
   }
   collapse() {
+    const itemWasFocused = this.contains(document.activeElement);
+    const searchHadInput = this.searchable && !!this.search;
     getMenuDescendants(this).forEach(descendant => {
       descendant.expanded = false;
     });
-    this.setProperties({
-      search: '',
-      expanded: false,
-    });
-    // TODO: investigate why is this UX is needed?
-    const focusSearch = this.selectable && !!this.search && !this.inoverlay;
-    if (focusSearch) this.$.search.focus();
+    this.expanded = false;
+    if (searchHadInput && itemWasFocused && !this.inoverlay) {
+      this.search = '';
+      this.$.search.focus();
+    }
   }
   expandedChanged() {
     if (this.expanded) {
@@ -308,39 +316,18 @@ export class IoMenuOptions extends IoElement {
     }
   }
   searchChanged() {
+    // TODO: focus drifts when filtered item is clicked
     if (this.inoverlay && this.$parent) {
-      this.debounce(this.clipHeight);
+      this.debounce(this.onExpandInOverlay);
     }
     this.debounce(this.setOverflow);
   }
   // TODO: Move functionality to Overlay
   onExpandInOverlay() {
     if (this.$parent) {
-      nudge(this, this.$parent, this.direction);
-      this.clipHeight();
+      nudge(this, this.$parent, this.direction, true);
     }
   }
-  clipHeight() {
-    this.scrollTop = 0;
-    if (!this.firstChild) return;
-
-    const rectTop = this.firstChild.getBoundingClientRect().top;
-    const rectBottom = this.lastChild.getBoundingClientRect().bottom;
-    const rectHeight = rectBottom - rectTop;
-
-    if (rectTop < 0) {
-      this.style.top = '0px';
-      this.style.height = (rectHeight + rectTop)  + 'px';
-      this.style.touchAction = 'pan-y';
-    } else if (rectBottom > window.innerHeight) {
-      this.style.height = (window.innerHeight - rectTop)  + 'px';
-      this.style.touchAction = 'pan-y';
-    } else {
-      this.style.height = null;
-      this.style.touchAction = null;
-    }
-  }
-
   changed() {
     const elements: VDOMElement[] = [...this.slotted];
 
@@ -348,7 +335,6 @@ export class IoMenuOptions extends IoElement {
       elements.push(ioString({
         id: 'search',
         role: 'search',
-        class: 'search',
         value: this.bind('search'),
         placeholder: 'Search',
         live: true
@@ -368,9 +354,9 @@ export class IoMenuOptions extends IoElement {
       }
       for (let i = 0; i < this.options.length; i++) {
         elements.push(ioMenuItem({
-          class: 'item',
           item: this.options[i],
           direction: direction,
+          $parent: this,
           depth: this.depth
         }));
         if (i < this.options.length - 1) {

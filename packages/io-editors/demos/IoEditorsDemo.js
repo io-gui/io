@@ -1,5 +1,5 @@
 import { Register, IoElement, div } from 'io-gui';
-import { MenuOptions, ioOptionMenu } from 'io-menus';
+import { MenuOptions, ioOptionSelect } from 'io-menus';
 import { ioPropertyEditor, ioObject, ioVector, ioMatrix, ioInspector } from 'io-editors';
 import { ioSlider } from 'io-sliders';
 import { ioString, ioNumber } from 'io-inputs';
@@ -125,7 +125,7 @@ export class IoEditorsDemo extends IoElement {
           config: new Map([
             [Object, [
               [String, ioString({live: true})],
-              [Number, ioOptionMenu({options: new MenuOptions().fromJSON([
+              [Number, ioOptionSelect({options: new MenuOptions().fromJSON([
                 {label: 'zero', value: 0},
                 {label: 'half', value: 0.5},
                 {label: 'one', value: 1},

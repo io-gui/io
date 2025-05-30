@@ -102,7 +102,6 @@ class IoOverlay extends IoElement {
   }
   onChildExpandedChanged() {
     this.debounce(this.expandAsChildren);
-    // this.debounce(this.expandAsChildren, undefined, 5);
   }
   collapse() {
     for (let i = this.children.length; i--;) {
@@ -136,9 +135,11 @@ document.body.appendChild(IoOverlaySingleton as unknown as HTMLElement);
 window.addEventListener('focusin', () => {
   focusRestoreTarget = document.activeElement;
 }, {capture: false});
+
 window.addEventListener('blur', () => {
-  if (IoOverlaySingleton.expanded) return;
-  if (document.activeElement === document.body) {
-    focusRestoreTarget = null;
-  }
+  setTimeout(() => {
+    if (!IoOverlaySingleton.expanded &&document.activeElement === document.body) {
+      focusRestoreTarget = null;
+    }
+  });
 }, {capture: true});

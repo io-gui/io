@@ -3,21 +3,56 @@ import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
-import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, isPointerAboveIoMenuItem } from '../utils/MenuHierarchy.js';
+import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuHierarchy.js';
+import { IoMenuTree } from './IoMenuTree.js';
 
-const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu', 'io-string'];
-
-const MenuElementTagsSelector = MenuElementTags.join(', ');
-
-export type IoMenuItemProps = IoFieldProps & {
-  item?: MenuItem,
-  expanded?: WithBinding<boolean>,
-  direction?: NudgeDirection,
-  depth?: number,
-};
+let timeoutOpen = -1;
 
 let hovered: IoMenuElementType | undefined;
 let prevHovered: IoMenuElementType | undefined;
+
+export function onOverlayPointerdown(event: PointerEvent) {
+  hovered = undefined;
+  prevHovered = undefined;
+}
+
+export function onOverlayPointermove(event: PointerEvent) {
+  // TODO: why is this needed?
+  // if (!this.inoverlay && this.expanded) this.onPointermove(event);
+  clearTimeout(timeoutOpen);
+  hovered = getHoveredMenuItem(event);
+  if (hovered && hovered !== prevHovered) {
+    const v = Math.abs(event.movementY) - Math.abs(event.movementX);
+    const h = hovered.parentElement.horizontal;
+    if (prevHovered?.parentElement !== hovered.parentElement) {
+      prevHovered = hovered;
+      if (hovered) hovered.focus();
+    } else if (h ? v < -0.25 : v > 0.25) {
+      prevHovered = hovered;
+      if (hovered) hovered.focus();
+    } else {
+      timeoutOpen = setTimeout(() => {
+        prevHovered = hovered;
+        if (hovered) hovered.focus();
+      }, 250);
+    }
+  }
+}
+
+export function onOverlayPointeup(event: PointerEvent) {
+  if (hovered) hovered.onClick();
+}
+
+Overlay.addEventListener('pointermove', onOverlayPointermove);
+
+export type IoMenuItemProps = IoFieldProps & {
+  item?: MenuItem,
+  label?: string,
+  expanded?: WithBinding<boolean>,
+  direction?: NudgeDirection,
+  depth?: number,
+  $parent?: IoMenuOptions | IoMenuTree,
+};
 
 /**
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
@@ -58,6 +93,9 @@ export class IoMenuItem extends IoField {
   @ReactiveProperty({type: MenuItem})
   declare item: MenuItem;
 
+  @Property('')
+  declare label: string;
+
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
@@ -69,6 +107,9 @@ export class IoMenuItem extends IoField {
 
   @Property('false')
   declare contentEditable: boolean;
+
+  @ReactiveProperty(undefined)
+  declare $parent?: IoMenuOptions | IoMenuTree;
 
   declare $options?: IoMenuOptions;
 
@@ -92,27 +133,13 @@ export class IoMenuItem extends IoField {
   get inoverlay() {
     return Overlay.contains(this.parentElement.parentElement);
   }
-  get $parent() {
-    return this.parentElement;
-  }
   connectedCallback() {
     super.connectedCallback();
-    // TODO: remove event listeners and find a better way to handle this.
-    Overlay.addEventListener('pointermove', this.onOverlayPointermove);
-    Overlay.addEventListener('pointerup', this.onOverlayPointerup);
     if (this.$options) Overlay.appendChild(this.$options as unknown as HTMLElement);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    Overlay.removeEventListener('pointermove', this.onOverlayPointermove);
-    Overlay.removeEventListener('pointerup', this.onOverlayPointerup);
     if (this.$options) Overlay.removeChild(this.$options as unknown as HTMLElement);
-  }
-  onOverlayPointermove(event: PointerEvent) {
-    if (!this.inoverlay && this.expanded) this.onPointermove(event);
-  }
-  onOverlayPointerup(event: PointerEvent) {
-    if (!this.inoverlay && this.expanded) this.onPointerupAction(event);
   }
   onClick() {
     const item = this.item;
@@ -144,48 +171,19 @@ export class IoMenuItem extends IoField {
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);
     event.stopPropagation();
-    event.preventDefault(); // Prevents focus
     this.setPointerCapture(event.pointerId);
-    this.onPointerdownAction(event);
-  }
-  onPointerdownAction(event: PointerEvent) {
-    // TODO: why is this needed?
-    if (this.expanded || event.pointerType === 'mouse' || this.inoverlay) {
-      this.focus();
-    }
-    // hovered = this;
-    // hoveredParent = this.parentElement;
+    this.expanded = true;
+    onOverlayPointerdown.call(this, event);
   }
   onPointermove(event: PointerEvent) {
     event.stopPropagation();
-    this.onPointermoveAction(event);
-  }
-  onPointermoveAction(event: PointerEvent) {
-    // TODO: why is this needed?
-    if (!this.expanded && event.pointerType === 'touch' && !this.inoverlay) return;
-
-    const clipped = !!this.$parent && !!this.$parent.style.height;
-
-    if (event.pointerType === 'touch' && clipped) return;
-
-    clearTimeout(this._timeoutOpen);
-    hovered = this.getHovered(event);
-    if (hovered && hovered !== prevHovered) {
-      const v = Math.abs(event.movementY) - Math.abs(event.movementX);
-      const h = hovered.parentElement.horizontal;
-      if (prevHovered?.parentElement !== hovered.parentElement) {
-        prevHovered = hovered;
-        this.expandHovered();
-      } else if (h ? v < -0.25 : v > 0.25) {
-        prevHovered = hovered;
-        this.expandHovered();
-      } else {
-        this._timeoutOpen = setTimeout(() => {
-          prevHovered = hovered;
-          this.expandHovered();
-        }, 100);
-      }
+    if (event.pointerType === 'touch') {
+      // Let touch scroll the document.
+      if (!this.expanded && !this.inoverlay) return;
+      // Let touch scroll in clipped menu options.
+      if (!!this.$parent && !!this.$parent.style.height) return;
     }
+    onOverlayPointermove.call(this, event);
   }
   onPointerup(event: PointerEvent) {
     super.onPointerup(event);
@@ -193,13 +191,7 @@ export class IoMenuItem extends IoField {
     this.onPointerupAction(event);
   }
   onPointerupAction(event: PointerEvent) {
-    const item = this.getHovered(event);
-    if (item) {
-      item.focus();
-      item.onClick(event);
-    }
-    hovered = undefined;
-    prevHovered = undefined;
+    this.onClick();
   }
   onFocus(event: FocusEvent) {
     super.onFocus(event);
@@ -233,43 +225,6 @@ export class IoMenuItem extends IoField {
       this.collapse();
     } else if (fucusLeftOverlay) {
       this.collapseRoot();
-    }
-  }
-  getHovered(event: PointerEvent) {
-    const items = getMenuDescendants(getMenuRoot(this));
-    const hovered: IoMenuElementType[] = [];
-    for (let i = items.length; i--;) {
-      if (isPointerAboveIoMenuItem(event, items[i])) {
-        hovered.push(items[i]);
-      }
-    }
-    if (hovered.length) {
-      hovered.sort((a: IoMenuElementType, b: IoMenuElementType) => {
-        return a.depth < b.depth ? 1 : a.depth > b.depth ? -1 : 0;
-      });
-      return hovered[hovered.length - 1];
-    }
-    return undefined;
-  }
-  expandHovered() {
-    if (hovered) {
-      hovered.focus();
-      if (hovered.hasmore) {
-        if (hovered.$options) {
-          const descendants = getMenuDescendants(hovered.$options);
-          for (let i = descendants.length; i--;) {
-            descendants[i].expanded = false;
-          }
-        }
-        hovered.expanded = true;
-      }
-      if (hovered.$parent) {
-        // Collapse all sibiling io-menu-item elements
-        const items = hovered.$parent.querySelectorAll(MenuElementTagsSelector);
-        for (let i = items.length; i--;) {
-          if (items[i] !== hovered) items[i].expanded = false;
-        }
-      }
     }
   }
   onKeydown(event: KeyboardEvent) {
@@ -393,13 +348,13 @@ export class IoMenuItem extends IoField {
           direction: this.direction,
           $parent: this,
         });
-        Overlay.appendChild(this.$options as unknown as HTMLElement);
       } else {
         this.$options.options = this.item.options;
       }
     }
 
     const icon = this.icon || this.item.icon;
+    const label = this.label || this.item.label;
 
     this.setAttribute('hidden', this.item.hidden);
 
@@ -407,7 +362,7 @@ export class IoMenuItem extends IoField {
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
       icon ? ioIcon({value: icon}) : null,
-      this.item.label ? span({class: 'label'}, this.item.label) : null,
+      label ? span({class: 'label'}, label) : null,
       this.item.hint ? span({class: 'hint'}, this.item.hint) : null,
       this.hasmore && this.direction === 'right' ? ioIcon({value: 'io:triangle_right', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'down' ? ioIcon({value: 'io:triangle_down', class: 'hasmore'}) : null,

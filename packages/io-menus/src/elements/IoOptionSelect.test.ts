@@ -1,7 +1,7 @@
-import { IoOptionMenu } from '../index';
+import { IoOptionSelect } from '../index';
 // import { MenuOptions } from '../index';
 
-const element = new IoOptionMenu();
+const element = new IoOptionSelect();
 document.body.appendChild(element as unknown as HTMLElement);
 element.style.display = 'none';
 
@@ -13,7 +13,7 @@ export default class {
   //   element.expanded = false;
   // }
   run() {
-    describe('IoOptionMenu', () => {
+    describe('IoOptionSelect', () => {
       it('has default values', () => {
       });
       it('matches values', () => {

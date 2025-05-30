@@ -1,4 +1,4 @@
-import OptionMenuElementTest from './elements/IoOptionMenu.test.js';
+import OptionMenuElementTest from './elements/IoOptionSelect.test.js';
 import MenuItemNodeTest from './nodes/MenuItem.test.js';
 import MenuOptionsNodeTest from './nodes/MenuOptions.test.js';
 

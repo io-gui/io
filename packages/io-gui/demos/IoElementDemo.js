@@ -3,7 +3,7 @@ import { ioInspector } from 'io-editors';
 import { ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
 import { ioIcon } from 'io-icons';
-import { ioOptionMenu, MenuOptions } from 'io-menus';
+import { ioOptionSelect, MenuOptions } from 'io-menus';
 import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-colors';
 
 // TODO: Implement IDs in menu options. use ID for selection
@@ -114,7 +114,7 @@ export class IoElementDemo extends IoElement {
   changed() {
     if (this.element) {
       this.template([
-        ioOptionMenu({
+        ioOptionSelect({
           value: this.bind('element'),
           options: options
         }),

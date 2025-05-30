@@ -1,5 +1,5 @@
 import { Register, IoElement, div, span } from 'io-gui';
-import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu } from 'io-menus';
+import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus';
 // TODO: remove dependencies on io-inputs and io-navigation.
 import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
 import 'io-navigation';
@@ -57,11 +57,31 @@ const optionsDeep = new MenuOptions().fromJSON([
       ]},
     ]},
   ]},
+  {label: 'Long Menu', options: [
+    'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
+    'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',
+    'umbrella', 'violin', 'watermelon', 'xylophone', 'yacht', 'zebra', 'astronaut', 'butterfly', 'crocodile', 'diamond',
+    'eagle', 'fireworks', 'guitar', 'helicopter', 'iceberg', 'jellyfish', 'koala', 'lighthouse', 'mountain', 'notebook',
+    'ocean', 'piano', 'queen', 'rocket', 'snowflake', 'telescope', 'unicorn', 'volcano', 'whale', 'yoga', 'zucchini',
+    'airplane', 'basketball', 'camera', 'dragon', 'eclipse', 'fountain', 'garden', 'hurricane', 'island', 'jungle',
+    'kite', 'moon', 'northern', 'oasis', 'paradise', 'quasar', 'rainforest', 'satellite', 'thunder', 'universe',
+    'vortex', 'waterfall', 'xenon', 'yellow', 'zenith', 'aurora', 'blizzard', 'cascade', 'dynamo', 'echo', 'fractal',
+    'galaxy', 'horizon', 'infinity', 'jubilee', 'kaleidoscope', 'labyrinth', 'mirage', 'nebula', 'orbit', 'phoenix',
+    'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
+  ]},
 ]);
+
 
 export class IoMenusDemo extends IoElement {
   static get Style() {
     return /* css */`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+      :host > * {
+        margin-top: var(--io_spacing);
+      }
       :host .row {
         display: flex;
         flex-direction: row;
@@ -69,8 +89,14 @@ export class IoMenusDemo extends IoElement {
         overflow: hidden;
         margin-bottom: var(--io_spacing);
       }
+      :host > io-menu-item {
+        align-self: flex-start;
+      }
       :host .row > *:not(:last-child) {
         margin-right: var(--io_spacing);
+      }
+      :host .row > io-option-select {
+        align-self: flex-start;
       }
       :host .contextArea {
         min-height: 200px;
@@ -89,17 +115,17 @@ export class IoMenusDemo extends IoElement {
         options: options,
       }),
       ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),
-      ioMenuItem({label: 'menu item', item: new MenuItem({
+      ioMenuItem({item: new MenuItem({
         selected: true,
         value: 'value',
-        hint: 'selected',
+        hint: 'hint',
         label: 'menu item label',
         icon: 'io:code',
       })}),
       ioMenuItem({label: 'menu item', item: new MenuItem({
         selected: false,
         value: 'value',
-        hint: 'not selected',
+        hint: 'hint',
         label: 'menu item label',
         icon: 'io:circle_fill_plus',
       })}),
@@ -144,6 +170,10 @@ export class IoMenusDemo extends IoElement {
         ioMenuOptions({
           options: optionsDeep,
         }),
+        ioOptionSelect({
+          label: 'Long Menu Select',
+          options: optionsDeep.items[1].options,
+        }),
       ]),
       div({class: 'contextArea'}, [
         span('Context Area'),
@@ -155,7 +185,7 @@ export class IoMenusDemo extends IoElement {
           button: 1,
         }),
         ioContextMenu({
-          options: new MenuOptions({items: [...numberItems.items]}),
+          options: new MenuOptions({items: [...optionsDeep.items[1].options]}),
           button: 2,
         }),
       ]),

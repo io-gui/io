@@ -2,11 +2,36 @@ import { IoOverlaySingleton } from 'io-gui';
 import { IoString } from 'io-inputs';
 import { IoMenuItem } from '../elements/IoMenuItem';
 import { IoMenuOptions } from '../elements/IoMenuOptions';
+import { IoMenuTree } from '../elements/IoMenuTree';
 
-export type IoMenuElementType = IoMenuItem | IoMenuOptions | IoString;
+export type IoMenuElementType = IoMenuItem | IoMenuOptions | IoMenuTree | IoString;
 
-const MenuElementTags = ['io-menu-item', 'io-menu-hamburger', 'io-option-menu', 'io-string'];
+const MenuElementTags = ['io-menu-item', 'io-menu-options', 'io-menu-hamburger', 'io-option-select', 'io-string', 'io-menu-tree'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
+
+export function getHoveredMenuItem(event: PointerEvent) {
+  const items = IoOverlaySingleton.querySelectorAll('io-menu-item, io-menu-options');
+  const hovered: IoMenuElementType[] = [];
+  for (let i = items.length; i--;) {
+    if (isPointerAboveIoMenuItem(event, items[i])) hovered.push(items[i]);
+  }
+  if (hovered.length) {
+    hovered.sort((a: IoMenuElementType, b: IoMenuElementType) => {
+      return a.depth > b.depth ? 1 : a.depth < b.depth ? -1 : 0;
+    });
+    const first = hovered[0];
+    const second = hovered[1];
+    if (first.localName === 'io-menu-item') {
+      return first;
+    // NOTE: This effectively blocks picking io-menu-item behind io-menu-options.
+    } else if (first.localName === 'io-menu-options' && second) {
+      if (second.localName === 'io-menu-item' && second.depth === first.depth) {
+        return second;
+      }
+    }
+  }
+  return undefined;
+}
 
 export function getMenuDescendants(element: IoMenuElementType) {
   const descendants: IoMenuElementType[] = [];
@@ -74,7 +99,7 @@ export function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuEle
   if (MenuElementTags.indexOf(element.localName) !== -1) {
     // TODO: hidden in no longer a property.
     if (!element.disabled && !element.hidden) {
-      if (!element.inoverlay || (element.parentElement.expanded && IoOverlaySingleton.expanded)) {
+      if ((element.parentElement.expanded && IoOverlaySingleton.expanded)) {
         const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
         const r = element.getBoundingClientRect();
         const x = event.clientX;

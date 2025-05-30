@@ -6,8 +6,9 @@ import { ioMenuItem } from './IoMenuItem.js';
 const dummyOptions = new MenuOptions();
 // TODO: fix tab-out without collapse
 
-export type IoOptionMenuProps = IoElementProps & {
+export type IoOptionSelectProps = IoElementProps & {
   value?: WithBinding<any>,
+  label?: string,
   options?: MenuOptions,
   item?: MenuItem,
 };
@@ -17,8 +18,8 @@ export type IoOptionMenuProps = IoElementProps & {
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 @Register
-export class IoOptionMenu extends IoElement {
-  static vConstructor: (arg0?: IoOptionMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export class IoOptionSelect extends IoElement {
+  static vConstructor: (arg0?: IoOptionSelectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -45,6 +46,9 @@ export class IoOptionMenu extends IoElement {
   @ReactiveProperty({value: undefined, reflect: true})
   declare value: any;
 
+  @Property('')
+  declare label: string;
+
   @ReactiveProperty({value: dummyOptions, type: MenuOptions, reflect: true})
   declare options: MenuOptions;
 
@@ -54,7 +58,7 @@ export class IoOptionMenu extends IoElement {
   @Property('button')
   declare role: string;
 
-  constructor(args: IoOptionMenuProps = {}) { super(args); }
+  constructor(args: IoOptionSelectProps = {}) { super(args); }
 
   _onLastChanged(event: CustomEvent) {
     if (this._disposed) return;
@@ -76,10 +80,11 @@ export class IoOptionMenu extends IoElement {
 
     // TODO: Implement id in menu items
     this.item = this.item || new MenuItem({value: this.value});
-    this.item.label = selectedItem?.label || String(this.value);
     this.item.options = this.options;
 
-    this.template([ioMenuItem({item: this.item, direction: 'down'})]);
+    const label = this.label || selectedItem?.label || String(this.value);
+
+    this.template([ioMenuItem({item: this.item, label: label, direction: 'down'})]);
   }
 }
-export const ioOptionMenu = IoOptionMenu.vConstructor;
+export const ioOptionSelect = IoOptionSelect.vConstructor;
