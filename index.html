@@ -119,20 +119,20 @@
       new MenuItem({value: 'About'}),
       new MenuItem({value: 'Docs', options: new MenuOptions({items: [
         new MenuItem({value: 'Quick Start', options: new MenuOptions({items: [
-          new MenuItem({label: 'Usage', value: 'usage', mode: 'scroll'}),
-          new MenuItem({label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'}),
-          new MenuItem({label: 'Making a Website', value: 'making-a-website', mode: 'scroll'}),
-          new MenuItem({label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'}),
+          new MenuItem({label: 'Usage', value: 'usage'}), //TODO: reimplement
+          new MenuItem({label: 'Making a Simple Element', value: 'making-a-simple-element'}), //TODO: reimplement
+          new MenuItem({label: 'Making a Website', value: 'making-a-website'}), //TODO: reimplement
+          new MenuItem({label: 'Built-in Elements', value: 'built-in-elements'}), //TODO: reimplement
         ]})}),
         new MenuItem({value: 'Deep Dive', options: new MenuOptions({items: [
-          new MenuItem({label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'}),
-          new MenuItem({label: 'Properties', value: 'properties', mode: 'scroll'}),
-          new MenuItem({label: 'Styling', value: 'styling', mode: 'scroll'}),
-          new MenuItem({label: 'Listeners', value: 'listeners', mode: 'scroll'}),
-          new MenuItem({label: 'Reactivity', value: 'reactivity', mode: 'scroll'}),
-          new MenuItem({label: 'Template Syntax', value: 'template-syntax', mode: 'scroll'}),
-          new MenuItem({label: 'Data Binding', value: 'data-binding', mode: 'scroll'}),
-          new MenuItem({label: 'Helper Methods', value: 'helper-methods', mode: 'scroll'}),
+          new MenuItem({label: 'Nodes and Elements', value: 'nodes-and-elements'}), //TODO: reimplement
+          new MenuItem({label: 'Properties', value: 'properties'}), //TODO: reimplement
+          new MenuItem({label: 'Styling', value: 'styling'}), //TODO: reimplement
+          new MenuItem({label: 'Listeners', value: 'listeners'}), //TODO: reimplement
+          new MenuItem({label: 'Reactivity', value: 'reactivity'}), //TODO: reimplement
+          new MenuItem({label: 'Template Syntax', value: 'template-syntax'}), //TODO: reimplement
+          new MenuItem({label: 'Data Binding', value: 'data-binding'}), //TODO: reimplement
+          new MenuItem({label: 'Helper Methods', value: 'helper-methods'}), //TODO: reimplement
         ]})}),
       ]})}),
       new MenuItem({value: 'Demos', options: new MenuOptions({items: [
@@ -166,17 +166,17 @@
           elements: [
             ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
             ioSelector({id: 'Docs',
-              options: OPTIONS.getItem('Docs').options,
+              options: OPTIONS.findItemByValue('Docs').options,
               cache: true,
               elements: [
                 ioNavigatorScroller({id: 'Quick Start',
-                  options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
+                  options: OPTIONS.findItemByValue('Docs').findItemByValue('Quick Start').options,
                   elements: [
                     ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
                   ]
                 }),
                 ioNavigatorScroller({id: 'Deep Dive',
-                  options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
+                  options: OPTIONS.findItemByValue('Docs').findItemByValue('Quick Start').options,
                   elements: [
                     ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}),
                   ]
@@ -184,7 +184,7 @@
               ]
             }),
             ioSelector({id: 'Demos',
-              options: OPTIONS.getItem('Demos').options,
+              options: OPTIONS.findItemByValue('Demos').options,
               cache: true,
               elements: [
                 ioInputsDemo({id: 'io-inputs-demo'}),

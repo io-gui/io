@@ -1,76 +1,69 @@
 import { Register, IoElement, div, span } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus';
-// TODO: remove dependencies on io-inputs and io-navigation.
+// TODO: remove dependencies on io-navigation.
 import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
 import 'io-navigation';
 import 'io-icons';
 
 const numberItems = new MenuOptions().fromJSON([
-  {value: 0, label: 'zero'},
-  {value: 1, label: 'one'},
-  {value: 2, label: 'two'},
-  {value: 3, label: 'three'},
-  {value: 4, label: 'four'},
+  {value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:layers'},
+  {value: 1, label: 'one', hint: 'Number(1)', icon: 'io:lock'},
+  {value: 2, label: 'two', hint: 'Number(2)', icon: 'io:box'},
+  {value: 3, label: 'three', hint: 'Number(3)', icon: 'io:film'},
+  {value: 4, label: 'four', hint: 'Number(4)', icon: 'io:gear'},
 ]);
 
-
-const options = new MenuOptions().fromJSON([
+const colorOptions = new MenuOptions().fromJSON([
   {label: 'Red', icon: '❤️', options: ['Red1','Red2','Red3']},
   {label: 'Green', icon: '💚', options: ['Green1','Green2','Green3']},
   {label: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3']},
-  {label: 'Numbers', options: [
-    {label: 'one', value: 1},
-    {label: 'two', value: 2},
-    {label: 'three', value: 3},
-    {label: 'four', value: 4},
-    {label: 'five', value: 5},
-  ]},
 ]);
 
 const optionsDeep = new MenuOptions().fromJSON([
   {label: 'Deep Menu', options: [
-    {value: 'Level 1 Item One'},
-    {value: 'Level 1 Item Two'},
-    {value: 'Level 1 Item Three', options: [
-      {value: 'Level 2 Item One'},
-      {value: 'Level 2 Item Two'},
-      {value: 'Level 2 Item Three', options: [
-        {value: 'Level 3 Item One'},
-        {value: 'Level 3 Item Two'},
-        {value: 'Level 3 Item Three', options: [
-          {value: 'Level 4 Item One'},
-          {value: 'Level 4 Item Two'},
-          {value: 'Level 4 Item Three', options: [
-            {value: 'Level 5 Item One'},
-            {value: 'Level 5 Item Two'},
-            {value: 'Level 5 Item Three', options: [
-              {value: 'Level 6 Item One'},
-              {value: 'Level 6 Item Two'},
-              {value: 'Level 6 Item Three', options: [
-                {value: 'Level 7 Item One'},
-                {value: 'Level 7 Item Two'},
-                {value: 'Level 7 Item Three'},
+    {value: 'Level 1/1', hint: 'One'},
+    {value: 'Level 1/2', hint: 'Two'},
+    {value: 'Level 1/3', hint: 'Three', options: [
+      {value: 'Level 2/1', hint: 'One'},
+      {value: 'Level 2/2', hint: 'Two'},
+      {value: 'Level 2/3', hint: 'Three', options: [
+        {value: 'Level 3/1', hint: 'One'},
+        {value: 'Level 3/2', hint: 'Two'},
+        {value: 'Level 3/3', hint: 'Three', options: [
+          {value: 'Level 4/1', hint: 'One'},
+          {value: 'Level 4/2', hint: 'Two'},
+          {value: 'Level 4/3', hint: 'Three', options: [
+            {value: 'Level 5/1', hint: 'One'},
+            {value: 'Level 5/2', hint: 'Two'},
+            {value: 'Level 5/3', hint: 'Three', options: [
+              {value: 'Level 6/1', hint: 'One'},
+              {value: 'Level 6/2', hint: 'Two'},
+              {value: 'Level 6/3', hint: 'Three', options: [
+                {value: 'Level 7/1', hint: 'One'},
+                {value: 'Level 7/2', hint: 'Two'},
+                {value: 'Level 7/3', hint: 'Three'},
               ]},
             ]},
           ]},
         ]},
       ]},
     ]},
-  ]},
-  {label: 'Long Menu', options: [
-    'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
-    'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',
-    'umbrella', 'violin', 'watermelon', 'xylophone', 'yacht', 'zebra', 'astronaut', 'butterfly', 'crocodile', 'diamond',
-    'eagle', 'fireworks', 'guitar', 'helicopter', 'iceberg', 'jellyfish', 'koala', 'lighthouse', 'mountain', 'notebook',
-    'ocean', 'piano', 'queen', 'rocket', 'snowflake', 'telescope', 'unicorn', 'volcano', 'whale', 'yoga', 'zucchini',
-    'airplane', 'basketball', 'camera', 'dragon', 'eclipse', 'fountain', 'garden', 'hurricane', 'island', 'jungle',
-    'kite', 'moon', 'northern', 'oasis', 'paradise', 'quasar', 'rainforest', 'satellite', 'thunder', 'universe',
-    'vortex', 'waterfall', 'xenon', 'yellow', 'zenith', 'aurora', 'blizzard', 'cascade', 'dynamo', 'echo', 'fractal',
-    'galaxy', 'horizon', 'infinity', 'jubilee', 'kaleidoscope', 'labyrinth', 'mirage', 'nebula', 'orbit', 'phoenix',
-    'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
+    {value: 'Level 1/4', hint: 'Four'},
   ]},
 ]);
 
+const optionsLong = new MenuOptions().fromJSON([
+  'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
+  'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',
+  'umbrella', 'violin', 'watermelon', 'xylophone', 'yacht', 'zebra', 'astronaut', 'butterfly', 'crocodile', 'diamond',
+  'eagle', 'fireworks', 'guitar', 'helicopter', 'iceberg', 'jellyfish', 'koala', 'lighthouse', 'mountain', 'notebook',
+  'ocean', 'piano', 'queen', 'rocket', 'snowflake', 'telescope', 'unicorn', 'volcano', 'whale', 'yoga', 'zucchini',
+  'airplane', 'basketball', 'camera', 'dragon', 'eclipse', 'fountain', 'garden', 'hurricane', 'island', 'jungle',
+  'kite', 'moon', 'northern', 'oasis', 'paradise', 'quasar', 'rainforest', 'satellite', 'thunder', 'universe',
+  'vortex', 'waterfall', 'xenon', 'yellow', 'zenith', 'aurora', 'blizzard', 'cascade', 'dynamo', 'echo', 'fractal',
+  'galaxy', 'horizon', 'infinity', 'jubilee', 'kaleidoscope', 'labyrinth', 'mirage', 'nebula', 'orbit', 'phoenix',
+  'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
+]);
 
 export class IoMenusDemo extends IoElement {
   static get Style() {
@@ -112,7 +105,7 @@ export class IoMenusDemo extends IoElement {
   init() {
     this.template([
       ioMenuTree({
-        options: options,
+        options: optionsDeep,
       }),
       ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),
       ioMenuItem({item: new MenuItem({
@@ -134,7 +127,7 @@ export class IoMenusDemo extends IoElement {
         searchable: true,
         options: new MenuOptions({
           items: numberItems.items,
-          first: this.bind('menuRoot')
+          selected: this.bind('menuRoot')
         }),
       }),
       ioMenuOptions({
@@ -142,7 +135,7 @@ export class IoMenusDemo extends IoElement {
         noPartialCollapse: true,
         options: new MenuOptions({
           items: numberItems.items,
-          first: this.bind('menuRoot')
+          selected: this.bind('menuRoot')
         }),
       }),
       div({class: 'row'}, [
@@ -150,42 +143,37 @@ export class IoMenusDemo extends IoElement {
           searchable: true,
           options: new MenuOptions({
             items: numberItems.items,
-            first: this.bind('menuRoot')
+            selected: this.bind('menuRoot')
           }),
         }),
         ioMenuOptions({
           options: new MenuOptions({
             items: numberItems.items.reverse(),
-            first: this.bind('menuRoot')
+            selected: this.bind('menuRoot')
           }),
         }),
         ioMenuOptions({
-          options: new MenuOptions({first: this.bind('menuRoot')}).fromJSON([
-            {value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:layers'},
-            {value: 1, label: 'one', hint: 'Number(1)', icon: 'io:layers'},
-            {value: 2, label: 'two', hint: 'Number(2)', icon: 'io:box'},
-            {value: 3, label: 'three', hint: 'Number(3)', icon: 'io:film'},
-          ]),
+          options: new MenuOptions({selected: this.bind('menuRoot'), items: numberItems.items}),
         }),
         ioMenuOptions({
           options: optionsDeep,
         }),
         ioOptionSelect({
           label: 'Long Menu Select',
-          options: optionsDeep.items[1].options,
+          options: optionsLong,
         }),
       ]),
       div({class: 'contextArea'}, [
         span('Context Area'),
         ioContextMenu({
-          options: new MenuOptions({items: [...optionsDeep.items, ...numberItems.items, ...options.items]}),
+          options: new MenuOptions({items: [...optionsDeep.items, ...numberItems.items, ...colorOptions.items]}),
         }),
         ioContextMenu({
-          options: new MenuOptions({items: [...options.items]}),
+          options: new MenuOptions({items: [...colorOptions.items]}),
           button: 1,
         }),
         ioContextMenu({
-          options: new MenuOptions({items: [...optionsDeep.items[1].options]}),
+          options: optionsLong,
           button: 2,
         }),
       ]),
@@ -219,14 +207,11 @@ export class IoOptionsDemoView extends IoElement {
         padding: 0 var(--io_spacing);
         color: var(--io_color);
       }
-      :host span.first {
-        color: var(--io_colorBlue);
-      }
       :host span.path {
         margin-left: 0.5em;
         color: var(--io_colorBlue);
       }
-      :host span.last {
+      :host span.selected {
         margin-left: 0.5em;
         color: var(--io_colorBlue);
       }
@@ -255,10 +240,8 @@ export class IoOptionsDemoView extends IoElement {
     }
     this.template([
       div([
-        this.options.first ? span({class: 'first'}, `first: ${this.options.first}`) : null,
-        this.options.last ? span({class: 'last'}, `last: ${this.options.last}`) : null,
+        this.options.selected ? span({class: 'selected'}, `selected: ${this.options.selected}`) : null,
         this.options.path ? span({class: 'path'}, `path: ${this.options.path}`) : null,
-        this.options.scroll ? span({class: 'scroll'}, `scroll: ${this.options.scroll}`) : null,
       ]),
       ...options
     ]);
@@ -294,7 +277,7 @@ export class IoItemDemoView extends IoElement {
     let selectElement = null;
     if (this.item.mode === 'toggle') {
       selectElement = ioBoolean({value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
-    } else if (this.item.mode === 'select' || this.item.mode === 'scroll') {
+    } else if (this.item.mode === 'select') {
       selectElement = ioSwitch({value: this.item.bind('selected')});
     }
     this.template([
@@ -322,21 +305,14 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
           ]}
         ]},
         {value: 'mixed', options: [
-          {value: 'scrolls', options: [
-            {value: 'scroll1', mode: 'scroll'},
-            {value: 'scroll2', mode: 'scroll'},
-            {value: 'scroll3', mode: 'scroll'},
-            {value: 'scroll4', mode: 'scroll'},
-          ]},
           {value: 'togglables', mode: 'none', options: [
             {value: 'toggle1', mode: 'toggle'},
             {value: 'toggle2', mode: 'toggle'},
             {value: 'toggle3', mode: 'toggle'},
             {value: 'toggle4', mode: 'toggle'},
           ]},
-          {value: 'selectable', options: [
+          {value: 'selectables', options: [
             {value: 'toggle', mode: 'toggle'},
-            {value: 'scroll', mode: 'scroll'},
             'selectable',
           ]},
         ]},

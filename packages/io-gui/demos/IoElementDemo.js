@@ -8,7 +8,7 @@ import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-col
 
 // TODO: Implement IDs in menu options. use ID for selection
 const options = new MenuOptions({
-  last: $({key: 'element-demo', storage: 'local', value: ioSlider()})
+  selected: $({key: 'element-demo', storage: 'local', value: ioSlider()})
 }).fromJSON([{
   label: 'native',
   options: [
@@ -98,7 +98,7 @@ export class IoElementDemo extends IoElement {
   }
   static get ReactiveProperties() {
     return {
-      element: options.bind('last'),
+      element: options.bind('selected'),
       reactivity: 'debounced'
     };
   }

@@ -3,7 +3,7 @@ import { IoNavigatorBase, IoNavigatorBaseProps } from './IoNavigatorBase.js';
 import { ioSelector } from './IoSelector.js';
 
 export type IoNavigatorSelectorProps = IoNavigatorBaseProps & {
-  select?: 'first' | 'last',
+  select?: 'shallow' | 'deep',
   cache?: boolean,
   precache?: boolean,
 };
@@ -12,8 +12,8 @@ export type IoNavigatorSelectorProps = IoNavigatorBaseProps & {
 export class IoNavigatorSelector extends IoNavigatorBase {
   static vConstructor: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
-  @ReactiveProperty('first')
-  declare select: 'first' | 'last';
+  @ReactiveProperty('shallow')
+  declare select: 'shallow' | 'deep';
 
   @ReactiveProperty(false)
   declare cache: boolean;

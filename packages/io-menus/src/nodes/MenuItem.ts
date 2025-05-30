@@ -1,13 +1,14 @@
 import { Node, Register, NodeProps, ReactiveProperty, WithBinding } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
 
-export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
+export type MenuItemSelectType = 'select' | 'toggle' | 'link' | 'none';
 
 // TODO: MenuItemProps options shoudl be array of MenuItemDefLoose
 export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
 
 export type MenuItemProps = NodeProps & {
   value?: any,
+  id?: string,
   label?: string,
   icon?: string,
   hint?: string,
@@ -26,6 +27,9 @@ export class MenuItem extends Node {
 
   @ReactiveProperty(undefined)
   declare value: any;
+
+  @ReactiveProperty({value: '', type: String})
+  declare id: string;
 
   @ReactiveProperty({value: '', type: String})
   declare label: string;
@@ -58,13 +62,25 @@ export class MenuItem extends Node {
     return !!(this.options?.length);
   }
 
-  getSubitem(value: any) {
-    return this.options?.getItem(value);
+  findItemByValue(value: any) {
+    return this.options?.findItemByValue(value);
+  }
+
+  findItemById(id: string) {
+    return this.options?.findItemById(id);
   }
 
   constructor(args?: MenuItemProps) {
 
     const item: MenuItemProps = {...args};
+
+    if (item.id === undefined) {
+      if (item.label) {
+        item.id = item.label;
+      } else {
+        item.id = String(item.value);
+      }
+    }
 
     if (item.label === undefined) {
       if (typeof item.value === 'object') {
@@ -86,10 +102,7 @@ export class MenuItem extends Node {
       if (item.mode && (item.mode === 'toggle') && item.options) {
         console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
       }
-      if (item.mode && (item.mode === 'scroll') && item.options) {
-        console.warn('MenuItem: cannot have suboptions when `mode === "scroll"`');
-      }
-      if (item.mode && ['select', 'toggle', 'scroll', 'link', 'none'].indexOf(item.mode as string) === -1) {
+      if (item.mode && ['select', 'toggle', 'link', 'none'].indexOf(item.mode as string) === -1) {
         console.warn('MenuItem: unknown `mode` property!', item.mode);
       }
       if (item.action && typeof item.action !== 'function') {
@@ -110,6 +123,7 @@ export class MenuItem extends Node {
     const item: MenuItemProps = {};
     if (typeof looseDef === 'object' && looseDef !== null) {
       if (Object.hasOwn(looseDef, 'value')) item.value = looseDef.value;
+      if (Object.hasOwn(looseDef, 'id')) item.id = looseDef.id;
       if (Object.hasOwn(looseDef, 'label')) item.label = looseDef.label;
       if (Object.hasOwn(looseDef, 'icon')) item.icon = looseDef.icon;
       if (Object.hasOwn(looseDef, 'hint')) item.hint = looseDef.hint;
@@ -119,10 +133,22 @@ export class MenuItem extends Node {
       if (Object.hasOwn(looseDef, 'mode')) item.mode = looseDef.mode;
       if (Object.hasOwn(looseDef, 'selected')) item.selected = looseDef.selected;
       if (Object.hasOwn(looseDef, 'options')) {
-        item.options = new MenuOptions().fromJSON(looseDef.options as MenuItemDefLoose[]);
+        if (looseDef.options instanceof MenuOptions) {
+          item.options = looseDef.options;
+        } else {
+          item.options = new MenuOptions().fromJSON(looseDef.options as MenuItemDefLoose[]);
+        }
       }
     } else {
       item.value = looseDef;
+    }
+
+    if (item.id === undefined) {
+      if (item.label) {
+        item.id = item.label;
+      } else {
+        item.id = String(item.value);
+      }
     }
 
     if (item.label === undefined) {
@@ -145,10 +171,7 @@ export class MenuItem extends Node {
       if (item.mode && (item.mode === 'toggle') && item.options) {
         console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
       }
-      if (item.mode && (item.mode === 'scroll') && item.options) {
-        console.warn('MenuItem: cannot have suboptions when `mode === "scroll"`');
-      }
-      if (item.mode && ['select', 'toggle', 'scroll', 'link', 'none'].indexOf(item.mode as string) === -1) {
+      if (item.mode && ['select', 'toggle', 'link', 'none'].indexOf(item.mode as string) === -1) {
         console.warn('MenuItem: unknown `mode` property!', item.mode);
       }
       if (item.action && typeof item.action !== 'function') {
@@ -189,15 +212,15 @@ export class MenuItem extends Node {
 
   optionsChanged() {
     // TODO test this behavior and look for regressions
-    if ((this.options?.first !== undefined || this.options?.scroll !== undefined) && this.mode === 'select') {
-      this.selected = true;
-    }
+    // if ((this.options?.selected !== undefined) && this.mode === 'select') {
+    //   this.selected = true;
+    // }
   }
 
   selectedChanged() {
      if (this.mode === 'select' && this.selected === false && this.options) {
       for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].mode === 'select' || this.options[i].mode === 'scroll') {
+        if (this.options[i].mode === 'select') {
           this.options[i].selected = false;
         }
       }

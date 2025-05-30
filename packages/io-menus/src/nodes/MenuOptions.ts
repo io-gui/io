@@ -5,14 +5,8 @@ function _isNaN(value: any) {
   return typeof value === 'number' && isNaN(value);
 }
 
-function _isSelectable(value: string) {
-  return value === 'select' || value === 'scroll';
-}
-
 export type MenuOptionsProps = NodeProps & {
-  first?: WithBinding<any>,
-  last?: WithBinding<any>,
-  scroll?: WithBinding<string>,
+  selected?: WithBinding<any>,
   path?: string,
   delimiter?: string,
   items?: MenuItem[],
@@ -21,13 +15,7 @@ export type MenuOptionsProps = NodeProps & {
 @Register
 export class MenuOptions extends NodeMixin(Array) {
   @ReactiveProperty(undefined)
-  declare first: any;
-
-  @ReactiveProperty(undefined)
-  declare last: any;
-
-  @ReactiveProperty(undefined)
-  declare scroll: any;
+  declare selected: any;
 
   @ReactiveProperty('')
   declare path: string;
@@ -38,26 +26,53 @@ export class MenuOptions extends NodeMixin(Array) {
   @ReactiveProperty([])
   declare items: MenuItem[];
 
-  // TODO: change to `find` and add find by id and label.
-  getItem(value: any, deep = false) {
-    for (let i = 0; i < this.length; i++) {
-      if (this[i].value === value) return this[i];
-      if (deep && this[i].options) {
-        const item = this[i].options.getItem(value, deep);
-        if (item) return item;
-      }
-    }
-    return null;
-  }
+  @ReactiveProperty('debounced')
+  declare reactivity: string;
 
   constructor(properties: MenuOptionsProps = {}) {
     super(properties);
     this.push(...this.items);
 
     if (this.path !== '') this.pathChanged();
-    if (this.first !== undefined) this.firstChanged();
 
     this.initItems(this.items);
+  }
+
+  getAllItems() {
+    const items: MenuItem[] = [];
+    for (let i = 0; i < this.length; i++) {
+      items.push(this[i]);
+      if (this[i].options) {
+        items.push(...this[i].options.getAllItems());
+      }
+    }
+    // Check if there are items with duplicate ida
+    debug: {
+      const ids = new Set();
+      for (let i = 0; i < items.length; i++) {
+        if (ids.has(items[i].id)) {
+          console.warn(`MenuOptions.getAllItems: duplicate id "${items[i].id}"`, this);
+        }
+        ids.add(items[i].id);
+      }
+    }
+    return items;
+  }
+
+  findItemByValue(value: any) {
+    const allItems = this.getAllItems();
+    for (let i = 0; i < allItems.length; i++) {
+      if (allItems[i].value === value) return allItems[i];
+    }
+    return null;
+  }
+
+  findItemById(id: string) {
+    const allItems = this.getAllItems();
+    for (let i = 0; i < allItems.length; i++) {
+      if (allItems[i].id === id) return allItems[i];
+    }
+    return null;
   }
 
   fromJSON(menuItemDefLoose: MenuItemDefLoose[]) {
@@ -70,7 +85,6 @@ export class MenuOptions extends NodeMixin(Array) {
     this.push(...items);
 
     if (this.path !== '') this.pathChanged();
-    if (this.first !== undefined) this.firstChanged();
 
     this.initItems(items);
     return this;
@@ -106,12 +120,13 @@ export class MenuOptions extends NodeMixin(Array) {
     const path = this.path ? [...this.path.split(this.delimiter)] : [];
     if (this.length && path.length) {
       const first = path.shift();
+      // TODO: use ID
       const item = this.find((item: MenuItem) => (item.label === first));
       if (item) {
-        debug: if (!_isSelectable(item.mode)) {
+        debug: if (item.mode !== 'select') {
           console.warn('MenuOptions.pathChanged: Path set to non-selectable MenuItem!');
         }
-        if (_isSelectable(item.mode)) {
+        if (item.mode === 'select') {
           if (item.options) {
             item.options.path = path.join(this.delimiter);
           }
@@ -120,24 +135,8 @@ export class MenuOptions extends NodeMixin(Array) {
       } else {
         debug: console.warn(`MenuOptions.pathChanged: cannot find item for specified path "${this.path}"!`);
         for (let i = 0; i < this.length; i++) {
-          if (_isSelectable(this[i].mode)) this[i].selected = false;
+          if (this[i].mode === 'select') this[i].selected = false;
         }
-      }
-    } else {
-      for (let i = 0; i < this.length; i++) {
-        if (_isSelectable(this[i].mode)) this[i].selected = false;
-      }
-    }
-  }
-
-  firstChanged() {
-    if (this.first !== undefined) {
-      const item = this.find((item: MenuItem) => ((item.value === this.first && item.mode === 'select') || (_isNaN(item.value) && _isNaN(this.first))));
-      if (item) {
-        item.selected = true;
-      }
-      debug: if (item === undefined) {
-        console.warn(`MenuOptions.firstChanged: cannot find pickable item for specified first value "${this.first}"!`);
       }
     } else {
       for (let i = 0; i < this.length; i++) {
@@ -146,31 +145,41 @@ export class MenuOptions extends NodeMixin(Array) {
     }
   }
 
-  lastChanged() {
-    // TODO: this function does nothing. Its only for debugging.
-    debug: if (this.last !== undefined) {
+  selectedChanged() {
+    // Deep search options for mathing item value
+    const item = this.findItemByValue(this.selected);
+    if (item) {
+      item.selected = true;
+    } else {
+      // console.log('selected', this.selected, this[2].options[0].value);
+      console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected value "${this.selected}"!`);
+    }
+
+    // NOTE: this does nothing. It is only for debugging.
+    debug: if (this.selected !== undefined) {
       const path = this.path ? [...this.path.split(this.delimiter)] : [];
       if (path.length) {
         let label = path.shift();
-        let item = this.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'scroll')));
+        let item = this.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select')));
         let options = item?.options || undefined;
         while (path.length && options) {
           label = path.shift();
-          item = options.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select' || item.mode === 'scroll')));
+          item = options.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select')));
           options = item?.options || undefined;
         }
         if (item === undefined) {
-          console.warn(`MenuOptions.lastChanged: cannot find item for specified last value "${this.last}"!`);
+          console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected value "${this.selected}"!`);
         } else if (
-          (item.value !== this.last && !(_isNaN(item.value) && _isNaN(this.last))) &&
-          (item.value !== this.scroll && !(_isNaN(item.value) && _isNaN(this.scroll)))
+          (item.value !== this.selected && !(_isNaN(item.value) && _isNaN(this.selected)))
         ) {
           // TODO: test this?
-          console.warn(`MenuOptions.lastChanged: last property value "${this.last}" diverged from item specified by path!`);
+          console.warn(`MenuOptions.selectedChanged: selected property value "${this.selected}" diverged from item specified by path!`);
         }
       } else {
-        console.warn(`MenuOptions.lastChanged: last property value set "${this.last}" but path is empty!`);
-        // TODO: this case happens in io-element-demo.js options. Consider updating paths on lastChanged.
+        console.warn(`MenuOptions.selectedChanged: selected property value set "${this.selected}" but path is empty!`);
+        // console.log('selected', this.selected);
+        // console.log('path', this.path);
+        // TODO: this case happens in io-element-demo.js options. Consider updating paths on selectedChanged.
         // TODO: running updatePaths() here breaks the demo - value "[element-name]" becomes "element-name" for some reason.
       }
     }
@@ -178,38 +187,30 @@ export class MenuOptions extends NodeMixin(Array) {
 
   updatePaths(item?: MenuItem) {
     const path: string[] = [];
-    let walker: MenuItem | undefined = (item?.mode === 'select' || item?.mode === 'scroll') ? item : undefined;
+    let walker: MenuItem | undefined = (item?.mode === 'select') ? item : undefined;
     let lastSelected: MenuItem | undefined = item?.mode === 'select' ? item : undefined;
-    let lastAnchor: MenuItem | undefined = item?.mode === 'scroll' ? item : undefined;
 
     const hasSelected = this.find((item: MenuItem) => item.mode === 'select' && item.selected);
-    const hasAnchor = this.find((item: MenuItem) => item.mode === 'scroll' && item.selected);
-    if (!walker && (hasSelected || hasAnchor)) return;
+    if (!walker && hasSelected) return;
 
     while (walker) {
       path.push(walker.label);
       if (walker.mode === 'select') lastSelected = walker;
-      if (walker.mode === 'scroll') lastAnchor = walker;
-      walker = walker.options?.find((item: MenuItem) => (item.mode === 'select' || item.mode === 'scroll') && item.selected);
+      walker = walker.options?.find((item: MenuItem) => (item.mode === 'select') && item.selected);
     }
 
-    // TODO: when binding two menu elements to both `first` and `path` properties, it is important that we
-    // update the `path` property before the `first`. Otherwise, the menu binding will be broken!
-    // TODO: create a test for this edge-case.
     this.setProperties({
       path: path.join(this.delimiter),
-      first: item?.mode === 'select' ? item.value : undefined,
-      last: lastSelected !== undefined ? lastSelected.value : undefined,
-      scroll: lastAnchor !== undefined ? lastAnchor.value : undefined,
+      selected: lastSelected !== undefined ? lastSelected.value : undefined,
     });
   }
 
   _onItemSelectedChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    if (_isSelectable(item.mode)) {
+    if (item.mode === 'select') {
       if (item.selected) {
         for (let i = 0; i < this.length; i++) {
-          if (this[i] !== item && _isSelectable(this[i].mode)) {
+          if (this[i] !== item && this[i].mode === 'select') {
             this[i].selected = false;
           }
         }
@@ -228,7 +229,7 @@ export class MenuOptions extends NodeMixin(Array) {
 
   selectDefault() {
     for (let i = 0; i < this.length; i++) {
-      if (_isSelectable(this[i].mode)) {
+      if (this[i].mode === 'select') {
         if (this[i].hasmore) {
           const selected = this[i].options.selectDefault();
           if (selected) return true;
@@ -242,9 +243,9 @@ export class MenuOptions extends NodeMixin(Array) {
   }
 
   // bind<T>(prop: string): Binding<T> {
-  //   debug: if (prop === 'last' || prop === 'scroll') {
-  //     console.warn('MenuPath: Binding to `last` or `scroll` property is not recommended!');
-  //     // TODO: remove this warning and test edge cases. Binding to last is useful for nested options.
+  //   debug: if (prop === 'selected') {
+  //     console.warn('MenuPath: Binding to `selected` property is not recommended!');
+  //     // TODO: remove this warning and test edge cases. Binding to selected is useful for nested options.
   //   }
   //   return super.bind<T>(prop);
   // }

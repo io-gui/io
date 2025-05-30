@@ -90,7 +90,7 @@ export class IoMdNavigator extends IoElement {
     this.template([
       this.menu === 'top' ? ioMenuOptions({horizontal: true, ...sharedMenuConfig}) : null,
       this.menu === 'left' ? ioMenuTree({...sharedMenuConfig}) : null,
-      this.options.last ? ioMarkdown({src: this.options.last}) : null,
+      this.options.selected ? ioMarkdown({src: this.options.selected}) : null,
       this.menu === 'right' ? ioMenuTree({...sharedMenuConfig}) : null,
       this.menu === 'bottom' ? ioMenuOptions({horizontal: true, direction: 'up', ...sharedMenuConfig}) : null,
     ]);

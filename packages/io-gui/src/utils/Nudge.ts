@@ -24,7 +24,7 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
         y = elemRect.height - y;
       }
     } else {
-      y = y - elemRect.height
+      y = y - elemRect.height;
     }
     if (doClip && !fitsWidth) {
       clipWidth = window.innerWidth;
@@ -128,10 +128,10 @@ export function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement 
   const bottom = srcRect.bottom;
   const bottomToHeight = window.innerHeight - bottom;
   const rightToWidth = window.innerWidth - right;
+  const x = elemRect.left;
+  const y = elemRect.top;
   switch (direction) {
     case 'none':
-      const x = elemRect.left;
-      const y = elemRect.top;
       nudgeRight(element, x, y, elemRect, false, doClip) ||
       nudgeLeft(element, x, y, elemRect, false, doClip) ||
       nudgeRight(element, x, y, elemRect, rightToWidth > left, doClip) ||

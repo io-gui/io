@@ -74,7 +74,7 @@ export class IoBreadcrumbs extends IoElement {
   @ReactiveProperty({type: String, reflect: true})
   declare search: string;
 
-  @Property([])
+  @Property(Array)
   declare _crumbs: Array<Object>;
 
   valueChanged() {

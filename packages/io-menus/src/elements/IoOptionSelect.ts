@@ -3,14 +3,13 @@ import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem } from './IoMenuItem.js';
 
-const dummyOptions = new MenuOptions();
-// TODO: fix tab-out without collapse
+export type SelectBy = 'value' | 'id';
 
 export type IoOptionSelectProps = IoElementProps & {
   value?: WithBinding<any>,
   label?: string,
+  selectBy?: SelectBy,
   options?: MenuOptions,
-  item?: MenuItem,
 };
 
 /**
@@ -46,45 +45,55 @@ export class IoOptionSelect extends IoElement {
   @ReactiveProperty({value: undefined, reflect: true})
   declare value: any;
 
-  @Property('')
+  @ReactiveProperty('')
   declare label: string;
 
-  @ReactiveProperty({value: dummyOptions, type: MenuOptions, reflect: true})
-  declare options: MenuOptions;
+  @ReactiveProperty('value')
+  declare selectBy: string;
 
-  @ReactiveProperty(MenuItem)
-  declare item: MenuItem;
+  @ReactiveProperty({type: MenuOptions, init: null})
+  declare options: MenuOptions;
 
   @Property('button')
   declare role: string;
 
-  constructor(args: IoOptionSelectProps = {}) { super(args); }
+  declare $item: MenuItem;
 
-  _onLastChanged(event: CustomEvent) {
+  constructor(args: IoOptionSelectProps = {}) {
+    super(args);
+  }
+  
+  init() {
+    this.$item = new MenuItem({value: this.value, options: this.options});
+  }
+
+  // TODO: implement selecting by id
+  _onSelectedChanged(event: CustomEvent) {
     if (this._disposed) return;
-    this.inputValue(event.detail.value);
+    if (this.seclectBy === 'value') this.inputValue(event.detail.value);
   }
 
   optionsChanged(change: Change) {
-    if (change.oldValue && change.oldValue !== dummyOptions) {
-      change.oldValue.removeEventListener('last-changed', this._onLastChanged);
+    if (change.oldValue) {
+      change.oldValue.removeEventListener('selected-changed', this._onSelectedChanged);
     }
     if (change.value) {
-      change.value.addEventListener('last-changed', this._onLastChanged);
+      change.value.addEventListener('selected-changed', this._onSelectedChanged);
     }
-    const selectedItem = this.options.getItem(this.value);
-    if (selectedItem) selectedItem.selected = true;
+    this.$item.options = this.options;
   }
   changed() {
-    const selectedItem = this.options.getItem(this.value);
+    let selectedItem;
+    if (this.selectBy === 'value') {
+      selectedItem = this.options?.findItemByValue(this.value);
+    } else if (this.selectBy === 'id') {
+      selectedItem = this.options?.findItemById(this.value);
+    }
+    if (selectedItem) selectedItem.selected = true;
 
-    // TODO: Implement id in menu items
-    this.item = this.item || new MenuItem({value: this.value});
-    this.item.options = this.options;
+    const label = selectedItem ? selectedItem.label : this.label || String(this.value);
 
-    const label = this.label || selectedItem?.label || String(this.value);
-
-    this.template([ioMenuItem({item: this.item, label: label, direction: 'down'})]);
+    this.template([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
   }
 }
 export const ioOptionSelect = IoOptionSelect.vConstructor;

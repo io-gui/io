@@ -44,7 +44,7 @@ class MyElement extends IoElement {}
 
 # Properties
 
-Properties can be defined using property declarations in the `static get ReactiveProperties()` object or the `@Property({})` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
+Properties can be defined using property declarations in the `static get ReactiveProperties()` object or the `@Property()` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
 
 In the following example, we define a boolean property called `selected` by specifying only the default value `false`.
 
@@ -62,7 +62,7 @@ class MyNode extends Node {
 Here we do the same using decorator syntax in typescript. Note that we use `declare` keyword to tell the compiler that this property definitely exists and has the `boolean` type. Without this keyword, typescript would override our custom property initialization logic.
 
 ```typescript
-// Typescript version with `@Property({})` decorator
+// Typescript version with `@Property()` decorator
 class MyNode extends Node {
   @Property(false)
   declare selected: boolean;
@@ -99,7 +99,7 @@ While it is possible to specify object instances as values in property declarati
 ```typescript
 class MyNode extends Node {
   // This is not recommended!
-  @Property({value: new Color()})
+  @ReactiveProperty({value: new Color()})
   declare color: Color;
 }
 
@@ -111,7 +111,7 @@ We can also declare a property with a declaration object. In the following examp
 
 ```typescript
 class MyNode extends Node {
-  @Property({
+  @ReactiveProperty({
     value: false,
     type: Boolean,
     reactive: true,
@@ -128,7 +128,7 @@ Property definitions respect inheritance. This means that if a subclass extends 
 
 ```typescript
 class MySuperNode extends Node {
-  @Property({
+  @ReactiveProperty({
     value: false,
     reactive: true,
     reflect: true,
@@ -172,7 +172,7 @@ class MyElement extends IoElement {
       }
     `;
   }
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare selected: boolean;
 }
 ```

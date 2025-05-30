@@ -159,9 +159,6 @@ export class IoMenuItem extends IoField {
           item.selected = true;
         }
         this.collapseRoot();
-      } else if (item.mode === 'scroll') {
-        item.selected = true;
-        this.collapseRoot();
       } else if (item.mode === 'link') {
         window.open(item.value, '_blank');
         this.collapseRoot();

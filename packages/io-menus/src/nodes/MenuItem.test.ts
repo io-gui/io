@@ -99,15 +99,15 @@ export default class {
         expect(item.options?.path).to.be.eql('');
         // TODO: test longer paths
       });
-      it('Should return subitem with specified value using `.getSubitem([value])`', () => {
+      it('Should return subitem with specified value using `.findItemByValue([value])`', () => {
         const subItem1 = new MenuItem({value: 1});
         const subItem2 = new MenuItem({value: 2});
         const item = new MenuItem({options: new MenuOptions({items: [
           subItem1,
           subItem2,
         ]})});
-        expect(item.getSubitem(1)).to.be.equal(subItem1);
-        expect(item.getSubitem(2)).to.be.equal(subItem2);
+        expect(item.findItemByValue(1)).to.be.equal(subItem1);
+        expect(item.findItemByValue(2)).to.be.equal(subItem2);
       });
     });
   }

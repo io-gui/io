@@ -19,7 +19,7 @@ export class IoNavigatorMdView extends IoNavigatorBase {
   declare sanitize: boolean;
 
   getSlotted(): VDOMElement {
-    const src = this.options.last;
+    const src = this.options.selected;
     return ioScroller({options: this.options}, [
       ioMarkdown({src, strip: this.strip, sanitize: this.sanitize})
     ]);

@@ -51,20 +51,21 @@ export class IoScroller extends IoElement {
   _scrollToSelected() {
     if (this.scrollHeight <= this.clientHeight) return;
 
-    const selected = this.options.scroll;
+    const selected = this.options.selected;
 
-    debug: if (selected && typeof selected !== 'string') {
-      console.warn('IoScroller: selected scroll option is not a string!');
-    }
+    // TODO: implement scroll to selected anchor option
+    // debug: if (selected && typeof selected !== 'string') {
+    //   console.warn('IoScroller: selected option has no anchor value!');
+    // }
 
-    if (selected && typeof selected === 'string') {
-      const element = this.querySelector('#' + selected);
-      if (element) {
-        this.scrollTo({top: element.offsetTop, behavior: 'auto'});
-      } else {
-        this.scrollTo(0, 0);
-      }
-    }
+    // if (selected && typeof selected === 'string') {
+    //   const element = this.querySelector('#' + selected);
+    //   if (element) {
+    //     this.scrollTo({top: element.offsetTop, behavior: 'auto'});
+    //   } else {
+    //     this.scrollTo(0, 0);
+    //   }
+    // }
   }
   dispose() {
     super.dispose();

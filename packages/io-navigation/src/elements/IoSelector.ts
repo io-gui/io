@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, span, WithBinding, NativeElementProps } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, span, WithBinding, NativeElementProps, Property } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
@@ -13,13 +13,13 @@ const IMPORTED_PATHS: Record<string, any> = {};
 
 export type IoSelectorProps = IoElementProps & {
   options?: MenuOptions,
-  select?: 'first' | 'last',
+  select?: 'shallow' | 'deep',
   elements?: VDOMElement[],
   cache?: boolean,
   precache?: boolean,
-  precacheDelay?: number,
   loading?: WithBinding<boolean>,
   import?: string, // TODO: move to core?
+  precacheDelay?: number,
 };
 
 @Register
@@ -63,8 +63,8 @@ export class IoSelector extends IoElement {
   @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
-  @ReactiveProperty('first')
-  declare select: 'first' | 'last';
+  @ReactiveProperty('shallow')
+  declare select: 'shallow' | 'deep';
 
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
@@ -75,14 +75,14 @@ export class IoSelector extends IoElement {
   @ReactiveProperty({value: false})
   declare precache: boolean;
 
-  @ReactiveProperty({value: 1000})
-  declare precacheDelay: number;
-
   @ReactiveProperty({value: false, reflect: true})
   declare loading: boolean;
 
-  @ReactiveProperty({type: Object})
+  @Property(Object)
   declare private _caches: Record<string, HTMLElement>;
+
+  @Property(1000)
+  declare precacheDelay: number;
 
   private _selected?: any;
 
@@ -91,7 +91,17 @@ export class IoSelector extends IoElement {
   }
 
   optionsMutated() {
-    const selected = this.select === 'first' ? this.options.first : this.options.last;
+    let selected;
+    if (this.select === 'shallow') {
+      for (let i = 0; i < this.options.length; i++) {
+        if (this.options[i].selected) {
+          selected = this.options[i].value;
+          break;
+        }
+      }
+    } else if (this.select === 'deep') {
+      selected = this.options.selected;
+    }
 
     if (selected !== this._selected) {
       this._selected = selected;
@@ -120,7 +130,7 @@ export class IoSelector extends IoElement {
     const selected = this._selected;
 
     debug: if (selected && typeof selected !== 'string') {
-      console.warn('IoSelector: selected option first is not a string!');
+      console.warn('IoSelector: selected option is not a string!');
     }
 
     if (typeof selected !== 'string') return;
