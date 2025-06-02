@@ -1,6 +1,6 @@
 import { Register, IoElement, div } from 'io-gui';
 import { MenuOptions, ioOptionSelect } from 'io-menus';
-import { ioPropertyEditor, ioObject, ioVector, ioMatrix, ioInspector } from 'io-editors';
+import { ioPropertyEditor, ioVector, ioMatrix, ioInspector } from 'io-editors';
 import { ioSlider } from 'io-sliders';
 import { ioString, ioNumber } from 'io-inputs';
 export class IoEditorsDemo extends IoElement {

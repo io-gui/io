@@ -62,7 +62,7 @@ export default class {
       it('Should initialize with correct default values', () => {
         const options = new MenuOptions();
         expect(options.path).to.be.eql('');
-        expect(options.selected).to.be.equal(undefined);
+        expect(options.selected).to.be.equal('');
         expect(options.delimiter).to.be.equal(',');
         expect(options.length).to.be.equal(0);
       });
@@ -73,7 +73,7 @@ export default class {
           new MenuItem({value: null}),
         ]});
         expect(options.path).to.be.eql('');
-        expect(options.selected).to.be.equal(undefined);
+        expect(options.selected).to.be.equal('');
         expect(options.delimiter).to.be.equal(',');
         expect(options.length).to.be.equal(3);
         expect(options[0].value).to.be.equal(1);

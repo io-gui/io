@@ -26,10 +26,10 @@ export function onOverlayPointermove(event: PointerEvent) {
     const h = hovered.parentElement.horizontal;
     if (prevHovered?.parentElement !== hovered.parentElement) {
       prevHovered = hovered;
-      if (hovered) hovered.focus();
+      hovered.focus();
     } else if (h ? v < -0.25 : v > 0.25) {
       prevHovered = hovered;
-      if (hovered) hovered.focus();
+      hovered.focus();
     } else {
       timeoutOpen = setTimeout(() => {
         prevHovered = hovered;

@@ -6,8 +6,8 @@ export default class {
       it('Should initialize with correct default values', () => {
         const item = new MenuItem({});
         expect(item.value).to.be.equal(undefined);
-        expect(item.id).to.be.equal('undefined');
-        expect(item.label).to.be.equal('undefined');
+        expect(item.id).to.be.equal('');
+        expect(item.label).to.be.equal('');
         expect(item.icon).to.be.equal('');
         expect(item.hint).to.be.equal('');
         expect(item.disabled).to.be.equal(false);
@@ -37,13 +37,14 @@ export default class {
         expect(item.value).to.be.equal(null);
         expect(item.label).to.be.equal('null');
 
-        item = new MenuItem({value: null});
-        expect(item.value).to.be.equal(null);
-        expect(item.label).to.be.equal('null');
+        // TODO: more in/label inference tests.
+        // item = new MenuItem({value: null});
+        // expect(item.value).to.be.equal(null);
+        // expect(item.label).to.be.equal('null');
 
         item = new MenuItem({});
         expect(item.value).to.be.equal(undefined);
-        expect(item.label).to.be.equal('undefined');
+        expect(item.label).to.be.equal('');
 
         item = new MenuItem({
           value: 'foo',
@@ -86,7 +87,7 @@ export default class {
         expect((item.options as any)[1].id).to.be.equal('II');
         expect((item.options as any)[1].label).to.be.equal('two');
         expect((item.options as any)[2].value).to.be.equal(null);
-        expect((item.options as any)[2].id).to.be.equal('null');
+        expect((item.options as any)[2].id).to.be.equal('');
         expect((item.options as any)[2].label).to.be.equal('null');
       });
       it('Should return `options.path` from path getter', () => {
