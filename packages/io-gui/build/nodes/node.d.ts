@@ -10,6 +10,7 @@ export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
 export interface NodeConstructor<T> {
     new (...args: any[]): T;
     ReactiveProperties?: ReactivePropertyDefinitions;
+    Properties?: Record<string, any>;
     Listeners?: ListenerDefinitions;
     Style?: string;
 }

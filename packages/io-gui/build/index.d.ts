@@ -1,14 +1,12 @@
+export * from './core/Binding';
 export * from './core/ChangeQueue';
 export * from './core/EventDispatcher';
-export * from './core/ReactiveProperty';
-export * from './core/Binding';
 export * from './core/ProtoChain';
 export * from './core/Queue';
+export * from './core/ReactiveProperty';
 export * from './vdom/VDOM';
-export * from './decorators/Autobind';
 export * from './decorators/Property';
 export * from './decorators/Register';
-export * from './decorators/ReactiveProperty';
 export * from './nodes/Node';
 export * from './nodes/Storage';
 export * from './nodes/Theme';
@@ -17,6 +15,8 @@ export * from './elements/IoGL';
 export * from './elements/IoGL.glsl';
 export * from './elements/IoNative';
 export * from './elements/IoOverlay';
+export * from './utils/Focus';
+export * from './utils/Nudge';
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic
  *

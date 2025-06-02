@@ -1,10 +1,6 @@
 import { NodeMixin, NodeProps, ReactiveProperty, Register, WithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
 
-function _isNaN(value: any) {
-  return typeof value === 'number' && isNaN(value);
-}
-
 export type MenuOptionsProps = NodeProps & {
   selected?: WithBinding<string>,
   path?: string,

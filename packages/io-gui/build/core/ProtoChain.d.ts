@@ -26,7 +26,11 @@ export declare class ProtoChain {
      */
     constructors: ProtoConstructors;
     /**
-     * Aggregated property definition declared in `static get ProtoProperties()` or @ReactiveProperty() decorators
+     * Aggregated initial value for properties declared in `static get Properties()` or @Property() decorators
+    */
+    properties: Record<string, any>;
+    /**
+     * Aggregated reactive property definition declared in `static get ReactiveProperties()` or @ReactiveProperty() decorators
      */
     reactiveProperties: ReactiveProtoProperties;
     /**
@@ -34,13 +38,9 @@ export declare class ProtoChain {
      */
     listeners: ProtoListeners;
     /**
-     * Aggregated initial value for properties declared in `static get ReactiveProperties()` or @Property() decorators
-    */
-    properties: Record<string, any>;
-    /**
      * Aggregated CSS style definition declared in `static get Style()`
      */
-    styles: string;
+    style: string;
     /**
      * Array of function names that start with "on[A-Z]" or "_on[A-Z]" for auto-binding.
      */
@@ -63,15 +63,21 @@ export declare class ProtoChain {
      * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
      */
     addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>): void;
+    addProperties(properties?: Record<string, any>, prevHash?: string): string;
     /**
-     * Adds static properties from `static get ReactiveProperties()` to the properties array.
+     * Adds reactive properties defined in decorators to the properties array.
+     * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
+     */
+    addReactivePropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>): void;
+    /**
+     * Adds reactive properties from `static get ReactiveProperties()` to the properties array.
      * Only process properties if they differ from superclass.
      * This prevents 'static get ReactiveProperties()' from overriding subclass properties defined in decorators.
      * @param {ReactivePropertyDefinitions} properties - Properties to add
      * @param {string} prevHash - Previous properties hash
      * @returns {string} - Updated properties hash
      */
-    addStaticProperties(properties?: ReactivePropertyDefinitions, prevHash?: string): string;
+    addReactiveProperties(properties?: ReactivePropertyDefinitions, prevHash?: string): string;
     /**
      * Merges or appends a listener definitions to the existing listeners array.
      * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
@@ -81,7 +87,7 @@ export declare class ProtoChain {
      * Adds a style string to the styles array.
      * @param {string} style - Style string to add
      */
-    addStyles(style?: string): void;
+    addStyle(style?: string): void;
     /**
      * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
      * @param {Node} proto - Prototype object to search for handlers
@@ -98,18 +104,17 @@ export declare class ProtoChain {
      */
     getObservedNodeProperties(): string[];
     /**
-     * Debug only.
-     * Validates property definitions.
-     * Logs warnings for incorrect property definitions.
-     * @returns {void}
-     */
-    validateProperties(): void;
-    /**
      * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
      * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
      * @param {Node} node - Target node instance
      */
     autobindHandlers(node: Node): void;
+    /**
+     * Validates reactive property definitions in debug mode.
+     * Logs warnings for incorrect property definitions.
+     * @returns {void}
+     */
+    validateReactiveProperties(): void;
 }
 export {};
 //# sourceMappingURL=ProtoChain.d.ts.map

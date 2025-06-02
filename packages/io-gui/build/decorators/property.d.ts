@@ -1,9 +1,40 @@
-import { Node, AnyConstructor } from '../nodes/Node';
+import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty';
+import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node';
 export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>>;
+export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions>;
 /**
- * Sets a initial value for a property.
+ * Declares a property and an initial value for a property.
+ * @decorator
  * @param {any} initialValue - Initial value.
- * @return {Function} Property decorator function.
+ * @returns {Function} Property decorator function.
+ *
+ * @example
+ * \@Register
+ * class MyClass extends Node {
+ *   \@Property('default text')
+ *   declare title: string;
+ * }
  */
-export declare const Property: (initialValue: any) => (target: Node, propertyName: string) => void;
+export declare function Property(initialValue: any): (target: Node, propertyName: string) => void;
+/**
+ * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
+ * @decorator
+ * @param {ReactivePropertyDefinitionLoose} propertyDefinition - Property definition.
+ * @returns {Function} Property decorator function.
+ *
+ * @example
+ * \@Register
+ * class MyClass extends Node {
+ *   \@ReactiveProperty({type: String, value: 'default text', reflect: true})
+ *   declare title: string;
+ * }
+ *
+ * @example
+ * \@Register
+ * class MyClass extends Node {
+ *   \@ReactiveProperty({type: Array, init: [0, 0]})
+ *   declare size: [number, number];
+ * }
+ */
+export declare function ReactiveProperty(propertyDefinition?: ReactivePropertyDefinitionLoose): (target: Node, propertyName: string) => void;
 //# sourceMappingURL=Property.d.ts.map

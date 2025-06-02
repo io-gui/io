@@ -1,9 +1,7 @@
 import { NodeProps, WithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
 export type MenuOptionsProps = NodeProps & {
-    first?: WithBinding<any>;
-    last?: WithBinding<any>;
-    scroll?: WithBinding<string>;
+    selected?: WithBinding<string>;
     path?: string;
     delimiter?: string;
     items?: MenuItem[];
@@ -39,19 +37,20 @@ declare const MenuOptions_base: {
     readonly ReactiveProperties: import("io-gui").ReactivePropertyDefinitions;
 };
 export declare class MenuOptions extends MenuOptions_base {
-    first: any;
-    last: any;
-    scroll: any;
+    selected: string;
     path: string;
     delimiter: string;
     items: MenuItem[];
-    getItem(value: any, deep?: boolean): any;
+    reactivity: string;
     constructor(properties?: MenuOptionsProps);
+    getAllItems(): MenuItem[];
+    findItemByValue(value: any): MenuItem | null;
+    findItemById(id: string): MenuItem | null;
     fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
     initItems(items: MenuItem[]): void;
+    unselectAll(): void;
     pathChanged(): void;
-    firstChanged(): void;
-    lastChanged(): void;
+    selectedChanged(): void;
     updatePaths(item?: MenuItem): void;
     _onItemSelectedChanged(event: CustomEvent): void;
     _onSubOptionsPathChanged(event: CustomEvent): void;

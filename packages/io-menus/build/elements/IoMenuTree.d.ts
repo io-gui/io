@@ -20,12 +20,8 @@ export declare class IoMenuTree extends IoElement {
     slotted: VDOMElement[];
     $parent?: IoMenuItem;
     role: string;
-    static get Listeners(): {
-        'item-clicked': string;
-    };
     constructor(args?: IoMenuTreeProps);
-    _onItemClicked(event: CustomEvent): void;
-    _onCollapse(): void;
+    collapse(): void;
     changed(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

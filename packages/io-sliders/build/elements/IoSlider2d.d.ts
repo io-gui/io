@@ -10,7 +10,6 @@ export declare class IoSlider2d extends IoSliderBase {
     max: [number, number];
     noscroll: boolean;
     constructor(args?: IoSlider2dProps);
-    valueMutated(): void;
     static get GlUtils(): string;
     static get Frag(): string;
 }

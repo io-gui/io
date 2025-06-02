@@ -63,6 +63,7 @@ export declare class IoSliderBase extends IoGl {
     init(): void;
     valueChanged(): void;
     invalidChanged(): void;
+    valueMutated(): void;
     changed(): void;
 }
 //# sourceMappingURL=IoSliderBase.d.ts.map

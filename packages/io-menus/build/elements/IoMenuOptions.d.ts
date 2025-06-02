@@ -3,7 +3,7 @@ import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
 export type IoMenuOptionsProps = IoElementProps & {
-    options?: MenuOptions;
+    options?: WithBinding<MenuOptions>;
     expanded?: WithBinding<boolean>;
     horizontal?: boolean;
     searchable?: boolean;
@@ -11,7 +11,6 @@ export type IoMenuOptionsProps = IoElementProps & {
     direction?: NudgeDirection;
     depth?: number;
     noPartialCollapse?: boolean;
-    inlayer?: boolean;
     slotted?: VDOMElement[];
     $parent?: IoMenuItem | IoContextMenu;
 };
@@ -30,28 +29,28 @@ export declare class IoMenuOptions extends IoElement {
     depth: number;
     noPartialCollapse: boolean;
     overflow: string;
-    inlayer: boolean;
     slotted: VDOMElement[];
     $parent?: IoMenuItem;
     role: string;
     private _overflownItems;
     static get Listeners(): {
-        'item-clicked': string;
         touchstart: (string | {
             passive: boolean;
         })[];
+        'io-focus-to': string;
     };
+    get inoverlay(): any;
     constructor(args?: IoMenuOptionsProps);
-    _onItemClicked(event: CustomEvent): void;
-    _stopPropagation(event: MouseEvent): void;
-    init(): void;
+    stopPropagation(event: MouseEvent): void;
+    connectedCallback(): void;
+    disconnectedCallback(): void;
+    onIoFocusTo(event: CustomEvent): void;
     onResized(): void;
-    _onSetOverflow(): void;
-    _onCollapse(): void;
+    setOverflow(): void;
+    collapse(): void;
     expandedChanged(): void;
     searchChanged(): void;
-    _onExpandInOverlay(): void;
-    _onClipHeight(): void;
+    onExpandInOverlay(): void;
     changed(): void;
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

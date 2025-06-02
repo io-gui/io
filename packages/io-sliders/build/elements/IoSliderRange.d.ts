@@ -13,7 +13,6 @@ export declare class IoSliderRange extends IoSliderBase {
     max: number;
     _index: number;
     constructor(args?: IoSliderRangeProps);
-    valueMutated(): void;
     _getCoordFromValue(value: [number, number]): number[];
     onPointerdown(event: PointerEvent): void;
     onPointermoveThrottled(event: PointerEvent): void;

@@ -63,7 +63,7 @@ export class IoOptionSelect extends IoElement {
   constructor(args: IoOptionSelectProps = {}) {
     super(args);
   }
-  
+
   init() {
     this.$item = new MenuItem({value: this.value, mode: 'none', options: this.options});
   }
@@ -97,9 +97,9 @@ export class IoOptionSelect extends IoElement {
       selectedItem = this.options.findItemById(this.value);
     }
     if (selectedItem) selectedItem.selected = true;
-    
+
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
-  
+
     this.template([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
   }
 }

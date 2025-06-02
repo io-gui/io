@@ -51,7 +51,7 @@ export class IoScroller extends IoElement {
   _scrollToSelected() {
     if (this.scrollHeight <= this.clientHeight) return;
 
-    const selected = this.options.selected;
+    // const selected = this.options.selected;
 
     // TODO: implement scroll to selected anchor option
     // debug: if (selected && typeof selected !== 'string') {

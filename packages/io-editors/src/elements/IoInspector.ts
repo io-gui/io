@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoElementProps, WithBinding, span, a } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoElementProps, WithBinding, span } from 'io-gui';
 import { ioBreadcrumbs } from './IoBreadcrumbs';
 import { ioPropertyEditor } from './IoPropertyEditor';
 import { EditorConfig } from '../utils/EditorConfig';

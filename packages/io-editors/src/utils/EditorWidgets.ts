@@ -1,4 +1,4 @@
-import { AnyConstructor, div, VDOMElement } from 'io-gui';
+import { AnyConstructor, VDOMElement } from 'io-gui';
 
 export type EditorWidgets = Map<AnyConstructor, VDOMElement>
 

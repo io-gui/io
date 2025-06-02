@@ -1,9 +1,10 @@
-import { Node, NodeProps, WithBinding } from 'io-gui';
+import { Node, NodeProps, WithBinding, Change } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
-export type MenuItemSelectType = 'select' | 'scroll' | 'toggle' | 'link' | 'none';
+export type MenuItemSelectType = 'select' | 'toggle' | 'link' | 'action' | 'none';
 export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
 export type MenuItemProps = NodeProps & {
     value?: any;
+    id?: string;
     label?: string;
     icon?: string;
     hint?: string;
@@ -16,6 +17,7 @@ export type MenuItemProps = NodeProps & {
 };
 export declare class MenuItem extends Node {
     value: any;
+    id: string;
     label: string;
     icon: string;
     hint: string;
@@ -26,14 +28,16 @@ export declare class MenuItem extends Node {
     selected: boolean;
     options?: MenuOptions;
     get hasmore(): boolean;
-    getSubitem(value: any): any;
     constructor(args?: MenuItemProps);
+    findItemByValue(value: any): MenuItem | null;
+    findItemById(id: string): MenuItem | null;
     fromJSON(looseDef: MenuItemDefLoose): this;
     toJSON(): Record<string, any>;
-    _onSubItemSelected(): void;
-    _onOptionsPathChanged(event: CustomEvent): void;
-    optionsChanged(): void;
+    onOptionsItemSelected(): void;
+    onOptionsPathChanged(event: CustomEvent): void;
+    optionsChanged(change: Change): void;
     selectedChanged(): void;
+    changed(): void;
     dispose(): void;
 }
 //# sourceMappingURL=MenuItem.d.ts.map

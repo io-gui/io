@@ -18,15 +18,12 @@ export declare class IoContextMenu extends IoElement {
     connectedCallback(): void;
     disconnectedCallback(): void;
     getBoundingClientRect(): any;
-    _onItemClicked(event: CustomEvent): void;
     onContextmenu(event: MouseEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
-    _onOverlayPointermove(event: PointerEvent): void;
-    _onClick(event: MouseEvent): void;
-    _onCollapse(): void;
-    optionsChanged(): void;
+    onPointerleave(event: PointerEvent): void;
+    collapse(): void;
 }
 export declare const ioContextMenu: (arg0?: IoContextMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoContextMenu.d.ts.map

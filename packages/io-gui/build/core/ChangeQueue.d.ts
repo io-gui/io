@@ -13,19 +13,26 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
     readonly path: Node[];
 }
 /**
- * A queue system for managing and batching property changes in `Node` and `IoElement` nodes.
+ * This class is used internally by the framework to manage property changes in `Node` and `IoElement` nodes.
  *
  * This class implements a First-In-First-Out (FIFO) queue that:
  * - Collects property changes and their associated values
  * - Coalesces multiple changes to the same property
- * - Dispatches changes in order through events (e.g., '[propName]-changed')
+ * - Dispatches change events (e.g., '[propName]-changed')
  * - Invokes corresponding change handlers (e.g., [propName]Changed())
  * - Triggers a final 'changed()' handler after processing all changes
- * - Dispatches a final 'changed' event after processing all changes
+ * - Dispatches a final 'object-mutated' event for associated node.
  *
  * The queue helps optimize performance by batching multiple property changes
  * and preventing redundant updates when the same property changes multiple
  * times within a single execution cycle.
+ *
+ * @example
+ * const node = new Node();
+ * const changeQueue = new ChangeQueue(node);
+ * changeQueue.queue('prop1', 1, 0);
+ * changeQueue.queue('prop1', 2, 1);
+ * changeQueue.dispatch();
  */
 export declare class ChangeQueue {
     readonly node: Node;

@@ -1,5 +1,4 @@
 import { IoElement, IoElementProps } from './IoElement';
-export type NudgeDirection = 'none' | 'pointer' | 'up' | 'left' | 'down' | 'right';
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
  * It is a pointer-blocking element covering the entire window at a very high z-index.
@@ -19,11 +18,6 @@ declare class IoOverlay extends IoElement {
         })[];
         pointerup: string;
         contextmenu: string;
-        focusin: string;
-        scroll: string;
-        wheel: (string | {
-            passive: boolean;
-        })[];
         mousedown: (string | {
             passive: boolean;
         })[];
@@ -48,25 +42,28 @@ declare class IoOverlay extends IoElement {
         keyup: (string | {
             passive: boolean;
         })[];
+        focusin: (string | {
+            passive: boolean;
+        })[];
+        blur: (string | {
+            passive: boolean;
+        })[];
+        scroll: string;
+        wheel: (string | {
+            passive: boolean;
+        })[];
     };
     constructor(args?: IoElementProps);
     stopPropagation(event: Event): void;
-    onResized(): void;
     onPointerup(event: PointerEvent): void;
-    _onCollapse(): void;
     onContextmenu(event: Event): void;
-    onFocusIn(event: FocusEvent): void;
-    _onScroll(event: Event): void;
-    nudgeDown(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean): boolean;
-    nudgeUp(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean): boolean;
-    nudgeRight(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean): boolean;
-    nudgeLeft(element: HTMLElement, x: number, y: number, elemRect: DOMRect, force?: boolean): boolean;
-    nudgePointer(element: HTMLElement, x: number, y: number, elemRect: DOMRect): boolean;
-    setElementPosition(element: HTMLElement, direction: NudgeDirection, srcRect: DOMRect): void;
+    onScroll(event: Event): void;
+    onResized(): void;
     appendChild(child: HTMLElement): void;
     removeChild(child: HTMLElement): void;
-    onChildExpanded(): void;
-    onChildExpandedDelayed(): void;
+    onChildExpandedChanged(): void;
+    collapse(): void;
+    expandAsChildren(): void;
     expandedChanged(): void;
 }
 export declare const IoOverlaySingleton: IoOverlay;

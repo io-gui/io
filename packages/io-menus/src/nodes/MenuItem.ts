@@ -161,13 +161,13 @@ export class MenuItem extends Node {
         console.warn(`MenuItem: unknown mode property "${this.node}"!`, this);
       }
       if (this.mode === 'action' && !this.action) {
-        console.warn(`MenuItem: action property is required when mode is "action"!`, this);
+        console.warn('MenuItem: action property is required when mode is "action"!', this);
       }
       if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
-        console.warn(`MenuItem: selected property is only valid when mode is "select" or "toggle"!`, this);
+        console.warn('MenuItem: selected property is only valid when mode is "select" or "toggle"!', this);
       }
       if (this.mode === 'select' && !this.id) {
-        console.warn(`MenuItem: id property is required when mode is "select"!`, this);
+        console.warn('MenuItem: id property is required when mode is "select"!', this);
       }
       if (this.action && typeof this.action !== 'function') {
         console.warn(`MenuItem: invalid type of action property type "${typeof this.action}"!`, this);
