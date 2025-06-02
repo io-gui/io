@@ -73,9 +73,6 @@ export class IoNumberSliderRange extends IoElement {
   init() {
     this.changed();
   }
-  valueMutated() {
-    this.changed();
-  }
   changed() {
     this.template([
       ioNumber({

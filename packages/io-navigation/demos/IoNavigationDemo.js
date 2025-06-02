@@ -42,44 +42,43 @@ const contentElements = [
 ];
 
 const contentOptions = new MenuOptions().fromJSON([
-  {value: 'devs', options: [
-    {value: 'devs#dev1'},
-    {value: 'devs#dev2'},
-    {value: 'devs#dev3'},
-    {value: 'devs#dev4'},
-    {value: 'devs#dev5'},
-    {value: 'devs#dev6'},
-    {value: 'devs#dev7'},
+  {id: 'devs', options: [
+    {id: 'devs#dev1'},
+    {id: 'devs#dev2'},
+    {id: 'devs#dev3'},
+    {id: 'devs#dev4'},
+    {id: 'devs#dev5'},
+    {id: 'devs#dev6'},
+    {id: 'devs#dev7'},
   ]},
-  {value: 'foos', options: [
-    {value: 'foos#foo1'},
-    {value: 'foos#foo2'},
-    {value: 'foos#foo3'},
-    {value: 'foos#foo4'},
-    {value: 'foos#foo5'},
-    {value: 'foos#foo6'},
-    {value: 'foos#foo7'},
+  {id: 'foos', options: [
+    {id: 'foos#foo1'},
+    {id: 'foos#foo2'},
+    {id: 'foos#foo3'},
+    {id: 'foos#foo4'},
+    {id: 'foos#foo5'},
+    {id: 'foos#foo6'},
+    {id: 'foos#foo7'},
   ]},
-  {value: 'bazs', options: [
-    {value: 'bazs#baz1'},
-    {value: 'bazs#baz2'},
-    {value: 'bazs#baz3'},
-    {value: 'bazs#baz4'},
-    {value: 'bazs#baz5'},
-    {value: 'bazs#baz6'},
-    {value: 'bazs#baz7'},
+  {id: 'bazs', options: [
+    {id: 'bazs#baz1'},
+    {id: 'bazs#baz2'},
+    {id: 'bazs#baz3'},
+    {id: 'bazs#baz4'},
+    {id: 'bazs#baz5'},
+    {id: 'bazs#baz6'},
+    {id: 'bazs#baz7'},
   ]},
-  {value: 'bars', options: [
-    {value: 'bars#bar1'},
-    {value: 'bars#bar2'},
-    {value: 'bars#bar3'},
-    {value: 'bars#bar4'},
-    {value: 'bars#bar5'},
-    {value: 'bars#bar6'},
-    {value: 'bars#bar7'},
+  {id: 'bars', options: [
+    {id: 'bars#bar1'},
+    {id: 'bars#bar2'},
+    {id: 'bars#bar3'},
+    {id: 'bars#bar4'},
+    {id: 'bars#bar5'},
+    {id: 'bars#bar6'},
+    {id: 'bars#bar7'},
   ]},
 ]);
-contentOptions[0].selected = true;
 contentOptions[0].options[3].selected = true;
 
 export class IoNavigationDemo extends IoElement {

@@ -14,6 +14,11 @@ export type PropertyConfigRecord = Record<string, VDOMElement>;
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
 function optionMenu(options: any[]) {
+  for (let i = 0; i < options.length; i++) {
+    if (options[i] === null) {
+      options[i] = {value: null, id: 'Null'};
+    }
+  }
   return ioOptionSelect({options: new MenuOptions().fromJSON(options)});
 }
 
@@ -31,25 +36,25 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]],
   [window.Node, [
     ['tabIndex', ioOptionSelect({options: new MenuOptions().fromJSON([
-      {value: '', label: 'none'}, '-1', '0', '1', '2', '3',
+      {value: '', id: 'None'}, '-1', '0', '1', '2', '3',
     ])})],
     ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
     ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
-    ['autocapitalize', ioOptionSelect({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', label: 'None'}])})],
+    ['autocapitalize', ioOptionSelect({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', id: 'None'}])})],
     ['writingSuggestions', ioOptionSelect({options: new MenuOptions().fromJSON(['true', 'false'])})],
-    ['dir', ioOptionSelect({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', label: 'None'}])})],
-    ['virtualKeyboardPolicy', ioOptionSelect({options: new MenuOptions().fromJSON(['manual','auto',{value:'', label: 'None'}])})],
+    ['dir', ioOptionSelect({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', id: 'None'}])})],
+    ['virtualKeyboardPolicy', ioOptionSelect({options: new MenuOptions().fromJSON(['manual','auto',{value:'', id: 'None'}])})],
     ['enterKeyHint', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'enter','done','go','next','previous','search','send',{value:'', label: 'None'}])})
+      'enter','done','go','next','previous','search','send',{value:'', id: 'None'}])})
     ],
     ['contentEditable', ioOptionSelect({options: new MenuOptions().fromJSON([
       'true','false','plaintext-only','inherit'])})
     ],
     ['inputMode', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'decimal','email','numeric','tel','search','url','text',{value:'', label: 'None'}])})
+      'decimal','email','numeric','tel','search','url','text',{value:'', id: 'None'}])})
     ],
     ['lang', ioOptionSelect({options: new MenuOptions().fromJSON([
-      {value: '', label: 'None'},
+      {value: '', id: 'None'},
       'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu','be','bn','bh','bi','bs','br','bg','my','ca','ch','ce',
       'ny','zh','zh-ans','zh-ant','cv','kw','co','cr','hr','cs','da','dv','nl','dz','en','eo','et','ee','fo','fj','fi','fr','ff','gl','gd',
       'ka','de','el','kl','gn','gu','ht','ha','he','hz','hi','ho','hu','is','io','ig','id in','ia','ie','iu','ik','ga','it','ja','jv','kn',
@@ -66,46 +71,46 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term',
       'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
     ])})],
-    ['ariaAtomic', optionMenu(['true','false', null])],
+    ['ariaAtomic', optionMenu(['true','false',null])],
     ['ariaAutoComplete', ioOptionSelect({options: new MenuOptions().fromJSON(['inline','list','both','none'])})],
-    ['ariaBusy', optionMenu(['true','false', null])],
+    ['ariaBusy', optionMenu(['true','false',null])],
     ['ariaBrailleLabel', ioString()],
     ['ariaBrailleRoleDescription', ioString()],
-    ['ariaChecked', optionMenu(['true','false','mixed', null])],
-    ['ariaColCount', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaColIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaColSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaCurrent', optionMenu(['true','false','page','step','location','date','time', null])],
+    ['ariaChecked', optionMenu(['true','false','mixed',null])],
+    ['ariaColCount', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaColIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaColSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaCurrent', optionMenu(['true','false','page','step','location','date','time',null])],
     ['ariaDescription', ioString()],
-    ['ariaDisabled', optionMenu(['true','false', null])],
-    ['ariaExpanded', optionMenu(['true','false', null])],
-    ['ariaHasPopup', optionMenu(['true','false','menu','listbox','tree','grid','dialog', null])],
-    ['ariaHidden', optionMenu(['true','false', null])],
-    ['ariaInvalid', optionMenu(['true','false','grammar','spelling', null])],
+    ['ariaDisabled', optionMenu(['true','false',null])],
+    ['ariaExpanded', optionMenu(['true','false',null])],
+    ['ariaHasPopup', optionMenu(['true','false','menu','listbox','tree','grid','dialog',null])],
+    ['ariaHidden', optionMenu(['true','false',null])],
+    ['ariaInvalid', optionMenu(['true','false','grammar','spelling',null])],
     ['ariaKeyShortcuts', ioString()],
     ['ariaLabel', ioString()],
-    ['ariaLevel', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaLevel', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaLive', ioOptionSelect({options: new MenuOptions().fromJSON(['assertive','polite','off'])})],
-    ['ariaModal', optionMenu(['true','false', null])],
-    ['ariaMultiLine', optionMenu(['true','false', null])],
-    ['ariaMultiSelectable', optionMenu(['true','false', null])],
+    ['ariaModal', optionMenu(['true','false',null])],
+    ['ariaMultiLine', optionMenu(['true','false',null])],
+    ['ariaMultiSelectable', optionMenu(['true','false',null])],
     ['ariaOrientation', ioOptionSelect({options: new MenuOptions().fromJSON(['horizontal','vertical','undefined'])})],
     ['ariaPlaceholder', ioString()],
-    ['ariaPosInSet', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaPressed', optionMenu(['true','false','mixed', null])],
-    ['ariaReadOnly', optionMenu(['true','false', null])],
-    ['ariaRequired', optionMenu(['true','false', null])],
+    ['ariaPosInSet', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaPressed', optionMenu(['true','false','mixed',null])],
+    ['ariaReadOnly', optionMenu(['true','false',null])],
+    ['ariaRequired', optionMenu(['true','false',null])],
     ['ariaRelevant', ioOptionSelect({options: new MenuOptions().fromJSON(['additions','all','removals','text'])})],
     ['ariaRoleDescription', ioString()],
-    ['ariaRowCount', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaRowIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaRowSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaSelected', optionMenu(['true','false', null])],
-    ['ariaSetSize', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaRowCount', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaRowIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaRowSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaSelected', optionMenu(['true','false',null])],
+    ['ariaSetSize', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaSort', ioOptionSelect({options: new MenuOptions().fromJSON(['none','ascending','descending','other'])})],
-    ['ariaValueMax', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaValueMin', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
-    ['ariaValueNow', optionMenu([...[...Array(32)].map((_, i) => i + 1), null])],
+    ['ariaValueMax', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaValueMin', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
+    ['ariaValueNow', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaValueText', ioString()],
     ['ariaColIndexText', ioString()],
     ['ariaRowIndexText', ioString()],

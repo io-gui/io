@@ -1,10 +1,27 @@
-import { Node, Register, NodeProps, ReactiveProperty, WithBinding } from 'io-gui';
+import { Node, Register, NodeProps, ReactiveProperty, WithBinding, Change } from 'io-gui';
 import { MenuOptions } from './MenuOptions.js';
 
-export type MenuItemSelectType = 'select' | 'toggle' | 'link' | 'none';
+export type MenuItemSelectType = 'select' | 'toggle' | 'link' | 'action'| 'none';
 
-// TODO: MenuItemProps options shoudl be array of MenuItemDefLoose
+// TODO: MenuItemProps options should be array of MenuItemDefLoose?
 export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
+
+// TODO: consider deprecating inferring id from value.
+function defaultId(item: MenuItemProps) {
+  if (typeof item.value === 'string') return item.value;
+  if (typeof item.value === 'number') return String(item.value);
+  return '';
+}
+
+function defaultLabel(item: MenuItemProps) {
+  if (item.id) return item.id;
+  if (typeof item.value === 'object') {
+    if (item.value === null) return 'null';
+    return `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
+  }
+  if (item.value !== undefined) return String(item.value);
+  return '';
+}
 
 export type MenuItemProps = NodeProps & {
   value?: any,
@@ -20,12 +37,10 @@ export type MenuItemProps = NodeProps & {
   options?: MenuOptions | MenuItemDefLoose[]
 };
 
-// TODO: documentation!
-
 @Register
 export class MenuItem extends Node {
 
-  @ReactiveProperty(undefined)
+  @ReactiveProperty({value: undefined})
   declare value: any;
 
   @ReactiveProperty({value: '', type: String})
@@ -61,65 +76,19 @@ export class MenuItem extends Node {
   get hasmore() {
     return !!(this.options?.length);
   }
-
-  findItemByValue(value: any) {
-    return this.options?.findItemByValue(value);
-  }
-
-  findItemById(id: string) {
-    return this.options?.findItemById(id);
-  }
-
   constructor(args?: MenuItemProps) {
-
     const item: MenuItemProps = {...args};
-
-    if (item.id === undefined) {
-      if (item.label) {
-        item.id = item.label;
-      } else {
-        item.id = String(item.value);
-      }
-    }
-
-    if (item.label === undefined) {
-      if (typeof item.value === 'object') {
-        if (item.value === null) {
-          item.label = 'null';
-        } else {
-          item.label = `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
-        }
-      } else {
-        item.label = String(item.value);
-      }
-    }
-
-    if (item.selected === undefined && (item.mode === 'select' || item.mode === undefined) && item.options) {
-      item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
-    }
-
-    debug: {
-      if (item.mode && (item.mode === 'toggle') && item.options) {
-        console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
-      }
-      if (item.mode && ['select', 'toggle', 'link', 'none'].indexOf(item.mode as string) === -1) {
-        console.warn('MenuItem: unknown `mode` property!', item.mode);
-      }
-      if (item.action && typeof item.action !== 'function') {
-        console.warn('MenuItem: invalid type of `action` property!', typeof item.action);
-      }
-    }
-
-    super(item);
-
-    if (this.options) {
-      this.options.addEventListener('item-selected', this._onSubItemSelected);
-      this.options.addEventListener('path-changed', this._onOptionsPathChanged);
-    }
+    if (item.id === undefined) item.id = defaultId(item);
+    if (item.label === undefined) item.label = defaultLabel(item);
+    super(item as NodeProps);
   }
-
+  findItemByValue(value: any) {
+    return this.options?.findItemByValue(value) || null;
+  }
+  findItemById(id: string) {
+    return this.options?.findItemById(id) || null;
+  }
   fromJSON(looseDef: MenuItemDefLoose) {
-
     const item: MenuItemProps = {};
     if (typeof looseDef === 'object' && looseDef !== null) {
       if (Object.hasOwn(looseDef, 'value')) item.value = looseDef.value;
@@ -142,53 +111,11 @@ export class MenuItem extends Node {
     } else {
       item.value = looseDef;
     }
-
-    if (item.id === undefined) {
-      if (item.label) {
-        item.id = item.label;
-      } else {
-        item.id = String(item.value);
-      }
-    }
-
-    if (item.label === undefined) {
-      if (typeof item.value === 'object') {
-        if (item.value === null) {
-          item.label = 'null';
-        } else {
-          item.label = `${item.value.constructor.name}` + (item.value instanceof Array ? `(${item.value.length})` : '');
-        }
-      } else {
-        item.label = String(item.value);
-      }
-    }
-
-    if (item.selected === undefined && (item.mode === 'select' || item.mode === undefined) && item.options) {
-      item.selected = !!(item.options as MenuOptions).find((item: MenuItem) => item.selected && item.mode === 'select');
-    }
-
-    debug: {
-      if (item.mode && (item.mode === 'toggle') && item.options) {
-        console.warn('MenuItem: cannot have suboptions when `mode === "toggle"`');
-      }
-      if (item.mode && ['select', 'toggle', 'link', 'none'].indexOf(item.mode as string) === -1) {
-        console.warn('MenuItem: unknown `mode` property!', item.mode);
-      }
-      if (item.action && typeof item.action !== 'function') {
-        console.warn('MenuItem: invalid type of `action` property!', typeof item.action);
-      }
-    }
-
+    if (item.id === undefined) item.id = defaultId(item);
+    if (item.label === undefined) item.label = defaultLabel(item);
     this.applyProperties(item);
-
-    if (this.options) {
-      this.options.addEventListener('item-selected', this._onSubItemSelected);
-      this.options.addEventListener('path-changed', this._onOptionsPathChanged);
-    }
-
     return this;
   }
-
   toJSON() {
     const json: Record<string, any> = {
       value: this.value,
@@ -201,37 +128,56 @@ export class MenuItem extends Node {
     if (this.options) json.options = this.options;
     return json;
   }
-
-  _onSubItemSelected() {
-    this.selected = true;
-  }
-
-  _onOptionsPathChanged(event: CustomEvent) {
-    this.dispatchEvent('path-changed', event.detail);
-  }
-
-  optionsChanged() {
-    // TODO test this behavior and look for regressions
-    // if ((this.options?.selected !== undefined) && this.mode === 'select') {
-    //   this.selected = true;
-    // }
-  }
-
-  selectedChanged() {
-     if (this.mode === 'select' && this.selected === false && this.options) {
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].mode === 'select') {
-          this.options[i].selected = false;
-        }
-      }
-      this.options.updatePaths();
+  onOptionsItemSelected() {
+    if (this.mode === 'select' && this.options) {
+      this.selected = true;
     }
   }
-
+  onOptionsPathChanged(event: CustomEvent) {
+    this.dispatchEvent('path-changed', event.detail);
+  }
+  optionsChanged(change: Change) {
+    if (change.oldValue) {
+      change.oldValue.removeEventListener('item-selected', this.onOptionsItemSelected);
+      change.oldValue.removeEventListener('path-changed', this.onOptionsPathChanged);
+    }
+    if (change.value) {
+      change.value.addEventListener('item-selected', this.onOptionsItemSelected);
+      change.value.addEventListener('path-changed', this.onOptionsPathChanged);
+    }
+    if (this.mode === 'select' && this.options) {
+      this.selected = !!this.options.selected;
+    }
+  }
+  selectedChanged() {
+    if (this.selected === false) this.options?.unselectAll();
+  }
+  changed() {
+    debug: {
+      if (this.options &&['select', 'none'].indexOf(this.mode) === -1) {
+        console.warn('MenuItem: item with options must have mode set to "select" or "none"', this);
+      }
+      if (['select', 'toggle', 'link', 'action','none'].indexOf(this.mode) === -1) {
+        console.warn(`MenuItem: unknown mode property "${this.node}"!`, this);
+      }
+      if (this.mode === 'action' && !this.action) {
+        console.warn(`MenuItem: action property is required when mode is "action"!`, this);
+      }
+      if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
+        console.warn(`MenuItem: selected property is only valid when mode is "select" or "toggle"!`, this);
+      }
+      if (this.mode === 'select' && !this.id) {
+        console.warn(`MenuItem: id property is required when mode is "select"!`, this);
+      }
+      if (this.action && typeof this.action !== 'function') {
+        console.warn(`MenuItem: invalid type of action property type "${typeof this.action}"!`, this);
+      }
+    }
+  }
   dispose() {
     if (this.options) {
-      this.options.removeEventListener('item-selected', this._onSubItemSelected);
-      this.options.removeEventListener('path-changed', this._onOptionsPathChanged);
+      this.options.removeEventListener('item-selected', this.onOptionsItemSelected);
+      this.options.removeEventListener('path-changed', this.onOptionsPathChanged);
     }
     super.dispose();
   }

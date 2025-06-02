@@ -42,14 +42,15 @@ export class IoOptionSelect extends IoElement {
     `;
   }
 
-  @ReactiveProperty({value: undefined, reflect: true})
+  @ReactiveProperty({value: undefined})
   declare value: any;
 
   @ReactiveProperty('')
   declare label: string;
 
+  // TODO: consider deprecating
   @ReactiveProperty('value')
-  declare selectBy: string;
+  declare selectBy: SelectBy;
 
   @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
@@ -64,13 +65,13 @@ export class IoOptionSelect extends IoElement {
   }
   
   init() {
-    this.$item = new MenuItem({value: this.value, options: this.options});
+    this.$item = new MenuItem({value: this.value, mode: 'none', options: this.options});
   }
 
   // TODO: implement selecting by id
   _onSelectedChanged(event: CustomEvent) {
     if (this._disposed) return;
-    if (this.seclectBy === 'value') this.inputValue(event.detail.value);
+    this.inputValue(event.detail.value);
   }
 
   optionsChanged(change: Change) {
@@ -82,17 +83,23 @@ export class IoOptionSelect extends IoElement {
     }
     this.$item.options = this.options;
   }
+  optionsMutated() {
+    this.changed();
+  }
   changed() {
+    this.debounce(this.onChange);
+  }
+  onChange() {
     let selectedItem;
     if (this.selectBy === 'value') {
-      selectedItem = this.options?.findItemByValue(this.value);
+      selectedItem = this.options.findItemByValue(this.value);
     } else if (this.selectBy === 'id') {
-      selectedItem = this.options?.findItemById(this.value);
+      selectedItem = this.options.findItemById(this.value);
     }
     if (selectedItem) selectedItem.selected = true;
-
+    
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
-
+  
     this.template([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
   }
 }

@@ -9,6 +9,15 @@ const bothAreNaNs = function(value: any, oldValue: any) {
   return typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue);
 };
 
+const isTypeCompatible = (type1: any, type2: any) => {
+  // Handle primitive types
+  if (type1 === type2) return true;
+  // Handle class inheritance
+  if (typeof type1 === 'function' && typeof type2 === 'function') {
+    return type1 instanceof type2 || type2 instanceof type1;
+  }
+  return false;
+};
 /**
  * This class is used internally by the framework to enable two-way data synchronization between reactive properties.
  * It manages bindings between a source node's reactive property and one or more target nodes and reactive properties.
@@ -85,7 +94,7 @@ export class Binding<T extends unknown> {
       debug: {
         const srcP = this.node._reactiveProperties.get(this.property)!;
         const valueMismatch = srcP.value !== undefined && targetP.value !== undefined && typeof srcP.value !== typeof targetP.value;
-        const typeMismatch = srcP.type !== undefined && targetP.type !== undefined && srcP.type !== targetP.type;
+        const typeMismatch = srcP.type !== undefined && targetP.type !== undefined && !isTypeCompatible(srcP.type, targetP.type);
         if (valueMismatch || typeMismatch) {
           console.warn(`Binding: source property "${this.property}" does not match type of target property ${property}!`);
           console.info(`Source "${this.property}" value: ${srcP.value} type: ${srcP.type} typeof: ${typeof srcP.value}`);

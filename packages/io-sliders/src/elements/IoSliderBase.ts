@@ -354,6 +354,10 @@ export class IoSliderBase extends IoGl {
       this.removeAttribute('aria-invalid');
     }
   }
+  valueMutated() {
+    this.changed();
+    this.dispatchEvent('object-mutated', {object: this});
+  }
   changed() {
     super.changed();
     this.setAttribute('aria-valuemin', JSON.stringify(this.min));

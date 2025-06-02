@@ -1,4 +1,4 @@
-import { Register, IoElement, div, Storage as $, span } from 'io-gui';
+import { Register, IoElement, div, Storage as $, pre, code } from 'io-gui';
 import { ioInspector } from 'io-editors';
 import { ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
@@ -8,47 +8,47 @@ import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-col
 
 // TODO: Implement IDs in menu options. use ID for selection
 const options = new MenuOptions({
-  selected: $({key: 'element-demo', storage: 'local', value: ioSlider()})
+  selected: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
 }).fromJSON([{
-  label: 'native',
+  id: 'native',
   options: [
-    {value: div('div content'), label: 'div'},
+    {id: 'div', value: div('div content')},
   ]
 }, {
-  label: 'io-icons',
+  id: 'io-icons',
   options: [
-    {value: ioIcon({value: 'io:check'}), label: 'io-icon:check'},
-    {value: ioIcon({value: 'io:close'}), label: 'io-icon:close'},
-    {value: ioIcon({value: 'io:circle'}), label: 'io-icon:circle'},
+    {id: 'io-icon:check', value: ioIcon({value: 'io:check'})},
+    {id: 'io-icon:close', value: ioIcon({value: 'io:close'})},
+    {id: 'io-icon:circle', value: ioIcon({value: 'io:circle'})},
   ]
 }, {
-  label: 'io-inputs',
+  id: 'io-inputs',
   options: [
-    {value: ioBoolean(), label: 'io-boolean'},
-    {value: ioButton({label: 'Button'}), label: 'io-button'},
-    {value: ioNumber(), label: 'io-number'},
-    {value: ioString(), label: 'io-string'},
-    {value: ioSwitch(), label: 'io-switch'},
+    {id: 'io-boolean', value: ioBoolean()},
+    {id: 'io-button', value: ioButton({label: 'Button'})},
+    {id: 'io-number', value: ioNumber()},
+    {id: 'io-string', value: ioString()},
+    {id: 'io-switch', value: ioSwitch()},
   ]
 }, {
-  label: 'io-sliders',
+  id: 'io-sliders',
   options: [
-    {value: ioNumberSlider(), label: 'io-number-slider'},
-    {value: ioNumberSliderRange(), label: 'io-number-slider-range'},
-    {value: ioSlider(), label: 'io-slider'},
-    {value: ioSlider2d(), label: 'io-slider-2d'},
-    {value: ioSliderRange(), label: 'io-slider-range'},
+    {id: 'io-number-slider', value: ioNumberSlider()},
+    {id: 'io-number-slider-range', value: ioNumberSliderRange()},
+    {id: 'io-slider', value: ioSlider()},
+    {id: 'io-slider-2d', value: ioSlider2d()},
+    {id: 'io-slider-range', value: ioSliderRange()},
   ]
 }, {
-  label: 'io-colors',
+  id: 'io-colors',
   options: [
-    {value: ioColorRgba(), label: 'io-color-rgba'},
-    {value: ioColorSlider({channel: 'r'}), label: 'io-color-slider:r'},
-    {value: ioColorSlider({channel: 'g'}), label: 'io-color-slider:g'},
-    {value: ioColorSlider({channel: 'b'}), label: 'io-color-slider:b'},
-    {value: ioColorSlider({channel: 'sv'}), label: 'io-color-slider:sv'},
-    {value: ioColorSwatch(), label: 'io-color-swatch'},
-    {value: ioColorPicker(), label: 'io-color-picker'},
+    {id: 'io-color-rgba', value: ioColorRgba()},
+    {id: 'io-color-slider:r', value: ioColorSlider({channel: 'r'})},
+    {id: 'io-color-slider:g', value: ioColorSlider({channel: 'g'})},
+    {id: 'io-color-slider:b', value: ioColorSlider({channel: 'b'})},
+    {id: 'io-color-slider:sv', value: ioColorSlider({channel: 'sv'})},
+    {id: 'io-color-swatch', value: ioColorSwatch()},
+    {id: 'io-color-picker', value: ioColorPicker()},
   ]
 }]);
 
@@ -94,47 +94,79 @@ export class IoElementDemo extends IoElement {
     :host io-property-editor > div.row > io-string {
       min-width: 120px;
     }
+    :host code {
+      color: var(--io_color);
+    }
     `;
   }
   static get ReactiveProperties() {
     return {
-      element: options.bind('selected'),
-      reactivity: 'debounced'
+      selected: options.bind('selected'),
     };
   }
   init() {
-    this.changed();
+    this.selectedChanged();
   }
-  optionsMutated() {
-    this.changed();
+  onElementMutated() {
+    this.selectedChanged();
   }
-  elementMutated() {
-    this.changed();
-  }
-  changed() {
-    if (this.element) {
+  selectedChanged() {
+    const oldElement = this.querySelector('.element-wrap')?.children[0];
+    if (oldElement) oldElement.removeEventListener('object-mutated', this.onElementMutated);
+
+    if (this.selected) {
+      const vElement = options.findItemById(this.selected).value;
       this.template([
         ioOptionSelect({
-          value: this.bind('element'),
-          options: options
+          value: this.bind('selected'),
+          options: options,
+          selectBy: 'id'
         }),
-        div({class: 'element-wrap'}, [
-          this.element
+        div({class: 'element-wrap'}, [vElement]),
+        pre([
+          code({id: 'element-html', style: {display: 'block', whiteSpace: 'pre-wrap'}}),
         ]),
         ioInspector({id: 'inspector'}),
       ]);
       const element = this.querySelector('.element-wrap').children[0];
+      element.addEventListener('object-mutated', this.onElementMutated);
       const inspector = this.$['inspector'];
       if (inspector.value !== element) {
         inspector.value = element;
       }
+      const elementHtml = this.$['element-html'];
+      elementHtml.innerHTML = formatHtml(element.outerHTML);
     } else {
       this.template([
-        span('Element property not set.'),
+        ioField({value: 'Element property not set.'}),
       ]);
     }
   }
 }
 Register(IoElementDemo);
+
+function formatHtml(html, indentSize = 2) {
+  const indent = ' '.repeat(indentSize);
+  let result = '';
+  let level = 0;
+  const cleanHtml = html.replace(/>\s+</g, '><');
+  const tokens = cleanHtml.split(/(<[^>]*>)/);
+  tokens.forEach(token => {
+    if (token.trim()) {
+      if (token.startsWith('</')) {
+        level--;
+        result += indent.repeat(level) + token + '\n';
+      } else if (token.startsWith('<') && !token.endsWith('/>')) {
+        result += indent.repeat(level) + token + '\n';
+        level++;
+      } else if (token.startsWith('<') && token.endsWith('/>')) {
+        result += indent.repeat(level) + token + '\n';
+      } else {
+        result += indent.repeat(level) + token.trim() + '\n';
+      }
+    }
+  });
+  return result.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 
 export const ioElementDemo = IoElementDemo.vConstructor;

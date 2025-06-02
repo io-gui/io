@@ -134,37 +134,37 @@ export class IoEditorsDemo extends IoElement {
           ]),
         }),
       ]),
-      div({class: 'column'}, [
-        ioObject({
-          value: this.object,
-          expanded: true,
-          // widget: IoField({label: 'Widget Element'}),
-          properties: ['number', 'string', 'boolean'],
-        }),
-        ioObject({
-          value: this.object,
-          expanded: true,
-          properties: ['number'],
-          config: new Map([
-            [Number, ioSlider({step: 0.1})],
-          ]),
-        }),
-        ioObject({
-          value: this.object,
-          label: 'Object (All Properties)',
-          config: new Map([
-            [Object, [
-              [Array, ioPropertyEditor({labeled: false, class: 'array'})],
-              ['vector2', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['vector3', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['vector4', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['matrix2', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['matrix3', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['matrix4', ioPropertyEditor({labeled: false, class: 'array'})],
-            ]]
-          ]),
-        }),
-      ]),
+      // div({class: 'column'}, [
+      //   ioObject({
+      //     value: this.object,
+      //     expanded: true,
+      //     // widget: IoField({label: 'Widget Element'}),
+      //     properties: ['number', 'string', 'boolean'],
+      //   }),
+      //   ioObject({
+      //     value: this.object,
+      //     expanded: true,
+      //     properties: ['number'],
+      //     config: new Map([
+      //       [Number, ioSlider({step: 0.1})],
+      //     ]),
+      //   }),
+      //   ioObject({
+      //     value: this.object,
+      //     label: 'Object (All Properties)',
+      //     config: new Map([
+      //       [Object, [
+      //         [Array, ioPropertyEditor({labeled: false, class: 'array'})],
+      //         ['vector2', ioPropertyEditor({labeled: false, class: 'array'})],
+      //         ['vector3', ioPropertyEditor({labeled: false, class: 'array'})],
+      //         ['vector4', ioPropertyEditor({labeled: false, class: 'array'})],
+      //         ['matrix2', ioPropertyEditor({labeled: false, class: 'array'})],
+      //         ['matrix3', ioPropertyEditor({labeled: false, class: 'array'})],
+      //         ['matrix4', ioPropertyEditor({labeled: false, class: 'array'})],
+      //       ]]
+      //     ]),
+      //   }),
+      // ]),
     ]);
   }
 }

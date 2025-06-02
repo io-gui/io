@@ -14,13 +14,13 @@ const numberItems = new MenuOptions().fromJSON([
 ]);
 
 const colorOptions = new MenuOptions().fromJSON([
-  {label: 'Red', icon: '❤️', options: ['Red1','Red2','Red3']},
-  {label: 'Green', icon: '💚', options: ['Green1','Green2','Green3']},
-  {label: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3']},
+  {id: 'Red', icon: '❤️', options: ['Red1','Red2','Red3']},
+  {id: 'Green', icon: '💚', options: ['Green1','Green2','Green3']},
+  {id: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3']},
 ]);
 
 const optionsDeep = new MenuOptions().fromJSON([
-  {label: 'Deep Menu', options: [
+  {id: 'Deep Menu', options: [
     {value: 'Level 1/1', hint: 'One'},
     {value: 'Level 1/2', hint: 'Two'},
     {value: 'Level 1/3', hint: 'Three', options: [
@@ -99,7 +99,7 @@ export class IoMenusDemo extends IoElement {
   static get ReactiveProperties() {
     return {
       menuPath: '',
-      menuRoot: 0,
+      menuRoot: undefined,
     };
   }
   init() {

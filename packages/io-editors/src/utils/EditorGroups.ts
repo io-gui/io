@@ -27,14 +27,8 @@ export const SKIPPED_PROPERTIES = [
   'onleavepictureinpicture',
 ];
 
-const allPropertyNamesCache: Map<Function, string[]> = new Map();
-
 export function getAllPropertyNames(obj: object): string[] {
-  if (allPropertyNamesCache.has(obj.constructor)) {
-    return allPropertyNamesCache.get(obj.constructor) as string[];
-  }
   const allProps: string[] = [];
-  allPropertyNamesCache.set(obj.constructor, allProps);
   let curr = obj;
   do {
     const props = Object.getOwnPropertyNames(curr);

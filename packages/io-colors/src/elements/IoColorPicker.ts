@@ -4,6 +4,7 @@ import { ioColorSwatch } from './IoColorSwatch';
 
 // TODO: focus picker on expand.
 // TODO: collapse picker on blur.
+// TODO: fix focus keybord navigation.
 
 export type IoColorPickerProps = IoElementProps &{
   value?: WithBinding<{ r: number, g: number, b: number, a?: number }>,

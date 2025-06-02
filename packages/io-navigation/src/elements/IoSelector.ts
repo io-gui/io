@@ -1,5 +1,6 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, span, WithBinding, NativeElementProps, Property } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, WithBinding, NativeElementProps, Property } from 'io-gui';
 import { MenuOptions } from 'io-menus';
+import { ioField } from 'io-inputs';
 
 const dummyElement = document.createElement('div');
 /**
@@ -60,7 +61,7 @@ export class IoSelector extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
   @ReactiveProperty('shallow')
@@ -95,7 +96,7 @@ export class IoSelector extends IoElement {
     if (this.select === 'shallow') {
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].selected) {
-          selected = this.options[i].value;
+          selected = this.options[i].id;
           break;
         }
       }
@@ -146,8 +147,8 @@ export class IoSelector extends IoElement {
 
       if (!element) {
         const warning = `Could not find element with id: ${selected}!`;
-        console.warn(`IoSelector: ${warning}!`);
-        element = span(warning);
+        console.warn(`IoSelector: ${warning}!`, this.options);
+        element = ioField({label: warning});
       }
 
       let args: IoSelectorProps = element.props || {};

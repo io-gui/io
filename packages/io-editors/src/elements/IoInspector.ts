@@ -96,7 +96,6 @@ export class IoInspector extends IoElement {
   _onChange() {
     const elements = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
-      a({href: 'https://www.google.com', target: '_blank', rel: 'noopener noreferrer'}, 'Google'),
     ];
 
     const config = new Map(this.config);

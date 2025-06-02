@@ -92,7 +92,7 @@ export class IoNavigatorBase extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @ReactiveProperty({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
   @ReactiveProperty({value: 'left', reflect: true})
@@ -138,7 +138,7 @@ export class IoNavigatorBase extends IoElement {
       class: 'hamburger',
       direction: this.menu === 'left' ? 'right' : 'left',
       item: new MenuItem({
-        label: '',
+        mode: 'none',
         icon: 'menu:hamburger',
         options: this.options,
       })

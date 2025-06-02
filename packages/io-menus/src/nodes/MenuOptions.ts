@@ -6,7 +6,7 @@ function _isNaN(value: any) {
 }
 
 export type MenuOptionsProps = NodeProps & {
-  selected?: WithBinding<any>,
+  selected?: WithBinding<string>,
   path?: string,
   delimiter?: string,
   items?: MenuItem[],
@@ -14,8 +14,8 @@ export type MenuOptionsProps = NodeProps & {
 
 @Register
 export class MenuOptions extends NodeMixin(Array) {
-  @ReactiveProperty(undefined)
-  declare selected: any;
+  @ReactiveProperty('')
+  declare selected: string;
 
   @ReactiveProperty('')
   declare path: string;
@@ -50,7 +50,7 @@ export class MenuOptions extends NodeMixin(Array) {
     debug: {
       const ids = new Set();
       for (let i = 0; i < items.length; i++) {
-        if (ids.has(items[i].id)) {
+        if (items[i].id !== undefined && ids.has(items[i].id)) {
           console.warn(`MenuOptions.getAllItems: duplicate id "${items[i].id}"`, this);
         }
         ids.add(items[i].id);
@@ -101,8 +101,8 @@ export class MenuOptions extends NodeMixin(Array) {
           console.warn('MenuOptions.constructor: item is not a MenuItem!');
         }
         // TODO check if same item is at other index
-        if (this.find((otherItem: MenuItem) => otherItem !== item && otherItem.label === item.label)) {
-          console.warn(`MenuOptions.addItems: duplicate label "${item.label}"`);
+        if (this.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
+          console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);
         }
       }
       item.addEventListener('selected-changed', this._onItemSelectedChanged);
@@ -116,12 +116,20 @@ export class MenuOptions extends NodeMixin(Array) {
     }
   }
 
+  unselectAll() {
+    for (let i = 0; i < this.length; i++) {
+      if (this[i].mode === 'select') {
+        this[i].selected = false;
+      }
+    }
+    this.updatePaths();
+  }
+
   pathChanged() {
     const path = this.path ? [...this.path.split(this.delimiter)] : [];
     if (this.length && path.length) {
       const first = path.shift();
-      // TODO: use ID
-      const item = this.find((item: MenuItem) => (item.label === first));
+      const item = this.find((item: MenuItem) => (item.id === first));
       if (item) {
         debug: if (item.mode !== 'select') {
           console.warn('MenuOptions.pathChanged: Path set to non-selectable MenuItem!');
@@ -146,41 +154,39 @@ export class MenuOptions extends NodeMixin(Array) {
   }
 
   selectedChanged() {
-    // Deep search options for mathing item value
-    const item = this.findItemByValue(this.selected);
+    if (!this.selected) return;
+    // Deep search options for matching item id
+    const item = this.findItemById(this.selected);
     if (item) {
       item.selected = true;
     } else {
-      // console.log('selected', this.selected, this[2].options[0].value);
-      console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected value "${this.selected}"!`);
+      console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected id "${this.selected}"!`, this);
     }
 
     // NOTE: this does nothing. It is only for debugging.
     debug: if (this.selected !== undefined) {
       const path = this.path ? [...this.path.split(this.delimiter)] : [];
       if (path.length) {
-        let label = path.shift();
-        let item = this.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select')));
+        let id = path.shift();
+        let item = this.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
         let options = item?.options || undefined;
         while (path.length && options) {
-          label = path.shift();
-          item = options.find((item: MenuItem) => (item.selected === true && item.label === label && (item.mode === 'select')));
+          id = path.shift();
+          item = options.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
           options = item?.options || undefined;
         }
         if (item === undefined) {
-          console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected value "${this.selected}"!`);
+          console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected id "${this.selected}"!`);
         } else if (
-          (item.value !== this.selected && !(_isNaN(item.value) && _isNaN(this.selected)))
+          (item.id !== this.selected)
         ) {
           // TODO: test this?
-          console.warn(`MenuOptions.selectedChanged: selected property value "${this.selected}" diverged from item specified by path!`);
+          console.warn(`MenuOptions.selectedChanged: selected property id "${this.selected}" diverged from item specified by path "${this.path}"!`);
         }
       } else {
-        console.warn(`MenuOptions.selectedChanged: selected property value set "${this.selected}" but path is empty!`);
-        // console.log('selected', this.selected);
-        // console.log('path', this.path);
+        console.warn(`MenuOptions.selectedChanged: selected property id set "${this.selected}" but path is empty!`);
         // TODO: this case happens in io-element-demo.js options. Consider updating paths on selectedChanged.
-        // TODO: running updatePaths() here breaks the demo - value "[element-name]" becomes "element-name" for some reason.
+        // TODO: running updatePaths() here breaks the demo - id "[element-name]" becomes "element-name" for some reason.
       }
     }
   }
@@ -194,14 +200,14 @@ export class MenuOptions extends NodeMixin(Array) {
     if (!walker && hasSelected) return;
 
     while (walker) {
-      path.push(walker.label);
+      path.push(walker.id);
       if (walker.mode === 'select') lastSelected = walker;
       walker = walker.options?.find((item: MenuItem) => (item.mode === 'select') && item.selected);
     }
 
     this.setProperties({
       path: path.join(this.delimiter),
-      selected: lastSelected !== undefined ? lastSelected.value : undefined,
+      selected: lastSelected !== undefined ? lastSelected.id : this.selected,
     });
   }
 
