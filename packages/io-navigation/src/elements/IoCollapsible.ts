@@ -42,6 +42,7 @@ export class IoCollapsible extends IoElement {
     :host > io-boolean:before {
       text-align: center;
       width: var(--io_lineHeight);
+      margin-right: var(--io_spacing2);
       content: "▸"
     }
     :host > io-boolean[value]:before {

@@ -64,6 +64,9 @@ export class IoElementDemo extends IoElement {
       background-color: var(--io_bgColorStrong);
       padding: var(--io_spacing3);
     }
+    :host > io-option-select {
+      margin-bottom: var(--io_spacing2);
+    }
     :host > .element-wrap {
       border: var(--io_border);
       border-color: var(--io_borderColorDark);

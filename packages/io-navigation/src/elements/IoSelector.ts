@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, WithBinding, NativeElementProps, Property } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, WithBinding, NativeElementProps, Property, Change } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 import { ioField } from 'io-inputs';
 
@@ -12,9 +12,11 @@ const dummyElement = document.createElement('div');
 
 const IMPORTED_PATHS: Record<string, any> = {};
 
+export type SelectType = 'shallow' | 'deep' | 'none';
+
 export type IoSelectorProps = IoElementProps & {
   options?: MenuOptions,
-  select?: 'shallow' | 'deep',
+  select?: SelectType,
   elements?: VDOMElement[],
   cache?: boolean,
   precache?: boolean,
@@ -64,8 +66,8 @@ export class IoSelector extends IoElement {
   @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
-  @ReactiveProperty('shallow')
-  declare select: 'shallow' | 'deep';
+  @ReactiveProperty({value: 'shallow', type: String})
+  declare select: SelectType;
 
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
@@ -87,12 +89,13 @@ export class IoSelector extends IoElement {
 
   private _selected?: any;
 
-  init() {
+  optionsChanged() {
     this.optionsMutated();
   }
 
   optionsMutated() {
     let selected;
+
     if (this.select === 'shallow') {
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].selected) {
@@ -100,8 +103,13 @@ export class IoSelector extends IoElement {
           break;
         }
       }
+
     } else if (this.select === 'deep') {
       selected = this.options.selected;
+
+    } else if (this.select === 'none') {
+      this.template(this.elements, this, this.cache);
+      return;
     }
 
     if (selected !== this._selected) {
@@ -128,27 +136,21 @@ export class IoSelector extends IoElement {
   }
 
   protected renderSelected() {
-    const selected = this._selected;
-
-    debug: if (selected && typeof selected !== 'string') {
-      console.warn('IoSelector: selected option is not a string!');
-    }
-
-    if (typeof selected !== 'string') return;
+    let selected = this._selected;
 
     if (!selected) {
 
-      this.template([]);
+      this.template([], this, this.cache);
 
     } else if (this.childNodes[0]?.id !== selected) {
-
-      //TODO: VDOMARRAY
-      let element = this.elements.find((element: any) => {return element.props.id === selected;}) as VDOMElement;
+      
+      const element = this.elements.find((element: VDOMElement) => { return element.props?.id === selected });
 
       if (!element) {
-        const warning = `Could not find element with id: ${selected}!`;
+        const warning = `Could not find elements with id: ${selected}!`;
         console.warn(`IoSelector: ${warning}!`, this.options);
-        element = ioField({label: warning});
+        this.template([ioField({label: warning})], this, this.cache);
+        return;
       }
 
       let args: IoSelectorProps = element.props || {};
@@ -159,11 +161,11 @@ export class IoSelector extends IoElement {
       delete args.import;
 
       const cache = !explicitlyDontCache && (this.cache || explicitlyCache);
+      const cachedElement = this._caches[selected] as unknown as IoElement;
 
       // TODO: test this!
-      if (cache && this._caches[selected]) {
-        const cachedElement = this._caches[selected] as unknown as IoElement;
-        if (this._caches[selected].parentElement !== this as unknown as HTMLElement) {
+      if (cache && cachedElement) {
+        if (cachedElement.parentElement !== this as unknown as HTMLElement) {
           if (this.firstChild) this.removeChild(this.firstChild);
           this.appendChild(cachedElement);
           // Update properties
@@ -175,19 +177,18 @@ export class IoSelector extends IoElement {
             // Set native HTML element properties
             applyNativeElementProps(cachedElement as unknown as HTMLElement, args as NativeElementProps);
           }
-
           this.loading = false;
         }
       } else if (!importPath) {
         this.template([element], this, cache);
-        this._caches[selected] = this.childNodes[0];
+        if (cache) this._caches[selected] = this.childNodes[0];
         this.loading = false;
       } else {
         this.loading = true;
         void this.importModule(importPath as string).then(() => {
           if (this.loading) {
             this.template([element], this, cache);
-            this._caches[selected] = this.childNodes[0];
+            if (cache) this._caches[selected] = this.childNodes[0];
           }
           this.loading = false;
         });
@@ -213,10 +214,16 @@ export class IoSelector extends IoElement {
     }
   }
 
+  // elementsChanged(change: Change) {
+  //   // TODO: fix and test edge case where reusing element in templete() might return cache from the previous element if keys collide!
+  //   // debug: if (change.oldValue.length > 0) {}
+  // }
+
   dispose() {
     // TODO: check for garbage collection!
     for (const key in this._caches) {
       disposeChildren(this._caches[key] as unknown as IoElement);
+      delete this._caches[key];
     }
     super.dispose();
   }

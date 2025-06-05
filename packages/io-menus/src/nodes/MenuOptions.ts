@@ -28,6 +28,7 @@ export class MenuOptions extends NodeMixin(Array) {
   constructor(properties: MenuOptionsProps = {}) {
     super(properties);
     this.push(...this.items);
+    this.updatePaths = this.updatePaths.bind(this);
 
     if (this.path !== '') this.pathChanged();
 
@@ -101,8 +102,8 @@ export class MenuOptions extends NodeMixin(Array) {
           console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);
         }
       }
-      item.addEventListener('selected-changed', this._onItemSelectedChanged);
-      item.addEventListener('path-changed', this._onSubOptionsPathChanged);
+      item.addEventListener('selected-changed', this.onItemSelectedChanged);
+      item.addEventListener('path-changed', this.onSubOptionsPathChanged);
 
       // TODO move updatePaths to MenuItem. Handle setProperties better.
       if (item.selected && item.mode === 'select') {
@@ -180,13 +181,16 @@ export class MenuOptions extends NodeMixin(Array) {
           console.warn(`MenuOptions.selectedChanged: selected property id "${this.selected}" diverged from item specified by path "${this.path}"!`);
         }
       } else {
-        console.warn(`MenuOptions.selectedChanged: selected property id set "${this.selected}" but path is empty!`);
+        this.updatePathsDebounced();
+        // console.warn(`MenuOptions.selectedChanged: selected property id set "${this.selected}" but path is empty!`);
         // TODO: this case happens in io-element-demo.js options. Consider updating paths on selectedChanged.
         // TODO: running updatePaths() here breaks the demo - id "[element-name]" becomes "element-name" for some reason.
       }
     }
   }
-
+  updatePathsDebounced(item?: MenuItem) {
+    this.debounce(this.updatePaths, item);
+  }
   updatePaths(item?: MenuItem) {
     const path: string[] = [];
     let walker: MenuItem | undefined = (item?.mode === 'select') ? item : undefined;
@@ -207,7 +211,7 @@ export class MenuOptions extends NodeMixin(Array) {
     });
   }
 
-  _onItemSelectedChanged(event: CustomEvent) {
+  onItemSelectedChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
     if (item.mode === 'select') {
       if (item.selected) {
@@ -216,17 +220,17 @@ export class MenuOptions extends NodeMixin(Array) {
             this[i].selected = false;
           }
         }
-        this.updatePaths(item);
+        this.updatePathsDebounced(item);
         this.dispatchEvent('item-selected', {item: item});
       } else {
-        this.updatePaths();
+        this.updatePathsDebounced();
       }
     }
   }
 
-  _onSubOptionsPathChanged(event: CustomEvent) {
+  onSubOptionsPathChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    item.selected ? this.updatePaths(item) : this.updatePaths();
+    item.selected ? this.updatePathsDebounced(item) : this.updatePathsDebounced();
   }
 
   selectDefault() {
@@ -254,8 +258,8 @@ export class MenuOptions extends NodeMixin(Array) {
 
   dispose() {
     for (let i = 0; i < this.length; i++) {
-      this[i].removeEventListener('selected-changed', this._onItemSelectedChanged);
-      this[i].removeEventListener('path-changed', this._onSubOptionsPathChanged);
+      this[i].removeEventListener('selected-changed', this.onItemSelectedChanged);
+      this[i].removeEventListener('path-changed', this.onSubOptionsPathChanged);
     }
     super.dispose();
   }

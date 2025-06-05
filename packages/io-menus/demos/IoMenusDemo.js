@@ -105,6 +105,7 @@ export class IoMenusDemo extends IoElement {
   init() {
     this.template([
       ioMenuTree({
+        searchable: true,
         options: optionsDeep,
       }),
       ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),

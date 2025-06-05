@@ -1,18 +1,23 @@
-import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
+import { ioSelector, SelectType } from './IoSelector';
 
-export type IoNavigatorBaseProps = IoElementProps & {
+export type IoNavigatorProps = IoElementProps & {
   options?: MenuOptions,
-  slotted?: VDOMElement[],
+  widget?: VDOMElement,
   elements?: VDOMElement[],
   menu?: 'top' | 'left' | 'bottom' | 'right',
   depth?: number,
   collapsed?: WithBinding<boolean>,
   collapseWidth?: number,
+  select?: SelectType,
+  cache?: boolean,
+  precache?: boolean,
 };
 
-export class IoNavigatorBase extends IoElement {
-  static vConstructor: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+@Register
+export class IoNavigator extends IoElement {
+  static vConstructor: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -49,7 +54,7 @@ export class IoNavigatorBase extends IoElement {
         min-height: var(--io_fieldHeight) !important;
       }
       :host > io-menu-tree {
-        z-index: 1;
+        /* z-index: 1; */
         flex: 0 0 auto;
         min-width: 10em;
         overflow-y: auto;
@@ -86,8 +91,8 @@ export class IoNavigatorBase extends IoElement {
     `;
   }
 
-  @ReactiveProperty(Array)
-  declare slotted: VDOMElement[];
+  @ReactiveProperty(null)
+  declare widget: VDOMElement | null;
 
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
@@ -107,28 +112,23 @@ export class IoNavigatorBase extends IoElement {
   @ReactiveProperty(580)
   declare collapseWidth: number;
 
+  @ReactiveProperty('shallow')
+  declare select: SelectType;
+
+  @ReactiveProperty(false)
+  declare cache: boolean;
+
+  @ReactiveProperty(false)
+  declare precache: boolean;
+
   init() {
-    this._computeCollapsed = this._computeCollapsed.bind(this);
-    this.throttle(this._computeCollapsed);
     this.changed();
-  }
-
-  onResized() {
-    this.throttle(this._computeCollapsed);
-  }
-
-  _computeCollapsed() {
-    this.collapsed = this.offsetWidth < this.collapseWidth;
-  }
-
-  getSlotted(): VDOMElement | null {
-    return null;
   }
 
   changed() {
     const sharedMenuConfig = {
       options: this.options,
-      slotted: this.slotted,
+      widget: this.widget,
       depth: this.depth
     };
 
@@ -147,24 +147,25 @@ export class IoNavigatorBase extends IoElement {
     if (this.menu === 'top') {
       this.template([
         ioMenuOptions({horizontal: true, noPartialCollapse: this.collapsed, ...sharedMenuConfig}),
-        this.getSlotted(),
+        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
       ]);
     } else if (this.menu === 'left') {
       this.template([
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
-        this.getSlotted(),
+        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
       ]);
     } else if (this.menu === 'bottom') {
       this.template([
-        this.getSlotted(),
+        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
         ioMenuOptions({horizontal: true, noPartialCollapse: this.collapsed, direction: 'up', ...sharedMenuConfig}),
       ]);
     } else if (this.menu === 'right') {
       this.template([
-        this.getSlotted(),
+        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
       ]);
     }
   }
 }
-export const ioNavigatorBase = IoNavigatorBase.vConstructor;
+
+export const ioNavigator = IoNavigator.vConstructor;

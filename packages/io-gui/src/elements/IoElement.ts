@@ -62,43 +62,43 @@ export class IoElement extends NodeMixin(HTMLElement) {
     const prop = this._reactiveProperties.get(name)!;
     if (prop.reflect) this.setAttribute(name.toLowerCase(), value);
   }
-  // TODO: Reconsider cache parameter. Does it belong in the code class?
   /**
    * Renders DOM from virtual DOM arrays.
    * @param {Array} vDOMElements - Array of VDOMElement[] children.
    * @param {HTMLElement} [host] - Optional template target.
-   * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
+   * @param {boolean} [noDispose] - Skip disposal of existing elements.
    */
-  template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, cache?: boolean) {
+  template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
     host = (host || this) as any;
     const vDOMElementsOnly = vDOMElements.filter(item => item !== null);
-    this.traverse(vDOMElementsOnly, host as HTMLElement, cache);
+    this.$ = {};
+    this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose);
   }
   /**
    * Recurively traverses virtual DOM elements.
    * TODO: test element.traverse() function!
    * @param {Array} vDOMElements - Array of VDOMElements elements.
    * @param {HTMLElement} [host] - Optional template target.
-   * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
+   * @param {boolean} [noDispose] - Skip disposal of existing elements.
    */
-  traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, cache?: boolean) {
+  traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
     const children = host.children;
     // remove trailing elements
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
       host.removeChild(child);
-      if (!cache) disposeChildren(child as unknown as IoElement);
+      if (!noDispose) disposeChildren(child as unknown as IoElement);
     }
     // replace elements
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
       // replace existing elements
-      if (child.localName !== vChildren[i].tag || cache) {
+      if (child.localName !== vChildren[i].tag || noDispose) {
         const oldElement = child as unknown as HTMLElement;
         const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
-        if (!cache) disposeChildren(oldElement as unknown as IoElement);
+        if (!noDispose) disposeChildren(oldElement as unknown as IoElement);
       // update existing elements
       } else {
         // TODO: improve setting/removal/cleanup of native element properties/attributes.
@@ -114,7 +114,8 @@ export class IoElement extends NodeMixin(HTMLElement) {
         }
       }
     }
-    // TODO: doing this before "replace elements" cached elements to be created twice.
+    // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
+    // TODO: rename nodispose to dispose.
     // TODO: test
     // create new elements after existing
     if (children.length < vChildren.length) {
@@ -126,20 +127,26 @@ export class IoElement extends NodeMixin(HTMLElement) {
       host.appendChild(frag);
     }
     for (let i = 0; i < vChildren.length; i++) {
-      // Update this.$ map of ids.
+      const vChild = vChildren[i];
       const child = children[i] as HTMLElement | IoElement;
-      if (vChildren[i].props?.id) {
-        this.$[vChildren[i].props!.id] = child;
+      if (vChild.props?.id) {
+        // Update this.$ map of ids.
+        debug: {
+          if (this.$[vChild.props!.id] !== undefined) {
+            console.warn('IoElement: Duplicate id in template.');
+          }
+        }
+        this.$[vChild.props!.id] = child;
       }
-      if (vChildren[i].children) {
-        if (typeof vChildren[i].children === 'string') {
+      if (vChild.children) {
+        if (typeof vChild.children === 'string') {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);
-          (child as IoElement)._textNode.nodeValue = String(vChildren[i].children);
-        } else if (vChildren[i].children instanceof Array && vChildren[i].children!.length > 0) {
+          (child as IoElement)._textNode.nodeValue = String(vChild.children);
+        } else if (vChild.children instanceof Array) {
           // Traverse deeper.
-          const vDOMElementsOnly = (vChildren[i].children as Array<VDOMElement | null>).filter(item => item !== null);
-          this.traverse(vDOMElementsOnly, child as HTMLElement, cache);
+          const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null);
+          this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose);
         }
       }
     }

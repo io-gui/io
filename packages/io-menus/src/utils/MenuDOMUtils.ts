@@ -1,4 +1,4 @@
-import { IoOverlaySingleton } from 'io-gui';
+import { IoOverlaySingleton, VDOMElement } from 'io-gui';
 import { IoString } from 'io-inputs';
 import { IoMenuItem } from '../elements/IoMenuItem';
 import { IoMenuOptions } from '../elements/IoMenuOptions';
@@ -12,12 +12,18 @@ const MenuElementTagsSelector = MenuElementTags.join(', ');
 export function getHoveredMenuItem(event: PointerEvent) {
   const items = IoOverlaySingleton.querySelectorAll('io-menu-item, io-menu-options');
   const hovered: IoMenuElementType[] = [];
-  for (let i = items.length; i--;) {
-    if (isPointerAboveIoMenuItem(event, items[i])) hovered.push(items[i]);
+  if (IoOverlaySingleton.expanded) {
+    for (let i = items.length; i--;) {
+      if (isPointerAboveIoMenuItem(event, items[i])) hovered.push(items[i]);
+    }
   }
   if (hovered.length) {
     hovered.sort((a: IoMenuElementType, b: IoMenuElementType) => {
-      return a.depth > b.depth ? 1 : a.depth < b.depth ? -1 : 0;
+      if (a.depth > b.depth) return 1;
+      if (a.depth < b.depth) return -1;
+      if (a.localName === 'io-menu-item') return 1;
+      if (b.localName === 'io-menu-item') return -1;
+      return 0;
     });
     const first = hovered[0];
     const second = hovered[1];
@@ -97,14 +103,12 @@ export function getMenuRoot(element: IoMenuElementType) {
 
 export function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType) {
   if (MenuElementTags.indexOf(element.localName) !== -1) {
-    // TODO: hidden in no longer a property.
     if (!element.disabled && !element.hidden) {
-      if ((element.parentElement.expanded && IoOverlaySingleton.expanded)) {
-        const bw = 1; // TODO: temp hack to prevent picking items below through margin(1px) gaps.
+      if (element.parentElement !== IoOverlaySingleton && element.parentElement.expanded) {
         const r = element.getBoundingClientRect();
         const x = event.clientX;
         const y = event.clientY;
-        const hovered = (r.top <= y+bw && r.bottom >= y-bw && r.left <= x+bw && r.right >= x-bw );
+        const hovered = (r.top <= y && r.bottom >= y && r.left <= x && r.right >= x );
         return hovered;
       }
     }

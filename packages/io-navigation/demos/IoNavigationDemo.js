@@ -1,6 +1,6 @@
 import { Register, IoElement, div, span } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import { ioNavigatorSelector, ioNavigatorScroller, ioSelector } from 'io-navigation';
+import { ioNavigator, ioSelector } from 'io-navigation';
 
 const contentElements = [
   div({id: 'devs', class: 'vertical'}, [
@@ -84,16 +84,7 @@ contentOptions[0].options[3].selected = true;
 export class IoNavigationDemo extends IoElement {
   static get Style() {
     return /* css */`
-      :host .row {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        overflow: hidden;
-        margin-bottom: var(--io_spacing);
-      }
-      :host .row > *:not(:last-child) {
-        margin-right: var(--io_spacing);
-      }
+      :host {}
     `;
   }
   static get ReactiveProperties() {
@@ -105,22 +96,15 @@ export class IoNavigationDemo extends IoElement {
   }
   init() {
     this.template([
-      ioNavigatorScroller({
+      ioNavigator({
         menu: 'left',
-        collapseWidth: 100,
-        options: contentOptions[0].options,
-        elements: [contentElements[0]]
-      }),
-      ioNavigatorSelector({
-        menu: 'top',
-        depth: 0,
         options: contentOptions,
         elements: contentElements
       }),
-      ioSelector({
-        elements: contentElements,
-        options: contentOptions,
-      }),
+      // ioSelector({
+      //   elements: contentElements,
+      //   options: contentOptions,
+      // }),
     ]);
   }
 }

@@ -15,11 +15,27 @@ const marked = new Marked(
   })
 );
 
+const renderer = new marked.Renderer();
+renderer.heading = function({ tokens, depth }: { tokens: any[], depth: number }) {
+  const text = tokens.map(token => token.text).join('');
+  return `<h${depth} data-content="${text}">${text}</h${depth}>`;
+};
+
+marked.setOptions({ renderer });
+
+function strip(innerHTML: string, strip: string[]) {
+  for (let i = 0; i < strip.length; i++) {
+    innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'),'');
+  }
+  return innerHTML;
+}
+
 export type IoMarkdownProps = IoElementProps & {
   src?: string,
   strip?: string[],
   loading?: WithBinding<boolean>,
   sanitize?: boolean,
+  scroll?: WithBinding<string>,
 };
 
 /**
@@ -170,26 +186,27 @@ export class IoMarkdown extends IoElement {
   @ReactiveProperty(true)
   declare sanitize: boolean;
 
+  @ReactiveProperty({value: '', type: String})
+  declare scroll: string;
+
   @Property('document')
   declare role: string;
 
   constructor(args: IoMarkdownProps = {}) { super(args); }
 
-  protected _strip(innerHTML: string) {
-    for (let i = 0; i < this.strip.length; i++) {
-      innerHTML = innerHTML.replace(new RegExp(this.strip[i], 'g'),'');
-    }
-    return innerHTML;
+  scrollChanged() {
+    this.debounce(this.onScrollChanged);
   }
 
-  protected _parseMarkdown(markdown: string) {
-    // if (this._disposed) return;
-    const md = marked.parse(markdown) as string;
-    this.loading = false;
-    if (this.sanitize) {
-      this.innerHTML = this._strip(purify.sanitize(md));
-    } else {
-      this.innerHTML = this._strip(md);
+  onScrollChanged() {
+    if (this.scrollHeight <= this.clientHeight) return;
+    if (this.scroll) {
+      const element = this.querySelector(`[data-content="${this.scroll}"]`);
+      if (element) {
+        this.scrollTo({top: element.offsetTop, behavior: 'smooth'});
+      } else {
+        this.scrollTo(0, 0);
+      }
     }
   }
 
@@ -204,9 +221,14 @@ export class IoMarkdown extends IoElement {
     this.innerHTML = '';
     void fetch(this.src)
       .then(response => response.text())
-      .then(text => { this._parseMarkdown(text); });
+      .then(markdown => {
+        let md = marked.parse(markdown) as string;
+        if (this.sanitize) md = purify.sanitize(md);
+        this.innerHTML = strip(md, this.strip);
+        this.loading = false;
+      })
+      .then(this.onScrollChanged);
   }
-  changed() {}
 }
 export const ioMarkdown = IoMarkdown.vConstructor;
 

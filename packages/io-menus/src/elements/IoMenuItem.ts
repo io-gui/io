@@ -3,7 +3,7 @@ import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
-import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuHierarchy.js';
+import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js';
 import { IoMenuTree } from './IoMenuTree.js';
 
 let timeoutOpen = -1;
@@ -17,8 +17,6 @@ export function onOverlayPointerdown(event: PointerEvent) {
 }
 
 export function onOverlayPointermove(event: PointerEvent) {
-  // TODO: why is this needed?
-  // if (!this.inoverlay && this.expanded) this.onPointermove(event);
   clearTimeout(timeoutOpen);
   hovered = getHoveredMenuItem(event);
   if (hovered && hovered !== prevHovered) {
@@ -327,6 +325,7 @@ export class IoMenuItem extends IoField {
     getMenuRoot(this).collapse();
   }
   itemChanged() {
+    // TODO: unbind previous? Test!
     this.setProperties({
       selected: this.item.bind('selected'),
       disabled: this.item.bind('disabled'),

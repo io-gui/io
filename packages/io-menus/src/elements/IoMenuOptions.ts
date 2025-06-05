@@ -3,10 +3,11 @@ import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
-import { filterOptions } from './IoMenuTree.js';
 import { ioMenuHamburger } from './IoMenuHamburger.js';
 import { IoContextMenu } from './IoContextMenu.js';
-import { getMenuDescendants, getMenuSiblings } from '../utils/MenuHierarchy.js';
+import { getMenuDescendants, getMenuSiblings } from '../utils/MenuDOMUtils.js';
+import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
+
 const rects = new WeakMap();
 
 // TODO: improve focusto nav and in-layer navigation.
@@ -20,7 +21,7 @@ export type IoMenuOptionsProps = IoElementProps & {
   direction?: NudgeDirection,
   depth?: number,
   noPartialCollapse?: boolean,
-  slotted?: VDOMElement[],
+  widget?: VDOMElement | null,
   $parent?: IoMenuItem | IoContextMenu,
 };
 
@@ -35,42 +36,43 @@ export class IoMenuOptions extends IoElement {
     :host {
       display: flex;
       flex-direction: column;
-      align-self: stretch;
+      align-self: flex-start;
+      border: var(--io_border);
       border-radius: var(--io_borderRadius);
+      border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorDimmed);
-      position: relative;
+      padding: var(--io_spacing) 0;
+      user-select: none;
+      transition: opacity 0.3s ease-in-out;
     }
     :host[horizontal] {
       flex-direction: row;
       align-self: stretch;
       padding: 0 var(--io_spacing);
     }
-    :host:not([horizontal]) {
-      flex-direction: column;
-      padding: var(--io_spacing) 0;
-    }
     :host[inoverlay] {
       overflow-y: auto;
+      box-shadow: 1px 1px 16px var(--io_shadowColor),
+                  1px 1px 8px var(--io_shadowColor), 
+                  1px 1px 4px var(--io_shadowColor);
     }
     :host[inoverlay]:not([expanded]) {
       visibility: hidden;
       opacity: 0;
     }
-    /* Menu Items */
     :host > io-menu-item {
-      background-color: transparent;
       border-radius: 0;
     }
     :host[horizontal] > io-menu-item {
       height: calc(var(--io_fieldHeight) + var(--io_spacing2));
       border-left: none;
       border-right: none;
-      border-width: calc(var(--io_spacing) + var(--io_borderWidth)) var(--io_borderWidth);
+      border-width: calc(var(--io_spacing) + var(--io_borderWidth)) 0;
     }
     :host:not([horizontal]) > io-menu-item {
       border-top: none;
       border-bottom: none;
-      border-width: var(--io_borderWidth) var(--io_spacing);
+      border-width: 0 calc(var(--io_spacing) + var(--io_borderWidth));
     }
     :host > io-menu-item[selected][direction="up"] {
       border-color: var(--io_colorBlue) transparent transparent transparent;
@@ -153,8 +155,8 @@ export class IoMenuOptions extends IoElement {
   @ReactiveProperty({value: '', reflect: true})
   declare overflow: string;
 
-  @ReactiveProperty({type: Array})
-  declare slotted: VDOMElement[];
+  @ReactiveProperty(null)
+  declare widget: VDOMElement | null;
 
   @ReactiveProperty(undefined)
   declare $parent?: IoMenuItem;
@@ -329,7 +331,7 @@ export class IoMenuOptions extends IoElement {
     }
   }
   changed() {
-    const elements: VDOMElement[] = [...this.slotted];
+    const elements: VDOMElement[] = this.widget ? [this.widget] : [];
 
     if (this.searchable) {
       elements.push(ioString({
@@ -342,10 +344,13 @@ export class IoMenuOptions extends IoElement {
     }
 
     if (this.search) {
-      const len = elements.length;
-      filterOptions(this.options, this.search, this.depth, elements);
-      if (len === elements.length) {
+      const filteredItems = searchMenuOptions(this.options, this.search, this.depth);
+      if (filteredItems.length === 0) {
         elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
+      } else {
+        for (let i = 0; i < filteredItems.length; i++) {
+          elements.push(ioMenuItem({item: filteredItems[i], depth: 0}));
+        }
       }
     } else {
       let direction: 'left' | 'right' | 'up' | 'down' = this.horizontal ? 'down' : 'right';

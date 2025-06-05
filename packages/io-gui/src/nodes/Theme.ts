@@ -61,6 +61,9 @@ export type ThemeVars = {
   borderColor: Color;
   borderColorLight: Color;
   borderColorDark: Color;
+  borderColorRed: Color;
+  borderColorBlue: Color;
+  borderColorGreen: Color;
 
   bgColor: Color;
   bgColorStrong: Color;
@@ -115,6 +118,9 @@ export const LIGHT_THEME: ThemeVars = {
   borderColor: new Color(0, 0, 0, 0.2),
   borderColorLight: new Color(1, 1, 1, 0.8),
   borderColorDark: new Color(0, 0, 0, 0.4),
+  borderColorRed: new Color(1, 0.35, 0.15, 1),
+  borderColorGreen: new Color(0.1, 0.7, 0.2, 1),
+  borderColorBlue: new Color(0.2, 0.4, 0.95, 1),
 
   bgColor: new Color(0.85, 0.85, 0.85, 1),
   bgColorStrong: new Color(0.9, 0.9, 0.9, 1),
@@ -169,13 +175,16 @@ export const DARK_THEME: ThemeVars = {
   borderColor: new Color(1, 1, 1, 0.5),
   borderColorLight: new Color(1, 1, 1, 0.3),
   borderColorDark: new Color(0, 0, 0, 1),
+  borderColorRed: new Color(1, 0.2, 0.0, 1),
+  borderColorBlue: new Color(0.4, 0.5, 0.9, 1),
+  borderColorGreen: new Color(0, 0.6, 0.1, 1),
 
   bgColor: new Color(0.2, 0.2, 0.2, 1),
   bgColorStrong: new Color(0.15, 0.15, 0.15, 1),
   bgColorDimmed: new Color(0.25, 0.25, 0.25, 1),
   bgColorRed: new Color(0.7, 0.2, 0.1, 1),
   bgColorGreen: new Color(0.1, 0.5, 0.2, 1),
-  bgColorBlue: new Color(0.4, 0.3, 0.65, 1),
+  bgColorBlue: new Color(0.2, 0.4, 0.8, 1),
   bgColorInput: new Color(0.02, 0.02, 0.02, 1),
 
   color: new Color(0.6, 0.6, 0.6, 1),

@@ -36,8 +36,8 @@ export class IoField extends IoElement {
         opacity: 0.5;
       }
       :host[pressed] {
-        border-color: var(--io_borderColorInset);
-        box-shadow: var(--io_shadowInset);
+        border-color: var(--io_borderColorInset) !important;
+        box-shadow: var(--io_shadowInset) !important;
       }
       :host :not(:last-child) {
         margin-right: var(--io_spacing2);
@@ -68,18 +68,18 @@ export class IoField extends IoElement {
       :host[invalid] {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorRed);
-        border-color: var(--io_colorRed);
+        border-color: var(--io_borderColorRed);
       }
       :host.green {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorGreen);
-        border-color: var(--io_colorGreen);
+        border-color: var(--io_borderColorGreen);
       }
       :host.blue,
       :host[selected] {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorBlue);
-        border-color: var(--io_colorBlue);
+        border-color: var(--io_borderColorBlue);
       }
       :host:focus {
         text-overflow: inherit;

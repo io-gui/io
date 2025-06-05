@@ -64,7 +64,6 @@ export class IoInputsDemo extends IoElement {
       div({class: 'row'}, [
         ioButton({label: 'Button', icon: 'io:check'}),
         ioButton({label: 'Button', icon: 'io:check', appearance: 'inset'}),
-        ioButton({label: 'Button', icon: 'io:check', appearance: 'flush'}),
         ioButton({label: 'Button', icon: 'io:check', appearance: 'neutral'}),
       ]),
     ]);
