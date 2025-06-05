@@ -59,7 +59,7 @@ export class IoBoolean extends IoField {
   }
   changed() {
     const value = this.value ? this.true : this.false;
-    this.template([
+    this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.label ? span(this.label + ':') : null,
       value ? value.includes('io:') ? ioIcon({value: value}) : span(value) : null

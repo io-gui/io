@@ -403,14 +403,13 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     /**
-     * Disposes all core.
-     * Use this when instance is no longer needed.
+     * Disposes the node when it is no longer needed.
      */
     dispose() {
       debug: if (this._disposed) {
-        // TODO: figure out how to prevent redundant disposals from nested io-selectors with cache:false
-        // console.warn('Node.dispose(): Already disposed!', this.constructor.name);
+        console.warn('Node.dispose(): Already disposed!', this.constructor.name);
       }
+
       if (this._disposed) return;
 
       this._bindings.forEach((binding, name) => {

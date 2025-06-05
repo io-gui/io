@@ -100,7 +100,7 @@ export class IoOptionSelect extends IoElement {
 
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
 
-    this.template([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
+    this.render([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
   }
 }
 export const ioOptionSelect = IoOptionSelect.vConstructor;

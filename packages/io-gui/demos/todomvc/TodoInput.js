@@ -31,7 +31,7 @@ export class TodoInput extends IoElement {
     }
   }
   changed() {
-    this.template([
+    this.render([
       input({id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true}),
     ]);
   }

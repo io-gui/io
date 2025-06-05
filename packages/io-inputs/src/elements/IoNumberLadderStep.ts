@@ -93,7 +93,7 @@ export class IoNumberLadderStep extends IoField {
     this.changed();
   }
   changed() {
-    this.template([
+    this.render([
       span(this.label)
     ]);
     this.setAttribute('aria-label', this.label);

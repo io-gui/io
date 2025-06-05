@@ -69,7 +69,7 @@ export class IoEditorsDemo extends IoElement {
     };
   }
   init() {
-    this.template([
+    this.render([
       ioInspector({
         value: this.object,
         // TODO: this.object.object displays broken "number" slider. Investigate!

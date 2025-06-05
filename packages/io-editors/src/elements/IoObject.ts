@@ -97,7 +97,7 @@ export class IoObject extends IoElement {
         labeled: this.labeled,
       }));
     }
-    this.template(elements);
+    this.render(elements);
     this.setAttribute('aria-expanded', String(this.expanded));
   }
 }

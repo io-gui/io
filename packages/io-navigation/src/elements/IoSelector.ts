@@ -131,7 +131,7 @@ export class IoSelector extends IoElement {
     } else if (this.select === 'deep') {
       this.renderSelectedId(this.options.selected);
     } else if (this.select === 'none') {
-      this.template(this.elements);
+      this.render(this.elements);
     }
   }
 
@@ -139,7 +139,7 @@ export class IoSelector extends IoElement {
     const cache = this.caching === 'proactive' || this.caching === 'reactive';
 
     if (!id) {
-      this.template([], this, cache);
+      this.render([], this, cache);
       return;
     }
 
@@ -150,7 +150,7 @@ export class IoSelector extends IoElement {
 
     if (!vElement) {
       console.warn(`IoSelector: Could not find elements with id: ${id}!`, this.elements);
-      this.template([ioField({label: `Could not find elements with id: ${id}!`})], this, cache);
+      this.render([ioField({label: `Could not find elements with id: ${id}!`})], this, cache);
       return;
     }
 
@@ -164,15 +164,15 @@ export class IoSelector extends IoElement {
         this.appendChild(cachedElement);
       }
     } else if (!props.import) {
-      this.template([vElement], this, cache);
+      this.render([vElement], this, cache);
       if (cache) this._caches[id] = this.childNodes[0];
     } else {
-      this.template([], this, cache);
+      this.render([], this, cache);
       this.loading = true;
       this._preaching = false;
       void importModule(props.import).then(() => {
         if (this.loading) {
-          this.template([vElement], this, cache);
+          this.render([vElement], this, cache);
           if (cache) this._caches[id] = this.childNodes[0];
         }
         this.loading = false;
@@ -198,7 +198,7 @@ export class IoSelector extends IoElement {
       const id = props.id;
       if (id && this._caches[id] === undefined) {
         if (!props.import) {
-          this.template([vElement], dummyElement, true);
+          this.render([vElement], dummyElement, true);
           this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
           dummyElement.removeChild(dummyElement.childNodes[0]);
           this.debounce(this.preacheNext);
@@ -206,7 +206,7 @@ export class IoSelector extends IoElement {
         } else {
           void importModule(props.import).then(() => {
             if (!this._preaching) return;
-            this.template([vElement], dummyElement, true);
+            this.render([vElement], dummyElement, true);
             this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
             dummyElement.removeChild(dummyElement.childNodes[0]);
             this.debounce(this.preacheNext);

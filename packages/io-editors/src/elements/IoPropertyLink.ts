@@ -52,7 +52,7 @@ export class IoPropertyLink extends IoButton {
         label += ` "${name}"`;
       }
     }
-    this.template([span(label)]);
+    this.render([span(label)]);
   }
 }
 

@@ -95,7 +95,7 @@ export class IoNavigationDemo extends IoElement {
     };
   }
   init() {
-    this.template([
+    this.render([
       ioNavigator({
         menu: 'left',
         options: contentOptions,

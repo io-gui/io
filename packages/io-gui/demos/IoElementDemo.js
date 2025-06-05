@@ -119,7 +119,7 @@ export class IoElementDemo extends IoElement {
 
     if (this.selected) {
       const vElement = options.findItemById(this.selected).value;
-      this.template([
+      this.render([
         ioOptionSelect({
           value: this.bind('selected'),
           options: options,
@@ -140,7 +140,7 @@ export class IoElementDemo extends IoElement {
       const elementHtml = this.$['element-html'];
       elementHtml.innerHTML = formatHtml(element.outerHTML);
     } else {
-      this.template([
+      this.render([
         ioField({value: 'Element property not set.'}),
       ]);
     }

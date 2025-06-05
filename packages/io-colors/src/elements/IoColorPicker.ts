@@ -47,40 +47,40 @@ export class IoColorPicker extends IoElement {
   @Property('0')
   declare tabIndex: string;
 
-  onClick() {
-    this.toggle();
-  }
   get expanded() {
     return Panel.expanded && Panel.value === this.value;
   }
+
+  init() {
+    this.valueChanged();
+  }
+  
+  onClick() {
+    if (!this.expanded) this.expand();
+  }
+
   onKeydown(event: KeyboardEvent) {
     const rect = this.getBoundingClientRect();
     const pRect = Panel.getBoundingClientRect();
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.toggle();
-      if (this.expanded) Panel.firstChild.focus();
-    } else if (this.expanded && pRect.top >= rect.bottom && event.key === 'ArrowDown') {
+      if (!this.expanded) this.expand();
+    } else if (event.key === 'ArrowLeft') {
       event.preventDefault();
-      Panel.firstChild.focus();
-    } else if (this.expanded && pRect.bottom <= rect.top && event.key === 'ArrowUp') {
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
+    } else if (event.key === 'ArrowUp') {
       event.preventDefault();
-      Panel.firstChild.focus();
-    } else {
-      this.collapse();
-      // TODO: inherit from input-base
-      // super.onKeydown(event);
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
     }
   }
   onValueSet() {
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
-  }
-  toggle() {
-    if (this.expanded) {
-      this.collapse();
-    } else {
-      this.expand();
-    }
   }
   onPanelCollapse() {
     Panel.removeEventListener('value-input', this.onValueSet);
@@ -91,17 +91,15 @@ export class IoColorPicker extends IoElement {
     Panel.expanded = true;
     Panel.addEventListener('value-input', this.onValueSet);
     Panel.addEventListener('expanded-changed', this.onPanelCollapse);
-    nudge(Panel, this, 'down');
+    nudge(Panel, this, 'right');
+    Panel.firstChild.firstChild.focus();
   }
   collapse() {
     Panel.expanded = false;
     Panel.value = {r: 1, g: 1, b: 1, a: 1};
   }
-  init() {
-    this.valueChanged();
-  }
   valueChanged() {
-    this.template([
+    this.render([
       ioColorSwatch({value: this.value})
     ]);
   }

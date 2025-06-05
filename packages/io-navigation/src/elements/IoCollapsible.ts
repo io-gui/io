@@ -87,7 +87,7 @@ export class IoCollapsible extends IoElement {
   declare role: string;
 
   changed() {
-    this.template([
+    this.render([
       // TODO: consider implementing caching
       ioBoolean({icon: this.icon, true: this.label, false: this.label, value: this.bind('expanded')}),
       div({class: 'io-collapsible-content'}, this.expanded ? this.elements : []),

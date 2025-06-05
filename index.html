@@ -81,17 +81,19 @@
         margin: 0;
         width: 100%;
         height: 100%;
+        background-color: var(--io_bgColorStrong);
+        color: var(--io_color);
       }
       io-main-page {
         height: 100%;
-        background-color: var(--io_bgColor);
+      }
+      io-main-page .heading {
+        margin: 0.75em 1em;
+        color: var(--io_colorStrong);
       }
       io-main-page iframe {
         border: none;
         flex: 1 1 auto;
-      }
-      .badges a {
-        text-decoration: none;
       }
     </style>
   </head>
@@ -159,29 +161,29 @@
           menu: 'top',
           collapseWidth: 280,
           options: OPTIONS,
-          caching: 'proactive',
+          // caching: 'proactive',
           depth: 2,
           widget: {
             // TODO: consider initializeing with array instance without value property!
-            value: ioIcon({value: 'io:io', size: 'medium', style: {marginLeft: '0.5em'}})
+            value: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}})
           },
           elements: [
             ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
             ioSelector({id: 'Docs',
               options: OPTIONS.findItemById('Docs').options,
-              caching: 'proactive',
+              // caching: 'proactive',
               elements: [
-                ioNavigator({id: 'Quick Start', select: 'none', widget: h4({style: {margin: '0.75em 1em'}}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options, elements: [
+                ioNavigator({id: 'Quick Start', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options, elements: [
                   ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md', scroll: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected')}),
                 ]}),
-                ioNavigator({id: 'Deep Dive', select: 'none', widget: h4({style: {margin: '0.75em 1em'}}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, elements: [
+                ioNavigator({id: 'Deep Dive', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, elements: [
                   ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md', scroll: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options.bind('selected')}),
                 ]}),
               ]
             }),
             ioSelector({id: 'Demos',
               options: OPTIONS.findItemById('Demos').options,
-              caching: 'proactive',
+              // caching: 'proactive',
               elements: [
                 {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
                 {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},

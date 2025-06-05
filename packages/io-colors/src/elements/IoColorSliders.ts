@@ -189,7 +189,7 @@ export class IoColorSlider extends IoColorBase {
     // TODO: Fix!
     slider.props = {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput};
 
-    this.template([
+    this.render([
       slider,
     ]);
   }

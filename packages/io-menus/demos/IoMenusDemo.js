@@ -103,7 +103,7 @@ export class IoMenusDemo extends IoElement {
     };
   }
   init() {
-    this.template([
+    this.render([
       ioMenuTree({
         searchable: true,
         options: optionsDeep,
@@ -239,7 +239,7 @@ export class IoOptionsDemoView extends IoElement {
     for (let i = 0; i < this.options.length; i++) {
       options.push(ioItemDemoView({item: this.options[i]}));
     }
-    this.template([
+    this.render([
       div([
         this.options.selected ? span({class: 'selected'}, `selected: ${this.options.selected}`) : null,
         this.options.path ? span({class: 'path'}, `path: ${this.options.path}`) : null,
@@ -281,7 +281,7 @@ export class IoItemDemoView extends IoElement {
     } else if (this.item.mode === 'select') {
       selectElement = ioSwitch({value: this.item.bind('selected')});
     }
-    this.template([
+    this.render([
       div([
         selectElement,
         ioField({value: this.item.label, inert: true, appearance: 'neutral'}),

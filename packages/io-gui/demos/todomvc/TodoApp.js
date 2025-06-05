@@ -21,7 +21,7 @@ export class TodoApp extends IoElement {
   }
   changed() {
     const itemCount = this.model.items.length;
-    this.template([
+    this.render([
       section({class: 'todoapp'}, [
         header({class: 'header'}, [
           h1('todos'),

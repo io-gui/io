@@ -37,6 +37,7 @@ export class IoNavigator extends IoElement {
         min-width: 10em;
         border: var(--io_border);
         overflow-y: auto;
+        border-radius: 0;
       }
       :host[menu=left] > io-menu-tree {
         border-width: 0 var(--io_borderWidth) 0 0;
@@ -47,6 +48,7 @@ export class IoNavigator extends IoElement {
       :host > io-menu-options {
         border: none;
         border-bottom: var(--io_border);
+        border-radius: 0;
       }
       :host[collapsed] > io-menu-options {
         /* min-height: calc(var(--io_fieldHeight) + 1em); */
@@ -122,17 +124,17 @@ export class IoNavigator extends IoElement {
     // TODO: add widget and test collapse!!
 
     if (this.menu === 'top') {
-      this.template([
+      this.render([
         ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
         ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
       ]);
     } else if (this.menu === 'left') {
-      this.template([
+      this.render([
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
         ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
       ]);
     } else if (this.menu === 'right') {
-      this.template([
+      this.render([
         ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
       ]);

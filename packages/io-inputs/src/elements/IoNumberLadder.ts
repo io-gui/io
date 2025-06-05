@@ -229,7 +229,7 @@ class IoNumberLadder extends IoElement {
     const downLabel3 = Number((downStep3 * this.conversion).toFixed(6));
     const downLabel4 = Number((downStep4 * this.conversion).toFixed(6));
 
-    this.template([
+    this.render([
       (range >= upStep4) ? ioNumberLadderStep({class: 'io-up4', value: upStep4, label: String(upLabel4)}) : hiddenItem,
       (range >= upStep3) ? ioNumberLadderStep({class: 'io-up3', value: upStep3, label: String(upLabel3)}) : hiddenItem,
       (range >= upStep2) ? ioNumberLadderStep({class: 'io-up2', value: upStep2, label: String(upLabel2)}) : hiddenItem,

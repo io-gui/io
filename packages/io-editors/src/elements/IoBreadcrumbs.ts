@@ -36,6 +36,7 @@ export class IoBreadcrumbs extends IoElement {
     :host > io-button {
       padding-left: var(--io_spacing);
       padding-right: var(--io_spacing);
+      margin: var(--io_borderWidth);
       flex: 0 0 auto;
     }
     :host:not([search]) > io-button.clear-button {
@@ -59,9 +60,11 @@ export class IoBreadcrumbs extends IoElement {
       overflow: hidden;
       min-width: calc(var(--io_fieldHeight) + var(--io_borderWidth) * 2);
       height: calc(var(--io_fieldHeight) + var(--io_borderWidth) * 2);
+      margin-left: var(--io_spacing);
     }
     :host > .search-input:empty::before {
       content: '🔍';
+      font-size: 0.9em;
     }
     `;
   }
@@ -114,7 +117,7 @@ export class IoBreadcrumbs extends IoElement {
       ioButton({icon: 'io:close', class: 'clear-button', action: this.onClearSearch}),
       ioString({id: 'search', class: 'search-input', value: this.bind('search'), live: true}),
     );
-    this.template(elements);
+    this.render(elements);
   }
 }
 export const ioBreadcrumbs = IoBreadcrumbs.vConstructor;

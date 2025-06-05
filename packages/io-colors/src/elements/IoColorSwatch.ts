@@ -31,7 +31,7 @@ export class IoColorSwatch extends IoColorBase {
   }
   valueChanged() {
     super.valueChanged();
-    this.template([
+    this.render([
       div({style: {'background-color': `rgba(${this.rgba[0] * 255 },${this.rgba[1] * 255}, ${this.rgba[2] * 255}, ${this.rgba[3]})`}})
     ]);
   }

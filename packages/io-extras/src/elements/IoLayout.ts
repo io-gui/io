@@ -89,7 +89,7 @@ export class IoLayout extends IoElement {
         }));
       }
     }
-    this.template([children]);
+    this.render([children]);
   }
   // splitsChanged(event) {
   //   // for (let i = this.splits.length; i--;) {
@@ -267,7 +267,7 @@ export class IoLayoutDivider extends IoElement {
     }
   }
   changed() {
-    this.template([
+    this.render([
       div({class: 'app-divider'}, this.orientation === 'horizontal' ? '⋮' : '⋯')
     ]);
   }

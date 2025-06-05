@@ -354,7 +354,7 @@ export class IoMenuItem extends IoField {
 
     this.setAttribute('hidden', this.item.hidden);
 
-    this.template([
+    this.render([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
       icon ? ioIcon({value: icon}) : null,

@@ -64,7 +64,7 @@ export class IoButton extends IoField {
   }
   changed() {
     this.setAttribute('aria-pressed', String(this.pressed));
-    this.template([
+    this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.label ? span(this.label) : null
     ]);

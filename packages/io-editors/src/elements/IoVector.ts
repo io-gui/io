@@ -123,7 +123,7 @@ export class IoVector extends IoElement {
       }
     }
     elements.push(this.getSlotted());
-    this.template(elements);
+    this.render(elements);
   }
   getSlotted(): VDOMElement | null {
     return this.linkable ? ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'}) : null;

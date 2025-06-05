@@ -22,7 +22,7 @@ export class TodoItem extends IoElement {
     };
   }
   changed() {
-    this.template([
+    this.render([
       li({class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
         div({class: 'view'}, [
           input({type: 'checkbox', class: 'toggle', checked: this.item.completed, '@click': this.onToggleItem}),

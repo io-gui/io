@@ -118,7 +118,7 @@ export class IoMenuTree extends IoElement {
       elements.push(...addMenuItemsOrTreeBranches(this.options, this.depth));
     }
 
-    this.template(elements);
+    this.render(elements);
   }
 }
 export const ioMenuTree = IoMenuTree.vConstructor;

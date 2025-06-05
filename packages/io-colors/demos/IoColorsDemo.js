@@ -32,7 +32,7 @@ export class IoColorsDemo extends IoElement {
     };
   }
   init() {
-    this.template([
+    this.render([
       div({class: 'column'}, [
         ioColorRgba({value: this.rgba}),
         ioColorRgba({value: this.rgb}),

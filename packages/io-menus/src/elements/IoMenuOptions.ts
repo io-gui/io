@@ -371,7 +371,7 @@ export class IoMenuOptions extends IoElement {
         })
       }));
     }
-    this.template(elements);
+    this.render(elements);
   }
 }
 export const ioMenuOptions = IoMenuOptions.vConstructor;

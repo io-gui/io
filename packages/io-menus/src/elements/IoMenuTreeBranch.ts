@@ -59,7 +59,7 @@ export class IoMenuTreeBranch extends IoElement {
   }
 
   changed() {
-    this.template([
+    this.render([
       ioBoolean({icon: this.item.icon, true: this.item.label, false: this.item.label, value: this.bind('expanded')}),
       this.expanded ? ioMenuTree({options: this.item.options, depth: this.depth + 1}) : null,
     ]);

@@ -68,7 +68,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
    * @param {HTMLElement} [host] - Optional template target.
    * @param {boolean} [noDispose] - Skip disposal of existing elements.
    */
-  template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
+  render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
     host = (host || this) as any;
     const vDOMElementsOnly = vDOMElements.filter(item => item !== null);
     this.$ = {};

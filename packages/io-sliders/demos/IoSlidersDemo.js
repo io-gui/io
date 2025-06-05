@@ -32,7 +32,7 @@ export class IoSlidersDemo extends IoElement {
     };
   }
   init() {
-    this.template([
+    this.render([
       div({class: 'column'}, [
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1}),
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1, disabled: true}),

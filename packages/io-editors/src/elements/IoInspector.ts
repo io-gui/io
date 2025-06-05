@@ -32,6 +32,9 @@ export class IoInspector extends IoElement {
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
     }
+    :host > io-breadcrumbs {
+      margin: 0 var(--io_spacing);
+    }
     :host > span {
       padding: var(--io_spacing) var(--io_spacing3);
       color: var(--io_colorStrong);
@@ -128,7 +131,7 @@ export class IoInspector extends IoElement {
       );
     }
 
-    this.template(elements);
+    this.render(elements);
   }
 }
 export const ioInspector = IoInspector.vConstructor;

@@ -29,7 +29,7 @@ export class IoInputsDemo extends IoElement {
     };
   }
   init() {
-    this.template([
+    this.render([
       div({class: 'row'}, [
         ioField({value: this.bind('string'), inert: true}),
         ioField({value: this.bind('string')}),

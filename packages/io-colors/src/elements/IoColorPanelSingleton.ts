@@ -34,6 +34,7 @@ class IoColorPanel extends IoColorBase {
   static get Listeners() {
     return {
       'keydown': 'onKeydown',
+      'io-focus-to': 'onIoFocusTo',
     };
   }
 
@@ -43,13 +44,24 @@ class IoColorPanel extends IoColorBase {
       this.expanded = false;
     }
   }
+  onIoFocusTo(event: CustomEvent) {
+    const source = event.detail.source;
+    const direction = event.detail.direction;
+    const sliders = this.querySelectorAll('[tabindex]');
+    const index = Array.from(sliders).indexOf(source);
+    if (direction === 'down' || (direction === 'left' && index === 0)) {
+      sliders[sliders.length - 1].focus();
+      event.stopPropagation();
+    } else if (direction === 'up' || (direction === 'right' && index === sliders.length - 1)) {
+      sliders[0].focus();
+      event.stopPropagation();
+    }
+  }
   onValueInput() {
     this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
   }
   changed() {
-    // TODO: fix nudge
-    // TODO: fix initial change with empty channel
-    this.template([
+    this.render([
       ioColorSlider({value: this.value, channel: 'sv', '@value-input': this.onValueInput}),
       ioColorSlider({value: this.value, channel: 'h', vertical: true, '@value-input': this.onValueInput}),
       this.value.a !== undefined ? ioColorSlider({value: this.value, channel: 'a', '@value-input': this.onValueInput, vertical: true}) : null,

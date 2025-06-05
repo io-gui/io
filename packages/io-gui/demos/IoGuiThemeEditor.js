@@ -18,7 +18,7 @@ export class IoGuiThemeEditor extends IoElement {
   }
   constructor(props) {
     super(props);
-    this.template([
+    this.render([
       ioOptionSelect({value: ThemeSingleton.bind('themeID'), options: new MenuOptions().fromJSON([
         {label: 'Light Theme', value: 'light'},
         {label: 'Dark Theme', value: 'dark'},

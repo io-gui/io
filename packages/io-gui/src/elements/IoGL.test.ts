@@ -81,12 +81,12 @@ export default class {
         let color = element.ctx.getImageData(0, 0, 1, 1).data;
         expect(color).to.eql(new Uint8ClampedArray([0, 0, 0, 0]));
         element.color = [1, 0.5, 0.25, 1];
-        element._onRender();
+        element.onRender();
         color = element.ctx.getImageData(0, 0, 1, 1).data;
         expect(color).to.eql(new Uint8ClampedArray([255, 128, 64, 255]));
 
         element.color = [1, 0.25, 0.5, 0.5];
-        element._onRender();
+        element.onRender();
         color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data;
         expect(color).to.eql(new Uint8ClampedArray([128, 32, 64, 64]));
       });

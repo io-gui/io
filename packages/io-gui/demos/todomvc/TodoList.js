@@ -27,7 +27,7 @@ export class TodoList extends IoElement {
     const allCompleted = itemCount === completedCount;
     const itemsInRoute = this.model.items.filter(this.model.filters[this.route]);
 
-    this.template([
+    this.render([
       section({class: 'main'}, [
         input({type: 'checkbox', id: 'toggle-all', class: 'toggle-all', checked: allCompleted}),
         this.model.items.length ? label({for: 'toggle-all', '@click': this.model.toggleAll}, 'Mark all as complete') : null,

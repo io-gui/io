@@ -69,7 +69,7 @@ export class IoNumberSlider extends IoElement {
     this.changed();
   }
   changed() {
-    this.template([
+    this.render([
       ioNumber({
         id: 'number',
         value: this.value,

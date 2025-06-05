@@ -204,7 +204,7 @@ export class IoSelectorTabs extends IoElement {
     }
   }
   changed() {
-    this.template([
+    this.render([
       ioTabs({
         id: 'tabs',
         elements: this.elements,
@@ -476,7 +476,7 @@ export class IoTabs extends IoElement {
       }));
     }
 
-    this.template(elements);
+    this.render(elements);
   }
 }
 export const ioTabs = IoTabs.vConstructor;

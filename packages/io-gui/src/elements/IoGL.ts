@@ -238,7 +238,7 @@ export class IoGl extends IoElement {
     const hasResized = (width !== this.size[0] || height !== this.size[1] || pxRatio !== this.pxRatio);
 
     if (hasResized) {
-      // NOTE: Resizing only in inline CSS. Buffer resize postponed until `_onRender()`.`
+      // NOTE: Resizing only in inline CSS. Buffer resize postponed until `onRender()`.`
       this.#canvas.style.width = Math.floor(width) + 'px';
       this.#canvas.style.height = Math.floor(height) + 'px';
       this.#needsResize = true;
@@ -254,12 +254,12 @@ export class IoGl extends IoElement {
   }
   themeMutated() {
     this.updateThemeUniforms();
-    this.throttle(this._onRender);
+    this.throttle(this.onRender);
   }
   changed() {
-    this.throttle(this._onRender);
+    this.throttle(this.onRender);
   }
-  _onRender() {
+  onRender() {
     const width = Math.floor(this.size[0] * this.pxRatio);
     const height = Math.floor(this.size[1] * this.pxRatio);
 

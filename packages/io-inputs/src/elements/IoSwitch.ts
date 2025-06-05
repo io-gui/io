@@ -66,7 +66,7 @@ export class IoSwitch extends IoBoolean {
     `;
   }
   changed() {
-    this.template([
+    this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       span()
     ]);

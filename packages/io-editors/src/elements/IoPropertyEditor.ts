@@ -172,7 +172,7 @@ export class IoPropertyEditor extends IoElement {
       }
     }
 
-    this.template(elements);
+    this.render(elements);
   }
   /**
    * Returns a JSON representation of the property editor. This feature is used in testing.

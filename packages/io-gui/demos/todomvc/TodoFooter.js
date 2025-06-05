@@ -26,7 +26,7 @@ export class TodoFooter extends IoElement {
   changed() {
     const activeLeft = this.model.getActiveCount();
     const completedCount = this.model.getCompletedCount();
-    this.template([
+    this.render([
       span({class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'),
       ul({class: 'filters'}, [
         li([

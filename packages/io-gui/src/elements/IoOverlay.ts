@@ -138,7 +138,7 @@ window.addEventListener('focusin', () => {
 
 window.addEventListener('blur', () => {
   setTimeout(() => {
-    if (!IoOverlaySingleton.expanded &&document.activeElement === document.body) {
+    if (!IoOverlaySingleton.expanded && document.activeElement === document.body) {
       focusRestoreTarget = null;
     }
   });

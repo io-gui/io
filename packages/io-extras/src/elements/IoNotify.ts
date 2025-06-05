@@ -61,7 +61,7 @@ export class IoNotify extends IoElement {
   }
   constructor(props?: any) {
     super(props);
-    this.template([
+    this.render([
       span('This app uses cookies for user interface customization.'),
       span('Agree'),
       ioBoolean({ '@value-input': this._onAgree }),
