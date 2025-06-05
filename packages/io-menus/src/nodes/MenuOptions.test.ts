@@ -482,10 +482,10 @@ export default class {
       // });
       // it('Should update `path`, `first` and `selected` properties in correct order and only when necessary.', () => {
       //   const options = new MenuOptions(testOptions);
-      //   options.addEventListener('object-mutated', () => { eventStack.push('object-mutated'); });
-      //   options.addEventListener('path-changed', () => { eventStack.push('path changed: ' + options.path); });
-      //   options.addEventListener('first-changed', () => { eventStack.push('firstChanged: ' + options.first); });
-      //   options.addEventListener('selected-changed', () => { eventStack.push('selectedChanged: ' + options.selected); });
+      //   options.addEventListener('object-mutated', () => { eventStack.push('object-mutated') });
+      //   options.addEventListener('path-changed', () => { eventStack.push('path changed: ' + options.path) });
+      //   options.addEventListener('first-changed', () => { eventStack.push('firstChanged: ' + options.first) });
+      //   options.addEventListener('selected-changed', () => { eventStack.push('selectedChanged: ' + options.selected) });
 
       //   eventStack.length = 0;
       //   options[0].selected = true;

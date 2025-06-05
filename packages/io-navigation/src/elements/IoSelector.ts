@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, applyNativeElementProps, ReactiveProperty, WithBinding, NativeElementProps, Property, Change } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property } from 'io-gui';
 import { MenuOptions } from 'io-menus';
 import { ioField } from 'io-inputs';
 
@@ -11,18 +11,31 @@ const dummyElement = document.createElement('div');
 // TODO: consider moving io-selectior to core elements
 
 const IMPORTED_PATHS: Record<string, any> = {};
+function importModule(path: string) {
+  const importPath = new URL(path, String(window.location)).pathname;
+  return new Promise(resolve => {
+    if (!path || IMPORTED_PATHS[importPath]) {
+      resolve(importPath);
+    } else {
+      void import(importPath)
+      .then(() => {
+        IMPORTED_PATHS[importPath] = true;
+        resolve(importPath);
+      });
+    }
+  });
+};
 
 export type SelectType = 'shallow' | 'deep' | 'none';
+export type CachingType = 'proactive' | 'reactive' | 'none';
 
 export type IoSelectorProps = IoElementProps & {
   options?: MenuOptions,
-  select?: SelectType,
   elements?: VDOMElement[],
-  cache?: boolean,
-  precache?: boolean,
+  select?: SelectType,
+  caching?: CachingType,
   loading?: WithBinding<boolean>,
   import?: string, // TODO: move to core?
-  precacheDelay?: number,
 };
 
 @Register
@@ -66,163 +79,149 @@ export class IoSelector extends IoElement {
   @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
-  @ReactiveProperty({value: 'shallow', type: String})
-  declare select: SelectType;
-
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @ReactiveProperty({value: false})
-  declare cache: boolean;
+  @ReactiveProperty({value: 'shallow', type: String})
+  declare select: SelectType;
 
-  @ReactiveProperty({value: false})
-  declare precache: boolean;
+  @ReactiveProperty({value: 'reactive', type: String})
+  declare caching: CachingType;
 
-  @ReactiveProperty({value: false, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare loading: boolean;
 
   @Property(Object)
-  declare private _caches: Record<string, HTMLElement>;
+  declare private _caches: Record<string, IoElement | HTMLElement>;
 
-  @Property(1000)
-  declare precacheDelay: number;
+  @Property(false)
+  declare private _preaching: boolean;
 
-  private _selected?: any;
+  // TODO: Perhaps caching and selection should be irrelevant if select === 'none'!
+
+  constructor(args: IoSelectorProps = {}) { super(args) }
+
+  init() {
+    this.preacheNext = this.preacheNext.bind(this);
+    this.startPreache = this.startPreache.bind(this);
+  }
 
   optionsChanged() {
     this.optionsMutated();
   }
 
-  optionsMutated() {
-    let selected;
+  elementsChanged() {
+    // TODO: make sure all elements have props and id if selectable!
+    // if (!id) {
+    //   console.warn('IoSelector: Missing id on element!', vElement);
+    //   continue;
+    // }
+    // TODO: fix and test edge case where reusing element in templete() might return cache from the previous element if keys collide!
+    this.startPreache();
+  }
 
+  optionsMutated() {
     if (this.select === 'shallow') {
       for (let i = 0; i < this.options.length; i++) {
         if (this.options[i].selected) {
-          selected = this.options[i].id;
-          break;
+          this.renderSelectedId(this.options[i].id);
+          return;
         }
       }
-
     } else if (this.select === 'deep') {
-      selected = this.options.selected;
-
+      this.renderSelectedId(this.options.selected);
     } else if (this.select === 'none') {
-      this.template(this.elements, this, this.cache);
+      this.template(this.elements);
+    }
+  }
+
+  renderSelectedId(id: string) {
+    const cache = this.caching === 'proactive' || this.caching === 'reactive';
+
+    if (!id) {
+      this.template([], this, cache);
       return;
     }
 
-    if (selected !== this._selected) {
-      this._selected = selected;
-      this.renderSelected();
+    // TODO: what if ioselector is reused in template() and ID collides?
+    if (id === this.childNodes[0]?.id) return;
+
+    const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id; });
+
+    if (!vElement) {
+      console.warn(`IoSelector: Could not find elements with id: ${id}!`, this.elements);
+      this.template([ioField({label: `Could not find elements with id: ${id}!`})], this, cache);
+      return;
     }
 
-    this.debounce(this.onLoadPrecache, undefined, this.precacheDelay);
-  }
+    const props = vElement.props!;
+    const cachedElement = this._caches[id];
 
-  importModule(path: string) {
-    const importPath = new URL(path, String(window.location)).pathname;
-    return new Promise(resolve => {
-      if (!path || IMPORTED_PATHS[importPath]) {
-        resolve(importPath);
-      } else {
-        void import(importPath)
-        .then(() => {
-          IMPORTED_PATHS[importPath] = true;
-          resolve(importPath);
-        });
+    // TODO: test this!
+    if (cache && cachedElement) {
+      if ((cachedElement.parentElement as IoElement) !== this) {
+        if (this.firstChild) this.removeChild(this.firstChild);
+        this.appendChild(cachedElement);
       }
-    });
-  }
-
-  protected renderSelected() {
-    let selected = this._selected;
-
-    if (!selected) {
-
-      this.template([], this, this.cache);
-
-    } else if (this.childNodes[0]?.id !== selected) {
-      
-      const element = this.elements.find((element: VDOMElement) => { return element.props?.id === selected });
-
-      if (!element) {
-        const warning = `Could not find elements with id: ${selected}!`;
-        console.warn(`IoSelector: ${warning}!`, this.options);
-        this.template([ioField({label: warning})], this, this.cache);
-        return;
-      }
-
-      let args: IoSelectorProps = element.props || {};
-
-      const explicitlyCache = args.cache === true;
-      const explicitlyDontCache = args.cache === false;
-      const importPath = args.import;
-      delete args.import;
-
-      const cache = !explicitlyDontCache && (this.cache || explicitlyCache);
-      const cachedElement = this._caches[selected] as unknown as IoElement;
-
-      // TODO: test this!
-      if (cache && cachedElement) {
-        if (cachedElement.parentElement !== this as unknown as HTMLElement) {
-          if (this.firstChild) this.removeChild(this.firstChild);
-          this.appendChild(cachedElement);
-          // Update properties
-          cachedElement.removeAttribute('className');
-          if (cachedElement._isIoElement) {
-            // Set IoElement element properties
-            cachedElement.applyProperties(args);
-          } else {
-            // Set native HTML element properties
-            applyNativeElementProps(cachedElement as unknown as HTMLElement, args as NativeElementProps);
-          }
-          this.loading = false;
+    } else if (!props.import) {
+      this.template([vElement], this, cache);
+      if (cache) this._caches[id] = this.childNodes[0];
+    } else {
+      this.template([], this, cache);
+      this.loading = true;
+      this._preaching = false;
+      void importModule(props.import).then(() => {
+        if (this.loading) {
+          this.template([vElement], this, cache);
+          if (cache) this._caches[id] = this.childNodes[0];
         }
-      } else if (!importPath) {
-        this.template([element], this, cache);
-        if (cache) this._caches[selected] = this.childNodes[0];
         this.loading = false;
-      } else {
-        this.loading = true;
-        void this.importModule(importPath as string).then(() => {
-          if (this.loading) {
-            this.template([element], this, cache);
-            if (cache) this._caches[selected] = this.childNodes[0];
-          }
-          this.loading = false;
-        });
-      }
+        this.debounce(this.startPreache);
+      });
+      delete props.import;
     }
   }
 
-  onLoadPrecache() {
+  startPreache() {
+    if (this.caching === 'proactive' && !this._preaching) {
+      this._preaching = true;
+      this.debounce(this.preacheNext);
+    }
+  }
+
+  preacheNext() {
     // TODO: Test this!
-    // TODO: consider precaching imports!
-    if (this.precache) {
-      for (let i = 0; i < this.elements.length; i++) {
-        const element = this.elements[i];
-        let args: IoSelectorProps = element.props || {};
-        if (!args.import && args.id && this._caches[args.id as string] === undefined) {
-          this.template([element], dummyElement, true);
-          this._caches[args.id as string] = dummyElement.childNodes[0] as HTMLElement;
+    if (!this._preaching) return;
+    for (let i = 0; i < this.elements.length; i++) {
+      const vElement = this.elements[i];
+      const props = vElement.props!;
+      const id = props.id;
+      if (id && this._caches[id] === undefined) {
+        if (!props.import) {
+          this.template([vElement], dummyElement, true);
+          this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
           dummyElement.removeChild(dummyElement.childNodes[0]);
-          this.debounce(this.onLoadPrecache, undefined, this.precacheDelay);
+          this.debounce(this.preacheNext);
+          return;
+        } else {
+          void importModule(props.import).then(() => {
+            if (!this._preaching) return;
+            this.template([vElement], dummyElement, true);
+            this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
+            dummyElement.removeChild(dummyElement.childNodes[0]);
+            this.debounce(this.preacheNext);
+            delete props.import;
+          });
           return;
         }
       }
     }
+    this._preaching = false;
   }
 
-  // elementsChanged(change: Change) {
-  //   // TODO: fix and test edge case where reusing element in templete() might return cache from the previous element if keys collide!
-  //   // debug: if (change.oldValue.length > 0) {}
-  // }
-
   dispose() {
-    // TODO: check for garbage collection!
     for (const key in this._caches) {
-      disposeChildren(this._caches[key] as unknown as IoElement);
+      disposeChildren(this._caches[key] as IoElement);
       delete this._caches[key];
     }
     super.dispose();

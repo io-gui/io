@@ -28,7 +28,7 @@ export class MenuOptions extends NodeMixin(Array) {
   constructor(properties: MenuOptionsProps = {}) {
     super(properties);
     this.push(...this.items);
-    this.updatePaths = this.updatePaths.bind(this);
+    this.updatePathsDebounced = this.updatePathsDebounced.bind(this);
 
     if (this.path !== '') this.pathChanged();
 
@@ -159,39 +159,12 @@ export class MenuOptions extends NodeMixin(Array) {
     } else {
       console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected id "${this.selected}"!`, this);
     }
-
-    // NOTE: this does nothing. It is only for debugging.
-    debug: if (this.selected !== undefined) {
-      const path = this.path ? [...this.path.split(this.delimiter)] : [];
-      if (path.length) {
-        let id = path.shift();
-        let item = this.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
-        let options = item?.options || undefined;
-        while (path.length && options) {
-          id = path.shift();
-          item = options.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
-          options = item?.options || undefined;
-        }
-        if (item === undefined) {
-          console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected id "${this.selected}"!`);
-        } else if (
-          (item.id !== this.selected)
-        ) {
-          // TODO: test this?
-          console.warn(`MenuOptions.selectedChanged: selected property id "${this.selected}" diverged from item specified by path "${this.path}"!`);
-        }
-      } else {
-        this.updatePathsDebounced();
-        // console.warn(`MenuOptions.selectedChanged: selected property id set "${this.selected}" but path is empty!`);
-        // TODO: this case happens in io-element-demo.js options. Consider updating paths on selectedChanged.
-        // TODO: running updatePaths() here breaks the demo - id "[element-name]" becomes "element-name" for some reason.
-      }
-    }
-  }
-  updatePathsDebounced(item?: MenuItem) {
-    this.debounce(this.updatePaths, item);
+    this.updatePaths();
   }
   updatePaths(item?: MenuItem) {
+    this.debounce(this.updatePathsDebounced, item);
+  }
+  updatePathsDebounced(item?: MenuItem) {
     const path: string[] = [];
     let walker: MenuItem | undefined = (item?.mode === 'select') ? item : undefined;
     let lastSelected: MenuItem | undefined = item?.mode === 'select' ? item : undefined;
@@ -209,6 +182,28 @@ export class MenuOptions extends NodeMixin(Array) {
       path: path.join(this.delimiter),
       selected: lastSelected !== undefined ? lastSelected.id : this.selected,
     });
+
+    if (path.length) {
+      // NOTE: this does nothing. It is only for debugging.
+      debug: {
+        let id = path.shift();
+        let item = this.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
+        let options = item?.options || undefined;
+        while (path.length && options) {
+          id = path.shift();
+          item = options.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
+          options = item?.options || undefined;
+        }
+        if (item === undefined) {
+          console.warn(`MenuOptions.selectedChanged: cannot find item for specified selected id "${this.selected}"!`);
+        } else if (
+          (item.id !== this.selected)
+        ) {
+          // TODO: test this?
+          console.warn(`MenuOptions.selectedChanged: selected property id "${this.selected}" diverged from item specified by path "${this.path}"!`);
+        }
+      }
+    }
   }
 
   onItemSelectedChanged(event: CustomEvent) {
@@ -220,17 +215,17 @@ export class MenuOptions extends NodeMixin(Array) {
             this[i].selected = false;
           }
         }
-        this.updatePathsDebounced(item);
+        this.updatePaths(item);
         this.dispatchEvent('item-selected', {item: item});
       } else {
-        this.updatePathsDebounced();
+        this.updatePaths();
       }
     }
   }
 
   onSubOptionsPathChanged(event: CustomEvent) {
     const item = event.target as unknown as MenuItem;
-    item.selected ? this.updatePathsDebounced(item) : this.updatePathsDebounced();
+    item.selected ? this.updatePaths(item) : this.updatePaths();
   }
 
   selectDefault() {

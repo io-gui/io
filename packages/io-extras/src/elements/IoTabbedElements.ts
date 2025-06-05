@@ -67,7 +67,7 @@ export class IoSelectorTabs extends IoElement {
   }
   elementsChanged() {
     if (this.filter === null) {
-      this.setProperty('filter', this.elements.map((element: any) => { return element[1].tag; }));
+      this.setProperty('filter', this.elements.map((element: any) => { return element[1].tag }));
     }
   }
   editableChanged() {
@@ -421,7 +421,7 @@ export class IoTabs extends IoElement {
     // TODO: consider testing with large element collections and optimizing.
     const options = [];
     // TODO: Investigate .map
-    const _elements = this.elements.map((element: any) => { return element[1].tag; });
+    const _elements = this.elements.map((element: any) => { return element[1].tag });
     for (let i = 0; i < _elements.length; i++) {
       const added = this.filter && this.filter.indexOf(_elements[i]) !== -1;
       // TODO: check for memory leaks

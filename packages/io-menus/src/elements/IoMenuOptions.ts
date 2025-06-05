@@ -63,17 +63,6 @@ export class IoMenuOptions extends IoElement {
     :host > io-menu-item {
       border-radius: 0;
     }
-    :host[horizontal] > io-menu-item {
-      height: calc(var(--io_fieldHeight) + var(--io_spacing2));
-      border-left: none;
-      border-right: none;
-      border-width: calc(var(--io_spacing) + var(--io_borderWidth)) 0;
-    }
-    :host:not([horizontal]) > io-menu-item {
-      border-top: none;
-      border-bottom: none;
-      border-width: 0 calc(var(--io_spacing) + var(--io_borderWidth));
-    }
     :host > io-menu-item[selected][direction="up"] {
       border-color: var(--io_colorBlue) transparent transparent transparent;
     }

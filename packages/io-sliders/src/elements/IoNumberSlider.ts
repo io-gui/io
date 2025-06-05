@@ -54,7 +54,7 @@ export class IoNumberSlider extends IoElement {
   @ReactiveProperty(1)
   declare conversion: number;
 
-  constructor(args: IoNumberSliderProps = {}) { super(args); }
+  constructor(args: IoNumberSliderProps = {}) { super(args) }
 
   _onNumberSet(event: CustomEvent) {
     this.value = event.detail.value;

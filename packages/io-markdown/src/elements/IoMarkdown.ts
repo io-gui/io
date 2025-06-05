@@ -18,7 +18,7 @@ const marked = new Marked(
 const renderer = new marked.Renderer();
 renderer.heading = function({ tokens, depth }: { tokens: any[], depth: number }) {
   const text = tokens.map(token => token.text).join('');
-  return `<h${depth} data-content="${text}">${text}</h${depth}>`;
+  return `<h${depth} data-heading="${text}">${text}</h${depth}>`;
 };
 
 marked.setOptions({ renderer });
@@ -192,20 +192,64 @@ export class IoMarkdown extends IoElement {
   @Property('document')
   declare role: string;
 
-  constructor(args: IoMarkdownProps = {}) { super(args); }
+  @Property(false)
+  declare private scrollToSuspended: boolean;
+
+  @Property(false)
+  declare private onScrollSuspended: boolean;
+
+  static get Listeners() {
+    return {
+      scroll: 'onScrollChanged',
+    };
+  }
+
+  constructor(args: IoMarkdownProps = {}) { super(args) }
+
+  init() {
+    this.scrollChangedDebounced = this.scrollChangedDebounced.bind(this);
+    this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this);
+    this.onScrollUnsuspended = this.onScrollUnsuspended.bind(this);
+  }
 
   scrollChanged() {
-    this.debounce(this.onScrollChanged);
+    if (!this.scrollToSuspended) {
+      this.onScrollSuspended = true;
+      this.debounce(this.onScrollUnsuspended, undefined, 120);
+    }
+    this.debounce(this.scrollChangedDebounced);
+  }
+
+  scrollChangedDebounced() {
+    if (!this.scroll || this.scrollToSuspended) return;
+    const heading = this.querySelector(`[data-heading="${this.scroll}"]`);
+    if (heading) {
+      this.scrollTo({top: heading.offsetTop, behavior: 'smooth'});
+    } else {
+      this.scrollTo(0, 0);
+    }
+  }
+
+  scrollToUnsuspend() {
+    this.scrollToSuspended = false;
+  }
+
+  onScrollUnsuspended() {
+    this.onScrollSuspended = false;
   }
 
   onScrollChanged() {
-    if (this.scrollHeight <= this.clientHeight) return;
-    if (this.scroll) {
-      const element = this.querySelector(`[data-content="${this.scroll}"]`);
-      if (element) {
-        this.scrollTo({top: element.offsetTop, behavior: 'smooth'});
-      } else {
-        this.scrollTo(0, 0);
+    if (this.onScrollSuspended) return;
+    const headings = this.querySelectorAll(`[data-heading]`) as NodeListOf<HTMLElement>;
+    const closestHeading = Array.from(headings).reduce((prev, curr) => {
+      return (Math.abs(curr.offsetTop - this.scrollTop) < Math.abs(prev.offsetTop - this.scrollTop) ? curr : prev);
+    }, headings[0]);
+    if (closestHeading) {
+      const current = closestHeading.textContent;
+      if (current && current !== this.scroll) {
+        this.scrollToSuspended = true;
+        this.scroll = current;
+        this.debounce(this.scrollToUnsuspend, 120);
       }
     }
   }
@@ -227,7 +271,7 @@ export class IoMarkdown extends IoElement {
         this.innerHTML = strip(md, this.strip);
         this.loading = false;
       })
-      .then(this.onScrollChanged);
+      .then(this.scrollChanged);
   }
 }
 export const ioMarkdown = IoMarkdown.vConstructor;

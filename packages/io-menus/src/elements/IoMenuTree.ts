@@ -1,10 +1,9 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, genObjectStorageID, div, IoElementProps, WithBinding, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, genObjectStorageID, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js';
-import { getMenuDescendants } from '../utils/MenuDOMUtils.js';
 import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
 
 function addMenuItemsOrTreeBranches(options: MenuOptions, depth: number, d = 0) {
@@ -51,7 +50,6 @@ export class IoMenuTree extends IoElement {
       padding-left: var(--io_spacing);
       padding-right: var(--io_spacing3);
       border-radius: 0;
-      border-right-width: calc(var(--io_spacing) + var(--io_borderWidth));
     }
     :host > io-menu-item[selected] {
       border-color: transparent var(--io_colorBlue) transparent transparent;
@@ -93,7 +91,7 @@ export class IoMenuTree extends IoElement {
   @Property('listbox')
   declare role: string;
 
-  constructor(args: IoMenuTreeProps = {}) { super(args); }
+  constructor(args: IoMenuTreeProps = {}) { super(args) }
 
   changed() {
     const elements: VDOMElement[] = this.widget ? [this.widget] : [];

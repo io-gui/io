@@ -4,6 +4,7 @@ import { IconsetSingleton } from '../nodes/Iconset';
 export type IoIconProps = IoElementProps & {
   value?: string,
   stroke?: boolean,
+  size?: 'small' | 'medium' | 'large',
 };
 
 /**
@@ -16,17 +17,19 @@ export class IoIcon extends IoElement {
   static vConstructor: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
-      --ioIcon: {
+      :host {
         display: inline-block;
+        fill: var(--io_color);
+      }
+      :host[size=small] {
         width: var(--io_lineHeight);
         height: var(--io_lineHeight);
         min-width: var(--io_lineHeight);
-        line-height: var(--io_lineHeight);
-        text-align: center;
-        fill: var(--io_color);
       }
-      :host {
-        @apply --ioIcon;
+      :host[size=medium] {
+        width: var(--io_fieldHeight);
+        height: var(--io_fieldHeight);
+        min-width: var(--io_fieldHeight);
       }
       :host:not([value]) {
         display: none;
@@ -49,7 +52,10 @@ export class IoIcon extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare stroke: boolean;
 
-  constructor(args: IoIconProps = {}) { super(args); }
+  @ReactiveProperty({value: 'small', type: String, reflect: true})
+  declare size: 'small' | 'medium' | 'large';
+
+  constructor(args: IoIconProps = {}) { super(args) }
 
   valueChanged() {
     if (this.value.search(':') !== -1) {

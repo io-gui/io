@@ -39,7 +39,7 @@ export class IoButton extends IoField {
   @Property('button')
   declare role: string;
 
-  constructor(args: IoButtonProps = {}) { super(args); }
+  constructor(args: IoButtonProps = {}) { super(args) }
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault();

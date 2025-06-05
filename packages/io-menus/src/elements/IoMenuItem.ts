@@ -119,7 +119,7 @@ export class IoMenuItem extends IoField {
     };
   }
 
-  constructor(args: IoMenuItemProps = {}) { super(args); }
+  constructor(args: IoMenuItemProps = {}) { super(args) }
 
   preventDefault(event: Event) {
     event.stopPropagation();

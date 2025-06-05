@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from 'io-gui';
+import { IoElement, VDOMElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem';
 import { ioMenuTree } from './IoMenuTree';

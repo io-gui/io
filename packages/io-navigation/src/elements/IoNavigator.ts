@@ -1,18 +1,19 @@
 import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
-import { ioSelector, SelectType } from './IoSelector';
+import { CachingType, ioSelector, SelectType } from './IoSelector';
+
+export type MenuPositionType = 'top' | 'left' | 'right';
 
 export type IoNavigatorProps = IoElementProps & {
   options?: MenuOptions,
-  widget?: VDOMElement,
   elements?: VDOMElement[],
-  menu?: 'top' | 'left' | 'bottom' | 'right',
+  widget?: VDOMElement,
+  menu?: MenuPositionType,
   depth?: number,
   collapsed?: WithBinding<boolean>,
   collapseWidth?: number,
   select?: SelectType,
-  cache?: boolean,
-  precache?: boolean,
+  caching?: CachingType,
 };
 
 @Register
@@ -30,11 +31,22 @@ export class IoNavigator extends IoElement {
       :host[menu=right] {
         flex-direction: row;
       }
-      :host > io-menu-tree,
-      :host > io-menu-options {
+      :host > io-menu-tree {
         align-self: stretch;
-        border-radius: 0;
-        /* border-color: var(--io_borderColorLight); */
+        flex: 0 0 auto;
+        min-width: 10em;
+        border: var(--io_border);
+        overflow-y: auto;
+      }
+      :host[menu=left] > io-menu-tree {
+        border-width: 0 var(--io_borderWidth) 0 0;
+      }
+      :host[menu=left] > io-menu-tree {
+        border-width: 0 var(--io_borderWidth) 0 0;
+      }
+      :host > io-menu-options {
+        border: none;
+        border-bottom: var(--io_border);
       }
       :host[collapsed] > io-menu-options {
         /* min-height: calc(var(--io_fieldHeight) + 1em); */
@@ -47,26 +59,7 @@ export class IoNavigator extends IoElement {
         /* min-height: calc(var(--io_fieldHeight) + 1em); */
         /* background-color: transparent; */
       }
-      :host > io-menu-options {
-        z-index: 1;
-        flex: 0 0 auto;
-        border: none;
-        min-height: var(--io_fieldHeight) !important;
-      }
-      :host > io-menu-tree {
-        /* z-index: 1; */
-        flex: 0 0 auto;
-        min-width: 10em;
-        overflow-y: auto;
-        padding: var(--io_borderWidth) 0;
-      }
-      :host[menu=left] > io-menu-tree {
-        border-width: 0 var(--io_borderWidth) 0 0;
-      }
-      :host[menu=left] > io-menu-tree {
-        border-width: 0 var(--io_borderWidth) 0 0;
-      }
-      :host > io-menu-item.hamburger {
+      /* :host > io-menu-item.hamburger {
         flex: 0 0 auto;
         border-radius: 0;
         padding: calc(var(--io_spacing) + 0.5em);
@@ -76,23 +69,9 @@ export class IoNavigator extends IoElement {
       }
       :host > io-menu-item.hamburger > .hasmore {
         display: none;
-      }
-      :host[menu=top] > io-menu-options {
-        /* padding: 0 var(--io_spacing); */
-        /* border-width: 0 0 var(--io_borderWidth) 0; */
-      }
-      :host[menu=bottom] > io-menu-options {
-        /* padding: 0 var(--io_spacing); */
-        /* border-width: var(--io_borderWidth) 0 0 0; */
-      }
-      :host > io-menu-options > io-menu-item {
-        /* border-radius: 0; */
-      }
+      } */
     `;
   }
-
-  @ReactiveProperty(null)
-  declare widget: VDOMElement | null;
 
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
@@ -100,30 +79,26 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
-  @ReactiveProperty({value: 'left', reflect: true})
-  declare menu: 'top' | 'left' | 'bottom' | 'right';
+  @ReactiveProperty(null)
+  declare widget: VDOMElement | null;
 
-  @ReactiveProperty(Infinity)
+  @ReactiveProperty({value: 'left', type: String, reflect: true})
+  declare menu: MenuPositionType;
+
+  @ReactiveProperty({value: Infinity, type: Number})
   declare depth: number;
 
-  @ReactiveProperty({value: false, reflect: true})
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare collapsed: boolean;
 
-  @ReactiveProperty(580)
+  @ReactiveProperty({value: 580, type: Number})
   declare collapseWidth: number;
 
-  @ReactiveProperty('shallow')
+  @ReactiveProperty({value: 'shallow', type: String})
   declare select: SelectType;
 
-  @ReactiveProperty(false)
-  declare cache: boolean;
-
-  @ReactiveProperty(false)
-  declare precache: boolean;
-
-  init() {
-    this.changed();
-  }
+  @ReactiveProperty({value: 'none', type: String})
+  declare caching: CachingType;
 
   changed() {
     const sharedMenuConfig = {
@@ -144,24 +119,21 @@ export class IoNavigator extends IoElement {
       })
     });
 
+    // TODO: add widget and test collapse!!
+
     if (this.menu === 'top') {
       this.template([
-        ioMenuOptions({horizontal: true, noPartialCollapse: this.collapsed, ...sharedMenuConfig}),
-        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
+        ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
       ]);
     } else if (this.menu === 'left') {
       this.template([
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
-        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
-      ]);
-    } else if (this.menu === 'bottom') {
-      this.template([
-        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
-        ioMenuOptions({horizontal: true, noPartialCollapse: this.collapsed, direction: 'up', ...sharedMenuConfig}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
       ]);
     } else if (this.menu === 'right') {
       this.template([
-        ioSelector({options: this.options, cache: this.cache, precache: this.precache, select: this.select, elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
       ]);
     }

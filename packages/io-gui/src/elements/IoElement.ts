@@ -103,6 +103,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
       } else {
         // TODO: improve setting/removal/cleanup of native element properties/attributes.
         child.removeAttribute('className');
+        child.removeAttribute('style');
         if (vChildren[i].props) {
           if ((child as IoElement)._isIoElement) {
             // Set IoElement element properties

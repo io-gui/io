@@ -44,7 +44,7 @@ export class IoNumberLadderStep extends IoField {
   @Property('spinbutton')
   declare role: string;
 
-  constructor(args: IoNumberLadderStepProps = {}) { super(args); }
+  constructor(args: IoNumberLadderStepProps = {}) { super(args) }
 
   onKeydown(event: KeyboardEvent) {
     let stepMove = 0;

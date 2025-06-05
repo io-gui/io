@@ -148,7 +148,7 @@ export class IoSlider extends IoGl {
     };
   }
 
-  constructor(args: IoSliderProps = {}) { super(args); }
+  constructor(args: IoSliderProps = {}) { super(args) }
 
   onFocus() {
     this.addEventListener('blur', this.onBlur);

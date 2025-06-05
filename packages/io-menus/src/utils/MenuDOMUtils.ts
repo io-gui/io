@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, VDOMElement } from 'io-gui';
+import { IoOverlaySingleton } from 'io-gui';
 import { IoString } from 'io-inputs';
 import { IoMenuItem } from '../elements/IoMenuItem';
 import { IoMenuOptions } from '../elements/IoMenuOptions';

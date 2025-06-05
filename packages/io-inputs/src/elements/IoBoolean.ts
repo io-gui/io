@@ -36,7 +36,7 @@ export class IoBoolean extends IoField {
   @Property('checkbox')
   declare role: string;
 
-  constructor(args: IoBooleanProps = {}) { super(args); }
+  constructor(args: IoBooleanProps = {}) { super(args) }
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault();

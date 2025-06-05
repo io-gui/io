@@ -98,20 +98,11 @@
   <body>
     <script type="module">
 
-    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe } from 'io-gui';
+    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe, h4 } from 'io-gui';
     import { ioMarkdown } from 'io-markdown';
-    import { IoNavigatorSelector, ioSelector, ioNavigatorScroller } from 'io-navigation';
-    import { MenuOptions, MenuItem } from 'io-menus';
-
-    import { ioInputsDemo } from './packages/io-inputs/demos/IoInputsDemo.js';
-    import { ioIconsDemo } from './packages/io-icons/demos/IoIconsDemo.js';
-    import { ioSlidersDemo } from './packages/io-sliders/demos/IoSlidersDemo.js';
-    import { ioColorsDemo } from './packages/io-colors/demos/IoColorsDemo.js';
-    import { ioEditorsDemo } from './packages/io-editors/demos/IoEditorsDemo.js';
-    import { ioMenusDemo } from './packages/io-menus/demos/IoMenusDemo.js';
-    import { ioNavigationDemo } from './packages/io-navigation/demos/IoNavigationDemo.js';
-    import { ioGuiThemeEditor } from './packages/io-gui/demos/IoGuiThemeEditor.js';
-    import { ioElementDemo } from './packages/io-gui/demos/IoElementDemo.js';
+    import { IoNavigator, ioNavigator, ioSelector } from 'io-navigation';
+    import { MenuOptions, MenuItem, ioMenuTree } from 'io-menus';
+    import { ioIcon } from 'io-icons';
 
     $.permit();
 
@@ -123,28 +114,35 @@
           new MenuItem({id: 'Making a Simple Element'}),
           new MenuItem({id: 'Making a Website'}),
           new MenuItem({id: 'Built-in Elements'}),
+          new MenuItem({id: 'Learn More'}),
         ]})}),
         new MenuItem({id: 'Deep Dive', options: new MenuOptions({items: [
           new MenuItem({id: 'Nodes and Elements'}),
+          new MenuItem({id: 'Registration'}),
           new MenuItem({id: 'Properties'}),
+          new MenuItem({id: 'Initial Value Inference'}),
+          new MenuItem({id: 'Property Declaration Inheritance'}),
+          new MenuItem({id: 'Property Declaration Fields'}),
           new MenuItem({id: 'Styling'}),
+          new MenuItem({id: 'CSS Mixin Polyfill'}),
           new MenuItem({id: 'Listeners'}),
           new MenuItem({id: 'Reactivity'}),
+          new MenuItem({id: 'Property Change Batching'}),
+          new MenuItem({id: 'Lazy Reactivity'}),
           new MenuItem({id: 'Template Syntax'}),
           new MenuItem({id: 'Data Binding'}),
-          new MenuItem({id: 'Helper Methods'}),
         ]})}),
       ]})}),
       new MenuItem({id: 'Demos', options: new MenuOptions({items: [
-        new MenuItem({id: 'io-inputs-demo'}),
-        new MenuItem({id: 'io-icons-demo'}),
-        new MenuItem({id: 'io-sliders-demo'}),
-        new MenuItem({id: 'io-colors-demo'}),
-        new MenuItem({id: 'io-editors-demo'}),
-        new MenuItem({id: 'io-menus-demo'}),
-        new MenuItem({id: 'io-navigation-demo'}),
-        new MenuItem({id: 'io-gui-theme-editor'}),
-        new MenuItem({id: 'io-element-demo'}),
+        new MenuItem({id: 'Inputs'}),
+        new MenuItem({id: 'Icons'}),
+        new MenuItem({id: 'Sliders'}),
+        new MenuItem({id: 'Colors'}),
+        new MenuItem({id: 'Editors'}),
+        new MenuItem({id: 'Menus'}),
+        new MenuItem({id: 'Navigation'}),
+        new MenuItem({id: 'Theme Editor'}),
+        new MenuItem({id: 'Element Inspector'}),
         new MenuItem({id: 'TODO MVC App', value: 'TODO MVC App'}),
       ]})}),
     ],
@@ -153,7 +151,7 @@
 
     const siteRoot = 'https://iogui.dev/io/';
 
-    export class IoMainPage extends IoNavigatorSelector {
+    export class IoMainPage extends IoNavigator {
       static get ReactiveProperties() {
         return {
           role: 'main',
@@ -161,46 +159,47 @@
           menu: 'top',
           collapseWidth: 280,
           options: OPTIONS,
-          cache: true,
-          depth: 1,
+          caching: 'proactive',
+          depth: 2,
+          widget: {
+            // TODO: consider initializeing with array instance without value property!
+            value: ioIcon({value: 'io:io', size: 'medium', style: {marginLeft: '0.5em'}})
+          },
           elements: [
             ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
             ioSelector({id: 'Docs',
               options: OPTIONS.findItemById('Docs').options,
-              cache: true,
+              caching: 'proactive',
               elements: [
-                ioNavigatorScroller({id: 'Quick Start',
-                  options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options,
-                  elements: [
-                    ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
-                  ]
-                }),
-                ioNavigatorScroller({id: 'Deep Dive',
-                  options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options,
-                  elements: [
-                    ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}),
-                  ]
-                }),
+                ioNavigator({id: 'Quick Start', select: 'none', widget: h4({style: {margin: '0.75em 1em'}}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options, elements: [
+                  ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md', scroll: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected')}),
+                ]}),
+                ioNavigator({id: 'Deep Dive', select: 'none', widget: h4({style: {margin: '0.75em 1em'}}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, elements: [
+                  ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md', scroll: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options.bind('selected')}),
+                ]}),
               ]
             }),
             ioSelector({id: 'Demos',
               options: OPTIONS.findItemById('Demos').options,
-              cache: true,
+              caching: 'proactive',
               elements: [
-                ioInputsDemo({id: 'io-inputs-demo'}),
-                ioIconsDemo({id: 'io-icons-demo'}),
-                ioSlidersDemo({id: 'io-sliders-demo'}),
-                ioColorsDemo({id: 'io-colors-demo'}),
-                ioEditorsDemo({id: 'io-editors-demo'}),
-                ioMenusDemo({id: 'io-menus-demo'}),
-                ioNavigationDemo({id: 'io-navigation-demo'}),
-                ioGuiThemeEditor({id: 'io-gui-theme-editor'}),
-                ioElementDemo({id: 'io-element-demo'}),
-                iframe({id: 'todo-mvc-app', src: './packages/io-gui/demos/todomvc/index.html'}),
+                {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
+                {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
+                {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/io-sliders/demos/IoSlidersDemo.js'}},
+                {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/io-colors/demos/IoColorsDemo.js'}},
+                {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
+                {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
+                {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
+                {tag: 'io-gui-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoGuiThemeEditor.js'}},
+                {tag: 'io-element-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementDemo.js'}},
+                iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
               ]
             }),
           ]
         };
+      }
+      init() {
+        this.changed();
       }
     }
     Register(IoMainPage);
