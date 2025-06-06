@@ -1,4 +1,4 @@
-import { NodeMixin, NodeProps, ReactiveProperty, Register, WithBinding } from 'io-gui';
+import { Node, NodeProps, ReactiveProperty, Register, WithBinding } from 'io-gui';
 import { MenuItem, MenuItemDefLoose } from './MenuItem.js';
 
 export type MenuOptionsProps = NodeProps & {
@@ -9,7 +9,7 @@ export type MenuOptionsProps = NodeProps & {
 };
 
 @Register
-export class MenuOptions extends NodeMixin(Array) {
+export class MenuOptions extends Node {
   @ReactiveProperty('')
   declare selected: string;
 
@@ -27,20 +27,19 @@ export class MenuOptions extends NodeMixin(Array) {
 
   constructor(properties: MenuOptionsProps = {}) {
     super(properties);
-    this.push(...this.items);
     this.updatePathsDebounced = this.updatePathsDebounced.bind(this);
 
     if (this.path !== '') this.pathChanged();
 
-    this.initItems(this.items);
+    this.initItems();
   }
 
   getAllItems() {
     const items: MenuItem[] = [];
-    for (let i = 0; i < this.length; i++) {
-      items.push(this[i]);
-      if (this[i].options) {
-        items.push(...this[i].options.getAllItems());
+    for (let i = 0; i < this.items.length; i++) {
+      items.push(this.items[i]);
+      if (this.items[i].options) {
+        items.push(...this.items[i].options!.getAllItems());
       }
     }
     // Check if there are items with duplicate ida
@@ -73,21 +72,21 @@ export class MenuOptions extends NodeMixin(Array) {
   }
 
   fromJSON(menuItemDefLoose: MenuItemDefLoose[]) {
-    this.length = 0;
+    this.items.length = 0;
     const items: MenuItem[] = [];
     for (let i = 0; i < menuItemDefLoose.length; i++) {
       items.push(new MenuItem().fromJSON(menuItemDefLoose[i]));
     }
     this.items = items;
-    this.push(...items);
 
     if (this.path !== '') this.pathChanged();
 
-    this.initItems(items);
+    this.initItems();
     return this;
   }
 
-  initItems(items: MenuItem[]) {
+  initItems() {
+    const items = this.items;
     for (let i = 0; i < items.length; i++) {
       let item = items[i];
       if (!(item instanceof MenuItem)) {
@@ -98,7 +97,7 @@ export class MenuOptions extends NodeMixin(Array) {
           console.warn('MenuOptions.constructor: item is not a MenuItem!');
         }
         // TODO check if same item is at other index
-        if (this.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
+        if (items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
           console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);
         }
       }
@@ -114,9 +113,9 @@ export class MenuOptions extends NodeMixin(Array) {
   }
 
   unselectAll() {
-    for (let i = 0; i < this.length; i++) {
-      if (this[i].mode === 'select') {
-        this[i].selected = false;
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].mode === 'select') {
+        this.items[i].selected = false;
       }
     }
     this.updatePaths();
@@ -124,9 +123,9 @@ export class MenuOptions extends NodeMixin(Array) {
 
   pathChanged() {
     const path = this.path ? [...this.path.split(this.delimiter)] : [];
-    if (this.length && path.length) {
+    if (this.items.length && path.length) {
       const first = path.shift();
-      const item = this.find((item: MenuItem) => (item.id === first));
+      const item = this.items.find((item: MenuItem) => (item.id === first));
       if (item) {
         debug: if (item.mode !== 'select') {
           console.warn('MenuOptions.pathChanged: Path set to non-selectable MenuItem!');
@@ -139,13 +138,13 @@ export class MenuOptions extends NodeMixin(Array) {
         }
       } else {
         debug: console.warn(`MenuOptions.pathChanged: cannot find item for specified path "${this.path}"!`);
-        for (let i = 0; i < this.length; i++) {
-          if (this[i].mode === 'select') this[i].selected = false;
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].mode === 'select') this.items[i].selected = false;
         }
       }
     } else {
-      for (let i = 0; i < this.length; i++) {
-        if (this[i].mode === 'select') this[i].selected = false;
+      for (let i = 0; i < this.items.length; i++) {
+        if (this.items[i].mode === 'select') this.items[i].selected = false;
       }
     }
   }
@@ -169,29 +168,30 @@ export class MenuOptions extends NodeMixin(Array) {
     let walker: MenuItem | undefined = (item?.mode === 'select') ? item : undefined;
     let lastSelected: MenuItem | undefined = item?.mode === 'select' ? item : undefined;
 
-    const hasSelected = this.find((item: MenuItem) => item.mode === 'select' && item.selected);
+    const hasSelected = this.items.find((item: MenuItem) => item.mode === 'select' && item.selected);
     if (!walker && hasSelected) return;
 
     while (walker) {
       path.push(walker.id);
       if (walker.mode === 'select') lastSelected = walker;
-      walker = walker.options?.find((item: MenuItem) => (item.mode === 'select') && item.selected);
+      walker = walker.options?.items.find((item: MenuItem) => (item.mode === 'select') && item.selected);
     }
 
     this.setProperties({
       path: path.join(this.delimiter),
-      selected: lastSelected !== undefined ? lastSelected.id : this.selected,
+      selected: lastSelected !== undefined ? lastSelected.id : '',
+      // selected: lastSelected !== undefined ? lastSelected.id : this.selected,
     });
 
     if (path.length) {
       // NOTE: this does nothing. It is only for debugging.
       debug: {
         let id = path.shift();
-        let item = this.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
+        let item = this.items.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
         let options = item?.options || undefined;
         while (path.length && options) {
           id = path.shift();
-          item = options.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
+          item = options.items.find((item: MenuItem) => (item.selected === true && item.id === id && (item.mode === 'select')));
           options = item?.options || undefined;
         }
         if (item === undefined) {
@@ -210,9 +210,9 @@ export class MenuOptions extends NodeMixin(Array) {
     const item = event.target as unknown as MenuItem;
     if (item.mode === 'select') {
       if (item.selected) {
-        for (let i = 0; i < this.length; i++) {
-          if (this[i] !== item && this[i].mode === 'select') {
-            this[i].selected = false;
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i] !== item && this.items[i].mode === 'select') {
+            this.items[i].selected = false;
           }
         }
         this.updatePaths(item);
@@ -229,13 +229,13 @@ export class MenuOptions extends NodeMixin(Array) {
   }
 
   selectDefault() {
-    for (let i = 0; i < this.length; i++) {
-      if (this[i].mode === 'select') {
-        if (this[i].hasmore) {
-          const selected = this[i].options.selectDefault();
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].mode === 'select') {
+        if (this.items[i].hasmore) {
+          const selected = this.items[i].options!.selectDefault();
           if (selected) return true;
         } else {
-          this[i].selected = true;
+          this.items[i].selected = true;
           return true;
         }
       }
@@ -252,9 +252,9 @@ export class MenuOptions extends NodeMixin(Array) {
   // }
 
   dispose() {
-    for (let i = 0; i < this.length; i++) {
-      this[i].removeEventListener('selected-changed', this.onItemSelectedChanged);
-      this[i].removeEventListener('path-changed', this.onSubOptionsPathChanged);
+    for (let i = 0; i < this.items.length; i++) {
+      this.items[i].removeEventListener('selected-changed', this.onItemSelectedChanged);
+      this.items[i].removeEventListener('path-changed', this.onSubOptionsPathChanged);
     }
     super.dispose();
   }

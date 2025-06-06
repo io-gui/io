@@ -54,14 +54,12 @@ export class IoColorPicker extends IoElement {
   init() {
     this.valueChanged();
   }
-  
+
   onClick() {
     if (!this.expanded) this.expand();
   }
 
   onKeydown(event: KeyboardEvent) {
-    const rect = this.getBoundingClientRect();
-    const pRect = Panel.getBoundingClientRect();
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       if (!this.expanded) this.expand();

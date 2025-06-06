@@ -130,7 +130,7 @@ export class IoField extends IoElement {
     };
   }
 
-  constructor(args: IoFieldProps = {}) { super(args) }
+  constructor(args: IoFieldProps = {}) { super(args); }
 
   onFocus(event: FocusEvent) {
     this.addEventListener('blur', this.onBlur);

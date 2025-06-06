@@ -78,7 +78,7 @@ export class IoNumber extends IoField {
 
   private _pointer = '';
 
-  constructor(args: IoNumberProps = {}) { super(args) }
+  constructor(args: IoNumberProps = {}) { super(args); }
 
   get textNode() {
     this._flattenTextNode(this);

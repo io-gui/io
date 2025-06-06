@@ -12,12 +12,12 @@ function matchMenuItem(item: MenuItem, search: string) {
 export function searchMenuOptions(options: MenuOptions, search: string, depth = 5, d = 0) {
   search = search.toLowerCase();
   const items: MenuItem[] = [];
-  if (d <= depth) for (let i = 0; i < options.length; i++) {
-    if (matchMenuItem(options[i], search)) {
-      items.push(options[i]);
+  if (d <= depth) for (let i = 0; i < options.items.length; i++) {
+    if (matchMenuItem(options.items[i], search)) {
+      items.push(options.items[i]);
     }
-    if (options[i].options) {
-      items.push(...searchMenuOptions(options[i].options, search, depth, d + 1));
+    if (options.items[i].options) {
+      items.push(...searchMenuOptions(options.items[i].options!, search, depth, d + 1));
     }
   }
   return items;

@@ -31,7 +31,7 @@ export class IoSliderRange extends IoSliderBase {
 
   _index = 0;
 
-  constructor(args: IoSliderRangeProps = {}) { super(args) }
+  constructor(args: IoSliderRangeProps = {}) { super(args); }
 
   _getCoordFromValue(value: [number, number]) {
     const coord = [0, 0];

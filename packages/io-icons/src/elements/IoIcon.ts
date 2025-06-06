@@ -55,7 +55,7 @@ export class IoIcon extends IoElement {
   @ReactiveProperty({value: 'small', type: String, reflect: true})
   declare size: 'small' | 'medium' | 'large';
 
-  constructor(args: IoIconProps = {}) { super(args) }
+  constructor(args: IoIconProps = {}) { super(args); }
 
   valueChanged() {
     if (this.value.search(':') !== -1) {

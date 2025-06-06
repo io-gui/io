@@ -99,7 +99,7 @@ export class IoSelector extends IoElement {
 
   // TODO: Perhaps caching and selection should be irrelevant if select === 'none'!
 
-  constructor(args: IoSelectorProps = {}) { super(args) }
+  constructor(args: IoSelectorProps = {}) { super(args); }
 
   init() {
     this.preacheNext = this.preacheNext.bind(this);
@@ -122,9 +122,9 @@ export class IoSelector extends IoElement {
 
   optionsMutated() {
     if (this.select === 'shallow') {
-      for (let i = 0; i < this.options.length; i++) {
-        if (this.options[i].selected) {
-          this.renderSelectedId(this.options[i].id);
+      for (let i = 0; i < this.options.items.length; i++) {
+        if (this.options.items[i].selected) {
+          this.renderSelectedId(this.options.items[i].id);
           return;
         }
       }

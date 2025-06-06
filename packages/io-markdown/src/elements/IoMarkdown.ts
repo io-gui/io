@@ -204,7 +204,7 @@ export class IoMarkdown extends IoElement {
     };
   }
 
-  constructor(args: IoMarkdownProps = {}) { super(args) }
+  constructor(args: IoMarkdownProps = {}) { super(args); }
 
   init() {
     this.scrollChangedDebounced = this.scrollChangedDebounced.bind(this);
@@ -240,7 +240,7 @@ export class IoMarkdown extends IoElement {
 
   onScrollChanged() {
     if (this.onScrollSuspended) return;
-    const headings = this.querySelectorAll(`[data-heading]`) as NodeListOf<HTMLElement>;
+    const headings = this.querySelectorAll('[data-heading]') as NodeListOf<HTMLElement>;
     const closestHeading = Array.from(headings).reduce((prev, curr) => {
       return (Math.abs(curr.offsetTop - this.scrollTop) < Math.abs(prev.offsetTop - this.scrollTop) ? curr : prev);
     }, headings[0]);

@@ -8,9 +8,9 @@ import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
 
 function addMenuItemsOrTreeBranches(options: MenuOptions, depth: number, d = 0) {
   const elements: VDOMElement[] = [];
-  if (d <= depth) for (let i = 0; i < options.length; i++) {
-    const item = options[i];
-    if (item.options?.length) {
+  if (d <= depth) for (let i = 0; i < options.items.length; i++) {
+    const item = options.items[i];
+    if (item.options?.items.length) {
       const collapsibleState = $({value: false, storage: 'local', key: genObjectStorageID(item)});
       if (item.selected === true) collapsibleState.value = true;
       elements.push(ioMenuTreeBranch({item: item, depth: d, expanded: collapsibleState}));
@@ -91,7 +91,7 @@ export class IoMenuTree extends IoElement {
   @Property('listbox')
   declare role: string;
 
-  constructor(args: IoMenuTreeProps = {}) { super(args) }
+  constructor(args: IoMenuTreeProps = {}) { super(args); }
 
   changed() {
     const elements: VDOMElement[] = this.widget ? [this.widget] : [];

@@ -1,4 +1,4 @@
-import { ProtoChain, Node, NodeMixin, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '../index';
+import { ProtoChain, Node, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '../index';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -70,7 +70,6 @@ class Node4 extends Node1 {
 }
 
 class IoElement1 extends IoElement {}
-class Node2 extends NodeMixin(Object3) {}
 
 class MockNode1 {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -151,8 +150,6 @@ export default class {
         expect(constructors).to.be.eql([Node1, Node, Object.getPrototypeOf(Node)]);
         constructors = new ProtoChain(IoElement1).constructors;
         expect(constructors).to.be.eql([IoElement1, IoElement, Object.getPrototypeOf(IoElement)]);
-        constructors = new ProtoChain(Node2).constructors;
-        expect(constructors).to.be.eql([Node2, Object.getPrototypeOf(Node2), Object3, Object2, Object1]);
       });
       it('Should include properties declared in `static get Properties()` return oject', () => {
         let protoChain = new ProtoChain(Node1);

@@ -346,14 +346,14 @@ export class IoMenuOptions extends IoElement {
       if (this.horizontal && this.direction === 'up') {
         direction = 'up';
       }
-      for (let i = 0; i < this.options.length; i++) {
+      for (let i = 0; i < this.options.items.length; i++) {
         elements.push(ioMenuItem({
-          item: this.options[i],
+          item: this.options.items[i],
           direction: direction,
           $parent: this,
           depth: this.depth
         }));
-        if (i < this.options.length - 1) {
+        if (i < this.options.items.length - 1) {
           elements.push({tag: 'span', props: {class: 'divider'}});
         }
       }

@@ -49,7 +49,7 @@ export class IoString extends IoField {
   @Property('textbox')
   declare role: string;
 
-  constructor(args: IoStringProps = {}) { super(args) }
+  constructor(args: IoStringProps = {}) { super(args); }
 
   get textNode() {
     this._flattenTextNode(this);

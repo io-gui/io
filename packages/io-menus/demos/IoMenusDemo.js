@@ -65,7 +65,113 @@ const optionsLong = new MenuOptions().fromJSON([
   'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
 ]);
 
-export class IoMenusDemo extends IoElement {
+class IoOptionsViewDemo extends IoElement {
+  static get Style() {
+    return /* css */`
+      :host {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid gray;
+        border-radius: var(--io_borderRadius);
+      }
+      :host > div {
+        background-color: var(--io_bgColorDimmed);
+        display: flex;
+        height: var(--io_lineHeight);
+      }
+      :host io-item-demo-view {
+        margin-left: var(--io_spacing);
+      }
+      :host span {
+        background-color: transparent;
+        padding: 0 var(--io_spacing);
+        color: var(--io_color);
+      }
+      :host span.path {
+        margin-left: 0.5em;
+        color: var(--io_colorBlue);
+      }
+      :host span.selected {
+        margin-left: 0.5em;
+        color: var(--io_colorBlue);
+      }
+      :host span.scroll {
+        margin-left: 0.5em;
+        color: var(--io_colorBlue);
+      }
+
+    `;
+  }
+  static get ReactiveProperties() {
+    return {
+      options: {
+        type: MenuOptions,
+      },
+    };
+  }
+  optionsMutated() {
+    this.changed();
+  }
+  changed() {
+    const vElements = [];
+    for (let i = 0; i < this.options.items.length; i++) {
+      vElements.push(ioItemViewDemo({item: this.options.items[i]}));
+    }
+    this.render([
+      div([
+        this.options.selected ? span({class: 'selected'}, `selected: ${this.options.selected}`) : null,
+        this.options.path ? span({class: 'path'}, `path: ${this.options.path}`) : null,
+      ]),
+      ...vElements
+    ]);
+  }
+}
+Register(IoOptionsViewDemo);
+const ioOptionsViewDemo = IoOptionsViewDemo.vConstructor;
+
+class IoItemViewDemo extends IoElement {
+  static get Style() {
+    return /* css */`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+      :host > div {
+        display: flex;
+      }
+    `;
+  }
+  static get ReactiveProperties() {
+    return {
+      item: {
+        type: MenuItem,
+      },
+    };
+  }
+  itemMutated() {
+    this.changed();
+  }
+  changed() {
+    let selectElement = null;
+    if (this.item.mode === 'toggle') {
+      selectElement = ioBoolean({value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
+    } else if (this.item.mode === 'select') {
+      selectElement = ioSwitch({value: this.item.bind('selected')});
+    }
+    this.render([
+      div([
+        selectElement,
+        ioField({value: this.item.label, inert: true, appearance: 'neutral'}),
+      ]),
+      this.item.hasmore ? ioOptionsViewDemo({options: this.item.options}) : null
+    ]);
+  }
+}
+Register(IoItemViewDemo);
+const ioItemViewDemo = IoItemViewDemo.vConstructor;
+
+class IoMenusDemo extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -178,125 +284,7 @@ export class IoMenusDemo extends IoElement {
           button: 2,
         }),
       ]),
-      ioDemoMenuModel(),
-    ]);
-  }
-}
-Register(IoMenusDemo);
-export const ioMenusDemo = IoMenusDemo.vConstructor;
-
-export class IoOptionsDemoView extends IoElement {
-  static get Style() {
-    return /* css */`
-      :host {
-        align-self: stretch;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid gray;
-        border-radius: var(--io_borderRadius);
-      }
-      :host > div {
-        background-color: var(--io_bgColorDimmed);
-        display: flex;
-        height: var(--io_lineHeight);
-      }
-      :host io-item-demo-view {
-        margin-left: var(--io_spacing);
-      }
-      :host span {
-        background-color: transparent;
-        padding: 0 var(--io_spacing);
-        color: var(--io_color);
-      }
-      :host span.path {
-        margin-left: 0.5em;
-        color: var(--io_colorBlue);
-      }
-      :host span.selected {
-        margin-left: 0.5em;
-        color: var(--io_colorBlue);
-      }
-      :host span.scroll {
-        margin-left: 0.5em;
-        color: var(--io_colorBlue);
-      }
-
-    `;
-  }
-  static get ReactiveProperties() {
-    return {
-      options: {
-        type: MenuOptions,
-        strict: true,
-      },
-    };
-  }
-  optionsMutated() {
-    this.changed();
-  }
-  changed() {
-    const options = [];
-    for (let i = 0; i < this.options.length; i++) {
-      options.push(ioItemDemoView({item: this.options[i]}));
-    }
-    this.render([
-      div([
-        this.options.selected ? span({class: 'selected'}, `selected: ${this.options.selected}`) : null,
-        this.options.path ? span({class: 'path'}, `path: ${this.options.path}`) : null,
-      ]),
-      ...options
-    ]);
-  }
-}
-Register(IoOptionsDemoView);
-export const ioOptionsDemoView = IoOptionsDemoView.vConstructor;
-
-export class IoItemDemoView extends IoElement {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: flex;
-        flex-direction: column;
-      }
-      :host > div {
-        display: flex;
-      }
-    `;
-  }
-  static get ReactiveProperties() {
-    return {
-      item: {
-        type: MenuItem,
-        strict: true,
-      },
-    };
-  }
-  itemMutated() {
-    this.changed();
-  }
-  changed() {
-    let selectElement = null;
-    if (this.item.mode === 'toggle') {
-      selectElement = ioBoolean({value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
-    } else if (this.item.mode === 'select') {
-      selectElement = ioSwitch({value: this.item.bind('selected')});
-    }
-    this.render([
-      div([
-        selectElement,
-        ioField({value: this.item.label, inert: true, appearance: 'neutral'}),
-      ]),
-      this.item.hasmore ? ioOptionsDemoView({options: this.item.options}) : null
-    ]);
-  }
-}
-Register(IoItemDemoView);
-export const ioItemDemoView = IoItemDemoView.vConstructor;
-
-export class IoDemoMenuModel extends IoOptionsDemoView {
-  static get ReactiveProperties() {
-    return {
-      options: {value: new MenuOptions().fromJSON([
+      ioOptionsViewDemo({options: new MenuOptions().fromJSON([
         'home', 
         {value: 'food', options: [
           {value: 'fruits', options: [
@@ -317,13 +305,9 @@ export class IoDemoMenuModel extends IoOptionsDemoView {
             'selectable',
           ]},
         ]},
-      ])}
-    }
-  }
-  init() {
-    // TODO: remove this. Why is it necessary in ./index.html?
-    this.changed();
+      ])}),
+    ]);
   }
 }
-Register(IoDemoMenuModel);
-export const ioDemoMenuModel = IoDemoMenuModel.vConstructor;
+Register(IoMenusDemo);
+export const ioMenusDemo = IoMenusDemo.vConstructor;

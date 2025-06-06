@@ -74,7 +74,7 @@ export class MenuItem extends Node {
   declare options?: MenuOptions;
 
   get hasmore() {
-    return !!(this.options?.length);
+    return !!(this.options?.items.length);
   }
   constructor(args?: MenuItemProps) {
     const item: MenuItemProps = {...args};
@@ -129,12 +129,15 @@ export class MenuItem extends Node {
     return json;
   }
   onOptionsItemSelected() {
-    if (this.mode === 'select' && this.options) {
+    if (this.mode === 'select') {
       this.selected = true;
     }
   }
   onOptionsPathChanged(event: CustomEvent) {
     this.dispatchEvent('path-changed', event.detail);
+    if (this.mode === 'select') {
+      this.selected = !!this.options?.path;
+    }
   }
   optionsChanged(change: Change) {
     if (change.oldValue) {
@@ -145,8 +148,9 @@ export class MenuItem extends Node {
       change.value.addEventListener('item-selected', this.onOptionsItemSelected);
       change.value.addEventListener('path-changed', this.onOptionsPathChanged);
     }
-    if (this.mode === 'select' && this.options) {
-      this.selected = !!this.options.selected;
+    if (this.mode === 'select') {
+      this.selected = !!this.options?.selected;
+      // this.selected = !!this.options?.path;
     }
   }
   selectedChanged() {
@@ -154,7 +158,7 @@ export class MenuItem extends Node {
   }
   changed() {
     debug: {
-      if (this.options &&['select', 'none'].indexOf(this.mode) === -1) {
+      if (this.options && ['select', 'none'].indexOf(this.mode) === -1) {
         console.warn('MenuItem: item with options must have mode set to "select" or "none"', this);
       }
       if (['select', 'toggle', 'link', 'action','none'].indexOf(this.mode) === -1) {
