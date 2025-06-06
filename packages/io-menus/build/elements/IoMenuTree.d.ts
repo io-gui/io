@@ -1,14 +1,12 @@
 import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuItem } from './IoMenuItem.js';
-export declare function addMenuOptions(options: MenuOptions, depth: number, d?: number): VDOMElement[];
-export declare function filterOptions(options: MenuOptions, search: string, depth?: number, elements?: VDOMElement[], d?: number): any;
 export type IoMenuTreeProps = IoElementProps & {
     options?: MenuOptions;
     searchable?: boolean;
     search?: WithBinding<string>;
     depth?: number;
-    slotted?: VDOMElement[];
+    widget?: VDOMElement | null;
 };
 export declare class IoMenuTree extends IoElement {
     static vConstructor: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -17,11 +15,10 @@ export declare class IoMenuTree extends IoElement {
     searchable: boolean;
     search: string;
     depth: number;
-    slotted: VDOMElement[];
+    widget: VDOMElement | null;
     $parent?: IoMenuItem;
     role: string;
     constructor(args?: IoMenuTreeProps);
-    collapse(): void;
     changed(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

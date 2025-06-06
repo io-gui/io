@@ -11,7 +11,7 @@ export type IoMenuOptionsProps = IoElementProps & {
     direction?: NudgeDirection;
     depth?: number;
     noPartialCollapse?: boolean;
-    slotted?: VDOMElement[];
+    widget?: VDOMElement | null;
     $parent?: IoMenuItem | IoContextMenu;
 };
 /**
@@ -29,7 +29,7 @@ export declare class IoMenuOptions extends IoElement {
     depth: number;
     noPartialCollapse: boolean;
     overflow: string;
-    slotted: VDOMElement[];
+    widget: VDOMElement | null;
     $parent?: IoMenuItem;
     role: string;
     private _overflownItems;

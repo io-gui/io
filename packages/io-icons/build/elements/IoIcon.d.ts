@@ -2,6 +2,7 @@ import { IoElement, IoElementProps, VDOMElement } from 'io-gui';
 export type IoIconProps = IoElementProps & {
     value?: string;
     stroke?: boolean;
+    size?: 'small' | 'medium' | 'large';
 };
 /**
  * SVG icon element.
@@ -13,6 +14,7 @@ export declare class IoIcon extends IoElement {
     static get Style(): string;
     value: string;
     stroke: boolean;
+    size: 'small' | 'medium' | 'large';
     constructor(args?: IoIconProps);
     valueChanged(): void;
 }

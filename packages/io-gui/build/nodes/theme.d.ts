@@ -33,6 +33,9 @@ export type ThemeVars = {
     borderColor: Color;
     borderColorLight: Color;
     borderColorDark: Color;
+    borderColorRed: Color;
+    borderColorBlue: Color;
+    borderColorGreen: Color;
     bgColor: Color;
     bgColorStrong: Color;
     bgColorDimmed: Color;

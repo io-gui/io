@@ -18,7 +18,7 @@ class MyElement extends IoElement {
     };
   }
   messageChanged() {
-    this.template([['p', this.message]]);
+    this.render([['p', this.message]]);
   }
 }
 Register(MyElement);

@@ -10,4 +10,4 @@ export declare function getMenuChildren(element: IoMenuElementType): IoMenuEleme
 export declare function getMenuSiblings(element: IoMenuItem): IoMenuItem[];
 export declare function getMenuRoot(element: IoMenuElementType): IoMenuElementType;
 export declare function isPointerAboveIoMenuItem(event: PointerEvent, element: IoMenuElementType): boolean;
-//# sourceMappingURL=MenuHierarchy.d.ts.map
+//# sourceMappingURL=MenuDOMUtils.d.ts.map

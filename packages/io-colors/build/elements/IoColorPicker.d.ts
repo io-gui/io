@@ -18,15 +18,14 @@ export declare class IoColorPicker extends IoElement {
     };
     static get Listeners(): any;
     tabIndex: string;
-    onClick(): void;
     get expanded(): boolean;
+    init(): void;
+    onClick(): void;
     onKeydown(event: KeyboardEvent): void;
     onValueSet(): void;
-    toggle(): void;
     onPanelCollapse(): void;
     expand(): void;
     collapse(): void;
-    init(): void;
     valueChanged(): void;
 }
 export declare const ioColorPicker: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

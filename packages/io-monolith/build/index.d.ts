@@ -483,8 +483,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 		 */
 		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node$1 | HTMLElement | Document | Window): void;
 		/**
-		 * Disposes all core.
-		 * Use this when instance is no longer needed.
+		 * Disposes the node when it is no longer needed.
 		 */
 		dispose(): void;
 		Register(ioNodeConstructor: typeof Node$1): void;
@@ -598,8 +597,7 @@ declare const Node_base: {
 		 */
 		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node$1 | HTMLElement | Document | Window): void;
 		/**
-		 * Disposes all core.
-		 * Use this when instance is no longer needed.
+		 * Disposes the node when it is no longer needed.
 		 */
 		dispose(): void;
 		Register(ioNodeConstructor: typeof Node$1): void;
@@ -812,17 +810,17 @@ export declare class IoElement extends IoElement_base {
 	 * Renders DOM from virtual DOM arrays.
 	 * @param {Array} vDOMElements - Array of VDOMElement[] children.
 	 * @param {HTMLElement} [host] - Optional template target.
-	 * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
+	 * @param {boolean} [noDispose] - Skip disposal of existing elements.
 	 */
-	template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, cache?: boolean): void;
+	render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean): void;
 	/**
 	 * Recurively traverses virtual DOM elements.
 	 * TODO: test element.traverse() function!
 	 * @param {Array} vDOMElements - Array of VDOMElements elements.
 	 * @param {HTMLElement} [host] - Optional template target.
-	 * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
+	 * @param {boolean} [noDispose] - Skip disposal of existing elements.
 	 */
-	traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, cache?: boolean): void;
+	traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
 	/**
 	* Helper function to flatten textContent into a single TextNode.
 	* Update textContent via TextNode is better for layout performance.
@@ -1268,6 +1266,9 @@ export type ThemeVars = {
 	borderColor: Color;
 	borderColorLight: Color;
 	borderColorDark: Color;
+	borderColorRed: Color;
+	borderColorBlue: Color;
+	borderColorGreen: Color;
 	bgColor: Color;
 	bgColorStrong: Color;
 	bgColorDimmed: Color;
@@ -1336,7 +1337,7 @@ export declare class IoGl extends IoElement {
 	get ctx(): CanvasRenderingContext2D;
 	themeMutated(): void;
 	changed(): void;
-	_onRender(): void;
+	onRender(): void;
 	setShaderProgram(): void;
 	updatePropertyUniform(name: string, property: ReactivePropertyInstance): void;
 	updateThemeUniforms(): void;
@@ -1503,8 +1504,10 @@ declare class IoColorPanel extends IoColorBase {
 	expanded: boolean;
 	static get Listeners(): {
 		keydown: string;
+		"io-focus-to": string;
 	};
 	onKeydown(event: KeyboardEvent): void;
+	onIoFocusTo(event: CustomEvent): void;
 	onValueInput(): void;
 	changed(): void;
 }
@@ -1528,15 +1531,14 @@ export declare class IoColorPicker extends IoElement {
 	};
 	static get Listeners(): any;
 	tabIndex: string;
-	onClick(): void;
 	get expanded(): boolean;
+	init(): void;
+	onClick(): void;
 	onKeydown(event: KeyboardEvent): void;
 	onValueSet(): void;
-	toggle(): void;
 	onPanelCollapse(): void;
 	expand(): void;
 	collapse(): void;
-	init(): void;
 	valueChanged(): void;
 }
 export declare const ioColorPicker: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2179,6 +2181,7 @@ export type IoMarkdownProps = IoElementProps & {
 	strip?: string[];
 	loading?: WithBinding<boolean>;
 	sanitize?: boolean;
+	scroll?: WithBinding<string>;
 };
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
@@ -2190,13 +2193,22 @@ export declare class IoMarkdown extends IoElement {
 	strip: string[];
 	loading: boolean;
 	sanitize: boolean;
+	scroll: string;
 	role: string;
+	private scrollToSuspended;
+	private onScrollSuspended;
+	static get Listeners(): {
+		scroll: string;
+	};
 	constructor(args?: IoMarkdownProps);
-	protected _strip(innerHTML: string): string;
-	protected _parseMarkdown(markdown: string): void;
+	init(): void;
+	scrollChanged(): void;
+	scrollChangedDebounced(): void;
+	scrollToUnsuspend(): void;
+	onScrollUnsuspended(): void;
+	onScrollChanged(): void;
 	onResized(): void;
 	srcChanged(): void;
-	changed(): void;
 }
 export declare const ioMarkdown: (arg0?: IoMarkdownProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare const MD_LIGHT_THEME = "\n/* a11y-light theme */\n/* Based on the Tomorrow Night Eighties theme: https://github.com/isagalaev/highlight.js/blob/master/src/styles/tomorrow-night-eighties.css */\n/* @author: ericwbailey */\n\n/* Comment */\n.hljs-comment, .hljs-quote {\n  color: #666;\n}\n\n/* Red */\n.hljs-variable, .hljs-template-variable, .hljs-tag, .hljs-name, .hljs-selector-id, .hljs-selector-class, .hljs-regexp, .hljs-deletion {\n  color: #d91e18;\n}\n\n/* Orange */\n.hljs-number, .hljs-built_in, .hljs-builtin-name, .hljs-literal, .hljs-type, .hljs-params, .hljs-meta, .hljs-link {\n  color: #aa5d00;\n}\n\n/* Yellow */\n.hljs-attribute {\n  color: #aa5d00;\n}\n\n/* Green */\n.hljs-string, .hljs-symbol, .hljs-bullet, .hljs-addition {\n  color: #008000;\n}\n\n/* Blue */\n.hljs-title, .hljs-section {\n  color: #007faa;\n}\n\n/* Purple */\n.hljs-keyword, .hljs-selector-tag {\n  color: #c928a1;\n}\n\n.hljs {\n  display: block;\n  overflow-x: auto;\n  background: #fefefe;\n  color: #545454;\n  padding: 0.5em;\n}\n\n.hljs-emphasis {\n  font-style: italic;\n}\n\n.hljs-strong {\n  font-weight: bold;\n}\n\n@media screen and (-ms-high-contrast: active) {\n  .hljs-addition, .hljs-attribute, .hljs-built_in, .hljs-builtin-name, .hljs-bullet, .hljs-comment, .hljs-link, .hljs-literal, .hljs-meta, .hljs-number, .hljs-params, .hljs-string, .hljs-symbol, .hljs-type, .hljs-quote {\n    color: highlight;\n  }\n  .hljs-keyword, .hljs-selector-tag {\n      font-weight: bold;\n  }\n}\n";
@@ -2210,6 +2222,7 @@ export declare const IconsetSingleton: Iconset;
 export type IoIconProps = IoElementProps & {
 	value?: string;
 	stroke?: boolean;
+	size?: "small" | "medium" | "large";
 };
 /**
  * SVG icon element.
@@ -2221,6 +2234,7 @@ export declare class IoIcon extends IoElement {
 	static get Style(): string;
 	value: string;
 	stroke: boolean;
+	size: "small" | "medium" | "large";
 	constructor(args?: IoIconProps);
 	valueChanged(): void;
 }
@@ -2462,37 +2476,7 @@ export type MenuOptionsProps = NodeProps & {
 	delimiter?: string;
 	items?: MenuItem[];
 };
-declare const MenuOptions_base: {
-	new (args?: NodeProps, ...superProps: any[]): {
-		[x: string]: any;
-		readonly _protochain: ProtoChain;
-		readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
-		readonly _bindings: Map<string, Binding<any>>;
-		readonly _changeQueue: ChangeQueue;
-		readonly _eventDispatcher: EventDispatcher;
-		applyProperties(props: any, skipDispatch?: boolean): void;
-		setProperties(props: any): void;
-		setProperty(name: string, value: any, debounce?: boolean): void;
-		inputValue(value: any): void;
-		changed(): void;
-		init(): void;
-		queue(name: string, value: any, oldValue: any): void;
-		dispatchQueue(debounce?: boolean): void;
-		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
-		debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-		onPropertyMutated(event: CustomEvent): true | undefined;
-		bind<T_1>(name: string): Binding<T_1>;
-		unbind(name: string): void;
-		addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
-		removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-		dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node$1 | HTMLElement | Document | Window): void;
-		dispose(): void;
-		Register(ioNodeConstructor: typeof Node$1): void;
-	};
-	[x: string]: any;
-	readonly ReactiveProperties: ReactivePropertyDefinitions;
-};
-export declare class MenuOptions extends MenuOptions_base {
+export declare class MenuOptions extends Node$1 {
 	selected: string;
 	path: string;
 	delimiter: string;
@@ -2503,13 +2487,14 @@ export declare class MenuOptions extends MenuOptions_base {
 	findItemByValue(value: any): MenuItem | null;
 	findItemById(id: string): MenuItem | null;
 	fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
-	initItems(items: MenuItem[]): void;
+	initItems(): void;
 	unselectAll(): void;
 	pathChanged(): void;
 	selectedChanged(): void;
 	updatePaths(item?: MenuItem): void;
-	_onItemSelectedChanged(event: CustomEvent): void;
-	_onSubOptionsPathChanged(event: CustomEvent): void;
+	updatePathsDebounced(item?: MenuItem): void;
+	onItemSelectedChanged(event: CustomEvent): void;
+	onSubOptionsPathChanged(event: CustomEvent): void;
 	selectDefault(): boolean;
 	dispose(): void;
 }
@@ -2588,7 +2573,7 @@ export type IoMenuOptionsProps = IoElementProps & {
 	direction?: NudgeDirection;
 	depth?: number;
 	noPartialCollapse?: boolean;
-	slotted?: VDOMElement[];
+	widget?: VDOMElement | null;
 	$parent?: IoMenuItem | IoContextMenu;
 };
 /**
@@ -2606,7 +2591,7 @@ export declare class IoMenuOptions extends IoElement {
 	depth: number;
 	noPartialCollapse: boolean;
 	overflow: string;
-	slotted: VDOMElement[];
+	widget: VDOMElement | null;
 	$parent?: IoMenuItem;
 	role: string;
 	private _overflownItems;
@@ -2631,14 +2616,12 @@ export declare class IoMenuOptions extends IoElement {
 	changed(): void;
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export declare function addMenuOptions(options: MenuOptions, depth: number, d?: number): VDOMElement[];
-export declare function filterOptions(options: MenuOptions, search: string, depth?: number, elements?: VDOMElement[], d?: number): any;
 export type IoMenuTreeProps = IoElementProps & {
 	options?: MenuOptions;
 	searchable?: boolean;
 	search?: WithBinding<string>;
 	depth?: number;
-	slotted?: VDOMElement[];
+	widget?: VDOMElement | null;
 };
 export declare class IoMenuTree extends IoElement {
 	static vConstructor: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2647,11 +2630,10 @@ export declare class IoMenuTree extends IoElement {
 	searchable: boolean;
 	search: string;
 	depth: number;
-	slotted: VDOMElement[];
+	widget: VDOMElement | null;
 	$parent?: IoMenuItem;
 	role: string;
 	constructor(args?: IoMenuTreeProps);
-	collapse(): void;
 	changed(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2708,6 +2690,26 @@ export declare class IoMenuHamburger extends IoMenuItem {
 	changed(): void;
 }
 export declare const ioMenuHamburger: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoMenuTreeBranchProps = IoElementProps & {
+	depth?: number;
+	item?: MenuItem;
+	expanded?: WithBinding<boolean>;
+};
+/**
+ * An element with collapsible content.
+ * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
+ **/
+export declare class IoMenuTreeBranch extends IoElement {
+	static vConstructor: (arg0?: IoMenuTreeBranchProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static get Style(): string;
+	depth: number;
+	item: MenuItem;
+	expanded: boolean;
+	role: string;
+	itemMutated(): void;
+	changed(): void;
+}
+export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type SelectBy = "value" | "id";
 export type IoOptionSelectProps = IoElementProps & {
 	value?: WithBinding<any>;
@@ -2760,111 +2762,64 @@ export declare class IoCollapsible extends IoElement {
 	changed(): void;
 }
 export declare const ioCollapsible: (arg0?: IoCollapsibleProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type SelectType = "shallow" | "deep" | "none";
+export type CachingType = "proactive" | "reactive" | "none";
 export type IoSelectorProps = IoElementProps & {
 	options?: MenuOptions;
-	select?: "shallow" | "deep";
 	elements?: VDOMElement[];
-	cache?: boolean;
-	precache?: boolean;
+	select?: SelectType;
+	caching?: CachingType;
 	loading?: WithBinding<boolean>;
 	import?: string;
-	precacheDelay?: number;
 };
 export declare class IoSelector extends IoElement {
 	static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
 	options: MenuOptions;
-	select: "shallow" | "deep";
 	elements: VDOMElement[];
-	cache: boolean;
-	precache: boolean;
+	select: SelectType;
+	caching: CachingType;
 	loading: boolean;
 	private _caches;
-	precacheDelay: number;
-	private _selected?;
+	private _preaching;
+	constructor(args?: IoSelectorProps);
 	init(): void;
+	optionsChanged(): void;
+	elementsChanged(): void;
 	optionsMutated(): void;
-	importModule(path: string): Promise<unknown>;
-	protected renderSelected(): void;
-	onLoadPrecache(): void;
+	renderSelectedId(id: string): void;
+	startPreache(): void;
+	preacheNext(): void;
 	dispose(): void;
 }
 export declare const ioSelector: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoScrollerProps = IoElementProps & {
+export type MenuPositionType = "top" | "left" | "right";
+export type IoNavigatorProps = IoElementProps & {
 	options?: MenuOptions;
-};
-export declare class IoScroller extends IoElement {
-	static vConstructor: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-	static get Style(): string;
-	options: MenuOptions;
-	private _observer;
-	init(): void;
-	connectedCallback(): void;
-	_onDomMutated(): void;
-	optionsMutated(): void;
-	_scrollToSelected(): void;
-	dispose(): void;
-}
-export declare const ioScroller: (arg0?: IoScrollerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNavigatorBaseProps = IoElementProps & {
-	options?: MenuOptions;
-	slotted?: VDOMElement[];
 	elements?: VDOMElement[];
-	menu?: "top" | "left" | "bottom" | "right";
+	widget?: VDOMElement;
+	menu?: MenuPositionType;
 	depth?: number;
 	collapsed?: WithBinding<boolean>;
 	collapseWidth?: number;
+	select?: SelectType;
+	caching?: CachingType;
 };
-export declare class IoNavigatorBase extends IoElement {
-	static vConstructor: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare class IoNavigator extends IoElement {
+	static vConstructor: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 	static get Style(): string;
-	slotted: VDOMElement[];
 	elements: VDOMElement[];
 	options: MenuOptions;
-	menu: "top" | "left" | "bottom" | "right";
+	widget: VDOMElement | null;
+	menu: MenuPositionType;
 	depth: number;
 	collapsed: boolean;
 	collapseWidth: number;
-	init(): void;
-	onResized(): void;
-	_computeCollapsed(): void;
-	getSlotted(): VDOMElement | null;
+	select: SelectType;
+	caching: CachingType;
 	changed(): void;
 }
-export declare const ioNavigatorBase: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNavigatorSelectorProps = IoNavigatorBaseProps & {
-	select?: "shallow" | "deep";
-	cache?: boolean;
-	precache?: boolean;
-};
-export declare class IoNavigatorSelector extends IoNavigatorBase {
-	static vConstructor: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-	select: "shallow" | "deep";
-	cache: boolean;
-	precache: boolean;
-	getSlotted(): VDOMElement;
-}
-export declare const ioNavigatorSelector: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export declare class IoNavigatorCombined extends IoNavigatorSelector {
-	static get Style(): string;
-	getSlotted(): VDOMElement;
-}
-export declare const ioNavigatorCombined: (arg0?: IoNavigatorSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoNavigatorMdViewProps = IoNavigatorBaseProps & {
-	strip?: string[];
-	sanitize?: boolean;
-};
-export declare class IoNavigatorMdView extends IoNavigatorBase {
-	static vConstructor: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-	strip: string[];
-	sanitize: boolean;
-	getSlotted(): VDOMElement;
-}
-export declare const ioNavigatorMdView: (arg0?: IoNavigatorMdViewProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export declare class IoNavigatorScroller extends IoNavigatorBase {
-	getSlotted(): VDOMElement;
-}
-export declare const ioNavigatorScroller: (arg0?: IoNavigatorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNavigator: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
 export {
 	Node$1 as Node,

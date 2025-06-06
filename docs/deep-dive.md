@@ -1,26 +1,14 @@
-# Nodes and Elements
+### Nodes and Elements
 
-In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use features provided by the `NodeMixin` such as reactivity, data binding and various helper methods.
+In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use the same features such as reactivity, data binding and various helper methods
 
-A **node** is any `Object` that has been extended with the `NodeMixin` or an object that extends `Node`.
-
-```javascript
-class Node extends NodeMixin(Object) {}
-class MyNode extends Node {}
-```
-
-An **element** is a custom element that extends `IoElement` which is essentially `NodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is automatically assigned as kebab-case version of the CamelCase class name. For Example `MyElement` class name will register with `<my-element>` HTML tagName.
-
-```javascript
-class IoElement extends NodeMixin(HTMLElement) { ... }
-class MyElement extends IoElement {}
-```
+A **node** is essentially an `Object` that that extends `Node` while **element** is a custom element that extends `IoElement`. Most of the features are normalized across these two object types. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is automatically assigned as kebab-case version of the CamelCase class name. For Example `MyElement` class name will register with `<my-element>` HTML tagName.
 
 Elements are used to build the "view", meaning they are responsible for rendering the user interface that users can see and interact with. Nodes, on the other hand, have no visual representation and are more suitable for creating "models" and application business logic.
 
 DOM Events (CustomEvents) work with nodes just like with elements, allowing nodes to communicate and interact with the elements as if they are part of the DOM.
 
-## Registration
+### Registration
 
 All new classes must be registered before use.
 
@@ -42,7 +30,7 @@ class MyNode extends Node {}
 class MyElement extends IoElement {}
 ```
 
-# Properties
+### Properties
 
 Properties can be defined using property declarations in the `static get ReactiveProperties()` object or the `@Property()` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
 
@@ -69,7 +57,7 @@ class MyNode extends Node {
 }
 ```
 
-## Initial Value Inference
+### Initial Value Inference
 
 Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` respectively. In other words, when no initial value is specified, it will be inferred from the specified type.
 
@@ -122,7 +110,7 @@ class MyNode extends Node {
 }
 ```
 
-## Property Declaration Inheritance
+### Property Declaration Inheritance
 
 Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyNode` will inherit explicit property declaration from `MySuperNode` but it will override the initial value to `true`. 
 
@@ -142,7 +130,7 @@ class MyNode extends MySuperNode {
 }
 ```
 
-## Property Declaration Fields
+### Property Declaration Fields
 
 Now let's get into each specific field of the PropertyDeclaration object. Note that each field is optional.
 
@@ -177,7 +165,7 @@ class MyElement extends IoElement {
 }
 ```
 
-# Styling
+### Styling
 
 Custom element styles are defined inside `static get Style()` template literal string. To get proper CSS syntax highlighting you can add `/* css */` comment just before the string and use code editor plugin such as [comment-tagged-templates for VSCode](https://marketplace.visualstudio.com/items?itemName=bierner.comment-tagged-templates).
 
@@ -208,7 +196,7 @@ The above style rule is effectively the same as adding the following style block
 
 In fact, this is automatically done by the `Register` decorator. Each element will have its own style block inside the document head.
 
-## CSS Mixin Polyfill
+### CSS Mixin Polyfill
 
 CSS mixins are a feature polyfilled by `IoElement`. It allows you to define style rule sets to be reused across multiple elements. To create a mixin, make a style rule set with a CSS selector starting with `--` and ending with `:`.
 
@@ -227,7 +215,7 @@ To use the mixin in any element use `@apply` CSS rule. It is important that the 
 }
 ```
 
-# Listeners
+### Listeners
 
 Listeners are defined inside the `static get Listeners()` object and .Following listener will call `onClick` handler function when `"click"` event happens.
 
@@ -269,7 +257,7 @@ static get Listeners() {
 }
 ```
 
-# Reactivity
+### Reactivity
 
 [comment]: <`[prop]Mutated()` throttled if called multiple times per frame.>
 [comment]: <Runtime type checking available in debug mode.>
@@ -311,7 +299,7 @@ node.selected = true;
 
 Note that change handler functions are provided with a `change` payload that includes property name as well as `oldValue` and new `value`. Similarly, the change event provides the same change payload as `event.detail`.
 
-## Property Change Batching
+### Property Change Batching
 
 Since `change()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
 
@@ -340,7 +328,7 @@ this.prop2Changed(change);
 this.changed();
 ```
 
-## Lazy Reactivity
+### Lazy Reactivity
 
 > **Warning!** This feature is not fully tested!
 
@@ -364,7 +352,7 @@ this.prop2Changed(change); // change.oldValue === 'a'
 this.changed();
 ```
 
-# Template Syntax
+### Template Syntax
 
 [comment]: <Uses nested array representation of (virtual) DOM.>
 [comment]: <Template function handles disposal of removed elements.>
@@ -392,7 +380,7 @@ The first array item is element name's, followed by **optional** properties and 
 Here is a slightly more complex vDOM tree with array iterator:
 
 ```javascript
-this.template([
+this.render([
   h4('Array indices:'),
   div([
     this.items.map(i => span({class: 'item'}, i))
@@ -415,7 +403,7 @@ DOM output:
 > **Note:** Io-Gui templates do not set HTML attributes - only properties are set.
 
 
-# Data Binding
+### Data Binding
 
 This is a simple yet powerful feature designed to be used with Io-Gui nodes and elements by simply invoking the `bind(propName)` method:
 
@@ -442,7 +430,7 @@ new IoSlider({value: myNode.bind('value')});
 Or we can assign it to an element using template syntax:
 
 ```javascript
-this.template([ioSldier({value: this.bind('value')})]);
+this.render([ioSldier({value: this.bind('value')})]);
 ```
 
 The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.

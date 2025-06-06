@@ -8,8 +8,10 @@ declare class IoColorPanel extends IoColorBase {
     expanded: boolean;
     static get Listeners(): {
         keydown: string;
+        'io-focus-to': string;
     };
     onKeydown(event: KeyboardEvent): void;
+    onIoFocusTo(event: CustomEvent): void;
     onValueInput(): void;
     changed(): void;
 }

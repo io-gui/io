@@ -1,32 +1,33 @@
 import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions } from 'io-menus';
+export type SelectType = 'shallow' | 'deep' | 'none';
+export type CachingType = 'proactive' | 'reactive' | 'none';
 export type IoSelectorProps = IoElementProps & {
     options?: MenuOptions;
-    select?: 'shallow' | 'deep';
     elements?: VDOMElement[];
-    cache?: boolean;
-    precache?: boolean;
+    select?: SelectType;
+    caching?: CachingType;
     loading?: WithBinding<boolean>;
     import?: string;
-    precacheDelay?: number;
 };
 export declare class IoSelector extends IoElement {
     static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     options: MenuOptions;
-    select: 'shallow' | 'deep';
     elements: VDOMElement[];
-    cache: boolean;
-    precache: boolean;
+    select: SelectType;
+    caching: CachingType;
     loading: boolean;
     private _caches;
-    precacheDelay: number;
-    private _selected?;
+    private _preaching;
+    constructor(args?: IoSelectorProps);
     init(): void;
+    optionsChanged(): void;
+    elementsChanged(): void;
     optionsMutated(): void;
-    importModule(path: string): Promise<unknown>;
-    protected renderSelected(): void;
-    onLoadPrecache(): void;
+    renderSelectedId(id: string): void;
+    startPreache(): void;
+    preacheNext(): void;
     dispose(): void;
 }
 export declare const ioSelector: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

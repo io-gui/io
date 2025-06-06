@@ -4,6 +4,7 @@ export type IoMarkdownProps = IoElementProps & {
     strip?: string[];
     loading?: WithBinding<boolean>;
     sanitize?: boolean;
+    scroll?: WithBinding<string>;
 };
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
@@ -15,13 +16,22 @@ export declare class IoMarkdown extends IoElement {
     strip: string[];
     loading: boolean;
     sanitize: boolean;
+    scroll: string;
     role: string;
+    private scrollToSuspended;
+    private onScrollSuspended;
+    static get Listeners(): {
+        scroll: string;
+    };
     constructor(args?: IoMarkdownProps);
-    protected _strip(innerHTML: string): string;
-    protected _parseMarkdown(markdown: string): void;
+    init(): void;
+    scrollChanged(): void;
+    scrollChangedDebounced(): void;
+    scrollToUnsuspend(): void;
+    onScrollUnsuspended(): void;
+    onScrollChanged(): void;
     onResized(): void;
     srcChanged(): void;
-    changed(): void;
 }
 export declare const ioMarkdown: (arg0?: IoMarkdownProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoMarkdown.d.ts.map

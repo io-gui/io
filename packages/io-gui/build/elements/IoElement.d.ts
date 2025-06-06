@@ -53,17 +53,17 @@ export declare class IoElement extends IoElement_base {
      * Renders DOM from virtual DOM arrays.
      * @param {Array} vDOMElements - Array of VDOMElement[] children.
      * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
+     * @param {boolean} [noDispose] - Skip disposal of existing elements.
      */
-    template(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, cache?: boolean): void;
+    render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean): void;
     /**
      * Recurively traverses virtual DOM elements.
      * TODO: test element.traverse() function!
      * @param {Array} vDOMElements - Array of VDOMElements elements.
      * @param {HTMLElement} [host] - Optional template target.
-     * @param {boolean} [cache] - Optional don't reuse existing elements and skip dispose
+     * @param {boolean} [noDispose] - Skip disposal of existing elements.
      */
-    traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, cache?: boolean): void;
+    traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
     /**
     * Helper function to flatten textContent into a single TextNode.
     * Update textContent via TextNode is better for layout performance.

@@ -20,7 +20,7 @@ export declare class IoGl extends IoElement {
     get ctx(): CanvasRenderingContext2D;
     themeMutated(): void;
     changed(): void;
-    _onRender(): void;
+    onRender(): void;
     setShaderProgram(): void;
     updatePropertyUniform(name: string, property: ReactivePropertyInstance): void;
     updateThemeUniforms(): void;

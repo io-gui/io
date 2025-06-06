@@ -131,8 +131,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
          */
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         /**
-         * Disposes all core.
-         * Use this when instance is no longer needed.
+         * Disposes the node when it is no longer needed.
          */
         dispose(): void;
         Register(ioNodeConstructor: typeof Node): void;
@@ -246,8 +245,7 @@ declare const Node_base: {
          */
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         /**
-         * Disposes all core.
-         * Use this when instance is no longer needed.
+         * Disposes the node when it is no longer needed.
          */
         dispose(): void;
         Register(ioNodeConstructor: typeof Node): void;
