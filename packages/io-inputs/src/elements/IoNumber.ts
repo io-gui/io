@@ -230,7 +230,7 @@ export class IoNumber extends IoField {
       this.setAttribute('aria-invalid', 'true');
     }
   }
-  init() {
+  ready() {
     this.disabledChanged();
     this.changed();
   }

@@ -65,8 +65,8 @@ class IoOverlay extends IoElement {
       'wheel': ['onScroll', {passive: false}],
     };
   }
-  constructor(args: IoElementProps = {}) {
-    super(args);
+  constructor(args: IoElementProps = {}) { super(args); }
+  init() {
     this.expandAsChildren = this.expandAsChildren.bind(this);
   }
   stopPropagation(event: Event) {

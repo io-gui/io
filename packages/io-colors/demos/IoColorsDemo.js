@@ -21,7 +21,7 @@ export class IoColorsDemo extends IoElement {
         flex-direction: column;
       }
       :host .row > * {
-        margin-right: var(--io_spacing3);
+        margin-right: var(--io_spacing2);
       }
     `;
   }
@@ -31,7 +31,7 @@ export class IoColorsDemo extends IoElement {
       rgba: {value: {r: 1, g: 0.5, b: 1, a: 1}},
     };
   }
-  init() {
+  ready() {
     this.render([
       div({class: 'column'}, [
         ioColorRgba({value: this.rgba}),

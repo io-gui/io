@@ -20,7 +20,6 @@ export class IoBreadcrumbs extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      overflow: hidden;
     }
     :host > div {
       display: flex;

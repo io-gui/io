@@ -25,7 +25,7 @@ export default class {
   run() {
     describe('IoElement', () => {
       it('Should have core API functions defined', () => {
-        expect(element.template).to.be.a('function');
+        expect(element.render).to.be.a('function');
         expect(element.traverse).to.be.a('function');
         expect(element.setAttribute).to.be.a('function');
         expect(element.$).to.be.a('object');
@@ -248,7 +248,7 @@ export default class {
               prop3: 'target3',
             };
           }
-          init() {
+          ready() {
             this.changed();
           }
           changed() {

@@ -14,6 +14,19 @@ export class IoSwitch extends IoBoolean {
         overflow: visible;
         padding: var(--io_spacing) var(--io_spacing);
       }
+      :host:focus {
+        outline: 0;
+        border-color: transparent;
+        z-index: 1;
+      }
+      :host:focus > span:before {
+        outline: var(--io_spacing) solid var(--io_colorStrong);
+        outline-offset: var(--io_borderWidth);
+      }
+      :host[pressed] {
+        border-color: transparent !important;
+        box-shadow: none !important;
+      }
       :host > span {
         position: relative;
         width: calc(1.5 * var(--io_fieldHeight));
@@ -53,15 +66,6 @@ export class IoSwitch extends IoBoolean {
       :host[value] > span:after {
         background-color: var(--io_bgColorBlue);
         left: calc(100% - calc(var(--io_lineHeight) - var(--io_borderWidth)));
-      }
-      :host:focus > span:before {
-        border-color: var(--io_colorBlue);
-        outline: 1px auto var(--io_colorBlue);
-        outline: 1px auto -webkit-focus-ring-color;
-      }
-      :host > span:focus {
-        outline: 0;
-        border-color: transparent;
       }
     `;
   }

@@ -6,11 +6,11 @@ import 'io-navigation';
 import 'io-icons';
 
 const numberItems = new MenuOptions().fromJSON([
-  {value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:layers'},
-  {value: 1, label: 'one', hint: 'Number(1)', icon: 'io:lock'},
-  {value: 2, label: 'two', hint: 'Number(2)', icon: 'io:box'},
-  {value: 3, label: 'three', hint: 'Number(3)', icon: 'io:film'},
-  {value: 4, label: 'four', hint: 'Number(4)', icon: 'io:gear'},
+  {value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:numeric-0-box'},
+  {value: 1, label: 'one', hint: 'Number(1)', icon: 'io:numeric-1-box'},
+  {value: 2, label: 'two', hint: 'Number(2)', icon: 'io:numeric-2-box'},
+  {value: 3, label: 'three', hint: 'Number(3)', icon: 'io:numeric-3-box'},
+  {value: 4, label: 'four', hint: 'Number(4)', icon: 'io:numeric-4-box'},
 ]);
 
 const colorOptions = new MenuOptions().fromJSON([
@@ -208,7 +208,7 @@ class IoMenusDemo extends IoElement {
       menuRoot: undefined,
     };
   }
-  init() {
+  ready() {
     this.render([
       ioMenuTree({
         searchable: true,
@@ -255,7 +255,7 @@ class IoMenusDemo extends IoElement {
         }),
         ioMenuOptions({
           options: new MenuOptions({
-            items: numberItems.items.reverse(),
+            items: [...numberItems.items].reverse(),
             selected: this.bind('menuRoot')
           }),
         }),

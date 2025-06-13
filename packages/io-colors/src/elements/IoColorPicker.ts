@@ -24,8 +24,9 @@ export class IoColorPicker extends IoElement {
         overflow: hidden;
       }
       :host:focus {
-        border-color: var(--io_colorBlue);
-        outline: 1px auto var(--io_colorBlue);
+        outline: var(--io_spacing) solid var(--io_colorStrong);
+        outline-offset: var(--io_borderWidth);
+        z-index: 1;
       }
       :host > io-color-swatch {
         width: 100%;
@@ -51,7 +52,7 @@ export class IoColorPicker extends IoElement {
     return Panel.expanded && Panel.value === this.value;
   }
 
-  init() {
+  ready() {
     this.valueChanged();
   }
 

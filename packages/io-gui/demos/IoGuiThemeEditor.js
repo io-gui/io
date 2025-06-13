@@ -49,6 +49,15 @@ export class IoGuiThemeEditor extends IoElement {
       ioField('borderColorDark'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorDark')}),
 
+      ioField('borderColorRed'),
+      ioColorRgba({value: ThemeSingleton.bind('borderColorRed')}),
+
+      ioField('borderColorBlue'),
+      ioColorRgba({value: ThemeSingleton.bind('borderColorBlue')}),
+
+      ioField('borderColorGreen'),
+      ioColorRgba({value: ThemeSingleton.bind('borderColorGreen')}),
+
       ioField('bgColor'),
       ioColorRgba({value: ThemeSingleton.bind('bgColor')}),
 

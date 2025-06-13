@@ -68,7 +68,7 @@ export class IoEditorsDemo extends IoElement {
       }}
     };
   }
-  init() {
+  ready() {
     this.render([
       ioInspector({
         value: this.object,

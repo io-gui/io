@@ -38,17 +38,17 @@ export class IoMenuOptions extends IoElement {
       flex-direction: column;
       align-self: flex-start;
       border: var(--io_border);
-      border-radius: var(--io_borderRadius);
+      border-radius: calc(var(--io_borderRadius) + var(--io_spacing2));
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorDimmed);
-      padding: var(--io_spacing) 0;
+      padding: calc(var(--io_spacing) + var(--io_borderWidth));
       user-select: none;
       transition: opacity 0.3s ease-in-out;
     }
     :host[horizontal] {
+      padding: var(--io_spacing) 0;
       flex-direction: row;
       align-self: stretch;
-      padding: 0 var(--io_spacing);
     }
     :host[inoverlay] {
       overflow-y: auto;
@@ -60,23 +60,6 @@ export class IoMenuOptions extends IoElement {
       visibility: hidden;
       opacity: 0;
     }
-    :host > io-menu-item {
-      border-radius: 0;
-    }
-    :host > io-menu-item[selected][direction="up"] {
-      border-color: var(--io_colorBlue) transparent transparent transparent;
-    }
-    :host > io-menu-item[selected][direction="down"] {
-      border-color: transparent transparent var(--io_colorBlue) transparent;
-    }
-    :host > io-menu-item[selected][direction="right"] {
-      border-color: transparent var(--io_colorBlue) transparent transparent;
-    }
-    :host > io-menu-item[selected][direction="left"] {
-      border-color: transparent transparent transparent var(--io_colorBlue);
-    }
-
-    /* Item divider */
     :host > io-menu-item[hidden] ~ span.divider {
       display: none;
     }
@@ -84,35 +67,22 @@ export class IoMenuOptions extends IoElement {
       flex: 0 0 0;
       border: var(--io_border);
       border-color: var(--io_borderColorInset);
-      margin: var(--io_spacing);
-      opacity: 0.5;
+      margin: var(--io_spacing) 0;
+      opacity: 0.1;
     }
-
-    /* Remove hints from horizontal menu */
+    :host[horizontal] > span.divider {
+      margin: 0 var(--io_spacing);
+    }
     :host[horizontal] > io-menu-item > .hint {
       display: none;
     }
-
-    /* Search field */
     :host:not([horizontal]) > #search {
       margin: var(--io_spacing);
       margin-top: 0;
     }
     :host[horizontal] > #search {
-      margin: var(--io_spacing);
-      margin-left: 0;
+      margin: 0 var(--io_spacing);
       flex: 0 0 10em;
-    }
-
-    /* Hamburger menu for overflow items */
-    :host > io-menu-hamburger {
-      border-color: transparent !important;
-      background-color: transparent !important;
-    }
-    :host[horizontal] > io-menu-hamburger {
-      position: absolute;
-      right: var(--io_spacing);
-      padding: var(--io_spacing);
     }
     `;
   }
@@ -166,9 +136,11 @@ export class IoMenuOptions extends IoElement {
   get inoverlay() {
     return Overlay.contains(this.parentElement);
   }
-  constructor(args: IoMenuOptionsProps = {}) {
-    super(args);
+  constructor(args: IoMenuOptionsProps = {}) { super(args); }
+  init() {
     this.setOverflow = this.setOverflow.bind(this);
+  }
+  ready() {
     this.debounce(this.setOverflow);
   }
   stopPropagation(event: MouseEvent) {
@@ -207,6 +179,7 @@ export class IoMenuOptions extends IoElement {
 
     let command = '';
 
+    // TODO: 'Home', 'End', 'PageUp', 'PageDown' keys should be handled.
     if (this.horizontal) {
       if (direction === 'right' && inoverlay) command = 'next';
       if (direction === 'left' && inoverlay) command = 'prev';
@@ -339,6 +312,9 @@ export class IoMenuOptions extends IoElement {
       } else {
         for (let i = 0; i < filteredItems.length; i++) {
           elements.push(ioMenuItem({item: filteredItems[i], depth: 0}));
+          if (i < filteredItems.length - 1) {
+            elements.push({tag: 'span', props: {class: 'divider'}});
+          }
         }
       }
     } else {

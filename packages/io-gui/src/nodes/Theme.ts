@@ -262,7 +262,7 @@ export class Theme extends Node {
   @ReactiveProperty('debounced')
   declare reactivity: string;
 
-  init() {
+  ready() {
     this.registerTheme('light', LIGHT_THEME);
     this.registerTheme('dark', DARK_THEME);
     this.themeIDChanged();

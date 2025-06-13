@@ -24,6 +24,7 @@ export class IoMenuTreeBranch extends IoElement {
     }
     :host > io-boolean {
       overflow: visible;
+      padding-left: var(--io_spacing3);
       padding-right: var(--io_spacing3);
     }
     :host > io-boolean:before {
@@ -35,8 +36,8 @@ export class IoMenuTreeBranch extends IoElement {
       content: "▾"
     }
     :host > io-menu-tree {
-      margin-top: 0;
       margin-left: var(--io_spacing3);
+      background: transparent;
       border: none;
     }
     `;

@@ -71,8 +71,8 @@ export default class {
       it('Should initialize suboptions from constructor arguments', () => {
         let item = new MenuItem({options: new MenuOptions({items: []})});
         expect(item.hasmore).to.be.equal(false);
-        expect(item.options).to.be.eql([]);
-        expect(item.options?.length).to.be.equal(0);
+        expect(item.options?.items).to.be.eql([]);
+        expect(item.options?.items.length).to.be.equal(0);
 
         item = new MenuItem({options: new MenuOptions({items: [
           new MenuItem({value: 1}),
@@ -80,15 +80,17 @@ export default class {
           new MenuItem({value: null}),
         ]})});
         expect(item.hasmore).to.be.equal(true);
-        expect((item.options as any)[0].value).to.be.equal(1);
-        expect((item.options as any)[0].id).to.be.equal('1');
-        expect((item.options as any)[0].label).to.be.equal('1');
-        expect((item.options as any)[1].value).to.be.equal('2');
-        expect((item.options as any)[1].id).to.be.equal('II');
-        expect((item.options as any)[1].label).to.be.equal('two');
-        expect((item.options as any)[2].value).to.be.equal(null);
-        expect((item.options as any)[2].id).to.be.equal('');
-        expect((item.options as any)[2].label).to.be.equal('null');
+        const options = item.options as MenuOptions;
+        const items = options.items as MenuItem[];
+        expect(items[0].value).to.be.equal(1);
+        expect(items[0].id).to.be.equal('1');
+        expect(items[0].label).to.be.equal('1');
+        expect(items[1].value).to.be.equal('2');
+        expect(items[1].id).to.be.equal('II');
+        expect(items[1].label).to.be.equal('two');
+        expect(items[2].value).to.be.equal(null);
+        expect(items[2].id).to.be.equal('');
+        expect(items[2].label).to.be.equal('null');
       });
       it('Should return `options.path` from path getter', () => {
         let item = new MenuItem({options: new MenuOptions({items: []})});

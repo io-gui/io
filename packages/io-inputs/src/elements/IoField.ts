@@ -32,15 +32,18 @@ export class IoField extends IoElement {
         font-size: var(--io_fontSize);
         user-select: none;
       }
+      :host:focus {
+        text-overflow: inherit;
+        outline: var(--io_spacing) solid var(--io_colorStrong);
+        outline-offset: var(--io_borderWidth);
+        z-index: 1;
+      }
       :host[disabled] {
         opacity: 0.5;
       }
       :host[pressed] {
         border-color: var(--io_borderColorInset) !important;
         box-shadow: var(--io_shadowInset) !important;
-      }
-      :host :not(:last-child) {
-        margin-right: var(--io_spacing2);
       }
       :host span {
         display: inline-block;
@@ -80,11 +83,6 @@ export class IoField extends IoElement {
         color: var(--io_colorWhite);
         background-color: var(--io_bgColorBlue);
         border-color: var(--io_borderColorBlue);
-      }
-      :host:focus {
-        text-overflow: inherit;
-        border-color: var(--io_colorBlue);
-        outline: 1px auto var(--io_colorBlue);
       }
     `;
   }

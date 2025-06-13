@@ -31,7 +31,7 @@ export class IoSlidersDemo extends IoElement {
       array2: [0, 1],
     };
   }
-  init() {
+  ready() {
     this.render([
       div({class: 'column'}, [
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1}),

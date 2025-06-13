@@ -107,7 +107,7 @@ export class IoElementDemo extends IoElement {
       selected: options.bind('selected'),
     };
   }
-  init() {
+  ready() {
     this.selectedChanged();
   }
   onElementMutated() {

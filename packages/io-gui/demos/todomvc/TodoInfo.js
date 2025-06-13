@@ -1,7 +1,7 @@
 import { IoElement, Register } from 'io-gui';
 
 export class TodoInfo extends IoElement {
-  init() {
+  ready() {
     this.innerHTML = `
       <p>Double-click to edit a todo</p>
       <p>Created with <a href="https://iogui.dev" target="_blank">Io-Gui</a></p>

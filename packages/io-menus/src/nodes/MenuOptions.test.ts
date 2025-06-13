@@ -64,7 +64,7 @@ export default class {
         expect(options.path).to.be.eql('');
         expect(options.selected).to.be.equal('');
         expect(options.delimiter).to.be.equal(',');
-        expect(options.length).to.be.equal(0);
+        expect(options.items.length).to.be.equal(0);
       });
       it('Should initialize correctly from constructor arguments', () => {
         let options = new MenuOptions({items: [
@@ -75,13 +75,13 @@ export default class {
         expect(options.path).to.be.eql('');
         expect(options.selected).to.be.equal('');
         expect(options.delimiter).to.be.equal(',');
-        expect(options.length).to.be.equal(3);
-        expect(options[0].value).to.be.equal(1);
-        expect(options[0].label).to.be.equal('1');
-        expect(options[1].value).to.be.equal('2');
-        expect(options[1].label).to.be.equal('2');
-        expect(options[2].value).to.be.equal(null);
-        expect(options[2].label).to.be.equal('null');
+        expect(options.items.length).to.be.equal(3);
+        expect(options.items[0].value).to.be.equal(1);
+        expect(options.items[0].label).to.be.equal('1');
+        expect(options.items[1].value).to.be.equal('2');
+        expect(options.items[1].label).to.be.equal('2');
+        expect(options.items[2].value).to.be.equal(null);
+        expect(options.items[2].label).to.be.equal('null');
 
         // options = new MenuOptions([{value: '2',  label: 'two'}]);
         // expect(options.length).to.be.equal(1);

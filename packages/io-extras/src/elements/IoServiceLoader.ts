@@ -17,8 +17,10 @@ export class IoServiceLoader extends Node {
   }
   constructor(props?: any) {
     super(props);
-    this.requestNotification = this.requestNotification.bind(this);
     if ('serviceWorker' in navigator) void this.activate();
+  }
+  init() {
+    this.requestNotification = this.requestNotification.bind(this);
   }
   async activate() {
     const serviceWorkerRegistration = await navigator.serviceWorker.register(this.path);

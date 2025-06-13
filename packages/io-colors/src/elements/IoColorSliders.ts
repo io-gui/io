@@ -212,6 +212,11 @@ class IoColorSliderBase extends IoSlider {
       ${glsl.hue2rgb}
       ${glsl.hsv2rgb}
       ${glsl.hsl2rgb}
+
+      vec3 paintHorizontalLine(vec3 dstCol, vec2 p, vec3 color) {
+        float lineShape = lineHorizontal(p, io_borderWidth * 2.0);
+        return compose(dstCol, vec4(color, lineShape));
+      }
     `;
   }
   static get Frag() {
@@ -283,9 +288,9 @@ class IoColorSlider2dBase extends IoSlider2d {
       vec2 position = size * (uv - vec2(0.5));
 
       // Colors
-      vec3 finalCol = geio_color(uv);
+      vec3 finalCol = color_field(uv);
       vec3 gridCol = io_bgColorDimmed.rgb;
-      vec3 sliderCol = geio_color(uValue);
+      vec3 sliderCol = color_field(uValue);
 
       // Grid
       vec2 gridSize = size / abs((uMax - uMin) / uStep);
@@ -459,7 +464,7 @@ export const ioColorSliderL = IoColorSliderL.vConstructor;
 export class IoColorSliderHs extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 geio_color(vec2 uv) {
+      vec3 color_field(vec2 uv) {
         return hsv2rgb(vec3(uv, uColor[2]));
       }
     `;
@@ -474,7 +479,7 @@ export const ioColorSliderHs = IoColorSliderHs.vConstructor;
 export class IoColorSliderSv extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 geio_color(vec2 uv) {
+      vec3 color_field(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv));
       }
     `;
@@ -489,7 +494,7 @@ export const ioColorSliderSv = IoColorSliderSv.vConstructor;
 export class IoColorSliderSl extends IoColorSlider2dBase {
   static get GlUtils() {
     return /* glsl */`
-      vec3 geio_color(vec2 uv) {
+      vec3 color_field(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uv));
       }
     `;

@@ -24,7 +24,7 @@ export class IoIconsDemo extends IoElement {
       }
     `;
   }
-  init() {
+  ready() {
     this.render(
       (()=>{
         const iconsets = [];

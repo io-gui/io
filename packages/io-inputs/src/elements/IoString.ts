@@ -143,7 +143,7 @@ export class IoString extends IoField {
       this.setCaretPosition(carretPosition);
     }
   }
-  init() {
+  ready() {
     this.disabledChanged();
   }
   valueChanged() {

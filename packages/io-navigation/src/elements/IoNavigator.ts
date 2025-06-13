@@ -50,28 +50,6 @@ export class IoNavigator extends IoElement {
         border-bottom: var(--io_border);
         border-radius: 0;
       }
-      :host[collapsed] > io-menu-options {
-        /* min-height: calc(var(--io_fieldHeight) + 1em); */
-        /* padding: calc(var(--io_spacing) + 0.5em) !important; */
-      }
-      :host[collapsed] > io-menu-options > io-menu-item.hamburger {
-        /* top: 0; */
-        /* padding: calc(var(--io_spacing) + 0.5em); */
-        /* padding-right: calc(var(--io_spacing2) + 0.5em); */
-        /* min-height: calc(var(--io_fieldHeight) + 1em); */
-        /* background-color: transparent; */
-      }
-      /* :host > io-menu-item.hamburger {
-        flex: 0 0 auto;
-        border-radius: 0;
-        padding: calc(var(--io_spacing) + 0.5em);
-        height: 100%;
-        background-color: var(--io_bgColorDimmed);
-        border-color: transparent !important;
-      }
-      :host > io-menu-item.hamburger > .hasmore {
-        display: none;
-      } */
     `;
   }
 

@@ -16,7 +16,7 @@ export class TodoApp extends IoElement {
       route: $({value: 'all', storage: 'hash', key: 'route'}),
     };
   }
-  init() {
+  ready() {
     this.changed();
   }
   changed() {

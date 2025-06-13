@@ -36,9 +36,6 @@ export class IoOptionSelect extends IoElement {
       background-color: transparent !important;
       border-color: transparent !important;
     }
-    :host > io-menu-item[selected] {
-      color: var(--io_colorStrong);
-    }
     `;
   }
 
@@ -64,7 +61,7 @@ export class IoOptionSelect extends IoElement {
     super(args);
   }
 
-  init() {
+  ready() {
     this.$item = new MenuItem({value: this.value, mode: 'none', options: this.options});
   }
 

@@ -247,6 +247,7 @@ export class IoMenuItem extends IoField {
 
     let command = '';
 
+    // TODO: 'Home', 'End', 'PageUp', 'PageDown' keys should be handled.
     if (event.key === 'Enter' || event.key === ' ') {
       if (this.hasmore) {
         command = 'in';
@@ -255,8 +256,10 @@ export class IoMenuItem extends IoField {
         this.onClick();
         return;
       }
-    } else if (event.key === 'Escape') {
+    } else if (event.key === 'Backspace') {
       command = 'out';
+    } else if (event.key === 'Escape') {
+      command = 'collapse';
     } else if (event.key === 'Tab') {
       event.preventDefault();
       if (direction === 'left' || direction === 'right') {
@@ -294,7 +297,7 @@ export class IoMenuItem extends IoField {
       event.preventDefault();
       switch (command) {
         case 'collapse': {
-          this.collapse();
+          this.collapseRoot();
           break;
         }
         case 'in':

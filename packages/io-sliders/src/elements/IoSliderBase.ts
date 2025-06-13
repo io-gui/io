@@ -46,8 +46,9 @@ export class IoSliderBase extends IoGl {
         border-color: var(--io_colorRed);
       }
       :host:focus {
-        border-color: var(--io_colorBlue);
-        outline: 1px auto var(--io_colorBlue);
+        outline: var(--io_spacing) solid var(--io_colorStrong);
+        outline-offset: var(--io_borderWidth);
+        z-index: 1;
       }
     `;
   }
@@ -335,7 +336,7 @@ export class IoSliderBase extends IoGl {
     value[1] = value[1] + step[1];
     this._inputValue(value);
   }
-  init() {
+  ready() {
     this.changed();
   }
   valueChanged() {

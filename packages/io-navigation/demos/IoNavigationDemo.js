@@ -94,7 +94,7 @@ export class IoNavigationDemo extends IoElement {
       boolean: true,
     };
   }
-  init() {
+  ready() {
     this.render([
       ioNavigator({
         menu: 'left',

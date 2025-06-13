@@ -70,7 +70,7 @@ export class IoNumberSliderRange extends IoElement {
     // this.dispatchEvent('object-mutated', {object: this.value}, false, window);
     this.dispatchEvent('value-input', event.detail, false);
   }
-  init() {
+  ready() {
     this.changed();
   }
   changed() {

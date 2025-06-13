@@ -52,8 +52,9 @@ export class IoSlider extends IoGl {
         opacity: 0.5;
       }
       :host:focus {
-        border-color: var(--io_colorBlue);
-        outline: 1px auto var(--io_colorBlue);
+        outline: var(--io_spacing) solid var(--io_colorStrong);
+        outline-offset: var(--io_borderWidth);
+        z-index: 1;
       }
     `;
   }
@@ -291,7 +292,7 @@ export class IoSlider extends IoGl {
       default:
     }
   }
-  init() {
+  ready() {
     this.valueChanged();
     this.minChanged();
     this.maxChanged();

@@ -89,7 +89,7 @@ export class IoNumberLadderStep extends IoField {
     this.removeEventListener('pointerup', this.onPointerup);
     this.dispatchEvent('ladder-step-collapse', {}, true);
   }
-  init() {
+  ready() {
     this.changed();
   }
   changed() {

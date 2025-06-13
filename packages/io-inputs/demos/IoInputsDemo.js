@@ -28,7 +28,7 @@ export class IoInputsDemo extends IoElement {
       boolean: true,
     };
   }
-  init() {
+  ready() {
     this.render([
       div({class: 'row'}, [
         ioField({value: this.bind('string'), inert: true}),
@@ -39,6 +39,7 @@ export class IoInputsDemo extends IoElement {
       ]),
       div({class: 'row'}, [
         ioField({value: this.bind('string'), inert: true}),
+        // TODO: Deprecate color classes
         ioField({value: this.bind('string'), invalid: this.bind('boolean')}),
         ioField({value: this.bind('string'), class: 'green'}),
         ioField({value: this.bind('string'), selected: this.bind('boolean')}),

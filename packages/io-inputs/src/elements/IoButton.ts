@@ -59,7 +59,7 @@ export class IoButton extends IoField {
     if (typeof this.action === 'function') this.action(this.value);
     this.dispatchEvent('io-button-clicked', {value: this.value}, true);
   }
-  init() {
+  ready() {
     this.changed();
   }
   changed() {

@@ -38,10 +38,6 @@ export class IoBoolean extends IoField {
 
   constructor(args: IoBooleanProps = {}) { super(args); }
 
-  onPointerdown(event: PointerEvent) {
-    event.preventDefault();
-    super.onPointerdown(event);
-  }
   onClick() {
     this.toggle();
     this.dispatchEvent('io-boolean-clicked', {value: this.value}, true);
@@ -49,7 +45,7 @@ export class IoBoolean extends IoField {
   toggle() {
     this.inputValue(!this.value);
   }
-  init() {
+  ready() {
     this.valueChanged();
     this.changed();
   }

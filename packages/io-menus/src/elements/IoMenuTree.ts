@@ -43,13 +43,15 @@ export class IoMenuTree extends IoElement {
       border-radius: var(--io_borderRadius);
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorDimmed);
+      padding: var(--io_spacing);
       user-select: none;
     }
-    
+    :host io-menu-tree {
+      padding: 0 !important;
+    }
     :host > io-menu-item {
       padding-left: var(--io_spacing);
       padding-right: var(--io_spacing3);
-      border-radius: 0;
     }
     :host > io-menu-item[selected] {
       border-color: transparent var(--io_colorBlue) transparent transparent;
@@ -58,14 +60,6 @@ export class IoMenuTree extends IoElement {
       display: inline-block;
       width: var(--io_fontSize);
       content: ""
-    }
-    :host io-menu-tree-branch {
-      margin-left: var(--io_spacing2);
-    }
-
-    :host > #search {
-      margin: var(--io_spacing);
-      margin-bottom: 0;
     }
     `;
   }

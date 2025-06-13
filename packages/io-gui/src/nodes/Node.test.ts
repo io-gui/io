@@ -810,7 +810,7 @@ export default class {
               prop3: 'target3',
             };
           }
-          init() {
+          ready() {
             this.changed();
           }
           changed() {

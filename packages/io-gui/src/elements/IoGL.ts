@@ -105,7 +105,6 @@ export class IoGl extends IoElement {
       ${glsl.checkerX}
       ${glsl.checkerY}
       ${glsl.compose}
-      ${glsl.paintHorizontalLine}
     `;
   }
   static get Frag() {

@@ -61,6 +61,8 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       // eslint-disable-next-line constructor-super
       super(...superProps);
 
+      this.init();
+
       if (this._isIoElement) {
         Object.defineProperty(this, '$', {
           value: {},
@@ -130,7 +132,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         window.addEventListener('object-mutated', this.onPropertyMutated as EventListener);
       }
 
-      this.init();
+      this.ready();
 
       this.dispatchQueue();
     }
@@ -267,14 +269,14 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         this.dispatchEvent('value-input', {value: value, oldValue: oldValue}, false);
       }
     }
+    ready() {}
+    init() {}
     /**
      * default change handler.
      * Invoked when one of the properties change.
      */
 
     changed() {}
-
-    init() {}
     /**
      * Adds property change to the queue.
      * @param {string} name - Property name.

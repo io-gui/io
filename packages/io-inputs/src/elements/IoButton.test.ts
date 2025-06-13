@@ -51,7 +51,7 @@ export default class {
       });
       it('should set icon to match icon property', () => {
         element.icon = 'io:io_logo';
-        expect(element.innerHTML).to.equal(`<io-icon value="${element.icon}">${IconsetSingleton.getIcon(element.icon)}</io-icon>`);
+        expect(element.innerHTML).to.equal(`<io-icon value="${element.icon}" size="small">${IconsetSingleton.getIcon(element.icon)}</io-icon>`);
         element.icon = '';
         expect(element.innerHTML).to.equal('');
       });

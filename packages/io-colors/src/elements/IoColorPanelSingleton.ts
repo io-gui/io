@@ -16,14 +16,14 @@ class IoColorPanel extends IoColorBase {
       border: var(--io_border);
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorDimmed);
-      padding: var(--io_spacing);
-      border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
+      padding: var(--io_spacing2);
+      border-radius: calc(var(--io_borderRadius) + var(--io_spacing2));
     }
     :host:not([expanded]) {
       display: none;
     }
     :host > *:not(:last-child) {
-      margin: 0 var(--io_spacing) 0 0;
+      margin: 0 var(--io_spacing2) 0 0;
     }
     `;
   }
