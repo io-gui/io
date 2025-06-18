@@ -4,15 +4,15 @@ export type MenuOptionsProps = NodeProps & {
     selected?: WithBinding<string>;
     path?: string;
     delimiter?: string;
-    items?: MenuItem[];
+    items?: MenuItem[] | MenuItemDefLoose[];
 };
 export declare class MenuOptions extends Node {
     selected: string;
     path: string;
     delimiter: string;
     items: MenuItem[];
-    reactivity: string;
     constructor(properties?: MenuOptionsProps);
+    init(): void;
     getAllItems(): MenuItem[];
     findItemByValue(value: any): MenuItem | null;
     findItemById(id: string): MenuItem | null;

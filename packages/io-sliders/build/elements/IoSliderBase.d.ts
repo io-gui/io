@@ -60,7 +60,7 @@ export declare class IoSliderBase extends IoGl {
     _setDown(): void;
     _setLeft(): void;
     _setRight(): void;
-    init(): void;
+    ready(): void;
     valueChanged(): void;
     invalidChanged(): void;
     valueMutated(): void;

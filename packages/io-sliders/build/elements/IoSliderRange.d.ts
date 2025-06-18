@@ -1,5 +1,5 @@
 import { VDOMElement } from 'io-gui';
-import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 export type IoSliderRangeProps = IoSliderBaseProps & {};
 /**
  * Input element for `Array(2)` data type displayed as slider.

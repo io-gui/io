@@ -162,14 +162,14 @@
       class: 'main',
       menu: 'top',
       options: OPTIONS,
-      caching: 'none',
+      caching: 'proactive',
       depth: 2,
       widget: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}}),
       elements: [
         ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
         ioSelector({id: 'Docs',
           options: OPTIONS.findItemById('Docs').options,
-          caching: 'none',
+          caching: 'proactive',
           elements: [
             ioNavigator({id: 'Quick Start', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options, elements: [
               ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md', scroll: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected')}),
@@ -181,7 +181,7 @@
         }),
         ioSelector({id: 'Demos',
           options: OPTIONS.findItemById('Demos').options,
-          // caching: 'proactive',
+          caching: 'reactive',
           elements: [
             {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
             {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
@@ -190,8 +190,8 @@
             {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
             {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
             {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
-            {tag: 'io-gui-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoGuiThemeEditor.js'}},
-            {tag: 'io-element-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementDemo.js'}},
+            {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoThemeEditor.js'}},
+            {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementInspectorDemo.js'}},
             iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
           ]
         }),

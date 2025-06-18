@@ -53,7 +53,7 @@ export declare class IoSlider extends IoGl {
     _incrementValue(value: number): void;
     _inputValue(value: number): void;
     onKeydown(event: KeyboardEvent): void;
-    init(): void;
+    ready(): void;
     invalidChanged(): void;
     disabledChanged(): void;
     valueChanged(): void;

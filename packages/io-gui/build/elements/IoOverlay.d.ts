@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from './IoElement';
+import { IoElement, IoElementProps } from './IoElement.js';
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
  * It is a pointer-blocking element covering the entire window at a very high z-index.
@@ -54,6 +54,7 @@ declare class IoOverlay extends IoElement {
         })[];
     };
     constructor(args?: IoElementProps);
+    init(): void;
     stopPropagation(event: Event): void;
     onPointerup(event: PointerEvent): void;
     onContextmenu(event: Event): void;

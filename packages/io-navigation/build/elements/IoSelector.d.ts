@@ -23,9 +23,11 @@ export declare class IoSelector extends IoElement {
     constructor(args?: IoSelectorProps);
     init(): void;
     optionsChanged(): void;
-    elementsChanged(): void;
     optionsMutated(): void;
+    elementsChanged(): void;
+    renderSelected(): void;
     renderSelectedId(id: string): void;
+    renderDebounced(vElement: VDOMElement): void;
     startPreache(): void;
     preacheNext(): void;
     dispose(): void;

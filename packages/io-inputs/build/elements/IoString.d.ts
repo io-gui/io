@@ -1,5 +1,5 @@
 import { VDOMElement, WithBinding } from 'io-gui';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 export type IoStringProps = Omit<IoFieldProps, 'value'> & {
     value?: WithBinding<string>;
     live?: boolean;
@@ -29,7 +29,7 @@ export declare class IoString extends IoField {
     onPointerup(event: PointerEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
-    init(): void;
+    ready(): void;
     valueChanged(): void;
     changed(): void;
 }

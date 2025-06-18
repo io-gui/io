@@ -1,5 +1,5 @@
 import { VDOMElement } from 'io-gui';
-import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 export type IoSlider2dProps = IoSliderBaseProps & {};
 export declare class IoSlider2d extends IoSliderBase {
     static vConstructor: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

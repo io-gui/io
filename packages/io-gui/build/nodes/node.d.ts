@@ -1,9 +1,9 @@
-import { ProtoChain } from '../core/ProtoChain';
-import { Binding } from '../core/Binding';
-import { ChangeQueue } from '../core/ChangeQueue';
-import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty';
-import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
-import { CallbackFunction } from '../core/Queue';
+import { ProtoChain } from '../core/ProtoChain.js';
+import { Binding } from '../core/Binding.js';
+import { ChangeQueue } from '../core/ChangeQueue.js';
+import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
+import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
+import { CallbackFunction } from '../core/Queue.js';
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
 export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
@@ -58,12 +58,13 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
          * @param {*} value - Property value.
          */
         inputValue(value: any): void;
+        ready(): void;
+        init(): void;
         /**
          * default change handler.
          * Invoked when one of the properties change.
          */
         changed(): void;
-        init(): void;
         /**
          * Adds property change to the queue.
          * @param {string} name - Property name.
@@ -172,12 +173,13 @@ declare const Node_base: {
          * @param {*} value - Property value.
          */
         inputValue(value: any): void;
+        ready(): void;
+        init(): void;
         /**
          * default change handler.
          * Invoked when one of the properties change.
          */
         changed(): void;
-        init(): void;
         /**
          * Adds property change to the queue.
          * @param {string} name - Property name.

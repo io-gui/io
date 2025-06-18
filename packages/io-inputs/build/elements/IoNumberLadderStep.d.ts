@@ -1,5 +1,5 @@
 import { VDOMElement } from 'io-gui';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 export type IoNumberLadderStepProps = IoFieldProps & {
     value?: number;
     label?: string;
@@ -15,7 +15,7 @@ export declare class IoNumberLadderStep extends IoField {
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
-    init(): void;
+    ready(): void;
     changed(): void;
 }
 export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

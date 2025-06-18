@@ -1,6 +1,6 @@
 # Usage
 
-There are many ways to use Io-Gui. You can use its core classes `Node` and `IoElement` to bootstrap your own nodes and custom elements, build anything from a website to a complex single-page application, or you can simply import and use one of its nodes or elements in your own web architecture. You can learn more about nodes and elements in the [deep dive] guide.
+There are many ways to use Io-Gui. You can use its core classes `Node` and `IoElement` to create your own nodes and custom elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture. You can learn more about nodes and elements in the [deep dive] guide.
 
 To quickly import Io-Gui and get started, continue reading this article.
 
@@ -8,57 +8,51 @@ To quickly import Io-Gui and get started, continue reading this article.
 
 Here is a basic example of a reaciteve element `<my-element>` with a `message` property and a simple template.
 
-```javascript
-import { IoElement, Register } from 'io-gui';
+```typescript
+import { IoElement, Register, ReactiveProperty, span } from 'io-gui'
 
+@Register
 class MyElement extends IoElement {
-  static get ReactiveProperties() {
-    return {
-      message: ''
-    };
-  }
-  messageChanged() {
-    this.render([['p', this.message]]);
+  
+  @ReactiveProperty('hello')
+  declare message: string
+  
+  changed() {
+    this.render([
+      span(this.message)
+    ]);
   }
 }
-Register(MyElement);
 
-const myElement = new MyElement({message: 'Hello World'});
-document.body.appendChild(myElement);
+document.body.appendChild(
+  new MyElement({message: 'Hello World'})
+)
 ```
 
-> **Note:** You can add `<my-element>` to your HTML declaratively but keep in mind that properties have to be set imperatively. Setting HTML attributes won't work.
+## Making a Simple Website
 
-## Making a Website
-
-Here is a quick way to make a simple website `<my-website>` with navigation and pages that load contents from .md files. 
+Here is a quick way to make a simple website with navigation and 5 pages that load contents from .md files. 
 
 ```javascript
-import { IoNavigator, Register, MenuOptions, Storage as $ } from 'io-gui';
-import { ioMarkdown } from 'io-markdown';
+import { IoNavigator, MenuOptions, Storage as $ } from 'io-gui'
+import { ioMarkdown } from 'io-markdown'
 
-export class MyWebsite extends IoNavigator {
-  static get ReactiveProperties() {
-    return {
-      // TODO: update!
-      menu: 'top', // This can also be 'left', 'right' or 'bottom'.
-      options: new MenuOptions(
-        ['About', 'Products', 'Services', 'Testemonials', 'Contact'], {
-          // This will store selected page in url hash.
-          path: $({key: 'page', storage: 'hash', value: 'About'}),
-        }
-      ),
-      elements: [
-        ioMarkdown({id: 'About', src: './page/about.md'}),
-        ioMarkdown({id: 'Products', src: './page/products.md'}),
-        ioMarkdown({id: 'Services', src: './page/services.md'}),
-        ioMarkdown({id: 'Testemonials', src: './page/testemonials.md'}),
-        ioMarkdown({id: 'Contact', src: './page/contact.md'}),
-      ]
-    };
-  }
-}
-Register(MyWebsite);
+document.body.appendChild(
+  new IoNavigator({
+    menu: 'top',
+    options: new MenuOptions({
+      items: ['About', 'Products', 'Services', 'Testemonials', 'Contact'],
+      path: $({storage: 'hash', key: 'page', value: 'About'})
+    }),
+    elements: [
+      ioMarkdown({id: 'About', src: './page/about.md'}),
+      ioMarkdown({id: 'Products', src: './page/products.md'}),
+      ioMarkdown({id: 'Services', src: './page/services.md'}),
+      ioMarkdown({id: 'Testemonials', src: './page/testemonials.md'}),
+      ioMarkdown({id: 'Contact', src: './page/contact.md'}),
+    ]
+  })
+);
 ```
 
 See [index.html] of iogui.dev for more advanced example.

@@ -19,7 +19,7 @@ export declare class IoColorBase extends IoElement {
     rgba: [number, number, number, number];
     hsv: [number, number, number];
     hsl: [number, number, number];
-    init(): void;
+    ready(): void;
     valueMutated(): void;
     rgbFromHsv(): void;
     rgbFromHsl(): void;

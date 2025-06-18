@@ -22,8 +22,8 @@ export declare class IoOptionSelect extends IoElement {
     role: string;
     $item: MenuItem;
     constructor(args?: IoOptionSelectProps);
-    init(): void;
-    _onSelectedChanged(event: CustomEvent): void;
+    ready(): void;
+    _onItemSelected(event: CustomEvent): void;
     optionsChanged(change: Change): void;
     optionsMutated(): void;
     changed(): void;

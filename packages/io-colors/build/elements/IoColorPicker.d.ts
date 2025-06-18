@@ -19,7 +19,7 @@ export declare class IoColorPicker extends IoElement {
     static get Listeners(): any;
     tabIndex: string;
     get expanded(): boolean;
-    init(): void;
+    ready(): void;
     onClick(): void;
     onKeydown(event: KeyboardEvent): void;
     onValueSet(): void;

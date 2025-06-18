@@ -1,5 +1,5 @@
 import { VDOMElement, WithBinding } from 'io-gui';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 export type IoNumberProps = Omit<IoFieldProps, 'value'> & {
     value?: WithBinding<number>;
     live?: boolean;
@@ -42,7 +42,7 @@ export declare class IoNumber extends IoField {
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
     _setFromTextNode(): void;
-    init(): void;
+    ready(): void;
     changed(): void;
 }
 export declare const ioNumber: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

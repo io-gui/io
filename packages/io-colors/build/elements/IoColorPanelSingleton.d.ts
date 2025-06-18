@@ -1,4 +1,4 @@
-import { IoColorBase } from './IoColorBase';
+import { IoColorBase } from './IoColorBase.js';
 /**
  * Input element for color displayed as a set of sliders.
  * This element has a singleton instance `IoColorPanelSingleton` used by `IoColorPicker` and other elements.

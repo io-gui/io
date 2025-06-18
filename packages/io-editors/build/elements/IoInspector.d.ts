@@ -1,7 +1,7 @@
 import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
-import { EditorConfig } from '../utils/EditorConfig';
-import { EditorGroups } from '../utils/EditorGroups';
-import { EditorWidgets } from '../utils/EditorWidgets';
+import { EditorConfig } from '../utils/EditorConfig.js';
+import { EditorGroups } from '../utils/EditorGroups.js';
+import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoInspectorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     selected?: WithBinding<Record<string, any> | any[]>;

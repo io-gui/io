@@ -1,36 +1,37 @@
-import { VDOMElement, NativeElementProps } from '../vdom/VDOM';
-import { Node, NodeProps } from '../nodes/Node';
-import { Binding } from '../core/Binding';
+import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
+import { Node, NodeProps } from '../nodes/Node.js';
+import { Binding } from '../core/Binding.js';
 export type IoElementProps = NativeElementProps & NodeProps;
 declare const IoElement_base: {
     new (args?: NodeProps, ...superProps: any[]): {
         [x: string]: any;
-        readonly _protochain: import("..").ProtoChain;
-        readonly _reactiveProperties: Map<string, import("..").ReactivePropertyInstance>;
+        readonly _protochain: import("../index.js").ProtoChain;
+        readonly _reactiveProperties: Map<string, import("../index.js").ReactivePropertyInstance>;
         readonly _bindings: Map<string, Binding<any>>;
-        readonly _changeQueue: import("..").ChangeQueue;
-        readonly _eventDispatcher: import("..").EventDispatcher;
+        readonly _changeQueue: import("../index.js").ChangeQueue;
+        readonly _eventDispatcher: import("../index.js").EventDispatcher;
         applyProperties(props: any, skipDispatch?: boolean): void;
         setProperties(props: any): void;
         setProperty(name: string, value: any, debounce?: boolean): void;
         inputValue(value: any): void;
-        changed(): void;
+        ready(): void;
         init(): void;
+        changed(): void;
         queue(name: string, value: any, oldValue: any): void;
         dispatchQueue(debounce?: boolean): void;
-        throttle(func: import("..").CallbackFunction, arg?: any, timeout?: number): void;
-        debounce(func: import("..").CallbackFunction, arg?: any, timeout?: number): void;
+        throttle(func: import("../index.js").CallbackFunction, arg?: any, timeout?: number): void;
+        debounce(func: import("../index.js").CallbackFunction, arg?: any, timeout?: number): void;
         onPropertyMutated(event: CustomEvent): true | undefined;
         bind<T>(name: string): Binding<T>;
         unbind(name: string): void;
-        addEventListener(type: string, listener: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
-        removeEventListener(type: string, listener?: import("..").AnyEventListener, options?: AddEventListenerOptions): void;
+        addEventListener(type: string, listener: import("../index.js").AnyEventListener, options?: AddEventListenerOptions): void;
+        removeEventListener(type: string, listener?: import("../index.js").AnyEventListener, options?: AddEventListenerOptions): void;
         dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
         dispose(): void;
         Register(ioNodeConstructor: typeof Node): void;
     };
     [x: string]: any;
-    readonly ReactiveProperties: import("../nodes/Node").ReactivePropertyDefinitions;
+    readonly ReactiveProperties: import("../nodes/Node.js").ReactivePropertyDefinitions;
 };
 /**
  * Core `IoElement` class.

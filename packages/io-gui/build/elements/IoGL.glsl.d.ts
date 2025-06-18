@@ -11,7 +11,6 @@ export declare const glsl: {
     checkerX: string;
     checkerY: string;
     compose: string;
-    paintHorizontalLine: string;
     hue2rgb: string;
     hsv2rgb: string;
     hsl2rgb: string;

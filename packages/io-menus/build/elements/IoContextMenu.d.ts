@@ -15,6 +15,7 @@ export declare class IoContextMenu extends IoElement {
     button: number;
     static get ReactiveProperties(): any;
     constructor(args?: IoContextMenuProps);
+    init(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
     getBoundingClientRect(): any;

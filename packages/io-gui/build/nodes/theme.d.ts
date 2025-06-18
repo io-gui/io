@@ -1,4 +1,4 @@
-import { ReactivePropertyDefinitions, Node } from '../nodes/Node';
+import { ReactivePropertyDefinitions, Node } from '../nodes/Node.js';
 export declare class Color {
     r: number;
     g: number;
@@ -72,7 +72,7 @@ export declare class Theme extends Node {
     themeDefaults: Record<string, ThemeVars>;
     themeID: string;
     reactivity: string;
-    init(): void;
+    ready(): void;
     registerTheme(themeID: string, theme: ThemeVars): void;
     reset(): void;
     themeIDChanged(): void;

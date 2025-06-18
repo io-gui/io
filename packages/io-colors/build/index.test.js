@@ -1,4 +1,4 @@
-import{nextQueue as e}from"io-gui";import{IoColorBase as t,IoColorPanelSingleton as o,IoColorPicker as l,IoColorRgba as r,IoColorSlider as c,IoColorSwatch as n}from"./index";
+import{nextQueue as e}from"io-gui";import{IoColorBase as t,IoColorPanelSingleton as o,IoColorPicker as l,IoColorRgba as r,IoColorSlider as c,IoColorSwatch as n}from"./index.js";
 /**@License
  * Copyright (c) 2011-2016 Heather Arthur <fayearthur@gmail.com>
  *

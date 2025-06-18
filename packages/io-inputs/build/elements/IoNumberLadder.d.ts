@@ -1,5 +1,5 @@
 import { IoElement, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
-import { IoNumber } from './IoNumber';
+import { IoNumber } from './IoNumber.js';
 export type IoNumberLadderProps = IoElementProps & {
     src?: IoNumber;
     expanded?: WithBinding<boolean>;

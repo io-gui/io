@@ -147,10 +147,10 @@ export class IoSelector extends IoElement {
       this.render([], this, cache);
       return;
     }
-    
+
     // TODO: what if <io-selector> is reused in template() and ID collides?
     if (id === this.childNodes[0]?.id) return;
-    
+
     this.render([], this, cache);
 
     const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id; });
@@ -211,7 +211,7 @@ export class IoSelector extends IoElement {
           this.render([vElement], dummyElement, true);
           this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
           dummyElement.removeChild(dummyElement.childNodes[0]);
-          this.debounce(this.preacheNext, undefined, 100);
+          this.debounce(this.preacheNext);
           return;
         } else {
           void importModule(props.import).then(() => {
@@ -219,7 +219,7 @@ export class IoSelector extends IoElement {
             this.render([vElement], dummyElement, true);
             this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
             dummyElement.removeChild(dummyElement.childNodes[0]);
-            this.debounce(this.preacheNext, undefined, 100);
+            this.debounce(this.preacheNext);
             delete props.import;
           });
           return;

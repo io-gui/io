@@ -41,6 +41,8 @@ export declare class IoMenuOptions extends IoElement {
     };
     get inoverlay(): any;
     constructor(args?: IoMenuOptionsProps);
+    init(): void;
+    ready(): void;
     stopPropagation(event: MouseEvent): void;
     connectedCallback(): void;
     disconnectedCallback(): void;

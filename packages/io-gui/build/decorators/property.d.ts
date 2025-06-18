@@ -1,5 +1,5 @@
-import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty';
-import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node';
+import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
+import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node.js';
 export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>>;
 export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions>;
 /**

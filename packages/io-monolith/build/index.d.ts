@@ -410,12 +410,13 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 		 * @param {*} value - Property value.
 		 */
 		inputValue(value: any): void;
+		ready(): void;
+		init(): void;
 		/**
 		 * default change handler.
 		 * Invoked when one of the properties change.
 		 */
 		changed(): void;
-		init(): void;
 		/**
 		 * Adds property change to the queue.
 		 * @param {string} name - Property name.
@@ -524,12 +525,13 @@ declare const Node_base: {
 		 * @param {*} value - Property value.
 		 */
 		inputValue(value: any): void;
+		ready(): void;
+		init(): void;
 		/**
 		 * default change handler.
 		 * Invoked when one of the properties change.
 		 */
 		changed(): void;
-		init(): void;
 		/**
 		 * Adds property change to the queue.
 		 * @param {string} name - Property name.
@@ -771,8 +773,9 @@ declare const IoElement_base: {
 		setProperties(props: any): void;
 		setProperty(name: string, value: any, debounce?: boolean): void;
 		inputValue(value: any): void;
-		changed(): void;
+		ready(): void;
 		init(): void;
+		changed(): void;
 		queue(name: string, value: any, oldValue: any): void;
 		dispatchQueue(debounce?: boolean): void;
 		throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
@@ -1214,7 +1217,6 @@ export type StorageProps = NodeProps & {
 	default?: any;
 	storage?: "hash" | "local" | "none";
 };
-export declare function genObjectStorageID(object: Record<string, any>): string;
 export declare class StorageNode extends Node$1 {
 	key: string;
 	value: any;
@@ -1305,7 +1307,7 @@ export declare class Theme extends Node$1 {
 	themeDefaults: Record<string, ThemeVars>;
 	themeID: string;
 	reactivity: string;
-	init(): void;
+	ready(): void;
 	registerTheme(themeID: string, theme: ThemeVars): void;
 	reset(): void;
 	themeIDChanged(): void;
@@ -1358,7 +1360,6 @@ export declare const glsl: {
 	checkerX: string;
 	checkerY: string;
 	compose: string;
-	paintHorizontalLine: string;
 	hue2rgb: string;
 	hsv2rgb: string;
 	hsl2rgb: string;
@@ -1413,6 +1414,7 @@ declare class IoOverlay extends IoElement {
 		})[];
 	};
 	constructor(args?: IoElementProps);
+	init(): void;
 	stopPropagation(event: Event): void;
 	onPointerup(event: PointerEvent): void;
 	onContextmenu(event: Event): void;
@@ -1492,7 +1494,7 @@ export declare class IoColorBase extends IoElement {
 		number,
 		number
 	];
-	init(): void;
+	ready(): void;
 	valueMutated(): void;
 	rgbFromHsv(): void;
 	rgbFromHsl(): void;
@@ -1532,7 +1534,7 @@ export declare class IoColorPicker extends IoElement {
 	static get Listeners(): any;
 	tabIndex: string;
 	get expanded(): boolean;
-	init(): void;
+	ready(): void;
 	onClick(): void;
 	onKeydown(event: KeyboardEvent): void;
 	onValueSet(): void;
@@ -1579,7 +1581,7 @@ export declare class IoNumberSliderRange extends IoElement {
 	constructor(args?: IoNumberSliderRangeProps);
 	_onNumberSet(event: CustomEvent): void;
 	_onSliderSet(event: CustomEvent): void;
-	init(): void;
+	ready(): void;
 	changed(): void;
 }
 export declare const ioNumberSliderRange: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -1606,7 +1608,7 @@ export declare class IoNumberSlider extends IoElement {
 	constructor(args?: IoNumberSliderProps);
 	_onNumberSet(event: CustomEvent): void;
 	_onSliderSet(event: CustomEvent): void;
-	init(): void;
+	ready(): void;
 	changed(): void;
 }
 export declare const ioNumberSlider: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -1719,7 +1721,7 @@ export declare class IoSliderBase extends IoGl {
 	_setDown(): void;
 	_setLeft(): void;
 	_setRight(): void;
-	init(): void;
+	ready(): void;
 	valueChanged(): void;
 	invalidChanged(): void;
 	valueMutated(): void;
@@ -1830,7 +1832,7 @@ export declare class IoSlider extends IoGl {
 	_incrementValue(value: number): void;
 	_inputValue(value: number): void;
 	onKeydown(event: KeyboardEvent): void;
-	init(): void;
+	ready(): void;
 	invalidChanged(): void;
 	disabledChanged(): void;
 	valueChanged(): void;
@@ -2303,10 +2305,9 @@ export declare class IoBoolean extends IoField {
 	false: string;
 	role: string;
 	constructor(args?: IoBooleanProps);
-	onPointerdown(event: PointerEvent): void;
 	onClick(): void;
 	toggle(): void;
-	init(): void;
+	ready(): void;
 	valueChanged(): void;
 	changed(): void;
 }
@@ -2330,7 +2331,7 @@ export declare class IoButton extends IoField {
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
 	onClick(event: MouseEvent): void;
-	init(): void;
+	ready(): void;
 	changed(): void;
 }
 export declare const ioButton: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2376,7 +2377,7 @@ export declare class IoNumber extends IoField {
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
 	_setFromTextNode(): void;
-	init(): void;
+	ready(): void;
 	changed(): void;
 }
 export declare const ioNumber: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2424,7 +2425,7 @@ export declare class IoNumberLadderStep extends IoField {
 	onPointerdown(event: PointerEvent): void;
 	onPointermove(event: PointerEvent): void;
 	onPointerup(event: PointerEvent): void;
-	init(): void;
+	ready(): void;
 	changed(): void;
 }
 export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2457,7 +2458,7 @@ export declare class IoString extends IoField {
 	onPointerup(event: PointerEvent): void;
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
-	init(): void;
+	ready(): void;
 	valueChanged(): void;
 	changed(): void;
 }
@@ -2474,15 +2475,15 @@ export type MenuOptionsProps = NodeProps & {
 	selected?: WithBinding<string>;
 	path?: string;
 	delimiter?: string;
-	items?: MenuItem[];
+	items?: MenuItem[] | MenuItemDefLoose[];
 };
 export declare class MenuOptions extends Node$1 {
 	selected: string;
 	path: string;
 	delimiter: string;
 	items: MenuItem[];
-	reactivity: string;
 	constructor(properties?: MenuOptionsProps);
+	init(): void;
 	getAllItems(): MenuItem[];
 	findItemByValue(value: any): MenuItem | null;
 	findItemById(id: string): MenuItem | null;
@@ -2553,6 +2554,7 @@ export declare class IoContextMenu extends IoElement {
 	button: number;
 	static get ReactiveProperties(): any;
 	constructor(args?: IoContextMenuProps);
+	init(): void;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
 	getBoundingClientRect(): any;
@@ -2603,6 +2605,8 @@ export declare class IoMenuOptions extends IoElement {
 	};
 	get inoverlay(): any;
 	constructor(args?: IoMenuOptionsProps);
+	init(): void;
+	ready(): void;
 	stopPropagation(event: MouseEvent): void;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
@@ -2683,6 +2687,7 @@ export declare class IoMenuItem extends IoField {
 	itemChanged(): void;
 	itemMutated(): void;
 	changed(): void;
+	dispose(): void;
 }
 export declare const ioMenuItem: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export declare class IoMenuHamburger extends IoMenuItem {
@@ -2731,8 +2736,8 @@ export declare class IoOptionSelect extends IoElement {
 	role: string;
 	$item: MenuItem;
 	constructor(args?: IoOptionSelectProps);
-	init(): void;
-	_onSelectedChanged(event: CustomEvent): void;
+	ready(): void;
+	_onItemSelected(event: CustomEvent): void;
 	optionsChanged(change: Change): void;
 	optionsMutated(): void;
 	changed(): void;
@@ -2785,9 +2790,11 @@ export declare class IoSelector extends IoElement {
 	constructor(args?: IoSelectorProps);
 	init(): void;
 	optionsChanged(): void;
-	elementsChanged(): void;
 	optionsMutated(): void;
+	elementsChanged(): void;
+	renderSelected(): void;
 	renderSelectedId(id: string): void;
+	renderDebounced(vElement: VDOMElement): void;
 	startPreache(): void;
 	preacheNext(): void;
 	dispose(): void;

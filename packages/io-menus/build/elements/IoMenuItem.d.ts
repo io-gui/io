@@ -1,7 +1,7 @@
 import { VDOMElement, WithBinding, NudgeDirection } from 'io-gui';
+import { IoField, IoFieldProps } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-import { IoField, IoFieldProps } from 'io-inputs';
 import { IoMenuTree } from './IoMenuTree.js';
 export declare function onOverlayPointerdown(event: PointerEvent): void;
 export declare function onOverlayPointermove(event: PointerEvent): void;
@@ -49,6 +49,7 @@ export declare class IoMenuItem extends IoField {
     itemChanged(): void;
     itemMutated(): void;
     changed(): void;
+    dispose(): void;
 }
 export declare const ioMenuItem: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoMenuItem.d.ts.map

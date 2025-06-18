@@ -1,6 +1,6 @@
-import { ReactiveProtoProperty } from './ReactiveProperty';
-import { ListenerDefinition } from './EventDispatcher';
-import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
+import { ReactiveProtoProperty } from './ReactiveProperty.js';
+import { ListenerDefinition } from './EventDispatcher.js';
+import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
 type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];
 type ReactiveProtoProperties = {

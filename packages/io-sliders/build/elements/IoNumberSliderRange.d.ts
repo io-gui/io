@@ -21,7 +21,7 @@ export declare class IoNumberSliderRange extends IoElement {
     constructor(args?: IoNumberSliderRangeProps);
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;
-    init(): void;
+    ready(): void;
     changed(): void;
 }
 export declare const ioNumberSliderRange: (arg0?: IoElementProps | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;

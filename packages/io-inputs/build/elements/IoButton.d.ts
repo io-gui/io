@@ -1,5 +1,5 @@
 import { VDOMElement } from 'io-gui';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 export type IoButtonProps = IoFieldProps & {
     action?: Function;
 };
@@ -19,7 +19,7 @@ export declare class IoButton extends IoField {
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
     onClick(event: MouseEvent): void;
-    init(): void;
+    ready(): void;
     changed(): void;
 }
 export declare const ioButton: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

@@ -1,5 +1,5 @@
 import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
-import { MenuItem } from '../nodes/MenuItem';
+import { MenuItem } from '../nodes/MenuItem.js';
 export type IoMenuTreeBranchProps = IoElementProps & {
     depth?: number;
     item?: MenuItem;

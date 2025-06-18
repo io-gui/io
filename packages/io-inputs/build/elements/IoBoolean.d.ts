@@ -1,5 +1,5 @@
 import { VDOMElement, WithBinding } from 'io-gui';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
     value?: WithBinding<boolean>;
     true?: string;
@@ -17,10 +17,9 @@ export declare class IoBoolean extends IoField {
     false: string;
     role: string;
     constructor(args?: IoBooleanProps);
-    onPointerdown(event: PointerEvent): void;
     onClick(): void;
     toggle(): void;
-    init(): void;
+    ready(): void;
     valueChanged(): void;
     changed(): void;
 }

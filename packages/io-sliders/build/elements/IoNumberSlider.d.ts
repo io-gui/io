@@ -22,7 +22,7 @@ export declare class IoNumberSlider extends IoElement {
     constructor(args?: IoNumberSliderProps);
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;
-    init(): void;
+    ready(): void;
     changed(): void;
 }
 export declare const ioNumberSlider: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

@@ -1,4 +1,4 @@
-import { IoNumberSlider } from '../index';
+import { IoNumberSlider } from '../index.js';
 export default class {
     element: IoNumberSlider;
     constructor();

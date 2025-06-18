@@ -1,12 +1,11 @@
-import { Binding } from '../core/Binding';
-import { Node, NodeProps } from '../nodes/Node';
+import { Binding } from '../core/Binding.js';
+import { Node, NodeProps } from '../nodes/Node.js';
 export type StorageProps = NodeProps & {
     key: string;
     value?: any;
     default?: any;
     storage?: 'hash' | 'local' | 'none';
 };
-export declare function genObjectStorageID(object: Record<string, any>): string;
 export declare class StorageNode extends Node {
     key: string;
     value: any;

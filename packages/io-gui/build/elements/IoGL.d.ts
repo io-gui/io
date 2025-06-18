@@ -1,7 +1,7 @@
-import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty';
-import { VDOMElement } from '../vdom/VDOM';
-import { ThemeSingleton } from '../nodes/Theme';
-import { IoElement, IoElementProps } from './IoElement';
+import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
+import { VDOMElement } from '../vdom/VDOM.js';
+import { ThemeSingleton } from '../nodes/Theme.js';
+import { IoElement, IoElementProps } from './IoElement.js';
 export declare class IoGl extends IoElement {
     #private;
     static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

@@ -1,5 +1,5 @@
 import { VDOMElement } from 'io-gui';
-import { IoVector, IoVectorProps } from './IoVector';
+import { IoVector, IoVectorProps } from './IoVector.js';
 export type IoMatrixProps = IoVectorProps & {
     columns?: number;
 };
