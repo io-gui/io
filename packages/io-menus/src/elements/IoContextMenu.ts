@@ -33,12 +33,15 @@ export class IoContextMenu extends IoElement {
 
   constructor(args: IoContextMenuProps = {}) {
     super(args);
-    this.collapse = this.collapse.bind(this);
     this.$options = new IoMenuOptions({
       expanded: this.bind('expanded'),
       options: this.bind('options'),
       $parent: this,
     });
+  }
+
+  init() {
+    this.collapse = this.collapse.bind(this);
   }
 
   connectedCallback() {

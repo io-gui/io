@@ -1,6 +1,6 @@
 import { Register, IoElement, div, Storage as $, pre, code } from 'io-gui';
 import { ioInspector } from 'io-editors';
-import { ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
+import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
 import { ioIcon } from 'io-icons';
 import { ioOptionSelect, MenuOptions } from 'io-menus';
@@ -53,7 +53,7 @@ const options = new MenuOptions({
   selected: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
 })
 
-export class IoElementDemo extends IoElement {
+export class IoElementInspectorDemo extends IoElement {
   static get Style() {
     return /* css */`
     :host {
@@ -147,7 +147,7 @@ export class IoElementDemo extends IoElement {
     }
   }
 }
-Register(IoElementDemo);
+Register(IoElementInspectorDemo);
 
 function formatHtml(html, indentSize = 2) {
   const indent = ' '.repeat(indentSize);
@@ -173,4 +173,4 @@ function formatHtml(html, indentSize = 2) {
   return result.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-export const ioElementDemo = IoElementDemo.vConstructor;
+export const ioElementInspectorDemo = IoElementInspectorDemo.vConstructor;

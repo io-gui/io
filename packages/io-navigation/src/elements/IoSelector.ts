@@ -104,10 +104,15 @@ export class IoSelector extends IoElement {
   init() {
     this.preacheNext = this.preacheNext.bind(this);
     this.startPreache = this.startPreache.bind(this);
+    this.renderSelected = this.renderSelected.bind(this);
+    this.renderDebounced = this.renderDebounced.bind(this);
   }
 
   optionsChanged() {
-    this.optionsMutated();
+    this.debounce(this.renderSelected);
+  }
+  optionsMutated() {
+    this.debounce(this.renderSelected);
   }
 
   elementsChanged() {
@@ -120,7 +125,7 @@ export class IoSelector extends IoElement {
     this.startPreache();
   }
 
-  optionsMutated() {
+  renderSelected() {
     if (this.select === 'shallow') {
       for (let i = 0; i < this.options.items.length; i++) {
         if (this.options.items[i].selected) {
@@ -142,9 +147,11 @@ export class IoSelector extends IoElement {
       this.render([], this, cache);
       return;
     }
-
-    // TODO: what if ioselector is reused in template() and ID collides?
+    
+    // TODO: what if <io-selector> is reused in template() and ID collides?
     if (id === this.childNodes[0]?.id) return;
+    
+    this.render([], this, cache);
 
     const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id; });
 
@@ -154,31 +161,34 @@ export class IoSelector extends IoElement {
       return;
     }
 
-    const props = vElement.props!;
+    const importPath = vElement.props?.import;
+
+    if (!importPath) {
+      this.debounce(this.renderDebounced, vElement);
+    } else {
+      this.loading = true;
+      this._preaching = false;
+      void importModule(importPath).then(() => {
+        this.loading = false;
+        this.debounce(this.renderDebounced, vElement);
+        this.debounce(this.startPreache);
+      });
+    }
+  }
+
+  renderDebounced(vElement: VDOMElement) {
+    const cache = this.caching === 'proactive' || this.caching === 'reactive';
+    const id = vElement.props?.id;
     const cachedElement = this._caches[id];
 
-    // TODO: test this!
     if (cache && cachedElement) {
       if ((cachedElement.parentElement as IoElement) !== this) {
         if (this.firstChild) this.removeChild(this.firstChild);
         this.appendChild(cachedElement);
       }
-    } else if (!props.import) {
+    } else {
       this.render([vElement], this, cache);
       if (cache) this._caches[id] = this.childNodes[0];
-    } else {
-      this.render([], this, cache);
-      this.loading = true;
-      this._preaching = false;
-      void importModule(props.import).then(() => {
-        if (this.loading) {
-          this.render([vElement], this, cache);
-          if (cache) this._caches[id] = this.childNodes[0];
-        }
-        this.loading = false;
-        this.debounce(this.startPreache);
-      });
-      delete props.import;
     }
   }
 
@@ -201,7 +211,7 @@ export class IoSelector extends IoElement {
           this.render([vElement], dummyElement, true);
           this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
           dummyElement.removeChild(dummyElement.childNodes[0]);
-          this.debounce(this.preacheNext);
+          this.debounce(this.preacheNext, undefined, 100);
           return;
         } else {
           void importModule(props.import).then(() => {
@@ -209,7 +219,7 @@ export class IoSelector extends IoElement {
             this.render([vElement], dummyElement, true);
             this._caches[id] = dummyElement.childNodes[0] as HTMLElement;
             dummyElement.removeChild(dummyElement.childNodes[0]);
-            this.debounce(this.preacheNext);
+            this.debounce(this.preacheNext, undefined, 100);
             delete props.import;
           });
           return;

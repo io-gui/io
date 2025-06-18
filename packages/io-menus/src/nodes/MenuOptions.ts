@@ -34,9 +34,6 @@ export class MenuOptions extends Node {
   @ReactiveProperty([])
   declare items: MenuItem[];
 
-  @ReactiveProperty('debounced')
-  declare reactivity: string;
-
   constructor(properties: MenuOptionsProps = {}) {
     const props = {...properties};
     if (props.items) {
@@ -44,11 +41,14 @@ export class MenuOptions extends Node {
     }
 
     super(props);
-    this.updatePathsDebounced = this.updatePathsDebounced.bind(this);
 
     if (this.path !== '') this.pathChanged();
 
     this.initItems();
+  }
+
+  init() {
+    this.updatePathsDebounced = this.updatePathsDebounced.bind(this);
   }
 
   getAllItems() {

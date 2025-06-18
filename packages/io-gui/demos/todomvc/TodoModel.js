@@ -22,8 +22,10 @@ export class TodoModel extends Node {
   constructor() {
     super();
     const items = JSON.parse(localStorage.getItem('todoapp'));
-    this.toggleAll = this.toggleAll.bind(this);
     if (items) this.items = items;
+  }
+  init() {
+    this.toggleAll = this.toggleAll.bind(this);
   }
   newItem(title) {
     title = String(title).trim();

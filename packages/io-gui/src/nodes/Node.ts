@@ -43,6 +43,8 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
         }
       };
     }
+    // declare reactivity: 'none' | 'immediate' | 'throttled' | 'debounced';
+
     declare readonly _protochain: ProtoChain;
     declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
     declare readonly _bindings: Map<string, Binding<any>>;

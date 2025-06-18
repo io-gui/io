@@ -4,7 +4,7 @@ import { ioButton, ioField } from 'io-inputs';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
 
-export class IoGuiThemeEditor extends IoElement {
+export class IoThemeEditor extends IoElement {
   static get Style() {
     return /* css */`
     :host {
@@ -114,5 +114,5 @@ export class IoGuiThemeEditor extends IoElement {
     ]);
   }
 }
-Register(IoGuiThemeEditor);
-export const ioGuiThemeEditor = IoGuiThemeEditor.vConstructor;
+Register(IoThemeEditor);
+export const ioThemeEditor = IoThemeEditor.vConstructor;
