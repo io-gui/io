@@ -1,4 +1,4 @@
-import { throttle, debounce, nextQueue, Node } from '../index';
+import { throttle, debounce, nextQueue, Node } from '../index.js';
 
 export default class {
   run() {

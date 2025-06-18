@@ -1,7 +1,7 @@
-import { EventDispatcher } from '../core/EventDispatcher';
-import { Node } from '../nodes/Node';
-import { IoElement } from '../elements/IoElement';
-import { Binding } from '../core/Binding';
+import { EventDispatcher } from '../core/EventDispatcher.js';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
+import { Binding } from '../core/Binding.js';
 
 export type VDOMElement = {
   tag: string,

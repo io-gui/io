@@ -46,9 +46,7 @@ export class IoSliderBase extends IoGl {
         border-color: var(--io_colorRed);
       }
       :host:focus {
-        outline: var(--io_spacing) solid var(--io_colorStrong);
-        outline-offset: var(--io_borderWidth);
-        z-index: 1;
+        @apply --io_focus;
       }
     `;
   }

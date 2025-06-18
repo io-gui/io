@@ -1,11 +1,11 @@
-import BooleanElementTest from './elements/IoBoolean.test';
-import ButtonElementTest from './elements/IoButton.test';
-import FieldElementTest from './elements/IoField.test';
-import NumberElementTest from './elements/IoNumber.test';
-import NumberLadderElementTest from './elements/IoNumberLadder.test';
-import NumberLadderStepElementTest from './elements/IoNumberLadderStep.test';
-import StringElementTest from './elements/IoString.test';
-import SwitchElementTest from './elements/IoSwitch.test';
+import BooleanElementTest from './elements/IoBoolean.test.js';
+import ButtonElementTest from './elements/IoButton.test.js';
+import FieldElementTest from './elements/IoField.test.js';
+import NumberElementTest from './elements/IoNumber.test.js';
+import NumberLadderElementTest from './elements/IoNumberLadder.test.js';
+import NumberLadderStepElementTest from './elements/IoNumberLadderStep.test.js';
+import StringElementTest from './elements/IoString.test.js';
+import SwitchElementTest from './elements/IoSwitch.test.js';
 
 export default class {
   run() {

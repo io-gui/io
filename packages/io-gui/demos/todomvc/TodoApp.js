@@ -19,6 +19,9 @@ export class TodoApp extends IoElement {
   ready() {
     this.changed();
   }
+  modelMutated() {
+    this.changed();
+  }
   changed() {
     const itemCount = this.model.items.length;
     this.render([

@@ -1,10 +1,10 @@
 import { Register, IoElement, ReactiveProperty, VDOMElement, IoElementProps, WithBinding, span } from 'io-gui';
-import { ioBreadcrumbs } from './IoBreadcrumbs';
-import { ioPropertyEditor } from './IoPropertyEditor';
-import { EditorConfig } from '../utils/EditorConfig';
-import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
-import { EditorWidgets } from '../utils/EditorWidgets';
-import { ioPropertyLink } from './IoPropertyLink';
+import { ioBreadcrumbs } from './IoBreadcrumbs.js';
+import { ioPropertyEditor } from './IoPropertyEditor.js';
+import { EditorConfig } from '../utils/EditorConfig.js';
+import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
+import { EditorWidgets } from '../utils/EditorWidgets.js';
+import { ioPropertyLink } from './IoPropertyLink.js';
 
 export type IoInspectorProps = IoElementProps & {
   value?: Record<string, any> | any[],

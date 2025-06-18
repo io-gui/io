@@ -1,5 +1,5 @@
 import { Register, div } from 'io-gui';
-import { IoColorBase } from './IoColorBase';
+import { IoColorBase } from './IoColorBase.js';
 
 /**
  * Element displaying colored square.

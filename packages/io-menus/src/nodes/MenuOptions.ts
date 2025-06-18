@@ -5,8 +5,20 @@ export type MenuOptionsProps = NodeProps & {
   selected?: WithBinding<string>,
   path?: string,
   delimiter?: string,
-  items?: MenuItem[],
+  items?: MenuItem[] | MenuItemDefLoose[],
 };
+
+function hardenMenuItems(itemsOrDefs: MenuItem[] | MenuItemDefLoose[]) {
+  const items: MenuItem[] = [];
+  for (let i = 0; i < itemsOrDefs.length; i++) {
+    if (itemsOrDefs[i] instanceof MenuItem) {
+      items.push(itemsOrDefs[i] as MenuItem);
+    } else {
+      items.push(new MenuItem().fromJSON(itemsOrDefs[i]));
+    }
+  }
+  return items;
+}
 
 @Register
 export class MenuOptions extends Node {
@@ -26,7 +38,12 @@ export class MenuOptions extends Node {
   declare reactivity: string;
 
   constructor(properties: MenuOptionsProps = {}) {
-    super(properties);
+    const props = {...properties};
+    if (props.items) {
+      props.items = hardenMenuItems(props.items);
+    }
+
+    super(props);
     this.updatePathsDebounced = this.updatePathsDebounced.bind(this);
 
     if (this.path !== '') this.pathChanged();

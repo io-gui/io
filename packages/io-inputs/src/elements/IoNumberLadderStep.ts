@@ -1,5 +1,5 @@
 import { Register, ReactiveProperty, span, VDOMElement, Property } from 'io-gui';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 
 export type IoNumberLadderStepProps = IoFieldProps & {
   value?: number,

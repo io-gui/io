@@ -183,15 +183,11 @@ export class IoMenuOptions extends IoElement {
     if (this.horizontal) {
       if (direction === 'right' && inoverlay) command = 'next';
       if (direction === 'left' && inoverlay) command = 'prev';
-      if (direction === 'left' && index === 0 && parentIsLeft) command = 'out';
-      if (direction === 'right' && index === siblings.length - 1 && parentIsRight) command = 'out';
       if (direction === 'up' && parentIsAbove) command = 'out';
       if (direction === 'down' && parentIsBelow) command = 'out';
     } else {
       if (direction === 'down' && inoverlay) command = 'next';
       if (direction === 'up' && inoverlay) command = 'prev';
-      if (direction === 'up' && index === 0 && parentIsAbove) command = 'out';
-      if (direction === 'down' && index === siblings.length - 1 && parentIsBelow) command = 'out';
       if (direction === 'left' && parentIsLeft) command = 'out';
       if (direction === 'right' && parentIsRight) command = 'out';
     }

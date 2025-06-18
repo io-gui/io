@@ -1,4 +1,4 @@
-import { StorageNode, Storage, Binding } from '../index';;
+import { StorageNode, Storage, Binding } from '../index.js';;
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {

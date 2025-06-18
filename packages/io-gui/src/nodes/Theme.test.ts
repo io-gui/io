@@ -1,4 +1,4 @@
-import { ThemeSingleton } from '../index';;
+import { ThemeSingleton } from '../index.js';;
 
 const theme = ThemeSingleton;
 const binding = theme._reactiveProperties.get('themeID')!.binding;

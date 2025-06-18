@@ -1,7 +1,7 @@
 import { Register, Node } from 'io-gui';
 import { ioNumber } from 'io-inputs';
-import { IoColorBase } from './IoColorBase';
-import { ioColorPicker } from './IoColorPicker';
+import { IoColorBase } from './IoColorBase.js';
+import { ioColorPicker } from './IoColorPicker.js';
 
 /**
  * Input element for color displayed as vector and an interactive picker.

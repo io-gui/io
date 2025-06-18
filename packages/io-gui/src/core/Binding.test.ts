@@ -1,4 +1,4 @@
-import { Binding, Node, Register, ReactiveProperty } from '../index';
+import { Binding, Node, Register, ReactiveProperty } from '../index.js';
 
 @Register
 class TestNode extends Node {

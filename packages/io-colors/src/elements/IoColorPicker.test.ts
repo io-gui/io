@@ -1,4 +1,4 @@
-import { IoColorPicker } from '../index';
+import { IoColorPicker } from '../index.js';
 // import { expect } from 'chai';
 
 const element = new IoColorPicker();

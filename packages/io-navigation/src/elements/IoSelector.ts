@@ -221,7 +221,10 @@ export class IoSelector extends IoElement {
 
   dispose() {
     for (const key in this._caches) {
-      disposeChildren(this._caches[key] as IoElement);
+      // Dispose cached elements not in the DOM.
+      if (!this._caches[key].parentElement) {
+        disposeChildren(this._caches[key] as IoElement);
+      }
       delete this._caches[key];
     }
     super.dispose();

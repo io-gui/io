@@ -1,7 +1,7 @@
-import { Register } from '../decorators/Register';
-import { ReactiveProperty } from '../decorators/Property';
-import { ReactivePropertyDefinitions, Node } from '../nodes/Node';
-import { Storage as $ } from '../nodes/Storage';
+import { Register } from '../decorators/Register.js';
+import { ReactiveProperty } from '../decorators/Property.js';
+import { ReactivePropertyDefinitions, Node } from '../nodes/Node.js';
+import { Storage as $ } from '../nodes/Storage.js';
 
 const THEME_VERSION = 'v0.10';
 const styleElement = document.createElement('style');

@@ -1,7 +1,7 @@
-import NumberSliderRangeElementTest from './elements/IoNumberSliderRange.test';
-import NumberSliderElementTest from './elements/IoNumberSlider.test';
-import SliderRangeElementTest from './elements/IoSliderRange.test';
-import SliderElementTest from './elements/IoSlider.test';
+import NumberSliderRangeElementTest from './elements/IoNumberSliderRange.test.js';
+import NumberSliderElementTest from './elements/IoNumberSlider.test.js';
+import SliderRangeElementTest from './elements/IoSliderRange.test.js';
+import SliderElementTest from './elements/IoSlider.test.js';
 
 export default class {
   run() {

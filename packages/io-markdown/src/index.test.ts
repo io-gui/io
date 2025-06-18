@@ -1,5 +1,5 @@
-import IoMarkdownElementTest from './elements/IoMarkdown.test';
-import IoMarkdownThemeTest from './elements/IoMarkdownTheme.test';
+import IoMarkdownElementTest from './elements/IoMarkdown.test.js';
+import IoMarkdownThemeTest from './elements/IoMarkdownTheme.test.js';
 
 export default class {
   run() {

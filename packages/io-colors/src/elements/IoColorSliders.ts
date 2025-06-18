@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, glsl, VDOMElement, WithBinding, Node } from 'io-gui';
-import { IoColorBase, IoColorBaseProps } from './IoColorBase';
 import { IoSlider, IoSlider2d } from 'io-sliders';
+import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 
 export type IoColorSliderProps = IoColorBaseProps & {
   color?: WithBinding<[number, number, number, number]>,

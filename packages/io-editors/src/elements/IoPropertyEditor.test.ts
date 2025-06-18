@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { IoPropertyEditor } from '../index';
+import { IoPropertyEditor } from '../index.js';
 
 // const testValue = {
 //   'number': 0.5,

@@ -1,7 +1,7 @@
 import { IoElement, VDOMElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
-import { MenuItem } from '../nodes/MenuItem';
-import { ioMenuTree } from './IoMenuTree';
+import { MenuItem } from '../nodes/MenuItem.js';
+import { ioMenuTree } from './IoMenuTree.js';
 
 export type IoMenuTreeBranchProps = IoElementProps & {
   depth?: number,
@@ -36,9 +36,11 @@ export class IoMenuTreeBranch extends IoElement {
       content: "▾"
     }
     :host > io-menu-tree {
-      margin-left: var(--io_spacing3);
       background: transparent;
       border: none;
+      border-left: var(--io_border);
+      border-color: var(--io_colorDimmed);
+      margin-left: var(--io_spacing5);
     }
     `;
   }

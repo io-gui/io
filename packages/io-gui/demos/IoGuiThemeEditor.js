@@ -19,10 +19,10 @@ export class IoGuiThemeEditor extends IoElement {
   constructor(props) {
     super(props);
     this.render([
-      ioOptionSelect({value: ThemeSingleton.bind('themeID'), options: new MenuOptions().fromJSON([
+      ioOptionSelect({value: ThemeSingleton.bind('themeID'), options: new MenuOptions({items: [
         {label: 'Light Theme', value: 'light'},
         {label: 'Dark Theme', value: 'dark'},
-      ])}),
+      ]})}),
       ioButton({label: 'Reset', action: () => ThemeSingleton.reset() }),
 
       ioField('spacing'),

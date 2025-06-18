@@ -1,4 +1,4 @@
-import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../index';
+import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../index.js';
 
 export default class {
   run() {

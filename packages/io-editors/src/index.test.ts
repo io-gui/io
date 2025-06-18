@@ -1,6 +1,6 @@
-import EditorConfigTest from './utils/EditorConfig.test';
-import EditorGroupsTest from './utils/EditorGroups.test';
-import PropertyEditorTest from './elements/IoPropertyEditor.test';
+import EditorConfigTest from './utils/EditorConfig.test.js';
+import EditorGroupsTest from './utils/EditorGroups.test.js';
+import PropertyEditorTest from './elements/IoPropertyEditor.test.js';
 
 export default class {
   run() {

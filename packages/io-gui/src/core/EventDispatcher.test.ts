@@ -1,4 +1,4 @@
-import { Node, Register, ListenerDefinitions, EventDispatcher } from '../index';
+import { Node, Register, ListenerDefinitions, EventDispatcher } from '../index.js';
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`);

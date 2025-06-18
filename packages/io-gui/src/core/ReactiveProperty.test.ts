@@ -1,4 +1,4 @@
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from '../index';
+import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from '../index.js';
 
 class Object1 {
   constructor(init?: any) {

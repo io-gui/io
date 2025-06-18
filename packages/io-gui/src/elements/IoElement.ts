@@ -1,9 +1,9 @@
-import { Property } from '../decorators/Property';
-import { Register } from '../decorators/Register';
-import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM';
-import { Node, NodeMixin, NodeProps } from '../nodes/Node';
-import { Binding } from '../core/Binding';
-import { applyElementStyleToDocument } from '../core/Style';
+import { Property } from '../decorators/Property.js';
+import { Register } from '../decorators/Register.js';
+import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js';
+import { Node, NodeMixin, NodeProps } from '../nodes/Node.js';
+import { Binding } from '../core/Binding.js';
+import { applyElementStyleToDocument } from '../core/Style.js';
 
 const resizeObserver = new ResizeObserver((entries: any) => {
   for (const entry of entries) (entry.target as unknown as IoElement).onResized();

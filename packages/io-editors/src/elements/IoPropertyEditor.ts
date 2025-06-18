@@ -1,9 +1,8 @@
 import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
-import { EditorConfig, getEditorConfig } from '../utils/EditorConfig';
-import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups';
-import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets';
-
-import { ioObject } from './IoObject';
+import { EditorConfig, getEditorConfig } from '../utils/EditorConfig.js';
+import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
+import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js';
+import { ioObject } from './IoObject.js';
 
 export type IoPropertyEditorProps = IoElementProps & {
   value?: Record<string, any> | any[],
@@ -43,6 +42,7 @@ export class IoPropertyEditor extends IoElement {
       margin-bottom: var(--io_spacing);
     }
     :host > .row > span {
+      padding: var(--io_borderWidth); /* TODO: verify correctness */
       margin: var(--io_spacing);
       margin-left: var(--io_spacing2);
       line-height: var(--io_lineHeight);

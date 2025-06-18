@@ -1,4 +1,4 @@
-import { MenuItem, MenuOptions } from '../index';
+import { MenuItem, MenuOptions } from '../index.js';
 
 // const testOptions = {items: [
 //   new MenuItem({value: 1, options: new MenuOptions({items: [

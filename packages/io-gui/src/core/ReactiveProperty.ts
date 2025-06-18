@@ -1,5 +1,5 @@
-import { Binding } from './Binding';
-import { AnyConstructor, Node } from '../nodes/Node';
+import { Binding } from './Binding.js';
+import { AnyConstructor, Node } from '../nodes/Node.js';
 
 // TODO: make init: null default.
 

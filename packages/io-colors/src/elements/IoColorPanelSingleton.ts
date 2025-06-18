@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, IoOverlaySingleton } from 'io-gui';
-import { IoColorBase } from './IoColorBase';
-import { ioColorSlider } from './IoColorSliders';
+import { IoColorBase } from './IoColorBase.js';
+import { ioColorSlider } from './IoColorSliders.js';
 
 /**
  * Input element for color displayed as a set of sliders.

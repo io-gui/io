@@ -1,9 +1,9 @@
 import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, VDOMElement, WithBinding, NudgeDirection } from 'io-gui';
-import { MenuItem } from '../nodes/MenuItem.js';
-import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js';
+import { MenuItem } from '../nodes/MenuItem.js';
+import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoMenuTree } from './IoMenuTree.js';
 
 let timeoutOpen = -1;

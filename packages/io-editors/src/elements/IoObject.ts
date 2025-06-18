@@ -1,9 +1,9 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
-import { ioPropertyEditor } from './IoPropertyEditor';
-import { EditorConfig } from '../utils/EditorConfig';
-import { EditorGroups } from '../utils/EditorGroups';
-import { EditorWidgets } from '../utils/EditorWidgets';
+import { ioPropertyEditor } from './IoPropertyEditor.js';
+import { EditorConfig } from '../utils/EditorConfig.js';
+import { EditorGroups } from '../utils/EditorGroups.js';
+import { EditorWidgets } from '../utils/EditorWidgets.js';
 
 export type IoObjectProps = IoElementProps & {
   value?: Record<string, any> | any[],

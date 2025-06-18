@@ -1,4 +1,4 @@
-import { applyNativeElementProps, constructElement, div } from '../index';
+import { applyNativeElementProps, constructElement, div } from '../index.js';
 
 export default class {
   run() {

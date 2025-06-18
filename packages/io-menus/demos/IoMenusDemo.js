@@ -5,21 +5,21 @@ import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
 import 'io-navigation';
 import 'io-icons';
 
-const numberItems = new MenuOptions().fromJSON([
+const numberItems = new MenuOptions({items: [
   {value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:numeric-0-box'},
   {value: 1, label: 'one', hint: 'Number(1)', icon: 'io:numeric-1-box'},
   {value: 2, label: 'two', hint: 'Number(2)', icon: 'io:numeric-2-box'},
   {value: 3, label: 'three', hint: 'Number(3)', icon: 'io:numeric-3-box'},
   {value: 4, label: 'four', hint: 'Number(4)', icon: 'io:numeric-4-box'},
-]);
+]});
 
-const colorOptions = new MenuOptions().fromJSON([
+const colorOptions = new MenuOptions({items: [
   {id: 'Red', icon: '❤️', options: ['Red1','Red2','Red3']},
   {id: 'Green', icon: '💚', options: ['Green1','Green2','Green3']},
   {id: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3']},
-]);
+]});
 
-const optionsDeep = new MenuOptions().fromJSON([
+const optionsDeep = new MenuOptions({items: [
   {id: 'Deep Menu', options: [
     {value: 'Level 1/1', hint: 'One'},
     {value: 'Level 1/2', hint: 'Two'},
@@ -50,9 +50,9 @@ const optionsDeep = new MenuOptions().fromJSON([
     ]},
     {value: 'Level 1/4', hint: 'Four'},
   ]},
-]);
+]});
 
-const optionsLong = new MenuOptions().fromJSON([
+const optionsLong = new MenuOptions({items: [
   'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
   'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',
   'umbrella', 'violin', 'watermelon', 'xylophone', 'yacht', 'zebra', 'astronaut', 'butterfly', 'crocodile', 'diamond',
@@ -63,7 +63,7 @@ const optionsLong = new MenuOptions().fromJSON([
   'vortex', 'waterfall', 'xenon', 'yellow', 'zenith', 'aurora', 'blizzard', 'cascade', 'dynamo', 'echo', 'fractal',
   'galaxy', 'horizon', 'infinity', 'jubilee', 'kaleidoscope', 'labyrinth', 'mirage', 'nebula', 'orbit', 'phoenix',
   'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
-]);
+]});
 
 class IoOptionsViewDemo extends IoElement {
   static get Style() {
@@ -172,7 +172,7 @@ Register(IoItemViewDemo);
 const ioItemViewDemo = IoItemViewDemo.vConstructor;
 
 class IoMenusDemo extends IoElement {
-  static get Style() {
+  static get Style () {
     return /* css */`
       :host {
         display: flex;
@@ -284,7 +284,7 @@ class IoMenusDemo extends IoElement {
           button: 2,
         }),
       ]),
-      ioOptionsViewDemo({options: new MenuOptions().fromJSON([
+      ioOptionsViewDemo({options: new MenuOptions({items: [
         'home', 
         {value: 'food', options: [
           {value: 'fruits', options: [
@@ -305,7 +305,7 @@ class IoMenusDemo extends IoElement {
             'selectable',
           ]},
         ]},
-      ])}),
+      ]})}),
     ]);
   }
 }

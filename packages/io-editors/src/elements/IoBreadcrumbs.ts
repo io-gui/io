@@ -1,6 +1,6 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, div, Property } from 'io-gui';
-import { ioPropertyLink } from './IoPropertyLink';
 import { ioButton, ioString } from 'io-inputs';
+import { ioPropertyLink } from './IoPropertyLink.js';
 
 export type IoBreadcrumbsProps = IoElementProps & {
   value?: Object,

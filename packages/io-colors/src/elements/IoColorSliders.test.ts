@@ -1,4 +1,4 @@
-import { IoColorSlider } from '../index';
+import { IoColorSlider } from '../index.js';
 // import { expect } from 'chai';
 
 const element = new IoColorSlider();

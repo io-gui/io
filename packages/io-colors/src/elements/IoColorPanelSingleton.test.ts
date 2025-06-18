@@ -1,5 +1,5 @@
 import { nextQueue } from 'io-gui';
-import { IoColorPanelSingleton } from '../index';
+import { IoColorPanelSingleton } from '../index.js';
 
 const element = IoColorPanelSingleton;
 

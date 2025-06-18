@@ -1,8 +1,8 @@
 import { IoOverlaySingleton } from 'io-gui';
 import { IoString } from 'io-inputs';
-import { IoMenuItem } from '../elements/IoMenuItem';
-import { IoMenuOptions } from '../elements/IoMenuOptions';
-import { IoMenuTree } from '../elements/IoMenuTree';
+import { IoMenuItem } from '../elements/IoMenuItem.js';
+import { IoMenuOptions } from '../elements/IoMenuOptions.js';
+import { IoMenuTree } from '../elements/IoMenuTree.js';
 
 export type IoMenuElementType = IoMenuItem | IoMenuOptions | IoMenuTree | IoString;
 

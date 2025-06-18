@@ -69,7 +69,10 @@
           "io-markdown": "./packages/io-markdown/build/index.js",
           "io-menus": "./packages/io-menus/build/index.js",
           "io-navigation": "./packages/io-navigation/build/index.js",
-          "io-sliders": "./packages/io-sliders/build/index.js"
+          "io-sliders": "./packages/io-sliders/build/index.js",
+          "marked": "./node_modules/marked/lib/marked.esm.js",
+          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
         }
       }
     </script>
@@ -84,14 +87,14 @@
         background-color: var(--io_bgColorStrong);
         color: var(--io_color);
       }
-      io-main-page {
+      io-navigator {
         height: 100%;
       }
-      io-main-page .heading {
+      io-navigator .heading {
         margin: 0.75em 1em;
         color: var(--io_colorStrong);
       }
-      io-main-page iframe {
+      io-navigator iframe {
         border: none;
         flex: 1 1 auto;
       }
@@ -108,106 +111,95 @@
 
     $.permit();
 
-    const OPTIONS = new MenuOptions({items: [
-      new MenuItem({id: 'About'}),
-      new MenuItem({id: 'Docs', options: new MenuOptions({items: [
-        new MenuItem({id: 'Quick Start', options: new MenuOptions({items: [
-          new MenuItem({id: 'Usage'}),
-          new MenuItem({id: 'Making a Simple Element'}),
-          new MenuItem({id: 'Making a Website'}),
-          new MenuItem({id: 'Built-in Elements'}),
-          new MenuItem({id: 'Learn More'}),
-        ]})}),
-        new MenuItem({id: 'Deep Dive', options: new MenuOptions({items: [
-          new MenuItem({id: 'Nodes and Elements'}),
-          new MenuItem({id: 'Registration'}),
-          new MenuItem({id: 'Properties'}),
-          new MenuItem({id: 'Initial Value Inference'}),
-          new MenuItem({id: 'Property Declaration Inheritance'}),
-          new MenuItem({id: 'Property Declaration Fields'}),
-          new MenuItem({id: 'Styling'}),
-          new MenuItem({id: 'CSS Mixin Polyfill'}),
-          new MenuItem({id: 'Listeners'}),
-          new MenuItem({id: 'Reactivity'}),
-          new MenuItem({id: 'Property Change Batching'}),
-          new MenuItem({id: 'Lazy Reactivity'}),
-          new MenuItem({id: 'Template Syntax'}),
-          new MenuItem({id: 'Data Binding'}),
-        ]})}),
-      ]})}),
-      new MenuItem({id: 'Demos', options: new MenuOptions({items: [
-        new MenuItem({id: 'Inputs'}),
-        new MenuItem({id: 'Icons'}),
-        new MenuItem({id: 'Sliders'}),
-        new MenuItem({id: 'Colors'}),
-        new MenuItem({id: 'Editors'}),
-        new MenuItem({id: 'Menus'}),
-        new MenuItem({id: 'Navigation'}),
-        new MenuItem({id: 'Theme Editor'}),
-        new MenuItem({id: 'Element Inspector'}),
-        new MenuItem({id: 'TODO MVC App', value: 'TODO MVC App'}),
-      ]})}),
-    ],
+    const OPTIONS = new MenuOptions({
+      items: [
+        'About',
+        {id: 'Docs', options: [
+          {id: 'Quick Start', options: [
+            'Usage',
+            'Making a Simple Element',
+            'Making a Website',
+            'Built-in Elements',
+            'Learn More',
+          ]},
+          {id: 'Deep Dive', options: [
+            'Nodes and Elements',
+            'Registration',
+            'Properties',
+            'Initial Value Inference',
+            'Property Declaration Inheritance',
+            'Property Declaration Fields',
+            'Styling',
+            'CSS Mixin Polyfill',
+            'Listeners',
+            'Reactivity',
+            'Property Change Batching',
+            'Lazy Reactivity',
+            'Template Syntax',
+            'Data Binding',
+          ]},
+        ]},
+        {id: 'Demos', options: [
+          'Inputs',
+          'Icons',
+          'Sliders',
+          'Colors',
+          'Editors',
+          'Menus',
+          'Navigation',
+          'Theme Editor',
+          'Element Inspector',
+          'TODO MVC App',
+        ]}
+      ],
       path: $({key: 'path', storage: 'hash', value: 'About'})
-    });
+    })
 
     const siteRoot = 'https://iogui.dev/io/';
 
-    export class IoMainPage extends IoNavigator {
-      static get ReactiveProperties() {
-        return {
-          role: 'main',
-          class: 'main',
-          menu: 'top',
-          collapseWidth: 280,
-          options: OPTIONS,
-          // caching: 'proactive',
-          depth: 2,
-          widget: {
-            // TODO: consider initializeing with array instance without value property!
-            value: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}})
-          },
+    const navigator = new IoNavigator({
+      role: 'main',
+      class: 'main',
+      menu: 'top',
+      options: OPTIONS,
+      caching: 'none',
+      depth: 2,
+      widget: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}}),
+      elements: [
+        ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
+        ioSelector({id: 'Docs',
+          options: OPTIONS.findItemById('Docs').options,
+          caching: 'none',
           elements: [
-            ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
-            ioSelector({id: 'Docs',
-              options: OPTIONS.findItemById('Docs').options,
-              // caching: 'proactive',
-              elements: [
-                ioNavigator({id: 'Quick Start', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options, elements: [
-                  ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md', scroll: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected')}),
-                ]}),
-                ioNavigator({id: 'Deep Dive', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, elements: [
-                  ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md', scroll: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options.bind('selected')}),
-                ]}),
-              ]
-            }),
-            ioSelector({id: 'Demos',
-              options: OPTIONS.findItemById('Demos').options,
-              // caching: 'proactive',
-              elements: [
-                {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
-                {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
-                {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/io-sliders/demos/IoSlidersDemo.js'}},
-                {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/io-colors/demos/IoColorsDemo.js'}},
-                {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
-                {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
-                {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
-                {tag: 'io-gui-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoGuiThemeEditor.js'}},
-                {tag: 'io-element-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementDemo.js'}},
-                iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
-              ]
-            }),
+            ioNavigator({id: 'Quick Start', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options, elements: [
+              ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md', scroll: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected')}),
+            ]}),
+            ioNavigator({id: 'Deep Dive', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, elements: [
+              ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md', scroll: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options.bind('selected')}),
+            ]}),
           ]
-        };
-      }
-      init() {
-        this.changed();
-      }
-    }
-    Register(IoMainPage);
+        }),
+        ioSelector({id: 'Demos',
+          options: OPTIONS.findItemById('Demos').options,
+          // caching: 'proactive',
+          elements: [
+            {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
+            {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
+            {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/io-sliders/demos/IoSlidersDemo.js'}},
+            {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/io-colors/demos/IoColorsDemo.js'}},
+            {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
+            {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
+            {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
+            {tag: 'io-gui-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoGuiThemeEditor.js'}},
+            {tag: 'io-element-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementDemo.js'}},
+            iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
+          ]
+        }),
+      ]
+    });
+    document.body.appendChild(navigator);
 
     </script>
     <noscript>JavaScript is required to view this page!</noscript>
-    <io-main-page></io-main-page>
   </body>
 </html>

@@ -1,5 +1,5 @@
 import { Register, ReactiveProperty, VDOMElement } from 'io-gui';
-import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase';
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 
 export type IoSliderRangeProps = IoSliderBaseProps & {
   // TODO TS does not support narrowing of the type values here? :/

@@ -8,49 +8,50 @@ import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-col
 
 // TODO: Implement IDs in menu options. use ID for selection
 const options = new MenuOptions({
+  items: [{
+    id: 'native',
+    options: [
+      {id: 'div', value: div('div content')},
+    ]
+  }, {
+    id: 'io-icons',
+    options: [
+      {id: 'io-icon:check', value: ioIcon({value: 'io:check'})},
+      {id: 'io-icon:close', value: ioIcon({value: 'io:close'})},
+      {id: 'io-icon:circle', value: ioIcon({value: 'io:circle'})},
+    ]
+  }, {
+    id: 'io-inputs',
+    options: [
+      {id: 'io-boolean', value: ioBoolean()},
+      {id: 'io-button', value: ioButton({label: 'Button'})},
+      {id: 'io-number', value: ioNumber()},
+      {id: 'io-string', value: ioString()},
+      {id: 'io-switch', value: ioSwitch()},
+    ]
+  }, {
+    id: 'io-sliders',
+    options: [
+      {id: 'io-number-slider', value: ioNumberSlider()},
+      {id: 'io-number-slider-range', value: ioNumberSliderRange()},
+      {id: 'io-slider', value: ioSlider()},
+      {id: 'io-slider-2d', value: ioSlider2d()},
+      {id: 'io-slider-range', value: ioSliderRange()},
+    ]
+  }, {
+    id: 'io-colors',
+    options: [
+      {id: 'io-color-rgba', value: ioColorRgba()},
+      {id: 'io-color-slider:r', value: ioColorSlider({channel: 'r'})},
+      {id: 'io-color-slider:g', value: ioColorSlider({channel: 'g'})},
+      {id: 'io-color-slider:b', value: ioColorSlider({channel: 'b'})},
+      {id: 'io-color-slider:sv', value: ioColorSlider({channel: 'sv'})},
+      {id: 'io-color-swatch', value: ioColorSwatch()},
+      {id: 'io-color-picker', value: ioColorPicker()},
+    ]
+  }],
   selected: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
-}).fromJSON([{
-  id: 'native',
-  options: [
-    {id: 'div', value: div('div content')},
-  ]
-}, {
-  id: 'io-icons',
-  options: [
-    {id: 'io-icon:check', value: ioIcon({value: 'io:check'})},
-    {id: 'io-icon:close', value: ioIcon({value: 'io:close'})},
-    {id: 'io-icon:circle', value: ioIcon({value: 'io:circle'})},
-  ]
-}, {
-  id: 'io-inputs',
-  options: [
-    {id: 'io-boolean', value: ioBoolean()},
-    {id: 'io-button', value: ioButton({label: 'Button'})},
-    {id: 'io-number', value: ioNumber()},
-    {id: 'io-string', value: ioString()},
-    {id: 'io-switch', value: ioSwitch()},
-  ]
-}, {
-  id: 'io-sliders',
-  options: [
-    {id: 'io-number-slider', value: ioNumberSlider()},
-    {id: 'io-number-slider-range', value: ioNumberSliderRange()},
-    {id: 'io-slider', value: ioSlider()},
-    {id: 'io-slider-2d', value: ioSlider2d()},
-    {id: 'io-slider-range', value: ioSliderRange()},
-  ]
-}, {
-  id: 'io-colors',
-  options: [
-    {id: 'io-color-rgba', value: ioColorRgba()},
-    {id: 'io-color-slider:r', value: ioColorSlider({channel: 'r'})},
-    {id: 'io-color-slider:g', value: ioColorSlider({channel: 'g'})},
-    {id: 'io-color-slider:b', value: ioColorSlider({channel: 'b'})},
-    {id: 'io-color-slider:sv', value: ioColorSlider({channel: 'sv'})},
-    {id: 'io-color-swatch', value: ioColorSwatch()},
-    {id: 'io-color-picker', value: ioColorPicker()},
-  ]
-}]);
+})
 
 export class IoElementDemo extends IoElement {
   static get Style() {

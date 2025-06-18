@@ -1,4 +1,4 @@
-import { IoColorSwatch } from '../index';
+import { IoColorSwatch } from '../index.js';
 // import { expect } from 'chai';
 
 const element = new IoColorSwatch();

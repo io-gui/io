@@ -1,8 +1,8 @@
-import { ReactiveProtoProperty } from './ReactiveProperty';
-import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher';
-import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node';
-import { reactivePropertyDecorators } from '../decorators/Property';
-import { propertyDecorators } from '../decorators/Property';
+import { ReactiveProtoProperty } from './ReactiveProperty.js';
+import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher.js';
+import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
+import { reactivePropertyDecorators } from '../decorators/Property.js';
+import { propertyDecorators } from '../decorators/Property.js';
 
 type ProtoConstructors = Array<NodeConstructor<any>>;
 type ProtoHandlers = string[];

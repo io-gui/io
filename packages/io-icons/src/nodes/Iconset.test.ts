@@ -1,4 +1,4 @@
-import { IconsetSingleton } from '../index';;
+import { IconsetSingleton } from '../index.js';;
 
 export default class {
   run() {

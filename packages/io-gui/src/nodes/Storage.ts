@@ -1,7 +1,7 @@
-import { ReactiveProperty } from '../decorators/Property';
-import { Register } from '../decorators/Register';
-import { Binding } from '../core/Binding';
-import { Node, NodeProps } from '../nodes/Node';
+import { ReactiveProperty } from '../decorators/Property.js';
+import { Register } from '../decorators/Register.js';
+import { Binding } from '../core/Binding.js';
+import { Node, NodeProps } from '../nodes/Node.js';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
@@ -101,15 +101,6 @@ export type StorageProps = NodeProps & {
   default?: any,
   storage?: 'hash' | 'local' | 'none',
 };
-
-export function genObjectStorageID(object: Record<string, any>) {
-  const string = JSON.stringify(object);
-  let hash = 0;
-  for (let i = 0; i < string.length; i++) {
-    hash = Math.imul(31, hash) + string.charCodeAt(i) | 0;
-  }
-  return 'io-local-state-' + String(hash);
-}
 
 @Register
 export class StorageNode extends Node {
@@ -306,6 +297,12 @@ function updateAllFromHash() {
       } catch (error) {
         node.value = hashValues[h];
       }
+    }
+  }
+
+  for (const [key, node] of nodes.hash.entries()) {
+    if (hashValues[key] === undefined) {
+      node.value = node.default;
     }
   }
 }

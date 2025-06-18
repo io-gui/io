@@ -1,5 +1,5 @@
-import { MenuItem } from '../nodes/MenuItem';
-import { MenuOptions } from '../nodes/MenuOptions';
+import { MenuItem } from '../nodes/MenuItem.js';
+import { MenuOptions } from '../nodes/MenuOptions.js';
 
 function matchMenuItem(item: MenuItem, search: string) {
   if (item.options) return false;

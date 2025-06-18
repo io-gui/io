@@ -2,7 +2,8 @@ import { Register, IoElement, div } from 'io-gui';
 import { MenuOptions, ioOptionSelect } from 'io-menus';
 import { ioPropertyEditor, ioVector, ioMatrix, ioInspector } from 'io-editors';
 import { ioSlider } from 'io-sliders';
-import { ioString, ioNumber } from 'io-inputs';
+import { ioString, ioNumber, ioBoolean } from 'io-inputs';
+
 export class IoEditorsDemo extends IoElement {
   static get Style() {
     return /* css */`
@@ -69,6 +70,7 @@ export class IoEditorsDemo extends IoElement {
     };
   }
   ready() {
+    console.log('ready', this);
     this.render([
       ioInspector({
         value: this.object,
@@ -83,9 +85,7 @@ export class IoEditorsDemo extends IoElement {
           [Object, [
             [Number, ioSlider({step: 0.1})],
             [Array, ioPropertyEditor({labeled: false, class: 'array', config: new Map([
-              [Array, [
-                [Number, ioNumber({live: true})],
-              ]]
+              [Array, [[Number, ioNumber()]]]
             ])})],
             ['vector2', ioVector({linkable: true})],
             ['vector3', ioVector({linkable: true})],
@@ -113,23 +113,26 @@ export class IoEditorsDemo extends IoElement {
           properties: ['number', 'string', 'boolean'],
           config: new Map([
             [Object, [
-              [String, ioString({live: true})],
-              [Number, ioSlider({step: 0.1})],
+              [Number, ioSlider({step: 0.01})],
+              [Boolean, ioBoolean()],
             ]]
           ]),
         }),
         ioPropertyEditor({
           value: this.object,
           properties: ['number', 'string'],
-          // widget: IoField({label: 'Widget Element'}),
+          // widget: ioField({label: 'Widget Element'}),
           config: new Map([
             [Object, [
-              [String, ioString({live: true})],
-              [Number, ioOptionSelect({options: new MenuOptions().fromJSON([
-                {label: 'zero', value: 0},
-                {label: 'half', value: 0.5},
-                {label: 'one', value: 1},
-              ])})],
+              [String, ioString({live: true, appearance: 'neutral'})],
+              // TODO: fix this. 'number' works but breaks other configs.
+              [Number, ioOptionSelect({options: new MenuOptions({
+                items: [
+                  {label: 'zero', value: 0},
+                  {label: 'half', value: 0.5},
+                  {label: 'one', value: 1},
+                ],
+              })})],
             ]]
           ]),
         }),

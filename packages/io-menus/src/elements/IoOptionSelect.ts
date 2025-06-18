@@ -66,17 +66,18 @@ export class IoOptionSelect extends IoElement {
   }
 
   // TODO: implement selecting by id
-  _onSelectedChanged(event: CustomEvent) {
+  // TODO: Consider triggering this.inputValue() only by user-input!
+  _onItemSelected(event: CustomEvent) {
     if (this._disposed) return;
-    this.inputValue(event.detail.value);
+    this.inputValue(event.detail.item.value);
   }
 
   optionsChanged(change: Change) {
     if (change.oldValue) {
-      change.oldValue.removeEventListener('selected-changed', this._onSelectedChanged);
+      change.oldValue.removeEventListener('item-selected', this._onItemSelected);
     }
     if (change.value) {
-      change.value.addEventListener('selected-changed', this._onSelectedChanged);
+      change.value.addEventListener('item-selected', this._onItemSelected);
     }
     this.$item.options = this.options;
   }
@@ -93,7 +94,7 @@ export class IoOptionSelect extends IoElement {
     } else if (this.selectBy === 'id') {
       selectedItem = this.options.findItemById(this.value);
     }
-    if (selectedItem) selectedItem.selected = true;
+    if (selectedItem) selectedItem.value = true;
 
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
 

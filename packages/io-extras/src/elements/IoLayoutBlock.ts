@@ -1,5 +1,5 @@
 import { Register, IoElement } from 'io-gui';
-import { ioTabs } from './IoTabbedElements';
+import { ioTabs } from './IoTabbedElements.js';
 // import "./layout-tab.js";
 // import "./layout-tabs.js";
 

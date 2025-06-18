@@ -1,2 +1,2 @@
-export * from './nodes/Iconset';
-export * from './elements/IoIcon';
+export * from './nodes/Iconset.js';
+export * from './elements/IoIcon.js';

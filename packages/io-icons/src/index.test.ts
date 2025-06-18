@@ -1,5 +1,5 @@
-import IconsetElementTest from './nodes/Iconset.test';
-import IconElementTest from './elements/IoIcon.test';
+import IconsetElementTest from './nodes/Iconset.test.js';
+import IconElementTest from './elements/IoIcon.test.js';
 
 export default class {
   run() {

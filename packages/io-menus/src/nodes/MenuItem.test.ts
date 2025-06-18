@@ -1,4 +1,4 @@
-import { MenuItem, MenuOptions } from '../index';
+import { MenuItem, MenuOptions } from '../index.js';
 
 export default class {
   run() {

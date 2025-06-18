@@ -1,10 +1,19 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, genObjectStorageID, IoElementProps, WithBinding, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js';
 import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
+
+function genObjectStorageID(object: Record<string, any>) {
+  const string = JSON.stringify(object);
+  let hash = 0;
+  for (let i = 0; i < string.length; i++) {
+    hash = Math.imul(31, hash) + string.charCodeAt(i) | 0;
+  }
+  return 'io-local-state-' + String(hash);
+}
 
 function addMenuItemsOrTreeBranches(options: MenuOptions, depth: number, d = 0) {
   const elements: VDOMElement[] = [];

@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, Property, WithBinding, nudge } from 'io-gui';
-import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton';
-import { ioColorSwatch } from './IoColorSwatch';
+import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js';
+import { ioColorSwatch } from './IoColorSwatch.js';
 
 // TODO: focus picker on expand.
 // TODO: collapse picker on blur.
@@ -24,9 +24,7 @@ export class IoColorPicker extends IoElement {
         overflow: hidden;
       }
       :host:focus {
-        outline: var(--io_spacing) solid var(--io_colorStrong);
-        outline-offset: var(--io_borderWidth);
-        z-index: 1;
+        @apply --io_focus;
       }
       :host > io-color-swatch {
         width: 100%;

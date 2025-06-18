@@ -1,6 +1,6 @@
-import { ReactiveProperty } from '../decorators/Property';
-import { Register } from '../decorators/Register';
-import { IoElement, IoElementProps } from './IoElement';
+import { ReactiveProperty } from '../decorators/Property.js';
+import { Register } from '../decorators/Register.js';
+import { IoElement, IoElementProps } from './IoElement.js';
 
 let focusRestoreTarget: Element | null = null;
 

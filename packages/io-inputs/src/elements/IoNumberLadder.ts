@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, VDOMElement, WithBinding, Property } from 'io-gui';
-import { IoNumber } from './IoNumber';
-import { ioNumberLadderStep } from './IoNumberLadderStep';
+import { IoNumber } from './IoNumber.js';
+import { ioNumberLadderStep } from './IoNumberLadderStep.js';
 
 let lastFocus: Element | null = null;
 {

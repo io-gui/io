@@ -1,4 +1,4 @@
-import { ChangeQueue, Change, Node, Register } from '../index';
+import { ChangeQueue, Change, Node, Register } from '../index.js';
 
 @Register
 class MockNode extends Node {

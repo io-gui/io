@@ -1,6 +1,6 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Node } from 'io-gui';
-import {ioSliderRange} from './IoSliderRange';
 import {ioNumber} from 'io-inputs';
+import {ioSliderRange} from './IoSliderRange.js';
 
 export type IoNumberSliderRangeProps = IoElementProps & {
   value?: WithBinding<[number, number]>,

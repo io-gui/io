@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, span, VDOMElement, WithBinding, Property } from 'io-gui';
 import { ioIcon } from 'io-icons';
-import { IoField, IoFieldProps } from './IoField';
+import { IoField, IoFieldProps } from './IoField.js';
 
 export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
   value?: WithBinding<boolean>,

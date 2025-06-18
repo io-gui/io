@@ -1,5 +1,5 @@
 import { Register, IoElement, p, div } from 'io-gui';
-import { ioSelectorTabs } from './IoTabbedElements';
+import { ioSelectorTabs } from './IoTabbedElements.js';
 
 @Register
 export class IoLayout extends IoElement {

@@ -1,4 +1,4 @@
-// import { getEditorGroups } from '../index';
+// import { getEditorGroups } from '../index.js';
 
 export default class {
   run() {

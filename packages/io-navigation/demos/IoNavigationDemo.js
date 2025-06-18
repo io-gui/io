@@ -1,6 +1,6 @@
 import { Register, IoElement, div, span } from 'io-gui';
 import { MenuOptions } from 'io-menus';
-import { ioNavigator, ioSelector } from 'io-navigation';
+import { ioNavigator } from 'io-navigation';
 
 const contentElements = [
   div({id: 'devs', class: 'vertical'}, [
@@ -41,7 +41,7 @@ const contentElements = [
   ]),
 ];
 
-const contentOptions = new MenuOptions().fromJSON([
+const contentOptions = new MenuOptions({items:[
   {id: 'devs', options: [
     {id: 'devs#dev1'},
     {id: 'devs#dev2'},
@@ -78,8 +78,8 @@ const contentOptions = new MenuOptions().fromJSON([
     {id: 'bars#bar6'},
     {id: 'bars#bar7'},
   ]},
-]);
-contentOptions[0].options[3].selected = true;
+]});
+contentOptions.items[0].options.items[3].selected = true;
 
 export class IoNavigationDemo extends IoElement {
   static get Style() {

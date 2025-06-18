@@ -3,9 +3,9 @@ import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
 import { MenuOptions, ioOptionSelect } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
-import { ioVector } from '../elements/IoVector';
-import { ioObject } from '../elements/IoObject';
-import { getAllPropertyNames } from './EditorGroups';
+import { ioVector } from '../elements/IoVector.js';
+import { ioObject } from '../elements/IoObject.js';
+import { getAllPropertyNames } from './EditorGroups.js';
 
 type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
@@ -19,7 +19,7 @@ function optionMenu(options: any[]) {
       options[i] = {value: null, id: 'Null'};
     }
   }
-  return ioOptionSelect({options: new MenuOptions().fromJSON(options)});
+  return ioOptionSelect({options: new MenuOptions({items: options})});
 }
 
 const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
@@ -35,25 +35,17 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     [Number, ioNumber({step: 0.01})],
   ]],
   [window.Node, [
-    ['tabIndex', ioOptionSelect({options: new MenuOptions().fromJSON([
-      {value: '', id: 'None'}, '-1', '0', '1', '2', '3',
-    ])})],
+    ['tabIndex', ioOptionSelect({options: new MenuOptions({items: [{value: '', id: 'None'}, '-1', '0', '1', '2', '3']})})],
     ['innerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
     ['outerHTML', ioString({disabled: true, style: {maxWidth: '10em'}})],//TODO
-    ['autocapitalize', ioOptionSelect({options: new MenuOptions().fromJSON(['off', 'sentences', 'words', 'characters', {value: '', id: 'None'}])})],
-    ['writingSuggestions', ioOptionSelect({options: new MenuOptions().fromJSON(['true', 'false'])})],
-    ['dir', ioOptionSelect({options: new MenuOptions().fromJSON(['ltr','rtl','auto',{value:'', id: 'None'}])})],
-    ['virtualKeyboardPolicy', ioOptionSelect({options: new MenuOptions().fromJSON(['manual','auto',{value:'', id: 'None'}])})],
-    ['enterKeyHint', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'enter','done','go','next','previous','search','send',{value:'', id: 'None'}])})
-    ],
-    ['contentEditable', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'true','false','plaintext-only','inherit'])})
-    ],
-    ['inputMode', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'decimal','email','numeric','tel','search','url','text',{value:'', id: 'None'}])})
-    ],
-    ['lang', ioOptionSelect({options: new MenuOptions().fromJSON([
+    ['autocapitalize', ioOptionSelect({options: new MenuOptions({items: ['off', 'sentences', 'words', 'characters', {value: '', id: 'None'}]})})],
+    ['writingSuggestions', ioOptionSelect({options: new MenuOptions({items: ['true', 'false']})})],
+    ['dir', ioOptionSelect({options: new MenuOptions({items: ['ltr','rtl','auto',{value:'', id: 'None'}]})})],
+    ['virtualKeyboardPolicy', ioOptionSelect({options: new MenuOptions({items: ['manual','auto',{value:'', id: 'None'}]})})],
+    ['enterKeyHint', ioOptionSelect({options: new MenuOptions({items: ['enter','done','go','next','previous','search','send',{value:'', id: 'None'}]})})],
+    ['contentEditable', ioOptionSelect({options: new MenuOptions({items: ['true','false','plaintext-only','inherit']})})],
+    ['inputMode', ioOptionSelect({options: new MenuOptions({items: ['decimal','email','numeric','tel','search','url','text',{value:'', id: 'None'}]})})],
+    ['lang', ioOptionSelect({options: new MenuOptions({items: [
       {value: '', id: 'None'},
       'ab','aa','af','ak','sq','am','ar','an','hy','as','av','ae','ay','az','bm','ba','eu','be','bn','bh','bi','bs','br','bg','my','ca','ch','ce',
       'ny','zh','zh-ans','zh-ant','cv','kw','co','cr','hr','cs','da','dv','nl','dz','en','eo','et','ee','fo','fj','fi','fr','ff','gl','gd',
@@ -62,17 +54,17 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
       'mi','mr','mh','mo','mn','na','nv','ng','nd','ne','no','nb','nn','oc','oj','cu','or','om','os','pi','ps','fa','pl','pt','pa','qu','rm',
       'ro','ru','se','sm','sg','sa','sr','sh','st','tn','sn','ii','sd','si','ss','sk','sl','so','nr','es','su','sw','sv','tl','ty','tg','ta',
       'tt','te','th','bo','ti','to','ts','tr','tk','tw','ug','uk','ur','uz','ve','vi','vo','wa','cy','wo','fy','xh','yi','ji','yo','za','zu'
-    ])})],
-    ['role', ioOptionSelect({options: new MenuOptions().fromJSON([
+    ]})})],
+    ['role', ioOptionSelect({options: new MenuOptions({items: [
       'alert','alertdialog','application','article','banner','button','cell','checkbox','columnheader','combobox','complementary',
       'contentinfo','definition','dialog','directory','document','feed','figure','form','grid','gridcell','group','heading','img',
       'link','list','listbox','listitem','log','main','marquee','math','menu','menubar','menuitem','menuitemcheckbox','menuitemradio',
       'navigation','none','note','option','presentation','progressbar','radio','radiogroup','region','row','rowgroup','rowheader',
       'scrollbar','search','searchbox','separator','slider','spinbutton','status','switch','tab','table','tablist','tabpanel','term',
       'textbox','timer','toolbar','tooltip','tree','treegrid','treeitem',
-    ])})],
+    ]})})],
     ['ariaAtomic', optionMenu(['true','false',null])],
-    ['ariaAutoComplete', ioOptionSelect({options: new MenuOptions().fromJSON(['inline','list','both','none'])})],
+    ['ariaAutoComplete', ioOptionSelect({options: new MenuOptions({items: ['inline','list','both','none']})})],
     ['ariaBusy', optionMenu(['true','false',null])],
     ['ariaBrailleLabel', ioString()],
     ['ariaBrailleRoleDescription', ioString()],
@@ -90,24 +82,24 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     ['ariaKeyShortcuts', ioString()],
     ['ariaLabel', ioString()],
     ['ariaLevel', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
-    ['ariaLive', ioOptionSelect({options: new MenuOptions().fromJSON(['assertive','polite','off'])})],
+    ['ariaLive', ioOptionSelect({options: new MenuOptions({items: ['assertive','polite','off']})})],
     ['ariaModal', optionMenu(['true','false',null])],
     ['ariaMultiLine', optionMenu(['true','false',null])],
     ['ariaMultiSelectable', optionMenu(['true','false',null])],
-    ['ariaOrientation', ioOptionSelect({options: new MenuOptions().fromJSON(['horizontal','vertical','undefined'])})],
+    ['ariaOrientation', ioOptionSelect({options: new MenuOptions({items: ['horizontal','vertical','undefined']})})],
     ['ariaPlaceholder', ioString()],
     ['ariaPosInSet', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaPressed', optionMenu(['true','false','mixed',null])],
     ['ariaReadOnly', optionMenu(['true','false',null])],
     ['ariaRequired', optionMenu(['true','false',null])],
-    ['ariaRelevant', ioOptionSelect({options: new MenuOptions().fromJSON(['additions','all','removals','text'])})],
+    ['ariaRelevant', ioOptionSelect({options: new MenuOptions({items: ['additions','all','removals','text']})})],
     ['ariaRoleDescription', ioString()],
     ['ariaRowCount', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaRowIndex', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaRowSpan', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaSelected', optionMenu(['true','false',null])],
     ['ariaSetSize', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
-    ['ariaSort', ioOptionSelect({options: new MenuOptions().fromJSON(['none','ascending','descending','other'])})],
+    ['ariaSort', ioOptionSelect({options: new MenuOptions({items: ['none','ascending','descending','other']})})],
     ['ariaValueMax', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaValueMin', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
     ['ariaValueNow', optionMenu([...[...Array(32)].map((_, i) => i + 1),null])],
@@ -120,14 +112,10 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   [HTMLElement, [
   ]],
   [Node, [
-    ['reactivity', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'none', 'debounced', 'immediate',
-    ])})],
+    ['reactivity', ioOptionSelect({options: new MenuOptions({items: ['none', 'debounced', 'immediate']})})],
   ]],
   [IoElement, [
-    ['reactivity', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'none', 'debounced', 'immediate',
-    ])})],
+    ['reactivity', ioOptionSelect({options: new MenuOptions({items: ['none', 'debounced', 'immediate']})})],
   ]],
   [IoGl, [
     ['size', ioVector({step: 1})],
@@ -135,10 +123,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
   ]],
   [Theme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],
-    ['themeID', ioOptionSelect({options: new MenuOptions().fromJSON([
-      'light',
-      'dark',
-    ])})],
+    ['themeID', ioOptionSelect({options: new MenuOptions({items: ['light','dark']})})],
     ['spacing2', ioField({disabled: true})],
     ['spacing3', ioField({disabled: true})],
     ['spacing5', ioField({disabled: true})],
@@ -226,6 +211,11 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
         element = elementCandidate;
       }
       if (element) {
+        // element = {...element};
+        // if (element.props) {
+        //   element.props = {...element.props};
+        // }
+        // console.log(key, element);
         configRecord[key] = element;
       }
     }

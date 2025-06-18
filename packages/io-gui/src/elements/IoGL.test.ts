@@ -1,4 +1,4 @@
-import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from '../index';;
+import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from '../index.js';;
 
 @Register
 class IoGlTest extends IoGl {

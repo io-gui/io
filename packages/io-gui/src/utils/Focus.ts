@@ -1,6 +1,6 @@
-import { IoElement } from '../elements/IoElement';
-import { ThemeSingleton } from '../nodes/Theme';
-import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay';
+import { IoElement } from '../elements/IoElement.js';
+import { ThemeSingleton } from '../nodes/Theme.js';
+import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js';
 
 let focusBacktrack = new WeakMap();
 type Direction = 'left' | 'right' | 'down' | 'up';

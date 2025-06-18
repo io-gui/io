@@ -1,10 +1,10 @@
-import { Register } from '../decorators/Register';
-import { ProtoChain } from '../core/ProtoChain';
-import { Binding } from '../core/Binding';
-import { ChangeQueue } from '../core/ChangeQueue';
-import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty';
-import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher';
-import { throttle, debounce, CallbackFunction } from '../core/Queue';
+import { Register } from '../decorators/Register.js';
+import { ProtoChain } from '../core/ProtoChain.js';
+import { Binding } from '../core/Binding.js';
+import { ChangeQueue } from '../core/ChangeQueue.js';
+import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
+import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
+import { throttle, debounce, CallbackFunction } from '../core/Queue.js';
 
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;

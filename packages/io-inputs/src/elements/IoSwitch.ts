@@ -1,6 +1,6 @@
 import { span, Register } from 'io-gui';
-import { IoBoolean } from './IoBoolean';
 import { ioIcon } from 'io-icons';
+import { IoBoolean } from './IoBoolean.js';
 
 /**
  * Input element for `Boolean` data type displayed as switch.
@@ -15,13 +15,12 @@ export class IoSwitch extends IoBoolean {
         padding: var(--io_spacing) var(--io_spacing);
       }
       :host:focus {
-        outline: 0;
-        border-color: transparent;
+        outline: 0 !important;
+        border-color: transparent !important;
         z-index: 1;
       }
       :host:focus > span:before {
-        outline: var(--io_spacing) solid var(--io_colorStrong);
-        outline-offset: var(--io_borderWidth);
+        @apply --io_focus;
       }
       :host[pressed] {
         border-color: transparent !important;
@@ -62,6 +61,7 @@ export class IoSwitch extends IoBoolean {
         border-radius: var(--io_lineHeight);
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
+        z-index: 2;
       }
       :host[value] > span:after {
         background-color: var(--io_bgColorBlue);
