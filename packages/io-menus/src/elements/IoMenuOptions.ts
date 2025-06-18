@@ -117,14 +117,13 @@ export class IoMenuOptions extends IoElement {
   @ReactiveProperty(null)
   declare widget: VDOMElement | null;
 
-  @ReactiveProperty(undefined)
+  @Property(undefined)
   declare $parent?: IoMenuItem;
 
   @Property('listbox')
   declare role: string;
 
-  // TODO: make non-reactive
-  @ReactiveProperty({type: Array})
+  @Property(Array)
   declare private _overflownItems: MenuItem[];
 
   static get Listeners() {

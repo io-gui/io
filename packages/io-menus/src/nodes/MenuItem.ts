@@ -150,7 +150,6 @@ export class MenuItem extends Node {
     }
     if (this.mode === 'select') {
       this.selected = !!this.options?.selected;
-      // this.selected = !!this.options?.path;
     }
   }
   selectedChanged() {

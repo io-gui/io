@@ -106,7 +106,7 @@ export class IoMenuItem extends IoField {
   @Property('false')
   declare contentEditable: boolean;
 
-  @ReactiveProperty(undefined)
+  @Property(undefined)
   declare $parent?: IoMenuOptions | IoMenuTree;
 
   declare $options?: IoMenuOptions;
@@ -204,6 +204,7 @@ export class IoMenuItem extends IoField {
     this.debounce(this.onBlurDebounced);
   }
   onBlurDebounced() {
+    if (this._disposed) return;
     // TODO: rewrite this.
     const descendants = getMenuDescendants(this);
     const siblings = getMenuSiblings(this);
@@ -366,6 +367,10 @@ export class IoMenuItem extends IoField {
       this.hasmore && this.direction === 'right' ? ioIcon({value: 'io:triangle_right', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'down' ? ioIcon({value: 'io:triangle_down', class: 'hasmore'}) : null,
     ]);
+  }
+  dispose() {
+    super.dispose();
+    delete this.$options;
   }
 }
 export const ioMenuItem = IoMenuItem.vConstructor;

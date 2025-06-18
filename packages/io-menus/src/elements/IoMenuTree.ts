@@ -88,7 +88,7 @@ export class IoMenuTree extends IoElement {
   @ReactiveProperty(null)
   declare widget: VDOMElement | null;
 
-  @ReactiveProperty(undefined)
+  @Property(undefined)
   declare $parent?: IoMenuItem;
 
   @Property('listbox')

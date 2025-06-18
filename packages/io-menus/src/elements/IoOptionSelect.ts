@@ -94,10 +94,8 @@ export class IoOptionSelect extends IoElement {
     } else if (this.selectBy === 'id') {
       selectedItem = this.options.findItemById(this.value);
     }
-    if (selectedItem) selectedItem.value = true;
-
+    if (selectedItem) selectedItem.selected = true;
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
-
     this.render([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
   }
 }

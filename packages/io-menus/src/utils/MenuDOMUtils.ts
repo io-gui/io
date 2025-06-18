@@ -61,7 +61,7 @@ export function getMenuDescendants(element: IoMenuElementType) {
 export function getMenuAncestors(element: IoMenuElementType) {
   const ancestors: IoMenuElementType[] = [];
   let item = element;
-  while (item && item.$parent) {
+  while (item && item.$parent) { // && !item.$parent._disposed
     item = item.$parent;
     if (item) ancestors.push(item);
   }

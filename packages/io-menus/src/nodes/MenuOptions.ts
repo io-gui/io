@@ -260,14 +260,6 @@ export class MenuOptions extends Node {
     return false;
   }
 
-  // bind<T>(prop: string): Binding<T> {
-  //   debug: if (prop === 'selected') {
-  //     console.warn('MenuPath: Binding to `selected` property is not recommended!');
-  //     // TODO: remove this warning and test edge cases. Binding to selected is useful for nested options.
-  //   }
-  //   return super.bind<T>(prop);
-  // }
-
   dispose() {
     for (let i = 0; i < this.items.length; i++) {
       this.items[i].removeEventListener('selected-changed', this.onItemSelectedChanged);

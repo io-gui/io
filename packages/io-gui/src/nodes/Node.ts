@@ -63,14 +63,6 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
 
       this.init();
 
-      if (this._isIoElement) {
-        Object.defineProperty(this, '$', {
-          value: {},
-          writable: true,
-          enumerable: false,
-        });
-      }
-
       debug: {
         const constructor = Object.getPrototypeOf(this).constructor;
         if (this._protochain.constructors[0] !== constructor) {
@@ -436,6 +428,10 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
           removed.push(property.value);
         }
       });
+
+      for (const name in this._protochain.properties) {
+        delete this[name];
+      }
 
       // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
       this._eventDispatcher.dispose();
