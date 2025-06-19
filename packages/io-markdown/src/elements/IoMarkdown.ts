@@ -52,8 +52,8 @@ export class IoMarkdown extends IoElement {
         align-self: stretch;
         justify-self: stretch;
         flex: 1 1 auto;
-        overflow-x: hidden;
-        overflow-y: auto;
+        /* overflow-x: hidden; */
+        /* overflow-y: auto; */
         -webkit-overflow-scrolling: touch;
         -webkit-tap-highlight-color: transparent;
         padding: 0 var(--io_lineHeight);
@@ -186,73 +186,10 @@ export class IoMarkdown extends IoElement {
   @ReactiveProperty(true)
   declare sanitize: boolean;
 
-  @ReactiveProperty({value: '', type: String})
-  declare scroll: string;
-
   @Property('document')
   declare role: string;
 
-  @Property(false)
-  declare private scrollToSuspended: boolean;
-
-  @Property(false)
-  declare private onScrollSuspended: boolean;
-
-  static get Listeners() {
-    return {
-      scroll: 'onScrollChanged',
-    };
-  }
-
   constructor(args: IoMarkdownProps = {}) { super(args); }
-
-  init() {
-    this.scrollChangedDebounced = this.scrollChangedDebounced.bind(this);
-    this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this);
-    this.onScrollUnsuspended = this.onScrollUnsuspended.bind(this);
-  }
-
-  scrollChanged() {
-    if (!this.scrollToSuspended) {
-      this.onScrollSuspended = true;
-      this.debounce(this.onScrollUnsuspended, undefined, 120);
-    }
-    this.debounce(this.scrollChangedDebounced);
-  }
-
-  scrollChangedDebounced() {
-    if (!this.scroll || this.scrollToSuspended) return;
-    const heading = this.querySelector(`[data-heading="${this.scroll}"]`);
-    if (heading) {
-      this.scrollTo({top: heading.offsetTop, behavior: 'smooth'});
-    } else {
-      this.scrollTo(0, 0);
-    }
-  }
-
-  scrollToUnsuspend() {
-    this.scrollToSuspended = false;
-  }
-
-  onScrollUnsuspended() {
-    this.onScrollSuspended = false;
-  }
-
-  onScrollChanged() {
-    if (this.onScrollSuspended) return;
-    const headings = this.querySelectorAll('[data-heading]') as NodeListOf<HTMLElement>;
-    const closestHeading = Array.from(headings).reduce((prev, curr) => {
-      return (Math.abs(curr.offsetTop - this.scrollTop) < Math.abs(prev.offsetTop - this.scrollTop) ? curr : prev);
-    }, headings[0]);
-    if (closestHeading) {
-      const current = closestHeading.textContent;
-      if (current && current !== this.scroll) {
-        this.scrollToSuspended = true;
-        this.scroll = current;
-        this.debounce(this.scrollToUnsuspend, 120);
-      }
-    }
-  }
 
   onResized() {
     let width = this.getBoundingClientRect().width;
@@ -271,7 +208,6 @@ export class IoMarkdown extends IoElement {
         this.innerHTML = strip(md, this.strip);
         this.loading = false;
       })
-      .then(this.scrollChanged);
   }
 }
 export const ioMarkdown = IoMarkdown.vConstructor;

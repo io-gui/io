@@ -327,6 +327,13 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
       }
     } else if (p === 'class') {
       element['className'] = prop;
+    } else if (p.startsWith('data-')) {
+      // TODO: Test this!
+      if (prop === undefined) {
+        element.removeAttribute(p);
+      } else {
+        element.setAttribute(p, prop);
+      }
     } else {
       if (prop === undefined) {
         _element[p] = defaultPropValues[p];

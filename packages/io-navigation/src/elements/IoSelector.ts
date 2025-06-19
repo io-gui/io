@@ -36,6 +36,7 @@ export type IoSelectorProps = IoElementProps & {
   caching?: CachingType,
   loading?: WithBinding<boolean>,
   import?: string, // TODO: move to core?
+  scroll?: WithBinding<string>,
 };
 
 @Register
@@ -91,11 +92,26 @@ export class IoSelector extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare loading: boolean;
 
+  @ReactiveProperty({value: '', type: String})
+  declare scroll: string;
+
   @Property(Object)
   declare private _caches: Record<string, IoElement | HTMLElement>;
 
   @Property(false)
   declare private _preaching: boolean;
+
+  @Property(false)
+  declare private scrollToSuspended: boolean;
+
+  @Property(false)
+  declare private onScrollSuspended: boolean;
+
+  static get Listeners() {
+    return {
+      scroll: 'onScrollChanged',
+    };
+  }
 
   // TODO: Perhaps caching and selection should be irrelevant if select === 'none'!
 
@@ -106,6 +122,60 @@ export class IoSelector extends IoElement {
     this.startPreache = this.startPreache.bind(this);
     this.renderSelected = this.renderSelected.bind(this);
     this.renderDebounced = this.renderDebounced.bind(this);
+    this.scrollChangedDebounced = this.scrollChangedDebounced.bind(this);
+    this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this);
+    this.onScrollUnsuspend = this.onScrollUnsuspend.bind(this);
+  }
+
+  scrollChanged() {
+    if (!this.scrollToSuspended) {
+      this.onScrollSuspended = true;
+      this.debounce(this.onScrollUnsuspend, undefined, 120);
+    }
+    this.debounce(this.scrollChangedDebounced, undefined, 2);
+  }
+
+  scrollChangedDebounced() {
+    const scroll = this.scroll.split('#')[1] || this.scroll;
+    if (!scroll || this.scrollToSuspended) return;
+    const heading = this.querySelector(`[data-heading="${scroll}"]`);
+    if (heading) {
+      const style = window.getComputedStyle(heading);
+      const top = heading.offsetTop - parseInt(style.marginTop);
+      this.scrollTo({top: top, behavior: 'smooth'});
+    } else {
+      this.scrollTo(0, 0);
+    }
+  }
+
+  scrollToUnsuspend() {
+    this.scrollToSuspended = false;
+  }
+
+  onScrollUnsuspend() {
+    this.onScrollSuspended = false;
+  }
+
+  onScrollChanged() {
+    if (this.onScrollSuspended) return;
+
+    const scroll = this.scroll.split('#')[1] || this.scroll;
+    const headings = this.querySelectorAll('[data-heading]') as NodeListOf<HTMLElement>;
+    const closestHeading = Array.from(headings).reduce((prev, curr) => {
+      return (Math.abs(curr.offsetTop - this.scrollTop) < Math.abs(prev.offsetTop - this.scrollTop) ? curr : prev);
+    }, headings[0]);
+    if (closestHeading) {
+      const current = closestHeading.getAttribute('data-heading');
+      if (current && current !== scroll) {
+        this.scrollToSuspended = true;
+        if (this.scroll.split('#').length === 2) {
+          this.scroll = this.scroll.split('#')[0] + '#' + current;
+        } else {
+          this.scroll = current;
+        }
+        this.debounce(this.scrollToUnsuspend, undefined, 120);
+      }
+    }
   }
 
   optionsChanged() {
@@ -138,6 +208,7 @@ export class IoSelector extends IoElement {
     } else if (this.select === 'none') {
       this.render(this.elements);
     }
+    this.debounce(this.scrollChangedDebounced, undefined, 2);
   }
 
   renderSelectedId(id: string) {
@@ -145,13 +216,16 @@ export class IoSelector extends IoElement {
 
     if (!id) {
       this.render([], this, cache);
+      this.scrollTo(0, 0);
       return;
     }
-
+    
+    id = id.split('#')[0];
     // TODO: what if <io-selector> is reused in template() and ID collides?
     if (id === this.childNodes[0]?.id) return;
 
     this.render([], this, cache);
+    this.scrollTo(0, 0);
 
     const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id; });
 

@@ -191,6 +191,13 @@ export class IoElement extends NodeMixin(HTMLElement) {
           for (const s in props[name]) {
             this.style[s] = props[name][s];
           }
+        } else if (name.startsWith('data-')) {
+          // TODO: Test this!
+          if (props[name] === undefined) {
+            this.removeAttribute(name);
+          } else {
+            this.setAttribute(name, props[name]);
+          }
         } else if (!name.startsWith('@')) {
           debug: if (props[name] instanceof Binding) {
             console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`);

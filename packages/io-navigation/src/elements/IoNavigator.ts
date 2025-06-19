@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-gui';
+import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register, Property } from 'io-gui';
 import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
 import { CachingType, ioSelector, SelectType } from './IoSelector.js';
 
@@ -14,6 +14,7 @@ export type IoNavigatorProps = IoElementProps & {
   collapseWidth?: number,
   select?: SelectType,
   caching?: CachingType,
+  scroll?: WithBinding<string>,
 };
 
 @Register
@@ -80,6 +81,9 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({value: 'none', type: String})
   declare caching: CachingType;
 
+  @ReactiveProperty({value: '', type: String})
+  declare scroll: string;
+
   changed() {
     const sharedMenuConfig = {
       options: this.options,
@@ -104,16 +108,16 @@ export class IoNavigator extends IoElement {
     if (this.menu === 'top') {
       this.render([
         ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
-        ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, scroll: this.bind('scroll'), elements: this.elements}),
       ]);
     } else if (this.menu === 'left') {
       this.render([
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
-        ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, scroll: this.bind('scroll'), elements: this.elements}),
       ]);
     } else if (this.menu === 'right') {
       this.render([
-        ioSelector({options: this.options, caching: this.caching, select: this.select, elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, scroll: this.bind('scroll'),elements: this.elements}),
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
       ]);
     }
