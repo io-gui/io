@@ -8,6 +8,7 @@ export type SelectBy = 'value' | 'id';
 export type IoOptionSelectProps = IoElementProps & {
   value?: WithBinding<any>,
   label?: string,
+  icon?: string,
   selectBy?: SelectBy,
   options?: MenuOptions,
 };
@@ -44,6 +45,9 @@ export class IoOptionSelect extends IoElement {
 
   @ReactiveProperty('')
   declare label: string;
+
+  @ReactiveProperty('')
+  declare icon: string;
 
   // TODO: consider deprecating
   @ReactiveProperty('value')
@@ -96,7 +100,7 @@ export class IoOptionSelect extends IoElement {
     }
     if (selectedItem) selectedItem.selected = true;
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
-    this.render([ioMenuItem({item: this.$item, label: label, direction: 'down'})]);
+    this.render([ioMenuItem({item: this.$item, label: label, icon: this.icon, direction: 'down'})]);
   }
 }
 export const ioOptionSelect = IoOptionSelect.vConstructor;

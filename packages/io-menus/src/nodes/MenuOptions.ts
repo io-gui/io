@@ -102,6 +102,28 @@ export class MenuOptions extends Node {
     return this;
   }
 
+  addItem(itemLoose: MenuItem | MenuItemDefLoose) {
+    // TODO handle options mutation in a better way
+    if (!(itemLoose instanceof MenuItem)) {
+      itemLoose = new MenuItem().fromJSON(itemLoose);
+    }
+    const item = itemLoose as MenuItem;
+    this.items.push(item);
+    debug: {
+      // TODO check if same item is at other index
+      if (this.items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
+        console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);
+      }
+    }
+    item.addEventListener('selected-changed', this.onItemSelectedChanged);
+    item.addEventListener('path-changed', this.onSubOptionsPathChanged);
+
+    // TODO move updatePaths to MenuItem. Handle setProperties better.
+    if (item.selected && item.mode === 'select') {
+      this.updatePaths(item);
+    }
+  }
+
   initItems() {
     const items = this.items;
     for (let i = 0; i < items.length; i++) {
@@ -110,9 +132,6 @@ export class MenuOptions extends Node {
         item = new MenuItem().fromJSON(item);
       }
       debug: {
-        if (!(item instanceof MenuItem)) {
-          console.warn('MenuOptions.constructor: item is not a MenuItem!');
-        }
         // TODO check if same item is at other index
         if (items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
           console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);

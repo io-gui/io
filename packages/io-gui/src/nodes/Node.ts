@@ -111,7 +111,7 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       for (const name in this._protochain.properties) {
         let initialValue = this._protochain.properties[name];
         if (typeof initialValue === 'function') {
-          initialValue = initialValue();
+          initialValue = new initialValue();
         } else if (initialValue instanceof Array) {
           initialValue = initialValue.slice();
         } else if (typeof initialValue === 'object') {

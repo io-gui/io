@@ -25,7 +25,6 @@ export class IoNavigator extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
-        overflow-y: auto !important;
         flex: 1 1 auto;
       }
       :host[menu=left],

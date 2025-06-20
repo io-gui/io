@@ -29,7 +29,7 @@ export type MenuItemProps = NodeProps & {
   label?: string,
   icon?: string,
   hint?: string,
-  action?: () => void,
+  action?: (value?: any) => void,
   mode?: MenuItemSelectType,
   hidden?: boolean,
   disabled?: boolean,

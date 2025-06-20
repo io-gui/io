@@ -12,12 +12,14 @@
           "io-gui/": "./packages/io-gui/build/",
           "io-colors": "./packages/io-colors/build/index.js",
           "io-colors/": "./packages/io-colors/build/",
+          "io-editors": "./packages/io-editors/build/index.js",
+          "io-editors/": "./packages/io-editors/build/",
           "io-icons": "./packages/io-icons/build/index.js",
           "io-icons/": "./packages/io-icons/build/",
           "io-inputs": "./packages/io-inputs/build/index.js",
           "io-inputs/": "./packages/io-inputs/build/",
-          "io-editors": "./packages/io-editors/build/index.js",
-          "io-editors/": "./packages/io-editors/build/",
+          "io-layout": "./packages/io-layout/build/index.js",
+          "io-layout/": "./packages/io-layout/build/",
           "io-markdown": "./packages/io-markdown/build/index.js",
           "io-markdown/": "./packages/io-markdown/build/",
           "io-menus": "./packages/io-menus/build/index.js",
@@ -38,16 +40,14 @@
 
       import GuiTest from 'io-gui/index.test.js';
       import InputsTest from 'io-inputs/index.test.js';
+      import SlidersTest from 'io-sliders/index.test.js';
       import ColorsTest from 'io-colors/index.test.js';
-      // import ExtrasTest from 'io-extras/index.test.js';
       import IconsTest from 'io-icons/index.test.js';
       import EditorsTest from 'io-editors/index.test.js';
       import MarkdownTest from 'io-markdown/index.test.js';
       import MenusTest from 'io-menus/index.test.js';
       import NavigationTest from 'io-navigation/index.test.js';
-      import SlidersTest from 'io-sliders/index.test.js';
-
-
+      import LayoutTest from 'io-layout/index.test.js';
 
       window.expect = expect;
 
@@ -65,14 +65,14 @@
       try {
         new GuiTest().run();
         new InputsTest().run();
+        new SlidersTest().run();
         new ColorsTest().run();
-        // new ExtrasTest().run();
         new IconsTest().run();
         new EditorsTest().run();
         new MarkdownTest().run();
         new MenusTest().run();
         new NavigationTest().run();
-        new SlidersTest().run();
+        new LayoutTest().run();
 
         mocha.checkLeaks();
         mocha.run(() => {

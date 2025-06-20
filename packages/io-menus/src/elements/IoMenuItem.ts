@@ -246,7 +246,8 @@ export class IoMenuItem extends IoField {
     if (direction === 'left' && optionsAreRight) direction = 'right';
     if (direction === 'right' && optionsAreLeft) direction = 'left';
 
-    let command = '';
+    // TODO: types!
+    let command = null;
 
     // TODO: 'Home', 'End', 'PageUp', 'PageDown' keys should be handled.
     if (event.key === 'Enter' || event.key === ' ') {
@@ -356,7 +357,7 @@ export class IoMenuItem extends IoField {
     const icon = this.icon || this.item.icon;
     const label = this.label || this.item.label;
 
-    this.setAttribute('hidden', this.item.hidden);
+    this.hidden = this.item.hidden
 
     this.render([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
