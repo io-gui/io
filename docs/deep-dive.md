@@ -1,6 +1,6 @@
-// TODO: Constructors and VirtualConstructors
+<!-- // TODO: Constructors and VirtualConstructors -->
 
-### Nodes and Elements
+# Nodes and Elements
 
 In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use the same features such as reactivity, data binding and various helper methods
 

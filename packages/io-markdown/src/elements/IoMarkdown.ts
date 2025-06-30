@@ -92,7 +92,7 @@ export class IoMarkdown extends IoElement {
         color: var(--io_colorStrong);
       }
       :host code {
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
       }
       :host strong code {}
       :host pre > code {
@@ -100,7 +100,7 @@ export class IoMarkdown extends IoElement {
       }
       
       :host code[class] {
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
         padding: var(--io_spacing3);
         display: block;
         overflow-x: auto;
@@ -126,7 +126,7 @@ export class IoMarkdown extends IoElement {
         table-layout: auto;
       }
       :host table th {
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
         color: var(--io_colorStrong);
         font-weight: bold;
       }
@@ -207,7 +207,7 @@ export class IoMarkdown extends IoElement {
         if (this.sanitize) md = purify.sanitize(md);
         this.innerHTML = strip(md, this.strip);
         this.loading = false;
-      })
+      });
   }
 }
 export const ioMarkdown = IoMarkdown.vConstructor;

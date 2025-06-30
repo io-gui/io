@@ -14,7 +14,7 @@ export class IoInputsDemo extends IoElement {
         padding: var(--io_spacing);
         margin: var(--io_spacing);
         margin-bottom: 0;
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
       }
       :host .row > * {
         margin-right: var(--io_spacing);

@@ -36,7 +36,7 @@ export class IoPropertyEditor extends IoElement {
       padding: var(--io_spacing) 0;
       border-radius: var(--io_borderRadius);
       margin-bottom: 0;
-      background-color: var(--io_bgColorDimmed);
+      background-color: var(--io_bgColorLight);
     }
     :host > .row:last-of-type {
       margin-bottom: var(--io_spacing);
@@ -109,7 +109,7 @@ export class IoPropertyEditor extends IoElement {
     const widget = getEditorWidget(this.value, this.widgets);
 
     const properties = [];
-    const elements = [];
+    const vChildren = [];
 
     if (this.properties.length) {
       properties.push(...this.properties);
@@ -120,7 +120,7 @@ export class IoPropertyEditor extends IoElement {
           props: Object.assign({value: this.value}, widget.props),
           children: widget.children
         };
-        elements.push(widgetWithValue);
+        vChildren.push(widgetWithValue);
       }
       properties.push(...groups.Main);
     }
@@ -145,7 +145,7 @@ export class IoPropertyEditor extends IoElement {
           finalProps.config = finalProps.config || this.config;
           finalProps.groups = finalProps.groups || this.groups;
         }
-        elements.push(div({class: 'row'}, [
+        vChildren.push(div({class: 'row'}, [
           this.labeled ? span(id) : null,
           {tag: tag, props: finalProps, children: children},
         ]));
@@ -159,7 +159,7 @@ export class IoPropertyEditor extends IoElement {
     if (!this.properties.length) {
       for (const group in groups) {
         if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
-          elements.push(
+          vChildren.push(
             ioObject({
               label: group,
               expanded: $({value: false, storage: 'local', key: uuid + '-' + group}),
@@ -172,7 +172,7 @@ export class IoPropertyEditor extends IoElement {
       }
     }
 
-    this.render(elements);
+    this.render(vChildren);
   }
   /**
    * Returns a JSON representation of the property editor. This feature is used in testing.

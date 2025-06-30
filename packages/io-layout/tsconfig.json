@@ -5,8 +5,9 @@
     "paths": {
       "io-gui": ["../io-gui"],
       "io-inputs": ["../io-inputs"],
-      "io-navigation": ["../io-navigation"],
-      "io-menus": ["../io-menus"]
+      "io-icons": ["../io-icons"],
+      "io-menus": ["../io-menus"],
+      "io-navigation": ["../io-navigation"]
     }
   },
   "include": ["./src"]

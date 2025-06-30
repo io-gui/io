@@ -24,10 +24,8 @@ export class IoSlider2d extends IoSliderBase {
       }
       :host:not([vertical]),
       :host[vertical] {
-        width: var(--io_fieldHeight5);
-        height: var(--io_fieldHeight5);
-        min-width: var(--io_fieldHeight5);
-        min-height: var(--io_fieldHeight5);
+        min-width: calc(var(--io_fieldHeight) * 5);
+        min-height: calc(var(--io_fieldHeight) * 5);
         cursor: crosshair;
       }
     `;
@@ -79,7 +77,7 @@ export class IoSlider2d extends IoSliderBase {
 
       // Colors
       vec3 finalCol = io_bgColorInput.rgb;
-      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 gridCol = io_bgColorLight.rgb;
       vec3 sliderCol = io_bgColorBlue.rgb;
       vec3 lineCol1 = io_color.rgb;
       vec3 lineCol2 = io_bgColor.rgb;

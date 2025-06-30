@@ -70,14 +70,14 @@ export class IoElementInspectorDemo extends IoElement {
     }
     :host > .element-wrap {
       border: var(--io_border);
-      border-color: var(--io_borderColorDark);
-      background-color: var(--io_bgColorDimmed);
+      border-color: var(--io_borderColorStrong);
+      background-color: var(--io_bgColorLight);
       padding: var(--io_spacing3);
     }
     :host > io-property-editor {
       border: var(--io_border);
-      border-color: var(--io_borderColorDark);
-      background-color: var(--io_bgColorDimmed);
+      border-color: var(--io_borderColorStrong);
+      background-color: var(--io_bgColorLight);
       border-top: none;
       padding: 0 var(--io_spacing2);
     }

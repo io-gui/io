@@ -76,7 +76,7 @@ class IoOptionsViewDemo extends IoElement {
         border-radius: var(--io_borderRadius);
       }
       :host > div {
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
         display: flex;
         height: var(--io_lineHeight);
       }
@@ -114,16 +114,16 @@ class IoOptionsViewDemo extends IoElement {
     this.changed();
   }
   changed() {
-    const vElements = [];
+    const vChildren = [];
     for (let i = 0; i < this.options.items.length; i++) {
-      vElements.push(ioItemViewDemo({item: this.options.items[i]}));
+      vChildren.push(ioItemViewDemo({item: this.options.items[i]}));
     }
     this.render([
       div([
         this.options.selected ? span({class: 'selected'}, `selected: ${this.options.selected}`) : null,
         this.options.path ? span({class: 'path'}, `path: ${this.options.path}`) : null,
       ]),
-      ...vElements
+      ...vChildren
     ]);
   }
 }

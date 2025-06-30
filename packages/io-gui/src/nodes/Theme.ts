@@ -3,7 +3,7 @@ import { ReactiveProperty } from '../decorators/Property.js';
 import { ReactivePropertyDefinitions, Node } from '../nodes/Node.js';
 import { Storage as $ } from '../nodes/Storage.js';
 
-const THEME_VERSION = 'v0.10';
+const THEME_VERSION = 'v0.11';
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
 document.head.appendChild(styleElement);
@@ -39,35 +39,21 @@ export type ThemeVars = {
   spacing8: number;
 
   fontSize: number;
-
   lineHeight: number;
-
   fieldHeight: number;
-  fieldHeight2: number;
-  fieldHeight3: number;
-  fieldHeight4: number;
-  fieldHeight5: number;
-  fieldHeight6: number;
-  fieldHeight7: number;
-  fieldHeight8: number;
-  fieldHeight9: number;
-  fieldHeight10: number;
-  fieldHeight11: number;
-  fieldHeight12: number;
 
   borderRadius: number;
-  borderRadius2: number;
   borderWidth: number;
   borderColor: Color;
   borderColorLight: Color;
-  borderColorDark: Color;
+  borderColorStrong: Color;
   borderColorRed: Color;
   borderColorBlue: Color;
   borderColorGreen: Color;
 
   bgColor: Color;
   bgColorStrong: Color;
-  bgColorDimmed: Color;
+  bgColorLight: Color;
   bgColorRed: Color;
   bgColorGreen: Color;
   bgColorBlue: Color;
@@ -75,7 +61,7 @@ export type ThemeVars = {
 
   color: Color;
   colorStrong: Color;
-  colorDimmed: Color;
+  colorLight: Color;
   colorRed: Color;
   colorGreen: Color;
   colorBlue: Color;
@@ -96,35 +82,21 @@ export const LIGHT_THEME: ThemeVars = {
   spacing8: 0,
 
   lineHeight: 20,
-
   fontSize: 14,
-
   fieldHeight: 0,
-  fieldHeight2: 0,
-  fieldHeight3: 0,
-  fieldHeight4: 0,
-  fieldHeight5: 0,
-  fieldHeight6: 0,
-  fieldHeight7: 0,
-  fieldHeight8: 0,
-  fieldHeight9: 0,
-  fieldHeight10: 0,
-  fieldHeight11: 0,
-  fieldHeight12: 0,
 
   borderRadius: 2,
-  borderRadius2: 0,
   borderWidth: 1,
   borderColor: new Color(0, 0, 0, 0.2),
-  borderColorLight: new Color(1, 1, 1, 0.8),
-  borderColorDark: new Color(0, 0, 0, 0.4),
+  borderColorLight: new Color(0, 0, 0, 0.3),
+  borderColorStrong: new Color(0, 0, 0, 0.6),
   borderColorRed: new Color(1, 0.35, 0.15, 1),
   borderColorGreen: new Color(0.1, 0.7, 0.2, 1),
   borderColorBlue: new Color(0.2, 0.4, 0.95, 1),
 
   bgColor: new Color(0.85, 0.85, 0.85, 1),
   bgColorStrong: new Color(0.9, 0.9, 0.9, 1),
-  bgColorDimmed: new Color(0.8, 0.8, 0.8, 1),
+  bgColorLight: new Color(0.8, 0.8, 0.8, 1),
   bgColorRed: new Color(1, 0.5, 0.3, 1),
   bgColorGreen: new Color(0.2, 0.9, 0.3, 1),
   bgColorBlue: new Color(0.2, 0.5, 0.9, 1),
@@ -132,7 +104,7 @@ export const LIGHT_THEME: ThemeVars = {
 
   color: new Color(0.25, 0.25, 0.2, 1),
   colorStrong: new Color(0, 0, 0, 1),
-  colorDimmed: new Color(0.6, 0.6, 0.6, 1),
+  colorLight: new Color(0.6, 0.6, 0.6, 1),
   colorRed: new Color(1, 0.2, 0.0, 1),
   colorGreen: new Color(0, 0.6, 0.1, 1),
   colorBlue: new Color(0.2, 0.3, 1, 1),
@@ -153,35 +125,21 @@ export const DARK_THEME: ThemeVars = {
   spacing8: 0,
 
   lineHeight: 20,
-
   fontSize: 14,
-
   fieldHeight: 0,
-  fieldHeight2: 0,
-  fieldHeight3: 0,
-  fieldHeight4: 0,
-  fieldHeight5: 0,
-  fieldHeight6: 0,
-  fieldHeight7: 0,
-  fieldHeight8: 0,
-  fieldHeight9: 0,
-  fieldHeight10: 0,
-  fieldHeight11: 0,
-  fieldHeight12: 0,
 
   borderRadius: 2,
-  borderRadius2: 0,
   borderWidth: 1,
   borderColor: new Color(1, 1, 1, 0.5),
   borderColorLight: new Color(1, 1, 1, 0.3),
-  borderColorDark: new Color(0, 0, 0, 1),
+  borderColorStrong: new Color(0, 0, 0, 1),
   borderColorRed: new Color(1, 0.2, 0.0, 1),
   borderColorBlue: new Color(0.4, 0.5, 0.9, 1),
   borderColorGreen: new Color(0, 0.6, 0.1, 1),
 
   bgColor: new Color(0.2, 0.2, 0.2, 1),
   bgColorStrong: new Color(0.15, 0.15, 0.15, 1),
-  bgColorDimmed: new Color(0.25, 0.25, 0.25, 1),
+  bgColorLight: new Color(0.25, 0.25, 0.25, 1),
   bgColorRed: new Color(0.7, 0.2, 0.1, 1),
   bgColorGreen: new Color(0.1, 0.5, 0.2, 1),
   bgColorBlue: new Color(0.2, 0.4, 0.8, 1),
@@ -189,7 +147,7 @@ export const DARK_THEME: ThemeVars = {
 
   color: new Color(0.6, 0.6, 0.6, 1),
   colorStrong: new Color(0.86, 0.86, 0.86, 1),
-  colorDimmed: new Color(0.3, 0.3, 0.3, 1),
+  colorLight: new Color(0.3, 0.3, 0.3, 1),
   colorRed: new Color(1, 0.4, 0.4, 1),
   colorGreen: new Color(0.4, 0.95, 0.3, 1),
   colorBlue: new Color(0.6, 0.9, 1, 1),
@@ -217,8 +175,8 @@ const $Themes = $({
 const compositeVariables = /* css */`
   body {
     --io_border: var(--io_borderWidth) solid var(--io_borderColor);
-    --io_borderColorInset: var(--io_borderColorDark) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorDark);
-    --io_borderColorOutset: var(--io_borderColorLight) var(--io_borderColorDark) var(--io_borderColorDark) var(--io_borderColorLight);
+    --io_borderColorInset: var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong);
+    --io_borderColorOutset: var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight);
     --io_gradientOutset: linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%);
     --io_gradientInset: linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%);
     --io_shadow: 2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor);
@@ -306,24 +264,11 @@ export class Theme extends Node {
   }
   changed() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth);
-    this.fieldHeight2 = this.fieldHeight * 2;
-    this.fieldHeight3 = this.fieldHeight * 3;
-    this.fieldHeight4 = this.fieldHeight * 4;
-    this.fieldHeight5 = this.fieldHeight * 5;
-    this.fieldHeight6 = this.fieldHeight * 6;
-    this.fieldHeight7 = this.fieldHeight * 7;
-    this.fieldHeight8 = this.fieldHeight * 8;
-    this.fieldHeight9 = this.fieldHeight * 9;
-    this.fieldHeight10 = this.fieldHeight * 10;
-    this.fieldHeight11 = this.fieldHeight * 11;
-    this.fieldHeight12 = this.fieldHeight * 12;
 
     this.spacing2 = this.spacing * 2;
     this.spacing3 = this.spacing * 3;
     this.spacing5 = this.spacing * 5;
     this.spacing8 = this.spacing * 8;
-
-    this.borderRadius2 = this.borderRadius + this.spacing;
 
     const propertyVariables = Array.from(Object.keys(LIGHT_THEME) as Array<keyof ThemeVars>).reduce(
       (result, prop) => {

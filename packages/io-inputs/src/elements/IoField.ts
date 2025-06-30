@@ -41,6 +41,9 @@ export class IoField extends IoElement {
         text-overflow: inherit;
         @apply --io_focus;
       }
+      :host[hidden] {
+        display: none;
+      }
       :host[disabled] {
         opacity: 0.5;
       }
@@ -49,7 +52,6 @@ export class IoField extends IoElement {
         box-shadow: var(--io_shadowInset) !important;
       }
       :host span {
-        display: inline-block;
         height: var(--io_lineHeight);
         vertical-align: top;
       }

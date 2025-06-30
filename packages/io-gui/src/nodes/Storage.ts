@@ -108,10 +108,10 @@ export class StorageNode extends Node {
   @ReactiveProperty({value: '', type: String})
   declare key: string;
 
-  @ReactiveProperty({value: undefined})
+  @ReactiveProperty({value: undefined, type: Object, init: null})
   declare value: any;
 
-  @ReactiveProperty({value: undefined})
+  @ReactiveProperty({value: undefined, type: Object, init: null})
   declare default: any;
 
   @ReactiveProperty({value: 'none', type: String})
@@ -159,7 +159,7 @@ export class StorageNode extends Node {
         props.value = def;
       }
       super(Object.assign({default: def}, props));
-      if (props.key !== '__proto__') {
+      if (props.key !== '__proto__') { // TODO: Why is this here ffs?
         nodes[s].set(props.key, this);
       }
 
@@ -188,6 +188,9 @@ export class StorageNode extends Node {
     const s = (this.storage) as keyof StorageNodes;
     nodes[s].delete(this.key);
   }
+  valueMutated() {
+    this.valueChanged();
+  }
   valueChanged() {
     switch (this.storage) {
       case 'hash': {
@@ -195,7 +198,7 @@ export class StorageNode extends Node {
         break;
       }
       case 'local': {
-        if (this.value === null || this.value === undefined || this.value === this.default) {
+        if (this.value === null || this.value === undefined || (this.value === this.default && typeof this.value !== 'object')) {
           localStorage.removeItem('Storage:' + this.key);
         } else {
           localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value));

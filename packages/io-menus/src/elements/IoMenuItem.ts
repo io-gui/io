@@ -63,11 +63,7 @@ export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
       :host {
-        display: flex;
         user-select: none;
-      }
-      :host[hidden] {
-        display: none;
       }
       :host > * {
         pointer-events: none;
@@ -162,6 +158,7 @@ export class IoMenuItem extends IoField {
         this.collapseRoot();
       }
     }
+    getMenuRoot(this).dispatchEvent('io-menu-item-clicked', {item: this.item});
   }
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);
@@ -357,7 +354,7 @@ export class IoMenuItem extends IoField {
     const icon = this.icon || this.item.icon;
     const label = this.label || this.item.label;
 
-    this.hidden = this.item.hidden
+    this.hidden = this.item.hidden;
 
     this.render([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,

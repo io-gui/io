@@ -95,9 +95,9 @@ export class IoBreadcrumbs extends IoElement {
     this.search = '';
   }
   changed() {
-    const elements = [];
+    const vChildren = [];
     if (this._crumbs.length > 1) {
-      elements.push(ioButton({
+      vChildren.push(ioButton({
         icon: 'io:arrow_left',
         class: 'back-button',
         value: this._crumbs[this._crumbs.length - 2],
@@ -111,12 +111,12 @@ export class IoBreadcrumbs extends IoElement {
         showName: i === this._crumbs.length - 1,
       }));
     }
-    elements.push(
+    vChildren.push(
       crumbs,
       ioButton({icon: 'io:close', class: 'clear-button', action: this.onClearSearch}),
       ioString({id: 'search', class: 'search-input', value: this.bind('search'), live: true}),
     );
-    this.render(elements);
+    this.render(vChildren);
   }
 }
 export const ioBreadcrumbs = IoBreadcrumbs.vConstructor;

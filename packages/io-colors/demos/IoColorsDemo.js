@@ -6,6 +6,9 @@ export class IoColorsDemo extends IoElement {
     return /* css */`
       :host {
         margin: var(--io_spacing2);
+        display: flex;
+        flex-direction: column;
+        align-self: flex-start;
       }
       :host .row,
       :host .column {
@@ -15,7 +18,7 @@ export class IoColorsDemo extends IoElement {
         padding: var(--io_spacing);
         margin: var(--io_spacing);
         margin-bottom: 0;
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
       }
       :host .column {
         flex-direction: column;

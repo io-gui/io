@@ -1,12 +1,12 @@
 {
-  "name": "io-extras",
+  "name": "io-layout",
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-extras, a set of extra elements for Io-Gui.",
-  "main": "build/io-extras.js",
-  "module": "build/io-extras.js",
-  "types": "build/io-extras.d.ts",
+  "description": "Io-layout, a set of layout elements for Io-Gui.",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
     "/build",
     "/demos",
@@ -16,7 +16,7 @@
   ],
   "sideEffects": true,
   "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["io","gui","md","iogui","io-gui","extras","io-extras"],
+  "keywords": ["io","gui","md","iogui","io-gui","layout","io-layout"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},
@@ -24,7 +24,8 @@
   "peerDependencies": {
     "io-gui": "^2.0.0",
     "io-inputs": "^2.0.0",
-    "io-navigation": "^2.0.0",
-    "io-menus": "^2.0.0"
+    "io-icons": "^2.0.0",
+    "io-menus": "^2.0.0",
+    "io-navigation": "^2.0.0"
   }
 }

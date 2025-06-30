@@ -4,4 +4,4 @@ export * from './elements/IoPanel.js';
 export * from './elements/IoSplit.js';
 export * from './elements/IoTab.js';
 export * from './elements/IoTabs.js';
-
+//# sourceMappingURL=index.d.ts.map

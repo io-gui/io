@@ -46,8 +46,8 @@ export class IoThemeEditor extends IoElement {
       ioField('borderColorLight'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorLight')}),
 
-      ioField('borderColorDark'),
-      ioColorRgba({value: ThemeSingleton.bind('borderColorDark')}),
+      ioField('borderColorStrong'),
+      ioColorRgba({value: ThemeSingleton.bind('borderColorStrong')}),
 
       ioField('borderColorRed'),
       ioColorRgba({value: ThemeSingleton.bind('borderColorRed')}),
@@ -64,8 +64,8 @@ export class IoThemeEditor extends IoElement {
       ioField('bgColorStrong'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorStrong')}),
 
-      ioField('bgColorDimmed'),
-      ioColorRgba({value: ThemeSingleton.bind('bgColorDimmed')}),
+      ioField('bgColorLight'),
+      ioColorRgba({value: ThemeSingleton.bind('bgColorLight')}),
 
       ioField('bgColorRed'),
       ioColorRgba({value: ThemeSingleton.bind('bgColorRed')}),
@@ -85,8 +85,8 @@ export class IoThemeEditor extends IoElement {
       ioField('colorStrong'),
       ioColorRgba({value: ThemeSingleton.bind('colorStrong')}),
 
-      ioField('colorDimmed'),
-      ioColorRgba({value: ThemeSingleton.bind('colorDimmed')}),
+      ioField('colorLight'),
+      ioColorRgba({value: ThemeSingleton.bind('colorLight')}),
 
       ioField('colorRed'),
       ioColorRgba({value: ThemeSingleton.bind('colorRed')}),

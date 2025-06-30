@@ -14,7 +14,7 @@ export class IoIconsDemo extends IoElement {
         padding: var(--io_spacing);
         margin: var(--io_spacing);
         margin-bottom: 0;
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
       }
       :host > h3 {
         margin: var(--io_spacing3);

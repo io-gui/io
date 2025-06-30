@@ -80,15 +80,15 @@ export class IoObject extends IoElement {
 
   changed() {
     const label = this.label || this.value.constructor.name;
-    const elements: VDOMElement[] = [];
-    elements.push(ioBoolean({
+    const vChildren: VDOMElement[] = [];
+    vChildren.push(ioBoolean({
       appearance: 'neutral',
       true: label,
       false: label,
       value: this.bind('expanded')}
     ));
     if (this.expanded) {
-      elements.push(ioPropertyEditor({
+      vChildren.push(ioPropertyEditor({
         value: this.value,
         properties: this.properties,
         config: this.config,
@@ -97,7 +97,7 @@ export class IoObject extends IoElement {
         labeled: this.labeled,
       }));
     }
-    this.render(elements);
+    this.render(vChildren);
     this.setAttribute('aria-expanded', String(this.expanded));
   }
 }

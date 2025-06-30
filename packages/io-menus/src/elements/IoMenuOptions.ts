@@ -40,7 +40,7 @@ export class IoMenuOptions extends IoElement {
       border: var(--io_border);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing2));
       border-color: var(--io_borderColorOutset);
-      background-color: var(--io_bgColorDimmed);
+      background-color: var(--io_bgColorLight);
       padding: calc(var(--io_spacing) + var(--io_borderWidth));
       user-select: none;
       transition: opacity 0.3s ease-in-out;
@@ -288,10 +288,10 @@ export class IoMenuOptions extends IoElement {
     }
   }
   changed() {
-    const elements: VDOMElement[] = this.widget ? [this.widget] : [];
+    const vChildren: VDOMElement[] = this.widget ? [this.widget] : [];
 
     if (this.searchable) {
-      elements.push(ioString({
+      vChildren.push(ioString({
         id: 'search',
         role: 'search',
         value: this.bind('search'),
@@ -303,12 +303,12 @@ export class IoMenuOptions extends IoElement {
     if (this.search) {
       const filteredItems = searchMenuOptions(this.options, this.search, this.depth);
       if (filteredItems.length === 0) {
-        elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
+        vChildren.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
       } else {
         for (let i = 0; i < filteredItems.length; i++) {
-          elements.push(ioMenuItem({item: filteredItems[i], depth: 0}));
+          vChildren.push(ioMenuItem({item: filteredItems[i], depth: 0}));
           if (i < filteredItems.length - 1) {
-            elements.push({tag: 'span', props: {class: 'divider'}});
+            vChildren.push({tag: 'span', props: {class: 'divider'}});
           }
         }
       }
@@ -318,20 +318,20 @@ export class IoMenuOptions extends IoElement {
         direction = 'up';
       }
       for (let i = 0; i < this.options.items.length; i++) {
-        elements.push(ioMenuItem({
+        vChildren.push(ioMenuItem({
           item: this.options.items[i],
           direction: direction,
           $parent: this,
           depth: this.depth
         }));
         if (i < this.options.items.length - 1) {
-          elements.push({tag: 'span', props: {class: 'divider'}});
+          vChildren.push({tag: 'span', props: {class: 'divider'}});
         }
       }
     }
 
     if (this.overflow) {
-      elements.push(ioMenuHamburger({
+      vChildren.push(ioMenuHamburger({
         depth: this.depth + 1,
         role: 'navigation',
         direction: 'down',
@@ -342,7 +342,7 @@ export class IoMenuOptions extends IoElement {
         })
       }));
     }
-    this.render(elements);
+    this.render(vChildren);
   }
 }
 export const ioMenuOptions = IoMenuOptions.vConstructor;

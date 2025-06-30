@@ -27,16 +27,12 @@ export class IoSliderBase extends IoGl {
         border-color: var(--io_borderColorInset);
         min-height: var(--io_fieldHeight);
         min-width: var(--io_fieldHeight);
-      }
-      :host:not([vertical]) {
-        width: var(--io_fieldHeight10);
-        height: var(--io_fieldHeight);
+        flex-grow: 1;
       }
       :host[vertical] {
         cursor: ns-resize;
         width: var(--io_fieldHeight);
-        height: var(--io_fieldHeight5);
-        min-height: var(--io_fieldHeight5);
+        min-height: calc(var(--io_fieldHeight) * 5);
         flex-basis: var(--io_fieldHeight);
         flex-grow: 0;
       }

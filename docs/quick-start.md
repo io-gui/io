@@ -4,7 +4,7 @@ There are many ways to use Io-Gui. You can use its core classes `Node` and `IoEl
 
 To quickly import Io-Gui and get started, continue reading this article.
 
-## Making a Simple Element
+## Making an Element
 
 Here is a basic example of a reaciteve element `<my-element>` with a `message` property and a simple template.
 
@@ -29,7 +29,7 @@ document.body.appendChild(
 )
 ```
 
-## Making a Simple Website
+## Making a Website
 
 Here is a quick way to make a simple website with navigation and 5 pages that load contents from .md files. 
 

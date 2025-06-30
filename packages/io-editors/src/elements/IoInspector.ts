@@ -98,7 +98,7 @@ export class IoInspector extends IoElement {
     this.throttle(this._onChange);
   }
   _onChange() {
-    const elements = [
+    const vChildren = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
     ];
 
@@ -117,11 +117,11 @@ export class IoInspector extends IoElement {
     }
 
     if (this.search && properties.length === 0) {
-      elements.push(
+      vChildren.push(
         span(`No results found for "${this.search}"`),
       );
     } else {
-      elements.push(
+      vChildren.push(
         ioPropertyEditor({
           value: this.selected,
           config: config,
@@ -132,7 +132,7 @@ export class IoInspector extends IoElement {
       );
     }
 
-    this.render(elements);
+    this.render(vChildren);
   }
 }
 export const ioInspector = IoInspector.vConstructor;

@@ -51,7 +51,7 @@ export class IoMenuTree extends IoElement {
       border: var(--io_border);
       border-radius: var(--io_borderRadius);
       border-color: var(--io_borderColorOutset);
-      background-color: var(--io_bgColorDimmed);
+      background-color: var(--io_bgColorLight);
       padding: var(--io_spacing);
       user-select: none;
     }
@@ -97,10 +97,10 @@ export class IoMenuTree extends IoElement {
   constructor(args: IoMenuTreeProps = {}) { super(args); }
 
   changed() {
-    const elements: VDOMElement[] = this.widget ? [this.widget] : [];
+    const vChildren: VDOMElement[] = this.widget ? [this.widget] : [];
 
     if (this.searchable) {
-      elements.push(ioString({
+      vChildren.push(ioString({
         id: 'search',
         role: 'search',
         value: this.bind('search'),
@@ -112,16 +112,16 @@ export class IoMenuTree extends IoElement {
     if (this.search) {
       const filteredItems = searchMenuOptions(this.options, this.search, this.depth);
       if (filteredItems.length === 0) {
-        elements.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
+        vChildren.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
       } else for (let i = 0; i < filteredItems.length; i++) {
-        elements.push(ioMenuItem({item: filteredItems[i], depth: 0}));
+        vChildren.push(ioMenuItem({item: filteredItems[i], depth: 0}));
       }
 
     } else {
-      elements.push(...addMenuItemsOrTreeBranches(this.options, this.depth));
+      vChildren.push(...addMenuItemsOrTreeBranches(this.options, this.depth));
     }
 
-    this.render(elements);
+    this.render(vChildren);
   }
 }
 export const ioMenuTree = IoMenuTree.vConstructor;

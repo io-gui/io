@@ -22,8 +22,6 @@ export class IoNumberSlider extends IoElement {
     return /* css */`
     :host {
       display: flex;
-      min-width: var(--io_fieldHeight5);
-      width: var(--io_fieldHeight10);
     }
     :host > io-number {
       flex: 0 0 3.5em;

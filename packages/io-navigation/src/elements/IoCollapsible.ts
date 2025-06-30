@@ -30,7 +30,7 @@ export class IoCollapsible extends IoElement {
       border-radius: calc(var(--io_borderRadius) - var(--io_spacing));
       border-color: var(--io_borderColorOutset);
       min-height: var(--io_fieldHeight);
-      background-color: var(--io_bgColorDimmed);
+      background-color: var(--io_bgColorLight);
     }
     :host > io-boolean {
       flex: 0 0 auto;

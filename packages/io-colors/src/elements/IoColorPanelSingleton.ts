@@ -15,7 +15,7 @@ class IoColorPanel extends IoColorBase {
       flex-direction: row;
       border: var(--io_border);
       border-color: var(--io_borderColorOutset);
-      background-color: var(--io_bgColorDimmed);
+      background-color: var(--io_bgColorLight);
       padding: var(--io_spacing2);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing2));
     }

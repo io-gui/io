@@ -82,7 +82,7 @@ export class IoSliderRange extends IoSliderBase {
 
       // Colors
       vec3 finalCol = io_bgColorInput.rgb;
-      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 gridCol = io_bgColorLight.rgb;
       vec3 sliderCol = signRange > 0.0 ? io_bgColorBlue.rgb : io_bgColorRed.rgb;
       vec3 lineCol1 = io_color.rgb;
       vec3 lineCol2 = io_bgColor.rgb;

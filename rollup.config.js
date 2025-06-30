@@ -3,8 +3,18 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
 import terser from '@rollup/plugin-terser';
 
-// const externals = [];
-const externals = ['io-gui', 'io-markdown', 'io-menus', 'io-inputs', 'io-icons', 'io-colors', 'io-extras', 'io-editors', 'io-navigation', 'io-sliders'];
+const externals = [
+  'io-gui',
+  'io-colors',
+  'io-editors',
+  'io-icons',
+  'io-inputs',
+  'io-layout',
+  'io-markdown',
+  'io-menus',
+  'io-navigation',
+  'io-sliders',
+];
 
 export function makeBundleTarget(src, target, skipExternals = true) {
   const _externals = [...externals];

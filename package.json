@@ -10,6 +10,7 @@
     "clean:colors": "wireit",
     "clean:icons": "wireit",
     "clean:inputs": "wireit",
+    "clean:layout": "wireit",
     "clean:editors": "wireit",
     "clean:markdown": "wireit",
     "clean:menus": "wireit",
@@ -21,6 +22,7 @@
     "lint:colors": "wireit",
     "lint:icons": "wireit",
     "lint:inputs": "wireit",
+    "lint:layout": "wireit",
     "lint:editors": "wireit",
     "lint:markdown": "wireit",
     "lint:menus": "wireit",
@@ -32,6 +34,7 @@
     "build:colors": "wireit",
     "build:icons": "wireit",
     "build:inputs": "wireit",
+    "build:layout": "wireit",
     "build:editors": "wireit",
     "build:markdown": "wireit",
     "build:menus": "wireit",
@@ -43,6 +46,7 @@
     "bundle:colors": "wireit",
     "bundle:icons": "wireit",
     "bundle:inputs": "wireit",
+    "bundle:layout": "wireit",
     "bundle:editors": "wireit",
     "bundle:markdown": "wireit",
     "bundle:menus": "wireit",
@@ -54,6 +58,7 @@
     "dev:colors": "wireit",
     "dev:icons": "wireit",
     "dev:inputs": "wireit",
+    "dev:layout": "wireit",
     "dev:editors": "wireit",
     "dev:markdown": "wireit",
     "dev:menus": "wireit",
@@ -71,6 +76,7 @@
         "clean:colors",
         "clean:icons",
         "clean:inputs",
+        "clean:layout",
         "clean:editors",
         "clean:markdown",
         "clean:menus",
@@ -90,6 +96,9 @@
     },
     "clean:inputs": {
       "command": "rm -rf ./packages/io-inputs/build && rm -rf ./packages/io-inputs/bundle"
+    },
+    "clean:layout": {
+      "command": "rm -rf ./packages/io-layout/build && rm -rf ./packages/io-layout/bundle"
     },
     "clean:editors": {
       "command": "rm -rf ./packages/io-editors/build && rm -rf ./packages/io-editors/bundle"
@@ -115,6 +124,7 @@
         "lint:colors",
         "lint:icons",
         "lint:inputs",
+        "lint:layout",
         "lint:editors",
         "lint:markdown",
         "lint:menus",
@@ -134,6 +144,9 @@
     },
     "lint:inputs": {
       "command": "eslint -c ./packages/io-inputs/.eslintrc.js ./packages/io-inputs/src --fix"
+    },
+    "lint:layout": {
+      "command": "eslint -c ./packages/io-layout/.eslintrc.js ./packages/io-layout/src --fix"
     },
     "lint:editors": {
       "command": "eslint -c ./packages/io-editors/.eslintrc.js ./packages/io-editors/src --fix"
@@ -158,6 +171,7 @@
         "build:gui",
         "build:icons",
         "build:inputs",
+        "build:layout",
         "build:sliders",
         "build:colors",
         "build:menus",
@@ -199,6 +213,18 @@
         "lint:inputs",
         "build:gui",
         "build:icons"
+      ]
+    },
+    "build:layout": {
+      "command": "tsc --project ./packages/io-layout/tsconfig.json",
+      "dependencies": [
+        "clean:layout",
+        "lint:layout",
+        "build:gui",
+        "build:icons",
+        "build:inputs",
+        "build:menus",
+        "build:navigation"
       ]
     },
     "build:editors": {
@@ -262,6 +288,7 @@
         "build:colors",
         "build:icons",
         "build:inputs",
+        "build:layout",
         "build:editors",
         "build:markdown",
         "build:menus",
@@ -276,6 +303,7 @@
         "bundle:colors",
         "bundle:icons",
         "bundle:inputs",
+        "bundle:layout",
         "bundle:editors",
         "bundle:markdown",
         "bundle:menus",
@@ -312,6 +340,17 @@
         "bundle:gui",
         "bundle:icons",
         "build:inputs"
+      ]
+    },
+    "bundle:layout": {
+      "command": "rollup -c ./packages/io-layout/rollup.config.js && find ./packages/io-layout/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-layout/build/* ./packages/io-layout/bundle && rm -rf ./packages/io-layout/build && mv ./packages/io-layout/bundle ./packages/io-layout/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:menus",
+        "bundle:navigation",
+        "build:layout"
       ]
     },
     "bundle:editors": {
@@ -374,6 +413,7 @@
         "dev:colors",
         "dev:icons",
         "dev:inputs",
+        "dev:layout",
         "dev:editors",
         "dev:markdown",
         "dev:menus",
@@ -396,6 +436,10 @@
     },
     "dev:inputs": {
       "command": "tsc -w --project ./packages/io-inputs/tsconfig.json",
+      "service": true
+    },
+    "dev:layout": {
+      "command": "tsc -w --project ./packages/io-layout/tsconfig.json",
       "service": true
     },
     "dev:editors": {

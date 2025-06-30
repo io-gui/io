@@ -124,6 +124,8 @@ export class MenuOptions extends Node {
     }
   }
 
+  // TODO: removeItem() {}
+
   initItems() {
     const items = this.items;
     for (let i = 0; i < items.length; i++) {

@@ -4,10 +4,10 @@ import { importMapsPlugin } from '@web/dev-server-import-maps';
 const importMapsModules = {
   'io-gui': '/packages/io-gui/build/index.js?wds-import-map=0',
   'io-colors': '/packages/io-colors/build/index.js?wds-import-map=0',
-  'io-extras': '/packages/io-extras/build/index.js?wds-import-map=0',
+  'io-editors': '/packages/io-editors/build/index.js?wds-import-map=0',
   'io-icons': '/packages/io-icons/build/index.js?wds-import-map=0',
   'io-inputs': '/packages/io-inputs/build/index.js?wds-import-map=0',
-  'io-editors': '/packages/io-editors/build/index.js?wds-import-map=0',
+  'io-layout': '/packages/io-layout/build/index.js?wds-import-map=0',
   'io-markdown': '/packages/io-markdown/build/index.js?wds-import-map=0',
   'io-menus': '/packages/io-menus/build/index.js?wds-import-map=0',
   'io-navigation': '/packages/io-navigation/build/index.js?wds-import-map=0',

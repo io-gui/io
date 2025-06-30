@@ -64,13 +64,13 @@ export class IoSelector extends IoElement {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: var(--io_fieldHeight2);
-        height: var(--io_fieldHeight2);
+        width: 4em;
+        height: 4em;
         margin-top: calc(-1 * var(--io_fieldHeight));
         margin-left: calc(-1 * var(--io_fieldHeight));
         border-radius: 50%;
         border: var(--io_border);
-        border-color: var(--io_borderColorDark);
+        border-color: var(--io_borderColorStrong);
         border-top-color: var(--io_colorBlue);
         animation: io-loading-spinner .6s linear infinite;
       }
@@ -132,7 +132,7 @@ export class IoSelector extends IoElement {
       this.onScrollSuspended = true;
       this.debounce(this.onScrollUnsuspend, undefined, 120);
     }
-    this.debounce(this.scrollChangedDebounced, undefined, 2);
+    this.debounce(this.scrollChangedDebounced, undefined, 3);
   }
 
   scrollChangedDebounced() {
@@ -219,7 +219,7 @@ export class IoSelector extends IoElement {
       this.scrollTo(0, 0);
       return;
     }
-    
+
     id = id.split('#')[0];
     // TODO: what if <io-selector> is reused in template() and ID collides?
     if (id === this.childNodes[0]?.id) return;

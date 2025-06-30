@@ -54,7 +54,7 @@ export class IoSwitch extends IoBoolean {
         left: var(--io_borderWidth);
         height: calc(var(--io_lineHeight) - calc(2 * var(--io_borderWidth)));
         width: calc(var(--io_lineHeight) - calc(2 * var(--io_borderWidth)));
-        background-color: var(--io_bgColorDimmed);
+        background-color: var(--io_bgColorLight);
         box-shadow: var(--io_shadowOutset);
         border: var(--io_border);
         border-color: var(--io_borderColorOutset);

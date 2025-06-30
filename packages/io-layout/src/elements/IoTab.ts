@@ -1,10 +1,17 @@
-import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, VDOMElement, WithBinding, NudgeDirection } from 'io-gui';
+import { Register, ReactiveProperty, Property, span, VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { MenuItem } from 'io-menus';
 import { IoPanel } from './IoPanel.js';
 
 export type TabEditCommand = 'delete' | 'shiftLeft' | 'shiftRight' | 'shiftUp' | 'shiftDown' | 'shiftStart' | 'shiftEnd';
+
+export type TabData = {
+  id?: string,
+  label?: string,
+  icon?: string,
+  hint?: string,
+}
 
 export type IoTabProps = IoFieldProps & {
   item?: MenuItem,
@@ -19,28 +26,55 @@ export class IoTab extends IoField {
     return /* css */`
       :host {
         display: flex;
-        user-select: none;
+        position: relative;
+        padding: 0;
+        /* padding-right: var(--io_lineHeight); */
+        height: inherit;
+        min-height: inherit;
+        margin: var(--io_spacing);
+        margin-bottom: calc(-1 * var(--io_borderWidth));
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-      }
-      :host[hidden] {
-        display: none;
+        border-bottom-color: transparent;
+        user-select: none;
+        margin-right: var(--io_spacing);
       }
       :host[selected] {
-        background-color: var(--io_bgColorDimmed);
-        border-color: var(--io_borderColor);
+        color: var(--io_colorStrong);
+        background-color: var(--io_bgColorLight);
+        border-color: var(--io_borderColorStrong);
+        border-bottom-color: var(--io_bgColorLight);
+      }
+      :host[selected]:focus {
+        color: var(--io_colorWhite);
+      }
+      :host:not([selected]) {
+        margin-bottom: var(--io_borderWidth) !important;
       }
       :host > * {
         pointer-events: none;
-        text-overflow: ellipsis;
-      }
-      :host > .label {
-        flex: 1 1 auto;
+        display: inline-block;
+        white-space: nowrap;
         padding: 0 var(--io_spacing);
+      }
+      :host > .label {}
+      :host > .hint {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--io_colorLight);
+        padding-right: var(--io_spacing3);
+      }
+      :host > .hint:empty {
+        padding-right: var(--io_lineHeight);
       }
       :host:not(:hover) > .io-close-icon {
         visibility: hidden;
       }
       :host > .io-close-icon {
+        position: absolute;
+        right: var(--io_spacing);
+        top: 0;
         pointer-events: inherit;
       }
       :host > .io-close-icon:hover {
@@ -53,17 +87,14 @@ export class IoTab extends IoField {
   @ReactiveProperty({type: MenuItem})
   declare item: MenuItem;
 
-  @Property('false')
-  declare contentEditable: boolean;
-
   @Property(undefined)
   declare $parent?: IoPanel;
 
-  static get Listeners(): any {
-    return {
-      'click': 'preventDefault'
-    };
-  }
+  // static get Listeners(): any {
+  //   return {
+  //     'click': 'preventDefault'
+  //   };
+  // }
 
   constructor(args: IoTabProps = {}) { super(args); }
 
@@ -73,9 +104,6 @@ export class IoTab extends IoField {
     event.stopPropagation();
     event.preventDefault();
   }
-  onClick() {
-    this.item.selected = true;
-  }
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);
     event.stopPropagation();
@@ -84,7 +112,6 @@ export class IoTab extends IoField {
     // onOverlayPointerdown.call(this, event);
   }
   onPointermove(event: PointerEvent) {
-    event.stopPropagation();
     // if (event.pointerType === 'touch') {
     //   if (!this.expanded && !this.inoverlay) return;
     // }
@@ -93,13 +120,17 @@ export class IoTab extends IoField {
   onPointerup(event: PointerEvent) {
     super.onPointerup(event);
     event.stopPropagation();
+    this.releasePointerCapture(event.pointerId);
     this.onPointerupAction(event);
   }
   onPointerupAction(event: PointerEvent) {
     this.onClick();
   }
+  onClick() {
+    this.item.selected = true;
+  }
   onCloseClick() {
-    this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'delete'}, false);
+    this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'delete'}, true);
   }
   onKeydown(event: KeyboardEvent) {
     let command: TabEditCommand | null = null;
@@ -153,7 +184,6 @@ export class IoTab extends IoField {
     }
   }
   itemChanged() {
-    // TODO: unbind previous? Test!
     this.setProperties({
       selected: this.item.bind('selected'),
       disabled: this.item.bind('disabled'),
@@ -167,7 +197,7 @@ export class IoTab extends IoField {
     this.render([
       ioIcon({value: this.item.icon || ' '}),
       span({class: 'label'}, this.item.label),
-      this.item.hint ? span({class: 'hint'}, this.item.hint) : null,
+      span({class: 'hint'}, this.item.hint || ''),
       ioIcon({value: 'io:close_small', size: 'small', class: 'io-close-icon', '@click': this.onCloseClick, '@pointerdown': this.preventDefault}),
     ]);
   }

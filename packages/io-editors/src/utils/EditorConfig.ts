@@ -129,18 +129,6 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     ['spacing5', ioField({disabled: true})],
     ['spacing8', ioField({disabled: true})],
     ['fieldHeight', ioField({disabled: true})],
-    ['fieldHeight2', ioField({disabled: true})],
-    ['fieldHeight3', ioField({disabled: true})],
-    ['fieldHeight4', ioField({disabled: true})],
-    ['fieldHeight5', ioField({disabled: true})],
-    ['fieldHeight6', ioField({disabled: true})],
-    ['fieldHeight7', ioField({disabled: true})],
-    ['fieldHeight8', ioField({disabled: true})],
-    ['fieldHeight9', ioField({disabled: true})],
-    ['fieldHeight10', ioField({disabled: true})],
-    ['fieldHeight11', ioField({disabled: true})],
-    ['fieldHeight12', ioField({disabled: true})],
-    ['borderRadius2', ioField({disabled: true})],
     [Color, ioColorRgba()],
   ]]
 ]);

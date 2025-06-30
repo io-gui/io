@@ -22,8 +22,6 @@ export class IoVector extends IoElement {
       :host {
         display: flex;
         flex: 1 1 auto;
-        min-width: var(--io_fieldHeight5);
-        width: var(--io_fieldHeight8);
       }
       :host > io-number {
         flex: 1 1 auto;
@@ -106,10 +104,10 @@ export class IoVector extends IoElement {
     this.debounce(this.changed);
   }
   changed() {
-    const elements: Array<VDOMElement | null> = [];
+    const vChildren: Array<VDOMElement | null> = [];
     for (const k of this.keys as [keyof typeof this.value]) {
       if (this.value[k] !== undefined) {
-        elements.push(ioNumber({
+        vChildren.push(ioNumber({
           id: k, // Consider removing global id collisions
           value: this.value[k],
           conversion: this.conversion,
@@ -122,11 +120,8 @@ export class IoVector extends IoElement {
         }));
       }
     }
-    elements.push(this.getSlotted());
-    this.render(elements);
-  }
-  getSlotted(): VDOMElement | null {
-    return this.linkable ? ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'}) : null;
+    vChildren.push(this.linkable ? ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'}) : null);
+    this.render(vChildren);
   }
 }
 export const ioVector = IoVector.vConstructor;

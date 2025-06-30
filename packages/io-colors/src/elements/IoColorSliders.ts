@@ -233,7 +233,7 @@ class IoColorSliderBase extends IoSlider {
       // Colors
       vec3 finalCol = io_bgColorInput.rgb;
       vec3 startCol = getStartColor(uv);
-      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 gridCol = io_bgColorLight.rgb;
       vec3 endCol = getEndColor(uv);
       vec3 sliderCol = mix(startCol, endCol, uv.x);
 
@@ -289,7 +289,7 @@ class IoColorSlider2dBase extends IoSlider2d {
 
       // Colors
       vec3 finalCol = color_field(uv);
-      vec3 gridCol = io_bgColorDimmed.rgb;
+      vec3 gridCol = io_bgColorLight.rgb;
       vec3 sliderCol = color_field(uValue);
 
       // Grid

@@ -28,7 +28,7 @@ export class IoOptionSelect extends IoElement {
       border-radius: var(--io_borderRadius);
       border: var(--io_border);
       border-color: var(--io_borderColorOutset);
-      background-color: var(--io_bgColorDimmed);
+      background-color: var(--io_bgColorLight);
       background-image: var(--io_gradientOutset);
       text-align: left;
     }
