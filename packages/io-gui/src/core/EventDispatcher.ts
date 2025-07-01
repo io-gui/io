@@ -20,7 +20,7 @@ export type AnyEventListener = EventListener |
                                ChangeEventListener |
                                IoEventListener;
 
-/**
+                               /**
  * Listener definition type.
  * The first item is a string (function name) or an event listener function.
  * The second item is an optional object of event listener options.

@@ -30,7 +30,7 @@ export class IoButton extends IoField {
   @ReactiveProperty({value: undefined, type: undefined, reflect: false})
   declare value: any;
 
-  @ReactiveProperty(undefined)
+  @ReactiveProperty()
   declare action?: Function;
 
   @ReactiveProperty({value: 'outset', type: String, reflect: true})

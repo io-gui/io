@@ -8,7 +8,10 @@ import { throttle, debounce, CallbackFunction } from '../core/Queue.js';
 
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
-export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
+// export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
+export type ListenerDefinitions = {
+  [key: string]: ListenerDefinitionLoose;
+}
 
 export interface NodeConstructor<T> {
   new (...args: any[]): T;
@@ -44,6 +47,10 @@ export function NodeMixin<T extends NodeConstructor<any>>(superclass: T) {
       };
     }
     // declare reactivity: 'none' | 'immediate' | 'throttled' | 'debounced';
+
+    static get Listeners(): ListenerDefinitions {
+      return {};
+    }
 
     declare readonly _protochain: ProtoChain;
     declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;

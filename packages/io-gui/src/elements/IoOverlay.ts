@@ -1,5 +1,6 @@
 import { ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
+import { ListenerDefinitions } from '../nodes/Node.js';
 import { IoElement, IoElementProps } from './IoElement.js';
 
 let focusRestoreTarget: Element | null = null;
@@ -45,7 +46,7 @@ class IoOverlay extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
 
-  static get Listeners() {
+  static get Listeners(): ListenerDefinitions {
     return {
       'pointerdown': ['stopPropagation', {passive: false}],
       'pointermove': ['stopPropagation', {passive: false}],

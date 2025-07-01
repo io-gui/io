@@ -102,7 +102,7 @@ export class IoMenuItem extends IoField {
   @Property('false')
   declare contentEditable: boolean;
 
-  @Property(undefined)
+  @Property()
   declare $parent?: IoMenuOptions | IoMenuTree;
 
   declare $options?: IoMenuOptions;

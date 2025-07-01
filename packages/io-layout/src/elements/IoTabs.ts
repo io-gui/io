@@ -13,20 +13,20 @@ export class IoTabs extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        position: relative;
         display: flex;
         background-color: var(--io_bgColorStrong);
-        border-bottom: var(--io_border);
-        border-bottom-color: var(--io_borderColorStrong);
-      }
-      :host > io-tab:first-of-type {
-        margin-left: var(--io_spacing2);
+        padding-top: var(--io_spacing);
+        padding-left: var(--io_spacing);
+        padding-right: var(--io_spacing);
       }
       :host > io-menu-item {
         min-width: fit-content;
         margin-left: auto;
-        padding-left: var(--io_spacing);
-        padding-right: var(--io_spacing);
+        /* margin-top: var(--io_spacing); */
+        padding: 0;
         opacity: 0.125;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
       }
       :host > io-menu-item:focus,
       :host > io-menu-item:hover {
@@ -47,7 +47,6 @@ export class IoTabs extends IoElement {
   declare private addMenuItem: MenuItem;
 
   init() {
-    this.addTab = this.addTab.bind(this);
     this.selectTabByIndex = this.selectTabByIndex.bind(this);
   }
 
@@ -102,9 +101,11 @@ export class IoTabs extends IoElement {
     const tabs = this.querySelectorAll('io-tab');
     if (tabs[index]) tabs[index].focus();
   }
-  addTab(event: CustomEvent) {
-    event.stopPropagation();
+  onMenuItemClicked(event: CustomEvent) {
     const item: MenuItem = event.detail.item;
+    this.addTab(item);
+  }
+  addTab(item: MenuItem, addIndex?: number) {
     if (!item.id) return;
     const existing = this.tabs.findItemById(item.id!);
     if (!existing) {
@@ -125,13 +126,11 @@ export class IoTabs extends IoElement {
   changed() {
     this.render([
       ...this.tabs.items.map(item => ioTab({item})),
-      // TODO: consider designing an element for options without item in the root.
-      // TODO: reconsider iocontextmenu design.
       ioMenuItem({
         icon: 'io:box_fill_plus',
         direction: 'down',
         item: this.addMenuItem,
-        '@io-menu-item-clicked': this.addTab,
+        '@io-menu-item-clicked': this.onMenuItemClicked,
       }),
     ]);
   }

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Property, nudge } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Property, nudge, ListenerDefinition } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -117,7 +117,7 @@ export class IoMenuOptions extends IoElement {
   @ReactiveProperty(null)
   declare widget: VDOMElement | null;
 
-  @Property(undefined)
+  @Property()
   declare $parent?: IoMenuItem;
 
   @Property('listbox')
@@ -128,7 +128,7 @@ export class IoMenuOptions extends IoElement {
 
   static get Listeners() {
     return {
-      'touchstart': ['stopPropagation', {passive: false}],
+      'touchstart': ['stopPropagation', {passive: false}] as ListenerDefinition,
       'io-focus-to': 'onIoFocusTo',
     };
   }

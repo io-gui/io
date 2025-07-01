@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, VDOMElement, WithBinding, Property } from 'io-gui';
+import { ReactiveProperty, IoGl, IoElementProps, VDOMElement, WithBinding, Property, ListenerDefinition } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -124,7 +124,7 @@ export class IoSliderBase extends IoGl {
       'focus': 'onFocus',
       'contextmenu': 'onContextmenu',
       'pointerdown': 'onPointerdown',
-      'touchstart': ['onTouchstart', {passive: false}],
+      'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
     };
   }
 

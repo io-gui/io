@@ -87,9 +87,9 @@ export const LIGHT_THEME: ThemeVars = {
 
   borderRadius: 2,
   borderWidth: 1,
-  borderColor: new Color(0, 0, 0, 0.2),
-  borderColorLight: new Color(0, 0, 0, 0.3),
-  borderColorStrong: new Color(0, 0, 0, 0.6),
+  borderColor: new Color(0.2, 0.2, 0.2, 1),
+  borderColorLight: new Color(0.3, 0.3, 0.3, 1),
+  borderColorStrong: new Color(0.6, 0.6, 0.6, 1),
   borderColorRed: new Color(1, 0.35, 0.15, 1),
   borderColorGreen: new Color(0.1, 0.7, 0.2, 1),
   borderColorBlue: new Color(0.2, 0.4, 0.95, 1),
@@ -130,8 +130,8 @@ export const DARK_THEME: ThemeVars = {
 
   borderRadius: 2,
   borderWidth: 1,
-  borderColor: new Color(1, 1, 1, 0.5),
-  borderColorLight: new Color(1, 1, 1, 0.3),
+  borderColor: new Color(0.5, 0.5, 0.5, 1),
+  borderColorLight: new Color(0.3, 0.3, 0.3, 1),
   borderColorStrong: new Color(0, 0, 0, 1),
   borderColorRed: new Color(1, 0.2, 0.0, 1),
   borderColorBlue: new Color(0.4, 0.5, 0.9, 1),

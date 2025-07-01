@@ -17,7 +17,7 @@ export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropert
  *   declare title: string;
  * }
  */
-export function Property(initialValue: any) {
+export function Property(initialValue: any = undefined) {
   return (target: Node, propertyName: string) => {
     const constructor = target.constructor as AnyConstructor;
     const properties = propertyDecorators.get(constructor) || {};

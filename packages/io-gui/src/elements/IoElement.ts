@@ -139,7 +139,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
         }
         this.$[vChild.props!.id] = child;
       }
-      if (vChild.children) {
+      if (vChild.children !== undefined) { // TODO: test this! Look for more cases of truthy check bugs!
         if (typeof vChild.children === 'string') {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);

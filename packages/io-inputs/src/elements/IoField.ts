@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, span, Property, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
@@ -125,7 +125,7 @@ export class IoField extends IoElement {
   @Property('0')
   declare tabIndex: string;
 
-  static get Listeners() {
+  static get Listeners(): ListenerDefinitions { // TODO: fix listener types
     return {
       'focus': 'onFocus',
       'pointerdown': 'onPointerdown',
