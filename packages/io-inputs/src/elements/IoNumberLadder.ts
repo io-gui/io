@@ -92,7 +92,7 @@ class IoNumberLadder extends IoElement {
   static get Listeners() {
     return {
       'ladder-step-change': '_onLadderStepChange',
-      'ladder-step-collapse': '_onLadderStepCollapse',
+      'ladder-step-collapse': 'onLadderStepCollapse',
       'io-focus-to': 'onIoFocusTo',
     };
   }
@@ -136,7 +136,7 @@ class IoNumberLadder extends IoElement {
       src.inputValue(newValue);
     }
   }
-  _onLadderStepCollapse() {
+  onLadderStepCollapse() {
     this.setProperty('expanded', false);
   }
   expandedChanged() {

@@ -118,7 +118,7 @@ export class IoNumber extends IoField {
           this.setCaretPosition(this.textNode.length);
         }
       }
-      this._expandLadder();
+      this.expandLadder();
     } else {
       if (document.activeElement !== this as unknown as Element) {
         this.focus();
@@ -126,11 +126,11 @@ export class IoNumber extends IoField {
       }
     }
   }
-  _expandLadder() {
+  expandLadder() {
     IoNumberLadderSingleton.src = this;
     IoNumberLadderSingleton.expanded = true;
   }
-  _collapseLadder() {
+  collapseLadder() {
     IoNumberLadderSingleton.expanded = false;
   }
   onKeydown(event: KeyboardEvent) {
@@ -213,9 +213,9 @@ export class IoNumber extends IoField {
   onKeyup(event: KeyboardEvent) {
     // TODO: move to onkeydown?
     if (event.key === 'Control' || event.key === 'Shift') {
-      IoNumberLadderSingleton.expanded ? this._collapseLadder() : this._expandLadder();
+      IoNumberLadderSingleton.expanded ? this.collapseLadder() : this.expandLadder();
     } else if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
-      this._collapseLadder();
+      this.collapseLadder();
     }
 
     if (this.live) {

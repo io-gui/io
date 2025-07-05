@@ -5,9 +5,9 @@ element.style.display = 'none';
 document.body.appendChild(element as unknown as HTMLElement);
 
 const ladder = IoNumberLadderSingleton;
-ladder.expanded = true;
-ladder.style.display = 'none';
 ladder.src = element;
+ladder.setAttribute('expanded', 'true');
+ladder.style.display = 'none';
 
 export default class {
   run() {

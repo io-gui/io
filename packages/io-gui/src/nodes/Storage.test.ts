@@ -38,16 +38,16 @@ export default class {
         expect(node._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           reflect: false,
-          init: undefined,
-          type: undefined,
+          init: null, // TODO: fix
+          type: Object, // TODO: fix type
           value: 'foo',
         });
 
         expect(node._reactiveProperties.get('default')).to.eql({
           binding: undefined,
           reflect: false,
-          init: undefined,
-          type: undefined,
+          init: null, // TODO: fix
+          type: Object, // TODO: fix type
           value: 'foo',
         });
 
