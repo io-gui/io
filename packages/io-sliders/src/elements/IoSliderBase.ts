@@ -249,39 +249,30 @@ export class IoSliderBase extends IoGl {
     const oneDimension = typeof this.value === 'number';
     switch (event.key) {
       case 'ArrowLeft':
-        event.preventDefault();
         if (event.shiftKey) {
           oneDimension ? this._setDecrease() : this._setLeft();
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
+          break;
         }
-        break;
       case 'ArrowUp':
-        event.preventDefault();
         if (event.shiftKey) {
           oneDimension ? this._setIncrease() : this._setUp();
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
+          break;
         }
-        break;
       case 'ArrowRight':
-        event.preventDefault();
         if (event.shiftKey) {
           oneDimension ? this._setIncrease() : this._setRight();
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
+          break;
         }
-        break;
       case 'ArrowDown':
-        event.preventDefault();
         if (event.shiftKey) {
           oneDimension ? this._setDecrease() : this._setDown();
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
+          break;
         }
-        break;
       default:
-        break;
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
     }
   }
   _setIncrease() {

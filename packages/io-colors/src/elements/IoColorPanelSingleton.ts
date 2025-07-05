@@ -46,13 +46,13 @@ class IoColorPanel extends IoColorBase {
   }
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
-    const direction = event.detail.direction;
+    const command = event.detail.command;
     const sliders = this.querySelectorAll('[tabindex]');
     const index = Array.from(sliders).indexOf(source);
-    if (direction === 'down' || (direction === 'left' && index === 0)) {
+    if (command === 'ArrowDown' || (command === 'ArrowLeft' && index === 0)) {
       sliders[sliders.length - 1].focus();
       event.stopPropagation();
-    } else if (direction === 'up' || (direction === 'right' && index === sliders.length - 1)) {
+    } else if (command === 'ArrowUp' || (command === 'ArrowRight' && index === sliders.length - 1)) {
       sliders[0].focus();
       event.stopPropagation();
     }

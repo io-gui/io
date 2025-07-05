@@ -2,20 +2,6 @@ import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySinglet
 import { IoNumber } from './IoNumber.js';
 import { ioNumberLadderStep } from './IoNumberLadderStep.js';
 
-let lastFocus: Element | null = null;
-{
-  window.addEventListener('focusin', () => {
-    lastFocus = document.activeElement;
-  }, {capture: false});
-  window.addEventListener('blur', () => {
-    setTimeout(() => {
-      if (document.activeElement === document.body) {
-        lastFocus = null;
-      }
-    });
-  }, {capture: true});
-}
-
 export type IoNumberLadderProps = IoElementProps & {
   src?: IoNumber,
   expanded?: WithBinding<boolean>,
@@ -55,53 +41,32 @@ class IoNumberLadder extends IoElement {
       :host > .io-up2,
       :host > .io-up3,
       :host > .io-up4 {
+        margin-bottom: var(--io_borderWidth);
         box-shadow: 0px -2px 6px var(--io_shadowColor), 0 -1px 3px var(--io_shadowColor);
       }
       :host > .io-down1,
       :host > .io-down2,
       :host > .io-down3,
       :host > .io-down4 {
+        margin-top: var(--io_borderWidth);
         box-shadow: 0px 2px 6px var(--io_shadowColor), 0 1px 3px var(--io_shadowColor);
       }
       :host > .io-up1,
       :host > .io-down1{
         z-index: 4;
-        transition: transform 0.1s;
       }
       :host > .io-up2,
       :host > .io-down2 {
         z-index: 3;
-        transition: transform 0.2s;
-      }
-      :host:not([expanded]) > .io-up4 {
-        transform: translateY(calc(3 * var(--io_fieldHeight)));
-      }
-      :host:not([expanded]) > .io-up3 {
-        transform: translateY(calc(2 * var(--io_fieldHeight)));
-      }
-      :host:not([expanded]) > .io-up2 {
-        transform: translateY(calc(1 * var(--io_fieldHeight)));
-      }
-      :host:not([expanded]) > .io-down2 {
-        transform: translateY(calc(-1 * var(--io_fieldHeight)));
-      }
-      :host:not([expanded]) > .io-down3 {
-        transform: translateY(calc(-2 * var(--io_fieldHeight)));
-      }
-      :host:not([expanded]) > .io-down4 {
-        transform: translateY(calc(-3 * var(--io_fieldHeight)));
       }
       :host > .io-up3,
       :host > .io-down3 {
         z-index: 2;
-        transition: transform 0.4s;
       }
       :host > .io-up4,
       :host > .io-down4 {
         z-index: 1;
-        transition: transform 0.8s;
       }
-      :host > io-number-ladder-step:hover,
       :host > io-number-ladder-step:focus {
         background-color: var(--io_bgColorStrong);
         border-color: var(--io_colorBlue);
@@ -128,7 +93,7 @@ class IoNumberLadder extends IoElement {
     return {
       'ladder-step-change': '_onLadderStepChange',
       'ladder-step-collapse': '_onLadderStepCollapse',
-      'focusin': 'onFocusIn',
+      'io-focus-to': 'onIoFocusTo',
     };
   }
   get value() {
@@ -149,23 +114,17 @@ class IoNumberLadder extends IoElement {
 
   constructor(args: IoNumberLadderProps = {}) { super(args); }
 
-  onFocusIn(event: FocusEvent) {
-    event.stopPropagation();
-  }
-  onFocusTo(event: CustomEvent) {
-    event.stopPropagation();
-    const srcStep = event.composedPath()[0];
-    const src = this.src;
-    const dir = event.detail.dir;
-    if (src) {
-      if ((srcStep === this.querySelector('.io-up1') && dir === 'down') ||
-          (srcStep === this.querySelector('.io-down1') && dir === 'up')) {
-        src.focus();
-        src.selectionStart = src.selectionEnd = src.textNode.length;
-        return;
+  onIoFocusTo(event: CustomEvent) {
+    const source = event.detail.source;
+    const command = event.detail.command;
+    if (this.src) {
+      if ((command === 'ArrowDown' && source === this.querySelector('.io-up1')) ||
+          (command === 'ArrowUp' && source === this.querySelector('.io-down1'))) {
+        event.stopPropagation();
+        this.src.focus();
+        this.src.setCaretPosition(this.src.textNode.length);
       }
     }
-    super.onFocusTo(event);
   }
   _onLadderStepChange(event: CustomEvent) {
     const src = this.src;
@@ -181,25 +140,21 @@ class IoNumberLadder extends IoElement {
     this.setProperty('expanded', false);
   }
   expandedChanged() {
-    const src = this.src;
     if (this.expanded) {
-      if (src) {
-        const rect = src.getBoundingClientRect();
+      if (this.src) {
+        const rect = this.src.getBoundingClientRect();
         const selfRect = this.getBoundingClientRect();
         // NOTE: layerRect fix for Safari zoom.
         const layerRect = IoOverlaySingleton.getBoundingClientRect();
         this.style.top = rect.bottom - layerRect.top + 'px';
         this.style.left = rect.left - layerRect.left + 'px';
         this.style.marginTop = - (selfRect.height / 2 + ThemeSingleton.lineHeight / 2 + ThemeSingleton.spacing) + 'px';
-      } else {
-        this.removeAttribute('style');
       }
     } else {
-      if (src && src._pointerType !== 'touch') {
-        src.focus();
-      } else if (lastFocus) {
-        (lastFocus as HTMLElement).focus();
-      }
+      setTimeout(() => {
+        this.src?.setCaretPosition(this.src.textNode.length);
+      });
+      this.removeAttribute('style');
     }
     this.dispatchEvent('expanded', {value: this.expanded}, true);
   }

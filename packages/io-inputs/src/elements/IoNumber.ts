@@ -76,8 +76,6 @@ export class IoNumber extends IoField {
   @Property('textbox')
   declare role: string;
 
-  private _pointer = '';
-
   constructor(args: IoNumberProps = {}) { super(args); }
 
   get textNode() {
@@ -102,17 +100,16 @@ export class IoNumber extends IoField {
     });
   }
   onPointerdown(event: PointerEvent) {
-    if (this._pointer === 'touch') event.preventDefault();
+    if (event.pointerType === 'touch') event.preventDefault();
     this.addEventListener('pointermove', this.onPointermove);
     this.addEventListener('pointerup', this.onPointerup);
     if (document.activeElement === this as unknown as Element && event.button === 0) return;
-    this._pointer = event.pointerType;
   }
   onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerup', this.onPointerup);
     if (this.ladder || event.button === 1) {
-      if (this._pointer === 'touch') {
+      if (event.pointerType === 'touch') {
         event.preventDefault();
         (document.activeElement as HTMLElement).blur();
       } else {
@@ -129,81 +126,96 @@ export class IoNumber extends IoField {
       }
     }
   }
-  onFocus(event: FocusEvent) {
-    super.onFocus(event);
-    if (this._pointer === 'touch') {
-      IoNumberLadderSingleton.expanded = false;
-    }
-  }
   _expandLadder() {
     IoNumberLadderSingleton.src = this;
     IoNumberLadderSingleton.expanded = true;
   }
+  _collapseLadder() {
+    IoNumberLadderSingleton.expanded = false;
+  }
   onKeydown(event: KeyboardEvent) {
-    const rng = (window.getSelection() as Selection).getRangeAt(0);
-    const start = rng.startOffset;
-    const end = rng.endOffset;
+    const range = (window.getSelection() as Selection).getRangeAt(0);
+    const rangeStart = range.startOffset;
+    const rangeEnd = range.endOffset;
     const length = this.childNodes[0] ? this.childNodes[0].length : 0;
-    const rngInside = rng.startContainer === rng.endContainer && (rng.startContainer === this.childNodes[0] || rng.startContainer === this as unknown as Node);
+    const rangeInside = range.startContainer === range.endContainer && (range.startContainer === this.childNodes[0] || range.startContainer === this as unknown as Node);
+    const valueNumber = Number(this.textNode);
 
-    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this._setFromTextNode();
-    } else if (event.key === 'Home') { // home
-      this.textNode = this.min;
-      this._setFromTextNode();
-    } else if (event.key === 'End') { // end
-      this.textNode = this.max;
-      this._setFromTextNode();
-    } else if (event.key === 'PageUp') { // pgup
-      const valueNumber = Number(this.textNode);
-      if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
-        this.textNode = Number(this.textNode) + this.step;
-      } else {
-        this.textNode = this.step;
-      }
-      this._setFromTextNode();
-    } else if (event.key === 'PageDown') { // pgdown
-      const valueNumber = Number(this.textNode);
-      if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
-        this.textNode = Number(this.textNode) - this.step;
-      } else {
-        this.textNode = -this.step;
-      }
-      this._setFromTextNode();
-    } else if (event.key === 'ArrowLeft') { // left
-      if (event.ctrlKey || (rngInside && start === end && start === 0)) {
+    switch (event.key) {
+      case 'Escape':
+      case 'Enter':
+      case ' ':
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
-      }
-    } else if (event.key === 'ArrowUp') { // up
-      if (IoNumberLadderSingleton.expanded) {
-        const upStep = IoNumberLadderSingleton.querySelector('.io-up1');
-        if (upStep) upStep.focus();
-      } else if (event.ctrlKey || (rngInside && start === end && start === 0)) {
+        this._setFromTextNode();
+        break;
+      case 'Home':
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
-      }
-    } else if (event.key === 'ArrowRight') { // right
-      if (event.ctrlKey || (rngInside && start === end && start === length)) {
+        this.textNode = this.min;
+        this._setFromTextNode();
+        break;
+      case 'End':
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
-      }
-    } else if (event.key === 'ArrowDown') { // down
-      if (IoNumberLadderSingleton.expanded) {
-        const downStep = IoNumberLadderSingleton.querySelector('.io-down1');
-        if (downStep) downStep.focus();
-      } else if (event.ctrlKey || (rngInside && start === end && start === length)) {
+        this.textNode = this.max;
+        this._setFromTextNode();
+        break;
+      case 'PageUp':
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
-      }
+        if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
+          this.textNode = Number(this.textNode) + this.step;
+        } else {
+          this.textNode = this.step;
+        }
+        this._setFromTextNode();
+        break;
+      case 'PageDown':
+        event.preventDefault();
+        if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
+          this.textNode = Number(this.textNode) - this.step;
+        } else {
+          this.textNode = -this.step;
+        }
+        this._setFromTextNode();
+        break;
+      case 'ArrowLeft':
+        if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
+        break;
+      case 'ArrowUp':
+        if (IoNumberLadderSingleton.expanded) {
+          event.preventDefault();
+          const upStep = IoNumberLadderSingleton.querySelector('.io-up1');
+          if (upStep) upStep.focus();
+        } else if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
+        break;
+      case 'ArrowRight':
+        if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
+        break;
+      case 'ArrowDown':
+        if (IoNumberLadderSingleton.expanded) {
+          event.preventDefault();
+          const downStep = IoNumberLadderSingleton.querySelector('.io-down1');
+          if (downStep) downStep.focus();
+        } else if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
+        break;
     }
   }
   onKeyup(event: KeyboardEvent) {
-    if (event.key === 'Control') { // ctrl
-      this._expandLadder(); // TODO: toggle ladder
+    // TODO: move to onkeydown?
+    if (event.key === 'Control' || event.key === 'Shift') {
+      IoNumberLadderSingleton.expanded ? this._collapseLadder() : this._expandLadder();
     } else if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
-      IoOverlaySingleton.expanded = false;
+      this._collapseLadder();
     }
 
     if (this.live) {

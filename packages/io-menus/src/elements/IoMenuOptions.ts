@@ -156,7 +156,7 @@ export class IoMenuOptions extends IoElement {
   }
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
-    const direction = event.detail.direction;
+    const cmd = event.detail.command;
     const siblings = getMenuSiblings(source);
     const index = siblings.indexOf(source);
 
@@ -176,27 +176,27 @@ export class IoMenuOptions extends IoElement {
       parentIsRight = rect.right < parentRect.right;
     }
 
-    let command = '';
+    let cmdOverride = '';
 
-    // TODO: 'Home', 'End', 'PageUp', 'PageDown' keys should be handled.
     if (this.horizontal) {
-      if (direction === 'right' && inoverlay) command = 'next';
-      if (direction === 'left' && inoverlay) command = 'prev';
-      if (direction === 'up' && parentIsAbove) command = 'out';
-      if (direction === 'down' && parentIsBelow) command = 'out';
+      if (cmd === 'ArrowRight' && inoverlay) cmdOverride = 'Next';
+      if (cmd === 'ArrowLeft' && inoverlay) cmdOverride = 'Prev';
+      if (cmd === 'ArrowUp' && parentIsAbove) cmdOverride = 'Out';
+      if (cmd === 'ArrowDown' && parentIsBelow) cmdOverride = 'Out';
     } else {
-      if (direction === 'down' && inoverlay) command = 'next';
-      if (direction === 'up' && inoverlay) command = 'prev';
-      if (direction === 'left' && parentIsLeft) command = 'out';
-      if (direction === 'right' && parentIsRight) command = 'out';
+      if (cmd === 'ArrowDown' && inoverlay) cmdOverride = 'Next';
+      if (cmd === 'ArrowUp' && inoverlay) cmdOverride = 'Prev';
+      if (cmd === 'ArrowLeft' && parentIsLeft) cmdOverride = 'Out';
+      if (cmd === 'ArrowRight' && parentIsRight) cmdOverride = 'Out';
     }
+    if (cmd === 'Tab' && inoverlay) cmdOverride = 'Next';
 
-    if (command) {
-      if (command === 'next') {
+    if (cmdOverride) {
+      if (cmdOverride === 'Next') {
         siblings[(index + 1) % siblings.length].focus();
-      } else if (command === 'prev') {
+      } else if (cmdOverride === 'Prev') {
         siblings[(index - 1 + siblings.length) % siblings.length].focus();
-      } else if (command === 'out') {
+      } else if (cmdOverride === 'Out') {
         if (this.$parent) this.$parent.focus();
       }
       event.stopPropagation();

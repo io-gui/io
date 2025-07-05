@@ -79,6 +79,7 @@ export class IoContextMenu extends IoElement {
       if (event.button === this.button) {
         this.setPointerCapture(event.pointerId);
         this.expanded = true;
+        // TODO: keyboard focus navigation
       }
     } else {
       // iOS Safari contextmenu event emulation.
@@ -86,6 +87,7 @@ export class IoContextMenu extends IoElement {
       this._contextTimeout = setTimeout(() => {
         this.setPointerCapture(event.pointerId);
         this.expanded = true;
+        // TODO: keyboard focus navigation
       }, 150);
     }
     onOverlayPointerdown.call(this, event);

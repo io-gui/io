@@ -6,6 +6,7 @@ export type IoNumberLadderStepProps = IoFieldProps & {
   label?: string,
 };
 
+//TODO: Dont extend IoField.
 @Register
 export class IoNumberLadderStep extends IoField {
   static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -22,6 +23,10 @@ export class IoNumberLadderStep extends IoField {
         touch-action: none;
         width: 6em;
       }
+      :host:focus {
+        background-color: var(--io_bgColor) !important;
+      }
+      /* TODO: use icons */
       :host:before {
         float: left;
         content: '<';
@@ -47,21 +52,31 @@ export class IoNumberLadderStep extends IoField {
   constructor(args: IoNumberLadderStepProps = {}) { super(args); }
 
   onKeydown(event: KeyboardEvent) {
+    // TODO: fix ladder focus handling. Wrap around.
     let stepMove = 0;
-    if (event.key === 'Escape' || event.key === ' ') {
-      this.dispatchEvent('ladder-step-collapse', {}, true);
-    } else if (event.key === 'ArrowLeft' || event.key === 'Backspace') {
-      event.preventDefault();
-      stepMove = this.value * -1;
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
-    } else if (event.key === 'ArrowRight' || event.key === 'Enter') {
-      event.preventDefault();
-      stepMove = this.value * 1;
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
+    switch (event.key) {
+      case 'Enter':
+      case 'Escape':
+      case ' ':
+        this.dispatchEvent('ladder-step-collapse', {}, true);
+        break;
+      case 'ArrowLeft':
+      case 'Backspace':
+        event.preventDefault();
+        stepMove = this.value * -1;
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        stepMove = this.value * 1;
+        break;
+      case 'ArrowDown':
+        event.preventDefault();
+        this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        break;
     }
     if (stepMove !== 0) {
       this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
@@ -93,9 +108,7 @@ export class IoNumberLadderStep extends IoField {
     this.changed();
   }
   changed() {
-    this.render([
-      span(this.label)
-    ]);
+    this.render([span(this.label)]);
     this.setAttribute('aria-label', this.label);
     this.setAttribute('aria-valuestep', this.label);
   }

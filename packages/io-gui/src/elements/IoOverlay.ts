@@ -130,7 +130,10 @@ class IoOverlay extends IoElement {
 }
 
 export const IoOverlaySingleton = new IoOverlay();
-document.body.appendChild(IoOverlaySingleton as unknown as HTMLElement);
+
+setTimeout(() => {
+  document.body.appendChild(IoOverlaySingleton as unknown as HTMLElement);
+}, 100);
 
 // TODO: Test
 window.addEventListener('focusin', () => {

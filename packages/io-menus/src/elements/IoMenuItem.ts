@@ -244,67 +244,58 @@ export class IoMenuItem extends IoField {
     if (direction === 'right' && optionsAreLeft) direction = 'left';
 
     // TODO: types!
-    let command = null;
+    let cmd = null;
 
     // TODO: 'Home', 'End', 'PageUp', 'PageDown' keys should be handled.
     if (event.key === 'Enter' || event.key === ' ') {
       if (this.hasmore) {
-        command = 'in';
+        cmd = 'In';
       } else {
         event.preventDefault();
         this.onClick();
         return;
       }
     } else if (event.key === 'Backspace') {
-      command = 'out';
+      cmd = 'Out';
     } else if (event.key === 'Escape') {
-      command = 'collapse';
-    } else if (event.key === 'Tab') {
-      event.preventDefault();
-      if (direction === 'left' || direction === 'right') {
-        this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
-      } else {
-        this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
-      }
+      cmd = 'Collapse';
     } else if (event.key === 'ArrowLeft' && (inoverlay || this.expanded)) {
       if (this.hasmore && direction === 'left') {
-        command = 'in';
+        cmd = 'In';
       } else if (direction === 'right') {
-        command = 'out';
+        cmd = 'Out';
       }
     } else if (event.key === 'ArrowRight' && (inoverlay || this.expanded)) {
       if (this.hasmore && direction === 'right') {
-        command = 'in';
+        cmd = 'In';
       } else if (direction === 'left') {
-        command = 'out';
+        cmd = 'Out';
       }
     } else if (event.key === 'ArrowUp' && (inoverlay || this.expanded)) {
       if (this.hasmore && direction === 'up') {
-        command = 'in';
+        cmd = 'In';
       } else if (direction === 'down') {
-        command = 'out';
+        cmd = 'Out';
       }
     } else if (event.key === 'ArrowDown' && (inoverlay || this.expanded)) {
       if (this.hasmore && direction === 'down') {
-        command = 'in';
+        cmd = 'In';
       } else if (direction === 'up') {
-        command = 'out';
+        cmd = 'Out';
       }
     }
 
-    if (command) {
+    if (cmd) {
       event.preventDefault();
-      switch (command) {
-        case 'collapse': {
+      switch (cmd) {
+        case 'Collapse':
           this.collapseRoot();
           break;
-        }
-        case 'in':
+        case 'In':
           if (this.hasmore) this.expanded = true;
           if (this.$options && this.$options.children.length) this.$options.children[0].focus();
           break;
-        case 'out':
-          this.collapse();
+        case 'Out':
           if (this.$parent && this.$parent.$parent) {
             this.$parent.$parent.focus();
             this.$parent.$parent.collapse();

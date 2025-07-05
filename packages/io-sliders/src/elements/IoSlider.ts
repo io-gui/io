@@ -236,54 +236,54 @@ export class IoSlider extends IoGl {
     const invert = this.max < this.min;
     switch (event.key) {
       case 'ArrowLeft':
-        event.preventDefault();
         if (event.shiftKey) {
           this._incrementValue(invert ? this.step : -this.step);
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
+          break;
         }
-        break;
       case 'ArrowUp':
-        event.preventDefault();
         if (event.shiftKey) {
           this._incrementValue(invert ? -this.step : this.step);
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
+          break;
         }
-        break;
       case 'ArrowRight':
-        event.preventDefault();
         if (event.shiftKey) {
           this._incrementValue(invert ? -this.step : this.step);
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
+          break;
         }
-        break;
       case 'ArrowDown':
-        event.preventDefault();
         if (event.shiftKey) {
           this._incrementValue(invert ? this.step : -this.step);
-        } else {
-          this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
+          break;
         }
-        break;
       case 'Home':
-        event.preventDefault();
-        this._inputValue(this.min);
-        break;
+        if (event.shiftKey) {
+          event.preventDefault();
+          this._inputValue(this.min);
+          break;
+        }
       case 'End':
-        event.preventDefault();
-        this._inputValue(this.max);
-        break;
+        if (event.shiftKey) {
+          event.preventDefault();
+          this._inputValue(this.max);
+          break;
+        }
       case 'PageUp':
-        event.preventDefault();
-        this._incrementValue(invert ? -this.step : this.step);
-        break;
+        if (event.shiftKey) {
+          event.preventDefault();
+          this._incrementValue(invert ? -this.step : this.step);
+          break;
+        }
       case 'PageDown':
-        event.preventDefault();
-        this._incrementValue(invert ? this.step : -this.step);
-        break;
+        if (event.shiftKey) {
+          event.preventDefault();
+          this._incrementValue(invert ? this.step : -this.step);
+          break;
+        }
       default:
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
     }
   }
   ready() {

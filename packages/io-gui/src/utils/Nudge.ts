@@ -13,8 +13,8 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
   x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
   let clipWidth = -1;
   let clipHeight = -1;
-  const fitsWidth = elemRect.width <= window.innerWidth;
   const fitsHeight = y - elemRect.height >= 0;
+  const fitsWidth = x + elemRect.width <= window.innerWidth;
   if (fitsHeight || force) {
     if (!fitsHeight) {
       if (doClip) {
@@ -26,8 +26,12 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
     } else {
       y = y - elemRect.height;
     }
-    if (doClip && !fitsWidth) {
-      clipWidth = window.innerWidth;
+    if (!fitsWidth) {
+      if (doClip) {
+        clipWidth = window.innerWidth;
+      } else {
+        x = window.innerWidth - elemRect.width;
+      }
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
@@ -43,7 +47,7 @@ function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemR
   let clipWidth = -1;
   let clipHeight = -1;
   const fitsHeight = y + elemRect.height <= window.innerHeight;
-  const fitsWidth = elemRect.width <= window.innerWidth;
+  const fitsWidth = x + elemRect.width <= window.innerWidth;
   if (fitsHeight || force) {
     if (!fitsHeight) {
       if (doClip) {
@@ -52,8 +56,12 @@ function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemR
         y = window.innerHeight - elemRect.height;
       }
     }
-    if (doClip && !fitsWidth) {
-      clipWidth = window.innerWidth;
+    if (!fitsWidth) {
+      if (doClip) {
+        clipWidth = window.innerWidth;
+      } else {
+        x = window.innerWidth - elemRect.width;
+      }
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
@@ -69,7 +77,7 @@ function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemR
   let clipWidth = -1;
   let clipHeight = -1;
   const fitsWidth = x - elemRect.width >= 0;
-  const fitsHeight = elemRect.height <= window.innerHeight;
+  const fitsHeight = y + elemRect.height <= window.innerHeight;
   if (fitsWidth || force) {
     if (!fitsWidth) {
       if (doClip) {
@@ -81,8 +89,12 @@ function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemR
     } else {
       x = x - elemRect.width;
     }
-    if (doClip && !fitsHeight) {
-      clipHeight = window.innerHeight;
+    if (!fitsHeight) {
+      if (doClip) {
+        clipHeight = window.innerHeight;
+      } else {
+        y = window.innerHeight - elemRect.height;
+      }
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
@@ -98,7 +110,7 @@ function nudgeRight(element: HTMLElement | IoElement, x: number, y: number, elem
   let clipWidth = -1;
   let clipHeight = -1;
   const fitsWidth = x + elemRect.width <= window.innerWidth;
-  const fitsHeight = elemRect.height <= window.innerHeight;
+  const fitsHeight = y + elemRect.height <= window.innerHeight;
   if (fitsWidth || force) {
     if (!fitsWidth) {
       if (doClip) {
@@ -107,8 +119,12 @@ function nudgeRight(element: HTMLElement | IoElement, x: number, y: number, elem
         x = window.innerWidth - elemRect.width;
       }
     }
-    if (doClip && !fitsHeight) {
-      clipHeight = window.innerHeight;
+    if (!fitsHeight) {
+      if (doClip) {
+        clipHeight = window.innerHeight;
+      } else {
+        y = window.innerHeight - elemRect.height;
+      }
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';

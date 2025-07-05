@@ -59,21 +59,17 @@ export class IoColorPicker extends IoElement {
   }
 
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      if (!this.expanded) this.expand();
-    } else if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        if (!this.expanded) this.expand();
+        break;
+      default:
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
     }
   }
   onValueSet() {

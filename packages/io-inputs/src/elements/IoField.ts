@@ -167,22 +167,17 @@ export class IoField extends IoElement {
   onClick(event?: MouseEvent) {
   }
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this.onClick();
-    }
-    else if (event.key === 'ArrowLeft') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'left'}, true);
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'up'}, true);
-    } else if (event.key === 'ArrowRight') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'right'}, true);
-    } else if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, direction: 'down'}, true);
+    switch (event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.onClick();
+        break;
+      default:
+        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+          event.preventDefault();
+          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        }
     }
   }
   onKeyup(event: KeyboardEvent) {}
@@ -200,18 +195,30 @@ export class IoField extends IoElement {
     }
     return position;
   }
-  setCaretPosition(position: number){
-    if (!position) return;
+  setCaretPosition(position: number = 0){
     const selection = window.getSelection();
+    // this.normalize(); // TODO: use normalize() instead?
+    this._flattenTextNode(this);
+    const textNode = this._textNode;
     if (selection) {
       const range = document.createRange();
-      range.setStart(this.firstChild, position);
+      range.setStart(textNode, Math.max(0, Math.min(position, textNode.length)));
       range.collapse(true);
       selection.removeAllRanges();
       selection.addRange(range);
     }
   }
-
+  selectAll() {
+    const selection = window.getSelection();
+    this._flattenTextNode(this);
+    const textNode = this._textNode;
+    if (selection && textNode) {
+      const range = document.createRange();
+      range.selectNodeContents(textNode);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
   labelChanged() {
     if (this.label) {
       this.setAttribute('aria-label', this.label);

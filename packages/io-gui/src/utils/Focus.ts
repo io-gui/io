@@ -2,13 +2,18 @@ import { IoElement } from '../elements/IoElement.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
 import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js';
 
+// TODO: improve focus algorithm
+// Note: focus string field in IoInspector demo and use arrowleft - notice focus shift is not intuitive.
+
+// TODO: Home, End, PageUp, PageDown?
+
 let focusBacktrack = new WeakMap();
-type Direction = 'left' | 'right' | 'down' | 'up';
+type Direction = 'ArrowLeft' | 'ArrowRight' | 'ArrowDown' | 'ArrowUp';
 const backtrackDir: Record<Direction, Direction> = {
-  left: 'right',
-  right: 'left',
-  down: 'up',
-  up: 'down'
+  ArrowLeft: 'ArrowRight',
+  ArrowRight: 'ArrowLeft',
+  ArrowDown: 'ArrowUp',
+  ArrowUp: 'ArrowDown'
 };
 
 function setFocusBacktrack(element: HTMLElement | IoElement, dir: Direction, source: HTMLElement | IoElement) {
@@ -42,7 +47,7 @@ function getCenterDistance(rect1: DOMRect, rect2: DOMRect) {
 function onIoFocusTo(event: CustomEvent) {
   const src = event.detail.source;
   const srcRect = src.getBoundingClientRect();
-  const dir = event.detail.direction;
+  const cmd = event.detail.command;
 
   const inoverlay = Overlay.contains(src);
 
@@ -52,7 +57,7 @@ function onIoFocusTo(event: CustomEvent) {
 
   const backtrack = focusBacktrack.get(src);
 
-  if (backtrack && backtrack.dir === dir) {
+  if (backtrack && backtrack.dir === cmd) {
     const source = backtrack.source;
     let visible = true;
     if (!source.offsetParent || source === src) {
@@ -65,49 +70,67 @@ function onIoFocusTo(event: CustomEvent) {
     }
     if (visible) {
       source.focus();
-      setFocusBacktrack(source, dir, src);
+      setFocusBacktrack(source, cmd, src);
       return;
     }
   }
 
   const root = inoverlay ? Overlay as unknown as HTMLElement : document;
-  const focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
+  let focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
+  focusableCandidates = focusableCandidates.filter(el => el.offsetParent !== null);
+  focusableCandidates = focusableCandidates.filter(el => {
+    const style = window.getComputedStyle(el);
+    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+  });
 
-  for (let i = focusableCandidates.length; i--;) {
-
-    const candidate = focusableCandidates[i];
-
-    if (!candidate.offsetParent || candidate === src) {
-      continue;
+  if (cmd === 'Tab') {
+    const index = focusableCandidates.indexOf(src);
+    if (index !== -1) {
+      focusableCandidates[(index + 1) % focusableCandidates.length].focus();
     }
-    const sStyle = window.getComputedStyle(candidate);
-    if (sStyle.visibility !== 'visible' || sStyle.display === 'none') {
-      continue;
+    return;
+  } else if (cmd === 'Home') {
+    focusableCandidates[0].focus();
+    return;
+  } else if (cmd === 'End') {
+    focusableCandidates[focusableCandidates.length - 1].focus();
+    return;
+  } else if (cmd === 'PageUp') {
+    // TODO: implement
+    return;
+  } else if (cmd === 'PageDown') {
+    // TODO: implement
+    return;
+  } else if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(cmd)) {
+    for (let i = focusableCandidates.length; i--;) {
+      const candidate = focusableCandidates[i];
+      if (!candidate.offsetParent || candidate === src) {
+        continue;
+      }
+      const sStyle = window.getComputedStyle(candidate);
+      if (sStyle.visibility !== 'visible' || sStyle.display === 'none') {
+        continue;
+      }
+      const rect = candidate.getBoundingClientRect();
+      if (cmd === 'ArrowRight' && rect.left < srcRect.right) continue;
+      if (cmd === 'ArrowLeft' && rect.right > srcRect.left) continue;
+      if (cmd === 'ArrowDown' && rect.top < srcRect.bottom) continue;
+      if (cmd === 'ArrowUp' && rect.bottom > srcRect.top) continue;
+      const distance = getRectDistance(srcRect, rect);
+      const centerDistance = getCenterDistance(srcRect, rect);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestCenterDistance = centerDistance;
+        closestElement = candidate;
+      } else if (distance === closestDistance && centerDistance < closestCenterDistance) {
+        closestCenterDistance = centerDistance;
+        closestElement = candidate;
+      }
     }
-
-    const rect = candidate.getBoundingClientRect();
-
-    if (dir === 'right' && rect.left < srcRect.right) continue;
-    if (dir === 'left' && rect.right > srcRect.left) continue;
-    if (dir === 'down' && rect.top < srcRect.bottom) continue;
-    if (dir === 'up' && rect.bottom > srcRect.top) continue;
-
-    const distance = getRectDistance(srcRect, rect);
-    const centerDistance = getCenterDistance(srcRect, rect);
-
-    if (distance < closestDistance) {
-      closestDistance = distance;
-      closestCenterDistance = centerDistance;
-      closestElement = candidate;
-    } else if (distance === closestDistance && centerDistance < closestCenterDistance) {
-      closestCenterDistance = centerDistance;
-      closestElement = candidate;
+    if (closestElement !== src) {
+      (closestElement as any).focus();
+      setFocusBacktrack(closestElement, cmd, src);
     }
-  }
-
-  if (closestElement !== src) {
-    (closestElement as any).focus();
-    setFocusBacktrack(closestElement, dir, src);
   }
 }
 

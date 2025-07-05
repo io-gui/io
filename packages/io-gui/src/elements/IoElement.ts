@@ -156,6 +156,7 @@ export class IoElement extends NodeMixin(HTMLElement) {
   /**
   * Helper function to flatten textContent into a single TextNode.
   * Update textContent via TextNode is better for layout performance.
+  * TODO: Consider using normalize()? Is it the same function?
   * @param {HTMLElement} element - Element to flatten.
   */
   _flattenTextNode(element: HTMLElement | IoElement) {

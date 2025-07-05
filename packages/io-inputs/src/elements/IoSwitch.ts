@@ -10,6 +10,7 @@ export class IoSwitch extends IoBoolean {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         position: relative;
         overflow: visible;
         padding: var(--io_spacing) var(--io_spacing);
