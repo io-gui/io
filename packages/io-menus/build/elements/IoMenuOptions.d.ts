@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, NudgeDirection, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, NudgeDirection, IoElementProps, WithBinding, ListenerDefinition } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
@@ -34,9 +34,7 @@ export declare class IoMenuOptions extends IoElement {
     role: string;
     private _overflownItems;
     static get Listeners(): {
-        touchstart: (string | {
-            passive: boolean;
-        })[];
+        touchstart: ListenerDefinition;
         'io-focus-to': string;
     };
     get inoverlay(): any;

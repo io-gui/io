@@ -1,4 +1,4 @@
-import { IoGl, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
+import { IoGl, IoElementProps, VDOMElement, WithBinding, ListenerDefinition } from 'io-gui';
 export type IoSliderBaseProps = IoElementProps & {
     value?: WithBinding<number | [number, number]>;
     step?: number | [number, number];
@@ -33,9 +33,7 @@ export declare class IoSliderBase extends IoGl {
         focus: string;
         contextmenu: string;
         pointerdown: string;
-        touchstart: (string | {
-            passive: boolean;
-        })[];
+        touchstart: ListenerDefinition;
     };
     constructor(args?: IoSliderBaseProps);
     onFocus(): void;

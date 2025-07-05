@@ -105,7 +105,7 @@ export class IoTabs extends IoElement {
     const item: MenuItem = event.detail.item;
     this.addTab(item);
   }
-  addTab(item: MenuItem, addIndex?: number) {
+  addTab(item: MenuItem) { // TODO: addIndex?: number
     if (!item.id) return;
     const existing = this.tabs.findItemById(item.id!);
     if (!existing) {

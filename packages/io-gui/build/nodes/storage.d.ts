@@ -15,6 +15,7 @@ export declare class StorageNode extends Node {
     constructor(props: StorageProps);
     dispose(): void;
     _clearStorage(): void;
+    valueMutated(): void;
     valueChanged(): void;
     removeValueToHash(): void;
     saveValueToHash(): void;

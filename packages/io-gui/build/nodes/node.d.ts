@@ -6,7 +6,9 @@ import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../c
 import { CallbackFunction } from '../core/Queue.js';
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
-export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
+export type ListenerDefinitions = {
+    [key: string]: ListenerDefinitionLoose;
+};
 export interface NodeConstructor<T> {
     new (...args: any[]): T;
     ReactiveProperties?: ReactivePropertyDefinitions;
@@ -139,6 +141,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
     };
     [x: string]: any;
     readonly ReactiveProperties: ReactivePropertyDefinitions;
+    readonly Listeners: ListenerDefinitions;
 };
 declare const Node_base: {
     new (args?: NodeProps, ...superProps: any[]): {
@@ -254,6 +257,7 @@ declare const Node_base: {
     };
     [x: string]: any;
     readonly ReactiveProperties: ReactivePropertyDefinitions;
+    readonly Listeners: ListenerDefinitions;
 };
 /**
  * NodeMixin applied to `Object` class.

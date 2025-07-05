@@ -1,7 +1,6 @@
 import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { MenuItem } from 'io-menus';
-import { IoPanel } from './IoPanel.js';
 export type TabEditCommand = 'delete' | 'shiftLeft' | 'shiftRight' | 'shiftUp' | 'shiftDown' | 'shiftStart' | 'shiftEnd';
 export type TabData = {
     id?: string;
@@ -11,19 +10,20 @@ export type TabData = {
 };
 export type IoTabProps = IoFieldProps & {
     item?: MenuItem;
-    $parent?: IoPanel;
 };
 export declare class IoTab extends IoField {
     static vConstructor: (arg0?: IoTabProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     item: MenuItem;
-    $parent?: IoPanel;
+    static get Listeners(): {
+        click: string;
+        contextmenu: string;
+    };
     constructor(args?: IoTabProps);
     preventDefault(event: Event): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
-    onPointerupAction(event: PointerEvent): void;
     onClick(): void;
     onCloseClick(): void;
     onKeydown(event: KeyboardEvent): void;

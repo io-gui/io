@@ -5,6 +5,7 @@ export type SelectBy = 'value' | 'id';
 export type IoOptionSelectProps = IoElementProps & {
     value?: WithBinding<any>;
     label?: string;
+    icon?: string;
     selectBy?: SelectBy;
     options?: MenuOptions;
 };
@@ -17,6 +18,7 @@ export declare class IoOptionSelect extends IoElement {
     static get Style(): string;
     value: any;
     label: string;
+    icon: string;
     selectBy: SelectBy;
     options: MenuOptions;
     role: string;

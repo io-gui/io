@@ -40,7 +40,6 @@ export declare class IoVector extends IoElement {
     valueChanged(): void;
     valueMutated(): void;
     changed(): void;
-    getSlotted(): VDOMElement | null;
 }
 export declare const ioVector: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoVector.d.ts.map

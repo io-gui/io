@@ -221,6 +221,7 @@
         "clean:layout",
         "lint:layout",
         "build:gui",
+        "build:editors",
         "build:icons",
         "build:inputs",
         "build:menus",
@@ -346,6 +347,7 @@
       "command": "rollup -c ./packages/io-layout/rollup.config.js && find ./packages/io-layout/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-layout/build/* ./packages/io-layout/bundle && rm -rf ./packages/io-layout/build && mv ./packages/io-layout/bundle ./packages/io-layout/build",
       "dependencies": [
         "bundle:gui",
+        "bundle:editors",
         "bundle:icons",
         "bundle:inputs",
         "bundle:menus",

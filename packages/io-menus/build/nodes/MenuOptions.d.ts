@@ -17,6 +17,7 @@ export declare class MenuOptions extends Node {
     findItemByValue(value: any): MenuItem | null;
     findItemById(id: string): MenuItem | null;
     fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
+    addItem(itemLoose: MenuItem | MenuItemDefLoose): void;
     initItems(): void;
     unselectAll(): void;
     pathChanged(): void;

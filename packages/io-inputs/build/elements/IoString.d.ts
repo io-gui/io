@@ -22,7 +22,7 @@ export declare class IoString extends IoField {
     get textNode(): any;
     set textNode(value: any);
     _setFromTextNode(): void;
-    _tryParseFromTextNode(): void;
+    _setObjectFromTextNodeJSON(): void;
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;

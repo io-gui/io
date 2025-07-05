@@ -1,3 +1,4 @@
+import { ListenerDefinitions } from '../nodes/Node.js';
 import { IoElement, IoElementProps } from './IoElement.js';
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
@@ -9,50 +10,7 @@ import { IoElement, IoElementProps } from './IoElement.js';
 declare class IoOverlay extends IoElement {
     static get Style(): string;
     expanded: boolean;
-    static get Listeners(): {
-        pointerdown: (string | {
-            passive: boolean;
-        })[];
-        pointermove: (string | {
-            passive: boolean;
-        })[];
-        pointerup: string;
-        contextmenu: string;
-        mousedown: (string | {
-            passive: boolean;
-        })[];
-        mousemove: (string | {
-            passive: boolean;
-        })[];
-        mouseup: (string | {
-            passive: boolean;
-        })[];
-        touchstart: (string | {
-            passive: boolean;
-        })[];
-        touchmove: (string | {
-            passive: boolean;
-        })[];
-        touchend: (string | {
-            passive: boolean;
-        })[];
-        keydown: (string | {
-            passive: boolean;
-        })[];
-        keyup: (string | {
-            passive: boolean;
-        })[];
-        focusin: (string | {
-            passive: boolean;
-        })[];
-        blur: (string | {
-            passive: boolean;
-        })[];
-        scroll: string;
-        wheel: (string | {
-            passive: boolean;
-        })[];
-    };
+    static get Listeners(): ListenerDefinitions;
     constructor(args?: IoElementProps);
     init(): void;
     stopPropagation(event: Event): void;

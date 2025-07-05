@@ -15,7 +15,8 @@ export declare class IoTabs extends IoElement {
     };
     onEditTabItem(event: CustomEvent): void;
     selectTabByIndex(index: number): void;
-    addTab(event: CustomEvent): void;
+    onMenuItemClicked(event: CustomEvent): void;
+    addTab(item: MenuItem): void;
     changed(): void;
 }
 export declare const ioTabs: (arg0?: IoTabsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

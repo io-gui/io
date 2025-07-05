@@ -21,7 +21,7 @@ declare class IoNumberLadder extends IoElement {
     static get Listeners(): {
         'ladder-step-change': string;
         'ladder-step-collapse': string;
-        focusin: string;
+        'io-focus-to': string;
     };
     get value(): number;
     get min(): number;
@@ -29,8 +29,7 @@ declare class IoNumberLadder extends IoElement {
     get step(): number;
     get conversion(): number;
     constructor(args?: IoNumberLadderProps);
-    onFocusIn(event: FocusEvent): void;
-    onFocusTo(event: CustomEvent): void;
+    onIoFocusTo(event: CustomEvent): void;
     _onLadderStepChange(event: CustomEvent): void;
     _onLadderStepCollapse(): void;
     expandedChanged(): void;

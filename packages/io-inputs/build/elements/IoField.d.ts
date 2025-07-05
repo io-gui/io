@@ -1,4 +1,4 @@
-import { VDOMElement, IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { VDOMElement, IoElement, IoElementProps, WithBinding, ListenerDefinitions } from 'io-gui';
 export type IoFieldProps = IoElementProps & {
     value?: WithBinding<any>;
     icon?: string;
@@ -22,11 +22,7 @@ export declare class IoField extends IoElement {
     pattern: string;
     spellcheck: boolean;
     tabIndex: string;
-    static get Listeners(): {
-        focus: string;
-        pointerdown: string;
-        click: string;
-    };
+    static get Listeners(): ListenerDefinitions;
     constructor(args?: IoFieldProps);
     onFocus(event: FocusEvent): void;
     onBlur(event: FocusEvent): void;
@@ -38,7 +34,8 @@ export declare class IoField extends IoElement {
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
     getCaretPosition(): number;
-    setCaretPosition(position: number): void;
+    setCaretPosition(position?: number): void;
+    selectAll(): void;
     labelChanged(): void;
     selectedChanged(): void;
     invalidChanged(): void;

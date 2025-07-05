@@ -1,4 +1,4 @@
-import { IoGl, IoElementProps, Binding, VDOMElement } from 'io-gui';
+import { IoGl, IoElementProps, Binding, VDOMElement, ListenerDefinition } from 'io-gui';
 export type IoSliderProps = IoElementProps & {
     value?: number | Binding<number>;
     step?: number;
@@ -33,9 +33,7 @@ export declare class IoSlider extends IoGl {
         focus: string;
         contextmenu: string;
         pointerdown: string;
-        touchstart: (string | {
-            passive: boolean;
-        })[];
+        touchstart: ListenerDefinition;
     };
     constructor(args?: IoSliderProps);
     onFocus(): void;

@@ -15,7 +15,7 @@ export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, Reactiv
  *   declare title: string;
  * }
  */
-export declare function Property(initialValue: any): (target: Node, propertyName: string) => void;
+export declare function Property(initialValue?: any): (target: Node, propertyName: string) => void;
 /**
  * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator

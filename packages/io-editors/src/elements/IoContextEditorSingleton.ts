@@ -41,7 +41,7 @@ class IoContextEditor extends IoPropertyEditor {
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
     const cmd = event.detail.command;
-    const siblings = this.querySelectorAll('[tabindex="0"]')
+    const siblings = this.querySelectorAll('[tabindex="0"]');
     const index = [...siblings].indexOf(source);
 
     let cmdOverride = '';

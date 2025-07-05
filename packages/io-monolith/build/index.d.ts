@@ -113,10 +113,10 @@ export interface IoEventListener {
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener;
 /**
- * Listener definition type.
- * The first item is a string (function name) or an event listener function.
- * The second item is an optional object of event listener options.
- */
+* Listener definition type.
+* The first item is a string (function name) or an event listener function.
+* The second item is an optional object of event listener options.
+*/
 export type ListenerDefinition = [
 	string | AnyEventListener,
 	AddEventListenerOptions?
@@ -358,7 +358,9 @@ export declare function throttle(func: CallbackFunction, arg?: any, node?: Node$
 export declare function debounce(func: CallbackFunction, arg?: any, node?: Node$1, delay?: number): void;
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
-export type ListenerDefinitions = Record<string, ListenerDefinitionLoose>;
+export type ListenerDefinitions = {
+	[key: string]: ListenerDefinitionLoose;
+};
 export interface NodeConstructor<T> {
 	new (...args: any[]): T;
 	ReactiveProperties?: ReactivePropertyDefinitions;
@@ -491,6 +493,7 @@ export declare function NodeMixin<T extends NodeConstructor<any>>(superclass: T)
 	};
 	[x: string]: any;
 	readonly ReactiveProperties: ReactivePropertyDefinitions;
+	readonly Listeners: ListenerDefinitions;
 };
 declare const Node_base: {
 	new (args?: NodeProps, ...superProps: any[]): {
@@ -606,6 +609,7 @@ declare const Node_base: {
 	};
 	[x: string]: any;
 	readonly ReactiveProperties: ReactivePropertyDefinitions;
+	readonly Listeners: ListenerDefinitions;
 };
 /**
  * NodeMixin applied to `Object` class.
@@ -791,6 +795,7 @@ declare const IoElement_base: {
 	};
 	[x: string]: any;
 	readonly ReactiveProperties: ReactivePropertyDefinitions;
+	readonly Listeners: ListenerDefinitions;
 };
 /**
  * Core `IoElement` class.
@@ -827,6 +832,7 @@ export declare class IoElement extends IoElement_base {
 	/**
 	* Helper function to flatten textContent into a single TextNode.
 	* Update textContent via TextNode is better for layout performance.
+	* TODO: Consider using normalize()? Is it the same function?
 	* @param {HTMLElement} element - Element to flatten.
 	*/
 	_flattenTextNode(element: HTMLElement | IoElement): void;
@@ -1166,7 +1172,7 @@ export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, Reactiv
  *   declare title: string;
  * }
  */
-export declare function Property(initialValue: any): (target: Node$1, propertyName: string) => void;
+export declare function Property(initialValue?: any): (target: Node$1, propertyName: string) => void;
 /**
  * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator
@@ -1226,6 +1232,7 @@ export declare class StorageNode extends Node$1 {
 	constructor(props: StorageProps);
 	dispose(): void;
 	_clearStorage(): void;
+	valueMutated(): void;
 	valueChanged(): void;
 	removeValueToHash(): void;
 	saveValueToHash(): void;
@@ -1251,36 +1258,24 @@ export type ThemeVars = {
 	fontSize: number;
 	lineHeight: number;
 	fieldHeight: number;
-	fieldHeight2: number;
-	fieldHeight3: number;
-	fieldHeight4: number;
-	fieldHeight5: number;
-	fieldHeight6: number;
-	fieldHeight7: number;
-	fieldHeight8: number;
-	fieldHeight9: number;
-	fieldHeight10: number;
-	fieldHeight11: number;
-	fieldHeight12: number;
 	borderRadius: number;
-	borderRadius2: number;
 	borderWidth: number;
 	borderColor: Color;
 	borderColorLight: Color;
-	borderColorDark: Color;
+	borderColorStrong: Color;
 	borderColorRed: Color;
 	borderColorBlue: Color;
 	borderColorGreen: Color;
 	bgColor: Color;
 	bgColorStrong: Color;
-	bgColorDimmed: Color;
+	bgColorLight: Color;
 	bgColorRed: Color;
 	bgColorGreen: Color;
 	bgColorBlue: Color;
 	bgColorInput: Color;
 	color: Color;
 	colorStrong: Color;
-	colorDimmed: Color;
+	colorLight: Color;
 	colorRed: Color;
 	colorGreen: Color;
 	colorBlue: Color;
@@ -1369,50 +1364,7 @@ export declare const a: (arg0?: (NativeElementProps & OtherHTMLElementProps) | A
 declare class IoOverlay extends IoElement {
 	static get Style(): string;
 	expanded: boolean;
-	static get Listeners(): {
-		pointerdown: (string | {
-			passive: boolean;
-		})[];
-		pointermove: (string | {
-			passive: boolean;
-		})[];
-		pointerup: string;
-		contextmenu: string;
-		mousedown: (string | {
-			passive: boolean;
-		})[];
-		mousemove: (string | {
-			passive: boolean;
-		})[];
-		mouseup: (string | {
-			passive: boolean;
-		})[];
-		touchstart: (string | {
-			passive: boolean;
-		})[];
-		touchmove: (string | {
-			passive: boolean;
-		})[];
-		touchend: (string | {
-			passive: boolean;
-		})[];
-		keydown: (string | {
-			passive: boolean;
-		})[];
-		keyup: (string | {
-			passive: boolean;
-		})[];
-		focusin: (string | {
-			passive: boolean;
-		})[];
-		blur: (string | {
-			passive: boolean;
-		})[];
-		scroll: string;
-		wheel: (string | {
-			passive: boolean;
-		})[];
-	};
+	static get Listeners(): ListenerDefinitions;
 	constructor(args?: IoElementProps);
 	init(): void;
 	stopPropagation(event: Event): void;
@@ -1682,9 +1634,7 @@ export declare class IoSliderBase extends IoGl {
 		focus: string;
 		contextmenu: string;
 		pointerdown: string;
-		touchstart: (string | {
-			passive: boolean;
-		})[];
+		touchstart: ListenerDefinition;
 	};
 	constructor(args?: IoSliderBaseProps);
 	onFocus(): void;
@@ -1812,9 +1762,7 @@ export declare class IoSlider extends IoGl {
 		focus: string;
 		contextmenu: string;
 		pointerdown: string;
-		touchstart: (string | {
-			passive: boolean;
-		})[];
+		touchstart: ListenerDefinition;
 	};
 	constructor(args?: IoSliderProps);
 	onFocus(): void;
@@ -2028,6 +1976,63 @@ export declare class IoBreadcrumbs extends IoElement {
 	changed(): void;
 }
 export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoPropertyEditorProps = IoElementProps & {
+	value?: Record<string, any> | any[];
+	properties?: string[];
+	labeled?: boolean;
+	orientation?: "vertical" | "horizontal";
+	config?: EditorConfig;
+	groups?: EditorGroups;
+	widgets?: EditorWidgets;
+};
+/**
+ * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
+ **/
+export declare class IoPropertyEditor extends IoElement {
+	static vConstructor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static get Style(): string;
+	reactivity: string;
+	value: Object;
+	properties: string[];
+	labeled: boolean;
+	orientation: "vertical" | "horizontal";
+	config: EditorConfig;
+	groups: EditorGroups;
+	widgets: EditorWidgets;
+	_onValueInput(event: CustomEvent): void;
+	valueMutated(): void;
+	changed(): void;
+	/**
+	 * Returns a JSON representation of the property editor. This feature is used in testing.
+	 * @return {Object} JSON representation of the property editor.
+	 */
+	toJSON(): any;
+}
+export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export type IoContextEditorProps = IoPropertyEditorProps & {
+	expanded?: boolean;
+};
+export interface IoContextEditorExpandProps {
+	value: any;
+	properties?: string[];
+	labeled?: boolean;
+	orientation?: "vertical" | "horizontal";
+}
+declare class IoContextEditor extends IoPropertyEditor {
+	static vConstructor: (arg0?: IoContextEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+	static get Style(): string;
+	expanded: boolean;
+	static get Listeners(): {
+		keydown: string;
+		"io-focus-to": string;
+	};
+	onKeydown(event: KeyboardEvent): void;
+	onIoFocusTo(event: CustomEvent): void;
+	expand(props: IoContextEditorExpandProps): void;
+	onExpand(): void;
+	expandedChanged(): void;
+}
+export declare const IoContextEditorSingleton: IoContextEditor;
 export type IoInspectorProps = IoElementProps & {
 	value?: Record<string, any> | any[];
 	selected?: WithBinding<Record<string, any> | any[]>;
@@ -2088,37 +2093,6 @@ export declare class IoObject extends IoElement {
 	changed(): void;
 }
 export declare const ioObject: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export type IoPropertyEditorProps = IoElementProps & {
-	value?: Record<string, any> | any[];
-	properties?: string[];
-	labeled?: boolean;
-	config?: EditorConfig;
-	groups?: EditorGroups;
-	widgets?: EditorWidgets;
-};
-/**
- * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
- **/
-export declare class IoPropertyEditor extends IoElement {
-	static vConstructor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-	static get Style(): string;
-	reactivity: string;
-	value: Object;
-	properties: string[];
-	labeled: boolean;
-	config: EditorConfig;
-	groups: EditorGroups;
-	widgets: EditorWidgets;
-	_onValueInput(event: CustomEvent): void;
-	valueMutated(): void;
-	changed(): void;
-	/**
-	 * Returns a JSON representation of the property editor. This feature is used in testing.
-	 * @return {Object} JSON representation of the property editor.
-	 */
-	toJSON(): any;
-}
-export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type IoVectorProps = IoElementProps & {
 	value?: {
 		x: number;
@@ -2160,7 +2134,6 @@ export declare class IoVector extends IoElement {
 	valueChanged(): void;
 	valueMutated(): void;
 	changed(): void;
-	getSlotted(): VDOMElement | null;
 }
 export declare const ioVector: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type IoMatrixProps = IoVectorProps & {
@@ -2195,20 +2168,8 @@ export declare class IoMarkdown extends IoElement {
 	strip: string[];
 	loading: boolean;
 	sanitize: boolean;
-	scroll: string;
 	role: string;
-	private scrollToSuspended;
-	private onScrollSuspended;
-	static get Listeners(): {
-		scroll: string;
-	};
 	constructor(args?: IoMarkdownProps);
-	init(): void;
-	scrollChanged(): void;
-	scrollChangedDebounced(): void;
-	scrollToUnsuspend(): void;
-	onScrollUnsuspended(): void;
-	onScrollChanged(): void;
 	onResized(): void;
 	srcChanged(): void;
 }
@@ -2264,11 +2225,7 @@ export declare class IoField extends IoElement {
 	pattern: string;
 	spellcheck: boolean;
 	tabIndex: string;
-	static get Listeners(): {
-		focus: string;
-		pointerdown: string;
-		click: string;
-	};
+	static get Listeners(): ListenerDefinitions;
 	constructor(args?: IoFieldProps);
 	onFocus(event: FocusEvent): void;
 	onBlur(event: FocusEvent): void;
@@ -2280,7 +2237,8 @@ export declare class IoField extends IoElement {
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
 	getCaretPosition(): number;
-	setCaretPosition(position: number): void;
+	setCaretPosition(position?: number): void;
+	selectAll(): void;
 	labelChanged(): void;
 	selectedChanged(): void;
 	invalidChanged(): void;
@@ -2365,15 +2323,14 @@ export declare class IoNumber extends IoField {
 	pattern: string;
 	inputMode: string;
 	role: string;
-	private _pointer;
 	constructor(args?: IoNumberProps);
 	get textNode(): any;
 	set textNode(value: any);
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
 	onPointerup(event: PointerEvent): void;
-	onFocus(event: FocusEvent): void;
 	_expandLadder(): void;
+	_collapseLadder(): void;
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
 	_setFromTextNode(): void;
@@ -2394,7 +2351,7 @@ declare class IoNumberLadder extends IoElement {
 	static get Listeners(): {
 		"ladder-step-change": string;
 		"ladder-step-collapse": string;
-		focusin: string;
+		"io-focus-to": string;
 	};
 	get value(): number;
 	get min(): number;
@@ -2402,8 +2359,7 @@ declare class IoNumberLadder extends IoElement {
 	get step(): number;
 	get conversion(): number;
 	constructor(args?: IoNumberLadderProps);
-	onFocusIn(event: FocusEvent): void;
-	onFocusTo(event: CustomEvent): void;
+	onIoFocusTo(event: CustomEvent): void;
 	_onLadderStepChange(event: CustomEvent): void;
 	_onLadderStepCollapse(): void;
 	expandedChanged(): void;
@@ -2451,7 +2407,7 @@ export declare class IoString extends IoField {
 	get textNode(): any;
 	set textNode(value: any);
 	_setFromTextNode(): void;
-	_tryParseFromTextNode(): void;
+	_setObjectFromTextNodeJSON(): void;
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
 	onPointermove(event: PointerEvent): void;
@@ -2488,6 +2444,7 @@ export declare class MenuOptions extends Node$1 {
 	findItemByValue(value: any): MenuItem | null;
 	findItemById(id: string): MenuItem | null;
 	fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
+	addItem(itemLoose: MenuItem | MenuItemDefLoose): void;
 	initItems(): void;
 	unselectAll(): void;
 	pathChanged(): void;
@@ -2507,7 +2464,7 @@ export type MenuItemProps = NodeProps & {
 	label?: string;
 	icon?: string;
 	hint?: string;
-	action?: () => void;
+	action?: (value?: any) => void;
 	mode?: MenuItemSelectType;
 	hidden?: boolean;
 	disabled?: boolean;
@@ -2598,9 +2555,7 @@ export declare class IoMenuOptions extends IoElement {
 	role: string;
 	private _overflownItems;
 	static get Listeners(): {
-		touchstart: (string | {
-			passive: boolean;
-		})[];
+		touchstart: ListenerDefinition;
 		"io-focus-to": string;
 	};
 	get inoverlay(): any;
@@ -2719,6 +2674,7 @@ export type SelectBy = "value" | "id";
 export type IoOptionSelectProps = IoElementProps & {
 	value?: WithBinding<any>;
 	label?: string;
+	icon?: string;
 	selectBy?: SelectBy;
 	options?: MenuOptions;
 };
@@ -2731,6 +2687,7 @@ export declare class IoOptionSelect extends IoElement {
 	static get Style(): string;
 	value: any;
 	label: string;
+	icon: string;
 	selectBy: SelectBy;
 	options: MenuOptions;
 	role: string;
@@ -2776,6 +2733,7 @@ export type IoSelectorProps = IoElementProps & {
 	caching?: CachingType;
 	loading?: WithBinding<boolean>;
 	import?: string;
+	scroll?: WithBinding<string>;
 };
 export declare class IoSelector extends IoElement {
 	static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2785,10 +2743,21 @@ export declare class IoSelector extends IoElement {
 	select: SelectType;
 	caching: CachingType;
 	loading: boolean;
+	scroll: string;
 	private _caches;
 	private _preaching;
+	private scrollToSuspended;
+	private onScrollSuspended;
+	static get Listeners(): {
+		scroll: string;
+	};
 	constructor(args?: IoSelectorProps);
 	init(): void;
+	scrollChanged(): void;
+	scrollChangedDebounced(): void;
+	scrollToUnsuspend(): void;
+	onScrollUnsuspend(): void;
+	onScrollChanged(): void;
 	optionsChanged(): void;
 	optionsMutated(): void;
 	elementsChanged(): void;
@@ -2811,6 +2780,7 @@ export type IoNavigatorProps = IoElementProps & {
 	collapseWidth?: number;
 	select?: SelectType;
 	caching?: CachingType;
+	scroll?: WithBinding<string>;
 };
 export declare class IoNavigator extends IoElement {
 	static vConstructor: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -2824,6 +2794,7 @@ export declare class IoNavigator extends IoElement {
 	collapseWidth: number;
 	select: SelectType;
 	caching: CachingType;
+	scroll: string;
 	changed(): void;
 }
 export declare const ioNavigator: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

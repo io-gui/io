@@ -32,6 +32,7 @@ declare const IoElement_base: {
     };
     [x: string]: any;
     readonly ReactiveProperties: import("../nodes/Node.js").ReactivePropertyDefinitions;
+    readonly Listeners: import("../nodes/Node.js").ListenerDefinitions;
 };
 /**
  * Core `IoElement` class.
@@ -68,6 +69,7 @@ export declare class IoElement extends IoElement_base {
     /**
     * Helper function to flatten textContent into a single TextNode.
     * Update textContent via TextNode is better for layout performance.
+    * TODO: Consider using normalize()? Is it the same function?
     * @param {HTMLElement} element - Element to flatten.
     */
     _flattenTextNode(element: HTMLElement | IoElement): void;

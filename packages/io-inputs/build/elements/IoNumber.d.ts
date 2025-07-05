@@ -30,15 +30,14 @@ export declare class IoNumber extends IoField {
     pattern: string;
     inputMode: string;
     role: string;
-    private _pointer;
     constructor(args?: IoNumberProps);
     get textNode(): any;
     set textNode(value: any);
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
-    onFocus(event: FocusEvent): void;
     _expandLadder(): void;
+    _collapseLadder(): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
     _setFromTextNode(): void;

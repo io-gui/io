@@ -198,7 +198,7 @@ export class IoTab extends IoField {
       }
 
       if (dropTarget && dropIndex !== -1) {
-        dropTarget.addTab(this.item, dropIndex);
+        dropTarget.addTab(this.item); // TODO: addIndex?: number
         console.log('dropTarget', dropTarget);
         console.log('dropIndex', dropIndex);
       }

@@ -55,7 +55,7 @@ export class IoInputsDemo extends IoElement {
         ioNumber({conversion: 2, value: this.bind('number')}),
       ]),
       div({class: 'row'}, [
-        ioBoolean({value: this.bind('boolean'), true: 'io:circle_fill', false: 'io:circle_fill_checked'}),
+        ioBoolean({value: this.bind('boolean'), true: 'io:circle_fill_checked', false: 'io:circle_fill'}),
         ioBoolean({value: this.bind('boolean'), icon: 'io:io'}),
       ]),
       div({class: 'row'}, [

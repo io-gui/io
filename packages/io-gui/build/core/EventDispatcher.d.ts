@@ -30,10 +30,10 @@ export interface IoEventListener {
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener;
 /**
- * Listener definition type.
- * The first item is a string (function name) or an event listener function.
- * The second item is an optional object of event listener options.
- */
+* Listener definition type.
+* The first item is a string (function name) or an event listener function.
+* The second item is an optional object of event listener options.
+*/
 export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOptions?];
 /**
  * Loose listener definition type.

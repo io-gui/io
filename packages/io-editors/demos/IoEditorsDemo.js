@@ -1,6 +1,6 @@
-import { Register, IoElement, div } from 'io-gui';
+import { Register, IoElement, div, nudge } from 'io-gui';
 import { MenuOptions, ioOptionSelect } from 'io-menus';
-import { ioPropertyEditor, ioVector, ioMatrix, ioInspector, ioObject } from 'io-editors';
+import { ioPropertyEditor, ioVector, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
 import { ioSlider } from 'io-sliders';
 import { ioString, ioNumber, ioBoolean } from 'io-inputs';
 
@@ -37,6 +37,10 @@ export class IoEditorsDemo extends IoElement {
         padding: 0;
         margin: 0;
         margin: var(--io_spacing) var(--io_spacing) 0 0;
+      }
+      :host .context-editor-area {
+        height: 100px;
+        background-color: var(--io_bgColorLight);
       }
     `;
   }
@@ -166,6 +170,14 @@ export class IoEditorsDemo extends IoElement {
             ]]
           ]),
         }),
+        div({class: 'context-editor-area', '@click': (event) => {
+          event.stopPropagation();
+          IoContextEditorSingleton.expand({
+            value: this.object,
+            properties: ['number', 'string', 'boolean', 'object'],
+          });
+          nudge(IoContextEditorSingleton, event.target, 'down');
+        }})
       ]),
     ]);
   }

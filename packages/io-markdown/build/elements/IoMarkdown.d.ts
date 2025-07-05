@@ -16,20 +16,8 @@ export declare class IoMarkdown extends IoElement {
     strip: string[];
     loading: boolean;
     sanitize: boolean;
-    scroll: string;
     role: string;
-    private scrollToSuspended;
-    private onScrollSuspended;
-    static get Listeners(): {
-        scroll: string;
-    };
     constructor(args?: IoMarkdownProps);
-    init(): void;
-    scrollChanged(): void;
-    scrollChangedDebounced(): void;
-    scrollToUnsuspend(): void;
-    onScrollUnsuspended(): void;
-    onScrollChanged(): void;
     onResized(): void;
     srcChanged(): void;
 }

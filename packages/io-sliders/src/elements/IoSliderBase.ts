@@ -247,6 +247,7 @@ export class IoSliderBase extends IoGl {
   }
   onKeydown(event: KeyboardEvent) {
     const oneDimension = typeof this.value === 'number';
+
     switch (event.key) {
       case 'ArrowLeft':
         if (event.shiftKey) {

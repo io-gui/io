@@ -12,6 +12,7 @@ export type IoNavigatorProps = IoElementProps & {
     collapseWidth?: number;
     select?: SelectType;
     caching?: CachingType;
+    scroll?: WithBinding<string>;
 };
 export declare class IoNavigator extends IoElement {
     static vConstructor: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -25,6 +26,7 @@ export declare class IoNavigator extends IoElement {
     collapseWidth: number;
     select: SelectType;
     caching: CachingType;
+    scroll: string;
     changed(): void;
 }
 export declare const ioNavigator: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

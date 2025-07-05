@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoOverlaySingleton, VDOMElement, WithBinding, Property } from 'io-gui';
+import { Register, ReactiveProperty, VDOMElement, WithBinding, Property } from 'io-gui';
 import { IoNumberLadderSingleton } from './IoNumberLadder.js';
 import { IoField, IoFieldProps } from './IoField.js';
 
