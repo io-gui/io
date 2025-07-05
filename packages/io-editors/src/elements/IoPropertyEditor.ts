@@ -8,6 +8,7 @@ export type IoPropertyEditorProps = IoElementProps & {
   value?: Record<string, any> | any[],
   properties?: string[],
   labeled?: boolean,
+  orientation?: 'vertical' | 'horizontal',
   config?: EditorConfig,
   groups?: EditorGroups,
   widgets?: EditorWidgets,
@@ -29,6 +30,9 @@ export class IoPropertyEditor extends IoElement {
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
       font-size: var(--io_fontSize);
     }
+    :host[orientation="horizontal"] {
+      flex-direction: row;
+    }
     :host > .row {
       display: flex;
       flex-direction: row;
@@ -37,6 +41,9 @@ export class IoPropertyEditor extends IoElement {
       border-radius: var(--io_borderRadius);
       margin-bottom: 0;
       background-color: var(--io_bgColorLight);
+    }
+    :host[orientation="horizontal"] > .row {
+      flex-direction: column;
     }
     :host > .row:last-of-type {
       margin-bottom: var(--io_spacing);
@@ -74,6 +81,9 @@ export class IoPropertyEditor extends IoElement {
 
   @ReactiveProperty(true)
   declare labeled: boolean;
+
+  @ReactiveProperty({type: String, value: 'vertical', reflect: true})
+  declare orientation: 'vertical' | 'horizontal';
 
   @ReactiveProperty({type: Map})
   declare config: EditorConfig;

@@ -1,9 +1,8 @@
-import { Register, ReactiveProperty, span, VDOMElement } from 'io-gui';
+import { Register, ReactiveProperty, Property, span, VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { MenuItem } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
-import { IoTab } from './IoTab.js';
 import { tabDropMarkerSingleton } from './IoTabDropMarker.js';
 
 type IoTabDragIconProps = IoFieldProps & {
@@ -58,6 +57,9 @@ class IoTabDragIcon extends IoField {
 
   @ReactiveProperty({type: Number, value: -1})
   declare dropIndex: number;
+
+  @Property('-1')
+  declare tabIndex: string;
 
   constructor(args: IoTabDragIconProps = {}) { super(args); }
 

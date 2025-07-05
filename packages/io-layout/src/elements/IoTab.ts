@@ -1,5 +1,6 @@
-import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton } from 'io-gui';
+import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton, nudge } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
+import { IoContextEditorSingleton } from 'io-editors';
 import { ioIcon } from 'io-icons';
 import { MenuItem } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
@@ -110,6 +111,7 @@ export class IoTab extends IoField {
   static get Listeners() {
     return {
       'click': 'preventDefault',
+      'contextmenu': 'preventDefault',
     };
   }
 
@@ -122,6 +124,17 @@ export class IoTab extends IoField {
   onPointerdown(event: PointerEvent) {
     event.preventDefault();
     event.stopPropagation();
+    if (event.button === 2) {
+      IoContextEditorSingleton.expand({
+        value: this.item,
+        properties: ['icon', 'label', 'hint'],
+        orientation: 'horizontal',
+      });
+      setTimeout(() => {
+        nudge(IoContextEditorSingleton, this, 'down');
+      });
+      return;
+    }
     super.onPointerdown(event);
     this.focus();
     this.setPointerCapture(event.pointerId);
@@ -257,9 +270,10 @@ export class IoTab extends IoField {
     });
     debug: if (this.item.options?.length) console.warn('IoTab: Tab item should not have sub-options!');
   }
-  // itemMutated() {
-  //   this.changed();
-  // }
+  itemMutated() {
+    // TODO: consider using TabData instead of MenuItem.
+    this.changed();
+  }
   changed() {
     this.hidden = this.item.hidden;
     this.render([
