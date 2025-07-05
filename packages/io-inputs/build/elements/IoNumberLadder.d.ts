@@ -31,7 +31,7 @@ declare class IoNumberLadder extends IoElement {
     constructor(args?: IoNumberLadderProps);
     onIoFocusTo(event: CustomEvent): void;
     _onLadderStepChange(event: CustomEvent): void;
-    _onLadderStepCollapse(): void;
+    onLadderStepCollapse(): void;
     expandedChanged(): void;
     changed(): void;
 }

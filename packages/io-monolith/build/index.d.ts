@@ -2329,8 +2329,8 @@ export declare class IoNumber extends IoField {
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
 	onPointerup(event: PointerEvent): void;
-	_expandLadder(): void;
-	_collapseLadder(): void;
+	expandLadder(): void;
+	collapseLadder(): void;
 	onKeydown(event: KeyboardEvent): void;
 	onKeyup(event: KeyboardEvent): void;
 	_setFromTextNode(): void;
@@ -2361,7 +2361,7 @@ declare class IoNumberLadder extends IoElement {
 	constructor(args?: IoNumberLadderProps);
 	onIoFocusTo(event: CustomEvent): void;
 	_onLadderStepChange(event: CustomEvent): void;
-	_onLadderStepCollapse(): void;
+	onLadderStepCollapse(): void;
 	expandedChanged(): void;
 	changed(): void;
 }
