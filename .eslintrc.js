@@ -42,7 +42,6 @@ export function makeConfig(projectPath) {
         'caughtErrorsIgnorePattern': '^error',
       }],
       '@typescript-eslint/no-empty-function': 'off',
-      'no-fallthrough': 'off',
       'no-unused-labels': 'off',
       'no-unused-vars': 'off',
       'no-var': 'error',

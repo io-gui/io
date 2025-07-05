@@ -248,33 +248,23 @@ export class IoSliderBase extends IoGl {
   onKeydown(event: KeyboardEvent) {
     const oneDimension = typeof this.value === 'number';
 
-    switch (event.key) {
+    if (event.shiftKey) switch (event.key) {
       case 'ArrowLeft':
-        if (event.shiftKey) {
-          oneDimension ? this._setDecrease() : this._setLeft();
-          break;
-        }
+        oneDimension ? this._setDecrease() : this._setLeft();
+        break;
       case 'ArrowUp':
-        if (event.shiftKey) {
-          oneDimension ? this._setIncrease() : this._setUp();
-          break;
-        }
+        oneDimension ? this._setIncrease() : this._setUp();
+        break;
       case 'ArrowRight':
-        if (event.shiftKey) {
-          oneDimension ? this._setIncrease() : this._setRight();
-          break;
-        }
+        oneDimension ? this._setIncrease() : this._setRight();
+        break;
       case 'ArrowDown':
-        if (event.shiftKey) {
-          oneDimension ? this._setDecrease() : this._setDown();
-          break;
-        }
-      default:
-        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
-          event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
-        }
-    }
+        oneDimension ? this._setDecrease() : this._setDown();
+        break;
+      } else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+        event.preventDefault();
+        this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+      }
   }
   _setIncrease() {
     const value = this._value;

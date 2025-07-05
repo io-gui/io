@@ -234,56 +234,38 @@ export class IoSlider extends IoGl {
   }
   onKeydown(event: KeyboardEvent) {
     const invert = this.max < this.min;
-    switch (event.key) {
+    if (event.shiftKey) switch (event.key) {
       case 'ArrowLeft':
-        if (event.shiftKey) {
-          this._incrementValue(invert ? this.step : -this.step);
-          break;
-        }
+        this._incrementValue(invert ? this.step : -this.step);
+        break;
       case 'ArrowUp':
-        if (event.shiftKey) {
-          this._incrementValue(invert ? -this.step : this.step);
-          break;
-        }
+        this._incrementValue(invert ? -this.step : this.step);
+        break;
       case 'ArrowRight':
-        if (event.shiftKey) {
-          this._incrementValue(invert ? -this.step : this.step);
-          break;
-        }
+        this._incrementValue(invert ? -this.step : this.step);
+        break;
       case 'ArrowDown':
-        if (event.shiftKey) {
-          this._incrementValue(invert ? this.step : -this.step);
-          break;
-        }
+        this._incrementValue(invert ? this.step : -this.step);
+        break;
       case 'Home':
-        if (event.shiftKey) {
-          event.preventDefault();
-          this._inputValue(this.min);
-          break;
-        }
+        event.preventDefault();
+        this._inputValue(this.min);
+        break;
       case 'End':
-        if (event.shiftKey) {
-          event.preventDefault();
-          this._inputValue(this.max);
-          break;
-        }
+        event.preventDefault();
+        this._inputValue(this.max);
+        break;
       case 'PageUp':
-        if (event.shiftKey) {
-          event.preventDefault();
-          this._incrementValue(invert ? -this.step : this.step);
-          break;
-        }
+        event.preventDefault();
+        this._incrementValue(invert ? -this.step : this.step);
+        break;
       case 'PageDown':
-        if (event.shiftKey) {
-          event.preventDefault();
-          this._incrementValue(invert ? this.step : -this.step);
-          break;
-        }
-      default:
-        if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
-          event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
-        }
+        event.preventDefault();
+        this._incrementValue(invert ? this.step : -this.step);
+        break;
+    } else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+      event.preventDefault();
+      this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
     }
   }
   ready() {
