@@ -63,7 +63,7 @@ export class IoPanel extends IoElement {
     }
     switch (key) {
       case 'Backspace': {
-        this.options.removeItemByIndex(index);
+        this.removeTab(item);
         this.selectTabByIndex(Math.min(index, this.options.items.length - 1));
         break;
       }
@@ -132,7 +132,7 @@ export class IoPanel extends IoElement {
         icon: item.icon,
       }));
     });
-    this.dispatch('io-panel-data-changed', {panel: this.panel}, true);
+    this.dispatch('io-panel-data-changed', {}, true);
   }
   panelChanged() {
     this.options?.dispose();

@@ -35,8 +35,25 @@ export class Split extends Node {
     super(args);
   }
 
+  // TODO: consider more robust flex handling and validation.
+
   remove(child: Panel | Split) {
     this.children = this.children.filter((c: Split | Panel) => c !== child);
+    if (this.children.length === 2) {
+      this.children[1].flex = '1 1 100%';
+    }
+    this.dispatch('object-mutated', {object: this});
+  }
+
+  convertToSplit(panel: Panel, newPanel: Panel, direction: 'left' | 'right' | 'top' | 'bottom') {
+    // TODO: implement
+  }
+
+  convertToPanel(split: Split) {
+    const child = split.children[0];
+    const index = this.children.indexOf(split);
+    child.flex = '1 1 100%';
+    this.children.splice(index, 1, child);
     this.dispatch('object-mutated', {object: this});
   }
 

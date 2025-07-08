@@ -41,6 +41,8 @@ export class IoSplit extends IoElement {
       'io-divider-move': 'onDividerMove',
       'io-divider-move-end': 'onDividerMoveEnd',
       'io-panel-remove': 'onPanelRemove',
+      'io-split-remove': 'onSplitRemove',
+      'io-split-convert-to-panel': 'onSplitConvertToPanel',
     };
   }
 
@@ -162,19 +164,34 @@ export class IoSplit extends IoElement {
       this.split.children[index].flex = splitElement.style.flex;
       index++;
     }
-    this.dispatch('io-split-data-changed', {split: this.split}, true);
+    this.dispatch('io-split-data-changed', {}, true);
   }
 
   onPanelRemove(event: CustomEvent) {
-    if (event.detail.panel === this.split) {
-      return;
-    }
+    if (event.detail.panel === this.split) return;
     event.stopPropagation();
     this.split.remove(event.detail.panel);
-    this.dispatch('io-split-data-changed', {split: this.split}, true);
     if (this.split.children.length === 0) {
-      this.dispatch('io-panel-remove', {panel: this.split}, true);
+      this.dispatch('io-split-remove', {split: this.split}, true);
+    } else if (this.split.children.length === 1) {
+      this.dispatch('io-split-convert-to-panel', {split: this.split}, true);
+    } else {
+      this.dispatch('io-split-data-changed', {}, true);
     }
+  }
+
+  onSplitRemove(event: CustomEvent) {
+    if (event.detail.split === this.split) return;
+    event.stopPropagation();
+    this.split.remove(event.detail.split);
+    this.dispatch('io-split-data-changed', {}, true);
+  }
+
+  onSplitConvertToPanel(event: CustomEvent) {
+    if (event.detail.split === this.split) return;
+    event.stopPropagation();
+    this.split.convertToPanel(event.detail.split);
+    this.dispatch('io-split-data-changed', {}, true);
   }
 
   splitMutated() {

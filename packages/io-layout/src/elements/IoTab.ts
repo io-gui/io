@@ -29,6 +29,7 @@ export class IoTab extends IoField {
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
         user-select: none;
+        padding-right: var(--io_lineHeight);
       }
       :host[pressed] {
         border-color: unset !important;
@@ -60,15 +61,14 @@ export class IoTab extends IoField {
         display: inline-block;
         white-space: nowrap;
       }
-      :host > .label {}
       :host:not(:hover) > .io-close-icon {
         opacity: 0;
-        transform: scale(1);
+        transform: scale(0.2);
         transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
       }
       :host:hover > .io-close-icon {
         opacity: 1;
-        transform: scale(1.5);
+        transform: scale(0.5);
         transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
       }
       :host > .io-close-icon {
@@ -82,6 +82,7 @@ export class IoTab extends IoField {
         background: linear-gradient(to right, transparent 0%, var(--io_bgColorLight) 25%);
       }
       :host > .io-close-icon:hover {
+        transform: scale(0.75);
         fill: var(--io_colorStrong);
         stroke: var(--io_colorStrong);
       }
@@ -224,7 +225,7 @@ export class IoTab extends IoField {
       this.item.selected ? span({class: 'marker'}) : null,
       ioIcon({value: this.item.icon || ' '}),
       span({class: 'label'}, this.item.label),
-      ioIcon({value: 'io:close_small', size: 'small', class: 'io-close-icon', '@click': this.onCloseClick, '@pointerdown': this.preventDefault}),
+      ioIcon({value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onCloseClick, '@pointerdown': this.preventDefault}),
     ]);
   }
 }
