@@ -1,9 +1,10 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
-import { MenuOptions, MenuItem } from 'io-menus';
-import { ioSplit, SplitData } from './IoSplit.js';
+import { MenuItem } from 'io-menus';
+import { ioSplit } from './IoSplit.js';
+import { Split } from '../nodes/Split.js';
 
 export type IoLayoutProps = IoElementProps & {
-  split?: SplitData,
+  split?: Split,
   elements?: VDOMElement[],
 };
 
@@ -27,7 +28,7 @@ export class IoLayout extends IoElement {
   }
 
   @ReactiveProperty({type: Object, init: null})
-  declare split: SplitData;
+  declare split: Split;
 
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
@@ -42,33 +43,15 @@ export class IoLayout extends IoElement {
     };
   }
   onSplitDataChanged(event: CustomEvent) {
-    this.dispatchEvent('object-mutated', {object: this.split}, false, window);
+    event.stopPropagation();
+    this.debounce(this.onDataChangedDebounced, undefined, 1);
   }
   onPanelDataChanged(event: CustomEvent) {
-    this.dispatchEvent('object-mutated', {object: this.split}, false, window);
+    event.stopPropagation();
+    this.debounce(this.onDataChangedDebounced, undefined, 1);
   }
-  elementsChanged() {
-    if (this.addMenuItem) {
-      this.addMenuItem.options?.dispose();
-      this.addMenuItem.dispose();
-    }
-    const items: MenuItem[] = [];
-    for (let i = 0; i < this.elements.length; i++) {
-      const id = this.elements[i].props?.id;
-      if (id) {
-        items.push(new MenuItem({
-          mode: 'none',
-          id: id,
-          label: this.elements[i].props?.label || id,
-          icon: this.elements[i].props?.icon || '',
-          hint: this.elements[i].props?.hint || '',
-        }));
-      }
-    }
-    this.addMenuItem = new MenuItem({
-      mode: 'none',
-      options: new MenuOptions({items}),
-    });
+  onDataChangedDebounced() {
+    this.dispatchEvent('object-mutated', {object: this.split}, false, window);
   }
   changed() {
     this.render([

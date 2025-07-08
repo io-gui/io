@@ -102,29 +102,61 @@ export class MenuOptions extends Node {
     return this;
   }
 
-  addItem(itemLoose: MenuItem | MenuItemDefLoose) {
+  moveItem(oldIndex: number, newIndex: number) {
+    if (oldIndex >= 0 && oldIndex < this.items.length && newIndex >= 0 && newIndex < this.items.length) {
+      this.items.splice(newIndex, 0, this.items.splice(oldIndex, 1)[0]);
+    }
+    this.dispatchEvent('object-mutated', {object: this});
+  }
+  addItem(itemLoose: MenuItem | MenuItemDefLoose, index?: number) {
     // TODO handle options mutation in a better way
+    let item = itemLoose as MenuItem;
     if (!(itemLoose instanceof MenuItem)) {
-      itemLoose = new MenuItem().fromJSON(itemLoose);
+      item = new MenuItem().fromJSON(itemLoose);
     }
-    const item = itemLoose as MenuItem;
-    this.items.push(item);
-    debug: {
-      // TODO check if same item is at other index
-      if (this.items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
-        console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);
-      }
-    }
-    item.addEventListener('selected-changed', this.onItemSelectedChanged);
-    item.addEventListener('path-changed', this.onSubOptionsPathChanged);
+    const existingIndex = this.items.findIndex((otherItem: MenuItem) =>  otherItem === item);
 
+    this.items.splice(index ?? this.items.length, 0, item);
+
+    if (existingIndex !== -1) {
+      this.items.splice(existingIndex, 1);
+    } else {
+      item.addEventListener('selected-changed', this.onItemSelectedChanged);
+      item.addEventListener('path-changed', this.onSubOptionsPathChanged);
+    }
+    
+    const clashingItem = this.items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id === item.id);
+    if (clashingItem) {
+      this.removeItem(clashingItem);
+    }
+    
     // TODO move updatePaths to MenuItem. Handle setProperties better.
     if (item.selected && item.mode === 'select') {
       this.updatePaths(item);
     }
+    this.dispatchEvent('object-mutated', {object: this});
   }
-
-  // TODO: removeItem() {}
+  removeItemById(id: string) {
+    const item = this.findItemById(id);
+    if (item) this.removeItem(item);
+  }
+  removeItemByIndex(index: number) {
+    if (index >= 0 && index < this.items.length) {
+      this.removeItem(this.items[index]);
+    }
+  }
+  removeItem(item: MenuItem) {
+    const index = this.items.indexOf(item);
+    if (index !== -1) {
+      item.removeEventListener('selected-changed', this.onItemSelectedChanged);
+      item.removeEventListener('path-changed', this.onSubOptionsPathChanged);
+      this.items.splice(index, 1);
+      this.updatePaths();
+    } else debug: {
+      console.warn(`MenuOptions.removeItem: cannot find item to remove!`, this);
+    }
+    this.dispatchEvent('object-mutated', {object: this});
+  }
 
   initItems() {
     const items = this.items;

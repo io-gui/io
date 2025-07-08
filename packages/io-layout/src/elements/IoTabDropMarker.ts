@@ -37,7 +37,11 @@ class IoTabDropMarker extends IoElement {
     const hasDropTarget = this.dropTarget && this.dropIndex !== -1;
     if (hasDropTarget) {
       const tabs = this.dropTarget!.querySelectorAll('io-tab');
-      if (this.dropIndex > tabs.length - 1) {
+      if (tabs.length === 0) {
+        const rect = this.dropTarget!.getBoundingClientRect();
+        this.style.top = `${rect.top + ThemeSingleton.borderRadius}px`;
+        this.style.left = `${rect.left}px`;
+      } else if (this.dropIndex > tabs.length - 1) {
         const tab = tabs[tabs.length - 1] as IoTab;
         const rect = tab.getBoundingClientRect();
         this.style.top = `${rect.top + ThemeSingleton.borderRadius}px`;

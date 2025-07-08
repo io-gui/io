@@ -1,7 +1,7 @@
 import { ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { Binding } from '../core/Binding.js';
-import { Node, NodeProps } from '../nodes/Node.js';
+import { Node, NodeProps, AnyConstructor } from '../nodes/Node.js';
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>;
@@ -84,13 +84,11 @@ const localStorage = new EmulatedLocalStorage();
 type StorageNodes = {
   local: Map<string, StorageNode>,
   hash: Map<string, StorageNode>,
-  none: Map<string, StorageNode>
 }
 
 const nodes: StorageNodes = {
   local: new Map(),
   hash: new Map(),
-  none: new Map(),
 };
 
 let hashValues: Record<string, any> = {};
@@ -99,7 +97,7 @@ export type StorageProps = NodeProps & {
   key: string,
   value?: any,
   default?: any,
-  storage?: 'hash' | 'local' | 'none',
+  storage?: 'hash' | 'local',
 };
 
 @Register
@@ -108,14 +106,14 @@ export class StorageNode extends Node {
   @ReactiveProperty({value: '', type: String})
   declare key: string;
 
-  @ReactiveProperty({value: undefined, type: Object, init: null})
+  @ReactiveProperty({value: undefined, type: Object, init: null}) // TODO: make untyped!
   declare value: any;
 
-  @ReactiveProperty({value: undefined, type: Object, init: null})
+  @ReactiveProperty({value: undefined, type: Object, init: null}) // TODO: make untyped!
   declare default: any;
 
-  @ReactiveProperty({value: 'none', type: String})
-  declare storage: 'hash' | 'local' | 'none';
+  @ReactiveProperty({value: 'local', type: String})
+  declare storage: 'hash' | 'local';
 
   declare binding: Binding<any>;
 
@@ -126,38 +124,45 @@ export class StorageNode extends Node {
       } else {
         if (typeof props.key !== 'string' || !props.key)
           console.warn('Ivalid Storage key!');
-        if (props.storage && ['hash', 'local', 'none'].indexOf(props.storage) === -1)
+        if (props.storage && ['hash', 'local'].indexOf(props.storage) === -1)
           console.warn('Ivalid Storage storage!');
       }
     }
-    const s = (props.storage || 'none') as keyof StorageNodes;
+
+    const s = props.storage as keyof StorageNodes;
     if (nodes[s].has(props.key)) {
       return nodes[s].get(props.key) as StorageNode;
     } else {
       const def = props.default || props.value;
+
+      // TODO: test!
+      let constructor: AnyConstructor | undefined;
+      if (typeof def === 'object') {
+        constructor = def.constructor as AnyConstructor;
+      }
+
+      let storedValue: string | null = null;
       switch (props.storage) {
-        case 'hash': {
-          const hash = getValueFromHash(props.key);
-          if (hash !== undefined) {
-            try {
-              props.value = JSON.parse(hash);
-            } catch (error) {
-              props.value = hash;
-            }
-          }
+        case 'hash':
+          storedValue = getValueFromHash(props.key);
           break;
-        }
-        case 'local': {
-          const localValue = localStorage.getItem('Storage:' + props.key);
-          if (localValue) {
-            props.value = JSON.parse(localValue);
-          }
+        case 'local':
+          storedValue = localStorage.getItem('Storage:' + props.key);
           break;
+      }
+      if (storedValue !== null) {
+        try {
+          const value = JSON.parse(storedValue);
+          props.value = constructor ? new constructor(value) : value;
+        } catch (error) {
+          props.value = storedValue;
         }
       }
+
       if (props.value === undefined) {
         props.value = def;
       }
+
       super(Object.assign({default: def}, props));
       if (props.key !== '__proto__') { // TODO: Why is this here ffs?
         nodes[s].set(props.key, this);
@@ -165,16 +170,16 @@ export class StorageNode extends Node {
 
       this.binding = this.bind('value');
       this.binding.dispose = () => {
-        this._clearStorage();
+        this.clearStorage();
       };
       return this;
     }
   }
   dispose() {
-    this._clearStorage();
+    this.clearStorage();
     super.dispose();
   }
-  _clearStorage() {
+  clearStorage() {
     switch (this.storage) {
       case 'hash': {
         this.removeValueToHash();
@@ -281,13 +286,7 @@ function parseHash(hash: string) {
 
 function getValueFromHash(key: string) {
   hashValues = parseHash(self.location.hash);
-  if (hashValues[key]) {
-    try {
-      return JSON.parse(hashValues[key]);
-    } catch (error) {
-      return hashValues[key];
-    }
-  }
+  return hashValues[key] || null;
 }
 
 function updateAllFromHash() {

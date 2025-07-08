@@ -1,17 +1,12 @@
 import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from 'io-gui';
 import { MenuItem } from 'io-menus';
-import { PanelData, ioPanel } from './IoPanel.js';
+import { ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
-
-export type SplitData = {
-  type: 'split',
-  direction: 'row' | 'column',
-  children: Array<SplitData | PanelData>,
-  flex: string,
-};
+import { Split } from '../nodes/Split.js';
+import { Panel } from '../nodes/Panel.js';
 
 export type IoSplitProps = IoElementProps & {
-  split?: SplitData,
+  split?: Split,
   elements?: VDOMElement[],
   addMenuItem?: MenuItem,
 };
@@ -24,15 +19,16 @@ export class IoSplit extends IoElement {
       :host {
         display: flex;
         overflow: hidden;
+        flex-direction: row;
       }
-      :host[direction='column'] {
+      :host[orientation='vertical'] {
         flex-direction: column;
       }
     `;
   }
 
   @ReactiveProperty({type: Object, init: null})
-  declare split: SplitData;
+  declare split: Split;
 
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
@@ -44,6 +40,7 @@ export class IoSplit extends IoElement {
     return {
       'io-divider-move': 'onDividerMove',
       'io-divider-move-end': 'onDividerMoveEnd',
+      'io-panel-remove': 'onPanelRemove',
     };
   }
 
@@ -53,11 +50,11 @@ export class IoSplit extends IoElement {
     event.stopPropagation();
     const index = event.detail.index;
     const rect = this.getBoundingClientRect();
-    const dir = this.split.direction;
+    const orientation = this.split.orientation;
 
     const dividerSize = ThemeSingleton.spacing3;
-    const totalSpace = (dir === 'row' ? rect.width : rect.height) - dividerSize * (this.children.length - 1) / 2;
-    const minSize = dir === 'row' ? ThemeSingleton.fieldHeight * 4 : ThemeSingleton.fieldHeight;
+    const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - dividerSize * (this.children.length - 1) / 2;
+    const minSize = orientation === 'horizontal' ? ThemeSingleton.fieldHeight * 4 : ThemeSingleton.fieldHeight;
 
     const splits = [];
     const splitSizes = [];
@@ -67,7 +64,7 @@ export class IoSplit extends IoElement {
       const splitElement = this.children[i];
 
       const splitRect = splitElement.getBoundingClientRect();
-      const splitSize = dir === 'row' ? splitRect.width : splitRect.height;
+      const splitSize = orientation === 'horizontal' ? splitRect.width : splitRect.height;
 
       let x = event.detail.clientX - splitRect.left - dividerSize / 2;
       let y = event.detail.clientY - splitRect.top - dividerSize / 2;
@@ -76,7 +73,7 @@ export class IoSplit extends IoElement {
         x = rect.width - (event.detail.clientX - rect.left) - dividerSize / 2;
         y = rect.height - (event.detail.clientY - rect.top) - dividerSize / 2;
       }
-      let size = dir === 'row' ? x : y;
+      let size = orientation === 'horizontal' ? x : y;
 
       splits.push(splitElement);
       splitSizes.push(splitSize);
@@ -155,8 +152,6 @@ export class IoSplit extends IoElement {
         }
       }
     }
-
-
   }
 
   onDividerMoveEnd(event: CustomEvent) {
@@ -170,22 +165,39 @@ export class IoSplit extends IoElement {
     this.dispatchEvent('io-split-data-changed', {split: this.split}, true);
   }
 
+  onPanelRemove(event: CustomEvent) {
+    if (event.detail.panel === this.split) {
+      return;
+    }
+    event.stopPropagation();
+    this.split.remove(event.detail.panel);
+    this.dispatchEvent('io-split-data-changed', {split: this.split}, true);
+    if (this.split.children.length === 0) {
+      this.dispatchEvent('io-panel-remove', {panel: this.split}, true);
+    }
+  }
+
+  splitMutated() {
+    this.changed();
+  }
+  
   changed() {
-    this.setAttribute('direction', this.split.direction);
-    this.style.flex = this.split.flex;
+    this.setAttribute('orientation', this.split.orientation);
     // TODO: Validate split
     const vChildren: VDOMElement[] = [];
     for (let i = 0; i < this.split.children.length; i++) {
       const child = this.split.children[i];
-      if (child.type === 'split') {
+      if (child instanceof Split) {
         vChildren.push(ioSplit({
           split: child,
+          style: {flex: child.flex},
           elements: this.elements,
           addMenuItem: this.addMenuItem,
         }));
-      } else if (child.type === 'panel') {
+      } else if (child instanceof Panel) {
         vChildren.push(ioPanel({
           panel: child,
+          style: {flex: child.flex},
           elements: this.elements,
           addMenuItem: this.addMenuItem,
         }));
@@ -193,10 +205,9 @@ export class IoSplit extends IoElement {
         console.warn('IOSplit: Invalid child type', child);
       }
       if (i < this.split.children.length - 1) {
-        vChildren.push(ioDivider({direction: this.split.direction, index: i}));
+        vChildren.push(ioDivider({orientation: this.split.orientation, index: i}));
       }
     }
-
     this.render(vChildren);
   }
 }

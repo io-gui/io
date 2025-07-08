@@ -5,15 +5,7 @@ import { ioIcon } from 'io-icons';
 import { MenuItem } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
 import { tabDragIconSingleton } from './IoTabDragIcon.js';
-
-export type TabEditCommand = 'delete' | 'shiftLeft' | 'shiftRight' | 'shiftUp' | 'shiftDown' | 'shiftStart' | 'shiftEnd';
-
-export type TabData = {
-  id?: string,
-  label?: string,
-  icon?: string,
-  hint?: string,
-}
+import { IoPanel } from './IoPanel.js';
 
 export type IoTabProps = IoFieldProps & {
   item?: MenuItem,
@@ -69,15 +61,6 @@ export class IoTab extends IoField {
         white-space: nowrap;
       }
       :host > .label {}
-      :host > .hint {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: var(--io_colorLight);
-        padding-right: var(--io_spacing3);
-      }
-      :host > .hint:empty {
-        padding-right: var(--io_lineHeight);
-      }
       :host:not(:hover) > .io-close-icon {
         opacity: 0;
         transform: scale(1);
@@ -127,7 +110,7 @@ export class IoTab extends IoField {
     if (event.button === 2) {
       IoContextEditorSingleton.expand({
         value: this.item,
-        properties: ['icon', 'label', 'hint'],
+        properties: ['id', 'label', 'icon'],
         orientation: 'horizontal',
       });
       setTimeout(() => {
@@ -145,9 +128,10 @@ export class IoTab extends IoField {
     tabDragIconSingleton.setProperties({
       item: this.item,
       dragging: true,
+      dropSource: this.parentElement as IoTabs,
+      dropTarget: null,
+      dropIndex: -1,
     });
-    tabDragIconSingleton.dropTarget = null;
-    tabDragIconSingleton.dropIndex = -1;
     tabDragIconSingleton.style.top = event.clientY + 'px';
     tabDragIconSingleton.style.left = event.clientX + 'px';
 
@@ -160,6 +144,12 @@ export class IoTab extends IoField {
       const tcr = tabsContainer.getBoundingClientRect();
       if (y >= tcr.top && y <= tcr.bottom && x >= tcr.left && x <= tcr.right) {
         const tabs = tabsContainer.querySelectorAll('io-tab');
+        if (tabs.length === 0) {
+          tabsContainer.dropIndex = 0;
+          tabDragIconSingleton.dropTarget = tabsContainer;
+          tabDragIconSingleton.dropIndex = 0;
+          break;
+        }
         for (let j = 0; j < tabs.length; j++) {
           const tab = tabs[j] as unknown as IoTab;
           const tr = tab.getBoundingClientRect();
@@ -183,14 +173,16 @@ export class IoTab extends IoField {
     super.onPointerup(event);
     this.releasePointerCapture(event.pointerId);
     if (tabDragIconSingleton.dragging) {
+      const dropSource = tabDragIconSingleton.dropSource;
       const dropTarget = tabDragIconSingleton.dropTarget;
       const dropIndex = tabDragIconSingleton.dropIndex;
       tabDragIconSingleton.setProperties({
         item: new MenuItem({}),
         dragging: false,
+        dropSource: null,
+        dropTarget: null,
+        dropIndex: -1,
       });
-      tabDragIconSingleton.dropTarget = null;
-      tabDragIconSingleton.dropIndex = -1;
       const tabsContainers = document.querySelectorAll('io-tabs');
       for (let i = 0; i < tabsContainers.length; i++) {
         const tabsContainer = tabsContainers[i] as unknown as IoTabs;
@@ -198,9 +190,12 @@ export class IoTab extends IoField {
       }
 
       if (dropTarget && dropIndex !== -1) {
-        dropTarget.addTab(this.item); // TODO: addIndex?: number
-        console.log('dropTarget', dropTarget);
-        console.log('dropIndex', dropIndex);
+        const targetPanel = dropTarget.parentElement as IoPanel;
+        targetPanel.addTab(this.item, dropIndex);
+        if (dropSource && dropSource !== dropTarget) {
+          const sourcePanel = dropSource.parentElement as IoPanel;
+          sourcePanel.removeTab(this.item);
+        }
       }
     } else {
       this.onClick();
@@ -210,55 +205,12 @@ export class IoTab extends IoField {
     this.item.selected = true;
   }
   onCloseClick() {
-    this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'delete'}, true);
+    this.dispatchEvent('io-edit-tab-item', {item: this.item, key: 'Backspace'}, true);
   }
   onKeydown(event: KeyboardEvent) {
-    let command: TabEditCommand | null = null;
-
-    if (event.key === 'Backspace' && event.shiftKey) {
-      command = 'delete';
-    } else if (event.key === 'ArrowLeft' && event.shiftKey) {
-      command = 'shiftLeft';
-    } else if (event.key === 'ArrowRight' && event.shiftKey) {
-      command = 'shiftRight';
-    } else if (event.key === 'ArrowUp' && event.shiftKey) {
-      command = 'shiftUp';
-    } else if (event.key === 'ArrowDown' && event.shiftKey) {
-      command = 'shiftDown';
-    } else if (event.key === 'Home' && event.shiftKey) {
-      command = 'shiftStart';
-    } else if (event.key === 'End' && event.shiftKey) {
-      command = 'shiftEnd';
-    }
-
-    if (command) {
+    if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       event.preventDefault();
-      switch (command) {
-        case 'delete': {
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'delete'}, true);
-          break;
-        }
-        case 'shiftLeft':
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'shiftLeft'}, true);
-          break;
-        case 'shiftRight':
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'shiftRight'}, true);
-          break;
-        case 'shiftUp':
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'shiftUp'}, true);
-          break;
-        case 'shiftDown':
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'shiftDown'}, true);
-          break;
-        case 'shiftStart':
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'shiftStart'}, true);
-          break;
-        case 'shiftEnd':
-          this.dispatchEvent('io-edit-tab-item', {item: this.item, command: 'shiftEnd'}, true);
-          break;
-        default:
-          break;
-      }
+      this.dispatchEvent('io-edit-tab-item', {item: this.item, key: event.key}, true);
     } else {
       super.onKeydown(event);
     }
@@ -271,7 +223,7 @@ export class IoTab extends IoField {
     debug: if (this.item.options?.length) console.warn('IoTab: Tab item should not have sub-options!');
   }
   itemMutated() {
-    // TODO: consider using TabData instead of MenuItem.
+    // TODO: consider using Tab(s) instead of MenuItem(s).
     this.changed();
   }
   changed() {
@@ -280,7 +232,6 @@ export class IoTab extends IoField {
       this.item.selected ? span({class: 'marker'}) : null,
       ioIcon({value: this.item.icon || ' '}),
       span({class: 'label'}, this.item.label),
-      span({class: 'hint'}, this.item.hint || ''),
       ioIcon({value: 'io:close_small', size: 'small', class: 'io-close-icon', '@click': this.onCloseClick, '@pointerdown': this.preventDefault}),
     ]);
   }

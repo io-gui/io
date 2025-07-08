@@ -1,9 +1,9 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
 import { MenuItem, ioMenuItem, MenuOptions } from 'io-menus';
-import { ioTab, TabEditCommand } from './IoTab.js';
+import { ioTab } from './IoTab.js';
 
 export type IoTabsProps = IoElementProps & {
-  tabs?: MenuOptions,
+  options?: MenuOptions,
   addMenuItem?: MenuItem,
 };
 
@@ -41,96 +41,22 @@ export class IoTabs extends IoElement {
   }
 
   @ReactiveProperty({type: MenuOptions, init: null})
-  declare private tabs: MenuOptions;
+  declare private options: MenuOptions;
 
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
 
-  init() {
-    this.selectTabByIndex = this.selectTabByIndex.bind(this);
-  }
-
-  static get Listeners() {
-    return {
-      'io-edit-tab-item': 'onEditTabItem',
-    };
-  }
-
-  onEditTabItem(event: CustomEvent) {
-    event.stopPropagation();
-    const item: MenuItem = event.detail.item;
-    const command: TabEditCommand = event.detail.command;
-    const index = this.tabs.items.indexOf(item);
-    if (index === -1) {
-      debug: console.warn('IoTabs:Item not found in options', item);
-      return;
-    }
-    switch (command) {
-      case 'delete': {
-        if (this.tabs.items.length === 1) {
-          return;
-        }
-        // TODO: use removeItem()
-        this.tabs.items.splice(index, 1);
-        const newIndex = Math.min(index, this.tabs.items.length - 1);
-        this.selectTabByIndex(newIndex);
-        break;
-      }
-      case 'shiftLeft': {
-        if (index > 0) {
-          this.tabs.items.splice(index - 1, 0, this.tabs.items.splice(index, 1)[0]);
-          this.selectTabByIndex(index - 1);
-        }
-        break;
-      }
-      case 'shiftRight': {
-        if (index < this.tabs.items.length - 1) {
-          this.tabs.items.splice(index + 1, 0, this.tabs.items.splice(index, 1)[0]);
-          this.selectTabByIndex(index + 1);
-        }
-        break;
-      }
-    }
-    if (command) {
-      this.changed();
-      this.dispatchEvent('object-mutated', {object: this.tabs}, false, window);
-    }
-  }
-  selectTabByIndex(index: number) {
-    this.tabs.items[index].selected = true;
-    const tabs = this.querySelectorAll('io-tab');
-    if (tabs[index]) tabs[index].focus();
-  }
-  onMenuItemClicked(event: CustomEvent) {
-    const item: MenuItem = event.detail.item;
-    this.addTab(item);
-  }
-  addTab(item: MenuItem) { // TODO: addIndex?: number
-    if (!item.id) return;
-    const existing = this.tabs.findItemById(item.id!);
-    if (!existing) {
-      this.tabs.addItem({
-        id: item.id,
-        label: item.label,
-        icon: item.icon,
-        hint: item.hint,
-        mode: 'select',
-      });
-      this.debounce(this.selectTabByIndex, this.tabs.items.length - 1);
-    } else {
-      const index = this.tabs.items.indexOf(existing);
-      this.selectTabByIndex(index);
-    }
+  optionsMutated() {
     this.changed();
   }
+
   changed() {
     this.render([
-      ...this.tabs.items.map(item => ioTab({item})),
+      ...this.options.items.map(item => ioTab({item})),
       ioMenuItem({
         icon: 'io:box_fill_plus',
         direction: 'down',
         item: this.addMenuItem,
-        '@io-menu-item-clicked': this.onMenuItemClicked,
       }),
     ]);
   }

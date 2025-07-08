@@ -1,6 +1,7 @@
 import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-gui';
-import { ioLayout } from 'io-layout';
+import { ioLayout, Split } from 'io-layout';
 import { ioCollapsible } from 'io-navigation';
+import { MenuItem } from 'io-menus';
 
 function lorem(length) {
   const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');
@@ -10,6 +11,49 @@ function lorem(length) {
   }
   return lorem;
 }
+
+const split = new Split({
+  flex: '1 1 100%',
+  orientation: 'horizontal',
+  children: [
+    {
+      flex: '1 1 100%',
+      selected: 'Doc 1',
+      tabs: [{id: 'Doc 1'},{id: 'Doc 2'},{id: 'Doc 3'}],
+    },
+    {
+      flex: '1 1 100%',
+      orientation: 'vertical',
+      children: [
+        {
+          flex: '1 1 100%',
+          selected: 'Doc 2',
+          tabs: [{id: 'Doc 2', label: 'Doc 2'}],
+        },
+        {
+          flex: '1 1 100%',
+          selected: 'Doc 3',
+          tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}],
+        },
+        {
+          flex: '1 1 100%',
+          selected: 'Doc 3',
+          tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}],
+        },
+        {
+          flex: '1 1 100%',
+          selected: 'Doc 3',
+          tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}],
+        }                
+      ]
+    },
+    {
+      flex: '1 1 100%',
+      selected: 'Doc 4',
+      tabs: [{id: 'Doc 4', label: 'Doc 4', icon: 'io:numeric-4-box'}],
+    }
+  ]
+});
 
 export class IoLayoutDemo extends IoElement {
   static get Style() {
@@ -49,7 +93,7 @@ export class IoLayoutDemo extends IoElement {
               })
             ])
           ]),
-          div({id: 'Doc 2', icon: 'io:numeric-2-box', hint: 'second document'}, [
+          div({id: 'Doc 2', icon: 'io:numeric-2-box'}, [
             h1({'data-heading': 'Doc 2'}, 'Doc 2'),
             h4({'data-heading': 'Section 1'}, 'Section 1'), p(lorem(100)),
             h4({'data-heading': 'Section 2'}, 'Section 2'), p(lorem(100)),
@@ -59,13 +103,13 @@ export class IoLayoutDemo extends IoElement {
             h4({'data-heading': 'Section 6'}, 'Section 6'), p(lorem(100)),
             h4({'data-heading': 'Section 7'}, 'Section 7'), p(lorem(100)),
           ]),
-          div({id: 'Doc 3', icon: 'io:numeric-3-box', hint: 'third document'}, [
+          div({id: 'Doc 3', icon: 'io:numeric-3-box'}, [
             h1({'data-heading': 'Doc 3'}, 'Doc 3'),
             h4({'data-heading': 'Section 1'}, 'Section 1'), p(lorem(100)),
             h4({'data-heading': 'Section 2'}, 'Section 2'), p(lorem(100)),
             h4({'data-heading': 'Section 3'}, 'Section 3'), p(lorem(100)),
           ]),
-          div({id: 'Doc 4', icon: 'io:numeric-4-box', hint: 'fourth document'}, [
+          div({id: 'Doc 4', icon: 'io:numeric-4-box'}, [
             h1({'data-heading': 'Doc 4'}, 'Doc 4'),
             h4({'data-heading': 'Section 1'}, 'Section 1'), p(lorem(100)),
             h4({'data-heading': 'Section 2'}, 'Section 2'), p(lorem(100)),
@@ -74,70 +118,22 @@ export class IoLayoutDemo extends IoElement {
             h4({'data-heading': 'Section 5'}, 'Section 5'), p(lorem(100)),
           ]),
         ],
-        split: $({key: 'split', storage: 'local', value: {
-          type: 'split',
-          flex: '1 1 100%',
-          direction: 'row',
-          children: [
-            {
-              type: 'panel',
-              tabs: [
-                {id: 'Doc 1'},
-                {id: 'Doc 2'},
-                {id: 'Doc 3'},
-              ],
-              flex: '1 1 100%',
-              selected: 'Doc 1',
-            },
-            {
-              type: 'split',
-              flex: '1 1 100%',
-              direction: 'column',
-              children: [
-                {
-                  type: 'panel',
-                  tabs: [
-                    {id: 'Doc 2', label: 'Doc 2', hint: 'second document'},
-                  ],
-                  flex: '1 1 100%',
-                  selected: 'Doc 2',
-                },
-                {
-                  type: 'panel',
-                  tabs: [
-                    {id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box', hint: 'third document'},
-                  ],
-                  flex: '1 1 100%',
-                  selected: 'Doc 3',
-                },
-                {
-                  type: 'panel',
-                  tabs: [
-                    {id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box', hint: 'third document'},
-                  ],
-                  flex: '1 1 100%',
-                  selected: 'Doc 3',
-                },
-                {
-                  type: 'panel',
-                  tabs: [
-                    {id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box', hint: 'third document'},
-                  ],
-                  flex: '1 1 100%',
-                  selected: 'Doc 3',
-                }                
-              ]
-            },
-            {
-              type: 'panel',
-              tabs: [
-                {id: 'Doc 4', label: 'Doc 4', icon: 'io:numeric-4-box', hint: 'fourth document'},
-              ],
-              flex: '1 1 100%',
-              selected: 'Doc 4',
-            }
-          ]
-        }})
+        addMenuItem:  new MenuItem().fromJSON({
+          mode: 'none',
+          options: [
+            {id: 'Doc 1', mode: 'none'},
+            {id: 'Doc 2', mode: 'none'},
+            {id: 'Doc 3', mode: 'none'},
+            {id: 'Doc 4', mode: 'none'},
+            {label: 'Sub Options', mode: 'none', options: [
+              {id: 'Doc 1', icon: 'io:numeric-1-box', mode: 'none'},
+              {id: 'Doc 2', icon: 'io:numeric-2-box', mode: 'none'},
+              {id: 'Doc 3', icon: 'io:numeric-3-box', mode: 'none'},
+              {id: 'Doc 4', icon: 'io:numeric-4-box', mode: 'none'},
+            ]},
+          ],
+        }),
+        split: $({key: 'split', storage: 'local', value: split})
       })
     ]);
   }

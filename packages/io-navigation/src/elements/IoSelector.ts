@@ -197,6 +197,10 @@ export class IoSelector extends IoElement {
 
   renderSelected() {
     if (this.select === 'shallow') {
+      if (this.options.items.length === 0) {
+        this.render([], this, true);
+        return;
+      }
       for (let i = 0; i < this.options.items.length; i++) {
         if (this.options.items[i].selected) {
           this.renderSelectedId(this.options.items[i].id);

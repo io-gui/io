@@ -158,7 +158,7 @@ export class IoMenuItem extends IoField {
         this.collapseRoot();
       }
     }
-    getMenuRoot(this).dispatchEvent('io-menu-item-clicked', {item: this.item});
+    getMenuRoot(this).dispatchEvent('io-menu-item-clicked', {item: this.item}, true);
   }
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);

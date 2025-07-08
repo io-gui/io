@@ -36,13 +36,6 @@ class IoTabDragIcon extends IoField {
         padding: 0 var(--io_spacing);
       }
       :host > .label {}
-      :host > .hint {
-        color: var(--io_colorLight);
-        padding-right: var(--io_spacing3);
-      }
-      :host > .hint:empty {
-        padding-right: var(--io_lineHeight);
-      }
     `;
   }
 
@@ -51,6 +44,9 @@ class IoTabDragIcon extends IoField {
 
   @ReactiveProperty({type: MenuItem, init: null})
   declare item: MenuItem;
+
+  @ReactiveProperty(null)
+  declare dropSource: IoTabs | null;
 
   @ReactiveProperty(null)
   declare dropTarget: IoTabs | null;
@@ -74,7 +70,6 @@ class IoTabDragIcon extends IoField {
     this.render([
       ioIcon({value: this.item.icon || ' '}),
       span({class: 'label'}, this.item.label || ''),
-      span({class: 'hint'}, this.item.hint || ''),
     ]);
   }
 }

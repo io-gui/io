@@ -1,7 +1,7 @@
 import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property } from 'io-gui';
 
 export type IoDividerProps = IoElementProps & {
-  direction?: 'row' | 'column',
+  orientation?: 'vertical' | 'horizontal',
   index?: number,
 };
 
@@ -44,7 +44,7 @@ export class IoDivider extends IoElement {
         border-radius: var(--io_spacing);
         opacity: 0.5;
       }
-      :host[direction='column']:before {
+      :host[orientation='vertical']:before {
         transform: translate(-50%, -50%);
       }
       :host:after {
@@ -54,7 +54,7 @@ export class IoDivider extends IoElement {
         transform: translate(-50%, -50%) rotate(45deg);
         border-radius: 25%;
       }
-      :host[direction='column'] {
+      :host[orientation='vertical'] {
         cursor: row-resize;
         border-width: var(--io_borderWidth) 0;
       }
@@ -70,8 +70,8 @@ export class IoDivider extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare pressed: boolean;
 
-  @ReactiveProperty({value: 'row', type: String, reflect: true})
-  declare direction: 'row' | 'column';
+  @ReactiveProperty({value: 'horizontal', type: String, reflect: true})
+  declare orientation: 'horizontal' | 'vertical';
 
   @Property(Number)
   declare index: number;
@@ -102,6 +102,7 @@ export class IoDivider extends IoElement {
     }, true);
   }
   onPointerleave(event: PointerEvent) {
+    event.preventDefault();
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
