@@ -207,7 +207,7 @@ export class IoMenuOptions extends IoElement {
   }
   setOverflow() {
     if (this._disposed) return;
-    const items = this.querySelectorAll('.item');
+    const items = Array.from(this.querySelectorAll('.item')) as IoMenuItem[];
     this._overflownItems.length = 0;
     if (this.horizontal) {
       const hamburger = this.querySelector('io-menu-hamburger');
@@ -253,7 +253,7 @@ export class IoMenuOptions extends IoElement {
     const itemWasFocused = this.contains(document.activeElement);
     const searchHadInput = this.searchable && !!this.search;
     getMenuDescendants(this).forEach(descendant => {
-      descendant.expanded = false;
+      (descendant as any).expanded = false;
     });
     this.expanded = false;
     if (searchHadInput && itemWasFocused && !this.inoverlay) {
@@ -267,9 +267,9 @@ export class IoMenuOptions extends IoElement {
         this.debounce(this.onExpandInOverlay);
       }
     } else {
-      this.style.top = null;
-      this.style.height = null;
-      this.style.touchAction = null;
+      this.style.top = '';
+      this.style.height = '';
+      this.style.touchAction = '';
       this.scrollTop = 0;
       this.search = '';
     }

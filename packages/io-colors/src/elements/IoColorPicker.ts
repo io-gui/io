@@ -43,8 +43,8 @@ export class IoColorPicker extends IoElement {
     };
   }
 
-  @Property('0')
-  declare tabIndex: string;
+  @Property(0)
+  declare tabIndex: number;
 
   get expanded() {
     return Panel.expanded && Panel.value === this.value;
@@ -68,12 +68,12 @@ export class IoColorPicker extends IoElement {
       default:
         if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
     }
   }
   onValueSet() {
-    this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
+    this.dispatch('value-input', {property: 'value', value: this.value}, true);
   }
   onPanelCollapse() {
     Panel.removeEventListener('value-input', this.onValueSet);
@@ -85,7 +85,7 @@ export class IoColorPicker extends IoElement {
     Panel.addEventListener('value-input', this.onValueSet);
     Panel.addEventListener('expanded-changed', this.onPanelCollapse);
     nudge(Panel, this, 'right');
-    Panel.firstChild.firstChild.focus();
+    (Panel.firstChild?.firstChild as HTMLElement)?.focus();
   }
   collapse() {
     Panel.expanded = false;

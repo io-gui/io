@@ -51,7 +51,7 @@ export class IoLayout extends IoElement {
     this.debounce(this.onDataChangedDebounced, undefined, 1);
   }
   onDataChangedDebounced() {
-    this.dispatchEvent('object-mutated', {object: this.split}, false, window);
+    this.dispatch('object-mutated', {object: this.split}, false, window);
   }
   changed() {
     this.render([

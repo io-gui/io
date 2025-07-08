@@ -122,7 +122,7 @@ class IoNumberLadder extends IoElement {
           (command === 'ArrowUp' && source === this.querySelector('.io-down1'))) {
         event.stopPropagation();
         this.src.focus();
-        this.src.setCaretPosition(this.src.textNode.length);
+        this.src.setCaretPosition(this.src.textNode!.length);
       }
     }
   }
@@ -152,11 +152,11 @@ class IoNumberLadder extends IoElement {
       }
     } else {
       setTimeout(() => {
-        this.src?.setCaretPosition(this.src.textNode.length);
+        this.src?.setCaretPosition(this.src.textNode!.length);
       });
       this.removeAttribute('style');
     }
-    this.dispatchEvent('expanded', {value: this.expanded}, true);
+    this.dispatch('expanded', {value: this.expanded}, true);
   }
   changed() {
     const range = this.max - this.min;
@@ -204,10 +204,10 @@ class IoNumberLadder extends IoElement {
 
     const steps = this.querySelectorAll('io-number-ladder-step');
     for (let i = steps.length; i--;) {
-      steps[i].setAttribute('aria-valuemin', this.min);
-      steps[i].setAttribute('aria-valuemax', this.max);
-      steps[i].setAttribute('aria-valuenow', this.value);
-      steps[i].changed();
+      steps[i].setAttribute('aria-valuemin', String(this.min));
+      steps[i].setAttribute('aria-valuemax', String(this.max));
+      steps[i].setAttribute('aria-valuenow', String(this.value));
+      (steps[i] as any).changed();
     }
   }
 }

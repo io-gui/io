@@ -75,6 +75,13 @@ export class IoOptionSelect extends IoElement {
     if (this._disposed) return;
     this.inputValue(event.detail.item.value);
   }
+  inputValue(value: any) {
+    if (this.value !== value || typeof this.value === 'object') {
+      const oldValue = this.value;
+      this.setProperty('value', value);
+      this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
+    }
+  }
 
   optionsChanged(change: Change) {
     if (change.oldValue) {

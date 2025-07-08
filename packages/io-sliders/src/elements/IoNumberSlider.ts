@@ -56,12 +56,12 @@ export class IoNumberSlider extends IoElement {
 
   _onNumberSet(event: CustomEvent) {
     this.value = event.detail.value;
-    this.dispatchEvent('value-input', event.detail, false);
+    this.dispatch('value-input', event.detail, false);
   }
   _onSliderSet(event: CustomEvent) {
     event.detail.value = event.detail.value / this.conversion;
     this.value = event.detail.value;
-    this.dispatchEvent('value-input', event.detail, false);
+    this.dispatch('value-input', event.detail, false);
   }
   ready() {
     this.changed();

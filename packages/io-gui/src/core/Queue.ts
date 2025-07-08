@@ -1,9 +1,10 @@
-import { Node } from '../nodes/Node';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 
 export type CallbackFunction = (arg?: any) => void;
 
 interface QueueOptions {
-  node: Node | undefined;
+  node: Node | IoElement | undefined;
   arg: any;
   frame: number;
 }
@@ -38,13 +39,13 @@ export async function nextQueue(): Promise<void> {
  * Throttles function execution once per frame (rAF).
  * @param {CallbackFunction} func - Function to throttle.
  * @param {*} [arg] - Optional argument for throttled function.
- * @param {Node} [node] - Node instance.
+ * @param {Node | IoElement} [node] - Node instance.
  * @param {number} [delay] - Delay in frames.
  *
  * @example
  * throttle(someFunction, 'someArg', someNode);
  */
-export function throttle(func: CallbackFunction, arg?: any, node?: Node, delay = 1) {
+export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
   if (queueSync.indexOf(func) === -1) {
     queueSync.push(func);
     if (node?._disposed) return;
@@ -73,13 +74,13 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node, delay =
  * Debounces function execution to next frame (rAF).
  * @param {CallbackFunction} func - Function to debounce.
  * @param {*} [arg] - Optional argument for debounced function.
- * @param {Node} [node] - Node instance.
+ * @param {Node | IoElement} [node] - Node instance.
  * @param {number} [delay] - Delay in frames.
  *
  * @example
  * debounce(someFunction, 'someArg', someNode);
  */
-export function debounce(func: CallbackFunction, arg?: any, node?: Node, delay = 1) {
+export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
   if (queue.indexOf(func) === -1) {
     queue.push(func);
   }

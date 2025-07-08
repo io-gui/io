@@ -1,5 +1,8 @@
-import { ChangeEvent } from './ChangeQueue';
-import { Node } from '../nodes/Node';
+import { ChangeEvent } from './ChangeQueue.js';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
+
+// TODO: Improve types!
 
 /**
  * Event listener types.
@@ -10,7 +13,7 @@ export interface CustomEventListener { (event: CustomEvent): void }
 export interface FocusEventListener { (event: FocusEvent): void }
 export interface TouchEventListener { (event: TouchEvent): void }
 export interface ChangeEventListener { (event: ChangeEvent): void }
-export interface IoEventListener { (event: {detail: any, target: Node, path: Node[]}): void }
+export interface IoEventListener { (event: {detail: any, target: Node | IoElement, path: Array<Node | IoElement>}): void }
 export type AnyEventListener = EventListener |
                                KeyboardEventListener |
                                PointerEventListener |
@@ -18,9 +21,9 @@ export type AnyEventListener = EventListener |
                                FocusEventListener |
                                TouchEventListener |
                                ChangeEventListener |
-                               IoEventListener;
-
-                               /**
+                               IoEventListener |
+                               EventListenerOrEventListenerObject;
+/**
  * Listener definition type.
  * The first item is a string (function name) or an event listener function.
  * The second item is an optional object of event listener options.
@@ -53,11 +56,11 @@ const LISTENER_OPTIONS = ['capture', 'passive'];
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {Node | EventTarget} node - The node instance containing potential method references
+ * @param {Node | IoElement | EventTarget} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
-export const listenerFromDefinition = (node: Node | EventTarget, def: ListenerDefinition): Listener => {
+export const listenerFromDefinition = (node: Node | IoElement | EventTarget, def: ListenerDefinition): Listener => {
   const handlerDef = def[0];
   const options = def[1];
 
@@ -80,7 +83,7 @@ export const listenerFromDefinition = (node: Node | EventTarget, def: ListenerDe
     }
   }
 
-  const handler = typeof handlerDef === 'string' ? (node as Record<string, AnyEventListener>)[handlerDef] : handlerDef;
+  const handler = typeof handlerDef === 'string' ? (node as unknown as Record<string, AnyEventListener>)[handlerDef] : handlerDef;
 
   return options ? [handler, options] : [handler];
 };
@@ -94,7 +97,7 @@ export const listenerFromDefinition = (node: Node | EventTarget, def: ListenerDe
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export class EventDispatcher {
-  readonly node: Node | EventTarget;
+  readonly node: Node | IoElement | EventTarget;
   readonly nodeIsEventTarget: boolean;
   readonly protoListeners: Listeners = {};
   readonly propListeners: Listeners = {};
@@ -102,9 +105,9 @@ export class EventDispatcher {
   /**
    * Creates an instance of `EventDispatcher` for specified `Node` instance.
    * It initializes `protoListeners` from `ProtoChain`.
-   * @param {Node} node owner Node
+   * @param {Node | IoElement | EventTarget} node owner Node
    */
-  constructor(node: Node | EventTarget) {
+  constructor(node: Node | IoElement | EventTarget) {
     this.node = node;
     this.nodeIsEventTarget = node instanceof EventTarget;
     this.setProtoListeners(node as Node);
@@ -113,9 +116,9 @@ export class EventDispatcher {
   /**
    * Sets `protoListeners` specified as `get Listeners()` class definitions.
    * Definitions from subclass replace the ones from parent class.
-   * @param {Node} node owner Node
+   * @param {Node | IoElement} node owner Node
    */
-  setProtoListeners(node: Node) {
+  setProtoListeners(node: Node | IoElement) {
     for (const name in node._protochain?.listeners) {
       for (let i = 0; i < node._protochain.listeners[name].length; i++) {
         const listener = listenerFromDefinition(node, node._protochain.listeners[name][i]);
@@ -279,9 +282,9 @@ export class EventDispatcher {
    * @param {string} name - Name of the event
    * @param {any} detail - Event detail data
    * @param {boolean} [bubbles] - Makes event bubble
-   * @param {EventTarget} [node] - Event target override to dispatch the event from
+   * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: any, bubbles = true, node: EventTarget | Node = this.node) {
+  dispatchEvent(name: string, detail?: any, bubbles = true, node: Node | IoElement | EventTarget = this.node) {
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {

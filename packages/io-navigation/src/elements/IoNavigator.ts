@@ -14,7 +14,7 @@ export type IoNavigatorProps = IoElementProps & {
   collapseWidth?: number,
   select?: SelectType,
   caching?: CachingType,
-  scroll?: WithBinding<string>,
+  anchor?: WithBinding<string>,
 };
 
 @Register
@@ -81,7 +81,7 @@ export class IoNavigator extends IoElement {
   declare caching: CachingType;
 
   @ReactiveProperty({value: '', type: String})
-  declare scroll: string;
+  declare anchor: string;
 
   changed() {
     const sharedMenuConfig = {
@@ -107,16 +107,16 @@ export class IoNavigator extends IoElement {
     if (this.menu === 'top') {
       this.render([
         ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
-        ioSelector({options: this.options, caching: this.caching, select: this.select, scroll: this.bind('scroll'), elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, anchor: this.bind('anchor'), elements: this.elements}),
       ]);
     } else if (this.menu === 'left') {
       this.render([
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
-        ioSelector({options: this.options, caching: this.caching, select: this.select, scroll: this.bind('scroll'), elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, anchor: this.bind('anchor'), elements: this.elements}),
       ]);
     } else if (this.menu === 'right') {
       this.render([
-        ioSelector({options: this.options, caching: this.caching, select: this.select, scroll: this.bind('scroll'),elements: this.elements}),
+        ioSelector({options: this.options, caching: this.caching, select: this.select, anchor: this.bind('anchor'),elements: this.elements}),
         this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
       ]);
     }

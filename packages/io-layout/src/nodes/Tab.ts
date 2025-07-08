@@ -1,7 +1,7 @@
 import { Node, NodeProps, ReactiveProperty, Register } from 'io-gui';
 
 export type TabProps = NodeProps & {
-  id?: string, // TODO: required
+  id: string,
   label?: string,
   icon?: string,
 };
@@ -11,14 +11,14 @@ export class Tab extends Node {
 
   @ReactiveProperty({type: String, value: ''})
   declare id: string;
-  
+
   @ReactiveProperty({type: String, value: ''})
   declare label: string;
 
   @ReactiveProperty({type: String, value: ''})
   declare icon: string;
 
-  constructor(args: TabProps = {}) {
+  constructor(args: TabProps) {
     if (!args.label) args.label = args.id;
     super(args);
   }
@@ -32,11 +32,11 @@ export class Tab extends Node {
   }
 
   fromJSON(json: TabProps) {
-    this.id = json.id!; // TODO: required
+    this.id = json.id;
     if (json.label) {
       this.label = json.label;
     } else {
-      this.label = json.id!; // TODO: required
+      this.label = json.id;
     }
     if (json.icon) this.icon = json.icon;
     return this;

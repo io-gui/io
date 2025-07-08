@@ -98,7 +98,7 @@ export default class {
         this.element.expanded = true;
         const properties = this.element.children[1];
         expect(properties.children[1].localName).to.equal('io-slider');
-        expect(properties.children[1].step).to.equal(1);
+        expect((properties.children[1] as any).step).to.equal(1);
         expect(properties.children[5].localName).to.equal('io-string');
         this.reset();
       });

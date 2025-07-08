@@ -54,8 +54,8 @@ class IoTabDragIcon extends IoField {
   @ReactiveProperty({type: Number, value: -1})
   declare dropIndex: number;
 
-  @Property('-1')
-  declare tabIndex: string;
+  @Property(-1)
+  declare tabIndex: number;
 
   constructor(args: IoTabDragIconProps = {}) { super(args); }
 

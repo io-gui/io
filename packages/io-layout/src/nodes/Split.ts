@@ -5,7 +5,7 @@ export type SplitOrientation = 'horizontal' | 'vertical';
 
 export type SplitProps = NodeProps & {
   orientation?: SplitOrientation,
-  children?: Array<Split | Panel> | Array<SplitProps | PanelProps>,
+  children: Array<Split | Panel> | Array<SplitProps | PanelProps>,
   flex?: string,
 };
 
@@ -20,8 +20,8 @@ export class Split extends Node {
   @ReactiveProperty({type: String, value: ''})
   declare flex: string;
 
-  constructor(args?: SplitProps) {
-    if (args?.children) {
+  constructor(args: SplitProps) {
+    if (args.children) {
       for (let i = 0; i < args.children.length; i++) {
         if (!(args.children[i] instanceof Split) && !(args.children[i] instanceof Panel)) {
           if ((args.children[i] as PanelProps).tabs) {
@@ -37,7 +37,7 @@ export class Split extends Node {
 
   remove(child: Panel | Split) {
     this.children = this.children.filter((c: Split | Panel) => c !== child);
-    this.dispatchEvent('object-mutated', {object: this});
+    this.dispatch('object-mutated', {object: this});
   }
 
   toJSON(): SplitProps {
@@ -50,7 +50,12 @@ export class Split extends Node {
 
   fromJSON(json: SplitProps) {
     if (json.orientation) this.orientation = json.orientation;
-    if (json.children) this.children = json.children.map((child: SplitProps | PanelProps): Split | Panel => new Split(child));
+    if (json.children) this.children = json.children.map(child => {
+      if (child instanceof Split) return child;
+      else if (child instanceof Panel) return child;
+      else if ((child as PanelProps).tabs) return new Panel(child as PanelProps);
+      else return new Split(child as SplitProps);
+    });
     if (json.flex) this.flex = json.flex;
     return this;
   }

@@ -1,5 +1,4 @@
 import { EventDispatcher } from '../core/EventDispatcher.js';
-import { Node } from '../nodes/Node.js';
 import { IoElement } from '../elements/IoElement.js';
 import { Binding } from '../core/Binding.js';
 
@@ -296,6 +295,8 @@ export type NativeElementProps = AriaProps & PropsWithUndefined<{
 
 const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps>();
 
+// TODO: Fix types. Remove any.
+
 /**
  * Sets native element's properties and attributes.
  * - style: formatted as Object.
@@ -305,27 +306,26 @@ const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps>();
  * @param {Object} props - Element properties.
  */
 export const applyNativeElementProps = function(element: HTMLElement, props: NativeElementProps) {
-  // TODO: remove type conversion once NativeElementProps is fully typed.
-  const _element = (element as unknown as IoElement);
 
-  let defaultPropValues: NativeElementProps = defaultPropsMap.get(element) || {};
+  let defaultPropValues: any = defaultPropsMap.get(element) || {};
+
   defaultPropsMap.set(element, defaultPropValues);
 
   for (const _p in props) {
-    const p = _p as keyof NativeElementProps;
-    const prop: any = props[p];
+    const p = _p as keyof HTMLElement;
+    const prop = props[p as keyof NativeElementProps];
 
     debug: if (prop instanceof Binding) {
       console.warn(`VDOM: Cannot set binding on "${element.localName}.${_p}"`);
     }
 
-    if (!Object.hasOwn(defaultPropValues, p)) defaultPropValues[p] = _element[p];
+    if (!Object.hasOwn(defaultPropValues, p)) defaultPropValues[p] = element[p];
 
     if (p === 'style') {
       for (const s in prop) {
         element.style.setProperty(s, prop[s]);
       }
-    } else if (p === 'class') {
+    } else if ((p as any) === 'class') {
       element['className'] = prop;
     } else if (p.startsWith('data-')) {
       // TODO: Test this!
@@ -336,9 +336,9 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
       }
     } else {
       if (prop === undefined) {
-        _element[p] = defaultPropValues[p];
+        (element as any)[p] = defaultPropValues[p];
       } else {
-        _element[p] = prop;
+        (element as any)[p] = prop;
       }
     }
 
@@ -349,14 +349,14 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
   for (const _p in defaultPropValues) {
     const p = _p as keyof NativeElementProps;
     if (!Object.hasOwn(props, p)) {
-      _element[p] = defaultPropValues[p];
+      (element as any)[p] = defaultPropValues[p];
       element.removeAttribute(p);
     }
   }
-  if (!_element._eventDispatcher) {
-    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as Node)});
+  if (!(element as IoElement)._eventDispatcher) {
+    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoElement)});
   }
-  _element._eventDispatcher.applyPropListeners(props);
+  (element as IoElement)._eventDispatcher.applyPropListeners(props);
 };
 
 /**
@@ -384,7 +384,7 @@ export const constructElement = function(vDOMElement: VDOMElement) {
 export const disposeChildren = function(element: IoElement) {
   // NOTE: This rAF ensures that element's change queue is emptied before disposing.
   requestAnimationFrame(() => {
-    const elements = [...(element.querySelectorAll('*')), element] as IoElement[];
+    const elements = Array.from(element.querySelectorAll('*')).concat([element]) as IoElement[];
     for (let i = elements.length; i--;) {
       if (typeof elements[i].dispose === 'function') {
         elements[i].dispose();
@@ -425,6 +425,6 @@ export const toVDOM = function(element: IoElement | HTMLElement): VDOMElement {
   return {
     tag: element.localName,
     props: vDOMAttributes(element),
-    children: element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent
+    children: element.children.length > 0 ? toVDOMChildren((element as any).children) : element.textContent as string
   };
 };

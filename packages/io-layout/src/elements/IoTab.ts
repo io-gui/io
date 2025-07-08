@@ -145,7 +145,6 @@ export class IoTab extends IoField {
       if (y >= tcr.top && y <= tcr.bottom && x >= tcr.left && x <= tcr.right) {
         const tabs = tabsContainer.querySelectorAll('io-tab');
         if (tabs.length === 0) {
-          tabsContainer.dropIndex = 0;
           tabDragIconSingleton.dropTarget = tabsContainer;
           tabDragIconSingleton.dropIndex = 0;
           break;
@@ -158,13 +157,10 @@ export class IoTab extends IoField {
           if (y >= tr.top - m && y <= tr.bottom + m && x >= tr.left - m && (x <= tr.right + m || isLast && x <= tcr.right)) {
             const side = x < tr.left + tr.width / 2 ? 'left' : 'right';
             const dropIndex = side === 'left' ? j : j + 1;
-            tabsContainer.dropIndex = dropIndex;
             tabDragIconSingleton.dropTarget = tabsContainer;
             tabDragIconSingleton.dropIndex = dropIndex;
           }
         }
-      } else {
-        tabsContainer.dropIndex = -1;
       }
     }
   }
@@ -176,18 +172,6 @@ export class IoTab extends IoField {
       const dropSource = tabDragIconSingleton.dropSource;
       const dropTarget = tabDragIconSingleton.dropTarget;
       const dropIndex = tabDragIconSingleton.dropIndex;
-      tabDragIconSingleton.setProperties({
-        item: new MenuItem({}),
-        dragging: false,
-        dropSource: null,
-        dropTarget: null,
-        dropIndex: -1,
-      });
-      const tabsContainers = document.querySelectorAll('io-tabs');
-      for (let i = 0; i < tabsContainers.length; i++) {
-        const tabsContainer = tabsContainers[i] as unknown as IoTabs;
-        tabsContainer.dropIndex = -1;
-      }
 
       if (dropTarget && dropIndex !== -1) {
         const targetPanel = dropTarget.parentElement as IoPanel;
@@ -197,6 +181,14 @@ export class IoTab extends IoField {
           sourcePanel.removeTab(this.item);
         }
       }
+
+      tabDragIconSingleton.setProperties({
+        item: new MenuItem({}),
+        dragging: false,
+        dropSource: null,
+        dropTarget: null,
+        dropIndex: -1,
+      });
     } else {
       this.onClick();
     }
@@ -205,12 +197,12 @@ export class IoTab extends IoField {
     this.item.selected = true;
   }
   onCloseClick() {
-    this.dispatchEvent('io-edit-tab-item', {item: this.item, key: 'Backspace'}, true);
+    this.dispatch('io-edit-tab-item', {item: this.item, key: 'Backspace'}, true);
   }
   onKeydown(event: KeyboardEvent) {
     if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       event.preventDefault();
-      this.dispatchEvent('io-edit-tab-item', {item: this.item, key: event.key}, true);
+      this.dispatch('io-edit-tab-item', {item: this.item, key: event.key}, true);
     } else {
       super.onKeydown(event);
     }
@@ -220,7 +212,7 @@ export class IoTab extends IoField {
       selected: this.item.bind('selected'),
       disabled: this.item.bind('disabled'),
     });
-    debug: if (this.item.options?.length) console.warn('IoTab: Tab item should not have sub-options!');
+    debug: if (this.item.options?.items.length) console.warn('IoTab: Tab item should not have sub-options!');
   }
   itemMutated() {
     // TODO: consider using Tab(s) instead of MenuItem(s).

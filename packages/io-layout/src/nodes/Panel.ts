@@ -2,8 +2,8 @@ import { Node, NodeProps, ReactiveProperty, Register } from 'io-gui';
 import { Tab, TabProps } from './Tab.js';
 
 export type PanelProps = NodeProps & {
-  tabs?: Array<Tab> | Array<TabProps>, // TODO: required
-  selected?: string, // TODO: required
+  tabs: Array<Tab> | Array<TabProps>,
+  selected: string,
   flex?: string,
 };
 
@@ -14,15 +14,15 @@ export class Panel extends Node {
 
   @ReactiveProperty({type: String, value: ''})
   declare selected: string;
-  
+
   @ReactiveProperty({type: String, value: ''})
   declare flex: string;
 
-  constructor(args: PanelProps = {}) {
+  constructor(args: PanelProps) {
     if (args.tabs) {
       for (let i = 0; i < args.tabs.length; i++) {
         if (!(args.tabs[i] instanceof Tab)) {
-          args.tabs[i] = new Tab(args.tabs[i]);
+          args.tabs[i] = new Tab(args.tabs[i] as TabProps);
         }
       }
     }
@@ -38,7 +38,10 @@ export class Panel extends Node {
   }
 
   fromJSON(json: PanelProps) {
-    if (json.tabs) this.tabs = json.tabs.map((tab: TabProps) => new Tab(tab));
+    if (json.tabs) this.tabs = json.tabs.map(tab => {
+      if (tab instanceof Tab) return tab;
+      else return new Tab(tab as TabProps);
+    });
     if (json.selected) this.selected = json.selected;
     if (json.flex) this.flex = json.flex;
     return this;

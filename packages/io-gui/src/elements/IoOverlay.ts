@@ -66,7 +66,9 @@ class IoOverlay extends IoElement {
       'wheel': ['onScroll', {passive: false}],
     };
   }
+
   constructor(args: IoElementProps = {}) { super(args); }
+
   init() {
     this.expandAsChildren = this.expandAsChildren.bind(this);
   }
@@ -91,15 +93,17 @@ class IoOverlay extends IoElement {
   onResized() {
     this.collapse();
   }
-  appendChild(child: HTMLElement) {
+  appendChild<El extends Node>(child: El) {
     super.appendChild(child);
     child.addEventListener('expanded-changed', this.onChildExpandedChanged);
     this.debounce(this.expandAsChildren);
+    return child;
   }
-  removeChild(child: HTMLElement) {
+  removeChild<El extends Node>(child: El) {
     super.removeChild(child);
     child.removeEventListener('expanded-changed', this.onChildExpandedChanged);
     this.debounce(this.expandAsChildren);
+    return child;
   }
   onChildExpandedChanged() {
     this.debounce(this.expandAsChildren);
@@ -112,7 +116,7 @@ class IoOverlay extends IoElement {
   }
   expandAsChildren() {
     for (let i = this.children.length; i--;) {
-      if (this.children[i].expanded) {
+      if ((this.children[i] as any).expanded) {
         this.expanded = true;
         return;
       }
@@ -122,7 +126,7 @@ class IoOverlay extends IoElement {
   expandedChanged() {
     if (!this.expanded) {
       for (let i = this.children.length; i--;) {
-        this.children[i].expanded = false;
+        (this.children[i] as any).expanded = false;
       }
       if (focusRestoreTarget) (focusRestoreTarget as HTMLElement).focus();
     }

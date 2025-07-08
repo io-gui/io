@@ -83,8 +83,8 @@ export class IoSlider extends IoGl {
   @Property('slider')
   declare role: string;
 
-  @Property('0')
-  declare tabIndex: string;
+  @Property(0)
+  declare tabIndex: number;
 
   #startX = 0;
   #startY = 0;
@@ -232,6 +232,13 @@ export class IoSlider extends IoGl {
       this.inputValue(value);
     }
   }
+  inputValue(value: any) {
+    if (this.value !== value || typeof this.value === 'object') {
+      const oldValue = this.value;
+      this.setProperty('value', value);
+      this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
+    }
+  }
   onKeydown(event: KeyboardEvent) {
     const invert = this.max < this.min;
     if (event.shiftKey) switch (event.key) {
@@ -265,7 +272,7 @@ export class IoSlider extends IoGl {
         break;
     } else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
       event.preventDefault();
-      this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+      this.dispatch('io-focus-to', {source: this, command: event.key}, true);
     }
   }
   ready() {
@@ -275,21 +282,21 @@ export class IoSlider extends IoGl {
     this.changed();
   }
   invalidChanged() {
-    this.ariaInvalid = this.invalid;
+    this.ariaInvalid = String(this.invalid);
   }
   disabledChanged() {
     this.inert = this.disabled;
-    this.ariaDisabled = this.disabled;
+    this.ariaDisabled = String(this.disabled);
   }
   valueChanged() {
     this.invalid = isNaN(this.value);
-    this.ariaValueNow = this.value;
+    this.ariaValueNow = String(this.value);
   }
   minChanged() {
-    this.ariaValueMin = this.min;
+    this.ariaValueMin = String(this.min);
   }
   maxChanged() {
-    this.ariaValueMax = this.max;
+    this.ariaValueMax = String(this.max);
   }
 }
 export const ioSlider = IoSlider.vConstructor;

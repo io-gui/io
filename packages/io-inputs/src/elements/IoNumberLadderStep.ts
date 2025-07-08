@@ -49,6 +49,8 @@ export class IoNumberLadderStep extends IoField {
   @Property('spinbutton')
   declare role: string;
 
+  declare private startX: number;
+
   constructor(args: IoNumberLadderStepProps = {}) { super(args); }
 
   onKeydown(event: KeyboardEvent) {
@@ -58,7 +60,7 @@ export class IoNumberLadderStep extends IoField {
       case 'Enter':
       case 'Escape':
       case ' ':
-        this.dispatchEvent('ladder-step-collapse', {}, true);
+        this.dispatch('ladder-step-collapse', {}, true);
         break;
       case 'ArrowLeft':
       case 'Backspace':
@@ -67,7 +69,7 @@ export class IoNumberLadderStep extends IoField {
         break;
       case 'ArrowUp':
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         break;
       case 'ArrowRight':
         event.preventDefault();
@@ -75,34 +77,34 @@ export class IoNumberLadderStep extends IoField {
         break;
       case 'ArrowDown':
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         break;
     }
     if (stepMove !== 0) {
-      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
+      this.dispatch('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
   onPointerdown(event: PointerEvent) {
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this.onPointermove);
     this.addEventListener('pointerup', this.onPointerup);
-    this._startX = event.clientX;
+    this.startX = event.clientX;
   }
   onPointermove(event: PointerEvent) {
-    const deltaX = event.clientX - this._startX;
+    const deltaX = event.clientX - this.startX;
     if (Math.abs(deltaX) > 5) {
       const expMove = Math.pow(deltaX / 5, 2) * deltaX < 0 ? -1: 1;
       const roundMove = deltaX > 0 ? Math.floor(expMove) : Math.ceil(expMove);
       const stepMove = this.value * roundMove;
-      this._startX = event.clientX;
-      this.dispatchEvent('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
+      this.startX = event.clientX;
+      this.dispatch('ladder-step-change', {step: Number(stepMove.toFixed(5)), round: event.shiftKey}, true);
     }
   }
   onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerup', this.onPointerup);
-    this.dispatchEvent('ladder-step-collapse', {}, true);
+    this.dispatch('ladder-step-collapse', {}, true);
   }
   ready() {
     this.changed();

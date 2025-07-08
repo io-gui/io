@@ -61,7 +61,7 @@ export class IoSplit extends IoElement {
     const splitResize = [];
 
     for (let i = 0; i < this.children.length; i += 2) {
-      const splitElement = this.children[i];
+      const splitElement = this.children[i] as HTMLElement;
 
       const splitRect = splitElement.getBoundingClientRect();
       const splitSize = orientation === 'horizontal' ? splitRect.width : splitRect.height;
@@ -158,11 +158,11 @@ export class IoSplit extends IoElement {
     event.stopPropagation();
     let index = 0;
     for (let i = 0; i < this.children.length; i += 2) {
-      const splitElement = this.children[i];
+      const splitElement = this.children[i] as HTMLElement;
       this.split.children[index].flex = splitElement.style.flex;
       index++;
     }
-    this.dispatchEvent('io-split-data-changed', {split: this.split}, true);
+    this.dispatch('io-split-data-changed', {split: this.split}, true);
   }
 
   onPanelRemove(event: CustomEvent) {
@@ -171,18 +171,19 @@ export class IoSplit extends IoElement {
     }
     event.stopPropagation();
     this.split.remove(event.detail.panel);
-    this.dispatchEvent('io-split-data-changed', {split: this.split}, true);
+    this.dispatch('io-split-data-changed', {split: this.split}, true);
     if (this.split.children.length === 0) {
-      this.dispatchEvent('io-panel-remove', {panel: this.split}, true);
+      this.dispatch('io-panel-remove', {panel: this.split}, true);
     }
   }
 
   splitMutated() {
     this.changed();
   }
-  
+
   changed() {
     this.setAttribute('orientation', this.split.orientation);
+    this.style.flex = this.split.flex;
     // TODO: Validate split
     const vChildren: VDOMElement[] = [];
     for (let i = 0; i < this.split.children.length; i++) {

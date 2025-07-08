@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, ReactiveProperty, Register, VDOMElement, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, ReactiveProperty, Register, VDOMElement, WithBinding, ReactivityType } from 'io-gui';
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js';
 
 export type IoColorBaseProps = IoElementProps & {
@@ -10,7 +10,7 @@ export class IoColorBase extends IoElement {
   static vConstructor: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @ReactiveProperty('throttled')
-  declare reactivity: string;
+  declare reactivity: ReactivityType;
 
   @ReactiveProperty({type: Object, init: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number, g: number, b: number, a?: number};

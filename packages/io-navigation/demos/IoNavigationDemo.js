@@ -108,21 +108,21 @@ export class IoNavigationDemo extends IoElement {
         options: contentOptions,
         elements: contentElements,
         select: 'deep',
-        scroll: contentOptions.bind('selected'),
+        anchor: contentOptions.bind('selected'),
       }),
       div({style: {display: 'flex'}}, [
         ioSelector({
           style: {'flex-basis': '50%'},
           elements: contentElements,
           options: contentOptions,
-          scroll: contentOptions.bind('selected'),
+          anchor: contentOptions.bind('selected'),
         }),
         ioNavigator({
           style: {'flex-basis': '50%'},
           menu: 'top',
           options: contentOptions,
           elements: contentElements,
-          scroll: contentOptions.bind('selected'),
+          anchor: contentOptions.bind('selected'),
         }),
       ])
     ]);

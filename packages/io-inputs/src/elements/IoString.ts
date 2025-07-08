@@ -43,8 +43,8 @@ export class IoString extends IoField {
   @ReactiveProperty({value: 'inset', reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Property(true)
-  declare contentEditable: boolean;
+  @Property('true')
+  declare contentEditable: string;
 
   @Property('textbox')
   declare role: string;
@@ -68,7 +68,7 @@ export class IoString extends IoField {
   }
   // TODO: reconsider this feature
   _setObjectFromTextNodeJSON() {
-    const textNode = this.textNode;
+    const textNode = this.textNode!;
     try {
       const value = JSON.parse(textNode.replace(/[\t\n\r ]+/g, ' '));
       this.inputValue(value);
@@ -97,14 +97,14 @@ export class IoString extends IoField {
     this.removeEventListener('pointerup', this.onPointerup);
     if (document.activeElement !== this as unknown as Element) {
       this.focus();
-      this.setCaretPosition(this.textNode.length);
+      this.setCaretPosition(this.textNode!.length);
     }
   }
   onKeydown(event: KeyboardEvent) {
     const range = (window.getSelection() as Selection).getRangeAt(0);
     const rangeStart = range.startOffset;
     const rangeEnd = range.endOffset;
-    const length = this.childNodes[0] ? this.childNodes[0].length : 0;
+    const length = this.childNodes[0] ? (this.childNodes[0] as Text).length : 0;
     const rangeInside = range.startContainer === range.endContainer && (range.startContainer === this.childNodes[0] || range.startContainer === this as unknown as Node);
 
     switch (event.key) {
@@ -120,31 +120,31 @@ export class IoString extends IoField {
       case 'ArrowLeft':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: 'ArrowLeft'}, true);
+          this.dispatch('io-focus-to', {source: this, command: 'ArrowLeft'}, true);
         }
         break;
       case 'ArrowUp':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: 'ArrowUp'}, true);
+          this.dispatch('io-focus-to', {source: this, command: 'ArrowUp'}, true);
         }
         break;
       case 'ArrowRight':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: 'ArrowRight'}, true);
+          this.dispatch('io-focus-to', {source: this, command: 'ArrowRight'}, true);
         }
         break;
       case 'ArrowDown':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: 'ArrowDown'}, true);
+          this.dispatch('io-focus-to', {source: this, command: 'ArrowDown'}, true);
         }
         break;
       default:
         if (['Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
     }
   }

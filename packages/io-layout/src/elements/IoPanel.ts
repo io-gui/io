@@ -3,7 +3,7 @@ import { ioSelector } from 'io-navigation';
 import { MenuItem, MenuOptions } from 'io-menus';
 import { ioTabs } from './IoTabs.js';
 import { Panel } from '../nodes/Panel.js';
-import { Tab, TabProps } from '../nodes/Tab.js';
+import { Tab } from '../nodes/Tab.js';
 
 export type IoPanelProps = IoElementProps & {
   panel?: Panel,
@@ -81,7 +81,7 @@ export class IoPanel extends IoElement {
         // TODO: move tab to panel above or split the panel
         break;
       }
-      case 'ArrowDown': {   
+      case 'ArrowDown': {
         // TODO: move tab to panel below or split the panel
         break;
       }
@@ -94,7 +94,7 @@ export class IoPanel extends IoElement {
       return;
     }
     this.options.items[index].selected = true;
-    const tabs = this.querySelectorAll('io-tab');
+    const tabs = Array.from(this.querySelectorAll('io-tab')) as HTMLElement[];
     if (tabs[index]) tabs[index].focus();
   }
   onMenuItemClicked(event: CustomEvent) {
@@ -118,7 +118,7 @@ export class IoPanel extends IoElement {
   removeTab(item: MenuItem) {
     this.options.removeItemById(item.id);
     if (this.options.items.length === 0) {
-      this.dispatchEvent('io-panel-remove', {panel: this.panel}, true);
+      this.dispatch('io-panel-remove', {panel: this.panel}, true);
     }
   }
   optionsMutated() {
@@ -132,11 +132,11 @@ export class IoPanel extends IoElement {
         icon: item.icon,
       }));
     });
-    this.dispatchEvent('io-panel-data-changed', {panel: this.panel}, true);
+    this.dispatch('io-panel-data-changed', {panel: this.panel}, true);
   }
   panelChanged() {
     this.options?.dispose();
-    this.options = new MenuOptions({items: this.panel.tabs, selected: this.panel.selected});
+    this.options = new MenuOptions({items: this.panel.tabs as unknown as MenuItem[], selected: this.panel.selected});
   }
   changed() {
     this.render([

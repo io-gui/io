@@ -94,10 +94,10 @@ export class IoColorSlider extends IoColorBase {
         break;
     }
     if (oldValue === JSON.stringify(this.value)) return;
-    this.dispatchEvent('value-input', {property: 'value', value: this.value}, false);
+    this.dispatch('value-input', {property: 'value', value: this.value}, false);
     if (!(this.value as unknown as Node)._isNode) {
       const detail = {object: this.value};
-      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+      this.dispatch('object-mutated', detail, false, window); // TODO: test
     }
   }
 

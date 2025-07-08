@@ -64,6 +64,8 @@ export class IoInspector extends IoElement {
   @ReactiveProperty({type: Map})
   declare widgets: EditorWidgets;
 
+  declare _cfgTimeout: number;
+
   static get Listeners() {
     return {
       'io-button-clicked': 'onLinkClicked',

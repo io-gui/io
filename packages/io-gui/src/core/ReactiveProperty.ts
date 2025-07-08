@@ -1,5 +1,6 @@
 import { Binding } from './Binding.js';
 import { AnyConstructor, Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 
 // TODO: make init: null default.
 
@@ -115,7 +116,7 @@ export class ReactiveProtoProperty {
   }
 }
 
-function decodeInitArgument(item: any, node: Node) {
+function decodeInitArgument(item: any, node: Node | IoElement) {
   if (item === 'this') {
     return node;
   } else if (typeof item === 'string' && item.startsWith('this.')) {
@@ -148,7 +149,7 @@ export class ReactivePropertyInstance {
    * @param node owner Node instance
    * @param propDef ReactiveProtoProperty object
    */
-  constructor(node: Node, propDef: ReactiveProtoProperty) {
+  constructor(node: Node | IoElement, propDef: ReactiveProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {

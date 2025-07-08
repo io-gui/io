@@ -134,7 +134,7 @@ export class MenuItem extends Node {
     }
   }
   onOptionsPathChanged(event: CustomEvent) {
-    this.dispatchEvent('path-changed', event.detail);
+    this.dispatch('path-changed', event.detail);
     if (this.mode === 'select') {
       this.selected = !!this.options?.path;
     }
@@ -161,7 +161,7 @@ export class MenuItem extends Node {
         console.warn('MenuItem: item with options must have mode set to "select" or "none"', this);
       }
       if (['select', 'toggle', 'link', 'action','none'].indexOf(this.mode) === -1) {
-        console.warn(`MenuItem: unknown mode property "${this.node}"!`, this);
+        console.warn(`MenuItem: unknown mode property "${this.mode}"!`, this);
       }
       if (this.mode === 'action' && !this.action) {
         console.warn('MenuItem: action property is required when mode is "action"!', this);

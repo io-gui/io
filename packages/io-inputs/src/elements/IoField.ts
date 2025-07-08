@@ -122,8 +122,8 @@ export class IoField extends IoElement {
   @Property(false)
   declare spellcheck: boolean;
 
-  @Property('0')
-  declare tabIndex: string;
+  @Property(0)
+  declare tabIndex: number;
 
   static get Listeners(): ListenerDefinitions { // TODO: fix listener types
     return {
@@ -164,6 +164,13 @@ export class IoField extends IoElement {
     this.removeEventListener('pointerup', this.onPointerup);
     this.pressed = false;
   }
+  inputValue(value: any) {
+    if (this.value !== value || typeof this.value === 'object') {
+      const oldValue = this.value;
+      this.setProperty('value', value);
+      this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
+    }
+  }
   onClick(event?: MouseEvent) {
   }
   onKeydown(event: KeyboardEvent) {
@@ -176,7 +183,7 @@ export class IoField extends IoElement {
       default:
         if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
     }
   }

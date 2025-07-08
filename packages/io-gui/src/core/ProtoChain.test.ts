@@ -139,17 +139,17 @@ export default class {
     describe('ProtoChain', () => {
       it('Should include an array of inherited class constructors', () => {
         let constructors = new ProtoChain(Array3).constructors;
-        expect(constructors).to.be.eql([Array3, Array2, Array1]);
+        expect(constructors).to.be.eql([Array3, Array2, Array1, Array]);
         constructors = new ProtoChain(Object3).constructors;
         expect(constructors).to.be.eql([Object3, Object2, Object1]);
         constructors = new ProtoChain(HTMLElement3).constructors;
         expect(constructors).to.be.eql([HTMLElement3, HTMLElement2, HTMLElement1]);
         constructors = new ProtoChain(Node).constructors;
-        expect(constructors).to.be.eql([Node, Object.getPrototypeOf(Node)]);
+        expect(constructors).to.be.eql([Node]);
         constructors = new ProtoChain(Node1).constructors;
-        expect(constructors).to.be.eql([Node1, Node, Object.getPrototypeOf(Node)]);
+        expect(constructors).to.be.eql([Node1, Node]);
         constructors = new ProtoChain(IoElement1).constructors;
-        expect(constructors).to.be.eql([IoElement1, IoElement, Object.getPrototypeOf(IoElement)]);
+        expect(constructors).to.be.eql([IoElement1, IoElement]);
       });
       it('Should include properties declared in `static get Properties()` return oject', () => {
         let protoChain = new ProtoChain(Node1);

@@ -64,8 +64,8 @@ export class IoNumber extends IoField {
   @ReactiveProperty({value: 'inset', type: String, reflect: true})
   declare appearance: 'neutral' | 'inset' | 'outset';
 
-  @Property(true)
-  declare contentEditable: boolean;
+  @Property('true')
+  declare contentEditable: string;
 
   @ReactiveProperty({value: 'pattern="[0-9]*"', type: String, reflect: true})
   declare pattern: string;
@@ -115,14 +115,14 @@ export class IoNumber extends IoField {
       } else {
         if (document.activeElement !== this as unknown as Element) {
           this.focus();
-          this.setCaretPosition(this.textNode.length);
+          this.setCaretPosition(this.textNode!.length);
         }
       }
       this.expandLadder();
     } else {
       if (document.activeElement !== this as unknown as Element) {
         this.focus();
-        this.setCaretPosition(this.textNode.length);
+        this.setCaretPosition(this.textNode!.length);
       }
     }
   }
@@ -137,7 +137,7 @@ export class IoNumber extends IoField {
     const range = (window.getSelection() as Selection).getRangeAt(0);
     const rangeStart = range.startOffset;
     const rangeEnd = range.endOffset;
-    const length = this.childNodes[0] ? this.childNodes[0].length : 0;
+    const length = this.childNodes[0] ? (this.childNodes[0] as Text).length : 0;
     const rangeInside = range.startContainer === range.endContainer && (range.startContainer === this.childNodes[0] || range.startContainer === this as unknown as Node);
     const valueNumber = Number(this.textNode);
 
@@ -150,62 +150,62 @@ export class IoNumber extends IoField {
         break;
       case 'Home':
         event.preventDefault();
-        this.textNode = this.min;
+        this.textNode = String(this.min);
         this._setFromTextNode();
         break;
       case 'End':
         event.preventDefault();
-        this.textNode = this.max;
+        this.textNode = String(this.max);
         this._setFromTextNode();
         break;
       case 'PageUp':
         event.preventDefault();
         if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
-          this.textNode = Number(this.textNode) + this.step;
+          this.textNode = String(Number(this.textNode) + this.step);
         } else {
-          this.textNode = this.step;
+          this.textNode = String(this.step);
         }
         this._setFromTextNode();
         break;
       case 'PageDown':
         event.preventDefault();
         if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
-          this.textNode = Number(this.textNode) - this.step;
+          this.textNode = String(Number(this.textNode) - this.step);
         } else {
-          this.textNode = -this.step;
+          this.textNode = String(-this.step);
         }
         this._setFromTextNode();
         break;
       case 'ArrowLeft':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
         break;
       case 'ArrowUp':
         if (IoNumberLadderSingleton.expanded) {
           event.preventDefault();
-          const upStep = IoNumberLadderSingleton.querySelector('.io-up1');
+          const upStep = IoNumberLadderSingleton.querySelector('.io-up1') as HTMLElement;
           if (upStep) upStep.focus();
         } else if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
         break;
       case 'ArrowRight':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
         break;
       case 'ArrowDown':
         if (IoNumberLadderSingleton.expanded) {
           event.preventDefault();
-          const downStep = IoNumberLadderSingleton.querySelector('.io-down1');
+          const downStep = IoNumberLadderSingleton.querySelector('.io-down1') as HTMLElement;
           if (downStep) downStep.focus();
         } else if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
           event.preventDefault();
-          this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
         break;
     }

@@ -95,7 +95,7 @@ export class IoDivider extends IoElement {
   }
   onPointermove(event: PointerEvent) {
     event.preventDefault();
-    this.dispatchEvent('io-divider-move', {
+    this.dispatch('io-divider-move', {
       index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
@@ -115,7 +115,7 @@ export class IoDivider extends IoElement {
     this.removeEventListener('pointerup', this.onPointerup);
     this.releasePointerCapture(event.pointerId);
     this.pressed = false;
-    this.dispatchEvent('io-divider-move-end', {
+    this.dispatch('io-divider-move-end', {
       index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,

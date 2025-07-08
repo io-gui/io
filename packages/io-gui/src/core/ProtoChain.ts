@@ -1,14 +1,16 @@
 import { ReactiveProtoProperty } from './ReactiveProperty.js';
 import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher.js';
-import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
+import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions, AnyConstructor } from '../nodes/Node.js';
 import { reactivePropertyDecorators } from '../decorators/Property.js';
 import { propertyDecorators } from '../decorators/Property.js';
+import { IoElement } from '../elements/IoElement.js';
 
-type ProtoConstructors = Array<NodeConstructor<any>>;
+// TODO: Improve types!
+
+type ProtoConstructors = Array<NodeConstructor>;
 type ProtoHandlers = string[];
 type ReactiveProtoProperties = { [property: string]: ReactiveProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
-
 
 const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
 function isNonNodeConstructor(constructor: any) {
@@ -16,7 +18,8 @@ function isNonNodeConstructor(constructor: any) {
   let proto = constructor.prototype;
   while (proto) {
     if (NON_OBSERVED.includes(constructor)) return false;
-    if (proto.constructor.name === 'NodeMixinConstructor') return false;
+    if (proto.constructor.name === 'Node') return false;
+    if (proto.constructor.name === 'IoElement') return false;
     if (proto === Object.prototype) return true;
     proto = Object.getPrototypeOf(proto);
   }
@@ -29,7 +32,8 @@ function isNodeObjectConstructor(constructor: any) {
   if (typeof constructor !== 'function') return false;
   let proto = constructor.prototype;
   while (proto) {
-    if (proto.constructor.name === 'NodeMixinConstructor') return true;
+    if (proto.constructor.name === 'Node') return true;
+    if (proto.constructor.name === 'IoElement') return true;
     proto = Object.getPrototypeOf(proto);
   }
   return false;
@@ -81,17 +85,16 @@ export class ProtoChain {
   observedNodeProperties: string[] = [];
   /**
    * Creates an instance of `ProtoChain` for specified class constructor.
-   * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
+   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
    */
-  constructor(ioNodeConstructor: NodeConstructor<any>) {
+  constructor(ioNodeConstructor: NodeConstructor) {
     let proto = ioNodeConstructor.prototype;
     // Iterate through the prototype chain to aggregate constructors.
     // Terminates at `HTMLElement`, `Object` or `Array`.
     while (
       proto
       && (ioNodeConstructor) !== HTMLElement
-      && (ioNodeConstructor) !== Object
-      && (ioNodeConstructor) !== Array) {
+      && (ioNodeConstructor) !== Object) {
         this.constructors.push(ioNodeConstructor);
         proto = Object.getPrototypeOf(proto);
         ioNodeConstructor = proto.constructor;
@@ -108,7 +111,7 @@ export class ProtoChain {
       reactivePropertyHash = this.addReactiveProperties(ioNodeConstructor.ReactiveProperties, reactivePropertyHash);
       this.addListeners(ioNodeConstructor.Listeners);
       this.addStyle(ioNodeConstructor.Style);
-      this.addHandlers(ioNodeConstructor.prototype);
+      this.addHandlers(ioNodeConstructor.prototype as Node | IoElement);
     }
 
     this.observedObjectProperties = this.getObservedObjectProperties();
@@ -117,10 +120,10 @@ export class ProtoChain {
   }
   /**
    * Adds properties defined in decorators to the properties array.
-   * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
+   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
    */
-  addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>) {
-    const props = propertyDecorators.get(ioNodeConstructor);
+  addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor) {
+    const props = propertyDecorators.get(ioNodeConstructor as AnyConstructor);
     if (props) for (const name in props) {
       this.properties[name] = props[name];
     }
@@ -137,10 +140,10 @@ export class ProtoChain {
   }
   /**
    * Adds reactive properties defined in decorators to the properties array.
-   * @param {NodeConstructor<any>} ioNodeConstructor - Owner `Node` constructor.
+   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
    */
-  addReactivePropertiesFromDecorators(ioNodeConstructor: NodeConstructor<any>) {
-    const props = reactivePropertyDecorators.get(ioNodeConstructor);
+  addReactivePropertiesFromDecorators(ioNodeConstructor: NodeConstructor) {
+    const props = reactivePropertyDecorators.get(ioNodeConstructor as AnyConstructor);
     if (props) for (const name in props) {
       const protoProperty = new ReactiveProtoProperty(props[name]);
       if (!this.reactiveProperties[name]) this.reactiveProperties[name] = protoProperty;
@@ -202,14 +205,14 @@ export class ProtoChain {
    * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
    * @param {Node} proto - Prototype object to search for handlers
    */
-  addHandlers(proto: Node) {
+  addHandlers(proto: Node | IoElement) {
     const names = Object.getOwnPropertyNames(proto);
     for (let j = 0; j < names.length; j++) {
       const fn = names[j];
       if (/^on[A-Z]/.test(fn) || /^_on[A-Z]/.test(fn) || fn.endsWith('Changed') || fn.endsWith('Mutated') || fn === 'changed') {
         const propDesr = Object.getOwnPropertyDescriptor(proto, fn);
         if (propDesr === undefined || propDesr.get || propDesr.set) continue;
-        if (typeof proto[fn] === 'function') {
+        if (typeof (proto as any)[fn] === 'function') {
           if (this.handlers.indexOf(fn) === -1) {
             this.handlers.push(fn);
           }
@@ -250,15 +253,15 @@ export class ProtoChain {
   /**
    * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
    * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-   * @param {Node} node - Target node instance
+   * @param {Node | IoElement} node - Target node instance
    */
-  autobindHandlers(node: Node) {
+  autobindHandlers(node: Node | IoElement) {
     debug: if (node.constructor !== this.constructors[0]) {
       console.warn('`autobindHandlers` should be used on', this.constructors[0].name, 'instance');
     }
     for (let i = this.handlers.length; i--;) {
       Object.defineProperty(node, this.handlers[i], {
-        value: node[this.handlers[i]].bind(node),
+        value: (node as any)[this.handlers[i]].bind(node),
         writable: true,
         configurable: true
       });

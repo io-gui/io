@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, VDOMElement, Storage as $, HTML_ELEMENTS } from 'io-gui';
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, VDOMElement, Storage as $, HTML_ELEMENTS, ReactivityType } from 'io-gui';
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js';
@@ -71,7 +71,7 @@ export class IoPropertyEditor extends IoElement {
   }
 
   @ReactiveProperty('debounced')
-  declare reactivity: string;
+  declare reactivity: ReactivityType;
 
   @ReactiveProperty({type: Object})
   declare value: Object;
@@ -104,7 +104,7 @@ export class IoPropertyEditor extends IoElement {
 
       if (!(this.value as Node)._isNode) {
         const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-        this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+        this.dispatch('object-mutated', detail, false, window); // TODO: test
       }
     } else {
       debug: console.warn('IoPropertyEditor: "value-input" recieved from an input without a property id');
@@ -184,14 +184,15 @@ export class IoPropertyEditor extends IoElement {
 
     this.render(vChildren);
   }
+  // TODO: Remove?!
   /**
    * Returns a JSON representation of the property editor. This feature is used in testing.
    * @return {Object} JSON representation of the property editor.
    */
-  toJSON() {
-    const json = Object.assign({}, super.toJSON(), this);
-    return json;
-  }
+  // toJSON() {
+  //   const json = Object.assign({}, super.toJSON(), this);
+  //   return json;
+  // }
 }
 export const ioPropertyEditor = IoPropertyEditor.vConstructor;
 

@@ -129,6 +129,8 @@ export class StorageNode extends Node {
       }
     }
 
+    if (props.storage === undefined) props.storage = 'local';
+
     const s = props.storage as keyof StorageNodes;
     if (nodes[s].has(props.key)) {
       return nodes[s].get(props.key) as StorageNode;

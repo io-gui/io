@@ -10,7 +10,7 @@ class MockNode extends Node {
   prop2Changed(change: Change) {
     this.changeStack.push(`prop2Changed ${change.property} ${change.value} ${change.oldValue}`);
   }
-  dispatchEvent(eventName: string, change?: Change) {
+  dispatch(eventName: string, change?: Change) {
     if (change && change.property) {
       this.eventStack.push(`${eventName} ${change.property} ${change.value} ${change.oldValue}`);
     } else {

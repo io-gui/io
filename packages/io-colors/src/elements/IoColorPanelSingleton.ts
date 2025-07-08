@@ -47,7 +47,7 @@ class IoColorPanel extends IoColorBase {
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
     const command = event.detail.command;
-    const sliders = this.querySelectorAll('[tabindex]');
+    const sliders = Array.from(this.querySelectorAll('[tabindex]')) as HTMLElement[];
     const index = Array.from(sliders).indexOf(source);
     if (command === 'ArrowDown' || (command === 'ArrowLeft' && index === 0)) {
       sliders[sliders.length - 1].focus();
@@ -58,7 +58,7 @@ class IoColorPanel extends IoColorBase {
     }
   }
   onValueInput() {
-    this.dispatchEvent('value-input', {property: 'value', value: this.value}, true);
+    this.dispatch('value-input', {property: 'value', value: this.value}, true);
   }
   changed() {
     this.render([

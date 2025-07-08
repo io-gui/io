@@ -16,7 +16,6 @@ export type IoSliderBaseProps = IoElementProps & {
 
 export class IoSliderBase extends IoGl {
   static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-
   static get Style() {
     return /* css */`
       :host {
@@ -74,8 +73,8 @@ export class IoSliderBase extends IoGl {
   @Property('slider')
   declare role: string;
 
-  @Property('0')
-  declare tabIndex: string;
+  @Property(0)
+  declare tabIndex: number;
 
   _startX = 0;
   _startY = 0;
@@ -234,7 +233,7 @@ export class IoSliderBase extends IoGl {
       this.value[1] = value[1];
       if (oldValue === JSON.stringify(this.value)) return;
       this.inputValue(this.value);
-      this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+      this.dispatch('object-mutated', {object: this.value}, false, window);
     } else if (typeof this.value === 'object') {
       const oldValue = JSON.stringify(this.value);
       const $value = this.value as {x: number, y: number};
@@ -242,7 +241,14 @@ export class IoSliderBase extends IoGl {
       $value.y = value[1];
       if (oldValue === JSON.stringify(this.value)) return;
       this.inputValue(this.value);
-      this.dispatchEvent('object-mutated', {object: this.value}, false, window);
+      this.dispatch('object-mutated', {object: this.value}, false, window);
+    }
+  }
+  inputValue(value: any) {
+    if (this.value !== value || typeof this.value === 'object') {
+      const oldValue = this.value;
+      this.setProperty('value', value);
+      this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
     }
   }
   onKeydown(event: KeyboardEvent) {
@@ -263,7 +269,7 @@ export class IoSliderBase extends IoGl {
         break;
       } else if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
         event.preventDefault();
-        this.dispatchEvent('io-focus-to', {source: this, command: event.key}, true);
+        this.dispatch('io-focus-to', {source: this, command: event.key}, true);
       }
   }
   _setIncrease() {
@@ -333,7 +339,7 @@ export class IoSliderBase extends IoGl {
   }
   valueMutated() {
     this.changed();
-    this.dispatchEvent('object-mutated', {object: this});
+    this.dispatch('object-mutated', {object: this});
   }
   changed() {
     super.changed();

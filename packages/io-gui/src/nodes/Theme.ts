@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register.js';
 import { ReactiveProperty } from '../decorators/Property.js';
-import { ReactivePropertyDefinitions, Node } from '../nodes/Node.js';
+import { ReactivePropertyDefinitions, Node, ReactivityType } from '../nodes/Node.js';
 import { Storage as $ } from '../nodes/Storage.js';
 
 const THEME_VERSION = 'v0.11';
@@ -210,6 +210,41 @@ export class Theme extends Node {
     return props;
   }
 
+  declare spacing: number;
+  declare spacing2: number;
+  declare spacing3: number;
+  declare spacing5: number;
+  declare spacing8: number;
+  declare lineHeight: number;
+  declare fontSize: number;
+  declare fieldHeight: number;
+  declare borderRadius: number;
+  declare borderWidth: number;
+  declare borderColor: Color;
+  declare borderColorLight: Color;
+  declare borderColorStrong: Color;
+  declare borderColorRed: Color;
+  declare borderColorGreen: Color;
+  declare borderColorBlue: Color;
+  declare bgColor: Color;
+  declare bgColorStrong: Color;
+  declare bgColorLight: Color;
+  declare bgColorRed: Color;
+  declare bgColorGreen: Color;
+  declare bgColorBlue: Color;
+  declare bgColorInput: Color;
+  declare color: Color;
+  declare colorStrong: Color;
+  declare colorLight: Color;
+  declare colorRed: Color;
+  declare colorGreen: Color;
+  declare colorBlue: Color;
+  declare colorWhite: Color;
+  declare colorInput: Color;
+  declare gradientColorStart: Color;
+  declare gradientColorEnd: Color;
+  declare shadowColor: Color;
+
   // Default theme values
   @ReactiveProperty({type: Object})
   declare themeDefaults: Record<string, ThemeVars>;
@@ -218,7 +253,7 @@ export class Theme extends Node {
   declare themeID: string;
 
   @ReactiveProperty('debounced')
-  declare reactivity: string;
+  declare reactivity: ReactivityType;
 
   ready() {
     this.registerTheme('light', LIGHT_THEME);
@@ -252,7 +287,7 @@ export class Theme extends Node {
     const mutated = super.onPropertyMutated(event);
     if (mutated) {
       this.changed();
-      this.dispatchEvent('object-mutated', {object: this});
+      this.dispatch('object-mutated', {object: this});
       return true;
     }
   }

@@ -57,7 +57,7 @@ export class IoButton extends IoField {
   }
   onClick(event: MouseEvent) {
     if (typeof this.action === 'function') this.action(this.value);
-    this.dispatchEvent('io-button-clicked', {value: this.value}, true);
+    this.dispatch('io-button-clicked', {value: this.value}, true);
   }
   ready() {
     this.changed();

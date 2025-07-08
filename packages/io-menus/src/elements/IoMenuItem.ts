@@ -21,7 +21,7 @@ export function onOverlayPointermove(event: PointerEvent) {
   hovered = getHoveredMenuItem(event);
   if (hovered && hovered !== prevHovered) {
     const v = Math.abs(event.movementY) - Math.abs(event.movementX);
-    const h = hovered.parentElement.horizontal;
+    const h = (hovered.parentElement as IoMenuOptions)?.horizontal;
     if (prevHovered?.parentElement !== hovered.parentElement) {
       prevHovered = hovered;
       hovered.focus();
@@ -38,7 +38,7 @@ export function onOverlayPointermove(event: PointerEvent) {
 }
 
 export function onOverlayPointeup(event: PointerEvent) {
-  if (hovered) hovered.onClick();
+  if (hovered) (hovered as any).onClick();
 }
 
 Overlay.addEventListener('pointermove', onOverlayPointermove);
@@ -100,7 +100,7 @@ export class IoMenuItem extends IoField {
   declare depth: number;
 
   @Property('false')
-  declare contentEditable: boolean;
+  declare contentEditable: string;
 
   @Property()
   declare $parent?: IoMenuOptions | IoMenuTree;
@@ -125,15 +125,15 @@ export class IoMenuItem extends IoField {
     return this.item.hasmore && this.depth > 0;
   }
   get inoverlay() {
-    return Overlay.contains(this.parentElement.parentElement);
+    return Overlay.contains(this.parentElement?.parentElement as HTMLElement);
   }
   connectedCallback() {
     super.connectedCallback();
-    if (this.$options) Overlay.appendChild(this.$options as unknown as HTMLElement);
+    if (this.$options) Overlay.appendChild(this.$options as HTMLElement);
   }
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this.$options) Overlay.removeChild(this.$options as unknown as HTMLElement);
+    if (this.$options) Overlay.removeChild(this.$options as HTMLElement);
   }
   onClick() {
     const item = this.item;
@@ -158,7 +158,7 @@ export class IoMenuItem extends IoField {
         this.collapseRoot();
       }
     }
-    getMenuRoot(this).dispatchEvent('io-menu-item-clicked', {item: this.item}, true);
+    getMenuRoot(this).dispatch('io-menu-item-clicked', {item: this.item}, true);
   }
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);
@@ -191,8 +191,8 @@ export class IoMenuItem extends IoField {
     const $allitems = getMenuDescendants(getMenuRoot(this));
     const $ancestoritems = getMenuAncestors(this);
     for (let i = $allitems.length; i--;) {
-      if ($allitems[i] !== this && $allitems[i] !== this.$options && $ancestoritems.indexOf($allitems[i]) === -1 && $allitems[i].expanded) {
-        $allitems[i].collapse();
+      if ($allitems[i] !== this && $allitems[i] !== this.$options && $ancestoritems.indexOf($allitems[i]) === -1 && ($allitems[i] as any).expanded) {
+        ($allitems[i] as any).collapse();
       }
     }
   }
@@ -293,7 +293,11 @@ export class IoMenuItem extends IoField {
           break;
         case 'In':
           if (this.hasmore) this.expanded = true;
-          if (this.$options && this.$options.children.length) this.$options.children[0].focus();
+          if (this.$options && this.$options.children.length) {
+            const item = this.$options!.querySelector(`[selected]`) as IoMenuItem;
+            if (item) item.focus();
+            else (this.$options!.children[0] as IoMenuItem).focus();
+          }
           break;
         case 'Out':
           if (this.$parent && this.$parent.$parent) {
@@ -310,12 +314,12 @@ export class IoMenuItem extends IoField {
   }
   collapse() {
     getMenuDescendants(this).forEach(descendant => {
-      descendant.expanded = false;
+      (descendant as any).expanded = false;
     });
     this.expanded = false;
   }
   collapseRoot() {
-    getMenuRoot(this).collapse();
+    (getMenuRoot(this) as any).collapse();
   }
   itemChanged() {
     // TODO: unbind previous? Test!

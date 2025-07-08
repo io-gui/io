@@ -40,7 +40,7 @@ export class IoBoolean extends IoField {
 
   onClick() {
     this.toggle();
-    this.dispatchEvent('io-boolean-clicked', {value: this.value}, true);
+    this.dispatch('io-boolean-clicked', {value: this.value}, true);
   }
   toggle() {
     this.inputValue(!this.value);

@@ -60,13 +60,13 @@ export class IoNumberSliderRange extends IoElement {
     if (!(this.value as unknown as Node)._isNode) {
       // TODO: add oldValue/value
       const detail = {object: this.value};
-      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+      this.dispatch('object-mutated', detail, false, window); // TODO: test
     }
   }
   _onSliderSet(event: CustomEvent) {
     this.value = event.detail.value;
-    // this.dispatchEvent('object-mutated', {object: this.value}, false, window);
-    this.dispatchEvent('value-input', event.detail, false);
+    // this.dispatch('object-mutated', {object: this.value}, false, window);
+    this.dispatch('value-input', event.detail, false);
   }
   ready() {
     this.changed();

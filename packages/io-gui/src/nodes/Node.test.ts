@@ -8,7 +8,6 @@ export default class {
         expect(node.setProperty).to.be.a('function');
         expect(node.applyProperties).to.be.a('function');
         expect(node.setProperties).to.be.a('function');
-        expect(node.inputValue).to.be.a('function');
         expect(node.changed).to.be.a('function');
         expect(node.queue).to.be.a('function');
         expect(node.dispatchQueue).to.be.a('function');
@@ -19,7 +18,7 @@ export default class {
         expect(node.unbind).to.be.a('function');
         expect(node.addEventListener).to.be.a('function');
         expect(node.removeEventListener).to.be.a('function');
-        expect(node.dispatchEvent).to.be.a('function');
+        expect(node.dispatch).to.be.a('function');
         expect(node.dispose).to.be.a('function');
         node.dispose();
       });
@@ -43,7 +42,7 @@ export default class {
           }
         }
 
-        const node = new TestNode();
+        const node = new TestNode() as any;
 
         expect(node.prop0).to.be.equal('');
         expect(node.prop1).to.be.equal(false);
@@ -249,7 +248,6 @@ export default class {
         const node1 = new Object1();
         const node2 = new Object2();
 
-
         expect(node1._reactiveProperties.get('prop1')!.binding).to.be.equal(binding1);
         expect(node2._reactiveProperties.get('prop1')!.binding).to.be.equal(binding2);
         expect(node2._reactiveProperties.get('prop3')!.binding).to.be.equal(binding3);
@@ -274,7 +272,7 @@ export default class {
           }
         }
 
-        const node = new TestNode();
+        const node = new TestNode() as any;
 
         expect(node._reactiveProperties.get('prop1')!.value).to.be.equal(1);
         expect(node.prop1).to.be.equal(1);
@@ -306,7 +304,7 @@ export default class {
           }
         }
 
-        const node = new TestNode2();
+        const node = new TestNode2() as any;
 
         expect(node._reactiveProperties.get('prop1')!.value).to.be.equal('label1');
         expect(node.prop1).to.be.equal('label1');
@@ -335,7 +333,7 @@ export default class {
           }
         }
 
-        const element = new TestElementReflection();
+        const element = new TestElementReflection() as any;
         expect(element.getAttribute('label')).to.be.equal('label1');
         expect(element.getAttribute('label2')).to.be.equal(null);
         element.label = 'label2';
@@ -352,6 +350,7 @@ export default class {
               prop: Number,
             };
           }
+          declare propChangedEvents: Change[];
           static get Listeners(): ListenerDefinitions {
             return {
               'prop-changed': 'onPropChanged',
@@ -363,7 +362,7 @@ export default class {
           }
         }
 
-        const node = new TestNode();
+        const node = new TestNode() as any;
         expect(node.propChangedEvents).to.be.eql([]);
 
         node.addEventListener('prop-changed', (() => {
@@ -442,7 +441,7 @@ export default class {
 
         const node3 = new TestNode({
           prop: -1
-        });
+        }) as any;
 
         expect(node3.propChangedEvents).to.be.eql([{
           oldValue: 0,
@@ -506,7 +505,7 @@ export default class {
         const subnode = new TestNode();
         const node = new TestNode({
           prop: subnode,
-        });
+        }) as any;
 
         expect(subnode._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node.onPropertyMutated);
 
@@ -528,7 +527,7 @@ export default class {
           }
         }
 
-        const node2 = new TestNode2();
+        const node2 = new TestNode2() as any;
         const subnode3 = node2.prop;
 
         expect(subnode3._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node2.onPropertyMutated);
@@ -537,15 +536,15 @@ export default class {
 
         expect(subnode3._eventDispatcher.addedListeners['object-mutated']).to.be.equal(undefined);
 
-        const node3 = new TestNode2();
+        const node3 = new TestNode2() as any;
         const subnode4 = node3.prop;
 
         node3.prop = null;
 
         expect(subnode4._eventDispatcher.addedListeners['object-mutated']).to.be.equal(undefined);
 
-        const node4 = new TestNode2();
-        const node5 = new TestNode2();
+        const node4 = new TestNode2() as any;
+        const node5 = new TestNode2() as any;
         const subnode5 = node4.prop;
         const subnode6 = node5.prop;
 
@@ -579,7 +578,7 @@ export default class {
           }
         }
 
-        const node = new TestNode();
+        const node = new TestNode() as any;
 
         expect(node.changedCounter).to.equal(0);
         expect(node.prop1Changes).to.be.eql([]);
@@ -705,7 +704,7 @@ export default class {
           }
         }
 
-        const node = new TestNode();
+        const node = new TestNode() as any;
 
         expect(node.changedCounter).to.equal(0);
         expect(node.obj1MutatedCounter).to.equal(0);
@@ -749,15 +748,15 @@ export default class {
           constructor(args?: any) {super(args);}
         }
 
-        const node = new TestNode();
+        const node = new TestNode() as any;
 
         const binding = node.bind('prop1');
         expect(binding).to.be.instanceof(Binding);
         expect(binding.node).to.be.equal(node);
         expect(binding.property).to.be.equal('prop1');
 
-        const boundNode1 = new TestNode({prop1: binding});
-        const boundNode2 = new TestNode({prop1: binding});
+        const boundNode1 = new TestNode({prop1: binding}) as any;
+        const boundNode2 = new TestNode({prop1: binding}) as any;
         boundNode2.prop2 = binding;
 
         expect(binding.targets[0]).to.be.equal(boundNode1);
@@ -810,6 +809,7 @@ export default class {
               prop3: 'target3',
             };
           }
+          declare subnode: TestNode;
           ready() {
             this.changed();
           }
@@ -822,7 +822,7 @@ export default class {
           }
         }
 
-        const targetNode = new TestNodeTarget();
+        const targetNode = new TestNodeTarget() as any;
 
         expect(targetNode.subnode.prop1).to.be.equal(targetNode.prop1).to.be.equal('target1');
         expect(targetNode.subnode.prop2).to.be.equal(targetNode.prop2).to.be.equal('target2');
@@ -832,7 +832,7 @@ export default class {
           prop1: 'source1',
           prop2: 'source2',
           prop3: 'source3',
-        });
+        }) as any;
 
         targetNode.setProperties({
           prop1: sourceNode.bind('prop1'),
@@ -878,12 +878,12 @@ export default class {
         const binding0 = new Binding(srcNode, 'prop1');
         const binding1 = new Binding(srcNode, 'prop2');
 
-        const dstNode0 = new TestNode();
+        const dstNode0 = new TestNode() as any;
         dstNode0.prop1 = binding0;
         dstNode0.prop2 = binding1;
 
-        const dstNode1 = new TestNode({prop1: binding0});
-        const dstNode3 = new TestNode({prop1: binding0, prop2: binding0});
+        const dstNode1 = new TestNode({prop1: binding0}) as any;
+        const dstNode3 = new TestNode({prop1: binding0, prop2: binding0}) as any;
 
         expect(binding0.targets[0]).to.be.equal(dstNode0);
         expect(binding0.targets[1]).to.be.equal(dstNode1);

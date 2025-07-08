@@ -35,8 +35,8 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
-    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : null;
-    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : null;
+    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : '';
+    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : '';
     return true;
   }
   return false;
@@ -65,8 +65,8 @@ function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemR
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
-    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : null;
-    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : null;
+    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : '';
+    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : '';
     return true;
   }
   return false;
@@ -98,8 +98,8 @@ function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemR
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
-    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : null;
-    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : null;
+    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : '';
+    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : '';
     return true;
   }
   return false;
@@ -128,8 +128,8 @@ function nudgeRight(element: HTMLElement | IoElement, x: number, y: number, elem
     }
     element.style.top = y + 'px';
     element.style.left = x + 'px';
-    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : null;
-    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : null;
+    element.style.width = clipWidth !== -1 ? clipWidth + 'px' : '';
+    element.style.height = clipHeight !== -1 ? clipHeight + 'px' : '';
     return true;
   }
   return false;

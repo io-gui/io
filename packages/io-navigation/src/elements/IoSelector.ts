@@ -36,7 +36,7 @@ export type IoSelectorProps = IoElementProps & {
   caching?: CachingType,
   loading?: WithBinding<boolean>,
   import?: string, // TODO: move to core?
-  scroll?: WithBinding<string>,
+  anchor?: WithBinding<string>,
 };
 
 @Register
@@ -93,7 +93,7 @@ export class IoSelector extends IoElement {
   declare loading: boolean;
 
   @ReactiveProperty({value: '', type: String})
-  declare scroll: string;
+  declare anchor: string;
 
   @Property(Object)
   declare private _caches: Record<string, IoElement | HTMLElement>;
@@ -122,26 +122,26 @@ export class IoSelector extends IoElement {
     this.startPreache = this.startPreache.bind(this);
     this.renderSelected = this.renderSelected.bind(this);
     this.renderDebounced = this.renderDebounced.bind(this);
-    this.scrollChangedDebounced = this.scrollChangedDebounced.bind(this);
+    this.anchorChangedDebounced = this.anchorChangedDebounced.bind(this);
     this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this);
     this.onScrollUnsuspend = this.onScrollUnsuspend.bind(this);
   }
 
-  scrollChanged() {
+  anchorChanged() {
     if (!this.scrollToSuspended) {
       this.onScrollSuspended = true;
       this.debounce(this.onScrollUnsuspend, undefined, 120);
     }
-    this.debounce(this.scrollChangedDebounced, undefined, 3);
+    this.debounce(this.anchorChangedDebounced, undefined, 3);
   }
 
-  scrollChangedDebounced() {
-    const scroll = this.scroll.split('#')[1] || this.scroll;
-    if (!scroll || this.scrollToSuspended) return;
-    const heading = this.querySelector(`[data-heading="${scroll}"]`);
+  anchorChangedDebounced() {
+    const anchor = this.anchor.split('#')[1] || this.anchor;
+    if (!anchor || this.scrollToSuspended) return;
+    const heading = this.querySelector(`[data-heading="${anchor}"]`);
     if (heading) {
       const style = window.getComputedStyle(heading);
-      const top = heading.offsetTop - parseInt(style.marginTop);
+      const top = (heading as HTMLElement).offsetTop - parseInt(style.marginTop);
       this.scrollTo({top: top, behavior: 'smooth'});
     } else {
       this.scrollTo(0, 0);
@@ -159,19 +159,19 @@ export class IoSelector extends IoElement {
   onScrollChanged() {
     if (this.onScrollSuspended) return;
 
-    const scroll = this.scroll.split('#')[1] || this.scroll;
+    const anchor = this.anchor.split('#')[1] || this.anchor;
     const headings = this.querySelectorAll('[data-heading]') as NodeListOf<HTMLElement>;
     const closestHeading = Array.from(headings).reduce((prev, curr) => {
       return (Math.abs(curr.offsetTop - this.scrollTop) < Math.abs(prev.offsetTop - this.scrollTop) ? curr : prev);
     }, headings[0]);
     if (closestHeading) {
       const current = closestHeading.getAttribute('data-heading');
-      if (current && current !== scroll) {
+      if (current && current !== anchor) {
         this.scrollToSuspended = true;
-        if (this.scroll.split('#').length === 2) {
-          this.scroll = this.scroll.split('#')[0] + '#' + current;
+        if (this.anchor.split('#').length === 2) {
+          this.anchor = this.anchor.split('#')[0] + '#' + current;
         } else {
-          this.scroll = current;
+          this.anchor = current;
         }
         this.debounce(this.scrollToUnsuspend, undefined, 120);
       }
@@ -212,7 +212,7 @@ export class IoSelector extends IoElement {
     } else if (this.select === 'none') {
       this.render(this.elements);
     }
-    this.debounce(this.scrollChangedDebounced, undefined, 2);
+    this.debounce(this.anchorChangedDebounced, undefined, 2);
   }
 
   renderSelectedId(id: string) {
@@ -226,7 +226,7 @@ export class IoSelector extends IoElement {
 
     id = id.split('#')[0];
     // TODO: what if <io-selector> is reused in template() and ID collides?
-    if (id === this.childNodes[0]?.id) return;
+    if (id === (this.childNodes[0] as IoElement)?.id) return;
 
     this.render([], this, cache);
     this.scrollTo(0, 0);
@@ -262,11 +262,11 @@ export class IoSelector extends IoElement {
     if (cache && cachedElement) {
       if ((cachedElement.parentElement as IoElement) !== this) {
         if (this.firstChild) this.removeChild(this.firstChild);
-        this.appendChild(cachedElement);
+        this.appendChild(cachedElement as Node);
       }
     } else {
       this.render([vElement], this, cache);
-      if (cache) this._caches[id] = this.childNodes[0];
+      if (cache) this._caches[id] = this.childNodes[0] as IoElement;
     }
   }
 

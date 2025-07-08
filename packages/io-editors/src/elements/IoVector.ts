@@ -89,7 +89,7 @@ export class IoVector extends IoElement {
     }
     if (!(this.value as unknown as Node)._isNode) {
       const detail = this.linked ? {object: this.value} : {object: this.value, property: id, value: value, oldValue: oldValue};
-      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+      this.dispatch('object-mutated', detail, false, window); // TODO: test
     }
   }
 

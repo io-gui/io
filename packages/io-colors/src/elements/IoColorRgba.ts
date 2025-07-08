@@ -49,7 +49,7 @@ export class IoColorRgba extends IoColorBase {
     if (!(this.value as unknown as Node)._isNode) {
       // TODO: add oldValue/value
       const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-      this.dispatchEvent('object-mutated', detail, false, window); // TODO: test
+      this.dispatch('object-mutated', detail, false, window); // TODO: test
     }
   }
 

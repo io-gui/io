@@ -14,7 +14,7 @@ function hardenMenuItems(itemsOrDefs: MenuItem[] | MenuItemDefLoose[]) {
     if (itemsOrDefs[i] instanceof MenuItem) {
       items.push(itemsOrDefs[i] as MenuItem);
     } else {
-      items.push(new MenuItem().fromJSON(itemsOrDefs[i]));
+      items.push(new MenuItem().fromJSON(itemsOrDefs[i] as MenuItemDefLoose));
     }
   }
   return items;
@@ -106,7 +106,7 @@ export class MenuOptions extends Node {
     if (oldIndex >= 0 && oldIndex < this.items.length && newIndex >= 0 && newIndex < this.items.length) {
       this.items.splice(newIndex, 0, this.items.splice(oldIndex, 1)[0]);
     }
-    this.dispatchEvent('object-mutated', {object: this});
+    this.dispatch('object-mutated', {object: this});
   }
   addItem(itemLoose: MenuItem | MenuItemDefLoose, index?: number) {
     // TODO handle options mutation in a better way
@@ -124,17 +124,17 @@ export class MenuOptions extends Node {
       item.addEventListener('selected-changed', this.onItemSelectedChanged);
       item.addEventListener('path-changed', this.onSubOptionsPathChanged);
     }
-    
+
     const clashingItem = this.items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id === item.id);
     if (clashingItem) {
       this.removeItem(clashingItem);
     }
-    
+
     // TODO move updatePaths to MenuItem. Handle setProperties better.
     if (item.selected && item.mode === 'select') {
       this.updatePaths(item);
     }
-    this.dispatchEvent('object-mutated', {object: this});
+    this.dispatch('object-mutated', {object: this});
   }
   removeItemById(id: string) {
     const item = this.findItemById(id);
@@ -153,9 +153,9 @@ export class MenuOptions extends Node {
       this.items.splice(index, 1);
       this.updatePaths();
     } else debug: {
-      console.warn(`MenuOptions.removeItem: cannot find item to remove!`, this);
+      console.warn('MenuOptions.removeItem: cannot find item to remove!', this);
     }
-    this.dispatchEvent('object-mutated', {object: this});
+    this.dispatch('object-mutated', {object: this});
   }
 
   initItems() {
@@ -286,7 +286,7 @@ export class MenuOptions extends Node {
           }
         }
         this.updatePaths(item);
-        this.dispatchEvent('item-selected', {item: item});
+        this.dispatch('item-selected', {item: item});
       } else {
         this.updatePaths();
       }

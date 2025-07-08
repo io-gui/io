@@ -1,4 +1,7 @@
-import { Node } from '../nodes/Node';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
+
+// TODO: Improve types!
 
 export interface Change {
   property: string;
@@ -11,7 +14,7 @@ export interface Changes {
 }
 
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-  readonly target: Node;
+  readonly target: Node | IoElement;
   readonly detail: Change;
   readonly path: Node[];
 }
@@ -39,7 +42,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * changeQueue.dispatch();
  */
 export class ChangeQueue {
-  declare readonly node: Node;
+  declare readonly node: Node | IoElement;
   declare readonly changes: Change[];
   dispatchedChange = false;
   dispatching = false;
@@ -47,7 +50,7 @@ export class ChangeQueue {
    * Creates change queue for the specified owner instance of `Node`.
    * @param {Node} node - Owner node.
    */
-  constructor(node: Node) {
+  constructor(node: Node | IoElement) {
     this.changes = [];
     this.node = node;
     Object.defineProperty(this, 'dispatch', {
@@ -97,13 +100,13 @@ export class ChangeQueue {
       const property = change.property;
       if (change.value !== change.oldValue) {
         this.dispatchedChange = true;
-        if (this.node[property + 'Changed']) this.node[property + 'Changed'](change);
-        this.node.dispatchEvent(property + '-changed', change);
+        if ((this.node as any)[property + 'Changed']) (this.node as any)[property + 'Changed'](change);
+        this.node.dispatch(property + '-changed' as any, change);
       }
     }
     if (this.dispatchedChange) {
       this.node.changed();
-      this.node.dispatchEvent('object-mutated', {object: this.node});
+      this.node.dispatch('object-mutated' as any, {object: this.node});
     }
     this.dispatchedChange = false;
     this.dispatching = false;

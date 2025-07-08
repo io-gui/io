@@ -100,10 +100,10 @@ export default class {
         element.step = 1;
         element.min = 2;
         element.max = 5;
-        element.textNode = 10;
+        element.textNode = '10';
         element._setFromTextNode();
         expect(element.value).to.equal(5);
-        element.textNode = 0;
+        element.textNode = '0';
         element._setFromTextNode();
         expect(element.value).to.equal(2);
         element.step = 0.0001;
@@ -117,7 +117,7 @@ export default class {
         expect(element.innerText).to.equal('0.1');
         element.conversion = 0.01;
         expect(element.innerText).to.equal('0.01');
-        element.textNode = 10;
+        element.textNode = '10';
         element._setFromTextNode();
         expect(element.value).to.equal(1000);
         element.value = 0;

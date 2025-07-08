@@ -41,11 +41,11 @@ class IoContextEditor extends IoPropertyEditor {
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
     const cmd = event.detail.command;
-    const siblings = this.querySelectorAll('[tabindex="0"]');
+    const siblings = Array.from(this.querySelectorAll('[tabindex="0"]')) as HTMLElement[];
     const index = [...siblings].indexOf(source);
 
     let cmdOverride = '';
-    if (this.horizontal) {
+    if ((this as any).horizontal) {
       if (cmd === 'ArrowRight') cmdOverride = 'next';
       if (cmd === 'ArrowLeft') cmdOverride = 'prev';
     } else {
@@ -59,7 +59,7 @@ class IoContextEditor extends IoPropertyEditor {
       } else if (cmdOverride === 'prev') {
         siblings[(index - 1 + siblings.length) % siblings.length].focus();
       } else if (cmdOverride === 'out') {
-        if (this.$parent) this.$parent.focus();
+        if ((this as any).$parent) (this as any).$parent.focus();
       }
       event.stopPropagation();
     }
@@ -75,7 +75,7 @@ class IoContextEditor extends IoPropertyEditor {
     this.debounce(this.onExpand);
   }
   onExpand() {
-    this.querySelector('[tabindex="0"]')?.focus();
+    (this.querySelector('[tabindex="0"]') as HTMLElement)?.focus();
     // TODO: keyboard focus navigation
   }
   expandedChanged() {
