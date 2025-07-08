@@ -294,7 +294,7 @@ export class IoMenuItem extends IoField {
         case 'In':
           if (this.hasmore) this.expanded = true;
           if (this.$options && this.$options.children.length) {
-            const item = this.$options!.querySelector(`[selected]`) as IoMenuItem;
+            const item = this.$options!.querySelector('[selected]') as IoMenuItem;
             if (item) item.focus();
             else (this.$options!.children[0] as IoMenuItem).focus();
           }

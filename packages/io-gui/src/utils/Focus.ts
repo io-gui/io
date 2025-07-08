@@ -23,7 +23,7 @@ function setFocusBacktrack(element: HTMLElement | IoElement, dir: Direction, sou
   });
 }
 
-function getRectDistance(rect1: DOMRect, rect2: DOMRect) {
+function getRectDistance(rect1: DOMRect, rect2: DOMRect, dirBias: number = 1) {
   if (rect1.right > rect2.left && rect2.right > rect1.left && rect1.bottom > rect2.top && rect2.bottom > rect1.top) {
     return 0;
   }
@@ -34,14 +34,19 @@ function getRectDistance(rect1: DOMRect, rect2: DOMRect) {
   else if (rect2.right < rect1.left) dx = Math.max(MIN_DISTANCE, rect1.left - rect2.right);
   if (rect1.bottom < rect2.top) dy = Math.max(MIN_DISTANCE, rect2.top - rect1.bottom);
   else if (rect2.bottom < rect1.top) dy = Math.max(MIN_DISTANCE, rect1.top - rect2.bottom);
-
+  dx = dx * dirBias;
+  dy = dy / dirBias;
   return (dx**2 + dy**2)**0.5;
 }
 
-function getCenterDistance(rect1: DOMRect, rect2: DOMRect) {
+function getCenterDistance(rect1: DOMRect, rect2: DOMRect, dirBias: number = 1) {
   let c1 = {x: rect1.x + rect1.width / 2, y: rect1.y + rect1.height / 2};
   let c2 = {x: rect2.x + rect2.width / 2, y: rect2.y + rect2.height / 2};
-  return ((c1.x - c2.x)**2 + (c1.y - c2.y)**2)**0.5;
+  let dx = c1.x - c2.x;
+  let dy = c1.y - c2.y;
+  dx = dx * dirBias;
+  dy = dy / dirBias;
+  return (dx**2 + dy**2)**0.5;
 }
 
 function onIoFocusTo(event: CustomEvent) {
@@ -116,8 +121,12 @@ function onIoFocusTo(event: CustomEvent) {
       if (cmd === 'ArrowLeft' && rect.right > srcRect.left) continue;
       if (cmd === 'ArrowDown' && rect.top < srcRect.bottom) continue;
       if (cmd === 'ArrowUp' && rect.bottom > srcRect.top) continue;
-      const distance = getRectDistance(srcRect, rect);
-      const centerDistance = getCenterDistance(srcRect, rect);
+
+      const biasMagnitude = 4;
+      const dirBias = cmd === 'ArrowLeft' || cmd === 'ArrowRight' ? 1 / biasMagnitude : biasMagnitude;
+
+      const distance = getRectDistance(srcRect, rect, dirBias);
+      const centerDistance = getCenterDistance(srcRect, rect, dirBias);
       if (distance < closestDistance) {
         closestDistance = distance;
         closestCenterDistance = centerDistance;
