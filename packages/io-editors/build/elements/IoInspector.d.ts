@@ -22,6 +22,7 @@ export declare class IoInspector extends IoElement {
     config: EditorConfig;
     groups: EditorGroups;
     widgets: EditorWidgets;
+    _cfgTimeout: number;
     static get Listeners(): {
         'io-button-clicked': string;
     };

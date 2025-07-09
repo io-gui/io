@@ -1,4 +1,5 @@
-import { Node } from '../nodes/Node';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 export interface Change {
     property: string;
     value: any;
@@ -8,7 +9,7 @@ export interface Changes {
     [property: string]: Change;
 }
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-    readonly target: Node;
+    readonly target: Node | IoElement;
     readonly detail: Change;
     readonly path: Node[];
 }
@@ -35,7 +36,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * changeQueue.dispatch();
  */
 export declare class ChangeQueue {
-    readonly node: Node;
+    readonly node: Node | IoElement;
     readonly changes: Change[];
     dispatchedChange: boolean;
     dispatching: boolean;
@@ -43,7 +44,7 @@ export declare class ChangeQueue {
      * Creates change queue for the specified owner instance of `Node`.
      * @param {Node} node - Owner node.
      */
-    constructor(node: Node);
+    constructor(node: Node | IoElement);
     /**
      * Adds property change payload to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.

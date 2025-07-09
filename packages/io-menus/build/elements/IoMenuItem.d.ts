@@ -25,14 +25,14 @@ export declare class IoMenuItem extends IoField {
     expanded: boolean;
     direction: NudgeDirection;
     depth: number;
-    contentEditable: boolean;
+    contentEditable: string;
     $parent?: IoMenuOptions | IoMenuTree;
     $options?: IoMenuOptions;
     static get Listeners(): any;
     constructor(args?: IoMenuItemProps);
     preventDefault(event: Event): void;
     get hasmore(): boolean;
-    get inoverlay(): any;
+    get inoverlay(): boolean;
     connectedCallback(): void;
     disconnectedCallback(): void;
     onClick(): void;

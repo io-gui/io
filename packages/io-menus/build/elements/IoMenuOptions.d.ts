@@ -37,7 +37,7 @@ export declare class IoMenuOptions extends IoElement {
         touchstart: ListenerDefinition;
         'io-focus-to': string;
     };
-    get inoverlay(): any;
+    get inoverlay(): boolean;
     constructor(args?: IoMenuOptionsProps);
     init(): void;
     ready(): void;

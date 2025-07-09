@@ -16,11 +16,11 @@ export declare class IoString extends IoField {
     live: boolean;
     placeholder: string;
     appearance: 'neutral' | 'inset' | 'outset';
-    contentEditable: boolean;
+    contentEditable: string;
     role: string;
     constructor(args?: IoStringProps);
-    get textNode(): any;
-    set textNode(value: any);
+    get textNode(): string | null;
+    set textNode(value: string | null);
     _setFromTextNode(): void;
     _setObjectFromTextNodeJSON(): void;
     onBlur(event: FocusEvent): void;

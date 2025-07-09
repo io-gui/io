@@ -1,13 +1,13 @@
 import { VDOMElement, IoElement, IoElementProps } from 'io-gui';
 export type IoDividerProps = IoElementProps & {
-    direction?: 'row' | 'column';
+    orientation?: 'vertical' | 'horizontal';
     index?: number;
 };
 export declare class IoDivider extends IoElement {
     static vConstructor: (arg0?: IoDividerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     pressed: boolean;
-    direction: 'row' | 'column';
+    orientation: 'horizontal' | 'vertical';
     index: number;
     static get Listeners(): {
         pointerdown: string;

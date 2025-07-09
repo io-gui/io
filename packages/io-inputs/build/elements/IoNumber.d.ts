@@ -26,13 +26,13 @@ export declare class IoNumber extends IoField {
     max: number;
     ladder: boolean;
     appearance: 'neutral' | 'inset' | 'outset';
-    contentEditable: boolean;
+    contentEditable: string;
     pattern: string;
     inputMode: string;
     role: string;
     constructor(args?: IoNumberProps);
-    get textNode(): any;
-    set textNode(value: any);
+    get textNode(): string | null;
+    set textNode(value: string | null);
     onBlur(event: FocusEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;

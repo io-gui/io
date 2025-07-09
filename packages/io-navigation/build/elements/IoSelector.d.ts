@@ -9,7 +9,7 @@ export type IoSelectorProps = IoElementProps & {
     caching?: CachingType;
     loading?: WithBinding<boolean>;
     import?: string;
-    scroll?: WithBinding<string>;
+    anchor?: WithBinding<string>;
 };
 export declare class IoSelector extends IoElement {
     static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
@@ -19,7 +19,7 @@ export declare class IoSelector extends IoElement {
     select: SelectType;
     caching: CachingType;
     loading: boolean;
-    scroll: string;
+    anchor: string;
     private _caches;
     private _preaching;
     private scrollToSuspended;
@@ -29,8 +29,8 @@ export declare class IoSelector extends IoElement {
     };
     constructor(args?: IoSelectorProps);
     init(): void;
-    scrollChanged(): void;
-    scrollChangedDebounced(): void;
+    anchorChanged(): void;
+    anchorChangedDebounced(): void;
     scrollToUnsuspend(): void;
     onScrollUnsuspend(): void;
     onScrollChanged(): void;

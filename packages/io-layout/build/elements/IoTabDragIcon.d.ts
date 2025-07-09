@@ -10,9 +10,10 @@ declare class IoTabDragIcon extends IoField {
     static get Style(): string;
     dragging: boolean;
     item: MenuItem;
+    dropSource: IoTabs | null;
     dropTarget: IoTabs | null;
     dropIndex: number;
-    tabIndex: string;
+    tabIndex: number;
     constructor(args?: IoTabDragIconProps);
     changed(): void;
 }

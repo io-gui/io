@@ -1,5 +1,6 @@
-import { ChangeEvent } from './ChangeQueue';
-import { Node } from '../nodes/Node';
+import { ChangeEvent } from './ChangeQueue.js';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 /**
  * Event listener types.
  */
@@ -24,16 +25,16 @@ export interface ChangeEventListener {
 export interface IoEventListener {
     (event: {
         detail: any;
-        target: Node;
-        path: Node[];
+        target: Node | IoElement;
+        path: Array<Node | IoElement>;
     }): void;
 }
-export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener;
+export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener | EventListenerOrEventListenerObject;
 /**
-* Listener definition type.
-* The first item is a string (function name) or an event listener function.
-* The second item is an optional object of event listener options.
-*/
+ * Listener definition type.
+ * The first item is a string (function name) or an event listener function.
+ * The second item is an optional object of event listener options.
+ */
 export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOptions?];
 /**
  * Loose listener definition type.
@@ -54,11 +55,11 @@ export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefi
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {Node | EventTarget} node - The node instance containing potential method references
+ * @param {Node | IoElement | EventTarget} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
-export declare const listenerFromDefinition: (node: Node | EventTarget, def: ListenerDefinition) => Listener;
+export declare const listenerFromDefinition: (node: Node | IoElement | EventTarget, def: ListenerDefinition) => Listener;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
  * It makes events of all `Node` class instances compatible with DOM events.
@@ -68,7 +69,7 @@ export declare const listenerFromDefinition: (node: Node | EventTarget, def: Lis
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export declare class EventDispatcher {
-    readonly node: Node | EventTarget;
+    readonly node: Node | IoElement | EventTarget;
     readonly nodeIsEventTarget: boolean;
     readonly protoListeners: Listeners;
     readonly propListeners: Listeners;
@@ -76,15 +77,15 @@ export declare class EventDispatcher {
     /**
      * Creates an instance of `EventDispatcher` for specified `Node` instance.
      * It initializes `protoListeners` from `ProtoChain`.
-     * @param {Node} node owner Node
+     * @param {Node | IoElement | EventTarget} node owner Node
      */
-    constructor(node: Node | EventTarget);
+    constructor(node: Node | IoElement | EventTarget);
     /**
      * Sets `protoListeners` specified as `get Listeners()` class definitions.
      * Definitions from subclass replace the ones from parent class.
-     * @param {Node} node owner Node
+     * @param {Node | IoElement} node owner Node
      */
-    setProtoListeners(node: Node): void;
+    setProtoListeners(node: Node | IoElement): void;
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
@@ -114,9 +115,9 @@ export declare class EventDispatcher {
      * @param {string} name - Name of the event
      * @param {any} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
-     * @param {EventTarget} [node] - Event target override to dispatch the event from
+     * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: EventTarget | Node): void;
+    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: Node | IoElement | EventTarget): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.

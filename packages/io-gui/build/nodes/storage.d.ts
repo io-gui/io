@@ -4,17 +4,17 @@ export type StorageProps = NodeProps & {
     key: string;
     value?: any;
     default?: any;
-    storage?: 'hash' | 'local' | 'none';
+    storage?: 'hash' | 'local';
 };
 export declare class StorageNode extends Node {
     key: string;
     value: any;
     default: any;
-    storage: 'hash' | 'local' | 'none';
+    storage: 'hash' | 'local';
     binding: Binding<any>;
     constructor(props: StorageProps);
     dispose(): void;
-    _clearStorage(): void;
+    clearStorage(): void;
     valueMutated(): void;
     valueChanged(): void;
     removeValueToHash(): void;

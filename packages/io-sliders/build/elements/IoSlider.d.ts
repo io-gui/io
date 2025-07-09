@@ -27,7 +27,7 @@ export declare class IoSlider extends IoGl {
     disabled: boolean;
     noscroll: boolean;
     role: string;
-    tabIndex: string;
+    tabIndex: number;
     static get Frag(): string;
     static get Listeners(): {
         focus: string;
@@ -50,6 +50,7 @@ export declare class IoSlider extends IoGl {
     onPointermoveThrottled(event: PointerEvent): void;
     _incrementValue(value: number): void;
     _inputValue(value: number): void;
+    inputValue(value: any): void;
     onKeydown(event: KeyboardEvent): void;
     ready(): void;
     invalidChanged(): void;

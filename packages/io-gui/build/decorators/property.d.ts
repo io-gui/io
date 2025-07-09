@@ -1,5 +1,6 @@
 import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
 import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>>;
 export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions>;
 /**
@@ -15,7 +16,7 @@ export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, Reactiv
  *   declare title: string;
  * }
  */
-export declare function Property(initialValue?: any): (target: Node, propertyName: string) => void;
+export declare function Property(initialValue?: any): (target: Node | IoElement, propertyName: string) => void;
 /**
  * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator
@@ -36,5 +37,5 @@ export declare function Property(initialValue?: any): (target: Node, propertyNam
  *   declare size: [number, number];
  * }
  */
-export declare function ReactiveProperty(propertyDefinition?: ReactivePropertyDefinitionLoose): (target: Node, propertyName: string) => void;
+export declare function ReactiveProperty(propertyDefinition?: ReactivePropertyDefinitionLoose): (target: Node | IoElement, propertyName: string) => void;
 //# sourceMappingURL=Property.d.ts.map

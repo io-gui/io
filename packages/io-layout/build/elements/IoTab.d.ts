@@ -1,13 +1,6 @@
 import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { MenuItem } from 'io-menus';
-export type TabEditCommand = 'delete' | 'shiftLeft' | 'shiftRight' | 'shiftUp' | 'shiftDown' | 'shiftStart' | 'shiftEnd';
-export type TabData = {
-    id?: string;
-    label?: string;
-    icon?: string;
-    hint?: string;
-};
 export type IoTabProps = IoFieldProps & {
     item?: MenuItem;
 };

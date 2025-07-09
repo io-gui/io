@@ -10,6 +10,7 @@ export declare class IoNumberLadderStep extends IoField {
     value: number;
     label: string;
     role: string;
+    private startX;
     constructor(args?: IoNumberLadderStepProps);
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;

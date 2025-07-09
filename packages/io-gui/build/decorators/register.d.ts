@@ -1,7 +1,8 @@
-import { Node } from '../nodes/Node';
+import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 /**
  * Registers a new Node or IoElement subclass. This needs to be called for each new class that extends Node or IoElement.
- * @param {Node} ioNodeConstructor - Node class to register.
+ * @param {Node | IoElement} ioNodeConstructor - Node class to register.
  *
  * @example
  * // Creating a new Node subclass.
@@ -21,5 +22,5 @@ import { Node } from '../nodes/Node';
  * }
  * Register(MyNode);
 */
-export declare function Register(ioNodeConstructor: typeof Node): void;
+export declare function Register(ioNodeConstructor: typeof Node | typeof IoElement): void;
 //# sourceMappingURL=Register.d.ts.map

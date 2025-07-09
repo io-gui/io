@@ -26,6 +26,7 @@ export declare class IoOptionSelect extends IoElement {
     constructor(args?: IoOptionSelectProps);
     ready(): void;
     _onItemSelected(event: CustomEvent): void;
+    inputValue(value: any): void;
     optionsChanged(change: Change): void;
     optionsMutated(): void;
     changed(): void;

@@ -1,56 +1,52 @@
+import { ProtoChain } from '../core/ProtoChain.js';
 import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
-import { Node, NodeProps } from '../nodes/Node.js';
+import { Node, NodeProps, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
 import { Binding } from '../core/Binding.js';
+import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
+import { ChangeQueue } from '../core/ChangeQueue.js';
+import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
+import { CallbackFunction } from '../core/Queue.js';
 export type IoElementProps = NativeElementProps & NodeProps;
-declare const IoElement_base: {
-    new (args?: NodeProps, ...superProps: any[]): {
-        [x: string]: any;
-        readonly _protochain: import("../index.js").ProtoChain;
-        readonly _reactiveProperties: Map<string, import("../index.js").ReactivePropertyInstance>;
-        readonly _bindings: Map<string, Binding<any>>;
-        readonly _changeQueue: import("../index.js").ChangeQueue;
-        readonly _eventDispatcher: import("../index.js").EventDispatcher;
-        applyProperties(props: any, skipDispatch?: boolean): void;
-        setProperties(props: any): void;
-        setProperty(name: string, value: any, debounce?: boolean): void;
-        inputValue(value: any): void;
-        ready(): void;
-        init(): void;
-        changed(): void;
-        queue(name: string, value: any, oldValue: any): void;
-        dispatchQueue(debounce?: boolean): void;
-        throttle(func: import("../index.js").CallbackFunction, arg?: any, timeout?: number): void;
-        debounce(func: import("../index.js").CallbackFunction, arg?: any, timeout?: number): void;
-        onPropertyMutated(event: CustomEvent): true | undefined;
-        bind<T>(name: string): Binding<T>;
-        unbind(name: string): void;
-        addEventListener(type: string, listener: import("../index.js").AnyEventListener, options?: AddEventListenerOptions): void;
-        removeEventListener(type: string, listener?: import("../index.js").AnyEventListener, options?: AddEventListenerOptions): void;
-        dispatchEvent(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-        dispose(): void;
-        Register(ioNodeConstructor: typeof Node): void;
-    };
-    [x: string]: any;
-    readonly ReactiveProperties: import("../nodes/Node.js").ReactivePropertyDefinitions;
-    readonly Listeners: import("../nodes/Node.js").ListenerDefinitions;
-};
 /**
  * Core `IoElement` class.
  */
-export declare class IoElement extends IoElement_base {
+export declare class IoElement extends HTMLElement {
     static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
+    reactivity: ReactivityType;
     $: Record<string, HTMLElement | IoElement>;
+    static get ReactiveProperties(): ReactivePropertyDefinitions;
+    static get Properties(): Record<string, any>;
+    static get Listeners(): ListenerDefinitions;
+    readonly _protochain: ProtoChain;
+    readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
+    readonly _bindings: Map<string, Binding<any>>;
+    readonly _changeQueue: ChangeQueue;
+    readonly _eventDispatcher: EventDispatcher;
+    readonly _isNode: boolean;
+    readonly _isIoElement: boolean;
+    _disposed: boolean;
+    _textNode: Text;
     constructor(args?: IoElementProps);
-    /**
-    * Add resize listener if `onResized()` is defined in subclass.
-    */
-    connectedCallback(): void;
-    /**
-    * Removes resize listener if `onResized()` is defined in subclass.
-    */
-    disconnectedCallback(): void;
+    applyProperties(props: any, skipDispatch?: boolean): void;
+    setProperties(props: any): void;
     setProperty(name: string, value: any, debounce?: boolean): void;
+    init(): void;
+    ready(): void;
+    changed(): void;
+    queue(name: string, value: any, oldValue: any): void;
+    dispatchQueue(debounce?: boolean): void;
+    throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
+    debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+    onPropertyMutated(event: CustomEvent): true | undefined;
+    bind<T>(name: string): Binding<T>;
+    unbind(name: string): void;
+    addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
+    removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
+    dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+    dispose(): void;
+    connectedCallback(): void;
+    disconnectedCallback(): void;
     /**
      * Renders DOM from virtual DOM arrays.
      * @param {Array} vDOMElements - Array of VDOMElement[] children.
@@ -74,12 +70,6 @@ export declare class IoElement extends IoElement_base {
     */
     _flattenTextNode(element: HTMLElement | IoElement): void;
     /**
-     * Sets multiple properties in batch.
-     * [property]-changed` events will be broadcast in the end.
-     * @param {Object} props - Map of property names and values.
-     */
-    applyProperties(props: any, skipDispatch?: boolean): void;
-    /**
     * Alias for HTMLElement setAttribute where falsey values remove the attribute.
     * @param {string} attr - Attribute name.
     * @param {*} value - Attribute value.
@@ -89,8 +79,7 @@ export declare class IoElement extends IoElement_base {
      * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
      */
     toVDOM(): VDOMElement;
-    Register(ioNodeConstructor: typeof Node): void;
+    Register(ioNodeConstructor: typeof IoElement): void;
 }
 export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
-export {};
 //# sourceMappingURL=IoElement.d.ts.map

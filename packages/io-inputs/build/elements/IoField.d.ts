@@ -21,7 +21,7 @@ export declare class IoField extends IoElement {
     appearance: 'neutral' | 'inset' | 'outset';
     pattern: string;
     spellcheck: boolean;
-    tabIndex: string;
+    tabIndex: number;
     static get Listeners(): ListenerDefinitions;
     constructor(args?: IoFieldProps);
     onFocus(event: FocusEvent): void;
@@ -30,6 +30,7 @@ export declare class IoField extends IoElement {
     onPointermove(event: PointerEvent): void;
     onPointerleave(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
+    inputValue(value: any): void;
     onClick(event?: MouseEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;

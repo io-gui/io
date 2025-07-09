@@ -1,13 +1,13 @@
 import { IoElement, VDOMElement, IoElementProps } from 'io-gui';
-import { SplitData } from './IoSplit.js';
+import { Split } from '../nodes/Split.js';
 export type IoLayoutProps = IoElementProps & {
-    split?: SplitData;
+    split?: Split;
     elements?: VDOMElement[];
 };
 export declare class IoLayout extends IoElement {
     static vConstructor: (arg0?: IoLayoutProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    split: SplitData;
+    split: Split;
     elements: VDOMElement[];
     private addMenuItem;
     static get Listeners(): {
@@ -16,7 +16,7 @@ export declare class IoLayout extends IoElement {
     };
     onSplitDataChanged(event: CustomEvent): void;
     onPanelDataChanged(event: CustomEvent): void;
-    elementsChanged(): void;
+    onDataChangedDebounced(): void;
     changed(): void;
 }
 export declare const ioLayout: (arg0?: IoLayoutProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;

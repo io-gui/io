@@ -20,7 +20,7 @@ export declare class IoSliderBase extends IoGl {
     invalid: boolean;
     noscroll: boolean;
     role: string;
-    tabIndex: string;
+    tabIndex: number;
     _startX: number;
     _startY: number;
     _rect: DOMRect | null;
@@ -49,6 +49,7 @@ export declare class IoSliderBase extends IoGl {
     _getValueFromCoord(coord: [number, number]): [number, number];
     onPointermoveThrottled(event: PointerEvent): void;
     _inputValue(value: [number, number]): void;
+    inputValue(value: any): void;
     onKeydown(event: KeyboardEvent): void;
     _setIncrease(): void;
     _setDecrease(): void;

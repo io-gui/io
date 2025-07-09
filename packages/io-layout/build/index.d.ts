@@ -6,4 +6,7 @@ export * from './elements/IoTab.js';
 export * from './elements/IoTabDragIcon.js';
 export * from './elements/IoTabDropMarker.js';
 export * from './elements/IoTabs.js';
+export * from './nodes/Panel.js';
+export * from './nodes/Split.js';
+export * from './nodes/Tab.js';
 //# sourceMappingURL=index.d.ts.map

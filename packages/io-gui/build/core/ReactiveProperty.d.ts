@@ -1,5 +1,6 @@
 import { Binding } from './Binding.js';
 import { AnyConstructor, Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 /**
  * Configuration for a property of an Node class.
  * @typedef {Object} ReactivePropertyDefinition
@@ -81,6 +82,6 @@ export declare class ReactivePropertyInstance {
      * @param node owner Node instance
      * @param propDef ReactiveProtoProperty object
      */
-    constructor(node: Node, propDef: ReactiveProtoProperty);
+    constructor(node: Node | IoElement, propDef: ReactiveProtoProperty);
 }
 //# sourceMappingURL=ReactiveProperty.d.ts.map

@@ -1,5 +1,6 @@
 import { IoElement, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
+import { IoMenuOptions } from './IoMenuOptions.js';
 export type IoContextMenuProps = IoElementProps & {
     options?: MenuOptions;
     expanded?: WithBinding<boolean>;
@@ -13,12 +14,14 @@ export declare class IoContextMenu extends IoElement {
     options: MenuOptions;
     expanded: boolean;
     button: number;
+    $options: IoMenuOptions;
+    _contextTimeout: number;
     static get ReactiveProperties(): any;
     constructor(args?: IoContextMenuProps);
     init(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
-    getBoundingClientRect(): any;
+    getBoundingClientRect(): DOMRect;
     onContextmenu(event: MouseEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;

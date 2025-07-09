@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, VDOMElement } from 'io-gui';
+import { IoElement, IoElementProps, VDOMElement, ReactivityType } from 'io-gui';
 import { EditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
@@ -17,7 +17,7 @@ export type IoPropertyEditorProps = IoElementProps & {
 export declare class IoPropertyEditor extends IoElement {
     static vConstructor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    reactivity: string;
+    reactivity: ReactivityType;
     value: Object;
     properties: string[];
     labeled: boolean;
@@ -28,11 +28,6 @@ export declare class IoPropertyEditor extends IoElement {
     _onValueInput(event: CustomEvent): void;
     valueMutated(): void;
     changed(): void;
-    /**
-     * Returns a JSON representation of the property editor. This feature is used in testing.
-     * @return {Object} JSON representation of the property editor.
-     */
-    toJSON(): any;
 }
 export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoPropertyEditor.d.ts.map

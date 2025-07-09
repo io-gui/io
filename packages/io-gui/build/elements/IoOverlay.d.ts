@@ -18,8 +18,8 @@ declare class IoOverlay extends IoElement {
     onContextmenu(event: Event): void;
     onScroll(event: Event): void;
     onResized(): void;
-    appendChild(child: HTMLElement): void;
-    removeChild(child: HTMLElement): void;
+    appendChild<El extends Node>(child: El): El;
+    removeChild<El extends Node>(child: El): El;
     onChildExpandedChanged(): void;
     collapse(): void;
     expandAsChildren(): void;
