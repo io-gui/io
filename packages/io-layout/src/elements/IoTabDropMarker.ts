@@ -1,12 +1,11 @@
 import { Register, ReactiveProperty, IoElement, VDOMElement, IoElementProps, ThemeSingleton } from 'io-gui';
-import { IoTabs } from './IoTabs.js';
 import { IoTab } from './IoTab.js';
-
-type IoTabDropMarkerProps = IoElementProps & {};
+import { SplitDirection } from '../nodes/Split.js';
+import { IoPanel } from './IoPanel.js';
 
 @Register
 class IoTabDropMarker extends IoElement {
-  static vConstructor: (arg0?: IoTabDropMarkerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -16,27 +15,36 @@ class IoTabDropMarker extends IoElement {
         background-color: var(--io_bgColorBlue);
         margin-bottom: var(--io_borderWidth);
         z-index: 100000;
-      }
-      :host[dropindex="-1"] {
         display: none;
+      }
+      :host:not([dropindex="-1"]) {
+        display: block;
+      }
+      :host:not([splitdirection="none"]) {
+        display: block;
+        opacity: 0.25;
       }
     `;
   }
 
   @ReactiveProperty(null)
-  declare dropTarget: IoTabs | null;
+  declare dropTarget: IoPanel | null;
+
+  @ReactiveProperty({type: String, value: 'none', reflect: true})
+  declare splitDirection: SplitDirection;
 
   @ReactiveProperty({type: Number, value: -1, reflect: true})
   declare dropIndex: number;
 
-  constructor(args: IoTabDropMarkerProps = {}) { super(args); }
+  constructor(args: IoElementProps = {}) { super(args); }
 
   changed() {
-    const hasDropTarget = this.dropTarget && this.dropIndex !== -1;
-    if (hasDropTarget) {
-      const tabs = this.dropTarget!.querySelectorAll('io-tab');
+    if (this.dropTarget && this.dropIndex !== -1) {
+      const tabs = this.dropTarget.querySelectorAll('io-tab');
+      this.style.width = ``;
+      this.style.height = ``;
       if (tabs.length === 0) {
-        const rect = this.dropTarget!.getBoundingClientRect();
+        const rect = this.dropTarget.getBoundingClientRect();
         this.style.top = `${rect.top + ThemeSingleton.borderRadius}px`;
         this.style.left = `${rect.left}px`;
       } else if (this.dropIndex > tabs.length - 1) {
@@ -50,9 +58,39 @@ class IoTabDropMarker extends IoElement {
         this.style.top = `${rect.top + ThemeSingleton.borderRadius}px`;
         this.style.left = `${rect.left - ThemeSingleton.spacing}px`;
       }
+    } else if (this.dropTarget && this.splitDirection !== 'none') {
+      const rect = this.dropTarget.getBoundingClientRect();
+      if (this.splitDirection === 'top') {
+        this.style.top = `${rect.top}px`;
+        this.style.left = `${rect.left}px`;
+        this.style.width = `${rect.width}px`;
+        this.style.height = `${rect.height / 2}px`;
+      } else if (this.splitDirection === 'bottom') {
+        this.style.top = `${rect.top + rect.height / 2}px`;
+        this.style.left = `${rect.left}px`;
+        this.style.width = `${rect.width}px`;
+        this.style.height = `${rect.height / 2}px`;
+      } else if (this.splitDirection === 'left') {
+        this.style.top = `${rect.top}px`;
+        this.style.left = `${rect.left}px`;
+        this.style.width = `${rect.width / 2}px`;
+        this.style.height = `${rect.height}px`;
+      } else if (this.splitDirection === 'right') {
+        this.style.top = `${rect.top}px`;
+        this.style.left = `${rect.left + rect.width / 2}px`;
+        this.style.width = `${rect.width / 2}px`;
+        this.style.height = `${rect.height}px`;
+      } else if (this.splitDirection === 'center') {
+        this.style.top = `${rect.top}px`;
+        this.style.left = `${rect.left}px`;
+        this.style.width = `${rect.width}px`;
+        this.style.height = `${rect.height}px`;
+      }
     }
   }
 }
 
 export const tabDropMarkerSingleton = new IoTabDropMarker();
-document.body.appendChild(tabDropMarkerSingleton as unknown as HTMLElement);
+setTimeout(() => {
+  document.body.appendChild(tabDropMarkerSingleton as unknown as HTMLElement);
+}, 100);

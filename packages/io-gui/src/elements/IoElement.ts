@@ -10,19 +10,15 @@ import { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
 import { throttle, debounce, CallbackFunction } from '../core/Queue.js';
 
-
-
 const resizeObserver = new ResizeObserver(entries => {
   for (const entry of entries) (entry.target as any).onResized();
 });
 
 export type IoElementProps = NativeElementProps & NodeProps;
 
-/**
- * Core `IoElement` class.
- */
 @Register
 export class IoElement extends HTMLElement {
+  // TODO: remove any?
   static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`

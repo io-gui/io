@@ -20,10 +20,10 @@ const split = new Split({
     {
       orientation: 'vertical',
       children: [
-        {tabs: [{id: 'Doc 2', label: 'Doc 2'}]},
+        {tabs: [{id: 'Doc 1', label: 'Doc 1'}]},
+        {tabs: [{id: 'Doc 2', label: 'Doc 2', icon: 'io:numeric-2-box'}]},
         {tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}]},
-        {tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}]},
-        {tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}]},
+        {tabs: [{id: 'Doc 4', label: 'Doc 4', icon: 'io:numeric-4-box'}]},
       ]
     },
     {

@@ -2,11 +2,11 @@ import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton, nudge } 
 import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
 import { IconsetDB, ioIcon } from 'io-icons';
-import { MenuItem, MenuOptions, ioOptionSelect } from 'io-menus';
+import { MenuOptions, ioOptionSelect } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
-import { tabDragIconSingleton } from './IoTabDragIcon.js';
 import { IoPanel } from './IoPanel.js';
 import { Tab } from '../nodes/Tab.js';
+import { tabDragIconSingleton } from './IoTabDragIcon.js';
 
 const icons = [];
 for (const set of Object.keys(IconsetDB)) {
@@ -113,7 +113,7 @@ export class IoTab extends IoField {
     };
   }
 
-  constructor(args: IoTabProps = {}) { super(args); }
+  constructor(args: IoTabProps) { super(args); }
 
   preventDefault(event: Event) {
     event.stopPropagation();
@@ -148,6 +148,7 @@ export class IoTab extends IoField {
   onPointermove(event: PointerEvent) {
     event.preventDefault();
     if (event.buttons !== 1) return;
+    const panel = this.parentElement!.parentElement as IoPanel;
     if (!tabDragIconSingleton.dragging) {
       const dx = Math.abs(_dragStartX - event.clientX);
       const dy = Math.abs(_dragStartY - event.clientY);
@@ -155,7 +156,7 @@ export class IoTab extends IoField {
         tabDragIconSingleton.setProperties({
           tab: this.tab,
           dragging: true,
-          dropSource: this.parentElement as IoTabs,
+          dropSource: panel,
           dropTarget: null,
           dropIndex: -1,
         });
@@ -172,27 +173,66 @@ export class IoTab extends IoField {
     const m = ThemeSingleton.spacing;
     const tabsContainers = document.querySelectorAll('io-tabs');
     for (let i = 0; i < tabsContainers.length; i++) {
-      const tabsContainer = tabsContainers[i] as unknown as IoTabs;
+      const tabsContainer = tabsContainers[i] as IoTabs;
+      const targetPanel = tabsContainer.parentElement as IoPanel;
       const tcr = tabsContainer.getBoundingClientRect();
       if (y >= tcr.top && y <= tcr.bottom && x >= tcr.left && x <= tcr.right) {
         const tabs = tabsContainer.querySelectorAll('io-tab');
         if (tabs.length === 0) {
-          tabDragIconSingleton.dropTarget = tabsContainer;
-          tabDragIconSingleton.dropIndex = 0;
-          break;
+          tabDragIconSingleton.setProperties({
+            dropTarget: targetPanel,
+            splitDirection: 'none',
+            dropIndex: 0,
+          });
+          return;
         }
         for (let j = 0; j < tabs.length; j++) {
-          const tab = tabs[j] as unknown as IoTab;
+          const tab = tabs[j] as IoTab;
           const tr = tab.getBoundingClientRect();
           const isLast = j === tabs.length - 1;
           // TODO: consider hovering empty tab space.
           if (y >= tr.top - m && y <= tr.bottom + m && x >= tr.left - m && (x <= tr.right + m || isLast && x <= tcr.right)) {
             const side = x < tr.left + tr.width / 2 ? 'left' : 'right';
             const dropIndex = side === 'left' ? j : j + 1;
-            tabDragIconSingleton.dropTarget = tabsContainer;
-            tabDragIconSingleton.dropIndex = dropIndex;
+            tabDragIconSingleton.setProperties({
+              dropTarget: targetPanel,
+              splitDirection: 'none',
+              dropIndex: dropIndex,
+            });
+            return;
           }
         }
+      }
+    }
+
+    const panels = document.querySelectorAll('io-panel');
+    for (let i = 0; i < panels.length; i++) {
+      const targetPanel = panels[i] as IoPanel;
+      const pr = targetPanel.getBoundingClientRect();
+      if (y >= pr.top && y <= pr.bottom && x >= pr.left && x <= pr.right) {
+        // get xy relative to panel center
+        const rx = (x - pr.left - pr.width / 2) / pr.width * 2;
+        const ry = (y - pr.top - pr.height / 2) / pr.height * 2;
+        let direction = 'none';
+
+        if (Math.abs(rx) < 0.5 && Math.abs(ry) < 0.5) {
+          direction = 'center';
+        } else if (ry > 0 && Math.abs(ry) > Math.abs(rx)) {
+          direction = 'bottom';
+        } else if (ry < 0 && Math.abs(ry) > Math.abs(rx)) {
+          direction = 'top';
+        } else if (rx > 0 && Math.abs(rx) > Math.abs(ry)) {
+          direction = 'right';
+        } else if (rx < 0 && Math.abs(rx) > Math.abs(ry)) {
+          direction = 'left';
+        }
+
+        tabDragIconSingleton.setProperties({
+          dropTarget: targetPanel,
+          splitDirection: direction,
+          dropIndex: -1,
+        });
+        return;
       }
     }
   }
@@ -201,23 +241,25 @@ export class IoTab extends IoField {
     super.onPointerup(event);
     this.releasePointerCapture(event.pointerId);
     if (tabDragIconSingleton.dragging) {
-      const dropSource = tabDragIconSingleton.dropSource;
-      const dropTarget = tabDragIconSingleton.dropTarget;
-      const dropIndex = tabDragIconSingleton.dropIndex;
+      const source = tabDragIconSingleton.dropSource;
+      const target = tabDragIconSingleton.dropTarget;
+      const index = tabDragIconSingleton.dropIndex;
+      const direction = tabDragIconSingleton.splitDirection;
 
-      if (dropTarget && dropIndex !== -1) {
-        const targetPanel = dropTarget.parentElement as IoPanel;
-        if (dropSource && dropSource !== dropTarget) {
-          const sourcePanel = dropSource.parentElement as IoPanel;
-          sourcePanel.removeTab(this.tab);
+      if (target && index !== -1) {
+        target.addTab(this.tab, index);
+        if (source && source !== target) {
+          source.removeTab(this.tab);
         }
-        targetPanel.addTab(this.tab, dropIndex);
+      } else if (source && target && direction !== 'none') {
+        target.moveTabToSplit(source, this.tab, direction);
       }
 
       tabDragIconSingleton.setProperties({
         dragging: false,
         dropSource: null,
         dropTarget: null,
+        splitDirection: 'none',
         dropIndex: -1,
       });
     } else {

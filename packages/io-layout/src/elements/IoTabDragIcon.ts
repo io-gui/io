@@ -1,17 +1,14 @@
 import { Register, ReactiveProperty, Property, span, VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
-import { IoTabs } from './IoTabs.js';
 import { tabDropMarkerSingleton } from './IoTabDropMarker.js';
 import { Tab } from '../nodes/Tab.js';
-
-type IoTabDragIconProps = IoFieldProps & {
-  tab?: Tab,
-};
+import { SplitDirection } from '../nodes/Split.js';
+import { IoPanel } from './IoPanel.js';
 
 @Register
 class IoTabDragIcon extends IoField {
-  static vConstructor: (arg0?: IoTabDragIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -42,14 +39,17 @@ class IoTabDragIcon extends IoField {
   @ReactiveProperty({type: Boolean, reflect: true})
   declare dragging: boolean;
 
-  @ReactiveProperty({type: Tab, init: null})
-  declare tab: Tab;
+  @ReactiveProperty(null)
+  declare tab: Tab | null;
 
   @ReactiveProperty(null)
-  declare dropSource: IoTabs | null;
+  declare dropSource: IoPanel | null;
 
   @ReactiveProperty(null)
-  declare dropTarget: IoTabs | null;
+  declare dropTarget: IoPanel | null;
+
+  @ReactiveProperty({type: String, value: 'none', reflect: true})
+  declare splitDirection: SplitDirection;
 
   @ReactiveProperty({type: Number, value: -1})
   declare dropIndex: number;
@@ -57,19 +57,17 @@ class IoTabDragIcon extends IoField {
   @Property(-1)
   declare tabIndex: number;
 
-  constructor(args: IoTabDragIconProps = {}) { super(args); }
+  constructor(args: IoFieldProps = {}) { super(args); }
 
   changed() {
-    if (this.dropTarget && this.dropIndex !== -1) {
-      tabDropMarkerSingleton.dropTarget = this.dropTarget;
-      tabDropMarkerSingleton.dropIndex = this.dropIndex;
-    } else {
-      tabDropMarkerSingleton.dropTarget = null;
-      tabDropMarkerSingleton.dropIndex = -1;
-    }
+    tabDropMarkerSingleton.setProperties({
+      dropTarget: this.dropTarget,
+      splitDirection: this.splitDirection,
+      dropIndex: this.dropIndex,
+    });
     this.render([
-      ioIcon({value: this.tab.icon || ' '}),
-      span({class: 'label'}, this.tab.label || ''),
+      ioIcon({value: this.tab?.icon || ' '}),
+      span({class: 'label'}, this.tab?.label || ''),
     ]);
   }
 }

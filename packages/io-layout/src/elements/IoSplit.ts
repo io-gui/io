@@ -1,9 +1,10 @@
 import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from 'io-gui';
 import { MenuItem } from 'io-menus';
-import { ioPanel } from './IoPanel.js';
+import { IoPanel, ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
-import { Split } from '../nodes/Split.js';
+import { Split, SplitDirection } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
+import { Tab } from '../nodes/Tab.js';
 
 export type IoSplitProps = IoElementProps & {
   split?: Split,
@@ -194,10 +195,47 @@ export class IoSplit extends IoElement {
     this.dispatch('io-split-data-changed', {}, true);
   }
 
+  moveTabToSplit(sourcePanel: IoPanel, panel: Panel, tab: Tab, direction: SplitDirection) {
+    const index = this.split.children.indexOf(panel);
+    if (direction === 'left' || direction === 'right') {
+      if (this.split.orientation === 'horizontal') {
+        const newIndex = direction === 'left' ? index - 1 : index + 1;
+        this.split.addSplit(new Panel({tabs: [tab]}), newIndex);
+        sourcePanel.removeTab(tab);
+        this.dispatch('io-split-data-changed', {}, true);
+      } else {
+        if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
+          if (direction === 'left') {
+            this.split.convertToSplit(panel, new Panel({tabs: [tab]}), panel, 'horizontal');
+          } else {
+            this.split.convertToSplit(panel, panel, new Panel({tabs: [tab]}), 'horizontal');
+          }
+          sourcePanel.removeTab(tab);
+          this.dispatch('io-split-data-changed', {}, true);
+        }
+      }
+    } else if (direction === 'top' || direction === 'bottom') {
+      if (this.split.orientation === 'vertical') {
+        const newIndex = direction === 'top' ? index - 1 : index + 1;
+        this.split.addSplit(new Panel({tabs: [tab]}), newIndex);
+        sourcePanel.removeTab(tab);
+        this.dispatch('io-split-data-changed', {}, true);
+      } else {
+        if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
+          if (direction === 'top') {
+            this.split.convertToSplit(panel, new Panel({tabs: [tab]}), panel, 'vertical');
+          } else {
+            this.split.convertToSplit(panel, panel, new Panel({tabs: [tab]}), 'vertical');
+          }
+          sourcePanel.removeTab(tab);
+          this.dispatch('io-split-data-changed', {}, true);
+        }
+      }
+    }
+  }
   splitMutated() {
     this.changed();
   }
-
   changed() {
     this.setAttribute('orientation', this.split.orientation);
     this.style.flex = this.split.flex;

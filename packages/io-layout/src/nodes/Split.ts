@@ -2,10 +2,11 @@ import { Node, NodeProps, ReactiveProperty, Register } from 'io-gui';
 import { Panel, PanelProps } from './Panel.js';
 
 export type SplitOrientation = 'horizontal' | 'vertical';
+export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
 
 export type SplitProps = NodeProps & {
   orientation?: SplitOrientation,
-  children: Array<Split | Panel> | Array<SplitProps | PanelProps>,
+  children: Array<Split | Panel | SplitProps | PanelProps>,
   flex?: string,
 };
 
@@ -40,9 +41,12 @@ export class Split extends Node {
     }
     super(args);
   }
-
+  addSplit(child: Panel | Split, index?: number) {
+    index = index ?? this.children.length;
+    this.children.splice(index, 0, child);
+    this.dispatch('object-mutated', {object: this});
+  }
   // TODO: consider more robust flex handling and validation.
-
   remove(child: Panel | Split) {
     this.children = this.children.filter((c: Split | Panel) => c !== child);
     if (this.children.length === 2) {
@@ -50,11 +54,11 @@ export class Split extends Node {
     }
     this.dispatch('object-mutated', {object: this});
   }
-
-  // convertToSplit(panel: Panel, newPanel: Panel, direction: 'left' | 'right' | 'top' | 'bottom') {
-  //   // TODO: implement
-  // }
-
+  convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
+    const index = this.children.indexOf(panel);
+    this.children.splice(index, 1, new Split({orientation: orientation, children: [first, second]}));
+    this.dispatch('object-mutated', {object: this});
+  }
   convertToPanel(split: Split) {
     const child = split.children[0];
     const index = this.children.indexOf(split);
@@ -62,7 +66,6 @@ export class Split extends Node {
     this.children.splice(index, 1, child);
     this.dispatch('object-mutated', {object: this});
   }
-
   toJSON(): SplitProps {
     return {
       orientation: this.orientation,
@@ -70,7 +73,6 @@ export class Split extends Node {
       flex: this.flex,
     };
   }
-
   fromJSON(json: SplitProps) {
     if (json.orientation) this.orientation = json.orientation;
     if (json.children) this.children = json.children.map(child => {

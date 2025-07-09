@@ -2,8 +2,10 @@ import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Pro
 import { ioSelector } from 'io-navigation';
 import { MenuItem } from 'io-menus';
 import { ioTabs } from './IoTabs.js';
-import { Panel } from '../nodes/Panel.js';
+import { IoSplit } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
+import { Panel } from '../nodes/Panel.js';
+import { SplitDirection } from '../nodes/Split.js';
 
 export type IoPanelProps = IoElementProps & {
   panel?: Panel,
@@ -91,6 +93,15 @@ export class IoPanel extends IoElement {
     if (item.id) {
       const tab = new Tab({id: item.id, label: item.label, icon: item.icon});
       this.addTab(tab);
+    }
+  }
+  moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
+    const parentSplit = this.parentElement as IoSplit;
+    if (direction === 'center') {
+      this.addTab(tab);
+      sourcePanel.removeTab(tab);
+    } else {
+      parentSplit.moveTabToSplit(sourcePanel, this.panel, tab, direction);
     }
   }
   selectTab(tab: Tab) {

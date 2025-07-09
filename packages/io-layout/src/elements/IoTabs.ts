@@ -1,5 +1,5 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
-import { MenuItem, ioMenuItem, MenuOptions } from 'io-menus';
+import { MenuItem, ioMenuItem } from 'io-menus';
 import { ioTab } from './IoTab.js';
 import { Panel } from '../nodes/Panel.js';
 
@@ -24,7 +24,6 @@ export class IoTabs extends IoElement {
       :host > io-menu-item {
         min-width: fit-content;
         margin-left: auto;
-        /* margin-top: var(--io_spacing); */
         padding: 0;
         opacity: 0.125;
         transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
@@ -46,6 +45,8 @@ export class IoTabs extends IoElement {
 
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
+
+  constructor(args: IoTabsProps = {}) { super(args); }
 
   panelMutated() {
     this.changed();

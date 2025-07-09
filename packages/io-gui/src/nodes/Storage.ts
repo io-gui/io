@@ -95,9 +95,8 @@ let hashValues: Record<string, any> = {};
 
 export type StorageProps = NodeProps & {
   key: string,
-  value?: any,
-  default?: any,
-  storage?: 'hash' | 'local',
+  value: any,
+  storage: 'hash' | 'local',
 };
 
 @Register
@@ -135,7 +134,7 @@ export class StorageNode extends Node {
     if (nodes[s].has(props.key)) {
       return nodes[s].get(props.key) as StorageNode;
     } else {
-      const def = props.default || props.value;
+      const def = props.value;
 
       // TODO: test!
       let constructor: AnyConstructor | undefined;
