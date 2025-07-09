@@ -1,15 +1,28 @@
 import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton, nudge } from 'io-gui';
-import { IoField, IoFieldProps } from 'io-inputs';
+import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
-import { ioIcon } from 'io-icons';
-import { MenuItem } from 'io-menus';
+import { IconsetDB, ioIcon } from 'io-icons';
+import { MenuItem, MenuOptions, ioOptionSelect } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
 import { tabDragIconSingleton } from './IoTabDragIcon.js';
 import { IoPanel } from './IoPanel.js';
 
+const icons = [];
+for (const set of Object.keys(IconsetDB)) {
+  for (const icon of Object.keys(IconsetDB[set])) {
+    const id = `${set}:${icon}`;
+    icons.push({value: id, label: icon, icon: id});
+  }
+}
+
+const iconOptions = ioOptionSelect({label: 'Select', options: new MenuOptions().fromJSON(icons)});
+
 export type IoTabProps = IoFieldProps & {
   item?: MenuItem,
 };
+
+let _dragStartX = 0;
+let _dragStartY = 0;
 
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
@@ -68,7 +81,7 @@ export class IoTab extends IoField {
       }
       :host:hover > .io-close-icon {
         opacity: 1;
-        transform: scale(0.5);
+        transform: scale(0.4);
         transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
       }
       :host > .io-close-icon {
@@ -82,7 +95,7 @@ export class IoTab extends IoField {
         background: linear-gradient(to right, transparent 0%, var(--io_bgColorLight) 25%);
       }
       :host > .io-close-icon:hover {
-        transform: scale(0.75);
+        transform: scale(0.5);
         fill: var(--io_colorStrong);
         stroke: var(--io_colorStrong);
       }
@@ -108,31 +121,48 @@ export class IoTab extends IoField {
   onPointerdown(event: PointerEvent) {
     event.preventDefault();
     event.stopPropagation();
-    if (event.button === 2) {
+    _dragStartX = event.clientX;
+    _dragStartY = event.clientY;
+    this.setPointerCapture(event.pointerId);
+    super.onPointerdown(event);
+    if (event.buttons === 2) {
       IoContextEditorSingleton.expand({
         value: this.item,
         properties: ['id', 'label', 'icon'],
         orientation: 'horizontal',
+        config: new Map([
+          [Object, [
+            ['id', ioField({inert: true})],
+            ['label', ioString({live: true})],
+            ['icon', iconOptions],
+          ]],
+        ]),
       });
-      setTimeout(() => {
-        nudge(IoContextEditorSingleton, this, 'down');
-      });
-      return;
+      nudge(IoContextEditorSingleton, this, 'down');
+      //TODO Save layout on item edit.
+    } else {
+      this.focus();
     }
-    super.onPointerdown(event);
-    this.focus();
-    this.setPointerCapture(event.pointerId);
   }
   onPointermove(event: PointerEvent) {
     event.preventDefault();
-    // TODO: implement minimum drag distance!
-    tabDragIconSingleton.setProperties({
-      item: this.item,
-      dragging: true,
-      dropSource: this.parentElement as IoTabs,
-      dropTarget: null,
-      dropIndex: -1,
-    });
+    if (event.buttons !== 1) return;
+    if (!tabDragIconSingleton.dragging) {
+      const dx = Math.abs(_dragStartX - event.clientX);
+      const dy = Math.abs(_dragStartY - event.clientY);
+      if (dx > 10 || dy > 10) {        
+        tabDragIconSingleton.setProperties({
+          item: this.item,
+          dragging: true,
+          dropSource: this.parentElement as IoTabs,
+          dropTarget: null,
+          dropIndex: -1,
+        });
+        tabDragIconSingleton.style.top = event.clientY + 'px';
+        tabDragIconSingleton.style.left = event.clientX + 'px';        
+      }
+      return;
+    }
     tabDragIconSingleton.style.top = event.clientY + 'px';
     tabDragIconSingleton.style.left = event.clientX + 'px';
 

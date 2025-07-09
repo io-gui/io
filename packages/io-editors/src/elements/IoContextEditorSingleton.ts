@@ -1,5 +1,8 @@
 import { IoOverlaySingleton, ReactiveProperty, Register, VDOMElement } from 'io-gui';
 import { IoPropertyEditor, IoPropertyEditorProps } from './IoPropertyEditor.js';
+import { EditorGroups } from '../utils/EditorGroups.js';
+import { EditorWidgets } from '../utils/EditorWidgets.js';
+import { EditorConfig } from '../utils/EditorConfig.js';
 
 type IoContextEditorProps = IoPropertyEditorProps & {
   expanded?: boolean,
@@ -10,6 +13,9 @@ interface IoContextEditorExpandProps {
   properties?: string[],
   labeled?: boolean,
   orientation?: 'vertical' | 'horizontal',
+  config?: EditorConfig,
+  groups?: EditorGroups,
+  widgets?: EditorWidgets,
 }
 
 @Register
@@ -33,7 +39,7 @@ class IoContextEditor extends IoPropertyEditor {
     };
   }
   onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' || event.key === 'Enter') {
       event.preventDefault();
       this.expanded = false;
     }
@@ -70,6 +76,9 @@ class IoContextEditor extends IoPropertyEditor {
       properties: props.properties || [],
       labeled: props.labeled || true,
       orientation: props.orientation || 'vertical',
+      config: props.config || new Map(),
+      groups: props.groups || new Map(),
+      widgets: props.widgets || new Map(),
       expanded: true,
     });
     this.debounce(this.onExpand);
@@ -85,6 +94,9 @@ class IoContextEditor extends IoPropertyEditor {
         properties: [],
         labeled: true,
         orientation: 'vertical',
+        config: new Map(),
+        groups: new Map(),
+        widgets: new Map(),
       });
     }
   }

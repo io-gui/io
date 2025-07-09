@@ -45,9 +45,9 @@ export class Split extends Node {
     this.dispatch('object-mutated', {object: this});
   }
 
-  convertToSplit(panel: Panel, newPanel: Panel, direction: 'left' | 'right' | 'top' | 'bottom') {
-    // TODO: implement
-  }
+  // convertToSplit(panel: Panel, newPanel: Panel, direction: 'left' | 'right' | 'top' | 'bottom') {
+  //   // TODO: implement
+  // }
 
   convertToPanel(split: Split) {
     const child = split.children[0];

@@ -51,7 +51,6 @@ export class IoLayout extends IoElement {
     this.debounce(this.onDataChangedDebounced, undefined, 2);
   }
   onDataChangedDebounced() {
-    console.log('onDataChangedDebounced', this.split);
     this.dispatch('object-mutated', {object: this.split}, false, window);
   }
   // TODO: Make sure one panel is available even when all tabs are removed.

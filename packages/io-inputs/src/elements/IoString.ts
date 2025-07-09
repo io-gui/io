@@ -163,7 +163,7 @@ export class IoString extends IoField {
     this.invalid = (typeof this.value !== 'string' && this.value !== null && this.value !== undefined);
   }
   changed() {
-    this.textNode = String(this.value || '').replace(new RegExp(' ', 'g'), '\u00A0');
+    this.textNode = String(this.value || '');
   }
 }
 export const ioString = IoString.vConstructor;
