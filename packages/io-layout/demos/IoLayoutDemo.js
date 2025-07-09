@@ -68,7 +68,7 @@ export class IoLayoutDemo extends IoElement {
       :host io-layout {
         flex: 1 1 100%;
       }
-      :host io-panel > io-selector {
+      :host io-panel > io-selector > * {
         padding: var(--io_lineHeight);
       }
     `;

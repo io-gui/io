@@ -169,17 +169,17 @@
       elements: [
         ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
         ioSelector({id: 'Docs',
-          options: OPTIONS.findItemById('Docs').options,
+          selected: OPTIONS.findItemById('Docs').options.bind('selectedShallow'),
           caching: 'proactive',
           elements: [
-            ioNavigator({id: 'Quick Start', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'), 
+            ioNavigator({id: 'Quick Start', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'), 
               options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options,
               anchor: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected'),
               elements: [
                 ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
               ]
             }),
-            ioNavigator({id: 'Deep Dive', select: 'none', widget: h4({class: 'heading'}, 'Table of Contents'),
+            ioNavigator({id: 'Deep Dive', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'),
               options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, 
               anchor: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options.bind('selected'),
               elements: [
@@ -189,7 +189,7 @@
           ]
         }),
         ioSelector({id: 'Demos',
-          options: OPTIONS.findItemById('Demos').options,
+          selected: OPTIONS.findItemById('Demos').options.bind('selected'),
           caching: 'proactive',
           elements: [
             {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},

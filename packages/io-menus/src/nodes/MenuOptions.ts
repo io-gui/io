@@ -26,6 +26,9 @@ export class MenuOptions extends Node {
   declare selected: string;
 
   @ReactiveProperty('')
+  declare selectedShallow: string;
+
+  @ReactiveProperty('')
   declare path: string;
 
   @ReactiveProperty(',')
@@ -250,7 +253,7 @@ export class MenuOptions extends Node {
     this.setProperties({
       path: path.join(this.delimiter),
       selected: lastSelected !== undefined ? lastSelected.id : '',
-      // selected: lastSelected !== undefined ? lastSelected.id : this.selected,
+      selectedShallow: path[0] !== undefined ? path[0] : '',
     });
 
     if (path.length) {

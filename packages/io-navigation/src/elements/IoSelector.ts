@@ -25,17 +25,15 @@ function importModule(path: string) {
   });
 };
 
-export type SelectType = 'shallow' | 'deep' | 'none';
 export type CachingType = 'proactive' | 'reactive' | 'none';
 
 export type IoSelectorProps = IoElementProps & {
-  options?: MenuOptions,
   elements?: VDOMElement[],
-  select?: SelectType,
+  selected?: WithBinding<string>,
+  anchor?: WithBinding<string>,
   caching?: CachingType,
   loading?: WithBinding<boolean>,
   import?: string, // TODO: move to core?
-  anchor?: WithBinding<string>,
 };
 
 @Register
@@ -76,23 +74,20 @@ export class IoSelector extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions, init: null})
-  declare options: MenuOptions;
-
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @ReactiveProperty({value: 'shallow', type: String})
-  declare select: SelectType;
+  @ReactiveProperty({value: '', type: String})
+  declare selected: string;
+
+  @ReactiveProperty({value: '', type: String})
+  declare anchor: string;
 
   @ReactiveProperty({value: 'reactive', type: String})
   declare caching: CachingType;
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare loading: boolean;
-
-  @ReactiveProperty({value: '', type: String})
-  declare anchor: string;
 
   @Property(Object)
   declare private _caches: Record<string, IoElement | HTMLElement>;
@@ -111,21 +106,15 @@ export class IoSelector extends IoElement {
       scroll: 'onScrollChanged',
     };
   }
-
-  // TODO: Perhaps caching and selection should be irrelevant if select === 'none'!
-
   constructor(args: IoSelectorProps = {}) { super(args); }
-
   init() {
     this.preacheNext = this.preacheNext.bind(this);
     this.startPreache = this.startPreache.bind(this);
-    this.renderSelected = this.renderSelected.bind(this);
     this.renderDebounced = this.renderDebounced.bind(this);
     this.anchorChangedDebounced = this.anchorChangedDebounced.bind(this);
     this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this);
     this.onScrollUnsuspend = this.onScrollUnsuspend.bind(this);
   }
-
   anchorChanged() {
     if (!this.scrollToSuspended) {
       this.onScrollSuspended = true;
@@ -133,7 +122,6 @@ export class IoSelector extends IoElement {
     }
     this.debounce(this.anchorChangedDebounced, undefined, 3);
   }
-
   anchorChangedDebounced() {
     const anchor = this.anchor.split('#')[1] || this.anchor;
     if (!anchor || this.scrollToSuspended) return;
@@ -146,18 +134,14 @@ export class IoSelector extends IoElement {
       this.scrollTo(0, 0);
     }
   }
-
   scrollToUnsuspend() {
     this.scrollToSuspended = false;
   }
-
   onScrollUnsuspend() {
     this.onScrollSuspended = false;
   }
-
   onScrollChanged() {
     if (this.onScrollSuspended) return;
-
     const anchor = this.anchor.split('#')[1] || this.anchor;
     const headings = this.querySelectorAll('[data-heading]') as NodeListOf<HTMLElement>;
     const closestHeading = Array.from(headings).reduce((prev, curr) => {
@@ -176,40 +160,18 @@ export class IoSelector extends IoElement {
       }
     }
   }
-
-  optionsChanged() {
-    this.debounce(this.renderSelected);
-  }
-  optionsMutated() {
-    this.debounce(this.renderSelected);
-  }
-
   elementsChanged() {
     // TODO: make sure all elements have props and id if selectable!
-    // if (!id) {
-    //   console.warn('IoSelector: Missing id on element!', vElement);
-    //   continue;
-    // }
     // TODO: fix and test edge case where reusing element in templete() might return cache from the previous element if keys collide!
     this.startPreache();
   }
-
-  renderSelected() {
-    if (this.select === 'shallow') {
-      if (this.options.items.length === 0) {
-        this.render([], this, true);
-        return;
-      }
-      for (let i = 0; i < this.options.items.length; i++) {
-        if (this.options.items[i].selected) {
-          this.renderSelectedId(this.options.items[i].id);
-          return;
-        }
-      }
-    } else if (this.select === 'deep') {
-      this.renderSelectedId(this.options.selected);
-    } else if (this.select === 'none') {
+  selectedChanged() {
+    if (!this.selected) {
+      this.render([], this, true);
+    } else if (this.selected === '*') {
       this.render(this.elements);
+    } else {
+      this.renderSelectedId(this.selected);
     }
     this.debounce(this.anchorChangedDebounced, undefined, 2);
   }
@@ -252,12 +214,10 @@ export class IoSelector extends IoElement {
       });
     }
   }
-
   renderDebounced(vElement: VDOMElement) {
     const cache = this.caching === 'proactive' || this.caching === 'reactive';
     const id = vElement.props?.id;
     const cachedElement = this._caches[id];
-
     if (cache && cachedElement) {
       if ((cachedElement.parentElement as IoElement) !== this) {
         if (this.firstChild) this.removeChild(this.firstChild);
@@ -268,14 +228,12 @@ export class IoSelector extends IoElement {
       if (cache) this._caches[id] = this.childNodes[0] as IoElement;
     }
   }
-
   startPreache() {
     if (this.caching === 'proactive' && !this._preaching) {
       this._preaching = true;
       this.debounce(this.preacheNext);
     }
   }
-
   preacheNext() {
     // TODO: Test this!
     if (!this._preaching) return;
@@ -305,7 +263,6 @@ export class IoSelector extends IoElement {
     }
     this._preaching = false;
   }
-
   dispose() {
     for (const key in this._caches) {
       // Dispose cached elements not in the DOM.

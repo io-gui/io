@@ -1,8 +1,9 @@
 import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-gui';
-import { MenuOptions, MenuItem, ioMenuOptions, ioMenuItem, ioMenuTree } from 'io-menus';
-import { CachingType, ioSelector, SelectType } from './IoSelector.js';
+import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
+import { CachingType, ioSelector } from './IoSelector.js';
 
 export type MenuPositionType = 'top' | 'left' | 'right';
+export type SelectType = 'shallow' | 'deep' | 'all' | 'none';
 
 export type IoNavigatorProps = IoElementProps & {
   options?: MenuOptions,
@@ -10,8 +11,6 @@ export type IoNavigatorProps = IoElementProps & {
   widget?: VDOMElement,
   menu?: MenuPositionType,
   depth?: number,
-  collapsed?: WithBinding<boolean>,
-  collapseWidth?: number,
   select?: SelectType,
   caching?: CachingType,
   anchor?: WithBinding<string>,
@@ -68,12 +67,6 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({value: Infinity, type: Number})
   declare depth: number;
 
-  @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare collapsed: boolean;
-
-  @ReactiveProperty({value: 580, type: Number})
-  declare collapseWidth: number;
-
   @ReactiveProperty({value: 'shallow', type: String})
   declare select: SelectType;
 
@@ -83,6 +76,10 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({value: '', type: String})
   declare anchor: string;
 
+  optionsMutated() {
+    this.changed();
+  }
+
   changed() {
     const sharedMenuConfig = {
       options: this.options,
@@ -90,34 +87,27 @@ export class IoNavigator extends IoElement {
       depth: this.depth
     };
 
-    const hamburger = ioMenuItem({
-      depth: this.depth,
-      role: 'navigation',
-      class: 'hamburger',
-      direction: this.menu === 'left' ? 'right' : 'left',
-      item: new MenuItem({
-        mode: 'none',
-        icon: 'menu:hamburger',
-        options: this.options,
-      })
-    });
-
     // TODO: add widget and test collapse!!
+    let selected = '';
+    if (this.select === 'shallow') selected = this.options.selectedShallow;
+    if (this.select === 'deep') selected = this.options.selected;
+    if (this.select === 'all') selected = '*';
+    if (this.select === 'none') selected = '';
 
     if (this.menu === 'top') {
       this.render([
         ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
-        ioSelector({options: this.options, caching: this.caching, select: this.select, anchor: this.bind('anchor'), elements: this.elements}),
+        ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements}),
       ]);
     } else if (this.menu === 'left') {
       this.render([
-        this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
-        ioSelector({options: this.options, caching: this.caching, select: this.select, anchor: this.bind('anchor'), elements: this.elements}),
+        ioMenuTree({...sharedMenuConfig}),
+        ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements}),
       ]);
     } else if (this.menu === 'right') {
       this.render([
-        ioSelector({options: this.options, caching: this.caching, select: this.select, anchor: this.bind('anchor'),elements: this.elements}),
-        this.collapsed ? hamburger : ioMenuTree({...sharedMenuConfig}),
+        ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching,elements: this.elements}),
+        ioMenuTree({...sharedMenuConfig}),
       ]);
     }
   }

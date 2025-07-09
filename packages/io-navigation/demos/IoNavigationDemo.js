@@ -114,7 +114,7 @@ export class IoNavigationDemo extends IoElement {
         ioSelector({
           style: {'flex-basis': '50%'},
           elements: contentElements,
-          options: contentOptions,
+          selected: contentOptions.bind('selected'),
           anchor: contentOptions.bind('selected'),
         }),
         ioNavigator({

@@ -150,7 +150,7 @@ export class IoTab extends IoField {
     if (!tabDragIconSingleton.dragging) {
       const dx = Math.abs(_dragStartX - event.clientX);
       const dy = Math.abs(_dragStartY - event.clientY);
-      if (dx > 10 || dy > 10) {        
+      if (dx > 10 || dy > 10) {
         tabDragIconSingleton.setProperties({
           item: this.item,
           dragging: true,
@@ -159,7 +159,7 @@ export class IoTab extends IoField {
           dropIndex: -1,
         });
         tabDragIconSingleton.style.top = event.clientY + 'px';
-        tabDragIconSingleton.style.left = event.clientX + 'px';        
+        tabDragIconSingleton.style.left = event.clientX + 'px';
       }
       return;
     }

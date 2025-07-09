@@ -146,7 +146,7 @@ export class IoPanel extends IoElement {
         '@io-menu-item-clicked': this.onMenuItemClicked,
       }),
       ioSelector({
-        options: this.options,
+        selected: this.options.bind('selectedShallow'),
         elements: this.elements,
       })
     ]);
