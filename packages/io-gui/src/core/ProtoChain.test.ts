@@ -241,10 +241,10 @@ export default class {
         protoChain = new ProtoChain(MockNode2);
         expect(protoChain.handlers).to.be.eql(['changed', 'onFunction1', '_onFunction1', 'onFunction2', '_onFunction2']);
       });
-      it('Should bind auto-binding functions with `.autobindHandlers(node)` function', () => {
+      it('Should bind auto-binding functions with `.init(node)` function', () => {
         const protoChain = new ProtoChain(MockNode2);
         const node = new MockNode2();
-        protoChain.autobindHandlers(node as unknown as Node);
+        protoChain.init(node as unknown as Node);
         expect(node.function1.name).to.be.equal('function1');
         expect(node.onFunction1.name).to.be.equal('bound onFunction1');
         expect(node._onFunction1.name).to.be.equal('bound _onFunction1');

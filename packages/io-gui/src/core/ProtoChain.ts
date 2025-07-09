@@ -119,6 +119,28 @@ export class ProtoChain {
     debug: this.validateReactiveProperties();
   }
   /**
+   * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
+   * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
+   * @param {Node | IoElement} node - Target node instance
+   */
+  init(node: Node | IoElement) {
+    for (let i = this.handlers.length; i--;) {
+      Object.defineProperty(node, this.handlers[i], {
+        value: (node as any)[this.handlers[i]].bind(node),
+        writable: true,
+        configurable: true
+      });
+    }
+    if (this.observedObjectProperties.length) {
+      window.addEventListener('object-mutated', node.onPropertyMutated as EventListener);
+    }
+    debug: {
+      if (this.constructors[0] !== node.constructor) {
+        console.error(`ProtoChain: ${node.constructor.name} not registered!\nUse @Register decorator before using ${node.constructor.name} class!`);
+      }
+    }
+  }
+  /**
    * Adds properties defined in decorators to the properties array.
    * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
    */
@@ -249,23 +271,6 @@ export class ProtoChain {
       }
     }
     return observedNodeProperties;
-  }
-  /**
-   * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
-   * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-   * @param {Node | IoElement} node - Target node instance
-   */
-  autobindHandlers(node: Node | IoElement) {
-    debug: if (node.constructor !== this.constructors[0]) {
-      console.warn('`autobindHandlers` should be used on', this.constructors[0].name, 'instance');
-    }
-    for (let i = this.handlers.length; i--;) {
-      Object.defineProperty(node, this.handlers[i], {
-        value: (node as any)[this.handlers[i]].bind(node),
-        writable: true,
-        configurable: true
-      });
-    }
   }
   /**
    * Validates reactive property definitions in debug mode.

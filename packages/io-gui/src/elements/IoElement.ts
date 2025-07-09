@@ -1,8 +1,8 @@
-import { Property } from '../decorators/Property.js';
+import { Property, ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js';
-import { Node, NodeProps, ReactivePropertyDefinitions, ReactivityType, ListenerDefinitions } from '../nodes/Node.js';
+import { Node, NodeProps, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
@@ -33,24 +33,20 @@ export class IoElement extends HTMLElement {
       }
     `;
   }
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
-    return {
-      reactivity: {
-        value: 'immediate',
-        type: String,
-      }
-    };
-  }
-  // TODO: use decorator
-  declare reactivity: ReactivityType;
 
-  declare _isNode: boolean;
-  declare _isIoElement: boolean;
-  declare _disposed: boolean;
-  declare _textNode: Text;
+  @ReactiveProperty({type: String, value: 'immediate'})
+  declare reactivity: ReactivityType;
 
   @Property(Object)
   declare $: Record<string, HTMLElement | IoElement>;
+
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {};
+  }
+
+  static get Properties(): Record<string, any> {
+    return {};
+  }
 
   static get Listeners(): ListenerDefinitions {
     return {};
@@ -61,90 +57,31 @@ export class IoElement extends HTMLElement {
   declare readonly _bindings: Map<string, Binding<any>>;
   declare readonly _changeQueue: ChangeQueue;
   declare readonly _eventDispatcher: EventDispatcher;
+  declare readonly _isNode: boolean;
+  declare readonly _isIoElement: boolean;
+  declare _disposed: boolean;
+  declare _textNode: Text;
 
   constructor(args: IoElementProps = {}) {
     super();
-
     this.init();
-
-    debug: {
-      const constructor = Object.getPrototypeOf(this).constructor;
-      if (this._protochain.constructors[0] !== constructor) {
-        console.error(`${constructor.name} not registered! Call "Register([ClassName])" of @Register decorator before using ${constructor.name} class!`);
-      }
-    }
-
-    this._protochain.autobindHandlers(this);
+    this._protochain.init(this);
 
     Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
     Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()});
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
 
+    initReactiveProperties(this);
+    initProperties(this);
 
-    // TODO: move in loop below
-    for (const name in this._protochain.reactiveProperties) {
-      Object.defineProperty(this, name, {
-        get: function() {
-          return this._reactiveProperties.get(name).value;
-        },
-        set: function(value) {
-          (this as Node).setProperty(name, value);
-        },
-        configurable: true,
-        enumerable: true,
-      });
-    }
-
-    for (const name in this._protochain.reactiveProperties) {
-      const property = new ReactivePropertyInstance(this, this._protochain.reactiveProperties[name]);
-      this._reactiveProperties.set(name, property);
-
-      if (property.binding) property.binding.addTarget(this, name);
-      if (property.value?._isNode) {
-        let hasSameValueAtOtherProperty = false;
-        this._reactiveProperties.forEach((p, n) => {
-          if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true;
-        });
-        if (!hasSameValueAtOtherProperty) property.value.addEventListener('object-mutated', this.onPropertyMutated);
-      }
-    }
-
-    for (const name in this._protochain.properties) {
-      let initialValue = this._protochain.properties[name];
-      if (typeof initialValue === 'function') {
-        initialValue = new initialValue();
-      } else if (initialValue instanceof Array) {
-        initialValue = initialValue.slice();
-      } else if (typeof initialValue === 'object') {
-        initialValue = Object.assign({}, initialValue);
-      }
-      this[name as keyof this] = initialValue;
-    }
-
-    this.applyProperties(args as Record<keyof this, any>, true);
-
-    if (this._protochain.observedObjectProperties.length) {
-      window.addEventListener('object-mutated', this.onPropertyMutated as EventListener);
-    }
+    this.applyProperties(args, true);
 
     this.ready();
-
     this.dispatchQueue();
-
-    for (const name in this._protochain.reactiveProperties) {
-      const property = this._reactiveProperties.get(name)!;
-      if (property.reflect && property.value !== undefined && property.value !== null) {
-        this.setAttribute(name, property.value);
-      }
-    }
   }
-  /**
-   * Sets multiple properties in batch.
-   * [property]-changed` events will be broadcast in the end.
-   * @param {Object} props - Map of property names and values.
-   */
-  applyProperties(props: Record<keyof this, any>, skipDispatch = false) {
+  // TODO: add types
+  applyProperties(props: any, skipDispatch = false) {
     for (const name in props) {
       if (this._reactiveProperties.has(name)) {
         this.setProperty(name, props[name], true);
@@ -166,7 +103,7 @@ export class IoElement extends HTMLElement {
           debug: if (props[name] as any instanceof Binding) {
             console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`);
           }
-          this[name] = props[name];
+          this[name as keyof this] = props[name];
           // TODO: test and check if type can be attribute.
           if (props[name] === undefined && this.hasAttribute(name)) {
             this.removeAttribute(name);
@@ -177,295 +114,57 @@ export class IoElement extends HTMLElement {
     this._eventDispatcher.applyPropListeners(props);
     if (!skipDispatch) this.dispatchQueue();
   }
-  /**
-   * Sets multiple properties in batch.
-   * [property]-changed` events will be broadcast in the end.
-   * @param {Object} props - Map of property names and values.
-   */
   // TODO: add types
   setProperties(props: any) {
-    for (const name in props) {
-      if (!this._reactiveProperties.has(name)) {
-        debug: console.warn(`Property "${name}" is not defined`, this);
-        continue;
-      }
-      this.setProperty(name, props[name], true);
-    }
-    this.dispatchQueue();
+    setProperties(this, props);
   }
-  /**
-   * Sets the property value, connects the bindings and sets attributes for properties with attribute reflection enabled.
-   * @param {string} name Property name to set value of.
-   * @param {any} value Peroperty value.
-   * @param {boolean} [debounce] flag to skip event dispatch.
-   */
   setProperty(name: string, value: any, debounce = false) {
+    setProperty(this, name, value, debounce);
     const prop = this._reactiveProperties.get(name)!;
-    const oldValue = prop.value;
-
-    if (value !== oldValue) {
-      const binding = (value instanceof Binding) ? value : null;
-      if (binding) {
-        const oldBinding = prop.binding;
-        if (binding !== oldBinding) {
-          if (oldBinding) {
-            oldBinding.removeTarget(this, name);
-          }
-          binding.addTarget(this, name);
-          // NOTE: We return here because binding.setTarget() will trigger execution of setProperty() again.
-          return;
-        } else {
-          // NOTE: This was a remedy for an old bug that might not be relevant anymore.
-          // Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings,
-          // it used to cause all but one of those properties to be reset to original value once parent changed.
-          // This ugly hack fixed the bug by setting binding value from target when binding already exists.
-          // TODO: keep an eye on this and remove if not needed.
-          // binding.value = value = prop.value;
-          return;
-        }
-      }
-
-      prop.value = value;
-
-      // TODO: test!
-      if (value !== oldValue) {
-        let hasNewValueAtOtherProperty = false;
-        let hasOldValueAtOtherProperty = false;
-        this._reactiveProperties.forEach((property, n) => {
-          if (property.value === value && n !== name) hasNewValueAtOtherProperty = true;
-          if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true;
-        });
-        if (value?._isNode) {
-          if (!hasNewValueAtOtherProperty) value.addEventListener('object-mutated', this.onPropertyMutated);
-        }
-        if (oldValue?._isNode) {
-          if (!hasOldValueAtOtherProperty && !oldValue._disposed) oldValue.removeEventListener('object-mutated', this.onPropertyMutated);
-        }
-      }
-
-      debug: {
-        if (prop.type === String) {
-          if (typeof value !== 'string') {
-            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
-          }
-        } else if (prop.type === Number) {
-          if (typeof value !== 'number') {
-            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
-          }
-        } else if (prop.type === Boolean) {
-          if (typeof value !== 'boolean') {
-            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
-          }
-        } else if (prop.type === Array) {
-          if (!(value instanceof Array)) {
-            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
-          }
-        } else if (prop.type === Object) {
-          if (value instanceof Array) {
-            console.warn(`Wrong type of property "${name}". Value: "${JSON.stringify(value)}". Expected type: ${prop.type.name}`, this);
-          }
-        } else if (typeof prop.type === 'function') {
-          if (!(value instanceof prop.type)) {
-            console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, this);
-          }
-        }
-      }
-      if (oldValue !== value) {
-        this.queue(name, value, oldValue);
-        this.dispatchQueue(debounce);
-      }
-    }
-
     if (prop.reflect) this.setAttribute(name.toLowerCase(), value);
   }
-  ready() {}
   init() {}
-  /**
-   * default change handler.
-   * Invoked when one of the properties change.
-   */
-
+  ready() {}
   changed() {}
-  /**
-   * Adds property change to the queue.
-   * @param {string} name - Property name.
-   * @param {*} value - Property value.
-   * @param {*} oldValue - Old property value.
-   */
   queue(name: string, value: any, oldValue: any) {
-    if (this.reactivity === 'none') return;
     this._changeQueue.queue(name, value, oldValue);
   }
-  /**
-   * Dispatches the queue in the next rAF cycle if `reactivity` property is set to `"debounced"`. Otherwise it dispatches the queue immediately.
-   */
   dispatchQueue(debounce = false) {
-    if (this.reactivity === 'debounced' || debounce || this._changeQueue.dispatching) {
-      this.debounce(this._changeQueue.dispatch);
-    } else if (this.reactivity === 'throttled') {
-      this.throttle(this._changeQueue.dispatch);
-    } else if (this.reactivity === 'immediate') {
-      this._changeQueue.dispatch();
-    }
-    debug: if (['none', 'immediate', 'throttled', 'debounced'].indexOf(this.reactivity) === -1) {
-      console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${this.reactivity}". Expected one of: "none", "immediate", "throttled", "debounced".`);
-    }
+    dispatchQueue(this, debounce);
   }
-  /**
-   * Throttles function execution once per frame (rAF).
-   * @param {CallbackFunction} func - Function to throttle.
-   * @param {*} [arg] - Optional argument for throttled function.
-   */
   throttle(func: CallbackFunction, arg?: any, timeout = 1) {
     throttle(func, arg, this, timeout);
   }
-  /**
-   * Debounces function execution to next frame (rAF).
-   * @param {CallbackFunction} func - Function to debounce.
-   * @param {*} [arg] - Optional argument for debounced function.
-   */
   debounce(func: CallbackFunction, arg?: any, timeout = 1) {
     debounce(func, arg, this, timeout);
   }
-  /**
-   * Event handler for 'object-mutated' events emitted from the properties which are Node instances.
-   * Aditionally, it handles events emitted from the `window` object (used for observing non-Node object properties).
-   * NOTE: non-Node objects don't emit 'object-mutated' event automatically - something needs to emit this for them.
-   * This is used to evoke '[propName]Mutated()' mutation handler
-   * @param {Object} event - Event payload.
-   * @param {EventTarget} event.target - Node that emitted the event.
-   * @param {Node} event.detail.object - Mutated node.
-   */
   onPropertyMutated(event: CustomEvent) {
-    const object = event.detail.object;
-    // TODO: consider situations where node is listening to object-mutated events from multiple sources (window and property).
-    // This might cause multiple executions of the same handler.
-    // TODO: consider optimizing. This handler might be called a lot.
-    const properties = [...new Set([...this._protochain.observedObjectProperties, ...this._protochain.observedNodeProperties])];
-    for (let i = 0; i < properties.length; i++) {
-      const name = properties[i];
-      const value = this._reactiveProperties.get(name)!.value;
-      if (value === object) {
-        const handlerName = name + 'Mutated' as keyof Node;
-        if (typeof this[handlerName] === 'function') {
-          this.throttle(this[handlerName] as CallbackFunction);
-        }
-        return true;
-      }
-    }
+    return onPropertyMutated(this, event);
   };
-  /**
-   * Returns a binding to a specified property`.
-   * @param {string} name - Property name to bind to.
-   * @return {Binding} Binding object.
-   */
-  bind<T>(name: string) {
-    debug: if (!this._reactiveProperties.has(name)) {
-      console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`);
-    }
-    if (!this._bindings.has(name)) {
-      this._bindings.set(name, new Binding<T>(this, name));
-    }
-    return this._bindings.get(name)! as Binding<T>;
+  bind<T>(name: string): Binding<T> {
+    return bind<T>(this, name);
   }
-  /**
-   * Unbinds a binding to a specified property`.
-   * @param {string} name - Property name to unbind.
-   */
-  unbind(name: string) {
-    const binding = this._bindings.get(name);
-    if (binding) {
-      binding.dispose();
-      this._bindings.delete(name);
-    }
-
-    const property = this._reactiveProperties.get(name);
-    property?.binding?.removeTarget(this, name);
+  unbind(name: string): void {
+    unbind(this, name);
   }
-  /**
-   * Wrapper for addEventListener.
-   * @param {string} type - listener name.
-   * @param {AnyEventListener} listener - listener handler.
-   * @param {AddEventListenerOptions} options - event listener options.
-   */
   addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
     this._eventDispatcher.addEventListener(type, listener as EventListener, options);
   }
-  /**
-   * Wrapper for removeEventListener.
-   * @param {string} type - event name to listen to.
-   * @param {AnyEventListener} listener - listener handler.
-   * @param {ObjAddEventListenerOptionsect} options - event listener options.
-   */
   removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options);
   }
-  /**
-   * Wrapper for dispatchEvent.
-   * @param {string} type - event name to dispatch.
-   * @param {Object} detail - event detail.
-   * @param {boolean} bubbles - event bubbles.
-   * @param {HTMLElement|Node} src source node/element to dispatch event from.
-   */
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
   }
-  /**
-   * Disposes the node when it is no longer needed.
-   */
   dispose() {
-    debug: if (this._disposed) {
-      console.warn('Node.dispose(): Already disposed!', this.constructor.name);
-    }
-
-    if (this._disposed) return;
-
-    this._bindings.forEach((binding, name) => {
-      binding.dispose();
-      this._bindings.delete(name);
-    });
-    delete (this as any)._bindings;
-
-    if (this._protochain.observedObjectProperties.length) {
-      window.removeEventListener('object-mutated', this.onPropertyMutated as EventListener);
-    }
-    delete (this as any)._protochain;
-
-    this._changeQueue.dispose();
-    delete (this as any)._changeQueue;
-
-    let removed: Node[] = [];
-    this._reactiveProperties.forEach((property, name) => {
-      property.binding?.removeTarget(this, name);
-      if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
-        property.value.removeEventListener('object-mutated', this.onPropertyMutated);
-        removed.push(property.value);
-      }
-    });
-
-    for (const name in this._protochain.properties) {
-      delete this[name as keyof Node];
-    }
-
-    // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
-    this._eventDispatcher.dispose();
-    delete (this as any)._eventDispatcher;
-    delete (this as any)._reactiveProperties;
-
-    Object.defineProperty(this, '_disposed', {value: true});
+    dispose(this);
   }
 
-  /**
-  * Add resize listener if `onResized()` is defined in subclass.
-  */
   connectedCallback() {
     if (typeof (this as any).onResized === 'function') {
       resizeObserver.observe(this);
     }
   }
-  /**
-  * Removes resize listener if `onResized()` is defined in subclass.
-  */
   disconnectedCallback() {
     if (typeof (this as any).onResized === 'function') {
       resizeObserver.unobserve(this);
@@ -607,8 +306,8 @@ export class IoElement extends HTMLElement {
     return toVDOM(this);
   }
   Register(ioNodeConstructor: typeof IoElement) {
-    Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true});
-    Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true});
+    Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true, writable: false});
+    Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true, writable: false});
     Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
 
     const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
@@ -616,8 +315,8 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(ioNodeConstructor, 'localName', {value: localName});
     Object.defineProperty(ioNodeConstructor.prototype, 'localName', {value: localName});
 
-    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: true});
-    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: true});
+    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: true, writable: false});
+    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: true, writable: false});
     Object.defineProperty(window, ioNodeConstructor.name, {value: ioNodeConstructor});
 
     window.customElements.define(localName, ioNodeConstructor as unknown as CustomElementConstructor);

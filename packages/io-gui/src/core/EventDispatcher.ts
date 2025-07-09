@@ -183,7 +183,6 @@ export class EventDispatcher {
    * @param {AddEventListenerOptions} [options] - Event listener options
    */
   addEventListener(name: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
-    // Validate listener
     debug: {
       if (typeof listener !== 'function') {
         console.error('EventDispatcher.addEventListener: Invalid listener type - must be a function');
