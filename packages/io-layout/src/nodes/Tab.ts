@@ -4,6 +4,7 @@ export type TabProps = NodeProps & {
   id: string,
   label?: string,
   icon?: string,
+  selected?: boolean,
 };
 
 @Register
@@ -18,6 +19,9 @@ export class Tab extends Node {
   @ReactiveProperty({type: String, value: ''})
   declare icon: string;
 
+  @ReactiveProperty({type: Boolean, value: false})
+  declare selected: boolean;
+
   constructor(args: TabProps) {
     if (!args.label) args.label = args.id;
     super(args);
@@ -27,7 +31,8 @@ export class Tab extends Node {
     return {
       id: this.id,
       label: this.label,
-      icon: this.icon,
+      icon: this.icon,  
+      selected: this.selected,
     };
   }
 
@@ -39,6 +44,7 @@ export class Tab extends Node {
       this.label = json.id;
     }
     if (json.icon) this.icon = json.icon;
+    if (json.selected) this.selected = json.selected;
     return this;
   }
 }

@@ -1,12 +1,12 @@
 import { Register, ReactiveProperty, Property, span, VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
-import { MenuItem } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
 import { tabDropMarkerSingleton } from './IoTabDropMarker.js';
+import { Tab } from '../nodes/Tab.js';
 
 type IoTabDragIconProps = IoFieldProps & {
-  item?: MenuItem,
+  tab?: Tab,
 };
 
 @Register
@@ -42,8 +42,8 @@ class IoTabDragIcon extends IoField {
   @ReactiveProperty({type: Boolean, reflect: true})
   declare dragging: boolean;
 
-  @ReactiveProperty({type: MenuItem, init: null})
-  declare item: MenuItem;
+  @ReactiveProperty({type: Tab, init: null})
+  declare tab: Tab;
 
   @ReactiveProperty(null)
   declare dropSource: IoTabs | null;
@@ -68,8 +68,8 @@ class IoTabDragIcon extends IoField {
       tabDropMarkerSingleton.dropIndex = -1;
     }
     this.render([
-      ioIcon({value: this.item.icon || ' '}),
-      span({class: 'label'}, this.item.label || ''),
+      ioIcon({value: this.tab.icon || ' '}),
+      span({class: 'label'}, this.tab.label || ''),
     ]);
   }
 }

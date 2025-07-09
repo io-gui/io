@@ -2,9 +2,7 @@ import { Register, ReactiveProperty, IoElement, VDOMElement, IoElementProps, The
 import { IoTabs } from './IoTabs.js';
 import { IoTab } from './IoTab.js';
 
-type IoTabDropMarkerProps = IoElementProps & {
-
-};
+type IoTabDropMarkerProps = IoElementProps & {};
 
 @Register
 class IoTabDropMarker extends IoElement {

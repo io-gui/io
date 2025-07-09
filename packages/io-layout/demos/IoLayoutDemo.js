@@ -13,43 +13,20 @@ function lorem(length) {
 }
 
 const split = new Split({
-  flex: '1 1 100%',
-  orientation: 'horizontal',
   children: [
     {
-      flex: '1 1 100%',
-      selected: 'Doc 1',
       tabs: [{id: 'Doc 1'},{id: 'Doc 2'},{id: 'Doc 3'}],
     },
     {
-      flex: '1 1 100%',
       orientation: 'vertical',
       children: [
-        {
-          flex: '1 1 100%',
-          selected: 'Doc 2',
-          tabs: [{id: 'Doc 2', label: 'Doc 2'}],
-        },
-        {
-          flex: '1 1 100%',
-          selected: 'Doc 3',
-          tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}],
-        },
-        {
-          flex: '1 1 100%',
-          selected: 'Doc 3',
-          tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}],
-        },
-        {
-          flex: '1 1 100%',
-          selected: 'Doc 3',
-          tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}],
-        }                
+        {tabs: [{id: 'Doc 2', label: 'Doc 2'}]},
+        {tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}]},
+        {tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}]},
+        {tabs: [{id: 'Doc 3', label: 'Doc 3', icon: 'io:numeric-3-box'}]},
       ]
     },
     {
-      flex: '1 1 100%',
-      selected: 'Doc 4',
       tabs: [{id: 'Doc 4', label: 'Doc 4', icon: 'io:numeric-4-box'}],
     }
   ]

@@ -21,6 +21,12 @@ export class Split extends Node {
   declare flex: string;
 
   constructor(args: SplitProps) {
+    if (!args.orientation) {
+      args.orientation = 'horizontal';
+    }
+    if (!args.flex) {
+      args.flex = '1 1 100%';
+    }
     if (args.children) {
       for (let i = 0; i < args.children.length; i++) {
         if (!(args.children[i] instanceof Split) && !(args.children[i] instanceof Panel)) {

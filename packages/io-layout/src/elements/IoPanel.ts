@@ -1,6 +1,6 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
 import { ioSelector } from 'io-navigation';
-import { MenuItem, MenuOptions } from 'io-menus';
+import { MenuItem } from 'io-menus';
 import { ioTabs } from './IoTabs.js';
 import { Panel } from '../nodes/Panel.js';
 import { Tab } from '../nodes/Tab.js';
@@ -37,44 +37,39 @@ export class IoPanel extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @ReactiveProperty({type: MenuOptions, init: null})
-  declare options: MenuOptions;
-
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
 
-  init() {
-    this.selectTabByIndex = this.selectTabByIndex.bind(this);
-  }
   static get Listeners() {
     return {
-      'io-edit-tab-item': 'onEditTabItem',
+      'io-edit-tab': 'onEditTab',
     };
   }
 
-  onEditTabItem(event: CustomEvent) {
+  onEditTab(event: CustomEvent) {
     event.stopPropagation();
-    const item: MenuItem = event.detail.item;
+    const tab: Tab = event.detail.tab;
     const key = event.detail.key;
-    const index = this.options.items.indexOf(item);
+    const index = this.panel.tabs.indexOf(tab);
     if (index === -1) {
-      debug: console.warn('IoTabs:Item not found in options', item);
+      debug: console.warn('IoTabs:Tab not found in panel', tab);
       return;
     }
     switch (key) {
+      case 'Select': {
+        this.selectTab(tab);
+        break;
+      }
       case 'Backspace': {
-        this.removeTab(item);
-        this.selectTabByIndex(Math.min(index, this.options.items.length - 1));
+        this.removeTab(tab);
         break;
       }
       case 'ArrowLeft': {
-        this.options.moveItem(index, index - 1);
-        this.selectTabByIndex(index - 1);
+        this.moveTab(tab, index - 1);
         break;
       }
       case 'ArrowRight': {
-        this.options.moveItem(index, index + 1);
-        this.selectTabByIndex(index + 1);
+        this.moveTab(tab, index + 1);
         break;
       }
       case 'ArrowUp': {
@@ -87,66 +82,59 @@ export class IoPanel extends IoElement {
       }
     }
   }
-  selectTabByIndex(index: number) {
-    if (index < 0) {
-      this.options.selected = '';
-      this.panel.selected = '';
-      return;
+  init() {
+    this.focusTabDebounced = this.focusTabDebounced.bind(this);
+  }
+  onNewTabClicked(event: CustomEvent) {
+    event.stopPropagation();
+    const item: MenuItem = event.detail.item;
+    if (item.id) {
+      const tab = new Tab({id: item.id, label: item.label, icon: item.icon});
+      this.addTab(tab);
     }
-    this.options.items[index].selected = true;
+  }
+  selectTab(tab: Tab) {
+    const index = this.panel.tabs.indexOf(tab);
+    this.panel.selectIndex(index);
+    this.debounce(this.focusTabDebounced, index);
+  }
+  addTab(tab: Tab, index?: number) {
+    index = index ?? this.panel.tabs.length;
+    this.panel.addTab(tab, index);
+    this.debounce(this.focusTabDebounced, index);
+  }
+  removeTab(tab: Tab) {
+    const index = this.panel.tabs.indexOf(tab);
+    this.panel.removeTab(tab);
+    if (this.panel.tabs.length === 0) {
+      this.dispatch('io-panel-remove', {panel: this.panel}, true);
+    } else {
+      const newIndex = Math.min(index, this.panel.tabs.length - 1);
+      this.panel.selectIndex(newIndex);
+      this.debounce(this.focusTabDebounced, newIndex);
+    }
+  }
+  moveTab(tab: Tab, index: number) {
+    index = Math.max(Math.min(index, this.panel.tabs.length - 1), 0);
+    this.panel.moveTab(tab, index);
+    this.debounce(this.focusTabDebounced, index);
+  }
+  focusTabDebounced(index: number) {
     const tabs = Array.from(this.querySelectorAll('io-tab')) as HTMLElement[];
     if (tabs[index]) tabs[index].focus();
   }
-  onMenuItemClicked(event: CustomEvent) {
-    event.stopPropagation();
-    const item: MenuItem = event.detail.item;
-    this.addTab(item);
-  }
-  addTab(item: MenuItem, index?: number) {
-    if (!item.id) return;
-    index = index ?? this.options.items.length;
-    this.options.addItem({
-      id: item.id,
-      label: item.label,
-      icon: item.icon,
-      mode: 'select',
-    }, index);
-    const foundItem = this.options.findItemById(item.id)!;
-    const foundItemIndex = this.options.items.indexOf(foundItem);
-    this.selectTabByIndex(foundItemIndex);
-  }
-  removeTab(item: MenuItem) {
-    this.options.removeItemById(item.id);
-    if (this.options.items.length === 0) {
-      this.dispatch('io-panel-remove', {panel: this.panel}, true);
-    }
-  }
-  optionsMutated() {
-    // TODO: use TabData instead of MenuItem?
-    this.panel.selected = this.options.selected;
-    this.panel.tabs.length = 0;
-    this.options.items.forEach(item => {
-      this.panel.tabs.push(new Tab({
-        id: item.id,
-        label: item.label,
-        icon: item.icon,
-      }));
-    });
+  panelMutated() {
     this.dispatch('io-panel-data-changed', {}, true);
-  }
-  panelChanged() {
-    this.options?.dispose();
-    this.options = new MenuOptions({items: this.panel.tabs as unknown as MenuItem[], selected: this.panel.selected});
   }
   changed() {
     this.render([
       ioTabs({
-        options: this.options,
+        panel: this.panel,
         addMenuItem: this.addMenuItem,
-        '@io-menu-item-clicked': this.onMenuItemClicked,
+        '@io-menu-item-clicked': this.onNewTabClicked,
       }),
       ioSelector({
-        selected: this.options.bind('selectedShallow'),
+        selected: this.panel.bind('selected'),
         elements: this.elements,
       })
     ]);

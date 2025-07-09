@@ -6,6 +6,7 @@ import { MenuItem, MenuOptions, ioOptionSelect } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
 import { tabDragIconSingleton } from './IoTabDragIcon.js';
 import { IoPanel } from './IoPanel.js';
+import { Tab } from '../nodes/Tab.js';
 
 const icons = [];
 for (const set of Object.keys(IconsetDB)) {
@@ -18,7 +19,7 @@ for (const set of Object.keys(IconsetDB)) {
 const iconOptions = ioOptionSelect({label: 'Select', options: new MenuOptions().fromJSON(icons)});
 
 export type IoTabProps = IoFieldProps & {
-  item?: MenuItem,
+  tab?: Tab,
 };
 
 let _dragStartX = 0;
@@ -102,8 +103,8 @@ export class IoTab extends IoField {
     `;
   }
 
-  @ReactiveProperty({type: MenuItem})
-  declare item: MenuItem;
+  @ReactiveProperty({type: Tab, init: null})
+  declare tab: Tab;
 
   static get Listeners() {
     return {
@@ -127,7 +128,7 @@ export class IoTab extends IoField {
     super.onPointerdown(event);
     if (event.buttons === 2) {
       IoContextEditorSingleton.expand({
-        value: this.item,
+        value: this.tab,
         properties: ['id', 'label', 'icon'],
         orientation: 'horizontal',
         config: new Map([
@@ -152,7 +153,7 @@ export class IoTab extends IoField {
       const dy = Math.abs(_dragStartY - event.clientY);
       if (dx > 10 || dy > 10) {
         tabDragIconSingleton.setProperties({
-          item: this.item,
+          tab: this.tab,
           dragging: true,
           dropSource: this.parentElement as IoTabs,
           dropTarget: null,
@@ -206,15 +207,14 @@ export class IoTab extends IoField {
 
       if (dropTarget && dropIndex !== -1) {
         const targetPanel = dropTarget.parentElement as IoPanel;
-        targetPanel.addTab(this.item, dropIndex);
         if (dropSource && dropSource !== dropTarget) {
           const sourcePanel = dropSource.parentElement as IoPanel;
-          sourcePanel.removeTab(this.item);
+          sourcePanel.removeTab(this.tab);
         }
+        targetPanel.addTab(this.tab, dropIndex);
       }
 
       tabDragIconSingleton.setProperties({
-        item: new MenuItem({}),
         dragging: false,
         dropSource: null,
         dropTarget: null,
@@ -225,37 +225,29 @@ export class IoTab extends IoField {
     }
   }
   onClick() {
-    this.item.selected = true;
+    this.dispatch('io-edit-tab', {tab: this.tab, key: 'Select'}, true);
   }
-  onCloseClick() {
-    this.dispatch('io-edit-tab-item', {item: this.item, key: 'Backspace'}, true);
+  onDeleteClick() {
+    this.dispatch('io-edit-tab', {tab: this.tab, key: 'Backspace'}, true);
   }
   onKeydown(event: KeyboardEvent) {
     if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       event.preventDefault();
-      this.dispatch('io-edit-tab-item', {item: this.item, key: event.key}, true);
+      this.dispatch('io-edit-tab', {tab: this.tab, key: event.key}, true);
     } else {
       super.onKeydown(event);
     }
   }
-  itemChanged() {
-    this.setProperties({
-      selected: this.item.bind('selected'),
-      disabled: this.item.bind('disabled'),
-    });
-    debug: if (this.item.options?.items.length) console.warn('IoTab: Tab item should not have sub-options!');
-  }
-  itemMutated() {
-    // TODO: consider using Tab(s) instead of MenuItem(s).
+  tabMutated() {
     this.changed();
   }
   changed() {
-    this.hidden = this.item.hidden;
+    this.setAttribute('selected', this.tab.selected);
     this.render([
-      this.item.selected ? span({class: 'marker'}) : null,
-      ioIcon({value: this.item.icon || ' '}),
-      span({class: 'label'}, this.item.label),
-      ioIcon({value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onCloseClick, '@pointerdown': this.preventDefault}),
+      this.tab.selected ? span({class: 'marker'}) : null,
+      ioIcon({value: this.tab.icon || ' '}),
+      span({class: 'label'}, this.tab.label),
+      ioIcon({value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onDeleteClick, '@pointerdown': this.preventDefault}),
     ]);
   }
 }

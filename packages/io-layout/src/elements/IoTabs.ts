@@ -1,9 +1,10 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
 import { MenuItem, ioMenuItem, MenuOptions } from 'io-menus';
 import { ioTab } from './IoTab.js';
+import { Panel } from '../nodes/Panel.js';
 
 export type IoTabsProps = IoElementProps & {
-  options?: MenuOptions,
+  panel?: Panel,
   addMenuItem?: MenuItem,
 };
 
@@ -40,19 +41,19 @@ export class IoTabs extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions, init: null})
-  declare private options: MenuOptions;
+  @ReactiveProperty({type: Panel, init: null})
+  declare private panel: Panel;
 
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
 
-  optionsMutated() {
+  panelMutated() {
     this.changed();
   }
 
   changed() {
     this.render([
-      ...this.options.items.map(item => ioTab({item})),
+      ...this.panel.tabs.map(tab => ioTab({tab: tab})),
       ioMenuItem({
         icon: 'io:box_fill_plus',
         direction: 'down',
