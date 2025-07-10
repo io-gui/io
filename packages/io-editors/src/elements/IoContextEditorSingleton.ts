@@ -16,6 +16,7 @@ interface IoContextEditorExpandProps {
   config?: EditorConfig,
   groups?: EditorGroups,
   widgets?: EditorWidgets,
+  onClose?: () => void,
 }
 
 @Register
@@ -31,6 +32,8 @@ class IoContextEditor extends IoPropertyEditor {
 
   @ReactiveProperty({type: Boolean, value: false, reflect: true})
   declare expanded: boolean;
+
+  declare onClose: null | (() => void);
 
   static get Listeners() {
     return {
@@ -81,6 +84,7 @@ class IoContextEditor extends IoPropertyEditor {
       widgets: props.widgets || new Map(),
       expanded: true,
     });
+    this.onClose = props.onClose || null;
     this.debounce(this.onExpand);
   }
   onExpand() {
@@ -98,6 +102,10 @@ class IoContextEditor extends IoPropertyEditor {
         groups: new Map(),
         widgets: new Map(),
       });
+      if (this.onClose) {
+        this.onClose();
+        this.onClose = null;
+      }
     }
   }
 }

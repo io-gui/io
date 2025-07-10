@@ -3,7 +3,7 @@ import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
 import { MenuOptions, ioOptionSelect } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
-import { ioVector } from '../elements/IoVector.js';
+import { ioVectorArray } from '../elements/IoVectorArray.js';
 import { ioObject } from '../elements/IoObject.js';
 import { getAllPropertyNames } from './EditorGroups.js';
 
@@ -118,8 +118,8 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     ['reactivity', ioOptionSelect({options: new MenuOptions({items: ['none', 'debounced', 'immediate']})})],
   ]],
   [IoGl, [
-    ['size', ioVector({step: 1})],
-    ['color', ioVector({step: 1})],
+    ['size', ioVectorArray({step: 1})],
+    ['color', ioVectorArray({step: 1})],
   ]],
   [Theme, [
     [Number, ioNumberSlider({step: 1, min: 0, max: 20})],

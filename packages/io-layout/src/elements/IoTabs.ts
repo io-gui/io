@@ -1,5 +1,5 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
-import { MenuItem, ioMenuItem } from 'io-menus';
+import { MenuItem, ioMenuItem, ioMenuHamburger } from 'io-menus';
 import { ioTab } from './IoTab.js';
 import { Panel } from '../nodes/Panel.js';
 
@@ -14,17 +14,18 @@ export class IoTabs extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        position: relative;
         display: flex;
         background-color: var(--io_bgColorStrong);
         padding-top: var(--io_spacing);
         padding-left: var(--io_spacing);
         padding-right: var(--io_spacing);
       }
+      :host > io-menu-hamburger {
+        margin-bottom: var(--io_spacing);
+      }
       :host > io-menu-item {
-        min-width: fit-content;
         margin-left: auto;
-        padding: 0;
+        flex-shrink: 0;
         opacity: 0.125;
         transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
       }
@@ -46,16 +47,42 @@ export class IoTabs extends IoElement {
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
 
+  declare private hamburgerMenuItem: MenuItem;
+
   constructor(args: IoTabsProps = {}) { super(args); }
 
+  panelChanged() {
+    this.updateHamburgerMenuItem();
+  }
+
   panelMutated() {
+    this.updateHamburgerMenuItem();
     this.changed();
+  }
+
+  updateHamburgerMenuItem() {
+    if (this.hamburgerMenuItem) {
+      this.hamburgerMenuItem.dispose();
+    }
+    this.hamburgerMenuItem = new MenuItem().fromJSON({
+      mode: 'none',
+      options: this.panel.tabs.map(tab => ({
+        mode: 'none',
+        id: tab.id,
+        label: tab.label,
+        icon: tab.icon,
+      })),
+    });
   }
 
   changed() {
     this.render([
+      ioMenuHamburger({
+        item: this.hamburgerMenuItem,
+      }),
       ...this.panel.tabs.map(tab => ioTab({tab: tab})),
       ioMenuItem({
+        class: 'add-tab',
         icon: 'io:box_fill_plus',
         direction: 'down',
         item: this.addMenuItem,

@@ -327,11 +327,12 @@ export class IoMenuItem extends IoField {
       selected: this.item.bind('selected'),
       disabled: this.item.bind('disabled'),
     });
+    this.initOptions();
   }
   itemMutated() {
     this.changed();
   }
-  changed() {
+  initOptions() {
     if (this.item.options && this.depth > 0) {
       if (this.$options === undefined) {
         this.$options = new IoMenuOptions({
@@ -344,8 +345,9 @@ export class IoMenuItem extends IoField {
       } else {
         this.$options.options = this.item.options;
       }
-    }
-
+    }    
+  }
+  changed() {
     const icon = this.icon || this.item.icon;
     const label = this.label || this.item.label;
 

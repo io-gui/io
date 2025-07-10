@@ -1,19 +1,8 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from 'io-gui';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
-export type IoVectorProps = IoElementProps & {
-  value?: {
-    x?: number,
-    y?: number,
-    z?: number,
-    w?: number,
-    r?: number,
-    g?: number,
-    b?: number,
-    a?: number,
-    u?: number,
-    v?: number,
-  },
+export type IoVectorArrayProps = IoElementProps & {
+  value?: number[],
   conversion?: number,
   step?: number,
   min?: number,
@@ -26,8 +15,8 @@ export type IoVectorProps = IoElementProps & {
  * Input element for vector arrays and objects.
  **/
 @Register
-export class IoVector extends IoElement {
-  static vConstructor: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export class IoVectorArray extends IoElement {
+  static vConstructor: (arg0?: IoVectorArrayProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -47,19 +36,8 @@ export class IoVector extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: Object, init: null})
-  declare value: {
-    x?: number,
-    y?: number,
-    z?: number,
-    w?: number,
-    r?: number,
-    g?: number,
-    b?: number,
-    a?: number,
-    u?: number,
-    v?: number,
-  };
+  @ReactiveProperty({type: Array, init: false})
+  declare value: number[];
 
   @ReactiveProperty(1)
   declare conversion: number;
@@ -83,7 +61,7 @@ export class IoVector extends IoElement {
   declare ladder: boolean;
 
   @ReactiveProperty({type: Array})
-  declare keys: string[];
+  declare keys: number[];
 
   private _ratios: any = {};
 
@@ -93,18 +71,18 @@ export class IoVector extends IoElement {
     this._ratios = {};
     if (this.linked && this.value[id] !== 0) {
       const value = this.value as any;
-      for (const k of this.keys) this._ratios[k] = value[k] / value[id];
+      for (const k of this.keys as [keyof typeof value]) this._ratios[k] = value[k] / value[id];
     }
   }
 
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const id = item.id as keyof typeof this.value;
-    (this.value as any)[id] = event.detail.value;
+    const index = Number(item.id);
+    (this.value as any)[index] = event.detail.value;
     if (this.linked) {
       for (const k of this.keys) {
         const value = this.value as any;
-        if (k !== id && this._ratios[k]) (value as any)[k] = value[id] * this._ratios[k];
+        if (k !== index && this._ratios[k]) (value as any)[k] = value[index] * this._ratios[k];
       }
     }
     if (!(this.value as unknown as Node)._isNode) {
@@ -115,9 +93,9 @@ export class IoVector extends IoElement {
 
   valueChanged() {
     this.keys.length = 0;
-    this.keys.push(...Object.keys(this.value).filter(key => typeof (this.value as any)[key] === 'number') as Array<keyof typeof this.value>);
-    debug: if (this.keys.find(k => ['0', '1', '2', '3', 'x', 'y', 'z', 'w', 'r', 'g', 'b', 'a', 'u', 'v'].indexOf(k) === -1)) {
-      console.warn('IoVector: Unrecognized vector type!');
+    this.keys = Array.from(Array(this.value.length).keys());
+    debug: if (this.keys.find(k => [0, 1, 2, 3].indexOf(k) === -1)) {
+      console.warn('IoVectorArray: Unrecognized vector type!');
     }
   }
   valueMutated() {
@@ -125,10 +103,10 @@ export class IoVector extends IoElement {
   }
   changed() {
     const vChildren: Array<VDOMElement | null> = [];
-    for (const k of this.keys as [keyof typeof this.value]) {
+    for (const k of this.keys) {
       if (this.value[k] !== undefined) {
         vChildren.push(ioNumber({
-          id: k,
+          id: String(k), // Consider removing global id collisions
           value: this.value[k],
           conversion: this.conversion,
           step: this.step,
@@ -144,4 +122,4 @@ export class IoVector extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioVector = IoVector.vConstructor;
+export const ioVectorArray = IoVectorArray.vConstructor;

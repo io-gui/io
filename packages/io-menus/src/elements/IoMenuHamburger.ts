@@ -1,4 +1,4 @@
-import { Register } from 'io-gui';
+import { NudgeDirection, ReactiveProperty, Register } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoMenuItem } from './IoMenuItem.js';
 
@@ -9,6 +9,7 @@ export class IoMenuHamburger extends IoMenuItem {
       :host {
         display: flex;
         user-select: none;
+        flex-shrink: 0;
       }
       :host > * {
         pointer-events: none;
@@ -17,13 +18,11 @@ export class IoMenuHamburger extends IoMenuItem {
     `;
   }
 
+  @ReactiveProperty({value: 'down', reflect: true})
+  declare direction: NudgeDirection;
+
   changed() {
-    if (this.$options !== undefined && this.item.options) {
-      this.$options.options = this.item.options;
-    }
-    this.setAttribute('selected', this.item.selected);
     this.setAttribute('hidden', this.item.hidden);
-    this.disabled = this.item.disabled; // TODO: reconsider this
     this.render([ioIcon({value: 'io:hamburger'})]);
   }
 }

@@ -29,7 +29,7 @@ export class IoField extends IoElement {
         border: var(--io_border);
         border-color: transparent;
         border-radius: var(--io_borderRadius);
-        padding: var(--io_spacing) var(--io_spacing3);
+        padding: var(--io_spacing) calc(var(--io_spacing3) + var(--io_borderWidth));
         color: var(--io_color);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -107,6 +107,7 @@ export class IoField extends IoElement {
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare invalid: boolean;
 
+  // TODO: remove
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare disabled: boolean;
 

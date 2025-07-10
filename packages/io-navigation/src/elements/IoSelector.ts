@@ -225,7 +225,9 @@ export class IoSelector extends IoElement {
       }
     } else {
       this.render([vElement], this, cache);
-      if (cache) this._caches[id] = this.childNodes[0] as IoElement;
+      if (cache) {
+        this._caches[id] = this.childNodes[0] as IoElement;
+      }
     }
   }
   startPreache() {

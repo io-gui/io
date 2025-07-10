@@ -139,7 +139,6 @@ export class IoNumber extends IoField {
     const rangeEnd = range.endOffset;
     const length = this.childNodes[0] ? (this.childNodes[0] as Text).length : 0;
     const rangeInside = range.startContainer === range.endContainer && (range.startContainer === this.childNodes[0] || range.startContainer === this as unknown as Node);
-    const valueNumber = Number(this.textNode);
 
     switch (event.key) {
       case 'Escape':
@@ -158,29 +157,12 @@ export class IoNumber extends IoField {
         this.textNode = String(this.max);
         this._setFromTextNode();
         break;
-      case 'PageUp':
-        event.preventDefault();
-        if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
-          this.textNode = String(Number(this.textNode) + this.step);
-        } else {
-          this.textNode = String(this.step);
-        }
-        this._setFromTextNode();
-        break;
-      case 'PageDown':
-        event.preventDefault();
-        if (!isNaN(valueNumber) && Math.abs(valueNumber) < Infinity) {
-          this.textNode = String(Number(this.textNode) - this.step);
-        } else {
-          this.textNode = String(-this.step);
-        }
-        this._setFromTextNode();
-        break;
       case 'ArrowLeft':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
           event.preventDefault();
           this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
+        // TODO: shift step
         break;
       case 'ArrowUp':
         if (IoNumberLadderSingleton.expanded) {
@@ -197,6 +179,7 @@ export class IoNumber extends IoField {
           event.preventDefault();
           this.dispatch('io-focus-to', {source: this, command: event.key}, true);
         }
+        // TODO: shift step
         break;
       case 'ArrowDown':
         if (IoNumberLadderSingleton.expanded) {

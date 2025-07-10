@@ -7,4 +7,5 @@ export * from './elements/IoInspector.js';
 export * from './elements/IoObject.js';
 export * from './elements/IoPropertyEditor.js';
 export * from './elements/IoVector.js';
+export * from './elements/IoVectorArray.js';
 export * from './elements/IoMatrix.js';

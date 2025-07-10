@@ -1,6 +1,6 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
 import { ioSelector } from 'io-navigation';
-import { MenuItem } from 'io-menus';
+import { IoMenuItem, MenuItem } from 'io-menus';
 import { ioTabs } from './IoTabs.js';
 import { IoSplit } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
@@ -58,6 +58,10 @@ export class IoPanel extends IoElement {
       return;
     }
     switch (key) {
+      case 'Edit': {
+        this.dispatch('io-panel-data-changed', {}, true);
+        break;
+      }
       case 'Select': {
         this.selectTab(tab);
         break;
@@ -93,6 +97,8 @@ export class IoPanel extends IoElement {
     if (item.id) {
       const tab = new Tab({id: item.id, label: item.label, icon: item.icon});
       this.addTab(tab);
+      const addMenuItem = this.querySelector('.add-tab') as IoMenuItem;
+      if (addMenuItem) addMenuItem.expanded = false;
     }
   }
   moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
@@ -136,6 +142,7 @@ export class IoPanel extends IoElement {
   }
   panelMutated() {
     this.dispatch('io-panel-data-changed', {}, true);
+    this.changed();
   }
   changed() {
     this.render([
@@ -147,6 +154,7 @@ export class IoPanel extends IoElement {
       ioSelector({
         selected: this.panel.bind('selected'),
         elements: this.elements,
+        anchor: '',
       })
     ]);
   }

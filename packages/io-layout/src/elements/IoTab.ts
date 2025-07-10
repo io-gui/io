@@ -36,6 +36,7 @@ export class IoTab extends IoField {
         position: relative;
         height: inherit;
         min-height: inherit;
+        min-width: calc(var(--io_fieldHeight) * 1.42);
         margin: 0;
         margin-right: var(--io_spacing);
         background-color: var(--io_bgColor) !important;
@@ -56,8 +57,15 @@ export class IoTab extends IoField {
         border-bottom-color: var(--io_bgColorLight);
         z-index: 1;
       }
+      :host:not([selected]) > .io-close-icon {
+        /* TODO: make always visible when no overflow */
+        display: none;
+      }
       :host[selected]:focus {
         color: var(--io_colorWhite);
+      }
+      :host > .io-icon:not([value=' ']) {
+        margin: 0 var(--io_spacing2) 0 var(--io_spacing);
       }
       :host > .marker {
         position: absolute;
@@ -69,6 +77,8 @@ export class IoTab extends IoField {
       }
       :host > span {
         padding: 0 var(--io_spacing);
+        overflow: hidden; 
+        text-overflow: ellipsis !important;
       }
       :host > * {
         pointer-events: none;
@@ -138,6 +148,9 @@ export class IoTab extends IoField {
             ['icon', iconOptions],
           ]],
         ]),
+        onClose: () => {
+          this.dispatch('io-edit-tab', {tab: this.tab, key: 'Edit'}, true);
+        },
       });
       nudge(IoContextEditorSingleton, this, 'down');
       //TODO Save layout on item edit.
@@ -287,7 +300,7 @@ export class IoTab extends IoField {
     this.setAttribute('selected', this.tab.selected);
     this.render([
       this.tab.selected ? span({class: 'marker'}) : null,
-      ioIcon({value: this.tab.icon || ' '}),
+      ioIcon({class: 'io-icon', value: this.tab.icon || ' '}),
       span({class: 'label'}, this.tab.label),
       ioIcon({value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onDeleteClick, '@pointerdown': this.preventDefault}),
     ]);

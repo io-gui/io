@@ -1,7 +1,7 @@
 import { Register, ReactiveProperty, VDOMElement, Node } from 'io-gui';
-import { IoVector, IoVectorProps } from './IoVector.js';
+import { IoVectorArray, IoVectorArrayProps } from './IoVectorArray.js';
 
-export type IoMatrixProps = IoVectorProps & {
+export type IoMatrixProps = IoVectorArrayProps & {
   columns?: number,
 };
 
@@ -9,7 +9,7 @@ export type IoMatrixProps = IoVectorProps & {
  * Input element for vector arrays dispalayed as 2D matrices. Array `value` can have 4, 9, and 16 elements for 2x2, 3x3 and 4x4 matrices.
  **/
 @Register
-export class IoMatrix extends IoVector {
+export class IoMatrix extends IoVectorArray {
   static vConstructor: (arg0?: IoMatrixProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
@@ -52,19 +52,19 @@ export class IoMatrix extends IoVector {
   valueChanged() {
     if (this.value.length === 4) {
       this.setProperties({
-        keys: ['0', '1', '2', '3'],
+        keys: [0, 1, 2, 3],
         columns: 2
       });
     }
     if (this.value.length === 9) {
       this.setProperties({
-        keys: ['0', '1', '2', '3', '4', '5', '6', '7', '8'],
+        keys: [0, 1, 2, 3, 4, 5, 6, 7, 8],
         columns: 3
       });
     }
     if (this.value.length === 16) {
       this.setProperties({
-        keys: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'],
+        keys: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         columns: 4
       });
     }
@@ -75,7 +75,7 @@ export class IoMatrix extends IoVector {
       if (this.value.find(v => typeof v !== 'number')) {
         console.warn('IoMatrix: Unrecognized matrix type!');
       }
-      if (this.keys.find(k => ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'].indexOf(k) === -1)) {
+      if (this.keys.find(k => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].indexOf(k) === -1)) {
         console.warn('IoMatrix: Unrecognized matrix type!');
       }
     }
