@@ -44,7 +44,7 @@ export class Split extends Node {
   addSplit(child: Panel | Split, index?: number) {
     index = index ?? this.children.length;
     this.children.splice(index, 0, child);
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   // TODO: consider more robust flex handling and validation.
   remove(child: Panel | Split) {
@@ -52,19 +52,19 @@ export class Split extends Node {
     if (this.children.length === 2) {
       this.children[1].flex = '1 1 100%';
     }
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
     const index = this.children.indexOf(panel);
     this.children.splice(index, 1, new Split({orientation: orientation, children: [first, second]}));
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   convertToPanel(split: Split) {
     const child = split.children[0];
     const index = this.children.indexOf(split);
     child.flex = '1 1 100%';
     this.children.splice(index, 1, child);
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   toJSON(): SplitProps {
     return {

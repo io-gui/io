@@ -145,6 +145,13 @@ export class Node extends Object {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event);
   };
+  dispatchMutation(object: Object | Node | IoElement, property?: string, value?: any, oldValue?: any) {
+    if ((object as Node)._isNode) {
+      this.dispatch('io-object-mutation', {object, property, value, oldValue});
+    } else {
+      this.dispatch('io-object-mutation', {object, property, value, oldValue}, false, window);
+    }
+  }
   bind<T>(name: string): Binding<T> {
     return bind<T>(this, name);
   }
@@ -259,11 +266,11 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       });
       if (value?._isNode && !hasNewValueAtOtherProperty) {
         node._observedNodeProperties.push(name);
-        value.addEventListener('object-mutated', node.onPropertyMutated);
+        value.addEventListener('io-object-mutation', node.onPropertyMutated);
       }
       if (oldValue?._isNode && !hasOldValueAtOtherProperty && !oldValue._disposed) {
         node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1);
-        oldValue.removeEventListener('object-mutated', node.onPropertyMutated);
+        oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated);
       }
     }
 
@@ -315,7 +322,7 @@ export function dispatchQueue(node: Node | IoElement, debounce = false) {
 export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   const object = event.detail.object;
 
-  // TODO: consider situations where node is listening to object-mutated events from multiple sources (window and property).
+  // TODO: consider situations where node is listening to io-object-mutation events from multiple sources (window and property).
   // This might cause multiple executions of the same handler.
   // TODO: consider optimizing. This handler might be called a lot.
   const properties = [...new Set([...node._observedObjectProperties, ...node._observedNodeProperties])];
@@ -336,7 +343,7 @@ export function observeObjectProperty(node: Node | IoElement, name: string, prop
     if(isNonNodeObject(property.value)) {
       node._observedObjectProperties.push(name);
       if (node._observedObjectProperties.length === 1) {
-        window.addEventListener('object-mutated', node.onPropertyMutated as EventListener);
+        window.addEventListener('io-object-mutation', node.onPropertyMutated as EventListener);
       }
     }
   }
@@ -350,7 +357,7 @@ export function observeNodeProperty(node: Node | IoElement, name: string, proper
     });
     if (!hasSameValueAtOtherProperty) {
       node._observedNodeProperties.push(name);
-      property.value.addEventListener('object-mutated', node.onPropertyMutated);
+      property.value.addEventListener('io-object-mutation', node.onPropertyMutated);
     }
   }
 }
@@ -387,7 +394,7 @@ export function dispose(node: Node | IoElement) {
   delete (node as any)._bindings;
 
   if (node._observedObjectProperties.length) {
-    window.removeEventListener('object-mutated', node.onPropertyMutated as EventListener);
+    window.removeEventListener('io-object-mutation', node.onPropertyMutated as EventListener);
     node._observedObjectProperties.length = 0;
     delete (node as any)._observedObjectProperties;
   }
@@ -400,7 +407,7 @@ export function dispose(node: Node | IoElement) {
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name);
     if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
-      property.value.removeEventListener('object-mutated', node.onPropertyMutated);
+      property.value.removeEventListener('io-object-mutation', node.onPropertyMutated);
       removed.push(property.value);
     }
   });

@@ -98,13 +98,9 @@ export class IoPropertyEditor extends IoElement {
     event.stopImmediatePropagation();
     const id = (event.target as HTMLElement).id as keyof typeof this.value;
     if (id !== undefined) {
-      const value = event.detail.value;
-      const oldValue = event.detail.oldValue;
-      this.value[id] = value;
-
+      this.value[id] = event.detail.value;
       if (!(this.value as Node)._isNode) {
-        const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-        this.dispatch('object-mutated', detail, false, window); // TODO: test
+        this.dispatchMutation(this.value);
       }
     } else {
       debug: console.warn('IoPropertyEditor: "value-input" recieved from an input without a property id');

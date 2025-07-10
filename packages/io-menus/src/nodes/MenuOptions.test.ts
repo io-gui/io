@@ -482,30 +482,30 @@ export default class {
       // });
       // it('Should update `path`, `first` and `selected` properties in correct order and only when necessary.', () => {
       //   const options = new MenuOptions(testOptions);
-      //   options.addEventListener('object-mutated', () => { eventStack.push('object-mutated') });
+      //   options.addEventListener('io-object-mutation', () => { eventStack.push('io-object-mutation') });
       //   options.addEventListener('path-changed', () => { eventStack.push('path changed: ' + options.path) });
       //   options.addEventListener('first-changed', () => { eventStack.push('firstChanged: ' + options.first) });
       //   options.addEventListener('selected-changed', () => { eventStack.push('selectedChanged: ' + options.selected) });
 
       //   eventStack.length = 0;
       //   options[0].selected = true;
-      //   expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'selectedChanged: 1', 'object-mutated']);
+      //   expect(eventStack).to.be.eql(['path changed: 1', 'firstChanged: 1', 'selectedChanged: 1', 'io-object-mutation']);
 
       //   eventStack.length = 0;
       //   options[1].options[1].selected = true;
-      //   expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'selectedChanged: bar', 'object-mutated']);
+      //   expect(eventStack).to.be.eql(['path changed: 2,bar', 'firstChanged: 2', 'selectedChanged: bar', 'io-object-mutation']);
 
       //   eventStack.length = 0;
       //   options[2].options[2].options[2].selected = true;
-      //   expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'selectedChanged: NaN', 'object-mutated']);
+      //   expect(eventStack).to.be.eql(['path changed: 3,buzz,NaN', 'firstChanged: 3', 'selectedChanged: NaN', 'io-object-mutation']);
 
       //   eventStack.length = 0;
       //   options[2].selected = false;
-      //   expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'selectedChanged: undefined', 'object-mutated']);
+      //   expect(eventStack).to.be.eql(['path changed: ', 'firstChanged: undefined', 'selectedChanged: undefined', 'io-object-mutation']);
 
       //   eventStack.length = 0;
       //   options[2].selected = true;
-      //   expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'selectedChanged: 3', 'object-mutated']);
+      //   expect(eventStack).to.be.eql(['path changed: 3', 'firstChanged: 3', 'selectedChanged: 3', 'io-object-mutation']);
       // });
     });
   }

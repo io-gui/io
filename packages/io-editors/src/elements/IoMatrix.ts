@@ -42,14 +42,11 @@ export class IoMatrix extends IoVector {
 
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const id = item.id as any;
-    const value = event.detail.value;
-    const oldValue = event.detail.oldValue;
-    this.value[id] = value;
+    this.value[item.id as any] = event.detail.value;
     if (!(this.value as unknown as Node)._isNode) {
-      const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-      this.dispatch('object-mutated', detail, false, window); // TODO: test
+      this.dispatchMutation(this.value);
     }
+    this.dispatch('value-input', {property: 'value', value: this.value}, false);
   }
 
   valueChanged() {

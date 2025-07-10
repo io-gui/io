@@ -233,7 +233,7 @@ export class IoSliderBase extends IoGl {
       this.value[1] = value[1];
       if (oldValue === JSON.stringify(this.value)) return;
       this.inputValue(this.value);
-      this.dispatch('object-mutated', {object: this.value}, false, window);
+      this.dispatchMutation(this.value);
     } else if (typeof this.value === 'object') {
       const oldValue = JSON.stringify(this.value);
       const $value = this.value as {x: number, y: number};
@@ -241,7 +241,7 @@ export class IoSliderBase extends IoGl {
       $value.y = value[1];
       if (oldValue === JSON.stringify(this.value)) return;
       this.inputValue(this.value);
-      this.dispatch('object-mutated', {object: this.value}, false, window);
+      this.dispatchMutation(this.value);
     }
   }
   inputValue(value: any) {
@@ -339,7 +339,7 @@ export class IoSliderBase extends IoGl {
   }
   valueMutated() {
     this.changed();
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   changed() {
     super.changed();

@@ -28,7 +28,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * - Dispatches change events (e.g., '[propName]-changed')
  * - Invokes corresponding change handlers (e.g., [propName]Changed())
  * - Triggers a final 'changed()' handler after processing all changes
- * - Dispatches a final 'object-mutated' event for associated node.
+ * - Dispatches a final 'io-object-mutation' event for associated node.
  *
  * The queue helps optimize performance by batching multiple property changes
  * and preventing redundant updates when the same property changes multiple
@@ -106,7 +106,7 @@ export class ChangeQueue {
     }
     if (this.dispatchedChange) {
       this.node.changed();
-      this.node.dispatch('object-mutated' as any, {object: this.node});
+      this.node.dispatchMutation(this.node);
     }
     this.dispatchedChange = false;
     this.dispatching = false;

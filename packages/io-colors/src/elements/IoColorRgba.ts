@@ -40,17 +40,11 @@ export class IoColorRgba extends IoColorBase {
 
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    const id = item.id as keyof typeof this.value;
-    const newValue = event.detail.value;
-    const oldValue = event.detail.oldValue;
-    const value = this.value as any;
-    value[id] = newValue;
-
+    this.value[item.id as keyof typeof this.value] = event.detail.value;
     if (!(this.value as unknown as Node)._isNode) {
-      // TODO: add oldValue/value
-      const detail = {object: this.value, property: id, value: value, oldValue: oldValue};
-      this.dispatch('object-mutated', detail, false, window); // TODO: test
+      this.dispatchMutation(this.value);
     }
+    this.dispatch('value-input', {property: 'value', value: this.value}, false);
   }
 
   changed() {

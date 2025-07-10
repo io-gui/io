@@ -38,7 +38,7 @@ export default class {
         expect(element.hsv).to.deep.equal([0.5555555555555557, 0.75, 1]);
         expect(element.hsl).to.deep.equal([0.5555555555555556, 1, 0.625]);
         element.value.r = 0.5;
-        element.dispatch('object-mutated', {object: element.value}, false, window);
+        element.dispatchMutation(element.value);
         await nextQueue();
         expect(element.rgba).to.deep.equal([0.5, 0.75, 1, 0.5]);
         expect(element.hsv).to.deep.equal([0.5833333333333334, 0.5, 1]);

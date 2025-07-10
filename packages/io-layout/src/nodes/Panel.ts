@@ -47,18 +47,18 @@ export class Panel extends Node {
     }
     this.selected = this.tabs[index].id;
     this.tabs.forEach(tab => tab.selected = tab.id === this.selected);
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   removeTab(tab: Tab) {
     this.tabs = this.tabs.filter(t => t !== tab);
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   moveTab(tab: Tab, index: number) {
     index = Math.max(Math.min(index, this.tabs.length - 1), 0);
     this.tabs = this.tabs.filter(t => t !== tab);
     this.tabs.splice(index, 0, tab);
     this.selectIndex(index);
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   addTab(tab: Tab, index?: number) {
     if (index === undefined) index = this.tabs.length;
@@ -66,7 +66,7 @@ export class Panel extends Node {
     this.tabs = this.tabs.filter((t, i) => i === index || t.id !== tab.id);
     index = this.tabs.indexOf(tab);
     this.selectIndex(index);
-    this.dispatch('object-mutated', {object: this});
+    this.dispatchMutation(this);
   }
   toJSON(): PanelProps {
     return {

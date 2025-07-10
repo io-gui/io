@@ -491,7 +491,7 @@ export default class {
         await nextQueue();
         expect(order).to.be.eql([0, 1, 2, 0]);
       });
-      it('Should add/remove "object-mutated" event listeners to properties of Node type', async () => {
+      it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -507,16 +507,16 @@ export default class {
           prop: subnode,
         }) as any;
 
-        expect(subnode._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node.onPropertyMutated);
+        expect(subnode._eventDispatcher.addedListeners['io-object-mutation'][0][0]).to.be.equal(node.onPropertyMutated);
 
         node.prop = null;
 
-        expect(subnode._eventDispatcher.addedListeners['object-mutated']).to.be.equal(undefined);
+        expect(subnode._eventDispatcher.addedListeners['io-object-mutation']).to.be.equal(undefined);
 
         const subnode2 = new TestNode();
         node.prop = subnode2;
 
-        expect(subnode2._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node.onPropertyMutated);
+        expect(subnode2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).to.be.equal(node.onPropertyMutated);
 
         @Register
         class TestNode2 extends Node {
@@ -530,18 +530,18 @@ export default class {
         const node2 = new TestNode2() as any;
         const subnode3 = node2.prop;
 
-        expect(subnode3._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node2.onPropertyMutated);
+        expect(subnode3._eventDispatcher.addedListeners['io-object-mutation'][0][0]).to.be.equal(node2.onPropertyMutated);
 
         node2.dispose();
 
-        expect(subnode3._eventDispatcher.addedListeners['object-mutated']).to.be.equal(undefined);
+        expect(subnode3._eventDispatcher.addedListeners['io-object-mutation']).to.be.equal(undefined);
 
         const node3 = new TestNode2() as any;
         const subnode4 = node3.prop;
 
         node3.prop = null;
 
-        expect(subnode4._eventDispatcher.addedListeners['object-mutated']).to.be.equal(undefined);
+        expect(subnode4._eventDispatcher.addedListeners['io-object-mutation']).to.be.equal(undefined);
 
         const node4 = new TestNode2() as any;
         const node5 = new TestNode2() as any;
@@ -550,9 +550,9 @@ export default class {
 
         node4.prop = new Binding(node5, 'prop');
 
-        expect(subnode5._eventDispatcher.addedListeners['object-mutated']).to.be.equal(undefined);
-        expect(subnode6._eventDispatcher.addedListeners['object-mutated'][0][0]).to.be.equal(node5.onPropertyMutated);
-        expect(subnode6._eventDispatcher.addedListeners['object-mutated'][1][0]).to.be.equal(node4.onPropertyMutated);
+        expect(subnode5._eventDispatcher.addedListeners['io-object-mutation']).to.be.equal(undefined);
+        expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][0][0]).to.be.equal(node5.onPropertyMutated);
+        expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][1][0]).to.be.equal(node4.onPropertyMutated);
 
       });
       it('Should corectly invoke handler functions on change', async () => {

@@ -77,20 +77,16 @@ export class IoVector extends IoElement {
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
     const id = item.id as keyof typeof this.value;
-    const newValue = event.detail.value;
-    const oldValue = event.detail.oldValue;
-    const value = this.value as any;
-    value[id] = newValue;
-
+    (this.value as any)[id] = event.detail.value;
     if (this.linked) {
       for (const k of this.keys) {
-        if (k !== id && this._ratios[k]) value[k] = value[id] * this._ratios[k];
+        if (k !== id && this._ratios[k]) (this.value as any)[k] = this.value[id] * this._ratios[k];
       }
     }
     if (!(this.value as unknown as Node)._isNode) {
-      const detail = this.linked ? {object: this.value} : {object: this.value, property: id, value: value, oldValue: oldValue};
-      this.dispatch('object-mutated', detail, false, window); // TODO: test
+      this.dispatchMutation(this.value);
     }
+    this.dispatch('value-input', {property: 'value', value: this.value}, false);
   }
 
   valueChanged() {
