@@ -96,7 +96,7 @@ let hashValues: Record<string, any> = {};
 export type StorageProps = NodeProps & {
   key: string,
   value: any,
-  storage: 'hash' | 'local',
+  storage?: 'hash' | 'local',
 };
 
 @Register
@@ -105,10 +105,10 @@ export class StorageNode extends Node {
   @ReactiveProperty({value: '', type: String})
   declare key: string;
 
-  @ReactiveProperty({value: undefined, type: Object, init: null}) // TODO: make untyped!
+  @ReactiveProperty()
   declare value: any;
 
-  @ReactiveProperty({value: undefined, type: Object, init: null}) // TODO: make untyped!
+  @ReactiveProperty()
   declare default: any;
 
   @ReactiveProperty({value: 'local', type: String})
@@ -129,17 +129,19 @@ export class StorageNode extends Node {
     }
 
     if (props.storage === undefined) props.storage = 'local';
+    console.log('props.storage', props.storage);
 
-    const s = props.storage as keyof StorageNodes;
-    if (nodes[s].has(props.key)) {
-      return nodes[s].get(props.key) as StorageNode;
+    if (nodes[props.storage].has(props.key)) {
+      return nodes[props.storage].get(props.key)!;
     } else {
-      const def = props.value;
-
+      let def: any;
       // TODO: test!
       let constructor: AnyConstructor | undefined;
-      if (typeof def === 'object') {
-        constructor = def.constructor as AnyConstructor;
+      if (typeof props.value === 'object' && props.value !== null) {
+        constructor = props.value.constructor as AnyConstructor;
+        def = JSON.stringify(props.value);
+      } else {
+        def = props.value;
       }
 
       let storedValue: string | null = null;
@@ -160,19 +162,17 @@ export class StorageNode extends Node {
         }
       }
 
-      if (props.value === undefined) {
-        props.value = def;
-      }
-
       super(Object.assign({default: def}, props));
-      if (props.key !== '__proto__') { // TODO: Why is this here ffs?
-        nodes[s].set(props.key, this);
-      }
 
       this.binding = this.bind('value');
       this.binding.dispose = () => {
         this.clearStorage();
       };
+
+      if (props.key !== '__proto__') { // TODO: Why is this here ffs?
+        nodes[props.storage].set(props.key, this);
+      }
+
       return this;
     }
   }

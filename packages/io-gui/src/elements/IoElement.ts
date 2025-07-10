@@ -53,6 +53,8 @@ export class IoElement extends HTMLElement {
   declare readonly _bindings: Map<string, Binding<any>>;
   declare readonly _changeQueue: ChangeQueue;
   declare readonly _eventDispatcher: EventDispatcher;
+  declare readonly _observedObjectProperties: string[];
+  declare readonly _observedNodeProperties: string[];
   declare readonly _isNode: boolean;
   declare readonly _isIoElement: boolean;
   declare _disposed: boolean;
@@ -67,6 +69,8 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()});
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
+    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
+    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
 
     initReactiveProperties(this);
     initProperties(this);

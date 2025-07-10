@@ -252,15 +252,6 @@ export default class {
         expect(node.onFunction2.name).to.be.equal('bound onFunction2');
         expect(node._onFunction2.name).to.be.equal('bound _onFunction2');
       });
-      it('Should include property names of mutation-observed object properties', () => {
-        let protoChain = new ProtoChain(MockNode1);
-        expect(protoChain.observedObjectProperties).to.be.eql([]);
-        protoChain = new ProtoChain(MockNode2);
-        expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
-        protoChain = new ProtoChain(MockNode4);
-        expect(protoChain.observedObjectProperties).to.be.eql(['prop1']);
-        expect(protoChain.observedNodeProperties).to.be.eql(['prop3', 'prop4']);
-      });
     });
   }
 }

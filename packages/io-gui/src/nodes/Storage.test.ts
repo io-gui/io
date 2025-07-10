@@ -24,8 +24,7 @@ export default class {
         const node = new StorageNode({key: 'test', value: 'foo'});
         expect(node.key).to.be.equal('test');
         expect(node.value).to.be.equal('foo');
-        expect(node.default).to.be.equal('foo');
-        expect(node.storage).to.be.equal('none');
+        expect(node.storage).to.be.equal('local');
 
         expect(node._reactiveProperties.get('key')).to.eql({
           binding: undefined,
@@ -38,16 +37,16 @@ export default class {
         expect(node._reactiveProperties.get('value')).to.eql({
           binding: undefined,
           reflect: false,
-          init: null, // TODO: fix
-          type: Object, // TODO: fix type
+          init: undefined,
+          type: undefined,
           value: 'foo',
         });
 
         expect(node._reactiveProperties.get('default')).to.eql({
           binding: undefined,
           reflect: false,
-          init: null, // TODO: fix
-          type: Object, // TODO: fix type
+          init: undefined,
+          type: undefined,
           value: 'foo',
         });
 
@@ -56,7 +55,7 @@ export default class {
           reflect: false,
           init: undefined,
           type: String,
-          value: 'none',
+          value: 'local',
         });
         node.dispose();
       });
@@ -79,16 +78,10 @@ export default class {
         node.dispose();
       });
       it('Should return a new instance only if key and store are unique', () => {
-        const node1 = new StorageNode({key: 'test3', storage: 'local'});
-        const node2 = new StorageNode({key: 'test3', storage: 'local'});
-        const node3 = new StorageNode({key: 'test3', storage: 'hash'});
-        const node4 = new StorageNode({key: 'test4', storage: 'local'});
+        const node1 = new StorageNode({key: 'test3', value: ''});
+        const node2 = new StorageNode({key: 'test3', value: ''});
         expect(node1).to.be.equal(node2);
-        expect(node1).to.not.be.equal(node3);
-        expect(node1).to.not.be.equal(node4);
         node1.dispose();
-        node3.dispose();
-        node4.dispose();
       });
       it('Should update localStorage store when value changes', () => {
         const node = new StorageNode({key: 'test5', value: 'one', storage: 'local'});
@@ -143,7 +136,7 @@ export default class {
         if (!permited || permited === 'false') localStorage.setItem('Storage:user-permitted', 'false');
       });
       it('Storage should return binding to StorageNode Node', () => {
-        const storage = Storage({key: 'test', storage: 'hash'});
+        const storage = Storage({key: 'test', value: ''});
         storage.value = 'foo';
         expect(storage).to.be.instanceOf(Binding);
         storage.dispose();

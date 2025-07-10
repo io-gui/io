@@ -23,7 +23,6 @@ export interface NodeConstructor {
   prototype: NodeConstructor | Object | HTMLElement;
 }
 
-
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 
 // Utility type to add Binding to all properties of a type
@@ -35,6 +34,23 @@ export type NodeProps = {
   reactivity?: ReactivityType;
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
 };
+
+const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
+function isNonNodeConstructor(constructor: any) {
+  if (typeof constructor !== 'function') return false;
+  let proto = constructor.prototype;
+  while (proto) {
+    if (NON_OBSERVED.includes(constructor)) return false;
+    if (proto.constructor.name === 'Node') return false;
+    if (proto.constructor.name === 'IoElement') return false;
+    if (proto === Object.prototype) return true;
+    proto = Object.getPrototypeOf(proto);
+  }
+  return false;
+}
+function isNonNodeObject(value: any) {
+  return (typeof value === 'object' && value !== null && !value._isNode);
+}
 
 /**
  * NodeMixin applied to `Object` class.
@@ -62,6 +78,8 @@ export class Node extends Object {
   declare readonly _bindings: Map<string, Binding<any>>;
   declare readonly _changeQueue: ChangeQueue;
   declare readonly _eventDispatcher: EventDispatcher;
+  declare readonly _observedObjectProperties: string[];
+  declare readonly _observedNodeProperties: string[];
   declare readonly _isNode: boolean;
   declare _disposed: boolean;
 
@@ -74,6 +92,8 @@ export class Node extends Object {
     Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()});
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
+    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
+    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
 
     initReactiveProperties(this);
     initProperties(this);
@@ -165,13 +185,9 @@ export function initReactiveProperties(node: Node | IoElement) {
     const property = new ReactivePropertyInstance(node, node._protochain.reactiveProperties[name]);
     node._reactiveProperties.set(name, property);
     if (property.binding) property.binding.addTarget(node, name);
-    if (property.value?._isNode) {
-      let hasSameValueAtOtherProperty = false;
-      node._reactiveProperties.forEach((p, n) => {
-        if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true;
-      });
-      if (!hasSameValueAtOtherProperty) property.value.addEventListener('object-mutated', node.onPropertyMutated);
-    }
+
+    observeObjectProperty(node, name, property);
+    observeNodeProperty(node, name, property);
 
     if (node instanceof IoElement) {
       if (property.reflect && property.value !== undefined && property.value !== null) {
@@ -231,6 +247,8 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
 
     prop.value = value;
 
+    observeObjectProperty(node, name, prop);
+
     // TODO: test!
     if (value !== oldValue) {
       let hasNewValueAtOtherProperty = false;
@@ -239,11 +257,13 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         if (property.value === value && n !== name) hasNewValueAtOtherProperty = true;
         if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true;
       });
-      if (value?._isNode) {
-        if (!hasNewValueAtOtherProperty) value.addEventListener('object-mutated', node.onPropertyMutated);
+      if (value?._isNode && !hasNewValueAtOtherProperty) {
+        node._observedNodeProperties.push(name);
+        value.addEventListener('object-mutated', node.onPropertyMutated);
       }
-      if (oldValue?._isNode) {
-        if (!hasOldValueAtOtherProperty && !oldValue._disposed) oldValue.removeEventListener('object-mutated', node.onPropertyMutated);
+      if (oldValue?._isNode && !hasOldValueAtOtherProperty && !oldValue._disposed) {
+        node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1);
+        oldValue.removeEventListener('object-mutated', node.onPropertyMutated);
       }
     }
 
@@ -294,14 +314,15 @@ export function dispatchQueue(node: Node | IoElement, debounce = false) {
 }
 export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   const object = event.detail.object;
+
   // TODO: consider situations where node is listening to object-mutated events from multiple sources (window and property).
   // This might cause multiple executions of the same handler.
   // TODO: consider optimizing. This handler might be called a lot.
-  const properties = [...new Set([...node._protochain.observedObjectProperties, ...node._protochain.observedNodeProperties])];
+  const properties = [...new Set([...node._observedObjectProperties, ...node._observedNodeProperties])];
   for (let i = 0; i < properties.length; i++) {
     const name = properties[i];
     const value = node._reactiveProperties.get(name)!.value;
-    if (value === object) {
+    if (value === object) {    
       const handlerName = name + 'Mutated' as keyof Node;
       if (typeof node[handlerName] === 'function') {
         node.throttle(node[handlerName] as CallbackFunction);
@@ -310,6 +331,30 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
     }
   }
 }
+export function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
+  if (!node._observedObjectProperties.includes(name)) {
+    if(isNonNodeObject(property.value)) {
+      node._observedObjectProperties.push(name);
+      if (node._observedObjectProperties.length === 1) {
+        window.addEventListener('object-mutated', node.onPropertyMutated as EventListener);
+      }
+    }
+  }
+}
+
+export function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
+  if (property.value?._isNode) {
+    let hasSameValueAtOtherProperty = false;
+    node._reactiveProperties.forEach((p, n) => {
+      if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true;
+    });
+    if (!hasSameValueAtOtherProperty) {
+      node._observedNodeProperties.push(name);
+      property.value.addEventListener('object-mutated', node.onPropertyMutated);
+    }
+  }
+}
+
 export function bind<T>(node: Node | IoElement, name: string) {
   debug: if (!node._reactiveProperties.has(name)) {
     console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`);
@@ -341,8 +386,10 @@ export function dispose(node: Node | IoElement) {
   });
   delete (node as any)._bindings;
 
-  if (node._protochain.observedObjectProperties.length) {
+  if (node._observedObjectProperties.length) {
     window.removeEventListener('object-mutated', node.onPropertyMutated as EventListener);
+    node._observedObjectProperties.length = 0;
+    delete (node as any)._observedObjectProperties;
   }
   delete (node as any)._protochain;
 

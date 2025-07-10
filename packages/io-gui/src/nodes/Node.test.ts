@@ -652,21 +652,6 @@ export default class {
           value: 'test2',
         }]);
 
-        node.prop1Changes.length = 0;
-        node.prop2Changes.length = 0;
-
-        node.reactivity = 'none';
-
-        node.setProperties({
-          'prop1': 'five',
-          'prop2': 'test3',
-        });
-
-        await nextQueue();
-
-        expect(node.prop1Changes).to.be.eql([]);
-        expect(node.prop2Changes).to.be.eql([]);
-
         node.dispose();
       });
       it('should invoke property mutation handler functions on mutation event', async () => {

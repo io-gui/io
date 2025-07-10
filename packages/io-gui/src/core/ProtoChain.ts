@@ -12,22 +12,6 @@ type ProtoHandlers = string[];
 type ReactiveProtoProperties = { [property: string]: ReactiveProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
 
-const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
-function isNonNodeConstructor(constructor: any) {
-  if (typeof constructor !== 'function') return false;
-  let proto = constructor.prototype;
-  while (proto) {
-    if (NON_OBSERVED.includes(constructor)) return false;
-    if (proto.constructor.name === 'Node') return false;
-    if (proto.constructor.name === 'IoElement') return false;
-    if (proto === Object.prototype) return true;
-    proto = Object.getPrototypeOf(proto);
-  }
-  return false;
-}
-function isNonNodeObject(value: any) {
-  return (typeof value === 'object' && value !== null && !value._isNode);
-}
 function isNodeObjectConstructor(constructor: any) {
   if (typeof constructor !== 'function') return false;
   let proto = constructor.prototype;
@@ -76,14 +60,6 @@ export class ProtoChain {
    */
   handlers: ProtoHandlers = [];
   /**
-   * Array of property names of mutation-observed object properties.
-   */
-  observedObjectProperties: string[] = [];
-  /**
-   * Array of property names of mutation-observed Node properties.
-   */
-  observedNodeProperties: string[] = [];
-  /**
    * Creates an instance of `ProtoChain` for specified class constructor.
    * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
    */
@@ -113,9 +89,6 @@ export class ProtoChain {
       this.addStyle(ioNodeConstructor.Style);
       this.addHandlers(ioNodeConstructor.prototype as Node | IoElement);
     }
-
-    this.observedObjectProperties = this.getObservedObjectProperties();
-    this.observedNodeProperties = this.getObservedNodeProperties();
     debug: this.validateReactiveProperties();
   }
   /**
@@ -130,9 +103,6 @@ export class ProtoChain {
         writable: true,
         configurable: true
       });
-    }
-    if (this.observedObjectProperties.length) {
-      window.addEventListener('object-mutated', node.onPropertyMutated as EventListener);
     }
     debug: {
       if (this.constructors[0] !== node.constructor) {
@@ -242,36 +212,6 @@ export class ProtoChain {
       }
     }
   };
-  /**
-   * Creates observedObjectProperties array.
-   * @returns {string[]} - Array of property names that are observed as native objects.
-   */
-  getObservedObjectProperties() {
-    const observedObjectProperties: string[] = [];
-    for (const name in this.reactiveProperties) {
-      const value = this.reactiveProperties[name].value;
-      const type = this.reactiveProperties[name].type;
-      if(isNonNodeObject(value) || isNonNodeConstructor(type)) {
-        observedObjectProperties.push(name);
-      }
-    }
-    return observedObjectProperties;
-  }
-  /**
-   * Creates observedNodeProperties array.
-   * @returns {string[]} - Array of property names that are observed as Node objects.
-   */
-  getObservedNodeProperties() {
-    const observedNodeProperties: string[] = [];
-    for (const name in this.reactiveProperties) {
-      const value = this.reactiveProperties[name].value;
-      const type = this.reactiveProperties[name].type;
-      if(value?._isNode || isNodeObjectConstructor(type)) {
-        observedNodeProperties.push(name);
-      }
-    }
-    return observedNodeProperties;
-  }
   /**
    * Validates reactive property definitions in debug mode.
    * Logs warnings for incorrect property definitions.
