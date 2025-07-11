@@ -4,6 +4,7 @@ import { Binding } from '../core/Binding.js';
 import { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
+import { NodeArray } from '../core/NodeArray.js';
 import { throttle, debounce, CallbackFunction } from '../core/Queue.js';
 import { ReactiveProperty } from '../decorators/Property.js';
 import { IoElement } from '../elements/IoElement.js';
@@ -145,11 +146,11 @@ export class Node extends Object {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event);
   };
-  dispatchMutation(object: Object | Node | IoElement, property?: string, value?: any, oldValue?: any) {
+  dispatchMutation(object: Object | Node | IoElement = this) {
     if ((object as Node)._isNode) {
-      this.dispatch('io-object-mutation', {object, property, value, oldValue});
+      this.dispatch('io-object-mutation', {object});
     } else {
-      this.dispatch('io-object-mutation', {object, property, value, oldValue}, false, window);
+      this.dispatch('io-object-mutation', {object}, false, window);
     }
   }
   bind<T>(name: string): Binding<T> {
@@ -252,9 +253,26 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       }
     }
 
-    prop.value = value;
-
     observeObjectProperty(node, name, prop);
+
+    if (prop.type === NodeArray) {
+      const nodeArray = prop.value as NodeArray<Node>;
+
+      debug: if (value.constructor !== Array) {
+        console.error(`Node: Property "${name}" should be assigned as an Array!`, value);
+      } else if ((value as Array<any>).some(item => !item._isNode)) {
+        console.error(`Node: Property "${name}" should be assigned as an Array of nodes!`, value);
+      }
+      debug: if (nodeArray.constructor !== NodeArray) {
+        console.error(`Node: Property "${name}" should be initialized as a NodeArray!`, nodeArray);
+      }
+
+      nodeArray.length = 0;
+      nodeArray.push(...value as Array<Node>);
+      return;
+    }
+
+    prop.value = value;
 
     // TODO: test!
     if (value !== oldValue) {
@@ -329,7 +347,12 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   for (let i = 0; i < properties.length; i++) {
     const name = properties[i];
     const value = node._reactiveProperties.get(name)!.value;
-    if (value === object) {    
+
+    // if (value.constructor === Proxy) {
+    //   console.log('onPropertyMutated', name, value, object);
+    // }
+
+    if (value === object) {
       const handlerName = name + 'Mutated' as keyof Node;
       if (typeof node[handlerName] === 'function') {
         node.throttle(node[handlerName] as CallbackFunction);

@@ -108,13 +108,15 @@ export class StorageNode extends Node {
   @ReactiveProperty()
   declare value: any;
 
-  @ReactiveProperty()
-  declare default: any;
+  // @ReactiveProperty()
+  // declare default: any;
 
   @ReactiveProperty({value: 'local', type: String})
   declare storage: 'hash' | 'local';
 
   declare binding: Binding<any>;
+
+  declare default: any;
 
   constructor(props: StorageProps) {
     debug: {
@@ -160,7 +162,9 @@ export class StorageNode extends Node {
         }
       }
 
-      super(Object.assign({default: def}, props));
+      super(props);
+
+      this.default = def;
 
       this.binding = this.bind('value');
       this.binding.dispose = () => {

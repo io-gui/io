@@ -141,7 +141,7 @@ export class IoElement extends HTMLElement {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event);
   };
-  dispatchMutation(object: Object | Node | IoElement) {
+  dispatchMutation(object: Object | Node | IoElement = this) {
     if ((object as Node)._isNode) {
       this.dispatch('io-object-mutation', {object});
     } else {

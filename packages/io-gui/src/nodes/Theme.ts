@@ -287,7 +287,7 @@ export class Theme extends Node {
     const mutated = super.onPropertyMutated(event);
     if (mutated) {
       this.changed();
-      this.dispatchMutation(this);
+      this.dispatchMutation();
       return true;
     }
   }
