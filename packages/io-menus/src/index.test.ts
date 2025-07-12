@@ -1,11 +1,11 @@
-import OptionMenuElementTest from './elements/IoOptionSelect.test.js';
-import MenuItemNodeTest from './nodes/MenuItem.test.js';
-import MenuOptionsNodeTest from './nodes/MenuOptions.test.js';
+import IoOptionMenuTest from './elements/IoOptionSelect.test.js';
+import IoMenuItemNodeTest from './nodes/MenuItem.test.js';
+import IoMenuOptionsNodeTest from './nodes/MenuOptions.test.js';
 
 export default class {
   run() {
-    new OptionMenuElementTest().run();
-    new MenuItemNodeTest().run();
-    new MenuOptionsNodeTest().run();
+    new IoOptionMenuTest().run();
+    new IoMenuItemNodeTest().run();
+    new IoMenuOptionsNodeTest().run();
   }
 }

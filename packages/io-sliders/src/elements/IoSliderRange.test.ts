@@ -2,7 +2,7 @@ import { nextQueue } from 'io-gui';
 import { IoSliderRange } from '../index.js';
 
 export default class {
-  element = new IoSliderRange({value: [0, 0]});
+  element = new IoSliderRange();
   constructor() {
     this.element.style.display = 'none';
     document.body.appendChild(this.element as HTMLElement);

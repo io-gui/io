@@ -1,12 +1,11 @@
-import { Register, ReactiveProperty, Property } from 'io-gui';
+import { Register, ReactiveProperty, Property, WithBinding } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 
 export type IoSlider2dProps = IoSliderBaseProps & {
-  // TODO TS does not support narrowing of the type values here? :/
-  // value?: [number, number],
-  // step?: [number, number],
-  // min?: [number, number],
-  // max?: [number, number],
+  value?: WithBinding<[number, number]>,
+  step?: [number, number],
+  min?: [number, number],
+  max?: [number, number],
 };
 
 @Register

@@ -26,7 +26,7 @@ export class IoButton extends IoField {
       }
     `;
   }
-  @ReactiveProperty({value: undefined, type: undefined, reflect: false})
+  @ReactiveProperty()
   declare value: any;
 
   @ReactiveProperty()

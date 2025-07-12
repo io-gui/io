@@ -1,11 +1,11 @@
-import { Register, ReactiveProperty, IoGl, IoElementProps, Binding, Property, ListenerDefinition } from 'io-gui';
+import { Register, ReactiveProperty, IoGl, IoElementProps, Property, ListenerDefinition, WithBinding } from 'io-gui';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
 };
 
 export type IoSliderProps = IoElementProps & {
-  value?: number | Binding<number>,
+  value?: WithBinding<number>,
   step?: number,
   min?: number,
   max?: number,

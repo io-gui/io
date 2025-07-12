@@ -1,7 +1,7 @@
 import { Register, ReactiveProperty, Property, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
 
-export type IoStringProps = Omit<IoFieldProps, 'value'> & {
+export type IoStringProps = IoFieldProps & {
   value?: WithBinding<string>,
   live?: boolean,
   placeholder?: string,

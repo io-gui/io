@@ -1,7 +1,6 @@
 import { Register } from '../decorators/Register.js';
 import { ReactiveProperty } from '../decorators/Property.js';
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
-import { VDOMElement } from '../vdom/VDOM.js';
 import { Node, ReactivityType } from '../nodes/Node.js';
 import { ThemeSingleton, Color } from '../nodes/Theme.js';
 import { IoElement, IoElementProps } from './IoElement.js';
@@ -38,7 +37,6 @@ let currentProgram: WebGLProgram | null;
 
 @Register
 export class IoGl extends IoElement {
-  static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -380,4 +378,3 @@ export class IoGl extends IoElement {
     Object.defineProperty(ioNodeConstructor.prototype, '_glUtils', {enumerable: false, value: _glUtils});
   }
 }
-export const ioGl = IoGl.vConstructor;

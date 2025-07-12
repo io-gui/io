@@ -1,8 +1,8 @@
 import { Register, ReactiveProperty, WithBinding, Property } from 'io-gui';
-import { IoNumberLadderSingleton } from './IoNumberLadder.js';
+import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js';
 import { IoField, IoFieldProps } from './IoField.js';
 
-export type IoNumberProps = Omit<IoFieldProps, 'value'> & {
+export type IoNumberProps = IoFieldProps & {
   value?: WithBinding<number>;
   live?: boolean;
   conversion?: number;

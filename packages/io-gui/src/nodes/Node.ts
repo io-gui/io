@@ -33,7 +33,7 @@ type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${T
 
 export type NodeProps = {
   reactivity?: ReactivityType;
-  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
+  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 };
 
 function isNonNodeObject(value: any) {

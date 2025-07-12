@@ -1,6 +1,6 @@
 import { IoNumberLadderStep } from '../index.js';
 
-const step = new IoNumberLadderStep();
+const step = new IoNumberLadderStep({value: 1, label: '1'});
 step.style.display = 'none';
 document.body.appendChild(step as HTMLElement);
 

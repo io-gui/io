@@ -2,8 +2,8 @@ import { Register, ReactiveProperty, span, Property } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
 
 export type IoNumberLadderStepProps = IoFieldProps & {
-  value?: number,
-  label?: string,
+  value: number,
+  label: string,
 };
 
 //TODO: Dont extend IoField.
@@ -50,7 +50,7 @@ export class IoNumberLadderStep extends IoField {
 
   declare private startX: number;
 
-  constructor(args: IoNumberLadderStepProps = {}) { super(args); }
+  constructor(args: IoNumberLadderStepProps) { super(args); }
 
   onKeydown(event: KeyboardEvent) {
     // TODO: fix ladder focus handling. Wrap around.
