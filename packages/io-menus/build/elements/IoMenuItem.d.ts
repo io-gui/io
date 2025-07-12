@@ -1,4 +1,4 @@
-import { VDOMElement, WithBinding, NudgeDirection } from 'io-gui';
+import { WithBinding, NudgeDirection } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
@@ -18,7 +18,6 @@ export type IoMenuItemProps = IoFieldProps & {
  * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
  **/
 export declare class IoMenuItem extends IoField {
-    static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     item: MenuItem;
     label: string;
@@ -48,8 +47,9 @@ export declare class IoMenuItem extends IoField {
     collapseRoot(): void;
     itemChanged(): void;
     itemMutated(): void;
+    initOptions(): void;
     changed(): void;
     dispose(): void;
 }
-export declare const ioMenuItem: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuItem: (arg0?: IoMenuItemProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoMenuItem.d.ts.map

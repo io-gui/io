@@ -1,15 +1,21 @@
-import { Node, NodeProps } from 'io-gui';
+import { Node, NodeArray } from 'io-gui';
 import { Tab, TabProps } from './Tab.js';
-export type PanelProps = NodeProps & {
-    tabs: Array<Tab> | Array<TabProps>;
-    selected: string;
+export type PanelProps = {
+    tabs: Array<TabProps>;
+    selected?: string;
     flex?: string;
 };
 export declare class Panel extends Node {
-    tabs: Array<Tab>;
+    tabs: NodeArray<Tab>;
     selected: string;
     flex: string;
     constructor(args: PanelProps);
+    selectIndex(index: number): void;
+    removeTab(tab: Tab): void;
+    moveTab(tab: Tab, index: number): void;
+    addTab(tab: Tab, index?: number): void;
+    tabsMutated(): void;
+    tabsMutatedDebounced(): void;
     toJSON(): PanelProps;
     fromJSON(json: PanelProps): this;
 }

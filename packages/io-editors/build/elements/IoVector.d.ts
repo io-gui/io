@@ -1,11 +1,17 @@
 import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-gui';
 export type IoVectorProps = IoElementProps & {
     value?: {
-        x: number;
-        y: number;
+        x?: number;
+        y?: number;
         z?: number;
         w?: number;
-    } | number[];
+        r?: number;
+        g?: number;
+        b?: number;
+        a?: number;
+        u?: number;
+        v?: number;
+    };
     conversion?: number;
     step?: number;
     min?: number;
@@ -18,14 +24,19 @@ export type IoVectorProps = IoElementProps & {
  * Input element for vector arrays and objects.
  **/
 export declare class IoVector extends IoElement {
-    static vConstructor: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: {
-        x: number;
-        y: number;
+        x?: number;
+        y?: number;
         z?: number;
         w?: number;
-    } | number[];
+        r?: number;
+        g?: number;
+        b?: number;
+        a?: number;
+        u?: number;
+        v?: number;
+    };
     conversion: number;
     step: number;
     min: number;
@@ -41,5 +52,5 @@ export declare class IoVector extends IoElement {
     valueMutated(): void;
     changed(): void;
 }
-export declare const ioVector: (arg0?: IoVectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioVector: (arg0?: IoVectorProps) => VDOMElement;
 //# sourceMappingURL=IoVector.d.ts.map

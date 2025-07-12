@@ -1,13 +1,15 @@
-import { Node, NodeProps } from 'io-gui';
-export type TabProps = NodeProps & {
+import { Node } from 'io-gui';
+export type TabProps = {
     id: string;
     label?: string;
     icon?: string;
+    selected?: boolean;
 };
 export declare class Tab extends Node {
     id: string;
     label: string;
     icon: string;
+    selected: boolean;
     constructor(args: TabProps);
     toJSON(): TabProps;
     fromJSON(json: TabProps): this;

@@ -16,7 +16,6 @@ export type IoObjectProps = IoElementProps & {
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
 export declare class IoObject extends IoElement {
-    static vConstructor: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: Record<string, any> | any[];
     properties: string[];
@@ -29,5 +28,5 @@ export declare class IoObject extends IoElement {
     role: string;
     changed(): void;
 }
-export declare const ioObject: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioObject: (arg0?: IoObjectProps) => VDOMElement;
 //# sourceMappingURL=IoObject.d.ts.map

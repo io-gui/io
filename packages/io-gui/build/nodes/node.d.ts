@@ -38,6 +38,8 @@ export declare class Node extends Object {
     readonly _bindings: Map<string, Binding<any>>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
+    readonly _observedObjectProperties: string[];
+    readonly _observedNodeProperties: string[];
     readonly _isNode: boolean;
     _disposed: boolean;
     constructor(args?: NodeProps);
@@ -52,6 +54,7 @@ export declare class Node extends Object {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): true | undefined;
+    dispatchMutation(object?: Object | Node | IoElement): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -66,6 +69,8 @@ export declare function setProperties(node: Node | IoElement, props: any): void;
 export declare function setProperty(node: Node | IoElement, name: string, value: any, debounce?: boolean): void;
 export declare function dispatchQueue(node: Node | IoElement, debounce?: boolean): void;
 export declare function onPropertyMutated(node: Node | IoElement, event: CustomEvent): true | undefined;
+export declare function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance): void;
+export declare function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance): void;
 export declare function bind<T>(node: Node | IoElement, name: string): Binding<T>;
 export declare function unbind(node: Node | IoElement, name: string): void;
 export declare function dispose(node: Node | IoElement): void;

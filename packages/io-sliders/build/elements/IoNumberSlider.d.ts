@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-gui';
 export type IoNumberSliderProps = IoElementProps & {
     value?: WithBinding<number>;
     step?: number;
@@ -11,7 +11,6 @@ export type IoNumberSliderProps = IoElementProps & {
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
  **/
 export declare class IoNumberSlider extends IoElement {
-    static vConstructor: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     step: number;
@@ -25,5 +24,5 @@ export declare class IoNumberSlider extends IoElement {
     ready(): void;
     changed(): void;
 }
-export declare const ioNumberSlider: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNumberSlider: (arg0?: IoNumberSliderProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoNumberSlider.d.ts.map

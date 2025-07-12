@@ -1,6 +1,6 @@
-import { VDOMElement, WithBinding } from 'io-gui';
+import { WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
-export type IoStringProps = Omit<IoFieldProps, 'value'> & {
+export type IoStringProps = IoFieldProps & {
     value?: WithBinding<string>;
     live?: boolean;
     placeholder?: string;
@@ -10,7 +10,6 @@ export type IoStringProps = Omit<IoFieldProps, 'value'> & {
  * Input element for `String` data type.
  **/
 export declare class IoString extends IoField {
-    static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: string;
     live: boolean;
@@ -33,5 +32,5 @@ export declare class IoString extends IoField {
     valueChanged(): void;
     changed(): void;
 }
-export declare const ioString: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioString: (arg0?: IoStringProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoString.d.ts.map

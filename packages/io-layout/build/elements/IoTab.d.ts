@@ -1,28 +1,26 @@
-import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
-import { MenuItem } from 'io-menus';
+import { Tab } from '../nodes/Tab.js';
 export type IoTabProps = IoFieldProps & {
-    item?: MenuItem;
+    tab: Tab;
 };
 export declare class IoTab extends IoField {
-    static vConstructor: (arg0?: IoTabProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    item: MenuItem;
+    tab: Tab;
     static get Listeners(): {
         click: string;
         contextmenu: string;
     };
-    constructor(args?: IoTabProps);
+    constructor(args: IoTabProps);
     preventDefault(event: Event): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
     onClick(): void;
-    onCloseClick(): void;
+    onDeleteClick(): void;
+    expandContextEditor(): void;
     onKeydown(event: KeyboardEvent): void;
-    itemChanged(): void;
-    itemMutated(): void;
+    tabMutated(): void;
     changed(): void;
 }
-export declare const ioTab: (arg0?: IoTabProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioTab: (arg0: IoTabProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoTab.d.ts.map

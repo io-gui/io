@@ -1,4 +1,4 @@
-import { IoElement, Change, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
+import { IoElement, Change, IoElementProps, WithBinding } from 'io-gui';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 export type SelectBy = 'value' | 'id';
@@ -14,7 +14,6 @@ export type IoOptionSelectProps = IoElementProps & {
  * When clicked or activated by space/enter key, it expands a menu with selectable options.
  **/
 export declare class IoOptionSelect extends IoElement {
-    static vConstructor: (arg0?: IoOptionSelectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: any;
     label: string;
@@ -32,5 +31,5 @@ export declare class IoOptionSelect extends IoElement {
     changed(): void;
     onChange(): void;
 }
-export declare const ioOptionSelect: (arg0?: IoOptionSelectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioOptionSelect: (arg0?: IoOptionSelectProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoOptionSelect.d.ts.map

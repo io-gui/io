@@ -11,7 +11,6 @@ export type IoCollapsibleProps = IoElementProps & {
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
  **/
 export declare class IoCollapsible extends IoElement {
-    static vConstructor: (arg0?: IoCollapsibleProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     elements: VDOMElement[];
     label: string;
@@ -21,5 +20,5 @@ export declare class IoCollapsible extends IoElement {
     role: string;
     changed(): void;
 }
-export declare const ioCollapsible: (arg0?: IoCollapsibleProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioCollapsible: (arg0?: IoCollapsibleProps) => VDOMElement;
 //# sourceMappingURL=IoCollapsible.d.ts.map

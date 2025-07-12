@@ -1,6 +1,6 @@
-import { VDOMElement, WithBinding } from 'io-gui';
+import { WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
-export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
+export type IoBooleanProps = IoFieldProps & {
     value?: WithBinding<boolean>;
     true?: string;
     false?: string;
@@ -10,7 +10,6 @@ export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
  * It can be configured to display custom `true` or `false` strings.
  **/
 export declare class IoBoolean extends IoField {
-    static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: boolean;
     true: string;
@@ -23,5 +22,5 @@ export declare class IoBoolean extends IoField {
     valueChanged(): void;
     changed(): void;
 }
-export declare const ioBoolean: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioBoolean: (arg0?: IoBooleanProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoBoolean.d.ts.map

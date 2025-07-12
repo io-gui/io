@@ -1,6 +1,7 @@
 export * from './core/Binding.js';
 export * from './core/ChangeQueue.js';
 export * from './core/EventDispatcher.js';
+export * from './core/NodeArray.js';
 export * from './core/ProtoChain.js';
 export * from './core/Queue.js';
 export * from './core/ReactiveProperty.js';

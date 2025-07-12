@@ -1,20 +1,17 @@
-import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
-import { MenuItem } from 'io-menus';
-import { IoTabs } from './IoTabs.js';
-type IoTabDragIconProps = IoFieldProps & {
-    item?: MenuItem;
-};
+import { Tab } from '../nodes/Tab.js';
+import { SplitDirection } from '../nodes/Split.js';
+import { IoPanel } from './IoPanel.js';
 declare class IoTabDragIcon extends IoField {
-    static vConstructor: (arg0?: IoTabDragIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     dragging: boolean;
-    item: MenuItem;
-    dropSource: IoTabs | null;
-    dropTarget: IoTabs | null;
+    tab: Tab | null;
+    dropSource: IoPanel | null;
+    dropTarget: IoPanel | null;
+    splitDirection: SplitDirection;
     dropIndex: number;
     tabIndex: number;
-    constructor(args?: IoTabDragIconProps);
+    constructor(args?: IoFieldProps);
     changed(): void;
 }
 export declare const tabDragIconSingleton: IoTabDragIcon;

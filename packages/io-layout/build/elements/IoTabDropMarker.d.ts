@@ -1,12 +1,12 @@
-import { IoElement, VDOMElement, IoElementProps } from 'io-gui';
-import { IoTabs } from './IoTabs.js';
-type IoTabDropMarkerProps = IoElementProps & {};
+import { IoElement, IoElementProps } from 'io-gui';
+import { SplitDirection } from '../nodes/Split.js';
+import { IoPanel } from './IoPanel.js';
 declare class IoTabDropMarker extends IoElement {
-    static vConstructor: (arg0?: IoTabDropMarkerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    dropTarget: IoTabs | null;
+    dropTarget: IoPanel | null;
+    splitDirection: SplitDirection;
     dropIndex: number;
-    constructor(args?: IoTabDropMarkerProps);
+    constructor(args?: IoElementProps);
     changed(): void;
 }
 export declare const tabDropMarkerSingleton: IoTabDropMarker;

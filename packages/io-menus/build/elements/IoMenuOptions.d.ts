@@ -18,7 +18,6 @@ export type IoMenuOptionsProps = IoElementProps & {
  * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
  **/
 export declare class IoMenuOptions extends IoElement {
-    static vConstructor: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     options: MenuOptions;
     expanded: boolean;
@@ -39,19 +38,14 @@ export declare class IoMenuOptions extends IoElement {
     };
     get inoverlay(): boolean;
     constructor(args?: IoMenuOptionsProps);
-    init(): void;
-    ready(): void;
-    stopPropagation(event: MouseEvent): void;
+    stopPropagation(event: TouchEvent): void;
     connectedCallback(): void;
-    disconnectedCallback(): void;
     onIoFocusTo(event: CustomEvent): void;
-    onResized(): void;
-    setOverflow(): void;
     collapse(): void;
     expandedChanged(): void;
     searchChanged(): void;
     onExpandInOverlay(): void;
     changed(): void;
 }
-export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps) => VDOMElement;
 //# sourceMappingURL=IoMenuOptions.d.ts.map

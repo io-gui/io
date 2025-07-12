@@ -1,16 +1,16 @@
-import { IoElement, VDOMElement, IoElementProps } from 'io-gui';
-import { MenuItem, MenuOptions } from 'io-menus';
+import { IoElement, IoElementProps, NodeArray } from 'io-gui';
+import { MenuItem } from 'io-menus';
+import { Tab } from '../nodes/Tab.js';
 export type IoTabsProps = IoElementProps & {
-    options?: MenuOptions;
-    addMenuItem?: MenuItem;
+    tabs: NodeArray<Tab>;
+    addMenuItem: MenuItem;
 };
 export declare class IoTabs extends IoElement {
-    static vConstructor: (arg0?: IoTabsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
-    private options;
+    private tabs;
     private addMenuItem;
-    optionsMutated(): void;
+    constructor(args: IoTabsProps);
     changed(): void;
 }
-export declare const ioTabs: (arg0?: IoTabsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioTabs: (arg0: IoTabsProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoTabs.d.ts.map

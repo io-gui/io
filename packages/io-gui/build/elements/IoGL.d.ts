@@ -1,11 +1,9 @@
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
-import { VDOMElement } from '../vdom/VDOM.js';
 import { ReactivityType } from '../nodes/Node.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
 import { IoElement, IoElementProps } from './IoElement.js';
 export declare class IoGl extends IoElement {
     #private;
-    static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     theme: typeof ThemeSingleton;
     size: [number, number];
@@ -28,5 +26,4 @@ export declare class IoGl extends IoElement {
     setUniform(name: string, value: any): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
-export declare const ioGl: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 //# sourceMappingURL=IoGL.d.ts.map

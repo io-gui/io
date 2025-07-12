@@ -47,14 +47,6 @@ export declare class ProtoChain {
      */
     handlers: ProtoHandlers;
     /**
-     * Array of property names of mutation-observed object properties.
-     */
-    observedObjectProperties: string[];
-    /**
-     * Array of property names of mutation-observed Node properties.
-     */
-    observedNodeProperties: string[];
-    /**
      * Creates an instance of `ProtoChain` for specified class constructor.
      * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
      */
@@ -100,16 +92,6 @@ export declare class ProtoChain {
      * @param {Node} proto - Prototype object to search for handlers
      */
     addHandlers(proto: Node | IoElement): void;
-    /**
-     * Creates observedObjectProperties array.
-     * @returns {string[]} - Array of property names that are observed as native objects.
-     */
-    getObservedObjectProperties(): string[];
-    /**
-     * Creates observedNodeProperties array.
-     * @returns {string[]} - Array of property names that are observed as Node objects.
-     */
-    getObservedNodeProperties(): string[];
     /**
      * Validates reactive property definitions in debug mode.
      * Logs warnings for incorrect property definitions.

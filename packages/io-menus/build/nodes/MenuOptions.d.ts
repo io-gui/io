@@ -8,6 +8,7 @@ export type MenuOptionsProps = NodeProps & {
 };
 export declare class MenuOptions extends Node {
     selected: string;
+    selectedShallow: string;
     path: string;
     delimiter: string;
     items: MenuItem[];

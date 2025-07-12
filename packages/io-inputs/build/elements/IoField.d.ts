@@ -1,4 +1,4 @@
-import { VDOMElement, IoElement, IoElementProps, WithBinding, ListenerDefinitions } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from 'io-gui';
 export type IoFieldProps = IoElementProps & {
     value?: WithBinding<any>;
     icon?: string;
@@ -9,7 +9,6 @@ export type IoFieldProps = IoElementProps & {
     pattern?: string;
 };
 export declare class IoField extends IoElement {
-    static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: any;
     icon: string;
@@ -43,5 +42,5 @@ export declare class IoField extends IoElement {
     disabledChanged(): void;
     changed(): void;
 }
-export declare const ioField: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioField: (arg0: IoFieldProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoField.d.ts.map

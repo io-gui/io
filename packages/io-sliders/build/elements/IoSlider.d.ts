@@ -1,6 +1,6 @@
-import { IoGl, IoElementProps, Binding, VDOMElement, ListenerDefinition } from 'io-gui';
+import { IoGl, IoElementProps, ListenerDefinition, WithBinding } from 'io-gui';
 export type IoSliderProps = IoElementProps & {
-    value?: number | Binding<number>;
+    value?: WithBinding<number>;
     step?: number;
     min?: number;
     max?: number;
@@ -15,7 +15,6 @@ export type IoSliderProps = IoElementProps & {
  **/
 export declare class IoSlider extends IoGl {
     #private;
-    static vConstructor: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     step: number;
@@ -59,5 +58,5 @@ export declare class IoSlider extends IoGl {
     minChanged(): void;
     maxChanged(): void;
 }
-export declare const ioSlider: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioSlider: (arg0?: IoSliderProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoSlider.d.ts.map

@@ -1,17 +1,15 @@
-import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoNumberLadderStepProps = IoFieldProps & {
-    value?: number;
-    label?: string;
+    value: number;
+    label: string;
 };
 export declare class IoNumberLadderStep extends IoField {
-    static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     label: string;
     role: string;
     private startX;
-    constructor(args?: IoNumberLadderStepProps);
+    constructor(args: IoNumberLadderStepProps);
     onKeydown(event: KeyboardEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
@@ -19,5 +17,5 @@ export declare class IoNumberLadderStep extends IoField {
     ready(): void;
     changed(): void;
 }
-export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNumberLadderStep: (arg0?: IoNumberLadderStepProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoNumberLadderStep.d.ts.map

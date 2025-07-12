@@ -1,4 +1,3 @@
-import { VDOMElement } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoButtonProps = IoFieldProps & {
     action?: Function;
@@ -8,7 +7,6 @@ export type IoButtonProps = IoFieldProps & {
  * When clicked or activated by space/enter key, it calls the `action` property function with optional `value` argument.
  **/
 export declare class IoButton extends IoField {
-    static vConstructor: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: any;
     action?: Function;
@@ -22,5 +20,5 @@ export declare class IoButton extends IoField {
     ready(): void;
     changed(): void;
 }
-export declare const ioButton: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioButton: (arg0?: IoButtonProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoButton.d.ts.map

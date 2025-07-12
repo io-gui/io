@@ -9,7 +9,6 @@ export type IoMenuTreeProps = IoElementProps & {
     widget?: VDOMElement | null;
 };
 export declare class IoMenuTree extends IoElement {
-    static vConstructor: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     options: MenuOptions;
     searchable: boolean;
@@ -21,5 +20,5 @@ export declare class IoMenuTree extends IoElement {
     constructor(args?: IoMenuTreeProps);
     changed(): void;
 }
-export declare const ioMenuTree: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioMenuTree: (arg0?: IoMenuTreeProps) => VDOMElement;
 //# sourceMappingURL=IoMenuTree.d.ts.map

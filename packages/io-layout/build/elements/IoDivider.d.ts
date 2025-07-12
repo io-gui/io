@@ -1,10 +1,9 @@
-import { VDOMElement, IoElement, IoElementProps } from 'io-gui';
+import { IoElement, IoElementProps } from 'io-gui';
 export type IoDividerProps = IoElementProps & {
-    orientation?: 'vertical' | 'horizontal';
-    index?: number;
+    orientation: 'vertical' | 'horizontal';
+    index: number;
 };
 export declare class IoDivider extends IoElement {
-    static vConstructor: (arg0?: IoDividerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     pressed: boolean;
     orientation: 'horizontal' | 'vertical';
@@ -12,11 +11,11 @@ export declare class IoDivider extends IoElement {
     static get Listeners(): {
         pointerdown: string;
     };
-    constructor(args?: IoDividerProps);
+    constructor(args: IoDividerProps);
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerleave(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
 }
-export declare const ioDivider: (arg0?: IoDividerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioDivider: (arg0: IoDividerProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoDivider.d.ts.map

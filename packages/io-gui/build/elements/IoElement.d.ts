@@ -7,9 +7,6 @@ import { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
 import { CallbackFunction } from '../core/Queue.js';
 export type IoElementProps = NativeElementProps & NodeProps;
-/**
- * Core `IoElement` class.
- */
 export declare class IoElement extends HTMLElement {
     static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
@@ -23,6 +20,8 @@ export declare class IoElement extends HTMLElement {
     readonly _bindings: Map<string, Binding<any>>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
+    readonly _observedObjectProperties: string[];
+    readonly _observedNodeProperties: string[];
     readonly _isNode: boolean;
     readonly _isIoElement: boolean;
     _disposed: boolean;
@@ -39,6 +38,7 @@ export declare class IoElement extends HTMLElement {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): true | undefined;
+    dispatchMutation(object?: Object | Node | IoElement): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;

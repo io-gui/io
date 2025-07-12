@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, VDOMElement, WithBinding, ReactivityType } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding, ReactivityType } from 'io-gui';
 export type IoColorBaseProps = IoElementProps & {
     value?: WithBinding<{
         r: number;
@@ -8,7 +8,6 @@ export type IoColorBaseProps = IoElementProps & {
     }>;
 };
 export declare class IoColorBase extends IoElement {
-    static vConstructor: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     reactivity: ReactivityType;
     value: {
         r: number;

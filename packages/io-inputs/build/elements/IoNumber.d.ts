@@ -1,6 +1,6 @@
-import { VDOMElement, WithBinding } from 'io-gui';
+import { WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
-export type IoNumberProps = Omit<IoFieldProps, 'value'> & {
+export type IoNumberProps = IoFieldProps & {
     value?: WithBinding<number>;
     live?: boolean;
     conversion?: number;
@@ -16,7 +16,6 @@ export type IoNumberProps = Omit<IoFieldProps, 'value'> & {
  * Alternatively, ladder can be expanded by middle click or ctrl key regardless of ladder property.
  **/
 export declare class IoNumber extends IoField {
-    static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
     value: number;
     live: boolean;
@@ -44,5 +43,5 @@ export declare class IoNumber extends IoField {
     ready(): void;
     changed(): void;
 }
-export declare const ioNumber: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export declare const ioNumber: (arg0?: IoNumberProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoNumber.d.ts.map

@@ -1,18 +1,23 @@
-import { Node, NodeProps } from 'io-gui';
+import { Node, NodeArray } from 'io-gui';
 import { Panel, PanelProps } from './Panel.js';
 export type SplitOrientation = 'horizontal' | 'vertical';
-export type SplitProps = NodeProps & {
+export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
+export type SplitProps = {
+    children: Array<SplitProps | PanelProps>;
     orientation?: SplitOrientation;
-    children: Array<Split | Panel> | Array<SplitProps | PanelProps>;
     flex?: string;
 };
 export declare class Split extends Node {
+    children: NodeArray<Split | Panel>;
     orientation: SplitOrientation;
-    children: Array<Split | Panel>;
     flex: string;
     constructor(args: SplitProps);
-    remove(child: Panel | Split): void;
+    removeChild(child: Panel | Split): void;
+    addSplit(child: Panel | Split, index?: number): void;
+    convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation): void;
     convertToPanel(split: Split): void;
+    childrenMutated(): void;
+    childrenMutatedDebounced(): void;
     toJSON(): SplitProps;
     fromJSON(json: SplitProps): this;
 }
