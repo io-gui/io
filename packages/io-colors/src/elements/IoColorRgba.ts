@@ -1,6 +1,6 @@
 import { Register, Node } from 'io-gui';
 import { ioNumber } from 'io-inputs';
-import { IoColorBase } from './IoColorBase.js';
+import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 import { ioColorPicker } from './IoColorPicker.js';
 
 /**
@@ -60,4 +60,6 @@ export class IoColorRgba extends IoColorBase {
     ]);
   }
 }
-export const ioColorRgba = IoColorRgba.vConstructor;
+export const ioColorRgba = function(arg0?: IoColorBaseProps) {
+  return IoColorRgba.vConstructor(arg0);
+};

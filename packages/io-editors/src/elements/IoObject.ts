@@ -21,7 +21,6 @@ export type IoObjectProps = IoElementProps & {
  **/
 @Register
 export class IoObject extends IoElement {
-  static vConstructor: (arg0?: IoObjectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -101,4 +100,6 @@ export class IoObject extends IoElement {
     this.setAttribute('aria-expanded', String(this.expanded));
   }
 }
-export const ioObject = IoObject.vConstructor;
+export const ioObject = function(arg0?: IoObjectProps) {
+  return IoObject.vConstructor(arg0);
+};

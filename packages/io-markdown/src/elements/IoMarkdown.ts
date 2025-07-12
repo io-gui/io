@@ -43,7 +43,6 @@ export type IoMarkdownProps = IoElementProps & {
  */
 @Register
 export class IoMarkdown extends IoElement {
-  static vConstructor: (arg0?: IoMarkdownProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -210,7 +209,9 @@ export class IoMarkdown extends IoElement {
       });
   }
 }
-export const ioMarkdown = IoMarkdown.vConstructor;
+export const ioMarkdown = function(arg0?: IoMarkdownProps) {
+  return IoMarkdown.vConstructor(arg0);
+};
 
 const styleElement = document.createElement('style');
 styleElement.id = 'io-highlight-theme';

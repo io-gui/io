@@ -19,7 +19,6 @@ export type IoPropertyEditorProps = IoElementProps & {
  **/
 @Register
 export class IoPropertyEditor extends IoElement {
-  static vConstructor: (arg0?: IoPropertyEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -190,7 +189,9 @@ export class IoPropertyEditor extends IoElement {
   //   return json;
   // }
 }
-export const ioPropertyEditor = IoPropertyEditor.vConstructor;
+export const ioPropertyEditor = function(arg0?: IoPropertyEditorProps) {
+  return IoPropertyEditor.vConstructor(arg0);
+};
 
 // TODO: consider using WeakMap instead of UUID.
 function genIdentifier(object: any) {

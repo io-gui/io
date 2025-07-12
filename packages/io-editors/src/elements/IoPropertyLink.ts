@@ -8,7 +8,6 @@ export type IoPropertyLinkProps = IoButtonProps & {
 
 @Register
 export class IoPropertyLink extends IoButton {
-  static vConstructor: (arg0?: IoPropertyLinkProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -56,4 +55,6 @@ export class IoPropertyLink extends IoButton {
   }
 }
 
-export const ioPropertyLink = IoPropertyLink.vConstructor;
+export const ioPropertyLink = function(arg0?: IoPropertyLinkProps) {
+  return IoPropertyLink.vConstructor(arg0);
+};

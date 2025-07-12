@@ -15,7 +15,6 @@ export type IoMenuTreeBranchProps = IoElementProps & {
 
 @Register
 export class IoMenuTreeBranch extends IoElement {
-  static vConstructor: (arg0?: IoMenuTreeBranchProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -68,4 +67,6 @@ export class IoMenuTreeBranch extends IoElement {
     ]);
   }
 }
-export const ioMenuTreeBranch = IoMenuTreeBranch.vConstructor;
+export const ioMenuTreeBranch = function(arg0?: IoMenuTreeBranchProps) {
+  return IoMenuTreeBranch.vConstructor(arg0);
+};

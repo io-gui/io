@@ -15,7 +15,6 @@ export type IoSliderRangeProps = IoSliderBaseProps & {
  **/
 @Register
 export class IoSliderRange extends IoSliderBase {
-  static vConstructor: (arg0?: IoSliderRangeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @ReactiveProperty({value: null, type: Array, init: [0, 0]})
   declare value: [number, number];
@@ -117,4 +116,6 @@ export class IoSliderRange extends IoSliderBase {
     `;
   }
 }
-export const ioSliderRange = IoSliderRange.vConstructor;
+export const ioSliderRange = function(arg0?: IoSliderRangeProps) {
+  return IoSliderRange.vConstructor(arg0);
+};

@@ -13,7 +13,6 @@ export type IoStringProps = Omit<IoFieldProps, 'value'> & {
  **/
 @Register
 export class IoString extends IoField {
-  static vConstructor: (arg0?: IoStringProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -166,4 +165,6 @@ export class IoString extends IoField {
     this.textNode = String(this.value || '');
   }
 }
-export const ioString = IoString.vConstructor;
+export const ioString = function(arg0?: IoStringProps) {
+  return IoString.vConstructor(arg0);
+};

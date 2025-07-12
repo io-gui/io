@@ -18,7 +18,6 @@ export type IoNavigatorProps = IoElementProps & {
 
 @Register
 export class IoNavigator extends IoElement {
-  static vConstructor: (arg0?: IoNavigatorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -113,4 +112,6 @@ export class IoNavigator extends IoElement {
   }
 }
 
-export const ioNavigator = IoNavigator.vConstructor;
+export const ioNavigator = function(arg0?: IoNavigatorProps) {
+  return IoNavigator.vConstructor(arg0);
+};

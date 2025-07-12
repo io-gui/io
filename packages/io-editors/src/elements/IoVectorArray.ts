@@ -16,7 +16,6 @@ export type IoVectorArrayProps = IoElementProps & {
  **/
 @Register
 export class IoVectorArray extends IoElement {
-  static vConstructor: (arg0?: IoVectorArrayProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -122,4 +121,6 @@ export class IoVectorArray extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioVectorArray = IoVectorArray.vConstructor;
+export const ioVectorArray = function(arg0?: IoVectorArrayProps) {
+  return IoVectorArray.vConstructor(arg0);
+};

@@ -17,7 +17,6 @@ export type IoNumberLadderProps = IoElementProps & {
  **/
 @Register
 class IoNumberLadder extends IoElement {
-  static vConstructor: (arg0?: IoNumberLadderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

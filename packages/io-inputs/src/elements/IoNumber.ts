@@ -20,7 +20,6 @@ export type IoNumberProps = Omit<IoFieldProps, 'value'> & {
  **/
 @Register
 export class IoNumber extends IoField {
-  static vConstructor: (arg0?: IoNumberProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -257,4 +256,6 @@ export class IoNumber extends IoField {
     this.textNode = valueText;
   }
 }
-export const ioNumber = IoNumber.vConstructor;
+export const ioNumber = function(arg0?: IoNumberProps) {
+  return IoNumber.vConstructor(arg0);
+};

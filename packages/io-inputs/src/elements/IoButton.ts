@@ -12,7 +12,6 @@ export type IoButtonProps = IoFieldProps & {
  **/
 @Register
 export class IoButton extends IoField {
-  static vConstructor: (arg0?: IoButtonProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -70,4 +69,6 @@ export class IoButton extends IoField {
     ]);
   }
 }
-export const ioButton = IoButton.vConstructor;
+export const ioButton = function(arg0?: IoButtonProps) {
+  return IoButton.vConstructor(arg0);
+};

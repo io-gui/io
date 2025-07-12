@@ -7,7 +7,6 @@ export type IoColorBaseProps = IoElementProps & {
 
 @Register
 export class IoColorBase extends IoElement {
-  static vConstructor: (arg0?: IoColorBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @ReactiveProperty('throttled')
   declare reactivity: ReactivityType;

@@ -21,7 +21,6 @@ export type IoSliderProps = IoElementProps & {
  **/
 @Register
 export class IoSlider extends IoGl {
-  static vConstructor: (arg0?: IoSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -299,4 +298,6 @@ export class IoSlider extends IoGl {
     this.ariaValueMax = String(this.max);
   }
 }
-export const ioSlider = IoSlider.vConstructor;
+export const ioSlider = function(arg0?: IoSliderProps) {
+  return IoSlider.vConstructor(arg0);
+};

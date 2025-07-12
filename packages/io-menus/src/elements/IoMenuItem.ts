@@ -59,7 +59,6 @@ export type IoMenuItemProps = IoFieldProps & {
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoMenuItem extends IoField {
-  static vConstructor: (arg0?: IoMenuItemProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -368,7 +367,9 @@ export class IoMenuItem extends IoField {
     delete this.$options;
   }
 }
-export const ioMenuItem = IoMenuItem.vConstructor;
+export const ioMenuItem = function(arg0?: IoMenuItemProps) {
+  return IoMenuItem.vConstructor(arg0);
+};
 
 
 

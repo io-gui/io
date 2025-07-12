@@ -16,7 +16,6 @@ export type IoNumberSliderProps = IoElementProps & {
  **/
 @Register
 export class IoNumberSlider extends IoElement {
-  static vConstructor: (arg0?: IoNumberSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -89,4 +88,6 @@ export class IoNumberSlider extends IoElement {
     ]);
   }
 }
-export const ioNumberSlider = IoNumberSlider.vConstructor;
+export const ioNumberSlider = function(arg0?: IoNumberSliderProps) {
+  return IoNumberSlider.vConstructor(arg0);
+};

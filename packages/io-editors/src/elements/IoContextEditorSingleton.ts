@@ -23,7 +23,6 @@ interface IoContextEditorExpandProps {
 
 @Register
 class IoContextEditor extends IoPropertyEditor {
-  static vConstructor: (arg0?: IoContextEditorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host:not([expanded]) {

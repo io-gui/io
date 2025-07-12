@@ -15,7 +15,6 @@ export type IoBreadcrumbsProps = IoElementProps & {
  **/
 @Register
 export class IoBreadcrumbs extends IoElement {
-  static vConstructor: (arg0?: IoBreadcrumbsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -119,4 +118,6 @@ export class IoBreadcrumbs extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioBreadcrumbs = IoBreadcrumbs.vConstructor;
+export const ioBreadcrumbs = function(arg0?: IoBreadcrumbsProps) {
+  return IoBreadcrumbs.vConstructor(arg0);
+};

@@ -14,7 +14,6 @@ export type IoContextMenuProps = IoElementProps & {
  **/
 @Register
 export class IoContextMenu extends IoElement {
-  static vConstructor: (arg0?: IoContextMenuProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
@@ -122,4 +121,6 @@ export class IoContextMenu extends IoElement {
     Overlay.collapse();
   }
 }
-export const ioContextMenu = IoContextMenu.vConstructor;
+export const ioContextMenu = function(arg0?: IoContextMenuProps) {
+  return IoContextMenu.vConstructor(arg0);
+};

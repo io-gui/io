@@ -16,7 +16,6 @@ export type IoColorSliderProps = IoColorBaseProps & {
  **/
 @Register
 export class IoColorSlider extends IoColorBase {
-  static vConstructor: (arg0?: IoColorSliderProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -194,7 +193,9 @@ export class IoColorSlider extends IoColorBase {
     ]);
   }
 }
-export const ioColorSlider = IoColorSlider.vConstructor;
+export const ioColorSlider = function(arg0?: IoColorSliderProps) {
+  return IoColorSlider.vConstructor(arg0);
+};
 /**
  * A base class for 1D color slider.
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
@@ -326,7 +327,9 @@ export class IoColorSliderR extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderR = IoColorSliderR.vConstructor;
+export const ioColorSliderR = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderR.vConstructor(arg0);
+};
 
 /**
  * A 1D slider for "green" color channel.
@@ -344,7 +347,9 @@ export class IoColorSliderG extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderG = IoColorSliderG.vConstructor;
+export const ioColorSliderG = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderG.vConstructor(arg0);
+};
 
 /**
  * A 1D slider for "blue" color channel.
@@ -362,7 +367,9 @@ export class IoColorSliderB extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderB = IoColorSliderB.vConstructor;
+export const ioColorSliderB = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderB.vConstructor(arg0);
+};
 /**
  * A 1D slider for "alpha" color channel.
  **/
@@ -384,7 +391,9 @@ export class IoColorSliderA extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderA = IoColorSliderA.vConstructor;
+export const ioColorSliderA = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderA.vConstructor(arg0);
+};
 
 /**
  * A 1D slider for "hue" color channel.
@@ -402,7 +411,9 @@ export class IoColorSliderH extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderH = IoColorSliderH.vConstructor;
+export const ioColorSliderH = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderH.vConstructor(arg0);
+};
 /**
  * A 1D slider for "saturation" color channel.
  **/
@@ -419,7 +430,9 @@ export class IoColorSliderS extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderS = IoColorSliderS.vConstructor;
+export const ioColorSliderS = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderS.vConstructor(arg0);
+};
 
 /**
  * A 1D slider for "value" color channel.
@@ -437,7 +450,9 @@ export class IoColorSliderV extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderV = IoColorSliderV.vConstructor;
+export const ioColorSliderV = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderV.vConstructor(arg0);
+};
 
 /**
  * A 1D slider for "level" color channel.
@@ -455,7 +470,9 @@ export class IoColorSliderL extends IoColorSliderBase {
     `;
   }
 }
-export const ioColorSliderL = IoColorSliderL.vConstructor;
+export const ioColorSliderL = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderL.vConstructor(arg0);
+};
 
 /**
  * A 2D slider gor "hue" and "saturation" color channels.
@@ -470,7 +487,9 @@ export class IoColorSliderHs extends IoColorSlider2dBase {
     `;
   }
 }
-export const ioColorSliderHs = IoColorSliderHs.vConstructor;
+export const ioColorSliderHs = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderHs.vConstructor(arg0);
+};
 
 /**
  * A 2D slider gor "saturation" and "value" color channels.
@@ -485,7 +504,9 @@ export class IoColorSliderSv extends IoColorSlider2dBase {
     `;
   }
 }
-export const ioColorSliderSv = IoColorSliderSv.vConstructor;
+export const ioColorSliderSv = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderSv.vConstructor(arg0);
+};
 
 /**
  * A 2D slider gor "saturation" and "level" color channels.
@@ -500,4 +521,6 @@ export class IoColorSliderSl extends IoColorSlider2dBase {
     `;
   }
 }
-export const ioColorSliderSl = IoColorSliderSl.vConstructor;
+export const ioColorSliderSl = function(arg0?: IoColorSliderProps) {
+  return IoColorSliderSl.vConstructor(arg0);
+};

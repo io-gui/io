@@ -1,5 +1,5 @@
 import { Register, div } from 'io-gui';
-import { IoColorBase } from './IoColorBase.js';
+import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 
 /**
  * Element displaying colored square.
@@ -36,4 +36,6 @@ export class IoColorSwatch extends IoColorBase {
     ]);
   }
 }
-export const ioColorSwatch = IoColorSwatch.vConstructor;
+export const ioColorSwatch = function(arg0?: IoColorBaseProps) {
+  return IoColorSwatch.vConstructor(arg0);
+};

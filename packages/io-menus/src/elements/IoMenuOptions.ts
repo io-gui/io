@@ -30,7 +30,6 @@ export type IoMenuOptionsProps = IoElementProps & {
  **/
 @Register
 export class IoMenuOptions extends IoElement {
-  static vConstructor: (arg0?: IoMenuOptionsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -342,4 +341,6 @@ export class IoMenuOptions extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioMenuOptions = IoMenuOptions.vConstructor;
+export const ioMenuOptions = function(arg0?: IoMenuOptionsProps) {
+  return IoMenuOptions.vConstructor(arg0);
+};

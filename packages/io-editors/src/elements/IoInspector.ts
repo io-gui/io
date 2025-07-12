@@ -20,7 +20,6 @@ export type IoInspectorProps = IoElementProps & {
  **/
 @Register
 export class IoInspector extends IoElement {
-  static vConstructor: (arg0?: IoInspectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -137,6 +136,8 @@ export class IoInspector extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioInspector = IoInspector.vConstructor;
+export const ioInspector = function(arg0?: IoInspectorProps) {
+  return IoInspector.vConstructor(arg0);
+};
 
 

@@ -15,7 +15,6 @@ export type IoCollapsibleProps = IoElementProps & {
 
 @Register
 export class IoCollapsible extends IoElement {
-  static vConstructor: (arg0?: IoCollapsibleProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -94,4 +93,6 @@ export class IoCollapsible extends IoElement {
     ]);
   }
 }
-export const ioCollapsible = IoCollapsible.vConstructor;
+export const ioCollapsible = function(arg0?: IoCollapsibleProps) {
+  return IoCollapsible.vConstructor(arg0);
+};

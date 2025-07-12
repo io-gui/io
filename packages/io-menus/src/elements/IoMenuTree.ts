@@ -40,7 +40,6 @@ export type IoMenuTreeProps = IoElementProps & {
 
 @Register
 export class IoMenuTree extends IoElement {
-  static vConstructor: (arg0?: IoMenuTreeProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -124,4 +123,6 @@ export class IoMenuTree extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioMenuTree = IoMenuTree.vConstructor;
+export const ioMenuTree = function(arg0?: IoMenuTreeProps) {
+  return IoMenuTree.vConstructor(arg0);
+};

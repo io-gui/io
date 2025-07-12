@@ -15,7 +15,6 @@ export type IoSliderBaseProps = IoElementProps & {
 };
 
 export class IoSliderBase extends IoGl {
-  static vConstructor: (arg0?: IoSliderBaseProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {

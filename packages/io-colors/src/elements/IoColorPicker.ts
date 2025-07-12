@@ -7,12 +7,11 @@ import { ioColorSwatch } from './IoColorSwatch.js';
 // TODO: fix focus keybord navigation.
 
 export type IoColorPickerProps = IoElementProps &{
-  value?: WithBinding<{ r: number, g: number, b: number, a?: number }>,
+  value: WithBinding<{ r: number, g: number, b: number, a?: number }>,
 };
 
 @Register
 export class IoColorPicker extends IoElement {
-  static vConstructor: (arg0?: IoColorPickerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -97,4 +96,6 @@ export class IoColorPicker extends IoElement {
     ]);
   }
 }
-export const ioColorPicker = IoColorPicker.vConstructor;
+export const ioColorPicker = function(arg0: IoColorPickerProps) {
+  return IoColorPicker.vConstructor(arg0);
+};

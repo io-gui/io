@@ -11,7 +11,6 @@ export type IoSlider2dProps = IoSliderBaseProps & {
 
 @Register
 export class IoSlider2d extends IoSliderBase {
-  static vConstructor: (arg0?: IoSlider2dProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -101,4 +100,6 @@ export class IoSlider2d extends IoSliderBase {
     }`;
   }
 }
-export const ioSlider2d = IoSlider2d.vConstructor;
+export const ioSlider2d = function(arg0?: IoSlider2dProps) {
+  return IoSlider2d.vConstructor(arg0);
+};

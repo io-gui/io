@@ -19,7 +19,6 @@ export type IoOptionSelectProps = IoElementProps & {
  **/
 @Register
 export class IoOptionSelect extends IoElement {
-  static vConstructor: (arg0?: IoOptionSelectProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
     :host {
@@ -110,4 +109,6 @@ export class IoOptionSelect extends IoElement {
     this.render([ioMenuItem({item: this.$item, label: label, icon: this.icon, direction: 'down'})]);
   }
 }
-export const ioOptionSelect = IoOptionSelect.vConstructor;
+export const ioOptionSelect = function(arg0?: IoOptionSelectProps) {
+  return IoOptionSelect.vConstructor(arg0);
+};

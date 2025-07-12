@@ -9,7 +9,6 @@ export type IoNumberLadderStepProps = IoFieldProps & {
 //TODO: Dont extend IoField.
 @Register
 export class IoNumberLadderStep extends IoField {
-  static vConstructor: (arg0?: IoNumberLadderStepProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -115,4 +114,6 @@ export class IoNumberLadderStep extends IoField {
     this.setAttribute('aria-valuestep', this.label);
   }
 }
-export const ioNumberLadderStep = IoNumberLadderStep.vConstructor;
+export const ioNumberLadderStep = function(arg0?: IoNumberLadderStepProps) {
+  return IoNumberLadderStep.vConstructor(arg0);
+};

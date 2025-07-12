@@ -10,7 +10,6 @@ export type IoMatrixProps = IoVectorArrayProps & {
  **/
 @Register
 export class IoMatrix extends IoVectorArray {
-  static vConstructor: (arg0?: IoMatrixProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -81,4 +80,6 @@ export class IoMatrix extends IoVectorArray {
     }
   }
 }
-export const ioMatrix = IoMatrix.vConstructor;
+export const ioMatrix = function(arg0?: IoMatrixProps) {
+  return IoMatrix.vConstructor(arg0);
+};

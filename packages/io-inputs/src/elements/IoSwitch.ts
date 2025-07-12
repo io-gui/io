@@ -77,4 +77,6 @@ export class IoSwitch extends IoBoolean {
     ]);
   }
 }
-export const ioSwitch = IoSwitch.vConstructor;
+export const ioSwitch = function(arg0?: any) {
+  return IoSwitch.vConstructor(arg0);
+};

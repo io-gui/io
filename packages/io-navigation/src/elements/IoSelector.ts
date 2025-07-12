@@ -37,7 +37,6 @@ export type IoSelectorProps = IoElementProps & {
 
 @Register
 export class IoSelector extends IoElement {
-  static vConstructor: (arg0?: IoSelectorProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -275,4 +274,6 @@ export class IoSelector extends IoElement {
     super.dispose();
   }
 }
-export const ioSelector = IoSelector.vConstructor;
+export const ioSelector = function(arg0?: IoSelectorProps) {
+  return IoSelector.vConstructor(arg0);
+};

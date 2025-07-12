@@ -14,7 +14,6 @@ export type IoBooleanProps = Omit<IoFieldProps, 'value'> & {
  **/
 @Register
 export class IoBoolean extends IoField {
-  static vConstructor: (arg0?: IoBooleanProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 
   static get Style() {
     return /* css */`
@@ -62,4 +61,6 @@ export class IoBoolean extends IoField {
     ]);
   }
 }
-export const ioBoolean = IoBoolean.vConstructor;
+export const ioBoolean = function(arg0?: IoBooleanProps) {
+  return IoBoolean.vConstructor(arg0);
+};
