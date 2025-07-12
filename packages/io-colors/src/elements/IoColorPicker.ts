@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, Property, WithBinding, nudge } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property, WithBinding, nudge } from 'io-gui';
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js';
 import { ioColorSwatch } from './IoColorSwatch.js';
 

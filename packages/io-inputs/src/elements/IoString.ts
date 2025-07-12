@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, Property, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, Property, WithBinding } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
 
 export type IoStringProps = Omit<IoFieldProps, 'value'> & {

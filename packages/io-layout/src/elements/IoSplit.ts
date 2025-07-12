@@ -266,4 +266,4 @@ export class IoSplit extends IoElement {
 }
 export const ioSplit = function(arg0: IoSplitProps) {
   return IoSplit.vConstructor(arg0);
-}
+};

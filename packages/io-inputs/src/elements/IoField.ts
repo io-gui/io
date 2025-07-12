@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
@@ -267,4 +267,4 @@ export class IoField extends IoElement {
 
 export const ioField = function(arg0: IoFieldProps) {
   return IoField.vConstructor(arg0);
-}
+};

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps } from 'io-gui';
 import { IconsetSingleton } from '../nodes/Iconset.js';
 
 export type IoIconProps = IoElementProps & {
@@ -67,4 +67,4 @@ export class IoIcon extends IoElement {
 
 export const ioIcon = function(arg0: IoIconProps) {
   return IoIcon.vConstructor(arg0);
-}
+};

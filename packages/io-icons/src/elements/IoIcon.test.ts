@@ -1,6 +1,6 @@
 import { IoIcon, IconsetSingleton } from '../index.js';
 
-const element = new IoIcon();
+const element = new IoIcon({ value: '' });
 element.style.display = 'none';
 document.body.appendChild(element as HTMLElement);
 

@@ -3,7 +3,6 @@ import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
-import { ioMenuHamburger } from './IoMenuHamburger.js';
 import { IoContextMenu } from './IoContextMenu.js';
 import { getMenuDescendants, getMenuSiblings } from '../utils/MenuDOMUtils.js';
 import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
@@ -285,7 +284,6 @@ export class IoMenuOptions extends IoElement {
   }
   changed() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : [];
-
     if (this.searchable) {
       vChildren.push(ioString({
         id: 'search',
@@ -295,7 +293,6 @@ export class IoMenuOptions extends IoElement {
         live: true
       }));
     }
-
     if (this.search) {
       const filteredItems = searchMenuOptions(this.options, this.search, this.depth);
       if (filteredItems.length === 0) {
@@ -324,19 +321,6 @@ export class IoMenuOptions extends IoElement {
           vChildren.push({tag: 'span', props: {class: 'divider'}});
         }
       }
-    }
-
-    if (this.overflow) {
-      vChildren.push(ioMenuHamburger({
-        depth: this.depth + 1,
-        role: 'navigation',
-        direction: 'down',
-        item: new MenuItem({
-          options: new MenuOptions({
-            items: this._overflownItems,
-          }),
-        })
-      }));
     }
     this.render(vChildren);
   }

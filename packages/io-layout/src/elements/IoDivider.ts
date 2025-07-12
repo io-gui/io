@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property } from 'io-gui';
 
 export type IoDividerProps = IoElementProps & {
   orientation: 'vertical' | 'horizontal',
@@ -123,4 +123,4 @@ export class IoDivider extends IoElement {
 }
 export const ioDivider = function(arg0: IoDividerProps) {
   return IoDivider.vConstructor(arg0);
-}
+};

@@ -49,4 +49,4 @@ export class IoLayout extends IoElement {
 
 export const ioLayout = function(arg0: IoLayoutProps) {
   return IoLayout.vConstructor(arg0);
-}
+};

@@ -1,12 +1,8 @@
-import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register, VDOMElement } from 'io-gui';
-import { IoPropertyEditor, IoPropertyEditorProps } from './IoPropertyEditor.js';
+import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register } from 'io-gui';
+import { IoPropertyEditor } from './IoPropertyEditor.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
 import { EditorConfig } from '../utils/EditorConfig.js';
-
-type IoContextEditorProps = IoPropertyEditorProps & {
-  expanded?: boolean,
-};
 
 interface IoContextEditorExpandProps {
   source: HTMLElement,
@@ -113,6 +109,7 @@ class IoContextEditor extends IoPropertyEditor {
 }
 
 export const IoContextEditorSingleton = new IoContextEditor();
+
 setTimeout(() => {
   IoOverlaySingleton.appendChild(IoContextEditorSingleton as HTMLElement);
 }, 100);

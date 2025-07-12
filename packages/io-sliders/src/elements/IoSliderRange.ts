@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement } from 'io-gui';
+import { Register, ReactiveProperty } from 'io-gui';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 
 export type IoSliderRangeProps = IoSliderBaseProps & {

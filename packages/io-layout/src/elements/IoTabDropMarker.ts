@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, VDOMElement, IoElementProps, ThemeSingleton } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, ThemeSingleton } from 'io-gui';
 import { IoTab } from './IoTab.js';
 import { SplitDirection } from '../nodes/Split.js';
 import { IoPanel } from './IoPanel.js';

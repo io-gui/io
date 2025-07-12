@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, div, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from 'io-gui';
 import { ioButton, ioString } from 'io-inputs';
 import { ioPropertyLink } from './IoPropertyLink.js';
 

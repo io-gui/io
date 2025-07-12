@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, IoElementProps, VDOMElement, WithBinding } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, IoElementProps, WithBinding } from 'io-gui';
 import { MenuOptions } from '../nodes/MenuOptions.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js';

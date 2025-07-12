@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton } from 'io-gui';
+import { Register, ReactiveProperty, span, ThemeSingleton } from 'io-gui';
 import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
 import { IconsetDB, ioIcon } from 'io-icons';
@@ -311,4 +311,4 @@ export class IoTab extends IoField {
 
 export const ioTab = function(arg0: IoTabProps) {
   return IoTab.vConstructor(arg0);
-}
+};

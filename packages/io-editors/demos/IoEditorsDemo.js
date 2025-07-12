@@ -1,6 +1,6 @@
 import { Register, IoElement, div, nudge } from 'io-gui';
 import { MenuOptions, ioOptionSelect } from 'io-menus';
-import { ioPropertyEditor, ioVector, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
+import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
 import { ioSlider } from 'io-sliders';
 import { ioString, ioNumber, ioBoolean } from 'io-inputs';
 
@@ -90,9 +90,9 @@ export class IoEditorsDemo extends IoElement {
             [Array, ioPropertyEditor({labeled: false, class: 'array', config: new Map([
               [Array, [[Number, ioNumber()]]]
             ])})],
-            ['vector2', ioVector({linkable: true})],
-            ['vector3', ioVector({linkable: true})],
-            ['vector4', ioVector({linkable: true})],
+            ['vector2', ioVectorArray({linkable: true})],
+            ['vector3', ioVectorArray({linkable: true})],
+            ['vector4', ioVectorArray({linkable: true})],
             ['matrix2', ioMatrix()],
             ['matrix3', ioMatrix()],
             ['matrix4', ioMatrix()],

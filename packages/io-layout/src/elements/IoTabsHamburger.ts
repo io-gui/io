@@ -1,4 +1,4 @@
-import { Register, NodeArray, VDOMElement, ReactiveProperty, IoElement, IoElementProps } from 'io-gui';
+import { Register, NodeArray, ReactiveProperty } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { Tab } from '../nodes/Tab.js';
@@ -41,4 +41,4 @@ export class IoTabsHamburger extends IoField {
 
 export const ioTabsHamburger = function(arg0: IoTabsHamburgerProps) {
   return IoTabsHamburger.vConstructor(arg0);
-}
+};

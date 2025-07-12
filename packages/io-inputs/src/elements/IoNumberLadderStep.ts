@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, VDOMElement, Property } from 'io-gui';
+import { Register, ReactiveProperty, span, Property } from 'io-gui';
 import { IoField, IoFieldProps } from './IoField.js';
 
 export type IoNumberLadderStepProps = IoFieldProps & {

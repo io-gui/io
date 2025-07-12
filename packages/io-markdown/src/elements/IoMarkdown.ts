@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, VDOMElement, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, Property } from 'io-gui';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import purify from 'dompurify';

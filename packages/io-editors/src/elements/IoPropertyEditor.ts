@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, VDOMElement, Storage as $, HTML_ELEMENTS, ReactivityType } from 'io-gui';
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS, ReactivityType } from 'io-gui';
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js';

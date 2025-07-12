@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, ReactiveProperty, Register, VDOMElement, WithBinding, ReactivityType } from 'io-gui';
+import { IoElement, IoElementProps, ReactiveProperty, Register, WithBinding, ReactivityType } from 'io-gui';
 import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '../lib/color.convert.js';
 
 export type IoColorBaseProps = IoElementProps & {

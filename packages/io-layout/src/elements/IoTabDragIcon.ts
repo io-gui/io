@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property, span, VDOMElement } from 'io-gui';
+import { Register, ReactiveProperty, Property, span } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { tabDropMarkerSingleton } from './IoTabDropMarker.js';

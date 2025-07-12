@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, Node } from 'io-gui';
+import { Register, ReactiveProperty, Node } from 'io-gui';
 import { IoVectorArray, IoVectorArrayProps } from './IoVectorArray.js';
 
 export type IoMatrixProps = IoVectorArrayProps & {

@@ -65,4 +65,4 @@ export class IoTabs extends IoElement {
 
 export const ioTabs = function(arg0: IoTabsProps) {
   return IoTabs.vConstructor(arg0);
-}
+};

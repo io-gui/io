@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, VDOMElement, WithBinding, Property } from 'io-gui';
+import { Register, ReactiveProperty, span, WithBinding, Property } from 'io-gui';
 import { ioIcon } from 'io-icons';
 import { IoField, IoFieldProps } from './IoField.js';
 

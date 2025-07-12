@@ -159,4 +159,4 @@ export class IoPanel extends IoElement {
 }
 export const ioPanel = function(arg0: IoPanelProps) {
   return IoPanel.vConstructor(arg0);
-}
+};
