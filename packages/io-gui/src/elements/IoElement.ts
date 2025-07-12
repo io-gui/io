@@ -18,8 +18,7 @@ export type IoElementProps = NativeElementProps & NodeProps;
 
 @Register
 export class IoElement extends HTMLElement {
-  // TODO: remove any?
-  static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  declare static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -203,18 +202,18 @@ export class IoElement extends HTMLElement {
     while (children.length > vChildren.length) {
       const child = children[children.length - 1];
       host.removeChild(child);
-      if (!noDispose) disposeChildren(child as unknown as IoElement);
+      if (!noDispose) disposeChildren(child as IoElement);
     }
     // replace elements
     for (let i = 0; i < children.length; i++) {
       const child = children[i] as HTMLElement | IoElement;
       // replace existing elements
       if (child.localName !== vChildren[i].tag || noDispose) {
-        const oldElement = child as unknown as HTMLElement;
+        const oldElement = child as HTMLElement;
         const element = constructElement(vChildren[i]);
         host.insertBefore(element, oldElement);
         host.removeChild(oldElement);
-        if (!noDispose) disposeChildren(oldElement as unknown as IoElement);
+        if (!noDispose) disposeChildren(oldElement as IoElement);
       // update existing elements
       } else {
         // TODO: improve setting/removal/cleanup of native element properties/attributes.
@@ -355,4 +354,5 @@ export class IoElement extends HTMLElement {
     }});
   }
 }
+
 export const ioElement = IoElement.vConstructor;

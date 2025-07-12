@@ -164,6 +164,8 @@ export class StorageNode extends Node {
 
       super(props);
 
+      this.valueMutatedDebounced = this.valueMutatedDebounced.bind(this);
+
       this.default = def;
 
       this.binding = this.bind('value');
@@ -197,6 +199,9 @@ export class StorageNode extends Node {
     nodes[s].delete(this.key);
   }
   valueMutated() {
+    this.debounce(this.valueMutatedDebounced);
+  }
+  valueMutatedDebounced() {
     this.valueChanged();
   }
   valueChanged() {

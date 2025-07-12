@@ -80,7 +80,7 @@ function onIoFocusTo(event: CustomEvent) {
     }
   }
 
-  const root = inoverlay ? Overlay as unknown as HTMLElement : document;
+  const root = inoverlay ? Overlay as HTMLElement : document;
   let focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
   focusableCandidates = focusableCandidates.filter(el => el.offsetParent !== null);
   focusableCandidates = focusableCandidates.filter(el => {

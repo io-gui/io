@@ -121,19 +121,6 @@ class MockNode2 extends MockNode1 {
 }
 class MockNode3 extends MockNode2 {}
 
-class MockNode4 extends MockNode2 {
-  static get ReactiveProperties(): ReactivePropertyDefinitions {
-    return {
-      prop3: {
-        type: Node,
-      },
-      prop4: {
-        value: new Node(),
-      }
-    };
-  }
-}
-
 export default class {
   run() {
     describe('ProtoChain', () => {

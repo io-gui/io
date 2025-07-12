@@ -1,18 +1,21 @@
 import { Node } from '../nodes/Node.js';
+import { IoElement } from '../elements/IoElement.js';
 
 // TODO: test!!!
 export class NodeArray<N extends Node> extends Array<N> {
   declare private proxy: typeof Proxy;
   private _isInternalOperation = false;
 
-  static get [Symbol.species]() { return Array }
+  static get [Symbol.species]() { return Array; }
 
-  constructor(public node: Node, ...args: any[]) {
+  constructor(public node: Node | IoElement, ...args: any[]) {
     super(...args);
     this.dispatchMutation = this.dispatchMutation.bind(this);
     this.dispatchMutationDebounced = this.dispatchMutationDebounced.bind(this);
 
-    if (!(node instanceof Node)) console.error('NodeArray constructor called with non-node!');
+    debug: if (!(node instanceof Node) && !(node instanceof IoElement)) {
+      console.error('NodeArray constructor called with non-node!');
+    }
 
     const self = this;
     const proxy = new Proxy(this, {

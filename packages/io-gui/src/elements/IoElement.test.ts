@@ -3,7 +3,7 @@ import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from '
 
 const element = new IoElement();
 element.style.display = 'none';
-document.body.appendChild(element as unknown as HTMLElement);
+document.body.appendChild(element as HTMLElement);
 
 const eventStack: string[] = [];
 

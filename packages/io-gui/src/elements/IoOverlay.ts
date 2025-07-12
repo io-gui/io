@@ -136,7 +136,7 @@ class IoOverlay extends IoElement {
 export const IoOverlaySingleton = new IoOverlay();
 
 setTimeout(() => {
-  document.body.appendChild(IoOverlaySingleton as unknown as HTMLElement);
+  document.body.appendChild(IoOverlaySingleton as HTMLElement);
 }, 100);
 
 // TODO: Test

@@ -36,19 +36,6 @@ export type NodeProps = {
   [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void)
 };
 
-const NON_OBSERVED = [String, Number, Boolean, Date, RegExp, Map, Set, WeakMap, WeakSet];
-function isNonNodeConstructor(constructor: any) {
-  if (typeof constructor !== 'function') return false;
-  let proto = constructor.prototype;
-  while (proto) {
-    if (NON_OBSERVED.includes(constructor)) return false;
-    if (proto.constructor.name === 'Node') return false;
-    if (proto.constructor.name === 'IoElement') return false;
-    if (proto === Object.prototype) return true;
-    proto = Object.getPrototypeOf(proto);
-  }
-  return false;
-}
 function isNonNodeObject(value: any) {
   return (typeof value === 'object' && value !== null && !value._isNode);
 }
@@ -255,12 +242,11 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
 
     observeObjectProperty(node, name, prop);
 
-    if (prop.type === NodeArray) {
+    // TODO: test!
+    if (prop.type === NodeArray && value.constructor === Array) {
       const nodeArray = prop.value as NodeArray<Node>;
 
-      debug: if (value.constructor !== Array) {
-        console.error(`Node: Property "${name}" should be assigned as an Array!`, value);
-      } else if ((value as Array<any>).some(item => !item._isNode)) {
+      debug: if ((value as Array<any>).some(item => !item._isNode)) {
         console.error(`Node: Property "${name}" should be assigned as an Array of nodes!`, value);
       }
       debug: if (nodeArray.constructor !== NodeArray) {
@@ -312,6 +298,13 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       } else if (prop.type === Object) {
         if (value instanceof Array) {
           console.warn(`Wrong type of property "${name}". Value: "${JSON.stringify(value)}". Expected type: ${prop.type.name}`, node);
+        }
+      } else if (prop.type === NodeArray) {
+        if (!(value instanceof NodeArray)) {
+          console.error(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+        }
+        if ((value as Array<any>).some(item => !item._isNode)) {
+          console.error(`Wrong type of property "${name}". NodeArray items should be nodes!`, value);
         }
       } else if (typeof prop.type === 'function') {
         if (!(value instanceof prop.type)) {

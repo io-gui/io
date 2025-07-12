@@ -20,7 +20,7 @@ element.style.position = 'fixed';
 element.style.left = '0';
 element.style.bottom = '0';
 element.style.zIndex = '1000000';
-document.body.appendChild(element as unknown as HTMLElement);
+document.body.appendChild(element as HTMLElement);
 
 export default class {
   run() {

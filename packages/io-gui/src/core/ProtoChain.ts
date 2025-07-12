@@ -12,17 +12,6 @@ type ProtoHandlers = string[];
 type ReactiveProtoProperties = { [property: string]: ReactiveProtoProperty };
 type ProtoListeners = { [property: string]: ListenerDefinition[] };
 
-function isNodeObjectConstructor(constructor: any) {
-  if (typeof constructor !== 'function') return false;
-  let proto = constructor.prototype;
-  while (proto) {
-    if (proto.constructor.name === 'Node') return true;
-    if (proto.constructor.name === 'IoElement') return true;
-    proto = Object.getPrototypeOf(proto);
-  }
-  return false;
-}
-
 /**
  * ProtoChain manages class inheritance metadata and configuration.
  *

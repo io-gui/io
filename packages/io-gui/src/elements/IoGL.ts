@@ -226,7 +226,7 @@ export class IoGl extends IoElement {
     // TODO: consider optimizing
     const pxRatio = window.devicePixelRatio;
     const rect = this.getBoundingClientRect();
-    const style = window.getComputedStyle(this as unknown as HTMLElement);
+    const style = window.getComputedStyle(this);
     const bw = parseInt(style.borderRightWidth) + parseInt(style.borderLeftWidth);
     const bh = parseInt(style.borderTopWidth) + parseInt(style.borderBottomWidth);
 
