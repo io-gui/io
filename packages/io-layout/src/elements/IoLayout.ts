@@ -4,13 +4,13 @@ import { ioSplit } from './IoSplit.js';
 import { Split } from '../nodes/Split.js';
 
 export type IoLayoutProps = IoElementProps & {
-  split?: Split,
-  elements?: VDOMElement[],
+  split: Split,
+  elements: VDOMElement[],
+  addMenuItem: MenuItem,
 };
 
 @Register
 export class IoLayout extends IoElement {
-  static vConstructor: (arg0?: IoLayoutProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -36,25 +36,6 @@ export class IoLayout extends IoElement {
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
 
-  static get Listeners() {
-    return {
-      'io-split-data-changed': 'onSplitDataChanged',
-      'io-panel-data-changed': 'onPanelDataChanged',
-    };
-  }
-  onSplitDataChanged(event: CustomEvent) {
-    event.stopPropagation();
-    this.debounce(this.onDataChangedDebounced, undefined, 2);
-  }
-  onPanelDataChanged(event: CustomEvent) {
-    event.stopPropagation();
-    this.debounce(this.onDataChangedDebounced, undefined, 2);
-  }
-  onDataChangedDebounced() {
-    // TODO: this should happen from top split, not here.
-    this.split.dispatchMutation(this.split);
-  }
-  // TODO: Make sure one panel is available even when all tabs are removed.
   changed() {
     this.render([
       ioSplit({
@@ -65,4 +46,7 @@ export class IoLayout extends IoElement {
     ]);
   }
 }
-export const ioLayout = IoLayout.vConstructor;
+
+export const ioLayout = function(arg0: IoLayoutProps) {
+  return IoLayout.vConstructor(arg0);
+}

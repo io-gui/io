@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, ThemeSingleton, IoElementProps, WithBinding, Property, nudge, ListenerDefinition } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition } from 'io-gui';
 import { ioString } from 'io-inputs';
 import { MenuItem } from '../nodes/MenuItem.js';
 import { MenuOptions } from '../nodes/MenuOptions.js';
@@ -8,7 +8,7 @@ import { IoContextMenu } from './IoContextMenu.js';
 import { getMenuDescendants, getMenuSiblings } from '../utils/MenuDOMUtils.js';
 import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
 
-const rects = new WeakMap();
+// const rects = new WeakMap();
 
 // TODO: improve focusto nav and in-layer navigation.
 
@@ -128,7 +128,7 @@ export class IoMenuOptions extends IoElement {
 
   static get Listeners() {
     return {
-      'touchstart': ['stopPropagation', {passive: false}] as ListenerDefinition,
+      'touchstart': ['stopPropagation', {passive: false}] as ListenerDefinition, // TODO: why?
       'io-focus-to': 'onIoFocusTo',
     };
   }
@@ -136,13 +136,13 @@ export class IoMenuOptions extends IoElement {
     return Overlay.contains(this.parentElement);
   }
   constructor(args: IoMenuOptionsProps = {}) { super(args); }
-  init() {
-    this.setOverflow = this.setOverflow.bind(this);
-  }
-  ready() {
-    this.debounce(this.setOverflow);
-  }
-  stopPropagation(event: MouseEvent) {
+  // init() {
+  //   this.setOverflow = this.setOverflow.bind(this);
+  // }
+  // ready() {
+  //   this.debounce(this.setOverflow);
+  // }
+  stopPropagation(event: TouchEvent) {
     event.stopPropagation();
   }
   connectedCallback() {
@@ -150,9 +150,6 @@ export class IoMenuOptions extends IoElement {
     if (this.inoverlay) {
       this.setAttribute('inoverlay', 'true');
     }
-  }
-  disconnectedCallback() {
-    super.disconnectedCallback();
   }
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source;
@@ -202,53 +199,53 @@ export class IoMenuOptions extends IoElement {
       event.stopPropagation();
     }
   }
-  onResized() {
-    this.debounce(this.setOverflow);
-  }
-  setOverflow() {
-    if (this._disposed) return;
-    const items = Array.from(this.querySelectorAll('.item')) as IoMenuItem[];
-    this._overflownItems.length = 0;
-    if (this.horizontal) {
-      const hamburger = this.querySelector('io-menu-hamburger');
-      const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
-      const end = this.getBoundingClientRect().right - (ThemeSingleton.borderWidth + ThemeSingleton.spacing);
-      let last = Infinity;
-      let hasOwerflown = false;
+  // onResized() {
+  //   this.debounce(this.setOverflow);
+  // }
+  // setOverflow() {
+  //   if (this._disposed) return;
+  //   const items = Array.from(this.querySelectorAll('.item')) as IoMenuItem[];
+  //   this._overflownItems.length = 0;
+  //   if (this.horizontal) {
+  //     const hamburger = this.querySelector('io-menu-hamburger');
+  //     const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
+  //     const end = this.getBoundingClientRect().right - (ThemeSingleton.borderWidth + ThemeSingleton.spacing);
+  //     let last = Infinity;
+  //     let hasOwerflown = false;
 
-      for (let i = items.length; i--;) {
-        const r = items[i].getBoundingClientRect();
-        const rect = rects.get(items[i].item) || {right: 0, width: 0};
-        if (r.right !== 0 && r.width !== 0)  {
-          rect.right = r.right;
-          rect.width = r.width;
-          rects.set(items[i].item, rect);
-        }
+  //     for (let i = items.length; i--;) {
+  //       const r = items[i].getBoundingClientRect();
+  //       const rect = rects.get(items[i].item) || {right: 0, width: 0};
+  //       if (r.right !== 0 && r.width !== 0)  {
+  //         rect.right = r.right;
+  //         rect.width = r.width;
+  //         rects.set(items[i].item, rect);
+  //       }
 
-        last = Math.min(last, rect.right);
-        if (this.noPartialCollapse && hasOwerflown) {
-          items[i].hidden = true;
-          this._overflownItems.unshift(items[i].item);
-        } else if (i === (items.length - 1) && last < end) {
-          items[i].hidden = false;
-        } else if (last < (end - hamburgetWidth * 1.5)) {
-          items[i].hidden = false;
-        } else {
-          hasOwerflown = true;
-          items[i].hidden = true;
-          this._overflownItems.unshift(items[i].item);
-        }
-      }
+  //       last = Math.min(last, rect.right);
+  //       if (this.noPartialCollapse && hasOwerflown) {
+  //         items[i].hidden = true;
+  //         this._overflownItems.unshift(items[i].item);
+  //       } else if (i === (items.length - 1) && last < end) {
+  //         items[i].hidden = false;
+  //       } else if (last < (end - hamburgetWidth * 1.5)) {
+  //         items[i].hidden = false;
+  //       } else {
+  //         hasOwerflown = true;
+  //         items[i].hidden = true;
+  //         this._overflownItems.unshift(items[i].item);
+  //       }
+  //     }
 
-      if (this._overflownItems.length) {
-        this.overflow = JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label));
-      } else {
-        this.overflow = '';
-      }
-    } else {
-      this.overflow = '';
-    }
-  }
+  //     if (this._overflownItems.length) {
+  //       this.overflow = JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label));
+  //     } else {
+  //       this.overflow = '';
+  //     }
+  //   } else {
+  //     this.overflow = '';
+  //   }
+  // }
   collapse() {
     const itemWasFocused = this.contains(document.activeElement);
     const searchHadInput = this.searchable && !!this.search;
@@ -279,7 +276,7 @@ export class IoMenuOptions extends IoElement {
     if (this.inoverlay && this.$parent) {
       this.debounce(this.onExpandInOverlay);
     }
-    this.debounce(this.setOverflow);
+    // this.debounce(this.setOverflow);
   }
   // TODO: Move functionality to Overlay
   onExpandInOverlay() {

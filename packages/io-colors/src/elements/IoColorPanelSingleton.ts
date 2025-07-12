@@ -70,4 +70,6 @@ class IoColorPanel extends IoColorBase {
 }
 
 export const IoColorPanelSingleton = new IoColorPanel();
-IoOverlaySingleton.appendChild(IoColorPanelSingleton as unknown as HTMLElement);
+setTimeout(() => {
+  IoOverlaySingleton.appendChild(IoColorPanelSingleton as HTMLElement);
+}, 100);

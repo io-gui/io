@@ -8,7 +8,7 @@ At the core of IoGui there are two basic classes. First, there is `Node` - essen
 Simply define properties using `@Property()` decorator or in the `static get ReactiveProperties() {}` function, and your components will automatically dispatch `'[propertyName]-changed'` events and invoke `.[propertyName]Changed(change)` handlers. Lastly, `changed()` handler will be invoked.
 
 ### Observed Object Mutations
-If a property is defined with a type of `Node` or `IoElement`, it will automatically be observed for mutations. After object mutation, the `'[propertyName]Mutated()'` handler will be invoked. While properties of other object types are also observed for mutations, the `'object-mutated'` event must be manually dispatched by the component responsible for the mutation.
+If a property is defined with a type of `Node` or `IoElement`, it will automatically be observed for mutations. After object mutation, the `'[propertyName]Mutated()'` handler will be invoked. While properties of other object types are also observed for mutations, the `'io-object-mutation'` event must be manually dispatched by the component responsible for the mutation.
 
 ### Data Binding
 Io-Gui allows you to two-way bind its properties using `this.bind('[propertyName]')` function. Its reactive properties are specifically designed to handle two-way data binding with a robust event system that prevents unintentional side-effects. This feature should be used in moderation alongside one-way data flow.

@@ -1,5 +1,4 @@
 import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span } from 'io-gui';
-import { MenuOptions } from 'io-menus';
 
 const dummyElement = document.createElement('div');
 /**
@@ -192,7 +191,7 @@ export class IoSelector extends IoElement {
     this.render([], this, cache);
     this.scrollTo(0, 0);
 
-    const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id });
+    const vElement = this.elements.find((element: VDOMElement) => { return element.props?.id === id; });
 
     if (!vElement) {
       console.warn(`IoSelector: Could not find elements with id: "${id}"!`);

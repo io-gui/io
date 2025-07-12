@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, ReactiveProperty, Register, VDOMElement } from 'io-gui';
+import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register, VDOMElement } from 'io-gui';
 import { IoPropertyEditor, IoPropertyEditorProps } from './IoPropertyEditor.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
@@ -9,6 +9,8 @@ type IoContextEditorProps = IoPropertyEditorProps & {
 };
 
 interface IoContextEditorExpandProps {
+  source: HTMLElement,
+  direction: NudgeDirection,
   value: any,
   properties?: string[],
   labeled?: boolean,
@@ -85,10 +87,11 @@ class IoContextEditor extends IoPropertyEditor {
       expanded: true,
     });
     this.onClose = props.onClose || null;
+    nudge(this, props.source, props.direction);
     this.debounce(this.onExpand);
   }
   onExpand() {
-    (this.querySelector('[tabindex="0"]') as HTMLElement)?.focus();
+    (this.querySelector('[tabindex="0"]:not([inert])') as HTMLElement)?.focus();
     // TODO: keyboard focus navigation
   }
   expandedChanged() {
@@ -111,4 +114,6 @@ class IoContextEditor extends IoPropertyEditor {
 }
 
 export const IoContextEditorSingleton = new IoContextEditor();
-IoOverlaySingleton.appendChild(IoContextEditorSingleton as unknown as HTMLElement);
+setTimeout(() => {
+  IoOverlaySingleton.appendChild(IoContextEditorSingleton as HTMLElement);
+}, 100);

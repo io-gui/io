@@ -8,7 +8,6 @@ import { IoPanel } from './IoPanel.js';
 
 @Register
 class IoTabDragIcon extends IoField {
-  static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -73,4 +72,4 @@ class IoTabDragIcon extends IoField {
 }
 
 export const tabDragIconSingleton = new IoTabDragIcon();
-document.body.appendChild(tabDragIconSingleton as unknown as HTMLElement);
+document.body.appendChild(tabDragIconSingleton as HTMLElement);

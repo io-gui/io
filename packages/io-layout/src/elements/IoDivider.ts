@@ -1,13 +1,12 @@
 import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property } from 'io-gui';
 
 export type IoDividerProps = IoElementProps & {
-  orientation?: 'vertical' | 'horizontal',
-  index?: number,
+  orientation: 'vertical' | 'horizontal',
+  index: number,
 };
 
 @Register
 export class IoDivider extends IoElement {
-  static vConstructor: (arg0?: IoDividerProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -82,7 +81,7 @@ export class IoDivider extends IoElement {
     };
   }
 
-  constructor(args: IoDividerProps = {}) { super(args); }
+  constructor(args: IoDividerProps) { super(args); }
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault();
@@ -122,8 +121,6 @@ export class IoDivider extends IoElement {
     }, true);
   }
 }
-export const ioDivider = IoDivider.vConstructor;
-
-
-
-
+export const ioDivider = function(arg0: IoDividerProps) {
+  return IoDivider.vConstructor(arg0);
+}

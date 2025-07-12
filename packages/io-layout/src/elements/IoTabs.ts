@@ -1,16 +1,16 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
-import { MenuItem, ioMenuItem, ioMenuHamburger } from 'io-menus';
+import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from 'io-gui';
+import { MenuItem, ioMenuItem } from 'io-menus';
 import { ioTab } from './IoTab.js';
-import { Panel } from '../nodes/Panel.js';
+import { ioTabsHamburger } from './IoTabsHamburger.js';
+import { Tab } from '../nodes/Tab.js';
 
 export type IoTabsProps = IoElementProps & {
-  panel?: Panel,
-  addMenuItem?: MenuItem,
+  tabs: NodeArray<Tab>,
+  addMenuItem: MenuItem,
 };
 
 @Register
 export class IoTabs extends IoElement {
-  static vConstructor: (arg0?: IoTabsProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -20,7 +20,7 @@ export class IoTabs extends IoElement {
         padding-left: var(--io_spacing);
         padding-right: var(--io_spacing);
       }
-      :host > io-menu-hamburger {
+      :host > io-tabs-hamburger {
         margin-bottom: var(--io_spacing);
       }
       :host > io-menu-item {
@@ -41,46 +41,18 @@ export class IoTabs extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: Panel, init: null})
-  declare private panel: Panel;
+  @ReactiveProperty({type: NodeArray, init: null})
+  declare private tabs: NodeArray<Tab>;
 
   @Property(MenuItem)
   declare private addMenuItem: MenuItem;
 
-  declare private hamburgerMenuItem: MenuItem;
-
-  constructor(args: IoTabsProps = {}) { super(args); }
-
-  panelChanged() {
-    this.updateHamburgerMenuItem();
-  }
-
-  panelMutated() {
-    this.updateHamburgerMenuItem();
-    this.changed();
-  }
-
-  updateHamburgerMenuItem() {
-    if (this.hamburgerMenuItem) {
-      this.hamburgerMenuItem.dispose();
-    }
-    this.hamburgerMenuItem = new MenuItem().fromJSON({
-      mode: 'none',
-      options: this.panel.tabs.map(tab => ({
-        mode: 'none',
-        id: tab.id,
-        label: tab.label,
-        icon: tab.icon,
-      })),
-    });
-  }
+  constructor(args: IoTabsProps) { super(args); }
 
   changed() {
     this.render([
-      ioMenuHamburger({
-        item: this.hamburgerMenuItem,
-      }),
-      ...this.panel.tabs.map(tab => ioTab({tab: tab})),
+      ioTabsHamburger({tabs: this.tabs}),
+      ...this.tabs.map(tab => ioTab({tab: tab})),
       ioMenuItem({
         class: 'add-tab',
         icon: 'io:box_fill_plus',
@@ -90,4 +62,7 @@ export class IoTabs extends IoElement {
     ]);
   }
 }
-export const ioTabs = IoTabs.vConstructor;
+
+export const ioTabs = function(arg0: IoTabsProps) {
+  return IoTabs.vConstructor(arg0);
+}

@@ -4,7 +4,7 @@ export default class {
   element = new IoString();
   constructor() {
     this.element.style.display = 'none';
-    document.body.appendChild(this.element as unknown as HTMLElement);
+    document.body.appendChild(this.element as HTMLElement);
   }
   run() {
     describe('IoString.test', () => {

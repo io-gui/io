@@ -15,7 +15,7 @@ export default class {
   element = new IoObject();
   constructor() {
     this.element.style.display = 'none';
-    document.body.appendChild(this.element as unknown as HTMLElement);
+    document.body.appendChild(this.element as HTMLElement);
   }
   reset() {
     this.element.label = '';

@@ -109,7 +109,7 @@ export class MenuOptions extends Node {
     if (oldIndex >= 0 && oldIndex < this.items.length && newIndex >= 0 && newIndex < this.items.length) {
       this.items.splice(newIndex, 0, this.items.splice(oldIndex, 1)[0]);
     }
-    this.dispatchMutation(this);
+    this.dispatchMutation();
   }
   addItem(itemLoose: MenuItem | MenuItemDefLoose, index?: number) {
     // TODO handle options mutation in a better way
@@ -137,7 +137,7 @@ export class MenuOptions extends Node {
     if (item.selected && item.mode === 'select') {
       this.updatePaths(item);
     }
-    this.dispatchMutation(this);
+    this.dispatchMutation();
   }
   removeItemById(id: string) {
     const item = this.findItemById(id);
@@ -158,7 +158,7 @@ export class MenuOptions extends Node {
     } else debug: {
       console.warn('MenuOptions.removeItem: cannot find item to remove!', this);
     }
-    this.dispatchMutation(this);
+    this.dispatchMutation();
   }
 
   initItems() {

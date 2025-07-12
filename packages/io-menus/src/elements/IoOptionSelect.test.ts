@@ -1,7 +1,7 @@
 import { IoOptionSelect, MenuOptions } from '../index.js';
 
 const element = new IoOptionSelect({value: '', options: new MenuOptions()});
-document.body.appendChild(element as unknown as HTMLElement);
+document.body.appendChild(element as HTMLElement);
 element.style.display = 'none';
 
 export default class {

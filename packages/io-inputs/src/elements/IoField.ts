@@ -13,7 +13,6 @@ export type IoFieldProps = IoElementProps & {
 
 @Register
 export class IoField extends IoElement {
-  static vConstructor: (arg0?: IoFieldProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       --io_focus: {
@@ -265,5 +264,7 @@ export class IoField extends IoElement {
   }
 
 }
-export const ioField = IoField.vConstructor;
 
+export const ioField = function(arg0: IoFieldProps) {
+  return IoField.vConstructor(arg0);
+}

@@ -3,7 +3,7 @@ import { IoColorPicker } from '../index.js';
 
 const element = new IoColorPicker();
 element.style.display = 'none';
-document.body.appendChild(element as unknown as HTMLElement);
+document.body.appendChild(element as HTMLElement);
 
 export default class {
   run() {

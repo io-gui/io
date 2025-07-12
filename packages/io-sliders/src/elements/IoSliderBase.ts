@@ -339,7 +339,7 @@ export class IoSliderBase extends IoGl {
   }
   valueMutated() {
     this.changed();
-    this.dispatchMutation(this);
+    this.dispatchMutation();
   }
   changed() {
     super.changed();

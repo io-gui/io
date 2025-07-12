@@ -94,7 +94,7 @@ export class IoColorSlider extends IoColorBase {
         break;
     }
     if (oldValue === JSON.stringify(this.value)) return;
-    
+
     if (!(this.value as unknown as Node)._isNode) {
       this.dispatchMutation(this.value);
     }

@@ -8,14 +8,13 @@ import { Panel } from '../nodes/Panel.js';
 import { SplitDirection } from '../nodes/Split.js';
 
 export type IoPanelProps = IoElementProps & {
-  panel?: Panel,
-  elements?: VDOMElement[],
-  addMenuItem?: MenuItem,
+  panel: Panel,
+  elements: VDOMElement[],
+  addMenuItem: MenuItem,
 };
 
 @Register
 export class IoPanel extends IoElement {
-  static vConstructor: (arg0?: IoPanelProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -58,8 +57,9 @@ export class IoPanel extends IoElement {
       return;
     }
     switch (key) {
+      // TODO: This should be unnecessary once NodeArray is used.
       case 'Edit': {
-        this.dispatch('io-panel-data-changed', {}, true);
+        this.panel.dispatchMutation();
         break;
       }
       case 'Select': {
@@ -126,9 +126,7 @@ export class IoPanel extends IoElement {
     if (this.panel.tabs.length === 0) {
       this.dispatch('io-panel-remove', {panel: this.panel}, true);
     } else {
-      const newIndex = Math.min(index, this.panel.tabs.length - 1);
-      this.panel.selectIndex(newIndex);
-      this.debounce(this.focusTabDebounced, newIndex);
+      this.debounce(this.focusTabDebounced, index);
     }
   }
   moveTab(tab: Tab, index: number) {
@@ -138,16 +136,16 @@ export class IoPanel extends IoElement {
   }
   focusTabDebounced(index: number) {
     const tabs = Array.from(this.querySelectorAll('io-tab')) as HTMLElement[];
+    index = Math.min(index, tabs.length - 1);
     if (tabs[index]) tabs[index].focus();
   }
   panelMutated() {
-    this.dispatch('io-panel-data-changed', {}, true);
     this.changed();
   }
   changed() {
     this.render([
       ioTabs({
-        panel: this.panel,
+        tabs: this.panel.tabs,
         addMenuItem: this.addMenuItem,
         '@io-menu-item-clicked': this.onNewTabClicked,
       }),
@@ -159,4 +157,6 @@ export class IoPanel extends IoElement {
     ]);
   }
 }
-export const ioPanel = IoPanel.vConstructor;
+export const ioPanel = function(arg0: IoPanelProps) {
+  return IoPanel.vConstructor(arg0);
+}

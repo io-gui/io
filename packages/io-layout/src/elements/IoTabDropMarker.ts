@@ -5,7 +5,6 @@ import { IoPanel } from './IoPanel.js';
 
 @Register
 class IoTabDropMarker extends IoElement {
-  static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -41,8 +40,8 @@ class IoTabDropMarker extends IoElement {
   changed() {
     if (this.dropTarget && this.dropIndex !== -1) {
       const tabs = this.dropTarget.querySelectorAll('io-tab');
-      this.style.width = ``;
-      this.style.height = ``;
+      this.style.width = '';
+      this.style.height = '';
       if (tabs.length === 0) {
         const rect = this.dropTarget.getBoundingClientRect();
         this.style.top = `${rect.top + ThemeSingleton.borderRadius}px`;
@@ -92,5 +91,5 @@ class IoTabDropMarker extends IoElement {
 
 export const tabDropMarkerSingleton = new IoTabDropMarker();
 setTimeout(() => {
-  document.body.appendChild(tabDropMarkerSingleton as unknown as HTMLElement);
+  document.body.appendChild(tabDropMarkerSingleton as HTMLElement);
 }, 100);

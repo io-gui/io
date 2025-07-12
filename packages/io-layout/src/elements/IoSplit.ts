@@ -7,14 +7,13 @@ import { Panel } from '../nodes/Panel.js';
 import { Tab } from '../nodes/Tab.js';
 
 export type IoSplitProps = IoElementProps & {
-  split?: Split,
-  elements?: VDOMElement[],
-  addMenuItem?: MenuItem,
+  split: Split,
+  elements: VDOMElement[],
+  addMenuItem: MenuItem,
 };
 
 @Register
 export class IoSplit extends IoElement {
-  static vConstructor: (arg0?: IoSplitProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -46,8 +45,12 @@ export class IoSplit extends IoElement {
       'io-split-convert-to-panel': 'onSplitConvertToPanel',
     };
   }
+  // TODO: Make sure one panel is available even when all tabs are removed.
 
-  constructor(args: IoSplitProps = {}) { super(args); }
+  constructor(args: IoSplitProps) {
+    super(args);
+    this.splitMutatedDebounced = this.splitMutatedDebounced.bind(this);
+  }
 
   onDividerMove(event: CustomEvent) {
     event.stopPropagation();
@@ -165,34 +168,29 @@ export class IoSplit extends IoElement {
       this.split.children[index].flex = splitElement.style.flex;
       index++;
     }
-    this.dispatch('io-split-data-changed', {}, true);
   }
 
   onPanelRemove(event: CustomEvent) {
     if (event.detail.panel === this.split) return;
     event.stopPropagation();
-    this.split.remove(event.detail.panel);
+    this.split.removeChild(event.detail.panel);
     if (this.split.children.length === 0) {
       this.dispatch('io-split-remove', {split: this.split}, true);
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-convert-to-panel', {split: this.split}, true);
-    } else {
-      this.dispatch('io-split-data-changed', {}, true);
     }
   }
 
   onSplitRemove(event: CustomEvent) {
     if (event.detail.split === this.split) return;
     event.stopPropagation();
-    this.split.remove(event.detail.split);
-    this.dispatch('io-split-data-changed', {}, true);
+    this.split.removeChild(event.detail.split);
   }
 
   onSplitConvertToPanel(event: CustomEvent) {
     if (event.detail.split === this.split) return;
     event.stopPropagation();
     this.split.convertToPanel(event.detail.split);
-    this.dispatch('io-split-data-changed', {}, true);
   }
 
   moveTabToSplit(sourcePanel: IoPanel, panel: Panel, tab: Tab, direction: SplitDirection) {
@@ -202,7 +200,6 @@ export class IoSplit extends IoElement {
         const newIndex = direction === 'left' ? index - 1 : index + 1;
         this.split.addSplit(new Panel({tabs: [tab]}), newIndex);
         sourcePanel.removeTab(tab);
-        this.dispatch('io-split-data-changed', {}, true);
       } else {
         if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
           if (direction === 'left') {
@@ -211,7 +208,6 @@ export class IoSplit extends IoElement {
             this.split.convertToSplit(panel, panel, new Panel({tabs: [tab]}), 'horizontal');
           }
           sourcePanel.removeTab(tab);
-          this.dispatch('io-split-data-changed', {}, true);
         }
       }
     } else if (direction === 'top' || direction === 'bottom') {
@@ -219,7 +215,6 @@ export class IoSplit extends IoElement {
         const newIndex = direction === 'top' ? index - 1 : index + 1;
         this.split.addSplit(new Panel({tabs: [tab]}), newIndex);
         sourcePanel.removeTab(tab);
-        this.dispatch('io-split-data-changed', {}, true);
       } else {
         if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
           if (direction === 'top') {
@@ -228,12 +223,14 @@ export class IoSplit extends IoElement {
             this.split.convertToSplit(panel, panel, new Panel({tabs: [tab]}), 'vertical');
           }
           sourcePanel.removeTab(tab);
-          this.dispatch('io-split-data-changed', {}, true);
         }
       }
     }
   }
   splitMutated() {
+    this.debounce(this.splitMutatedDebounced);
+  }
+  splitMutatedDebounced() {
     this.changed();
   }
   changed() {
@@ -267,8 +264,6 @@ export class IoSplit extends IoElement {
     this.render(vChildren);
   }
 }
-export const ioSplit = IoSplit.vConstructor;
-
-
-
-
+export const ioSplit = function(arg0: IoSplitProps) {
+  return IoSplit.vConstructor(arg0);
+}

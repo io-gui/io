@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton, nudge } from 'io-gui';
+import { Register, ReactiveProperty, span, VDOMElement, ThemeSingleton } from 'io-gui';
 import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
 import { IconsetDB, ioIcon } from 'io-icons';
@@ -19,7 +19,7 @@ for (const set of Object.keys(IconsetDB)) {
 const iconOptions = ioOptionSelect({label: 'Select', options: new MenuOptions().fromJSON(icons)});
 
 export type IoTabProps = IoFieldProps & {
-  tab?: Tab,
+  tab: Tab,
 };
 
 let _dragStartX = 0;
@@ -28,7 +28,6 @@ let _dragStartY = 0;
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
 export class IoTab extends IoField {
-  static vConstructor: (arg0?: IoTabProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -36,7 +35,7 @@ export class IoTab extends IoField {
         position: relative;
         height: inherit;
         min-height: inherit;
-        min-width: calc(var(--io_fieldHeight) * 1.42);
+        min-width: calc(var(--io_fieldHeight) * 1.2);
         margin: 0;
         margin-right: var(--io_spacing);
         background-color: var(--io_bgColor) !important;
@@ -63,6 +62,7 @@ export class IoTab extends IoField {
       }
       :host[selected]:focus {
         color: var(--io_colorWhite);
+        z-index: 2;
       }
       :host > .io-icon:not([value=' ']) {
         margin: 0 var(--io_spacing2) 0 var(--io_spacing);
@@ -137,23 +137,7 @@ export class IoTab extends IoField {
     this.setPointerCapture(event.pointerId);
     super.onPointerdown(event);
     if (event.buttons === 2) {
-      IoContextEditorSingleton.expand({
-        value: this.tab,
-        properties: ['id', 'label', 'icon'],
-        orientation: 'horizontal',
-        config: new Map([
-          [Object, [
-            ['id', ioField({inert: true})],
-            ['label', ioString({live: true})],
-            ['icon', iconOptions],
-          ]],
-        ]),
-        onClose: () => {
-          this.dispatch('io-edit-tab', {tab: this.tab, key: 'Edit'}, true);
-        },
-      });
-      nudge(IoContextEditorSingleton, this, 'down');
-      //TODO Save layout on item edit.
+      this.expandContextEditor();
     } else {
       this.focus();
     }
@@ -285,10 +269,28 @@ export class IoTab extends IoField {
   onDeleteClick() {
     this.dispatch('io-edit-tab', {tab: this.tab, key: 'Backspace'}, true);
   }
+  expandContextEditor() {
+    IoContextEditorSingleton.expand({
+      source: this,
+      direction: 'down',
+      value: this.tab,
+      properties: ['id', 'label', 'icon'],
+      orientation: 'horizontal',
+      config: new Map([
+        [Object, [
+          ['id', ioField({inert: true})],
+          ['label', ioString({live: true})],
+          ['icon', iconOptions],
+        ]],
+      ]),
+    });
+  }
   onKeydown(event: KeyboardEvent) {
     if (event.shiftKey && ['Backspace', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       event.preventDefault();
       this.dispatch('io-edit-tab', {tab: this.tab, key: event.key}, true);
+    } else if (event.shiftKey && event.key === 'Enter') {
+      this.expandContextEditor();
     } else {
       super.onKeydown(event);
     }
@@ -306,8 +308,7 @@ export class IoTab extends IoField {
     ]);
   }
 }
-export const ioTab = IoTab.vConstructor;
 
-
-
-
+export const ioTab = function(arg0: IoTabProps) {
+  return IoTab.vConstructor(arg0);
+}

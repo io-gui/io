@@ -5,7 +5,7 @@ export default class {
   element = new IoSliderRange({value: [0, 0]});
   constructor() {
     this.element.style.display = 'none';
-    document.body.appendChild(this.element as unknown as HTMLElement);
+    document.body.appendChild(this.element as HTMLElement);
   }
   reset() {
     this.element.value = [0, 1];

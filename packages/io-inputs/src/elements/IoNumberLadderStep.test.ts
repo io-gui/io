@@ -2,7 +2,7 @@ import { IoNumberLadderStep } from '../index.js';
 
 const step = new IoNumberLadderStep();
 step.style.display = 'none';
-document.body.appendChild(step as unknown as HTMLElement);
+document.body.appendChild(step as HTMLElement);
 
 export default class {
   run() {

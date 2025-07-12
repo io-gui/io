@@ -213,4 +213,6 @@ class IoNumberLadder extends IoElement {
 }
 
 export const IoNumberLadderSingleton = new IoNumberLadder();
-IoOverlaySingleton.appendChild(IoNumberLadderSingleton as unknown as HTMLElement);
+setTimeout(() => {
+  IoOverlaySingleton.appendChild(IoNumberLadderSingleton as HTMLElement);
+}, 100);

@@ -2,7 +2,7 @@ import { IoNumber, IoNumberLadderSingleton } from '../index.js';
 
 const element = new IoNumber();
 element.style.display = 'none';
-document.body.appendChild(element as unknown as HTMLElement);
+document.body.appendChild(element as HTMLElement);
 
 const ladder = IoNumberLadderSingleton;
 ladder.src = element;

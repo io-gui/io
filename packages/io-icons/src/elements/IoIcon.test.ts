@@ -2,7 +2,7 @@ import { IoIcon, IconsetSingleton } from '../index.js';
 
 const element = new IoIcon();
 element.style.display = 'none';
-document.body.appendChild(element as unknown as HTMLElement);
+document.body.appendChild(element as HTMLElement);
 
 export default class {
   run() {

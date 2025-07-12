@@ -345,7 +345,7 @@ export class IoMenuItem extends IoField {
       } else {
         this.$options.options = this.item.options;
       }
-    }    
+    }
   }
   changed() {
     const icon = this.icon || this.item.icon;

@@ -1,6 +1,6 @@
-import { Node, NodeProps, ReactiveProperty, Register } from 'io-gui';
+import { Node, ReactiveProperty, Register } from 'io-gui';
 
-export type TabProps = NodeProps & {
+export type TabProps = {
   id: string,
   label?: string,
   icon?: string,
@@ -23,28 +23,24 @@ export class Tab extends Node {
   declare selected: boolean;
 
   constructor(args: TabProps) {
-    if (!args.label) args.label = args.id;
+    args.label = args.label ?? args.id;
     super(args);
   }
-
   toJSON(): TabProps {
     return {
       id: this.id,
       label: this.label,
-      icon: this.icon,  
+      icon: this.icon,
       selected: this.selected,
     };
   }
-
   fromJSON(json: TabProps) {
-    this.id = json.id;
-    if (json.label) {
-      this.label = json.label;
-    } else {
-      this.label = json.id;
-    }
-    if (json.icon) this.icon = json.icon;
-    if (json.selected) this.selected = json.selected;
+    this.setProperties({
+      id: json.id,
+      label: json.label ?? json.id,
+      icon: json.icon ?? '',
+      selected: json.selected ?? false,
+    });
     return this;
   }
 }

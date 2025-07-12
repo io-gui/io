@@ -2,7 +2,7 @@ import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement } fr
 import { IconsetSingleton } from '../nodes/Iconset.js';
 
 export type IoIconProps = IoElementProps & {
-  value?: string,
+  value: string,
   stroke?: boolean,
   size?: 'small' | 'medium' | 'large',
 };
@@ -14,7 +14,6 @@ export type IoIconProps = IoElementProps & {
  **/
 @Register
 export class IoIcon extends IoElement {
-  static vConstructor: (arg0?: IoIconProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
   static get Style() {
     return /* css */`
       :host {
@@ -55,7 +54,7 @@ export class IoIcon extends IoElement {
   @ReactiveProperty({value: 'small', type: String, reflect: true})
   declare size: 'small' | 'medium' | 'large';
 
-  constructor(args: IoIconProps = {}) { super(args); }
+  constructor(args: IoIconProps) { super(args); }
 
   valueChanged() {
     if (this.value.search(':') !== -1) {
@@ -65,4 +64,7 @@ export class IoIcon extends IoElement {
     }
   }
 }
-export const ioIcon = IoIcon.vConstructor;
+
+export const ioIcon = function(arg0: IoIconProps) {
+  return IoIcon.vConstructor(arg0);
+}

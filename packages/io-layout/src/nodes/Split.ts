@@ -1,87 +1,88 @@
-import { Node, NodeProps, ReactiveProperty, Register } from 'io-gui';
+import { Node, NodeArray, ReactiveProperty, Register } from 'io-gui';
 import { Panel, PanelProps } from './Panel.js';
 
 export type SplitOrientation = 'horizontal' | 'vertical';
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
 
-export type SplitProps = NodeProps & {
+export type SplitProps = {
+  children: Array<SplitProps | PanelProps>,
   orientation?: SplitOrientation,
-  children: Array<Split | Panel | SplitProps | PanelProps>,
   flex?: string,
 };
 
 @Register
 export class Split extends Node {
+
+  @ReactiveProperty({type: NodeArray, init: ['this']})
+  declare children: NodeArray<Split | Panel>;
+
   @ReactiveProperty({type: String, value: 'horizontal'})
   declare orientation: SplitOrientation;
 
-  @ReactiveProperty({type: Array, value: []})
-  declare children: Array<Split | Panel>;
-
-  @ReactiveProperty({type: String, value: ''})
+  @ReactiveProperty({type: String, value: '1 1 100%'})
   declare flex: string;
 
   constructor(args: SplitProps) {
-    if (!args.orientation) {
-      args.orientation = 'horizontal';
-    }
-    if (!args.flex) {
-      args.flex = '1 1 100%';
-    }
-    if (args.children) {
-      for (let i = 0; i < args.children.length; i++) {
-        if (!(args.children[i] instanceof Split) && !(args.children[i] instanceof Panel)) {
-          if ((args.children[i] as PanelProps).tabs) {
-            args.children[i] = new Panel(args.children[i] as PanelProps);
-          } else {
-            args.children[i] = new Split(args.children[i] as SplitProps);
-          }
-        }
+    for (let i = 0; i < args.children.length; i++) {
+      const panelChild = args.children[i] as PanelProps;
+      const splitChild = args.children[i] as SplitProps;
+      if (panelChild.tabs) {
+        args.children[i] = new Panel(panelChild);
+      } else if (splitChild.children) {
+        args.children[i] = new Split(splitChild);
       }
     }
     super(args);
+    this.childrenMutatedDebounced = this.childrenMutatedDebounced.bind(this);
+  }
+  removeChild(child: Panel | Split) {
+    const index = this.children.indexOf(child);
+    this.children.splice(index, 1);
+    if (this.children.length === 2) {
+      this.children[1].flex = '1 1 100%';
+    }
   }
   addSplit(child: Panel | Split, index?: number) {
     index = index ?? this.children.length;
     this.children.splice(index, 0, child);
-    this.dispatchMutation(this);
-  }
-  // TODO: consider more robust flex handling and validation.
-  remove(child: Panel | Split) {
-    this.children = this.children.filter((c: Split | Panel) => c !== child);
-    if (this.children.length === 2) {
-      this.children[1].flex = '1 1 100%';
-    }
-    this.dispatchMutation(this);
   }
   convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
     const index = this.children.indexOf(panel);
     this.children.splice(index, 1, new Split({orientation: orientation, children: [first, second]}));
-    this.dispatchMutation(this);
   }
   convertToPanel(split: Split) {
-    const child = split.children[0];
+    const panel = split.children[0] as Panel;
     const index = this.children.indexOf(split);
-    child.flex = '1 1 100%';
-    this.children.splice(index, 1, child);
-    this.dispatchMutation(this);
+    panel.flex = '1 1 100%';
+    this.children.splice(index, 1, panel);
+  }
+  childrenMutated() {
+    this.debounce(this.childrenMutatedDebounced);
+  }
+  childrenMutatedDebounced() {
+    this.dispatchMutation();
   }
   toJSON(): SplitProps {
     return {
-      orientation: this.orientation,
       children: this.children.map((child: Split | Panel): SplitProps | PanelProps => child.toJSON()),
-      flex: this.flex,
+      orientation: this.orientation ?? 'horizontal',
+      flex: this.flex ?? '1 1 100%',
     };
   }
   fromJSON(json: SplitProps) {
-    if (json.orientation) this.orientation = json.orientation;
-    if (json.children) this.children = json.children.map(child => {
-      if (child instanceof Split) return child;
-      else if (child instanceof Panel) return child;
-      else if ((child as PanelProps).tabs) return new Panel(child as PanelProps);
-      else return new Split(child as SplitProps);
+    this.setProperties({
+      children: json.children.map((child: SplitProps | PanelProps) => {
+        const panelChild = child as PanelProps;
+        const splitChild = child as SplitProps;
+        if (panelChild.tabs) {
+          return new Panel(panelChild);
+        } else if (splitChild.children) {
+          return new Split(splitChild);
+        }
+      }),
+      orientation: json.orientation ?? 'horizontal',
+      flex: json.flex ?? '1 1 100%',
     });
-    if (json.flex) this.flex = json.flex;
     return this;
   }
 }
