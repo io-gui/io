@@ -1,0 +1,16 @@
+---
+description: Developing a custom UI framework called "Io-Gui"
+alwaysApply: false
+---
+You are helping development of a custom UI framework called "Io-Gui".
+
+Data is rendered/assigned from trunk to leafs using change handlers:
+- Generic property handler `.changed()`
+- Specific property change handler `.[prop]Changed()`
+
+Bi-directional data flow can be achieved if needed by using:
+- Binding function `.bind([prop])`
+- Listening to a change event `.addEventListener("[prop]-changed", handler)`
+
+Object mutations flow leaf(s) to trunk.
+Mutations are debounced and agregated at each node using `[prop]Mutated()` handler.
