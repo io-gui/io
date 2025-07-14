@@ -82,6 +82,7 @@ function onIoFocusTo(event: CustomEvent) {
 
   const root = inoverlay ? Overlay as HTMLElement : document;
   let focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
+  let focusableSiblingCandidates = Array.from(src.parentElement.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[];
   focusableCandidates = focusableCandidates.filter(el => el.offsetParent !== null);
   focusableCandidates = focusableCandidates.filter(el => {
     const style = window.getComputedStyle(el);
@@ -101,10 +102,10 @@ function onIoFocusTo(event: CustomEvent) {
     focusableCandidates[focusableCandidates.length - 1].focus();
     return;
   } else if (cmd === 'PageUp') {
-    // TODO: implement
+    focusableSiblingCandidates[0].focus();
     return;
   } else if (cmd === 'PageDown') {
-    // TODO: implement
+    focusableSiblingCandidates[focusableSiblingCandidates.length - 1].focus();
     return;
   } else if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(cmd)) {
     for (let i = focusableCandidates.length; i--;) {

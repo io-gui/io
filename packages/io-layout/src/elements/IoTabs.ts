@@ -20,6 +20,12 @@ export class IoTabs extends IoElement {
         padding-left: var(--io_spacing);
         padding-right: var(--io_spacing);
       }
+      :host:not([overflow="-1"]) io-tab {
+        display: none;
+      }
+      :host[overflow="-1"] io-tabs-hamburger {
+        display: none;
+      }
       :host > io-tabs-hamburger {
         margin-bottom: var(--io_spacing);
       }
@@ -41,13 +47,36 @@ export class IoTabs extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: NodeArray, init: null})
-  declare private tabs: NodeArray<Tab>;
+  @ReactiveProperty({type: NodeArray, init: ['this']})
+  declare tabs: NodeArray<Tab>;
+
+  @ReactiveProperty({type: Number, value: -1, reflect: true})
+  declare overflow: number;
 
   @Property(MenuItem)
-  declare private addMenuItem: MenuItem;
+  declare addMenuItem: MenuItem;
 
   constructor(args: IoTabsProps) { super(args); }
+
+  tabsMutated() {
+    this.changed();
+
+    this.overflow = -1;
+    this.onResized();
+  }
+
+  onResized() {
+    const rect = this.getBoundingClientRect();
+    const addMenuRect = this.querySelector('.add-tab')!.getBoundingClientRect();
+
+    if (this.overflow === -1) {
+      if (addMenuRect.right > rect.right) {
+        this.overflow = rect.width;
+      }
+    } else if (rect.width > (this.overflow + 32)) {
+      this.overflow = -1;
+    }
+  }
 
   changed() {
     this.render([

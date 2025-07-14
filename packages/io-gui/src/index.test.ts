@@ -1,7 +1,6 @@
 import BindingTest from './core/Binding.test.js';
 import ChangeQueueTest from './core/ChangeQueue.test.js';
 import EventDispatcherTest from './core/EventDispatcher.test.js';
-import NodeArrayTest from './core/NodeArray.test.js';
 import ReactivePropertyTest from './core/ReactiveProperty.test.js';
 import ProtoChainTest from './core/ProtoChain.test.js';
 import QueueTest from './core/Queue.test.js';
@@ -17,7 +16,6 @@ export default class {
     new BindingTest().run();
     new ChangeQueueTest().run();
     new EventDispatcherTest().run();
-    new NodeArrayTest().run();
     new ReactivePropertyTest().run();
     new ProtoChainTest().run();
     new QueueTest().run();

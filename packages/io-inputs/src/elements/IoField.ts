@@ -149,19 +149,31 @@ export class IoField extends IoElement {
     this.addEventListener('pointermove', this.onPointermove);
     this.addEventListener('pointerleave', this.onPointerleave);
     this.addEventListener('pointerup', this.onPointerup);
+    this.addEventListener('pointercancel', this.onPointercancel);
     this.pressed = true;
   }
   onPointermove(event: PointerEvent) {}
+  onPointercancel(event: PointerEvent) {
+    this.removeEventListener('pointermove', this.onPointermove);
+    this.removeEventListener('pointerleave', this.onPointerleave);
+    this.removeEventListener('pointerup', this.onPointerup);
+    this.removeEventListener('pointercancel', this.onPointercancel);
+    console.log('onPointercancel');
+    this.pressed = false;
+  }
   onPointerleave(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
+    this.removeEventListener('pointercancel', this.onPointercancel);
+    console.log('onPointerleave');
     this.pressed = false;
   }
   onPointerup(event: PointerEvent) {
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
+    this.removeEventListener('pointercancel', this.onPointercancel);
     this.pressed = false;
   }
   inputValue(value: any) {

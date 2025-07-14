@@ -118,6 +118,7 @@ export class IoElement extends HTMLElement {
     setProperties(this, props);
   }
   setProperty(name: string, value: any, debounce = false) {
+    if (this._disposed) return;
     setProperty(this, name, value, debounce);
     const prop = this._reactiveProperties.get(name)!;
     if (prop.reflect) this.setAttribute(name.toLowerCase(), value);

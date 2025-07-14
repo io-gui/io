@@ -7,7 +7,7 @@ import { IoElement } from '../elements/IoElement';
  * @example
  *
  */
-export type NudgeDirection = 'none' | 'up' | 'left' | 'down' | 'right';
+export type NudgeDirection = 'none' | 'up' | 'left' | 'down' | 'right' | 'over';
 
 function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
   x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
@@ -172,11 +172,17 @@ export function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement 
       nudgeUp(element, left, top, elemRect, bottomToHeight <= top, doClip);
       break;
     case 'right':
-    default:
       nudgeRight(element, right, top, elemRect, false, doClip) ||
       nudgeLeft(element, left, top, elemRect, false, doClip) ||
       nudgeRight(element, right, top, elemRect, rightToWidth > left, doClip) ||
       nudgeLeft(element, left, top, elemRect, rightToWidth <= left, doClip);
+      break;
+    case 'over':
+    default:
+      nudgeRight(element, left, top, elemRect, false, doClip) ||
+      nudgeLeft(element, right, top, elemRect, false, doClip) ||
+      nudgeRight(element, left, top, elemRect, rightToWidth > left, doClip) ||
+      nudgeLeft(element, right, top, elemRect, rightToWidth <= left, doClip);
       break;
   }
 }

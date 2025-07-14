@@ -21,7 +21,10 @@ interface IoContextEditorExpandProps {
 class IoContextEditor extends IoPropertyEditor {
   static get Style() {
     return /* css */`
-    :host:not([expanded]) {
+      :host {
+        z-index: 2;
+      }
+      :host:not([expanded]) {
       visibility: hidden;
     }
     `;

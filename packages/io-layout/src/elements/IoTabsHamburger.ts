@@ -20,7 +20,7 @@ export class IoTabsHamburger extends IoField {
     `;
   }
 
-  @ReactiveProperty({type: NodeArray, init: null})
+  @ReactiveProperty({type: NodeArray, init: ['this']})
   declare private tabs: NodeArray<Tab>;
 
   constructor(args: IoTabsHamburgerProps) { super(args); }
@@ -28,13 +28,17 @@ export class IoTabsHamburger extends IoField {
   onClick() {
     IoTabsHamburgerMenuSingleton.expand({
       source: this,
-      direction: 'down',
+      direction: 'over',
       tabs: this.tabs,
+      onEditTab: this.onEditTab,
     });
+  }
+  onEditTab(event: CustomEvent) {
+    this.dispatch('io-edit-tab', {tab: event.detail.tab, key: event.detail.key}, true);
   }
   changed() {
     this.render([
-      ioIcon({value: 'io:columns'})
+      ioIcon({value: 'io:hamburger'})
     ]);
   }
 }

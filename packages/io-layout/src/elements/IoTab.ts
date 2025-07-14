@@ -56,8 +56,7 @@ export class IoTab extends IoField {
         border-bottom-color: var(--io_bgColorLight);
         z-index: 1;
       }
-      :host:not([selected]) > .io-close-icon {
-        /* TODO: make always visible when no overflow */
+      :host[overflow]:not([selected]) > .io-close-icon {
         display: none;
       }
       :host[selected]:focus {
@@ -116,6 +115,9 @@ export class IoTab extends IoField {
   @ReactiveProperty({type: Tab, init: null})
   declare tab: Tab;
 
+  @ReactiveProperty({type: Boolean, reflect: true})
+  declare overflow: boolean;
+
   static get Listeners() {
     return {
       'click': 'preventDefault',
@@ -125,6 +127,10 @@ export class IoTab extends IoField {
 
   constructor(args: IoTabProps) { super(args); }
 
+  onResized() {
+    const span = this.querySelector('span')!;
+    this.overflow = span.scrollWidth > span.clientWidth;
+  }
   preventDefault(event: Event) {
     event.stopPropagation();
     event.preventDefault();
@@ -244,10 +250,10 @@ export class IoTab extends IoField {
       const direction = tabDragIconSingleton.splitDirection;
 
       if (target && index !== -1) {
-        target.addTab(this.tab, index);
         if (source && source !== target) {
           source.removeTab(this.tab);
         }
+        target.addTab(this.tab, index);
       } else if (source && target && direction !== 'none') {
         target.moveTabToSplit(source, this.tab, direction);
       }
@@ -262,6 +268,30 @@ export class IoTab extends IoField {
     } else {
       this.onClick();
     }
+  }
+  onPointercancel(event: PointerEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    super.onPointercancel(event);
+    tabDragIconSingleton.setProperties({
+      dragging: false,
+      dropSource: null,
+      dropTarget: null,
+      splitDirection: 'none',
+      dropIndex: -1,
+    });
+  }
+  onPointerleave(event: PointerEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    super.onPointerleave(event);
+    tabDragIconSingleton.setProperties({
+      dragging: false,
+      dropSource: null,
+      dropTarget: null,
+      splitDirection: 'none',
+      dropIndex: -1,
+    });
   }
   onClick() {
     this.dispatch('io-edit-tab', {tab: this.tab, key: 'Select'}, true);

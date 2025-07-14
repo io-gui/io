@@ -1,6 +1,7 @@
 import { Binding } from './Binding.js';
 import { AnyConstructor, Node } from '../nodes/Node.js';
 import { IoElement } from '../elements/IoElement.js';
+import { NodeArray } from '../core/NodeArray.js';
 
 // TODO: make init: null default.
 
@@ -126,7 +127,7 @@ function decodeInitArgument(item: any, node: Node | IoElement) {
       target = target[keys[i]];
     }
     if (target) return target;
-    debug: console.warn(`ReactivePropertyInstance: Invalid path ${item}`);
+    console.error(`ReactivePropertyInstance: Invalid path ${item}`);
   } else return item;
 }
 
@@ -158,6 +159,9 @@ export class ReactivePropertyInstance {
       });
       if (propDef.type !== undefined) {
         if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
+      }
+      if (propDef.type === NodeArray && !(propDef.init instanceof Array && propDef.init[0] === 'this')) {
+        console.warn('NodeArray property should be initialized with ["this"]');
       }
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);

@@ -1,15 +1,23 @@
 import { Node } from '../nodes/Node.js';
 import { IoElement } from '../elements/IoElement.js';
 
+export type SelectableNode = Node & {
+  id: string;
+  selected: boolean
+};
+
 // TODO: test!!!
 export class NodeArray<N extends Node> extends Array<N> {
   declare private proxy: typeof Proxy;
   private _isInternalOperation = false;
 
+  declare selected: string;
+
   static get [Symbol.species]() { return Array; }
 
   constructor(public node: Node | IoElement, ...args: any[]) {
     super(...args);
+
     this.dispatchMutation = this.dispatchMutation.bind(this);
     this.dispatchMutationDebounced = this.dispatchMutationDebounced.bind(this);
 
@@ -19,6 +27,24 @@ export class NodeArray<N extends Node> extends Array<N> {
 
     const self = this;
     const proxy = new Proxy(this, {
+      get(target: NodeArray<N>, property: string | symbol) {
+        if (property === 'selected') {
+          let selected= '';
+          for (let i = 0; i < target.length; i++) {
+            const item = target[i] as unknown as SelectableNode;
+            if (item.selected && item.id) {
+              selected = item.id;
+              break;
+            }
+          }
+          return selected;
+        }
+        const index = Number(property);
+        if (!isNaN(index) && index >= 0) {
+          return target[index];
+        }
+        return target[property as any];
+      },
       set(target: NodeArray<N>, property: string | symbol, value: any) {
         if (property === 'length') {
           if (!self._isInternalOperation) {
@@ -36,7 +62,20 @@ export class NodeArray<N extends Node> extends Array<N> {
               return true;
             }
           }
-          target[property as any] = value;
+          target[property] = value;
+          if (!self._isInternalOperation) self.dispatchMutation();
+          return true;
+        }
+        if (property === 'selected') {
+          for (let i = 0; i < target.length; i++) {
+            const item = target[i] as unknown as SelectableNode;
+            if (item.id === value) {
+              item.selected = true;
+            } else {
+              item.selected = false;
+            }
+          }
+          target[property] = value;
           if (!self._isInternalOperation) self.dispatchMutation();
           return true;
         }
@@ -50,6 +89,9 @@ export class NodeArray<N extends Node> extends Array<N> {
           target[property as any] = value;
           if (value instanceof Node && !self._isInternalOperation) {
             value.addEventListener('io-object-mutation', self.dispatchMutation);
+          }
+          if (value.selected && value.id) {
+            target.selected = value.id;
           }
           if (!self._isInternalOperation) self.dispatchMutation();
           return true;

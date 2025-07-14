@@ -113,6 +113,7 @@ export class Node extends Object {
     setProperties(this, props);
   }
   setProperty(name: string, value: any, debounce = false) {
+    if (this._disposed) return;
     setProperty(this, name, value, debounce);
   }
   init() {}
@@ -340,10 +341,6 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   for (let i = 0; i < properties.length; i++) {
     const name = properties[i];
     const value = node._reactiveProperties.get(name)!.value;
-
-    // if (value.constructor === Proxy) {
-    //   console.log('onPropertyMutated', name, value, object);
-    // }
 
     if (value === object) {
       const handlerName = name + 'Mutated' as keyof Node;

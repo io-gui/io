@@ -6,7 +6,7 @@ export interface IoTabsHamburgerMenuExpandProps {
   source: HTMLElement,
   direction: NudgeDirection,
   tabs: NodeArray<Tab>,
-  onClose?: () => void,
+  onEditTab: (event: CustomEvent) => void,
 }
 
 @Register
@@ -46,16 +46,19 @@ class IoTabsHamburgerMenu extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: NodeArray, init: null})
+  @ReactiveProperty({type: NodeArray, init: ['this']})
   declare private tabs: NodeArray<Tab>;
 
   @ReactiveProperty({type: Boolean, reflect: true})
   declare private expanded: boolean;
 
+  declare private onEditTab: (event: CustomEvent) => void;
+
   static get Listeners() {
     return {
       'touchstart': ['stopPropagation', {passive: false}] as ListenerDefinition, // TODO: why?
       'io-focus-to': 'onIoFocusTo',
+      'io-edit-tab': 'onEditTabCapture',
     };
   }
 
@@ -92,11 +95,18 @@ class IoTabsHamburgerMenu extends IoElement {
     }
   }
 
+  onEditTabCapture(event: CustomEvent) {
+    event.stopPropagation();
+    this.onEditTab(event);
+    this.expanded = false;
+  }
+
   expand(props: IoTabsHamburgerMenuExpandProps) {
     this.setProperties({
       tabs: props.tabs,
       expanded: true,
     });
+    this.onEditTab = props.onEditTab;
     nudge(this, props.source, props.direction);
     this.debounce(this.onExpand);
   }

@@ -2,7 +2,7 @@ import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Pro
 import { MenuItem } from 'io-menus';
 import { IoPanel, ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
-import { Split, SplitDirection } from '../nodes/Split.js';
+import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { Tab } from '../nodes/Tab.js';
 
@@ -173,7 +173,12 @@ export class IoSplit extends IoElement {
   onPanelRemove(event: CustomEvent) {
     if (event.detail.panel === this.split) return;
     event.stopPropagation();
-    this.split.removeChild(event.detail.panel);
+    for (let i = this.split.children.length; i--;) {
+      const child = this.split.children[i];
+      if (child instanceof Panel && child.tabs.length === 0) {
+        this.split.children.splice(i, 1);
+      }
+    }
     if (this.split.children.length === 0) {
       this.dispatch('io-split-remove', {split: this.split}, true);
     } else if (this.split.children.length === 1) {
@@ -184,45 +189,49 @@ export class IoSplit extends IoElement {
   onSplitRemove(event: CustomEvent) {
     if (event.detail.split === this.split) return;
     event.stopPropagation();
-    this.split.removeChild(event.detail.split);
+    const index = this.split.children.indexOf(event.detail.split);
+    this.split.children.splice(index, 1);
+    if (this.split.children.length === 2) {
+      this.split.children[1].flex = '1 1 100%';
+    }
   }
 
   onSplitConvertToPanel(event: CustomEvent) {
     if (event.detail.split === this.split) return;
     event.stopPropagation();
-    this.split.convertToPanel(event.detail.split);
+    this.convertToPanel(event.detail.split);
+  }
+
+  convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
+    const index = this.split.children.indexOf(panel);
+    this.split.children.splice(index, 1, new Split({orientation: orientation, children: [first, second]}));
+  }
+  convertToPanel(split: Split) {
+    const panel = split.children[0] as Panel;
+    const index = this.split.children.indexOf(split);
+    panel.flex = '1 1 100%';
+    this.split.children.splice(index, 1, panel);
   }
 
   moveTabToSplit(sourcePanel: IoPanel, panel: Panel, tab: Tab, direction: SplitDirection) {
     const index = this.split.children.indexOf(panel);
-    if (direction === 'left' || direction === 'right') {
-      if (this.split.orientation === 'horizontal') {
-        const newIndex = direction === 'left' ? index - 1 : index + 1;
-        this.split.addSplit(new Panel({tabs: [tab]}), newIndex);
+    let orientation: SplitOrientation = 'horizontal';
+    if (direction === 'top' || direction === 'bottom') {
+      orientation = 'vertical';
+    }
+    let newIndex = ['left', 'top'].includes(direction) ? index - 1 : index + 1;
+
+    if (this.split.orientation === orientation) {
+      newIndex = Math.max(0, newIndex);
+      this.split.children.splice(newIndex, 0, new Panel({tabs: [tab]}));
+      sourcePanel.removeTab(tab);
+    } else {
+      if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
         sourcePanel.removeTab(tab);
-      } else {
-        if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
-          if (direction === 'left') {
-            this.split.convertToSplit(panel, new Panel({tabs: [tab]}), panel, 'horizontal');
-          } else {
-            this.split.convertToSplit(panel, panel, new Panel({tabs: [tab]}), 'horizontal');
-          }
-          sourcePanel.removeTab(tab);
-        }
-      }
-    } else if (direction === 'top' || direction === 'bottom') {
-      if (this.split.orientation === 'vertical') {
-        const newIndex = direction === 'top' ? index - 1 : index + 1;
-        this.split.addSplit(new Panel({tabs: [tab]}), newIndex);
-        sourcePanel.removeTab(tab);
-      } else {
-        if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
-          if (direction === 'top') {
-            this.split.convertToSplit(panel, new Panel({tabs: [tab]}), panel, 'vertical');
-          } else {
-            this.split.convertToSplit(panel, panel, new Panel({tabs: [tab]}), 'vertical');
-          }
-          sourcePanel.removeTab(tab);
+        if (newIndex === -1) {
+          this.convertToSplit(panel, new Panel({tabs: [tab]}), panel, orientation);
+        } else {
+          this.convertToSplit(panel, panel, new Panel({tabs: [tab]}), orientation);
         }
       }
     }

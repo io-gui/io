@@ -35,27 +35,6 @@ export class Split extends Node {
     super(args);
     this.childrenMutatedDebounced = this.childrenMutatedDebounced.bind(this);
   }
-  removeChild(child: Panel | Split) {
-    const index = this.children.indexOf(child);
-    this.children.splice(index, 1);
-    if (this.children.length === 2) {
-      this.children[1].flex = '1 1 100%';
-    }
-  }
-  addSplit(child: Panel | Split, index?: number) {
-    index = index ?? this.children.length;
-    this.children.splice(index, 0, child);
-  }
-  convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
-    const index = this.children.indexOf(panel);
-    this.children.splice(index, 1, new Split({orientation: orientation, children: [first, second]}));
-  }
-  convertToPanel(split: Split) {
-    const panel = split.children[0] as Panel;
-    const index = this.children.indexOf(split);
-    panel.flex = '1 1 100%';
-    this.children.splice(index, 1, panel);
-  }
   childrenMutated() {
     this.debounce(this.childrenMutatedDebounced);
   }
