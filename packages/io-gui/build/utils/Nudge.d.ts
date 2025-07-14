@@ -6,6 +6,6 @@ import { IoElement } from '../elements/IoElement';
  * @example
  *
  */
-export type NudgeDirection = 'none' | 'up' | 'left' | 'down' | 'right';
+export type NudgeDirection = 'none' | 'up' | 'left' | 'down' | 'right' | 'over';
 export declare function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement | IoElement, direction: NudgeDirection, doClip?: boolean): void;
 //# sourceMappingURL=Nudge.d.ts.map

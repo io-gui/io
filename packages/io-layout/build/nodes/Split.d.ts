@@ -12,10 +12,6 @@ export declare class Split extends Node {
     orientation: SplitOrientation;
     flex: string;
     constructor(args: SplitProps);
-    removeChild(child: Panel | Split): void;
-    addSplit(child: Panel | Split, index?: number): void;
-    convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation): void;
-    convertToPanel(split: Split): void;
     childrenMutated(): void;
     childrenMutatedDebounced(): void;
     toJSON(): SplitProps;

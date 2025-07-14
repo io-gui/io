@@ -7,9 +7,12 @@ export type IoTabsProps = IoElementProps & {
 };
 export declare class IoTabs extends IoElement {
     static get Style(): string;
-    private tabs;
-    private addMenuItem;
+    tabs: NodeArray<Tab>;
+    overflow: number;
+    addMenuItem: MenuItem;
     constructor(args: IoTabsProps);
+    tabsMutated(): void;
+    onResized(): void;
     changed(): void;
 }
 export declare const ioTabs: (arg0: IoTabsProps) => import("io-gui").VDOMElement;

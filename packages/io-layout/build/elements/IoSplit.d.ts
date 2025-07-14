@@ -1,7 +1,7 @@
 import { VDOMElement, IoElement, IoElementProps } from 'io-gui';
 import { MenuItem } from 'io-menus';
 import { IoPanel } from './IoPanel.js';
-import { Split, SplitDirection } from '../nodes/Split.js';
+import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { Tab } from '../nodes/Tab.js';
 export type IoSplitProps = IoElementProps & {
@@ -27,6 +27,8 @@ export declare class IoSplit extends IoElement {
     onPanelRemove(event: CustomEvent): void;
     onSplitRemove(event: CustomEvent): void;
     onSplitConvertToPanel(event: CustomEvent): void;
+    convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation): void;
+    convertToPanel(split: Split): void;
     moveTabToSplit(sourcePanel: IoPanel, panel: Panel, tab: Tab, direction: SplitDirection): void;
     splitMutated(): void;
     splitMutatedDebounced(): void;

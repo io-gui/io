@@ -19,8 +19,9 @@ export declare class IoPanel extends IoElement {
     onEditTab(event: CustomEvent): void;
     init(): void;
     onNewTabClicked(event: CustomEvent): void;
-    moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection): void;
+    selectIndex(index: number): void;
     selectTab(tab: Tab): void;
+    moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection): void;
     addTab(tab: Tab, index?: number): void;
     removeTab(tab: Tab): void;
     moveTab(tab: Tab, index: number): void;

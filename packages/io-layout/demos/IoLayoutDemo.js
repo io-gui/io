@@ -110,6 +110,7 @@ export class IoLayoutDemo extends IoElement {
             ]},
           ],
         }),
+        // split: split,
         split: $({key: 'split', storage: 'local', value: split})
       })
     ]);

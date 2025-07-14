@@ -20,7 +20,7 @@ export declare function Property(initialValue?: any): (target: Node | IoElement,
 /**
  * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator
- * @param {ReactivePropertyDefinitionLoose} propertyDefinition - Property definition.
+ * @param {ReactivePropertyDefinitionLoose} defLoose - Property definition.
  * @returns {Function} Property decorator function.
  *
  * @example
@@ -37,5 +37,5 @@ export declare function Property(initialValue?: any): (target: Node | IoElement,
  *   declare size: [number, number];
  * }
  */
-export declare function ReactiveProperty(propertyDefinition?: ReactivePropertyDefinitionLoose): (target: Node | IoElement, propertyName: string) => void;
+export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLoose): (target: Node | IoElement, propertyName: string) => void;
 //# sourceMappingURL=Property.d.ts.map

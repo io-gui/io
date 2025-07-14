@@ -933,10 +933,15 @@ export declare class Binding<T extends unknown> {
 	 */
 	dispose(): void;
 }
+export type SelectableNode = Node$1 & {
+	id: string;
+	selected: boolean;
+};
 export declare class NodeArray<N extends Node$1> extends Array<N> {
 	node: Node$1 | IoElement;
 	private proxy;
 	private _isInternalOperation;
+	selected: string;
 	static get [Symbol.species](): ArrayConstructor;
 	constructor(node: Node$1 | IoElement, ...args: any[]);
 	private withInternalOperation;
@@ -971,7 +976,7 @@ export declare function Property(initialValue?: any): (target: Node$1 | IoElemen
 /**
  * Declares a reactive property and defines its inital value and behavior using a loose or strict definition.
  * @decorator
- * @param {ReactivePropertyDefinitionLoose} propertyDefinition - Property definition.
+ * @param {ReactivePropertyDefinitionLoose} defLoose - Property definition.
  * @returns {Function} Property decorator function.
  *
  * @example
@@ -988,7 +993,7 @@ export declare function Property(initialValue?: any): (target: Node$1 | IoElemen
  *   declare size: [number, number];
  * }
  */
-export declare function ReactiveProperty(propertyDefinition?: ReactivePropertyDefinitionLoose): (target: Node$1 | IoElement, propertyName: string) => void;
+export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLoose): (target: Node$1 | IoElement, propertyName: string) => void;
 /**
  * Registers a new Node or IoElement subclass. This needs to be called for each new class that extends Node or IoElement.
  * @param {Node | IoElement} ioNodeConstructor - Node class to register.
@@ -1214,7 +1219,7 @@ export declare const IoOverlaySingleton: IoOverlay;
  * @example
  *
  */
-export type NudgeDirection = "none" | "up" | "left" | "down" | "right";
+export type NudgeDirection = "none" | "up" | "left" | "down" | "right" | "over";
 export declare function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement | IoElement, direction: NudgeDirection, doClip?: boolean): void;
 /** @License
  * Copyright ©2025 Aleksandar (Aki) Rodic
@@ -2111,6 +2116,7 @@ export declare class IoField extends IoElement {
 	onBlur(event: FocusEvent): void;
 	onPointerdown(event: PointerEvent): void;
 	onPointermove(event: PointerEvent): void;
+	onPointercancel(event: PointerEvent): void;
 	onPointerleave(event: PointerEvent): void;
 	onPointerup(event: PointerEvent): void;
 	inputValue(value: any): void;

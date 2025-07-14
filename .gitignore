@@ -3,7 +3,6 @@
 .project
 .idea/
 /node_modules
-/packages/**/build/
 .git/
 npm-debug.log
 .jshintrc
