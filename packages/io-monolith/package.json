@@ -29,6 +29,7 @@
     "io-navigation": "^2.0.0",
     "io-markdown": "^2.0.0",
     "io-editors": "^2.0.0",
-    "io-icons": "^2.0.0"
+    "io-icons": "^2.0.0",
+    "io-three": "^2.0.0"
   }
 }

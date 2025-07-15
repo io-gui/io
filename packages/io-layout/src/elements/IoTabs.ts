@@ -20,14 +20,21 @@ export class IoTabs extends IoElement {
         padding-left: var(--io_spacing);
         padding-right: var(--io_spacing);
       }
+      :host io-tab {
+        transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
       :host:not([overflow="-1"]) io-tab {
-        display: none;
+        /* TODO: make niceer animations */
+        pointer-events: none;
+        opacity: 0;
       }
       :host[overflow="-1"] io-tabs-hamburger {
+        /* TODO: make niceer animations */
         display: none;
       }
       :host > io-tabs-hamburger {
         margin-bottom: var(--io_spacing);
+        /* transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1); */
       }
       :host > io-menu-item {
         margin-left: auto;

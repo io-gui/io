@@ -35,7 +35,8 @@ export class IoTab extends IoField {
         position: relative;
         height: inherit;
         min-height: inherit;
-        min-width: calc(var(--io_fieldHeight) * 1.2);
+        /* TODO: use vars for this */
+        min-width: calc(var(--io_fieldHeight) * 1.25);
         margin: 0;
         margin-right: var(--io_spacing);
         background-color: var(--io_bgColor) !important;
@@ -64,7 +65,7 @@ export class IoTab extends IoField {
         z-index: 2;
       }
       :host > .io-icon:not([value=' ']) {
-        margin: 0 var(--io_spacing2) 0 var(--io_spacing);
+        margin: 0 var(--io_spacing2) 0 0;
       }
       :host > .marker {
         position: absolute;

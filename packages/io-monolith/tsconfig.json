@@ -11,7 +11,8 @@
       "io-inputs": ["../io-inputs"],
       "io-markdown": ["../io-markdown"],
       "io-editors": ["../io-editors"],
-      "io-icons": ["../io-icons"]
+      "io-icons": ["../io-icons"],
+      "io-three": ["../io-three"]
     }
   },
   "include": ["./src"]

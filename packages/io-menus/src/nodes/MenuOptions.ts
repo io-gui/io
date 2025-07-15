@@ -170,7 +170,7 @@ export class MenuOptions extends Node {
       }
       debug: {
         // TODO check if same item is at other index
-        if (items.find((otherItem: MenuItem) =>  otherItem !== item && otherItem.id !== undefined && otherItem.id === item.id)) {
+        if (items.find((otherItem: MenuItem) =>  otherItem !== item && ['select', 'toggle'].includes(otherItem.mode) && otherItem.id !== undefined && otherItem.id === item.id)) {
           console.warn(`MenuOptions.addItems: duplicate id "${item.id}"`);
         }
       }

@@ -150,6 +150,7 @@ export class IoSelector extends IoElement {
       if (current && current !== anchor) {
         this.scrollToSuspended = true;
         if (this.anchor.split('#').length === 2) {
+          // TODO: triggers missing id warning if menuoptions dont include id when you scroll dcs to the top
           this.anchor = this.anchor.split('#')[0] + '#' + current;
         } else {
           this.anchor = current;
