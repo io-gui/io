@@ -2,10 +2,28 @@ import { Binding, Node, Register, ReactiveProperty } from '../index.js';
 
 @Register
 class TestNode extends Node {
-  @ReactiveProperty(0)
+  @ReactiveProperty({type: Number, value: 0})
   declare prop1: number;
-  @ReactiveProperty(0)
+  @ReactiveProperty({type: Number, value: 0})
   declare prop2: number;
+}
+
+@Register
+class TestNodeString extends Node {
+  @ReactiveProperty({type: String, value: ''})
+  declare strProp: string;
+}
+
+@Register
+class TestNodeBoolean extends Node {
+  @ReactiveProperty({type: Boolean, value: true})
+  declare boolProp: boolean;
+}
+
+@Register
+class TestNodeObject extends Node {
+  @ReactiveProperty({type: Object, init: null})
+  declare objProp: object;
 }
 
 export default class {
@@ -157,6 +175,28 @@ export default class {
         expect(node._eventDispatcher.addedListeners).to.be.eql({});
 
         expect(dstNode._eventDispatcher.addedListeners).to.be.eql({});
+      });
+      it('Should return correct JSON representation', () => {
+        const node1 = new TestNode();
+        const node2 = new TestNode();
+        const node3 = new TestNode();
+        const node4 = new TestNodeString();
+        const binding = new Binding(node1, 'prop1');
+        binding.addTarget(node2, 'prop1');
+        binding.addTarget(node2, 'prop2');
+        binding.addTarget(node3, 'prop1');
+        binding.addTarget(node4, 'strProp');
+        const json = binding.toJSON();
+        expect(json).to.be.eql({
+          node: 'TestNode',
+          property: 'prop1',
+          targets: ['TestNode', 'TestNode', 'TestNodeString'],
+          targetProperties: [
+            ['prop1', 'prop2'],
+            ['prop1'],
+            ['strProp']
+          ]
+        });
       });
     });
   }

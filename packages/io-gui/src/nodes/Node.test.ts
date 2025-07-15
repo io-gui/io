@@ -3,7 +3,7 @@ import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement
 export default class {
   run() {
     describe('Node', () => {
-      it('Should have core API functions defined', () => {
+      it('Should have all core API functions defined', () => {
         const node = new Node();
         expect(node.setProperty).to.be.a('function');
         expect(node.applyProperties).to.be.a('function');
@@ -22,7 +22,7 @@ export default class {
         expect(node.dispose).to.be.a('function');
         node.dispose();
       });
-      it('Should register property definitions correctly', () => {
+      it('Should register reactive property definitions with correct defaults', () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -135,7 +135,7 @@ export default class {
         });
         node.dispose();
       });
-      it('Should aggregate property definitions from protochain', () => {
+      it('Should aggregate reactive property definitions from prototype chain', () => {
         @Register
         class Object1 extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -210,7 +210,7 @@ export default class {
           init: undefined,
         });
       });
-      it('Should correctly register properties with bindigs', () => {
+      it('Should correctly register properties with bindings', () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): any {
@@ -342,7 +342,7 @@ export default class {
         element.setProperty('label', 'label3');
         expect(element.getAttribute('label')).to.be.equal('label3');
       });
-      it('Should dipatch "[propName]-changed" events correctly', async () => {
+      it('Should dispatch "[propName]-changed" events correctly', async () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -556,7 +556,7 @@ export default class {
         expect(subnode6._eventDispatcher.addedListeners['io-object-mutation'][1][0]).to.be.equal(node4.onPropertyMutated);
 
       });
-      it('Should corectly invoke handler functions on change', async () => {
+      it('Should correctly invoke handler functions on property changes', async () => {
         @Register
         class TestNode extends Node {
           changedCounter = 0;
@@ -655,7 +655,7 @@ export default class {
 
         node.dispose();
       });
-      it('should invoke property mutation handler functions on mutation event', async () => {
+      it('Should invoke property mutation handler functions on mutation events', async () => {
         @Register
         class TestSubNode extends Node {
           static get ReactiveProperties(): any {
@@ -722,7 +722,7 @@ export default class {
 
         node.dispose();
       });
-      it('should correctly bind properties', () => {
+      it('Should correctly bind properties using binding system', () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -772,7 +772,7 @@ export default class {
 
         node.dispose();
       });
-      it('Should correctly set values when setProperties() is used to re-set multiple bindings', async () => {
+      it('Should correctly handle multiple binding re-assignments in setProperties()', async () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -848,7 +848,7 @@ export default class {
         expect(targetNode.subnode.prop2).to.be.equal(sourceNode.prop2).to.be.equal(targetNode.prop2).to.be.equal('final2');
         expect(targetNode.subnode.prop3).to.be.equal(sourceNode.prop3).to.be.equal(targetNode.prop3).to.be.equal('final3');
       });
-      it('Should add/remove targets and targetProperties when assigned to values', () => {
+      it('Should correctly manage binding targets and target properties', () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -895,7 +895,7 @@ export default class {
         expect(binding0.targetProperties.get(dstNode1)).to.be.eql(['prop2', 'prop1']);
         expect(binding0.targetProperties.get(dstNode3)).to.be.eql(['prop2', 'prop1']);
       });
-      it('Should return existing binding or create a new on "bind()"', () => {
+      it('Should return existing binding or create new one on bind()', () => {
         @Register
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {

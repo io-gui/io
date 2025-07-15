@@ -49,8 +49,8 @@ export class Binding<T extends unknown> {
    */
   constructor(node: Node | IoElement, property: string) {
     debug: {
-      if (!node._isNode) console.warn('Binding: Source node is not a Node instance!');
-      if (!node._reactiveProperties.has(property)) console.warn(`Binding: Source node does not have a reactive property "${property}"!`);
+      if (!node._isNode) console.warn('Source node is not a Node instance!');
+      if (!node._reactiveProperties.has(property)) console.warn(`Source node does not have a reactive property "${property}"!`);
     }
     this.node = node;
     this.property = property;
@@ -75,9 +75,9 @@ export class Binding<T extends unknown> {
     const targetProps = this.getTargetProperties(target);
 
     debug: {
-      if (!target._isNode) console.warn('Binding: Target node is not a Node instance!');
-      if (!target._reactiveProperties.has(property)) console.warn(`Binding: Target node does not have a reactive property "${property}"!`);
-      if (targetProps.indexOf(property) !== -1) console.error(`Binding: target property "${property}" already added!`);
+      if (!target._isNode) console.warn('Target node is not a Node instance!');
+      if (!target._reactiveProperties.has(property)) console.warn(`Target node does not have a reactive property "${property}"!`);
+      if (targetProps.indexOf(property) !== -1) console.error(`Target property "${property}" already added!`);
     }
 
     if (this.targets.indexOf(target) === -1) this.targets.push(target);
@@ -87,8 +87,8 @@ export class Binding<T extends unknown> {
       const targetP = target._reactiveProperties.get(property)!;
       if (targetP.binding && targetP.binding !== this) {
         debug: {
-          console.warn('Binding: improper usage detected!');
-          console.info('Binding: target property is already a target of another binding. Undinding previous binding!');
+          console.warn('Improper usage detected!');
+          console.info('Target property is already a target of another binding. Undinding previous binding!');
         }
         targetP.binding.removeTarget(target, property);
       }
@@ -99,7 +99,7 @@ export class Binding<T extends unknown> {
         const valueMismatch = srcP.value !== undefined && targetP.value !== undefined && typeof srcP.value !== typeof targetP.value;
         const typeMismatch = srcP.type !== undefined && targetP.type !== undefined && !isTypeCompatible(srcP.type, targetP.type);
         if (valueMismatch || typeMismatch) {
-          console.warn(`Binding: source property "${this.property}" does not match type of target property ${property}!`);
+          console.warn(`Source property "${this.property}" does not match type of target property "${property}"!`);
           console.info(`Source "${this.property}" value: ${srcP.value} type: ${srcP.type} typeof: ${typeof srcP.value}`);
           console.info(`Target "${property}" value: ${targetP.value} type: ${targetP.type} typeof: ${typeof targetP.value}`);
         }
@@ -124,13 +124,13 @@ export class Binding<T extends unknown> {
 
       const i = targetProperties.indexOf(property);
       debug: if (i === -1) {
-        console.error('Binding: target property not found!');
+        console.error('Target property not found!');
       }
       targetProperties.splice(i, 1);
 
       const propertyInstance = target._reactiveProperties.get(property)!;
       debug: if (propertyInstance.binding !== this) {
-        console.error('Binding: target property has a different binding!');
+        console.error('Target property has a different binding!');
       }
       propertyInstance.binding = undefined;
       target.removeEventListener(`${property}-changed`, this.onTargetChanged);
@@ -141,7 +141,7 @@ export class Binding<T extends unknown> {
         const prop = targetProperties[i];
         const propertyInstance = target._reactiveProperties.get(prop)!;
         debug: if (propertyInstance.binding !== this) {
-          console.error('Binding: target property has a different binding!');
+          console.error('Target property has a different binding!');
         }
         propertyInstance.binding = undefined;
         target.removeEventListener(`${prop}-changed`, this.onTargetChanged);
@@ -158,7 +158,7 @@ export class Binding<T extends unknown> {
    */
   onTargetChanged(event: ChangeEvent){
     debug: if (this.targets.indexOf(event.target) === -1) {
-      console.error('onTargetChanged() should never fire if target is not accounted for');
+      console.error('onTargetChanged() should never fire if target is not accounted for!');
     }
     const oldValue = this.value;
     const value = event.detail.value;
@@ -173,7 +173,7 @@ export class Binding<T extends unknown> {
    */
   onSourceChanged(event: ChangeEvent) {
     debug: if (event.target !== this.node) {
-      console.error('onSourceChanged() should always originate form source node.');
+      console.error('onSourceChanged() should always originate form source node!');
     }
     const value = event.detail.value;
     for (let i = this.targets.length; i--;) {
@@ -204,11 +204,11 @@ export class Binding<T extends unknown> {
    * @return {string} JSON representation of the binding.
    */
   toJSON() {
-    const targetProperties: Record<string, Properties> = {};
+    const targetProperties: Properties[] = [];
     for (let i = 0; i < this.targets.length; i++) {
       const target = this.targets[i];
       const props = this.getTargetProperties(target);
-      targetProperties[target.constructor.name] = props;
+      targetProperties[i] = props;
     }
     return {
       node: this.node.constructor.name,
