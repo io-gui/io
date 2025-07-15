@@ -176,7 +176,7 @@ export class IoMarkdown extends IoElement {
   @ReactiveProperty({value: '', reflect: true})
   declare src: string;
 
-  @ReactiveProperty({type: Array})
+  @ReactiveProperty({type: Array, init: null})
   declare strip: string[];
 
   @ReactiveProperty({value: false, reflect: true})

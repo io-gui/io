@@ -10,7 +10,7 @@ export type PanelProps = {
 @Register
 export class Panel extends Node {
 
-  @ReactiveProperty({type: NodeArray, init: ['this']})
+  @ReactiveProperty({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>;
 
   @ReactiveProperty({type: String, value: '1 1 100%'})

@@ -15,7 +15,7 @@ export type IoContextMenuProps = IoElementProps & {
 @Register
 export class IoContextMenu extends IoElement {
 
-  @ReactiveProperty({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
   @ReactiveProperty({value: false, reflect: true})

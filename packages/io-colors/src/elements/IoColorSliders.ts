@@ -28,7 +28,7 @@ export class IoColorSlider extends IoColorBase {
   @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
   declare color: [number, number, number, number];
 
-  @ReactiveProperty(0.01)
+  @ReactiveProperty({type: Number, value: 0.01})
   declare step: number;
 
   @ReactiveProperty('a')

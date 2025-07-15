@@ -15,16 +15,16 @@ export type IoSliderRangeProps = IoSliderBaseProps & {
 @Register
 export class IoSliderRange extends IoSliderBase {
 
-  @ReactiveProperty({value: null, type: Array, init: [0, 0]})
+  @ReactiveProperty({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
   declare value: [number, number];
 
-  @ReactiveProperty(0.01)
+  @ReactiveProperty({type: Number, value: 0.01})
   declare step: number;
 
-  @ReactiveProperty(0)
+  @ReactiveProperty({type: Number, value: 0})
   declare min: number;
 
-  @ReactiveProperty(1)
+  @ReactiveProperty({type: Number, value: 1})
   declare max: number;
 
   _index = 0;

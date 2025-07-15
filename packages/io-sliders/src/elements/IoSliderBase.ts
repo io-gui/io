@@ -45,19 +45,19 @@ export class IoSliderBase extends IoGl {
     `;
   }
 
-  @ReactiveProperty({value: 0})
+  @ReactiveProperty({type: Number, value: 0})
   declare value: number | [number, number];
 
-  @ReactiveProperty(0.01)
+  @ReactiveProperty({type: Number, value: 0.01})
   declare step: number | [number, number];
 
-  @ReactiveProperty(0)
+  @ReactiveProperty({type: Number, value: 0})
   declare min: number | [number, number];
 
-  @ReactiveProperty(1)
+  @ReactiveProperty({type: Number, value: 1})
   declare max: number | [number, number];
 
-  @ReactiveProperty(1)
+  @ReactiveProperty({type: Number, value: 1})
   declare exponent: number;
 
   @ReactiveProperty({value: false, reflect: true})

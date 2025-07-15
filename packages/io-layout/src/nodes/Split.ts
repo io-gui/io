@@ -13,7 +13,7 @@ export type SplitProps = {
 @Register
 export class Split extends Node {
 
-  @ReactiveProperty({type: NodeArray, init: ['this']})
+  @ReactiveProperty({type: NodeArray, init: 'this'})
   declare children: NodeArray<Split | Panel>;
 
   @ReactiveProperty({type: String, value: 'horizontal'})

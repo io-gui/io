@@ -113,7 +113,7 @@ export class IoTab extends IoField {
     `;
   }
 
-  @ReactiveProperty({type: Tab, init: null})
+  @ReactiveProperty({type: Tab})
   declare tab: Tab;
 
   @ReactiveProperty({type: Boolean, reflect: true})

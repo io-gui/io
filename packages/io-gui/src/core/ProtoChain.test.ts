@@ -12,6 +12,8 @@ class HTMLElement1 extends HTMLElement {}
 class HTMLElement2 extends HTMLElement1 {}
 class HTMLElement3 extends HTMLElement2 {}
 
+// TODO: Fix init field testing. Based on old implementation.
+
 @Register
 class Node1 extends Node {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
@@ -29,7 +31,7 @@ class Node1 extends Node {
     };
   }
 
-  @ReactiveProperty({type: Object})
+  @ReactiveProperty({type: Object, init: null})
   declare prop2: Object;
 }
 
@@ -104,6 +106,7 @@ class MockNode2 extends MockNode1 {
     return {
       prop1: {
         type: Object,
+        init: null
       },
       prop2: {}
     };
@@ -154,7 +157,7 @@ export default class {
         protoChain = new ProtoChain(MockNode2);
         expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['prop1', 'prop2']);
         expect(protoChain.reactiveProperties).to.be.eql({
-          prop1:{type: Object, init: false},
+          prop1:{type: Object, init: null},
           prop2:{},
         });
       });
@@ -172,14 +175,14 @@ export default class {
         expect(protoChain.reactiveProperties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{init: false},
-          prop2:{type: Object},
+          prop2:{type: Object, init: null},
         });
         protoChain = new ProtoChain(Node3);
         expect(Object.keys(protoChain.reactiveProperties)).to.be.eql(['reactivity', 'prop2', 'prop1', 'prop3']);
         expect(protoChain.reactiveProperties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{reflect: true, init: true},
-          prop2:{value: 'foo', type: Object, reflect: false},
+          prop2:{value: 'foo', init: null, type: Object, reflect: false},
           prop3:{reflect: true},
         });
       });
@@ -196,7 +199,7 @@ export default class {
         expect(protoChain.reactiveProperties).to.be.eql({
           reactivity:{value: 'immediate', type: String},
           prop1:{init: true},
-          prop2:{type: Object},
+          prop2:{type: Object, init: null},
         });
       });
       it('Should include listners declared in `static get Listeners()` return oject', () => {

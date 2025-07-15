@@ -54,13 +54,13 @@ export class IoInspector extends IoElement {
   @ReactiveProperty('')
   declare search: string;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare config: EditorConfig;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare groups: EditorGroups;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets;
 
   declare _cfgTimeout: number;

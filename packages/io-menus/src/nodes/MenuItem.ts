@@ -61,7 +61,7 @@ export class MenuItem extends Node {
   @ReactiveProperty({value: false, type: Boolean})
   declare disabled: boolean;
 
-  @ReactiveProperty({value: undefined, type: Function, init: null})
+  @ReactiveProperty({value: undefined, type: Function})
   declare action?: (value?: any) => void;
 
   @ReactiveProperty({value: 'select', type: String})
@@ -70,7 +70,7 @@ export class MenuItem extends Node {
   @ReactiveProperty({value: false, type: Boolean})
   declare selected: boolean;
 
-  @ReactiveProperty({value: undefined, type: MenuOptions, init: null})
+  @ReactiveProperty({value: undefined, type: MenuOptions})
   declare options?: MenuOptions;
 
   get hasmore() {

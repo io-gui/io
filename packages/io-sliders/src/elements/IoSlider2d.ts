@@ -29,16 +29,16 @@ export class IoSlider2d extends IoSliderBase {
     `;
   }
 
-  @ReactiveProperty({value: null, type: Array, init: [0, 0]})
+  @ReactiveProperty({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
   declare value: [number, number];
 
-  @ReactiveProperty({value: null, type: Array, init: [0.01, 0.01]})
+  @ReactiveProperty({type: Array, value: undefined, init: [0.01, 0.01]}) // TODO: Remove value: undefined
   declare step: [number, number];
 
-  @ReactiveProperty({value: null, type: Array, init: [-1, -1]})
+  @ReactiveProperty({type: Array, value: undefined, init: [-1, -1]}) // TODO: Remove value: undefined
   declare min: [number, number];
 
-  @ReactiveProperty({value: null, type: Array, init: [1, 1]})
+  @ReactiveProperty({type: Array, value: undefined, init: [1, 1]}) // TODO: Remove value: undefined
   declare max: [number, number];
 
   @Property(true)

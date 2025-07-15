@@ -54,7 +54,7 @@ export class IoTabs extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: NodeArray, init: ['this']})
+  @ReactiveProperty({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>;
 
   @ReactiveProperty({type: Number, value: -1, reflect: true})

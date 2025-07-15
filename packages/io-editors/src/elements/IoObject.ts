@@ -53,7 +53,7 @@ export class IoObject extends IoElement {
   @ReactiveProperty()
   declare value: Record<string, any> | any[];
 
-  @ReactiveProperty({type: Array})
+  @ReactiveProperty({type: Array, init: null})
   declare properties: string[];
 
   @ReactiveProperty(true)
@@ -65,13 +65,13 @@ export class IoObject extends IoElement {
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare config: EditorConfig;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare groups: EditorGroups;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets;
 
   @Property('region')

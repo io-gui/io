@@ -221,10 +221,10 @@ export default class {
         propDef = new ReactiveProtoProperty(Object);
         prop = new ReactivePropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
-          type: Object
+          type: Object,
         });
         expect(prop).to.be.eql({
-          value: {},
+          value: undefined,
           type: Object,
           binding: undefined,
           reflect: false,
@@ -237,7 +237,7 @@ export default class {
           type: Object
         });
         expect(prop).to.be.eql({
-          value: {},
+          value: undefined,
           type: Object,
           binding: undefined,
           reflect: false,
@@ -251,7 +251,7 @@ export default class {
           init: null
         });
         expect(prop).to.be.eql({
-          value: undefined,
+          value: {},
           type: Object,
           binding: undefined,
           reflect: false,
@@ -280,7 +280,7 @@ export default class {
           type: Array
         });
         expect(prop).to.be.eql({
-          value: [],
+          value: undefined,
           type: Array,
           binding: undefined,
           reflect: false,
@@ -293,13 +293,27 @@ export default class {
           type: Array
         });
         expect(prop).to.be.eql({
-          value: [],
+          value: undefined,
           type: Array,
           binding: undefined,
           reflect: false,
           init: undefined,
         });
-        // initialize with an object property definition with object value property
+        // initialize with type: Array property definition and init: null
+        propDef = new ReactiveProtoProperty({type: Array, init: null});
+        prop = new ReactivePropertyInstance(dummy, propDef);
+        expect(propDef).to.be.eql({
+          type: Array,
+          init: null
+        });
+        expect(prop).to.be.eql({
+          value: [],
+          type: Array,
+          binding: undefined,
+          reflect: false,
+          init: null,
+        });
+        // initialize with an object property definition with array value
         const array = [1, 2, 3];
         propDef = new ReactiveProtoProperty({value: array});
         prop = new ReactivePropertyInstance(dummy, propDef);
@@ -315,19 +329,18 @@ export default class {
         });
         expect(propDef.value).to.equal(array);
         expect(prop.value).to.equal(array);
-        // initialize with custom Object1 property definition but without value initialization
-        propDef = new ReactiveProtoProperty({type: Object1, init: null});
+        // initialize with custom type: Object1 and no value initialization
+        propDef = new ReactiveProtoProperty({type: Object1});
         prop = new ReactivePropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
           type: Object1,
-          init: null,
         });
         expect(prop).to.be.eql({
           value: undefined,
           type: Object1,
           binding: undefined,
           reflect: false,
-          init: null,
+          init: undefined,
         });
         // initialize with custom Object1 property definition
         propDef = new ReactiveProtoProperty(Object1);
@@ -336,13 +349,13 @@ export default class {
           type: Object1
         });
         expect(prop).to.be.eql({
-          value: new Object1(),
+          value: undefined,
           type: Object1,
           binding: undefined,
           reflect: false,
           init: undefined,
         });
-        // initialize with custom Object1 property definition with initial argument
+        // initialize with custom type: Object1 and init: 'test'
         propDef = new ReactiveProtoProperty({type: Object1, init: 'test'});
         prop = new ReactivePropertyInstance(dummy, propDef);
         expect(propDef).to.be.eql({
@@ -409,8 +422,7 @@ export default class {
           type: Object1
         });
         expect(prop).to.be.eql({
-          value: new Object1(),
-          // value: undefined,
+          value: undefined,
           type: Object1,
           binding: undefined,
           reflect: false,

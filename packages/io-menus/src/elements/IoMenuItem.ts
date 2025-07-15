@@ -83,7 +83,7 @@ export class IoMenuItem extends IoField {
     `;
   }
 
-  @ReactiveProperty({type: MenuItem})
+  @ReactiveProperty({type: MenuItem, init: null})
   declare item: MenuItem;
 
   @Property('')

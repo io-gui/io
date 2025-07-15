@@ -85,7 +85,7 @@ export class IoMenuOptions extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions})
+  @ReactiveProperty({type: MenuOptions, init: null})
   declare options: MenuOptions;
 
   @ReactiveProperty({value: false, reflect: true})

@@ -66,10 +66,10 @@ export class IoBreadcrumbs extends IoElement {
     }
     `;
   }
-  @ReactiveProperty({type: Object})
+  @ReactiveProperty({type: Object, init: null})
   declare value: Object;
 
-  @ReactiveProperty({type: Object})
+  @ReactiveProperty({type: Object, init: null})
   declare selected: Object;
 
   @ReactiveProperty({type: String, reflect: true})

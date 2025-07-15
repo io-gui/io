@@ -202,7 +202,7 @@ export class Theme extends Node {
     for (const p in LIGHT_THEME) {
       const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME];
       if (prop instanceof Object) {
-        props[p] = {value: prop, type: Color};
+        props[p] = {value: prop, type: Color, init: null};
       } else {
         props[p] = prop;
       }
@@ -246,7 +246,7 @@ export class Theme extends Node {
   declare shadowColor: Color;
 
   // Default theme values
-  @ReactiveProperty({type: Object})
+  @ReactiveProperty({type: Object, init: null})
   declare themeDefaults: Record<string, ThemeVars>;
 
   @ReactiveProperty({type: String, binding: $ThemeID})

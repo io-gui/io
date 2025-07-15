@@ -27,7 +27,7 @@ export class IoSplit extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: Object, init: null})
+  @ReactiveProperty({type: Object})
   declare split: Split;
 
   @ReactiveProperty(Array)

@@ -72,7 +72,7 @@ export class IoMenuTree extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions, init: null})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
   @ReactiveProperty({value: false, type: Boolean})

@@ -20,7 +20,7 @@ export class IoTabsHamburger extends IoField {
     `;
   }
 
-  @ReactiveProperty({type: NodeArray, init: ['this']})
+  @ReactiveProperty({type: NodeArray, init: 'this'})
   declare private tabs: NodeArray<Tab>;
 
   constructor(args: IoTabsHamburgerProps) { super(args); }

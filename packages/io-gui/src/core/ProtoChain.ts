@@ -95,7 +95,7 @@ export class ProtoChain {
     }
     debug: {
       if (this.constructors[0] !== node.constructor) {
-        console.error(`ProtoChain: ${node.constructor.name} not registered!\nUse @Register decorator before using ${node.constructor.name} class!`);
+        console.error(`${node.constructor.name} not registered!\nUse @Register decorator before using ${node.constructor.name} class!`);
       }
     }
   }
@@ -213,13 +213,13 @@ export class ProtoChain {
         if (prop.type === Boolean && prop.value !== undefined && typeof prop.value !== 'boolean' ||
             prop.type === Number && prop.value !== undefined && typeof prop.value !== 'number' ||
             prop.type === String && prop.value !== undefined && typeof prop.value !== 'string') {
-          console.warn(`Property "${name}" in ProtoChain: Incorrect value type for ${prop.type} property!`);
+          console.warn(`Reactive property "${name}" value "${prop.value}" type for ${prop.type.name} property!`);
         }
       } else {
         const isNull = prop.value === null;
         const isUndefined = prop.value === undefined;
         if (typeof prop.type === 'function' && !(prop.value instanceof prop.type) && !isNull && !isUndefined) {
-            console.warn(`Property "${name}" in ProtoChain: Incorrect value type for ${prop.type} property!`);
+            console.warn(`Reactive property "${name}" value "${prop.value}" type for ${prop.type.name} property!`);
         }
       }
     }

@@ -52,7 +52,7 @@ export class IoOptionSelect extends IoElement {
   @ReactiveProperty('value')
   declare selectBy: SelectBy;
 
-  @ReactiveProperty({type: MenuOptions, init: null})
+  @ReactiveProperty({type: MenuOptions})
   declare options: MenuOptions;
 
   @Property('button')

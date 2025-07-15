@@ -46,7 +46,7 @@ class IoTabsHamburgerMenu extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: NodeArray, init: ['this']})
+  @ReactiveProperty({type: NodeArray, init: 'this'})
   declare private tabs: NodeArray<Tab>;
 
   @ReactiveProperty({type: Boolean, reflect: true})

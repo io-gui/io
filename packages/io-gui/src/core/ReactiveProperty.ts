@@ -3,8 +3,6 @@ import { AnyConstructor, Node } from '../nodes/Node.js';
 import { IoElement } from '../elements/IoElement.js';
 import { NodeArray } from '../core/NodeArray.js';
 
-// TODO: make init: null default.
-
 /**
  * Configuration for a property of an Node class.
  * @typedef {Object} ReactivePropertyDefinition
@@ -160,8 +158,8 @@ export class ReactivePropertyInstance {
       if (propDef.type !== undefined) {
         if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
       }
-      if (propDef.type === NodeArray && !(propDef.init instanceof Array && propDef.init[0] === 'this')) {
-        console.warn('NodeArray property should be initialized with ["this"]');
+      if (propDef.type === NodeArray && propDef.init !== 'this') {
+        console.warn('NodeArray property should be initialized with "this"');
       }
       if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
       if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
@@ -175,7 +173,7 @@ export class ReactivePropertyInstance {
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value;
-    } else if ((this.value === undefined || this.value === null) && this.init !== null) {
+    } else if (this.value === undefined) {
       if (this.type === Boolean) this.value = false;
       else if (this.type === String) this.value = '';
       else if (this.type === Number) this.value = 0;
@@ -190,27 +188,27 @@ export class ReactivePropertyInstance {
               args[key] = decodeInitArgument(this.init[key], node);
             });
             this.value = new this.type(args);
+          } else if (this.init === null) {
+            this.value = new this.type();
           } else {
             const argument = decodeInitArgument(this.init, node);
             this.value = new this.type(argument);
           }
-        } else {
-          this.value = new this.type();
         }
       }
     }
 
     debug: {
-      if (this.value !== undefined && this.value !== null) {
+      if (this.value !== undefined && this.init !== undefined) {
         if ([String, Number, Boolean].indexOf(this.type as any) !== -1) {
           if (this.type === Boolean && typeof this.value !== 'boolean' ||
               this.type === Number && typeof this.value !== 'number' ||
               this.type === String && typeof this.value !== 'string') {
-            console.warn(`Property: Incorrect value "${this.value}" type for property!`);
+            console.warn(`Property: Uninitialized value for type "${this.type.name}"!`);
           }
         } else {
           if (typeof this.type === 'function' && !(this.value instanceof this.type)) {
-            console.warn(`Property: Incorrect value "${this.value}" type for property!`);
+            console.warn(`Property: Incorrect value "${this.value}" for type "${this.type.name}"!`);
           }
         }
       }

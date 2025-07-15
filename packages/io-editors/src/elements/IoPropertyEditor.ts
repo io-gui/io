@@ -72,10 +72,10 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty('debounced')
   declare reactivity: ReactivityType;
 
-  @ReactiveProperty({type: Object})
+  @ReactiveProperty({type: Object, init: null})
   declare value: Object;
 
-  @ReactiveProperty({type: Array})
+  @ReactiveProperty({type: Array, init: null})
   declare properties: string[];
 
   @ReactiveProperty(true)
@@ -84,13 +84,13 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty({type: String, value: 'vertical', reflect: true})
   declare orientation: 'vertical' | 'horizontal';
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare config: EditorConfig;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare groups: EditorGroups;
 
-  @ReactiveProperty({type: Map})
+  @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets;
 
   _onValueInput(event: CustomEvent) {

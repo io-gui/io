@@ -31,7 +31,7 @@ export default class {
               prop1: { value: false },
               prop2: -1,
               prop3: Number,
-              prop4: Object,
+              prop4: {type: Object, init: null},
               prop5: [0, 1, 2],
               prop6: { value: 'hello', type: String },
               prop7: { value: true, type: Boolean },
@@ -54,6 +54,7 @@ export default class {
         expect(node.prop7).to.be.equal(true);
         expect(node.prop8).to.be.equal(1);
         expect(node.prop9).to.be.eql([1, 2, 3]);
+        expect(node.prop10).to.be.eql([]);
 
         expect(node._reactiveProperties.get('prop0')).to.be.eql({
           value: '',
@@ -88,7 +89,7 @@ export default class {
           type: Object,
           binding: undefined,
           reflect: false,
-          init: undefined,
+          init: null,
         });
         expect(node._reactiveProperties.get('prop5')).to.be.eql({
           value: [0, 1, 2],
@@ -126,7 +127,7 @@ export default class {
           init: [1, 2, 3],
         });
         expect(node._reactiveProperties.get('prop10')).to.be.eql({
-          value: undefined,
+          value: [],
           type: Array,
           binding: undefined,
           reflect: false,
@@ -346,7 +347,7 @@ export default class {
         class TestNode extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
-              propChangedEvents: Array,
+              propChangedEvents: {type: Array, init: null},
               prop: Number,
             };
           }
@@ -522,7 +523,7 @@ export default class {
         class TestNode2 extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
-              prop: TestNode,
+              prop: {type: TestNode, init: null},
             };
           }
         }
@@ -674,10 +675,10 @@ export default class {
           static get ReactiveProperties(): any {
             return {
               obj1: {
-                type: TestSubNode,
+                type: TestSubNode, init: null,
               },
               obj2: {
-                type: TestSubNode,
+                type: TestSubNode, init: null,
               },
             };
           }
@@ -788,7 +789,7 @@ export default class {
         class TestNodeTarget extends Node {
           static get ReactiveProperties(): ReactivePropertyDefinitions {
             return {
-              subnode: TestNode,
+              subnode: {type: TestNode, init: null},
               prop1: 'target1',
               prop2: 'target2',
               prop3: 'target3',

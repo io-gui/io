@@ -79,7 +79,7 @@ class IoNumberLadder extends IoElement {
     `;
   }
   // TODO: rename
-  @ReactiveProperty({value: undefined, type: IoElement})
+  @ReactiveProperty({value: undefined, type: IoElement, init: null})
   declare src?: IoNumber;
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})

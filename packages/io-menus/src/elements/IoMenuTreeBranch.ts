@@ -47,7 +47,7 @@ export class IoMenuTreeBranch extends IoElement {
   @ReactiveProperty(Number)
   declare depth: number;
 
-  @ReactiveProperty({type: MenuItem, init: null})
+  @ReactiveProperty({type: MenuItem})
   declare item: MenuItem;
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})

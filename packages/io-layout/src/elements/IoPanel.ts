@@ -33,7 +33,7 @@ export class IoPanel extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: Object, init: null})
+  @ReactiveProperty({type: Object})
   declare panel: Panel;
 
   @ReactiveProperty(Array)

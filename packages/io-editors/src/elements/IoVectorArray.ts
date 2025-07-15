@@ -35,7 +35,7 @@ export class IoVectorArray extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: Array, init: false})
+  @ReactiveProperty({type: Array, init: null})
   declare value: number[];
 
   @ReactiveProperty(1)
@@ -59,7 +59,7 @@ export class IoVectorArray extends IoElement {
   @ReactiveProperty(true)
   declare ladder: boolean;
 
-  @ReactiveProperty({type: Array})
+  @ReactiveProperty({type: Array, init: null})
   declare keys: number[];
 
   private _ratios: any = {};
