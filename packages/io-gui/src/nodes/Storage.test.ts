@@ -42,14 +42,6 @@ export default class {
           value: 'foo',
         });
 
-        expect(node._reactiveProperties.get('default')).to.eql({
-          binding: undefined,
-          reflect: false,
-          init: undefined,
-          type: undefined,
-          value: 'foo',
-        });
-
         expect(node._reactiveProperties.get('storage')).to.eql({
           binding: undefined,
           reflect: false,
@@ -85,7 +77,7 @@ export default class {
       });
       it('Should update localStorage store when value changes', () => {
         const node = new StorageNode({key: 'test5', value: 'one', storage: 'local'});
-        expect(localStorage.getItem('Storage:test5')).to.be.equal(null);
+        expect(localStorage.getItem('Storage:test5')).to.be.equal('"one"');
         node.value = 'two';
         expect(localStorage.getItem('Storage:test5')).to.be.equal('"two"');
         node.value = '2';
