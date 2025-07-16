@@ -11,7 +11,7 @@ import { IoLayout } from './IoLayout.js';
 export type IoPanelProps = IoElementProps & {
   panel: Panel,
   elements: VDOMElement[],
-  addMenuItem: MenuItem,
+  addMenuOption: MenuItem,
 };
 
 @Register
@@ -40,7 +40,7 @@ export class IoPanel extends IoElement {
   declare elements: VDOMElement[];
 
   @Property(MenuItem)
-  declare private addMenuItem: MenuItem;
+  declare private addMenuOption: MenuItem;
 
   static get Listeners() {
     return {
@@ -93,8 +93,8 @@ export class IoPanel extends IoElement {
     if (item.id) {
       const tab = new Tab({id: item.id, label: item.label, icon: item.icon});
       this.addTab(tab);
-      const addMenuItem = this.querySelector('.add-tab') as IoMenuItem;
-      if (addMenuItem) addMenuItem.expanded = false;
+      const addMenuOption = this.querySelector('.add-tab') as IoMenuItem;
+      if (addMenuOption) addMenuOption.expanded = false;
     }
   }
   selectIndex(index: number) {
@@ -163,8 +163,8 @@ export class IoPanel extends IoElement {
     this.render([
       ioTabs({
         tabs: this.panel.tabs,
-        addMenuItem: this.addMenuItem,
-        '@io-menu-item-clicked': this.onNewTabClicked,
+        addMenuOption: this.addMenuOption,
+        '@io-menu-option-clicked': this.onNewTabClicked,
       }),
       ioSelector({
         selected: this.panel.tabs.selected,

@@ -6,7 +6,7 @@ import { Split } from '../nodes/Split.js';
 export type IoLayoutProps = IoElementProps & {
   split: Split,
   elements: VDOMElement[],
-  addMenuItem: MenuItem,
+  addMenuOption: MenuItem,
 };
 
 @Register
@@ -34,14 +34,14 @@ export class IoLayout extends IoElement {
   declare elements: VDOMElement[];
 
   @Property(MenuItem)
-  declare private addMenuItem: MenuItem;
+  declare private addMenuOption: MenuItem;
 
   changed() {
     this.render([
       ioSplit({
         split: this.split,
         elements: this.elements,
-        addMenuItem: this.addMenuItem,
+        addMenuOption: this.addMenuOption,
       })
     ]);
   }

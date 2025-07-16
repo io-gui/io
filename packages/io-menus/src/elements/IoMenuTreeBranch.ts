@@ -1,11 +1,11 @@
 import { IoElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-gui';
 import { ioBoolean } from 'io-inputs';
-import { MenuItem } from '../nodes/MenuItem.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuTree } from './IoMenuTree.js';
 
 export type IoMenuTreeBranchProps = IoElementProps & {
   depth?: number,
-  item?: MenuItem,
+  option?: MenuOption,
   expanded?: WithBinding<boolean>,
 };
 /**
@@ -47,8 +47,8 @@ export class IoMenuTreeBranch extends IoElement {
   @ReactiveProperty(Number)
   declare depth: number;
 
-  @ReactiveProperty({type: MenuItem})
-  declare item: MenuItem;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
   declare expanded: boolean;
@@ -56,14 +56,14 @@ export class IoMenuTreeBranch extends IoElement {
   @Property('region')
   declare role: string;
 
-  itemMutated() {
-    if (this.item.selected) this.expanded = this.item.selected;
+  optionMutated() {
+    if (this.option.selected) this.expanded = this.option.selected;
   }
 
   changed() {
     this.render([
-      ioBoolean({icon: this.item.icon, true: this.item.label, false: this.item.label, value: this.bind('expanded')}),
-      this.expanded ? ioMenuTree({options: this.item.options, depth: this.depth + 1}) : null,
+      ioBoolean({icon: this.option.icon, true: this.option.label, false: this.option.label, value: this.bind('expanded')}),
+      this.expanded ? ioMenuTree({option: this.option, depth: this.depth + 1}) : null,
     ]);
   }
 }

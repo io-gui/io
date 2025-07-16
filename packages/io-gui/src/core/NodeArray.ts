@@ -17,7 +17,7 @@ export class NodeArray<N extends Node> extends Array<N> {
 
   constructor(public node: Node | IoElement, ...args: any[]) {
     super(...args);
-
+    this.itemMutated = this.itemMutated.bind(this);
     this.dispatchMutation = this.dispatchMutation.bind(this);
     this.dispatchMutationDebounced = this.dispatchMutationDebounced.bind(this);
 
@@ -29,7 +29,7 @@ export class NodeArray<N extends Node> extends Array<N> {
     const proxy = new Proxy(this, {
       get(target: NodeArray<N>, property: string | symbol) {
         if (property === 'selected') {
-          let selected= '';
+          let selected = '';
           for (let i = 0; i < target.length; i++) {
             const item = target[i] as unknown as SelectableNode;
             if (item.selected && item.id) {
@@ -54,7 +54,7 @@ export class NodeArray<N extends Node> extends Array<N> {
               for (let i = newLength; i < oldLength; i++) {
                 const item = target[i];
                 if (item instanceof Node) {
-                  item.removeEventListener('io-object-mutation', self.dispatchMutation);
+                  item.removeEventListener('io-object-mutation', self.itemMutated);
                 }
               }
             } else if (newLength > oldLength) {
@@ -84,11 +84,11 @@ export class NodeArray<N extends Node> extends Array<N> {
           // TODO Prevent adding to index greater than length?
           const oldValue = target[index];
           if (oldValue instanceof Node && !self._isInternalOperation) {
-            oldValue.removeEventListener('io-object-mutation', self.dispatchMutation);
+            oldValue.removeEventListener('io-object-mutation', self.itemMutated);
           }
           target[property as any] = value;
           if (value instanceof Node && !self._isInternalOperation) {
-            value.addEventListener('io-object-mutation', self.dispatchMutation);
+            value.addEventListener('io-object-mutation', self.itemMutated);
           }
           if (value.selected && value.id) {
             target.selected = value.id;
@@ -97,19 +97,19 @@ export class NodeArray<N extends Node> extends Array<N> {
           return true;
         }
         target[property as any] = value;
-        // self.dispatchMutation();
         return true;
       }
     });
     Object.defineProperty(this, 'proxy', {value: proxy, enumerable: false, configurable: false});
     return proxy;
   }
-  private withInternalOperation<T>(operation: () => T): T {
+  withInternalOperation<T>(operation: () => T, dispatch = true): T {
     this._isInternalOperation = true;
     try {
       return operation();
     } finally {
       this._isInternalOperation = false;
+      if (dispatch) this.dispatchMutation();
     }
   }
   splice(start: number, deleteCount: number, ...items: N[]): N[] {
@@ -117,17 +117,16 @@ export class NodeArray<N extends Node> extends Array<N> {
       for (let i = start; i < start + deleteCount; i++) {
         const item = this[i];
         if (item instanceof Node) {
-          item.removeEventListener('io-object-mutation', this.dispatchMutation);
+          item.removeEventListener('io-object-mutation', this.itemMutated);
         }
       }
       const result = super.splice(start, deleteCount, ...items);
       for (let i = start; i < start + items.length; i++) {
         const item = this[i];
         if (item instanceof Node) {
-          item.addEventListener('io-object-mutation', this.dispatchMutation);
+          item.addEventListener('io-object-mutation', this.itemMutated);
         }
       }
-      this.dispatchMutation();
       return result;
     });
   }
@@ -136,10 +135,9 @@ export class NodeArray<N extends Node> extends Array<N> {
       const result = super.push(...items);
       for (const item of items) {
         if (item instanceof Node) {
-          item.addEventListener('io-object-mutation', this.dispatchMutation);
+          item.addEventListener('io-object-mutation', this.itemMutated);
         }
       }
-      this.dispatchMutation();
       return result;
     });
   }
@@ -148,10 +146,9 @@ export class NodeArray<N extends Node> extends Array<N> {
       const result = super.unshift(...items);
       for (const item of items) {
         if (item instanceof Node) {
-          item.addEventListener('io-object-mutation', this.dispatchMutation);
+          item.addEventListener('io-object-mutation', this.itemMutated);
         }
       }
-      this.dispatchMutation();
       return result;
     });
   }
@@ -159,9 +156,8 @@ export class NodeArray<N extends Node> extends Array<N> {
     return this.withInternalOperation(() => {
       const item = super.pop();
       if (item instanceof Node) {
-        item.removeEventListener('io-object-mutation', this.dispatchMutation);
+        item.removeEventListener('io-object-mutation', this.itemMutated);
       }
-      this.dispatchMutation();
       return item;
     });
   }
@@ -169,23 +165,20 @@ export class NodeArray<N extends Node> extends Array<N> {
     return this.withInternalOperation(() => {
       const item = super.shift();
       if (item instanceof Node) {
-        item.removeEventListener('io-object-mutation', this.dispatchMutation);
+        item.removeEventListener('io-object-mutation', this.itemMutated);
       }
-      this.dispatchMutation();
       return item;
     });
   }
   reverse() {
     return this.withInternalOperation(() => {
       const result = super.reverse();
-      this.dispatchMutation();
       return result;
     });
   }
   sort(compareFn?: (a: N, b: N) => number) {
     return this.withInternalOperation(() => {
       const result = super.sort(compareFn);
-      this.dispatchMutation();
       return result;
     });
   }
@@ -197,8 +190,15 @@ export class NodeArray<N extends Node> extends Array<N> {
     console.warn('NodeArray: copyWithin is not supported');
     return this;
   }
+  itemMutated(event: CustomEvent) {
+    const item = event.detail.object as SelectableNode;
+    if (item.selected && event.detail.properties.includes('selected')) {
+      this.node.dispatch('io-node-array-item-selected', {node: this.proxy, item: item}, false);
+    }
+    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window);
+  }
   dispatchMutation() {
-    this.node.debounce(this.dispatchMutationDebounced);
+    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window);
   }
   dispatchMutationDebounced() {
     this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window);

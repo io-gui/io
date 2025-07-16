@@ -1,10 +1,10 @@
-import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, IoElementProps, WithBinding } from 'io-gui';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { Register, IoElement, ReactiveProperty, IoOverlaySingleton as Overlay, IoElementProps, WithBinding, Change } from 'io-gui';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from './IoMenuItem.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 
 export type IoContextMenuProps = IoElementProps & {
-  options?: MenuOptions,
+  option?: MenuOption,
   expanded?: WithBinding<boolean>,
   button?: number,
 };
@@ -15,8 +15,8 @@ export type IoContextMenuProps = IoElementProps & {
 @Register
 export class IoContextMenu extends IoElement {
 
-  @ReactiveProperty({type: MenuOptions, init: null})
-  declare options: MenuOptions;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
@@ -37,7 +37,7 @@ export class IoContextMenu extends IoElement {
     super(args);
     this.$options = new IoMenuOptions({
       expanded: this.bind('expanded'),
-      options: this.bind('options'),
+      option: this.option,
       $parent: this,
     });
   }
@@ -46,6 +46,9 @@ export class IoContextMenu extends IoElement {
     this.collapse = this.collapse.bind(this);
   }
 
+  optionChanged(change: Change) {
+    this.$options.option = this.option;
+  }
   connectedCallback() {
     super.connectedCallback();
     Overlay.appendChild(this.$options as HTMLElement);

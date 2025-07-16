@@ -1,5 +1,4 @@
-export * from './nodes/MenuItem.js';
-export * from './nodes/MenuOptions.js';
+export * from './nodes/MenuOption.js';
 export * from './elements/IoMenuHamburger.js';
 export * from './elements/IoMenuItem.js';
 export * from './elements/IoMenuTree.js';

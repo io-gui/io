@@ -9,7 +9,7 @@ import { Tab } from '../nodes/Tab.js';
 export type IoSplitProps = IoElementProps & {
   split: Split,
   elements: VDOMElement[],
-  addMenuItem: MenuItem,
+  addMenuOption: MenuItem,
 };
 
 @Register
@@ -34,7 +34,7 @@ export class IoSplit extends IoElement {
   declare elements: VDOMElement[];
 
   @Property(MenuItem)
-  declare private addMenuItem: MenuItem;
+  declare private addMenuOption: MenuItem;
 
   static get Listeners() {
     return {
@@ -254,14 +254,14 @@ export class IoSplit extends IoElement {
           split: child,
           style: {flex: child.flex},
           elements: this.elements,
-          addMenuItem: this.addMenuItem,
+          addMenuOption: this.addMenuOption,
         }));
       } else if (child instanceof Panel) {
         vChildren.push(ioPanel({
           panel: child,
           style: {flex: child.flex},
           elements: this.elements,
-          addMenuItem: this.addMenuItem,
+          addMenuOption: this.addMenuOption,
         }));
       } else debug: {
         console.warn('IOSplit: Invalid child type', child);

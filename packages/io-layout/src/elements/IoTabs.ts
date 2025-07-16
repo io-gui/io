@@ -1,12 +1,12 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from 'io-gui';
-import { MenuItem, ioMenuItem } from 'io-menus';
+import { MenuOption, ioMenuItem } from 'io-menus';
 import { ioTab } from './IoTab.js';
 import { ioTabsHamburger } from './IoTabsHamburger.js';
 import { Tab } from '../nodes/Tab.js';
 
 export type IoTabsProps = IoElementProps & {
   tabs: NodeArray<Tab>,
-  addMenuItem: MenuItem,
+  addMenuOption: MenuOption,
 };
 
 @Register
@@ -60,8 +60,8 @@ export class IoTabs extends IoElement {
   @ReactiveProperty({type: Number, value: -1, reflect: true})
   declare overflow: number;
 
-  @Property(MenuItem)
-  declare addMenuItem: MenuItem;
+  @Property({type: MenuOption})
+  declare addMenuOption: MenuOption;
 
   constructor(args: IoTabsProps) { super(args); }
 
@@ -93,7 +93,7 @@ export class IoTabs extends IoElement {
         class: 'add-tab',
         icon: 'io:box_fill_plus',
         direction: 'down',
-        item: this.addMenuItem,
+        option: this.addMenuOption,
       }),
     ]);
   }

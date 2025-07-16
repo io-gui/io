@@ -1,6 +1,5 @@
 import { Register, IoElement, Change, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-gui';
-import { MenuItem } from '../nodes/MenuItem.js';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem } from './IoMenuItem.js';
 
 export type SelectBy = 'value' | 'id';
@@ -10,7 +9,7 @@ export type IoOptionSelectProps = IoElementProps & {
   label?: string,
   icon?: string,
   selectBy?: SelectBy,
-  options?: MenuOptions,
+  option?: MenuOption,
 };
 
 /**
@@ -52,27 +51,21 @@ export class IoOptionSelect extends IoElement {
   @ReactiveProperty('value')
   declare selectBy: SelectBy;
 
-  @ReactiveProperty({type: MenuOptions})
-  declare options: MenuOptions;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @Property('button')
   declare role: string;
-
-  declare $item: MenuItem;
 
   constructor(args: IoOptionSelectProps = {}) {
     super(args);
   }
 
-  ready() {
-    this.$item = new MenuItem({value: this.value, mode: 'none', options: this.options});
-  }
-
   // TODO: implement selecting by id
   // TODO: Consider triggering this.inputValue() only by user-input!
-  _onItemSelected(event: CustomEvent) {
+  _onOptionSelected(event: CustomEvent) {
     if (this._disposed) return;
-    this.inputValue(event.detail.item.value);
+    this.inputValue(event.detail.option.value);
   }
   inputValue(value: any) {
     if (this.value !== value || typeof this.value === 'object') {
@@ -82,16 +75,15 @@ export class IoOptionSelect extends IoElement {
     }
   }
 
-  optionsChanged(change: Change) {
+  optionChanged(change: Change) {
     if (change.oldValue) {
-      change.oldValue.removeEventListener('item-selected', this._onItemSelected);
+      change.oldValue.removeEventListener('option-selected', this._onOptionSelected);
     }
     if (change.value) {
-      change.value.addEventListener('item-selected', this._onItemSelected);
+      change.value.addEventListener('option-selected', this._onOptionSelected);
     }
-    this.$item.options = this.options;
   }
-  optionsMutated() {
+  optionMutated() {
     this.changed();
   }
   changed() {
@@ -100,13 +92,13 @@ export class IoOptionSelect extends IoElement {
   onChange() {
     let selectedItem;
     if (this.selectBy === 'value') {
-      selectedItem = this.options.findItemByValue(this.value);
+      selectedItem = this.option.findItemByValue(this.value);
     } else if (this.selectBy === 'id') {
-      selectedItem = this.options.findItemById(this.value);
+      selectedItem = this.option.findItemById(this.value);
     }
     if (selectedItem) selectedItem.selected = true;
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
-    this.render([ioMenuItem({item: this.$item, label: label, icon: this.icon, direction: 'down'})]);
+    this.render([ioMenuItem({option: this.option, label: label, icon: this.icon, direction: 'down'})]);
   }
 }
 export const ioOptionSelect = function(arg0?: IoOptionSelectProps) {

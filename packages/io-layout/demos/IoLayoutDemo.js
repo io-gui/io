@@ -124,7 +124,7 @@ export class IoLayoutDemo extends IoElement {
             h4({'data-heading': 'Section 5'}, 'Section 5'), p(lorem(100)),
           ]),
         ],
-        addMenuItem:  new MenuItem().fromJSON({
+        addMenuOption:  new MenuItem().fromJSON({
           mode: 'none',
           options: [
             {label: 'Docs', mode: 'none', options: [

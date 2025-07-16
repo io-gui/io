@@ -2,7 +2,7 @@ import { Register, ReactiveProperty, span, ThemeSingleton } from 'io-gui';
 import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
 import { IconsetDB, ioIcon } from 'io-icons';
-import { MenuOptions, ioOptionSelect } from 'io-menus';
+import { MenuItemProps, MenuOptions, ioOptionSelect } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
 import { IoPanel } from './IoPanel.js';
 import { Tab } from '../nodes/Tab.js';
@@ -16,7 +16,7 @@ for (const set of Object.keys(IconsetDB)) {
   }
 }
 
-const iconOptions = ioOptionSelect({label: 'Select', options: new MenuOptions().fromJSON(icons)});
+const iconOptions = ioOptionSelect({label: 'Select', options: new MenuOptions({items: icons as MenuItemProps[]})});
 
 export type IoTabProps = IoFieldProps & {
   tab: Tab,

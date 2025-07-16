@@ -6,6 +6,8 @@ import { todoList } from './TodoList.js';
 import { todoFooter } from './TodoFooter.js';
 import { todoInfo } from './TodoInfo.js';
 
+// TODO: Consider using NodeArray and item models.
+
 export class TodoApp extends IoElement {
   static get ReactiveProperties() {
     return {

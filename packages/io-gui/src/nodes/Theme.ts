@@ -284,6 +284,7 @@ export class Theme extends Node {
   }
 
   onPropertyMutated(event: CustomEvent) {
+    // TODO: Add properties to mutation handler.
     const mutated = super.onPropertyMutated(event);
     if (mutated) {
       this.changed();

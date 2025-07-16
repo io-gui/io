@@ -141,11 +141,11 @@ export class IoElement extends HTMLElement {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event);
   };
-  dispatchMutation(object: Object | Node | IoElement = this) {
+  dispatchMutation(object: Object | Node | IoElement = this, properties: string[] = []) {
     if ((object as Node)._isNode) {
-      this.dispatch('io-object-mutation', {object});
+      this.dispatch('io-object-mutation', {object, properties});
     } else {
-      this.dispatch('io-object-mutation', {object}, false, window);
+      this.dispatch('io-object-mutation', {object, properties}, false, window);
     }
   }
   bind<T>(name: string): Binding<T> {

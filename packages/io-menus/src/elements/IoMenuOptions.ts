@@ -1,7 +1,6 @@
 import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition } from 'io-gui';
-import { ioString } from 'io-inputs';
-import { MenuItem } from '../nodes/MenuItem.js';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { ioField, ioString } from 'io-inputs';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
 import { getMenuDescendants, getMenuSiblings } from '../utils/MenuDOMUtils.js';
@@ -12,20 +11,19 @@ import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
 // TODO: improve focusto nav and in-layer navigation.
 
 export type IoMenuOptionsProps = IoElementProps & {
-  options?: WithBinding<MenuOptions>,
+  option?: MenuOption,
   expanded?: WithBinding<boolean>,
   horizontal?: boolean,
   searchable?: boolean,
   search?: WithBinding<string>,
   direction?: NudgeDirection,
   depth?: number,
-  noPartialCollapse?: boolean,
   widget?: VDOMElement | null,
   $parent?: IoMenuItem | IoContextMenu,
 };
 
 /**
- * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
+ * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
  **/
 @Register
 export class IoMenuOptions extends IoElement {
@@ -85,8 +83,8 @@ export class IoMenuOptions extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions, init: null})
-  declare options: MenuOptions;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean;
@@ -106,9 +104,6 @@ export class IoMenuOptions extends IoElement {
   @ReactiveProperty(100)
   declare depth: number;
 
-  @ReactiveProperty(false)
-  declare noPartialCollapse: boolean;
-
   @ReactiveProperty({value: '', reflect: true})
   declare overflow: string;
 
@@ -120,9 +115,6 @@ export class IoMenuOptions extends IoElement {
 
   @Property('listbox')
   declare role: string;
-
-  @Property(Array)
-  declare private _overflownItems: MenuItem[];
 
   static get Listeners() {
     return {
@@ -197,61 +189,14 @@ export class IoMenuOptions extends IoElement {
       event.stopPropagation();
     }
   }
-  // onResized() {
-  //   this.debounce(this.setOverflow);
-  // }
-  // setOverflow() {
-  //   if (this._disposed) return;
-  //   const items = Array.from(this.querySelectorAll('.item')) as IoMenuItem[];
-  //   this._overflownItems.length = 0;
-  //   if (this.horizontal) {
-  //     const hamburger = this.querySelector('io-menu-hamburger');
-  //     const hamburgetWidth = hamburger?.getBoundingClientRect().width || 0;
-  //     const end = this.getBoundingClientRect().right - (ThemeSingleton.borderWidth + ThemeSingleton.spacing);
-  //     let last = Infinity;
-  //     let hasOwerflown = false;
-
-  //     for (let i = items.length; i--;) {
-  //       const r = items[i].getBoundingClientRect();
-  //       const rect = rects.get(items[i].item) || {right: 0, width: 0};
-  //       if (r.right !== 0 && r.width !== 0)  {
-  //         rect.right = r.right;
-  //         rect.width = r.width;
-  //         rects.set(items[i].item, rect);
-  //       }
-
-  //       last = Math.min(last, rect.right);
-  //       if (this.noPartialCollapse && hasOwerflown) {
-  //         items[i].hidden = true;
-  //         this._overflownItems.unshift(items[i].item);
-  //       } else if (i === (items.length - 1) && last < end) {
-  //         items[i].hidden = false;
-  //       } else if (last < (end - hamburgetWidth * 1.5)) {
-  //         items[i].hidden = false;
-  //       } else {
-  //         hasOwerflown = true;
-  //         items[i].hidden = true;
-  //         this._overflownItems.unshift(items[i].item);
-  //       }
-  //     }
-
-  //     if (this._overflownItems.length) {
-  //       this.overflow = JSON.stringify(this._overflownItems.map((item: MenuItem) => item.label));
-  //     } else {
-  //       this.overflow = '';
-  //     }
-  //   } else {
-  //     this.overflow = '';
-  //   }
-  // }
   collapse() {
-    const itemWasFocused = this.contains(document.activeElement);
+    const optionWasFocused = this.contains(document.activeElement);
     const searchHadInput = this.searchable && !!this.search;
     getMenuDescendants(this).forEach(descendant => {
       (descendant as any).expanded = false;
     });
     this.expanded = false;
-    if (searchHadInput && itemWasFocused && !this.inoverlay) {
+    if (searchHadInput && optionWasFocused && !this.inoverlay) {
       this.search = '';
       this.$.search.focus();
     }
@@ -270,7 +215,7 @@ export class IoMenuOptions extends IoElement {
     }
   }
   searchChanged() {
-    // TODO: focus drifts when filtered item is clicked
+    // TODO: focus drifts when filtered option is clicked
     if (this.inoverlay && this.$parent) {
       this.debounce(this.onExpandInOverlay);
     }
@@ -294,12 +239,12 @@ export class IoMenuOptions extends IoElement {
       }));
     }
     if (this.search) {
-      const filteredItems = searchMenuOptions(this.options, this.search, this.depth);
+      const filteredItems = searchMenuOptions(this.option.options, this.search, this.depth);
       if (filteredItems.length === 0) {
-        vChildren.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
+        vChildren.push(ioField({label: 'No matches'}));
       } else {
         for (let i = 0; i < filteredItems.length; i++) {
-          vChildren.push(ioMenuItem({item: filteredItems[i], depth: 0}));
+          vChildren.push(ioMenuItem({option: filteredItems[i], depth: 0}));
           if (i < filteredItems.length - 1) {
             vChildren.push({tag: 'span', props: {class: 'divider'}});
           }
@@ -310,14 +255,14 @@ export class IoMenuOptions extends IoElement {
       if (this.horizontal && this.direction === 'up') {
         direction = 'up';
       }
-      for (let i = 0; i < this.options.items.length; i++) {
+      for (let i = 0; i < this.option.options.length; i++) {
         vChildren.push(ioMenuItem({
-          item: this.options.items[i],
+          option: this.option.options[i],
           direction: direction,
           $parent: this,
           depth: this.depth
         }));
-        if (i < this.options.items.length - 1) {
+        if (i < this.option.options.length - 1) {
           vChildren.push({tag: 'span', props: {class: 'divider'}});
         }
       }
