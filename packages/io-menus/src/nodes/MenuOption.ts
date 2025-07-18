@@ -62,7 +62,7 @@ export class MenuOption extends Node {
       'io-node-array-selected-changed': 'suboptionSelectedChanged',
     };
   }
-  
+
   constructor(args: string | number | boolean | null | undefined | MenuOptionProps) {
 
     if (typeof args === 'string' || typeof args === 'number' || typeof args === 'boolean' || args === null || args === undefined) {
@@ -82,7 +82,7 @@ export class MenuOption extends Node {
     const hardenedOptions = args.options as MenuOption[];
     const selectedOptions = hardenedOptions.filter(option => option.mode === 'select' && option.selected);
     for (let i = 1; i < selectedOptions.length; i++) {
-      debug: console.warn(`Duplicate selected options with mode "select" found!`, selectedOptions);
+      debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions);
       selectedOptions[i].selected = false;
     }
 
@@ -128,17 +128,15 @@ export class MenuOption extends Node {
     }
     if (walker) walker.selected = true;
   }
-  selectedChanged(change: any) {
+  selectedChanged() {
     if (this.selected === false) {
       this.unselectSuboptions();
     }
-    // console.log('selectedChanged', this.id, this.selectedID, change.oldValue, change.value);
   }
   selectedIDChanged() {
     const option = this.findItemById(this.selectedID);
     if (option) {
       option.selected = true;
-      // console.log('selectedIDChanged', this.selectedID);
       this.dispatch('option-selected', {option: option}, false);
     }
   }
@@ -190,10 +188,10 @@ export class MenuOption extends Node {
     let walker = this.options.selected ? this.options.find(option => option.mode === 'select' && option.selected && option.id === this.options.selected) : undefined;
     if (!walker) return;
 
-    let lastSelected = walker;
+    // let lastSelected = walker;
     while (walker) {
       path.push(walker.id);
-      lastSelected = walker;
+      // lastSelected = walker;
       walker = walker.options.selected ? walker.options.find(option => option.mode === 'select' && option.selected && option.id === walker!.options.selected) : undefined;
     }
     this.path = path.join(',');

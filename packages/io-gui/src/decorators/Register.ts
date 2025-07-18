@@ -25,9 +25,4 @@ import { IoElement } from '../elements/IoElement.js';
 */
 export function Register(ioNodeConstructor: typeof Node | typeof IoElement) {
   (ioNodeConstructor as any).prototype.Register(ioNodeConstructor);
-  // if (ioNodeConstructor.prototype instanceof Node) {
-  //   (ioNodeConstructor as any).prototype.Register(ioNodeConstructor as typeof Node);
-  // } else if (ioNodeConstructor.prototype instanceof IoElement) {
-  //   (ioNodeConstructor as any).prototype.Register(ioNodeConstructor as typeof IoElement);
-  // }
 }

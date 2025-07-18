@@ -65,7 +65,7 @@ export class IoOptionSelect extends IoElement {
   onOptionSelected(event: CustomEvent) {
     if (this._disposed) return;
     if (this.selectBy === 'value') {
-      this.inputValue(event.detail.option.value); 
+      this.inputValue(event.detail.option.value);
     } else if (this.selectBy === 'id') {
       this.inputValue(event.detail.option.id);
     }

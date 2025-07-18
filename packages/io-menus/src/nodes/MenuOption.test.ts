@@ -13,7 +13,7 @@ const testItemArgs = {
       {id: '2.2', label: 'two.2'},
     ]},
   ]
-}
+};
 
 export default class {
   run() {
@@ -147,7 +147,7 @@ export default class {
       });
       it('Should update paths in menu option tree on option selection', async () => {
         const option =new MenuOption({id: 'optionsview', options: [
-          {id: 'home'}, 
+          {id: 'home'},
           {id: 'food', options: [
             {id: 'fruits', options: [
               {id: 'apples', selected: true},

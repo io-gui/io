@@ -39,7 +39,7 @@ export class IoSlidersDemo extends IoElement {
       div({class: 'column'}, [
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1}),
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1, disabled: true}),
-        ioSlider({value: 'string', min: 0, max: 2, step: 0.1}),
+        ioSlider({value: 'this should error', min: 0, max: 2, step: 0.1}),
         ioSlider({value: this.bind('number'), min: -1.3, max: 3, step: 1}),
         ioSlider({value: this.bind('number'), min: 0, max: 4.3, step: 1}),
         ioSlider({value: this.bind('number'), min: 0, max: 2, step: 0.1, exponent: 3}),

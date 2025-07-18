@@ -94,7 +94,7 @@ export class ChangeQueue {
       return;
     }
     this.dispatching = true;
-    const properties = []
+    const properties = [];
     while (this.changes.length) {
       const change = this.changes[0];
       this.changes.splice(0, 1);
