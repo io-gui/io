@@ -104,54 +104,57 @@
     <script type="module">
 
     import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe, h4 } from 'io-gui';
-    import { ioMarkdown } from 'io-markdown';
     import { IoNavigator, ioNavigator, ioSelector } from 'io-navigation';
-    import { MenuOptions, MenuItem, ioMenuTree } from 'io-menus';
+    import { MenuOption, ioMenuTree } from 'io-menus';
+    import { ioMarkdown } from 'io-markdown';
     import { ioIcon } from 'io-icons';
 
     $.permit();
 
-    const OPTIONS = new MenuOptions({
-      items: [
-        'About',
+    const MENU_OPTION = new MenuOption({
+      id: 'root',
+      options: [
+        {id: 'About'},
         {id: 'Docs', options: [
           {id: 'Quick Start', options: [
-            'Usage',
-            'Making an Element',
-            'Making a Website',
-            'Built-in Elements',
-            'Learn More',
+            {id: 'Usage'},
+            {id: 'Making an Element'},
+            {id: 'Making a Website'},
+            {id: 'Built-in Elements'},
+            {id: 'Virtual DOM'},
+            {id: 'Learn More'},
           ]},
           {id: 'Deep Dive', options: [
-            'Nodes and Elements',
-            'Registration',
-            'Properties',
-            'Initial Value Inference',
-            'Property Declaration Inheritance',
-            'Property Declaration Fields',
-            'Styling',
-            'CSS Mixin Polyfill',
-            'Listeners',
-            'Reactivity',
-            'Property Change Batching',
-            'Lazy Reactivity',
-            'Template Syntax',
-            'Data Binding',
+            {id: 'Nodes and Elements'},
+            {id: 'Registration'},
+            {id: 'Properties'},
+            {id: 'Initial Value Inference'},
+            {id: 'Property Declaration Inheritance'},
+            {id: 'Property Declaration Fields'},
+            {id: 'Styling'},
+            {id: 'CSS Mixin Polyfill'},
+            {id: 'Listeners'},
+            {id: 'Reactivity'},
+            {id: 'Property Change and Object Mutation'},
+            {id: 'Property Change Batching'},
+            {id: 'Lazy Reactivity'},
+            {id: 'Template Syntax'},
+            {id: 'Data Binding'},
           ]},
         ]},
         {id: 'Demos', options: [
-          'Inputs',
-          'Icons',
-          'Sliders',
-          'Colors',
-          'Editors',
-          'Menus',
-          'Navigation',
-          'Layout',
-          'Theme Editor',
-          'Element Inspector',
-          'Change Visualization',
-          'TODO MVC App',
+          {id: 'Inputs'},
+          {id: 'Icons'},
+          {id: 'Sliders'},
+          {id: 'Colors'},
+          {id: 'Editors'},
+          {id: 'Menus'},
+          {id: 'Navigation'},
+          {id: 'Layout'},
+          {id: 'Theme Editor'},
+          {id: 'Element Inspector'},
+          {id: 'Change Visualization'},
+          {id: 'TODO MVC App'},
         ]}
       ],
       path: $({key: 'path', storage: 'hash', value: 'About'})
@@ -163,26 +166,26 @@
       role: 'main',
       class: 'main',
       menu: 'top',
-      options: OPTIONS,
+      option: MENU_OPTION,
       caching: 'proactive',
       depth: 2,
       widget: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}}),
       elements: [
         ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
         ioSelector({id: 'Docs',
-          selected: OPTIONS.findItemById('Docs').options.bind('selectedShallow'),
+          selected: MENU_OPTION.findItemById('Docs').bind('selectedIDImmediate'),
           caching: 'proactive',
           elements: [
             ioNavigator({id: 'Quick Start', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'), 
-              options: OPTIONS.findItemById('Docs').findItemById('Quick Start').options,
-              anchor: OPTIONS.findItemById('Docs').findItemById('Quick Start').options.bind('selected'),
+              option: MENU_OPTION.findItemById('Docs').findItemById('Quick Start'),
+              anchor: MENU_OPTION.findItemById('Docs').findItemById('Quick Start').bind('selectedID'),
               elements: [
                 ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
               ]
             }),
             ioNavigator({id: 'Deep Dive', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'),
-              options: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options, 
-              anchor: OPTIONS.findItemById('Docs').findItemById('Deep Dive').options.bind('selected'),
+              option: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive'), 
+              anchor: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive').bind('selectedID'),
               elements: [
                 ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}),
               ]
@@ -190,7 +193,7 @@
           ]
         }),
         ioSelector({id: 'Demos',
-          selected: OPTIONS.findItemById('Demos').options.bind('selected'),
+          selected: MENU_OPTION.findItemById('Demos').bind('selectedID'),
           caching: 'proactive',
           elements: [
             {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},

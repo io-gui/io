@@ -40,9 +40,6 @@ function isNonNodeObject(value: any) {
   return (typeof value === 'object' && value !== null && !value._isNode);
 }
 
-/**
- * NodeMixin applied to `Object` class.
- */
 @Register
 export class Node extends Object {
 
@@ -71,7 +68,7 @@ export class Node extends Object {
   declare readonly _isNode: boolean;
   declare _disposed: boolean;
 
-  constructor(args: NodeProps = {}) {
+  constructor(args?: any) {
     super();
     this.init();
     this._protochain.init(this);
@@ -86,7 +83,7 @@ export class Node extends Object {
     initReactiveProperties(this);
     initProperties(this);
 
-    this.applyProperties(args, true);
+    this.applyProperties(typeof args === 'object' ? args : {}, true);
 
     this.ready();
     this.dispatchQueue();
@@ -348,8 +345,8 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
     if (value === object) {
       const handlerName = name + 'Mutated' as keyof Node;
       if (typeof node[handlerName] === 'function') {
-        // node.throttle(node[handlerName] as CallbackFunction, event); //TODO: Check for regressions.
-        (node[handlerName] as CallbackFunction)(event);
+        // node.throttle(node[handlerName] as CallbackFunction, event);
+        (node[handlerName] as CallbackFunction)(event); //TODO: Check for regressions.
       }
       return true;
     }

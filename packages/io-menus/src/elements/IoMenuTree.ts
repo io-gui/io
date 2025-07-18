@@ -3,7 +3,7 @@ import { ioField, ioString } from 'io-inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js';
-import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
+import { searchMenuOption } from '../utils/MenuNodeUtils.js';
 
 function genObjectStorageID(object: Record<string, any>) {
   const string = JSON.stringify(object);
@@ -108,7 +108,7 @@ export class IoMenuTree extends IoElement {
     }
 
     if (this.search) {
-      const filteredItems = searchMenuOptions(this.option.options, this.search, this.depth);
+      const filteredItems = searchMenuOption(this.option, this.search, this.depth);
       if (filteredItems.length === 0) {
         vChildren.push(ioField({label: 'No matches'}));
       } else for (let i = 0; i < filteredItems.length; i++) {

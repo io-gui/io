@@ -150,6 +150,8 @@ export class IoMenuItem extends IoField {
           o.selectDefault();
         } else {
           o.selected = true;
+          // TODO: figure out OptionSelect value input with NodeArray options
+          // o.dispatch('option-selected', {option: o}, true);
         }
         this.collapseRoot();
       }

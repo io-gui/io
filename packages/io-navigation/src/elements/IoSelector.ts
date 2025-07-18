@@ -78,6 +78,7 @@ export class IoSelector extends IoElement {
   @ReactiveProperty({value: '', type: String})
   declare selected: string;
 
+  // TODO: Setting anchor offscreen will not update once it is in the dom.
   @ReactiveProperty({value: '', type: String})
   declare anchor: string;
 

@@ -20,7 +20,7 @@ export default class {
     describe('MenuOption', () => {
       it('Should initialize with correct default values', () => {
         const option = new MenuOption({id: 'test'});
-        expect(option.value).to.be.equal(undefined);
+        expect(option.value).to.be.equal('test');
         expect(option.id).to.be.equal('test');
         expect(option.label).to.be.equal('test');
         expect(option.icon).to.be.equal('');
@@ -144,6 +144,76 @@ export default class {
         expect(option.options[1].selected).to.be.equal(true);
         expect(option.options[1].selectedID).to.be.equal('2.1');
         expect(option.options[1].selectedIDImmediate).to.be.equal('2.1');
+      });
+      it('Should update paths in menu option tree on option selection', async () => {
+        const option =new MenuOption({id: 'optionsview', options: [
+          {id: 'home'}, 
+          {id: 'food', options: [
+            {id: 'fruits', options: [
+              {id: 'apples', selected: true},
+              {id: 'mangos'},
+              {id: 'bannanas'},
+            ]}
+          ]},
+          {id: 'mixed', options: [
+            {id: 'togglables', mode: 'none', options: [
+              {id: 'toggle1', mode: 'toggle'},
+              {id: 'toggle2', mode: 'toggle'},
+              {id: 'toggle3', mode: 'toggle'},
+              {id: 'toggle4', mode: 'toggle'},
+            ]},
+            {id: 'selectables', options: [
+              {id: 'toggle', mode: 'toggle'},
+              {id: 'selectable'},
+            ]},
+          ]},
+        ]});
+        expect(option.selected).to.be.equal(true);
+        expect(option.options[1].selected).to.be.equal(true);
+        expect(option.options[1].options[0].selected).to.be.equal(true);
+        expect(option.options[1].options[0].options[0].selected).to.be.equal(true);
+        expect(option.selectedID).to.be.equal('apples');
+        expect(option.selectedIDImmediate).to.be.equal('food');
+        expect(option.path).to.be.equal('food,fruits,apples');
+        expect(option.options[1].selectedID).to.be.equal('apples');
+        expect(option.options[1].selectedIDImmediate).to.be.equal('fruits');
+        expect(option.options[1].path).to.be.equal('fruits,apples');
+        expect(option.options[1].options[0].selectedID).to.be.equal('apples');
+        expect(option.options[1].options[0].selectedIDImmediate).to.be.equal('apples');
+        expect(option.options[1].options[0].path).to.be.equal('apples');
+
+
+        option.options[1].options[0].options[0].selected = false;
+
+        expect(option.options[1].options[0].selectedID).to.be.equal('');
+        expect(option.options[1].options[0].selectedIDImmediate).to.be.equal('');
+        expect(option.options[1].options[0].path).to.be.equal('');
+        expect(option.selectedID).to.be.equal('fruits');
+        expect(option.selectedIDImmediate).to.be.equal('food');
+        expect(option.path).to.be.equal('food,fruits');
+        expect(option.options[1].selectedID).to.be.equal('fruits');
+        expect(option.options[1].selectedIDImmediate).to.be.equal('fruits');
+        expect(option.options[1].path).to.be.equal('fruits');
+
+        option.options[0].selected = true;
+
+        expect(option.selected).to.be.equal(true);
+        expect(option.options[1].selected).to.be.equal(false);
+        expect(option.options[1].options[0].selected).to.be.equal(false);
+        expect(option.options[1].options[0].options[0].selected).to.be.equal(false);
+        expect(option.selectedID).to.be.equal('home');
+        expect(option.selectedIDImmediate).to.be.equal('home');
+        expect(option.path).to.be.equal('home');
+        expect(option.selectedID).to.be.equal('home');
+        expect(option.selectedIDImmediate).to.be.equal('home');
+        expect(option.path).to.be.equal('home');
+        expect(option.options[1].selectedID).to.be.equal('');
+        expect(option.options[1].selectedIDImmediate).to.be.equal('');
+        expect(option.options[1].path).to.be.equal('');
+        expect(option.options[1].options[0].selectedID).to.be.equal('');
+        expect(option.options[1].options[0].selectedIDImmediate).to.be.equal('');
+        expect(option.options[1].options[0].path).to.be.equal('');
+
       });
     });
   }

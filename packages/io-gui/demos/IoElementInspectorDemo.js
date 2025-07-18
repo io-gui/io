@@ -3,12 +3,12 @@ import { ioInspector } from 'io-editors';
 import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
 import { ioIcon } from 'io-icons';
-import { ioOptionSelect, MenuOptions } from 'io-menus';
+import { ioOptionSelect, MenuOption } from 'io-menus';
 import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-colors';
 
 // TODO: Implement IDs in menu options. use ID for selection
-const options = new MenuOptions({
-  items: [{
+const option = new MenuOption({
+  options: [{
     id: 'native',
     options: [
       {id: 'div', value: div('div content')},
@@ -50,7 +50,7 @@ const options = new MenuOptions({
       {id: 'io-color-picker', value: ioColorPicker()},
     ]
   }],
-  selected: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
+  selectedID: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
 })
 
 export class IoElementInspectorDemo extends IoElement {
@@ -105,7 +105,7 @@ export class IoElementInspectorDemo extends IoElement {
   }
   static get ReactiveProperties() {
     return {
-      selected: options.bind('selected'),
+      selected: option.bind('selectedID'),
     };
   }
   ready() {
@@ -119,11 +119,11 @@ export class IoElementInspectorDemo extends IoElement {
     if (oldElement) oldElement.removeEventListener('io-object-mutation', this.onElementMutated);
 
     if (this.selected) {
-      const vElement = options.findItemById(this.selected).value;
+      const vElement = option.findItemById(this.selected).value;
       this.render([
         ioOptionSelect({
           value: this.bind('selected'),
-          options: options,
+          option: option,
           selectBy: 'id'
         }),
         div({class: 'element-wrap'}, [vElement]),

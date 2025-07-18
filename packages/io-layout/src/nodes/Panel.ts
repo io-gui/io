@@ -22,12 +22,11 @@ export class Panel extends Node {
     }
     args.tabs = args.tabs.map(tab => new Tab({...tab}));
     super(args);
-    this.tabsMutatedDebounced = this.tabsMutatedDebounced.bind(this);
   }
   tabsMutated() {
-    this.debounce(this.tabsMutatedDebounced);
+    this.debounce(this.onTabsMutatedDebounced);
   }
-  tabsMutatedDebounced() {
+  onTabsMutatedDebounced() {
     this.dispatchMutation();
   }
   toJSON(): PanelProps {

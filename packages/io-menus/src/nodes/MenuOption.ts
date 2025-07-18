@@ -3,7 +3,7 @@ import { Node, Register, ReactiveProperty, WithBinding, NodeArray } from 'io-gui
 export type MenuOptionMode = 'select' | 'toggle' | 'none';
 
 export type MenuOptionProps = {
-  id: string,
+  id?: string,
   value?: any,
   label?: string,
   icon?: string,
@@ -12,7 +12,7 @@ export type MenuOptionProps = {
   mode?: MenuOptionMode,
   disabled?: boolean,
   selected?: WithBinding<boolean>,
-  options?: MenuOptionProps[]
+  options?: Array<string | number | boolean | null | undefined | MenuOptionProps>
 };
 
 @Register
@@ -59,23 +59,34 @@ export class MenuOption extends Node {
 
   static get Listeners() {
     return {
-      'io-node-array-option-selected': 'optionSelected',
+      'io-node-array-selected-changed': 'suboptionSelectedChanged',
     };
   }
   
-  constructor(args: MenuOptionProps) {
-    args = { ...args };
-    args.label = args.label ?? args.id;
-    args.options = args.options ?? [];
-    args.options = args.options.map(option => new MenuOption(option));
+  constructor(args: string | number | boolean | null | undefined | MenuOptionProps) {
 
-    const selectedOptions = args.options.filter(option => option.mode === 'select' && option.selected);
+    if (typeof args === 'string' || typeof args === 'number' || typeof args === 'boolean' || args === null || args === undefined) {
+      args = {
+        id: String(args),
+        value: args,
+      };
+    }
+
+    args = { ...args };
+    args.id = args.id ?? 'null'; // TODO: Reconsider.
+    args.label = args.label ?? args.id;
+    args.value = args.value ?? args.id;
+    args.options = args.options ?? [];
+    args.options = args.options.map(option => (option instanceof MenuOption) ? option : new MenuOption(option));
+
+    const hardenedOptions = args.options as MenuOption[];
+    const selectedOptions = hardenedOptions.filter(option => option.mode === 'select' && option.selected);
     for (let i = 1; i < selectedOptions.length; i++) {
-      debug: console.warn(`Duplicate selected options with mode "select" found!`, selectedOptions[i]);
+      debug: console.warn(`Duplicate selected options with mode "select" found!`, selectedOptions);
       selectedOptions[i].selected = false;
     }
 
-    super(args);
+    super(args as MenuOptionProps);
   }
   getAllOptions() {
     const options: MenuOption[] = [this];
@@ -117,28 +128,55 @@ export class MenuOption extends Node {
     }
     if (walker) walker.selected = true;
   }
-  selectedChanged() {
+  selectedChanged(change: any) {
     if (this.selected === false) {
-      this.selectedIDImmediate = '';
-      this.unselectAll();
+      this.unselectSuboptions();
     }
+    // console.log('selectedChanged', this.id, this.selectedID, change.oldValue, change.value);
   }
   selectedIDChanged() {
     const option = this.findItemById(this.selectedID);
-    if (option) option.selected = true;
+    if (option) {
+      option.selected = true;
+      // console.log('selectedIDChanged', this.selectedID);
+      this.dispatch('option-selected', {option: option}, false);
+    }
   }
   selectedIDImmediateChanged() {
-    this.selected = !!this.selectedIDImmediate;
-    const option = this.options.find(option => option.id === this.selectedIDImmediate);
-    if (option) option.selected = true;
+    if (this.selectedIDImmediate) {
+      this.selected = true;
+      const option = this.options.find(option => option.id === this.selectedIDImmediate);
+      if (option) option.selected = true;
+    }
     this.updatePaths();
   }
-  optionSelected(event: CustomEvent) {
-    const selectedItem = event.detail.option;
+  suboptionSelectedChanged(event: CustomEvent) {
+    const selectedItem = event.detail.item;
+    if (selectedItem.selected) {
+      for (let i = 0; i < this.options.length; i++) {
+        const option = this.options[i] as MenuOption;
+        if (option !== selectedItem && option.mode === 'select' && selectedItem.mode === 'select') {
+          option.selected = false;
+        }
+      }
+    }
+    const hasSelected = this.options.some(option => option.selected && option.mode === 'select');
+    if (hasSelected) {
+      // this.updatePaths();
+    } else {
+      this.setProperties({
+        selectedID: '',
+        selectedIDImmediate: '',
+        path: '',
+      });
+    }
+  }
+  unselectSuboptions() {
     for (let i = 0; i < this.options.length; i++) {
-      const option = this.options[i] as MenuOption;
-      if (option !== selectedItem && option.mode === 'select') {
+      const option = this.options[i];
+      if (option.mode === 'select') {
         option.selected = false;
+        option.unselectSuboptions();
       }
     }
   }
@@ -169,20 +207,12 @@ export class MenuOption extends Node {
     if (this.mode === 'select' && this.options.selected && this.options.length) {
       const selectedIDImmediate = this.options.selected;
       this.setProperties({
-        selected: !!selectedIDImmediate,
+        // selected: !!selectedIDImmediate,
         selectedIDImmediate: selectedIDImmediate,
       });
     }
+    this.updatePaths();
     this.dispatchMutation();
-  }
-  unselectAll() {
-    for (let i = 0; i < this.options.length; i++) {
-      const option = this.options[i];
-      if (option.mode === 'select') {
-        option.selected = false;
-        option.unselectAll();
-      }
-    }
   }
   toJSON(): MenuOptionProps {
     return {

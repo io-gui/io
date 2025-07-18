@@ -19,7 +19,6 @@ export class NodeArray<N extends Node> extends Array<N> {
     super(...args);
     this.itemMutated = this.itemMutated.bind(this);
     this.dispatchMutation = this.dispatchMutation.bind(this);
-    this.dispatchMutationDebounced = this.dispatchMutationDebounced.bind(this);
 
     debug: if (!(node instanceof Node) && !(node instanceof IoElement)) {
       console.error('NodeArray constructor called with non-node!');
@@ -38,6 +37,9 @@ export class NodeArray<N extends Node> extends Array<N> {
             }
           }
           return selected;
+        }
+        if (typeof property === 'symbol') {
+          return target[property as any];
         }
         const index = Number(property);
         if (!isNaN(index) && index >= 0) {
@@ -192,15 +194,12 @@ export class NodeArray<N extends Node> extends Array<N> {
   }
   itemMutated(event: CustomEvent) {
     const item = event.detail.object as SelectableNode;
-    if (item.selected && event.detail.properties.includes('selected')) {
-      this.node.dispatch('io-node-array-item-selected', {node: this.proxy, item: item}, false);
+    if (event.detail.properties.includes('selected')) {
+      this.node.dispatch('io-node-array-selected-changed', {node: this.proxy, item: item}, false);
     }
     this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window);
   }
   dispatchMutation() {
-    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window);
-  }
-  dispatchMutationDebounced() {
     this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window);
   }
 }

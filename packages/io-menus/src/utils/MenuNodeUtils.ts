@@ -1,23 +1,23 @@
 import { MenuOption } from '../nodes/MenuOption.js';
 
-function matchMenuItem(option: MenuOption, search: string) {
-  if (option.options) return false;
+function matchMenuOption(option: MenuOption, search: string) {
+  if (option.options.length) return false;
   if (option.value !== undefined && String(option.value).toLowerCase().indexOf(search) !== -1) return true;
   if (option.label && option.label.toLowerCase().indexOf(search) !== -1) return true;
   if (option.hint && option.hint.toLowerCase().indexOf(search) !== -1) return true;
   return false;
 }
 
-export function searchMenuOptions(options: MenuOption[], search: string, depth = 5, d = 0) {
+export function searchMenuOption(option: MenuOption, search: string, depth = 5, d = 0) {
   search = search.toLowerCase();
-  const suboptions: MenuOption[] = [];
-  if (d <= depth) for (let i = 0; i < options.length; i++) {
-    if (matchMenuItem(options[i], search)) {
-      suboptions.push(options[i]);
+  const subitems: MenuOption[] = [];
+  if (d <= depth) for (let i = 0; i < option.options.length; i++) {
+    if (matchMenuOption(option.options[i], search)) {
+      subitems.push(option.options[i]);
     }
-    if (options[i].options.length) {
-      suboptions.push(...searchMenuOptions(options[i].options, search, depth, d + 1));
+    if (option.options[i].options.length) {
+      subitems.push(...searchMenuOption(option.options[i], search, depth, d + 1));
     }
   }
-  return suboptions;
+  return subitems;
 }

@@ -26,6 +26,10 @@ export class IoElement extends HTMLElement {
         box-sizing: border-box;
         -webkit-touch-callout: none;
       }
+      :host[hidden] {
+        display: none;
+        pointer-events: none;
+      }
     `;
   }
 

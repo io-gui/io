@@ -1,5 +1,5 @@
 import { Register, IoElement, div, nudge } from 'io-gui';
-import { MenuOptions, ioOptionSelect } from 'io-menus';
+import { MenuOption, ioOptionSelect } from 'io-menus';
 import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
 import { ioSlider } from 'io-sliders';
 import { ioString, ioNumber, ioBoolean } from 'io-inputs';
@@ -129,11 +129,12 @@ export class IoEditorsDemo extends IoElement {
             [Object, [
               [String, ioString({live: true, appearance: 'neutral'})],
               // TODO: fix this. 'number' works but breaks other configs.
-              [Number, ioOptionSelect({options: new MenuOptions({
-                items: [
-                  {label: 'zero', value: 0},
-                  {label: 'half', value: 0.5},
-                  {label: 'one', value: 1},
+              [Number, ioOptionSelect({option: new MenuOption({
+                id: 'number',
+                options: [
+                  {id: 'zero', value: 0},
+                  {id: 'half', value: 0.5},
+                  {id: 'one', value: 1},
                 ],
               })})],
             ]]

@@ -2,7 +2,7 @@ import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-gui';
 import { ioLayout, Split } from 'io-layout';
 import { ioCollapsible } from 'io-navigation';
 import { ioMarkdown } from 'io-markdown';
-import { MenuItem } from 'io-menus';
+import { MenuOption } from 'io-menus';
 
 function lorem(length) {
   const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');
@@ -124,16 +124,17 @@ export class IoLayoutDemo extends IoElement {
             h4({'data-heading': 'Section 5'}, 'Section 5'), p(lorem(100)),
           ]),
         ],
-        addMenuOption:  new MenuItem().fromJSON({
+        addMenuOption:  new MenuOption({
+          id: 'addMenuOption',
           mode: 'none',
           options: [
-            {label: 'Docs', mode: 'none', options: [
+            {id: 'Docs', mode: 'none', options: [
               {id: 'Doc 1', icon: 'io:numeric-1-box', mode: 'none'},
               {id: 'Doc 2', icon: 'io:numeric-2-box', mode: 'none'},
               {id: 'Doc 3', icon: 'io:numeric-3-box', mode: 'none'},
               {id: 'Doc 4', icon: 'io:numeric-4-box', mode: 'none'},
             ]},
-            {label: 'Demos', mode: 'none', options: [
+            {id: 'Demos', mode: 'none', options: [
               {id: 'Inputs', mode: 'none', icon: 'io:toggle_on'},
               {id: 'Icons', mode: 'none', icon: 'io:image'},
               {id: 'Sliders', mode: 'none', icon: 'io:sliders'},

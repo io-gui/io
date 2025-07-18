@@ -1,12 +1,12 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
-import { MenuItem } from 'io-menus';
+import { MenuOption } from 'io-menus';
 import { ioSplit } from './IoSplit.js';
 import { Split } from '../nodes/Split.js';
 
 export type IoLayoutProps = IoElementProps & {
   split: Split,
   elements: VDOMElement[],
-  addMenuOption: MenuItem,
+  addMenuOption: MenuOption,
 };
 
 @Register
@@ -33,8 +33,8 @@ export class IoLayout extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @Property(MenuItem)
-  declare private addMenuOption: MenuItem;
+  @Property({type: MenuOption})
+  declare private addMenuOption: MenuOption;
 
   changed() {
     this.render([

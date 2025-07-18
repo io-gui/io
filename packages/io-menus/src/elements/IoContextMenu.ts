@@ -4,7 +4,7 @@ import { onOverlayPointerdown, onOverlayPointermove, onOverlayPointeup } from '.
 import { MenuOption } from '../nodes/MenuOption.js';
 
 export type IoContextMenuProps = IoElementProps & {
-  option?: MenuOption,
+  option: MenuOption,
   expanded?: WithBinding<boolean>,
   button?: number,
 };
@@ -33,7 +33,7 @@ export class IoContextMenu extends IoElement {
     };
   }
 
-  constructor(args: IoContextMenuProps = {}) {
+  constructor(args: IoContextMenuProps) {
     super(args);
     this.$options = new IoMenuOptions({
       expanded: this.bind('expanded'),
@@ -47,7 +47,7 @@ export class IoContextMenu extends IoElement {
   }
 
   optionChanged(change: Change) {
-    this.$options.option = this.option;
+    if (this.$options) this.$options.option = this.option;
   }
   connectedCallback() {
     super.connectedCallback();

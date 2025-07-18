@@ -1,5 +1,5 @@
 import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from 'io-gui';
-import { MenuItem } from 'io-menus';
+import { MenuOption } from 'io-menus';
 import { IoPanel, ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
 import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js';
@@ -9,7 +9,7 @@ import { Tab } from '../nodes/Tab.js';
 export type IoSplitProps = IoElementProps & {
   split: Split,
   elements: VDOMElement[],
-  addMenuOption: MenuItem,
+  addMenuOption: MenuOption,
 };
 
 @Register
@@ -33,8 +33,8 @@ export class IoSplit extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @Property(MenuItem)
-  declare private addMenuOption: MenuItem;
+  @Property({type: MenuOption})
+  declare private addMenuOption: MenuOption;
 
   static get Listeners() {
     return {

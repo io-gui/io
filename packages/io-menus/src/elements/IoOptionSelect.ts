@@ -5,11 +5,11 @@ import { ioMenuItem } from './IoMenuItem.js';
 export type SelectBy = 'value' | 'id';
 
 export type IoOptionSelectProps = IoElementProps & {
+  option: MenuOption,
   value?: WithBinding<any>,
   label?: string,
   icon?: string,
   selectBy?: SelectBy,
-  option?: MenuOption,
 };
 
 /**
@@ -57,15 +57,18 @@ export class IoOptionSelect extends IoElement {
   @Property('button')
   declare role: string;
 
-  constructor(args: IoOptionSelectProps = {}) {
+  constructor(args: IoOptionSelectProps) {
     super(args);
   }
 
-  // TODO: implement selecting by id
-  // TODO: Consider triggering this.inputValue() only by user-input!
-  _onOptionSelected(event: CustomEvent) {
+  // TODO: Consider triggering inputValue() only by user-input!
+  onOptionSelected(event: CustomEvent) {
     if (this._disposed) return;
-    this.inputValue(event.detail.option.value);
+    if (this.selectBy === 'value') {
+      this.inputValue(event.detail.option.value); 
+    } else if (this.selectBy === 'id') {
+      this.inputValue(event.detail.option.id);
+    }
   }
   inputValue(value: any) {
     if (this.value !== value || typeof this.value === 'object') {
@@ -74,33 +77,25 @@ export class IoOptionSelect extends IoElement {
       this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
     }
   }
-
   optionChanged(change: Change) {
     if (change.oldValue) {
-      change.oldValue.removeEventListener('option-selected', this._onOptionSelected);
+      change.oldValue.removeEventListener('option-selected', this.onOptionSelected);
     }
     if (change.value) {
-      change.value.addEventListener('option-selected', this._onOptionSelected);
+      change.value.addEventListener('option-selected', this.onOptionSelected);
     }
   }
-  optionMutated() {
-    this.changed();
-  }
   changed() {
-    this.debounce(this.onChange);
-  }
-  onChange() {
     let selectedItem;
     if (this.selectBy === 'value') {
       selectedItem = this.option.findItemByValue(this.value);
     } else if (this.selectBy === 'id') {
       selectedItem = this.option.findItemById(this.value);
     }
-    if (selectedItem) selectedItem.selected = true;
     const label = selectedItem ? selectedItem.label : this.label || String(this.value);
     this.render([ioMenuItem({option: this.option, label: label, icon: this.icon, direction: 'down'})]);
   }
 }
-export const ioOptionSelect = function(arg0?: IoOptionSelectProps) {
+export const ioOptionSelect = function(arg0: IoOptionSelectProps) {
   return IoOptionSelect.vConstructor(arg0);
 };

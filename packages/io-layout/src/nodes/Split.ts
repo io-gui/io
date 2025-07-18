@@ -34,12 +34,11 @@ export class Split extends Node {
       }
     }
     super(args);
-    this.childrenMutatedDebounced = this.childrenMutatedDebounced.bind(this);
   }
   childrenMutated() {
-    this.debounce(this.childrenMutatedDebounced);
+    this.debounce(this.onChildrenMutatedDebounced);
   }
-  childrenMutatedDebounced() {
+  onChildrenMutatedDebounced() {
     this.dispatchMutation();
   }
   toJSON(): SplitProps {
