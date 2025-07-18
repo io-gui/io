@@ -69,7 +69,7 @@ This document is a rough draft.
 Design system
 
 * Menu system
-    - Versatile Menu Model With MenuOptions and MenuItem
+    - Versatile Menu Model With MenuOption
     - Menu elements
 
 * Content navigation and routing
