@@ -1,13 +1,12 @@
 import { IoElement, Change, IoElementProps, WithBinding } from 'io-gui';
-import { MenuItem } from '../nodes/MenuItem.js';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 export type SelectBy = 'value' | 'id';
 export type IoOptionSelectProps = IoElementProps & {
+    option: MenuOption;
     value?: WithBinding<any>;
     label?: string;
     icon?: string;
     selectBy?: SelectBy;
-    options?: MenuOptions;
 };
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
@@ -19,17 +18,13 @@ export declare class IoOptionSelect extends IoElement {
     label: string;
     icon: string;
     selectBy: SelectBy;
-    options: MenuOptions;
+    option: MenuOption;
     role: string;
-    $item: MenuItem;
-    constructor(args?: IoOptionSelectProps);
-    ready(): void;
-    _onItemSelected(event: CustomEvent): void;
+    constructor(args: IoOptionSelectProps);
+    onOptionSelected(event: CustomEvent): void;
     inputValue(value: any): void;
-    optionsChanged(change: Change): void;
-    optionsMutated(): void;
+    optionChanged(change: Change): void;
     changed(): void;
-    onChange(): void;
 }
-export declare const ioOptionSelect: (arg0?: IoOptionSelectProps) => import("io-gui").VDOMElement;
+export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("io-gui").VDOMElement;
 //# sourceMappingURL=IoOptionSelect.d.ts.map

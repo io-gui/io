@@ -13,8 +13,9 @@ export declare class Split extends Node {
     flex: string;
     constructor(args: SplitProps);
     childrenMutated(): void;
-    childrenMutatedDebounced(): void;
+    onChildrenMutatedDebounced(): void;
     toJSON(): SplitProps;
     fromJSON(json: SplitProps): this;
+    dispose(): void;
 }
 //# sourceMappingURL=Split.d.ts.map

@@ -1,15 +1,15 @@
 import { IoElement, IoElementProps, NodeArray } from 'io-gui';
-import { MenuItem } from 'io-menus';
+import { MenuOption } from 'io-menus';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabsProps = IoElementProps & {
     tabs: NodeArray<Tab>;
-    addMenuItem: MenuItem;
+    addMenuOption: MenuOption;
 };
 export declare class IoTabs extends IoElement {
     static get Style(): string;
     tabs: NodeArray<Tab>;
     overflow: number;
-    addMenuItem: MenuItem;
+    addMenuOption: MenuOption;
     constructor(args: IoTabsProps);
     tabsMutated(): void;
     onResized(): void;

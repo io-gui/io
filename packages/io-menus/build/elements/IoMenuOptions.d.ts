@@ -1,37 +1,34 @@
 import { IoElement, VDOMElement, NudgeDirection, IoElementProps, WithBinding, ListenerDefinition } from 'io-gui';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuItem } from './IoMenuItem.js';
 import { IoContextMenu } from './IoContextMenu.js';
 export type IoMenuOptionsProps = IoElementProps & {
-    options?: WithBinding<MenuOptions>;
+    option?: MenuOption;
     expanded?: WithBinding<boolean>;
     horizontal?: boolean;
     searchable?: boolean;
     search?: WithBinding<string>;
     direction?: NudgeDirection;
     depth?: number;
-    noPartialCollapse?: boolean;
     widget?: VDOMElement | null;
     $parent?: IoMenuItem | IoContextMenu;
 };
 /**
- * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
+ * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
  **/
 export declare class IoMenuOptions extends IoElement {
     static get Style(): string;
-    options: MenuOptions;
+    option: MenuOption;
     expanded: boolean;
     horizontal: boolean;
     searchable: boolean;
     search: string;
     direction: NudgeDirection;
     depth: number;
-    noPartialCollapse: boolean;
     overflow: string;
     widget: VDOMElement | null;
     $parent?: IoMenuItem;
     role: string;
-    private _overflownItems;
     static get Listeners(): {
         touchstart: ListenerDefinition;
         'io-focus-to': string;

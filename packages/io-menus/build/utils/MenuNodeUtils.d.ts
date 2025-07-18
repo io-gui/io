@@ -1,4 +1,3 @@
-import { MenuItem } from '../nodes/MenuItem.js';
-import { MenuOptions } from '../nodes/MenuOptions.js';
-export declare function searchMenuOptions(options: MenuOptions, search: string, depth?: number, d?: number): MenuItem[];
+import { MenuOption } from '../nodes/MenuOption.js';
+export declare function searchMenuOption(option: MenuOption, search: string, depth?: number, d?: number): MenuOption[];
 //# sourceMappingURL=MenuNodeUtils.d.ts.map

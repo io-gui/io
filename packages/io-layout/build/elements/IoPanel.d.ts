@@ -1,18 +1,18 @@
 import { IoElement, VDOMElement, IoElementProps } from 'io-gui';
-import { MenuItem } from 'io-menus';
+import { MenuOption } from 'io-menus';
 import { Tab } from '../nodes/Tab.js';
 import { Panel } from '../nodes/Panel.js';
 import { SplitDirection } from '../nodes/Split.js';
 export type IoPanelProps = IoElementProps & {
     panel: Panel;
     elements: VDOMElement[];
-    addMenuItem: MenuItem;
+    addMenuOption: MenuOption;
 };
 export declare class IoPanel extends IoElement {
     static get Style(): string;
     panel: Panel;
     elements: VDOMElement[];
-    private addMenuItem;
+    private addMenuOption;
     static get Listeners(): {
         'io-edit-tab': string;
     };

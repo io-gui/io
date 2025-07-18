@@ -74,7 +74,7 @@ export declare class Binding<T extends unknown> {
         node: string;
         property: string;
         targets: string[];
-        targetProperties: Record<string, Properties>;
+        targetProperties: Properties[];
     };
     /**
      * Disposes the binding and removes all targets and listeners.

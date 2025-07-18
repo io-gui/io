@@ -1,5 +1,5 @@
 import { VDOMElement, IoElement, IoElementProps } from 'io-gui';
-import { MenuItem } from 'io-menus';
+import { MenuOption } from 'io-menus';
 import { IoPanel } from './IoPanel.js';
 import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
@@ -7,13 +7,13 @@ import { Tab } from '../nodes/Tab.js';
 export type IoSplitProps = IoElementProps & {
     split: Split;
     elements: VDOMElement[];
-    addMenuItem: MenuItem;
+    addMenuOption: MenuOption;
 };
 export declare class IoSplit extends IoElement {
     static get Style(): string;
     split: Split;
     elements: VDOMElement[];
-    private addMenuItem;
+    private addMenuOption;
     static get Listeners(): {
         'io-divider-move': string;
         'io-divider-move-end': string;

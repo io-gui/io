@@ -11,7 +11,7 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     selected: string;
     static get [Symbol.species](): ArrayConstructor;
     constructor(node: Node | IoElement, ...args: any[]);
-    private withInternalOperation;
+    withInternalOperation<T>(operation: () => T, dispatch?: boolean): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];
     push(...items: N[]): number;
     unshift(...items: N[]): number;
@@ -21,7 +21,7 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     sort(compareFn?: (a: N, b: N) => number): this;
     fill(): this;
     copyWithin(): this;
+    itemMutated(event: CustomEvent): void;
     dispatchMutation(): void;
-    dispatchMutationDebounced(): void;
 }
 //# sourceMappingURL=NodeArray.d.ts.map

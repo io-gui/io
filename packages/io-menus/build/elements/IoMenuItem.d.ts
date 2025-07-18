@@ -1,13 +1,13 @@
 import { WithBinding, NudgeDirection } from 'io-gui';
 import { IoField, IoFieldProps } from 'io-inputs';
-import { MenuItem } from '../nodes/MenuItem.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoMenuTree } from './IoMenuTree.js';
 export declare function onOverlayPointerdown(event: PointerEvent): void;
 export declare function onOverlayPointermove(event: PointerEvent): void;
 export declare function onOverlayPointeup(event: PointerEvent): void;
 export type IoMenuItemProps = IoFieldProps & {
-    item?: MenuItem;
+    option?: MenuOption;
     label?: string;
     expanded?: WithBinding<boolean>;
     direction?: NudgeDirection;
@@ -15,11 +15,11 @@ export type IoMenuItemProps = IoFieldProps & {
     $parent?: IoMenuOptions | IoMenuTree;
 };
 /**
- * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
+ * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu options whose `option.value` matches selected value.
  **/
 export declare class IoMenuItem extends IoField {
     static get Style(): string;
-    item: MenuItem;
+    option: MenuOption;
     label: string;
     expanded: boolean;
     direction: NudgeDirection;
@@ -30,7 +30,7 @@ export declare class IoMenuItem extends IoField {
     static get Listeners(): any;
     constructor(args?: IoMenuItemProps);
     preventDefault(event: Event): void;
-    get hasmore(): boolean;
+    get hasmore(): boolean | 0;
     get inoverlay(): boolean;
     connectedCallback(): void;
     disconnectedCallback(): void;
@@ -45,8 +45,8 @@ export declare class IoMenuItem extends IoField {
     onKeydown(event: KeyboardEvent): void;
     collapse(): void;
     collapseRoot(): void;
-    itemChanged(): void;
-    itemMutated(): void;
+    optionChanged(): void;
+    optionMutated(): void;
     initOptions(): void;
     changed(): void;
     dispose(): void;

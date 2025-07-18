@@ -88,6 +88,11 @@ export declare class ProtoChain {
      */
     addStyle(style?: string): void;
     /**
+     * Adds style defined in decorators to the style string.
+     * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+     */
+    addStyleFromDecorators(ioNodeConstructor: NodeConstructor): void;
+    /**
      * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
      * @param {Node} proto - Prototype object to search for handlers
      */

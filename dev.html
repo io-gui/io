@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <title>Io-Gui: The Artisinal Web Framework</title>
+
+    <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, framework, javascript, web development, webdev" />
+    
+    <meta itemprop="name" content="Io-Gui, a UI framework for web development." />
+    <meta name="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta itemprop="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+
+    <!-- Web application enable -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- Web application name -->
+    <meta name="application-name" content="Io-Gui, a UI framework for web development." />
+    <meta name="apple-mobile-web-app-title" content="Io-Gui, a UI framework for web development." />
+
+    <!-- Browser UI color -->
+    <meta name="theme-color" content="#f5f5f5" />
+    <meta name="msapplication-TileColor" content="#f5f5f5" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#f5f5f5" />
+
+    <!-- Home screen icons -->
+    <link rel="shortcut icon" href="./images/favicon.ico" />
+    <meta itemprop="image" content="./images/logo/io-512.png" />
+    <meta name="msapplication-TileImage" content="./images/logo/io-144-precomposed.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="./images/logo/io-144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="./images/logo/io-152.png">
+
+    <!-- Other icons -->
+    <link rel="icon" type="image/png" sizes="512x512" href="./images/logo/io-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./images/logo/io-192.png" />
+    <link rel="icon" type="image/png" sizes="96x96" href="./images/logo/io-96.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./images/logo/io-32-alt.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logo/io-16.png" />
+    <link rel="apple-touch-icon" href="./images/logo/io-152.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/logo/io-72.png">
+
+    <!-- Social sharing data -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Io-Gui: The Artisinal Web Framework" />
+    <meta name="twitter:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta name="twitter:site" content="iogui.dev" />
+    <meta name="twitter:creator" content="akirodic" />
+    <meta name="twitter:image" content="https://iogui.dev/io/images/logo/io-512.png?002">
+    <meta name="twitter:image:alt" content="Io-Gui: The Artisinal Web Framework">
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Io-Gui: The Artisinal Web Framework" />
+    <meta property="og:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
+    <meta property="og:locale" content="en_US" />
+
+    <link rel="me" href="https://bsky.app/profile/akirodic.com" />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "io-gui": "./packages/io-gui/build/index.js",
+          "io-colors": "./packages/io-colors/build/index.js",
+          "io-editors": "./packages/io-editors/build/index.js",
+          "io-icons": "./packages/io-icons/build/index.js",
+          "io-inputs": "./packages/io-inputs/build/index.js",
+          "io-layout": "./packages/io-layout/build/index.js",
+          "io-markdown": "./packages/io-markdown/build/index.js",
+          "io-menus": "./packages/io-menus/build/index.js",
+          "io-navigation": "./packages/io-navigation/build/index.js",
+          "io-sliders": "./packages/io-sliders/build/index.js",
+          "marked": "./node_modules/marked/lib/marked.esm.js",
+          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
+        }
+      }
+    </script>
+
+    <style>
+      html, body {
+        font: 16px 'Open Sans', Helvetica, Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--io_bgColorStrong);
+        color: var(--io_color);
+      }
+      io-navigator {
+        height: 100%;
+      }
+      io-navigator .heading {
+        margin: 0.75em 1em;
+        color: var(--io_colorStrong);
+      }
+      io-navigator iframe {
+        border: none;
+        flex: 1 1 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+import { IoElement, Register, span } from 'io-gui'
+// Notice that, unlike real constructors, vDOM constructors start with lowercase "i"
+import { ioSlider } from 'io-sliders';
+import { ioOptionSelect, MenuOption } from 'io-menus';
+
+class MyElement extends IoElement {
+
+  static get Style() {
+    return /* css */`
+      :host {
+        display: inline-block;
+        width: 160px;
+      }
+    `;
+  }
+
+  static get ReactiveProperties() {
+    return {
+      numberValue: {type: Number, value: 0},
+      menuOption: {type: MenuOption, value: new MenuOption({options: [
+        {id: 'Zero', value: 0},
+        {id: 'One', value: 1},
+        {id: 'Two', value: 2},
+        {id: 'Three', value: 3},
+      ]})}
+    }
+  }
+
+  ready() {
+    this.changed();
+  }
+
+  onValueInput(event) {
+    this.numberValue = event.detail.value;
+  }
+
+  changed() {
+    this.render([
+    ioSlider({
+      value: this.numberValue,
+      min: -1,
+      max: 3,
+      step: 1,
+      '@value-input': this.onValueInput,
+    }),
+    ioOptionSelect({
+        value: this.numberValue,
+        option: this.menuOption,
+        '@value-input': this.onValueInput,
+      })
+    ]);
+  }
+}
+Register(MyElement);
+
+document.body.appendChild(
+  new MyElement()
+)
+    </script>
+    <noscript>JavaScript is required to view this page!</noscript>
+  </body>
+</html>

@@ -1,8 +1,8 @@
 import { IoElement, IoElementProps, WithBinding } from 'io-gui';
-import { MenuItem } from '../nodes/MenuItem.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 export type IoMenuTreeBranchProps = IoElementProps & {
     depth?: number;
-    item?: MenuItem;
+    option?: MenuOption;
     expanded?: WithBinding<boolean>;
 };
 /**
@@ -12,10 +12,10 @@ export type IoMenuTreeBranchProps = IoElementProps & {
 export declare class IoMenuTreeBranch extends IoElement {
     static get Style(): string;
     depth: number;
-    item: MenuItem;
+    option: MenuOption;
     expanded: boolean;
     role: string;
-    itemMutated(): void;
+    optionMutated(): void;
     changed(): void;
 }
 export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps) => import("io-gui").VDOMElement;
