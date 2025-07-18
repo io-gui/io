@@ -2,7 +2,7 @@ import { Register, ReactiveProperty, span, ThemeSingleton } from 'io-gui';
 import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
 import { IconsetDB, ioIcon } from 'io-icons';
-import { MenuOptions, ioOptionSelect } from 'io-menus';
+import { MenuOptionProps, MenuOption, ioOptionSelect } from 'io-menus';
 import { IoTabs } from './IoTabs.js';
 import { IoPanel } from './IoPanel.js';
 import { Tab } from '../nodes/Tab.js';
@@ -16,7 +16,7 @@ for (const set of Object.keys(IconsetDB)) {
   }
 }
 
-const iconOptions = ioOptionSelect({label: 'Select', options: new MenuOptions().fromJSON(icons)});
+const iconOptions = ioOptionSelect({label: 'Select', option: new MenuOption({id: 'iconselect', options: icons as MenuOptionProps[]})});
 
 export type IoTabProps = IoFieldProps & {
   tab: Tab,
@@ -139,9 +139,9 @@ export class IoTab extends IoField {
   onPointerdown(event: PointerEvent) {
     event.preventDefault();
     event.stopPropagation();
+    this.setPointerCapture(event.pointerId);
     _dragStartX = event.clientX;
     _dragStartY = event.clientY;
-    this.setPointerCapture(event.pointerId);
     super.onPointerdown(event);
     if (event.buttons === 2) {
       this.expandContextEditor();
@@ -285,14 +285,6 @@ export class IoTab extends IoField {
   onPointerleave(event: PointerEvent) {
     event.preventDefault();
     event.stopPropagation();
-    super.onPointerleave(event);
-    tabDragIconSingleton.setProperties({
-      dragging: false,
-      dropSource: null,
-      dropTarget: null,
-      splitDirection: 'none',
-      dropIndex: -1,
-    });
   }
   onClick() {
     this.dispatch('io-edit-tab', {tab: this.tab, key: 'Select'}, true);

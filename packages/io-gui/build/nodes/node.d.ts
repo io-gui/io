@@ -25,9 +25,6 @@ export type NodeProps = {
     reactivity?: ReactivityType;
     [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 };
-/**
- * NodeMixin applied to `Object` class.
- */
 export declare class Node extends Object {
     reactivity: ReactivityType;
     static get ReactiveProperties(): ReactivePropertyDefinitions;
@@ -42,7 +39,7 @@ export declare class Node extends Object {
     readonly _observedNodeProperties: string[];
     readonly _isNode: boolean;
     _disposed: boolean;
-    constructor(args?: NodeProps);
+    constructor(args?: any);
     applyProperties(props: any, skipDispatch?: boolean): void;
     setProperties(props: any): void;
     setProperty(name: string, value: any, debounce?: boolean): void;
@@ -54,7 +51,7 @@ export declare class Node extends Object {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): true | undefined;
-    dispatchMutation(object?: Object | Node | IoElement): void;
+    dispatchMutation(object?: Object | Node | IoElement, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;

@@ -2,7 +2,7 @@ import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, sp
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js';
-import { MenuItem } from '../nodes/MenuItem.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { IoMenuTree } from './IoMenuTree.js';
 
@@ -44,7 +44,7 @@ export function onOverlayPointeup(event: PointerEvent) {
 Overlay.addEventListener('pointermove', onOverlayPointermove);
 
 export type IoMenuItemProps = IoFieldProps & {
-  item?: MenuItem,
+  option?: MenuOption,
   label?: string,
   expanded?: WithBinding<boolean>,
   direction?: NudgeDirection,
@@ -53,7 +53,7 @@ export type IoMenuItemProps = IoFieldProps & {
 };
 
 /**
- * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
+ * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu options whose `option.value` matches selected value.
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.
@@ -83,8 +83,8 @@ export class IoMenuItem extends IoField {
     `;
   }
 
-  @ReactiveProperty({type: MenuItem, init: null})
-  declare item: MenuItem;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @Property('')
   declare label: string;
@@ -121,7 +121,7 @@ export class IoMenuItem extends IoField {
     event.preventDefault();
   }
   get hasmore() {
-    return this.item.hasmore && this.depth > 0;
+    return this.option.options.length && this.depth > 0;
   }
   get inoverlay() {
     return Overlay.contains(this.parentElement?.parentElement as HTMLElement);
@@ -135,29 +135,28 @@ export class IoMenuItem extends IoField {
     if (this.$options) Overlay.removeChild(this.$options as HTMLElement);
   }
   onClick() {
-    const item = this.item;
+    const o = this.option;
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true;
-    } else if (item.mode === 'toggle') {
-      item.selected = !item.selected;
+    } else if (o.mode === 'toggle') {
+      o.selected = !o.selected;
     } else {
-      if (item.action) {
-        item.action.apply(null, [item.value]);
+      if (o.action) {
+        o.action.apply(null, [o.value]);
         this.collapseRoot();
       }
-      if (item.mode === 'select') {
-        if (item.hasmore && item.options && this.depth <= 0) {
-          item.options.selectDefault();
+      if (o.mode === 'select') {
+        if (o.options.length && this.depth <= 0) {
+          o.selectDefault();
         } else {
-          item.selected = true;
+          o.selected = true;
+          // TODO: figure out OptionSelect value input with NodeArray options
+          // o.dispatch('option-selected', {option: o}, true);
         }
-        this.collapseRoot();
-      } else if (item.mode === 'link') {
-        window.open(item.value, '_blank');
         this.collapseRoot();
       }
     }
-    getMenuRoot(this).dispatch('io-menu-item-clicked', {item: this.item}, true);
+    getMenuRoot(this).dispatch('io-menu-option-clicked', {option: o}, true);
   }
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);
@@ -293,8 +292,8 @@ export class IoMenuItem extends IoField {
         case 'In':
           if (this.hasmore) this.expanded = true;
           if (this.$options && this.$options.children.length) {
-            const item = this.$options!.querySelector('[selected]') as IoMenuItem;
-            if (item) item.focus();
+            const option = this.$options!.querySelector('[selected]') as IoMenuItem;
+            if (option) option.focus();
             else (this.$options!.children[0] as IoMenuItem).focus();
           }
           break;
@@ -320,44 +319,45 @@ export class IoMenuItem extends IoField {
   collapseRoot() {
     (getMenuRoot(this) as any).collapse();
   }
-  itemChanged() {
-    // TODO: unbind previous? Test!
+  optionChanged() {
     this.setProperties({
-      selected: this.item.bind('selected'),
-      disabled: this.item.bind('disabled'),
+      selected: this.option.selected,
+      disabled: this.option.disabled,
     });
     this.initOptions();
   }
-  itemMutated() {
+  optionMutated() {
+    this.setProperties({
+      selected: this.option.selected,
+      disabled: this.option.disabled,
+    });
     this.changed();
   }
   initOptions() {
-    if (this.item.options && this.depth > 0) {
+    if (this.option.options && this.depth > 0) {
       if (this.$options === undefined) {
         this.$options = new IoMenuOptions({
           expanded: this.bind('expanded'),
           depth: this.depth - 1,
-          options: this.item.options,
+          option: this.option,
           direction: this.direction,
           $parent: this,
         });
       } else {
-        this.$options.options = this.item.options;
+        this.$options.option = this.option;
       }
     }
   }
   changed() {
-    const icon = this.icon || this.item.icon;
-    const label = this.label || this.item.label;
-
-    this.hidden = this.item.hidden;
+    const icon = this.icon || this.option.icon;
+    const label = this.label || this.option.label;
 
     this.render([
       this.hasmore && this.direction === 'left' ? ioIcon({value: 'io:triangle_left', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'up' ? ioIcon({value: 'io:triangle_up', class: 'hasmore'}) : null,
       icon ? ioIcon({value: icon}) : null,
       label ? span({class: 'label'}, label) : null,
-      this.item.hint ? span({class: 'hint'}, this.item.hint) : null,
+      this.option.hint ? span({class: 'hint'}, this.option.hint) : null,
       this.hasmore && this.direction === 'right' ? ioIcon({value: 'io:triangle_right', class: 'hasmore'}) : null,
       this.hasmore && this.direction === 'down' ? ioIcon({value: 'io:triangle_down', class: 'hasmore'}) : null,
     ]);

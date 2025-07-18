@@ -40,9 +40,6 @@ function isNonNodeObject(value: any) {
   return (typeof value === 'object' && value !== null && !value._isNode);
 }
 
-/**
- * NodeMixin applied to `Object` class.
- */
 @Register
 export class Node extends Object {
 
@@ -71,7 +68,7 @@ export class Node extends Object {
   declare readonly _isNode: boolean;
   declare _disposed: boolean;
 
-  constructor(args: NodeProps = {}) {
+  constructor(args?: any) {
     super();
     this.init();
     this._protochain.init(this);
@@ -86,7 +83,7 @@ export class Node extends Object {
     initReactiveProperties(this);
     initProperties(this);
 
-    this.applyProperties(args, true);
+    this.applyProperties(typeof args === 'object' ? args : {}, true);
 
     this.ready();
     this.dispatchQueue();
@@ -134,11 +131,11 @@ export class Node extends Object {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event);
   };
-  dispatchMutation(object: Object | Node | IoElement = this) {
+  dispatchMutation(object: Object | Node | IoElement = this, properties: string[] = []) {
     if ((object as Node)._isNode) {
-      this.dispatch('io-object-mutation', {object});
+      this.dispatch('io-object-mutation', {object, properties});
     } else {
-      this.dispatch('io-object-mutation', {object}, false, window);
+      this.dispatch('io-object-mutation', {object, properties}, false, window);
     }
   }
   bind<T>(name: string): Binding<T> {
@@ -244,6 +241,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
     observeObjectProperty(node, name, prop);
 
     // TODO: test!
+    // TODO: Document magic!
     if (prop.type === NodeArray && value.constructor === Array) {
       const nodeArray = prop.value as NodeArray<Node>;
 
@@ -254,8 +252,10 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         console.error(`Node: Property "${name}" should be initialized as a NodeArray!`, nodeArray);
       }
 
-      nodeArray.length = 0;
-      nodeArray.push(...value as Array<Node>);
+      nodeArray.withInternalOperation(() => {
+        nodeArray.length = 0;
+        nodeArray.push(...value as Array<Node>);
+      }, false);
       return;
     }
 
@@ -345,7 +345,8 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
     if (value === object) {
       const handlerName = name + 'Mutated' as keyof Node;
       if (typeof node[handlerName] === 'function') {
-        node.throttle(node[handlerName] as CallbackFunction);
+        // node.throttle(node[handlerName] as CallbackFunction, event);
+        (node[handlerName] as CallbackFunction)(event); //TODO: Check for regressions.
       }
       return true;
     }

@@ -492,7 +492,7 @@ export declare class IoElement extends HTMLElement {
 	throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 	debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 	onPropertyMutated(event: CustomEvent): true | undefined;
-	dispatchMutation(object?: Object | Node$1 | IoElement): void;
+	dispatchMutation(object?: Object | Node$1 | IoElement, properties?: string[]): void;
 	bind<T>(name: string): Binding<T>;
 	unbind(name: string): void;
 	addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -705,6 +705,11 @@ export declare class ProtoChain {
 	 */
 	addStyle(style?: string): void;
 	/**
+	 * Adds style defined in decorators to the style string.
+	 * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+	 */
+	addStyleFromDecorators(ioNodeConstructor: NodeConstructor): void;
+	/**
 	 * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
 	 * @param {Node} proto - Prototype object to search for handlers
 	 */
@@ -736,9 +741,6 @@ export type NodeProps = {
 	reactivity?: ReactivityType;
 	[key: prefix<string, "@">]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 };
-/**
- * NodeMixin applied to `Object` class.
- */
 declare class Node$1 extends Object {
 	reactivity: ReactivityType;
 	static get ReactiveProperties(): ReactivePropertyDefinitions;
@@ -753,7 +755,7 @@ declare class Node$1 extends Object {
 	readonly _observedNodeProperties: string[];
 	readonly _isNode: boolean;
 	_disposed: boolean;
-	constructor(args?: NodeProps);
+	constructor(args?: any);
 	applyProperties(props: any, skipDispatch?: boolean): void;
 	setProperties(props: any): void;
 	setProperty(name: string, value: any, debounce?: boolean): void;
@@ -765,7 +767,7 @@ declare class Node$1 extends Object {
 	throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 	debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 	onPropertyMutated(event: CustomEvent): true | undefined;
-	dispatchMutation(object?: Object | Node$1 | IoElement): void;
+	dispatchMutation(object?: Object | Node$1 | IoElement, properties?: string[]): void;
 	bind<T>(name: string): Binding<T>;
 	unbind(name: string): void;
 	addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -807,7 +809,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, "target"> {
  * - Dispatches change events (e.g., '[propName]-changed')
  * - Invokes corresponding change handlers (e.g., [propName]Changed())
  * - Triggers a final 'changed()' handler after processing all changes
- * - Dispatches a final 'io-object-mutation' event for associated node.
+ * - Triggers a final 'dispatchMutation()' handler after processing all changes
  *
  * The queue helps optimize performance by batching multiple property changes
  * and preventing redundant updates when the same property changes multiple
@@ -926,7 +928,7 @@ export declare class Binding<T extends unknown> {
 		node: string;
 		property: string;
 		targets: string[];
-		targetProperties: Record<string, Properties>;
+		targetProperties: Properties[];
 	};
 	/**
 	 * Disposes the binding and removes all targets and listeners.
@@ -944,7 +946,7 @@ export declare class NodeArray<N extends Node$1> extends Array<N> {
 	selected: string;
 	static get [Symbol.species](): ArrayConstructor;
 	constructor(node: Node$1 | IoElement, ...args: any[]);
-	private withInternalOperation;
+	withInternalOperation<T>(operation: () => T, dispatch?: boolean): T;
 	splice(start: number, deleteCount: number, ...items: N[]): N[];
 	push(...items: N[]): number;
 	unshift(...items: N[]): number;
@@ -954,8 +956,8 @@ export declare class NodeArray<N extends Node$1> extends Array<N> {
 	sort(compareFn?: (a: N, b: N) => number): this;
 	fill(): this;
 	copyWithin(): this;
+	itemMutated(event: CustomEvent): void;
 	dispatchMutation(): void;
-	dispatchMutationDebounced(): void;
 }
 export declare const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>>;
 export declare const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions>;
@@ -1017,6 +1019,8 @@ export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLo
  * Register(MyNode);
 */
 export declare function Register(ioNodeConstructor: typeof Node$1 | typeof IoElement): void;
+export declare const styleDecorators: WeakMap<AnyConstructor, string>;
+export declare function Style(style: string): (target: Node$1 | IoElement, temp: string) => void;
 export type StorageProps = NodeProps & {
 	key: string;
 	value: any;
@@ -2309,82 +2313,56 @@ export declare class IoSwitch extends IoBoolean {
 	changed(): void;
 }
 export declare const ioSwitch: (arg0?: any) => VDOMElement;
-export type MenuOptionsProps = NodeProps & {
-	selected?: WithBinding<string>;
-	path?: string;
-	delimiter?: string;
-	items?: MenuItem[] | MenuItemDefLoose[];
-};
-export declare class MenuOptions extends Node$1 {
-	selected: string;
-	selectedShallow: string;
-	path: string;
-	delimiter: string;
-	items: MenuItem[];
-	constructor(properties?: MenuOptionsProps);
-	init(): void;
-	getAllItems(): MenuItem[];
-	findItemByValue(value: any): MenuItem | null;
-	findItemById(id: string): MenuItem | null;
-	fromJSON(menuItemDefLoose: MenuItemDefLoose[]): this;
-	moveItem(oldIndex: number, newIndex: number): void;
-	addItem(itemLoose: MenuItem | MenuItemDefLoose, index?: number): void;
-	removeItemById(id: string): void;
-	removeItemByIndex(index: number): void;
-	removeItem(item: MenuItem): void;
-	initItems(): void;
-	unselectAll(): void;
-	pathChanged(): void;
-	selectedChanged(): void;
-	updatePaths(item?: MenuItem): void;
-	updatePathsDebounced(item?: MenuItem): void;
-	onItemSelectedChanged(event: CustomEvent): void;
-	onSubOptionsPathChanged(event: CustomEvent): void;
-	selectDefault(): boolean;
-	dispose(): void;
-}
-export type MenuItemSelectType = "select" | "toggle" | "link" | "action" | "none";
-export type MenuItemDefLoose = undefined | null | string | number | MenuItemProps;
-export type MenuItemProps = NodeProps & {
-	value?: any;
+export type MenuOptionMode = "select" | "toggle" | "none";
+export type MenuOptionProps = {
 	id?: string;
+	value?: any;
 	label?: string;
 	icon?: string;
 	hint?: string;
 	action?: (value?: any) => void;
-	mode?: MenuItemSelectType;
-	hidden?: boolean;
+	mode?: MenuOptionMode;
 	disabled?: boolean;
 	selected?: WithBinding<boolean>;
-	options?: MenuOptions | MenuItemDefLoose[];
+	options?: Array<string | number | boolean | null | undefined | MenuOptionProps>;
 };
-export declare class MenuItem extends Node$1 {
-	value: any;
+export declare class MenuOption extends Node$1 {
 	id: string;
+	value: any;
 	label: string;
 	icon: string;
 	hint: string;
-	hidden: boolean;
 	disabled: boolean;
 	action?: (value?: any) => void;
-	mode: MenuItemSelectType;
+	mode: MenuOptionMode;
 	selected: boolean;
-	options?: MenuOptions;
-	get hasmore(): boolean;
-	constructor(args?: MenuItemProps);
-	findItemByValue(value: any): MenuItem | null;
-	findItemById(id: string): MenuItem | null;
-	fromJSON(looseDef: MenuItemDefLoose): this;
-	toJSON(): Record<string, any>;
-	onOptionsItemSelected(): void;
-	onOptionsPathChanged(event: CustomEvent): void;
-	optionsChanged(change: Change): void;
+	selectedIDImmediate: string;
+	selectedID: string;
+	path: string;
+	options: NodeArray<MenuOption>;
+	static get Listeners(): {
+		"io-node-array-selected-changed": string;
+	};
+	constructor(args: string | number | boolean | null | undefined | MenuOptionProps);
+	getAllOptions(): MenuOption[];
+	findItemByValue(value: any): MenuOption | null;
+	findItemById(id: string): MenuOption | null;
+	selectDefault(): void;
 	selectedChanged(): void;
+	selectedIDChanged(): void;
+	selectedIDImmediateChanged(): void;
+	suboptionSelectedChanged(event: CustomEvent): void;
+	unselectSuboptions(): void;
+	updatePaths(): void;
+	pathChanged(): void;
+	optionsMutated(event: CustomEvent): void;
+	toJSON(): MenuOptionProps;
+	fromJSON(json: MenuOptionProps): this;
 	changed(): void;
 	dispose(): void;
 }
 export type IoContextMenuProps = IoElementProps & {
-	options?: MenuOptions;
+	option: MenuOption;
 	expanded?: WithBinding<boolean>;
 	button?: number;
 };
@@ -2392,14 +2370,15 @@ export type IoContextMenuProps = IoElementProps & {
  * An invisible element that inserts a floating menu when its `parentElement` is clicked. Menu position is set by the pointer by default but it can be configured to expand to the side of the parent element by setting the `position` property. Default `button` property for menu expansion is `0` (left mouse button), but it can be configured for other buttons. You can have multiple `IoContextMenu` instances under the same `parentElement` as long as the `button` properties are different.
  **/
 export declare class IoContextMenu extends IoElement {
-	options: MenuOptions;
+	option: MenuOption;
 	expanded: boolean;
 	button: number;
 	$options: IoMenuOptions;
 	_contextTimeout: number;
 	static get ReactiveProperties(): any;
-	constructor(args?: IoContextMenuProps);
+	constructor(args: IoContextMenuProps);
 	init(): void;
+	optionChanged(): void;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
 	getBoundingClientRect(): DOMRect;
@@ -2412,35 +2391,32 @@ export declare class IoContextMenu extends IoElement {
 }
 export declare const ioContextMenu: (arg0?: IoContextMenuProps) => VDOMElement;
 export type IoMenuOptionsProps = IoElementProps & {
-	options?: WithBinding<MenuOptions>;
+	option?: MenuOption;
 	expanded?: WithBinding<boolean>;
 	horizontal?: boolean;
 	searchable?: boolean;
 	search?: WithBinding<string>;
 	direction?: NudgeDirection;
 	depth?: number;
-	noPartialCollapse?: boolean;
 	widget?: VDOMElement | null;
 	$parent?: IoMenuItem | IoContextMenu;
 };
 /**
- * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu items are displayed in horizontal direction.
+ * It generates a list of `IoMenuItem` elements from `options` property. If `horizontal` property is set, menu options are displayed in horizontal direction.
  **/
 export declare class IoMenuOptions extends IoElement {
 	static get Style(): string;
-	options: MenuOptions;
+	option: MenuOption;
 	expanded: boolean;
 	horizontal: boolean;
 	searchable: boolean;
 	search: string;
 	direction: NudgeDirection;
 	depth: number;
-	noPartialCollapse: boolean;
 	overflow: string;
 	widget: VDOMElement | null;
 	$parent?: IoMenuItem;
 	role: string;
-	private _overflownItems;
 	static get Listeners(): {
 		touchstart: ListenerDefinition;
 		"io-focus-to": string;
@@ -2458,7 +2434,7 @@ export declare class IoMenuOptions extends IoElement {
 }
 export declare const ioMenuOptions: (arg0?: IoMenuOptionsProps) => VDOMElement;
 export type IoMenuTreeProps = IoElementProps & {
-	options?: MenuOptions;
+	option?: MenuOption;
 	searchable?: boolean;
 	search?: WithBinding<string>;
 	depth?: number;
@@ -2466,7 +2442,7 @@ export type IoMenuTreeProps = IoElementProps & {
 };
 export declare class IoMenuTree extends IoElement {
 	static get Style(): string;
-	options: MenuOptions;
+	option: MenuOption;
 	searchable: boolean;
 	search: string;
 	depth: number;
@@ -2481,7 +2457,7 @@ export declare function onOverlayPointerdown(event: PointerEvent): void;
 export declare function onOverlayPointermove(event: PointerEvent): void;
 export declare function onOverlayPointeup(event: PointerEvent): void;
 export type IoMenuItemProps = IoFieldProps & {
-	item?: MenuItem;
+	option?: MenuOption;
 	label?: string;
 	expanded?: WithBinding<boolean>;
 	direction?: NudgeDirection;
@@ -2489,11 +2465,11 @@ export type IoMenuItemProps = IoFieldProps & {
 	$parent?: IoMenuOptions | IoMenuTree;
 };
 /**
- * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu items whose `option.value` matches selected value.
+ * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu options whose `option.value` matches selected value.
  **/
 export declare class IoMenuItem extends IoField {
 	static get Style(): string;
-	item: MenuItem;
+	option: MenuOption;
 	label: string;
 	expanded: boolean;
 	direction: NudgeDirection;
@@ -2504,7 +2480,7 @@ export declare class IoMenuItem extends IoField {
 	static get Listeners(): any;
 	constructor(args?: IoMenuItemProps);
 	preventDefault(event: Event): void;
-	get hasmore(): boolean;
+	get hasmore(): boolean | 0;
 	get inoverlay(): boolean;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
@@ -2519,8 +2495,8 @@ export declare class IoMenuItem extends IoField {
 	onKeydown(event: KeyboardEvent): void;
 	collapse(): void;
 	collapseRoot(): void;
-	itemChanged(): void;
-	itemMutated(): void;
+	optionChanged(): void;
+	optionMutated(): void;
 	initOptions(): void;
 	changed(): void;
 	dispose(): void;
@@ -2534,7 +2510,7 @@ export declare class IoMenuHamburger extends IoMenuItem {
 export declare const ioMenuHamburger: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
 export type IoMenuTreeBranchProps = IoElementProps & {
 	depth?: number;
-	item?: MenuItem;
+	option?: MenuOption;
 	expanded?: WithBinding<boolean>;
 };
 /**
@@ -2544,20 +2520,20 @@ export type IoMenuTreeBranchProps = IoElementProps & {
 export declare class IoMenuTreeBranch extends IoElement {
 	static get Style(): string;
 	depth: number;
-	item: MenuItem;
+	option: MenuOption;
 	expanded: boolean;
 	role: string;
-	itemMutated(): void;
+	optionMutated(): void;
 	changed(): void;
 }
 export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps) => VDOMElement;
 export type SelectBy = "value" | "id";
 export type IoOptionSelectProps = IoElementProps & {
+	option: MenuOption;
 	value?: WithBinding<any>;
 	label?: string;
 	icon?: string;
 	selectBy?: SelectBy;
-	options?: MenuOptions;
 };
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
@@ -2569,19 +2545,15 @@ export declare class IoOptionSelect extends IoElement {
 	label: string;
 	icon: string;
 	selectBy: SelectBy;
-	options: MenuOptions;
+	option: MenuOption;
 	role: string;
-	$item: MenuItem;
-	constructor(args?: IoOptionSelectProps);
-	ready(): void;
-	_onItemSelected(event: CustomEvent): void;
+	constructor(args: IoOptionSelectProps);
+	onOptionSelected(event: CustomEvent): void;
 	inputValue(value: any): void;
-	optionsChanged(change: Change): void;
-	optionsMutated(): void;
+	optionChanged(change: Change): void;
 	changed(): void;
-	onChange(): void;
 }
-export declare const ioOptionSelect: (arg0?: IoOptionSelectProps) => VDOMElement;
+export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => VDOMElement;
 export type IoCollapsibleProps = IoElementProps & {
 	elements?: VDOMElement[];
 	label?: string;
@@ -2646,7 +2618,7 @@ export declare const ioSelector: (arg0?: IoSelectorProps) => VDOMElement;
 export type MenuPositionType = "top" | "left" | "right";
 export type SelectType = "shallow" | "deep" | "all" | "none";
 export type IoNavigatorProps = IoElementProps & {
-	options?: MenuOptions;
+	option?: MenuOption;
 	elements?: VDOMElement[];
 	widget?: VDOMElement;
 	menu?: MenuPositionType;
@@ -2658,14 +2630,14 @@ export type IoNavigatorProps = IoElementProps & {
 export declare class IoNavigator extends IoElement {
 	static get Style(): string;
 	elements: VDOMElement[];
-	options: MenuOptions;
+	option: MenuOption;
 	widget: VDOMElement | null;
 	menu: MenuPositionType;
 	depth: number;
 	select: SelectType;
 	caching: CachingType;
 	anchor: string;
-	optionsMutated(): void;
+	optionMutated(): void;
 	changed(): void;
 }
 export declare const ioNavigator: (arg0?: IoNavigatorProps) => VDOMElement;

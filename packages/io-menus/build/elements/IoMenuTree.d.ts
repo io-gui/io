@@ -1,8 +1,8 @@
 import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuItem } from './IoMenuItem.js';
 export type IoMenuTreeProps = IoElementProps & {
-    options?: MenuOptions;
+    option?: MenuOption;
     searchable?: boolean;
     search?: WithBinding<string>;
     depth?: number;
@@ -10,7 +10,7 @@ export type IoMenuTreeProps = IoElementProps & {
 };
 export declare class IoMenuTree extends IoElement {
     static get Style(): string;
-    options: MenuOptions;
+    option: MenuOption;
     searchable: boolean;
     search: string;
     depth: number;

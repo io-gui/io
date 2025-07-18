@@ -1,10 +1,9 @@
 import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, IoElementProps, WithBinding, Property } from 'io-gui';
-import { ioString } from 'io-inputs';
-import { MenuItem } from '../nodes/MenuItem.js';
-import { MenuOptions } from '../nodes/MenuOptions.js';
+import { ioField, ioString } from 'io-inputs';
+import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js';
-import { searchMenuOptions } from '../utils/MenuNodeUtils.js';
+import { searchMenuOption } from '../utils/MenuNodeUtils.js';
 
 function genObjectStorageID(object: Record<string, any>) {
   const string = JSON.stringify(object);
@@ -15,23 +14,23 @@ function genObjectStorageID(object: Record<string, any>) {
   return 'io-local-state-' + String(hash);
 }
 
-function addMenuItemsOrTreeBranches(options: MenuOptions, depth: number, d = 0) {
+function addMenuOptionsOrTreeBranches(option: MenuOption, depth: number, d = 0) {
   const elements: VDOMElement[] = [];
-  if (d <= depth) for (let i = 0; i < options.items.length; i++) {
-    const item = options.items[i];
-    if (item.options?.items.length) {
-      const collapsibleState = $({value: false, storage: 'local', key: genObjectStorageID(item)});
-      if (item.selected === true) collapsibleState.value = true;
-      elements.push(ioMenuTreeBranch({item: item, depth: d, expanded: collapsibleState}));
+  if (d <= depth) for (let i = 0; i < option.options.length; i++) {
+    const subOption = option.options[i] as MenuOption;
+    if (subOption.options.length) {
+      const collapsibleState = $({value: false, storage: 'local', key: genObjectStorageID(subOption)});
+      if (subOption.selected === true) collapsibleState.value = true;
+      elements.push(ioMenuTreeBranch({option: subOption, depth: d, expanded: collapsibleState}));
     } else {
-      elements.push(ioMenuItem({item: item, depth: d}));
+      elements.push(ioMenuItem({option: subOption, depth: d}));
     }
   }
   return elements;
 }
 
 export type IoMenuTreeProps = IoElementProps & {
-  options?: MenuOptions,
+  option?: MenuOption,
   searchable?: boolean,
   search?: WithBinding<string>,
   depth?: number,
@@ -72,8 +71,8 @@ export class IoMenuTree extends IoElement {
     `;
   }
 
-  @ReactiveProperty({type: MenuOptions})
-  declare options: MenuOptions;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @ReactiveProperty({value: false, type: Boolean})
   declare searchable: boolean;
@@ -109,15 +108,15 @@ export class IoMenuTree extends IoElement {
     }
 
     if (this.search) {
-      const filteredItems = searchMenuOptions(this.options, this.search, this.depth);
+      const filteredItems = searchMenuOption(this.option, this.search, this.depth);
       if (filteredItems.length === 0) {
-        vChildren.push(ioMenuItem({item: new MenuItem({label: 'No matches', mode: 'none'})}));
+        vChildren.push(ioField({label: 'No matches'}));
       } else for (let i = 0; i < filteredItems.length; i++) {
-        vChildren.push(ioMenuItem({item: filteredItems[i], depth: 0}));
+        vChildren.push(ioMenuItem({option: filteredItems[i], depth: 0}));
       }
 
     } else {
-      vChildren.push(...addMenuItemsOrTreeBranches(this.options, this.depth));
+      vChildren.push(...addMenuOptionsOrTreeBranches(this.option, this.depth));
     }
 
     this.render(vChildren);

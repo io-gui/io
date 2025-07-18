@@ -8,6 +8,7 @@ export * from './core/ReactiveProperty.js';
 export * from './vdom/VDOM.js';
 export * from './decorators/Property.js';
 export * from './decorators/Register.js';
+export * from './decorators/Style.js';
 export * from './nodes/Node.js';
 export * from './nodes/Storage.js';
 export * from './nodes/Theme.js';

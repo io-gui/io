@@ -23,6 +23,7 @@ export class Split extends Node {
   declare flex: string;
 
   constructor(args: SplitProps) {
+    args = { ...args };
     for (let i = 0; i < args.children.length; i++) {
       const panelChild = args.children[i] as PanelProps;
       const splitChild = args.children[i] as SplitProps;
@@ -33,19 +34,18 @@ export class Split extends Node {
       }
     }
     super(args);
-    this.childrenMutatedDebounced = this.childrenMutatedDebounced.bind(this);
   }
   childrenMutated() {
-    this.debounce(this.childrenMutatedDebounced);
+    this.debounce(this.onChildrenMutatedDebounced);
   }
-  childrenMutatedDebounced() {
+  onChildrenMutatedDebounced() {
     this.dispatchMutation();
   }
   toJSON(): SplitProps {
     return {
       children: this.children.map((child: Split | Panel): SplitProps | PanelProps => child.toJSON()),
-      orientation: this.orientation ?? 'horizontal',
-      flex: this.flex ?? '1 1 100%',
+      orientation: this.orientation,
+      flex: this.flex,
     };
   }
   fromJSON(json: SplitProps) {
@@ -63,5 +63,9 @@ export class Split extends Node {
       flex: json.flex ?? '1 1 100%',
     });
     return this;
+  }
+  dispose() {
+    this.children.length = 0; // TODO: test magic!
+    super.dispose();
   }
 }

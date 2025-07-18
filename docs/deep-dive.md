@@ -301,6 +301,10 @@ node.selected = true;
 
 Note that change handler functions are provided with a `change` payload that includes property name as well as `oldValue` and new `value`. Similarly, the change event provides the same change payload as `event.detail`.
 
+### Property Change and Object Mutation
+
+<io-change-visualization style="width: 100%; aspect-ratio: 2/1;"></io-change-visualization>
+
 ### Property Change Batching
 
 Since `change()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
@@ -330,15 +334,15 @@ this.prop2Changed(change);
 this.changed();
 ```
 
-### Lazy Reactivity
+### Debounced Reactivity
 
 > **Warning!** This feature is not fully tested!
 
 By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inefficiencies in complex systems where multiple properties are changing frequently.
 
-Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `lazy` property to `true`. This will effectively change node's reactivity to a lazy (asynchronous) regime.
+Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `reactivity` property to `debounced` or `throttled`. This will effectively change node's reactivity to an asynchronous regime.
 
-In lazy regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
+In asynchronous regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
 
 ```javascript
 this.prop1 = 1;

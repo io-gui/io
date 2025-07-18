@@ -1,5 +1,5 @@
 import { IoElement, Register, ThemeSingleton } from 'io-gui';
-import { MenuOptions, ioOptionSelect } from 'io-menus';
+import { MenuOption, ioOptionSelect } from 'io-menus';
 import { ioButton, ioField } from 'io-inputs';
 import { ioNumberSlider } from 'io-sliders';
 import { ioColorRgba } from 'io-colors';
@@ -19,9 +19,9 @@ export class IoThemeEditor extends IoElement {
   constructor(props) {
     super(props);
     this.render([
-      ioOptionSelect({value: ThemeSingleton.bind('themeID'), options: new MenuOptions({items: [
-        {label: 'Light Theme', value: 'light'},
-        {label: 'Dark Theme', value: 'dark'},
+      ioOptionSelect({value: ThemeSingleton.bind('themeID'), option: new MenuOption({options: [
+        {id: 'Light Theme', value: 'light'},
+        {id: 'Dark Theme', value: 'dark'},
       ]})}),
       ioButton({label: 'Reset', action: () => ThemeSingleton.reset() }),
 

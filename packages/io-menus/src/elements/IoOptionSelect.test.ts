@@ -1,6 +1,6 @@
-import { IoOptionSelect, MenuOptions } from '../index.js';
+import { IoOptionSelect, MenuOption } from '../index.js';
 
-const element = new IoOptionSelect({value: '', options: new MenuOptions()});
+const element = new IoOptionSelect({value: '', option: new MenuOption({id: 'test', options: []})});
 document.body.appendChild(element as HTMLElement);
 element.style.display = 'none';
 

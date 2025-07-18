@@ -1,58 +1,58 @@
 import { Register, IoElement, div, span } from 'io-gui';
-import { MenuOptions, MenuItem, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus';
-// TODO: remove dependencies on io-navigation.
+import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus';
 import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
+// TODO: remove dependencies on io-navigation.
 import 'io-navigation';
 import 'io-icons';
 
-const numberItems = new MenuOptions({items: [
-  {value: 0, label: 'zero', hint: 'Number(0)', icon: 'io:numeric-0-box'},
-  {value: 1, label: 'one', hint: 'Number(1)', icon: 'io:numeric-1-box'},
-  {value: 2, label: 'two', hint: 'Number(2)', icon: 'io:numeric-2-box'},
-  {value: 3, label: 'three', hint: 'Number(3)', icon: 'io:numeric-3-box'},
-  {value: 4, label: 'four', hint: 'Number(4)', icon: 'io:numeric-4-box'},
+const numberItems = new MenuOption({id: 'numbers', options: [
+  {id: 'zero', value: 0, hint: 'Number(0)', icon: 'io:numeric-0-box'},
+  {id: 'one', value: 1, hint: 'Number(1)', icon: 'io:numeric-1-box'},
+  {id: 'two', value: 2, hint: 'Number(2)', icon: 'io:numeric-2-box'},
+  {id: 'three', value: 3, hint: 'Number(3)', icon: 'io:numeric-3-box'},
+  {id: 'four', value: 4, hint: 'Number(4)', icon: 'io:numeric-4-box'},
 ]});
 
-const colorOptions = new MenuOptions({items: [
-  {id: 'Red', icon: '❤️', options: ['Red1','Red2','Red3']},
-  {id: 'Green', icon: '💚', options: ['Green1','Green2','Green3']},
-  {id: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3']},
+const colorOptions = new MenuOption({id: 'colors', options: [
+  {id: 'Red', icon: '❤️', options: ['Red1','Red2','Red3'].map(item => new MenuOption({id: item, value: item}))},
+  {id: 'Green', icon: '💚', options: ['Green1','Green2','Green3'].map(item => new MenuOption({id: item, value: item}))},
+  {id: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3'].map(item => new MenuOption({id: item, value: item}))},
 ]});
 
-const optionsDeep = new MenuOptions({items: [
+const optionDeep = new MenuOption({id: 'deep', options: [
   {id: 'Deep Menu', options: [
-    {value: 'Level 1/1', hint: 'One'},
-    {value: 'Level 1/2', hint: 'Two'},
-    {value: 'Level 1/3', hint: 'Three', options: [
-      {value: 'Level 2/1', hint: 'One'},
-      {value: 'Level 2/2', hint: 'Two'},
-      {value: 'Level 2/3', hint: 'Three', options: [
-        {value: 'Level 3/1', hint: 'One'},
-        {value: 'Level 3/2', hint: 'Two'},
-        {value: 'Level 3/3', hint: 'Three', options: [
-          {value: 'Level 4/1', hint: 'One'},
-          {value: 'Level 4/2', hint: 'Two'},
-          {value: 'Level 4/3', hint: 'Three', options: [
-            {value: 'Level 5/1', hint: 'One'},
-            {value: 'Level 5/2', hint: 'Two'},
-            {value: 'Level 5/3', hint: 'Three', options: [
-              {value: 'Level 6/1', hint: 'One'},
-              {value: 'Level 6/2', hint: 'Two'},
-              {value: 'Level 6/3', hint: 'Three', options: [
-                {value: 'Level 7/1', hint: 'One'},
-                {value: 'Level 7/2', hint: 'Two'},
-                {value: 'Level 7/3', hint: 'Three'},
+    {id: 'Level 1/1', hint: 'One'},
+    {id: 'Level 1/2', hint: 'Two'},
+    {id: 'Level 1/3', hint: 'Three', options: [
+      {id: 'Level 2/1', hint: 'One'},
+      {id: 'Level 2/2', hint: 'Two'},
+      {id: 'Level 2/3', hint: 'Three', options: [
+        {id: 'Level 3/1', hint: 'One'},
+        {id: 'Level 3/2', hint: 'Two'},
+        {id: 'Level 3/3', hint: 'Three', options: [
+          {id: 'Level 4/1', hint: 'One'},
+          {id: 'Level 4/2', hint: 'Two'},
+          {id: 'Level 4/3', hint: 'Three', options: [
+            {id: 'Level 5/1', hint: 'One'},
+            {id: 'Level 5/2', hint: 'Two'},
+            {id: 'Level 5/3', hint: 'Three', options: [
+              {id: 'Level 6/1', hint: 'One'},
+              {id: 'Level 6/2', hint: 'Two'},
+              {id: 'Level 6/3', hint: 'Three', options: [
+                {id: 'Level 7/1', hint: 'One'},
+                {id: 'Level 7/2', hint: 'Two'},
+                {id: 'Level 7/3', hint: 'Three'},
               ]},
             ]},
           ]},
         ]},
       ]},
     ]},
-    {value: 'Level 1/4', hint: 'Four'},
+    {id: 'Level 1/4', hint: 'Four'},
   ]},
 ]});
 
-const optionsLong = new MenuOptions({items: [
+const optionLong = new MenuOption({id: 'long', options: [
   'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
   'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',
   'umbrella', 'violin', 'watermelon', 'xylophone', 'yacht', 'zebra', 'astronaut', 'butterfly', 'crocodile', 'diamond',
@@ -65,7 +65,7 @@ const optionsLong = new MenuOptions({items: [
   'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
 ]});
 
-class IoOptionsViewDemo extends IoElement {
+class IoSuboptionViewDemo extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -74,6 +74,8 @@ class IoOptionsViewDemo extends IoElement {
         flex-direction: column;
         border: 1px solid gray;
         border-radius: var(--io_borderRadius);
+        margin: var(--io_spacing);
+        margin-left: var(--io_spacing);
       }
       :host > div {
         background-color: var(--io_bgColorLight);
@@ -105,30 +107,30 @@ class IoOptionsViewDemo extends IoElement {
   }
   static get ReactiveProperties() {
     return {
-      options: {
-        type: MenuOptions,
+      option: {
+        type: MenuOption,
       },
     };
   }
-  optionsMutated() {
+  optionMutated() {
     this.changed();
   }
   changed() {
     const vChildren = [];
-    for (let i = 0; i < this.options.items.length; i++) {
-      vChildren.push(ioItemViewDemo({item: this.options.items[i]}));
+    for (let i = 0; i < this.option.options.length; i++) {
+      vChildren.push(ioItemViewDemo({option: this.option.options[i]}));
     }
     this.render([
       div([
-        this.options.selected ? span({class: 'selected'}, `selected: ${this.options.selected}`) : null,
-        this.options.path ? span({class: 'path'}, `path: ${this.options.path}`) : null,
+        this.option.selectedID ? span({class: 'selected'}, `selected: ${this.option.selectedID}`) : null,
+        this.option.path ? span({class: 'path'}, `path: ${this.option.path}`) : null,
       ]),
       ...vChildren
     ]);
   }
 }
-Register(IoOptionsViewDemo);
-const ioOptionsViewDemo = IoOptionsViewDemo.vConstructor;
+Register(IoSuboptionViewDemo);
+const ioSuboptionViewDemo = IoSuboptionViewDemo.vConstructor;
 
 class IoItemViewDemo extends IoElement {
   static get Style() {
@@ -136,6 +138,7 @@ class IoItemViewDemo extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+        margin: var(--io_spacing);
       }
       :host > div {
         display: flex;
@@ -144,27 +147,27 @@ class IoItemViewDemo extends IoElement {
   }
   static get ReactiveProperties() {
     return {
-      item: {
-        type: MenuItem,
+      option: {
+        type: MenuOption,
       },
     };
   }
-  itemMutated() {
+  optionMutated() {
     this.changed();
   }
   changed() {
     let selectElement = null;
-    if (this.item.mode === 'toggle') {
-      selectElement = ioBoolean({value: this.item.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
-    } else if (this.item.mode === 'select') {
-      selectElement = ioSwitch({value: this.item.bind('selected')});
+    if (this.option.mode === 'toggle') {
+      selectElement = ioBoolean({value: this.option.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
+    } else if (this.option.mode === 'select') {
+      selectElement = ioSwitch({value: this.option.bind('selected')});
     }
     this.render([
       div([
         selectElement,
-        ioField({value: this.item.label, inert: true, appearance: 'neutral'}),
+        ioField({value: this.option.label, inert: true, appearance: 'neutral'}),
       ]),
-      this.item.hasmore ? ioOptionsViewDemo({options: this.item.options}) : null
+      this.option.options.length ? ioSuboptionViewDemo({option: this.option}) : null
     ]);
   }
 }
@@ -202,27 +205,23 @@ class IoMenusDemo extends IoElement {
       }
     `;
   }
-  static get ReactiveProperties() {
-    return {
-      menuPath: '',
-      menuRoot: undefined,
-    };
-  }
   ready() {
     this.render([
       ioMenuTree({
         searchable: true,
-        options: optionsDeep,
+        option: optionDeep,
       }),
-      ioMenuItem({label: 'menu item', item: new MenuItem({value: 'item'})}),
-      ioMenuItem({item: new MenuItem({
+      ioMenuItem({label: 'menu item', option: new MenuOption({id: 'item', value: 'item'})}),
+      ioMenuItem({option: new MenuOption({
+        id: 'item with hint/label/icon',
         selected: true,
         value: 'value',
         hint: 'hint',
         label: 'menu item label',
         icon: 'io:code',
       })}),
-      ioMenuItem({label: 'menu item', item: new MenuItem({
+      ioMenuItem({label: 'menu item', option: new MenuOption({
+        id: 'item with label override from element',
         selected: false,
         value: 'value',
         hint: 'hint',
@@ -232,77 +231,67 @@ class IoMenusDemo extends IoElement {
       ioMenuOptions({
         horizontal: true,
         searchable: true,
-        options: new MenuOptions({
-          items: numberItems.items,
-          selected: this.bind('menuRoot')
-        }),
+        option: numberItems,
       }),
       ioMenuOptions({
         horizontal: true,
-        noPartialCollapse: true,
-        options: new MenuOptions({
-          items: numberItems.items,
-          selected: this.bind('menuRoot')
-        }),
+        option: colorOptions,
       }),
       div({class: 'row'}, [
         ioMenuOptions({
           searchable: true,
-          options: new MenuOptions({
-            items: numberItems.items,
-            selected: this.bind('menuRoot')
+          option: numberItems,
+        }),
+        ioMenuOptions({
+          option: new MenuOption({
+            id: 'reversed',
+            options: [...numberItems.options].reverse(),
           }),
         }),
         ioMenuOptions({
-          options: new MenuOptions({
-            items: [...numberItems.items].reverse(),
-            selected: this.bind('menuRoot')
-          }),
+          option: colorOptions,
         }),
         ioMenuOptions({
-          options: new MenuOptions({selected: this.bind('menuRoot'), items: numberItems.items}),
-        }),
-        ioMenuOptions({
-          options: optionsDeep,
+          option: optionDeep,
         }),
         ioOptionSelect({
           label: 'Long Menu Select',
-          options: optionsLong,
+          option: optionLong,
         }),
       ]),
       div({class: 'contextArea'}, [
         span('Context Area'),
         ioContextMenu({
-          options: new MenuOptions({items: [...optionsDeep.items, ...numberItems.items, ...colorOptions.items]}),
+          option: new MenuOption({id: 'context', options: [...optionDeep.options, ...numberItems.options, ...colorOptions.options]}),
         }),
         ioContextMenu({
-          options: new MenuOptions({items: [...colorOptions.items]}),
+          option: new MenuOption({id: 'context2', options: [...colorOptions.options]}),
           button: 1,
         }),
         ioContextMenu({
-          options: optionsLong,
+          option: optionLong,
           button: 2,
         }),
       ]),
-      ioOptionsViewDemo({options: new MenuOptions({items: [
-        'home', 
-        {value: 'food', options: [
-          {value: 'fruits', options: [
-            {value: 'apples', selected: true},
-            {value: 'mangos'},
-            {value: 'bannanas'},
+      ioSuboptionViewDemo({option: new MenuOption({id: 'optionsview', options: [
+        {id: 'home'}, 
+        {id: 'food', options: [
+          {id: 'fruits', options: [
+            {id: 'apples', selected: true},
+            {id: 'mangos'},
+            {id: 'bannanas'},
           ]}
         ]},
-        {value: 'mixed', options: [
-          {value: 'togglables', mode: 'none', options: [
-            {value: 'toggle1', mode: 'toggle'},
-            {value: 'toggle2', mode: 'toggle'},
-            {value: 'toggle3', mode: 'toggle'},
-            {value: 'toggle4', mode: 'toggle'},
+        {id: 'mixed', options: [
+          {id: 'togglables', mode: 'none', options: [
+            {id: 'toggle1', mode: 'toggle'},
+            {id: 'toggle2', mode: 'toggle'},
+            {id: 'toggle3', mode: 'toggle'},
+            {id: 'toggle4', mode: 'toggle'},
           ]},
-          {value: 'selectables', options: [
-            {value: 'toggle', mode: 'toggle'},
-            'selectable',
+          {id: 'selectables', options: [
+            {id: 'toggle', mode: 'toggle'},
+            {id: 'selectable'},
           ]},
         ]},
       ]})}),

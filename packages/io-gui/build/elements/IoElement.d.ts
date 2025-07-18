@@ -38,7 +38,7 @@ export declare class IoElement extends HTMLElement {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): true | undefined;
-    dispatchMutation(object?: Object | Node | IoElement): void;
+    dispatchMutation(object?: Object | Node | IoElement, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;

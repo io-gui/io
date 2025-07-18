@@ -22,7 +22,6 @@ export class IoMenuHamburger extends IoMenuItem {
   declare direction: NudgeDirection;
 
   changed() {
-    this.setAttribute('hidden', this.item.hidden);
     this.render([ioIcon({value: 'io:hamburger'})]);
   }
 }

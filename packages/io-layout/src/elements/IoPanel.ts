@@ -1,6 +1,6 @@
 import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
 import { ioSelector } from 'io-navigation';
-import { IoMenuItem, MenuItem } from 'io-menus';
+import { IoMenuItem, MenuOption } from 'io-menus';
 import { ioTabs } from './IoTabs.js';
 import { IoSplit } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
@@ -11,7 +11,7 @@ import { IoLayout } from './IoLayout.js';
 export type IoPanelProps = IoElementProps & {
   panel: Panel,
   elements: VDOMElement[],
-  addMenuItem: MenuItem,
+  addMenuOption: MenuOption,
 };
 
 @Register
@@ -39,8 +39,8 @@ export class IoPanel extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @Property(MenuItem)
-  declare private addMenuItem: MenuItem;
+  @Property(MenuOption)
+  declare private addMenuOption: MenuOption;
 
   static get Listeners() {
     return {
@@ -89,12 +89,12 @@ export class IoPanel extends IoElement {
   }
   onNewTabClicked(event: CustomEvent) {
     event.stopPropagation();
-    const item: MenuItem = event.detail.item;
-    if (item.id) {
-      const tab = new Tab({id: item.id, label: item.label, icon: item.icon});
+    const option: MenuOption = event.detail.option;
+    if (option.id) {
+      const tab = new Tab({id: option.id, label: option.label, icon: option.icon});
       this.addTab(tab);
-      const addMenuItem = this.querySelector('.add-tab') as IoMenuItem;
-      if (addMenuItem) addMenuItem.expanded = false;
+      const addMenuOption = this.querySelector('.add-tab') as IoMenuItem;
+      if (addMenuOption) addMenuOption.expanded = false;
     }
   }
   selectIndex(index: number) {
@@ -163,8 +163,8 @@ export class IoPanel extends IoElement {
     this.render([
       ioTabs({
         tabs: this.panel.tabs,
-        addMenuItem: this.addMenuItem,
-        '@io-menu-item-clicked': this.onNewTabClicked,
+        addMenuOption: this.addMenuOption,
+        '@io-menu-option-clicked': this.onNewTabClicked,
       }),
       ioSelector({
         selected: this.panel.tabs.selected,

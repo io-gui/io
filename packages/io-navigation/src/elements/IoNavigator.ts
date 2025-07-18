@@ -1,12 +1,12 @@
 import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-gui';
-import { MenuOptions, ioMenuOptions, ioMenuTree } from 'io-menus';
+import { MenuOption, ioMenuOptions, ioMenuTree } from 'io-menus';
 import { CachingType, ioSelector } from './IoSelector.js';
 
 export type MenuPositionType = 'top' | 'left' | 'right';
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none';
 
 export type IoNavigatorProps = IoElementProps & {
-  options?: MenuOptions,
+  option?: MenuOption,
   elements?: VDOMElement[],
   widget?: VDOMElement,
   menu?: MenuPositionType,
@@ -54,8 +54,8 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[];
 
-  @ReactiveProperty({type: MenuOptions})
-  declare options: MenuOptions;
+  @ReactiveProperty({type: MenuOption})
+  declare option: MenuOption;
 
   @ReactiveProperty(null)
   declare widget: VDOMElement | null;
@@ -75,21 +75,21 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({value: '', type: String})
   declare anchor: string;
 
-  optionsMutated() {
+  optionMutated() {
     this.changed();
   }
 
   changed() {
     const sharedMenuConfig = {
-      options: this.options,
+      option: this.option,
       widget: this.widget,
       depth: this.depth
     };
 
     // TODO: add widget and test collapse!!
     let selected = '';
-    if (this.select === 'shallow') selected = this.options.selectedShallow;
-    if (this.select === 'deep') selected = this.options.selected;
+    if (this.select === 'shallow') selected = this.option.selectedIDImmediate;
+    if (this.select === 'deep') selected = this.option.selectedID;
     if (this.select === 'all') selected = '*';
     if (this.select === 'none') selected = '';
 

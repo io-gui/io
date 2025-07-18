@@ -14,17 +14,17 @@ class TestNodeString extends Node {
   declare strProp: string;
 }
 
-@Register
-class TestNodeBoolean extends Node {
-  @ReactiveProperty({type: Boolean, value: true})
-  declare boolProp: boolean;
-}
+// @Register
+// class TestNodeBoolean extends Node {
+//   @ReactiveProperty({type: Boolean, value: true})
+//   declare boolProp: boolean;
+// }
 
-@Register
-class TestNodeObject extends Node {
-  @ReactiveProperty({type: Object, init: null})
-  declare objProp: object;
-}
+// @Register
+// class TestNodeObject extends Node {
+//   @ReactiveProperty({type: Object, init: null})
+//   declare objProp: object;
+// }
 
 export default class {
   run() {

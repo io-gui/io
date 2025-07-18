@@ -1,5 +1,5 @@
 import { Register, IoElement, div, p, h1, h4 } from 'io-gui';
-import { MenuOptions } from 'io-menus';
+import { MenuOption } from 'io-menus';
 import { ioNavigator, ioSelector, ioCollapsible } from 'io-navigation';
 
 function lorem(length) {
@@ -54,7 +54,7 @@ const contentElements = [
   ]),
 ];
 
-const contentOptions = new MenuOptions({items:[
+const contentOption = new MenuOption({options:[
   {id: 'Doc 1', options: [
     {label: 'Section 1', id: 'Doc 1#Section 1'},
     {label: 'Section 2', id: 'Doc 1#Section 2'},
@@ -84,7 +84,7 @@ const contentOptions = new MenuOptions({items:[
     {label: 'Section 5', id: 'Doc 4#Section 5'},
   ]},
 ]});
-contentOptions.items[0].options.items[3].selected = true;
+contentOption.options[0].options[3].selected = true;
 
 export class IoNavigationDemo extends IoElement {
   static get Style() {
@@ -105,24 +105,24 @@ export class IoNavigationDemo extends IoElement {
     this.render([
       ioNavigator({
         menu: 'left',
-        options: contentOptions,
+        option: contentOption,
         elements: contentElements,
         select: 'deep',
-        anchor: contentOptions.bind('selected'),
+        anchor: contentOption.bind('selectedID'),
       }),
       div({style: {display: 'flex'}}, [
         ioSelector({
           style: {'flex-basis': '50%'},
           elements: contentElements,
-          selected: contentOptions.bind('selected'),
-          anchor: contentOptions.bind('selected'),
+          selected: contentOption.bind('selectedID'),
+          anchor: contentOption.bind('selectedID'),
         }),
         ioNavigator({
           style: {'flex-basis': '50%'},
           menu: 'top',
-          options: contentOptions,
+          option: contentOption,
           elements: contentElements,
-          anchor: contentOptions.bind('selected'),
+          anchor: contentOption.bind('selectedID'),
         }),
       ])
     ]);

@@ -3,7 +3,10 @@ import { Node, Register } from 'io-gui';
 export class TodoModel extends Node {
   static get ReactiveProperties() {
     return {
-      items: Array,
+      items: {
+        type: Array,
+        init: null,
+      }
     };
   }
   get filters() {
@@ -31,7 +34,7 @@ export class TodoModel extends Node {
     title = String(title).trim();
     if (title) {
       this.items.push({title: title, completed: false});
-      this.dispatchMutation(this);
+      this.dispatchMutation();
       this.save();
     }
   }
@@ -44,7 +47,7 @@ export class TodoModel extends Node {
   destroyItem(item) {
     let i = this.items.indexOf(item);
     this.items.splice(i, 1);
-    this.dispatchMutation(this);
+    this.dispatchMutation();
     this.save();
   }
   updateItemTitle(item, title) {
@@ -52,18 +55,18 @@ export class TodoModel extends Node {
     if (title) {
       let i = this.items.indexOf(item);
       this.items[i].title = title;
-      this.dispatchMutation(this);
+      this.dispatchMutation();
       this.save();
     }
   }
   toggleItem(item) {
     item.completed = !item.completed;
-    this.dispatchMutation(this);
+    this.dispatchMutation();
     this.save();
   }
   clearCompletedItems() {
     this.items = this.items.filter(this.filters.active);
-    this.dispatchMutation(this);
+    this.dispatchMutation();
     this.save();
   }
   toggleAll() {
@@ -71,7 +74,7 @@ export class TodoModel extends Node {
     for (let i = this.items.length; i--;) {
       this.items[i].completed = completed;
     }
-    this.dispatchMutation(this);
+    this.dispatchMutation();
     this.save();
   }
   save() {

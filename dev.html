@@ -102,118 +102,64 @@
   </head>
   <body>
     <script type="module">
+import { IoElement, Register, span } from 'io-gui'
+// Notice that, unlike real constructors, vDOM constructors start with lowercase "i"
+import { ioSlider } from 'io-sliders';
+import { ioOptionSelect, MenuOption } from 'io-menus';
 
-    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe, h4 } from 'io-gui';
-    import { IoNavigator, ioNavigator, ioSelector } from 'io-navigation';
-    import { MenuOption, ioMenuTree } from 'io-menus';
-    import { ioMarkdown } from 'io-markdown';
-    import { ioIcon } from 'io-icons';
+class MyElement extends IoElement {
 
-    $.permit();
+  static get Style() {
+    return /* css */`
+      :host {
+        display: inline-block;
+        width: 160px;
+      }
+    `;
+  }
 
-    const MENU_OPTION = new MenuOption({
-      id: 'root',
-      options: [
-        {id: 'About'},
-        {id: 'Docs', options: [
-          {id: 'Quick Start', options: [
-            {id: 'Usage'},
-            {id: 'Making an Element'},
-            {id: 'Making a Website'},
-            {id: 'Built-in Elements'},
-            {id: 'Virtual DOM'},
-            {id: 'Learn More'},
-          ]},
-          {id: 'Deep Dive', options: [
-            {id: 'Nodes and Elements'},
-            {id: 'Registration'},
-            {id: 'Properties'},
-            {id: 'Initial Value Inference'},
-            {id: 'Property Declaration Inheritance'},
-            {id: 'Property Declaration Fields'},
-            {id: 'Styling'},
-            {id: 'CSS Mixin Polyfill'},
-            {id: 'Listeners'},
-            {id: 'Reactivity'},
-            {id: 'Property Change and Object Mutation'},
-            {id: 'Property Change Batching'},
-            {id: 'Lazy Reactivity'},
-            {id: 'Template Syntax'},
-            {id: 'Data Binding'},
-          ]},
-        ]},
-        {id: 'Demos', options: [
-          {id: 'Inputs'},
-          {id: 'Icons'},
-          {id: 'Sliders'},
-          {id: 'Colors'},
-          {id: 'Editors'},
-          {id: 'Menus'},
-          {id: 'Navigation'},
-          {id: 'Layout'},
-          {id: 'Theme Editor'},
-          {id: 'Element Inspector'},
-          {id: 'Change Visualization'},
-          {id: 'TODO MVC App'},
-        ]}
-      ],
-      path: $({key: 'path', storage: 'hash', value: 'About'})
-    })
+  static get ReactiveProperties() {
+    return {
+      numberValue: {type: Number, value: 0},
+      menuOption: {type: MenuOption, value: new MenuOption({options: [
+        {id: 'Zero', value: 0},
+        {id: 'One', value: 1},
+        {id: 'Two', value: 2},
+        {id: 'Three', value: 3},
+      ]})}
+    }
+  }
 
-    const siteRoot = 'https://iogui.dev/io/';
+  ready() {
+    this.changed();
+  }
 
-    const navigator = new IoNavigator({
-      role: 'main',
-      class: 'main',
-      menu: 'top',
-      option: MENU_OPTION,
-      caching: 'proactive',
-      depth: 2,
-      widget: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}}),
-      elements: [
-        ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
-        ioSelector({id: 'Docs',
-          selected: MENU_OPTION.findItemById('Docs').bind('selectedIDImmediate'),
-          caching: 'proactive',
-          elements: [
-            ioNavigator({id: 'Quick Start', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'), 
-              option: MENU_OPTION.findItemById('Docs').findItemById('Quick Start'),
-              anchor: MENU_OPTION.findItemById('Docs').findItemById('Quick Start').bind('selectedID'),
-              elements: [
-                ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
-              ]
-            }),
-            ioNavigator({id: 'Deep Dive', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'),
-              option: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive'), 
-              anchor: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive').bind('selectedID'),
-              elements: [
-                ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}),
-              ]
-            }),
-          ]
-        }),
-        ioSelector({id: 'Demos',
-          selected: MENU_OPTION.findItemById('Demos').bind('selectedID'),
-          caching: 'proactive',
-          elements: [
-            {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
-            {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
-            {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/io-sliders/demos/IoSlidersDemo.js'}},
-            {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/io-colors/demos/IoColorsDemo.js'}},
-            {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
-            {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
-            {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
-            {tag: 'io-layout-demo', props: {id: 'Layout', import: './packages/io-layout/demos/IoLayoutDemo.js'}},
-            {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoThemeEditor.js'}},
-            {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementInspectorDemo.js'}},
-            {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/io-gui/demos/IoChangeVisualization.js'}},
-            iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
-          ]
-        }),
-      ]
-    });
-    document.body.appendChild(navigator);
+  onValueInput(event) {
+    this.numberValue = event.detail.value;
+  }
 
+  changed() {
+    this.render([
+    ioSlider({
+      value: this.numberValue,
+      min: -1,
+      max: 3,
+      step: 1,
+      '@value-input': this.onValueInput,
+    }),
+    ioOptionSelect({
+        value: this.numberValue,
+        option: this.menuOption,
+        '@value-input': this.onValueInput,
+      })
+    ]);
+  }
+}
+Register(MyElement);
+
+document.body.appendChild(
+  new MyElement()
+)
     </script>
     <noscript>JavaScript is required to view this page!</noscript>
   </body>

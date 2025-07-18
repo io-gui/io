@@ -3,6 +3,7 @@ import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher.
 import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions, AnyConstructor } from '../nodes/Node.js';
 import { reactivePropertyDecorators } from '../decorators/Property.js';
 import { propertyDecorators } from '../decorators/Property.js';
+import { styleDecorators } from '../decorators/Style.js';
 import { IoElement } from '../elements/IoElement.js';
 
 // TODO: Improve types!
@@ -76,6 +77,7 @@ export class ProtoChain {
       reactivePropertyHash = this.addReactiveProperties(ioNodeConstructor.ReactiveProperties, reactivePropertyHash);
       this.addListeners(ioNodeConstructor.Listeners);
       this.addStyle(ioNodeConstructor.Style);
+      this.addStyleFromDecorators(ioNodeConstructor);
       this.addHandlers(ioNodeConstructor.prototype as Node | IoElement);
     }
     debug: this.validateReactiveProperties();
@@ -182,6 +184,16 @@ export class ProtoChain {
       this.style = this.style ? this.style + '\n' + style : style;
     }
   };
+  /**
+   * Adds style defined in decorators to the style string.
+   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+   */
+  addStyleFromDecorators(ioNodeConstructor: NodeConstructor) {
+    const style = styleDecorators.get(ioNodeConstructor as AnyConstructor);
+    if (style) {
+      this.style = this.style ? this.style + '\n' + style : style;
+    }
+  }
   /**
    * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
    * @param {Node} proto - Prototype object to search for handlers
