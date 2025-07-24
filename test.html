@@ -5,7 +5,83 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <link rel="shortcut icon" href="./images/favicon.ico" />
     <title>Io-GUI Test</title>
-    <script type="module" src="./build/io-gui.test.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "io-gui": "./packages/io-gui/build/index.js",
+          "io-gui/": "./packages/io-gui/build/",
+          "io-colors": "./packages/io-colors/build/index.js",
+          "io-colors/": "./packages/io-colors/build/",
+          "io-editors": "./packages/io-editors/build/index.js",
+          "io-editors/": "./packages/io-editors/build/",
+          "io-icons": "./packages/io-icons/build/index.js",
+          "io-icons/": "./packages/io-icons/build/",
+          "io-inputs": "./packages/io-inputs/build/index.js",
+          "io-inputs/": "./packages/io-inputs/build/",
+          "io-layout": "./packages/io-layout/build/index.js",
+          "io-layout/": "./packages/io-layout/build/",
+          "io-markdown": "./packages/io-markdown/build/index.js",
+          "io-markdown/": "./packages/io-markdown/build/",
+          "io-menus": "./packages/io-menus/build/index.js",
+          "io-menus/": "./packages/io-menus/build/",
+          "io-navigation": "./packages/io-navigation/build/index.js",
+          "io-navigation/": "./packages/io-navigation/build/",
+          "io-sliders": "./packages/io-sliders/build/index.js",
+          "io-sliders/": "./packages/io-sliders/build/",
+          "marked": "./node_modules/marked/lib/marked.esm.js",
+          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
+        }
+      }
+    </script>
+    <script type="module">
+      import { mocha, sessionFinished, sessionFailed } from '@web/test-runner-mocha';
+      import { expect } from 'chai';
+
+      import GuiTest from 'io-gui/index.test.js';
+      import InputsTest from 'io-inputs/index.test.js';
+      import SlidersTest from 'io-sliders/index.test.js';
+      import ColorsTest from 'io-colors/index.test.js';
+      import IconsTest from 'io-icons/index.test.js';
+      import EditorsTest from 'io-editors/index.test.js';
+      import MarkdownTest from 'io-markdown/index.test.js';
+      import MenusTest from 'io-menus/index.test.js';
+      import NavigationTest from 'io-navigation/index.test.js';
+      import LayoutTest from 'io-layout/index.test.js';
+
+      window.expect = expect;
+
+      const mochaDiv = document.createElement('div');
+      mochaDiv.setAttribute('id', 'mocha');
+      document.body.appendChild(mochaDiv);
+      mochaDiv.style.display = 'none';
+
+      try {
+        mocha.setup({ ui: 'bdd' });
+      } catch (error) {
+        console.error(error);
+      }
+
+      try {
+        new GuiTest().run();
+        new InputsTest().run();
+        new SlidersTest().run();
+        new ColorsTest().run();
+        new IconsTest().run();
+        new EditorsTest().run();
+        new MarkdownTest().run();
+        new MenusTest().run();
+        new NavigationTest().run();
+        new LayoutTest().run();
+
+        mocha.checkLeaks();
+        mocha.run(() => {
+          sessionFinished();
+        });
+      } catch (error) {
+        await sessionFailed(error);
+      }
+    </script>
     <style>
       html, body {
         margin: 0;
@@ -14,67 +90,45 @@
         color: var(--io_color);
       }
       #mocha {
-        font: 20px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-        margin: 0 1em;
-        position: relative;
+        font: 20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0.5em;
       }
-
-      #mocha-stats {
-        display: flex;
-        flex-direction: row;
-      }
-      #mocha-stats .progress-contain {
-        display: flex;
-        margin-right: auto;
-        margin-left: 1em;
-      }
-      #mocha-stats .progress {
-        display: none;
-      }
-      #mocha-stats .progress-element {
-        margin-top: 0.2em;
-        margin-right: 1em;
-      }
-      #mocha-stats a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      #mocha-stats .passes {
-        margin-right: var(--io_lineHeight);
-        color: var(--io_colorGreen);
-      }
-      #mocha-stats .failures {
-        margin-right: var(--io_lineHeight);
-        color: var(--io_colorRed);
-      }
-
-      #mocha .replay {
-        display: none !important;
-      }
-
       #mocha ul,
       #mocha li {
         margin: 0;
         padding: 0;
         list-style: none;
       }
-
+      #mocha-stats {
+        display: flex;
+        flex-direction: row;
+      }
+      #mocha-stats a,
+      #mocha h1 a {
+        text-decoration: none;
+        color: inherit;
+      }
+      #mocha-stats li {
+        margin-right: 1em;
+      }
+      #mocha-stats .passes {
+        color: var(--io_colorGreen);
+      }
+      #mocha-stats .failures {
+        color: var(--io_colorRed);
+      }
+      #mocha-stats .progress,
+      #mocha .replay {
+        display: none !important;
+      }
       #mocha h1,
       #mocha h2 {
         margin: 0;
       }
       #mocha h1 {
-        margin-top: 1em;
+        margin-top: 0.5em;
         font-size: 1em;
         font-weight: 200;
-      }
-      #mocha h1 a {
-        text-decoration: none;
-        color: inherit;
-      }
-      #mocha h1 a:hover {
-        text-decoration: underline;
       }
       #mocha h2 {
         font-size: 0.75em;
@@ -82,23 +136,19 @@
         padding-left: 1em !important;
         cursor: pointer;
       }
-
-      #mocha .hidden {
-        display: none;
+      #mocha .duration {
+        margin-left: 0.5em;
+        opacity: 0.5;
       }
-
       #mocha .test > pre {
-        background: var(--io_bgColorDimmed);
+        background: var(--io_bgColorLight);
         font-size: var(--io_fontSize);
-        margin: var(--io_lineHeight);
-        margin-top: 0.25em;
-        padding: var(--io_lineHeight);
+        margin: 0.25em var(--io_lineHeight);
+        padding: var(--io_spacing3);
         overflow: auto;
         border: var(--io_border);
-        border-radius: var(--io_borderRadius2);
-        max-width: calc(100% - 42px);
+        border-radius: var(--io_borderRadius);
       }
-
       #mocha .test.fail h2::before {
         content: '✖';
         font-size: 1em;
@@ -111,22 +161,21 @@
         margin: 0 0.5em 0 0;
         color: var(--io_colorGreen);
       }
-
       #mocha .test.fail pre.error {
         border: var(--io_borderFail);
       }
-
       #mocha code .comment { color: #ddd; }
       #mocha code .init { color: #2f6fad; }
       #mocha code .string { color: #5890ad; }
       #mocha code .keyword { color: #8a6343; }
       #mocha code .number { color: #2f6fad; }
-
       @media screen and (max-width: 550px) {
+        #mocha {
+          font-size: 16px;
+        }
         #mocha-stats .progress-contain {
           display: none;
         }
-
         #mocha .test > pre {
           font-size: 0.5em;
         }

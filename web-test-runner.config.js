@@ -5,9 +5,7 @@ export default {
   nodeResolve: true,
   plugins: [
     esbuildPlugin({
-      ts: true,
-      target: 'esnext',
-      tsconfig: './tsconfig.json',
+      target: 'esnext'
     }),
     importMapsPlugin(),
   ],

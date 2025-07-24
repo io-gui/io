@@ -1,32 +1,61 @@
-# Nodes and Elements
+### Universal Reactive Architecture
 
-In Io-Gui, there are two types of objects: nodes and elements. Both nodes and elements use features provided by the `IoNodeMixin` such as reactivity, data binding and various helper methods.
+Io-Gui implements the same features on top of its base classes - nodes and elements. The features include:
+- Reactive property system
+- Two-way data binding
+- Component lifecycle management
+- Event-driven architecture
 
-A **node** is any `Object` that has been extended with the `IoNodeMixin` or an object that extends `IoNode`.
+By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
 
-```javascript
-class IoNode extends IoNodeMixin(Object) {}
-class MyNode extends IoNode {}
-```
+#### Node
+Node is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
+- `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
+- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash/localStorage
+- `MenuOption`: A rich domain model for menu options and their state in io-menus
+- `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
-An **element** is a custom element that extends `IoElement` which is essentially `IoNodeMixin` applied to `HTMLElement`. Elements have all of the core features of nodes, as well as additional DOM-specific features such as template rendering and CSS styling. Element's HTML tagName is automatically assigned as kebab-case version of the CamelCase class name. For Example `MyElement` class name will register with `<my-element>` HTML tagName.
+#### IoElement
+IoElement is a custom element base class extending `HTMLElement` with Node functionality as well as some DOM functionality such as:
+- Virtual DOM rendering
+- Style declaration with inheritance
 
-```javascript
-class IoElement extends IoNodeMixin(HTMLElement) { ... }
-class MyElement extends IoElement {}
-```
+It can be used to create reactive custom elements that can be bound to node properties and are responsive to node mutations. The entire Io-Gui design system is built on top of this class.
 
-Elements are used to build the "view", meaning they are responsible for rendering the user interface that users can see and interact with. Nodes, on the other hand, have no visual representation and are more suitable for creating "models" and application business logic.
+### Reactive Data Flow
+- Trunk-to-leaf data flow can be achieved using change handlers and value assignment
+  - Property change events are automatically dispatched for all reactive properties
+  - Example: `"label"` property change event `"label-changed"` includes `event.detail.value` and `event.detail.oldValue`
+  - Change handlers get invoked automatically if they are defined
+  - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
+  - Generic property handler `.changed()` gets invoked after any property change
+- Leaf-to-trunk data flow can be achieved using mutation events and handlers
+  - Mutation events are automatically dispatched for all nodes and objects
+  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
+  - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
+  - Mutation handlers get invoked automatically if they are defined
+  - Example: `"data"` property mutation event invokes `dataMutated()` handler if it exists
+- Bi-directional data flow can be achieved using binding objects
+  - Example: Binding function `this.bind('label')` returns a data-binding object to the `"label"` property
+  - Binding object can synchronize reactive properties by simple assignment to a property
+  - Binding objects rely on change events for bound properties
 
-DOM Events (CustomEvents) work with nodes just like with elements, allowing nodes to communicate and interact with the elements as if they are part of the DOM.
+### Core Systems
+- **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
+- **ReactiveProperty** - Creates and initializes responsive properties
+- **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on nodes
+- **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
+- **Queue** - Generic queue manager with throttle and debounce capability
+- **Binding** - Manages two-way data flow using change events
+- **VDOM** - Virtual DOM implementation for efficient rendering
 
-## Registration
+### Registration
 
 All new classes must be registered before use.
 
 ```javascript
 // Javascript flavor
-class MyNode extends IoNode {}
+class MyNode extends Node {}
 Register(MyNode);
 
 class MyElement extends IoElement {}
@@ -36,22 +65,22 @@ Register(MyElement);
 ```typescript
 // Typescript flavor with experimentalDecorators: true
 @Register
-class MyNode extends IoNode {}
+class MyNode extends Node {}
 
 @Register
 class MyElement extends IoElement {}
 ```
 
-# Properties
+### Properties
 
-Properties can be defined using property declarations in the `static get Properties()` object or the `@Property({})` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
+Properties can be defined using property declarations in the `static get ReactiveProperties()` object or the `@ReactiveProperty()` decorator (preferred for TypeScript). These property declarations are loosely typed, meaning that properties don't have to be fully declared and default declarations can be inferred from what is specified.
 
 In the following example, we define a boolean property called `selected` by specifying only the default value `false`.
 
 ```javascript
-// Javascript version with `static get Properties()` object
-class MyNode extends IoNode {
-  static get Properties() {
+// Javascript version with `static get ReactiveProperties()` object
+class MyNode extends Node {
+  static get ReactiveProperties() {
     return {
       selected: false
     }
@@ -62,19 +91,19 @@ class MyNode extends IoNode {
 Here we do the same using decorator syntax in typescript. Note that we use `declare` keyword to tell the compiler that this property definitely exists and has the `boolean` type. Without this keyword, typescript would override our custom property initialization logic.
 
 ```typescript
-// Typescript version with `@Property({})` decorator
-class MyNode extends IoNode {
+// Typescript version with `@Property()` decorator
+class MyNode extends Node {
   @Property(false)
   declare selected: boolean;
 }
 ```
 
-## Initial Value Inference
+### Initial Value Inference
 
 Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` respectively. In other words, when no initial value is specified, it will be inferred from the specified type.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(Boolean)
   declare selected: boolean;
 }
@@ -85,7 +114,7 @@ Just like initial property value can be inferred from type, a property type can 
 When property type is a custom object class the initial value will NOT be inferred. Instead, the users are expected to provide the initial value in the constructor. Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(Color)
   declare color: Color;
 }
@@ -97,9 +126,9 @@ new MyNode({color: new Color()});
 While it is possible to specify object instances as values in property declaration it is important to note that such initial values will be shared across all instances of the class.
 
 ```typescript
-class MyNode extends IoNode {
+class MyNode extends Node {
   // This is not recommended!
-  @Property({value: new Color()})
+  @ReactiveProperty({value: new Color()})
   declare color: Color;
 }
 
@@ -107,30 +136,34 @@ new MyNode().color === new MyNode().color
 // returns true
 ```
 
+So instead of initializing with a shared value we can use `init` field to specify how we want to initialize an object. For example:
+
+```typescript
+// This will initialze value as new Color() for each instance
+@ReactiveProperty({type: Color, init: null})
+```
+
 We can also declare a property with a declaration object. In the following example we declare the `selected` property with a fully specified declaration object. Note that the final result is exactly the same as before as all of the fields in this example are defaults. We will get into each specific field later.
 
 ```typescript
-class MyNode extends IoNode {
-  @Property({
-    value: false,
+class MyNode extends Node {
+  @ReactiveProperty({
     type: Boolean,
-    reactive: true,
-    observe: false,
+    value: false,
     reflect: false,
   })
   declare selected: boolean;
 }
 ```
 
-## Property Declaration Inheritance
+### Property Declaration Inheritance
 
 Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyNode` will inherit explicit property declaration from `MySuperNode` but it will override the initial value to `true`. 
 
 ```typescript
-class MySuperNode extends IoNode {
-  @Property({
+class MySuperNode extends Node {
+  @ReactiveProperty({
     value: false,
-    reactive: true,
     reflect: true,
   })
   declare selected: boolean;
@@ -142,7 +175,7 @@ class MyNode extends MySuperNode {
 }
 ```
 
-## Property Declaration Fields
+### Property Declaration Fields
 
 Now let's get into each specific field of the PropertyDeclaration object. Note that each field is optional.
 
@@ -150,15 +183,12 @@ Now let's get into each specific field of the PropertyDeclaration object. Note t
 | :---- | :--: | :-----: | :---------- |
 | value | `any` | `undefined` | The initial value of the property |
 | type  | `any` | `undefined` | The type of the property |
-| reactive | `boolean` | `true` | Enables reactive behavior |
-| observe | `boolean` | `false` | Enables object observer |
+| init | `any` | `undefined` | Specifies how to initialize object property |
 | reflect | `boolean` | `false` | Reflects property to attribute |
 
 We already covered `value` and `type` in examples above. Now let's dig into the other fields.
 
-**`reactive`** field is `true` by default and it enables all of the reactive callbacks and events that happen when a property value changes. You can disable it if you don't need reactivity. Disabling it will also prevent data binding to that property.
-
-**`observe`** field is `false` by default and it can be used to enable object mutation observer for properties that are objects. Do not enable this for properties of basic data types such as `Boolean`, `String` and `Number`.
+**`init`** field is `undefined` by default and it can be used in conjunction with an object constructor in the `type` field. `init: null` will initialize the constructor without any arguments, `"this"` will pass node itself as the argument. You can also specify arguments as arrays.
 
 **`reflect`** field is `false` by default and it can enable reflection of properties to attributes in DOM elements. Enabling this on properties of nodes makes no effect. Reflected attributes can be used for CSS selectors for example.
 
@@ -172,12 +202,12 @@ class MyElement extends IoElement {
       }
     `;
   }
-  @Property({value: false, reflect: true})
+  @ReactiveProperty({value: false, reflect: true})
   declare selected: boolean;
 }
 ```
 
-# Styling
+### Styling
 
 Custom element styles are defined inside `static get Style()` template literal string. To get proper CSS syntax highlighting you can add `/* css */` comment just before the string and use code editor plugin such as [comment-tagged-templates for VSCode](https://marketplace.visualstudio.com/items?itemName=bierner.comment-tagged-templates).
 
@@ -208,7 +238,7 @@ The above style rule is effectively the same as adding the following style block
 
 In fact, this is automatically done by the `Register` decorator. Each element will have its own style block inside the document head.
 
-## CSS Mixin Polyfill
+### CSS Mixin Polyfill
 
 CSS mixins are a feature polyfilled by `IoElement`. It allows you to define style rule sets to be reused across multiple elements. To create a mixin, make a style rule set with a CSS selector starting with `--` and ending with `:`.
 
@@ -227,9 +257,9 @@ To use the mixin in any element use `@apply` CSS rule. It is important that the 
 }
 ```
 
-# Listeners
+### Listeners
 
-Listeners are defined inside the `static get Listeners()` object and .Following listener will call `onClick` handler function when `"click"` event happens.
+Listeners are defined inside the `static get Listeners()` object and the following listener will call `onClick` handler function when `"click"` event happens.
 
 ```typescript
 @Register
@@ -269,11 +299,11 @@ static get Listeners() {
 }
 ```
 
-# Reactivity
+### Reactivity
 
 [comment]: <`[prop]Mutated()` throttled if called multiple times per frame.>
 [comment]: <Runtime type checking available in debug mode.>
-[comment]: <Can recieve data `Binding` objects.>
+[comment]: <Can receive data `Binding` objects.>
 
 All properties are reactive by default, meaning that changing a property value will emit a change event and invoke change handler functions if they exist. Lastly, `changed()` function will be called when any one or more reactive properties change.
 
@@ -281,7 +311,7 @@ Here is an example of a node fully rigged to handle changes of its `selected` pr
 
 ```typescript
 @Register
-class MyNode extends IoNode {
+class MyNode extends Node {
   @Property(false)
   declare selected: boolean;
   selectedChanged(change: Change) {
@@ -311,7 +341,7 @@ node.selected = true;
 
 Note that change handler functions are provided with a `change` payload that includes property name as well as `oldValue` and new `value`. Similarly, the change event provides the same change payload as `event.detail`.
 
-## Property Change Batching
+### Property Change Batching
 
 Since `change()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
 
@@ -340,15 +370,13 @@ this.prop2Changed(change);
 this.changed();
 ```
 
-## Lazy Reactivity
-
-> **Warning!** This feature is not fully tested!
+### Debounced Reactivity
 
 By default, all nodes and elements handle changes synchronously, meaning that change handler functions and events happen immediately after the change. While this means that nodes react as fast as possible, it can also lead to inefficiencies in complex systems where multiple properties are changing frequently.
 
-Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `lazy` property to `true`. This will effectively change node's reactivity to a lazy (asynchronous) regime.
+Just like in the batching example above we can get into a scenario where change handler functions are called excessively. Again, this is fine but we can avoid redundant work by setting node's `reactivity` property to `debounced` or `throttled`. This will effectively change node's reactivity to an asynchronous regime.
 
-In lazy regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
+In asynchronous regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
 
 ```javascript
 this.prop1 = 1;
@@ -364,7 +392,7 @@ this.prop2Changed(change); // change.oldValue === 'a'
 this.changed();
 ```
 
-# Template Syntax
+### Template Syntax
 
 [comment]: <Uses nested array representation of (virtual) DOM.>
 [comment]: <Template function handles disposal of removed elements.>
@@ -378,7 +406,7 @@ Io-Gui elements use hypertext-like array structures to express virtual DOM templ
 Here is a simple element expressed in the Io-Gui template syntax:
 
 ```javascript
-['my-element', {prop: "propvalue"}, "Hello io!"]
+myElement({prop: "propvalue"}, "Hello io!")
 ```
 
 DOM output:
@@ -392,11 +420,11 @@ The first array item is element name's, followed by **optional** properties and 
 Here is a slightly more complex vDOM tree with array iterator:
 
 ```javascript
-this.template([
-  ['h4', 'Array indices:'],
-  ['div', [
-    this.items.map(i => ['span', {class: 'item'}, i])
-  ]]
+this.render([
+  h4('Array indices:'),
+  div([
+    this.items.map(i => span({class: 'item'}, i))
+  ])
 ]);
 ```
 
@@ -415,7 +443,7 @@ DOM output:
 > **Note:** Io-Gui templates do not set HTML attributes - only properties are set.
 
 
-# Data Binding
+### Data Binding
 
 This is a simple yet powerful feature designed to be used with Io-Gui nodes and elements by simply invoking the `bind(propName)` method:
 
@@ -442,7 +470,7 @@ new IoSlider({value: myNode.bind('value')});
 Or we can assign it to an element using template syntax:
 
 ```javascript
-this.template([['io-slider', {value: this.bind('value')}]]);
+this.render([ioSlider({value: this.bind('value')})]);
 ```
 
 The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.

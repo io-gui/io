@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "paths": {
+      "io-gui": ["../io-gui"],
+      "io-sliders": ["../io-sliders"],
+      "io-inputs": ["../io-inputs"]
+    }
+  },
+  "include": ["./src"]
+}

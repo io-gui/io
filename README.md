@@ -1,25 +1,23 @@
 
-# Io-Gui: Experimental JavaScript Framework
+# Io-Gui: UI Framework for JavaScript
 
 [![NPM Package][npm]][npm-url]
 [![DeepScan][deepscan]][deepscan-url]
 [![License][license]][license-url]
 
-> ⚠️ **WARNING!** Io-Gui is an experiment currently under development. This code is not production ready!
-
-Io-Gui is an experimental UI framework aimed at simplicity and performance. It lets you write fast and reactive custom elements that respond to state changes, data binding events and object mutations. It can support single page applications with routing, navigation and code splitting.
-
-The goal of this project is to provide a strong foundation for complex applications and tools such as 3D editors and demo tools for [threejs].
+Io-Gui is a web GUI framework focused on simplicity and performance. It allows you to create reactive nodes and custom elements that respond to state changes, data binding events and object mutations. It includes a built-in design system with various UI components, and supports WebGL-rendered elements using GLSL shaders. It's designed for complex applications like 3D editors and game engines.
 
 To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
 
-You can also check out the collection of built-in [elements].
-
-Stay in touch on [github] and [twitter].
+Stay in touch on [github] and [bluesky].
 
 ## Design system
 
-Io-Gui includes a design system built with a simple and effective CSS framework. It's built-in element library includes editors for basic data types and **user input**, various types of **sliders**, **color editors**, configurable **object editors**, **menu systems**, **selectors** and **layout** elements.
+Io-Gui includes an accessible and productivity-centric design system. Its component library includes inputs, menus, color editors, sliders, navigation and much more.
+
+## Styling and Theming
+
+The [theme engine] uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
 
 ## Reactive WebGL Elements
 
@@ -27,19 +25,19 @@ One of the unique features of Io-Gui is its ability to render custom elements us
 
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on very little tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [nodejs] and [yarn] to run development scripts.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on very little tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [nodejs] and [pnpm] to run a few development scripts. Using IoGui in your project requires no compilation or build tools.
 
 To download and develop Io-Gui locally:
 
 ```bash
 git clone https://github.com/io-gui/io.git && cd io
-yarn && yarn dev
+pnpm i && pnpm dev:gui
 ```
 
-This will install dev dependencies and start the typescript watch script. You will also need to **run a static file server** of your choice.
+This will install dev dependencies and start the typescript watch script. You will also need to run `pnpm serve` to run @web/dev-server. Or you can run any other web server of your choice.
 
 ```bash
-yarn build
+pnpm build
 ```
 
 To learn more Io-Gui development, please read [contributing guide](https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md), browse and submit [issues](https://github.com/io-gui/io/issues).
@@ -58,14 +56,14 @@ The files in `docs/tsdoc` are a work in progress. The files are automatically ge
 [license-url]: https://github.com/io-gui/io/blob/main/LICENSE
 
 [github]: https://github.com/io-gui/io/
-[twitter]: https://x.com/akirodic
+[bluesky]: https://bsky.app/profile/akirodic.com
 [threejs]: https://threejs.org
 [nodejs]: https://nodejs.org
-[yarn]: https://yarnpkg.com
+[pnpm]: https://pnpm.io/
 
 
 [io-gui.dev]: https://iogui.dev/io/
-[index.html]: https://github.com/io-gui/io/blob/main/index.html#L125
+[index.html]: https://github.com/io-gui/io/blob/main/index.html
 [quick start]: https://iogui.dev/io/#path=Docs,Quick%20Start
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive
-[elements]: https://iogui.dev/io/#path=Demos,Elements
+[theme engine]: https://iogui.dev/io/#path=Demos,Theme%20Editor

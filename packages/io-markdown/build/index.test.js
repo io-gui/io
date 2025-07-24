@@ -1,0 +1,1 @@
+class IoMarkdownTest{run(){describe("IoMarkdown",(()=>{}))}}class IoMarkdownThemeTest{run(){describe("IoMarkdown",(()=>{}))}}class index_test{run(){(new IoMarkdownTest).run(),(new IoMarkdownThemeTest).run()}}export{index_test as default};

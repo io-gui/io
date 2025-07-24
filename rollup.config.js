@@ -1,21 +1,34 @@
 import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
-import terser from "@rollup/plugin-terser";
+import terser from '@rollup/plugin-terser';
 
-export function makeBundleTarget(src, target, externals = [], debug) {
+const externals = [
+  'io-gui',
+  'io-colors',
+  'io-editors',
+  'io-icons',
+  'io-inputs',
+  'io-layout',
+  'io-markdown',
+  'io-menus',
+  'io-navigation',
+  'io-sliders',
+];
 
-  externals.forEach(function(part, index) {
-    externals[index] = path.resolve(externals[index]);
-  });
+export function makeBundleTarget(src, target, skipExternals = true) {
+  const _externals = [...externals];
+  externals.push(path.resolve(src));
 
   return {
     input: src,
     plugins: [
-      nodeResolve(),
+      nodeResolve({
+        moduleDirectories: ['node_modules', 'packages'],
+      }),
       strip({
         functions: [],
-        labels: debug ? [] : ['debug']
+        labels: ['debug']
       }),
       terser({
         keep_classnames: true,
@@ -32,16 +45,10 @@ export function makeBundleTarget(src, target, externals = [], debug) {
       file: target,
       indent: '  '
     }],
-    external: externals,
+    external: skipExternals ? _externals : [],
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);
     }
   };
 }
-
-export default [
-  makeBundleTarget('build/io-gui.js', 'bundle/io-gui.js', []),
-  makeBundleTarget('build/io-gui.js', 'bundle/io-gui.debug.js', [], true),
-  makeBundleTarget('build/io-gui.test.js', 'bundle/io-gui.test.js', ['build/io-gui.js'], true),
-];

@@ -4,16 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <title>Io-Gui - Web Framework</title>
+    <title>Io-Gui: The Artisinal Web Framework</title>
 
-    <meta name="description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
-    <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, javascript, web development, webdev" />
-
+    <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, framework, javascript, web development, webdev" />
+    
     <meta itemprop="name" content="Io-Gui, a UI framework for web development." />
-    <meta itemprop="description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
+    <meta name="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta itemprop="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
 
     <!-- Web application enable -->
-    <!-- <link rel="manifest" href="/manifest.json" -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
@@ -44,15 +43,15 @@
 
     <!-- Social sharing data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Io-Gui: Documentation" />
-    <meta name="twitter:description" content="Io-Gui is a UI framework for web development written in TypeScript. It relies on modern web platform features to bring simplicity and performance to web development." />
+    <meta name="twitter:title" content="Io-Gui: The Artisinal Web Framework" />
+    <meta name="twitter:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
     <meta name="twitter:site" content="iogui.dev" />
     <meta name="twitter:creator" content="akirodic" />
     <meta name="twitter:image" content="https://iogui.dev/io/images/logo/io-512.png?002">
-    <meta name="twitter:image:alt" content="Io-Gui">
+    <meta name="twitter:image:alt" content="Io-Gui: The Artisinal Web Framework">
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Io-Gui: Documentation" />
-    <meta property="og:description" content="Io-Gui is a user interface library and a framework for web development written in pure JavaScript and CSS. It relies on modern APIs such as ES6 modules, custom elements and WebGL to bring simplicity and enable rapid iterations in web development process. Io-Gui can be used in various development environments and it plays well with common tools, libraries and frameworks. The core library weights only 7.5KB and the custom elements library is only 52KB of tree-shakable javascript. Io-Gui lets you write fast, type-safe and reactive custom elements that update on state changes, data binding events and object mutations. It has comprehensive documentation, wide test coverage and a library of examples and demos. Io-Gui includes a robust UI system with menus, layout panels, object editors, color pickers, sliders and more. It can also support entire application architecture with routing, tree shaking and code splitting." />
+    <meta property="og:title" content="Io-Gui: The Artisinal Web Framework" />
+    <meta property="og:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
@@ -61,10 +60,19 @@
     <script type="importmap">
       {
         "imports": {
-          "io-gui": "./build/io-gui.js",
-          "io-icons": "./packages/io-icons/build/io-icons.js",
-          "io-markdown": "./packages/io-markdown/build/io-markdown.js",
-          "io-navigator": "./packages/io-navigator/build/io-navigator.js"
+          "io-gui": "./packages/io-gui/build/index.js",
+          "io-colors": "./packages/io-colors/build/index.js",
+          "io-editors": "./packages/io-editors/build/index.js",
+          "io-icons": "./packages/io-icons/build/index.js",
+          "io-inputs": "./packages/io-inputs/build/index.js",
+          "io-layout": "./packages/io-layout/build/index.js",
+          "io-markdown": "./packages/io-markdown/build/index.js",
+          "io-menus": "./packages/io-menus/build/index.js",
+          "io-navigation": "./packages/io-navigation/build/index.js",
+          "io-sliders": "./packages/io-sliders/build/index.js",
+          "marked": "./node_modules/marked/lib/marked.esm.js",
+          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
+          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
         }
       }
     </script>
@@ -76,107 +84,139 @@
         margin: 0;
         width: 100%;
         height: 100%;
+        background-color: var(--io_bgColorStrong);
+        color: var(--io_color);
       }
-      io-main-page {
+      io-navigator {
         height: 100%;
-        background-color: var(--io_bgColor);
       }
-      io-main-page iframe {
+      io-navigator .heading {
+        margin: 0.75em 1em;
+        color: var(--io_colorStrong);
+      }
+      io-navigator iframe {
         border: none;
         flex: 1 1 auto;
-      }
-      .badges a {
-        text-decoration: none;
       }
     </style>
   </head>
   <body>
     <script type="module">
 
-    import { MenuOptions, MenuItem, Register, IoStorage as $, IoThemeSingleton } from 'io-gui';
-    import 'io-markdown';
-    import { IoNavigatorSelector } from 'io-navigator';
+    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe, h4 } from 'io-gui';
+    import { IoNavigator, ioNavigator, ioSelector } from 'io-navigation';
+    import { MenuOption, ioMenuTree } from 'io-menus';
+    import { ioMarkdown } from 'io-markdown';
+    import { ioIcon } from 'io-icons';
 
-    const OPTIONS = new MenuOptions([
-      {value: 'About', icon: 'icons:io_logo'},
-      {value: 'Docs', options: [
-        {value: 'Quick Start', options: [
-        // {label: 'Quick Start', value: './docs/quick-start.md', options: [
-          {label: 'Usage', value: 'usage', mode: 'scroll'},
-          {label: 'Making a Simple Element', value: 'making-a-simple-element', mode: 'scroll'},
-          {label: 'Making a Website', value: 'making-a-website', mode: 'scroll'},
-          {label: 'Built-in Elements', value: 'built-in-elements', mode: 'scroll'},
+    $.permit();
+
+    const MENU_OPTION = new MenuOption({
+      id: 'root',
+      options: [
+        {id: 'About'},
+        {id: 'Docs', options: [
+          {id: 'Quick Start', options: [
+            {id: 'Usage'},
+            {id: 'Making an Element'},
+            {id: 'Making a Website'},
+            {id: 'Built-in Elements'},
+            {id: 'Virtual DOM'},
+          ]},
+          {id: 'Deep Dive', options: [
+            {id: 'Universal Reactive Architecture'},
+            {id: 'Node'},
+            {id: 'IoElement'},
+            {id: 'Reactive Data Flow'},
+            {id: 'Core Systems'},
+            {id: 'Registration'},
+            {id: 'Properties'},
+            {id: 'Initial Value Inference'},
+            {id: 'Property Declaration Inheritance'},
+            {id: 'Property Declaration Fields'},
+            {id: 'Styling'},
+            {id: 'CSS Mixin Polyfill'},
+            {id: 'Listeners'},
+            {id: 'Reactivity'},
+            {id: 'Property Change Batching'},
+            {id: 'Debounced Reactivity'},
+            {id: 'Template Syntax'},
+            {id: 'Data Binding'},
+          ]},
         ]},
-        {value: 'Deep Dive', options: [
-        // {label: 'Deep Dive', value: './docs/deep-dive.md', options: [
-          {label: 'Nodes and Elements', value: 'nodes-and-elements', mode: 'scroll'},
-          {label: 'Properties', value: 'properties', mode: 'scroll'},
-          {label: 'Styling', value: 'styling', mode: 'scroll'},
-          {label: 'Listeners', value: 'listeners', mode: 'scroll'},
-          {label: 'Reactivity', value: 'reactivity', mode: 'scroll'},
-          {label: 'Template Syntax', value: 'template-syntax', mode: 'scroll'},
-          {label: 'Data Binding', value: 'data-binding', mode: 'scroll'},
-          {label: 'Helper Methods', value: 'helper-methods', mode: 'scroll'},
-        ]},
-      ]},
-      {value: 'Demos', options: [
-        'Elements',
-        'Theme Editor',
-        'TODO MVC App',
-      ]},
-    ], {
-      path: $({key: 'path', storage: 'hash', value: 'About'}),
-    });
+        {id: 'Demos', options: [
+          {id: 'Inputs'},
+          {id: 'Icons'},
+          {id: 'Sliders'},
+          {id: 'Colors'},
+          {id: 'Editors'},
+          {id: 'Menus'},
+          {id: 'Navigation'},
+          {id: 'Layout'},
+          {id: 'Theme Editor'},
+          {id: 'Element Inspector'},
+          {id: 'Change Visualization'},
+          {id: 'TODO MVC App'},
+        ]}
+      ],
+      path: $({key: 'path', storage: 'hash', value: 'About'})
+    })
 
     const siteRoot = 'https://iogui.dev/io/';
 
-    export class IoMainPage extends IoNavigatorSelector {
-      static get Properties() {
-        return {
-          role: 'main',
-          class: 'main',
-          menu: 'top',
-          collapseWidth: 280,
-          options: OPTIONS,
-          cache: true,
-          depth: 1,
+    const navigator = new IoNavigator({
+      role: 'main',
+      class: 'main',
+      menu: 'top',
+      option: MENU_OPTION,
+      caching: 'proactive',
+      depth: 2,
+      widget: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}}),
+      elements: [
+        ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
+        ioSelector({id: 'Docs',
+          selected: MENU_OPTION.findItemById('Docs').bind('selectedIDImmediate'),
+          caching: 'proactive',
           elements: [
-            ['io-markdown', {id: 'About', strip: [siteRoot], src: './README.md'}],
-            ['io-selector', {id: 'Docs',
-              options: OPTIONS.getItem('Docs').options,
-              cache: true,
+            ioNavigator({id: 'Quick Start', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'), 
+              option: MENU_OPTION.findItemById('Docs').findItemById('Quick Start'),
+              anchor: MENU_OPTION.findItemById('Docs').findItemById('Quick Start').bind('selectedID'),
               elements: [
-                ['io-navigator-scroller', {id: 'Quick Start',
-                  options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
-                  elements: [
-                    ['io-markdown', {strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}],
-                  ]
-                }],
-                ['io-navigator-scroller', {id: 'Deep Dive',
-                  options: OPTIONS.getItem('Docs').getSubitem('Quick Start').options,
-                  elements: [
-                    ['io-markdown', {strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}],
-                  ]
-                }],
+                ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
               ]
-            }],
-            ['io-selector', {id: 'Demos',
-              options: OPTIONS.getItem('Demos').options,
-              cache: true,
+            }),
+            ioNavigator({id: 'Deep Dive', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'),
+              option: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive'), 
+              anchor: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive').bind('selectedID'),
               elements: [
-                ['io-demo-elements', {id: 'Elements', import: './demos/demo-elements.js'}],
-                ['io-demo-theme-editor', {id: 'Theme Editor', import: './demos/theme-editor.js'}],
-                ['iframe', {id: 'TODO MVC App', src: './demos/todomvc/index.html'}],
+                ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/deep-dive.md'}),
               ]
-            }],
+            }),
           ]
-        };
-      }
-    }
-    Register(IoMainPage);
+        }),
+        ioSelector({id: 'Demos',
+          selected: MENU_OPTION.findItemById('Demos').bind('selectedID'),
+          caching: 'proactive',
+          elements: [
+            {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/demos/IoInputsDemo.js'}},
+            {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
+            {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/io-sliders/demos/IoSlidersDemo.js'}},
+            {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/io-colors/demos/IoColorsDemo.js'}},
+            {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
+            {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
+            {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
+            {tag: 'io-layout-demo', props: {id: 'Layout', import: './packages/io-layout/demos/IoLayoutDemo.js'}},
+            {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoThemeEditor.js'}},
+            {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-gui/demos/IoElementInspectorDemo.js'}},
+            {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/io-gui/demos/IoChangeVisualization.js'}},
+            iframe({id: 'TODO MVC App', src: './packages/io-gui/demos/todomvc/index.html'}),
+          ]
+        }),
+      ]
+    });
+    document.body.appendChild(navigator);
 
     </script>
     <noscript>JavaScript is required to view this page!</noscript>
-    <io-main-page></io-main-page>
   </body>
 </html>

@@ -1,5 +1,6 @@
 import { makeBundleTarget } from '../../rollup.config.js';
 
 export default [
-  makeBundleTarget('packages/io-icons/build/io-icons.js', 'packages/io-icons/bundle/io-icons.js', ['io-gui']),
+  makeBundleTarget('packages/io-icons/build/index.js', 'packages/io-icons/bundle/index.js'),
+  makeBundleTarget('packages/io-icons/build/index.test.js', 'packages/io-icons/bundle/index.test.js'),
 ];

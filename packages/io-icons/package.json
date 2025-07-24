@@ -1,36 +1,27 @@
 {
   "name": "io-icons",
-  "version": "1.0.0-rc1",
+  "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-Icons, a set of icons for Io-Gui.",
-  "main": "build/io-icons.js",
-  "module": "build/io-icons.js",
-  "types": "build/io-icons.d.ts",
+  "description": "A set of icons for Io-Gui.",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
-    "/src/",
-    "/build/",
-    "/demos/",
+    "/build",
+    "/demos",
+    "/src",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/io-gui/io.git"
-  },
-  "keywords": [
-    "io",
-    "gui",
-    "iogui",
-    "io-gui",
-    "icons",
-    "io-icons"
-  ],
+  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["io","gui","iogui","io-gui","icons","iconset","io-icons"],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/iogui/iogui/issues"
-  },
-  "homepage": "https://iogui.dev"
+  "license": "MIT + Commons Clause - see LICENSE.md",
+  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-gui": "^2.0.0"
+  }
 }

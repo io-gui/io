@@ -1,44 +1,473 @@
 {
-  "name": "io-gui",
-  "version": "1.4.0-rc10",
-  "type": "module",
+  "name": "io-gui-monorepo",
+  "version": "2.0.0",
   "packageManager": "pnpm@9.5.0",
-  "description": "Io-Gui, a UI framework for web development.",
-  "main": "build/io-gui.js",
-  "module": "build/io-gui.js",
-  "types": "build/io-gui.d.ts",
-  "files": [
-    "/src/",
-    "/build/",
-    "/LICENSE",
-    "/README.md"
-  ],
-  "sideEffects": true,
+  "description": "Io-Gui monorepo, a UI framework for web development.",
+  "type": "module",
   "scripts": {
-    "clean": "rm -rf build && rm -rf bundle",
-    "clean:icons": "rm -rf ./packages/io-icons/build && rm -rf ./packages/io-icons/bundle",
-    "clean:markdown": "rm -rf ./packages/io-markdown/build && rm -rf ./packages/io-markdown/bundle",
-    "clean:navigator": "rm -rf ./packages/io-navigator/build && rm -rf ./packages/io-navigator/bundle",
-    
-    "lint": "eslint -c ./eslint.typescript.js src --fix",
-    "lint:icons": "eslint -c ./packages/io-icons/eslint.typescript.js ./packages/io-icons/src --fix",
-    "lint:markdown": "eslint -c ./packages/io-markdown/eslint.typescript.js ./packages/io-markdown/src --fix",
-    "lint:navigator": "eslint -c ./packages/io-navigator/eslint.typescript.js ./packages/io-navigator/src --fix",
-    "build": "pnpm clean && pnpm lint && tsc --project ./tsconfig.json && rollup -c && dts-bundle-generator --export-referenced-types false -o bundle/io-gui.d.ts build/io-gui.d.ts && rm -rf build && mv bundle build",
-    "build:icons": "tsc --project ./packages/io-icons/tsconfig.json && rollup -c ./packages/io-icons/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-icons/bundle/io-icons.d.ts ./packages/io-icons/build/io-icons.d.ts && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
-    "build:markdown": "tsc --project ./packages/io-markdown/tsconfig.json && rollup -c ./packages/io-markdown/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-markdown/bundle/io-markdown.d.ts ./packages/io-markdown/build/io-markdown.d.ts && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
-    "build:navigator": "tsc --project ./packages/io-navigator/tsconfig.json && rollup -c ./packages/io-navigator/rollup.config.js && dts-bundle-generator --export-referenced-types false -o packages/io-navigator/bundle/io-navigator.d.ts ./packages/io-navigator/build/io-navigator.d.ts && rm -rf ./packages/io-navigator/build && mv ./packages/io-navigator/bundle ./packages/io-navigator/build",
-    
-    "dev": "pnpm clean && tsc -w",
-    "dev:icons": "tsc -w --project ./packages/io-icons/tsconfig.json",
-    "dev:markdown": "tsc -w --project ./packages/io-markdown/tsconfig.json",
-    "dev:navigator": "tsc -w --project ./packages/io-navigator/tsconfig.json",
-
+    "clean": "wireit",
+    "clean:gui": "wireit",
+    "clean:colors": "wireit",
+    "clean:icons": "wireit",
+    "clean:inputs": "wireit",
+    "clean:layout": "wireit",
+    "clean:editors": "wireit",
+    "clean:markdown": "wireit",
+    "clean:menus": "wireit",
+    "clean:navigation": "wireit",
+    "clean:sliders": "wireit",
+    "clean:monolith": "wireit",
+    "lint": "wireit",
+    "lint:gui": "wireit",
+    "lint:colors": "wireit",
+    "lint:icons": "wireit",
+    "lint:inputs": "wireit",
+    "lint:layout": "wireit",
+    "lint:editors": "wireit",
+    "lint:markdown": "wireit",
+    "lint:menus": "wireit",
+    "lint:navigation": "wireit",
+    "lint:sliders": "wireit",
+    "lint:monolith": "wireit",
+    "build": "wireit",
+    "build:gui": "wireit",
+    "build:colors": "wireit",
+    "build:icons": "wireit",
+    "build:inputs": "wireit",
+    "build:layout": "wireit",
+    "build:editors": "wireit",
+    "build:markdown": "wireit",
+    "build:menus": "wireit",
+    "build:navigation": "wireit",
+    "build:sliders": "wireit",
+    "build:monolith": "wireit",
+    "bundle": "wireit",
+    "bundle:gui": "wireit",
+    "bundle:colors": "wireit",
+    "bundle:icons": "wireit",
+    "bundle:inputs": "wireit",
+    "bundle:layout": "wireit",
+    "bundle:editors": "wireit",
+    "bundle:markdown": "wireit",
+    "bundle:menus": "wireit",
+    "bundle:navigation": "wireit",
+    "bundle:sliders": "wireit",
+    "bundle:monolith": "wireit",
+    "dev": "wireit",
+    "dev:gui": "wireit",
+    "dev:colors": "wireit",
+    "dev:icons": "wireit",
+    "dev:inputs": "wireit",
+    "dev:layout": "wireit",
+    "dev:editors": "wireit",
+    "dev:markdown": "wireit",
+    "dev:menus": "wireit",
+    "dev:navigation": "wireit",
+    "dev:sliders": "wireit",
+    "dev:monolith": "wireit",
     "test": "web-test-runner \"test.html\"",
-    "test:watch": "web-test-runner \"test.html\" --manual --open --debug",
-
-    "docs": "typedoc --plugin typedoc-plugin-markdown",
-    "serve": "pnpm wds --watch"
+    "test:watch": "web-test-runner \"test.html\" --watch",
+    "serve": "wds --watch"
+  },
+  "wireit": {
+    "clean": {
+      "dependencies": [
+        "clean:gui",
+        "clean:colors",
+        "clean:icons",
+        "clean:inputs",
+        "clean:layout",
+        "clean:editors",
+        "clean:markdown",
+        "clean:menus",
+        "clean:navigation",
+        "clean:sliders",
+        "clean:monolith"
+      ]
+    },
+    "clean:gui": {
+      "command": "rm -rf ./packages/io-gui/build && rm -rf ./packages/io-gui/bundle"
+    },
+    "clean:colors": {
+      "command": "rm -rf ./packages/io-colors/build && rm -rf ./packages/io-colors/bundle"
+    },
+    "clean:icons": {
+      "command": "rm -rf ./packages/io-icons/build && rm -rf ./packages/io-icons/bundle"
+    },
+    "clean:inputs": {
+      "command": "rm -rf ./packages/io-inputs/build && rm -rf ./packages/io-inputs/bundle"
+    },
+    "clean:layout": {
+      "command": "rm -rf ./packages/io-layout/build && rm -rf ./packages/io-layout/bundle"
+    },
+    "clean:editors": {
+      "command": "rm -rf ./packages/io-editors/build && rm -rf ./packages/io-editors/bundle"
+    },
+    "clean:markdown": {
+      "command": "rm -rf ./packages/io-markdown/build && rm -rf ./packages/io-markdown/bundle"
+    },
+    "clean:menus": {
+      "command": "rm -rf ./packages/io-menus/build && rm -rf ./packages/io-menus/bundle"
+    },
+    "clean:navigation": {
+      "command": "rm -rf ./packages/io-navigation/build && rm -rf ./packages/io-navigation/bundle"
+    },
+    "clean:sliders": {
+      "command": "rm -rf ./packages/io-sliders/build && rm -rf ./packages/io-sliders/bundle"
+    },
+    "clean:monolith": {
+      "command": "rm -rf ./packages/io-monolith/build && rm -rf ./packages/io-monolith/bundle"
+    },
+    "lint": {
+      "dependencies": [
+        "lint:gui",
+        "lint:colors",
+        "lint:icons",
+        "lint:inputs",
+        "lint:layout",
+        "lint:editors",
+        "lint:markdown",
+        "lint:menus",
+        "lint:navigation",
+        "lint:sliders",
+        "lint:monolith"
+      ]
+    },
+    "lint:gui": {
+      "command": "eslint -c ./packages/io-gui/.eslintrc.js ./packages/io-gui/src --fix"
+    },
+    "lint:colors": {
+      "command": "eslint -c ./packages/io-colors/.eslintrc.js ./packages/io-colors/src --fix"
+    },
+    "lint:icons": {
+      "command": "eslint -c ./packages/io-icons/.eslintrc.js ./packages/io-icons/src --fix"
+    },
+    "lint:inputs": {
+      "command": "eslint -c ./packages/io-inputs/.eslintrc.js ./packages/io-inputs/src --fix"
+    },
+    "lint:layout": {
+      "command": "eslint -c ./packages/io-layout/.eslintrc.js ./packages/io-layout/src --fix"
+    },
+    "lint:editors": {
+      "command": "eslint -c ./packages/io-editors/.eslintrc.js ./packages/io-editors/src --fix"
+    },
+    "lint:markdown": {
+      "command": "eslint -c ./packages/io-markdown/.eslintrc.js ./packages/io-markdown/src --fix"
+    },
+    "lint:menus": {
+      "command": "eslint -c ./packages/io-menus/.eslintrc.js ./packages/io-menus/src --fix"
+    },
+    "lint:navigation": {
+      "command": "eslint -c ./packages/io-navigation/.eslintrc.js ./packages/io-navigation/src --fix"
+    },
+    "lint:sliders": {
+      "command": "eslint -c ./packages/io-sliders/.eslintrc.js ./packages/io-sliders/src --fix"
+    },
+    "lint:monolith": {
+      "command": "eslint -c ./packages/io-monolith/.eslintrc.js ./packages/io-monolith/src --fix"
+    },
+    "build": {
+      "dependencies": [
+        "build:gui",
+        "build:icons",
+        "build:inputs",
+        "build:layout",
+        "build:sliders",
+        "build:colors",
+        "build:menus",
+        "build:markdown",
+        "build:navigation",
+        "build:editors",
+        "build:monolith"
+      ]
+    },
+    "build:gui": {
+      "command": "tsc --project ./packages/io-gui/tsconfig.json",
+      "dependencies": [
+        "clean:gui",
+        "lint:gui"
+      ]
+    },
+    "build:colors": {
+      "command": "tsc --project ./packages/io-colors/tsconfig.json",
+      "dependencies": [
+        "clean:colors",
+        "lint:colors",
+        "build:gui",
+        "build:inputs",
+        "build:sliders"
+      ]
+    },
+    "build:icons": {
+      "command": "tsc --project ./packages/io-icons/tsconfig.json",
+      "dependencies": [
+        "clean:icons",
+        "lint:icons",
+        "build:gui"
+      ]
+    },
+    "build:inputs": {
+      "command": "tsc --project ./packages/io-inputs/tsconfig.json",
+      "dependencies": [
+        "clean:inputs",
+        "lint:inputs",
+        "build:gui",
+        "build:icons"
+      ]
+    },
+    "build:layout": {
+      "command": "tsc --project ./packages/io-layout/tsconfig.json",
+      "dependencies": [
+        "clean:layout",
+        "lint:layout",
+        "build:gui",
+        "build:editors",
+        "build:icons",
+        "build:inputs",
+        "build:menus",
+        "build:navigation"
+      ]
+    },
+    "build:editors": {
+      "command": "tsc --project ./packages/io-editors/tsconfig.json",
+      "dependencies": [
+        "clean:editors",
+        "lint:editors",
+        "build:gui",
+        "build:inputs",
+        "build:sliders",
+        "build:colors",
+        "build:menus",
+        "build:navigation"
+      ]
+    },
+    "build:markdown": {
+      "command": "tsc --project ./packages/io-markdown/tsconfig.json",
+      "dependencies": [
+        "clean:markdown",
+        "lint:markdown",
+        "build:gui"
+      ]
+    },
+    "build:menus": {
+      "command": "tsc --project ./packages/io-menus/tsconfig.json",
+      "dependencies": [
+        "clean:menus",
+        "lint:menus",
+        "build:gui",
+        "build:icons",
+        "build:inputs"
+      ]
+    },
+    "build:navigation": {
+      "command": "tsc --project ./packages/io-navigation/tsconfig.json",
+      "dependencies": [
+        "clean:navigation",
+        "lint:navigation",
+        "build:gui",
+        "build:icons",
+        "build:inputs",
+        "build:menus",
+        "build:markdown"
+      ]
+    },
+    "build:sliders": {
+      "command": "tsc --project ./packages/io-sliders/tsconfig.json",
+      "dependencies": [
+        "clean:sliders",
+        "lint:sliders",
+        "build:gui",
+        "build:inputs"
+      ]
+    },
+    "build:monolith": {
+      "command": "tsc --project ./packages/io-monolith/tsconfig.json",
+      "dependencies": [
+        "clean:monolith",
+        "lint:monolith",
+        "build:gui",
+        "build:colors",
+        "build:icons",
+        "build:inputs",
+        "build:layout",
+        "build:editors",
+        "build:markdown",
+        "build:menus",
+        "build:navigation",
+        "build:sliders"
+      ]
+    },
+    "bundle": {
+      "dependencies": [
+        "clean",
+        "bundle:gui",
+        "bundle:colors",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:layout",
+        "bundle:editors",
+        "bundle:markdown",
+        "bundle:menus",
+        "bundle:navigation",
+        "bundle:sliders",
+        "bundle:monolith"
+      ]
+    },
+    "bundle:gui": {
+      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build",
+      "dependencies": [
+        "build:gui"
+      ]
+    },
+    "bundle:colors": {
+      "command": "rollup -c ./packages/io-colors/rollup.config.js && find ./packages/io-colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-colors/build/* ./packages/io-colors/bundle && rm -rf ./packages/io-colors/build && mv ./packages/io-colors/bundle ./packages/io-colors/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:inputs",
+        "bundle:sliders",
+        "build:colors"
+      ]
+    },
+    "bundle:icons": {
+      "command": "rollup -c ./packages/io-icons/rollup.config.js && find ./packages/io-icons/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-icons/build/* ./packages/io-icons/bundle && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
+      "dependencies": [
+        "bundle:gui",
+        "build:icons"
+      ]
+    },
+    "bundle:inputs": {
+      "command": "rollup -c ./packages/io-inputs/rollup.config.js && find ./packages/io-inputs/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-inputs/build/* ./packages/io-inputs/bundle && rm -rf ./packages/io-inputs/build && mv ./packages/io-inputs/bundle ./packages/io-inputs/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "build:inputs"
+      ]
+    },
+    "bundle:layout": {
+      "command": "rollup -c ./packages/io-layout/rollup.config.js && find ./packages/io-layout/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-layout/build/* ./packages/io-layout/bundle && rm -rf ./packages/io-layout/build && mv ./packages/io-layout/bundle ./packages/io-layout/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:editors",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:menus",
+        "bundle:navigation",
+        "build:layout"
+      ]
+    },
+    "bundle:editors": {
+      "command": "rollup -c ./packages/io-editors/rollup.config.js && find ./packages/io-editors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-editors/build/* ./packages/io-editors/bundle && rm -rf ./packages/io-editors/build && mv ./packages/io-editors/bundle ./packages/io-editors/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:sliders",
+        "bundle:colors",
+        "bundle:menus",
+        "bundle:navigation",
+        "build:editors"
+      ]
+    },
+    "bundle:markdown": {
+      "command": "rollup -c ./packages/io-markdown/rollup.config.js && find ./packages/io-markdown/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-markdown/build/* ./packages/io-markdown/bundle && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
+      "dependencies": [
+        "bundle:gui",
+        "build:markdown"
+      ]
+    },
+    "bundle:menus": {
+      "command": "rollup -c ./packages/io-menus/rollup.config.js && find ./packages/io-menus/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-menus/build/* ./packages/io-menus/bundle && rm -rf ./packages/io-menus/build && mv ./packages/io-menus/bundle ./packages/io-menus/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
+        "build:menus"
+      ]
+    },
+    "bundle:navigation": {
+      "command": "rollup -c ./packages/io-navigation/rollup.config.js && find ./packages/io-navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-navigation/build/* ./packages/io-navigation/bundle && rm -rf ./packages/io-navigation/build && mv ./packages/io-navigation/bundle ./packages/io-navigation/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:icons",
+        "bundle:inputs",
+        "bundle:menus",
+        "bundle:markdown",
+        "build:navigation"
+      ]
+    },
+    "bundle:sliders": {
+      "command": "rollup -c ./packages/io-sliders/rollup.config.js && find ./packages/io-sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-sliders/build/* ./packages/io-sliders/bundle && rm -rf ./packages/io-sliders/build && mv ./packages/io-sliders/bundle ./packages/io-sliders/build",
+      "dependencies": [
+        "bundle:gui",
+        "bundle:inputs",
+        "build:sliders"
+      ]
+    },
+    "bundle:monolith": {
+      "command": "rollup -c ./packages/io-monolith/rollup.config.js && find ./packages/io-monolith/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-monolith/build/* ./packages/io-monolith/bundle && rm -rf ./packages/io-monolith/build && mv ./packages/io-monolith/bundle ./packages/io-monolith/build && ./node_modules/.bin/dts-bundle-generator -o packages/io-monolith/build/index.d.ts packages/io-monolith/build/index.d.ts",
+      "dependencies": [
+        "build:monolith"
+      ]
+    },
+    "dev": {
+      "dependencies": [
+        "dev:gui",
+        "dev:colors",
+        "dev:icons",
+        "dev:inputs",
+        "dev:layout",
+        "dev:editors",
+        "dev:markdown",
+        "dev:menus",
+        "dev:navigation",
+        "dev:sliders",
+        "dev:monolith"
+      ]
+    },
+    "dev:gui": {
+      "command": "tsc -w --project ./packages/io-gui/tsconfig.json",
+      "service": true
+    },
+    "dev:colors": {
+      "command": "tsc -w --project ./packages/io-colors/tsconfig.json",
+      "service": true
+    },
+    "dev:icons": {
+      "command": "tsc -w --project ./packages/io-icons/tsconfig.json",
+      "service": true
+    },
+    "dev:inputs": {
+      "command": "tsc -w --project ./packages/io-inputs/tsconfig.json",
+      "service": true
+    },
+    "dev:layout": {
+      "command": "tsc -w --project ./packages/io-layout/tsconfig.json",
+      "service": true
+    },
+    "dev:editors": {
+      "command": "tsc -w --project ./packages/io-editors/tsconfig.json",
+      "service": true
+    },
+    "dev:markdown": {
+      "command": "tsc -w --project ./packages/io-markdown/tsconfig.json",
+      "service": true
+    },
+    "dev:menus": {
+      "command": "tsc -w --project ./packages/io-menus/tsconfig.json",
+      "service": true
+    },
+    "dev:navigation": {
+      "command": "tsc -w --project ./packages/io-navigation/tsconfig.json",
+      "service": true
+    },
+    "dev:sliders": {
+      "command": "tsc -w --project ./packages/io-sliders/tsconfig.json",
+      "service": true
+    },
+    "dev:monolith": {
+      "command": "tsc -w --project ./packages/io-monolith/tsconfig.json",
+      "service": true
+    }
   },
   "repository": {
     "type": "git",
@@ -51,7 +480,7 @@
     "io-gui"
   ],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT",
+  "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {
     "url": "https://github.com/iogui/iogui/issues"
   },
@@ -80,9 +509,8 @@
     "marked-highlight": "^2.2.1",
     "mocha": "^11.1.0",
     "rollup": "^4.34.9",
-    "typedoc": "^0.27.9",
-    "typedoc-plugin-markdown": "^4.4.2",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.0"
+    "typescript-eslint": "^8.26.0",
+    "wireit": "^0.14.11"
   }
 }
