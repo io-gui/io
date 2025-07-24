@@ -5,27 +5,17 @@
 [![DeepScan][deepscan]][deepscan-url]
 [![License][license]][license-url]
 
-Io-Gui is a web GUI framework focused on simplicity and performance. It allows you to create reactive nodes and custom elements that respond to state changes, data binding events and object mutations. It includes a built-in design system with various UI components, and supports WebGL-rendered elements using GLSL shaders. It's designed for complex applications like 3D editors and game engines.
+Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
+
+Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
 To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
 
 Stay in touch on [github] and [bluesky].
 
-## Design system
-
-Io-Gui includes an accessible and productivity-centric design system. Its component library includes inputs, menus, color editors, sliders, navigation and much more.
-
-## Styling and Theming
-
-The [theme engine] uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
-
-## Reactive WebGL Elements
-
-One of the unique features of Io-Gui is its ability to render custom elements using WebGL shaders. Elements that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are reactively mapped to shader uniforms.  
-
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on very little tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [nodejs] and [pnpm] to run a few development scripts. Using IoGui in your project requires no compilation or build tools.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on very little tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [pnpm] to run a few development scripts. Using IoGui in your project requires no compilation or build tools.
 
 To download and develop Io-Gui locally:
 
@@ -36,17 +26,7 @@ pnpm i && pnpm dev:gui
 
 This will install dev dependencies and start the typescript watch script. You will also need to run `pnpm serve` to run @web/dev-server. Or you can run any other web server of your choice.
 
-```bash
-pnpm build
-```
-
 To learn more Io-Gui development, please read [contributing guide](https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md), browse and submit [issues](https://github.com/io-gui/io/issues).
-
-## Documentation
-
-The Io-Gui documentation is hosted on [io-gui.dev] via github pages from the main branch of this [github] repository. The UI of the website is created using Io-Gui and the source code is contained in [index.html]. The website content is loaded from `.md` files in the `docs/` directory and `.js` files in the `demos/` directory. The website itself is the most up-to-date reference on how to build a documentation website using Io-Gui. It also contains examples on how to use different nodes and elements.
-
-The files in `docs/tsdoc` are a work in progress. The files are automatically generated using typedoc and typedoc-plugin-markdown plugin.
 
 [npm]: https://img.shields.io/npm/v/io-gui
 [npm-url]: https://www.npmjs.com/package/io-gui
@@ -57,8 +37,6 @@ The files in `docs/tsdoc` are a work in progress. The files are automatically ge
 
 [github]: https://github.com/io-gui/io/
 [bluesky]: https://bsky.app/profile/akirodic.com
-[threejs]: https://threejs.org
-[nodejs]: https://nodejs.org
 [pnpm]: https://pnpm.io/
 
 
@@ -66,4 +44,3 @@ The files in `docs/tsdoc` are a work in progress. The files are automatically ge
 [index.html]: https://github.com/io-gui/io/blob/main/index.html
 [quick start]: https://iogui.dev/io/#path=Docs,Quick%20Start
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive
-[theme engine]: https://iogui.dev/io/#path=Demos,Theme%20Editor

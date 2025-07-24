@@ -238,6 +238,10 @@ The above style rule is effectively the same as adding the following style block
 
 In fact, this is automatically done by the `Register` decorator. Each element will have its own style block inside the document head.
 
+## Theming
+
+The theme engine uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
+
 ### CSS Mixin Polyfill
 
 CSS mixins are a feature polyfilled by `IoElement`. It allows you to define style rule sets to be reused across multiple elements. To create a mixin, make a style rule set with a CSS selector starting with `--` and ending with `:`.
@@ -474,3 +478,7 @@ this.render([ioSlider({value: this.bind('value')})]);
 ```
 
 The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.
+
+## Reactive WebGL Elements
+
+One of the unique features of Io-Gui is its ability to render custom elements using WebGL shaders. Elements that extend the `IoGl` element have the ability to render their contents using GLSL shading language. Element properties and CSS theme variables are reactively mapped to shader uniforms.  
