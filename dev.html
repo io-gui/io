@@ -102,64 +102,74 @@
   </head>
   <body>
     <script type="module">
-import { IoElement, Register, span } from 'io-gui'
-// Notice that, unlike real constructors, vDOM constructors start with lowercase "i"
-import { ioSlider } from 'io-sliders';
-import { ioOptionSelect, MenuOption } from 'io-menus';
+      import { IoElement, Register, span } from 'io-gui'
+      import { ioSlider } from 'io-sliders';
+      import { ioOptionSelect, MenuOption } from 'io-menus';
 
-class MyElement extends IoElement {
+      class MyElement extends IoElement {
 
-  static get Style() {
-    return /* css */`
-      :host {
-        display: inline-block;
-        width: 160px;
+        static get Style() {
+          return /* css */`
+            :host {
+              display: inline-block;
+              width: 160px;
+            }
+          `;
+        }
+
+        static get ReactiveProperties() {
+          return {
+            numberValue: 0,
+            menuOption: {value: new MenuOption({options: [
+              {id: 'Zero', value: 0},
+              {id: 'One', value: 1},
+              {id: 'Two', value: 2},
+              {id: 'Three', value: 3},
+            ]})}
+          }
+        }
+
+        ready() {
+          this.changed();
+        }
+
+        changed() {
+          this.render([
+            ioSlider({value: this.bind('numberValue'), min: -3, max: 3, step: 1}),
+            ioOptionSelect({
+              value: this.bind('numberValue'),
+              option: this.menuOption
+            })
+          ]);
+        }
+
+        onValueInput(event) {
+          this.numberValue = event.detail.value;
+        }
+
+        changed() {
+          this.render([
+            // Notice that, unlike constructors, vDOM factories start with lowercase "i"
+            ioSlider({
+              value: this.numberValue,
+              min: -3,
+              max: 3,
+              step: 1,
+              '@value-input': this.onValueInput,
+            }),
+            ioOptionSelect({
+              value: this.numberValue,
+              option: this.menuOption,
+              '@value-input': this.onValueInput,
+            })
+          ]);
+        }
       }
-    `;
-  }
+      Register(MyElement);
 
-  static get ReactiveProperties() {
-    return {
-      numberValue: {type: Number, value: 0},
-      menuOption: {type: MenuOption, value: new MenuOption({options: [
-        {id: 'Zero', value: 0},
-        {id: 'One', value: 1},
-        {id: 'Two', value: 2},
-        {id: 'Three', value: 3},
-      ]})}
-    }
-  }
-
-  ready() {
-    this.changed();
-  }
-
-  onValueInput(event) {
-    this.numberValue = event.detail.value;
-  }
-
-  changed() {
-    this.render([
-    ioSlider({
-      value: this.numberValue,
-      min: -1,
-      max: 3,
-      step: 1,
-      '@value-input': this.onValueInput,
-    }),
-    ioOptionSelect({
-        value: this.numberValue,
-        option: this.menuOption,
-        '@value-input': this.onValueInput,
-      })
-    ]);
-  }
-}
-Register(MyElement);
-
-document.body.appendChild(
-  new MyElement()
-)
+      document.body.appendChild(
+        new MyElement()
+      )
     </script>
     <noscript>JavaScript is required to view this page!</noscript>
   </body>

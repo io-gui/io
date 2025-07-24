@@ -2,17 +2,132 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Note**: No need to run any `pnpm` commands - they will be run by the user.
+
 ## Project Overview
 
-Io-Gui is a reactive web UI framework focused on simplicity and performance. It creates reactive nodes and custom elements that respond to state changes, data binding events, and object mutations. The framework includes a design system with UI components and supports WebGL-rendered elements using GLSL shaders.
+Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
 
-## Development Commands
+Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
-### Package Manager
-This project uses `pnpm` as the package manager.
+### Universal Reactive Architecture
+
+Io-Gui implements the same features on top of its base classes - nodes and elements. The features include:
+- Reactive property system
+- Two-way data binding
+- Component lifecycle management
+- Event-driven architecture
+By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
+
+#### Node
+Node is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
+- `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
+- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash/localStorage
+- `MenuOption`: A rich domain model for menu options and their state in io-menus
+- `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
+
+#### IoElement
+IoElement is a custom element base class extending `HTMLElement` with Node functionality as well as some DOM functionality such as:
+- Virtual DOM rendering
+- Style declaration with inheritance
+It can be used to create reactive custom elements that can be bound to node properties and are responsive to node mutations. The entire Io-Gui design system is built on top of this class.
+
+### Reactive Data Flow
+- Trunk-to-leaf data flow can be achieved using change handlers and value assignment
+  - Property change events are automatically dispatched for all reactive properties
+  - Example: `"label"` property change event `"label-changed"` includes `event.detail.value` and `event.detail.oldValue`
+  - Change handlers get invoked automatically if they are defined
+  - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
+  - Generic property handler `.changed()` gets invoked after any property change
+- Leaf-to-trunk data flow can be achieved using mutation events and handlers
+  - Mutation events are automatically dispatched for all nodes and objects
+  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
+  - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
+  - Mutation handlers get invoked automatically if they are defined
+  - Example: `"data"` property mutation event invokes `dataMutated()` handler if it exists
+- Bi-directional data flow can be achieved using binding objects
+  - Example: Binding function `this.bind('label')` returns a data-binding object to the `"label"` property
+  - Binding object can synchronize reactive properties by simple assignment to a property
+  - Binding objects rely on change events for bound properties
+
+### Core Systems
+- **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
+- **ReactiveProperty** - Creates and initializes responsive properties
+- **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on nodes
+- **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
+- **Queue** - Generic queue manager with throttle and debounce capability
+- **Binding** - Manages two-way data flow using change events
+- **VDOM** - Virtual DOM implementation for efficient rendering
+
+
+## Code Style Guidelines
+
+### Code Style
+- Code should require minimal documentation: "Code is documentation"
+- Use clear, descriptive, and easy-to-read variable/property names
+- Don't solve problems by removing debug statements/checks
+- Follow existing code style and linting patterns
+- Minimal Tooling: Avoid complex tools and processes
+- Use the Platform: Rely on native web features
+
+### TypeScript Patterns
+- Extensive use of decorators (`@Register`, `@ReactiveProperty`, `@Property`)
+- Strong typing with interfaces and type definitions
+- Avoid using `any` whenever possible
+- ES modules with `.js` extensions in imports
+- When importing from another package or a test file, use package name instead of full path
+
+### Defining New Components
+- Elements extend `IoElement` and use reactive properties
+- Nodes extend `Node` for non-DOM reactive objects
+- Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
+- CSS styles defined in static `static get Style()` string
+- CSS selectors have to start with `:host` selector which represents the host element
+- Reactive properties defined in static `static get ReactiveProperties()` object or `@ReactiveProperty` decorators
+- Non-reactive properties defined in static `static get Properties()` object or `@Property` decorators
+
+### Runtime Type Checking
+- Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc
+- Debug code should not alter the state in any way
+- Debug code should display errors when encounters a breaking state
+- Debug code should display warnings when encounters a non-breaking states
+- Bundled build does not include debug blocks
+
+### Styling
+- Element's tagName is the primary CSS selector. It is defined as `:host` selector in element's source Style
+- Properties reflected to attributes can be used to bridge property values to CSS state-selectors
+- ThemeSingleton manages top-level CSS variables and can have multiple themes
+- Prefer using custom element tag name as CSS selector when possible
+- Use classes and id's as CSS selectors only when necessary
+
+### DOM Structure
+- Use minimal number of elements in the DOM tree
+- DOM mutations should be articulated by custom elements
+- Reactive elements render and manage their own children
+- Elements render content using virtual DOM for efficient updates
+
+## Development
+The framework has no runtime dependencies - only development dependencies. It uses `pnpm` as the package manager.
+- Make changes to source files in `/packages/*/src/`
+- TypeScript will compile to `/packages/*/build/`
+
+### Monorepo Structure
+The project is organized as a monorepo with packages in `/packages/`:
+
+- **io-gui** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-colors** - Color components and utilities
+- **io-icons** - Icon component and default iconset
+- **io-inputs** - Input components (buttons, fields, switches)
+- **io-layout** - Layout components (panels, tabs, splits)
+- **io-editors** - Universal property editors
+- **io-markdown** - Markdown rendering component
+- **io-menus** - Menu components and rich domain models
+- **io-navigation** - Navigation and selection components
+- **io-sliders** - Slider components
+- **io-monolith** - Combined package with all components
 
 ### Essential Commands
-- `pnpm dev` - Start watch mode for all packages (TypeScript compilation)
+- `pnpm dev` - Start watch mode for all packages (tsc)
 - `pnpm dev:gui` - Start watch mode for core io-gui package only
 - `pnpm build` - Build all packages
 - `pnpm lint` - Lint all packages (auto-fixes)
@@ -26,47 +141,6 @@ Each package can be built/linted individually:
 - `pnpm build:gui`, `pnpm build:colors`, `pnpm build:inputs`, etc.
 - `pnpm lint:gui`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
 
-### Bundle Commands
-- `pnpm bundle` - Create optimized bundles for all packages
-- Individual bundle commands available: `pnpm bundle:gui`, `pnpm bundle:colors`, etc.
-
-## Architecture
-
-### Monorepo Structure
-The project is organized as a monorepo with packages in `/packages/`:
-
-- **io-gui** - Core framework (Node, IoElement, bindings, reactivity)
-- **io-colors** - Color components and utilities
-- **io-icons** - Icon system and components
-- **io-inputs** - Input controls (buttons, fields, switches)
-- **io-layout** - Layout components (panels, tabs, splits)
-- **io-editors** - Object and property editors
-- **io-markdown** - Markdown rendering
-- **io-menus** - Menu and context menu components
-- **io-navigation** - Navigation and selection components
-- **io-sliders** - Slider controls
-- **io-monolith** - Combined package with all components
-
-### Core Concepts
-
-#### Reactive Data Flow
-- Data flows trunk-to-leaf using change handlers:
-  - Generic: `.changed()`
-  - Specific: `.[prop]Changed()`
-- Bi-directional binding via `.bind([prop])` and change events
-- Object mutations flow leaf-to-trunk and are debounced/aggregated
-
-#### Base Classes
-- **Node** - Base reactive class extending Object with property binding and change detection
-- **IoElement** - Web component base class extending HTMLElement with Node functionality
-
-#### Key Systems
-- **ReactiveProperty** - Decorator for reactive properties with change detection
-- **Binding** - System for connecting properties between objects
-- **ChangeQueue** - Batches and manages property changes
-- **VDOM** - Virtual DOM implementation for efficient rendering
-- **ProtoChain** - Manages prototype chain for inheritance
-
 ### Build System
 - Uses `wireit` for orchestrated builds with dependency management
 - TypeScript compilation with `tsc`
@@ -77,39 +151,3 @@ The project is organized as a monorepo with packages in `/packages/`:
 - Uses Chai and Mocha for testing
 - Web Test Runner for browser-based tests
 - Test files follow `*.test.ts` pattern
-
-## Code Style Guidelines
-
-### From Cursor Rules
-- Code should require minimal documentation: "Code is documentation"
-- Use clear, descriptive, and easy-to-read variable/property names
-- Don't solve problems by removing debug statements/checks
-- Follow existing code style and linting patterns
-
-### TypeScript Patterns
-- Extensive use of decorators (`@ReactiveProperty`, `@Register`, `@Property`)
-- Strong typing with interfaces and type definitions
-- ES modules with `.js` extensions in imports
-
-### Component Structure
-- Elements extend `IoElement` and use reactive properties
-- Nodes extend `Node` for non-DOM reactive objects
-- CSS styles defined in static `Style` getter
-- Properties defined in static `ReactiveProperties` and `Properties` getters
-
-## Development Workflow
-
-1. Run `pnpm dev` to start watch mode for all packages
-2. Run `pnpm serve` to start development server
-3. Make changes to source files in `/packages/*/src/`
-4. TypeScript will compile to `/packages/*/build/`
-5. Use `pnpm lint` to fix linting issues
-6. Use `pnpm test` to run tests
-
-## Important Notes
-
-- Always run `pnpm lint` after making changes to ensure code style compliance
-- The framework has no runtime dependencies - only development dependencies
-- WebGL elements extend `IoGL` and can use GLSL shaders
-- Theme system uses CSS variables that map to JavaScript objects and GLSL uniforms
-- All packages have circular dependencies managed through the build system ordering

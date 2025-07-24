@@ -1,6 +1,10 @@
 # Usage
 
-Io-Gui is incrementally adoptable. You can use its core classes `Node` and `IoElement` to create your own nodes and custom elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
+Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
+
+Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
+
+Io-Gui is incrementally adoptable. You can use its core classes `Node` and `IoElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
 
 You can learn more about nodes and elements in the [deep dive] guide. To quickly import Io-Gui and get started, continue reading this article.
 
@@ -12,7 +16,6 @@ Here is a basic example of a reactive element `<my-element>` with style declarat
 import { IoElement, Register, span } from 'io-gui'
 
 class MyElement extends IoElement {
-
   static get Style() {
     return /* css */`
       :host {
@@ -30,15 +33,13 @@ class MyElement extends IoElement {
   ready() {
     this.changed();
   }
-  
+
   changed() {
     this.render([
       span(this.message)
     ]);
   }
-
 }
-
 Register(MyElement);
 
 document.body.appendChild(
@@ -46,7 +47,7 @@ document.body.appendChild(
 )
 ```
 
-Alternatively, you can use convinient "@" decorator syntax to define reactive properties and register the element. This syntax requires a transpiler such as Babel or TypeScript.
+Alternatively, you can use convenient "@" decorator syntax to define reactive properties and register the element. This syntax requires a transpiler such as Babel or TypeScript.
 
 ```javascript
 import { IoElement, Register, ReactiveProperty, span } from 'io-gui'
@@ -68,7 +69,7 @@ class MyElement extends IoElement {
   ready() {
     this.changed();
   }
-  
+
   changed() {
     this.render([
       span(this.message)
@@ -118,7 +119,7 @@ import { IoSlider } from 'io-sliders';
 import { IoOptionSelect, MenuOption } from 'io-menus';
 
 const slider = new IoSlider({value: 0, min: -3, max: 3, step: 1});
-const contextMenu = new IoOptionSelect({
+const optionSelect = new IoOptionSelect({
   value: 0,
   option: new MenuOption({options: [
     {id: 'Zero', value: 0},
@@ -129,7 +130,7 @@ const contextMenu = new IoOptionSelect({
 });
 
 document.body.appendChild(slider);
-document.body.appendChild(contextMenu);
+document.body.appendChild(optionSelect);
 ```
 
 These are just a few examples. There is an extensive library of nodes and elements to choose from.
@@ -145,7 +146,6 @@ import { IoElement, Register, span } from 'io-gui'
 import { ioSlider } from 'io-sliders';
 import { ioOptionSelect, MenuOption } from 'io-menus';
 
-@Register
 class MyElement extends IoElement {
 
   static get Style() {
@@ -157,49 +157,36 @@ class MyElement extends IoElement {
     `;
   }
 
-  @ReactiveProperty(0)
-  declare numberValue: number;
-
-  declare menuOption: MenuOption;
-
-  init() {
-    // Create a MenuOption Node. It is a good practice to reuse nodes whenever possible.
-    this.menuOption = new MenuOption({options: [
-      {id: 'Zero', value: 0},
-      {id: 'One', value: 1},
-      {id: 'Two', value: 2},
-      {id: 'Three', value: 3},
-    ]})
+  static get ReactiveProperties() {
+    return {
+      numberValue: {
+        type: Number,
+        value: 0
+      },
+      menuOption: {
+        type: MenuOption,
+        value: new MenuOption({options: [
+          {id: 'Zero', value: 0},
+          {id: 'One', value: 1},
+          {id: 'Two', value: 2},
+          {id: 'Three', value: 3},
+        ]})
+      }
+    }
   }
 
   ready() {
     this.changed();
   }
 
-  changed() {
-    this.render([
-      ioSlider({value: this.bind('numberValue'), min: -3, max: 3, step: 1}),
-      ioOptionSelect({
-        value: this.bind('numberValue'),
-        option: this.menuOption
-      })
-    ]);
-  }
-
-  onValueInput(event: CustomEvent) {
+  onValueInput(event) {
     this.numberValue = event.detail.value;
   }
 
   changed() {
     this.render([
       // Notice that, unlike constructors, vDOM factories start with lowercase "i"
-      ioSlider({
-        value: this.numberValue,
-        min: -1,
-        max: 3,
-        step: 1,
-        '@value-input': this.onValueInput,
-      }),
+      ioSlider({value: this.numberValue, min: -3, max: 3, step: 1, '@value-input': this.onValueInput}),
       ioOptionSelect({
         value: this.numberValue,
         option: this.menuOption,
@@ -208,13 +195,14 @@ class MyElement extends IoElement {
     ]);
   }
 }
+Register(MyElement);
 
 document.body.appendChild(
   new MyElement()
 )
 ```
 
-In this example, we also introduced event listeners to update value on user input. Alternatively, you can achieve this using two-way data binding function `.bind()`. For example:
+In the example above, we also introduced event listeners to update value on user input. Alternatively, you can achieve this using two-way data binding function `.bind()`. For example:
 
 ```typescript
 ioOptionSelect({
@@ -223,7 +211,7 @@ ioOptionSelect({
 })
 ```
 
-Note that two-way data flow can introduce unexpected states in more complex scenarios, especially when used in conjunction with user input. Use binding only when implications od two-way data flow is completely understood and predictable.
+Note that two-way data flow can introduce unexpected states in more complex scenarios, especially when used in conjunction with user input and multiple binding targets. Use binding only when implications of two-way data flow is completely understood and predictable.
 
 To learn more read the [deep dive] guide.
 

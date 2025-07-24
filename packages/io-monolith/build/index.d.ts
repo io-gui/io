@@ -1020,7 +1020,7 @@ export declare function ReactiveProperty(defLoose?: ReactivePropertyDefinitionLo
 */
 export declare function Register(ioNodeConstructor: typeof Node$1 | typeof IoElement): void;
 export declare const styleDecorators: WeakMap<AnyConstructor, string>;
-export declare function Style(style: string): (target: Node$1 | IoElement, temp: string) => void;
+export declare function Style(style: string): (target: AnyConstructor) => void;
 export type StorageProps = NodeProps & {
 	key: string;
 	value: any;

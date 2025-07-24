@@ -102,8 +102,9 @@ export class IoChangeVisualization extends IoElement {
   }
 
   onResized() {
-    this.$.canvas.width = this.clientWidth;
-    this.$.canvas.height = this.clientHeight;
+    const rect = this.getBoundingClientRect();
+    this.$.canvas.width = rect.width;
+    this.$.canvas.height = rect.height;
     this.canvasCenter.x = this.$.canvas.width / 2;
     this.canvasCenter.y = this.$.canvas.height / 2;
     this.scale = Math.min(this.$.canvas.width, this.$.canvas.height) / 60;
@@ -111,6 +112,8 @@ export class IoChangeVisualization extends IoElement {
   init() {
     this.canvasCenter = { x: 0, y: 0 };
     this.scale = 20;
+    this.isVisible = false;
+    this.animationId = null;
   }
   ready() {
     this.render([
@@ -257,8 +260,8 @@ export class IoChangeVisualization extends IoElement {
             if (this.isDispatching || this.changeQueue.length === 0) return;
             this.isDispatching = true;
 
-            this.changeQueue.forEach(change => {
-                this.animatePropertyChange(change);
+            this.changeQueue.forEach(() => {
+                this.animatePropertyChange();
                 setTimeout(() => this.triggerMutationEvent(), 100);
             });
 
@@ -361,7 +364,7 @@ export class IoChangeVisualization extends IoElement {
             }
         }
 
-        animatePropertyChange(change) {
+        animatePropertyChange() {
             const originalColor = this.originalColor;
             const mutationColor = '#FFFFFF';
             this.animateColor(originalColor, mutationColor, 100, () => {
@@ -764,12 +767,53 @@ export class IoChangeVisualization extends IoElement {
         }, 200);
     }
     
-    function animate() {
-        requestAnimationFrame(animate);
+    this.startAnimation = () => {
+      if (this.animationId) return; // Already running
+      
+      const animate = () => {
+        if (!this.isVisible) {
+          this.animationId = null;
+          return;
+        }
         render();
-    }
+        this.animationId = requestAnimationFrame(animate);
+      };
+      
+      this.animationId = requestAnimationFrame(animate);
+    };
     
-    animate();
+    this.stopAnimation = () => {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+        this.animationId = null;
+      }
+    };
+    
+    // Set up Intersection Observer for visibility detection
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        this.isVisible = entry.isIntersecting;
+        if (this.isVisible && !this.animationId) {
+          this.startAnimation();
+        } else if (!this.isVisible && this.animationId) {
+          this.stopAnimation();
+        }
+      });
+    }, {
+      threshold: 0.1 // Trigger when 10% of the element is visible
+    });
+    
+    this.observer.observe(this);
+    
+    // Check initial visibility
+    const rect = this.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    this.isVisible = rect.top < viewportHeight && rect.bottom > 0 && rect.left < viewportWidth && rect.right > 0;
+    
+    if (this.isVisible) {
+      this.startAnimation();
+    }
 
     setInterval(() => {
         if (Math.random() < 0.25) {
@@ -780,6 +824,13 @@ export class IoChangeVisualization extends IoElement {
           triggerChange(allNodes[Math.floor(Math.random() * allNodes.length)]);
         }
     }, 2000);
+  }
+  
+  disconnected() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+    this.stopAnimation();
   }
 }
 Register(IoChangeVisualization);

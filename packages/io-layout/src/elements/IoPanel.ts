@@ -90,7 +90,7 @@ export class IoPanel extends IoElement {
   onNewTabClicked(event: CustomEvent) {
     event.stopPropagation();
     const option: MenuOption = event.detail.option;
-    if (option.id) {
+    if (option.id && option.options.length === 0) {
       const tab = new Tab({id: option.id, label: option.label, icon: option.icon});
       this.addTab(tab);
       const addMenuOption = this.querySelector('.add-tab') as IoMenuItem;
