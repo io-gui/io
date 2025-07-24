@@ -71,7 +71,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Use the Platform: Rely on native web features
 
 ### TypeScript Patterns
-- Extensive use of decorators (`@Register`, `@ReactiveProperty`, `@Property`)
+- Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
 - Strong typing with interfaces and type definitions
 - Avoid using `any` whenever possible
 - ES modules with `.js` extensions in imports
@@ -128,7 +128,6 @@ The project is organized as a monorepo with packages in `/packages/`:
 
 ### Essential Commands
 - `pnpm dev` - Start watch mode for all packages (tsc)
-- `pnpm dev:gui` - Start watch mode for core io-gui package only
 - `pnpm build` - Build all packages
 - `pnpm lint` - Lint all packages (auto-fixes)
 - `pnpm test` - Run tests with web-test-runner
