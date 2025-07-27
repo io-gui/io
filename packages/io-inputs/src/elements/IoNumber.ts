@@ -66,7 +66,7 @@ export class IoNumber extends IoField {
   @Property('true')
   declare contentEditable: string;
 
-  @ReactiveProperty({value: 'pattern="-?[0-9]*\.?[0-9]*"', type: String, reflect: true})
+  @ReactiveProperty({value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
   // TODO: 'decimal' mode on iOS does not display minus and decimal point

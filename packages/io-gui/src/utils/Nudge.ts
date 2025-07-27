@@ -26,7 +26,7 @@ const viewport = {
   get offsetTop(): number {
     return window.visualViewport ? window.visualViewport.offsetTop : 0;
   },
-}
+};
 
 function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
   x = Math.max(0, Math.min(x, viewport.width - elemRect.width));

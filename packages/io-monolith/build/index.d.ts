@@ -2123,6 +2123,9 @@ export declare class IoField extends IoElement {
 	onPointercancel(event: PointerEvent): void;
 	onPointerleave(event: PointerEvent): void;
 	onPointerup(event: PointerEvent): void;
+	onTouchstart(event: TouchEvent): void;
+	onTouchmove(event: TouchEvent): void;
+	onTouchend(): void;
 	inputValue(value: any): void;
 	onClick(event?: MouseEvent): void;
 	onKeydown(event: KeyboardEvent): void;
