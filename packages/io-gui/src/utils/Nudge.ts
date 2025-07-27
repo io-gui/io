@@ -9,12 +9,31 @@ import { IoElement } from '../elements/IoElement';
  */
 export type NudgeDirection = 'none' | 'up' | 'left' | 'down' | 'right' | 'over';
 
+const viewport = {
+  get width(): number {
+    return window.visualViewport
+      ? window.visualViewport.width * window.visualViewport.scale
+      : document.documentElement.clientWidth;
+  },
+  get height(): number {
+    return window.visualViewport
+      ? window.visualViewport.height * window.visualViewport.scale
+      : document.documentElement.clientHeight;
+  },
+  get offsetLeft(): number {
+    return window.visualViewport ? window.visualViewport.offsetLeft : 0;
+  },
+  get offsetTop(): number {
+    return window.visualViewport ? window.visualViewport.offsetTop : 0;
+  },
+}
+
 function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
-  x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
+  x = Math.max(0, Math.min(x, viewport.width - elemRect.width));
   let clipWidth = -1;
   let clipHeight = -1;
   const fitsHeight = y - elemRect.height >= 0;
-  const fitsWidth = x + elemRect.width <= window.innerWidth;
+  const fitsWidth = x + elemRect.width <= viewport.width;
   if (fitsHeight || force) {
     if (!fitsHeight) {
       if (doClip) {
@@ -28,9 +47,9 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
     }
     if (!fitsWidth) {
       if (doClip) {
-        clipWidth = window.innerWidth;
+        clipWidth = viewport.width;
       } else {
-        x = window.innerWidth - elemRect.width;
+        x = viewport.width - elemRect.width;
       }
     }
     element.style.top = y + 'px';
@@ -43,24 +62,26 @@ function nudgeUp(element: HTMLElement | IoElement, x: number, y: number, elemRec
 }
 
 function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
-  x = Math.max(0, Math.min(x, window.innerWidth - elemRect.width));
+  y = y + viewport.offsetTop;
+  x = x + viewport.offsetLeft;
+  x = Math.max(0, Math.min(x, viewport.width - elemRect.width));
   let clipWidth = -1;
   let clipHeight = -1;
-  const fitsHeight = y + elemRect.height <= window.innerHeight;
-  const fitsWidth = x + elemRect.width <= window.innerWidth;
+  const fitsHeight = y + elemRect.height <= viewport.height;
+  const fitsWidth = x + elemRect.width <= viewport.width;
   if (fitsHeight || force) {
     if (!fitsHeight) {
       if (doClip) {
-        clipHeight = window.innerHeight - y;
+        clipHeight = viewport.height - y;
       } else {
-        y = window.innerHeight - elemRect.height;
+        y = viewport.height - elemRect.height;
       }
     }
     if (!fitsWidth) {
       if (doClip) {
-        clipWidth = window.innerWidth;
+        clipWidth = viewport.width;
       } else {
-        x = window.innerWidth - elemRect.width;
+        x = viewport.width - elemRect.width;
       }
     }
     element.style.top = y + 'px';
@@ -73,11 +94,11 @@ function nudgeDown(element: HTMLElement | IoElement, x: number, y: number, elemR
 }
 
 function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
-  y = Math.max(0, Math.min(y, window.innerHeight - elemRect.height));
+  y = Math.max(0, Math.min(y, viewport.height - elemRect.height));
   let clipWidth = -1;
   let clipHeight = -1;
   const fitsWidth = x - elemRect.width >= 0;
-  const fitsHeight = y + elemRect.height <= window.innerHeight;
+  const fitsHeight = y + elemRect.height <= viewport.height;
   if (fitsWidth || force) {
     if (!fitsWidth) {
       if (doClip) {
@@ -91,9 +112,9 @@ function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemR
     }
     if (!fitsHeight) {
       if (doClip) {
-        clipHeight = window.innerHeight;
+        clipHeight = viewport.height;
       } else {
-        y = window.innerHeight - elemRect.height;
+        y = viewport.height - elemRect.height;
       }
     }
     element.style.top = y + 'px';
@@ -106,24 +127,24 @@ function nudgeLeft(element: HTMLElement | IoElement, x: number, y: number, elemR
 }
 
 function nudgeRight(element: HTMLElement | IoElement, x: number, y: number, elemRect: DOMRect, force?: boolean, doClip?: boolean) {
-  y = Math.max(0, Math.min(y, window.innerHeight - elemRect.height));
+  y = Math.max(0, Math.min(y, viewport.height - elemRect.height));
   let clipWidth = -1;
   let clipHeight = -1;
-  const fitsWidth = x + elemRect.width <= window.innerWidth;
-  const fitsHeight = y + elemRect.height <= window.innerHeight;
+  const fitsWidth = x + elemRect.width <= viewport.width;
+  const fitsHeight = y + elemRect.height <= viewport.height;
   if (fitsWidth || force) {
     if (!fitsWidth) {
       if (doClip) {
-        clipWidth = window.innerWidth - x;
+        clipWidth = viewport.width - x;
       } else {
-        x = window.innerWidth - elemRect.width;
+        x = viewport.width - elemRect.width;
       }
     }
     if (!fitsHeight) {
       if (doClip) {
-        clipHeight = window.innerHeight;
+        clipHeight = viewport.height;
       } else {
-        y = window.innerHeight - elemRect.height;
+        y = viewport.height - elemRect.height;
       }
     }
     element.style.top = y + 'px';
@@ -142,8 +163,8 @@ export function nudge(element: HTMLElement | IoElement, srcElement: HTMLElement 
   const top = srcRect.top;
   const right = srcRect.right;
   const bottom = srcRect.bottom;
-  const bottomToHeight = window.innerHeight - bottom;
-  const rightToWidth = window.innerWidth - right;
+  const bottomToHeight = viewport.height - bottom;
+  const rightToWidth = viewport.width - right;
   const x = elemRect.left;
   const y = elemRect.top;
   switch (direction) {

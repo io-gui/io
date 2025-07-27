@@ -61,9 +61,6 @@ export type IoMenuItemProps = IoFieldProps & {
 export class IoMenuItem extends IoField {
   static get Style() {
     return /* css */`
-      :host {
-        user-select: none;
-      }
       :host > * {
         pointer-events: none;
         text-overflow: ellipsis;
@@ -160,20 +157,18 @@ export class IoMenuItem extends IoField {
   }
   onPointerdown(event: PointerEvent) {
     super.onPointerdown(event);
-    event.stopPropagation();
-    this.setPointerCapture(event.pointerId);
-    this.expanded = true;
-    onOverlayPointerdown.call(this, event);
+    if (event.pointerType !== 'touch') {
+      this.setPointerCapture(event.pointerId);
+      event.stopPropagation();
+      if (this.hasmore) this.expanded = true;
+      onOverlayPointerdown.call(this, event);
+    }
   }
   onPointermove(event: PointerEvent) {
     event.stopPropagation();
-    if (event.pointerType === 'touch') {
-      // Let touch scroll the document.
-      if (!this.expanded && !this.inoverlay) return;
-      // Let touch scroll in clipped menu options.
-      if (!!this.$parent && !!this.$parent.style.height) return;
+    if (event.pointerType !== 'touch') {
+      onOverlayPointermove.call(this, event);
     }
-    onOverlayPointermove.call(this, event);
   }
   onPointerup(event: PointerEvent) {
     super.onPointerup(event);

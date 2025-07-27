@@ -24,11 +24,8 @@ class IoNumberLadder extends IoElement {
         flex-direction: column;
         position: absolute;
         pointer-events: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
         box-shadow: unset;
+        @apply --unselectable;
       }
       :host:not([expanded]) {
         visibility: hidden;

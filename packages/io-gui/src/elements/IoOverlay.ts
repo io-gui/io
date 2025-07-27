@@ -24,11 +24,11 @@ class IoOverlay extends IoElement {
         bottom: 0;
         right: 0;
         z-index: 100000;
-        user-select: none;
         overflow: hidden;
         pointer-events: none;
         touch-action: none;
         background: transparent;
+        @apply --unselectable;
       }
       :host[expanded] {
         background: rgba(0, 0, 0, 0.25);
@@ -37,9 +37,6 @@ class IoOverlay extends IoElement {
       :host > * {
         position: absolute !important;
         box-shadow: var(--io_shadow);
-      }
-      :host * {
-        touch-action: none;
       }
     `;
   }

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from 'io-gui';
 
 export type IoDividerProps = IoElementProps & {
   orientation: 'vertical' | 'horizontal',
@@ -17,6 +17,7 @@ export class IoDivider extends IoElement {
         border-width: 0 var(--io_borderWidth);
         border-color: var(--io_color);
         cursor: col-resize;
+        @apply --unselectable;
       }
       :host[pressed] {
         border-color: var(--io_borderColorBlue);
@@ -78,6 +79,7 @@ export class IoDivider extends IoElement {
   static get Listeners() {
     return {
       'pointerdown': 'onPointerdown',
+      'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
     };
   }
 
@@ -119,6 +121,17 @@ export class IoDivider extends IoElement {
       clientX: event.clientX,
       clientY: event.clientY,
     }, true);
+  }
+  onTouchstart(event: TouchEvent) {
+    this.addEventListener('touchmove', this.onTouchmove, {passive: false});
+    this.addEventListener('touchend', this.onTouchend);
+  }
+  onTouchmove(event: TouchEvent) {
+    event.preventDefault();
+  }
+  onTouchend() {
+    this.removeEventListener('touchmove', this.onTouchmove);
+    this.removeEventListener('touchend', this.onTouchend);
   }
 }
 export const ioDivider = function(arg0: IoDividerProps) {

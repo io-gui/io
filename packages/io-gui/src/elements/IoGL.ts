@@ -42,7 +42,7 @@ export class IoGl extends IoElement {
       :host {
         position: relative;
         overflow: hidden !important;
-        user-select: none;
+        @apply --unselectable;
       }
       :host > canvas {
         position: absolute;

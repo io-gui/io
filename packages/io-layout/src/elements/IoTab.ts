@@ -43,7 +43,6 @@ export class IoTab extends IoField {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-        user-select: none;
         padding-right: var(--io_lineHeight);
       }
       :host[pressed] {
@@ -131,6 +130,9 @@ export class IoTab extends IoField {
   onResized() {
     const span = this.querySelector('span')!;
     this.overflow = span.scrollWidth > span.clientWidth;
+  }
+  onTouchmove(event: TouchEvent) {
+    event.preventDefault();
   }
   preventDefault(event: Event) {
     event.stopPropagation();
