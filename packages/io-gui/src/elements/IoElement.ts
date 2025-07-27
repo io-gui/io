@@ -28,7 +28,17 @@ export class IoElement extends HTMLElement {
       }
       :host[hidden] {
         display: none;
-        pointer-events: none;
+      }
+      --unselectable: {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      --io_focus: {
+        border-color: var(--io_colorWhite) !important;
+        outline: var(--io_borderWidth) solid var(--io_borderColorBlue) !important;
+        z-index: 1;
       }
     `;
   }

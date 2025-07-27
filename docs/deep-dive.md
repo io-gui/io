@@ -30,11 +30,11 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Example: change event `"label-changed"` invokes `.labelChanged()` handler if it exists
   - Generic property handler `.changed()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
-  - Mutation events are automatically dispatched for all nodes and objects
-  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
-  - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
+  - Mutation events are automatically dispatched for all nodes and elements
+  - Example: `"data"` object property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
+  - Mutation events for generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation handlers get invoked automatically if they are defined
-  - Example: `"data"` property mutation event invokes `dataMutated()` handler if it exists
+  - Example: `"data"` object property mutation event invokes `dataMutated()` handler if it exists
 - Bi-directional data flow can be achieved using binding objects
   - Example: Binding function `this.bind('label')` returns a data-binding object to the `"label"` property
   - Binding object can synchronize reactive properties by simple assignment to a property
@@ -43,7 +43,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 ### Core Systems
 - **ProtoChain** - Inheritance aggregator that also performs one-time class initialization
 - **ReactiveProperty** - Creates and initializes responsive properties
-- **EventDispatcher** - Manages DOM events on elements and bridges them to synthetic events on nodes
+- **EventDispatcher** - Manages DOM events on elements and synthetic events on nodes
 - **ChangeQueue** - Detects property changes and dispatches change/mutation events and handlers
 - **Queue** - Generic queue manager with throttle and debounce capability
 - **Binding** - Manages two-way data flow using change events
@@ -238,7 +238,7 @@ The above style rule is effectively the same as adding the following style block
 
 In fact, this is automatically done by the `Register` decorator. Each element will have its own style block inside the document head.
 
-## Theming
+### Theming
 
 The theme engine uses simple yet effective approach with CSS variables that define a spacing, element sizes, colors, borders, and so on. It propagates changes throughout the entire UI while maintaining a small footprint. Colors are represented as RGBA objects that automatically convert to CSS variables and WebGL shader uniforms, and all variables are accessible in CSS, JavaScript and GLSL. It comes with both light and dark theme and supports theme customization at runtime.
 

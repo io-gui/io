@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span } from 'io-gui';
 import { ioField, ioString } from 'io-inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';
@@ -38,8 +38,8 @@ export class IoMenuOptions extends IoElement {
       border-color: var(--io_borderColorOutset);
       background-color: var(--io_bgColorLight);
       padding: calc(var(--io_spacing) + var(--io_borderWidth));
-      user-select: none;
       transition: opacity 0.3s ease-in-out;
+      @apply --unselectable;
     }
     :host[horizontal] {
       padding: var(--io_spacing) 0;
@@ -118,7 +118,7 @@ export class IoMenuOptions extends IoElement {
 
   static get Listeners() {
     return {
-      'touchstart': ['stopPropagation', {passive: false}] as ListenerDefinition, // TODO: why?
+      'touchstart': ['stopPropagation'] as ListenerDefinition,
       'io-focus-to': 'onIoFocusTo',
     };
   }
@@ -126,14 +126,13 @@ export class IoMenuOptions extends IoElement {
     return Overlay.contains(this.parentElement);
   }
   constructor(args: IoMenuOptionsProps = {}) { super(args); }
-  // init() {
-  //   this.setOverflow = this.setOverflow.bind(this);
-  // }
-  // ready() {
-  //   this.debounce(this.setOverflow);
-  // }
+
   stopPropagation(event: TouchEvent) {
-    event.stopPropagation();
+    if (this.inoverlay) {
+      // TODO: Prevent pull-down-to-refresh on scrollable menus.
+      // Stops overlay from capturing touch events
+      event.stopPropagation();
+    }
   }
   connectedCallback() {
     super.connectedCallback();
@@ -209,7 +208,6 @@ export class IoMenuOptions extends IoElement {
     } else {
       this.style.top = '';
       this.style.height = '';
-      this.style.touchAction = '';
       this.scrollTop = 0;
       this.search = '';
     }
@@ -219,7 +217,6 @@ export class IoMenuOptions extends IoElement {
     if (this.inoverlay && this.$parent) {
       this.debounce(this.onExpandInOverlay);
     }
-    // this.debounce(this.setOverflow);
   }
   // TODO: Move functionality to Overlay
   onExpandInOverlay() {
@@ -263,7 +260,7 @@ export class IoMenuOptions extends IoElement {
           depth: this.depth
         }));
         if (i < this.option.options.length - 1) {
-          vChildren.push({tag: 'span', props: {class: 'divider'}});
+          vChildren.push(span({class: 'divider'}));
         }
       }
     }

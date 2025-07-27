@@ -13,6 +13,7 @@ export declare class IoTab extends IoField {
     };
     constructor(args: IoTabProps);
     onResized(): void;
+    onTouchmove(event: TouchEvent): void;
     preventDefault(event: Event): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;

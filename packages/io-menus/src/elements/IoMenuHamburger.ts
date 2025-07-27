@@ -8,7 +8,6 @@ export class IoMenuHamburger extends IoMenuItem {
     return /* css */`
       :host {
         display: flex;
-        user-select: none;
         flex-shrink: 0;
       }
       :host > * {

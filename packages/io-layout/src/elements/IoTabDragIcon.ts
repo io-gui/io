@@ -20,7 +20,6 @@ class IoTabDragIcon extends IoField {
         pointer-events: none;
         border-color: var(--io_borderColorLight);
         background-color: var(--io_bgColorLight) !important;
-        user-select: none;
         opacity: 0.75;
       }
       :host[dragging] {

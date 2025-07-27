@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-gui';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
@@ -15,11 +15,6 @@ export type IoFieldProps = IoElementProps & {
 export class IoField extends IoElement {
   static get Style() {
     return /* css */`
-      --io_focus: {
-        border-color: var(--io_colorWhite) !important;
-        outline: var(--io_borderWidth) solid var(--io_borderColorBlue) !important;
-        z-index: 1;
-      }
       :host {
         cursor: pointer;
         height: var(--io_fieldHeight);
@@ -34,7 +29,8 @@ export class IoField extends IoElement {
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: var(--io_fontSize);
-        user-select: none;
+        text-size-adjust: 100%;
+        @apply --unselectable;
       }
       :host:focus {
         text-overflow: inherit;
@@ -129,6 +125,7 @@ export class IoField extends IoElement {
     return {
       'focus': 'onFocus',
       'pointerdown': 'onPointerdown',
+      'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
       'click': 'onClick',
     };
   }
@@ -158,7 +155,6 @@ export class IoField extends IoElement {
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
     this.removeEventListener('pointercancel', this.onPointercancel);
-    console.log('onPointercancel');
     this.pressed = false;
   }
   onPointerleave(event: PointerEvent) {
@@ -166,7 +162,6 @@ export class IoField extends IoElement {
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
     this.removeEventListener('pointercancel', this.onPointercancel);
-    console.log('onPointerleave');
     this.pressed = false;
   }
   onPointerup(event: PointerEvent) {
@@ -175,6 +170,16 @@ export class IoField extends IoElement {
     this.removeEventListener('pointerup', this.onPointerup);
     this.removeEventListener('pointercancel', this.onPointercancel);
     this.pressed = false;
+  }
+  onTouchstart(event: TouchEvent) {
+    this.addEventListener('touchmove', this.onTouchmove, {passive: false});
+    this.addEventListener('touchend', this.onTouchend);
+  }
+  onTouchmove(event: TouchEvent) {
+  }
+  onTouchend() {
+    this.removeEventListener('touchmove', this.onTouchmove);
+    this.removeEventListener('touchend', this.onTouchend);
   }
   inputValue(value: any) {
     if (this.value !== value || typeof this.value === 'object') {

@@ -66,10 +66,11 @@ export class IoNumber extends IoField {
   @Property('true')
   declare contentEditable: string;
 
-  @ReactiveProperty({value: 'pattern="[0-9]*"', type: String, reflect: true})
+  @ReactiveProperty({value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true})
   declare pattern: string;
 
-  @Property('numeric')
+  // TODO: 'decimal' mode on iOS does not display minus and decimal point
+  @Property('text')
   declare inputMode: string;
 
   @Property('textbox')
@@ -145,6 +146,10 @@ export class IoNumber extends IoField {
       case ' ':
         event.preventDefault();
         this._setFromTextNode();
+        // Only blur if on mobile
+        if (isMobileDevice()) {
+          (this as unknown as HTMLElement).blur();
+        }
         break;
       case 'Home':
         event.preventDefault();
@@ -207,7 +212,8 @@ export class IoNumber extends IoField {
     }
   }
   _setFromTextNode() {
-    const valueText = this.textNode;
+    // Normalize comma to period for decimal separator
+    let valueText = this.textNode!.trim().replace(',', '.');
     let valueNumber = Number(valueText) / this.conversion;
     valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
     valueNumber = Math.round(valueNumber / this.step) * this.step;
@@ -256,6 +262,12 @@ export class IoNumber extends IoField {
     this.textNode = valueText;
   }
 }
+
+function isMobileDevice(): boolean {
+  return /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent)
+    || ('ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches);
+}
+
 export const ioNumber = function(arg0?: IoNumberProps) {
   return IoNumber.vConstructor(arg0);
 };

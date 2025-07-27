@@ -14,7 +14,6 @@ export class IoTabsHamburger extends IoField {
     return /* css */`
       :host {
         display: flex;
-        user-select: none;
         flex-shrink: 0;
       }
     `;

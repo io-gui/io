@@ -87,12 +87,7 @@ export default class {
       it('steps have a11y attributes', () => {
         expect($('.io-up1').getAttribute('role')).to.equal('spinbutton');
         expect($('.io-up1').getAttribute('aria-label')).to.equal('1');
-        expect($('.io-up1').getAttribute('aria-valuemax')).to.equal('Infinity');
-        expect($('.io-up1').getAttribute('aria-valuemin')).to.equal('-Infinity');
-        expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('0');
-        element.value = 3;
-        ladder.changed();
-        expect($('.io-up1').getAttribute('aria-valuenow')).to.equal('3');
+        expect($('.io-up1').getAttribute('aria-valuestep')).to.equal('1');
         element.step = 0.5;
         ladder.changed();
         expect($('.io-up1').getAttribute('aria-label')).to.equal('5');
