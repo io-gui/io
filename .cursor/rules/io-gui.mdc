@@ -1,32 +1,39 @@
 ---
 alwaysApply: true
 ---
+
+**Note**: No need to run any `pnpm` commands - they will be run by the user.
+
+Don't solve problems by removing debug statements/checks
+
+**Avoid unnecessary inline comments** - if the code is self-explanatory through descriptive names and clear logic, don't add comments that just restate what the code obviously does
+
 ## Project Overview
 
-Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
+Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
 
 Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
-### Universal Reactive Components-Based Architecture
+### Universal Reactive Architecture
 
 Io-Gui implements the same features on top of its base classes - nodes and elements. The features include:
 - Reactive property system
 - Two-way data binding
 - Component lifecycle management
 - Event-driven architecture
-By doing this, it achieves reactive interoperability with predictable data flow paterns between nodes and elements.
+By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
 
-#### Node (model/data)
+#### Node
 Node is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
-- `StorageNode` and `Storage`: Data persistance node/factory for data storage in location.hash/localStorage
+- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash/localStorage
 - `MenuOption`: A rich domain model for menu options and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
-#### IoElement (view/presentation)
+#### IoElement
 IoElement is a custom element base class extending `HTMLElement` with Node functionality as well as some DOM functionality such as:
 - Virtual DOM rendering
-- Style declaration with inheritence
+- Style declaration with inheritance
 It can be used to create reactive custom elements that can be bound to node properties and are responsive to node mutations. The entire Io-Gui design system is built on top of this class.
 
 ### Reactive Data Flow
@@ -38,11 +45,11 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Generic property handler `.changed()` gets invoked after any property change
 - Leaf-to-trunk data flow can be achieved using mutation events and handlers
   - Mutation events are automatically dispatched for all nodes and objects
-  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that eaquals mutated object
+  - Example: `"data"` property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
   - Mutations of generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
   - Mutation handlers get invoked automatically if they are defined
   - Example: `"data"` property mutation event invokes `dataMutated()` handler if it exists
-- Bi-derectional data flow can be achieved using binding objects
+- Bi-directional data flow can be achieved using binding objects
   - Example: Binding function `this.bind('label')` returns a data-binding object to the `"label"` property
   - Binding object can synchronize reactive properties by simple assignment to a property
   - Binding objects rely on change events for bound properties
@@ -68,7 +75,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Use the Platform: Rely on native web features
 
 ### TypeScript Patterns
-- Extensive use of decorators (`@Register`, `@ReactiveProperty`, `@Property`)
+- Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
 - Strong typing with interfaces and type definitions
 - Avoid using `any` whenever possible
 - ES modules with `.js` extensions in imports
@@ -87,7 +94,7 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc
 - Debug code should not alter the state in any way
 - Debug code should display errors when encounters a breaking state
-- Debug code should display warnings when encounters an non-breaking states
+- Debug code should display warnings when encounters a non-breaking states
 - Bundled build does not include debug blocks
 
 ### Styling
@@ -125,7 +132,6 @@ The project is organized as a monorepo with packages in `/packages/`:
 
 ### Essential Commands
 - `pnpm dev` - Start watch mode for all packages (tsc)
-- `pnpm dev:gui` - Start watch mode for core io-gui package only
 - `pnpm build` - Build all packages
 - `pnpm lint` - Lint all packages (auto-fixes)
 - `pnpm test` - Run tests with web-test-runner

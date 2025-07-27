@@ -98,6 +98,11 @@
         border: none;
         flex: 1 1 auto;
       }
+      @media (max-width: 780px) {
+        io-navigator.navigator > io-menu-tree {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -135,6 +140,7 @@
             {id: 'Property Declaration Inheritance'},
             {id: 'Property Declaration Fields'},
             {id: 'Styling'},
+            {id: 'Theming'},
             {id: 'CSS Mixin Polyfill'},
             {id: 'Listeners'},
             {id: 'Reactivity'},
@@ -142,6 +148,7 @@
             {id: 'Debounced Reactivity'},
             {id: 'Template Syntax'},
             {id: 'Data Binding'},
+            {id: 'Reactive WebGL Elements'},
           ]},
         ]},
         {id: 'Demos', options: [
@@ -178,14 +185,14 @@
           selected: MENU_OPTION.findItemById('Docs').bind('selectedIDImmediate'),
           caching: 'proactive',
           elements: [
-            ioNavigator({id: 'Quick Start', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'), 
+            ioNavigator({id: 'Quick Start', class: 'navigator', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'), 
               option: MENU_OPTION.findItemById('Docs').findItemById('Quick Start'),
               anchor: MENU_OPTION.findItemById('Docs').findItemById('Quick Start').bind('selectedID'),
               elements: [
                 ioMarkdown({strip: [siteRoot], sanitize: false, src: './docs/quick-start.md'}),
               ]
             }),
-            ioNavigator({id: 'Deep Dive', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'),
+            ioNavigator({id: 'Deep Dive', class: 'navigator', select: 'all', widget: h4({class: 'heading'}, 'Table of Contents'),
               option: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive'), 
               anchor: MENU_OPTION.findItemById('Docs').findItemById('Deep Dive').bind('selectedID'),
               elements: [
