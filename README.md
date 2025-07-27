@@ -14,7 +14,7 @@ Stay in touch on [github] and [bluesky].
 
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on minimal tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [pnpm] to run a few development scripts. Using IoGui (es2022) in your project requires no compilation or build tools.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on minimal tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [pnpm] to run a few development scripts. Using IoGui (esnext) in your project requires no compilation or build tools.
 
 To download and develop Io-Gui locally:
 

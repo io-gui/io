@@ -31,7 +31,7 @@ export default {
   nodeResolve: true,
   plugins: [
     esbuildPlugin({
-      target: 'es2022',
+      target: 'esnext',
     }),
     importMapsPlugin(),
     wdsPluginFixImportMapsModules(),

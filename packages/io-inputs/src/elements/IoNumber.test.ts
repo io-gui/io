@@ -14,8 +14,8 @@ export default class {
         expect(element.min).to.equal(-Infinity);
         expect(element.max).to.equal(Infinity);
         expect(element.ladder).to.equal(false);
-        expect(element.pattern).to.equal('pattern="[0-9]*"');
-        expect(element.inputMode).to.equal('numeric');
+        expect(element.pattern).to.equal('pattern="-?[0-9]*?[0-9]*"');
+        expect(element.inputMode).to.equal('text');
         expect(element.role).to.equal('textbox');
         expect(element.spellcheck).to.equal(false);
 
@@ -51,8 +51,8 @@ export default class {
       it('has correct default attributes', () => {
         expect(element.getAttribute('value')).to.equal('0');
         expect(element.getAttribute('role')).to.equal('textbox');
-        expect(element.getAttribute('pattern')).to.equal('pattern="[0-9]*"');
-        expect(element.getAttribute('inputmode')).to.equal('numeric');
+        expect(element.getAttribute('pattern')).to.equal('pattern="-?[0-9]*?[0-9]*"');
+        expect(element.getAttribute('inputmode')).to.equal('text');
         expect(element.getAttribute('spellcheck')).to.equal('false');
         expect(element.getAttribute('positive')).to.equal('');
         expect(element.getAttribute('aria-valuenow')).to.equal('0');
