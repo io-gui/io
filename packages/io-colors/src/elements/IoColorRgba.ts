@@ -40,9 +40,8 @@ export class IoColorRgba extends IoColorBase {
 
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement;
-    this.value[item.id as keyof typeof this.value] = event.detail.value;
-    if (!(this.value as unknown as Node)._isNode) {
-      this.dispatchMutation(this.value);
+    if (['r', 'g', 'b'].includes(item.id)) {
+      this.value[item.id as keyof typeof this.value] = event.detail.value;
     }
     this.dispatch('value-input', {property: 'value', value: this.value}, false);
   }
@@ -56,7 +55,7 @@ export class IoColorRgba extends IoColorBase {
       this.value.a !== undefined
         ? ioNumber({id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput})
         : null,
-      ioColorPicker({id: 'swatch', value: this.value}),
+      ioColorPicker({id: 'swatch', value: this.value, '@value-input': this._onNumberValueInput}),
     ]);
   }
 }

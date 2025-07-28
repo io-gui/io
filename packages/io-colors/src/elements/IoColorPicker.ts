@@ -75,8 +75,11 @@ export class IoColorPicker extends IoElement {
     this.dispatch('value-input', {property: 'value', value: this.value}, true);
   }
   onPanelCollapse() {
-    Panel.removeEventListener('value-input', this.onValueSet);
-    Panel.removeEventListener('expanded-changed', this.onPanelCollapse);
+    // TODO: Reconsider this.
+    if (!this.expanded) {
+      Panel.removeEventListener('value-input', this.onValueSet);
+      Panel.removeEventListener('expanded-changed', this.onPanelCollapse);
+    }
   }
   expand() {
     Panel.value = this.value;
