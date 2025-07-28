@@ -5,6 +5,7 @@ import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRang
 import { ioIcon } from 'io-icons';
 import { ioOptionSelect, MenuOption } from 'io-menus';
 import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-colors';
+import { ioStyleContainer } from './IoStyleContainer.js';
 
 // TODO: Implement IDs in menu options. use ID for selection
 const option = new MenuOption({
@@ -59,7 +60,8 @@ export class IoElementInspectorDemo extends IoElement {
     :host {
       display: flex;
       flex: 0 1 auto;
-      min-width: 450px;
+      min-width: 350px;
+      max-width: 500px;
       flex-direction: column;
       align-self: flex-start;
       background-color: var(--io_bgColorStrong);
@@ -73,6 +75,11 @@ export class IoElementInspectorDemo extends IoElement {
       border-color: var(--io_borderColorStrong);
       background-color: var(--io_bgColorLight);
       padding: var(--io_spacing3);
+    }
+    :host > pre > #element-html {
+      overflow-x: auto;
+      scrollbar-width: none;
+      font-size: 0.65em !important;
     }
     :host > io-property-editor {
       border: var(--io_border);
@@ -130,7 +137,9 @@ export class IoElementInspectorDemo extends IoElement {
         pre([
           code({id: 'element-html', style: {display: 'block', whiteSpace: 'pre-wrap'}}),
         ]),
-        ioInspector({id: 'inspector'}),
+        ioStyleContainer([
+          ioInspector({id: 'inspector'}),
+        ]),
       ]);
       const element = this.querySelector('.element-wrap').children[0];
       element.addEventListener('io-object-mutation', this.onElementMutated);
