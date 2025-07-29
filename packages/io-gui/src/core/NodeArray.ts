@@ -20,7 +20,7 @@ export class NodeArray<N extends Node> extends Array<N> {
     this.itemMutated = this.itemMutated.bind(this);
     this.dispatchMutation = this.dispatchMutation.bind(this);
 
-    debug: if (!(node._isNode) && !(node instanceof IoElement)) {
+    debug: if (!node._isNode && !node._isIoElement) {
       console.error('NodeArray constructor called with non-node!');
     }
 
@@ -57,7 +57,7 @@ export class NodeArray<N extends Node> extends Array<N> {
                 const item = target[i];
                 if (item._isNode) {
                   item.removeEventListener('io-object-mutation', self.itemMutated);
-                  item.removeParent(self.node);
+                  item.removeParent(self.node as Node);
                 }
               }
             } else if (newLength > oldLength) {
@@ -88,7 +88,7 @@ export class NodeArray<N extends Node> extends Array<N> {
           const oldValue = target[index];
           if (oldValue !== undefined && oldValue._isNode && !self._isInternalOperation) {
             oldValue.removeEventListener('io-object-mutation', self.itemMutated);
-            oldValue.removeParent(self.node);
+            oldValue.removeParent(self.node as Node);
           }
           target[property as any] = value;
           if (value._isNode && !self._isInternalOperation) {
@@ -123,7 +123,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const item = this[i];
         if (item._isNode) {
           item.removeEventListener('io-object-mutation', this.itemMutated);
-          item.removeParent(this.node);
+          item.removeParent(this.node as Node);
         }
       }
       const result = super.splice(start, deleteCount, ...items);
@@ -131,7 +131,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const item = this[i];
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated);
-          item.addParent(this.node);
+          item.addParent(this.node as Node);
         }
       }
       return result;
@@ -143,7 +143,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       for (const item of items) {
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated);
-          item.addParent(this.node);
+          item.addParent(this.node as Node);
         }
       }
       return result;
@@ -155,7 +155,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       for (const item of items) {
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated);
-          item.addParent(this.node);
+          item.addParent(this.node as Node);
         }
       }
       return result;
@@ -166,7 +166,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       const item = super.pop();
       if (item !== undefined && item._isNode) {
         item.removeEventListener('io-object-mutation', this.itemMutated);
-        item.removeParent(this.node);
+        item.removeParent(this.node as Node);
       }
       return item;
     });
@@ -176,7 +176,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       const item = super.shift();
       if (item !== undefined && item._isNode) {
         item.removeEventListener('io-object-mutation', this.itemMutated);
-        item.removeParent(this.node);
+        item.removeParent(this.node as Node);
       }
       return item;
     });

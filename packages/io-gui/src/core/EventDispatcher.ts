@@ -284,7 +284,8 @@ export class EventDispatcher {
    * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
   dispatchEvent(name: string, detail?: any, bubbles = true, node: Node | IoElement | EventTarget = this.node, path: Array<Node | IoElement | EventTarget> = []) {
-    path.push(node);
+    path = [...path, node];
+
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
@@ -311,8 +312,8 @@ export class EventDispatcher {
       if (bubbles) {
         for (const parent of node._parents) {
           if (parent._isNode) {
-            // TODO: enable omnidirectional propagation without recursion.
-            // TODO: enable propagation across Node / IoElement boundaries.
+            // TODO: prevent event multiplication when children contain multiple instances of the same node.
+            // TODO: enable propagation across Node / IoElement boundaries?
             parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path);
           }
         }

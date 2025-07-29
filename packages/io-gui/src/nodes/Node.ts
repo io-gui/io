@@ -65,8 +65,9 @@ export class Node extends Object {
   declare readonly _eventDispatcher: EventDispatcher;
   declare readonly _observedObjectProperties: string[];
   declare readonly _observedNodeProperties: string[];
-  declare readonly _parents: Array<Node | IoElement>;
+  declare readonly _parents: Array<Node>;
   declare readonly _isNode: boolean;
+  declare readonly _isIoElement: boolean;
   declare _disposed: boolean;
 
   constructor(args?: any) {
@@ -156,10 +157,10 @@ export class Node extends Object {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
   }
   // TODO: test!
-  addParent(parent: Node | IoElement) {
+  addParent(parent: Node) {
     this._parents.push(parent);
   }
-  removeParent(parent: Node | IoElement) {
+  removeParent(parent: Node) {
     debug: if (!this._parents.includes(parent)) {
       console.error('Node.removeParent(): Parent not found!', parent);
     }
@@ -171,6 +172,8 @@ export class Node extends Object {
   Register(ioNodeConstructor: typeof Node) {
     Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true, writable: false});
     Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true, writable: false});
+    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: false, writable: false});
+    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: false, writable: false});
     Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
   }
 }
@@ -182,7 +185,7 @@ export function initReactiveProperties(node: Node | IoElement) {
         return node._reactiveProperties.get(name)!.value;
       },
       set: function(value) {
-        (node as Node).setProperty(name, value);
+        node.setProperty(name, value);
       },
       configurable: true,
       enumerable: true,

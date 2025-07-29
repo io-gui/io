@@ -1,5 +1,5 @@
 import { IoElement, Register, section, input, label, ul } from 'io-gui';
-import { TodoModel } from './TodoModel.js';
+import { TodoListModel } from './TodoListModel.js';
 import { todoItem } from './TodoItem.js';
 
 export class TodoList extends IoElement {
@@ -13,7 +13,7 @@ export class TodoList extends IoElement {
   static get ReactiveProperties() {
     return {
       model: {
-        type: TodoModel,
+        type: TodoListModel,
       },
       route: 'all',
     };
@@ -22,15 +22,11 @@ export class TodoList extends IoElement {
     this.changed();
   }
   changed() {
-    const itemCount = this.model.items.length;
-    const completedCount = this.model.getCompletedCount();
-    const allCompleted = itemCount === completedCount;
     const itemsInRoute = this.model.items.filter(this.model.filters[this.route]);
-
     this.render([
       section({class: 'main'}, [
-        input({type: 'checkbox', id: 'toggle-all', class: 'toggle-all', checked: allCompleted}),
-        this.model.items.length ? label({for: 'toggle-all', '@click': this.model.toggleAll}, 'Mark all as complete') : null,
+        input({type: 'checkbox', id: 'toggle-all', class: 'toggle-all', checked: this.model.allCompleted}),
+        (this.model.items.length && !this.model.allCompleted) ? label({for: 'toggle-all', '@click': this.model.completeAll}, 'Mark all as complete') : null,
         ul({class: 'todo-list'},
           itemsInRoute.map((item) => todoItem({item: item, model: this.model}))
         )

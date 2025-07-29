@@ -85,7 +85,6 @@ export class IoColorBase extends IoElement {
       hsl[1] = this.hsl[1] * 100;
     }
 
-    // TODO: consider reusing existing arrays
     this.rgba[0] = rgb[0] / 255;
     this.rgba[1] = rgb[1] / 255;
     this.rgba[2] = rgb[2] / 255;
