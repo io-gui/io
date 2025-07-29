@@ -29,6 +29,31 @@ export class Panel extends Node {
   onTabsMutatedDebounced() {
     this.dispatchMutation();
   }
+  getSelected() {
+    let selected = '';
+    for (let i = 0; i < this.tabs.length; i++) {
+      const item = this.tabs[i];
+      if (item.selected && item.id) {
+        selected = item.id;
+        break;
+      }
+    }
+    return selected;
+  }
+  setSelected(id: string) {
+    // TODO Test and reconsider withInternalOperation
+    this.tabs.withInternalOperation(() => {
+      for (let i = 0; i < this.tabs.length; i++) {
+        const item = this.tabs[i];
+        if (item.id === id) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+      }
+    });
+    this.tabs.dispatchMutation();
+  }
   toJSON(): PanelProps {
     return {
       tabs: this.tabs.map(tab => tab.toJSON()),

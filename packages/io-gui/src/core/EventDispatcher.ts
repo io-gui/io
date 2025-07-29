@@ -314,6 +314,7 @@ export class EventDispatcher {
           if (parent._isNode) {
             // TODO: prevent event multiplication when children contain multiple instances of the same node.
             // TODO: enable propagation across Node / IoElement boundaries?
+            // TODO: implement stopPropagation() and stopImmediatePropagation()
             parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path);
           }
         }
