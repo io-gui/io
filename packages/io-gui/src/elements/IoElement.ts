@@ -68,6 +68,7 @@ export class IoElement extends HTMLElement {
   declare readonly _eventDispatcher: EventDispatcher;
   declare readonly _observedObjectProperties: string[];
   declare readonly _observedNodeProperties: string[];
+  declare readonly _parents: Array<Node>;
   declare readonly _isNode: boolean;
   declare readonly _isIoElement: boolean;
   declare _disposed: boolean;
@@ -84,6 +85,7 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
     Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
     Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
+    Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
 
     initReactiveProperties(this);
     initProperties(this);
@@ -176,6 +178,16 @@ export class IoElement extends HTMLElement {
   }
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
+  }
+  // TODO: test!
+  addParent(parent: Node) {
+    this._parents.push(parent);
+  }
+  removeParent(parent: Node) {
+    debug: if (!this._parents.includes(parent)) {
+      console.error('Node.removeParent(): Parent not found!', parent);
+    }
+    this._parents.splice(this._parents.indexOf(parent), 1);
   }
   dispose() {
     dispose(this);
@@ -327,8 +339,8 @@ export class IoElement extends HTMLElement {
     return toVDOM(this);
   }
   Register(ioNodeConstructor: typeof IoElement) {
-    Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true, writable: false});
-    Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true, writable: false});
+    Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: false, writable: false});
+    Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: false, writable: false});
     Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
 
     const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();

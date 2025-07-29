@@ -1,8 +1,6 @@
 import { IoElement, Register, input } from 'io-gui';
-import { TodoModel } from './TodoModel.js';
-
-const ENTER_KEY = 13;
-const ESCAPE_KEY = 27;
+import { TodoListModel } from './TodoListModel.js';
+import { TodoItemModel } from './TodoItemModel.js';
 
 export class TodoInput extends IoElement {
   static get Style() {
@@ -15,17 +13,20 @@ export class TodoInput extends IoElement {
   static get ReactiveProperties() {
     return {
       model: {
-        type: TodoModel,
+        type: TodoListModel,
       },
     };
   }
   onInputKey(event) {
-    if (event.which === ENTER_KEY) {
-      this.model.newItem(this.$.input.value);
+    if (event.key === 'Enter') {
+      const title = String(this.$.input.value).trim();
+      if (title) {
+        this.model.items.push(new TodoItemModel({title: title, completed: false}));
+      }
       this.$.input.value = '';
       this.$.input.focus();
     }
-    if (event.which === ESCAPE_KEY) {
+    if (event.key === 'Escape') {
       this.$.input.value = '';
       this.$.input.focus();
     }

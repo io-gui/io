@@ -1,21 +1,19 @@
-import { IoElement, Register, Storage as $, section, header, h1 } from 'io-gui';
+import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span } from 'io-gui';
 
-import { TodoModel } from './TodoModel.js';
+import { TodoListModel } from './TodoListModel.js';
 import { todoInput } from './TodoInput.js';
 import { todoList } from './TodoList.js';
 import { todoFooter } from './TodoFooter.js';
-import { todoInfo } from './TodoInfo.js';
 
-// TODO: Consider using NodeArray and item models.
+$.permit();
+const $route = $({key: 'route', storage: 'hash', value: 'all'});
+const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})});
 
 export class TodoApp extends IoElement {
   static get ReactiveProperties() {
     return {
-      model: {
-        type: TodoModel,
-        value: new TodoModel(),
-      },
-      route: $({value: 'all', storage: 'hash', key: 'route'}),
+      model: $model,
+      route: $route,
     };
   }
   ready() {
@@ -25,7 +23,6 @@ export class TodoApp extends IoElement {
     this.changed();
   }
   changed() {
-    const itemCount = this.model.items.length;
     this.render([
       section({class: 'todoapp'}, [
         header({class: 'header'}, [
@@ -33,9 +30,21 @@ export class TodoApp extends IoElement {
           todoInput({model: this.model}),
         ]),
         todoList({class: 'todo-list', model: this.model, route: this.route}),
-        itemCount ? todoFooter({class: 'footer', model: this.model, route: this.bind('route')}) : null,
+        this.model.count ? todoFooter({class: 'footer', model: this.model, route: this.bind('route')}) : null,
       ]),
-      todoInfo({class: 'info'})
+      div({class: 'info'}, [
+        p('Double-click to edit a todo'),
+        p([
+          // TODO: implement text and DOM mixed content rendering
+          span('Created with '),
+          a({href: 'https://iogui.dev', target: '_blank'}, 'Io-Gui'),
+        ]),
+        p([
+          // TODO: implement text and DOM mixed content rendering
+          span('Part of '),
+          a({href: 'http://todomvc.com/', target: '_blank'}, 'TodoMVC')
+        ])
+      ])
     ]);
   }
 }

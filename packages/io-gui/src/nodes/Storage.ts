@@ -108,9 +108,6 @@ export class StorageNode extends Node {
   @ReactiveProperty()
   declare value: any;
 
-  // @ReactiveProperty()
-  // declare default: any;
-
   @ReactiveProperty({value: 'local', type: String})
   declare storage: 'hash' | 'local';
 

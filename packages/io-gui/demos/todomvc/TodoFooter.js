@@ -1,5 +1,5 @@
 import { IoElement, Register, span, ul, li, a, button } from 'io-gui';
-import {TodoModel} from './TodoModel.js';
+import {TodoListModel} from './TodoListModel.js';
 
 export class TodoFooter extends IoElement {
   static get Style() {
@@ -12,34 +12,26 @@ export class TodoFooter extends IoElement {
   static get ReactiveProperties() {
     return {
       model: {
-        type: TodoModel,
+        type: TodoListModel,
       },
       route: 'all',
     };
   }
-  _onClear() {
-    this.model.clearCompletedItems();
-  }
-  _onSetRoute(event) {
+  onRouteClicked(event) {
     this.route = event.target.innerText.toLowerCase();
   }
+  modelMutated() {
+    this.changed();
+  }
   changed() {
-    const activeLeft = this.model.getActiveCount();
-    const completedCount = this.model.getCompletedCount();
     this.render([
-      span({class: 'todo-count'}, String(activeLeft) + (activeLeft === 1 ? ' item' : ' items') + ' left'),
+      span({class: 'todo-count'}, String(this.model.activeCount) + (this.model.activeCount === 1 ? ' item' : ' items') + ' left'),
       ul({class: 'filters'}, [
-        li([
-          a({'@click': this._onSetRoute, class: this.route === 'all' ? 'selected' : ''}, 'All')
-        ]),
-        li([
-          a({'@click': this._onSetRoute, class: this.route === 'active' ? 'selected' : ''}, 'Active')
-        ]),
-        li([
-          a({'@click': this._onSetRoute, class: this.route === 'completed' ? 'selected' : ''}, 'Completed')
-        ]),
+        li([a({'@click': this.onRouteClicked, class: this.route === 'all' ? 'selected' : ''}, 'All')]),
+        li([a({'@click': this.onRouteClicked, class: this.route === 'active' ? 'selected' : ''}, 'Active')]),
+        li([a({'@click': this.onRouteClicked, class: this.route === 'completed' ? 'selected' : ''}, 'Completed')]),
       ]),
-      completedCount ? button({class: 'clear-completed', '@click': this._onClear}, 'Clear completed') : null
+      this.model.completedCount ? button({class: 'clear-completed', '@click': this.model.clearCompleted}, 'Clear completed') : null
     ]);
   }
 }

@@ -1,8 +1,6 @@
 import { IoElement, Register, input, label, li, div, button } from 'io-gui';
-import { TodoModel } from './TodoModel.js';
-
-const ENTER_KEY = 13;
-const ESCAPE_KEY = 27;
+import { TodoItemModel } from './TodoItemModel.js';
+import { TodoListModel } from './TodoListModel.js';
 
 export class TodoItem extends IoElement {
   static get Style() {
@@ -14,46 +12,46 @@ export class TodoItem extends IoElement {
   }
   static get ReactiveProperties() {
     return {
-      item: Object,
+      item: TodoItemModel,
       model: {
-        type: TodoModel,
+        type: TodoListModel,
       },
       editing: false
     };
+  }
+  itemMutated() {
+    this.changed();
   }
   changed() {
     this.render([
       li({class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
         div({class: 'view'}, [
-          input({type: 'checkbox', class: 'toggle', checked: this.item.completed, '@click': this.onToggleItem}),
+          input({type: 'checkbox', class: 'toggle', checked: this.item.completed, '@click': this.item.toggle}),
           label({'@dblclick': this.onStartEdit}, this.item.title),
-          button({class: 'destroy', '@click': this.onDestroyItem}),
+          button({class: 'destroy', '@click': this.item.delete}),
         ]),
-        input({id: 'input', class: 'edit', value: this.item.title, '@blur': this.onEndEdit, '@keyup': this.onInputKey})
+        input({id: 'input-' + this.item.title, class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
       ])
     ]);
-  }
-  onDestroyItem() {
-    this.model.destroyItem(this.item);
-  }
-  onToggleItem() {
-    this.model.toggleItem(this.item);
+    this.$input = this.querySelector('input.edit');
   }
   onStartEdit() {
     this.editing = true;
-    this.querySelector('input.edit').focus();
+    this._originalTitle = this.item.title;
+    this.$input.focus();
   }
-  onEndEdit() {
-    this.model.updateItemTitle(this.item, this.querySelector('input.edit').value);
+  onBlur() {
+    const title = String(this.$input.value).trim();
+    if (title) {
+      this.item.title = title;
+    } else {
+      this.item.title = this._originalTitle;
+    }
     this.editing = false;
   }
   onInputKey(event) {
-    if (event.which === ENTER_KEY) {
-      this.$.input.blur();
-    }
-    if (event.which === ESCAPE_KEY) {
-      this.$.input.value = this.item.title;
-      this.$.input.blur();
+    if (['Enter', 'Escape'].includes(event.key)) {
+      this.$input.blur();
     }
   }
 }

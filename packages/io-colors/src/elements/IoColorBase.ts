@@ -26,10 +26,12 @@ export class IoColorBase extends IoElement {
   ready() {
     // this.throttle(this.valueChanged);
     this.valueChanged();
+    this.changed();
   }
   valueMutated() {
     // this.throttle(this.valueChanged);
     this.valueChanged();
+    this.changed();
   }
   rgbFromHsv() {
     const rgb = hsv2rgb([
@@ -83,11 +85,21 @@ export class IoColorBase extends IoElement {
       hsl[1] = this.hsl[1] * 100;
     }
 
-    // TODO: consider reusing existing arrays
+    this.rgba[0] = rgb[0] / 255;
+    this.rgba[1] = rgb[1] / 255;
+    this.rgba[2] = rgb[2] / 255;
+    this.rgba[3] = this.value.a ?? 1;
+    this.hsv[0] = hsv[0] / 360;
+    this.hsv[1] = hsv[1] / 100;
+    this.hsv[2] = hsv[2] / 100;
+    this.hsl[0] = hsl[0] / 360;
+    this.hsl[1] = hsl[1] / 100;
+    this.hsl[2] = hsl[2] / 100;
+
     this.setProperties({
-      rgba: [rgb[0] / 255, rgb[1] / 255, rgb[2] / 255, this.value.a ?? 1],
-      hsv: [hsv[0] / 360, hsv[1] / 100, hsv[2] / 100],
-      hsl: [hsl[0] / 360, hsl[1] / 100, hsl[2] / 100],
+      rgba: this.rgba,
+      hsv: this.hsv,
+      hsl: this.hsl,
     });
   }
 }

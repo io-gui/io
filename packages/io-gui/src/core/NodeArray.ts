@@ -20,7 +20,7 @@ export class NodeArray<N extends Node> extends Array<N> {
     this.itemMutated = this.itemMutated.bind(this);
     this.dispatchMutation = this.dispatchMutation.bind(this);
 
-    debug: if (!(node instanceof Node) && !(node instanceof IoElement)) {
+    debug: if (!node._isNode && !node._isIoElement) {
       console.error('NodeArray constructor called with non-node!');
     }
 
@@ -55,8 +55,9 @@ export class NodeArray<N extends Node> extends Array<N> {
             if (newLength < oldLength) {
               for (let i = newLength; i < oldLength; i++) {
                 const item = target[i];
-                if (item instanceof Node) {
+                if (item._isNode) {
                   item.removeEventListener('io-object-mutation', self.itemMutated);
+                  item.removeParent(self.node as Node);
                 }
               }
             } else if (newLength > oldLength) {
@@ -85,12 +86,14 @@ export class NodeArray<N extends Node> extends Array<N> {
         if (!isNaN(index) && index >= 0) {
           // TODO Prevent adding to index greater than length?
           const oldValue = target[index];
-          if (oldValue instanceof Node && !self._isInternalOperation) {
+          if (oldValue !== undefined && oldValue._isNode && !self._isInternalOperation) {
             oldValue.removeEventListener('io-object-mutation', self.itemMutated);
+            oldValue.removeParent(self.node as Node);
           }
           target[property as any] = value;
-          if (value instanceof Node && !self._isInternalOperation) {
+          if (value._isNode && !self._isInternalOperation) {
             value.addEventListener('io-object-mutation', self.itemMutated);
+            value.addParent(self.node);
           }
           if (value.selected && value.id) {
             target.selected = value.id;
@@ -118,15 +121,17 @@ export class NodeArray<N extends Node> extends Array<N> {
     return this.withInternalOperation(() => {
       for (let i = start; i < start + deleteCount; i++) {
         const item = this[i];
-        if (item instanceof Node) {
+        if (item._isNode) {
           item.removeEventListener('io-object-mutation', this.itemMutated);
+          item.removeParent(this.node as Node);
         }
       }
       const result = super.splice(start, deleteCount, ...items);
       for (let i = start; i < start + items.length; i++) {
         const item = this[i];
-        if (item instanceof Node) {
+        if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated);
+          item.addParent(this.node as Node);
         }
       }
       return result;
@@ -136,8 +141,9 @@ export class NodeArray<N extends Node> extends Array<N> {
     return this.withInternalOperation(() => {
       const result = super.push(...items);
       for (const item of items) {
-        if (item instanceof Node) {
+        if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated);
+          item.addParent(this.node as Node);
         }
       }
       return result;
@@ -147,8 +153,9 @@ export class NodeArray<N extends Node> extends Array<N> {
     return this.withInternalOperation(() => {
       const result = super.unshift(...items);
       for (const item of items) {
-        if (item instanceof Node) {
+        if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated);
+          item.addParent(this.node as Node);
         }
       }
       return result;
@@ -157,8 +164,9 @@ export class NodeArray<N extends Node> extends Array<N> {
   pop(): N | undefined {
     return this.withInternalOperation(() => {
       const item = super.pop();
-      if (item instanceof Node) {
+      if (item !== undefined && item._isNode) {
         item.removeEventListener('io-object-mutation', this.itemMutated);
+        item.removeParent(this.node as Node);
       }
       return item;
     });
@@ -166,8 +174,9 @@ export class NodeArray<N extends Node> extends Array<N> {
   shift(): N | undefined {
     return this.withInternalOperation(() => {
       const item = super.shift();
-      if (item instanceof Node) {
+      if (item !== undefined && item._isNode) {
         item.removeEventListener('io-object-mutation', this.itemMutated);
+        item.removeParent(this.node as Node);
       }
       return item;
     });
