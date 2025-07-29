@@ -27,7 +27,7 @@ export declare class MenuOption extends Node {
     path: string;
     options: NodeArray<MenuOption>;
     static get Listeners(): {
-        'io-node-array-selected-changed': string;
+        'option-selected-changed': string;
     };
     constructor(args: string | number | boolean | null | undefined | MenuOptionProps);
     getAllOptions(): MenuOption[];
@@ -37,7 +37,9 @@ export declare class MenuOption extends Node {
     selectedChanged(): void;
     selectedIDChanged(): void;
     selectedIDImmediateChanged(): void;
-    suboptionSelectedChanged(event: CustomEvent): void;
+    getSelectedIDImmediate(): string;
+    setSelectedIDImmediate(id: string): void;
+    onOptionSelectedChanged(event: CustomEvent): void;
     unselectSuboptions(): void;
     updatePaths(): void;
     pathChanged(): void;

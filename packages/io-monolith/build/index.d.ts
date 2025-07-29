@@ -326,8 +326,8 @@ export interface ChangeEventListener {
 export interface IoEventListener {
 	(event: {
 		detail: any;
-		target: Node$1 | IoElement;
-		path: Array<Node$1 | IoElement>;
+		target: Node$1 | IoElement | EventTarget;
+		path: Array<Node$1 | IoElement | EventTarget>;
 	}): void;
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener | EventListenerOrEventListenerObject;
@@ -424,7 +424,7 @@ export declare class EventDispatcher {
 	 * @param {boolean} [bubbles] - Makes event bubble
 	 * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
 	 */
-	dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: Node$1 | IoElement | EventTarget): void;
+	dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: Node$1 | IoElement | EventTarget, path?: Array<Node$1 | IoElement | EventTarget>): void;
 	/**
 	 * Disconnects all event listeners and removes all references for garbage collection.
 	 * Use this when node is discarded.
@@ -476,6 +476,7 @@ export declare class IoElement extends HTMLElement {
 	readonly _eventDispatcher: EventDispatcher;
 	readonly _observedObjectProperties: string[];
 	readonly _observedNodeProperties: string[];
+	readonly _parents: Array<Node$1>;
 	readonly _isNode: boolean;
 	readonly _isIoElement: boolean;
 	_disposed: boolean;
@@ -498,6 +499,8 @@ export declare class IoElement extends HTMLElement {
 	addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 	removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
 	dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node$1 | HTMLElement | Document | Window): void;
+	addParent(parent: Node$1): void;
+	removeParent(parent: Node$1): void;
 	dispose(): void;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
@@ -753,7 +756,9 @@ declare class Node$1 extends Object {
 	readonly _eventDispatcher: EventDispatcher;
 	readonly _observedObjectProperties: string[];
 	readonly _observedNodeProperties: string[];
+	readonly _parents: Array<Node$1>;
 	readonly _isNode: boolean;
+	readonly _isIoElement: boolean;
 	_disposed: boolean;
 	constructor(args?: any);
 	applyProperties(props: any, skipDispatch?: boolean): void;
@@ -773,6 +778,8 @@ declare class Node$1 extends Object {
 	addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 	removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
 	dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node$1 | HTMLElement | Document | Window): void;
+	addParent(parent: Node$1): void;
+	removeParent(parent: Node$1): void;
 	dispose(): void;
 	Register(ioNodeConstructor: typeof Node$1): void;
 }
@@ -935,15 +942,10 @@ export declare class Binding<T extends unknown> {
 	 */
 	dispose(): void;
 }
-export type SelectableNode = Node$1 & {
-	id: string;
-	selected: boolean;
-};
 export declare class NodeArray<N extends Node$1> extends Array<N> {
 	node: Node$1 | IoElement;
 	private proxy;
 	private _isInternalOperation;
-	selected: string;
 	static get [Symbol.species](): ArrayConstructor;
 	constructor(node: Node$1 | IoElement, ...args: any[]);
 	withInternalOperation<T>(operation: () => T, dispatch?: boolean): T;
@@ -2344,7 +2346,7 @@ export declare class MenuOption extends Node$1 {
 	path: string;
 	options: NodeArray<MenuOption>;
 	static get Listeners(): {
-		"io-node-array-selected-changed": string;
+		"option-selected-changed": string;
 	};
 	constructor(args: string | number | boolean | null | undefined | MenuOptionProps);
 	getAllOptions(): MenuOption[];
@@ -2354,7 +2356,9 @@ export declare class MenuOption extends Node$1 {
 	selectedChanged(): void;
 	selectedIDChanged(): void;
 	selectedIDImmediateChanged(): void;
-	suboptionSelectedChanged(event: CustomEvent): void;
+	getSelectedIDImmediate(): string;
+	setSelectedIDImmediate(id: string): void;
+	onOptionSelectedChanged(event: CustomEvent): void;
 	unselectSuboptions(): void;
 	updatePaths(): void;
 	pathChanged(): void;

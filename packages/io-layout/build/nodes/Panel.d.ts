@@ -10,6 +10,8 @@ export declare class Panel extends Node {
     constructor(args: PanelProps);
     tabsMutated(): void;
     onTabsMutatedDebounced(): void;
+    getSelected(): string;
+    setSelected(id: string): void;
     toJSON(): PanelProps;
     fromJSON(json: PanelProps): this;
     dispose(): void;

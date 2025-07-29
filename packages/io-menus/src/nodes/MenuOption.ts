@@ -59,7 +59,7 @@ export class MenuOption extends Node {
 
   static get Listeners() {
     return {
-      'io-node-array-selected-changed': 'suboptionSelectedChanged',
+      'option-selected-changed': 'onOptionSelectedChanged',
     };
   }
 
@@ -132,6 +132,7 @@ export class MenuOption extends Node {
     if (this.selected === false) {
       this.unselectSuboptions();
     }
+    this.dispatch('option-selected-changed', {option: this}, true);
   }
   selectedIDChanged() {
     const option = this.findItemById(this.selectedID);
@@ -148,12 +149,40 @@ export class MenuOption extends Node {
     }
     this.updatePaths();
   }
-  suboptionSelectedChanged(event: CustomEvent) {
-    const selectedItem = event.detail.item;
-    if (selectedItem.selected) {
+  getSelectedIDImmediate() {
+    let selected = '';
+    for (let i = 0; i < this.options.length; i++) {
+      const item = this.options[i];
+      if (item.selected && item.id) {
+        selected = item.id;
+        break;
+      }
+    }
+    return selected;
+  }
+  setSelectedIDImmediate(id: string) {
+    // TODO Test and reconsider withInternalOperation
+    this.options.withInternalOperation(() => {
+      for (let i = 0; i < this.options.length; i++) {
+        const item = this.options[i];
+        if (item.id === id) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+      }
+    });
+    this.options.dispatchMutation();
+  }
+  onOptionSelectedChanged(event: CustomEvent) {
+    // TODO: Instead of this check, use event.stopPropagation() once implemented in EventDispatcher.
+    if (this.options.indexOf(event.detail.option) === -1) return;
+    if (event.detail.option === this) return;
+    const selectedOption = event.detail.option;
+    if (selectedOption.selected) {
       for (let i = 0; i < this.options.length; i++) {
         const option = this.options[i] as MenuOption;
-        if (option !== selectedItem && option.mode === 'select' && selectedItem.mode === 'select') {
+        if (option !== selectedOption && option.mode === 'select' && selectedOption.mode === 'select') {
           option.selected = false;
         }
       }
@@ -185,14 +214,16 @@ export class MenuOption extends Node {
       return;
     }
 
-    let walker = this.options.selected ? this.options.find(option => option.mode === 'select' && option.selected && option.id === this.options.selected) : undefined;
+    let selectedIDImmediate = this.getSelectedIDImmediate();
+    let walker = selectedIDImmediate ? this.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate) : undefined;
     if (!walker) return;
 
     // let lastSelected = walker;
     while (walker) {
       path.push(walker.id);
       // lastSelected = walker;
-      walker = walker.options.selected ? walker.options.find(option => option.mode === 'select' && option.selected && option.id === walker!.options.selected) : undefined;
+      selectedIDImmediate = walker.getSelectedIDImmediate();
+      walker = selectedIDImmediate ? walker.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate) : undefined;
     }
     this.path = path.join(',');
   }
@@ -202,8 +233,8 @@ export class MenuOption extends Node {
   }
   optionsMutated(event: CustomEvent) {
     // console.log('optionsMutated', this.id, this.options.length);
-    if (this.mode === 'select' && this.options.selected && this.options.length) {
-      const selectedIDImmediate = this.options.selected;
+    const selectedIDImmediate = this.getSelectedIDImmediate();
+    if (this.mode === 'select' && selectedIDImmediate && this.options.length) {
       this.setProperties({
         // selected: !!selectedIDImmediate,
         selectedIDImmediate: selectedIDImmediate,

@@ -99,12 +99,12 @@ export class IoPanel extends IoElement {
   }
   selectIndex(index: number) {
     index = Math.min(index, this.panel.tabs.length - 1);
-    this.panel.tabs.selected = this.panel.tabs[index].id;
+    this.panel.setSelected(this.panel.tabs[index].id);
     this.debounce(this.focusTabDebounced, index);
   }
   selectTab(tab: Tab) {
     const index = this.panel.tabs.indexOf(tab);
-    this.panel.tabs.selected = tab.id;
+    this.panel.setSelected(tab.id);
     this.debounce(this.focusTabDebounced, index);
   }
   moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
@@ -167,7 +167,7 @@ export class IoPanel extends IoElement {
         '@io-menu-option-clicked': this.onNewTabClicked,
       }),
       ioSelector({
-        selected: this.panel.tabs.selected,
+        selected: this.panel.getSelected(),
         elements: this.elements,
         anchor: '',
       })

@@ -25,8 +25,8 @@ export interface ChangeEventListener {
 export interface IoEventListener {
     (event: {
         detail: any;
-        target: Node | IoElement;
-        path: Array<Node | IoElement>;
+        target: Node | IoElement | EventTarget;
+        path: Array<Node | IoElement | EventTarget>;
     }): void;
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener | EventListenerOrEventListenerObject;
@@ -117,7 +117,7 @@ export declare class EventDispatcher {
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: Node | IoElement | EventTarget): void;
+    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: Node | IoElement | EventTarget, path?: Array<Node | IoElement | EventTarget>): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.
