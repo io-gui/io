@@ -327,8 +327,8 @@ export class IoElement extends HTMLElement {
     return toVDOM(this);
   }
   Register(ioNodeConstructor: typeof IoElement) {
-    Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true, writable: false});
-    Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true, writable: false});
+    Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: false, writable: false});
+    Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: false, writable: false});
     Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
 
     const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();

@@ -65,6 +65,7 @@ export class Node extends Object {
   declare readonly _eventDispatcher: EventDispatcher;
   declare readonly _observedObjectProperties: string[];
   declare readonly _observedNodeProperties: string[];
+  declare readonly _parents: Array<Node | IoElement>;
   declare readonly _isNode: boolean;
   declare _disposed: boolean;
 
@@ -79,6 +80,7 @@ export class Node extends Object {
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
     Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
     Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
+    Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
 
     initReactiveProperties(this);
     initProperties(this);
@@ -152,6 +154,16 @@ export class Node extends Object {
   }
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
+  }
+  // TODO: test!
+  addParent(parent: Node | IoElement) {
+    this._parents.push(parent);
+  }
+  removeParent(parent: Node | IoElement) {
+    debug: if (!this._parents.includes(parent)) {
+      console.error('Node.removeParent(): Parent not found!', parent);
+    }
+    this._parents.splice(this._parents.indexOf(parent), 1);
   }
   dispose() {
     dispose(this);
@@ -272,10 +284,12 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       if (value?._isNode && !hasNewValueAtOtherProperty) {
         node._observedNodeProperties.push(name);
         value.addEventListener('io-object-mutation', node.onPropertyMutated);
+        value.addParent(node);
       }
       if (oldValue?._isNode && !hasOldValueAtOtherProperty && !oldValue._disposed) {
         node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1);
         oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated);
+        oldValue.removeParent(node);
       }
     }
 
@@ -344,9 +358,9 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
 
     if (value === object) {
       const handlerName = name + 'Mutated' as keyof Node;
-      if (typeof node[handlerName] === 'function') {
+      if (typeof (node as Node)[handlerName] === 'function') {
         // node.throttle(node[handlerName] as CallbackFunction, event);
-        (node[handlerName] as CallbackFunction)(event); //TODO: Check for regressions.
+        (node as any)[handlerName](event); //TODO: Check for regressions.
       }
       return true;
     }
@@ -427,7 +441,7 @@ export function dispose(node: Node | IoElement) {
   });
 
   for (const name in node._protochain.properties) {
-    delete node[name as keyof Node];
+    delete (node as Node)[name as keyof Node];
   }
 
   // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!

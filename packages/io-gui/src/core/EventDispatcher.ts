@@ -13,7 +13,7 @@ export interface CustomEventListener { (event: CustomEvent): void }
 export interface FocusEventListener { (event: FocusEvent): void }
 export interface TouchEventListener { (event: TouchEvent): void }
 export interface ChangeEventListener { (event: ChangeEvent): void }
-export interface IoEventListener { (event: {detail: any, target: Node | IoElement, path: Array<Node | IoElement>}): void }
+export interface IoEventListener { (event: {detail: any, target: Node | IoElement | EventTarget, path: Array<Node | IoElement | EventTarget>}): void }
 export type AnyEventListener = EventListener |
                                KeyboardEventListener |
                                PointerEventListener |
@@ -283,11 +283,12 @@ export class EventDispatcher {
    * @param {boolean} [bubbles] - Makes event bubble
    * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: any, bubbles = true, node: Node | IoElement | EventTarget = this.node) {
+  dispatchEvent(name: string, detail?: any, bubbles = true, node: Node | IoElement | EventTarget = this.node, path: Array<Node | IoElement | EventTarget> = []) {
+    path.push(node);
     if ((node instanceof EventTarget)) {
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}));
     } else {
-      const payload = {detail: detail, target: node, path: [node]};
+      const payload = {detail: detail, target: node, path: path};
       if (this.protoListeners[name]) {
         for (let i = 0; i < this.protoListeners[name].length; i ++) {
           const handler = this.protoListeners[name][i][0] as IoEventListener;
@@ -305,6 +306,15 @@ export class EventDispatcher {
         for (let i = 0; i < this.addedListeners[name].length; i ++) {
           const handler = this.addedListeners[name][i][0] as IoEventListener;
           handler.call(node, payload);
+        }
+      }
+      if (bubbles) {
+        for (const parent of node._parents) {
+          if (parent._isNode) {
+            // TODO: enable omnidirectional propagation without recursion.
+            // TODO: enable propagation across Node / IoElement boundaries.
+            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path);
+          }
         }
       }
     }
