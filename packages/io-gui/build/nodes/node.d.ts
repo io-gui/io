@@ -37,7 +37,9 @@ export declare class Node extends Object {
     readonly _eventDispatcher: EventDispatcher;
     readonly _observedObjectProperties: string[];
     readonly _observedNodeProperties: string[];
+    readonly _parents: Array<Node>;
     readonly _isNode: boolean;
+    readonly _isIoElement: boolean;
     _disposed: boolean;
     constructor(args?: any);
     applyProperties(props: any, skipDispatch?: boolean): void;
@@ -57,6 +59,8 @@ export declare class Node extends Object {
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
     dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+    addParent(parent: Node): void;
+    removeParent(parent: Node): void;
     dispose(): void;
     Register(ioNodeConstructor: typeof Node): void;
 }

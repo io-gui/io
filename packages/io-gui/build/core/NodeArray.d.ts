@@ -1,14 +1,9 @@
 import { Node } from '../nodes/Node.js';
 import { IoElement } from '../elements/IoElement.js';
-export type SelectableNode = Node & {
-    id: string;
-    selected: boolean;
-};
 export declare class NodeArray<N extends Node> extends Array<N> {
     node: Node | IoElement;
     private proxy;
     private _isInternalOperation;
-    selected: string;
     static get [Symbol.species](): ArrayConstructor;
     constructor(node: Node | IoElement, ...args: any[]);
     withInternalOperation<T>(operation: () => T, dispatch?: boolean): T;
