@@ -74,7 +74,8 @@ export class NodeArray<N extends Node> extends Array<N> {
     Object.defineProperty(this, 'proxy', {value: proxy, enumerable: false, configurable: false});
     return proxy;
   }
-  withInternalOperation<T>(operation: () => T, dispatch = true): T {
+  // TODO: test!
+  withInternalOperation<T>(operation: () => T, dispatch = false): T {
     this._isInternalOperation = true;
     try {
       return operation();

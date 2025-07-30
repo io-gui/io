@@ -134,8 +134,8 @@ export class Node extends Object {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event);
   };
-  dispatchMutation(object: Object | Node | IoElement = this, properties: string[] = []) {
-    if ((object as Node)._isNode) {
+  dispatchMutation(object: Object | Node = this, properties: string[] = []) {
+    if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties});
     } else {
       this.dispatch('io-object-mutation', {object, properties}, false, window);
@@ -270,7 +270,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       nodeArray.withInternalOperation(() => {
         nodeArray.length = 0;
         nodeArray.push(...value as Array<Node>);
-      }, false);
+      });
       return;
     }
 

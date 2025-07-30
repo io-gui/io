@@ -108,7 +108,9 @@ export class ChangeQueue {
     }
     if (this.dispatchedChange) {
       this.node.changed();
-      this.node.dispatchMutation(this.node, properties);
+      if (this.node._isNode) {
+        (this.node as Node).dispatchMutation(this.node, properties);
+      }
     }
     this.dispatchedChange = false;
     this.dispatching = false;
