@@ -24,6 +24,11 @@ export interface NodeConstructor {
   prototype: NodeConstructor | Object | HTMLElement;
 }
 
+export const NODES = {
+  active: new Set<Node>(),
+  disposed: new Set<Node>(),
+}
+
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 
 // Utility type to add Binding to all properties of a type
@@ -87,6 +92,8 @@ export class Node extends Object {
     initProperties(this);
 
     this.applyProperties(typeof args === 'object' ? args : {}, true);
+
+    // NODES.active.add(this);
 
     this.ready();
     this.dispatchQueue();
@@ -168,6 +175,8 @@ export class Node extends Object {
   }
   dispose() {
     dispose(this);
+    // NODES.active.delete(this);
+    // NODES.disposed.add(this);
   }
   Register(ioNodeConstructor: typeof Node) {
     Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true, writable: false});
@@ -451,6 +460,9 @@ export function dispose(node: Node | IoElement) {
   node._eventDispatcher.dispose();
   delete (node as any)._eventDispatcher;
   delete (node as any)._reactiveProperties;
+
+  node._parents.length = 0;
+  delete (node as any)._parents;
 
   Object.defineProperty(node, '_disposed', {value: true});
 };

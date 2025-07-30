@@ -1,6 +1,8 @@
-import { IoElement, Register, div, span, h4, p, canvas } from 'io-gui';
+import { IoElement, Register, div, span, h4, p, canvas, NODES } from 'io-gui';
 import { ioCollapsible } from 'io-navigation';
 import { ioIcon } from 'io-icons';
+
+// console.log(NODES);
 
 /*
  * IO-GUI MUTATION EVENT PROPAGATION VISUALIZATION
