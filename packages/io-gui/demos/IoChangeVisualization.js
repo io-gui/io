@@ -2,74 +2,45 @@ import { IoElement, Register, div, span, h4, p, canvas, NODES } from 'io-gui';
 import { ioCollapsible } from 'io-navigation';
 import { ioIcon } from 'io-icons';
 
-// console.log(NODES);
+const nodeMap = new Map();
 
-/*
- * IO-GUI MUTATION EVENT PROPAGATION VISUALIZATION
- * 
- * This interactive visualization demonstrates how mutation and change events flow through
- * a hierarchical node tree, simulating the reactive system used in the io-gui framework.
- * 
- * OVERVIEW:
- * - Visualizes a tree structure representing application components (data, view, service, util, config)
- * - Shows two types of event propagation: mutations (bottom-up) and changes (top-down)
- * - Uses force-directed graph simulation for optimal node positioning
- * - Rendered with HTML5 Canvas for performance and simplicity
- * 
- * KEY COMPONENTS:
- * 
- * 1. SIMULATED NODE CLASS:
- *    - Represents individual nodes in the component tree
- *    - Maintains parent-child relationships and properties
- *    - Handles visual representation (color, scale, position)
- *    - Implements mutation/change event propagation logic
- * 
- * 2. EVENT PROPAGATION SYSTEM:
- *    - MUTATIONS (Red, ↑): Flow upward from child to parent when properties change
- *      - Triggered by setProperty() calls on any node
- *      - Propagates through parent chain to root
- *      - Simulates how property changes bubble up in reactive systems
- *    
- *    - CHANGES (Yellow, ↓): Flow downward from parent to children
- *      - Triggered manually after mutations complete
- *      - Cascades from parent to all descendants
- *      - Represents how parent changes affect child components
- * 
- * 3. VISUAL EFFECTS:
- *    - Node animations: Color changes and scaling during events
- *    - Connection animations: Lines change color to show event flow
- *    - Wave effects: Expanding circles emanate from nodes during events
- *    - Root node: 3x larger to show hierarchy importance
- * 
- * 4. FORCE-DIRECTED LAYOUT:
- *    - Physics simulation for automatic node positioning
- *    - Repulsion forces: Nodes push away from each other (prevents overlap)
- *    - Attraction forces: Connected nodes pull toward optimal distance
- *    - Root pinning: Root node stays fixed at center as anchor point
- *    - Cooling system: Forces gradually weaken to reach stable equilibrium
- * 
- * 5. CANVAS RENDERING:
- *    - Pure HTML5 Canvas 2D API (no Three.js dependency)
- *    - Real-time coordinate transformation from world space to screen pixels
- *    - Draws connections first (behind nodes), then nodes with scaling
- *    - Handles window resizing and maintains aspect ratio
- * 
- * INTERACTION:
- * - Automatic random events trigger every 2 seconds
- * - Higher probability for root and upper-level nodes
- * - Toggle simulation button controls physics animation
- * - Events create cascading visual effects through the tree
- * 
- * TECHNICAL DETAILS:
- * - Tree structure: Nested JavaScript objects defining hierarchy
- * - Color interpolation: Custom hex color lerping for smooth transitions
- * - Animation system: RequestAnimationFrame-based with duration/callback support
- * - Force physics: Velocity-based integration with damping and velocity clamping
- * - Temperature cooling: Simulated annealing for convergence to stable layout
- * 
- * This visualization helps developers understand how reactive frameworks like io-gui
- * handle property changes and event propagation in component hierarchies.
- */
+const MAX_CHILDREN = 14;
+
+const treeRoot = {
+  id: 'treeRoot',
+  children: []
+};
+
+let counter = -1;
+function initNodeInfo(node) {
+  if (nodeMap.has(node)) {
+    return nodeMap.get(node);
+  } else {
+    const nodeInfo = {
+      id: `node-${counter++}`,
+      node: node,
+      children: []
+    }
+    nodeMap.set(node, nodeInfo);
+    return nodeInfo;
+  }
+}
+
+NODES.active.forEach(node => {
+  const nodeInfo = initNodeInfo(node);
+  if (node._parents.length === 0) {
+    treeRoot.children.push(nodeInfo);
+  } else {
+    node._parents.forEach(parent => {
+      const parentInfo = initNodeInfo(parent);
+      if (parentInfo.children.length < MAX_CHILDREN) {
+        parentInfo.children.push(nodeInfo);
+      }
+    });
+  }
+});
+
+
 
 export class IoChangeVisualization extends IoElement {
   static get Style() {
@@ -193,7 +164,7 @@ export class IoChangeVisualization extends IoElement {
         }
 
         createVisual() {
-            this.radius = this.name === 'root' ? 18 : 6; // 3x bigger for root
+            this.radius = 6; // Standard size since treeRoot is not rendered
             this.color = '#2196F3';
             this.originalColor = '#2196F3';
             this.originalScale = 0.1;
@@ -307,63 +278,38 @@ export class IoChangeVisualization extends IoElement {
             });
         }
 
+        animateConnectionColor(connection, targetColor, flashDuration = 150, fadeDuration = 650) {
+            if (!connection) return;
+            
+            const originalColor = connection.originalColor;
+            const animateColor = (from, to, duration, callback) => {
+                const startTime = Date.now();
+                const animate = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    connection.color = this.lerpColor(from, to, progress);
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else if (callback) {
+                        callback();
+                    }
+                };
+                animate();
+            };
+            
+            animateColor(originalColor, targetColor, flashDuration, () => {
+                animateColor(targetColor, originalColor, fadeDuration);
+            });
+        }
+
         createPropagationLine(source) {
             const connection = this.connections.find(conn => conn.nodeB === source);
-            if (connection) {
-                const originalColor = connection.originalColor;
-                const mutationColor = '#FF0000';
-                const animateColor = (from, to, duration, callback) => {
-                    const startTime = Date.now();
-                    const animate = () => {
-                        const elapsed = Date.now() - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        connection.color = this.lerpColor(from, to, progress);
-                        if (progress < 1) {
-                            requestAnimationFrame(animate);
-                        } else if (callback) {
-                            callback();
-                        }
-                    };
-                    animate();
-                };
-                
-                animateColor(originalColor, mutationColor, 150, () => {
-                    animateColor(mutationColor, originalColor, 650);
-                });
-            } else {
-                console.log('No connection found for mutation from', source.name, 'to', this.name);
-            }
+            this.animateConnectionColor(connection, '#FF0000', 150, 650);
         }
 
         createChangePropagationLine(source) {
-            // Find the existing connection line between source and this node
             const connection = source.connections.find(conn => conn.nodeB === this);
-            if (connection) {
-                const originalColor = connection.originalColor;
-                const changeColor = '#FFFF00';
-                
-                // Animate the existing line color
-                const animateColor = (from, to, duration, callback) => {
-                    const startTime = Date.now();
-                    const animate = () => {
-                        const elapsed = Date.now() - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        
-                        connection.color = this.lerpColor(from, to, progress);
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(animate);
-                        } else if (callback) {
-                            callback();
-                        }
-                    };
-                    animate();
-                };
-                
-                animateColor(originalColor, changeColor, 100, () => {
-                    animateColor(changeColor, originalColor, 700);
-                });
-            }
+            this.animateConnectionColor(connection, '#FFFF00', 100, 700);
         }
 
         animatePropertyChange() {
@@ -453,109 +399,64 @@ export class IoChangeVisualization extends IoElement {
             animate();
         }
 
-        dispose() {
-            // Canvas cleanup if needed
-        }
     }
-
-    const treeStructure = {
-        id: 'root',
-        children: [
-            {
-                id: 'view',
-                children: [
-                    {
-                        id: 'router',
-                        children: [
-                            { id: 'routes', children: [{ id: 'home' }, { id: 'about' }, { id: 'contact' }, { id: 'profile' }] },
-                            { id: 'guard', children: [{ id: 'auth', children: [{ id: 'check', children: [] }] }, { id: 'role', children: [] }] },
-                            { id: 'middleware', children: [{ id: 'cors', children: [] }, { id: 'helmet', children: [] }] }
-                        ]
-                    },
-                    {
-                        id: 'component',
-                        children: [
-                            { id: 'ui', children: [{ id: 'button', children: [] }, { id: 'input', children: [] }, { id: 'modal', children: [] }] },
-                            { id: 'layout', children: [{ id: 'header', children: [] }, { id: 'sidebar', children: [] }, { id: 'footer', children: [] }] }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: 'service',
-                children: [
-                    {
-                        id: 'api',
-                        children: [
-                            { id: 'rest', children: [{ id: 'endpoint', children: [] }] },
-                            { id: 'graphql', children: [{ id: 'resolver', children: [] }] }
-                        ]
-                    },
-                    {
-                        id: 'notification',
-                        children: [
-                            { id: 'email', children: [{ id: 'smtp', children: [] }] },
-                            { id: 'push', children: [{ id: 'fcm', children: [] }] }
-                        ]
-                    }
-                ]
-            },
-            
-            {
-                id: 'config',
-                children: [
-                    {
-                        id: 'env',
-                        children: [
-                            { id: 'dev', children: [{ id: 'debug', children: [] }] },
-                            { id: 'prod', children: [{ id: 'optimize', children: [] }] }
-                        ]
-                    },
-                    {
-                        id: 'database',
-                        children: [
-                            { id: 'connection', children: [{ id: 'pool', children: [] }] },
-                            { id: 'query', children: [{ id: 'builder', children: [] }] }
-                        ]
-                    }
-                ]
-            }
-        ]
-    };
 
     function calculateRadialPositions(treeData) {
         const positions = {};
         const levelRadius = 4;
         const levelSpacing = 3;
         const minNodeSpacing = 0.8;
+        const clusterSeparation = 25; // Distance between cluster centers
+        
+        // First, position each top-level cluster (treeRoot children) in a circle
+        const topLevelClusters = treeData.children || [];
+        const clusterCenters = {};
+        
+        topLevelClusters.forEach((cluster, index) => {
+            const angle = (index / topLevelClusters.length) * Math.PI * 2;
+            const centerX = Math.cos(angle) * clusterSeparation;
+            const centerY = Math.sin(angle) * clusterSeparation;
+            clusterCenters[cluster.id] = { x: centerX, y: centerY };
+        });
 
-        function positionNode(node, level = 0, parentAngle = 0, availableAngle = Math.PI * 2, siblingIndex = 0, siblingCount = 1) {
-            const radius = level * levelRadius + levelSpacing;
+        function positionNode(node, level = 0, parentAngle = 0, availableAngle = Math.PI * 2, siblingIndex = 0, siblingCount = 1, clusterCenter = { x: 0, y: 0 }) {
+            // Skip positioning for treeRoot since it won't be rendered
+            if (node.id !== 'treeRoot') {
+                const radius = level * levelRadius + levelSpacing;
 
-            let angle;
-            if (level === 0) {
-                angle = 0;
-            } else {
-                if (level === 1) {
-                    angle = (siblingIndex / siblingCount) * Math.PI * 2;
+                let angle;
+                if (level === 0) {
+                    angle = 0;
                 } else {
-                    const angleStep = availableAngle / siblingCount;
-                    angle = parentAngle - availableAngle / 2 + angleStep * (siblingIndex + 0.5);
+                    if (level === 1) {
+                        angle = (siblingIndex / siblingCount) * Math.PI * 2;
+                    } else {
+                        const angleStep = availableAngle / siblingCount;
+                        angle = parentAngle - availableAngle / 2 + angleStep * (siblingIndex + 0.5);
+                    }
                 }
+                
+                // Position relative to cluster center
+                const localX = radius * Math.cos(angle) * 2;
+                const localY = radius * Math.sin(angle) * 2;
+                const x = clusterCenter.x + localX;
+                const y = clusterCenter.y + localY;
+                
+                positions[node.id] = { x, y, z: 0 };
             }
             
-            const x = radius * Math.cos(angle);
-            const y = radius * Math.sin(angle);
-            
-            positions[node.id] = { x, y, z: 0 };
-            
             if (node.children && node.children.length > 0) {
-                const childRadius = (level + 1) * levelRadius + levelSpacing;
+                // For treeRoot children, treat them as level 0 (root level) with their own cluster center
+                const effectiveLevel = node.id === 'treeRoot' ? -1 : level;
+                const currentClusterCenter = node.id === 'treeRoot' ? { x: 0, y: 0 } : 
+                    (clusterCenters[node.id] || clusterCenter);
+                
+                const childRadius = (effectiveLevel + 1) * levelRadius + levelSpacing;
                 const minAngleForSpacing = minNodeSpacing / childRadius;
                 const minTotalAngle = minAngleForSpacing * node.children.length;
                 
                 let childAngleSpan;
-                if (level === 0) {
+                if (effectiveLevel === -1) { // treeRoot children get full circle
                     childAngleSpan = Math.PI * 2;
                 } else {
                     const maxAngleFromParent = Math.min(availableAngle * 0.9, Math.PI);
@@ -563,7 +464,12 @@ export class IoChangeVisualization extends IoElement {
                 }
                 
                 node.children.forEach((child, index) => {
-                    positionNode(child, level + 1, angle, childAngleSpan, index, node.children.length);
+                    const childLevel = node.id === 'treeRoot' ? 0 : level + 1;
+                    const childAngle = node.id === 'treeRoot' ? 0 : parentAngle;
+                    const childClusterCenter = node.id === 'treeRoot' ? 
+                        (clusterCenters[child.id] || { x: 0, y: 0 }) : currentClusterCenter;
+                    
+                    positionNode(child, childLevel, childAngle, childAngleSpan, index, node.children.length, childClusterCenter);
                 });
             }
         }
@@ -578,15 +484,16 @@ export class IoChangeVisualization extends IoElement {
             this.connections = connections;
             this.forces = {};
             this.velocities = {};
-            this.damping = 0.95;
-            this.repulsionStrength = 1;
+            this.damping = 0.7;
+            this.repulsionStrength = 4;
             this.attractionStrength = 0.05;
-            this.linkLength = 0.1;
-            this.maxVelocity = 0.5;
+            this.centerAttractionStrength = 0.01;
+            this.linkLength = 2;
+            this.maxVelocity = 0.4;
             this.running = false;
-            this.coolingRate = 0.999;
-            this.temperature = 0.20;
-            this.minTemperature = 0.01;
+            this.coolingRate = 0.99;
+            this.temperature = 0.1;
+            this.minTemperature = 0.1;
             
             Object.keys(nodes).forEach(id => {
                 this.forces[id] = { x: 0, y: 0 };
@@ -597,11 +504,13 @@ export class IoChangeVisualization extends IoElement {
         calculateRepulsionForces() {
             const nodeIds = Object.keys(this.nodes);
             
+            // Reset forces
             nodeIds.forEach(id => {
                 this.forces[id].x = 0;
                 this.forces[id].y = 0;
             });
 
+            // Calculate repulsion between all node pairs
             for (let i = 0; i < nodeIds.length; i++) {
                 for (let j = i + 1; j < nodeIds.length; j++) {
                     const nodeA = this.nodes[nodeIds[i]];
@@ -609,12 +518,13 @@ export class IoChangeVisualization extends IoElement {
                     
                     const dx = nodeA.position.x - nodeB.position.x;
                     const dy = nodeA.position.y - nodeB.position.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy) + 0.01;
+                    const distanceSquared = dx * dx + dy * dy;
+                    const distance = Math.sqrt(distanceSquared) + 0.01;
                     
-                    const force = (this.repulsionStrength * this.temperature) / (distance * distance);
+                    const force = (this.repulsionStrength * this.temperature) / (distanceSquared * distance);
                     const fx = (dx / distance) * force;
                     const fy = (dy / distance) * force;
-                    
+
                     this.forces[nodeIds[i]].x += fx;
                     this.forces[nodeIds[i]].y += fy;
                     this.forces[nodeIds[j]].x -= fx;
@@ -631,8 +541,19 @@ export class IoChangeVisualization extends IoElement {
                 const dx = nodeB.position.x - nodeA.position.x;
                 const dy = nodeB.position.y - nodeA.position.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
+               
+                // Adjust link length based on node connectivity
+                let linkLength = this.linkLength;
+                const nodeAChildren = nodeA.children.length;
+                const nodeBChildren = nodeB.children.length;
                 
-                const force = this.attractionStrength * this.temperature * (distance - this.linkLength);
+                if (nodeAChildren > 0) {
+                    linkLength *= 1 + nodeAChildren ** 0.25;
+                }
+                if (nodeBChildren > 0) {
+                    linkLength *= 1 + nodeBChildren ** 0.25;
+                }
+                const force = this.attractionStrength * this.temperature * (distance ** 2 - linkLength);
                 const fx = (dx / distance) * force;
                 const fy = (dy / distance) * force;
                 
@@ -647,13 +568,8 @@ export class IoChangeVisualization extends IoElement {
             Object.keys(this.nodes).forEach(id => {
                 const node = this.nodes[id];
                 
-                // Pin root node to center
-                if (id === 'root') {
-                    node.position.x = 0;
-                    node.position.y = 0;
-                    this.velocities[id].x = 0;
-                    this.velocities[id].y = 0;
-                    // Root node position is already set above
+                // Skip treeRoot since it's not in the simulation
+                if (id === 'treeRoot') {
                     return;
                 }
                 
@@ -675,15 +591,36 @@ export class IoChangeVisualization extends IoElement {
             });
         }
 
-        updateConnections() {
-            // Connections automatically update when nodes move since we reference node positions directly
+
+        calculateCenterAttractionForces() {
+            Object.keys(this.nodes).forEach(id => {
+                const node = this.nodes[id];
+                
+                // Skip treeRoot since it's not in the simulation
+                if (id === 'treeRoot') {
+                    return;
+                }
+                
+                // Calculate distance from center (0, 0)
+                const dx = -node.position.x;
+                const dy = -node.position.y;
+                const distance = Math.sqrt(dx * dx + dy * dy) + 0.01;
+                
+                // Apply gentle attraction towards center
+                const force = this.centerAttractionStrength * this.temperature * distance;
+                const fx = (dx / distance) * force;
+                const fy = (dy / distance) * force;
+                
+                this.forces[id].x += fx;
+                this.forces[id].y += fy;
+            });
         }
 
         step() {
             this.calculateRepulsionForces();
             this.calculateAttractionForces();
+            this.calculateCenterAttractionForces();
             this.updatePositions();
-            this.updateConnections();
             
             // Cool down the system
             if (this.temperature > this.minTemperature) {
@@ -721,9 +658,12 @@ export class IoChangeVisualization extends IoElement {
         const nodes = {};
         
         function createNode(nodeData) {
-            const position = positions[nodeData.id];
-            const node = new SimulatedNode(nodeData.id, position);
-            nodes[nodeData.id] = node;
+            // Skip treeRoot from visual representation
+            if (nodeData.id !== 'treeRoot') {
+                const position = positions[nodeData.id];
+                const node = new SimulatedNode(nodeData.id, position);
+                nodes[nodeData.id] = node;
+            }
             
             if (nodeData.children) {
                 nodeData.children.forEach(child => createNode(child));
@@ -738,12 +678,22 @@ export class IoChangeVisualization extends IoElement {
         const allConnections = [];
         
         function connect(nodeData) {
-            const parentNode = nodes[nodeData.id];
+            // Skip treeRoot connections - only connect from its children onwards
+            if (nodeData.id !== 'treeRoot') {
+                const parentNode = nodes[nodeData.id];
+                if (nodeData.children && parentNode) {
+                    nodeData.children.forEach(childData => {
+                        const childNode = nodes[childData.id];
+                        if (childNode) {
+                            const connection = parentNode.addChild(childNode);
+                            allConnections.push(connection);
+                        }
+                    });
+                }
+            }
+            
             if (nodeData.children) {
                 nodeData.children.forEach(childData => {
-                    const childNode = nodes[childData.id];
-                    const connection = parentNode.addChild(childNode);
-                    allConnections.push(connection);
                     connect(childData);
                 });
             }
@@ -752,9 +702,9 @@ export class IoChangeVisualization extends IoElement {
         return allConnections;
     }
 
-    const positions = calculateRadialPositions(treeStructure);
-    const nodes = createNodesFromTree(treeStructure, positions);
-    const connections = connectNodes(treeStructure, nodes);
+    const positions = calculateRadialPositions(treeRoot);
+    const nodes = createNodesFromTree(treeRoot, positions);
+    const connections = connectNodes(treeRoot, nodes);
     
     // Initialize force-directed layout
     const forceLayout = new ForceDirectedLayout(nodes, connections);
