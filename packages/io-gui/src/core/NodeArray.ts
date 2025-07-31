@@ -10,10 +10,13 @@ export class NodeArray<N extends Node> extends Array<N> {
 
   constructor(public node: Node | IoElement, ...args: any[]) {
     super(...args);
+    // TODO: Avoid creating empty NodeArrays in models!
+    // TODO: Test thoroughly! Check initializations with items!
+    // console.log('NodeArray constructor', args);
     this.itemMutated = this.itemMutated.bind(this);
     this.dispatchMutation = this.dispatchMutation.bind(this);
 
-    debug: if (!node._isNode && !node._isIoElement) {
+    debug: if (!(node as Node)._isNode && !(node as IoElement)._isIoElement) {
       console.error('NodeArray constructor called with non-node!');
     }
 
@@ -75,13 +78,12 @@ export class NodeArray<N extends Node> extends Array<N> {
     return proxy;
   }
   // TODO: test!
-  withInternalOperation<T>(operation: () => T, dispatch = false): T {
+  withInternalOperation<T>(operation: () => T): T {
     this._isInternalOperation = true;
     try {
       return operation();
     } finally {
       this._isInternalOperation = false;
-      if (dispatch) this.dispatchMutation();
     }
   }
   splice(start: number, deleteCount: number, ...items: N[]): N[] {
@@ -101,6 +103,7 @@ export class NodeArray<N extends Node> extends Array<N> {
           item.addParent(this.node as Node);
         }
       }
+      if (deleteCount || items.length) this.dispatchMutation();
       return result;
     });
   }
@@ -113,6 +116,7 @@ export class NodeArray<N extends Node> extends Array<N> {
           item.addParent(this.node as Node);
         }
       }
+      if (items.length) this.dispatchMutation();
       return result;
     });
   }
@@ -125,6 +129,7 @@ export class NodeArray<N extends Node> extends Array<N> {
           item.addParent(this.node as Node);
         }
       }
+      if (items.length) this.dispatchMutation();
       return result;
     });
   }
@@ -135,6 +140,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         item.removeEventListener('io-object-mutation', this.itemMutated);
         item.removeParent(this.node as Node);
       }
+      if (item !== undefined) this.dispatchMutation();
       return item;
     });
   }
@@ -145,18 +151,21 @@ export class NodeArray<N extends Node> extends Array<N> {
         item.removeEventListener('io-object-mutation', this.itemMutated);
         item.removeParent(this.node as Node);
       }
+      if (item !== undefined) this.dispatchMutation();
       return item;
     });
   }
   reverse() {
     return this.withInternalOperation(() => {
       const result = super.reverse();
+      if (result.length) this.dispatchMutation();
       return result;
     });
   }
   sort(compareFn?: (a: N, b: N) => number) {
     return this.withInternalOperation(() => {
       const result = super.sort(compareFn);
+      if (result.length) this.dispatchMutation();
       return result;
     });
   }

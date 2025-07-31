@@ -93,7 +93,7 @@ export class Node extends Object {
 
     this.applyProperties(typeof args === 'object' ? args : {}, true);
 
-    // NODES.active.add(this);
+    NODES.active.add(this);
 
     this.ready();
     this.dispatchQueue();
@@ -165,18 +165,22 @@ export class Node extends Object {
   }
   // TODO: test!
   addParent(parent: Node) {
-    this._parents.push(parent);
+    if (parent._isNode) {
+      this._parents.push(parent);
+    }
   }
   removeParent(parent: Node) {
-    debug: if (!this._parents.includes(parent)) {
-      console.error('Node.removeParent(): Parent not found!', parent);
+    if (parent._isNode) {
+      debug: if (!this._parents.includes(parent)) {
+        console.error('Node.removeParent(): Parent not found!', parent);
+      }
+      this._parents.splice(this._parents.indexOf(parent), 1);
     }
-    this._parents.splice(this._parents.indexOf(parent), 1);
   }
   dispose() {
     dispose(this);
-    // NODES.active.delete(this);
-    // NODES.disposed.add(this);
+    NODES.active.delete(this);
+    NODES.disposed.add(this);
   }
   Register(ioNodeConstructor: typeof Node) {
     Object.defineProperty(ioNodeConstructor, '_isNode', {enumerable: false, value: true, writable: false});
@@ -276,6 +280,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         console.error(`Node: Property "${name}" should be initialized as a NodeArray!`, nodeArray);
       }
 
+      // TODO: test, benchmark!
       nodeArray.withInternalOperation(() => {
         nodeArray.length = 0;
         nodeArray.push(...value as Array<Node>);
@@ -461,8 +466,10 @@ export function dispose(node: Node | IoElement) {
   delete (node as any)._eventDispatcher;
   delete (node as any)._reactiveProperties;
 
-  node._parents.length = 0;
-  delete (node as any)._parents;
+  if ((node as any)._parents) {
+    (node as any)._parents.length = 0;
+    delete (node as any)._parents;
+  }
 
   Object.defineProperty(node, '_disposed', {value: true});
 };
