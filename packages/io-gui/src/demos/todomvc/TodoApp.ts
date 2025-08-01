@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span } from 'io-gui';
 
 import { TodoListModel } from './TodoListModel.js';

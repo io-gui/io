@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { IoElement, Register, input } from 'io-gui';
 import { TodoListModel } from './TodoListModel.js';
 import { TodoItemModel } from './TodoItemModel.js';

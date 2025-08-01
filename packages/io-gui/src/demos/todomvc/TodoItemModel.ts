@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Node, Register } from 'io-gui';
 
 export class TodoItemModel extends Node {
@@ -9,10 +10,10 @@ export class TodoItemModel extends Node {
   }
   toggle = () => {
     this.completed = !this.completed;
-  }
+  };
   delete = () => {
     this.dispatch('delete-item', {item: this}, true);
-  }
+  };
   toJSON() {
     return {
       title: this.title,

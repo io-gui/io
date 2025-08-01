@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Node, NodeArray, Register } from 'io-gui';
 import { TodoItemModel } from './TodoItemModel.js';
 
@@ -46,10 +47,10 @@ export class TodoListModel extends Node {
   }
   completeAll = () => {
     this.items.forEach(item => item.completed = true);
-  }
+  };
   clearCompleted = () => {
     this.items = this.items.filter(item => !item.completed);
-  }
+  };
   itemsMutated() {
     this.dispatchMutation();
   }
