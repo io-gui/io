@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Register, IoElement, div, ReactiveProperty } from 'io-gui';
 import { MenuOption, ioOptionSelect } from 'io-menus';
 import { ioSlider } from 'io-sliders';
