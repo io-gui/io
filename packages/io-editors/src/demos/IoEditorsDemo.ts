@@ -2,7 +2,7 @@ import { Register, IoElement, div, ReactiveProperty } from 'io-gui';
 import { MenuOption, ioOptionSelect } from 'io-menus';
 import { ioSlider } from 'io-sliders';
 import { ioString, ioNumber, ioBoolean } from 'io-inputs';
-import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from '../index.js';
+import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
 
 export class IoEditorsDemo extends IoElement {
   static get Style() {

@@ -1,4 +1,4 @@
-import { applyNativeElementProps, constructElement, div } from '../index.js';
+import { applyNativeElementProps, constructElement, div } from 'io-gui';
 
 export default class {
   run() {

@@ -1,4 +1,4 @@
-import { IoOptionSelect, MenuOption } from '../index.js';
+import { IoOptionSelect, MenuOption } from 'io-menus';
 
 const element = new IoOptionSelect({value: '', option: new MenuOption({id: 'test', options: []})});
 document.body.appendChild(element as HTMLElement);

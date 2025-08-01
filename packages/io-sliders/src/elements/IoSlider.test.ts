@@ -1,5 +1,5 @@
 import { nextQueue } from 'io-gui';
-import { IoSlider } from '../index.js';
+import { IoSlider } from 'io-sliders';
 
 const element = new IoSlider();
 

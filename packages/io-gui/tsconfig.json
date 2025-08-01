@@ -1,7 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "build"
+    "outDir": "build",
+    "paths": {
+      "io-gui": ["./src/index.js"]
+    }
   },
   "include": ["./src"]
 }

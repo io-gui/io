@@ -1,4 +1,4 @@
-import { IoSlider2d } from '../index.js';
+import { IoSlider2d } from 'io-sliders';
 
 const element = new IoSlider2d();
 

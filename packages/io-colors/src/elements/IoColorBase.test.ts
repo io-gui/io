@@ -1,5 +1,5 @@
 import { nextQueue } from 'io-gui';
-import { IoColorBase } from '../index.js';
+import { IoColorBase } from 'io-colors';
 
 const element = new IoColorBase();
 element.style.display = 'none';

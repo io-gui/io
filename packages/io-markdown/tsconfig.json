@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-gui": ["../io-gui"],
+      "io-markdown": ["./src/index.js"],
+      "io-gui": ["../io-gui"]
     }
   },
   "include": ["./src", "./lib"]

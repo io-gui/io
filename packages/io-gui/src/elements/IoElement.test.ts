@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from '../index.js';
+import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from 'io-gui';
 
 const element = new IoElement();
 element.style.display = 'none';

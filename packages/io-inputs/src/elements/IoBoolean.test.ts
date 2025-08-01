@@ -1,4 +1,4 @@
-import { IoBoolean } from '../index.js';
+import { IoBoolean } from 'io-inputs';
 
 const element = new IoBoolean();
 element.style.display = 'none';

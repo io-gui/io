@@ -1,4 +1,4 @@
-import { IconsetSingleton } from '../index.js';;
+import { IconsetSingleton } from 'io-icons';
 
 export default class {
   run() {
