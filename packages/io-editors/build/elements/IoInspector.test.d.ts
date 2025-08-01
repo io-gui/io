@@ -1,4 +1,4 @@
-import { IoInspector } from '../index.js';
+import { IoInspector } from 'io-editors';
 export default class {
     element: IoInspector;
     constructor();

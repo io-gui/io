@@ -1,4 +1,4 @@
-import { IoObject } from '../index.js';
+import { IoObject } from 'io-editors';
 export default class {
     element: IoObject;
     constructor();

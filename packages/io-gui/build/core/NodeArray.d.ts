@@ -6,7 +6,7 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     private _isInternalOperation;
     static get [Symbol.species](): ArrayConstructor;
     constructor(node: Node | IoElement, ...args: any[]);
-    withInternalOperation<T>(operation: () => T, dispatch?: boolean): T;
+    withInternalOperation<T>(operation: () => T): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];
     push(...items: N[]): number;
     unshift(...items: N[]): number;
