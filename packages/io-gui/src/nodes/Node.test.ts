@@ -1,4 +1,4 @@
-import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '../index.js';
+import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from 'io-gui';
 
 export default class {
   run() {

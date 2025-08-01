@@ -1,4 +1,4 @@
-import { IoNumberLadderStep } from '../index.js';
+import { IoNumberLadderStep } from 'io-inputs';
 
 const step = new IoNumberLadderStep({value: 1, label: '1'});
 step.style.display = 'none';

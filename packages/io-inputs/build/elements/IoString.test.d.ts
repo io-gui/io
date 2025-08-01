@@ -1,4 +1,4 @@
-import { IoString } from '../index.js';
+import { IoString } from 'io-inputs';
 export default class {
     element: IoString;
     constructor();

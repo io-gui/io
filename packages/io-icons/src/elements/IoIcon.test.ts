@@ -1,4 +1,4 @@
-import { IoIcon, IconsetSingleton } from '../index.js';
+import { IoIcon, IconsetSingleton } from 'io-icons';
 
 const element = new IoIcon({ value: '' });
 element.style.display = 'none';

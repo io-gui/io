@@ -22,8 +22,6 @@ export declare class IoElement extends HTMLElement {
     readonly _eventDispatcher: EventDispatcher;
     readonly _observedObjectProperties: string[];
     readonly _observedNodeProperties: string[];
-    readonly _parents: Array<Node>;
-    readonly _isNode: boolean;
     readonly _isIoElement: boolean;
     _disposed: boolean;
     _textNode: Text;
@@ -39,14 +37,12 @@ export declare class IoElement extends HTMLElement {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): true | undefined;
-    dispatchMutation(object?: Object | Node | IoElement, properties?: string[]): void;
+    dispatchMutation(object?: Object | Node, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
     dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
-    addParent(parent: Node): void;
-    removeParent(parent: Node): void;
     dispose(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;

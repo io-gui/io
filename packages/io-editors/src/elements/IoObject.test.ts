@@ -1,6 +1,6 @@
 import { ioString } from 'io-inputs';
 import { ioSlider } from 'io-sliders';
-import { IoObject } from '../index.js';
+import { IoObject } from 'io-editors';
 
 const testValue = {
   'number': 0.5,

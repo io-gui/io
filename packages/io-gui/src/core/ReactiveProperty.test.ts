@@ -1,4 +1,4 @@
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from '../index.js';
+import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from 'io-gui';
 
 class Object1 {
   constructor(init?: any) {

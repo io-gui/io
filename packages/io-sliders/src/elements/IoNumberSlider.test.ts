@@ -1,5 +1,5 @@
 import { nextQueue } from 'io-gui';
-import { IoNumberSlider } from '../index.js';
+import { IoNumberSlider } from 'io-sliders';
 
 export default class {
   element = new IoNumberSlider();

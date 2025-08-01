@@ -1,4 +1,4 @@
-// import { IoMarkdown } from '../index.js';
+// import { IoMarkdown } from 'io-markdown';
 
 // const element = new IoMarkdown();
 

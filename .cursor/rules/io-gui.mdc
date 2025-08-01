@@ -149,6 +149,7 @@ Each package can be built/linted individually:
 - TypeScript compilation with `tsc`
 - Rollup for bundling with tree-shaking
 - ESLint for linting with auto-fix
+- Avoid installing new packages whenever possible
 
 ### Testing
 - Uses Chai and Mocha for testing

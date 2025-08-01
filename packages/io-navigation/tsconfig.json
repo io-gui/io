@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
+      "io-navigation": ["./src/index.js"],
       "io-gui": ["../io-gui"],
       "io-menus": ["../io-menus"],
       "io-inputs": ["../io-inputs"],

@@ -1,4 +1,4 @@
-import { IoNumber, IoNumberLadderSingleton } from '../index.js';
+import { IoNumber, IoNumberLadderSingleton } from 'io-inputs';
 
 const element = new IoNumber();
 element.style.display = 'none';

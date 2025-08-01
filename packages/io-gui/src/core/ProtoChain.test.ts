@@ -1,4 +1,4 @@
-import { ProtoChain, Node, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '../index.js';
+import { ProtoChain, Node, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from 'io-gui';
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

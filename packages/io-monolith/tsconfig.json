@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
+      "io-monolith": ["./src/index.js"],
       "io-gui": ["../io-gui"],
       "io-menus": ["../io-menus"],
       "io-colors": ["../io-colors"],

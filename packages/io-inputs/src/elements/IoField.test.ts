@@ -1,4 +1,4 @@
-import { IoField } from '../index.js';
+import { IoField } from 'io-inputs';
 
 const element = new IoField();
 element.style.display = 'none';

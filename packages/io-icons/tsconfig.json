@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
+      "io-icons": ["./src/index.js"],
       "io-gui": ["../io-gui"]
     }
   },

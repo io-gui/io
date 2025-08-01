@@ -1,4 +1,4 @@
-import { IoNumber } from '../index.js';
+import { IoNumber } from 'io-inputs';
 
 const element = new IoNumber();
 element.style.display = 'none';
