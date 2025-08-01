@@ -23,6 +23,9 @@ function makeSelect(options: any[]) {
   return ioOptionSelect({option});
 }
 
+// TODO: Make sure multiple editors dont share the same menu options.
+// TODO: Consider using function to return new view each time editor is configured at runtime.
+
 const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConfig[]>([
   [Object, [
     [String, ioString()],

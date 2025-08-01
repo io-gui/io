@@ -75,7 +75,7 @@ export class IoLayoutDemo extends IoElement {
           {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/demos/IoIconsDemo.js'}},
           {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/io-sliders/demos/IoSlidersDemo.js'}},
           {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/io-colors/demos/IoColorsDemo.js'}},
-          {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/demos/IoEditorsDemo.js'}},
+          {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/build/demos/IoEditorsDemo.js'}},
           {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/demos/IoMenusDemo.js'}},
           {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/demos/IoNavigationDemo.js'}},
           {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/demos/IoThemeEditor.js'}},

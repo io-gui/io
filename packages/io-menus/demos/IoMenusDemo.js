@@ -52,6 +52,7 @@ const optionDeep = new MenuOption({id: 'deep', options: [
   ]},
 ]});
 
+// TODO: consider initializing long option only when needed.
 const optionLong = new MenuOption({id: 'long', options: [
   'apple', 'banana', 'cherry', 'dolphin', 'elephant', 'flamingo', 'giraffe', 'hamburger', 'igloo', 'jaguar',
   'kangaroo', 'lemon', 'mango', 'nectarine', 'octopus', 'penguin', 'quilt', 'rainbow', 'sunflower', 'tiger',

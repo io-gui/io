@@ -260,7 +260,10 @@ export type OtherHTMLElementProps = PropsWithUndefined<{
   disablePictureInPicture?: boolean,
 }>;
 
+type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+
 export type NativeElementProps = AriaProps & PropsWithUndefined<{
+  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
   title?: string,
   lang?: Lang,
   translate?: any,

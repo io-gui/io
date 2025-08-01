@@ -27,7 +27,7 @@ export interface NodeConstructor {
 export const NODES = {
   active: new Set<Node>(),
   disposed: new Set<Node>(),
-}
+};
 
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 

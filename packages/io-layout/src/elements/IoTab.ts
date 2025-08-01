@@ -16,6 +16,7 @@ for (const set of Object.keys(IconsetDB)) {
   }
 }
 
+// TODO: consider initializing icon options when needed.
 const iconOptions = ioOptionSelect({label: 'Select', option: new MenuOption({id: 'iconselect', options: icons as MenuOptionProps[]})});
 
 export type IoTabProps = IoFieldProps & {
