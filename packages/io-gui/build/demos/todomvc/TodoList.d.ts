@@ -1,15 +1,17 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementProps } from 'io-gui';
 import { TodoListModel } from './TodoListModel.js';
+type TodoListProps = IoElementProps & {
+    model?: TodoListModel;
+    route?: string;
+};
 export declare class TodoList extends IoElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
-        model: {
-            type: typeof TodoListModel;
-        };
-        route: string;
-    };
+    model: TodoListModel;
+    route: string;
+    constructor(args?: TodoListProps);
     modelMutated(): void;
     changed(): void;
 }
-export declare const todoList: (arg0?: import("io-gui").IoElementProps | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;
+export declare const todoList: (arg0: TodoListProps) => import("io-gui").VDOMElement;
+export {};
 //# sourceMappingURL=TodoList.d.ts.map

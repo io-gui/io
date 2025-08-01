@@ -1,20 +1,24 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementProps } from 'io-gui';
 import { TodoItemModel } from './TodoItemModel.js';
 import { TodoListModel } from './TodoListModel.js';
+type TodoItemProps = IoElementProps & {
+    item?: TodoItemModel;
+    model?: TodoListModel;
+};
 export declare class TodoItem extends IoElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
-        item: typeof TodoItemModel;
-        model: {
-            type: typeof TodoListModel;
-        };
-        editing: boolean;
-    };
+    item: TodoItemModel;
+    model: TodoListModel;
+    editing: boolean;
+    private $input;
+    private _originalTitle;
+    constructor(args?: TodoItemProps);
     itemMutated(): void;
     changed(): void;
     onStartEdit(): void;
     onBlur(): void;
-    onInputKey(event: any): void;
+    onInputKey(event: CustomEvent): void;
 }
-export declare const todoItem: (arg0?: import("io-gui").IoElementProps | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;
+export declare const todoItem: (arg0: TodoItemProps) => import("io-gui").VDOMElement;
+export {};
 //# sourceMappingURL=TodoItem.d.ts.map

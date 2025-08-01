@@ -1,16 +1,18 @@
-import { IoElement } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-gui';
 import { TodoListModel } from './TodoListModel.js';
+type TodoFooterProps = IoElementProps & {
+    model?: TodoListModel;
+    route?: WithBinding<string>;
+};
 export declare class TodoFooter extends IoElement {
     static get Style(): string;
-    static get ReactiveProperties(): {
-        model: {
-            type: typeof TodoListModel;
-        };
-        route: string;
-    };
-    onRouteClicked(event: any): void;
+    model: TodoListModel;
+    route: string;
+    constructor(args?: TodoFooterProps);
+    onRouteClicked(event: CustomEvent): void;
     modelMutated(): void;
     changed(): void;
 }
-export declare const todoFooter: (arg0?: import("io-gui").IoElementProps | Array<import("io-gui").VDOMElement | null> | string, arg1?: Array<import("io-gui").VDOMElement | null> | string) => import("io-gui").VDOMElement;
+export declare const todoFooter: (arg0: TodoFooterProps) => import("io-gui").VDOMElement;
+export {};
 //# sourceMappingURL=TodoFooter.d.ts.map

@@ -1,7 +1,10 @@
-//@ts-nocheck
-import { IoElement, Register, input } from 'io-gui';
+import { IoElement, Register, input, ReactiveProperty, IoElementProps } from 'io-gui';
 import { TodoListModel } from './TodoListModel.js';
 import { TodoItemModel } from './TodoItemModel.js';
+
+type TodoInputProps = IoElementProps & {
+  model?: TodoListModel;
+};
 
 export class TodoInput extends IoElement {
   static get Style() {
@@ -11,27 +14,30 @@ export class TodoInput extends IoElement {
     }
     `;
   }
-  static get ReactiveProperties() {
-    return {
-      model: {
-        type: TodoListModel,
-      },
-    };
-  }
-  onInputKey(event) {
-    if (event.key === 'Enter') {
-      const title = String(this.$.input.value).trim();
+
+  @ReactiveProperty({type: TodoListModel})
+  declare model: TodoListModel;
+
+  constructor(args: TodoInputProps = {}) { super(args); }
+
+  onInputKey(event: CustomEvent) {
+    const keyboardEvent = event.detail as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      const inputElement = this.$.input as HTMLInputElement;
+      const title = String(inputElement.value).trim();
       if (title) {
         this.model.items.push(new TodoItemModel({title: title, completed: false}));
       }
-      this.$.input.value = '';
-      this.$.input.focus();
+      inputElement.value = '';
+      inputElement.focus();
     }
-    if (event.key === 'Escape') {
-      this.$.input.value = '';
-      this.$.input.focus();
+    if (keyboardEvent.key === 'Escape') {
+      const inputElement = this.$.input as HTMLInputElement;
+      inputElement.value = '';
+      inputElement.focus();
     }
   }
+
   changed() {
     this.render([
       input({id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true}),
@@ -39,4 +45,7 @@ export class TodoInput extends IoElement {
   }
 }
 Register(TodoInput);
-export const todoInput = TodoInput.vConstructor;
+
+export const todoInput = function(arg0: TodoInputProps) {
+  return TodoInput.vConstructor(arg0);
+};

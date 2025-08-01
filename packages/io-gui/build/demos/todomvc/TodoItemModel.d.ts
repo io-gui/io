@@ -1,14 +1,12 @@
 import { Node } from 'io-gui';
 export declare class TodoItemModel extends Node {
-    static get ReactiveProperties(): {
-        title: StringConstructor;
-        completed: BooleanConstructor;
-    };
+    title: string;
+    completed: boolean;
     toggle: () => void;
     delete: () => void;
     toJSON(): {
-        title: any;
-        completed: any;
+        title: string;
+        completed: boolean;
     };
     fromJSON(json: any): this;
 }

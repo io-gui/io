@@ -1,7 +1,12 @@
 //@ts-nocheck
-import { IoElement, Register, section, input, label, ul } from 'io-gui';
+import { IoElement, Register, section, input, label, ul, ReactiveProperty, IoElementProps } from 'io-gui';
 import { TodoListModel } from './TodoListModel.js';
 import { todoItem } from './TodoItem.js';
+
+type TodoListProps = IoElementProps & {
+  model?: TodoListModel;
+  route?: string;
+};
 
 export class TodoList extends IoElement {
   static get Style() {
@@ -11,19 +16,21 @@ export class TodoList extends IoElement {
       }
     `;
   }
-  static get ReactiveProperties() {
-    return {
-      model: {
-        type: TodoListModel,
-      },
-      route: 'all',
-    };
-  }
+
+  @ReactiveProperty({type: TodoListModel})
+  declare model: TodoListModel;
+
+  @ReactiveProperty({value: 'all'})
+  declare route: string;
+
+  constructor(args: TodoListProps = {}) { super(args); }
+
   modelMutated() {
     this.changed();
   }
+
   changed() {
-    const itemsInRoute = this.model.items.filter(this.model.filters[this.route]);
+    const itemsInRoute = this.model.items.filter(this.model.filters[this.route as keyof typeof this.model.filters]);
     this.render([
       section({class: 'main'}, [
         input({type: 'checkbox', id: 'toggle-all', class: 'toggle-all', checked: this.model.allCompleted}),
@@ -36,4 +43,7 @@ export class TodoList extends IoElement {
   }
 }
 Register(TodoList);
-export const todoList = TodoList.vConstructor;
+
+export const todoList = function(arg0: TodoListProps) {
+  return TodoList.vConstructor(arg0);
+};

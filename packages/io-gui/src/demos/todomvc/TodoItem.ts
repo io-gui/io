@@ -1,7 +1,11 @@
-//@ts-nocheck
-import { IoElement, Register, input, label, li, div, button } from 'io-gui';
+import { IoElement, Register, input, label, li, div, button, ReactiveProperty, IoElementProps } from 'io-gui';
 import { TodoItemModel } from './TodoItemModel.js';
 import { TodoListModel } from './TodoListModel.js';
+
+type TodoItemProps = IoElementProps & {
+  item?: TodoItemModel;
+  model?: TodoListModel;
+};
 
 export class TodoItem extends IoElement {
   static get Style() {
@@ -11,18 +15,25 @@ export class TodoItem extends IoElement {
     }
     `;
   }
-  static get ReactiveProperties() {
-    return {
-      item: TodoItemModel,
-      model: {
-        type: TodoListModel,
-      },
-      editing: false
-    };
-  }
+
+  @ReactiveProperty({type: TodoItemModel})
+  declare item: TodoItemModel;
+
+  @ReactiveProperty({type: TodoListModel})
+  declare model: TodoListModel;
+
+  @ReactiveProperty({value: false})
+  declare editing: boolean;
+
+  private $input!: HTMLInputElement;
+  private _originalTitle!: string;
+
+  constructor(args: TodoItemProps = {}) { super(args); }
+
   itemMutated() {
     this.changed();
   }
+
   changed() {
     this.render([
       li({class: 'todo ' + (this.item.completed ? 'completed ' : '') + (this.editing ? 'editing' : '')}, [
@@ -34,13 +45,15 @@ export class TodoItem extends IoElement {
         input({id: 'input-' + this.item.title, class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
       ])
     ]);
-    this.$input = this.querySelector('input.edit');
+    this.$input = this.querySelector('input.edit') as HTMLInputElement;
   }
+
   onStartEdit() {
     this.editing = true;
     this._originalTitle = this.item.title;
     this.$input.focus();
   }
+
   onBlur() {
     const title = String(this.$input.value).trim();
     if (title) {
@@ -50,11 +63,16 @@ export class TodoItem extends IoElement {
     }
     this.editing = false;
   }
-  onInputKey(event) {
-    if (['Enter', 'Escape'].includes(event.key)) {
+
+  onInputKey(event: CustomEvent) {
+    const keyboardEvent = event.detail as KeyboardEvent;
+    if (['Enter', 'Escape'].includes(keyboardEvent.key)) {
       this.$input.blur();
     }
   }
 }
 Register(TodoItem);
-export const todoItem = TodoItem.vConstructor;
+
+export const todoItem = function(arg0: TodoItemProps) {
+  return TodoItem.vConstructor(arg0);
+};

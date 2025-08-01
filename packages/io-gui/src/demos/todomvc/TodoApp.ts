@@ -1,5 +1,4 @@
-//@ts-nocheck
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span } from 'io-gui';
+import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from 'io-gui';
 
 import { TodoListModel } from './TodoListModel.js';
 import { todoInput } from './TodoInput.js';
@@ -11,18 +10,20 @@ const $route = $({key: 'route', storage: 'hash', value: 'all'});
 const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})});
 
 export class TodoApp extends IoElement {
-  static get ReactiveProperties() {
-    return {
-      model: $model,
-      route: $route,
-    };
-  }
+  @ReactiveProperty({value: $model})
+  declare model: TodoListModel;
+
+  @ReactiveProperty({value: $route})
+  declare route: string;
+
   ready() {
     this.changed();
   }
+
   modelMutated() {
     this.changed();
   }
+
   changed() {
     this.render([
       section({class: 'todoapp'}, [

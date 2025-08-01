@@ -1,9 +1,8 @@
 import { IoElement } from 'io-gui';
+import { TodoListModel } from './TodoListModel.js';
 export declare class TodoApp extends IoElement {
-    static get ReactiveProperties(): {
-        model: import("io-gui").Binding<any>;
-        route: import("io-gui").Binding<any>;
-    };
+    model: TodoListModel;
+    route: string;
     ready(): void;
     modelMutated(): void;
     changed(): void;
