@@ -2,7 +2,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js';
-import { Node, NodeProps, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
+import { Node, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
@@ -14,7 +14,12 @@ const resizeObserver = new ResizeObserver(entries => {
   for (const entry of entries) (entry.target as any).onResized();
 });
 
-export type IoElementProps = NativeElementProps & NodeProps;
+type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+
+export type IoElementProps = NativeElementProps & {
+  reactivity?: ReactivityType;
+  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void);
+}
 
 @Register
 export class IoElement extends HTMLElement {

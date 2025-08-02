@@ -20,9 +20,8 @@ export class TodoInput extends IoElement {
 
   constructor(args: TodoInputProps = {}) { super(args); }
 
-  onInputKey(event: CustomEvent) {
-    const keyboardEvent = event.detail as KeyboardEvent;
-    if (keyboardEvent.key === 'Enter') {
+  onInputKey(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
       const inputElement = this.$.input as HTMLInputElement;
       const title = String(inputElement.value).trim();
       if (title) {
@@ -31,7 +30,7 @@ export class TodoInput extends IoElement {
       inputElement.value = '';
       inputElement.focus();
     }
-    if (keyboardEvent.key === 'Escape') {
+    if (event.key === 'Escape') {
       const inputElement = this.$.input as HTMLInputElement;
       inputElement.value = '';
       inputElement.focus();

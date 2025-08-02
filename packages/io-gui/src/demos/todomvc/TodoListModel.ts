@@ -2,6 +2,7 @@ import { Node, NodeArray, Register, ReactiveProperty } from 'io-gui';
 import { TodoItemModel } from './TodoItemModel.js';
 
 export class TodoListModel extends Node {
+
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare items: TodoItemModel[];
 

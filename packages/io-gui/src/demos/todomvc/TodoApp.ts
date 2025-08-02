@@ -10,10 +10,10 @@ const $route = $({key: 'route', storage: 'hash', value: 'all'});
 const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})});
 
 export class TodoApp extends IoElement {
-  @ReactiveProperty({value: $model})
+  @ReactiveProperty($model)
   declare model: TodoListModel;
 
-  @ReactiveProperty({value: $route})
+  @ReactiveProperty($route)
   declare route: string;
 
   ready() {
