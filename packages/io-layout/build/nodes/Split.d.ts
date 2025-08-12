@@ -1,4 +1,4 @@
-import { Node, NodeArray } from 'io-gui';
+import { Node, NodeArray } from 'io-core';
 import { Panel, PanelProps } from './Panel.js';
 export type SplitOrientation = 'horizontal' | 'vertical';
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';

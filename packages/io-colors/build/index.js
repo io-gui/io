@@ -1,4 +1,4 @@
-import{ReactiveProperty as e,Register as t,IoElement as r,glsl as o,IoOverlaySingleton as n,div as i,Property as s,nudge as l}from"io-gui";import{IoSlider as a,IoSlider2d as u}from"io-sliders";import{ioNumber as c}from"io-inputs";
+import{ReactiveProperty as e,Register as t,IoElement as r,glsl as o,IoOverlaySingleton as n,div as i,Property as s,nudge as l}from"io-core";import{IoSlider as a,IoSlider2d as u}from"io-sliders";import{ioNumber as c}from"io-inputs";
 /**@License
  * Copyright (c) 2011-2016 Heather Arthur <fayearthur@gmail.com>
  *

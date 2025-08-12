@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps } from 'io-gui';
+import { IoElement, VDOMElement, IoElementProps } from 'io-core';
 import { MenuOption } from 'io-menus';
 import { Split } from '../nodes/Split.js';
 export type IoLayoutProps = IoElementProps & {

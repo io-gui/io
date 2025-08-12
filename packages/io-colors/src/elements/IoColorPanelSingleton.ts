@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoOverlaySingleton } from 'io-gui';
+import { Register, ReactiveProperty, IoOverlaySingleton } from 'io-core';
 import { IoColorBase } from './IoColorBase.js';
 import { ioColorSlider } from './IoColorSliders.js';
 

@@ -20,5 +20,5 @@ export declare class IoButton extends IoField {
     ready(): void;
     changed(): void;
 }
-export declare const ioButton: (arg0?: IoButtonProps) => import("io-gui").VDOMElement;
+export declare const ioButton: (arg0?: IoButtonProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoButton.d.ts.map

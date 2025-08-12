@@ -1,4 +1,4 @@
-import { Register } from 'io-gui';
+import { Register } from 'io-core';
 import { ioNumber } from 'io-inputs';
 import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 import { ioColorPicker } from './IoColorPicker.js';

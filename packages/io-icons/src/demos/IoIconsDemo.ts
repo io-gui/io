@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, h3, div } from 'io-gui';
+import { Register, IoElement, h3, div } from 'io-core';
 import { IconsetDB, ioIcon } from 'io-icons';
 
 export class IoIconsDemo extends IoElement {

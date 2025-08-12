@@ -2,7 +2,7 @@ import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { importMapsPlugin } from '@web/dev-server-import-maps';
 
 const importMapsModules = {
-  'io-gui': '/packages/io-gui/build/index.js?wds-import-map=0',
+  'io-core': '/packages/io-core/build/index.js?wds-import-map=0',
   'io-colors': '/packages/io-colors/build/index.js?wds-import-map=0',
   'io-editors': '/packages/io-editors/build/index.js?wds-import-map=0',
   'io-icons': '/packages/io-icons/build/index.js?wds-import-map=0',

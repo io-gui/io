@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, span } from 'io-gui';
+import { Register, IoElement, div, span } from 'io-core';
 import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus';
 import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
 // TODO: remove dependencies on io-navigation.

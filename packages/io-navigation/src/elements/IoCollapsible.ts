@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from 'io-gui';
+import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from 'io-core';
 import { ioBoolean } from 'io-inputs';
 
 export type IoCollapsibleProps = IoElementProps & {

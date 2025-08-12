@@ -4,7 +4,7 @@ import strip from '@rollup/plugin-strip';
 import terser from '@rollup/plugin-terser';
 
 const externals = [
-  'io-gui',
+  'io-core',
   'io-colors',
   'io-editors',
   'io-icons',

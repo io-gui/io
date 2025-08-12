@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from 'io-gui';
+import { IoElement, IoElementProps } from 'io-core';
 export type IoIconProps = IoElementProps & {
     value: string;
     stroke?: boolean;
@@ -17,5 +17,5 @@ export declare class IoIcon extends IoElement {
     constructor(args: IoIconProps);
     valueChanged(): void;
 }
-export declare const ioIcon: (arg0: IoIconProps) => import("io-gui").VDOMElement;
+export declare const ioIcon: (arg0: IoIconProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoIcon.d.ts.map

@@ -27,5 +27,5 @@ export declare class IoTab extends IoField {
     tabMutated(): void;
     changed(): void;
 }
-export declare const ioTab: (arg0: IoTabProps) => import("io-gui").VDOMElement;
+export declare const ioTab: (arg0: IoTabProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoTab.d.ts.map

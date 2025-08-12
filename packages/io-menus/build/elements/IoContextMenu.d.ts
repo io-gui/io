@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 import { IoMenuOptions } from './IoMenuOptions.js';
 import { MenuOption } from '../nodes/MenuOption.js';
 export type IoContextMenuProps = IoElementProps & {
@@ -29,5 +29,5 @@ export declare class IoContextMenu extends IoElement {
     onPointerleave(event: PointerEvent): void;
     collapse(): void;
 }
-export declare const ioContextMenu: (arg0?: IoContextMenuProps) => import("io-gui").VDOMElement;
+export declare const ioContextMenu: (arg0?: IoContextMenuProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoContextMenu.d.ts.map

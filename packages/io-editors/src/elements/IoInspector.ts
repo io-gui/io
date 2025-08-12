@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from 'io-core';
 import { ioBreadcrumbs } from './IoBreadcrumbs.js';
 import { ioPropertyEditor } from './IoPropertyEditor.js';
 import { EditorConfig } from '../utils/EditorConfig.js';

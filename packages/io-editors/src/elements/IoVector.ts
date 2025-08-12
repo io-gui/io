@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from 'io-core';
 import { ioNumber, ioBoolean } from 'io-inputs';
 
 export type IoVectorProps = IoElementProps & {

@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from 'io-core';
 export type IoFieldProps = IoElementProps & {
     value?: WithBinding<any>;
     icon?: string;
@@ -46,5 +46,5 @@ export declare class IoField extends IoElement {
     disabledChanged(): void;
     changed(): void;
 }
-export declare const ioField: (arg0: IoFieldProps) => import("io-gui").VDOMElement;
+export declare const ioField: (arg0: IoFieldProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoField.d.ts.map

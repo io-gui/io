@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 export type IoNumberSliderRangeProps = IoElementProps & {
     value?: WithBinding<[number, number]>;
     step?: number;
@@ -24,5 +24,5 @@ export declare class IoNumberSliderRange extends IoElement {
     ready(): void;
     changed(): void;
 }
-export declare const ioNumberSliderRange: (arg0?: IoNumberSliderRangeProps) => import("io-gui").VDOMElement;
+export declare const ioNumberSliderRange: (arg0?: IoNumberSliderRangeProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoNumberSliderRange.d.ts.map

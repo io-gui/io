@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-gui';
+import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from 'io-core';
 import { MenuOption, ioMenuOptions, ioMenuTree } from 'io-menus';
 import { CachingType, ioSelector } from './IoSelector.js';
 

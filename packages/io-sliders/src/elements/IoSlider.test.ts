@@ -1,4 +1,4 @@
-import { nextQueue } from 'io-gui';
+import { nextQueue } from 'io-core';
 import { IoSlider } from 'io-sliders';
 
 const element = new IoSlider();

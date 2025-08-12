@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 export type IoColorPickerProps = IoElementProps & {
     value: WithBinding<{
         r: number;
@@ -27,5 +27,5 @@ export declare class IoColorPicker extends IoElement {
     collapse(): void;
     valueChanged(): void;
 }
-export declare const ioColorPicker: (arg0: IoColorPickerProps) => import("io-gui").VDOMElement;
+export declare const ioColorPicker: (arg0: IoColorPickerProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoColorPicker.d.ts.map

@@ -1,4 +1,4 @@
-import { Node, NodeArray, ReactiveProperty, Register } from 'io-gui';
+import { Node, NodeArray, ReactiveProperty, Register } from 'io-core';
 import { Tab, TabProps } from './Tab.js';
 
 export type PanelProps = {

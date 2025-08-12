@@ -1,4 +1,4 @@
-import { Register, div } from 'io-gui';
+import { Register, div } from 'io-core';
 import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 
 /**

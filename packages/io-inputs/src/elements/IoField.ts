@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-core';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {

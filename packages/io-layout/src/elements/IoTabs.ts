@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from 'io-gui';
+import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from 'io-core';
 import { MenuOption, ioMenuItem } from 'io-menus';
 import { ioTab } from './IoTab.js';
 import { ioTabsHamburger } from './IoTabsHamburger.js';

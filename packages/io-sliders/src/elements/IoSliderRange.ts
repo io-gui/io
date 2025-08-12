@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, WithBinding } from 'io-core';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 
 export type IoSliderRangeProps = IoSliderBaseProps & {

@@ -1,4 +1,4 @@
-import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from 'io-gui';
+import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from 'io-core';
 import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
 import { MenuOption, ioOptionSelect } from 'io-menus';
 import { ioNumberSlider } from 'io-sliders';

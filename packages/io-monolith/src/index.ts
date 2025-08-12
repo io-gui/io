@@ -1,4 +1,4 @@
-export * from 'io-gui';
+export * from 'io-core';
 export * from 'io-colors';
 export * from 'io-editors';
 export * from 'io-markdown';

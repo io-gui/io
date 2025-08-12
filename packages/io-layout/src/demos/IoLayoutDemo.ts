@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-gui';
+import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-core';
 import { ioLayout, Split } from 'io-layout';
 import { ioCollapsible } from 'io-navigation';
 import { ioMarkdown } from 'io-markdown';
@@ -79,9 +79,9 @@ export class IoLayoutDemo extends IoElement {
           {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/io-editors/build/demos/IoEditorsDemo.js'}},
           {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/build/demos/IoMenusDemo.js'}},
           {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/build/demos/IoNavigationDemo.js'}},
-          {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/build/demos/IoThemeEditor.js'}},
-          {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-gui/build/demos/IoElementInspectorDemo.js'}},
-          {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/io-gui/build/demos/IoChangeVisualization.js'}},
+          {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-core/build/demos/IoThemeEditor.js'}},
+          {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-core/build/demos/IoElementInspectorDemo.js'}},
+          {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/io-core/build/demos/IoChangeVisualization.js'}},
           ioMarkdown({id: 'Getting Started', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md'}),
           ioMarkdown({id: 'Deep Dive', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md'}),
           div({id: 'Doc 1'}, [

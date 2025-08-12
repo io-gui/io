@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 import { EditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
@@ -34,5 +34,5 @@ export declare class IoInspector extends IoElement {
     changeThrottled(): void;
     dispose(): void;
 }
-export declare const ioInspector: (arg0?: IoInspectorProps) => import("io-gui").VDOMElement;
+export declare const ioInspector: (arg0?: IoInspectorProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoInspector.d.ts.map

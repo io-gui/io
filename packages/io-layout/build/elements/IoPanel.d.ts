@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps } from 'io-gui';
+import { IoElement, VDOMElement, IoElementProps } from 'io-core';
 import { MenuOption } from 'io-menus';
 import { Tab } from '../nodes/Tab.js';
 import { Panel } from '../nodes/Panel.js';

@@ -1,4 +1,4 @@
-import { WithBinding } from 'io-gui';
+import { WithBinding } from 'io-core';
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoBooleanProps = IoFieldProps & {
     value?: WithBinding<boolean>;
@@ -22,5 +22,5 @@ export declare class IoBoolean extends IoField {
     valueChanged(): void;
     changed(): void;
 }
-export declare const ioBoolean: (arg0?: IoBooleanProps) => import("io-gui").VDOMElement;
+export declare const ioBoolean: (arg0?: IoBooleanProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoBoolean.d.ts.map

@@ -1,4 +1,4 @@
-import { nextQueue } from 'io-gui';
+import { nextQueue } from 'io-core';
 import { IoColorBase } from 'io-colors';
 
 const element = new IoColorBase();

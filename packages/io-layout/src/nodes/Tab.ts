@@ -1,4 +1,4 @@
-import { Node, ReactiveProperty, Register } from 'io-gui';
+import { Node, ReactiveProperty, Register } from 'io-core';
 
 export type TabProps = {
   id: string,

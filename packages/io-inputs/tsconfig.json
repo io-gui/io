@@ -4,7 +4,7 @@
     "outDir": "build",
     "paths": {
       "io-inputs": ["./src/index.js"],
-      "io-gui": ["../io-gui"],
+      "io-core": ["../io-core"],
       "io-icons": ["../io-icons"]
     }
   },

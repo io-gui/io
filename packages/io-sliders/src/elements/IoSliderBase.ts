@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition } from 'io-gui';
+import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition } from 'io-core';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);

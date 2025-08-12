@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-gui';
+import { Register, IoElement, div } from 'io-core';
 import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
 
 export class IoInputsDemo extends IoElement {

@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-gui';
+import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-core';
 import { ioSelector } from 'io-navigation';
 import { IoMenuItem, MenuOption } from 'io-menus';
 import { ioTabs } from './IoTabs.js';

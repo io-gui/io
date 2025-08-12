@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, ThemeSingleton } from 'io-gui';
+import { Register, ReactiveProperty, span, ThemeSingleton } from 'io-core';
 import { IoField, IoFieldProps, ioField, ioString } from 'io-inputs';
 import { IoContextEditorSingleton } from 'io-editors';
 import { IconsetDB, ioIcon } from 'io-icons';

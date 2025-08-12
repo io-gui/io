@@ -1,5 +1,5 @@
 {
-  "name": "io-gui-monorepo",
+  "name": "io-core-monorepo",
   "version": "2.0.0",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui monorepo, a UI framework for web development.",
@@ -86,7 +86,7 @@
       ]
     },
     "clean:gui": {
-      "command": "rm -rf ./packages/io-gui/build && rm -rf ./packages/io-gui/bundle"
+      "command": "rm -rf ./packages/io-core/build && rm -rf ./packages/io-core/bundle"
     },
     "clean:colors": {
       "command": "rm -rf ./packages/io-colors/build && rm -rf ./packages/io-colors/bundle"
@@ -134,7 +134,7 @@
       ]
     },
     "lint:gui": {
-      "command": "eslint -c ./packages/io-gui/.eslintrc.js ./packages/io-gui/src --fix"
+      "command": "eslint -c ./packages/io-core/.eslintrc.js ./packages/io-core/src --fix"
     },
     "lint:colors": {
       "command": "eslint -c ./packages/io-colors/.eslintrc.js ./packages/io-colors/src --fix"
@@ -182,7 +182,7 @@
       ]
     },
     "build:gui": {
-      "command": "tsc --project ./packages/io-gui/tsconfig.json",
+      "command": "tsc --project ./packages/io-core/tsconfig.json",
       "dependencies": [
         "clean:gui",
         "lint:gui"
@@ -314,7 +314,7 @@
       ]
     },
     "bundle:gui": {
-      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && mkdir -p ./packages/io-gui/bundle/demos/todomvc && cp ./packages/io-gui/src/demos/todomvc/index.html ./packages/io-gui/bundle/demos/todomvc/ && cp ./packages/io-gui/src/demos/todomvc/index.css ./packages/io-gui/bundle/demos/todomvc/ && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build",
+      "command": "rollup -c ./packages/io-core/rollup.config.js && find ./packages/io-core/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-core/build/* ./packages/io-core/bundle && mkdir -p ./packages/io-core/bundle/demos/todomvc && cp ./packages/io-core/src/demos/todomvc/index.html ./packages/io-core/bundle/demos/todomvc/ && cp ./packages/io-core/src/demos/todomvc/index.css ./packages/io-core/bundle/demos/todomvc/ && rm -rf ./packages/io-core/build && mv ./packages/io-core/bundle ./packages/io-core/build",
       "dependencies": [
         "build:gui"
       ]
@@ -425,7 +425,7 @@
       ]
     },
     "dev:gui": {
-      "command": "tsc -w --project ./packages/io-gui/tsconfig.json",
+      "command": "tsc -w --project ./packages/io-core/tsconfig.json",
       "service": true
     },
     "dev:colors": {
@@ -471,13 +471,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/io-gui/io.git"
+    "url": "git+https://github.com/io-core/io.git"
   },
   "keywords": [
     "io",
     "gui",
     "iogui",
-    "io-gui"
+    "io-core"
   ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",

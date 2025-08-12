@@ -118,7 +118,7 @@ The framework has no runtime dependencies - only development dependencies. It us
 ### Monorepo Structure
 The project is organized as a monorepo with packages in `/packages/`:
 
-- **io-gui** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
 - **io-colors** - Color components and utilities
 - **io-icons** - Icon component and default iconset
 - **io-inputs** - Input components (buttons, fields, switches)

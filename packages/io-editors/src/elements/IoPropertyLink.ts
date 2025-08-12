@@ -1,4 +1,4 @@
-import { ReactiveProperty, Register, span } from 'io-gui';
+import { ReactiveProperty, Register, span } from 'io-core';
 import { IoButton, IoButtonProps } from 'io-inputs';
 
 export type IoPropertyLinkProps = IoButtonProps & {
