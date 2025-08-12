@@ -291,6 +291,7 @@ export class Theme extends Node {
       this.dispatchMutation();
       return true;
     }
+    return false;
   }
   fontSizeChanged() {
     this.lineHeight = Math.max(this.fontSize, this.lineHeight);

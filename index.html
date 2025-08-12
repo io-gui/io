@@ -203,7 +203,7 @@
         }),
         ioSelector({id: 'Demos',
           selected: MENU_OPTION.findItemById('Demos').bind('selectedID'),
-          caching: 'proactive',
+          caching: 'reactive',
           elements: [
             {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/build/demos/IoInputsDemo.js'}},
             {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/build/demos/IoIconsDemo.js'}},

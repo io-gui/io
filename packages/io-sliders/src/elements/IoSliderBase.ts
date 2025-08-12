@@ -137,6 +137,7 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('keydown', this.onKeydown);
   }
   onContextmenu(event: Event) {
+    event.stopPropagation();
     event.preventDefault();
   }
   onTouchstart(event: TouchEvent) {
@@ -162,6 +163,7 @@ export class IoSliderBase extends IoGl {
       }
     }
     if (this._active === 1 && event.cancelable) {
+      event.stopPropagation();
       event.preventDefault();
     }
   }
@@ -170,6 +172,7 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('touchend', this.onTouchend);
   }
   onPointerdown(event: PointerEvent) {
+    event.stopPropagation();
     this._rect = this.getBoundingClientRect();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this.onPointermove);

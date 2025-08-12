@@ -72,8 +72,8 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty('debounced')
   declare reactivity: ReactivityType;
 
-  @ReactiveProperty({type: Object, init: null})
-  declare value: Object;
+  @ReactiveProperty()
+  declare value: Object | Array<any>;
 
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[];
@@ -93,6 +93,12 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets;
 
+  init() {
+    this.changeThrottled = this.changeThrottled.bind(this);
+    this._observedObjectProperties.push('value');
+    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener);
+  }
+
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation();
     const id = (event.target as HTMLElement).id as keyof typeof this.value;
@@ -106,9 +112,12 @@ export class IoPropertyEditor extends IoElement {
     }
   }
   valueMutated() {
-    this.debounce(this.changed);
+    this.changed();
   }
   changed() {
+    this.throttle(this.changeThrottled);
+  }
+  changeThrottled() {
     const config = getEditorConfig(this.value, this.config);
     const groups = getEditorGroups(this.value, this.groups);
     const widget = getEditorWidget(this.value, this.widgets);
@@ -179,15 +188,10 @@ export class IoPropertyEditor extends IoElement {
 
     this.render(vChildren);
   }
-  // TODO: Remove?!
-  /**
-   * Returns a JSON representation of the property editor. This feature is used in testing.
-   * @return {Object} JSON representation of the property editor.
-   */
-  // toJSON() {
-  //   const json = Object.assign({}, super.toJSON(), this);
-  //   return json;
-  // }
+  dispose() {
+    super.dispose();
+    window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener);
+  }
 }
 export const ioPropertyEditor = function(arg0?: IoPropertyEditorProps) {
   return IoPropertyEditor.vConstructor(arg0);

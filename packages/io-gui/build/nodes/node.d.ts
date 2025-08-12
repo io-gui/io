@@ -25,9 +25,10 @@ export declare const NODES: {
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 export type WithBinding<T> = T | Binding<T>;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type NodeProps = {
     reactivity?: ReactivityType;
-    [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
+    [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
 export declare class Node extends Object {
     reactivity: ReactivityType;
@@ -56,7 +57,7 @@ export declare class Node extends Object {
     dispatchQueue(debounce?: boolean): void;
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-    onPropertyMutated(event: CustomEvent): true | undefined;
+    onPropertyMutated(event: CustomEvent): boolean;
     dispatchMutation(object?: Object | Node, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
@@ -73,7 +74,7 @@ export declare function initProperties(node: Node | IoElement): void;
 export declare function setProperties(node: Node | IoElement, props: any): void;
 export declare function setProperty(node: Node | IoElement, name: string, value: any, debounce?: boolean): void;
 export declare function dispatchQueue(node: Node | IoElement, debounce?: boolean): void;
-export declare function onPropertyMutated(node: Node | IoElement, event: CustomEvent): true | undefined;
+export declare function onPropertyMutated(node: Node | IoElement, event: CustomEvent): boolean;
 export declare function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance): void;
 export declare function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance): void;
 export declare function bind<T>(node: Node | IoElement, name: string): Binding<T>;

@@ -15,10 +15,11 @@ const resizeObserver = new ResizeObserver(entries => {
 });
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 
 export type IoElementProps = NativeElementProps & {
   reactivity?: ReactivityType;
-  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void);
+  [key: prefix<string, '@'>]: string | AnyEventHandler;
 }
 
 @Register
@@ -79,7 +80,6 @@ export class IoElement extends HTMLElement {
 
   constructor(args: IoElementProps = {}) {
     super();
-    this.init();
     this._protochain.init(this);
 
     Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
@@ -89,6 +89,8 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
     Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
     // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
+
+    this.init();
 
     initReactiveProperties(this);
     initProperties(this);

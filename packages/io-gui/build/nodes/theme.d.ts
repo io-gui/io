@@ -98,7 +98,7 @@ export declare class Theme extends Node {
     registerTheme(themeID: string, theme: ThemeVars): void;
     reset(): void;
     themeIDChanged(): void;
-    onPropertyMutated(event: CustomEvent): true | undefined;
+    onPropertyMutated(event: CustomEvent): boolean;
     fontSizeChanged(): void;
     lineHeightChanged(): void;
     changed(): void;

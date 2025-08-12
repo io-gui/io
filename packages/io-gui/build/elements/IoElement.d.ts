@@ -1,12 +1,17 @@
 import { ProtoChain } from '../core/ProtoChain.js';
 import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
-import { Node, NodeProps, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
+import { Node, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
 import { Binding } from '../core/Binding.js';
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
 import { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
 import { CallbackFunction } from '../core/Queue.js';
-export type IoElementProps = NativeElementProps & NodeProps;
+type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
+export type IoElementProps = NativeElementProps & {
+    reactivity?: ReactivityType;
+    [key: prefix<string, '@'>]: string | AnyEventHandler;
+};
 export declare class IoElement extends HTMLElement {
     static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
     static get Style(): string;
@@ -36,7 +41,7 @@ export declare class IoElement extends HTMLElement {
     dispatchQueue(debounce?: boolean): void;
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
-    onPropertyMutated(event: CustomEvent): true | undefined;
+    onPropertyMutated(event: CustomEvent): boolean;
     dispatchMutation(object?: Object | Node, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
@@ -81,4 +86,5 @@ export declare class IoElement extends HTMLElement {
     Register(ioNodeConstructor: typeof IoElement): void;
 }
 export declare const ioElement: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+export {};
 //# sourceMappingURL=IoElement.d.ts.map

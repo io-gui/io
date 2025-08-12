@@ -46,16 +46,6 @@ export async function nextQueue(): Promise<void> {
  * throttle(someFunction, 'someArg', someNode);
  */
 export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
-  if (queueSync.indexOf(func) === -1) {
-    queueSync.push(func);
-    if (node?._disposed) return;
-    try {
-      func(arg);
-    } catch (e) {
-      console.error(e);
-    }
-    return;
-  }
   if (queue.indexOf(func) === -1) {
     queue.push(func);
   }
@@ -66,7 +56,8 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElem
       frame: currentFrame + delay,
     });
   } else {
-    queueOptions.get(func)!.arg = arg;
+    const options = queueOptions.get(func)!;
+    options.arg = arg;
   }
 }
 
@@ -93,7 +84,6 @@ export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElem
   } else {
     const options = queueOptions.get(func)!;
     options.arg = arg;
-    options.node = node;
     options.frame = currentFrame + delay;
   }
 }
@@ -104,18 +94,18 @@ export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElem
  * Therfore, functions queued from another queued function will always move to the next queue.
  */
 function executeQueue () {
-  queueSync.length = 0;
+
   currentFrame++;
 
-  const activeThrottleQueue = queue;
-  const activeThrottleQueueOptions = queueOptions;
+  const activeQueue = queue;
+  const activeQueueOptions = queueOptions;
   queue = queue === queue0 ? queue1 : queue0;
   queueOptions = queueOptions === queueOptions0 ? queueOptions1 : queueOptions0;
 
-  for (let i = 0; i < activeThrottleQueue.length; i++) {
-    const func = activeThrottleQueue[i];
-    const options = activeThrottleQueueOptions.get(func)!;
-    activeThrottleQueueOptions.delete(func);
+  for (let i = 0; i < activeQueue.length; i++) {
+    const func = activeQueue[i];
+    const options = activeQueueOptions.get(func)!;
+    activeQueueOptions.delete(func);
 
     if (options === undefined) {
       console.warn(func);
@@ -124,7 +114,9 @@ function executeQueue () {
       if (queue.indexOf(func) === -1) {
         queue.push(func);
       }
-      queueOptions.set(func, options);
+      if (!queueOptions.has(func)) {
+        queueOptions.set(func, options);
+      }
       continue;
     }
 
@@ -136,7 +128,8 @@ function executeQueue () {
       console.error(e);
     }
   }
-  activeThrottleQueue.length = 0;
+  queueSync.length = 0;
+  activeQueue.length = 0;
   requestAnimationFrame(executeQueue);
 }
 requestAnimationFrame(executeQueue);

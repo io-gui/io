@@ -15,6 +15,17 @@ export type IoInspectorProps = IoElementProps & {
   widgets?: EditorWidgets,
 };
 
+function isNestedObject(value: Object, selected: Object): boolean {
+  if (value === selected) return true;
+  if (value instanceof Array) {
+    return value.some(v => isNestedObject(v, selected));
+  }
+  if (value instanceof Object) {
+    return Object.keys(value).some(k => isNestedObject(value[k as keyof typeof value], selected));
+  }
+  return false;
+}
+
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
@@ -46,12 +57,12 @@ export class IoInspector extends IoElement {
     `;
   }
   @ReactiveProperty()
-  declare value: Record<string, any> | any[];
+  declare value: Object | Array<any>;
 
   @ReactiveProperty()
-  declare selected: Record<string, any> | any[];
+  declare selected: Object | Array<any>;
 
-  @ReactiveProperty('')
+  @ReactiveProperty({type: String})
   declare search: string;
 
   @ReactiveProperty({type: Map, init: null})
@@ -63,12 +74,15 @@ export class IoInspector extends IoElement {
   @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets;
 
-  declare _cfgTimeout: number;
-
   static get Listeners() {
     return {
       'io-button-clicked': 'onLinkClicked',
     };
+  }
+  init() {
+    this.changeThrottled = this.changeThrottled.bind(this);
+    this._observedObjectProperties.push('value', 'selected');
+    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener);
   }
   onLinkClicked(event: CustomEvent) {
     event.stopPropagation();
@@ -83,22 +97,23 @@ export class IoInspector extends IoElement {
   valueChanged() {
     this.selected = this.value;
   }
+  valueMutated() {
+    // TODO: Improve this check to update selected to new object if it replaced the previously selected.
+    if (!isNestedObject(this.value, this.selected)) {
+      this.selected = this.value;
+    }
+    this.changed();
+  }
+  selectedMutated() {
+    this.changed();
+  }
   selectedChanged() {
     this.search = '';
   }
-  selectedMutated() {
-    clearTimeout(this._cfgTimeout);
-    this._cfgTimeout = setTimeout(()=>{
-      this._onChange();
-    }, 1000/10);
-  }
   changed() {
-    this._onChangedThrottled();
+    this.throttle(this.changeThrottled, undefined, 1);
   }
-  _onChangedThrottled() {
-    this.throttle(this._onChange);
-  }
-  _onChange() {
+  changeThrottled() {
     const vChildren = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
     ];
@@ -110,7 +125,7 @@ export class IoInspector extends IoElement {
 
     const properties = [];
     if (this.search) {
-      for (const [key] of getAllPropertyNames(this.selected)) {
+      for (const key of getAllPropertyNames(this.selected)) {
         if (key.toLowerCase().includes(this.search.toLowerCase())) {
           properties.push(key);
         }
@@ -134,6 +149,10 @@ export class IoInspector extends IoElement {
     }
 
     this.render(vChildren);
+  }
+  dispose() {
+    super.dispose();
+    window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener);
   }
 }
 export const ioInspector = function(arg0?: IoInspectorProps) {

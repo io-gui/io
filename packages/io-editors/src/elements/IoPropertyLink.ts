@@ -46,7 +46,7 @@ export class IoPropertyLink extends IoButton {
       label = `${this.value.constructor.name}`;
     }
     if (this.showName) {
-      const name = (this.value as any).name;
+      const name = (this.value as any).name || (this.value as any).title || (this.value as any).id;
       if (name) {
         label += ` "${name}"`;
       }

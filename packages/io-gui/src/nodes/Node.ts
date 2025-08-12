@@ -35,10 +35,11 @@ export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 export type WithBinding<T> = T | Binding<T>;
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 
 export type NodeProps = {
   reactivity?: ReactivityType;
-  [key: prefix<string, '@'>]: string | ((event: CustomEvent<any>) => void);
+  [key: prefix<string, '@'>]: string | AnyEventHandler;
 };
 
 function isNonNodeObject(value: any) {
@@ -77,7 +78,6 @@ export class Node extends Object {
 
   constructor(args?: any) {
     super();
-    this.init();
     this._protochain.init(this);
 
     Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
@@ -87,6 +87,8 @@ export class Node extends Object {
     Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
     Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
     Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
+
+    this.init();
 
     initReactiveProperties(this);
     initProperties(this);
@@ -365,6 +367,7 @@ export function dispatchQueue(node: Node | IoElement, debounce = false) {
 export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   const object = event.detail.object;
 
+  let hasMutated = false;
   // TODO: consider situations where node is listening to io-object-mutation events from multiple sources (window and property).
   // This might cause multiple executions of the same handler.
   // TODO: consider optimizing. This handler might be called a lot.
@@ -379,16 +382,17 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
         // node.throttle(node[handlerName] as CallbackFunction, event);
         (node as any)[handlerName](event); //TODO: Check for regressions.
       }
-      return true;
+      hasMutated = true;
     }
   }
+  return hasMutated;
 }
 export function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
   if (!node._observedObjectProperties.includes(name)) {
     if(isNonNodeObject(property.value)) {
       node._observedObjectProperties.push(name);
       if (node._observedObjectProperties.length === 1) {
-        window.addEventListener('io-object-mutation', node.onPropertyMutated as EventListener);
+        window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener);
       }
     }
   }
@@ -439,7 +443,7 @@ export function dispose(node: Node | IoElement) {
   delete (node as any)._bindings;
 
   if (node._observedObjectProperties.length) {
-    window.removeEventListener('io-object-mutation', node.onPropertyMutated as EventListener);
+    window.removeEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener);
     node._observedObjectProperties.length = 0;
     delete (node as any)._observedObjectProperties;
   }

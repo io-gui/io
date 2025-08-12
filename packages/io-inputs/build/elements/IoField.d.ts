@@ -32,7 +32,7 @@ export declare class IoField extends IoElement {
     onPointerup(event: PointerEvent): void;
     onTouchstart(event: TouchEvent): void;
     onTouchmove(event: TouchEvent): void;
-    onTouchend(): void;
+    onTouchend(event: TouchEvent): void;
     inputValue(value: any): void;
     onClick(event?: MouseEvent): void;
     onKeydown(event: KeyboardEvent): void;
