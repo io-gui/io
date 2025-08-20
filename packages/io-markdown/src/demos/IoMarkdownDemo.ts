@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement } from 'io-gui';
+import { Register, IoElement } from 'io-core';
 
 export class IoMarkdownDemo extends IoElement {
   ready() {}

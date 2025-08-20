@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-gui';
+import { Register, IoElement, div } from 'io-core';
 import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
 
 export class IoSlidersDemo extends IoElement {

@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-core';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuItem } from './IoMenuItem.js';
 export type IoMenuTreeProps = IoElementProps & {

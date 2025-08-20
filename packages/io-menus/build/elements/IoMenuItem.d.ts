@@ -1,4 +1,4 @@
-import { WithBinding, NudgeDirection } from 'io-gui';
+import { WithBinding, NudgeDirection } from 'io-core';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
@@ -51,5 +51,5 @@ export declare class IoMenuItem extends IoField {
     changed(): void;
     dispose(): void;
 }
-export declare const ioMenuItem: (arg0?: IoMenuItemProps) => import("io-gui").VDOMElement;
+export declare const ioMenuItem: (arg0?: IoMenuItemProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoMenuItem.d.ts.map

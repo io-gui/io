@@ -8,8 +8,8 @@
     <script type="importmap">
       {
         "imports": {
-          "io-gui": "./packages/io-gui/build/index.js",
-          "io-gui/": "./packages/io-gui/build/",
+          "io-core": "./packages/io-core/build/index.js",
+          "io-core/": "./packages/io-core/build/",
           "io-colors": "./packages/io-colors/build/index.js",
           "io-colors/": "./packages/io-colors/build/",
           "io-editors": "./packages/io-editors/build/index.js",
@@ -38,7 +38,7 @@
       import { mocha, sessionFinished, sessionFailed } from '@web/test-runner-mocha';
       import { expect } from 'chai';
 
-      import GuiTest from 'io-gui/index.test.js';
+      import GuiTest from 'io-core/index.test.js';
       import InputsTest from 'io-inputs/index.test.js';
       import SlidersTest from 'io-sliders/index.test.js';
       import ColorsTest from 'io-colors/index.test.js';

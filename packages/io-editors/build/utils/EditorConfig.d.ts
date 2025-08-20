@@ -1,4 +1,4 @@
-import { AnyConstructor, VDOMElement } from 'io-gui';
+import { AnyConstructor, VDOMElement } from 'io-core';
 type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
 export type PropertyConfig = [PropertyIdentifier, VDOMElement];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;

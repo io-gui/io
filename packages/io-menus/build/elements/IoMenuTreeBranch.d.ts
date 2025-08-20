@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 import { MenuOption } from '../nodes/MenuOption.js';
 export type IoMenuTreeBranchProps = IoElementProps & {
     depth?: number;
@@ -18,5 +18,5 @@ export declare class IoMenuTreeBranch extends IoElement {
     optionMutated(): void;
     changed(): void;
 }
-export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps) => import("io-gui").VDOMElement;
+export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoMenuTreeBranch.d.ts.map

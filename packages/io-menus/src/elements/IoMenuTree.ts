@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, IoElementProps, WithBinding, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, Storage as $, IoElementProps, WithBinding, Property } from 'io-core';
 import { ioField, ioString } from 'io-inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';

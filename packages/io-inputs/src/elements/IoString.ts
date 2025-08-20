@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property, WithBinding } from 'io-gui';
+import { Register, ReactiveProperty, Property, WithBinding } from 'io-core';
 import { IoField, IoFieldProps } from './IoField.js';
 
 export type IoStringProps = IoFieldProps & {
@@ -83,17 +83,8 @@ export class IoString extends IoField {
     this.scrollTop = 0;
     this.scrollLeft = 0;
   }
-
-  onPointerdown(event: PointerEvent) {
-    this.addEventListener('pointermove', this.onPointermove);
-    this.addEventListener('pointerup', this.onPointerup);
-  }
-
-  onPointermove(event: PointerEvent) {}
-
   onPointerup(event: PointerEvent) {
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerup', this.onPointerup);
+    super.onPointerup(event);
     if (document.activeElement !== this as unknown as Element) {
       this.focus();
       this.setCaretPosition(this.textNode!.length);

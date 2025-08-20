@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-core';
 import { ioIcon } from 'io-icons';
 
 export type IoFieldProps = IoElementProps & {
@@ -143,14 +143,20 @@ export class IoField extends IoElement {
     this.removeEventListener('keyup', this.onKeyup);
   }
   onPointerdown(event: PointerEvent) {
+    event.stopPropagation();
+    this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this.onPointermove);
     this.addEventListener('pointerleave', this.onPointerleave);
     this.addEventListener('pointerup', this.onPointerup);
     this.addEventListener('pointercancel', this.onPointercancel);
     this.pressed = true;
   }
-  onPointermove(event: PointerEvent) {}
+  onPointermove(event: PointerEvent) {
+    event.stopPropagation();
+  }
   onPointercancel(event: PointerEvent) {
+    event.stopPropagation();
+    this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
@@ -158,6 +164,7 @@ export class IoField extends IoElement {
     this.pressed = false;
   }
   onPointerleave(event: PointerEvent) {
+    event.stopPropagation();
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
@@ -165,6 +172,8 @@ export class IoField extends IoElement {
     this.pressed = false;
   }
   onPointerup(event: PointerEvent) {
+    event.stopPropagation();
+    this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
@@ -172,12 +181,16 @@ export class IoField extends IoElement {
     this.pressed = false;
   }
   onTouchstart(event: TouchEvent) {
+    event.stopPropagation();
     this.addEventListener('touchmove', this.onTouchmove, {passive: false});
     this.addEventListener('touchend', this.onTouchend);
+    this.focus();
   }
   onTouchmove(event: TouchEvent) {
+    event.stopPropagation();
   }
-  onTouchend() {
+  onTouchend(event: TouchEvent) {
+    event.stopPropagation();
     this.removeEventListener('touchmove', this.onTouchmove);
     this.removeEventListener('touchend', this.onTouchend);
   }

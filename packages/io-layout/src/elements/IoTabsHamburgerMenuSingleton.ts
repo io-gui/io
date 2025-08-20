@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, NudgeDirection, NodeArray, VDOMElement, IoElement, IoElementProps, Register, ReactiveProperty, nudge, ListenerDefinition } from 'io-gui';
+import { IoOverlaySingleton, NudgeDirection, NodeArray, VDOMElement, IoElement, IoElementProps, Register, ReactiveProperty, nudge, ListenerDefinition } from 'io-core';
 import { Tab } from '../nodes/Tab.js';
 import { ioTab, IoTab } from './IoTab.js';
 

@@ -3,22 +3,33 @@
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "A lightweight library that provides core features for Io-Gui components (nodes and elements).",
+  "description": "Monolitic build of all Io-Gui packages.",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
     "/build",
-    "/demos",
     "/src",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["io", "ui", "gui", "iogui", "io-gui"],
+  "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
+  "keywords": ["io","gui","iogui","io-core","inspector","io-object","io-properties","io-gui"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},
-  "homepage": "https://iogui.dev"
+  "homepage": "https://iogui.dev",
+  "peerDependencies": {
+    "io-core": "^2.0.0",
+    "io-inputs": "^2.0.0",
+    "io-menus": "^2.0.0",
+    "io-colors": "^2.0.0",
+    "io-sliders": "^2.0.0",
+    "io-navigation": "^2.0.0",
+    "io-markdown": "^2.0.0",
+    "io-editors": "^2.0.0",
+    "io-icons": "^2.0.0",
+    "io-three": "^2.0.0"
+  }
 }

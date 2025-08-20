@@ -1,4 +1,4 @@
-import { IoOverlaySingleton } from 'io-gui';
+import { IoOverlaySingleton } from 'io-core';
 import { IoString } from 'io-inputs';
 import { IoMenuItem } from '../elements/IoMenuItem.js';
 import { IoMenuOptions } from '../elements/IoMenuOptions.js';

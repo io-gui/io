@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 export type IoBreadcrumbsProps = IoElementProps & {
     value?: Object;
     selected?: WithBinding<Object>;
@@ -20,5 +20,5 @@ export declare class IoBreadcrumbs extends IoElement {
     onClearSearch(): void;
     changed(): void;
 }
-export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps) => import("io-gui").VDOMElement;
+export declare const ioBreadcrumbs: (arg0?: IoBreadcrumbsProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoBreadcrumbs.d.ts.map

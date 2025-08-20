@@ -1,4 +1,4 @@
-import { WithBinding } from 'io-gui';
+import { WithBinding } from 'io-core';
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoStringProps = IoFieldProps & {
     value?: WithBinding<string>;
@@ -23,8 +23,6 @@ export declare class IoString extends IoField {
     _setFromTextNode(): void;
     _setObjectFromTextNodeJSON(): void;
     onBlur(event: FocusEvent): void;
-    onPointerdown(event: PointerEvent): void;
-    onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
@@ -32,5 +30,5 @@ export declare class IoString extends IoField {
     valueChanged(): void;
     changed(): void;
 }
-export declare const ioString: (arg0?: IoStringProps) => import("io-gui").VDOMElement;
+export declare const ioString: (arg0?: IoStringProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoString.d.ts.map

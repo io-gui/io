@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Property } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Property } from 'io-core';
 import { IoNumber } from './IoNumber.js';
 import { ioNumberLadderStep } from './IoNumberLadderStep.js';
 

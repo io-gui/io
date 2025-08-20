@@ -1,4 +1,4 @@
-import { NodeArray } from 'io-gui';
+import { NodeArray } from 'io-core';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabsHamburgerProps = IoFieldProps & {
@@ -12,5 +12,5 @@ export declare class IoTabsHamburger extends IoField {
     onEditTab(event: CustomEvent): void;
     changed(): void;
 }
-export declare const ioTabsHamburger: (arg0: IoTabsHamburgerProps) => import("io-gui").VDOMElement;
+export declare const ioTabsHamburger: (arg0: IoTabsHamburgerProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoTabsHamburger.d.ts.map

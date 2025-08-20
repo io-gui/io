@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div, p, h1, h4 } from 'io-gui';
+import { Register, IoElement, div, p, h1, h4 } from 'io-core';
 import { MenuOption } from 'io-menus';
 import { ioNavigator, ioSelector, ioCollapsible } from 'io-navigation';
 

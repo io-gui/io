@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 import { IoNumber } from './IoNumber.js';
 export type IoNumberLadderProps = IoElementProps & {
     src?: IoNumber;

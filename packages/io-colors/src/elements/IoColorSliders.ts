@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, glsl, WithBinding, Node } from 'io-gui';
+import { Register, ReactiveProperty, glsl, WithBinding, Node } from 'io-core';
 import { IoSlider, IoSlider2d } from 'io-sliders';
 import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
 

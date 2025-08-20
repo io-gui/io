@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition } from 'io-gui';
+import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition } from 'io-core';
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min);
@@ -137,6 +137,7 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('keydown', this.onKeydown);
   }
   onContextmenu(event: Event) {
+    event.stopPropagation();
     event.preventDefault();
   }
   onTouchstart(event: TouchEvent) {
@@ -162,6 +163,7 @@ export class IoSliderBase extends IoGl {
       }
     }
     if (this._active === 1 && event.cancelable) {
+      event.stopPropagation();
       event.preventDefault();
     }
   }
@@ -170,6 +172,7 @@ export class IoSliderBase extends IoGl {
     this.removeEventListener('touchend', this.onTouchend);
   }
   onPointerdown(event: PointerEvent) {
+    event.stopPropagation();
     this._rect = this.getBoundingClientRect();
     this.setPointerCapture(event.pointerId);
     this.addEventListener('pointermove', this.onPointermove);

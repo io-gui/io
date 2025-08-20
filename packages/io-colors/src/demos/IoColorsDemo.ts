@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-gui';
+import { Register, IoElement, div } from 'io-core';
 import { ioColorRgba, ioColorSlider } from 'io-colors';
 
 export class IoColorsDemo extends IoElement {

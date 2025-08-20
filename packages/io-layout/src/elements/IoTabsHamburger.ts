@@ -1,4 +1,4 @@
-import { Register, NodeArray, ReactiveProperty } from 'io-gui';
+import { Register, NodeArray, ReactiveProperty } from 'io-core';
 import { IoField, IoFieldProps } from 'io-inputs';
 import { ioIcon } from 'io-icons';
 import { Tab } from '../nodes/Tab.js';

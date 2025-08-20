@@ -4,7 +4,7 @@
     "outDir": "build",
     "paths": {
       "io-markdown": ["./src/index.js"],
-      "io-gui": ["../io-gui"]
+      "io-core": ["../io-core"]
     }
   },
   "include": ["./src", "./lib"]

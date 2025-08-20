@@ -1,8 +1,8 @@
 //@ts-nocheck
-import { Register, IoElement, div, ReactiveProperty } from 'io-gui';
+import { Register, IoElement, div, ReactiveProperty } from 'io-core';
 import { MenuOption, ioOptionSelect } from 'io-menus';
 import { ioSlider } from 'io-sliders';
-import { ioString, ioNumber, ioBoolean } from 'io-inputs';
+import { ioString, ioNumber, ioBoolean, ioButton } from 'io-inputs';
 import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
 
 export class IoEditorsDemo extends IoElement {
@@ -149,6 +149,13 @@ export class IoEditorsDemo extends IoElement {
           value: document.head,
           properties: ['lang'],
         }),
+        ioButton({label: 'SwitchNestedObject', action: () => {
+          this.object.object = {
+            name: 'nested object 2',
+            number: 3,
+          };
+          this.dispatchMutation(this.object);
+        }})
       ]),
       div({class: 'column'}, [
         ioObject({

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from 'io-core';
 import { ioBoolean } from 'io-inputs';
 import { ioPropertyEditor } from './IoPropertyEditor.js';
 import { EditorConfig } from '../utils/EditorConfig.js';

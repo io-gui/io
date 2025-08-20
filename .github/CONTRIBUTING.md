@@ -37,7 +37,7 @@ This guide assumes you have basic knowledge of TypeScript, HTML, CSS, and Git. I
 
 Io-Gui is organized as a monorepo with the following packages:
 
-- **io-gui** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
 - **io-colors** - Color components and utilities
 - **io-icons** - Icon component and default iconset
 - **io-inputs** - Input components (buttons, fields, switches)
@@ -47,7 +47,7 @@ Io-Gui is organized as a monorepo with the following packages:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-monolith** - Combined package with all components
+- **io-gui** - Combined package with all components
 
 ## Development Commands
 
@@ -63,9 +63,9 @@ Io-Gui is organized as a monorepo with the following packages:
 
 ### Package-Specific Commands
 Each package can be built/linted individually:
-- `pnpm build:gui`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:gui`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
-- `pnpm dev:gui`, `pnpm dev:colors`, `pnpm dev:inputs`, etc.
+- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
+- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
+- `pnpm dev:core`, `pnpm dev:colors`, `pnpm dev:inputs`, etc.
 
 ## Development Workflow
 
@@ -144,7 +144,7 @@ The framework has no runtime dependencies - only development dependencies. It us
 ### Monorepo Structure
 The project is organized as a monorepo with packages in `/packages/`:
 
-- **io-gui** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
 - **io-colors** - Color components and utilities
 - **io-icons** - Icon component and default iconset
 - **io-inputs** - Input components (buttons, fields, switches)
@@ -154,7 +154,7 @@ The project is organized as a monorepo with packages in `/packages/`:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-monolith** - Combined package with all components
+- **io-gui** - Combined package with all components
 
 ### Essential Commands
 - `pnpm dev` - Start watch mode for all packages (tsc)
@@ -167,8 +167,8 @@ The project is organized as a monorepo with packages in `/packages/`:
 
 ### Package-Specific Commands
 Each package can be built/linted individually:
-- `pnpm build:gui`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:gui`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
+- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
+- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
 
 ### Build System
 - Uses `wireit` for orchestrated builds with dependency management
@@ -201,10 +201,10 @@ Each package can be built/linted individually:
 
 ## Getting Help
 
-- Browse and submit [issues](https://github.com/io-gui/io/issues)
+- Browse and submit [issues](https://github.com/io-core/io/issues)
 - Read the [quick start guide](https://iogui.dev/io/#path=Docs,Quick%20Start) and [deep dive guide](https://iogui.dev/io/#path=Docs,Deep%20Dive)
 - Check the [documentation website](https://iogui.dev) for examples and API reference
 
 ## Code of Conduct
 
-Please read and follow our [Code of Conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md) when contributing to the project.
+Please read and follow our [Code of Conduct](https://github.com/io-core/io/blob/main/.github/CODE_OF_CONDUCT.md) when contributing to the project.

@@ -1,4 +1,4 @@
-import { NodeArray } from 'io-gui';
+import { NodeArray } from 'io-core';
 import { MenuOption } from 'io-menus';
 
 const testItemArgs = {

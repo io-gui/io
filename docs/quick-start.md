@@ -13,7 +13,7 @@ You can learn more about nodes and elements in the [deep dive] guide. To quickly
 Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property.
 
 ```javascript
-import { IoElement, Register, span } from 'io-gui'
+import { IoElement, Register, span } from 'io-core'
 
 class MyElement extends IoElement {
   static get Style() {
@@ -50,7 +50,7 @@ document.body.appendChild(
 Alternatively, you can use convenient "@" decorator syntax to define reactive properties and register the element. This syntax requires a transpiler such as Babel or TypeScript.
 
 ```javascript
-import { IoElement, Register, ReactiveProperty, span } from 'io-gui'
+import { IoElement, Register, ReactiveProperty, span } from 'io-core'
 
 @Register
 class MyElement extends IoElement {
@@ -86,7 +86,7 @@ Here is a quick way to make a simple static website with navigation and 5 pages 
 ```javascript
 import { IoNavigator } from 'io-navigation'
 import { MenuOption } from 'io-menus'
-import { Storage } from 'io-gui'
+import { Storage } from 'io-core'
 import { ioMarkdown } from 'io-markdown'
 
 document.body.appendChild(
@@ -142,7 +142,7 @@ Just like most modern frameworks, Io-Gui uses a virtual DOM to efficiently updat
 Here, we can replicate the previous example using the `render()` function and virtual DOM constructors inside a custom element.
 
 ```typescript
-import { IoElement, Register, span } from 'io-gui'
+import { IoElement, Register, span } from 'io-core'
 import { ioSlider } from 'io-sliders';
 import { ioOptionSelect, MenuOption } from 'io-menus';
 
@@ -215,5 +215,5 @@ Note that two-way data flow can introduce unexpected states in more complex scen
 
 To learn more read the [deep dive] guide.
 
-[index.html]: https://github.com/io-gui/io/blob/main/index.html#L104
+[index.html]: https://github.com/io-core/io/blob/main/index.html#L104
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive

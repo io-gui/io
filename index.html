@@ -60,7 +60,7 @@
     <script type="importmap">
       {
         "imports": {
-          "io-gui": "./packages/io-gui/build/index.js",
+          "io-core": "./packages/io-core/build/index.js",
           "io-colors": "./packages/io-colors/build/index.js",
           "io-editors": "./packages/io-editors/build/index.js",
           "io-icons": "./packages/io-icons/build/index.js",
@@ -108,7 +108,7 @@
   <body>
     <script type="module">
 
-    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe, h4 } from 'io-gui';
+    import { Register, Storage as $, ThemeSingleton, ioElement, div, iframe, h4 } from 'io-core';
     import { IoNavigator, ioNavigator, ioSelector } from 'io-navigation';
     import { MenuOption, ioMenuTree } from 'io-menus';
     import { ioMarkdown } from 'io-markdown';
@@ -203,7 +203,7 @@
         }),
         ioSelector({id: 'Demos',
           selected: MENU_OPTION.findItemById('Demos').bind('selectedID'),
-          caching: 'proactive',
+          caching: 'reactive',
           elements: [
             {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/io-inputs/build/demos/IoInputsDemo.js'}},
             {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/io-icons/build/demos/IoIconsDemo.js'}},
@@ -213,10 +213,10 @@
             {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/io-menus/build/demos/IoMenusDemo.js'}},
             {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/io-navigation/build/demos/IoNavigationDemo.js'}},
             {tag: 'io-layout-demo', props: {id: 'Layout', import: './packages/io-layout/build/demos/IoLayoutDemo.js'}},
-            {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-gui/build/demos/IoThemeEditor.js'}},
-            {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-gui/build/demos/IoElementInspectorDemo.js'}},
-            {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/io-gui/build/demos/IoChangeVisualization.js'}},
-            iframe({id: 'TODO MVC App', src: './packages/io-gui/build/demos/todomvc/index.html'}),
+            {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/io-core/build/demos/IoThemeEditor.js'}},
+            {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/io-core/build/demos/IoElementInspectorDemo.js'}},
+            {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/io-core/build/demos/IoChangeVisualization.js'}},
+            iframe({id: 'TODO MVC App', src: './packages/io-core/build/demos/todomvc/index.html'}),
           ]
         }),
       ]

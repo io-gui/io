@@ -15,13 +15,13 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["io","gui","iogui","io-gui","icons","iconset","io-icons"],
+  "repository": {"type": "git", "url": "git+https://github.com/io-core/io.git"},
+  "keywords": ["io","gui","iogui","io-core","icons","iconset","io-icons"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "io-gui": "^2.0.0"
+    "io-core": "^2.0.0"
   }
 }

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding } from 'io-core';
 import {ioNumber} from 'io-inputs';
 import {ioSlider} from './IoSlider.js';
 

@@ -1,4 +1,4 @@
-import { span, Register } from 'io-gui';
+import { span, Register } from 'io-core';
 import { ioIcon } from 'io-icons';
 import { IoBoolean } from './IoBoolean.js';
 

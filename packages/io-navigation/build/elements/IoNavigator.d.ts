@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-core';
 import { MenuOption } from 'io-menus';
 import { CachingType } from './IoSelector.js';
 export type MenuPositionType = 'top' | 'left' | 'right';

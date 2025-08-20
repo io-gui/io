@@ -1,4 +1,4 @@
-import { WithBinding } from 'io-gui';
+import { WithBinding } from 'io-core';
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoNumberProps = IoFieldProps & {
     value?: WithBinding<number>;
@@ -43,5 +43,5 @@ export declare class IoNumber extends IoField {
     ready(): void;
     changed(): void;
 }
-export declare const ioNumber: (arg0?: IoNumberProps) => import("io-gui").VDOMElement;
+export declare const ioNumber: (arg0?: IoNumberProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoNumber.d.ts.map

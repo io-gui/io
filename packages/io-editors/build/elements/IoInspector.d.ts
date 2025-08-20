@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding } from 'io-core';
 import { EditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
@@ -15,23 +15,24 @@ export type IoInspectorProps = IoElementProps & {
  **/
 export declare class IoInspector extends IoElement {
     static get Style(): string;
-    value: Record<string, any> | any[];
-    selected: Record<string, any> | any[];
+    value: Object | Array<any>;
+    selected: Object | Array<any>;
     search: string;
     config: EditorConfig;
     groups: EditorGroups;
     widgets: EditorWidgets;
-    _cfgTimeout: number;
     static get Listeners(): {
         'io-button-clicked': string;
     };
+    init(): void;
     onLinkClicked(event: CustomEvent): void;
     valueChanged(): void;
-    selectedChanged(): void;
+    valueMutated(): void;
     selectedMutated(): void;
+    selectedChanged(): void;
     changed(): void;
-    _onChangedThrottled(): void;
-    _onChange(): void;
+    changeThrottled(): void;
+    dispose(): void;
 }
-export declare const ioInspector: (arg0?: IoInspectorProps) => import("io-gui").VDOMElement;
+export declare const ioInspector: (arg0?: IoInspectorProps) => import("io-core").VDOMElement;
 //# sourceMappingURL=IoInspector.d.ts.map

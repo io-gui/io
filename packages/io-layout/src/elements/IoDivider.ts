@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from 'io-core';
 
 export type IoDividerProps = IoElementProps & {
   orientation: 'vertical' | 'horizontal',

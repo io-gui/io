@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span } from 'io-gui';
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span } from 'io-core';
 import { ioField, ioString } from 'io-inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js';

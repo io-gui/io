@@ -118,7 +118,7 @@ The framework has no runtime dependencies - only development dependencies. It us
 ### Monorepo Structure
 The project is organized as a monorepo with packages in `/packages/`:
 
-- **io-gui** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
+- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
 - **io-colors** - Color components and utilities
 - **io-icons** - Icon component and default iconset
 - **io-inputs** - Input components (buttons, fields, switches)
@@ -128,7 +128,7 @@ The project is organized as a monorepo with packages in `/packages/`:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-monolith** - Combined package with all components
+- **io-gui** - Combined package with all components
 
 ### Essential Commands
 - `pnpm dev` - Start watch mode for all packages (tsc)
@@ -141,8 +141,8 @@ The project is organized as a monorepo with packages in `/packages/`:
 
 ### Package-Specific Commands
 Each package can be built/linted individually:
-- `pnpm build:gui`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:gui`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
+- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
+- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
 
 ### Build System
 - Uses `wireit` for orchestrated builds with dependency management

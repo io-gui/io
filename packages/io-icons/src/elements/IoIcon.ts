@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps } from 'io-gui';
+import { Register, ReactiveProperty, IoElement, IoElementProps } from 'io-core';
 import { IconsetSingleton } from '../nodes/Iconset.js';
 
 export type IoIconProps = IoElementProps & {

@@ -1,4 +1,4 @@
-import { NudgeDirection, NodeArray, VDOMElement, IoElement, IoElementProps, ListenerDefinition } from 'io-gui';
+import { NudgeDirection, NodeArray, VDOMElement, IoElement, IoElementProps, ListenerDefinition } from 'io-core';
 import { Tab } from '../nodes/Tab.js';
 export interface IoTabsHamburgerMenuExpandProps {
     source: HTMLElement;

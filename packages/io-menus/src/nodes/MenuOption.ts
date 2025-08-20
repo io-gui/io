@@ -1,4 +1,4 @@
-import { Node, Register, ReactiveProperty, WithBinding, NodeArray } from 'io-gui';
+import { Node, Register, ReactiveProperty, WithBinding, NodeArray } from 'io-core';
 
 export type MenuOptionMode = 'select' | 'toggle' | 'none';
 
@@ -12,6 +12,9 @@ export type MenuOptionProps = {
   mode?: MenuOptionMode,
   disabled?: boolean,
   selected?: WithBinding<boolean>,
+  selectedID?: WithBinding<string>,
+  selectedIDImmediate?: WithBinding<string>,
+  path?: WithBinding<string>,
   options?: Array<string | number | boolean | null | undefined | MenuOptionProps>
 };
 

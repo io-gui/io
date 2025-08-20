@@ -1,12 +1,12 @@
 {
-  "name": "io-gui-monorepo",
+  "name": "io-core-monorepo",
   "version": "2.0.0",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui monorepo, a UI framework for web development.",
   "type": "module",
   "scripts": {
     "clean": "wireit",
-    "clean:gui": "wireit",
+    "clean:core": "wireit",
     "clean:colors": "wireit",
     "clean:icons": "wireit",
     "clean:inputs": "wireit",
@@ -16,9 +16,9 @@
     "clean:menus": "wireit",
     "clean:navigation": "wireit",
     "clean:sliders": "wireit",
-    "clean:monolith": "wireit",
+    "clean:gui": "wireit",
     "lint": "wireit",
-    "lint:gui": "wireit",
+    "lint:core": "wireit",
     "lint:colors": "wireit",
     "lint:icons": "wireit",
     "lint:inputs": "wireit",
@@ -28,9 +28,9 @@
     "lint:menus": "wireit",
     "lint:navigation": "wireit",
     "lint:sliders": "wireit",
-    "lint:monolith": "wireit",
+    "lint:gui": "wireit",
     "build": "wireit",
-    "build:gui": "wireit",
+    "build:core": "wireit",
     "build:colors": "wireit",
     "build:icons": "wireit",
     "build:inputs": "wireit",
@@ -40,9 +40,9 @@
     "build:menus": "wireit",
     "build:navigation": "wireit",
     "build:sliders": "wireit",
-    "build:monolith": "wireit",
+    "build:gui": "wireit",
     "bundle": "wireit",
-    "bundle:gui": "wireit",
+    "bundle:core": "wireit",
     "bundle:colors": "wireit",
     "bundle:icons": "wireit",
     "bundle:inputs": "wireit",
@@ -52,9 +52,9 @@
     "bundle:menus": "wireit",
     "bundle:navigation": "wireit",
     "bundle:sliders": "wireit",
-    "bundle:monolith": "wireit",
+    "bundle:gui": "wireit",
     "dev": "wireit",
-    "dev:gui": "wireit",
+    "dev:core": "wireit",
     "dev:colors": "wireit",
     "dev:icons": "wireit",
     "dev:inputs": "wireit",
@@ -64,7 +64,7 @@
     "dev:menus": "wireit",
     "dev:navigation": "wireit",
     "dev:sliders": "wireit",
-    "dev:monolith": "wireit",
+    "dev:gui": "wireit",
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --watch",
     "serve": "wds --watch"
@@ -72,7 +72,7 @@
   "wireit": {
     "clean": {
       "dependencies": [
-        "clean:gui",
+        "clean:core",
         "clean:colors",
         "clean:icons",
         "clean:inputs",
@@ -82,11 +82,11 @@
         "clean:menus",
         "clean:navigation",
         "clean:sliders",
-        "clean:monolith"
+        "clean:gui"
       ]
     },
-    "clean:gui": {
-      "command": "rm -rf ./packages/io-gui/build && rm -rf ./packages/io-gui/bundle"
+    "clean:core": {
+      "command": "rm -rf ./packages/io-core/build && rm -rf ./packages/io-core/bundle"
     },
     "clean:colors": {
       "command": "rm -rf ./packages/io-colors/build && rm -rf ./packages/io-colors/bundle"
@@ -115,12 +115,12 @@
     "clean:sliders": {
       "command": "rm -rf ./packages/io-sliders/build && rm -rf ./packages/io-sliders/bundle"
     },
-    "clean:monolith": {
-      "command": "rm -rf ./packages/io-monolith/build && rm -rf ./packages/io-monolith/bundle"
+    "clean:gui": {
+      "command": "rm -rf ./packages/io-gui/build && rm -rf ./packages/io-gui/bundle"
     },
     "lint": {
       "dependencies": [
-        "lint:gui",
+        "lint:core",
         "lint:colors",
         "lint:icons",
         "lint:inputs",
@@ -130,11 +130,11 @@
         "lint:menus",
         "lint:navigation",
         "lint:sliders",
-        "lint:monolith"
+        "lint:gui"
       ]
     },
-    "lint:gui": {
-      "command": "eslint -c ./packages/io-gui/.eslintrc.js ./packages/io-gui/src --fix"
+    "lint:core": {
+      "command": "eslint -c ./packages/io-core/.eslintrc.js ./packages/io-core/src --fix"
     },
     "lint:colors": {
       "command": "eslint -c ./packages/io-colors/.eslintrc.js ./packages/io-colors/src --fix"
@@ -163,12 +163,12 @@
     "lint:sliders": {
       "command": "eslint -c ./packages/io-sliders/.eslintrc.js ./packages/io-sliders/src --fix"
     },
-    "lint:monolith": {
-      "command": "eslint -c ./packages/io-monolith/.eslintrc.js ./packages/io-monolith/src --fix"
+    "lint:gui": {
+      "command": "eslint -c ./packages/io-gui/.eslintrc.js ./packages/io-gui/src --fix"
     },
     "build": {
       "dependencies": [
-        "build:gui",
+        "build:core",
         "build:icons",
         "build:inputs",
         "build:layout",
@@ -178,14 +178,14 @@
         "build:markdown",
         "build:navigation",
         "build:editors",
-        "build:monolith"
+        "build:gui"
       ]
     },
-    "build:gui": {
-      "command": "tsc --project ./packages/io-gui/tsconfig.json",
+    "build:core": {
+      "command": "tsc --project ./packages/io-core/tsconfig.json",
       "dependencies": [
-        "clean:gui",
-        "lint:gui"
+        "clean:core",
+        "lint:core"
       ]
     },
     "build:colors": {
@@ -193,7 +193,7 @@
       "dependencies": [
         "clean:colors",
         "lint:colors",
-        "build:gui",
+        "build:core",
         "build:inputs",
         "build:sliders"
       ]
@@ -203,7 +203,7 @@
       "dependencies": [
         "clean:icons",
         "lint:icons",
-        "build:gui"
+        "build:core"
       ]
     },
     "build:inputs": {
@@ -211,7 +211,7 @@
       "dependencies": [
         "clean:inputs",
         "lint:inputs",
-        "build:gui",
+        "build:core",
         "build:icons"
       ]
     },
@@ -220,7 +220,7 @@
       "dependencies": [
         "clean:layout",
         "lint:layout",
-        "build:gui",
+        "build:core",
         "build:editors",
         "build:icons",
         "build:inputs",
@@ -233,7 +233,7 @@
       "dependencies": [
         "clean:editors",
         "lint:editors",
-        "build:gui",
+        "build:core",
         "build:inputs",
         "build:sliders",
         "build:colors",
@@ -246,7 +246,7 @@
       "dependencies": [
         "clean:markdown",
         "lint:markdown",
-        "build:gui"
+        "build:core"
       ]
     },
     "build:menus": {
@@ -254,7 +254,7 @@
       "dependencies": [
         "clean:menus",
         "lint:menus",
-        "build:gui",
+        "build:core",
         "build:icons",
         "build:inputs"
       ]
@@ -264,7 +264,7 @@
       "dependencies": [
         "clean:navigation",
         "lint:navigation",
-        "build:gui",
+        "build:core",
         "build:icons",
         "build:inputs",
         "build:menus",
@@ -276,16 +276,16 @@
       "dependencies": [
         "clean:sliders",
         "lint:sliders",
-        "build:gui",
+        "build:core",
         "build:inputs"
       ]
     },
-    "build:monolith": {
-      "command": "tsc --project ./packages/io-monolith/tsconfig.json",
+    "build:gui": {
+      "command": "tsc --project ./packages/io-gui/tsconfig.json",
       "dependencies": [
-        "clean:monolith",
-        "lint:monolith",
-        "build:gui",
+        "clean:gui",
+        "lint:gui",
+        "build:core",
         "build:colors",
         "build:icons",
         "build:inputs",
@@ -300,7 +300,7 @@
     "bundle": {
       "dependencies": [
         "clean",
-        "bundle:gui",
+        "bundle:core",
         "bundle:colors",
         "bundle:icons",
         "bundle:inputs",
@@ -310,19 +310,19 @@
         "bundle:menus",
         "bundle:navigation",
         "bundle:sliders",
-        "bundle:monolith"
+        "bundle:gui"
       ]
     },
-    "bundle:gui": {
-      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && mkdir -p ./packages/io-gui/bundle/demos/todomvc && cp ./packages/io-gui/src/demos/todomvc/index.html ./packages/io-gui/bundle/demos/todomvc/ && cp ./packages/io-gui/src/demos/todomvc/index.css ./packages/io-gui/bundle/demos/todomvc/ && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build",
+    "bundle:core": {
+      "command": "rollup -c ./packages/io-core/rollup.config.js && find ./packages/io-core/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-core/build/* ./packages/io-core/bundle && mkdir -p ./packages/io-core/bundle/demos/todomvc && cp ./packages/io-core/src/demos/todomvc/index.html ./packages/io-core/bundle/demos/todomvc/ && cp ./packages/io-core/src/demos/todomvc/index.css ./packages/io-core/bundle/demos/todomvc/ && rm -rf ./packages/io-core/build && mv ./packages/io-core/bundle ./packages/io-core/build",
       "dependencies": [
-        "build:gui"
+        "build:core"
       ]
     },
     "bundle:colors": {
       "command": "rollup -c ./packages/io-colors/rollup.config.js && find ./packages/io-colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-colors/build/* ./packages/io-colors/bundle && rm -rf ./packages/io-colors/build && mv ./packages/io-colors/bundle ./packages/io-colors/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:inputs",
         "bundle:sliders",
         "build:colors"
@@ -331,14 +331,14 @@
     "bundle:icons": {
       "command": "rollup -c ./packages/io-icons/rollup.config.js && find ./packages/io-icons/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-icons/build/* ./packages/io-icons/bundle && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "build:icons"
       ]
     },
     "bundle:inputs": {
       "command": "rollup -c ./packages/io-inputs/rollup.config.js && find ./packages/io-inputs/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-inputs/build/* ./packages/io-inputs/bundle && rm -rf ./packages/io-inputs/build && mv ./packages/io-inputs/bundle ./packages/io-inputs/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:icons",
         "build:inputs"
       ]
@@ -346,7 +346,7 @@
     "bundle:layout": {
       "command": "rollup -c ./packages/io-layout/rollup.config.js && find ./packages/io-layout/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-layout/build/* ./packages/io-layout/bundle && rm -rf ./packages/io-layout/build && mv ./packages/io-layout/bundle ./packages/io-layout/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:editors",
         "bundle:icons",
         "bundle:inputs",
@@ -358,7 +358,7 @@
     "bundle:editors": {
       "command": "rollup -c ./packages/io-editors/rollup.config.js && find ./packages/io-editors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-editors/build/* ./packages/io-editors/bundle && rm -rf ./packages/io-editors/build && mv ./packages/io-editors/bundle ./packages/io-editors/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:icons",
         "bundle:inputs",
         "bundle:sliders",
@@ -371,14 +371,14 @@
     "bundle:markdown": {
       "command": "rollup -c ./packages/io-markdown/rollup.config.js && find ./packages/io-markdown/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-markdown/build/* ./packages/io-markdown/bundle && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "build:markdown"
       ]
     },
     "bundle:menus": {
       "command": "rollup -c ./packages/io-menus/rollup.config.js && find ./packages/io-menus/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-menus/build/* ./packages/io-menus/bundle && rm -rf ./packages/io-menus/build && mv ./packages/io-menus/bundle ./packages/io-menus/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:icons",
         "bundle:inputs",
         "build:menus"
@@ -387,7 +387,7 @@
     "bundle:navigation": {
       "command": "rollup -c ./packages/io-navigation/rollup.config.js && find ./packages/io-navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-navigation/build/* ./packages/io-navigation/bundle && rm -rf ./packages/io-navigation/build && mv ./packages/io-navigation/bundle ./packages/io-navigation/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:icons",
         "bundle:inputs",
         "bundle:menus",
@@ -398,20 +398,20 @@
     "bundle:sliders": {
       "command": "rollup -c ./packages/io-sliders/rollup.config.js && find ./packages/io-sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-sliders/build/* ./packages/io-sliders/bundle && rm -rf ./packages/io-sliders/build && mv ./packages/io-sliders/bundle ./packages/io-sliders/build",
       "dependencies": [
-        "bundle:gui",
+        "bundle:core",
         "bundle:inputs",
         "build:sliders"
       ]
     },
-    "bundle:monolith": {
-      "command": "rollup -c ./packages/io-monolith/rollup.config.js && find ./packages/io-monolith/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-monolith/build/* ./packages/io-monolith/bundle && rm -rf ./packages/io-monolith/build && mv ./packages/io-monolith/bundle ./packages/io-monolith/build && ./node_modules/.bin/dts-bundle-generator -o packages/io-monolith/build/index.d.ts packages/io-monolith/build/index.d.ts",
+    "bundle:gui": {
+      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build && ./node_modules/.bin/dts-bundle-generator -o packages/io-gui/build/index.d.ts packages/io-gui/build/index.d.ts",
       "dependencies": [
-        "build:monolith"
+        "build:gui"
       ]
     },
     "dev": {
       "dependencies": [
-        "dev:gui",
+        "dev:core",
         "dev:colors",
         "dev:icons",
         "dev:inputs",
@@ -421,11 +421,11 @@
         "dev:menus",
         "dev:navigation",
         "dev:sliders",
-        "dev:monolith"
+        "dev:gui"
       ]
     },
-    "dev:gui": {
-      "command": "tsc -w --project ./packages/io-gui/tsconfig.json",
+    "dev:core": {
+      "command": "tsc -w --project ./packages/io-core/tsconfig.json",
       "service": true
     },
     "dev:colors": {
@@ -464,20 +464,20 @@
       "command": "tsc -w --project ./packages/io-sliders/tsconfig.json",
       "service": true
     },
-    "dev:monolith": {
-      "command": "tsc -w --project ./packages/io-monolith/tsconfig.json",
+    "dev:gui": {
+      "command": "tsc -w --project ./packages/io-gui/tsconfig.json",
       "service": true
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/io-gui/io.git"
+    "url": "git+https://github.com/io-core/io.git"
   },
   "keywords": [
     "io",
     "gui",
     "iogui",
-    "io-gui"
+    "io-core"
   ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
@@ -486,7 +486,6 @@
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^28.0.2",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-strip": "^3.0.4",
     "@rollup/plugin-terser": "^0.4.4",

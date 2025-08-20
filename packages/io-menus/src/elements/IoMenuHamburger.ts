@@ -1,4 +1,4 @@
-import { NudgeDirection, ReactiveProperty, Register } from 'io-gui';
+import { NudgeDirection, ReactiveProperty, Register } from 'io-core';
 import { ioIcon } from 'io-icons';
 import { IoMenuItem } from './IoMenuItem.js';
 

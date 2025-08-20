@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, Property } from 'io-gui';
+import { Register, ReactiveProperty, span, Property } from 'io-core';
 import { ioIcon } from 'io-icons';
 import { IoField, IoFieldProps } from './IoField.js';
 

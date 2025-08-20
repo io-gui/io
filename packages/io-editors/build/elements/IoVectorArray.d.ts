@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-gui';
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-core';
 export type IoVectorArrayProps = IoElementProps & {
     value?: number[];
     conversion?: number;

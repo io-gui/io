@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "paths": {
+      "io-core": ["./src/index.js"]
+    }
+  },
+  "include": ["./src"]
+}

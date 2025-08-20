@@ -1,0 +1,24 @@
+{
+  "name": "io-core",
+  "version": "2.0.0",
+  "type": "module",
+  "packageManager": "pnpm@9.5.0",
+  "description": "A lightweight library that provides core features for Io-Gui components (nodes and elements).",
+  "main": "build/index.js",
+  "module": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "/build",
+    "/demos",
+    "/src",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "sideEffects": true,
+  "repository": {"type": "git", "url": "git+https://github.com/io-core/io.git"},
+  "keywords": ["io", "ui", "gui", "iogui", "io-core"],
+  "author": "Aleksandar (Aki) Rodic",
+  "license": "MIT + Commons Clause - see LICENSE.md",
+  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "homepage": "https://iogui.dev"
+}
