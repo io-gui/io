@@ -47,7 +47,7 @@ Io-Gui is organized as a monorepo with the following packages:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-monolith** - Combined package with all components
+- **io-gui** - Combined package with all components
 
 ## Development Commands
 
@@ -63,9 +63,9 @@ Io-Gui is organized as a monorepo with the following packages:
 
 ### Package-Specific Commands
 Each package can be built/linted individually:
-- `pnpm build:gui`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:gui`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
-- `pnpm dev:gui`, `pnpm dev:colors`, `pnpm dev:inputs`, etc.
+- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
+- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
+- `pnpm dev:core`, `pnpm dev:colors`, `pnpm dev:inputs`, etc.
 
 ## Development Workflow
 
@@ -154,7 +154,7 @@ The project is organized as a monorepo with packages in `/packages/`:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-monolith** - Combined package with all components
+- **io-gui** - Combined package with all components
 
 ### Essential Commands
 - `pnpm dev` - Start watch mode for all packages (tsc)
@@ -167,8 +167,8 @@ The project is organized as a monorepo with packages in `/packages/`:
 
 ### Package-Specific Commands
 Each package can be built/linted individually:
-- `pnpm build:gui`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:gui`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
+- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
+- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
 
 ### Build System
 - Uses `wireit` for orchestrated builds with dependency management

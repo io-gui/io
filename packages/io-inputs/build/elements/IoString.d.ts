@@ -23,8 +23,6 @@ export declare class IoString extends IoField {
     _setFromTextNode(): void;
     _setObjectFromTextNodeJSON(): void;
     onBlur(event: FocusEvent): void;
-    onPointerdown(event: PointerEvent): void;
-    onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;

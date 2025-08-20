@@ -151,8 +151,11 @@ export class IoField extends IoElement {
     this.addEventListener('pointercancel', this.onPointercancel);
     this.pressed = true;
   }
-  onPointermove(event: PointerEvent) {}
+  onPointermove(event: PointerEvent) {
+    event.stopPropagation();
+  }
   onPointercancel(event: PointerEvent) {
+    event.stopPropagation();
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
@@ -161,6 +164,7 @@ export class IoField extends IoElement {
     this.pressed = false;
   }
   onPointerleave(event: PointerEvent) {
+    event.stopPropagation();
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
     this.removeEventListener('pointerup', this.onPointerup);
@@ -168,6 +172,7 @@ export class IoField extends IoElement {
     this.pressed = false;
   }
   onPointerup(event: PointerEvent) {
+    event.stopPropagation();
     this.releasePointerCapture(event.pointerId);
     this.removeEventListener('pointermove', this.onPointermove);
     this.removeEventListener('pointerleave', this.onPointerleave);
@@ -176,16 +181,16 @@ export class IoField extends IoElement {
     this.pressed = false;
   }
   onTouchstart(event: TouchEvent) {
-    event.preventDefault();
+    event.stopPropagation();
     this.addEventListener('touchmove', this.onTouchmove, {passive: false});
     this.addEventListener('touchend', this.onTouchend);
     this.focus();
   }
   onTouchmove(event: TouchEvent) {
-    event.preventDefault();
+    event.stopPropagation();
   }
   onTouchend(event: TouchEvent) {
-    event.preventDefault();
+    event.stopPropagation();
     this.removeEventListener('touchmove', this.onTouchmove);
     this.removeEventListener('touchend', this.onTouchend);
   }

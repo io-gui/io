@@ -20,7 +20,7 @@ To download and develop Io-Gui locally:
 
 ```bash
 git clone https://github.com/io-core/io.git && cd io
-pnpm i && pnpm dev:gui
+pnpm i && pnpm dev:core
 ```
 
 This will install dev dependencies and start the typescript watch script. You will also need to run `pnpm serve` to run @web/dev-server. Or you can run any other web server of your choice.

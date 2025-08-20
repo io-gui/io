@@ -1,5 +1,5 @@
 {
-  "name": "io-monolith",
+  "name": "io-gui",
   "version": "2.0.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
@@ -15,7 +15,7 @@
   ],
   "sideEffects": true,
   "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
-  "keywords": ["io","gui","iogui","io-core","inspector","io-object","io-properties","io-monolith"],
+  "keywords": ["io","gui","iogui","io-core","inspector","io-object","io-properties","io-gui"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},
