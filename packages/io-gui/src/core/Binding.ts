@@ -49,7 +49,7 @@ export class Binding<T extends unknown> {
    */
   constructor(node: Node | IoElement, property: string) {
     debug: {
-      if (!node._isNode && !node._isIoElement) console.warn('Source node is not a Node or IoElement instance!');
+      if (!(node as Node)._isNode && !(node as IoElement)._isIoElement) console.warn('Source node is not a Node or IoElement instance!');
       if (!node._reactiveProperties.has(property)) console.warn(`Source node does not have a reactive property "${property}"!`);
     }
     this.node = node;
@@ -75,7 +75,7 @@ export class Binding<T extends unknown> {
     const targetProps = this.getTargetProperties(target);
 
     debug: {
-      if (!target._isNode && !target._isIoElement) console.warn('Target node is not a Node or IoElement instance!');
+      if (!(target as Node)._isNode && !(target as IoElement)._isIoElement) console.warn('Target node is not a Node or IoElement instance!');
       if (!target._reactiveProperties.has(property)) console.warn(`Target node does not have a reactive property "${property}"!`);
       if (targetProps.indexOf(property) !== -1) console.error(`Target property "${property}" already added!`);
     }

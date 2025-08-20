@@ -243,7 +243,9 @@ export type OtherHTMLElementProps = PropsWithUndefined<{
 	playsInline?: boolean;
 	disablePictureInPicture?: boolean;
 }>;
+export type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type NativeElementProps = AriaProps & PropsWithUndefined<{
+	[key: prefix<string, "@">]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 	title?: string;
 	lang?: Lang;
 	translate?: any;
@@ -476,8 +478,6 @@ export declare class IoElement extends HTMLElement {
 	readonly _eventDispatcher: EventDispatcher;
 	readonly _observedObjectProperties: string[];
 	readonly _observedNodeProperties: string[];
-	readonly _parents: Array<Node$1>;
-	readonly _isNode: boolean;
 	readonly _isIoElement: boolean;
 	_disposed: boolean;
 	_textNode: Text;
@@ -493,14 +493,12 @@ export declare class IoElement extends HTMLElement {
 	throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 	debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 	onPropertyMutated(event: CustomEvent): true | undefined;
-	dispatchMutation(object?: Object | Node$1 | IoElement, properties?: string[]): void;
+	dispatchMutation(object?: Object | Node$1, properties?: string[]): void;
 	bind<T>(name: string): Binding<T>;
 	unbind(name: string): void;
 	addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
 	removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
 	dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node$1 | HTMLElement | Document | Window): void;
-	addParent(parent: Node$1): void;
-	removeParent(parent: Node$1): void;
 	dispose(): void;
 	connectedCallback(): void;
 	disconnectedCallback(): void;
@@ -737,12 +735,16 @@ export interface NodeConstructor {
 	name?: string;
 	prototype: NodeConstructor | Object | HTMLElement;
 }
+export declare const NODES: {
+	active: Set<Node$1>;
+	disposed: Set<Node$1>;
+};
 export type ReactivityType = "immediate" | "throttled" | "debounced";
 export type WithBinding<T> = T | Binding<T>;
-export type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
+type prefix$1<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 export type NodeProps = {
 	reactivity?: ReactivityType;
-	[key: prefix<string, "@">]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
+	[key: prefix$1<string, "@">]: string | ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void);
 };
 declare class Node$1 extends Object {
 	reactivity: ReactivityType;
@@ -772,7 +774,7 @@ declare class Node$1 extends Object {
 	throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
 	debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
 	onPropertyMutated(event: CustomEvent): true | undefined;
-	dispatchMutation(object?: Object | Node$1 | IoElement, properties?: string[]): void;
+	dispatchMutation(object?: Object | Node$1, properties?: string[]): void;
 	bind<T>(name: string): Binding<T>;
 	unbind(name: string): void;
 	addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -948,7 +950,7 @@ export declare class NodeArray<N extends Node$1> extends Array<N> {
 	private _isInternalOperation;
 	static get [Symbol.species](): ArrayConstructor;
 	constructor(node: Node$1 | IoElement, ...args: any[]);
-	withInternalOperation<T>(operation: () => T, dispatch?: boolean): T;
+	withInternalOperation<T>(operation: () => T): T;
 	splice(start: number, deleteCount: number, ...items: N[]): N[];
 	push(...items: N[]): number;
 	unshift(...items: N[]): number;

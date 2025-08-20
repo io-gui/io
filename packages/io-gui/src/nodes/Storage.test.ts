@@ -1,4 +1,4 @@
-import { StorageNode, Storage, Binding } from '../index.js';;
+import { StorageNode, Storage, Binding } from 'io-gui';
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {

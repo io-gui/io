@@ -85,6 +85,7 @@ class IoContextEditor extends IoPropertyEditor {
       expanded: true,
     });
     this.onClose = props.onClose || null;
+    // TODO: nudge: 'none' should open at cursor position like context menu
     nudge(this, props.source, props.direction);
     this.debounce(this.onExpand);
   }

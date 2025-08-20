@@ -1,4 +1,4 @@
-import { throttle, debounce, nextQueue, Node } from '../index.js';
+import { throttle, debounce, nextQueue, Node } from 'io-gui';
 
 export default class {
   run() {

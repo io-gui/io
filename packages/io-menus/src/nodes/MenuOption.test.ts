@@ -1,5 +1,5 @@
 import { NodeArray } from 'io-gui';
-import { MenuOption } from '../index.js';
+import { MenuOption } from 'io-menus';
 
 const testItemArgs = {
   id: 'root',

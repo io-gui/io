@@ -1,4 +1,4 @@
-import { IoSwitch } from '../index.js';
+import { IoSwitch } from 'io-inputs';
 
 export default class {
   element = new IoSwitch();

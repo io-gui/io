@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
+      "io-sliders": ["./src/index.js"],
       "io-gui": ["../io-gui/"],
       "io-inputs": ["../io-inputs/"]
     }

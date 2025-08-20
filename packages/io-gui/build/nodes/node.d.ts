@@ -18,6 +18,10 @@ export interface NodeConstructor {
     name?: string;
     prototype: NodeConstructor | Object | HTMLElement;
 }
+export declare const NODES: {
+    active: Set<Node>;
+    disposed: Set<Node>;
+};
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
 export type WithBinding<T> = T | Binding<T>;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
@@ -53,7 +57,7 @@ export declare class Node extends Object {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): true | undefined;
-    dispatchMutation(object?: Object | Node | IoElement, properties?: string[]): void;
+    dispatchMutation(object?: Object | Node, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;

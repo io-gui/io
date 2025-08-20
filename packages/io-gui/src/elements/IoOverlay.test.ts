@@ -1,4 +1,4 @@
-import { IoOverlaySingleton } from '../index.js';;
+import { IoOverlaySingleton } from 'io-gui';
 
 export default class {
   run() {

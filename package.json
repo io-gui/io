@@ -314,7 +314,7 @@
       ]
     },
     "bundle:gui": {
-      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build",
+      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && mkdir -p ./packages/io-gui/bundle/demos/todomvc && cp ./packages/io-gui/src/demos/todomvc/index.html ./packages/io-gui/bundle/demos/todomvc/ && cp ./packages/io-gui/src/demos/todomvc/index.css ./packages/io-gui/bundle/demos/todomvc/ && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build",
       "dependencies": [
         "build:gui"
       ]

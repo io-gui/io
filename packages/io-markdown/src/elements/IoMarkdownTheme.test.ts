@@ -1,4 +1,4 @@
-// import { IoMarkdownTheme } from '../index.js';
+// import { IoMarkdownTheme } from 'io-markdown';
 
 // const element = new IoMarkdownTheme();
 

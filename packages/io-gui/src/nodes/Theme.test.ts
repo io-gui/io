@@ -1,4 +1,4 @@
-import { ThemeSingleton } from '../index.js';;
+import { ThemeSingleton } from 'io-gui';
 
 const theme = ThemeSingleton;
 const binding = theme._reactiveProperties.get('themeID')!.binding;
