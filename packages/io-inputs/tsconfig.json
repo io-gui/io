@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-inputs": ["./src/index.js"],
+      "io-inputs": ["./src/index.ts"],
       "io-core": ["../io-core"],
       "io-icons": ["../io-icons"]
     }

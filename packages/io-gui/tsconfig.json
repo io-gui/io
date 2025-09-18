@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-gui": ["./src/index.js"],
+      "io-gui": ["./src/index.ts"],
       "io-colors": ["../io-colors"],
       "io-core": ["../io-core"],
       "io-editors": ["../io-editors"],

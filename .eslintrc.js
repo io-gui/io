@@ -1,7 +1,24 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint'
 import tsParser from '@typescript-eslint/parser';
-import globals from 'globals';
+
+const globals = {
+  browser: {
+    'fetch': true,
+    'document': true,
+    'window': true,
+    'self': true,
+    'console': true,
+    'setTimeout': true,
+    'setInterval': true,
+    'clearTimeout': true,
+    'clearInterval': true,
+    'requestAnimationFrame': true,
+    'navigator': true,
+    'history': true,
+    'localStorage': true
+  }
+}
 
 export function makeConfig(projectPath) {
   return tseslint.config({
