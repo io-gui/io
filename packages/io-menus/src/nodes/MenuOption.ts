@@ -156,7 +156,7 @@ export class MenuOption extends Node {
     let selected = '';
     for (let i = 0; i < this.options.length; i++) {
       const item = this.options[i];
-      if (item.selected && item.id) {
+      if (item.selected && item.id && item.mode === 'select') {
         selected = item.id;
         break;
       }
@@ -221,10 +221,8 @@ export class MenuOption extends Node {
     let walker = selectedIDImmediate ? this.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate) : undefined;
     if (!walker) return;
 
-    // let lastSelected = walker;
     while (walker) {
       path.push(walker.id);
-      // lastSelected = walker;
       selectedIDImmediate = walker.getSelectedIDImmediate();
       walker = selectedIDImmediate ? walker.options.find(option => option.mode === 'select' && option.selected && option.id === selectedIDImmediate) : undefined;
     }

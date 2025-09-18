@@ -490,7 +490,7 @@ export default class {
         node.throttle(throttleFuc);
 
         await nextQueue();
-        expect(order).to.be.eql([0, 1, 2, 0]);
+        expect(order).to.be.eql([1, 2, 0]);
       });
       it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
         @Register

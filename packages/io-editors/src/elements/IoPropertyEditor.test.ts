@@ -14,6 +14,7 @@ export default class {
   element = new IoPropertyEditor();
   constructor() {
     this.element.style.display = 'none';
+    this.reset();
     document.body.appendChild(this.element as HTMLElement);
   }
   reset() {

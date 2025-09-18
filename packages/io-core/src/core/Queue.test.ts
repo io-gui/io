@@ -3,10 +3,12 @@ import { throttle, debounce, nextQueue, Node } from 'io-core';
 export default class {
   run() {
     describe('Queue', () => {
-      it('Should exectute throttled function immediately at first call', async () => {
+      it('Should exectute twice throttled function once in the next frame', async () => {
         let count = 0;
         const func = () => { count++; };
         throttle(func);
+        throttle(func);
+        await nextQueue();
         expect(count).to.be.equal(1);
         await nextQueue();
         expect(count).to.be.equal(1);
@@ -16,13 +18,12 @@ export default class {
         const func = (a: string) => { arg = a; };
         throttle(func, 'first');
         throttle(func, 'second');
-        expect(arg).to.be.equal('first');
+        expect(arg).to.be.equal('');
         await nextQueue();
         expect(arg).to.be.equal('second');
         throttle(func, 'third');
         throttle(func, 'fourth');
         throttle(func, 'sixt');
-        expect(arg).to.be.equal('third');
         await nextQueue();
         expect(arg).to.be.equal('sixt');
       });
@@ -33,11 +34,11 @@ export default class {
         throttle(func);
         throttle(func);
         throttle(func);
+        expect(count).to.be.equal(0);
+        await nextQueue();
         expect(count).to.be.equal(1);
         await nextQueue();
-        expect(count).to.be.equal(2);
-        await nextQueue();
-        expect(count).to.be.equal(2);
+        expect(count).to.be.equal(1);
       });
       it('Should execute throttled function after specified delay', async () => {
         let count = 0;
@@ -46,20 +47,20 @@ export default class {
         throttle(func, undefined, undefined, 10);
         throttle(func, undefined, undefined, 10);
         throttle(func, undefined, undefined, 10);
+        expect(count).to.be.equal(0);
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
+        await nextQueue();
         expect(count).to.be.equal(1);
         await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        await nextQueue();
-        expect(count).to.be.equal(2);
-        await nextQueue();
-        expect(count).to.be.equal(2);
+        expect(count).to.be.equal(1);
       });
       it('Should exectute debounced function in the next frame', async () => {
         let count = 0;
