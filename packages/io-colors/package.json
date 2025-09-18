@@ -16,7 +16,7 @@
   ],
   "sideEffects": true,
   "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
-  "keywords": ["io","gui","md","iogui","io-core","color","io-colors"],
+  "keywords": ["ui","io","gui","iogui","colors","color","io-colors"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},

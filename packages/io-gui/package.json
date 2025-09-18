@@ -8,28 +8,28 @@
   "module": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
-    "/build",
-    "/src",
+    "/src/",
+    "/build/",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": true,
   "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
-  "keywords": ["io","gui","iogui","io-core","inspector","io-object","io-properties","io-gui"],
+  "keywords": ["ui","io","gui","iogui","io-gui"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT + Commons Clause - see LICENSE.md",
   "bugs": {"url": "https://github.com/iogui/iogui/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "io-core": "^2.0.0",
-    "io-inputs": "^2.0.0",
-    "io-menus": "^2.0.0",
     "io-colors": "^2.0.0",
-    "io-sliders": "^2.0.0",
-    "io-navigation": "^2.0.0",
-    "io-markdown": "^2.0.0",
+    "io-core": "^2.0.0",
     "io-editors": "^2.0.0",
     "io-icons": "^2.0.0",
-    "io-three": "^2.0.0"
+    "io-inputs": "^2.0.0",
+    "io-layout": "^2.0.0",
+    "io-markdown": "^2.0.0",
+    "io-menus": "^2.0.0",
+    "io-navigation": "^2.0.0",
+    "io-sliders": "^2.0.0"
   }
 }
