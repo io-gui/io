@@ -1,10 +1,10 @@
-import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveProperty, WithBinding } from 'io-core';
-import { TodoListModel } from './TodoListModel.js';
+import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveProperty, WithBinding } from 'io-core'
+import { TodoListModel } from './TodoListModel.js'
 
 type TodoFooterProps = IoElementProps & {
-  model?: TodoListModel;
-  route?: WithBinding<string>;
-};
+  model?: TodoListModel
+  route?: WithBinding<string>
+}
 
 export class TodoFooter extends IoElement {
   static get Style() {
@@ -12,24 +12,24 @@ export class TodoFooter extends IoElement {
       :host a {
         cursor: pointer;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({type: TodoListModel})
-  declare model: TodoListModel;
+  declare model: TodoListModel
 
   @ReactiveProperty({value: 'all'})
-  declare route: string;
+  declare route: string
 
-  constructor(args: TodoFooterProps = {}) { super(args); }
+  constructor(args: TodoFooterProps = {}) { super(args) }
 
   onRouteClicked(event: CustomEvent) {
-    const target = event.target as HTMLElement;
-    this.route = target.innerText.toLowerCase();
+    const target = event.target as HTMLElement
+    this.route = target.innerText.toLowerCase()
   }
 
   modelMutated() {
-    this.changed();
+    this.changed()
   }
 
   changed() {
@@ -41,11 +41,11 @@ export class TodoFooter extends IoElement {
         li([a({'@click': this.onRouteClicked, class: this.route === 'completed' ? 'selected' : ''}, 'Completed')]),
       ]),
       this.model.completedCount ? button({class: 'clear-completed', '@click': this.model.clearCompleted}, 'Clear completed') : null
-    ]);
+    ])
   }
 }
-Register(TodoFooter);
+Register(TodoFooter)
 
 export const todoFooter = function(arg0: TodoFooterProps) {
-  return TodoFooter.vConstructor(arg0);
-};
+  return TodoFooter.vConstructor(arg0)
+}

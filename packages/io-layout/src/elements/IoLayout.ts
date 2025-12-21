@@ -1,13 +1,13 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-core';
-import { MenuOption } from 'io-menus';
-import { ioSplit } from './IoSplit.js';
-import { Split } from '../nodes/Split.js';
+import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from 'io-core'
+import { MenuOption } from 'io-menus'
+import { ioSplit } from './IoSplit.js'
+import { Split } from '../nodes/Split.js'
 
 export type IoLayoutProps = IoElementProps & {
-  split: Split,
-  elements: VDOMElement[],
-  addMenuOption: MenuOption,
-};
+  split: Split
+  elements: VDOMElement[]
+  addMenuOption: MenuOption
+}
 
 @Register
 export class IoLayout extends IoElement {
@@ -24,17 +24,17 @@ export class IoLayout extends IoElement {
         max-width: 100%;
         max-height: 100%;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({type: Object})
-  declare split: Split;
+  declare split: Split
 
   @ReactiveProperty(Array)
-  declare elements: VDOMElement[];
+  declare elements: VDOMElement[]
 
   @Property({type: MenuOption})
-  declare private addMenuOption: MenuOption;
+  declare private addMenuOption: MenuOption
 
   changed() {
     this.render([
@@ -43,10 +43,10 @@ export class IoLayout extends IoElement {
         elements: this.elements,
         addMenuOption: this.addMenuOption,
       })
-    ]);
+    ])
   }
 }
 
 export const ioLayout = function(arg0: IoLayoutProps) {
-  return IoLayout.vConstructor(arg0);
-};
+  return IoLayout.vConstructor(arg0)
+}

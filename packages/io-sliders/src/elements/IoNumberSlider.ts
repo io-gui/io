@@ -1,15 +1,15 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding } from 'io-core';
-import {ioNumber} from 'io-inputs';
-import {ioSlider} from './IoSlider.js';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding } from 'io-core'
+import {ioNumber} from 'io-inputs'
+import {ioSlider} from './IoSlider.js'
 
 export type IoNumberSliderProps = IoElementProps & {
-  value?: WithBinding<number>,
-  step?: number,
-  min?: number,
-  max?: number,
-  exponent?: number,
-  conversion?: number,
-};
+  value?: WithBinding<number>
+  step?: number
+  min?: number
+  max?: number
+  exponent?: number
+  conversion?: number
+}
 
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
@@ -30,40 +30,40 @@ export class IoNumberSlider extends IoElement {
       flex: 1 1 3em;
       min-width: 3em;
     }
-    `;
+    `
   }
 
   @ReactiveProperty({value: 0})
-  declare value: number;
+  declare value: number
 
   @ReactiveProperty(0.01)
-  declare step: number;
+  declare step: number
 
   @ReactiveProperty(0)
-  declare min: number;
+  declare min: number
 
   @ReactiveProperty(1)
-  declare max: number;
+  declare max: number
 
   @ReactiveProperty(1)
-  declare exponent: number;
+  declare exponent: number
 
   @ReactiveProperty(1)
-  declare conversion: number;
+  declare conversion: number
 
-  constructor(args: IoNumberSliderProps = {}) { super(args); }
+  constructor(args: IoNumberSliderProps = {}) { super(args) }
 
   _onNumberSet(event: CustomEvent) {
-    this.value = event.detail.value;
-    this.dispatch('value-input', event.detail, false);
+    this.value = event.detail.value
+    this.dispatch('value-input', event.detail, false)
   }
   _onSliderSet(event: CustomEvent) {
-    event.detail.value = event.detail.value / this.conversion;
-    this.value = event.detail.value;
-    this.dispatch('value-input', event.detail, false);
+    event.detail.value = event.detail.value / this.conversion
+    this.value = event.detail.value
+    this.dispatch('value-input', event.detail, false)
   }
   ready() {
-    this.changed();
+    this.changed()
   }
   changed() {
     this.render([
@@ -85,9 +85,9 @@ export class IoNumberSlider extends IoElement {
         exponent: this.exponent,
         '@value-input': this._onSliderSet,
       }),
-    ]);
+    ])
   }
 }
 export const ioNumberSlider = function(arg0?: IoNumberSliderProps) {
-  return IoNumberSlider.vConstructor(arg0);
-};
+  return IoNumberSlider.vConstructor(arg0)
+}

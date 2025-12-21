@@ -1,5 +1,5 @@
-import { Node } from '../nodes/Node.js';
-import { IoElement } from '../elements/IoElement.js';
+import { Node } from '../nodes/Node.js'
+import { IoElement } from '../elements/IoElement.js'
 
 /**
  * Registers a new Node or IoElement subclass. This needs to be called for each new class that extends Node or IoElement.
@@ -24,5 +24,5 @@ import { IoElement } from '../elements/IoElement.js';
  * Register(MyNode);
 */
 export function Register(ioNodeConstructor: typeof Node | typeof IoElement) {
-  (ioNodeConstructor as any).prototype.Register(ioNodeConstructor);
+  (ioNodeConstructor as any).prototype.Register(ioNodeConstructor)
 }

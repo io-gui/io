@@ -1,9 +1,9 @@
-import { ReactiveProperty } from '../decorators/Property.js';
-import { Register } from '../decorators/Register.js';
-import { ListenerDefinitions } from '../nodes/Node.js';
-import { IoElement, IoElementProps } from './IoElement.js';
+import { ReactiveProperty } from '../decorators/Property.js'
+import { Register } from '../decorators/Register.js'
+import { ListenerDefinitions } from '../nodes/Node.js'
+import { IoElement, IoElementProps } from './IoElement.js'
 
-let focusRestoreTarget: Element | null = null;
+let focusRestoreTarget: Element | null = null
 
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.
@@ -38,10 +38,10 @@ class IoOverlay extends IoElement {
         position: absolute !important;
         box-shadow: var(--io_shadow);
       }
-    `;
+    `
   }
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare expanded: boolean;
+  declare expanded: boolean
 
   static get Listeners(): ListenerDefinitions {
     return {
@@ -61,90 +61,90 @@ class IoOverlay extends IoElement {
       'blur': ['stopPropagation', {passive: false}],
       'scroll': 'onScroll',
       'wheel': ['onScroll', {passive: false}],
-    };
+    }
   }
 
-  constructor(args: IoElementProps = {}) { super(args); }
+  constructor(args: IoElementProps = {}) { super(args) }
 
   init() {
-    this.expandAsChildren = this.expandAsChildren.bind(this);
+    this.expandAsChildren = this.expandAsChildren.bind(this)
   }
   stopPropagation(event: Event) {
-    event.stopPropagation();
+    event.stopPropagation()
   }
   onPointerup(event: PointerEvent) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
-      this.collapse();
+      this.collapse()
     }
-    event.stopPropagation();
+    event.stopPropagation()
   }
   onContextmenu(event: Event) {
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault()
+    event.stopPropagation()
   }
   onScroll(event: Event) {
     if (event.composedPath()[0] === this as unknown as EventTarget) {
-      this.collapse();
+      this.collapse()
     }
   }
   onResized() {
-    this.collapse();
+    this.collapse()
   }
   appendChild<El extends Node>(child: El) {
-    super.appendChild(child);
-    child.addEventListener('expanded-changed', this.onChildExpandedChanged);
-    this.debounce(this.expandAsChildren);
-    return child;
+    super.appendChild(child)
+    child.addEventListener('expanded-changed', this.onChildExpandedChanged)
+    this.debounce(this.expandAsChildren)
+    return child
   }
   removeChild<El extends Node>(child: El) {
-    super.removeChild(child);
-    child.removeEventListener('expanded-changed', this.onChildExpandedChanged);
-    this.debounce(this.expandAsChildren);
-    return child;
+    super.removeChild(child)
+    child.removeEventListener('expanded-changed', this.onChildExpandedChanged)
+    this.debounce(this.expandAsChildren)
+    return child
   }
   onChildExpandedChanged() {
-    this.debounce(this.expandAsChildren);
+    this.debounce(this.expandAsChildren)
   }
   collapse() {
     for (let i = this.children.length; i--;) {
-      this.expanded = false;
+      this.expanded = false
     }
-    this.expanded = false;
+    this.expanded = false
   }
   expandAsChildren() {
     for (let i = this.children.length; i--;) {
       if ((this.children[i] as any).expanded) {
-        this.expanded = true;
-        return;
+        this.expanded = true
+        return
       }
     }
-    this.expanded = false;
+    this.expanded = false
   }
   expandedChanged() {
     if (!this.expanded) {
       for (let i = this.children.length; i--;) {
-        (this.children[i] as any).expanded = false;
+        (this.children[i] as any).expanded = false
       }
-      if (focusRestoreTarget) (focusRestoreTarget as HTMLElement).focus();
+      if (focusRestoreTarget) (focusRestoreTarget as HTMLElement).focus()
     }
   }
 }
 
-export const IoOverlaySingleton = new IoOverlay();
+export const IoOverlaySingleton = new IoOverlay()
 
 setTimeout(() => {
-  document.body.appendChild(IoOverlaySingleton as HTMLElement);
-}, 100);
+  document.body.appendChild(IoOverlaySingleton as HTMLElement)
+}, 100)
 
 // TODO: Test
 window.addEventListener('focusin', () => {
-  focusRestoreTarget = document.activeElement;
-}, {capture: false});
+  focusRestoreTarget = document.activeElement
+}, {capture: false})
 
 window.addEventListener('blur', () => {
   setTimeout(() => {
     if (!IoOverlaySingleton.expanded && document.activeElement === document.body) {
-      focusRestoreTarget = null;
+      focusRestoreTarget = null
     }
-  });
-}, {capture: true});
+  })
+}, {capture: true})

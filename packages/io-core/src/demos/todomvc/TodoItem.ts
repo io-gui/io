@@ -1,11 +1,11 @@
-import { IoElement, Register, input, label, li, div, button, ReactiveProperty, IoElementProps } from 'io-core';
-import { TodoItemModel } from './TodoItemModel.js';
-import { TodoListModel } from './TodoListModel.js';
+import { IoElement, Register, input, label, li, div, button, ReactiveProperty, IoElementProps } from 'io-core'
+import { TodoItemModel } from './TodoItemModel.js'
+import { TodoListModel } from './TodoListModel.js'
 
 type TodoItemProps = IoElementProps & {
-  item?: TodoItemModel;
-  model?: TodoListModel;
-};
+  item?: TodoItemModel
+  model?: TodoListModel
+}
 
 export class TodoItem extends IoElement {
   static get Style() {
@@ -13,25 +13,25 @@ export class TodoItem extends IoElement {
     :host {
       display: contents;
     }
-    `;
+    `
   }
 
   @ReactiveProperty({type: TodoItemModel})
-  declare item: TodoItemModel;
+  declare item: TodoItemModel
 
   @ReactiveProperty({type: TodoListModel})
-  declare model: TodoListModel;
+  declare model: TodoListModel
 
   @ReactiveProperty({value: false})
-  declare editing: boolean;
+  declare editing: boolean
 
-  private $input!: HTMLInputElement;
-  private _originalTitle!: string;
+  private $input!: HTMLInputElement
+  private _originalTitle!: string
 
-  constructor(args: TodoItemProps = {}) { super(args); }
+  constructor(args: TodoItemProps = {}) { super(args) }
 
   itemMutated() {
-    this.changed();
+    this.changed()
   }
 
   changed() {
@@ -44,35 +44,35 @@ export class TodoItem extends IoElement {
         ]),
         input({id: 'input-' + this.item.title, class: 'edit', value: this.item.title, '@blur': this.onBlur, '@keyup': this.onInputKey})
       ])
-    ]);
-    this.$input = this.querySelector('input.edit') as HTMLInputElement;
+    ])
+    this.$input = this.querySelector('input.edit') as HTMLInputElement
   }
 
   onStartEdit() {
-    this.editing = true;
-    this._originalTitle = this.item.title;
-    this.$input.focus();
+    this.editing = true
+    this._originalTitle = this.item.title
+    this.$input.focus()
   }
 
   onBlur() {
-    const title = String(this.$input.value).trim();
+    const title = String(this.$input.value).trim()
     if (title) {
-      this.item.title = title;
+      this.item.title = title
     } else {
-      this.item.title = this._originalTitle;
+      this.item.title = this._originalTitle
     }
-    this.editing = false;
+    this.editing = false
   }
 
   onInputKey(event: CustomEvent) {
-    const keyboardEvent = event.detail as KeyboardEvent;
+    const keyboardEvent = event.detail as KeyboardEvent
     if (['Enter', 'Escape'].includes(keyboardEvent.key)) {
-      this.$input.blur();
+      this.$input.blur()
     }
   }
 }
-Register(TodoItem);
+Register(TodoItem)
 
 export const todoItem = function(arg0: TodoItemProps) {
-  return TodoItem.vConstructor(arg0);
-};
+  return TodoItem.vConstructor(arg0)
+}

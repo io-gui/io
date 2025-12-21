@@ -1,12 +1,12 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from 'io-core';
-import { ioButton, ioString } from 'io-inputs';
-import { ioPropertyLink } from './IoPropertyLink.js';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from 'io-core'
+import { ioButton, ioString } from 'io-inputs'
+import { ioPropertyLink } from './IoPropertyLink.js'
 
 export type IoBreadcrumbsProps = IoElementProps & {
-  value?: Object,
-  selected?: WithBinding<Object>,
-  search?: WithBinding<string>,
-};
+  value?: Object
+  selected?: WithBinding<Object>
+  search?: WithBinding<string>
+}
 
 /**
  * Breadcrumbs select element.
@@ -64,60 +64,60 @@ export class IoBreadcrumbs extends IoElement {
       content: '🔍';
       font-size: 0.9em;
     }
-    `;
+    `
   }
   @ReactiveProperty({type: Object, init: null})
-  declare value: Object;
+  declare value: Object
 
   @ReactiveProperty({type: Object, init: null})
-  declare selected: Object;
+  declare selected: Object
 
   @ReactiveProperty({type: String, reflect: true})
-  declare search: string;
+  declare search: string
 
   @Property(Array)
-  declare _crumbs: Array<Object>;
+  declare _crumbs: Array<Object>
 
   valueChanged() {
-    this._crumbs.length = 0;
-    this._crumbs.push(this.value);
+    this._crumbs.length = 0
+    this._crumbs.push(this.value)
   }
   selectedChanged() {
-    const index = this._crumbs.indexOf(this.selected);
+    const index = this._crumbs.indexOf(this.selected)
     if (index !== -1) {
-      this._crumbs.length = index + 1;
+      this._crumbs.length = index + 1
     } else {
-      this._crumbs.push(this.selected);
+      this._crumbs.push(this.selected)
     }
   }
   onClearSearch() {
-    this.search = '';
+    this.search = ''
   }
   changed() {
-    const vChildren = [];
+    const vChildren = []
     if (this._crumbs.length > 1) {
       vChildren.push(ioButton({
         icon: 'io:arrow_left',
         class: 'back-button',
         value: this._crumbs[this._crumbs.length - 2],
-      }));
+      }))
     }
-    const crumbs = div();
-    crumbs.children = [];
+    const crumbs = div()
+    crumbs.children = []
     for (let i = Math.max(0, this._crumbs.length - 2); i < this._crumbs.length; i++) {
       crumbs.children.push(ioPropertyLink({
         value: this._crumbs[i],
         showName: i === this._crumbs.length - 1,
-      }));
+      }))
     }
     vChildren.push(
       crumbs,
       ioButton({icon: 'io:close', class: 'clear-button', action: this.onClearSearch}),
       ioString({id: 'search', class: 'search-input', value: this.bind('search'), live: true}),
-    );
-    this.render(vChildren);
+    )
+    this.render(vChildren)
   }
 }
 export const ioBreadcrumbs = function(arg0?: IoBreadcrumbsProps) {
-  return IoBreadcrumbs.vConstructor(arg0);
-};
+  return IoBreadcrumbs.vConstructor(arg0)
+}

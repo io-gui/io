@@ -1,16 +1,16 @@
-import { Register, IoElement, Change, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-core';
-import { MenuOption } from '../nodes/MenuOption.js';
-import { ioMenuItem } from './IoMenuItem.js';
+import { Register, IoElement, Change, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-core'
+import { MenuOption } from '../nodes/MenuOption.js'
+import { ioMenuItem } from './IoMenuItem.js'
 
-export type SelectBy = 'value' | 'id';
+export type SelectBy = 'value' | 'id'
 
 export type IoOptionSelectProps = IoElementProps & {
-  option: MenuOption,
-  value?: WithBinding<any>,
-  label?: string,
-  icon?: string,
-  selectBy?: SelectBy,
-};
+  option: MenuOption
+  value?: WithBinding<any>
+  label?: string
+  icon?: string
+  selectBy?: SelectBy
+}
 
 /**
  * Option select element. Similar to `IoMenuItem`, except it is displayed as a button and uses `options` property instead of ~~`option.options`~~  and it is `selectable` by default. It displays selected `value` or `label` followed by the `â–¾` character.
@@ -35,67 +35,67 @@ export class IoOptionSelect extends IoElement {
       background-color: transparent !important;
       border-color: transparent !important;
     }
-    `;
+    `
   }
 
   @ReactiveProperty({value: undefined})
-  declare value: any;
+  declare value: any
 
   @ReactiveProperty('')
-  declare label: string;
+  declare label: string
 
   @ReactiveProperty('')
-  declare icon: string;
+  declare icon: string
 
   // TODO: consider deprecating
   @ReactiveProperty('value')
-  declare selectBy: SelectBy;
+  declare selectBy: SelectBy
 
   @ReactiveProperty({type: MenuOption})
-  declare option: MenuOption;
+  declare option: MenuOption
 
   @Property('button')
-  declare role: string;
+  declare role: string
 
   constructor(args: IoOptionSelectProps) {
-    super(args);
+    super(args)
   }
 
   // TODO: Consider triggering inputValue() only by user-input!
   onOptionSelected(event: CustomEvent) {
-    if (this._disposed) return;
+    if (this._disposed) return
     if (this.selectBy === 'value') {
-      this.inputValue(event.detail.option.value);
+      this.inputValue(event.detail.option.value)
     } else if (this.selectBy === 'id') {
-      this.inputValue(event.detail.option.id);
+      this.inputValue(event.detail.option.id)
     }
   }
   inputValue(value: any) {
     if (this.value !== value || typeof this.value === 'object') {
-      const oldValue = this.value;
-      this.setProperty('value', value);
-      this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
+      const oldValue = this.value
+      this.setProperty('value', value)
+      this.dispatch('value-input', {value: value, oldValue: oldValue}, false)
     }
   }
   optionChanged(change: Change) {
     if (change.oldValue) {
-      change.oldValue.removeEventListener('option-selected', this.onOptionSelected);
+      change.oldValue.removeEventListener('option-selected', this.onOptionSelected)
     }
     if (change.value) {
-      change.value.addEventListener('option-selected', this.onOptionSelected);
+      change.value.addEventListener('option-selected', this.onOptionSelected)
     }
   }
   changed() {
-    let selectedItem;
+    let selectedItem
     if (this.selectBy === 'value') {
-      selectedItem = this.option.findItemByValue(this.value);
+      selectedItem = this.option.findItemByValue(this.value)
     } else if (this.selectBy === 'id') {
-      selectedItem = this.option.findItemById(this.value);
+      selectedItem = this.option.findItemById(this.value)
     }
-    const label = selectedItem ? selectedItem.label : this.label || String(this.value);
-    this.render([ioMenuItem({option: this.option, label: label, icon: this.icon, direction: 'down'})]);
+    const label = selectedItem ? selectedItem.label : this.label || String(this.value)
+    this.render([ioMenuItem({option: this.option, label: label, icon: this.icon, direction: 'down'})])
   }
 }
 export const ioOptionSelect = function(arg0: IoOptionSelectProps) {
-  return IoOptionSelect.vConstructor(arg0);
-};
+  return IoOptionSelect.vConstructor(arg0)
+}

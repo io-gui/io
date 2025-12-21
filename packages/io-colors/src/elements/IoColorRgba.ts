@@ -1,7 +1,7 @@
-import { Register } from 'io-core';
-import { ioNumber } from 'io-inputs';
-import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
-import { ioColorPicker } from './IoColorPicker.js';
+import { Register } from 'io-core'
+import { ioNumber } from 'io-inputs'
+import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
+import { ioColorPicker } from './IoColorPicker.js'
 
 /**
  * Input element for color displayed as vector and an interactive picker.
@@ -35,16 +35,16 @@ export class IoColorRgba extends IoColorBase {
       :host > *:not(:last-child) {
         margin-right: var(--io_spacing);
       }
-    `;
+    `
   }
 
   _onNumberValueInput(event: CustomEvent) {
-    event.stopPropagation();
-    const item = event.composedPath()[0] as HTMLElement;
+    event.stopPropagation()
+    const item = event.composedPath()[0] as HTMLElement
     if (['r', 'g', 'b'].includes(item.id)) {
-      this.value[item.id as keyof typeof this.value] = event.detail.value;
+      this.value[item.id as keyof typeof this.value] = event.detail.value
     }
-    this.dispatch('value-input', {property: 'value', value: this.value}, false);
+    this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
   changed() {
@@ -57,9 +57,9 @@ export class IoColorRgba extends IoColorBase {
         ? ioNumber({id: 'a', value: this.value.a, min: 0, max: 1, step: 0.0001, ladder: true, '@value-input': this._onNumberValueInput})
         : null,
       ioColorPicker({id: 'swatch', value: this.value, '@value-input': this._onNumberValueInput}),
-    ]);
+    ])
   }
 }
 export const ioColorRgba = function(arg0?: IoColorBaseProps) {
-  return IoColorRgba.vConstructor(arg0);
-};
+  return IoColorRgba.vConstructor(arg0)
+}

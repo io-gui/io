@@ -1,9 +1,9 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from 'io-core';
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from 'io-core'
 
 export type IoDividerProps = IoElementProps & {
-  orientation: 'vertical' | 'horizontal',
-  index: number,
-};
+  orientation: 'vertical' | 'horizontal'
+  index: number
+}
 
 @Register
 export class IoDivider extends IoElement {
@@ -64,76 +64,76 @@ export class IoDivider extends IoElement {
       :host:hover:before {
         opacity: 1;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare pressed: boolean;
+  declare pressed: boolean
 
   @ReactiveProperty({value: 'horizontal', type: String, reflect: true})
-  declare orientation: 'horizontal' | 'vertical';
+  declare orientation: 'horizontal' | 'vertical'
 
   @Property(Number)
-  declare index: number;
+  declare index: number
 
   static get Listeners() {
     return {
       'pointerdown': 'onPointerdown',
       'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
-    };
+    }
   }
 
-  constructor(args: IoDividerProps) { super(args); }
+  constructor(args: IoDividerProps) { super(args) }
 
   onPointerdown(event: PointerEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.addEventListener('pointermove', this.onPointermove);
-    this.addEventListener('pointerleave', this.onPointerleave);
-    this.addEventListener('pointerup', this.onPointerup);
-    this.setPointerCapture(event.pointerId);
-    this.pressed = true;
+    event.preventDefault()
+    event.stopPropagation()
+    this.addEventListener('pointermove', this.onPointermove)
+    this.addEventListener('pointerleave', this.onPointerleave)
+    this.addEventListener('pointerup', this.onPointerup)
+    this.setPointerCapture(event.pointerId)
+    this.pressed = true
   }
   onPointermove(event: PointerEvent) {
-    event.preventDefault();
+    event.preventDefault()
     this.dispatch('io-divider-move', {
       index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
-    }, true);
+    }, true)
   }
   onPointerleave(event: PointerEvent) {
-    event.preventDefault();
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerleave', this.onPointerleave);
-    this.removeEventListener('pointerup', this.onPointerup);
-    this.pressed = false;
+    event.preventDefault()
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerleave', this.onPointerleave)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.pressed = false
   }
   onPointerup(event: PointerEvent) {
-    event.preventDefault();
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerleave', this.onPointerleave);
-    this.removeEventListener('pointerup', this.onPointerup);
-    this.releasePointerCapture(event.pointerId);
-    this.pressed = false;
+    event.preventDefault()
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerleave', this.onPointerleave)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.releasePointerCapture(event.pointerId)
+    this.pressed = false
     this.dispatch('io-divider-move-end', {
       index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
-    }, true);
+    }, true)
   }
   onTouchstart(event: TouchEvent) {
-    this.addEventListener('touchmove', this.onTouchmove, {passive: false});
-    this.addEventListener('touchend', this.onTouchend);
+    this.addEventListener('touchmove', this.onTouchmove, {passive: false})
+    this.addEventListener('touchend', this.onTouchend)
   }
   onTouchmove(event: TouchEvent) {
-    event.preventDefault();
+    event.preventDefault()
   }
   onTouchend() {
-    this.removeEventListener('touchmove', this.onTouchmove);
-    this.removeEventListener('touchend', this.onTouchend);
+    this.removeEventListener('touchmove', this.onTouchmove)
+    this.removeEventListener('touchend', this.onTouchend)
   }
 }
 export const ioDivider = function(arg0: IoDividerProps) {
-  return IoDivider.vConstructor(arg0);
-};
+  return IoDivider.vConstructor(arg0)
+}

@@ -1,77 +1,77 @@
-import { Register } from '../decorators/Register.js';
-import { ReactiveProperty } from '../decorators/Property.js';
-import { ReactivePropertyDefinitions, Node, ReactivityType } from '../nodes/Node.js';
-import { Storage as $ } from '../nodes/Storage.js';
+import { Register } from '../decorators/Register.js'
+import { ReactiveProperty } from '../decorators/Property.js'
+import { ReactivePropertyDefinitions, Node, ReactivityType } from '../nodes/Node.js'
+import { Storage as $ } from '../nodes/Storage.js'
 
-const THEME_VERSION = 'v0.11';
-const styleElement = document.createElement('style');
-styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
-document.head.appendChild(styleElement);
+const THEME_VERSION = 'v0.11'
+const styleElement = document.createElement('style')
+styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION)
+document.head.appendChild(styleElement)
 
 export class Color {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
+  r: number
+  g: number
+  b: number
+  a: number
   constructor(r: number, g: number, b: number, a: number) {
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
+    this.r = r
+    this.g = g
+    this.b = b
+    this.a = a
   }
   toCss() {
-    const r = Math.floor(this.r * 255);
-    const g = Math.floor(this.g * 255);
-    const b = Math.floor(this.b * 255);
+    const r = Math.floor(this.r * 255)
+    const g = Math.floor(this.g * 255)
+    const b = Math.floor(this.b * 255)
     if (this.a !== undefined && this.a !== 1) {
-      return `rgba(${r}, ${g}, ${b}, ${this.a})`;
+      return `rgba(${r}, ${g}, ${b}, ${this.a})`
     } else {
-      return `rgb(${r}, ${g}, ${b})`;
+      return `rgb(${r}, ${g}, ${b})`
     }
   }
 }
 
 export type ThemeVars = {
-  spacing: number;
-  spacing2: number;
-  spacing3: number;
-  spacing5: number;
-  spacing8: number;
+  spacing: number
+  spacing2: number
+  spacing3: number
+  spacing5: number
+  spacing8: number
 
-  fontSize: number;
-  lineHeight: number;
-  fieldHeight: number;
+  fontSize: number
+  lineHeight: number
+  fieldHeight: number
 
-  borderRadius: number;
-  borderWidth: number;
-  borderColor: Color;
-  borderColorLight: Color;
-  borderColorStrong: Color;
-  borderColorRed: Color;
-  borderColorBlue: Color;
-  borderColorGreen: Color;
+  borderRadius: number
+  borderWidth: number
+  borderColor: Color
+  borderColorLight: Color
+  borderColorStrong: Color
+  borderColorRed: Color
+  borderColorBlue: Color
+  borderColorGreen: Color
 
-  bgColor: Color;
-  bgColorStrong: Color;
-  bgColorLight: Color;
-  bgColorRed: Color;
-  bgColorGreen: Color;
-  bgColorBlue: Color;
-  bgColorInput: Color;
+  bgColor: Color
+  bgColorStrong: Color
+  bgColorLight: Color
+  bgColorRed: Color
+  bgColorGreen: Color
+  bgColorBlue: Color
+  bgColorInput: Color
 
-  color: Color;
-  colorStrong: Color;
-  colorLight: Color;
-  colorRed: Color;
-  colorGreen: Color;
-  colorBlue: Color;
-  colorWhite: Color;
-  colorInput: Color;
+  color: Color
+  colorStrong: Color
+  colorLight: Color
+  colorRed: Color
+  colorGreen: Color
+  colorBlue: Color
+  colorWhite: Color
+  colorInput: Color
 
-  gradientColorStart: Color;
-  gradientColorEnd: Color;
+  gradientColorStart: Color
+  gradientColorEnd: Color
 
-  shadowColor: Color;
+  shadowColor: Color
 }
 
 export const LIGHT_THEME: ThemeVars = {
@@ -115,7 +115,7 @@ export const LIGHT_THEME: ThemeVars = {
   gradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
 
   shadowColor: new Color(0, 0, 0, 0.2),
-};
+}
 
 export const DARK_THEME: ThemeVars = {
   spacing: 2,
@@ -158,19 +158,19 @@ export const DARK_THEME: ThemeVars = {
   gradientColorEnd: new Color(0.2, 0.2, 0.2, 1),
 
   shadowColor: new Color(0, 0, 0, 0.2),
-};
+}
 
 const $ThemeID = $({
   value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
   storage: 'local',
   key: 'theme-' + THEME_VERSION
-});
+})
 
 const $Themes = $({
   value: {},
   storage: 'local',
   key: 'io-themes-' + THEME_VERSION
-});
+})
 
 const compositeVariables = /* css */`
   body {
@@ -183,7 +183,7 @@ const compositeVariables = /* css */`
     --io_shadowInset: 0.75px 0.75px 2px inset var(--io_shadowColor);
     --io_shadowOutset: 1px 1px 2px var(--io_shadowColor);
   }
-`;
+`
 
 /**
  * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
@@ -198,132 +198,132 @@ const compositeVariables = /* css */`
 @Register
 export class Theme extends Node {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
-    const props: ReactivePropertyDefinitions = {};
+    const props: ReactivePropertyDefinitions = {}
     for (const p in LIGHT_THEME) {
-      const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME];
+      const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME]
       if (prop instanceof Object) {
-        props[p] = {value: prop, type: Color, init: null};
+        props[p] = {value: prop, type: Color, init: null}
       } else {
-        props[p] = prop;
+        props[p] = prop
       }
     }
-    return props;
+    return props
   }
 
-  declare spacing: number;
-  declare spacing2: number;
-  declare spacing3: number;
-  declare spacing5: number;
-  declare spacing8: number;
-  declare lineHeight: number;
-  declare fontSize: number;
-  declare fieldHeight: number;
-  declare borderRadius: number;
-  declare borderWidth: number;
-  declare borderColor: Color;
-  declare borderColorLight: Color;
-  declare borderColorStrong: Color;
-  declare borderColorRed: Color;
-  declare borderColorGreen: Color;
-  declare borderColorBlue: Color;
-  declare bgColor: Color;
-  declare bgColorStrong: Color;
-  declare bgColorLight: Color;
-  declare bgColorRed: Color;
-  declare bgColorGreen: Color;
-  declare bgColorBlue: Color;
-  declare bgColorInput: Color;
-  declare color: Color;
-  declare colorStrong: Color;
-  declare colorLight: Color;
-  declare colorRed: Color;
-  declare colorGreen: Color;
-  declare colorBlue: Color;
-  declare colorWhite: Color;
-  declare colorInput: Color;
-  declare gradientColorStart: Color;
-  declare gradientColorEnd: Color;
-  declare shadowColor: Color;
+  declare spacing: number
+  declare spacing2: number
+  declare spacing3: number
+  declare spacing5: number
+  declare spacing8: number
+  declare lineHeight: number
+  declare fontSize: number
+  declare fieldHeight: number
+  declare borderRadius: number
+  declare borderWidth: number
+  declare borderColor: Color
+  declare borderColorLight: Color
+  declare borderColorStrong: Color
+  declare borderColorRed: Color
+  declare borderColorGreen: Color
+  declare borderColorBlue: Color
+  declare bgColor: Color
+  declare bgColorStrong: Color
+  declare bgColorLight: Color
+  declare bgColorRed: Color
+  declare bgColorGreen: Color
+  declare bgColorBlue: Color
+  declare bgColorInput: Color
+  declare color: Color
+  declare colorStrong: Color
+  declare colorLight: Color
+  declare colorRed: Color
+  declare colorGreen: Color
+  declare colorBlue: Color
+  declare colorWhite: Color
+  declare colorInput: Color
+  declare gradientColorStart: Color
+  declare gradientColorEnd: Color
+  declare shadowColor: Color
 
   // Default theme values
   @ReactiveProperty({type: Object, init: null})
-  declare themeDefaults: Record<string, ThemeVars>;
+  declare themeDefaults: Record<string, ThemeVars>
 
   @ReactiveProperty({type: String, binding: $ThemeID})
-  declare themeID: string;
+  declare themeID: string
 
   @ReactiveProperty('debounced')
-  declare reactivity: ReactivityType;
+  declare reactivity: ReactivityType
 
   ready() {
-    this.registerTheme('light', LIGHT_THEME);
-    this.registerTheme('dark', DARK_THEME);
-    this.themeIDChanged();
+    this.registerTheme('light', LIGHT_THEME)
+    this.registerTheme('dark', DARK_THEME)
+    this.themeIDChanged()
   }
   registerTheme(themeID: string, theme: ThemeVars) {
     // Save default theme
-    this.themeDefaults[themeID] = theme;
-    this.setProperty('themeDefaults', JSON.parse(JSON.stringify(this.themeDefaults)), true);
+    this.themeDefaults[themeID] = theme
+    this.setProperty('themeDefaults', JSON.parse(JSON.stringify(this.themeDefaults)), true)
     // Save persistant theme
-    $Themes.value[themeID] = $Themes.value[themeID] || theme;
-    $Themes.value = JSON.parse(JSON.stringify($Themes.value));
+    $Themes.value[themeID] = $Themes.value[themeID] || theme
+    $Themes.value = JSON.parse(JSON.stringify($Themes.value))
   }
   reset() {
     // Load persistant themes from default themes
-    $Themes.value = JSON.parse(JSON.stringify(this.themeDefaults));
-    this.themeIDChanged();
+    $Themes.value = JSON.parse(JSON.stringify(this.themeDefaults))
+    this.themeIDChanged()
   }
   themeIDChanged() {
-    const values = $Themes.value[this.themeID];
+    const values = $Themes.value[this.themeID]
     for (const p in values) {
       if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
-         values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a);
+         values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a)
       }
     }
-    this.setProperties(values);
+    this.setProperties(values)
   }
 
   onPropertyMutated(event: CustomEvent) {
     // TODO: Add properties to mutation handler.
-    const mutated = super.onPropertyMutated(event);
+    const mutated = super.onPropertyMutated(event)
     if (mutated) {
-      this.changed();
-      this.dispatchMutation();
-      return true;
+      this.changed()
+      this.dispatchMutation()
+      return true
     }
-    return false;
+    return false
   }
   fontSizeChanged() {
-    this.lineHeight = Math.max(this.fontSize, this.lineHeight);
+    this.lineHeight = Math.max(this.fontSize, this.lineHeight)
   }
   lineHeightChanged() {
-    this.fontSize = Math.min(this.lineHeight, this.fontSize);
+    this.fontSize = Math.min(this.lineHeight, this.fontSize)
   }
   changed() {
-    this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth);
+    this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth)
 
-    this.spacing2 = this.spacing * 2;
-    this.spacing3 = this.spacing * 3;
-    this.spacing5 = this.spacing * 5;
-    this.spacing8 = this.spacing * 8;
+    this.spacing2 = this.spacing * 2
+    this.spacing3 = this.spacing * 3
+    this.spacing5 = this.spacing * 5
+    this.spacing8 = this.spacing * 8
 
     const propertyVariables = Array.from(Object.keys(LIGHT_THEME) as Array<keyof ThemeVars>).reduce(
       (result, prop) => {
-        $Themes.value[this.themeID][prop] = this[prop];
+        $Themes.value[this.themeID][prop] = this[prop]
         if (typeof this[prop] === 'object') {
-          return `${result}--io_${prop}: ${this[prop].toCss()};\n    `;
+          return `${result}--io_${prop}: ${this[prop].toCss()};\n    `
         } else {
-          return `${result}--io_${prop}: ${this[prop]}px;\n    `;
+          return `${result}--io_${prop}: ${this[prop]}px;\n    `
         }
-      }, '');
+      }, '')
 
-      styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`;
-      this.debounce(this.onSaveTheme, undefined, 60);
+      styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`
+      this.debounce(this.onSaveTheme, undefined, 60)
   }
   onSaveTheme() {
-    $Themes.value = JSON.parse(JSON.stringify($Themes.value));
+    $Themes.value = JSON.parse(JSON.stringify($Themes.value))
   }
 }
 
-const ThemeSingleton = new Theme();
-export { ThemeSingleton };
+const ThemeSingleton = new Theme()
+export { ThemeSingleton }

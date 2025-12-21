@@ -1,5 +1,5 @@
-import { Register, div } from 'io-core';
-import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
+import { Register, div } from 'io-core'
+import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
 
 /**
  * Element displaying colored square.
@@ -27,15 +27,15 @@ export class IoColorSwatch extends IoColorBase {
         width: 100%;
         height: 100%;
       }
-    `;
+    `
   }
   valueChanged() {
-    super.valueChanged();
+    super.valueChanged()
     this.render([
       div({style: {'background-color': `rgba(${this.rgba[0] * 255 },${this.rgba[1] * 255}, ${this.rgba[2] * 255}, ${this.rgba[3]})`}})
-    ]);
+    ])
   }
 }
 export const ioColorSwatch = function(arg0?: IoColorBaseProps) {
-  return IoColorSwatch.vConstructor(arg0);
-};
+  return IoColorSwatch.vConstructor(arg0)
+}

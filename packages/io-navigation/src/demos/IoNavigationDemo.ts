@@ -1,15 +1,15 @@
 //@ts-nocheck
-import { Register, IoElement, div, p, h1, h4 } from 'io-core';
-import { MenuOption } from 'io-menus';
-import { ioNavigator, ioSelector, ioCollapsible } from 'io-navigation';
+import { Register, IoElement, div, p, h1, h4 } from 'io-core'
+import { MenuOption } from 'io-menus'
+import { ioNavigator, ioSelector, ioCollapsible } from 'io-navigation'
 
 function lorem(length) {
-  const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');
-  let lorem = '';
+  const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')
+  let lorem = ''
   for (let i = 0; i < length; i++) {
-    lorem += words[Math.floor(Math.random() * words.length)] + ' ';
+    lorem += words[Math.floor(Math.random() * words.length)] + ' '
   }
-  return lorem;
+  return lorem
 }
 
 const contentElements = [
@@ -53,7 +53,7 @@ const contentElements = [
     h4({'data-heading': 'Section 4'}, 'Section 4'), p(lorem(100)),
     h4({'data-heading': 'Section 5'}, 'Section 5'), p(lorem(100)),
   ]),
-];
+]
 
 const contentOption = new MenuOption({options:[
   {id: 'Doc 1', options: [
@@ -84,8 +84,8 @@ const contentOption = new MenuOption({options:[
     {label: 'Section 4', id: 'Doc 4#Section 4'},
     {label: 'Section 5', id: 'Doc 4#Section 5'},
   ]},
-]});
-contentOption.options[0].options[3].selected = true;
+]})
+contentOption.options[0].options[3].selected = true
 
 export class IoNavigationDemo extends IoElement {
   static get Style() {
@@ -100,7 +100,7 @@ export class IoNavigationDemo extends IoElement {
       :host io-selector {
         max-height: 200px;
       }
-    `;
+    `
   }
   ready() {
     this.render([
@@ -126,8 +126,8 @@ export class IoNavigationDemo extends IoElement {
           anchor: contentOption.bind('selectedID'),
         }),
       ])
-    ]);
+    ])
   }
 }
-Register(IoNavigationDemo);
-export const ioNavigationDemo = IoNavigationDemo.vConstructor;
+Register(IoNavigationDemo)
+export const ioNavigationDemo = IoNavigationDemo.vConstructor

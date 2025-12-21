@@ -1,9 +1,9 @@
-import { IoColorSwatch } from 'io-colors';
+import { IoColorSwatch } from 'io-colors'
 // import { expect } from 'chai';
 
-const element = new IoColorSwatch();
-element.style.display = 'none';
-document.body.appendChild(element as HTMLElement);
+const element = new IoColorSwatch()
+element.style.display = 'none'
+document.body.appendChild(element as HTMLElement)
 
 export default class {
   run() {
@@ -17,17 +17,17 @@ export default class {
         // });
         // it('has correct default innerHTML', () => {
         // });
-      });
+      })
       describe('Reactivity', () => {
         // it('should set innerText to match value property', () => {
         // });
         // it('has reactive attributes', () => {
         // });
-      });
+      })
       describe('Accessibility', () => {
         // it('has a11y attributes', () => {
         // });
-      });
-    });
+      })
+    })
   }
 }

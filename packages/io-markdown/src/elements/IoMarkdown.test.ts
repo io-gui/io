@@ -5,6 +5,6 @@
 export default class {
   run() {
     describe('IoMarkdown', () => {
-    });
+    })
   }
 }

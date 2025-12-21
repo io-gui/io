@@ -1,13 +1,13 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from 'io-core';
-import { MenuOption, ioMenuItem } from 'io-menus';
-import { ioTab } from './IoTab.js';
-import { ioTabsHamburger } from './IoTabsHamburger.js';
-import { Tab } from '../nodes/Tab.js';
+import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from 'io-core'
+import { MenuOption, ioMenuItem } from 'io-menus'
+import { ioTab } from './IoTab.js'
+import { ioTabsHamburger } from './IoTabsHamburger.js'
+import { Tab } from '../nodes/Tab.js'
 
 export type IoTabsProps = IoElementProps & {
-  tabs: NodeArray<Tab>,
-  addMenuOption: MenuOption,
-};
+  tabs: NodeArray<Tab>
+  addMenuOption: MenuOption
+}
 
 @Register
 export class IoTabs extends IoElement {
@@ -51,37 +51,37 @@ export class IoTabs extends IoElement {
       :host > io-menu-item > .hasmore {
         display: none;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({type: NodeArray, init: 'this'})
-  declare tabs: NodeArray<Tab>;
+  declare tabs: NodeArray<Tab>
 
   @ReactiveProperty({type: Number, value: -1, reflect: true})
-  declare overflow: number;
+  declare overflow: number
 
   @Property({type: MenuOption})
-  declare addMenuOption: MenuOption;
+  declare addMenuOption: MenuOption
 
-  constructor(args: IoTabsProps) { super(args); }
+  constructor(args: IoTabsProps) { super(args) }
 
   tabsMutated() {
-    this.changed();
+    this.changed()
 
-    this.overflow = -1;
-    this.onResized();
+    this.overflow = -1
+    this.onResized()
   }
 
   onResized() {
-    const rect = this.getBoundingClientRect();
-    const addMenuRect = this.querySelector('.add-tab')!.getBoundingClientRect();
+    const rect = this.getBoundingClientRect()
+    const addMenuRect = this.querySelector('.add-tab')!.getBoundingClientRect()
 
     if (this.overflow === -1) {
       if (addMenuRect.right > rect.right) {
-        this.overflow = rect.width;
+        this.overflow = rect.width
       }
     } else if (rect.width > (this.overflow + 32)) {
-      this.overflow = -1;
+      this.overflow = -1
     }
   }
 
@@ -95,10 +95,10 @@ export class IoTabs extends IoElement {
         direction: 'down',
         option: this.addMenuOption,
       }),
-    ]);
+    ])
   }
 }
 
 export const ioTabs = function(arg0: IoTabsProps) {
-  return IoTabs.vConstructor(arg0);
-};
+  return IoTabs.vConstructor(arg0)
+}

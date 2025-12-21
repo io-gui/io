@@ -37,6 +37,6 @@ export default class {
     //       boolean: {name: 'io-boolean'},
     //     });
     //   });
-    });
+    })
   }
 }

@@ -1,10 +1,10 @@
-import { ReactiveProperty, Register, span } from 'io-core';
-import { IoButton, IoButtonProps } from 'io-inputs';
+import { ReactiveProperty, Register, span } from 'io-core'
+import { IoButton, IoButtonProps } from 'io-inputs'
 
 export type IoPropertyLinkProps = IoButtonProps & {
-  value?: Object,
-  showName?: boolean,
-};
+  value?: Object
+  showName?: boolean
+}
 
 @Register
 export class IoPropertyLink extends IoButton {
@@ -22,39 +22,39 @@ export class IoPropertyLink extends IoButton {
     :host:hover > span {
       text-decoration: underline;
     }
-    `;
+    `
   }
 
   @ReactiveProperty()
-  declare value: Object;
+  declare value: Object
 
   @ReactiveProperty({value: false, type: Boolean})
-  declare showName: boolean;
+  declare showName: boolean
 
   @ReactiveProperty({value: 'neutral', type: String, reflect: true})
-  declare appearance: 'inset' | 'outset' | 'neutral';
+  declare appearance: 'inset' | 'outset' | 'neutral'
 
   valueMutated() {
-    this.changed();
+    this.changed()
   }
 
   changed() {
-    let label = '';
+    let label = ''
     if (this.value instanceof Array) {
-      label = `${this.value.constructor.name} (${this.value.length})`;
+      label = `${this.value.constructor.name} (${this.value.length})`
     } else {
-      label = `${this.value.constructor.name}`;
+      label = `${this.value.constructor.name}`
     }
     if (this.showName) {
-      const name = (this.value as any).name || (this.value as any).title || (this.value as any).id;
+      const name = (this.value as any).name || (this.value as any).title || (this.value as any).id
       if (name) {
-        label += ` "${name}"`;
+        label += ` "${name}"`
       }
     }
-    this.render([span(label)]);
+    this.render([span(label)])
   }
 }
 
 export const ioPropertyLink = function(arg0?: IoPropertyLinkProps) {
-  return IoPropertyLink.vConstructor(arg0);
-};
+  return IoPropertyLink.vConstructor(arg0)
+}

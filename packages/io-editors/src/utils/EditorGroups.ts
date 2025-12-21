@@ -1,4 +1,4 @@
-import { AnyConstructor } from 'io-core';
+import { AnyConstructor } from 'io-core'
 
 export const SKIPPED_PROPERTIES = [
   '$',
@@ -25,27 +25,27 @@ export const SKIPPED_PROPERTIES = [
   'onpopstate','onrejectionhandled','onstorage','onunhandledrejection','onunload','onenterpictureinpicture','onreadystatechange',
   'onpointerlockchange','onpointerlockerror','onfreeze','onprerenderingchange','onresume','onvisibilitychange',
   'onleavepictureinpicture',
-];
+]
 
 export function getAllPropertyNames(obj: object): string[] {
-  const allProps: string[] = [];
-  let curr = obj;
+  const allProps: string[] = []
+  let curr = obj
   do {
-    const props = Object.getOwnPropertyNames(curr);
+    const props = Object.getOwnPropertyNames(curr)
     props.forEach((prop) => {
       if (allProps.indexOf(prop) === -1 && typeof (obj as any)[prop] !== 'function' && !SKIPPED_PROPERTIES.includes(prop)) {
-        allProps.push(prop);
+        allProps.push(prop)
       }
-    });
-    if (curr.constructor === Node) break;
+    })
+    if (curr.constructor === Node) break
     //@ts-ignore no-cond-assign
-  } while ((curr = Object.getPrototypeOf(curr)));
-  return allProps;
+  } while ((curr = Object.getPrototypeOf(curr)))
+  return allProps
 }
 
-type PropertyIdentifier = string | RegExp;
-export type PropertyGroups = Record<string, Array<PropertyIdentifier>>;
-export type PropertyGroupsRecord = Record<string, Array<string>>;
+type PropertyIdentifier = string | RegExp
+export type PropertyGroups = Record<string, Array<PropertyIdentifier>>
+export type PropertyGroupsRecord = Record<string, Array<string>>
 export type EditorGroups = Map<AnyConstructor, PropertyGroups>
 
 const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
@@ -83,30 +83,30 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
 
     Hidden: [],
   }],
-]);
+])
 
 export function getEditorGroups(object: object, editorGroups: EditorGroups = new Map()): PropertyGroupsRecord {
   debug: if (!object || !(object instanceof Object)) {
-    console.warn('`getEditorGroups` should be used with an Object instance');
-    return {};
+    console.warn('`getEditorGroups` should be used with an Object instance')
+    return {}
   }
 
   const aggregatedGroups: PropertyGroups = {
     Main: [],
-  };
+  }
 
   function aggregateGroups(editorGroups: EditorGroups) {
     for (const [constructorKey, groups] of editorGroups) {
       if (object instanceof constructorKey) {
         for (const g in groups) {
-          aggregatedGroups[g] = aggregatedGroups[g] || [];
-          aggregatedGroups[g].push(...groups[g]);
+          aggregatedGroups[g] = aggregatedGroups[g] || []
+          aggregatedGroups[g].push(...groups[g])
           // Remove duplicate identifiers that exist in other groups.
           for (const ag in aggregatedGroups) {
             if (ag !== g) {
               for (const identifier of groups[g]) {
                 if (aggregatedGroups[ag].includes(identifier)) {
-                  aggregatedGroups[ag].splice(aggregatedGroups[ag].indexOf(identifier), 1);
+                  aggregatedGroups[ag].splice(aggregatedGroups[ag].indexOf(identifier), 1)
                 }
               }
             }
@@ -116,52 +116,52 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
     }
   }
 
-  aggregateGroups(editorGroupsSingleton);
-  aggregateGroups(editorGroups);
+  aggregateGroups(editorGroupsSingleton)
+  aggregateGroups(editorGroups)
 
   const groupsRecord: PropertyGroupsRecord = {
     Main: [],
-  };
+  }
 
 
   for (const key of getAllPropertyNames(object)) {
-    let included = false;
+    let included = false
     for (const g of Object.keys(aggregatedGroups)) {
-      groupsRecord[g] = groupsRecord[g] || [];
+      groupsRecord[g] = groupsRecord[g] || []
       for (const identifier of aggregatedGroups[g]) {
         if (identifier === key) {
-          groupsRecord[g].push(key);
-          included = true;
-          continue;
+          groupsRecord[g].push(key)
+          included = true
+          continue
         } else if (identifier instanceof RegExp && identifier.test(key)) {
-          groupsRecord[g].push(key);
-          included = true;
+          groupsRecord[g].push(key)
+          included = true
         }
       }
     }
     if (!included) {
-      groupsRecord.Main.push(key);
+      groupsRecord.Main.push(key)
     }
   }
   // TODO: make sure no property belongs to multiple groups.
-  return groupsRecord;
+  return groupsRecord
 }
 
 export function registerEditorGroups(constructor: AnyConstructor, groups: PropertyGroups) {
-  const existingGroups = editorGroupsSingleton.get(constructor) || {};
+  const existingGroups = editorGroupsSingleton.get(constructor) || {}
   for (const group in groups) {
-    existingGroups[group] = existingGroups[group] || [];
-    existingGroups[group].push(...groups[group]);
+    existingGroups[group] = existingGroups[group] || []
+    existingGroups[group].push(...groups[group])
     // Remove duplicate identifiers that exist in other groups.
     for (const g in existingGroups) {
       if (g !== group) {
         for (const identifier of groups[group]) {
           if (existingGroups[g].includes(identifier)) {
-            existingGroups[g].splice(existingGroups[g].indexOf(identifier), 1);
+            existingGroups[g].splice(existingGroups[g].indexOf(identifier), 1)
           }
         }
       }
     }
   }
-  editorGroupsSingleton.set(constructor, existingGroups);
+  editorGroupsSingleton.set(constructor, existingGroups)
 }

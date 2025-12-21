@@ -1,9 +1,9 @@
 //@ts-nocheck
-import { Register, IoElement, div, ReactiveProperty } from 'io-core';
-import { MenuOption, ioOptionSelect } from 'io-menus';
-import { ioSlider } from 'io-sliders';
-import { ioString, ioNumber, ioBoolean, ioButton } from 'io-inputs';
-import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
+import { Register, IoElement, div, ReactiveProperty } from 'io-core'
+import { MenuOption, ioOptionSelect } from 'io-menus'
+import { ioSlider } from 'io-sliders'
+import { ioString, ioNumber, ioBoolean, ioButton } from 'io-inputs'
+import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors'
 
 export class IoEditorsDemo extends IoElement {
   static get Style() {
@@ -43,7 +43,7 @@ export class IoEditorsDemo extends IoElement {
         height: 100px;
         background-color: var(--io_bgColorLight);
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: {
@@ -71,7 +71,7 @@ export class IoEditorsDemo extends IoElement {
     matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
     matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
   }})
-  declare object: any;
+  declare object: any
 
   ready() {
     this.render([
@@ -153,8 +153,8 @@ export class IoEditorsDemo extends IoElement {
           this.object.object = {
             name: 'nested object 2',
             number: 3,
-          };
-          this.dispatchMutation(this.object);
+          }
+          this.dispatchMutation(this.object)
         }})
       ]),
       div({class: 'column'}, [
@@ -190,17 +190,17 @@ export class IoEditorsDemo extends IoElement {
           ]),
         }),
         div({class: 'context-editor-area', '@click': (event: MouseEvent) => {
-          event.stopPropagation();
+          event.stopPropagation()
           IoContextEditorSingleton.expand({
             source: event.target as HTMLElement,
             value: this.object,
             properties: ['number', 'string', 'boolean', 'object'],
             direction: 'down',
-          });
+          })
         }})
       ]),
-    ]);
+    ])
   }
 }
-Register(IoEditorsDemo);
-export const ioEditorsDemo = IoEditorsDemo.vConstructor;
+Register(IoEditorsDemo)
+export const ioEditorsDemo = IoEditorsDemo.vConstructor

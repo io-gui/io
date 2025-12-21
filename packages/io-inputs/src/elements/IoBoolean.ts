@@ -1,12 +1,12 @@
-import { Register, ReactiveProperty, span, WithBinding, Property } from 'io-core';
-import { ioIcon } from 'io-icons';
-import { IoField, IoFieldProps } from './IoField.js';
+import { Register, ReactiveProperty, span, WithBinding, Property } from 'io-core'
+import { ioIcon } from 'io-icons'
+import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoBooleanProps = IoFieldProps & {
-  value?: WithBinding<boolean>,
-  true?: string,
-  false?: string,
-};
+  value?: WithBinding<boolean>
+  true?: string
+  false?: string
+}
 
 /**
  * Input element for `Boolean` data type displayed as text.
@@ -20,47 +20,47 @@ export class IoBoolean extends IoField {
       :host {
         padding: var(--io_spacing);
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare value: boolean;
+  declare value: boolean
 
   @ReactiveProperty({value: 'true', type: String})
-  declare true: string;
+  declare true: string
 
   @ReactiveProperty({value: 'false', type: String})
-  declare false: string;
+  declare false: string
 
   @Property('checkbox')
-  declare role: string;
+  declare role: string
 
-  constructor(args: IoBooleanProps = {}) { super(args); }
+  constructor(args: IoBooleanProps = {}) { super(args) }
 
   onClick() {
-    this.toggle();
-    this.dispatch('io-boolean-clicked', {value: this.value}, true);
+    this.toggle()
+    this.dispatch('io-boolean-clicked', {value: this.value}, true)
   }
   toggle() {
-    this.inputValue(!this.value);
+    this.inputValue(!this.value)
   }
   ready() {
-    this.valueChanged();
-    this.changed();
+    this.valueChanged()
+    this.changed()
   }
   valueChanged() {
-    this.invalid = typeof this.value !== 'boolean';
-    this.setAttribute('aria-checked', String(!!this.value));
+    this.invalid = typeof this.value !== 'boolean'
+    this.setAttribute('aria-checked', String(!!this.value))
   }
   changed() {
-    const value = this.value ? this.true : this.false;
+    const value = this.value ? this.true : this.false
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.label ? span(this.label + ':') : null,
       value ? value.includes('io:') ? ioIcon({value: value}) : span(value) : null
-    ]);
+    ])
   }
 }
 export const ioBoolean = function(arg0?: IoBooleanProps) {
-  return IoBoolean.vConstructor(arg0);
-};
+  return IoBoolean.vConstructor(arg0)
+}

@@ -1,26 +1,26 @@
-import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from 'io-core';
-import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
-import { MenuOption, ioOptionSelect } from 'io-menus';
-import { ioNumberSlider } from 'io-sliders';
-import { ioColorRgba } from 'io-colors';
-import { ioVectorArray } from '../elements/IoVectorArray.js';
-import { ioObject } from '../elements/IoObject.js';
-import { getAllPropertyNames } from './EditorGroups.js';
+import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from 'io-core'
+import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs'
+import { MenuOption, ioOptionSelect } from 'io-menus'
+import { ioNumberSlider } from 'io-sliders'
+import { ioColorRgba } from 'io-colors'
+import { ioVectorArray } from '../elements/IoVectorArray.js'
+import { ioObject } from '../elements/IoObject.js'
+import { getAllPropertyNames } from './EditorGroups.js'
 
-type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
-export type PropertyConfig = [PropertyIdentifier, VDOMElement];
-export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
-export type PropertyConfigRecord = Record<string, VDOMElement>;
+type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined
+export type PropertyConfig = [PropertyIdentifier, VDOMElement]
+export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>
+export type PropertyConfigRecord = Record<string, VDOMElement>
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
 function makeSelect(options: any[]) {
   for (let i = 0; i < options.length; i++) {
     if (options[i] === null) {
-      options[i] = {value: null, id: 'Null'};
+      options[i] = {value: null, id: 'Null'}
     }
   }
-  const option = new MenuOption({options: options});
-  return ioOptionSelect({option});
+  const option = new MenuOption({options: options})
+  return ioOptionSelect({option})
 }
 
 // TODO: Make sure multiple editors dont share the same menu options.
@@ -135,40 +135,40 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     ['fieldHeight', ioField({disabled: true})],
     [Color, ioColorRgba()],
   ]]
-]);
+])
 
 editorConfigSingleton.forEach((propertyTypes, constructor) => {
-  const descriptors = Object.getOwnPropertyDescriptors(constructor.prototype);
+  const descriptors = Object.getOwnPropertyDescriptors(constructor.prototype)
   for (const [key, descriptor] of Object.entries(descriptors)) {
-    const isWritable = descriptor.writable !== false;
-    const hasGetter = descriptor.get !== undefined;
-    const hasSetter = descriptor.set !== undefined;
+    const isWritable = descriptor.writable !== false
+    const hasGetter = descriptor.get !== undefined
+    const hasSetter = descriptor.set !== undefined
     if ((hasGetter && !hasSetter) || !isWritable) {
-      const hasType = propertyTypes.find(propertyType => propertyType[0] === key);
+      const hasType = propertyTypes.find(propertyType => propertyType[0] === key)
       if (hasType) {
         debug: {
-          console.warn(constructor, `.${key} has getter but no setter or is not writable. Invalidating editor config.`);
+          console.warn(constructor, `.${key} has getter but no setter or is not writable. Invalidating editor config.`)
         }
-        (hasType as any).length = 0;
-        hasType.push(key, ioField({disabled: true}));
+        (hasType as any).length = 0
+        hasType.push(key, ioField({disabled: true}))
       } else {
-        propertyTypes.push([key, ioField({disabled: true})]);
+        propertyTypes.push([key, ioField({disabled: true})])
       }
     }
   }
-});
+})
 
 export function getEditorConfig(object: object, editorConfig: EditorConfig = new Map()): PropertyConfigRecord {
   debug: if (!object || !(object instanceof Object)) {
-    console.warn('`getObjectConfig` should be used with an Object instance');
-    return {};
+    console.warn('`getObjectConfig` should be used with an Object instance')
+    return {}
   }
 
-  const aggregatedConfig: PropertyConfigMap = new Map();
+  const aggregatedConfig: PropertyConfigMap = new Map()
   for (const [constructorKey, propertyTypes] of editorConfigSingleton) {
     if (object instanceof constructorKey) {
       for (const [PropertyIdentifier, config] of propertyTypes) {
-        aggregatedConfig.set(PropertyIdentifier, config);
+        aggregatedConfig.set(PropertyIdentifier, config)
       }
     }
   }
@@ -176,31 +176,31 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
   for (const [constructorKey, propertyTypes] of editorConfig) {
     if (object instanceof constructorKey) {
       for (const [PropertyIdentifier, config] of propertyTypes) {
-        aggregatedConfig.set(PropertyIdentifier, config);
+        aggregatedConfig.set(PropertyIdentifier, config)
       }
     }
   }
 
-  const configRecord: PropertyConfigRecord = {};
+  const configRecord: PropertyConfigRecord = {}
   for (const key of getAllPropertyNames(object)) {
-    const value = (object as any)[key];
+    const value = (object as any)[key]
     for (const [PropertyIdentifier, elementCandidate] of aggregatedConfig) {
-      let element: VDOMElement | undefined;
+      let element: VDOMElement | undefined
       if (typeof PropertyIdentifier === 'function' && value instanceof PropertyIdentifier) {
-        element = elementCandidate;
+        element = elementCandidate
       } else if (typeof PropertyIdentifier === 'function' && value?.constructor === PropertyIdentifier) {
-        element = elementCandidate;
+        element = elementCandidate
       } else if (typeof PropertyIdentifier === 'string' && key === PropertyIdentifier) {
         // ignore io-field elements assigned to read-only object properties
         if (!(typeof value === 'object' && value !== null && elementCandidate.tag === 'io-field')) {
-          element = elementCandidate;
+          element = elementCandidate
         }
       } else if (PropertyIdentifier instanceof RegExp && PropertyIdentifier.test(key)) {
-        element = elementCandidate;
+        element = elementCandidate
       } else if (PropertyIdentifier === null && value === null) {
-        element = elementCandidate;
+        element = elementCandidate
       } else if (PropertyIdentifier === undefined && value === undefined) {
-        element = elementCandidate;
+        element = elementCandidate
       }
       if (element) {
         // element = {...element};
@@ -208,29 +208,29 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
         //   element.props = {...element.props};
         // }
         // console.log(key, element);
-        configRecord[key] = element;
+        configRecord[key] = element
       }
     }
   }
 
   debug: for (const key of getAllPropertyNames(object)) {
-    if (key === 'textNode') continue;
-    const value = (object as any)[key];
-    if (!configRecord[key]) console.warn('No config found for', key, value);
+    if (key === 'textNode') continue
+    const value = (object as any)[key]
+    if (!configRecord[key]) console.warn('No config found for', key, value)
   }
 
-  return configRecord;
+  return configRecord
 }
 
 export function registerEditorConfig(constructor: AnyConstructor, propertyTypes: PropertyConfig[]) {
-  const existingConfigs = editorConfigSingleton.get(constructor) || [];
+  const existingConfigs = editorConfigSingleton.get(constructor) || []
   for (const [PropertyIdentifier, elementCandidate] of propertyTypes) {
-    const existingConfig = existingConfigs.find(config => config[0] === PropertyIdentifier);
+    const existingConfig = existingConfigs.find(config => config[0] === PropertyIdentifier)
     if (existingConfig) {
-      existingConfig[1] = elementCandidate;
+      existingConfig[1] = elementCandidate
     } else {
-      existingConfigs.push([PropertyIdentifier, elementCandidate]);
+      existingConfigs.push([PropertyIdentifier, elementCandidate])
     }
   }
-  editorConfigSingleton.set(constructor, existingConfigs);
+  editorConfigSingleton.set(constructor, existingConfigs)
 }

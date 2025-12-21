@@ -1,6 +1,5 @@
-import js from '@eslint/js';
+import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
-import tsParser from '@typescript-eslint/parser';
 import stylistic from '@stylistic/eslint-plugin'
 
 
@@ -26,7 +25,7 @@ export function makeConfig(projectPath) {
   return tseslint.config({
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "module",
+      sourceType: 'module',
       globals: {
         ...globals.browser,
         'expect': true,
@@ -35,7 +34,7 @@ export function makeConfig(projectPath) {
         'mocha': true,
         'hljs': true
       },
-      parser: tsParser,
+      parser: tseslint.parser,
       parserOptions: {
         project: projectPath
       }
@@ -49,12 +48,9 @@ export function makeConfig(projectPath) {
       '@stylistic': stylistic,
     },
     rules: {
-      'no-debugger': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-non-null-assertion' : 'off',
+      // Semantic/type-aware rules (require typescript-eslint)
       '@typescript-eslint/consistent-type-assertions': 'error',
       '@typescript-eslint/no-floating-promises': 'error',
-      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': ['error', {
         'vars': 'all',
         'args': 'after-used',
@@ -62,6 +58,9 @@ export function makeConfig(projectPath) {
         'argsIgnorePattern': '^event',
         'caughtErrorsIgnorePattern': '^error',
       }],
+      '@typescript-eslint/no-empty-function': 'off',
+
+      // Stylistic rules (migrated to @stylistic)
       '@stylistic/member-delimiter-style': ['error', {
         multiline: {
           delimiter: 'none',
@@ -72,15 +71,17 @@ export function makeConfig(projectPath) {
           requireLast: false,
         }
       }],
-      '@typescript-eslint/no-empty-function': 'off',
+      '@stylistic/semi': ['error', 'never'],
+      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/no-trailing-spaces': 'error',
+
+      // Core ESLint rules
+      'no-debugger': 'error',
       'no-unused-labels': 'off',
       'no-unused-vars': 'off',
       'no-var': 'error',
       'eqeqeq': 'error',
-      'no-trailing-spaces': 'error',
-      'semi': ['error', 'never'],
       'strict': 'error',
-      'quotes': ['error', 'single'],
     }
   },
   {
@@ -88,7 +89,7 @@ export function makeConfig(projectPath) {
     rules: {
       '@typescript-eslint/no-empty-function': 'off',
     }
-  });
+  })
 }
 
 export default makeConfig("./tsconfig.json");

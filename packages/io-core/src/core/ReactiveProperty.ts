@@ -1,7 +1,7 @@
-import { Binding } from './Binding.js';
-import { AnyConstructor, Node } from '../nodes/Node.js';
-import { IoElement } from '../elements/IoElement.js';
-import { NodeArray } from '../core/NodeArray.js';
+import { Binding } from './Binding.js'
+import { AnyConstructor, Node } from '../nodes/Node.js'
+import { IoElement } from '../elements/IoElement.js'
+import { NodeArray } from '../core/NodeArray.js'
 
 /**
  * Configuration for a property of an Node class.
@@ -13,18 +13,18 @@ import { NodeArray } from '../core/NodeArray.js';
  * @property {*} [init] Initialization arguments for constructing initial value.
  */
 export type ReactivePropertyDefinition= {
-  value?: any;
-  type?: AnyConstructor;
-  binding?: Binding<any>;
-  reflect?: boolean;
-  init?: any;
-};
+  value?: any
+  type?: AnyConstructor
+  binding?: Binding<any>
+  reflect?: boolean
+  init?: any
+}
 
 /**
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
  * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|ReactivePropertyDefinition)} ReactivePropertyDefinitionLoose
  */
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | ReactivePropertyDefinition;
+export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | ReactivePropertyDefinition
 
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
@@ -37,11 +37,11 @@ export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<
  * @property {*} [init] Initialization arguments for constructing initial values.
  */
 export class ReactiveProtoProperty {
-  declare value?: any;
-  declare type?: AnyConstructor;
-  declare binding?: Binding<any>;
-  declare reflect?: boolean;
-  declare init?: any;
+  declare value?: any
+  declare type?: AnyConstructor
+  declare binding?: Binding<any>
+  declare reflect?: boolean
+  declare init?: any
   /**
    * Creates a property definition from various input types.
    * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
@@ -58,24 +58,24 @@ export class ReactiveProtoProperty {
    */
   constructor(def: ReactivePropertyDefinitionLoose) {
     if (def === undefined || def === null) {
-      this.value = def;
+      this.value = def
     } else if (typeof def === 'function') {
-      this.type = def as AnyConstructor;
+      this.type = def as AnyConstructor
     } else if (def instanceof Binding) {
-      this.value = def.value;
-      this.binding = def;
+      this.value = def.value
+      this.binding = def
     } else if (def && def.constructor === Object) {
-      const d = def as ReactivePropertyDefinition;
-      if (Object.hasOwn(d, 'value')) this.value = d.value;
-      if (Object.hasOwn(d, 'type')) this.type = d.type;
+      const d = def as ReactivePropertyDefinition
+      if (Object.hasOwn(d, 'value')) this.value = d.value
+      if (Object.hasOwn(d, 'type')) this.type = d.type
       if (d.binding instanceof Binding) {
-        this.binding = d.binding;
-        this.value = this.binding.value;
+        this.binding = d.binding
+        this.value = this.binding.value
       }
-      if (Object.hasOwn(d, 'reflect')) this.reflect = d.reflect;
-      if (Object.hasOwn(d, 'init')) this.init = d.init;
+      if (Object.hasOwn(d, 'reflect')) this.reflect = d.reflect
+      if (Object.hasOwn(d, 'init')) this.init = d.init
     } else if (!(def && def.constructor === Object)) {
-      this.value = def;
+      this.value = def
     }
   }
   /**
@@ -83,11 +83,11 @@ export class ReactiveProtoProperty {
    * @param {ReactiveProtoProperty} protoProp Source ReactiveProtoProperty
    */
   assign(protoProp: ReactiveProtoProperty) {
-    if (Object.hasOwn(protoProp, 'value')) this.value = protoProp.value;
-    if (Object.hasOwn(protoProp, 'type')) this.type = protoProp.type;
-    if (Object.hasOwn(protoProp, 'reflect')) this.reflect = protoProp.reflect;
-    if (Object.hasOwn(protoProp, 'init')) this.init = protoProp.init;
-    if (Object.hasOwn(protoProp, 'binding')) this.binding = protoProp.binding;
+    if (Object.hasOwn(protoProp, 'value')) this.value = protoProp.value
+    if (Object.hasOwn(protoProp, 'type')) this.type = protoProp.type
+    if (Object.hasOwn(protoProp, 'reflect')) this.reflect = protoProp.reflect
+    if (Object.hasOwn(protoProp, 'init')) this.init = protoProp.init
+    if (Object.hasOwn(protoProp, 'binding')) this.binding = protoProp.binding
   }
   /**
    * Creates a serializable representation of the property definition.
@@ -104,29 +104,29 @@ export class ReactiveProtoProperty {
       reflect: this.reflect,
       init: this.init,
       binding: this.binding,
-    };
+    }
     if (json.value && typeof json.value === 'object') {
-      json.value = json.value.constructor.name;
+      json.value = json.value.constructor.name
     }
     if (json.type && typeof json.type === 'function') {
-      json.type = json.type.name;
+      json.type = json.type.name
     }
-    return json;
+    return json
   }
 }
 
 function decodeInitArgument(item: any, node: Node | IoElement) {
   if (item === 'this') {
-    return node;
+    return node
   } else if (typeof item === 'string' && item.startsWith('this.')) {
-    const keys = item.split('.');
-    let target: any = node;
+    const keys = item.split('.')
+    let target: any = node
     for (let i = 1; i < keys.length; i++) {
-      target = target[keys[i]];
+      target = target[keys[i]]
     }
-    if (target) return target;
-    console.error(`ReactivePropertyInstance: Invalid path ${item}`);
-  } else return item;
+    if (target) return target
+    console.error(`ReactivePropertyInstance: Invalid path ${item}`)
+  } else return item
 }
 
 /**
@@ -134,15 +134,15 @@ function decodeInitArgument(item: any, node: Node | IoElement) {
  */
 export class ReactivePropertyInstance {
   // Property value.
-  value?: any;
+  value?: any
   // Constructor of the property value.
-  type?: AnyConstructor;
+  type?: AnyConstructor
   // Binding object.
-  binding?: Binding<any>;
+  binding?: Binding<any>
   // Reflects to HTML attribute.
-  reflect = false;
+  reflect = false
   // Initialize property with provided constructor arguments. `null` prevents initialization.
-  init?: any = undefined;
+  init?: any = undefined
   /**
    * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
    * @param node owner Node instance
@@ -152,47 +152,47 @@ export class ReactivePropertyInstance {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {
-          console.warn(`ReactiveProtoProperty: Invalid field ${key}`);
+          console.warn(`ReactiveProtoProperty: Invalid field ${key}`)
         }
-      });
+      })
       if (propDef.type !== undefined) {
-        if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field');
+        if (typeof propDef.type !== 'function') console.warn('Incorrect type for "type" field')
       }
       if (propDef.type === NodeArray && propDef.init !== 'this') {
-        console.warn('NodeArray property should be initialized with "this"');
+        console.warn('NodeArray property should be initialized with "this"')
       }
-      if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field');
-      if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`);
+      if (propDef.binding !== undefined && propDef.binding.constructor !== Binding) console.warn('Incorrect type for "binding" field')
+      if (propDef.reflect !== undefined && typeof propDef.reflect !== 'boolean') console.error(`Invalid reflect field ${propDef.reflect}!`)
     }
 
-    this.value = propDef.value;
-    this.type = propDef.type;
-    this.binding = propDef.binding;
-    if (typeof propDef.reflect === 'boolean') this.reflect = propDef.reflect;
-    if (propDef.init !== undefined) this.init = propDef.init;
+    this.value = propDef.value
+    this.type = propDef.type
+    this.binding = propDef.binding
+    if (typeof propDef.reflect === 'boolean') this.reflect = propDef.reflect
+    if (propDef.init !== undefined) this.init = propDef.init
 
     if (this.binding instanceof Binding) {
-      this.value = this.binding.value;
+      this.value = this.binding.value
     } else if (this.value === undefined) {
-      if (this.type === Boolean) this.value = false;
-      else if (this.type === String) this.value = '';
-      else if (this.type === Number) this.value = 0;
+      if (this.type === Boolean) this.value = false
+      else if (this.type === String) this.value = ''
+      else if (this.type === Number) this.value = 0
       else if (typeof this.type === 'function') {
         if (this.init !== undefined) {
           if (this.init instanceof Array) {
-            const args = this.init.map(item => decodeInitArgument(item, node));
-            this.value = new this.type(...args);
+            const args = this.init.map(item => decodeInitArgument(item, node))
+            this.value = new this.type(...args)
           } else if (this.init instanceof Object) {
-            const args: any = {};
+            const args: any = {}
             Object.keys(this.init).forEach(key => {
-              args[key] = decodeInitArgument(this.init[key], node);
-            });
-            this.value = new this.type(args);
+              args[key] = decodeInitArgument(this.init[key], node)
+            })
+            this.value = new this.type(args)
           } else if (this.init === null) {
-            this.value = new this.type();
+            this.value = new this.type()
           } else {
-            const argument = decodeInitArgument(this.init, node);
-            this.value = new this.type(argument);
+            const argument = decodeInitArgument(this.init, node)
+            this.value = new this.type(argument)
           }
         }
       }
@@ -204,11 +204,11 @@ export class ReactivePropertyInstance {
           if (this.type === Boolean && typeof this.value !== 'boolean' ||
               this.type === Number && typeof this.value !== 'number' ||
               this.type === String && typeof this.value !== 'string') {
-            console.warn(`Property: Uninitialized value for type "${this.type.name}"!`);
+            console.warn(`Property: Uninitialized value for type "${this.type.name}"!`)
           }
         } else {
           if (typeof this.type === 'function' && !(this.value instanceof this.type)) {
-            console.warn(`Property: Incorrect value "${this.value}" for type "${this.type.name}"!`);
+            console.warn(`Property: Incorrect value "${this.value}" for type "${this.type.name}"!`)
           }
         }
       }

@@ -1,4 +1,4 @@
-import { AnyConstructor, VDOMElement } from 'io-core';
+import { AnyConstructor, VDOMElement } from 'io-core'
 
 export type EditorWidgets = Map<AnyConstructor, VDOMElement>
 
@@ -7,30 +7,30 @@ const editorWidgetsSingleton: EditorWidgets = new Map<AnyConstructor, VDOMElemen
   // [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: new Map([
   //   [HTMLElement, [['outerHTML', div()]]]
   // ]), labeled: false}}],
-]);
+])
 
 export function getEditorWidget(object: object, editorWidgets: EditorWidgets = new Map()): VDOMElement | null {
   debug: if (!object || !(object instanceof Object)) {
-    console.warn('`getEditorGroups` should be used with an Object instance');
-    return null;
+    console.warn('`getEditorGroups` should be used with an Object instance')
+    return null
   }
 
   function getWidget(editorWidgets: EditorWidgets) {
-    let matchedWidget = null;
+    let matchedWidget = null
     for (const [constructorKey, widgetCandidate] of editorWidgets) {
       if (object instanceof constructorKey) {
-        matchedWidget = widgetCandidate;
+        matchedWidget = widgetCandidate
       }
     }
-    return matchedWidget;
+    return matchedWidget
   }
 
-  let widget = getWidget(editorWidgetsSingleton);
-  widget = getWidget(editorWidgets) || widget;
+  let widget = getWidget(editorWidgetsSingleton)
+  widget = getWidget(editorWidgets) || widget
 
-  return widget;
+  return widget
 }
 
 export function registerEditorWidget(constructor: AnyConstructor, widget: VDOMElement) {
-  editorWidgetsSingleton.set(constructor, widget);
+  editorWidgetsSingleton.set(constructor, widget)
 }

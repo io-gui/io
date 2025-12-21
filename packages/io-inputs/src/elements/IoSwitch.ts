@@ -1,6 +1,6 @@
-import { span, Register } from 'io-core';
-import { ioIcon } from 'io-icons';
-import { IoBoolean } from './IoBoolean.js';
+import { span, Register } from 'io-core'
+import { ioIcon } from 'io-icons'
+import { IoBoolean } from './IoBoolean.js'
 
 /**
  * Input element for `Boolean` data type displayed as switch.
@@ -68,15 +68,15 @@ export class IoSwitch extends IoBoolean {
         background-color: var(--io_bgColorBlue);
         left: calc(100% - calc(var(--io_lineHeight) - var(--io_borderWidth)));
       }
-    `;
+    `
   }
   changed() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       span()
-    ]);
+    ])
   }
 }
 export const ioSwitch = function(arg0?: any) {
-  return IoSwitch.vConstructor(arg0);
-};
+  return IoSwitch.vConstructor(arg0)
+}

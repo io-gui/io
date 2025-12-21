@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-core';
-import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
+import { Register, IoElement, div } from 'io-core'
+import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders'
 
 export class IoSlidersDemo extends IoElement {
   static get Style() {
@@ -27,13 +27,13 @@ export class IoSlidersDemo extends IoElement {
       :host .row > * {
         margin-right: var(--io_spacing3);
       }
-    `;
+    `
   }
   static get ReactiveProperties() {
     return {
       number: 1,
       array2: [0, 1],
-    };
+    }
   }
   ready() {
     this.render([
@@ -69,10 +69,10 @@ export class IoSlidersDemo extends IoElement {
         ioSlider({value: this.bind('number'), vertical: true, min: 2, max: -2, step: 0.2}),
         ioSliderRange({value: this.array2, vertical: true, min: 2, max: 0, step: 0.1}),
       ]),
-    ]);
+    ])
   }
 }
 
-Register(IoSlidersDemo);
+Register(IoSlidersDemo)
 
-export const ioSlidersDemo = IoSlidersDemo.vConstructor;
+export const ioSlidersDemo = IoSlidersDemo.vConstructor

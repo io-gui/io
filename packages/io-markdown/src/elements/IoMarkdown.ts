@@ -1,42 +1,42 @@
-import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, Property } from 'io-core';
-import { Marked } from 'marked';
-import { markedHighlight } from 'marked-highlight';
-import purify from 'dompurify';
-import { MD_DARK_THEME, MD_LIGHT_THEME } from './IoMarkdownTheme.js';
-import hljs from '../../lib/highlight.min.js';
+import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, Property } from 'io-core'
+import { Marked } from 'marked'
+import { markedHighlight } from 'marked-highlight'
+import purify from 'dompurify'
+import { MD_DARK_THEME, MD_LIGHT_THEME } from './IoMarkdownTheme.js'
+import hljs from '../../lib/highlight.min.js'
 
 const marked = new Marked(
   markedHighlight({
     langPrefix: 'hljs language-',
     highlight(code, lang) {
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, { language }).value;
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext'
+      return hljs.highlight(code, { language }).value
     }
   })
-);
+)
 
-const renderer = new marked.Renderer();
-renderer.heading = function({ tokens, depth }: { tokens: any[], depth: number }) {
-  const text = tokens.map(token => token.text).join('');
-  return `<h${depth} data-heading="${text}">${text}</h${depth}>`;
-};
+const renderer = new marked.Renderer()
+renderer.heading = function({ tokens, depth }: { tokens: any[]; depth: number }) {
+  const text = tokens.map(token => token.text).join('')
+  return `<h${depth} data-heading="${text}">${text}</h${depth}>`
+}
 
-marked.setOptions({ renderer });
+marked.setOptions({ renderer })
 
 function strip(innerHTML: string, strip: string[]) {
   for (let i = 0; i < strip.length; i++) {
-    innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'),'');
+    innerHTML = innerHTML.replace(new RegExp(strip[i], 'g'),'')
   }
-  return innerHTML;
+  return innerHTML
 }
 
 export type IoMarkdownProps = IoElementProps & {
-  src?: string,
-  strip?: string[],
-  loading?: WithBinding<boolean>,
-  sanitize?: boolean,
-  scroll?: WithBinding<string>,
-};
+  src?: string
+  strip?: string[]
+  loading?: WithBinding<boolean>
+  sanitize?: boolean
+  scroll?: WithBinding<string>
+}
 
 /**
  * This elements loads a markdown file from path specified as `src` property and renders it as HTML using marked and dompurify.
@@ -170,59 +170,59 @@ export class IoMarkdown extends IoElement {
         border-top-color: #000;
         animation: spinner .6s linear infinite;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: '', reflect: true})
-  declare src: string;
+  declare src: string
 
   @ReactiveProperty({type: Array, init: null})
-  declare strip: string[];
+  declare strip: string[]
 
   @ReactiveProperty({value: false, reflect: true})
-  declare loading: boolean;
+  declare loading: boolean
 
   @ReactiveProperty(true)
-  declare sanitize: boolean;
+  declare sanitize: boolean
 
   @Property('document')
-  declare role: string;
+  declare role: string
 
-  constructor(args: IoMarkdownProps = {}) { super(args); }
+  constructor(args: IoMarkdownProps = {}) { super(args) }
 
   onResized() {
-    let width = this.getBoundingClientRect().width;
-    width = Math.min(Math.max((width - 30) / 45, 11), 14);
-    this.style.setProperty('--io-code-size', width + 'px');
+    let width = this.getBoundingClientRect().width
+    width = Math.min(Math.max((width - 30) / 45, 11), 14)
+    this.style.setProperty('--io-code-size', width + 'px')
   }
 
   srcChanged() {
-    this.loading = true;
-    this.innerHTML = '';
+    this.loading = true
+    this.innerHTML = ''
     void fetch(this.src)
       .then(response => response.text())
       .then(markdown => {
-        let md = marked.parse(markdown) as string;
-        if (this.sanitize) md = purify.sanitize(md);
-        this.innerHTML = strip(md, this.strip);
-        this.loading = false;
-      });
+        let md = marked.parse(markdown) as string
+        if (this.sanitize) md = purify.sanitize(md)
+        this.innerHTML = strip(md, this.strip)
+        this.loading = false
+      })
   }
 }
 export const ioMarkdown = function(arg0?: IoMarkdownProps) {
-  return IoMarkdown.vConstructor(arg0);
-};
+  return IoMarkdown.vConstructor(arg0)
+}
 
-const styleElement = document.createElement('style');
-styleElement.id = 'io-highlight-theme';
-document.head.appendChild(styleElement);
+const styleElement = document.createElement('style')
+styleElement.id = 'io-highlight-theme'
+document.head.appendChild(styleElement)
 
 function setTheme() {
   if (ThemeSingleton.themeID === 'dark') {
-    styleElement.innerHTML = MD_DARK_THEME;
+    styleElement.innerHTML = MD_DARK_THEME
   } else {
-    styleElement.innerHTML = MD_LIGHT_THEME;
+    styleElement.innerHTML = MD_LIGHT_THEME
   }
 }
-setTheme();
-ThemeSingleton.addEventListener('themeID-changed', setTheme);
+setTheme()
+ThemeSingleton.addEventListener('themeID-changed', setTheme)

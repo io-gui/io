@@ -1,30 +1,30 @@
-import { Property, ReactiveProperty } from '../decorators/Property.js';
-import { Register } from '../decorators/Register.js';
-import { ProtoChain } from '../core/ProtoChain.js';
-import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js';
-import { Node, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
-import { Binding } from '../core/Binding.js';
-import { applyElementStyleToDocument } from '../core/Style.js';
-import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
-import { ChangeQueue } from '../core/ChangeQueue.js';
-import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
-import { throttle, debounce, CallbackFunction } from '../core/Queue.js';
+import { Property, ReactiveProperty } from '../decorators/Property.js'
+import { Register } from '../decorators/Register.js'
+import { ProtoChain } from '../core/ProtoChain.js'
+import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
+import { Node, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js'
+import { Binding } from '../core/Binding.js'
+import { applyElementStyleToDocument } from '../core/Style.js'
+import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
+import { ChangeQueue } from '../core/ChangeQueue.js'
+import { ReactivePropertyInstance } from '../core/ReactiveProperty.js'
+import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
 
 const resizeObserver = new ResizeObserver(entries => {
-  for (const entry of entries) (entry.target as any).onResized();
-});
+  for (const entry of entries) (entry.target as any).onResized()
+})
 
-type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
+type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
+type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
 
 export type IoElementProps = NativeElementProps & {
-  reactivity?: ReactivityType;
-  [key: prefix<string, '@'>]: string | AnyEventHandler;
+  reactivity?: ReactivityType
+  [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
 @Register
 export class IoElement extends HTMLElement {
-  declare static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement;
+  declare static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
   static get Style() {
     return /* css */`
       :host {
@@ -46,156 +46,156 @@ export class IoElement extends HTMLElement {
         outline: var(--io_borderWidth) solid var(--io_borderColorBlue) !important;
         z-index: 1;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({type: String, value: 'immediate'})
-  declare reactivity: ReactivityType;
+  declare reactivity: ReactivityType
 
   @Property(Object)
-  declare $: Record<string, HTMLElement | IoElement>;
+  declare $: Record<string, HTMLElement | IoElement>
 
   static get ReactiveProperties(): ReactivePropertyDefinitions {
-    return {};
+    return {}
   }
 
   static get Properties(): Record<string, any> {
-    return {};
+    return {}
   }
 
   static get Listeners(): ListenerDefinitions {
-    return {};
+    return {}
   }
 
-  declare readonly _protochain: ProtoChain;
-  declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
-  declare readonly _bindings: Map<string, Binding<any>>;
-  declare readonly _changeQueue: ChangeQueue;
-  declare readonly _eventDispatcher: EventDispatcher;
-  declare readonly _observedObjectProperties: string[];
-  declare readonly _observedNodeProperties: string[];
-  declare readonly _isIoElement: boolean;
-  declare _disposed: boolean;
-  declare _textNode: Text;
+  declare readonly _protochain: ProtoChain
+  declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
+  declare readonly _bindings: Map<string, Binding<any>>
+  declare readonly _changeQueue: ChangeQueue
+  declare readonly _eventDispatcher: EventDispatcher
+  declare readonly _observedObjectProperties: string[]
+  declare readonly _observedNodeProperties: string[]
+  declare readonly _isIoElement: boolean
+  declare _disposed: boolean
+  declare _textNode: Text
 
   constructor(args: IoElementProps = {}) {
-    super();
-    this._protochain.init(this);
+    super()
+    this._protochain.init(this)
 
-    Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)});
-    Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()});
-    Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()});
-    Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)});
-    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []});
-    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []});
+    Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)})
+    Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
+    Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
+    Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
+    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []})
+    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []})
     // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
 
-    this.init();
+    this.init()
 
-    initReactiveProperties(this);
-    initProperties(this);
+    initReactiveProperties(this)
+    initProperties(this)
 
-    this.applyProperties(args, true);
+    this.applyProperties(args, true)
 
-    this.ready();
-    this.dispatchQueue();
+    this.ready()
+    this.dispatchQueue()
   }
   // TODO: add types
   applyProperties(props: any, skipDispatch = false) {
     for (const name in props) {
       if (this._reactiveProperties.has(name)) {
-        this.setProperty(name, props[name], true);
+        this.setProperty(name, props[name], true)
       } else {
         if (name === 'class') {
-          this.className = props[name];
+          this.className = props[name]
         } else if (name === 'style') {
           for (const s in props[name]) {
-            this.style[s as any] = props[name][s];
+            this.style[s as any] = props[name][s]
           }
         } else if (name.startsWith('data-')) {
           // TODO: Test this!
           if (props[name] === undefined) {
-            this.removeAttribute(name);
+            this.removeAttribute(name)
           } else {
-            this.setAttribute(name, props[name]);
+            this.setAttribute(name, props[name])
           }
         } else if (!name.startsWith('@')) {
           debug: if (props[name] as any instanceof Binding) {
-            console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`);
+            console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`)
           }
-          this[name as keyof this] = props[name];
+          this[name as keyof this] = props[name]
           // TODO: test and check if type can be attribute.
           if (props[name] === undefined && this.hasAttribute(name)) {
-            this.removeAttribute(name);
+            this.removeAttribute(name)
           }
         }
       }
     }
-    this._eventDispatcher.applyPropListeners(props);
-    if (!skipDispatch) this.dispatchQueue();
+    this._eventDispatcher.applyPropListeners(props)
+    if (!skipDispatch) this.dispatchQueue()
   }
   // TODO: add types
   setProperties(props: any) {
-    setProperties(this, props);
+    setProperties(this, props)
   }
   setProperty(name: string, value: any, debounce = false) {
-    if (this._disposed) return;
-    setProperty(this, name, value, debounce);
-    const prop = this._reactiveProperties.get(name)!;
-    if (prop.reflect) this.setAttribute(name.toLowerCase(), value);
+    if (this._disposed) return
+    setProperty(this, name, value, debounce)
+    const prop = this._reactiveProperties.get(name)!
+    if (prop.reflect) this.setAttribute(name.toLowerCase(), value)
   }
   init() {}
   ready() {}
   changed() {}
   queue(name: string, value: any, oldValue: any) {
-    this._changeQueue.queue(name, value, oldValue);
+    this._changeQueue.queue(name, value, oldValue)
   }
   dispatchQueue(debounce = false) {
-    dispatchQueue(this, debounce);
+    dispatchQueue(this, debounce)
   }
   throttle(func: CallbackFunction, arg?: any, timeout = 1) {
-    throttle(func, arg, this, timeout);
+    throttle(func, arg, this, timeout)
   }
   debounce(func: CallbackFunction, arg?: any, timeout = 1) {
-    debounce(func, arg, this, timeout);
+    debounce(func, arg, this, timeout)
   }
   onPropertyMutated(event: CustomEvent) {
-    return onPropertyMutated(this, event);
+    return onPropertyMutated(this, event)
   };
   dispatchMutation(object: Object | Node = this, properties: string[] = []) {
     if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
-      this.dispatch('io-object-mutation', {object, properties});
+      this.dispatch('io-object-mutation', {object, properties})
     } else {
-      this.dispatch('io-object-mutation', {object, properties}, false, window);
+      this.dispatch('io-object-mutation', {object, properties}, false, window)
     }
   }
   bind<T>(name: string): Binding<T> {
-    return bind<T>(this, name);
+    return bind<T>(this, name)
   }
   unbind(name: string): void {
-    unbind(this, name);
+    unbind(this, name)
   }
   addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
-    this._eventDispatcher.addEventListener(type, listener as EventListener, options);
+    this._eventDispatcher.addEventListener(type, listener as EventListener, options)
   }
   removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
-    this._eventDispatcher.removeEventListener(type, listener as EventListener, options);
+    this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
-    this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
+    this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
   dispose() {
-    dispose(this);
+    dispose(this)
   }
 
   connectedCallback() {
     if (typeof (this as any).onResized === 'function') {
-      resizeObserver.observe(this);
+      resizeObserver.observe(this)
     }
   }
   disconnectedCallback() {
     if (typeof (this as any).onResized === 'function') {
-      resizeObserver.unobserve(this);
+      resizeObserver.unobserve(this)
     }
   }
 
@@ -206,10 +206,10 @@ export class IoElement extends HTMLElement {
    * @param {boolean} [noDispose] - Skip disposal of existing elements.
    */
   render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
-    host = (host || this) as any;
-    const vDOMElementsOnly = vDOMElements.filter(item => item !== null);
-    this.$ = {};
-    this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose);
+    host = (host || this) as any
+    const vDOMElementsOnly = vDOMElements.filter(item => item !== null)
+    this.$ = {}
+    this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose)
   }
   /**
    * Recurively traverses virtual DOM elements.
@@ -219,35 +219,35 @@ export class IoElement extends HTMLElement {
    * @param {boolean} [noDispose] - Skip disposal of existing elements.
    */
   traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
-    const children = host.children;
+    const children = host.children
     // remove trailing elements
     while (children.length > vChildren.length) {
-      const child = children[children.length - 1];
-      host.removeChild(child);
-      if (!noDispose) disposeChildren(child as IoElement);
+      const child = children[children.length - 1]
+      host.removeChild(child)
+      if (!noDispose) disposeChildren(child as IoElement)
     }
     // replace elements
     for (let i = 0; i < children.length; i++) {
-      const child = children[i] as HTMLElement | IoElement;
+      const child = children[i] as HTMLElement | IoElement
       // replace existing elements
       if (child.localName !== vChildren[i].tag || noDispose) {
-        const oldElement = child as HTMLElement;
-        const element = constructElement(vChildren[i]);
-        host.insertBefore(element, oldElement);
-        host.removeChild(oldElement);
-        if (!noDispose) disposeChildren(oldElement as IoElement);
+        const oldElement = child as HTMLElement
+        const element = constructElement(vChildren[i])
+        host.insertBefore(element, oldElement)
+        host.removeChild(oldElement)
+        if (!noDispose) disposeChildren(oldElement as IoElement)
       // update existing elements
       } else {
         // TODO: improve setting/removal/cleanup of native element properties/attributes.
-        child.removeAttribute('className');
-        child.removeAttribute('style');
+        child.removeAttribute('className')
+        child.removeAttribute('style')
         if (vChildren[i].props) {
           if ((child as IoElement)._isIoElement) {
             // Set IoElement element properties
-            (child as IoElement).applyProperties(vChildren[i].props as Record<keyof this, any>);
+            (child as IoElement).applyProperties(vChildren[i].props as Record<keyof this, any>)
           } else {
             // Set native HTML element properties
-            applyNativeElementProps(child as HTMLElement, vChildren[i].props!);
+            applyNativeElementProps(child as HTMLElement, vChildren[i].props!)
           }
         }
       }
@@ -257,34 +257,34 @@ export class IoElement extends HTMLElement {
     // TODO: test
     // create new elements after existing
     if (children.length < vChildren.length) {
-      const frag = document.createDocumentFragment();
+      const frag = document.createDocumentFragment()
       for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructElement(vChildren[i]);
-        frag.appendChild(element);
+        const element = constructElement(vChildren[i])
+        frag.appendChild(element)
       }
-      host.appendChild(frag);
+      host.appendChild(frag)
     }
     for (let i = 0; i < vChildren.length; i++) {
-      const vChild = vChildren[i];
-      const child = children[i] as HTMLElement | IoElement;
+      const vChild = vChildren[i]
+      const child = children[i] as HTMLElement | IoElement
       if (vChild.props?.id) {
         // Update this.$ map of ids.
         debug: {
           if (this.$[vChild.props!.id] !== undefined) {
-            console.warn('IoElement: Duplicate id in template.');
+            console.warn('IoElement: Duplicate id in template.')
           }
         }
-        this.$[vChild.props!.id] = child;
+        this.$[vChild.props!.id] = child
       }
       if (vChild.children !== undefined) { // TODO: test this! Look for more cases of truthy check bugs!
         if (typeof vChild.children === 'string') {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);
-          (child as IoElement)._textNode.nodeValue = String(vChild.children);
+          (child as IoElement)._textNode.nodeValue = String(vChild.children)
         } else if (vChild.children instanceof Array) {
           // Traverse deeper.
-          const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null);
-          this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose);
+          const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
+          this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
         }
       }
     }
@@ -298,19 +298,19 @@ export class IoElement extends HTMLElement {
   */
   _flattenTextNode(element: HTMLElement | IoElement) {
     if (element.childNodes.length === 0) {
-      element.appendChild(document.createTextNode(''));
+      element.appendChild(document.createTextNode(''))
     }
     if (element.childNodes[0].nodeName !== '#text') {
-      element.innerHTML = '';
-      element.appendChild(document.createTextNode(''));
+      element.innerHTML = ''
+      element.appendChild(document.createTextNode(''))
     }
-    (element as IoElement)._textNode = element.childNodes[0] as Text;
+    (element as IoElement)._textNode = element.childNodes[0] as Text
     if (element.childNodes.length > 1) {
-      const textContent = element.textContent;
+      const textContent = element.textContent
       for (let i = element.childNodes.length; i--;) {
-        if (i !== 0) element.removeChild(element.childNodes[i]);
+        if (i !== 0) element.removeChild(element.childNodes[i])
       }
-      (element as IoElement)._textNode.nodeValue = textContent;
+      (element as IoElement)._textNode.nodeValue = textContent
     }
   }
   /**
@@ -320,59 +320,59 @@ export class IoElement extends HTMLElement {
   */
   setAttribute(attr: string, value: boolean | number | string) {
     if (value === true) {
-      HTMLElement.prototype.setAttribute.call(this, attr, '');
+      HTMLElement.prototype.setAttribute.call(this, attr, '')
     } else if (value === false || value === '') {
-      this.removeAttribute(attr);
+      this.removeAttribute(attr)
     } else if (typeof value === 'string' || typeof value === 'number') {
-      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value));
+      if (this.getAttribute(attr) !== String(value)) HTMLElement.prototype.setAttribute.call(this, attr, String(value))
     }
   }
   /**
    * Returns a vDOM-like representation of the element with children and attributes. This feature is used in testing.
    */
   toVDOM() {
-    return toVDOM(this);
+    return toVDOM(this)
   }
   Register(ioNodeConstructor: typeof IoElement) {
-    Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)});
+    Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)})
 
-    const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
+    const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase()
 
-    Object.defineProperty(ioNodeConstructor, 'localName', {value: localName});
-    Object.defineProperty(ioNodeConstructor.prototype, 'localName', {value: localName});
+    Object.defineProperty(ioNodeConstructor, 'localName', {value: localName})
+    Object.defineProperty(ioNodeConstructor.prototype, 'localName', {value: localName})
 
-    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: true, writable: false});
-    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: true, writable: false});
-    Object.defineProperty(window, ioNodeConstructor.name, {value: ioNodeConstructor});
+    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: true, writable: false})
+    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: true, writable: false})
+    Object.defineProperty(window, ioNodeConstructor.name, {value: ioNodeConstructor})
 
-    window.customElements.define(localName, ioNodeConstructor as unknown as CustomElementConstructor);
+    window.customElements.define(localName, ioNodeConstructor as unknown as CustomElementConstructor)
 
-    applyElementStyleToDocument(localName, ioNodeConstructor.prototype._protochain.style);
+    applyElementStyleToDocument(localName, ioNodeConstructor.prototype._protochain.style)
 
     // TODO: Define all overloads with type guards.
     // TODO: Add runtime debug type checks.
     // TODO: Test thoroughly.
     Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
-      const vDOMElement: VDOMElement = {tag: localName};
+      const vDOMElement: VDOMElement = {tag: localName}
       if (arg0 !== undefined) {
         if (typeof arg0 === 'string') {
-          vDOMElement.children = arg0;
+          vDOMElement.children = arg0
         } else if (arg0 instanceof Array) {
-          vDOMElement.children = arg0;
+          vDOMElement.children = arg0
         } else if (typeof arg0 === 'object') {
-          vDOMElement.props = arg0;
+          vDOMElement.props = arg0
         }
         if (arg1 !== undefined) {
           if (typeof arg1 === 'string') {
-            vDOMElement.children = arg1;
+            vDOMElement.children = arg1
           } else if (arg1 instanceof Array) {
-            vDOMElement.children = arg1;
+            vDOMElement.children = arg1
           }
         }
       }
-      return vDOMElement;
-    }});
+      return vDOMElement
+    }})
   }
 }
 
-export const ioElement = IoElement.vConstructor;
+export const ioElement = IoElement.vConstructor

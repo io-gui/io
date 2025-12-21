@@ -1,6 +1,6 @@
-import { NudgeDirection, ReactiveProperty, Register } from 'io-core';
-import { ioIcon } from 'io-icons';
-import { IoMenuItem } from './IoMenuItem.js';
+import { NudgeDirection, ReactiveProperty, Register } from 'io-core'
+import { ioIcon } from 'io-icons'
+import { IoMenuItem } from './IoMenuItem.js'
 
 @Register
 export class IoMenuHamburger extends IoMenuItem {
@@ -14,14 +14,14 @@ export class IoMenuHamburger extends IoMenuItem {
         pointer-events: none;
         text-overflow: ellipsis;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: 'down', reflect: true})
-  declare direction: NudgeDirection;
+  declare direction: NudgeDirection
 
   changed() {
-    this.render([ioIcon({value: 'io:hamburger'})]);
+    this.render([ioIcon({value: 'io:hamburger'})])
   }
 }
-export const ioMenuHamburger = IoMenuHamburger.vConstructor;
+export const ioMenuHamburger = IoMenuHamburger.vConstructor

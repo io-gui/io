@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { IoPropertyEditor } from 'io-editors';
+import { IoPropertyEditor } from 'io-editors'
 
 // const testValue = {
 //   'number': 0.5,
@@ -11,26 +11,26 @@ import { IoPropertyEditor } from 'io-editors';
 // };
 
 export default class {
-  element = new IoPropertyEditor();
+  element = new IoPropertyEditor()
   constructor() {
-    this.element.style.display = 'none';
-    this.reset();
-    document.body.appendChild(this.element as HTMLElement);
+    this.element.style.display = 'none'
+    this.reset()
+    document.body.appendChild(this.element as HTMLElement)
   }
   reset() {
-    this.element.labeled = true;
-    this.element.value = {};
-    this.element.config = new Map();
-    this.element.properties = [];
+    this.element.labeled = true
+    this.element.value = {}
+    this.element.config = new Map()
+    this.element.properties = []
   }
   run() {
     describe('io-property-editor.test', () => {
       it('has default values', () => {
-        expect(this.element.labeled).to.equal(true);
-        expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}));
-        expect(JSON.stringify(this.element.properties)).to.equal(JSON.stringify([]));
-        expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}));
-      });
+        expect(this.element.labeled).to.equal(true)
+        expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}))
+        expect(JSON.stringify(this.element.properties)).to.equal(JSON.stringify([]))
+        expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}))
+      })
       it('matches values', async () => {
         // this.element.value = testValue;
         // await nextQueue();
@@ -77,8 +77,8 @@ export default class {
         // expect(this.element.children[9].localName).to.equal('io-object');
         // expect(this.element.children[10].textContent).to.equal('array:');
         // expect(this.element.children[11].localName).to.equal('io-object');
-        this.reset();
-      });
+        this.reset()
+      })
       // it('matches value with labels disabled', () => {
       //   // this.element.value = testValue;
       //   this.element.labeled = false;
@@ -111,6 +111,6 @@ export default class {
       //   expect(this.element.children[5].localName).to.equal('io-string');
       //   this.reset();
       // });
-    });
+    })
   }
 }

@@ -1,29 +1,29 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from 'io-core';
-import { ioBreadcrumbs } from './IoBreadcrumbs.js';
-import { ioPropertyEditor } from './IoPropertyEditor.js';
-import { EditorConfig } from '../utils/EditorConfig.js';
-import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
-import { EditorWidgets } from '../utils/EditorWidgets.js';
-import { ioPropertyLink } from './IoPropertyLink.js';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from 'io-core'
+import { ioBreadcrumbs } from './IoBreadcrumbs.js'
+import { ioPropertyEditor } from './IoPropertyEditor.js'
+import { EditorConfig } from '../utils/EditorConfig.js'
+import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js'
+import { EditorWidgets } from '../utils/EditorWidgets.js'
+import { ioPropertyLink } from './IoPropertyLink.js'
 
 export type IoInspectorProps = IoElementProps & {
-  value?: Record<string, any> | any[],
-  selected?: WithBinding<Record<string, any> | any[]>,
-  search?: WithBinding<string>,
-  config?: EditorConfig,
-  groups?: EditorGroups,
-  widgets?: EditorWidgets,
-};
+  value?: Record<string, any> | any[]
+  selected?: WithBinding<Record<string, any> | any[]>
+  search?: WithBinding<string>
+  config?: EditorConfig
+  groups?: EditorGroups
+  widgets?: EditorWidgets
+}
 
 function isNestedObject(value: Object, selected: Object): boolean {
-  if (value === selected) return true;
+  if (value === selected) return true
   if (value instanceof Array) {
-    return value.some(v => isNestedObject(v, selected));
+    return value.some(v => isNestedObject(v, selected))
   }
   if (value instanceof Object) {
-    return Object.keys(value).some(k => isNestedObject(value[k as keyof typeof value], selected));
+    return Object.keys(value).some(k => isNestedObject(value[k as keyof typeof value], selected))
   }
-  return false;
+  return false
 }
 
 /**
@@ -54,80 +54,80 @@ export class IoInspector extends IoElement {
       min-width: 6em;
       text-align: right;
     }
-    `;
+    `
   }
   @ReactiveProperty()
-  declare value: Object | Array<any>;
+  declare value: Object | Array<any>
 
   @ReactiveProperty()
-  declare selected: Object | Array<any>;
+  declare selected: Object | Array<any>
 
   @ReactiveProperty({type: String})
-  declare search: string;
+  declare search: string
 
   @ReactiveProperty({type: Map, init: null})
-  declare config: EditorConfig;
+  declare config: EditorConfig
 
   @ReactiveProperty({type: Map, init: null})
-  declare groups: EditorGroups;
+  declare groups: EditorGroups
 
   @ReactiveProperty({type: Map, init: null})
-  declare widgets: EditorWidgets;
+  declare widgets: EditorWidgets
 
   static get Listeners() {
     return {
       'io-button-clicked': 'onLinkClicked',
-    };
+    }
   }
   init() {
-    this.changeThrottled = this.changeThrottled.bind(this);
-    this._observedObjectProperties.push('value', 'selected');
-    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener);
+    this.changeThrottled = this.changeThrottled.bind(this)
+    this._observedObjectProperties.push('value', 'selected')
+    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }
   onLinkClicked(event: CustomEvent) {
-    event.stopPropagation();
-    const value = event.detail.value;
-    const item = event.composedPath()[0] as any;
+    event.stopPropagation()
+    const value = event.detail.value
+    const item = event.composedPath()[0] as any
     if (value && typeof value === 'object') {
       if (item.localName === 'io-property-link' || item.className === 'back-button') {
-        this.setProperty('selected', value);
+        this.setProperty('selected', value)
       }
     }
   }
   valueChanged() {
-    this.selected = this.value;
+    this.selected = this.value
   }
   valueMutated() {
     // TODO: Improve this check to update selected to new object if it replaced the previously selected.
     if (!isNestedObject(this.value, this.selected)) {
-      this.selected = this.value;
+      this.selected = this.value
     }
-    this.changed();
+    this.changed()
   }
   selectedMutated() {
-    this.changed();
+    this.changed()
   }
   selectedChanged() {
-    this.search = '';
+    this.search = ''
   }
   changed() {
-    this.throttle(this.changeThrottled, undefined, 1);
+    this.throttle(this.changeThrottled, undefined, 1)
   }
   changeThrottled() {
     const vChildren = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
-    ];
+    ]
 
-    const config = new Map(this.config);
+    const config = new Map(this.config)
 
-    if (!config.has(Object)) config.set(Object, []);
-    config.get(Object)!.push([Object, ioPropertyLink({showName: true})]);
+    if (!config.has(Object)) config.set(Object, [])
+    config.get(Object)!.push([Object, ioPropertyLink({showName: true})])
 
-    const properties = [];
+    const properties = []
     if (this.search) {
       for (const key of getAllPropertyNames(this.selected)) {
         if (key.toLowerCase().includes(this.search.toLowerCase())) {
-          properties.push(key);
+          properties.push(key)
         }
       }
     }
@@ -135,7 +135,7 @@ export class IoInspector extends IoElement {
     if (this.search && properties.length === 0) {
       vChildren.push(
         span(`No results found for "${this.search}"`),
-      );
+      )
     } else {
       vChildren.push(
         ioPropertyEditor({
@@ -145,18 +145,18 @@ export class IoInspector extends IoElement {
           widgets: this.widgets,
           properties: properties,
         }),
-      );
+      )
     }
 
-    this.render(vChildren);
+    this.render(vChildren)
   }
   dispose() {
-    super.dispose();
-    window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener);
+    super.dispose()
+    window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }
 }
 export const ioInspector = function(arg0?: IoInspectorProps) {
-  return IoInspector.vConstructor(arg0);
-};
+  return IoInspector.vConstructor(arg0)
+}
 
 

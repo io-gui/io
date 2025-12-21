@@ -1,10 +1,10 @@
-import { Register, ReactiveProperty, Property, span } from 'io-core';
-import { IoField, IoFieldProps } from 'io-inputs';
-import { ioIcon } from 'io-icons';
-import { tabDropMarkerSingleton } from './IoTabDropMarker.js';
-import { Tab } from '../nodes/Tab.js';
-import { SplitDirection } from '../nodes/Split.js';
-import { IoPanel } from './IoPanel.js';
+import { Register, ReactiveProperty, Property, span } from 'io-core'
+import { IoField, IoFieldProps } from 'io-inputs'
+import { ioIcon } from 'io-icons'
+import { tabDropMarkerSingleton } from './IoTabDropMarker.js'
+import { Tab } from '../nodes/Tab.js'
+import { SplitDirection } from '../nodes/Split.js'
+import { IoPanel } from './IoPanel.js'
 
 @Register
 class IoTabDragIcon extends IoField {
@@ -31,44 +31,44 @@ class IoTabDragIcon extends IoField {
         padding: 0 var(--io_spacing);
       }
       :host > .label {}
-    `;
+    `
   }
 
   @ReactiveProperty({type: Boolean, reflect: true})
-  declare dragging: boolean;
+  declare dragging: boolean
 
   @ReactiveProperty(null)
-  declare tab: Tab | null;
+  declare tab: Tab | null
 
   @ReactiveProperty(null)
-  declare dropSource: IoPanel | null;
+  declare dropSource: IoPanel | null
 
   @ReactiveProperty(null)
-  declare dropTarget: IoPanel | null;
+  declare dropTarget: IoPanel | null
 
   @ReactiveProperty({type: String, value: 'none', reflect: true})
-  declare splitDirection: SplitDirection;
+  declare splitDirection: SplitDirection
 
   @ReactiveProperty({type: Number, value: -1})
-  declare dropIndex: number;
+  declare dropIndex: number
 
   @Property(-1)
-  declare tabIndex: number;
+  declare tabIndex: number
 
-  constructor(args: IoFieldProps = {}) { super(args); }
+  constructor(args: IoFieldProps = {}) { super(args) }
 
   changed() {
     tabDropMarkerSingleton.setProperties({
       dropTarget: this.dropTarget,
       splitDirection: this.splitDirection,
       dropIndex: this.dropIndex,
-    });
+    })
     this.render([
       ioIcon({value: this.tab?.icon || ' '}),
       span({class: 'label'}, this.tab?.label || ''),
-    ]);
+    ])
   }
 }
 
-export const tabDragIconSingleton = new IoTabDragIcon();
-document.body.appendChild(tabDragIconSingleton as HTMLElement);
+export const tabDragIconSingleton = new IoTabDragIcon()
+document.body.appendChild(tabDragIconSingleton as HTMLElement)
