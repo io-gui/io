@@ -39,6 +39,7 @@ export class IoColorRgba extends IoColorBase {
   }
 
   _onNumberValueInput(event: CustomEvent) {
+    event.stopPropagation();
     const item = event.composedPath()[0] as HTMLElement;
     if (['r', 'g', 'b'].includes(item.id)) {
       this.value[item.id as keyof typeof this.value] = event.detail.value;
