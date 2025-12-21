@@ -1,6 +1,8 @@
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint'
 import tsParser from '@typescript-eslint/parser';
+import stylistic from '@stylistic/eslint-plugin'
+
 
 const globals = {
   browser: {
@@ -43,7 +45,9 @@ export function makeConfig(projectPath) {
       js.configs.recommended,
       tseslint.configs.base
     ],
-    plugins: {},
+    plugins: {
+      '@stylistic': stylistic,
+    },
     rules: {
       'no-debugger': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -58,13 +62,23 @@ export function makeConfig(projectPath) {
         'argsIgnorePattern': '^event',
         'caughtErrorsIgnorePattern': '^error',
       }],
+      '@stylistic/member-delimiter-style': ['error', {
+        multiline: {
+          delimiter: 'none',
+          requireLast: false,
+        },
+        singleline: {
+          delimiter: 'semi',
+          requireLast: false,
+        }
+      }],
       '@typescript-eslint/no-empty-function': 'off',
       'no-unused-labels': 'off',
       'no-unused-vars': 'off',
       'no-var': 'error',
       'eqeqeq': 'error',
       'no-trailing-spaces': 'error',
-      'semi': 'error',
+      'semi': ['error', 'never'],
       'strict': 'error',
       'quotes': ['error', 'single'],
     }
