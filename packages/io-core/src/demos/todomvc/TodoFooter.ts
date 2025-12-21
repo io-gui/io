@@ -1,5 +1,5 @@
 import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveProperty, WithBinding } from 'io-core';
-import {TodoListModel} from './TodoListModel.js';
+import { TodoListModel } from './TodoListModel.js';
 
 type TodoFooterProps = IoElementProps & {
   model?: TodoListModel;

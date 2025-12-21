@@ -286,6 +286,9 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       nodeArray.withInternalOperation(() => {
         nodeArray.length = 0;
         nodeArray.push(...value as Array<Node>);
+        if (value.length === 0) {
+          nodeArray.dispatchMutation();
+        }
       });
       return;
     }
