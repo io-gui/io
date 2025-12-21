@@ -1,0 +1,1 @@
+{"version":3,"file":"TodoItemModel.d.ts","sourceRoot":"","sources":["../../../src/demos/todomvc/TodoItemModel.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAA8B,MAAM,SAAS,CAAC;AAE3D,qBAAa,aAAc,SAAQ,IAAI;IAE7B,KAAK,EAAE,MAAM,CAAC;IAGd,SAAS,EAAE,OAAO,CAAC;IAE3B,MAAM,aAEJ;IAEF,MAAM,aAEJ;IAEF,MAAM;;;;IAON,QAAQ,CAAC,IAAI,EAAE,GAAG;CAOnB"}

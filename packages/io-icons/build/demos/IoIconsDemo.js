@@ -1,1 +1,45 @@
-import{Register as o,IoElement as n,h3 as r,div as s}from"io-core";import{IconsetDB as t,ioIcon as i}from"io-icons";class IoIconsDemo extends n{static get Style(){return"\n      :host {\n        margin: var(--io_spacing2);\n      }\n      :host .row {\n        display: flex;\n        flex-direction: row;\n        flex-wrap: wrap;\n        padding: var(--io_spacing);\n        margin: var(--io_spacing);\n        margin-bottom: 0;\n        background-color: var(--io_bgColorLight);\n      }\n      :host > h3 {\n        margin: var(--io_spacing3);\n      }\n      :host .row > * {\n        margin-right: var(--io_spacing3);\n      }\n    "}ready(){this.render((()=>{const o=[];for(const n of Object.keys(t)){o.push(r(n));const a=[];for(const o of Object.keys(t[n])){const r=`${n}:${o}`;a.push(i({value:r,title:r}))}o.push(s({class:"row"},a))}return o})())}}o(IoIconsDemo);const a=IoIconsDemo.vConstructor;export{IoIconsDemo,a as ioIconsDemo};
+//@ts-nocheck
+import { Register, IoElement, h3, div } from 'io-core';
+import { IconsetDB, ioIcon } from 'io-icons';
+export class IoIconsDemo extends IoElement {
+    static get Style() {
+        return /* css */ `
+      :host {
+        margin: var(--io_spacing2);
+      }
+      :host .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: var(--io_spacing);
+        margin: var(--io_spacing);
+        margin-bottom: 0;
+        background-color: var(--io_bgColorLight);
+      }
+      :host > h3 {
+        margin: var(--io_spacing3);
+      }
+      :host .row > * {
+        margin-right: var(--io_spacing3);
+      }
+    `;
+    }
+    ready() {
+        this.render((() => {
+            const iconsets = [];
+            for (const set of Object.keys(IconsetDB)) {
+                iconsets.push(h3(set));
+                const icons = [];
+                for (const icon of Object.keys(IconsetDB[set])) {
+                    const id = `${set}:${icon}`;
+                    icons.push(ioIcon({ value: id, title: id }));
+                }
+                iconsets.push(div({ class: 'row' }, icons));
+            }
+            return iconsets;
+        })());
+    }
+}
+Register(IoIconsDemo);
+export const ioIconsDemo = IoIconsDemo.vConstructor;
+//# sourceMappingURL=IoIconsDemo.js.map

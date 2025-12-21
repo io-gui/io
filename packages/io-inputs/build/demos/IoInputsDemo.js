@@ -1,1 +1,75 @@
-import{Register as i,IoElement as n,div as e}from"io-core";import{ioField as o,ioString as t,ioNumber as a,ioBoolean as s,ioSwitch as r,ioButton as l}from"io-inputs";class IoInputsDemo extends n{static get Style(){return"\n      :host {\n        margin: var(--io_spacing2);\n      }\n      :host .row {\n        display: flex;\n        flex-direction: row;\n        flex-wrap: wrap;\n        padding: var(--io_spacing);\n        margin: var(--io_spacing);\n        margin-bottom: 0;\n        background-color: var(--io_bgColorLight);\n      }\n      :host .row > * {\n        margin-right: var(--io_spacing);\n      }\n    "}static get ReactiveProperties(){return{string:"Hello!",number:1,boolean:!0}}ready(){this.render([e({class:"row"},[o({value:this.bind("string"),inert:!0}),o({value:this.bind("string")}),o({value:this.bind("string"),appearance:"outset"}),o({value:this.bind("string"),appearance:"inset"}),o({value:this.bind("string"),appearance:"neutral",label:"Label",icon:"io:io",title:"Title"})]),e({class:"row"},[o({value:this.bind("string"),inert:!0}),o({value:this.bind("string"),invalid:this.bind("boolean")}),o({value:this.bind("string"),class:"green"}),o({value:this.bind("string"),selected:this.bind("boolean")}),o({label:"icon",icon:"io:io"})]),e({class:"row"},[t({value:this.bind("string"),placeholder:this.bind("string")}),t({value:this.bind("string"),placeholder:"io-string",label:"live",live:!0})]),e({class:"row"},[a({value:this.bind("number")}),a({ladder:!0,value:this.bind("number")}),a({conversion:2,value:this.bind("number")})]),e({class:"row"},[s({value:this.bind("boolean"),true:"io:circle_fill_checked",false:"io:circle_fill"}),s({value:this.bind("boolean"),icon:"io:io"})]),e({class:"row"},[r({value:this.bind("boolean")}),r({value:this.bind("boolean"),icon:"io:io"})]),e({class:"row"},[l({label:"Button",icon:"io:check"}),l({label:"Button",icon:"io:check",appearance:"inset"}),l({label:"Button",icon:"io:check",appearance:"neutral"})])])}}i(IoInputsDemo);const c=IoInputsDemo.vConstructor;export{IoInputsDemo,c as ioInputsDemo};
+//@ts-nocheck
+import { Register, IoElement, div } from 'io-core';
+import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
+export class IoInputsDemo extends IoElement {
+    static get Style() {
+        return /* css */ `
+      :host {
+        margin: var(--io_spacing2);
+      }
+      :host .row {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: var(--io_spacing);
+        margin: var(--io_spacing);
+        margin-bottom: 0;
+        background-color: var(--io_bgColorLight);
+      }
+      :host .row > * {
+        margin-right: var(--io_spacing);
+      }
+    `;
+    }
+    static get ReactiveProperties() {
+        return {
+            string: 'Hello!',
+            number: 1,
+            boolean: true,
+        };
+    }
+    ready() {
+        this.render([
+            div({ class: 'row' }, [
+                ioField({ value: this.bind('string'), inert: true }),
+                ioField({ value: this.bind('string') }),
+                ioField({ value: this.bind('string'), appearance: 'outset' }),
+                ioField({ value: this.bind('string'), appearance: 'inset' }),
+                ioField({ value: this.bind('string'), appearance: 'neutral', label: 'Label', icon: 'io:io', title: 'Title' }),
+            ]),
+            div({ class: 'row' }, [
+                ioField({ value: this.bind('string'), inert: true }),
+                // TODO: Deprecate color classes
+                ioField({ value: this.bind('string'), invalid: this.bind('boolean') }),
+                ioField({ value: this.bind('string'), class: 'green' }),
+                ioField({ value: this.bind('string'), selected: this.bind('boolean') }),
+                ioField({ label: 'icon', icon: 'io:io' }), // TODO
+            ]),
+            div({ class: 'row' }, [
+                ioString({ value: this.bind('string'), placeholder: this.bind('string') }),
+                ioString({ value: this.bind('string'), placeholder: 'io-string', label: 'live', live: true }),
+            ]),
+            div({ class: 'row' }, [
+                ioNumber({ value: this.bind('number') }),
+                ioNumber({ ladder: true, value: this.bind('number') }),
+                ioNumber({ conversion: 2, value: this.bind('number') }),
+            ]),
+            div({ class: 'row' }, [
+                ioBoolean({ value: this.bind('boolean'), true: 'io:circle_fill_checked', false: 'io:circle_fill' }),
+                ioBoolean({ value: this.bind('boolean'), icon: 'io:io' }),
+            ]),
+            div({ class: 'row' }, [
+                ioSwitch({ value: this.bind('boolean') }),
+                ioSwitch({ value: this.bind('boolean'), icon: 'io:io' }),
+            ]),
+            div({ class: 'row' }, [
+                ioButton({ label: 'Button', icon: 'io:check' }),
+                ioButton({ label: 'Button', icon: 'io:check', appearance: 'inset' }),
+                ioButton({ label: 'Button', icon: 'io:check', appearance: 'neutral' }),
+            ]),
+        ]);
+    }
+}
+Register(IoInputsDemo);
+export const ioInputsDemo = IoInputsDemo.vConstructor;
+//# sourceMappingURL=IoInputsDemo.js.map

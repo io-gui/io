@@ -1,0 +1,1 @@
+{"version":3,"file":"TodoApp.d.ts","sourceRoot":"","sources":["../../../src/demos/todomvc/TodoApp.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,SAAS,EAAkF,MAAM,SAAS,CAAC;AAEpH,OAAO,EAAE,aAAa,EAAE,MAAM,oBAAoB,CAAC;AASnD,qBAAa,OAAQ,SAAQ,SAAS;IAE5B,KAAK,EAAE,aAAa,CAAC;IAGrB,KAAK,EAAE,MAAM,CAAC;IAEtB,KAAK;IAIL,YAAY;IAIZ,OAAO;CAyBR;AAED,eAAO,MAAM,OAAO,gMAAuB,CAAC"}
