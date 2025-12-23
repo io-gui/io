@@ -1,13 +1,13 @@
-import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from 'io-core';
-import { ioBoolean } from 'io-inputs';
+import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from 'io-core'
+import { ioBoolean } from 'io-inputs'
 
 export type IoCollapsibleProps = IoElementProps & {
-  elements?: VDOMElement[],
-  label?: string,
-  direction?: 'column' | 'row',
-  icon?: string,
-  expanded?: WithBinding<boolean>,
-};
+  elements?: VDOMElement[]
+  label?: string
+  direction?: 'column' | 'row'
+  icon?: string
+  expanded?: WithBinding<boolean>
+}
 /**
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
@@ -64,35 +64,35 @@ export class IoCollapsible extends IoElement {
       padding: var(--io_spacing);
       border-radius: var(--io_borderRadius);
     }
-    `;
+    `
   }
 
   @ReactiveProperty(Array)
-  declare elements: VDOMElement[];
+  declare elements: VDOMElement[]
 
   @ReactiveProperty('')
-  declare label: string;
+  declare label: string
 
   @ReactiveProperty({value: 'column', reflect: true})
-  declare direction: 'column' | 'row';
+  declare direction: 'column' | 'row'
 
   @ReactiveProperty('')
-  declare icon: string;
+  declare icon: string
 
   @ReactiveProperty({value: false, reflect: true})
-  declare expanded: boolean;
+  declare expanded: boolean
 
   @Property('region')
-  declare role: string;
+  declare role: string
 
   changed() {
     this.render([
       // TODO: consider implementing caching
       ioBoolean({icon: this.icon, true: this.label, false: this.label, value: this.bind('expanded')}),
       div({class: 'io-collapsible-content'}, this.expanded ? this.elements : []),
-    ]);
+    ])
   }
 }
 export const ioCollapsible = function(arg0?: IoCollapsibleProps) {
-  return IoCollapsible.vConstructor(arg0);
-};
+  return IoCollapsible.vConstructor(arg0)
+}

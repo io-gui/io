@@ -1,12 +1,12 @@
 //@ts-nocheck
-import { Register, IoElement, div, Storage as $, pre, code } from 'io-core';
-import { ioInspector } from 'io-editors';
-import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
-import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
-import { ioIcon } from 'io-icons';
-import { ioOptionSelect, MenuOption } from 'io-menus';
-import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-colors';
-import { ioStyleContainer } from './IoStyleContainer.js';
+import { Register, IoElement, div, Storage as $, pre, code } from 'io-core'
+import { ioInspector } from 'io-editors'
+import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs'
+import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders'
+import { ioIcon } from 'io-icons'
+import { ioOptionSelect, MenuOption } from 'io-menus'
+import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-colors'
+import { ioStyleContainer } from './IoStyleContainer.js'
 
 // TODO: Implement IDs in menu options. use ID for selection
 const option = new MenuOption({
@@ -53,7 +53,7 @@ const option = new MenuOption({
     ]
   }],
   selectedID: $({key: 'element-demo', storage: 'local', value: 'io-slider'})
-});
+})
 
 export class IoElementInspectorDemo extends IoElement {
   static get Style() {
@@ -109,25 +109,25 @@ export class IoElementInspectorDemo extends IoElement {
     :host code {
       color: var(--io_color);
     }
-    `;
+    `
   }
   static get ReactiveProperties() {
     return {
       selected: option.bind('selectedID'),
-    };
+    }
   }
   ready() {
-    this.selectedChanged();
+    this.selectedChanged()
   }
   onElementMutated() {
-    this.selectedChanged();
+    this.selectedChanged()
   }
   selectedChanged() {
-    const oldElement = this.querySelector('.element-wrap')?.children[0];
-    if (oldElement) oldElement.removeEventListener('io-object-mutation', this.onElementMutated);
+    const oldElement = this.querySelector('.element-wrap')?.children[0]
+    if (oldElement) oldElement.removeEventListener('io-object-mutation', this.onElementMutated)
 
     if (this.selected) {
-      const vElement = option.findItemById(this.selected).value;
+      const vElement = option.findItemById(this.selected).value
       this.render([
         ioOptionSelect({
           value: this.bind('selected'),
@@ -141,46 +141,46 @@ export class IoElementInspectorDemo extends IoElement {
         ioStyleContainer([
           ioInspector({id: 'inspector'}),
         ]),
-      ]);
-      const element = this.querySelector('.element-wrap').children[0];
-      element.addEventListener('io-object-mutation', this.onElementMutated);
-      const inspector = this.$['inspector'];
+      ])
+      const element = this.querySelector('.element-wrap').children[0]
+      element.addEventListener('io-object-mutation', this.onElementMutated)
+      const inspector = this.$['inspector']
       if (inspector.value !== element) {
-        inspector.value = element;
+        inspector.value = element
       }
-      const elementHtml = this.$['element-html'];
-      elementHtml.innerHTML = formatHtml(element.outerHTML);
+      const elementHtml = this.$['element-html']
+      elementHtml.innerHTML = formatHtml(element.outerHTML)
     } else {
       this.render([
         ioField({value: 'Element property not set.'}),
-      ]);
+      ])
     }
   }
 }
-Register(IoElementInspectorDemo);
+Register(IoElementInspectorDemo)
 
 function formatHtml(html, indentSize = 2) {
-  const indent = ' '.repeat(indentSize);
-  let result = '';
-  let level = 0;
-  const cleanHtml = html.replace(/>\s+</g, '><');
-  const tokens = cleanHtml.split(/(<[^>]*>)/);
+  const indent = ' '.repeat(indentSize)
+  let result = ''
+  let level = 0
+  const cleanHtml = html.replace(/>\s+</g, '><')
+  const tokens = cleanHtml.split(/(<[^>]*>)/)
   tokens.forEach(token => {
     if (token.trim()) {
       if (token.startsWith('</')) {
-        level--;
-        result += indent.repeat(level) + token + '\n';
+        level--
+        result += indent.repeat(level) + token + '\n'
       } else if (token.startsWith('<') && !token.endsWith('/>')) {
-        result += indent.repeat(level) + token + '\n';
-        level++;
+        result += indent.repeat(level) + token + '\n'
+        level++
       } else if (token.startsWith('<') && token.endsWith('/>')) {
-        result += indent.repeat(level) + token + '\n';
+        result += indent.repeat(level) + token + '\n'
       } else {
-        result += indent.repeat(level) + token.trim() + '\n';
+        result += indent.repeat(level) + token.trim() + '\n'
       }
     }
-  });
-  return result.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  })
+  return result.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
 }
 
-export const ioElementInspectorDemo = IoElementInspectorDemo.vConstructor;
+export const ioElementInspectorDemo = IoElementInspectorDemo.vConstructor

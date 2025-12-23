@@ -1,13 +1,13 @@
-import { IoElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-core';
-import { ioBoolean } from 'io-inputs';
-import { MenuOption } from '../nodes/MenuOption.js';
-import { ioMenuTree } from './IoMenuTree.js';
+import { IoElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property } from 'io-core'
+import { ioBoolean } from 'io-inputs'
+import { MenuOption } from '../nodes/MenuOption.js'
+import { ioMenuTree } from './IoMenuTree.js'
 
 export type IoMenuTreeBranchProps = IoElementProps & {
-  depth?: number,
-  option?: MenuOption,
-  expanded?: WithBinding<boolean>,
-};
+  depth?: number
+  option?: MenuOption
+  expanded?: WithBinding<boolean>
+}
 /**
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.
@@ -41,32 +41,32 @@ export class IoMenuTreeBranch extends IoElement {
       border-color: var(--io_colorLight);
       margin-left: var(--io_spacing5);
     }
-    `;
+    `
   }
 
   @ReactiveProperty(Number)
-  declare depth: number;
+  declare depth: number
 
   @ReactiveProperty({type: MenuOption})
-  declare option: MenuOption;
+  declare option: MenuOption
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare expanded: boolean;
+  declare expanded: boolean
 
   @Property('region')
-  declare role: string;
+  declare role: string
 
   optionMutated() {
-    if (this.option.selected) this.expanded = this.option.selected;
+    if (this.option.selected) this.expanded = this.option.selected
   }
 
   changed() {
     this.render([
       ioBoolean({icon: this.option.icon, true: this.option.label, false: this.option.label, value: this.bind('expanded')}),
       this.expanded ? ioMenuTree({option: this.option, depth: this.depth + 1}) : null,
-    ]);
+    ])
   }
 }
 export const ioMenuTreeBranch = function(arg0?: IoMenuTreeBranchProps) {
-  return IoMenuTreeBranch.vConstructor(arg0);
-};
+  return IoMenuTreeBranch.vConstructor(arg0)
+}

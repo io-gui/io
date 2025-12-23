@@ -1,11 +1,11 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps } from 'io-core';
-import { IconsetSingleton } from '../nodes/Iconset.js';
+import { Register, ReactiveProperty, IoElement, IoElementProps } from 'io-core'
+import { IconsetSingleton } from '../nodes/Iconset.js'
 
 export type IoIconProps = IoElementProps & {
-  value: string,
-  stroke?: boolean,
-  size?: 'small' | 'medium' | 'large',
-};
+  value: string
+  stroke?: boolean
+  size?: 'small' | 'medium' | 'large'
+}
 
 /**
  * SVG icon element.
@@ -43,28 +43,28 @@ export class IoIcon extends IoElement {
       :host > svg > g {
         transform-origin: 0px 0px;
       }
-    `;
+    `
   }
   @ReactiveProperty({value: '', type: String, reflect: true})
-  declare value: string;
+  declare value: string
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare stroke: boolean;
+  declare stroke: boolean
 
   @ReactiveProperty({value: 'small', type: String, reflect: true})
-  declare size: 'small' | 'medium' | 'large';
+  declare size: 'small' | 'medium' | 'large'
 
-  constructor(args: IoIconProps) { super(args); }
+  constructor(args: IoIconProps) { super(args) }
 
   valueChanged() {
     if (this.value.search(':') !== -1) {
-      this.innerHTML = IconsetSingleton.getIcon(this.value);
+      this.innerHTML = IconsetSingleton.getIcon(this.value)
     } else {
-      this.innerText = this.value;
+      this.innerText = this.value
     }
   }
 }
 
 export const ioIcon = function(arg0: IoIconProps) {
-  return IoIcon.vConstructor(arg0);
-};
+  return IoIcon.vConstructor(arg0)
+}

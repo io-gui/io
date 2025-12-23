@@ -1,20 +1,20 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from 'io-core';
-import { ioBoolean } from 'io-inputs';
-import { ioPropertyEditor } from './IoPropertyEditor.js';
-import { EditorConfig } from '../utils/EditorConfig.js';
-import { EditorGroups } from '../utils/EditorGroups.js';
-import { EditorWidgets } from '../utils/EditorWidgets.js';
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from 'io-core'
+import { ioBoolean } from 'io-inputs'
+import { ioPropertyEditor } from './IoPropertyEditor.js'
+import { EditorConfig } from '../utils/EditorConfig.js'
+import { EditorGroups } from '../utils/EditorGroups.js'
+import { EditorWidgets } from '../utils/EditorWidgets.js'
 
 export type IoObjectProps = IoElementProps & {
-  value?: Record<string, any> | any[],
-  properties?: string[],
-  labeled?: boolean,
-  label?: string,
-  expanded?: WithBinding<boolean>,
-  config?: EditorConfig,
-  groups?: EditorGroups,
-  widgets?: EditorWidgets,
-};
+  value?: Record<string, any> | any[]
+  properties?: string[]
+  labeled?: boolean
+  label?: string
+  expanded?: WithBinding<boolean>
+  config?: EditorConfig
+  groups?: EditorGroups
+  widgets?: EditorWidgets
+}
 
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
@@ -47,45 +47,45 @@ export class IoObject extends IoElement {
       border: var(--io_border);
       border-color: var(--io_borderColorInset);
     }
-    `;
+    `
   }
 
   @ReactiveProperty()
-  declare value: Record<string, any> | any[];
+  declare value: Record<string, any> | any[]
 
   @ReactiveProperty({type: Array, init: null})
-  declare properties: string[];
+  declare properties: string[]
 
   @ReactiveProperty(true)
-  declare labeled: boolean;
+  declare labeled: boolean
 
   @ReactiveProperty('')
-  declare label: string;
+  declare label: string
 
   @ReactiveProperty({value: false, reflect: true})
-  declare expanded: boolean;
+  declare expanded: boolean
 
   @ReactiveProperty({type: Map, init: null})
-  declare config: EditorConfig;
+  declare config: EditorConfig
 
   @ReactiveProperty({type: Map, init: null})
-  declare groups: EditorGroups;
+  declare groups: EditorGroups
 
   @ReactiveProperty({type: Map, init: null})
-  declare widgets: EditorWidgets;
+  declare widgets: EditorWidgets
 
   @Property('region')
-  declare role: string;
+  declare role: string
 
   changed() {
-    const label = this.label || this.value.constructor.name;
-    const vChildren: VDOMElement[] = [];
+    const label = this.label || this.value.constructor.name
+    const vChildren: VDOMElement[] = []
     vChildren.push(ioBoolean({
       appearance: 'neutral',
       true: label,
       false: label,
       value: this.bind('expanded')}
-    ));
+    ))
     if (this.expanded) {
       vChildren.push(ioPropertyEditor({
         value: this.value,
@@ -94,12 +94,12 @@ export class IoObject extends IoElement {
         groups: this.groups,
         widgets: this.widgets,
         labeled: this.labeled,
-      }));
+      }))
     }
-    this.render(vChildren);
-    this.setAttribute('aria-expanded', String(this.expanded));
+    this.render(vChildren)
+    this.setAttribute('aria-expanded', String(this.expanded))
   }
 }
 export const ioObject = function(arg0?: IoObjectProps) {
-  return IoObject.vConstructor(arg0);
-};
+  return IoObject.vConstructor(arg0)
+}

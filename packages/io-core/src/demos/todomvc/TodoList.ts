@@ -1,12 +1,12 @@
 //@ts-nocheck
-import { IoElement, Register, section, input, label, ul, ReactiveProperty, IoElementProps } from 'io-core';
-import { TodoListModel } from './TodoListModel.js';
-import { todoItem } from './TodoItem.js';
+import { IoElement, Register, section, input, label, ul, ReactiveProperty, IoElementProps } from 'io-core'
+import { TodoListModel } from './TodoListModel.js'
+import { todoItem } from './TodoItem.js'
 
 type TodoListProps = IoElementProps & {
-  model?: TodoListModel;
-  route?: string;
-};
+  model?: TodoListModel
+  route?: string
+}
 
 export class TodoList extends IoElement {
   static get Style() {
@@ -14,23 +14,23 @@ export class TodoList extends IoElement {
       :host {
         flex-direction: column;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({type: TodoListModel})
-  declare model: TodoListModel;
+  declare model: TodoListModel
 
   @ReactiveProperty({value: 'all'})
-  declare route: string;
+  declare route: string
 
-  constructor(args: TodoListProps = {}) { super(args); }
+  constructor(args: TodoListProps = {}) { super(args) }
 
   modelMutated() {
-    this.changed();
+    this.changed()
   }
 
   changed() {
-    const itemsInRoute = this.model.items.filter(this.model.filters[this.route as keyof typeof this.model.filters]);
+    const itemsInRoute = this.model.items.filter(this.model.filters[this.route as keyof typeof this.model.filters])
     this.render([
       section({class: 'main'}, [
         input({type: 'checkbox', id: 'toggle-all', class: 'toggle-all', checked: this.model.allCompleted}),
@@ -39,11 +39,11 @@ export class TodoList extends IoElement {
           itemsInRoute.map((item) => todoItem({item: item, model: this.model}))
         )
       ]),
-    ]);
+    ])
   }
 }
-Register(TodoList);
+Register(TodoList)
 
 export const todoList = function(arg0: TodoListProps) {
-  return TodoList.vConstructor(arg0);
-};
+  return TodoList.vConstructor(arg0)
+}

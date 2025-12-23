@@ -1,9 +1,9 @@
-import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
-import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node.js';
-import { IoElement } from '../elements/IoElement.js';
+import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js'
+import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node.js'
+import { IoElement } from '../elements/IoElement.js'
 
-export const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>> = new WeakMap();
-export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions> = new WeakMap();
+export const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>> = new WeakMap()
+export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions> = new WeakMap()
 
 /**
  * Declares a property and an initial value for a property.
@@ -20,11 +20,11 @@ export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropert
  */
 export function Property(initialValue: any = undefined) {
   return (target: Node | IoElement, propertyName: string) => {
-    const constructor = target.constructor as AnyConstructor;
-    const properties = propertyDecorators.get(constructor) || {};
-    propertyDecorators.set(constructor, properties);
-    properties[propertyName] = initialValue;
-  };
+    const constructor = target.constructor as AnyConstructor
+    const properties = propertyDecorators.get(constructor) || {}
+    propertyDecorators.set(constructor, properties)
+    properties[propertyName] = initialValue
+  }
 };
 
 /**
@@ -49,9 +49,9 @@ export function Property(initialValue: any = undefined) {
  */
 export function ReactiveProperty(defLoose: ReactivePropertyDefinitionLoose = {}) {
   return (target: Node | IoElement, propertyName: string) => {
-    const constructor = target.constructor as AnyConstructor;
-    const properties = reactivePropertyDecorators.get(constructor) || {};
-    reactivePropertyDecorators.set(constructor, properties);
-    properties[propertyName] = defLoose;
-  };
+    const constructor = target.constructor as AnyConstructor
+    const properties = reactivePropertyDecorators.get(constructor) || {}
+    reactivePropertyDecorators.set(constructor, properties)
+    properties[propertyName] = defLoose
+  }
 };

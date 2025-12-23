@@ -11,7 +11,7 @@ export default class {
         //   main: [],
         //   hidden: ['_hidden'],
         // });
-      });
+      })
       it('should return default groups for a HTMLElement', () => {
         // const groups = getEditorGroups(document.createElement('div'));
         // expect(groups).to.eql({
@@ -22,7 +22,7 @@ export default class {
         //   display: ['width', 'height', 'top', 'left', 'scroll', 'style'],
         //   hierarchy: ['parent', 'child', 'element', 'root', 'slot', 'sibling', 'document'],
         // });
-      });
-    });
+      })
+    })
   }
 }

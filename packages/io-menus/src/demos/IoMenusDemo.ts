@@ -1,10 +1,10 @@
 //@ts-nocheck
-import { Register, IoElement, div, span } from 'io-core';
-import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus';
-import { ioSwitch, ioField, ioBoolean } from 'io-inputs';
+import { Register, IoElement, div, span } from 'io-core'
+import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus'
+import { ioSwitch, ioField, ioBoolean } from 'io-inputs'
 // TODO: remove dependencies on io-navigation.
-import 'io-navigation';
-import 'io-icons';
+import 'io-navigation'
+import 'io-icons'
 
 const numberItems = new MenuOption({id: 'numbers', options: [
   {id: 'zero', value: 0, hint: 'Number(0)', icon: 'io:numeric-0-box'},
@@ -12,13 +12,13 @@ const numberItems = new MenuOption({id: 'numbers', options: [
   {id: 'two', value: 2, hint: 'Number(2)', icon: 'io:numeric-2-box'},
   {id: 'three', value: 3, hint: 'Number(3)', icon: 'io:numeric-3-box'},
   {id: 'four', value: 4, hint: 'Number(4)', icon: 'io:numeric-4-box'},
-]});
+]})
 
 const colorOptions = new MenuOption({id: 'colors', options: [
   {id: 'Red', icon: '❤️', options: ['Red1','Red2','Red3'].map(item => new MenuOption({id: item, value: item}))},
   {id: 'Green', icon: '💚', options: ['Green1','Green2','Green3'].map(item => new MenuOption({id: item, value: item}))},
   {id: 'Blue', icon: '💙', options: ['Blue1','Blue2','Blue3'].map(item => new MenuOption({id: item, value: item}))},
-]});
+]})
 
 const optionDeep = new MenuOption({id: 'deep', options: [
   {id: 'Deep Menu', options: [
@@ -51,7 +51,7 @@ const optionDeep = new MenuOption({id: 'deep', options: [
     ]},
     {id: 'Level 1/4', hint: 'Four'},
   ]},
-]});
+]})
 
 // TODO: consider initializing long option only when needed.
 const optionLong = new MenuOption({id: 'long', options: [
@@ -65,7 +65,7 @@ const optionLong = new MenuOption({id: 'long', options: [
   'vortex', 'waterfall', 'xenon', 'yellow', 'zenith', 'aurora', 'blizzard', 'cascade', 'dynamo', 'echo', 'fractal',
   'galaxy', 'horizon', 'infinity', 'jubilee', 'kaleidoscope', 'labyrinth', 'mirage', 'nebula', 'orbit', 'phoenix',
   'quantum', 'radiance', 'spectrum', 'tranquility', 'ultraviolet', 'vibrant',
-]});
+]})
 
 class IoSuboptionViewDemo extends IoElement {
   static get Style() {
@@ -105,22 +105,22 @@ class IoSuboptionViewDemo extends IoElement {
         color: var(--io_colorBlue);
       }
 
-    `;
+    `
   }
   static get ReactiveProperties() {
     return {
       option: {
         type: MenuOption,
       },
-    };
+    }
   }
   optionMutated() {
-    this.changed();
+    this.changed()
   }
   changed() {
-    const vChildren = [];
+    const vChildren = []
     for (let i = 0; i < this.option.options.length; i++) {
-      vChildren.push(ioItemViewDemo({option: this.option.options[i]}));
+      vChildren.push(ioItemViewDemo({option: this.option.options[i]}))
     }
     this.render([
       div([
@@ -128,11 +128,11 @@ class IoSuboptionViewDemo extends IoElement {
         this.option.path ? span({class: 'path'}, `path: ${this.option.path}`) : null,
       ]),
       ...vChildren
-    ]);
+    ])
   }
 }
-Register(IoSuboptionViewDemo);
-const ioSuboptionViewDemo = IoSuboptionViewDemo.vConstructor;
+Register(IoSuboptionViewDemo)
+const ioSuboptionViewDemo = IoSuboptionViewDemo.vConstructor
 
 class IoItemViewDemo extends IoElement {
   static get Style() {
@@ -145,24 +145,24 @@ class IoItemViewDemo extends IoElement {
       :host > div {
         display: flex;
       }
-    `;
+    `
   }
   static get ReactiveProperties() {
     return {
       option: {
         type: MenuOption,
       },
-    };
+    }
   }
   optionMutated() {
-    this.changed();
+    this.changed()
   }
   changed() {
-    let selectElement = null;
+    let selectElement = null
     if (this.option.mode === 'toggle') {
-      selectElement = ioBoolean({value: this.option.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'});
+      selectElement = ioBoolean({value: this.option.bind('selected'), true: 'io:box_fill_checked', false: 'io:box'})
     } else if (this.option.mode === 'select') {
-      selectElement = ioSwitch({value: this.option.bind('selected')});
+      selectElement = ioSwitch({value: this.option.bind('selected')})
     }
     this.render([
       div([
@@ -170,11 +170,11 @@ class IoItemViewDemo extends IoElement {
         ioField({value: this.option.label, inert: true, appearance: 'neutral'}),
       ]),
       this.option.options.length ? ioSuboptionViewDemo({option: this.option}) : null
-    ]);
+    ])
   }
 }
-Register(IoItemViewDemo);
-const ioItemViewDemo = IoItemViewDemo.vConstructor;
+Register(IoItemViewDemo)
+const ioItemViewDemo = IoItemViewDemo.vConstructor
 
 class IoMenusDemo extends IoElement {
   static get Style () {
@@ -205,7 +205,7 @@ class IoMenusDemo extends IoElement {
       :host .contextArea {
         min-height: 200px;
       }
-    `;
+    `
   }
   ready() {
     this.render([
@@ -297,8 +297,8 @@ class IoMenusDemo extends IoElement {
           ]},
         ]},
       ]})}),
-    ]);
+    ])
   }
 }
-Register(IoMenusDemo);
-export const ioMenusDemo = IoMenusDemo.vConstructor;
+Register(IoMenusDemo)
+export const ioMenusDemo = IoMenusDemo.vConstructor

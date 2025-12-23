@@ -1,12 +1,12 @@
-import { Register, ReactiveProperty, WithBinding } from 'io-core';
-import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
+import { Register, ReactiveProperty, WithBinding } from 'io-core'
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js'
 
 export type IoSliderRangeProps = IoSliderBaseProps & {
-  value?: WithBinding<[number, number]>,
-  step?: number,
-  min?: number,
-  max?: number,
-};
+  value?: WithBinding<[number, number]>
+  step?: number
+  min?: number
+  max?: number
+}
 
 /**
  * Input element for `Array(2)` data type displayed as slider.
@@ -16,46 +16,46 @@ export type IoSliderRangeProps = IoSliderBaseProps & {
 export class IoSliderRange extends IoSliderBase {
 
   @ReactiveProperty({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
-  declare value: [number, number];
+  declare value: [number, number]
 
   @ReactiveProperty({type: Number, value: 0.01})
-  declare step: number;
+  declare step: number
 
   @ReactiveProperty({type: Number, value: 0})
-  declare min: number;
+  declare min: number
 
   @ReactiveProperty({type: Number, value: 1})
-  declare max: number;
+  declare max: number
 
-  _index = 0;
+  _index = 0
 
-  constructor(args: IoSliderRangeProps = {}) { super(args); }
+  constructor(args: IoSliderRangeProps = {}) { super(args) }
 
   _getCoordFromValue(value: [number, number]) {
-    const coord = [0, 0];
-    const min = this._min;
-    const max = this._max;
-    coord[0] = (value[0] - min[0]) / (max[0] - min[0]);
-    coord[1] = (value[1] - min[1]) / (max[1] - min[1]);
-    return coord;
+    const coord = [0, 0]
+    const min = this._min
+    const max = this._max
+    coord[0] = (value[0] - min[0]) / (max[0] - min[0])
+    coord[1] = (value[1] - min[1]) / (max[1] - min[1])
+    return coord
   }
   onPointerdown(event: PointerEvent) {
-    super.onPointerdown(event);
-    const value = this._value;
-    const p = this._getPointerCoord(event);
-    const c = this._getCoordFromValue(value);
-    this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1;
+    super.onPointerdown(event)
+    const value = this._value
+    const p = this._getPointerCoord(event)
+    const c = this._getCoordFromValue(value)
+    this._index = Math.abs(c[0] - p[0]) < Math.abs(c[1] - p[0]) ? 0 : 1
   }
   onPointermoveThrottled(event: PointerEvent) {
     if (this._active === 1) {
-      if (document.activeElement !== this as unknown as Element) this.focus();
-      const value = this._value;
-      const coord = this._getPointerCoord(event);
-      const newValue = this._getValueFromCoord(coord);
+      if (document.activeElement !== this as unknown as Element) this.focus()
+      const value = this._value
+      const coord = this._getPointerCoord(event)
+      const newValue = this._getValueFromCoord(coord)
       if (this._index === 0) {
-        this._inputValue([newValue[0], value[1]]);
+        this._inputValue([newValue[0], value[1]])
       } else if (this._index === 1) {
-        this._inputValue([value[0], newValue[0]]);
+        this._inputValue([value[0], newValue[0]])
       }
     }
   }
@@ -112,9 +112,9 @@ export class IoSliderRange extends IoSliderBase {
 
       gl_FragColor = vec4(finalCol, 1.0);
     }
-    `;
+    `
   }
 }
 export const ioSliderRange = function(arg0?: IoSliderRangeProps) {
-  return IoSliderRange.vConstructor(arg0);
-};
+  return IoSliderRange.vConstructor(arg0)
+}

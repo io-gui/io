@@ -1,9 +1,9 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton } from 'io-core';
-import { MenuOption, ioOptionSelect } from 'io-menus';
-import { ioButton, ioField } from 'io-inputs';
-import { ioNumberSlider } from 'io-sliders';
-import { ioColorRgba } from 'io-colors';
+import { Register, IoElement, ThemeSingleton } from 'io-core'
+import { MenuOption, ioOptionSelect } from 'io-menus'
+import { ioButton, ioField } from 'io-inputs'
+import { ioNumberSlider } from 'io-sliders'
+import { ioColorRgba } from 'io-colors'
 
 export class IoThemeEditor extends IoElement {
   static get Style() {
@@ -15,10 +15,10 @@ export class IoThemeEditor extends IoElement {
       padding: var(--io_spacing3);
       grid-template-columns: auto 2fr !important;
     }
-    `;
+    `
   }
   constructor(props) {
-    super(props);
+    super(props)
     this.render([
       ioOptionSelect({value: ThemeSingleton.bind('themeID'), option: new MenuOption({options: [
         {id: 'Light Theme', value: 'light'},
@@ -112,8 +112,8 @@ export class IoThemeEditor extends IoElement {
 
       ioField('shadowColor'),
       ioColorRgba({value: ThemeSingleton.bind('shadowColor')}),
-    ]);
+    ])
   }
 }
-Register(IoThemeEditor);
-export const ioThemeEditor = IoThemeEditor.vConstructor;
+Register(IoThemeEditor)
+export const ioThemeEditor = IoThemeEditor.vConstructor

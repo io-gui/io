@@ -1,7 +1,7 @@
-import { ThemeSingleton } from 'io-core';
+import { ThemeSingleton } from 'io-core'
 
-const theme = ThemeSingleton;
-const binding = theme._reactiveProperties.get('themeID')!.binding;
+const theme = ThemeSingleton
+const binding = theme._reactiveProperties.get('themeID')!.binding
 
 export default class {
   run() {
@@ -13,8 +13,8 @@ export default class {
           reflect: false,
           type: String,
           value: theme.themeID,
-        });
-      });
-    });
+        })
+      })
+    })
   }
 }

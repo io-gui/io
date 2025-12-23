@@ -1,16 +1,16 @@
-import { Register, ReactiveProperty, WithBinding, Property } from 'io-core';
-import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js';
-import { IoField, IoFieldProps } from './IoField.js';
+import { Register, ReactiveProperty, WithBinding, Property } from 'io-core'
+import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js'
+import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoNumberProps = IoFieldProps & {
-  value?: WithBinding<number>;
-  live?: boolean;
-  conversion?: number;
-  step?: number;
-  min?: number;
-  max?: number;
-  ladder?: boolean;
-};
+  value?: WithBinding<number>
+  live?: boolean
+  conversion?: number
+  step?: number
+  min?: number
+  max?: number
+  ladder?: boolean
+}
 
 /**
  * Input element for `Number` data type.
@@ -36,238 +36,238 @@ export class IoNumber extends IoField {
         padding: 0 calc(var(--io_spacing) + var(--io_borderWidth));
         opacity: 0.5;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: 0, type: Number})
-  declare value: number;
+  declare value: number
 
   @ReactiveProperty({value: false, type: Boolean})
-  declare live: boolean;
+  declare live: boolean
 
   @ReactiveProperty({value: 1, type: Number})
-  declare conversion: number;
+  declare conversion: number
 
   @ReactiveProperty({value: 0.0001, type: Number})
-  declare step: number;
+  declare step: number
 
   @ReactiveProperty({value: -Infinity, type: Number})
-  declare min: number;
+  declare min: number
 
   @ReactiveProperty({value: Infinity, type: Number})
-  declare max: number;
+  declare max: number
 
   @ReactiveProperty({value: false, type: Boolean})
-  declare ladder: boolean;
+  declare ladder: boolean
 
   @ReactiveProperty({value: 'inset', type: String, reflect: true})
-  declare appearance: 'neutral' | 'inset' | 'outset';
+  declare appearance: 'neutral' | 'inset' | 'outset'
 
   @Property('true')
-  declare contentEditable: string;
+  declare contentEditable: string
 
   @ReactiveProperty({value: 'pattern="-?[0-9]*?[0-9]*"', type: String, reflect: true})
-  declare pattern: string;
+  declare pattern: string
 
   // TODO: 'decimal' mode on iOS does not display minus and decimal point
   @Property('text')
-  declare inputMode: string;
+  declare inputMode: string
 
   @Property('textbox')
-  declare role: string;
+  declare role: string
 
-  constructor(args: IoNumberProps = {}) { super(args); }
+  constructor(args: IoNumberProps = {}) { super(args) }
 
   get textNode() {
-    this._flattenTextNode(this);
-    return this._textNode.nodeValue;
+    this._flattenTextNode(this)
+    return this._textNode.nodeValue
   }
   set textNode(value) {
-    this._flattenTextNode(this);
-    this._textNode.nodeValue = String(value);
+    this._flattenTextNode(this)
+    this._textNode.nodeValue = String(value)
   }
 
   onBlur(event: FocusEvent) {
-    super.onBlur(event);
-    this._setFromTextNode();
-    this.scrollTop = 0;
-    this.scrollLeft = 0;
+    super.onBlur(event)
+    this._setFromTextNode()
+    this.scrollTop = 0
+    this.scrollLeft = 0
     // TODO: unhack race condition
     setTimeout(() => {
       if ((document.activeElement as Element).parentElement !== IoNumberLadderSingleton as unknown as Element) {
-        IoNumberLadderSingleton.expanded = false;
+        IoNumberLadderSingleton.expanded = false
       }
-    });
+    })
   }
   onPointerdown(event: PointerEvent) {
-    if (event.pointerType === 'touch') event.preventDefault();
-    this.addEventListener('pointermove', this.onPointermove);
-    this.addEventListener('pointerup', this.onPointerup);
-    if (document.activeElement === this as unknown as Element && event.button === 0) return;
+    if (event.pointerType === 'touch') event.preventDefault()
+    this.addEventListener('pointermove', this.onPointermove)
+    this.addEventListener('pointerup', this.onPointerup)
+    if (document.activeElement === this as unknown as Element && event.button === 0) return
   }
   onPointerup(event: PointerEvent) {
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerup', this.onPointerup);
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerup', this.onPointerup)
     if (this.ladder || event.button === 1) {
       if (event.pointerType === 'touch') {
         event.preventDefault();
-        (document.activeElement as HTMLElement).blur();
+        (document.activeElement as HTMLElement).blur()
       } else {
         if (document.activeElement !== this as unknown as Element) {
-          this.focus();
-          this.setCaretPosition(this.textNode!.length);
+          this.focus()
+          this.setCaretPosition(this.textNode!.length)
         }
       }
-      this.expandLadder();
+      this.expandLadder()
     } else {
       if (document.activeElement !== this as unknown as Element) {
-        this.focus();
-        this.setCaretPosition(this.textNode!.length);
+        this.focus()
+        this.setCaretPosition(this.textNode!.length)
       }
     }
   }
   expandLadder() {
-    IoNumberLadderSingleton.src = this;
-    IoNumberLadderSingleton.expanded = true;
+    IoNumberLadderSingleton.src = this
+    IoNumberLadderSingleton.expanded = true
   }
   collapseLadder() {
-    IoNumberLadderSingleton.expanded = false;
+    IoNumberLadderSingleton.expanded = false
   }
   onKeydown(event: KeyboardEvent) {
-    const range = (window.getSelection() as Selection).getRangeAt(0);
-    const rangeStart = range.startOffset;
-    const rangeEnd = range.endOffset;
-    const length = this.childNodes[0] ? (this.childNodes[0] as Text).length : 0;
-    const rangeInside = range.startContainer === range.endContainer && (range.startContainer === this.childNodes[0] || range.startContainer === this as unknown as Node);
+    const range = (window.getSelection() as Selection).getRangeAt(0)
+    const rangeStart = range.startOffset
+    const rangeEnd = range.endOffset
+    const length = this.childNodes[0] ? (this.childNodes[0] as Text).length : 0
+    const rangeInside = range.startContainer === range.endContainer && (range.startContainer === this.childNodes[0] || range.startContainer === this as unknown as Node)
 
     switch (event.key) {
       case 'Escape':
       case 'Enter':
       case ' ':
-        event.preventDefault();
-        this._setFromTextNode();
+        event.preventDefault()
+        this._setFromTextNode()
         // Only blur if on mobile
         if (isMobileDevice()) {
-          (this as unknown as HTMLElement).blur();
+          (this as unknown as HTMLElement).blur()
         }
-        break;
+        break
       case 'Home':
-        event.preventDefault();
-        this.textNode = String(this.min);
-        this._setFromTextNode();
-        break;
+        event.preventDefault()
+        this.textNode = String(this.min)
+        this._setFromTextNode()
+        break
       case 'End':
-        event.preventDefault();
-        this.textNode = String(this.max);
-        this._setFromTextNode();
-        break;
+        event.preventDefault()
+        this.textNode = String(this.max)
+        this._setFromTextNode()
+        break
       case 'ArrowLeft':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
-          event.preventDefault();
-          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
+          event.preventDefault()
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true)
         }
         // TODO: shift step
-        break;
+        break
       case 'ArrowUp':
         if (IoNumberLadderSingleton.expanded) {
-          event.preventDefault();
-          const upStep = IoNumberLadderSingleton.querySelector('.io-up1') as HTMLElement;
-          if (upStep) upStep.focus();
+          event.preventDefault()
+          const upStep = IoNumberLadderSingleton.querySelector('.io-up1') as HTMLElement
+          if (upStep) upStep.focus()
         } else if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === 0)) {
-          event.preventDefault();
-          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
+          event.preventDefault()
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true)
         }
-        break;
+        break
       case 'ArrowRight':
         if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
-          event.preventDefault();
-          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
+          event.preventDefault()
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true)
         }
         // TODO: shift step
-        break;
+        break
       case 'ArrowDown':
         if (IoNumberLadderSingleton.expanded) {
-          event.preventDefault();
-          const downStep = IoNumberLadderSingleton.querySelector('.io-down1') as HTMLElement;
-          if (downStep) downStep.focus();
+          event.preventDefault()
+          const downStep = IoNumberLadderSingleton.querySelector('.io-down1') as HTMLElement
+          if (downStep) downStep.focus()
         } else if (event.ctrlKey || (rangeInside && rangeStart === rangeEnd && rangeStart === length)) {
-          event.preventDefault();
-          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
+          event.preventDefault()
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true)
         }
-        break;
+        break
     }
   }
   onKeyup(event: KeyboardEvent) {
     // TODO: move to onkeydown?
     if (event.key === 'Control' || event.key === 'Shift') {
-      IoNumberLadderSingleton.expanded ? this.collapseLadder() : this.expandLadder();
+      IoNumberLadderSingleton.expanded ? this.collapseLadder() : this.expandLadder()
     } else if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
-      this.collapseLadder();
+      this.collapseLadder()
     }
 
     if (this.live) {
-      const carretPosition = this.getCaretPosition();
-      this._setFromTextNode();
-      this.setCaretPosition(carretPosition);
+      const carretPosition = this.getCaretPosition()
+      this._setFromTextNode()
+      this.setCaretPosition(carretPosition)
     }
   }
   _setFromTextNode() {
     // Normalize comma to period for decimal separator
-    let valueText = this.textNode!.trim().replace(',', '.');
-    let valueNumber = Number(valueText) / this.conversion;
-    valueNumber = Math.min(this.max, Math.max(this.min, valueNumber));
-    valueNumber = Math.round(valueNumber / this.step) * this.step;
-    const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)));
-    valueNumber = Number(valueNumber.toFixed(d));
+    let valueText = this.textNode!.trim().replace(',', '.')
+    let valueNumber = Number(valueText) / this.conversion
+    valueNumber = Math.min(this.max, Math.max(this.min, valueNumber))
+    valueNumber = Math.round(valueNumber / this.step) * this.step
+    const d = Math.max(0, Math.min(100, -Math.floor(Math.log(this.step) / Math.LN10)))
+    valueNumber = Number(valueNumber.toFixed(d))
     if (!isNaN(valueNumber)) {
-      this._reactiveProperties.get('invalid')!.value = false;
-      this.removeAttribute('invalid');
-      this.removeAttribute('aria-invalid');
-      this.inputValue(valueNumber);
+      this._reactiveProperties.get('invalid')!.value = false
+      this.removeAttribute('invalid')
+      this.removeAttribute('aria-invalid')
+      this.inputValue(valueNumber)
     } else {
-      this._reactiveProperties.get('invalid')!.value = true;
-      this.setAttribute('invalid', 'true');
-      this.setAttribute('aria-invalid', 'true');
+      this._reactiveProperties.get('invalid')!.value = true
+      this.setAttribute('invalid', 'true')
+      this.setAttribute('aria-invalid', 'true')
     }
   }
   ready() {
-    this.disabledChanged();
-    this.changed();
+    this.disabledChanged()
+    this.changed()
   }
   changed() {
-    this.setAttribute('aria-valuenow', this.value);
-    this.setAttribute('aria-valuemin', this.min);
-    this.setAttribute('aria-valuemax', this.max);
-    this.setAttribute('aria-valuestep', this.step);
+    this.setAttribute('aria-valuenow', this.value)
+    this.setAttribute('aria-valuemin', this.min)
+    this.setAttribute('aria-valuemax', this.max)
+    this.setAttribute('aria-valuestep', this.step)
     if (typeof this.value !== 'number' || isNaN(this.value)) {
-      this.setAttribute('invalid', 'true');
-      this.setAttribute('aria-invalid', 'true');
+      this.setAttribute('invalid', 'true')
+      this.setAttribute('aria-invalid', 'true')
     } else {
-      this.removeAttribute('invalid');
-      this.removeAttribute('aria-invalid');
+      this.removeAttribute('invalid')
+      this.removeAttribute('aria-invalid')
     }
-    let value = this.value;
-    let valueText;
+    let value = this.value
+    let valueText
     if (typeof value === 'number' && !isNaN(value)) {
-      value *= this.conversion;
-      let d = -Math.floor(Math.log(this.step * this.conversion) / Math.LN10);
-      d = Math.max(0, Math.min(100, d));
-      value = Number(value.toFixed(d));
-      valueText = String(value);
+      value *= this.conversion
+      let d = -Math.floor(Math.log(this.step * this.conversion) / Math.LN10)
+      d = Math.max(0, Math.min(100, d))
+      value = Number(value.toFixed(d))
+      valueText = String(value)
     } else {
-      valueText = 'NaN';
+      valueText = 'NaN'
     }
-    this.setAttribute('value', valueText);
-    this.setAttribute('positive', this.value >= 0);
-    this.textNode = valueText;
+    this.setAttribute('value', valueText)
+    this.setAttribute('positive', this.value >= 0)
+    this.textNode = valueText
   }
 }
 
 function isMobileDevice(): boolean {
   return /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent)
-    || ('ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches);
+    || ('ontouchstart' in window && !window.matchMedia('(pointer: fine)').matches)
 }
 
 export const ioNumber = function(arg0?: IoNumberProps) {
-  return IoNumber.vConstructor(arg0);
-};
+  return IoNumber.vConstructor(arg0)
+}

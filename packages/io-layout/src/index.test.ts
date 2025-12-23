@@ -1,5 +1,5 @@
 export default class {
   run() {
-    console.log('TODO:Layout test');
+    console.log('TODO:Layout test')
   }
 }

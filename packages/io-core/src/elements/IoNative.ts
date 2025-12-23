@@ -1,4 +1,4 @@
-import { VDOMElement, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM';
+import { VDOMElement, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM'
 
 // export const HTML_CORE_PROPERTIES: Record<string, string[]> = {
 //   Node: ['ownerDocument','parentNode','parentElement','childNodes','firstChild','lastChild','previousSibling','nextSibling','textContent'],
@@ -79,36 +79,36 @@ export const HTML_ELEMENTS: string[] = [
   'output', 'p', 'param', 'picture', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select', 'small', 'source',
   'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead',
   'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
-];
+]
 
-const nativeVDOMConstructors: Record<string, (arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement> = {};
+const nativeVDOMConstructors: Record<string, (arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement> = {}
 
 HTML_ELEMENTS.forEach((element) => {
   // TODO: Add runtime debug type checks?
   // TODO: Test thoroughly.
   const vConstructor = function(arg0?: NativeElementProps & OtherHTMLElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
-    const vDOMElement: VDOMElement = {tag: element};
+    const vDOMElement: VDOMElement = {tag: element}
     if (arg0 !== undefined) {
       if (typeof arg0 === 'string') {
-        vDOMElement.children = arg0;
+        vDOMElement.children = arg0
       } else if (arg0 instanceof Array) {
-        vDOMElement.children = arg0;
+        vDOMElement.children = arg0
       } else if (typeof arg0 === 'object') {
-        vDOMElement.props = arg0;
+        vDOMElement.props = arg0
       }
       if (arg1 !== undefined) {
         if (typeof arg1 === 'string') {
-          vDOMElement.children = arg1;
+          vDOMElement.children = arg1
         } else if (arg1 instanceof Array) {
-          vDOMElement.children = arg1;
+          vDOMElement.children = arg1
         }
       }
     }
-    return vDOMElement;
+    return vDOMElement
 
-  };
-  nativeVDOMConstructors[element] = vConstructor;
-});
+  }
+  nativeVDOMConstructors[element] = vConstructor
+})
 
 //TODO: test element vDOM factories!
 
@@ -121,4 +121,4 @@ export const {
   output, p, param, picture, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
   span, strike, strong, style, sub, summary, sup, svg, table, tbody, td, template, textarea, tfoot, th, thead,
   time, title, tr, track, tt, u, ul, video, wbr
-} = nativeVDOMConstructors;
+} = nativeVDOMConstructors

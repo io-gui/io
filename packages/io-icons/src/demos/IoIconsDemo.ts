@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, h3, div } from 'io-core';
-import { IconsetDB, ioIcon } from 'io-icons';
+import { Register, IoElement, h3, div } from 'io-core'
+import { IconsetDB, ioIcon } from 'io-icons'
 
 export class IoIconsDemo extends IoElement {
   static get Style() {
@@ -23,25 +23,25 @@ export class IoIconsDemo extends IoElement {
       :host .row > * {
         margin-right: var(--io_spacing3);
       }
-    `;
+    `
   }
   ready() {
     this.render(
       (()=>{
-        const iconsets = [];
+        const iconsets = []
         for (const set of Object.keys(IconsetDB)) {
-          iconsets.push(h3(set));
-          const icons = [];
+          iconsets.push(h3(set))
+          const icons = []
           for (const icon of Object.keys(IconsetDB[set])) {
-            const id = `${set}:${icon}`;
-            icons.push(ioIcon({value: id, title: id}));
+            const id = `${set}:${icon}`
+            icons.push(ioIcon({value: id, title: id}))
           }
-          iconsets.push(div({class: 'row'}, icons));
+          iconsets.push(div({class: 'row'}, icons))
         }
-        return iconsets;
+        return iconsets
       })(),
-    );
+    )
   }
 }
-Register(IoIconsDemo);
-export const ioIconsDemo = IoIconsDemo.vConstructor;
+Register(IoIconsDemo)
+export const ioIconsDemo = IoIconsDemo.vConstructor

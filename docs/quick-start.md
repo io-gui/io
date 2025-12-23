@@ -215,5 +215,5 @@ Note that two-way data flow can introduce unexpected states in more complex scen
 
 To learn more read the [deep dive] guide.
 
-[index.html]: https://github.com/io-core/io/blob/main/index.html#L104
+[index.html]: https://github.com/io-gui/io/blob/main/index.html#L104
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive

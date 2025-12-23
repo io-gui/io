@@ -1,6 +1,9 @@
 {
-  "name": "io-markdown",
-  "version": "2.0.0",
+  "name": "@io-gui/io-markdown",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "2.0.0-alpha.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Markdown viewer for Io-Gui.",
@@ -8,20 +11,20 @@
   "module": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
-    "/build",
-    "/demos",
-    "/src",
+    "/src/",
+    "/build/",
+    "/demos/",
     "/LICENSE",
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
-  "keywords": ["io","gui","md","iogui","io-core","markdown","io-markdown"],
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["ui","io","gui","iogui","md","markdown","io-markdown"],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT + Commons Clause - see LICENSE.md",
-  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "license": "MIT",
+  "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "io-core": "^2.0.0"
+    "@io-gui/io-core": "^2.0.0"
   }
 }

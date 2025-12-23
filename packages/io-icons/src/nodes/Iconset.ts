@@ -1,6 +1,6 @@
-import { Node, Register } from 'io-core';
+import { Node, Register } from 'io-core'
 
-export const IconsetDB: Record<string, Record<string, string>> = {};
+export const IconsetDB: Record<string, Record<string, string>> = {}
 
 /**
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace:id` attribute.
@@ -8,27 +8,27 @@ export const IconsetDB: Record<string, Record<string, string>> = {};
 @Register
 class Iconset extends Node {
   registerIcons(name: string, svg: string) {
-    const stagingElement = document.createElement('div');
-    stagingElement.innerHTML = svg;
+    const stagingElement = document.createElement('div')
+    stagingElement.innerHTML = svg
     stagingElement.querySelectorAll('[id]').forEach(icon => {
-      IconsetDB[name] = IconsetDB[name] || {};
-      IconsetDB[name][icon.id] = icon.outerHTML;
-    });
+      IconsetDB[name] = IconsetDB[name] || {}
+      IconsetDB[name][icon.id] = icon.outerHTML
+    })
   }
   getIcon(icon: string) {
-    const iconset = IconsetDB[icon.split(':')[0]];
+    const iconset = IconsetDB[icon.split(':')[0]]
     if (iconset) {
-      const id = icon.split(':')[1];
+      const id = icon.split(':')[1]
       if (iconset[id]) {
-        const group = iconset[id].replace(' id="', ' class="icon-id-');
-        return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`;
+        const group = iconset[id].replace(' id="', ' class="icon-id-')
+        return `<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet">${group}</svg>`
       }
     }
-    return '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></g>';
+    return '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet"></g>'
   }
 }
 
-export const IconsetSingleton = new Iconset();
+export const IconsetSingleton = new Iconset()
 
 const icons = /* html */`
 <svg>
@@ -541,6 +541,6 @@ const icons = /* html */`
   <g id="toggle_on">
     <path d="M0 0h24v24H0z" fill="none"/><path d="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
   </g>
-</svg>`;
+</svg>`
 
-IconsetSingleton.registerIcons('io', icons);
+IconsetSingleton.registerIcons('io', icons)

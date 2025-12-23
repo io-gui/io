@@ -1,12 +1,12 @@
-import { Register, ReactiveProperty, Property, WithBinding } from 'io-core';
-import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
+import { Register, ReactiveProperty, Property, WithBinding } from 'io-core'
+import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js'
 
 export type IoSlider2dProps = IoSliderBaseProps & {
-  value?: WithBinding<[number, number]>,
-  step?: [number, number],
-  min?: [number, number],
-  max?: [number, number],
-};
+  value?: WithBinding<[number, number]>
+  step?: [number, number]
+  min?: [number, number]
+  max?: [number, number]
+}
 
 @Register
 export class IoSlider2d extends IoSliderBase {
@@ -26,25 +26,25 @@ export class IoSlider2d extends IoSliderBase {
         min-height: calc(var(--io_fieldHeight) * 5);
         cursor: crosshair;
       }
-    `;
+    `
   }
 
   @ReactiveProperty({type: Array, value: undefined, init: [0, 0]}) // TODO: Remove value: undefined
-  declare value: [number, number];
+  declare value: [number, number]
 
   @ReactiveProperty({type: Array, value: undefined, init: [0.01, 0.01]}) // TODO: Remove value: undefined
-  declare step: [number, number];
+  declare step: [number, number]
 
   @ReactiveProperty({type: Array, value: undefined, init: [-1, -1]}) // TODO: Remove value: undefined
-  declare min: [number, number];
+  declare min: [number, number]
 
   @ReactiveProperty({type: Array, value: undefined, init: [1, 1]}) // TODO: Remove value: undefined
-  declare max: [number, number];
+  declare max: [number, number]
 
   @Property(true)
-  declare noscroll: boolean;
+  declare noscroll: boolean
 
-  constructor(args: IoSlider2dProps = {}) { super(args); }
+  constructor(args: IoSlider2dProps = {}) { super(args) }
 
   static get GlUtils() {
     return /* glsl */`
@@ -61,7 +61,7 @@ export class IoSlider2d extends IoSliderBase {
         finalCol = mix(vec4(color, 1.0), finalCol, colorShape);
         return compose(dstCol, finalCol);
       }
-    `;
+    `
   }
   static get Frag() {
     return /* glsl */`
@@ -96,9 +96,9 @@ export class IoSlider2d extends IoSliderBase {
       finalCol = paintKnob(finalCol, gridPosition, knobPos, sliderCol);
 
       gl_FragColor = vec4(finalCol, 1.0);
-    }`;
+    }`
   }
 }
 export const ioSlider2d = function(arg0?: IoSlider2dProps) {
-  return IoSlider2d.vConstructor(arg0);
-};
+  return IoSlider2d.vConstructor(arg0)
+}

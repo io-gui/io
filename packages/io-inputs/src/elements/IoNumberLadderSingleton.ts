@@ -1,11 +1,11 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Property } from 'io-core';
-import { IoNumber } from './IoNumber.js';
-import { ioNumberLadderStep } from './IoNumberLadderStep.js';
+import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Property } from 'io-core'
+import { IoNumber } from './IoNumber.js'
+import { ioNumberLadderStep } from './IoNumberLadderStep.js'
 
 export type IoNumberLadderProps = IoElementProps & {
-  src?: IoNumber,
-  expanded?: WithBinding<boolean>,
-};
+  src?: IoNumber
+  expanded?: WithBinding<boolean>
+}
 
 /**
  * Interactive number ladder.
@@ -73,112 +73,112 @@ class IoNumberLadder extends IoElement {
       :host > .io-number-ladder-center {
         height: calc(1.5 * var(--io_fieldHeight));
       }
-    `;
+    `
   }
   // TODO: rename
   @ReactiveProperty({value: undefined, type: IoElement, init: null})
-  declare src?: IoNumber;
+  declare src?: IoNumber
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare expanded: boolean;
+  declare expanded: boolean
 
   @Property('listbox')
-  declare role: string;
+  declare role: string
 
   static get Listeners() {
     return {
       'ladder-step-change': '_onLadderStepChange',
       'ladder-step-collapse': 'onLadderStepCollapse',
       'io-focus-to': 'onIoFocusTo',
-    };
+    }
   }
   get value() {
-    return this.src ? this.src.value : 0;
+    return this.src ? this.src.value : 0
   }
   get min() {
-    return this.src ? this.src.min : -Infinity;
+    return this.src ? this.src.min : -Infinity
   }
   get max() {
-    return this.src ? this.src.max : Infinity;
+    return this.src ? this.src.max : Infinity
   }
   get step() {
-    return this.src ? this.src.step : 0.0001;
+    return this.src ? this.src.step : 0.0001
   }
   get conversion() {
-    return this.src ? this.src.conversion : 1;
+    return this.src ? this.src.conversion : 1
   }
 
-  constructor(args: IoNumberLadderProps = {}) { super(args); }
+  constructor(args: IoNumberLadderProps = {}) { super(args) }
 
   onIoFocusTo(event: CustomEvent) {
-    const source = event.detail.source;
-    const command = event.detail.command;
+    const source = event.detail.source
+    const command = event.detail.command
     if (this.src) {
       if ((command === 'ArrowDown' && source === this.querySelector('.io-up1')) ||
           (command === 'ArrowUp' && source === this.querySelector('.io-down1'))) {
-        event.stopPropagation();
-        this.src.focus();
-        this.src.setCaretPosition(this.src.textNode!.length);
+        event.stopPropagation()
+        this.src.focus()
+        this.src.setCaretPosition(this.src.textNode!.length)
       }
     }
   }
   _onLadderStepChange(event: CustomEvent) {
-    const src = this.src;
+    const src = this.src
     if (src) {
-      const step = event.detail.step;
-      const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value;
-      let newValue = Math.min(this.max, Math.max(this.min, value + step));
-      newValue = Number(newValue.toFixed(5));
-      src.inputValue(newValue);
+      const step = event.detail.step
+      const value = event.detail.round ? (Math.round(this.value / step) * step) : this.value
+      let newValue = Math.min(this.max, Math.max(this.min, value + step))
+      newValue = Number(newValue.toFixed(5))
+      src.inputValue(newValue)
     }
   }
   onLadderStepCollapse() {
-    this.setProperty('expanded', false);
+    this.setProperty('expanded', false)
   }
   expandedChanged() {
     if (this.expanded) {
       if (this.src) {
-        const rect = this.src.getBoundingClientRect();
-        const selfRect = this.getBoundingClientRect();
+        const rect = this.src.getBoundingClientRect()
+        const selfRect = this.getBoundingClientRect()
         // NOTE: layerRect fix for Safari zoom.
-        const layerRect = IoOverlaySingleton.getBoundingClientRect();
-        this.style.top = rect.bottom - layerRect.top + 'px';
-        this.style.left = rect.left - layerRect.left + 'px';
-        this.style.marginTop = - (selfRect.height / 2 + ThemeSingleton.lineHeight / 2 + ThemeSingleton.spacing) + 'px';
+        const layerRect = IoOverlaySingleton.getBoundingClientRect()
+        this.style.top = rect.bottom - layerRect.top + 'px'
+        this.style.left = rect.left - layerRect.left + 'px'
+        this.style.marginTop = - (selfRect.height / 2 + ThemeSingleton.lineHeight / 2 + ThemeSingleton.spacing) + 'px'
       }
     } else {
       setTimeout(() => {
-        this.src?.setCaretPosition(this.src.textNode!.length);
-      });
-      this.removeAttribute('style');
+        this.src?.setCaretPosition(this.src.textNode!.length)
+      })
+      this.removeAttribute('style')
     }
-    this.dispatch('expanded', {value: this.expanded}, true);
+    this.dispatch('expanded', {value: this.expanded}, true)
   }
   changed() {
-    const range = this.max - this.min;
-    const hiddenItem = span({class: 'io-number-ladder-empty'});
+    const range = this.max - this.min
+    const hiddenItem = span({class: 'io-number-ladder-empty'})
 
     // TODO: unhack
-    let step = this.step / 10000;
-    while (step < .1) step = step * 10;
+    let step = this.step / 10000
+    while (step < .1) step = step * 10
 
-    const upStep4 = 10000 * step;
-    const upStep3 = 1000 * step;
-    const upStep2 = 100 * step;
-    const upStep1 = 10 * step;
-    const downStep1 = 1 * step;
-    const downStep2 = .1 * step;
-    const downStep3 = .01 * step;
-    const downStep4 = .001 * step;
+    const upStep4 = 10000 * step
+    const upStep3 = 1000 * step
+    const upStep2 = 100 * step
+    const upStep1 = 10 * step
+    const downStep1 = 1 * step
+    const downStep2 = .1 * step
+    const downStep3 = .01 * step
+    const downStep4 = .001 * step
 
-    const upLabel4 = Number((upStep4 * this.conversion).toFixed(6));
-    const upLabel3 = Number((upStep3 * this.conversion).toFixed(6));
-    const upLabel2 = Number((upStep2 * this.conversion).toFixed(6));
-    const upLabel1 = Number((upStep1 * this.conversion).toFixed(6));
-    const downLabel1 = Number((downStep1 * this.conversion).toFixed(6));
-    const downLabel2 = Number((downStep2 * this.conversion).toFixed(6));
-    const downLabel3 = Number((downStep3 * this.conversion).toFixed(6));
-    const downLabel4 = Number((downStep4 * this.conversion).toFixed(6));
+    const upLabel4 = Number((upStep4 * this.conversion).toFixed(6))
+    const upLabel3 = Number((upStep3 * this.conversion).toFixed(6))
+    const upLabel2 = Number((upStep2 * this.conversion).toFixed(6))
+    const upLabel1 = Number((upStep1 * this.conversion).toFixed(6))
+    const downLabel1 = Number((downStep1 * this.conversion).toFixed(6))
+    const downLabel2 = Number((downStep2 * this.conversion).toFixed(6))
+    const downLabel3 = Number((downStep3 * this.conversion).toFixed(6))
+    const downLabel4 = Number((downStep4 * this.conversion).toFixed(6))
 
     this.render([
       (range >= upStep4) ? ioNumberLadderStep({class: 'io-up4', value: upStep4, label: String(upLabel4)}) : hiddenItem,
@@ -190,25 +190,25 @@ class IoNumberLadder extends IoElement {
       (this.step <= downStep2) ? ioNumberLadderStep({class: 'io-down2', value: downStep2, label: String(downLabel2)}) : hiddenItem,
       (this.step <= downStep3) ? ioNumberLadderStep({class: 'io-down3', value: downStep3, label: String(downLabel3)}) : hiddenItem,
       (this.step <= downStep4) ? ioNumberLadderStep({class: 'io-down4', value: downStep4, label: String(downLabel4)}) : hiddenItem,
-    ]);
+    ])
 
-    this.setAttribute('aria-valuemin', this.min);
-    this.setAttribute('aria-valuemax', this.max);
-    this.setAttribute('aria-valuenow', this.value);
-    this.setAttribute('aria-valuestep', this.step);
-    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value))  ? 'true' : false);
+    this.setAttribute('aria-valuemin', this.min)
+    this.setAttribute('aria-valuemax', this.max)
+    this.setAttribute('aria-valuenow', this.value)
+    this.setAttribute('aria-valuestep', this.step)
+    this.setAttribute('aria-invalid', (typeof this.value !== 'number' || isNaN(this.value))  ? 'true' : false)
 
-    const steps = this.querySelectorAll('io-number-ladder-step');
+    const steps = this.querySelectorAll('io-number-ladder-step')
     for (let i = steps.length; i--;) {
-      steps[i].setAttribute('aria-valuemin', String(this.min));
-      steps[i].setAttribute('aria-valuemax', String(this.max));
+      steps[i].setAttribute('aria-valuemin', String(this.min))
+      steps[i].setAttribute('aria-valuemax', String(this.max))
       steps[i].setAttribute('aria-valuenow', String(this.value));
-      (steps[i] as any).changed();
+      (steps[i] as any).changed()
     }
   }
 }
 
-export const IoNumberLadderSingleton = new IoNumberLadder();
+export const IoNumberLadderSingleton = new IoNumberLadder()
 setTimeout(() => {
-  IoOverlaySingleton.appendChild(IoNumberLadderSingleton as HTMLElement);
-}, 100);
+  IoOverlaySingleton.appendChild(IoNumberLadderSingleton as HTMLElement)
+}, 100)

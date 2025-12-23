@@ -2,7 +2,7 @@ const saturate = /* glsl */`
   #ifndef saturate
     #define saturate(v) clamp(v, 0., 1.)
   #endif
-`;
+`
 
 // Transform functions
 const translate = /* glsl */`
@@ -12,14 +12,14 @@ const translate = /* glsl */`
   vec2 translate(vec2 samplePosition, float x, float y){
     return samplePosition - vec2(x, y);
   }
-`;
+`
 
 // SDF functions
 const circle = /* glsl */`
   float circle(vec2 samplePosition, float radius){
     return saturate((length(samplePosition) - radius) * uPxRatio);
   }
-`;
+`
 const rectangle = /* glsl */`
   float rectangle(vec2 samplePosition, vec2 halfSize){
     vec2 edgeDistance = abs(samplePosition) - halfSize;
@@ -27,7 +27,7 @@ const rectangle = /* glsl */`
     float inside = min(max(edgeDistance.x, edgeDistance.y), 0.);
     return 1.0 - saturate((outside + inside) * 1000000.0);
   }
-`;
+`
 const paintDerivativeGrid2D = /* glsl*/`
   float paintDerivativeGrid2D(vec2 samplePosition, vec2 gridWidth, float lineWidth) {
     vec2 sp = samplePosition / gridWidth;
@@ -49,50 +49,50 @@ const paintDerivativeGrid2D = /* glsl*/`
 
     return (1.0 - saturate(min(linex, liney)));
   }
-`;
+`
 const lineVertical = /* glsl*/`
   float lineVertical(vec2 samplePosition, float lineWidth) {
     return (abs(samplePosition.x) * 2.0 > lineWidth) ? 0.0 : 1.0;
   }
-`;
+`
 const lineHorizontal = /* glsl*/`
   float lineHorizontal(vec2 samplePosition, float lineWidth) {
     return (abs(samplePosition.y) * 2.0 > lineWidth) ? 0.0 : 1.0;
   }
-`;
+`
 const lineCross2d = /* glsl*/`
   float lineCross2d(vec2 samplePosition, float lineWidth) {
     return (min(abs(samplePosition.x), abs(samplePosition.y)) * 2.0 > lineWidth) ? 0.0 : 1.0;
   }
-`;
+`
 const checker = /* glsl*/`
   float checker(vec2 samplePosition, float size) {
     vec2 checkerPos = floor(samplePosition / size);
     float checkerMask = mod(checkerPos.x + mod(checkerPos.y, 2.0), 2.0);
     return checkerMask;
   }
-`;
+`
 const checkerX = /* glsl*/`
   float checkerX(vec2 samplePosition, float size) {
     vec2 checkerPos = floor(samplePosition / size);
     float checkerMask = mod(checkerPos.x, 2.0);
     return checkerMask;
   }
-`;
+`
 const checkerY = /* glsl*/`
   float checkerY(vec2 samplePosition, float size) {
     vec2 checkerPos = floor(samplePosition / size);
     float checkerMask = mod(checkerPos.y, 2.0);
     return checkerMask;
   }
-`;
+`
 
 // Compositing functions
 const compose = /* glsl*/`
   vec3 compose(vec3 dst, vec4 src) {
     return mix(dst, src.rgb, src.a);
   }
-`;
+`
 
 /**
  * GLSL Color Functions
@@ -106,14 +106,14 @@ const hue2rgb = /* glsl*/`
     float B = 2. - abs(hue * 6. - 4.);
     return saturate(vec3(R,G,B));
   }
-`;
+`
 
 const hsv2rgb = /* glsl*/`
   vec3 hsv2rgb(vec3 hsv) {
     vec3 rgb = hue2rgb(hsv.r);
     return ((rgb - 1.) * hsv.g + 1.) * hsv.b;
   }
-`;
+`
 
 const hsl2rgb = /* glsl*/`
   vec3 hsl2rgb(vec3 hsl) {
@@ -121,7 +121,7 @@ const hsl2rgb = /* glsl*/`
     float C = (1. - abs(2. * hsl.z - 1.)) * hsl.y;
     return (rgb - 0.5) * C + hsl.z;
   }
-`;
+`
 
 export const glsl = {
   saturate,
@@ -139,4 +139,4 @@ export const glsl = {
   hue2rgb,
   hsv2rgb,
   hsl2rgb,
-};
+}

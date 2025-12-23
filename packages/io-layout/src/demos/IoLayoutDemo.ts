@@ -1,17 +1,17 @@
 //@ts-nocheck
-import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-core';
-import { ioLayout, Split } from 'io-layout';
-import { ioCollapsible } from 'io-navigation';
-import { ioMarkdown } from 'io-markdown';
-import { MenuOption } from 'io-menus';
+import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-core'
+import { ioLayout, Split } from 'io-layout'
+import { ioCollapsible } from 'io-navigation'
+import { ioMarkdown } from 'io-markdown'
+import { MenuOption } from 'io-menus'
 
 function lorem(length) {
-  const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');
-  let lorem = '';
+  const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')
+  let lorem = ''
   for (let i = 0; i < length; i++) {
-    lorem += words[Math.floor(Math.random() * words.length)] + ' ';
+    lorem += words[Math.floor(Math.random() * words.length)] + ' '
   }
-  return lorem;
+  return lorem
 }
 
 const split = new Split({
@@ -48,7 +48,7 @@ const split = new Split({
       flex: '0 0 350px',
     }
   ]
-});
+})
 
 export class IoLayoutDemo extends IoElement {
   static get Style() {
@@ -66,7 +66,7 @@ export class IoLayoutDemo extends IoElement {
       :host io-panel > io-selector > div {
         padding: var(--io_lineHeight);
       }
-    `;
+    `
   }
   ready() {
     this.render([
@@ -152,8 +152,8 @@ export class IoLayoutDemo extends IoElement {
         // split: split,
         split: $({key: 'split', storage: 'local', value: split})
       })
-    ]);
+    ])
   }
 }
-Register(IoLayoutDemo);
-export const ioLayoutDemo = IoLayoutDemo.vConstructor;
+Register(IoLayoutDemo)
+export const ioLayoutDemo = IoLayoutDemo.vConstructor

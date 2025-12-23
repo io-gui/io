@@ -1,6 +1,9 @@
 {
-  "name": "io-sliders",
-  "version": "2.0.0",
+  "name": "@io-gui/io-sliders",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "2.0.0-alpha.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "A set of sliders for Io-Gui.",
@@ -15,14 +18,14 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
-  "keywords": ["io","gui","md","iogui","io-core","sliders","io-sliders"],
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["ui","io","gui","iogui","sliders","io-sliders"],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT + Commons Clause - see LICENSE.md",
-  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "license": "MIT",
+  "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "io-core": "^2.0.0",
-    "io-inputs": "^2.0.0"
+    "@io-gui/io-core": "^2.0.0",
+    "@io-gui/io-inputs": "^2.0.0"
   }
 }

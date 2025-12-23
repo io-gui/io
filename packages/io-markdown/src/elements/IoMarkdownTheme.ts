@@ -62,7 +62,7 @@ export const MD_LIGHT_THEME = /* css */`
       font-weight: bold;
   }
 }
-`;
+`
 
 export const MD_DARK_THEME = /* css */`
 /* a11y-dark theme */
@@ -128,4 +128,4 @@ export const MD_DARK_THEME = /* css */`
     font-weight: bold;
   }
 }
-`;
+`

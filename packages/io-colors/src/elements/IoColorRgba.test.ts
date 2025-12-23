@@ -1,13 +1,13 @@
-import { IoColorRgba } from 'io-colors';
+import { IoColorRgba } from 'io-colors'
 // import { expect } from 'chai';
 
-const element = new IoColorRgba();
-element.style.display = 'none';
-document.body.appendChild(element as HTMLElement);
+const element = new IoColorRgba()
+element.style.display = 'none'
+document.body.appendChild(element as HTMLElement)
 
 export default class {
   run() {
     describe('IoColorRgba.test', () => {
-    });
+    })
   }
 }

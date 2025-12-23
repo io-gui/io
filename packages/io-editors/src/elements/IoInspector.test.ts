@@ -1,10 +1,10 @@
-import { IoInspector } from 'io-editors';
+import { IoInspector } from 'io-editors'
 
 export default class {
-  element = new IoInspector();
+  element = new IoInspector()
   constructor() {
-    this.element.style.display = 'none';
-    document.body.appendChild(this.element as HTMLElement);
+    this.element.style.display = 'none'
+    document.body.appendChild(this.element as HTMLElement)
   }
   reset() {
     // this.element.value = {};
@@ -13,9 +13,9 @@ export default class {
   run() {
     describe('IoInspector', () => {
       it('has default values', () => {
-        expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}));
-        expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}));
-      });
-    });
+        expect(JSON.stringify(this.element.value)).to.equal(JSON.stringify({}))
+        expect(JSON.stringify(this.element.config)).to.equal(JSON.stringify({}))
+      })
+    })
   }
 }

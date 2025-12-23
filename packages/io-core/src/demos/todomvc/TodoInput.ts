@@ -1,10 +1,10 @@
-import { IoElement, Register, input, ReactiveProperty, IoElementProps } from 'io-core';
-import { TodoListModel } from './TodoListModel.js';
-import { TodoItemModel } from './TodoItemModel.js';
+import { IoElement, Register, input, ReactiveProperty, IoElementProps } from 'io-core'
+import { TodoListModel } from './TodoListModel.js'
+import { TodoItemModel } from './TodoItemModel.js'
 
 type TodoInputProps = IoElementProps & {
-  model?: TodoListModel;
-};
+  model?: TodoListModel
+}
 
 export class TodoInput extends IoElement {
   static get Style() {
@@ -12,39 +12,39 @@ export class TodoInput extends IoElement {
     :host {
       display: contents;
     }
-    `;
+    `
   }
 
   @ReactiveProperty({type: TodoListModel})
-  declare model: TodoListModel;
+  declare model: TodoListModel
 
-  constructor(args: TodoInputProps = {}) { super(args); }
+  constructor(args: TodoInputProps = {}) { super(args) }
 
   onInputKey(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      const inputElement = this.$.input as HTMLInputElement;
-      const title = String(inputElement.value).trim();
+      const inputElement = this.$.input as HTMLInputElement
+      const title = String(inputElement.value).trim()
       if (title) {
-        this.model.items.push(new TodoItemModel({title: title, completed: false}));
+        this.model.items.push(new TodoItemModel({title: title, completed: false}))
       }
-      inputElement.value = '';
-      inputElement.focus();
+      inputElement.value = ''
+      inputElement.focus()
     }
     if (event.key === 'Escape') {
-      const inputElement = this.$.input as HTMLInputElement;
-      inputElement.value = '';
-      inputElement.focus();
+      const inputElement = this.$.input as HTMLInputElement
+      inputElement.value = ''
+      inputElement.focus()
     }
   }
 
   changed() {
     this.render([
       input({id: 'input', class: 'new-todo', placeholder: 'What needs to be done?', '@keyup': this.onInputKey, autofocus: true}),
-    ]);
+    ])
   }
 }
-Register(TodoInput);
+Register(TodoInput)
 
 export const todoInput = function(arg0: TodoInputProps) {
-  return TodoInput.vConstructor(arg0);
-};
+  return TodoInput.vConstructor(arg0)
+}

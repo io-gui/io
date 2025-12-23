@@ -1,27 +1,27 @@
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from 'io-core';
+import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from 'io-core'
 
-import { TodoListModel } from './TodoListModel.js';
-import { todoInput } from './TodoInput.js';
-import { todoList } from './TodoList.js';
-import { todoFooter } from './TodoFooter.js';
+import { TodoListModel } from './TodoListModel.js'
+import { todoInput } from './TodoInput.js'
+import { todoList } from './TodoList.js'
+import { todoFooter } from './TodoFooter.js'
 
-$.permit();
-const $route = $({key: 'route', storage: 'hash', value: 'all'});
-const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})});
+$.permit()
+const $route = $({key: 'route', storage: 'hash', value: 'all'})
+const $model = $({key: 'model', storage: 'local', value: new TodoListModel({items: []})})
 
 export class TodoApp extends IoElement {
   @ReactiveProperty($model)
-  declare model: TodoListModel;
+  declare model: TodoListModel
 
   @ReactiveProperty($route)
-  declare route: string;
+  declare route: string
 
   ready() {
-    this.changed();
+    this.changed()
   }
 
   modelMutated() {
-    this.changed();
+    this.changed()
   }
 
   changed() {
@@ -47,8 +47,8 @@ export class TodoApp extends IoElement {
           a({href: 'http://todomvc.com/', target: '_blank'}, 'TodoMVC')
         ])
       ])
-    ]);
+    ])
   }
 }
-Register(TodoApp);
-export const todoApp = TodoApp.vConstructor;
+Register(TodoApp)
+export const todoApp = TodoApp.vConstructor

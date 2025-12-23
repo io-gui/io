@@ -1,22 +1,22 @@
-import { Node } from '../nodes/Node.js';
-import { IoElement } from '../elements/IoElement.js';
+import { Node } from '../nodes/Node.js'
+import { IoElement } from '../elements/IoElement.js'
 
 // TODO: Improve types!
 
 export interface Change {
-  property: string;
-  value: any;
-  oldValue: any;
+  property: string
+  value: any
+  oldValue: any
 }
 
 export interface Changes {
-  [property: string]: Change;
+  [property: string]: Change
 }
 
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-  readonly target: Node | IoElement;
-  readonly detail: Change;
-  readonly path: Node[];
+  readonly target: Node | IoElement
+  readonly detail: Change
+  readonly path: Node[]
 }
 
 /**
@@ -42,23 +42,23 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * changeQueue.dispatch();
  */
 export class ChangeQueue {
-  declare readonly node: Node | IoElement;
-  declare readonly changes: Change[];
-  dispatchedChange = false;
-  dispatching = false;
+  declare readonly node: Node | IoElement
+  declare readonly changes: Change[]
+  dispatchedChange = false
+  dispatching = false
   /**
    * Creates change queue for the specified owner instance of `Node`.
    * @param {Node} node - Owner node.
    */
   constructor(node: Node | IoElement) {
-    this.changes = [];
-    this.node = node;
+    this.changes = []
+    this.node = node
     Object.defineProperty(this, 'dispatch', {
       value: this.dispatch.bind(this),
       enumerable: false,
       writable: false,
       configurable: false,
-    });
+    })
   }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.
@@ -70,15 +70,15 @@ export class ChangeQueue {
    */
   queue(property: string, value: any, oldValue: any) {
     debug: if (value === oldValue) {
-      console.warn('ChangeQueue: queuing change with same value and oldValue!');
+      console.warn('ChangeQueue: queuing change with same value and oldValue!')
     }
-    const i = this.changes.findIndex(change => change.property === property);
+    const i = this.changes.findIndex(change => change.property === property)
     if (i === -1) {
-      this.changes.push({property, value, oldValue});
+      this.changes.push({property, value, oldValue})
     } else if (value === this.changes[i].oldValue) {
-      this.changes.splice(i, 1);
+      this.changes.splice(i, 1)
     } else {
-      this.changes[i].value = value;
+      this.changes[i].value = value
     }
   }
   /**
@@ -90,38 +90,38 @@ export class ChangeQueue {
    */
   dispatch() {
     if (this.dispatching === true) {
-      debug: console.error('ChangeQueue: dispatching already in progress!');
-      return;
+      debug: console.error('ChangeQueue: dispatching already in progress!')
+      return
     }
-    this.dispatching = true;
-    const properties = [];
+    this.dispatching = true
+    const properties = []
     while (this.changes.length) {
-      const change = this.changes[0];
-      this.changes.splice(0, 1);
-      const property = change.property;
+      const change = this.changes[0]
+      this.changes.splice(0, 1)
+      const property = change.property
       if (change.value !== change.oldValue) {
-        this.dispatchedChange = true;
-        if ((this.node as any)[property + 'Changed']) (this.node as any)[property + 'Changed'](change);
-        this.node.dispatch(property + '-changed' as any, change);
-        properties.push(property);
+        this.dispatchedChange = true
+        if ((this.node as any)[property + 'Changed']) (this.node as any)[property + 'Changed'](change)
+        this.node.dispatch(property + '-changed' as any, change)
+        properties.push(property)
       }
     }
     if (this.dispatchedChange) {
-      this.node.changed();
+      this.node.changed()
       if ((this.node as Node)._isNode) {
-        (this.node as Node).dispatchMutation(this.node, properties);
+        (this.node as Node).dispatchMutation(this.node, properties)
       }
     }
-    this.dispatchedChange = false;
-    this.dispatching = false;
+    this.dispatchedChange = false
+    this.dispatching = false
   }
   /**
    * Clears the queue and removes the node reference for garbage collection.
    * Use this when node queue is no longer needed.
    */
   dispose() {
-    this.changes.length = 0;
-    delete (this as any).node;
-    delete (this as any).changes;
+    this.changes.length = 0
+    delete (this as any).node
+    delete (this as any).changes
   }
 }

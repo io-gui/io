@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
-      "io-markdown": ["./src/index.js"],
+      "io-markdown": ["./src/index.ts"],
       "io-core": ["../io-core"]
     }
   },

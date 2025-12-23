@@ -1,15 +1,15 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-core';
-import { ioIcon } from 'io-icons';
+import { Register, ReactiveProperty, IoElement, IoElementProps, span, Property, WithBinding, ListenerDefinitions, ListenerDefinition } from 'io-core'
+import { ioIcon } from 'io-icons'
 
 export type IoFieldProps = IoElementProps & {
-  value?: WithBinding<any>,
-  icon?: string,
-  label?: string,
-  selected?: boolean,
-  disabled?: boolean,
-  appearance?: 'neutral' | 'inset' | 'outset',
-  pattern?: string,
-};
+  value?: WithBinding<any>
+  icon?: string
+  label?: string
+  selected?: boolean
+  disabled?: boolean
+  appearance?: 'neutral' | 'inset' | 'outset'
+  pattern?: string
+}
 
 @Register
 export class IoField extends IoElement {
@@ -84,42 +84,42 @@ export class IoField extends IoElement {
         background-color: var(--io_bgColorBlue);
         border-color: var(--io_borderColorBlue);
       }
-    `;
+    `
   }
 
   @ReactiveProperty({value: ''})
-  declare value: any;
+  declare value: any
 
   @ReactiveProperty({type: String, value: ''})
-  declare icon: string;
+  declare icon: string
 
   @ReactiveProperty({type: String, value: '', reflect: true})
-  declare label: string;
+  declare label: string
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare selected: boolean;
+  declare selected: boolean
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare invalid: boolean;
+  declare invalid: boolean
 
   // TODO: remove
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare disabled: boolean;
+  declare disabled: boolean
 
   @ReactiveProperty({value: false, type: Boolean, reflect: true})
-  declare pressed: boolean;
+  declare pressed: boolean
 
   @ReactiveProperty({value: 'neutral', reflect: true})
-  declare appearance: 'neutral' | 'inset' | 'outset';
+  declare appearance: 'neutral' | 'inset' | 'outset'
 
   @ReactiveProperty({value: '', type: String, reflect: true})
-  declare pattern: string;
+  declare pattern: string
 
   @Property(false)
-  declare spellcheck: boolean;
+  declare spellcheck: boolean
 
   @Property(0)
-  declare tabIndex: number;
+  declare tabIndex: number
 
   static get Listeners(): ListenerDefinitions { // TODO: fix listener types
     return {
@@ -127,78 +127,78 @@ export class IoField extends IoElement {
       'pointerdown': 'onPointerdown',
       'touchstart': ['onTouchstart', {passive: false}] as ListenerDefinition,
       'click': 'onClick',
-    };
+    }
   }
 
-  constructor(args: IoFieldProps = {}) { super(args); }
+  constructor(args: IoFieldProps = {}) { super(args) }
 
   onFocus(event: FocusEvent) {
-    this.addEventListener('blur', this.onBlur);
-    this.addEventListener('keydown', this.onKeydown);
-    this.addEventListener('keyup', this.onKeyup);
+    this.addEventListener('blur', this.onBlur)
+    this.addEventListener('keydown', this.onKeydown)
+    this.addEventListener('keyup', this.onKeyup)
   }
   onBlur(event: FocusEvent) {
-    this.removeEventListener('blur', this.onBlur);
-    this.removeEventListener('keydown', this.onKeydown);
-    this.removeEventListener('keyup', this.onKeyup);
+    this.removeEventListener('blur', this.onBlur)
+    this.removeEventListener('keydown', this.onKeydown)
+    this.removeEventListener('keyup', this.onKeyup)
   }
   onPointerdown(event: PointerEvent) {
-    event.stopPropagation();
-    this.setPointerCapture(event.pointerId);
-    this.addEventListener('pointermove', this.onPointermove);
-    this.addEventListener('pointerleave', this.onPointerleave);
-    this.addEventListener('pointerup', this.onPointerup);
-    this.addEventListener('pointercancel', this.onPointercancel);
-    this.pressed = true;
+    event.stopPropagation()
+    this.setPointerCapture(event.pointerId)
+    this.addEventListener('pointermove', this.onPointermove)
+    this.addEventListener('pointerleave', this.onPointerleave)
+    this.addEventListener('pointerup', this.onPointerup)
+    this.addEventListener('pointercancel', this.onPointercancel)
+    this.pressed = true
   }
   onPointermove(event: PointerEvent) {
-    event.stopPropagation();
+    event.stopPropagation()
   }
   onPointercancel(event: PointerEvent) {
-    event.stopPropagation();
-    this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerleave', this.onPointerleave);
-    this.removeEventListener('pointerup', this.onPointerup);
-    this.removeEventListener('pointercancel', this.onPointercancel);
-    this.pressed = false;
+    event.stopPropagation()
+    this.releasePointerCapture(event.pointerId)
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerleave', this.onPointerleave)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
+    this.pressed = false
   }
   onPointerleave(event: PointerEvent) {
-    event.stopPropagation();
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerleave', this.onPointerleave);
-    this.removeEventListener('pointerup', this.onPointerup);
-    this.removeEventListener('pointercancel', this.onPointercancel);
-    this.pressed = false;
+    event.stopPropagation()
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerleave', this.onPointerleave)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
+    this.pressed = false
   }
   onPointerup(event: PointerEvent) {
-    event.stopPropagation();
-    this.releasePointerCapture(event.pointerId);
-    this.removeEventListener('pointermove', this.onPointermove);
-    this.removeEventListener('pointerleave', this.onPointerleave);
-    this.removeEventListener('pointerup', this.onPointerup);
-    this.removeEventListener('pointercancel', this.onPointercancel);
-    this.pressed = false;
+    event.stopPropagation()
+    this.releasePointerCapture(event.pointerId)
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerleave', this.onPointerleave)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
+    this.pressed = false
   }
   onTouchstart(event: TouchEvent) {
-    event.stopPropagation();
-    this.addEventListener('touchmove', this.onTouchmove, {passive: false});
-    this.addEventListener('touchend', this.onTouchend);
-    this.focus();
+    event.stopPropagation()
+    this.addEventListener('touchmove', this.onTouchmove, {passive: false})
+    this.addEventListener('touchend', this.onTouchend)
+    this.focus()
   }
   onTouchmove(event: TouchEvent) {
-    event.stopPropagation();
+    event.stopPropagation()
   }
   onTouchend(event: TouchEvent) {
-    event.stopPropagation();
-    this.removeEventListener('touchmove', this.onTouchmove);
-    this.removeEventListener('touchend', this.onTouchend);
+    event.stopPropagation()
+    this.removeEventListener('touchmove', this.onTouchmove)
+    this.removeEventListener('touchend', this.onTouchend)
   }
   inputValue(value: any) {
     if (this.value !== value || typeof this.value === 'object') {
-      const oldValue = this.value;
-      this.setProperty('value', value);
-      this.dispatch('value-input', {value: value, oldValue: oldValue}, false);
+      const oldValue = this.value
+      this.setProperty('value', value)
+      this.dispatch('value-input', {value: value, oldValue: oldValue}, false)
     }
   }
   onClick(event?: MouseEvent) {
@@ -207,82 +207,82 @@ export class IoField extends IoElement {
     switch (event.key) {
       case 'Enter':
       case ' ':
-        event.preventDefault();
-        this.onClick();
-        break;
+        event.preventDefault()
+        this.onClick()
+        break
       default:
         if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
-          event.preventDefault();
-          this.dispatch('io-focus-to', {source: this, command: event.key}, true);
+          event.preventDefault()
+          this.dispatch('io-focus-to', {source: this, command: event.key}, true)
         }
     }
   }
   onKeyup(event: KeyboardEvent) {}
 
   getCaretPosition() {
-    let position = 0;
-    const selection = window.getSelection();
+    let position = 0
+    const selection = window.getSelection()
     if (selection && selection.rangeCount) {
-      const range = selection.getRangeAt(0);
-      const selected = range.toString().length;
-      const preCaretRange = range.cloneRange();
-      preCaretRange.selectNodeContents(this as unknown as Node);
-      preCaretRange.setEnd(range.endContainer, range.endOffset);
-      position = preCaretRange.toString().length - selected;
+      const range = selection.getRangeAt(0)
+      const selected = range.toString().length
+      const preCaretRange = range.cloneRange()
+      preCaretRange.selectNodeContents(this as unknown as Node)
+      preCaretRange.setEnd(range.endContainer, range.endOffset)
+      position = preCaretRange.toString().length - selected
     }
-    return position;
+    return position
   }
   setCaretPosition(position: number = 0){
-    const selection = window.getSelection();
+    const selection = window.getSelection()
     // this.normalize(); // TODO: use normalize() instead?
-    this._flattenTextNode(this);
-    const textNode = this._textNode;
+    this._flattenTextNode(this)
+    const textNode = this._textNode
     if (selection) {
-      const range = document.createRange();
-      range.setStart(textNode, Math.max(0, Math.min(position, textNode.length)));
-      range.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(range);
+      const range = document.createRange()
+      range.setStart(textNode, Math.max(0, Math.min(position, textNode.length)))
+      range.collapse(true)
+      selection.removeAllRanges()
+      selection.addRange(range)
     }
   }
   selectAll() {
-    const selection = window.getSelection();
-    this._flattenTextNode(this);
-    const textNode = this._textNode;
+    const selection = window.getSelection()
+    this._flattenTextNode(this)
+    const textNode = this._textNode
     if (selection && textNode) {
-      const range = document.createRange();
-      range.selectNodeContents(textNode);
-      selection.removeAllRanges();
-      selection.addRange(range);
+      const range = document.createRange()
+      range.selectNodeContents(textNode)
+      selection.removeAllRanges()
+      selection.addRange(range)
     }
   }
   labelChanged() {
     if (this.label) {
-      this.setAttribute('aria-label', this.label);
+      this.setAttribute('aria-label', this.label)
     } else {
-      this.removeAttribute('aria-label');
+      this.removeAttribute('aria-label')
     }
   }
   selectedChanged() {
     if (this.selected) {
-      this.setAttribute('aria-selected', 'true');
+      this.setAttribute('aria-selected', 'true')
     } else {
-      this.removeAttribute('aria-selected');
+      this.removeAttribute('aria-selected')
     }
   }
   invalidChanged() {
     if (this.invalid) {
-      this.setAttribute('aria-invalid', 'true');
+      this.setAttribute('aria-invalid', 'true')
     } else {
-      this.removeAttribute('aria-invalid');
+      this.removeAttribute('aria-invalid')
     }
   }
   disabledChanged() {
-    this.inert = this.disabled;
+    this.inert = this.disabled
     if (this.disabled) {
-      this.setAttribute('aria-disabled', 'true');
+      this.setAttribute('aria-disabled', 'true')
     } else {
-      this.removeAttribute('aria-disabled');
+      this.removeAttribute('aria-disabled')
     }
   }
   changed() {
@@ -290,11 +290,11 @@ export class IoField extends IoElement {
       this.icon ? ioIcon({value: this.icon}) : null,
       this.label ? span(this.label) : null,
       this.value !== undefined ? span(String(this.value)) : null,
-    ]);
+    ])
   }
 
 }
 
 export const ioField = function(arg0: IoFieldProps) {
-  return IoField.vConstructor(arg0);
-};
+  return IoField.vConstructor(arg0)
+}

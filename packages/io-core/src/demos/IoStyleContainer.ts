@@ -1,8 +1,8 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton, Theme } from 'io-core';
+import { Register, IoElement, ThemeSingleton, Theme } from 'io-core'
 
 function lerp(a, b, t) {
-  return a + (b - a) * t;
+  return a + (b - a) * t
 }
 
 /**
@@ -38,53 +38,53 @@ export class IoStyleContainer extends IoElement {
         margin-right: var(--io_spacing2);
         background: var(--white-noise-bg) !important;
       }
-    `;
+    `
   }
 
   static get ReactiveProperties() {
     return {
       theme: {type: Theme, value: ThemeSingleton},
-    };
+    }
   }
 
   constructor() {
-    super();
-    this.generateWhiteNoise();
+    super()
+    this.generateWhiteNoise()
   }
 
   themeMutated() {
-    this.generateWhiteNoise();
+    this.generateWhiteNoise()
   }
 
   generateWhiteNoise() {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
 
     // Set canvas size for the noise pattern
-    canvas.width = 128;
-    canvas.height = 128;
+    canvas.width = 128
+    canvas.height = 128
 
     // Generate white noise
-    const imageData = ctx.createImageData(canvas.width, canvas.height);
-    const data = imageData.data;
+    const imageData = ctx.createImageData(canvas.width, canvas.height)
+    const data = imageData.data
 
-    const c1 = ThemeSingleton.bgColor;
-    const c2 = ThemeSingleton.bgColorStrong;
+    const c1 = ThemeSingleton.bgColor
+    const c2 = ThemeSingleton.bgColorStrong
     for (let i = 0; i < data.length; i += 4) {
-      const noise = Math.random();
-      data[i] = lerp(c1.r, c2.r, noise) * 255;     // Red
-      data[i + 1] = lerp(c1.g, c2.g, noise) * 255; // Green
-      data[i + 2] = lerp(c1.b, c2.b, noise) * 255; // Blue
-      data[i + 3] = 255;   // Alpha
+      const noise = Math.random()
+      data[i] = lerp(c1.r, c2.r, noise) * 255     // Red
+      data[i + 1] = lerp(c1.g, c2.g, noise) * 255 // Green
+      data[i + 2] = lerp(c1.b, c2.b, noise) * 255 // Blue
+      data[i + 3] = 255   // Alpha
     }
 
-    ctx.putImageData(imageData, 0, 0);
+    ctx.putImageData(imageData, 0, 0)
 
     // Convert to data URI and set as CSS variable
-    const dataUri = canvas.toDataURL();
-    document.documentElement.style.setProperty('--white-noise-bg', `url(${dataUri})`);
+    const dataUri = canvas.toDataURL()
+    document.documentElement.style.setProperty('--white-noise-bg', `url(${dataUri})`)
   }
 }
-Register(IoStyleContainer);
+Register(IoStyleContainer)
 
-export const ioStyleContainer = IoStyleContainer.vConstructor;
+export const ioStyleContainer = IoStyleContainer.vConstructor

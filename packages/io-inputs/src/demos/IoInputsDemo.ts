@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-core';
-import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
+import { Register, IoElement, div } from 'io-core'
+import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs'
 
 export class IoInputsDemo extends IoElement {
   static get Style() {
@@ -20,14 +20,14 @@ export class IoInputsDemo extends IoElement {
       :host .row > * {
         margin-right: var(--io_spacing);
       }
-    `;
+    `
   }
   static get ReactiveProperties() {
     return {
       string: 'Hello!',
       number: 1,
       boolean: true,
-    };
+    }
   }
   ready() {
     this.render([
@@ -68,9 +68,9 @@ export class IoInputsDemo extends IoElement {
         ioButton({label: 'Button', icon: 'io:check', appearance: 'inset'}),
         ioButton({label: 'Button', icon: 'io:check', appearance: 'neutral'}),
       ]),
-    ]);
+    ])
   }
 }
-Register(IoInputsDemo);
-export const ioInputsDemo = IoInputsDemo.vConstructor;
+Register(IoInputsDemo)
+export const ioInputsDemo = IoInputsDemo.vConstructor
 

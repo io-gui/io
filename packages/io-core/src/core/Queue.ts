@@ -1,23 +1,23 @@
-import { Node } from '../nodes/Node.js';
-import { IoElement } from '../elements/IoElement.js';
+import { Node } from '../nodes/Node.js'
+import { IoElement } from '../elements/IoElement.js'
 
-export type CallbackFunction = (arg?: any) => void;
+export type CallbackFunction = (arg?: any) => void
 
 interface QueueOptions {
-  node: Node | IoElement | undefined;
-  arg: any;
-  frame: number;
+  node: Node | IoElement | undefined
+  arg: any
+  frame: number
 }
 
-let currentFrame = 0;
+let currentFrame = 0
 
-const queueSync: CallbackFunction[] = [];
-const queue0: CallbackFunction[] = [];
-const queue1: CallbackFunction[] = [];
-const queueOptions0: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
-const queueOptions1: WeakMap<CallbackFunction, QueueOptions> = new WeakMap();
-let queue = queue0;
-let queueOptions = queueOptions0;
+const queueSync: CallbackFunction[] = []
+const queue0: CallbackFunction[] = []
+const queue1: CallbackFunction[] = []
+const queueOptions0: WeakMap<CallbackFunction, QueueOptions> = new WeakMap()
+const queueOptions1: WeakMap<CallbackFunction, QueueOptions> = new WeakMap()
+let queue = queue0
+let queueOptions = queueOptions0
 
 /**
  * Returns a promise that resolves when the next frame is rendered.
@@ -26,13 +26,13 @@ let queueOptions = queueOptions0;
  */
 export async function nextQueue(): Promise<void> {
   return new Promise((resolve) => {
-    queue.push(resolve);
+    queue.push(resolve)
     queueOptions.set(resolve, {
       arg: undefined,
       node: undefined,
       frame: currentFrame + 1,
-    });
-  });
+    })
+  })
 }
 
 /**
@@ -47,17 +47,17 @@ export async function nextQueue(): Promise<void> {
  */
 export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
   if (queue.indexOf(func) === -1) {
-    queue.push(func);
+    queue.push(func)
   }
   if (!queueOptions.has(func)) {
     queueOptions.set(func, {
       arg: arg,
       node: node,
       frame: currentFrame + delay,
-    });
+    })
   } else {
-    const options = queueOptions.get(func)!;
-    options.arg = arg;
+    const options = queueOptions.get(func)!
+    options.arg = arg
   }
 }
 
@@ -73,18 +73,18 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElem
  */
 export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
   if (queue.indexOf(func) === -1) {
-    queue.push(func);
+    queue.push(func)
   }
   if (!queueOptions.has(func)) {
     queueOptions.set(func, {
       arg: arg,
       node: node,
       frame: currentFrame + delay,
-    });
+    })
   } else {
-    const options = queueOptions.get(func)!;
-    options.arg = arg;
-    options.frame = currentFrame + delay;
+    const options = queueOptions.get(func)!
+    options.arg = arg
+    options.frame = currentFrame + delay
   }
 }
 
@@ -95,41 +95,43 @@ export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElem
  */
 function executeQueue () {
 
-  currentFrame++;
+  currentFrame++
 
-  const activeQueue = queue;
-  const activeQueueOptions = queueOptions;
-  queue = queue === queue0 ? queue1 : queue0;
-  queueOptions = queueOptions === queueOptions0 ? queueOptions1 : queueOptions0;
+  const activeQueue = queue
+  const activeQueueOptions = queueOptions
+  queue = queue === queue0 ? queue1 : queue0
+  queueOptions = queueOptions === queueOptions0 ? queueOptions1 : queueOptions0
 
   for (let i = 0; i < activeQueue.length; i++) {
-    const func = activeQueue[i];
-    const options = activeQueueOptions.get(func)!;
-    activeQueueOptions.delete(func);
+    const func = activeQueue[i]
+    const options = activeQueueOptions.get(func)!
+    activeQueueOptions.delete(func)
 
     if (options === undefined) {
-      console.warn(func);
-    }
-    if (options.frame > currentFrame) {
-      if (queue.indexOf(func) === -1) {
-        queue.push(func);
-      }
-      if (!queueOptions.has(func)) {
-        queueOptions.set(func, options);
-      }
-      continue;
+      console.warn(func)
+      continue
     }
 
-    if (options.node?._disposed) continue;
+    if (options.frame > currentFrame) {
+      if (queue.indexOf(func) === -1) {
+        queue.push(func)
+      }
+      if (!queueOptions.has(func)) {
+        queueOptions.set(func, options)
+      }
+      continue
+    }
+
+    if (options.node?._disposed) continue
     try {
-      if (options.arg !== undefined) func(options.arg);
-      else func();
+      if (options.arg !== undefined) func(options.arg)
+      else func()
     } catch (e) {
-      console.error(e);
+      console.error(e)
     }
   }
-  queueSync.length = 0;
-  activeQueue.length = 0;
-  requestAnimationFrame(executeQueue);
+  queueSync.length = 0
+  activeQueue.length = 0
+  requestAnimationFrame(executeQueue)
 }
-requestAnimationFrame(executeQueue);
+requestAnimationFrame(executeQueue)

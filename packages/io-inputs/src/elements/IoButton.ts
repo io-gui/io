@@ -1,10 +1,10 @@
-import { Register, ReactiveProperty, span, Property } from 'io-core';
-import { ioIcon } from 'io-icons';
-import { IoField, IoFieldProps } from './IoField.js';
+import { Register, ReactiveProperty, span, Property } from 'io-core'
+import { ioIcon } from 'io-icons'
+import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoButtonProps = IoFieldProps & {
-  action?: Function,
-};
+  action?: Function
+}
 
 /**
  * Button element.
@@ -24,51 +24,51 @@ export class IoButton extends IoField {
       :host > span {
         vertical-align: top;
       }
-    `;
+    `
   }
   @ReactiveProperty({value: undefined})
-  declare value: any;
+  declare value: any
 
   @ReactiveProperty()
-  declare action?: Function;
+  declare action?: Function
 
   @ReactiveProperty({value: 'outset', type: String, reflect: true})
-  declare appearance: 'inset' | 'outset' | 'neutral';
+  declare appearance: 'inset' | 'outset' | 'neutral'
 
   @Property('button')
-  declare role: string;
+  declare role: string
 
-  constructor(args: IoButtonProps = {}) { super(args); }
+  constructor(args: IoButtonProps = {}) { super(args) }
 
   onPointerdown(event: PointerEvent) {
-    event.preventDefault();
-    super.onPointerdown(event);
+    event.preventDefault()
+    super.onPointerdown(event)
   }
   onKeydown(event: KeyboardEvent) {
-    super.onKeydown(event);
+    super.onKeydown(event)
     if (event.key === 'Enter' || event.key === ' ') {
-      this.pressed = true;
+      this.pressed = true
     }
   }
   onKeyup(event: KeyboardEvent) {
-    super.onKeyup(event);
-    this.pressed = false;
+    super.onKeyup(event)
+    this.pressed = false
   }
   onClick(event: MouseEvent) {
-    if (typeof this.action === 'function') this.action(this.value);
-    this.dispatch('io-button-clicked', {value: this.value}, true);
+    if (typeof this.action === 'function') this.action(this.value)
+    this.dispatch('io-button-clicked', {value: this.value}, true)
   }
   ready() {
-    this.changed();
+    this.changed()
   }
   changed() {
-    this.setAttribute('aria-pressed', String(this.pressed));
+    this.setAttribute('aria-pressed', String(this.pressed))
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
       this.label ? span(this.label) : null
-    ]);
+    ])
   }
 }
 export const ioButton = function(arg0?: IoButtonProps) {
-  return IoButton.vConstructor(arg0);
-};
+  return IoButton.vConstructor(arg0)
+}

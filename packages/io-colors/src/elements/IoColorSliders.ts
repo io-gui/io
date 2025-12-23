@@ -1,13 +1,13 @@
-import { Register, ReactiveProperty, glsl, WithBinding, Node } from 'io-core';
-import { IoSlider, IoSlider2d } from 'io-sliders';
-import { IoColorBase, IoColorBaseProps } from './IoColorBase.js';
+import { Register, ReactiveProperty, glsl, WithBinding, Node } from 'io-core'
+import { IoSlider, IoSlider2d } from 'io-sliders'
+import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
 
 export type IoColorSliderProps = IoColorBaseProps & {
-  color?: WithBinding<[number, number, number, number]>,
-  step?: number,
-  channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl',
-  vertical?: boolean,
-};
+  color?: WithBinding<[number, number, number, number]>
+  step?: number
+  channel?: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl'
+  vertical?: boolean
+}
 
 /**
  * A generic color slider element.
@@ -21,188 +21,188 @@ export class IoColorSlider extends IoColorBase {
       :host {
         display: flex;
       }
-    `;
+    `
   }
 
   // Is this needed? Perhgaps value can be used in glsl?
   @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
-  declare color: [number, number, number, number];
+  declare color: [number, number, number, number]
 
   @ReactiveProperty({type: Number, value: 0.01})
-  declare step: number;
+  declare step: number
 
   @ReactiveProperty('a')
-  declare channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl';
+  declare channel: 'r' | 'g' | 'b' | 'a' | 'h' | 's' | 'v' | 'l' | 'hs' | 'sv' | 'sl'
 
   @ReactiveProperty({value: false, reflect: true})
-  declare vertical: boolean;
+  declare vertical: boolean
 
   _onValueInput(event: CustomEvent) {
-    const v = event.detail.value;
-    const oldValue = JSON.stringify(this.value);
+    const v = event.detail.value
+    const oldValue = JSON.stringify(this.value)
     switch (this.channel) {
       case 'r':
-        this.value.r = v;
-        break;
+        this.value.r = v
+        break
         case 'g':
-        this.value.g = v;
-        break;
+        this.value.g = v
+        break
         case 'b':
-        this.value.b = v;
-        break;
+        this.value.b = v
+        break
         case 'a':
-        this.value.a = v;
-        break;
+        this.value.a = v
+        break
       case 'h':
-        this.hsv[0] = v;
-        this.rgbFromHsv();
-        this.valueFromRgb();
-        break;
+        this.hsv[0] = v
+        this.rgbFromHsv()
+        this.valueFromRgb()
+        break
       case 's':
-        this.hsv[1] = v;
-        this.rgbFromHsv();
-        this.valueFromRgb();
-        break;
+        this.hsv[1] = v
+        this.rgbFromHsv()
+        this.valueFromRgb()
+        break
       case 'v':
-        this.hsv[2] = v;
-        this.rgbFromHsv();
-        this.valueFromRgb();
-        break;
+        this.hsv[2] = v
+        this.rgbFromHsv()
+        this.valueFromRgb()
+        break
       case 'l':
-        this.hsl[2] = v;
-        this.rgbFromHsl();
-        this.valueFromRgb();
-        break;
+        this.hsl[2] = v
+        this.rgbFromHsl()
+        this.valueFromRgb()
+        break
       case 'hs':
-        this.hsv[0] = v[0];
-        this.hsv[1] = v[1];
-        this.rgbFromHsv();
-        this.valueFromRgb();
-        break;
+        this.hsv[0] = v[0]
+        this.hsv[1] = v[1]
+        this.rgbFromHsv()
+        this.valueFromRgb()
+        break
       case 'sv':
-        this.hsv[1] = v[0];
-        this.hsv[2] = v[1];
-        this.rgbFromHsv();
-        this.valueFromRgb();
-        break;
+        this.hsv[1] = v[0]
+        this.hsv[2] = v[1]
+        this.rgbFromHsv()
+        this.valueFromRgb()
+        break
       case 'sl':
-        this.hsl[1] = v[0];
-        this.hsl[2] = v[1];
-        this.rgbFromHsl();
-        this.valueFromRgb();
-        break;
+        this.hsl[1] = v[0]
+        this.hsl[2] = v[1]
+        this.rgbFromHsl()
+        this.valueFromRgb()
+        break
     }
-    if (oldValue === JSON.stringify(this.value)) return;
+    if (oldValue === JSON.stringify(this.value)) return
 
     if (!(this.value as unknown as Node)._isNode) {
-      this.dispatchMutation(this.value);
+      this.dispatchMutation(this.value)
     }
-    this.dispatch('value-input', {property: 'value', value: this.value}, false);
+    this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
   changed() {
-    const c = this.channel;
+    const c = this.channel
 
     debug: if (['r', 'g', 'b', 'a', 'h', 's', 'v', 'l', 'hs', 'sv', 'sl'].indexOf(c) === -1) {
-      console.warn('IoColorSlider: Incorrect channel value!', c);
+      console.warn('IoColorSlider: Incorrect channel value!', c)
     }
 
-    let slider = null;
+    let slider = null
     switch (c) {
-      case 'r': slider = ioColorSliderR(); break;
-      case 'g': slider = ioColorSliderG(); break;
-      case 'b': slider = ioColorSliderB(); break;
-      case 'a': slider = ioColorSliderA(); break;
-      case 'h': slider = ioColorSliderH(); break;
-      case 's': slider = ioColorSliderS(); break;
-      case 'v': slider = ioColorSliderV(); break;
-      case 'l': slider = ioColorSliderL(); break;
-      case 'hs': slider = ioColorSliderHs(); break;
-      case 'sv': slider = ioColorSliderSv(); break;
-      case 'sl': slider = ioColorSliderSl(); break;
+      case 'r': slider = ioColorSliderR(); break
+      case 'g': slider = ioColorSliderG(); break
+      case 'b': slider = ioColorSliderB(); break
+      case 'a': slider = ioColorSliderA(); break
+      case 'h': slider = ioColorSliderH(); break
+      case 's': slider = ioColorSliderS(); break
+      case 'v': slider = ioColorSliderV(); break
+      case 'l': slider = ioColorSliderL(); break
+      case 'hs': slider = ioColorSliderHs(); break
+      case 'sv': slider = ioColorSliderSv(); break
+      case 'sl': slider = ioColorSliderSl(); break
     }
-    let value: number | [number, number] = 0;
-    let color: [number, number, number, number] = [0, 0, 0, 0];
-    let min: number | [number, number] = 0;
-    let max: number | [number, number] = 1;
-    let step: number | [number, number] = this.step;
+    let value: number | [number, number] = 0
+    let color: [number, number, number, number] = [0, 0, 0, 0]
+    let min: number | [number, number] = 0
+    let max: number | [number, number] = 1
+    let step: number | [number, number] = this.step
 
     switch (this.channel) {
       case 'r':
-        value = this.value.r;
-        color = [...this.rgba];
-        break;
+        value = this.value.r
+        color = [...this.rgba]
+        break
       case 'g':
-        value = this.value.g;
-        color = [...this.rgba];
-        break;
+        value = this.value.g
+        color = [...this.rgba]
+        break
       case 'b':
-        value = this.value.b;
-        color = [...this.rgba];
-        break;
+        value = this.value.b
+        color = [...this.rgba]
+        break
       case 'a':
-        value = this.value.a || 0;
-        color = [...this.rgba];
-        break;
+        value = this.value.a || 0
+        color = [...this.rgba]
+        break
       case 'h':
-        value = this.hsv[0];
-        color = [...this.hsv, 1];
-        break;
+        value = this.hsv[0]
+        color = [...this.hsv, 1]
+        break
       case 's':
-        value = this.hsv[1];
-        color = [...this.hsv, 1];
-        break;
+        value = this.hsv[1]
+        color = [...this.hsv, 1]
+        break
       case 'v':
-        value = this.hsv[2];
-        color = [...this.hsv, 1];
-        break;
+        value = this.hsv[2]
+        color = [...this.hsv, 1]
+        break
       case 'l':
-        value = this.hsl[2];
-        color = [...this.hsl, 1];
-        break;
+        value = this.hsl[2]
+        color = [...this.hsl, 1]
+        break
       case 'hs':
-        value = [this.hsv[0], this.hsv[1]];
-        color = [...this.hsv, 1];
-        min = [min, min];
-        max = [max, max];
-        step = [step, step];
-        break;
+        value = [this.hsv[0], this.hsv[1]]
+        color = [...this.hsv, 1]
+        min = [min, min]
+        max = [max, max]
+        step = [step, step]
+        break
       case 'sv':
-        value = [this.hsv[1], this.hsv[2]];
-        color = [...this.hsv, 1];
-        min = [min, min];
-        max = [max, max];
-        step = [step, step];
-        break;
+        value = [this.hsv[1], this.hsv[2]]
+        color = [...this.hsv, 1]
+        min = [min, min]
+        max = [max, max]
+        step = [step, step]
+        break
       case 'sl':
-        value = [this.hsl[1], this.hsl[2]];
-        color = [...this.hsl, 1];
-        min = [min, min];
-        max = [max, max];
-        step = [step, step];
-        break;
+        value = [this.hsl[1], this.hsl[2]]
+        color = [...this.hsl, 1]
+        min = [min, min]
+        max = [max, max]
+        step = [step, step]
+        break
     }
 
     // TODO: values are always new objects which causes double rendering when interacting with the slider.
     // This causes change() to be called so does valueMutated() from the slider itself.
     // TODO: Fix!
-    slider.props = {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput};
+    slider.props = {id: c, value: value, min: min, max: max, step: step, vertical: this.vertical, color: color, '@value-input': this._onValueInput}
 
     this.render([
       slider,
-    ]);
+    ])
   }
 }
 export const ioColorSlider = function(arg0?: IoColorSliderProps) {
-  return IoColorSlider.vConstructor(arg0);
-};
+  return IoColorSlider.vConstructor(arg0)
+}
 /**
  * A base class for 1D color slider.
  * It as an incomplete implementation of a color slider desiged to be fully implemented in channel-specific subclasses.
  **/
 class IoColorSliderBase extends IoSlider {
   @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
-  declare color: [number, number, number, number];
+  declare color: [number, number, number, number]
 
   static get GlUtils() {
     return /* glsl */`
@@ -218,7 +218,7 @@ class IoColorSliderBase extends IoSlider {
         float lineShape = lineHorizontal(p, io_borderWidth * 2.0);
         return compose(dstCol, vec4(color, lineShape));
       }
-    `;
+    `
   }
   static get Frag() {
     return /* glsl */`
@@ -254,7 +254,7 @@ class IoColorSliderBase extends IoSlider {
       finalCol = compose(finalCol, vec4(io_bgColorInput.rgb, gridShape * sliderShape * 0.125));
 
       gl_FragColor = vec4(finalCol, 1.0);
-    }`;
+    }`
   }
   // TODO: temp fix
   valueMutated() {}
@@ -266,7 +266,7 @@ class IoColorSliderBase extends IoSlider {
  **/
 class IoColorSlider2dBase extends IoSlider2d {
   @ReactiveProperty({type: Array, init: [0, 0, 0, 0]})
-  declare color: [number, number, number, number];
+  declare color: [number, number, number, number]
 
   static get GlUtils() {
     return /* glsl */`
@@ -276,7 +276,7 @@ class IoColorSlider2dBase extends IoSlider2d {
       ${glsl.hue2rgb}
       ${glsl.hsv2rgb}
       ${glsl.hsl2rgb}
-    `;
+    `
   }
   static get Frag() {
     return /* glsl */`
@@ -305,7 +305,7 @@ class IoColorSlider2dBase extends IoSlider2d {
       finalCol = paintKnob(finalCol, gridPosition, knobPos, sliderCol);
 
       gl_FragColor = vec4(finalCol, 1.0);
-    }`;
+    }`
   }
   // TODO: temp fix
   valueMutated() {}
@@ -324,12 +324,12 @@ export class IoColorSliderR extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return vec3(uv.x, uColor[1], uColor[2]);
       }
-    `;
+    `
   }
 }
 export const ioColorSliderR = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderR.vConstructor(arg0);
-};
+  return IoColorSliderR.vConstructor(arg0)
+}
 
 /**
  * A 1D slider for "green" color channel.
@@ -344,12 +344,12 @@ export class IoColorSliderG extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return vec3(uColor[0], uv.x, uColor[2]);
       }
-    `;
+    `
   }
 }
 export const ioColorSliderG = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderG.vConstructor(arg0);
-};
+  return IoColorSliderG.vConstructor(arg0)
+}
 
 /**
  * A 1D slider for "blue" color channel.
@@ -364,12 +364,12 @@ export class IoColorSliderB extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return vec3(uColor[0], uColor[1], uv.x);
       }
-    `;
+    `
   }
 }
 export const ioColorSliderB = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderB.vConstructor(arg0);
-};
+  return IoColorSliderB.vConstructor(arg0)
+}
 /**
  * A 1D slider for "alpha" color channel.
  **/
@@ -388,12 +388,12 @@ export class IoColorSliderA extends IoColorSliderBase {
         vec3 chkCol = mix(vec3(0.5), vec3(1.0), checkerX(position, io_fieldHeight / 4.0));
         return mix(chkCol, uColor.rgb, 1.0);
       }
-    `;
+    `
   }
 }
 export const ioColorSliderA = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderA.vConstructor(arg0);
-};
+  return IoColorSliderA.vConstructor(arg0)
+}
 
 /**
  * A 1D slider for "hue" color channel.
@@ -408,12 +408,12 @@ export class IoColorSliderH extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return hsv2rgb(vec3(uv.x, uColor[1], uColor[2]));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderH = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderH.vConstructor(arg0);
-};
+  return IoColorSliderH.vConstructor(arg0)
+}
 /**
  * A 1D slider for "saturation" color channel.
  **/
@@ -427,12 +427,12 @@ export class IoColorSliderS extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv.x, uColor[2]));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderS = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderS.vConstructor(arg0);
-};
+  return IoColorSliderS.vConstructor(arg0)
+}
 
 /**
  * A 1D slider for "value" color channel.
@@ -447,12 +447,12 @@ export class IoColorSliderV extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uColor[1], uv.x));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderV = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderV.vConstructor(arg0);
-};
+  return IoColorSliderV.vConstructor(arg0)
+}
 
 /**
  * A 1D slider for "level" color channel.
@@ -467,12 +467,12 @@ export class IoColorSliderL extends IoColorSliderBase {
       vec3 getEndColor(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uColor[1], uv.x));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderL = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderL.vConstructor(arg0);
-};
+  return IoColorSliderL.vConstructor(arg0)
+}
 
 /**
  * A 2D slider gor "hue" and "saturation" color channels.
@@ -484,12 +484,12 @@ export class IoColorSliderHs extends IoColorSlider2dBase {
       vec3 color_field(vec2 uv) {
         return hsv2rgb(vec3(uv, uColor[2]));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderHs = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderHs.vConstructor(arg0);
-};
+  return IoColorSliderHs.vConstructor(arg0)
+}
 
 /**
  * A 2D slider gor "saturation" and "value" color channels.
@@ -501,12 +501,12 @@ export class IoColorSliderSv extends IoColorSlider2dBase {
       vec3 color_field(vec2 uv) {
         return hsv2rgb(vec3(uColor[0], uv));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderSv = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderSv.vConstructor(arg0);
-};
+  return IoColorSliderSv.vConstructor(arg0)
+}
 
 /**
  * A 2D slider gor "saturation" and "level" color channels.
@@ -518,9 +518,9 @@ export class IoColorSliderSl extends IoColorSlider2dBase {
       vec3 color_field(vec2 uv) {
         return hsl2rgb(vec3(uColor[0], uv));
       }
-    `;
+    `
   }
 }
 export const ioColorSliderSl = function(arg0?: IoColorSliderProps) {
-  return IoColorSliderSl.vConstructor(arg0);
-};
+  return IoColorSliderSl.vConstructor(arg0)
+}

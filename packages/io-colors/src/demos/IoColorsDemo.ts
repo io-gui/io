@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-core';
-import { ioColorRgba, ioColorSlider } from 'io-colors';
+import { Register, IoElement, div } from 'io-core'
+import { ioColorRgba, ioColorSlider } from 'io-colors'
 
 export class IoColorsDemo extends IoElement {
   static get Style() {
@@ -27,13 +27,13 @@ export class IoColorsDemo extends IoElement {
       :host .row > * {
         margin-right: var(--io_spacing2);
       }
-    `;
+    `
   }
   static get ReactiveProperties() {
     return {
       rgb: {value: {r: 0, g: 1, b: 0.5}},
       rgba: {value: {r: 1, g: 0.5, b: 1, a: 1}},
-    };
+    }
   }
   ready() {
     this.render([
@@ -57,8 +57,8 @@ export class IoColorsDemo extends IoElement {
         ioColorSlider({value: this.rgba, vertical: true, channel: 'v'}),
         ioColorSlider({value: this.rgba, vertical: true, channel: 'l'}),
       ]),
-    ]);
+    ])
   }
 }
-Register(IoColorsDemo);
-export const ioColorsDemo = IoColorsDemo.vConstructor;
+Register(IoColorsDemo)
+export const ioColorsDemo = IoColorsDemo.vConstructor
