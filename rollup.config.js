@@ -1,7 +1,7 @@
 import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import strip from '@rollup/plugin-strip';
-// import terser from '@rollup/plugin-terser';
+import terser from '@rollup/plugin-terser';
 
 const externals = [
   'io-core',
@@ -30,13 +30,13 @@ export function makeBundleTarget(src, target, skipExternals = true) {
         functions: [],
         labels: ['debug']
       }),
-      // terser({
-      //   keep_classnames: true,
-      //   keep_fnames: true,
-      //   compress: {
-      //     keep_infinity: true,
-      //   }
-      // })
+      terser({
+        keep_classnames: true,
+        keep_fnames: true,
+        compress: {
+          keep_infinity: true,
+        }
+      })
     ],
     treeshake: true,
     output: [{

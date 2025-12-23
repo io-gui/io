@@ -109,7 +109,9 @@ function executeQueue () {
 
     if (options === undefined) {
       console.warn(func)
+      continue
     }
+
     if (options.frame > currentFrame) {
       if (queue.indexOf(func) === -1) {
         queue.push(func)

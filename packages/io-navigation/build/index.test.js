@@ -1,7 +1,1 @@
-import IoSelectorTest from './elements/IoSelector.test.js';
-export default class {
-    run() {
-        new IoSelectorTest().run();
-    }
-}
-//# sourceMappingURL=index.test.js.map
+class IoSelectorTest{constructor(){}run(){}}class index_test{run(){(new IoSelectorTest).run()}}export{index_test as default};

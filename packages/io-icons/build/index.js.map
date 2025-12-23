@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"AAAA,cAAc,oBAAoB,CAAA;AAClC,cAAc,sBAAsB,CAAA","sourcesContent":["export * from './nodes/Iconset.js'\nexport * from './elements/IoIcon.js'\n"]}

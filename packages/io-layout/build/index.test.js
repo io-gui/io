@@ -1,6 +1,1 @@
-export default class {
-    run() {
-        console.log('TODO:Layout test');
-    }
-}
-//# sourceMappingURL=index.test.js.map
+class index_test{run(){console.log("TODO:Layout test")}}export{index_test as default};
