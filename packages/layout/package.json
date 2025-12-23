@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-layout, a set of layout elements for Io-Gui.",
@@ -25,11 +25,11 @@
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0",
-    "@io-gui/editors": "^2.0.0",
-    "@io-gui/inputs": "^2.0.0",
-    "@io-gui/icons": "^2.0.0",
-    "@io-gui/menus": "^2.0.0",
-    "@io-gui/navigation": "^2.0.0"
+    "@io-gui/core": "^2.0.0-alpha.1",
+    "@io-gui/editors": "^2.0.0-alpha.1",
+    "@io-gui/inputs": "^2.0.0-alpha.1",
+    "@io-gui/icons": "^2.0.0-alpha.1",
+    "@io-gui/menus": "^2.0.0-alpha.1",
+    "@io-gui/navigation": "^2.0.0-alpha.1"
   }
 }

@@ -1,12 +1,12 @@
 {
-  "name": "@io-gui/inputs",
+  "name": "@io-gui/three",
   "publishConfig": {
     "access": "public"
   },
   "version": "2.0.0-alpha.1",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
-  "description": "A set of basic input elements for Io-Gui",
+  "description": "Three.js UI elements built with io-gui",
   "main": "build/index.js",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -18,14 +18,13 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["ui","io","gui","iogui","inputs","input","string","number","boolean","io-inputs"],
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "keywords": ["ui","io","gui","iogui","md","three","io-three"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.1",
-    "@io-gui/icons": "^2.0.0-alpha.1"
+    "@io-gui/core": "^2.0.0-alpha.1"
   }
 }

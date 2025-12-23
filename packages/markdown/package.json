@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Markdown viewer for Io-Gui.",
@@ -25,6 +25,6 @@
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0"
+    "@io-gui/core": "^2.0.0-alpha.1"
   }
 }

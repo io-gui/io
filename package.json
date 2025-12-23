@@ -16,6 +16,7 @@
     "clean:navigation": "wireit",
     "clean:sliders": "wireit",
     "clean:gui": "wireit",
+    "clean:three": "wireit",
     "lint": "wireit",
     "lint:core": "wireit",
     "lint:colors": "wireit",
@@ -28,6 +29,7 @@
     "lint:navigation": "wireit",
     "lint:sliders": "wireit",
     "lint:gui": "wireit",
+    "lint:three": "wireit",
     "build": "wireit",
     "build:core": "wireit",
     "build:colors": "wireit",
@@ -40,6 +42,7 @@
     "build:navigation": "wireit",
     "build:sliders": "wireit",
     "build:gui": "wireit",
+    "build:three": "wireit",
     "bundle": "wireit",
     "bundle:core": "wireit",
     "bundle:colors": "wireit",
@@ -52,6 +55,7 @@
     "bundle:navigation": "wireit",
     "bundle:sliders": "wireit",
     "bundle:gui": "wireit",
+    "bundle:three": "wireit",
     "dev": "wireit",
     "dev:core": "wireit",
     "dev:colors": "wireit",
@@ -64,6 +68,7 @@
     "dev:navigation": "wireit",
     "dev:sliders": "wireit",
     "dev:gui": "wireit",
+    "dev:three": "wireit",
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --watch",
     "serve": "wds --watch",
@@ -83,7 +88,8 @@
         "clean:menus",
         "clean:navigation",
         "clean:sliders",
-        "clean:gui"
+        "clean:gui",
+        "clean:three"
       ]
     },
     "clean:core": {
@@ -119,6 +125,9 @@
     "clean:gui": {
       "command": "rm -rf ./packages/gui/build && rm -rf ./packages/gui/bundle"
     },
+    "clean:three": {
+      "command": "rm -rf ./packages/three/build && rm -rf ./packages/three/bundle"
+    },
     "lint": {
       "dependencies": [
         "lint:core",
@@ -131,7 +140,8 @@
         "lint:menus",
         "lint:navigation",
         "lint:sliders",
-        "lint:gui"
+        "lint:gui",
+        "lint:three"
       ]
     },
     "lint:core": {
@@ -167,6 +177,9 @@
     "lint:gui": {
       "command": "eslint -c ./packages/gui/.eslintrc.js ./packages/gui/src --fix"
     },
+    "lint:three": {
+      "command": "eslint -c ./packages/three/.eslintrc.js ./packages/three/src --fix"
+    },
     "build": {
       "dependencies": [
         "build:core",
@@ -179,7 +192,8 @@
         "build:markdown",
         "build:navigation",
         "build:editors",
-        "build:gui"
+        "build:gui",
+        "build:three"
       ]
     },
     "build:core": {
@@ -298,6 +312,14 @@
         "build:sliders"
       ]
     },
+    "build:three": {
+      "command": "tsc --project ./packages/three/tsconfig.json",
+      "dependencies": [
+        "clean:three",
+        "lint:three",
+        "build:core"
+      ]
+    },
     "bundle": {
       "dependencies": [
         "clean",
@@ -311,7 +333,8 @@
         "bundle:menus",
         "bundle:navigation",
         "bundle:sliders",
-        "bundle:gui"
+        "bundle:gui",
+        "bundle:three"
       ]
     },
     "bundle:core": {
@@ -410,6 +433,12 @@
         "build:gui"
       ]
     },
+    "bundle:three": {
+      "command": "rollup -c ./packages/three/rollup.config.js && find ./packages/three/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/three/build/* ./packages/three/bundle && rm -rf ./packages/three/build && mv ./packages/three/bundle ./packages/three/build",
+      "dependencies": [
+        "build:three"
+      ]
+    },
     "dev": {
       "dependencies": [
         "dev:core",
@@ -422,7 +451,8 @@
         "dev:menus",
         "dev:navigation",
         "dev:sliders",
-        "dev:gui"
+        "dev:gui",
+        "dev:three"
       ]
     },
     "dev:core": {
@@ -468,6 +498,10 @@
     "dev:gui": {
       "command": "tsc -w --project ./packages/gui/tsconfig.json",
       "service": true
+    },
+    "dev:three": {
+      "command": "tsc -w --project ./packages/three/tsconfig.json",
+      "service": true
     }
   },
   "repository": {
@@ -510,5 +544,8 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.50.0",
     "wireit": "0.14.12"
+  },
+  "peerDependencies": {
+    "three": ">=0.182.0"
   }
 }
