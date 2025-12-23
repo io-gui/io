@@ -15,10 +15,10 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-core/io.git"},
+  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
   "keywords": ["ui","io","gui","iogui","io-core"],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT + Commons Clause - see LICENSE.md",
-  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "license": "MIT",
+  "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev"
 }

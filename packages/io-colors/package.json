@@ -15,11 +15,11 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-core/io.git"},
+  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
   "keywords": ["ui","io","gui","iogui","colors","color","io-colors"],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT + Commons Clause - see LICENSE.md",
-  "bugs": {"url": "https://github.com/iogui/iogui/issues"},
+  "license": "MIT",
+  "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
     "io-core": "^2.0.0",

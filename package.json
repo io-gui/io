@@ -1,5 +1,5 @@
 {
-  "name": "io-core-monorepo",
+  "name": "io-gui-monorepo",
   "version": "2.0.0",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui monorepo, a UI framework for web development.",
@@ -471,7 +471,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/io-core/io.git"
+    "url": "git+https://github.com/io-gui/io.git"
   },
   "keywords": [
     "io",
@@ -480,9 +480,9 @@
     "io-core"
   ],
   "author": "Aleksandar (Aki) Rodic",
-  "license": "MIT + Commons Clause - see LICENSE.md",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/iogui/iogui/issues"
+    "url": "https://github.com/io-gui/io/issues"
   },
   "homepage": "https://iogui.dev",
   "devDependencies": {

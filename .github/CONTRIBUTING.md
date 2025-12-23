@@ -201,10 +201,10 @@ Each package can be built/linted individually:
 
 ## Getting Help
 
-- Browse and submit [issues](https://github.com/io-core/io/issues)
+- Browse and submit [issues](https://github.com/io-gui/io/issues)
 - Read the [quick start guide](https://iogui.dev/io/#path=Docs,Quick%20Start) and [deep dive guide](https://iogui.dev/io/#path=Docs,Deep%20Dive)
 - Check the [documentation website](https://iogui.dev) for examples and API reference
 
 ## Code of Conduct
 
-Please read and follow our [Code of Conduct](https://github.com/io-core/io/blob/main/.github/CODE_OF_CONDUCT.md) when contributing to the project.
+Please read and follow our [Code of Conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md) when contributing to the project.
