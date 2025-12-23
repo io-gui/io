@@ -244,6 +244,9 @@ export function setProperty(node, name, value, debounce = false) {
             nodeArray.withInternalOperation(() => {
                 nodeArray.length = 0;
                 nodeArray.push(...value);
+                if (value.length === 0) {
+                    nodeArray.dispatchMutation();
+                }
             });
             return;
         }
