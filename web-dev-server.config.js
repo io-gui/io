@@ -2,16 +2,16 @@ import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { importMapsPlugin } from '@web/dev-server-import-maps';
 
 const importMapsModules = {
-  'io-core': '/packages/io-core/build/index.js?wds-import-map=0',
-  'io-colors': '/packages/io-colors/build/index.js?wds-import-map=0',
-  'io-editors': '/packages/io-editors/build/index.js?wds-import-map=0',
-  'io-icons': '/packages/io-icons/build/index.js?wds-import-map=0',
-  'io-inputs': '/packages/io-inputs/build/index.js?wds-import-map=0',
-  'io-layout': '/packages/io-layout/build/index.js?wds-import-map=0',
-  'io-markdown': '/packages/io-markdown/build/index.js?wds-import-map=0',
-  'io-menus': '/packages/io-menus/build/index.js?wds-import-map=0',
-  'io-navigation': '/packages/io-navigation/build/index.js?wds-import-map=0',
-  'io-sliders': '/packages/io-sliders/build/index.js?wds-import-map=0',
+  'io-core': '/packages/core/build/index.js?wds-import-map=0',
+  'io-colors': '/packages/colors/build/index.js?wds-import-map=0',
+  'io-editors': '/packages/editors/build/index.js?wds-import-map=0',
+  'io-icons': '/packages/icons/build/index.js?wds-import-map=0',
+  'io-inputs': '/packages/inputs/build/index.js?wds-import-map=0',
+  'io-layout': '/packages/layout/build/index.js?wds-import-map=0',
+  'io-markdown': '/packages/markdown/build/index.js?wds-import-map=0',
+  'io-menus': '/packages/menus/build/index.js?wds-import-map=0',
+  'io-navigation': '/packages/navigation/build/index.js?wds-import-map=0',
+  'io-sliders': '/packages/sliders/build/index.js?wds-import-map=0',
 };
 
 export function wdsPluginFixImportMapsModules() {

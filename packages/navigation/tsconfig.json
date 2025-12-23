@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "paths": {
+      "io-navigation": ["./src/index.ts"],
+      "io-core": ["../core"],
+      "io-menus": ["../menus"],
+      "io-inputs": ["../inputs"],
+      "io-icons": ["../icons"]
+    }
+  },
+  "include": ["./src"]
+}

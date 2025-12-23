@@ -87,37 +87,37 @@
       ]
     },
     "clean:core": {
-      "command": "rm -rf ./packages/io-core/build && rm -rf ./packages/io-core/bundle"
+      "command": "rm -rf ./packages/core/build && rm -rf ./packages/core/bundle"
     },
     "clean:colors": {
-      "command": "rm -rf ./packages/io-colors/build && rm -rf ./packages/io-colors/bundle"
+      "command": "rm -rf ./packages/colors/build && rm -rf ./packages/colors/bundle"
     },
     "clean:icons": {
-      "command": "rm -rf ./packages/io-icons/build && rm -rf ./packages/io-icons/bundle"
+      "command": "rm -rf ./packages/icons/build && rm -rf ./packages/icons/bundle"
     },
     "clean:inputs": {
-      "command": "rm -rf ./packages/io-inputs/build && rm -rf ./packages/io-inputs/bundle"
+      "command": "rm -rf ./packages/inputs/build && rm -rf ./packages/inputs/bundle"
     },
     "clean:layout": {
-      "command": "rm -rf ./packages/io-layout/build && rm -rf ./packages/io-layout/bundle"
+      "command": "rm -rf ./packages/layout/build && rm -rf ./packages/layout/bundle"
     },
     "clean:editors": {
-      "command": "rm -rf ./packages/io-editors/build && rm -rf ./packages/io-editors/bundle"
+      "command": "rm -rf ./packages/editors/build && rm -rf ./packages/editors/bundle"
     },
     "clean:markdown": {
-      "command": "rm -rf ./packages/io-markdown/build && rm -rf ./packages/io-markdown/bundle"
+      "command": "rm -rf ./packages/markdown/build && rm -rf ./packages/markdown/bundle"
     },
     "clean:menus": {
-      "command": "rm -rf ./packages/io-menus/build && rm -rf ./packages/io-menus/bundle"
+      "command": "rm -rf ./packages/menus/build && rm -rf ./packages/menus/bundle"
     },
     "clean:navigation": {
-      "command": "rm -rf ./packages/io-navigation/build && rm -rf ./packages/io-navigation/bundle"
+      "command": "rm -rf ./packages/navigation/build && rm -rf ./packages/navigation/bundle"
     },
     "clean:sliders": {
-      "command": "rm -rf ./packages/io-sliders/build && rm -rf ./packages/io-sliders/bundle"
+      "command": "rm -rf ./packages/sliders/build && rm -rf ./packages/sliders/bundle"
     },
     "clean:gui": {
-      "command": "rm -rf ./packages/io-gui/build && rm -rf ./packages/io-gui/bundle"
+      "command": "rm -rf ./packages/gui/build && rm -rf ./packages/gui/bundle"
     },
     "lint": {
       "dependencies": [
@@ -135,37 +135,37 @@
       ]
     },
     "lint:core": {
-      "command": "eslint -c ./packages/io-core/.eslintrc.js ./packages/io-core/src --fix"
+      "command": "eslint -c ./packages/core/.eslintrc.js ./packages/core/src --fix"
     },
     "lint:colors": {
-      "command": "eslint -c ./packages/io-colors/.eslintrc.js ./packages/io-colors/src --fix"
+      "command": "eslint -c ./packages/colors/.eslintrc.js ./packages/colors/src --fix"
     },
     "lint:icons": {
-      "command": "eslint -c ./packages/io-icons/.eslintrc.js ./packages/io-icons/src --fix"
+      "command": "eslint -c ./packages/icons/.eslintrc.js ./packages/icons/src --fix"
     },
     "lint:inputs": {
-      "command": "eslint -c ./packages/io-inputs/.eslintrc.js ./packages/io-inputs/src --fix"
+      "command": "eslint -c ./packages/inputs/.eslintrc.js ./packages/inputs/src --fix"
     },
     "lint:layout": {
-      "command": "eslint -c ./packages/io-layout/.eslintrc.js ./packages/io-layout/src --fix"
+      "command": "eslint -c ./packages/layout/.eslintrc.js ./packages/layout/src --fix"
     },
     "lint:editors": {
-      "command": "eslint -c ./packages/io-editors/.eslintrc.js ./packages/io-editors/src --fix"
+      "command": "eslint -c ./packages/editors/.eslintrc.js ./packages/editors/src --fix"
     },
     "lint:markdown": {
-      "command": "eslint -c ./packages/io-markdown/.eslintrc.js ./packages/io-markdown/src --fix"
+      "command": "eslint -c ./packages/markdown/.eslintrc.js ./packages/markdown/src --fix"
     },
     "lint:menus": {
-      "command": "eslint -c ./packages/io-menus/.eslintrc.js ./packages/io-menus/src --fix"
+      "command": "eslint -c ./packages/menus/.eslintrc.js ./packages/menus/src --fix"
     },
     "lint:navigation": {
-      "command": "eslint -c ./packages/io-navigation/.eslintrc.js ./packages/io-navigation/src --fix"
+      "command": "eslint -c ./packages/navigation/.eslintrc.js ./packages/navigation/src --fix"
     },
     "lint:sliders": {
-      "command": "eslint -c ./packages/io-sliders/.eslintrc.js ./packages/io-sliders/src --fix"
+      "command": "eslint -c ./packages/sliders/.eslintrc.js ./packages/sliders/src --fix"
     },
     "lint:gui": {
-      "command": "eslint -c ./packages/io-gui/.eslintrc.js ./packages/io-gui/src --fix"
+      "command": "eslint -c ./packages/gui/.eslintrc.js ./packages/gui/src --fix"
     },
     "build": {
       "dependencies": [
@@ -183,14 +183,14 @@
       ]
     },
     "build:core": {
-      "command": "tsc --project ./packages/io-core/tsconfig.json",
+      "command": "tsc --project ./packages/core/tsconfig.json",
       "dependencies": [
         "clean:core",
         "lint:core"
       ]
     },
     "build:colors": {
-      "command": "tsc --project ./packages/io-colors/tsconfig.json",
+      "command": "tsc --project ./packages/colors/tsconfig.json",
       "dependencies": [
         "clean:colors",
         "lint:colors",
@@ -200,7 +200,7 @@
       ]
     },
     "build:icons": {
-      "command": "tsc --project ./packages/io-icons/tsconfig.json",
+      "command": "tsc --project ./packages/icons/tsconfig.json",
       "dependencies": [
         "clean:icons",
         "lint:icons",
@@ -208,7 +208,7 @@
       ]
     },
     "build:inputs": {
-      "command": "tsc --project ./packages/io-inputs/tsconfig.json",
+      "command": "tsc --project ./packages/inputs/tsconfig.json",
       "dependencies": [
         "clean:inputs",
         "lint:inputs",
@@ -217,7 +217,7 @@
       ]
     },
     "build:layout": {
-      "command": "tsc --project ./packages/io-layout/tsconfig.json",
+      "command": "tsc --project ./packages/layout/tsconfig.json",
       "dependencies": [
         "clean:layout",
         "lint:layout",
@@ -230,7 +230,7 @@
       ]
     },
     "build:editors": {
-      "command": "tsc --project ./packages/io-editors/tsconfig.json",
+      "command": "tsc --project ./packages/editors/tsconfig.json",
       "dependencies": [
         "clean:editors",
         "lint:editors",
@@ -243,7 +243,7 @@
       ]
     },
     "build:markdown": {
-      "command": "tsc --project ./packages/io-markdown/tsconfig.json",
+      "command": "tsc --project ./packages/markdown/tsconfig.json",
       "dependencies": [
         "clean:markdown",
         "lint:markdown",
@@ -251,7 +251,7 @@
       ]
     },
     "build:menus": {
-      "command": "tsc --project ./packages/io-menus/tsconfig.json",
+      "command": "tsc --project ./packages/menus/tsconfig.json",
       "dependencies": [
         "clean:menus",
         "lint:menus",
@@ -261,7 +261,7 @@
       ]
     },
     "build:navigation": {
-      "command": "tsc --project ./packages/io-navigation/tsconfig.json",
+      "command": "tsc --project ./packages/navigation/tsconfig.json",
       "dependencies": [
         "clean:navigation",
         "lint:navigation",
@@ -273,7 +273,7 @@
       ]
     },
     "build:sliders": {
-      "command": "tsc --project ./packages/io-sliders/tsconfig.json",
+      "command": "tsc --project ./packages/sliders/tsconfig.json",
       "dependencies": [
         "clean:sliders",
         "lint:sliders",
@@ -282,7 +282,7 @@
       ]
     },
     "build:gui": {
-      "command": "tsc --project ./packages/io-gui/tsconfig.json",
+      "command": "tsc --project ./packages/gui/tsconfig.json",
       "dependencies": [
         "clean:gui",
         "lint:gui",
@@ -315,13 +315,13 @@
       ]
     },
     "bundle:core": {
-      "command": "rollup -c ./packages/io-core/rollup.config.js && find ./packages/io-core/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-core/build/* ./packages/io-core/bundle && mkdir -p ./packages/io-core/bundle/demos/todomvc && cp ./packages/io-core/src/demos/todomvc/index.html ./packages/io-core/bundle/demos/todomvc/ && cp ./packages/io-core/src/demos/todomvc/index.css ./packages/io-core/bundle/demos/todomvc/ && rm -rf ./packages/io-core/build && mv ./packages/io-core/bundle ./packages/io-core/build",
+      "command": "rollup -c ./packages/core/rollup.config.js && find ./packages/core/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/core/build/* ./packages/core/bundle && mkdir -p ./packages/core/bundle/demos/todomvc && cp ./packages/core/src/demos/todomvc/index.html ./packages/core/bundle/demos/todomvc/ && cp ./packages/core/src/demos/todomvc/index.css ./packages/core/bundle/demos/todomvc/ && rm -rf ./packages/core/build && mv ./packages/core/bundle ./packages/core/build",
       "dependencies": [
         "build:core"
       ]
     },
     "bundle:colors": {
-      "command": "rollup -c ./packages/io-colors/rollup.config.js && find ./packages/io-colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-colors/build/* ./packages/io-colors/bundle && rm -rf ./packages/io-colors/build && mv ./packages/io-colors/bundle ./packages/io-colors/build",
+      "command": "rollup -c ./packages/colors/rollup.config.js && find ./packages/colors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/colors/build/* ./packages/colors/bundle && rm -rf ./packages/colors/build && mv ./packages/colors/bundle ./packages/colors/build",
       "dependencies": [
         "bundle:core",
         "bundle:inputs",
@@ -330,14 +330,14 @@
       ]
     },
     "bundle:icons": {
-      "command": "rollup -c ./packages/io-icons/rollup.config.js && find ./packages/io-icons/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-icons/build/* ./packages/io-icons/bundle && rm -rf ./packages/io-icons/build && mv ./packages/io-icons/bundle ./packages/io-icons/build",
+      "command": "rollup -c ./packages/icons/rollup.config.js && find ./packages/icons/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/icons/build/* ./packages/icons/bundle && rm -rf ./packages/icons/build && mv ./packages/icons/bundle ./packages/icons/build",
       "dependencies": [
         "bundle:core",
         "build:icons"
       ]
     },
     "bundle:inputs": {
-      "command": "rollup -c ./packages/io-inputs/rollup.config.js && find ./packages/io-inputs/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-inputs/build/* ./packages/io-inputs/bundle && rm -rf ./packages/io-inputs/build && mv ./packages/io-inputs/bundle ./packages/io-inputs/build",
+      "command": "rollup -c ./packages/inputs/rollup.config.js && find ./packages/inputs/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/inputs/build/* ./packages/inputs/bundle && rm -rf ./packages/inputs/build && mv ./packages/inputs/bundle ./packages/inputs/build",
       "dependencies": [
         "bundle:core",
         "bundle:icons",
@@ -345,7 +345,7 @@
       ]
     },
     "bundle:layout": {
-      "command": "rollup -c ./packages/io-layout/rollup.config.js && find ./packages/io-layout/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-layout/build/* ./packages/io-layout/bundle && rm -rf ./packages/io-layout/build && mv ./packages/io-layout/bundle ./packages/io-layout/build",
+      "command": "rollup -c ./packages/layout/rollup.config.js && find ./packages/layout/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/layout/build/* ./packages/layout/bundle && rm -rf ./packages/layout/build && mv ./packages/layout/bundle ./packages/layout/build",
       "dependencies": [
         "bundle:core",
         "bundle:editors",
@@ -357,7 +357,7 @@
       ]
     },
     "bundle:editors": {
-      "command": "rollup -c ./packages/io-editors/rollup.config.js && find ./packages/io-editors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-editors/build/* ./packages/io-editors/bundle && rm -rf ./packages/io-editors/build && mv ./packages/io-editors/bundle ./packages/io-editors/build",
+      "command": "rollup -c ./packages/editors/rollup.config.js && find ./packages/editors/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/editors/build/* ./packages/editors/bundle && rm -rf ./packages/editors/build && mv ./packages/editors/bundle ./packages/editors/build",
       "dependencies": [
         "bundle:core",
         "bundle:icons",
@@ -370,14 +370,14 @@
       ]
     },
     "bundle:markdown": {
-      "command": "rollup -c ./packages/io-markdown/rollup.config.js && find ./packages/io-markdown/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-markdown/build/* ./packages/io-markdown/bundle && rm -rf ./packages/io-markdown/build && mv ./packages/io-markdown/bundle ./packages/io-markdown/build",
+      "command": "rollup -c ./packages/markdown/rollup.config.js && find ./packages/markdown/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/markdown/build/* ./packages/markdown/bundle && rm -rf ./packages/markdown/build && mv ./packages/markdown/bundle ./packages/markdown/build",
       "dependencies": [
         "bundle:core",
         "build:markdown"
       ]
     },
     "bundle:menus": {
-      "command": "rollup -c ./packages/io-menus/rollup.config.js && find ./packages/io-menus/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-menus/build/* ./packages/io-menus/bundle && rm -rf ./packages/io-menus/build && mv ./packages/io-menus/bundle ./packages/io-menus/build",
+      "command": "rollup -c ./packages/menus/rollup.config.js && find ./packages/menus/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/menus/build/* ./packages/menus/bundle && rm -rf ./packages/menus/build && mv ./packages/menus/bundle ./packages/menus/build",
       "dependencies": [
         "bundle:core",
         "bundle:icons",
@@ -386,7 +386,7 @@
       ]
     },
     "bundle:navigation": {
-      "command": "rollup -c ./packages/io-navigation/rollup.config.js && find ./packages/io-navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-navigation/build/* ./packages/io-navigation/bundle && rm -rf ./packages/io-navigation/build && mv ./packages/io-navigation/bundle ./packages/io-navigation/build",
+      "command": "rollup -c ./packages/navigation/rollup.config.js && find ./packages/navigation/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/navigation/build/* ./packages/navigation/bundle && rm -rf ./packages/navigation/build && mv ./packages/navigation/bundle ./packages/navigation/build",
       "dependencies": [
         "bundle:core",
         "bundle:icons",
@@ -397,7 +397,7 @@
       ]
     },
     "bundle:sliders": {
-      "command": "rollup -c ./packages/io-sliders/rollup.config.js && find ./packages/io-sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-sliders/build/* ./packages/io-sliders/bundle && rm -rf ./packages/io-sliders/build && mv ./packages/io-sliders/bundle ./packages/io-sliders/build",
+      "command": "rollup -c ./packages/sliders/rollup.config.js && find ./packages/sliders/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/sliders/build/* ./packages/sliders/bundle && rm -rf ./packages/sliders/build && mv ./packages/sliders/bundle ./packages/sliders/build",
       "dependencies": [
         "bundle:core",
         "bundle:inputs",
@@ -405,7 +405,7 @@
       ]
     },
     "bundle:gui": {
-      "command": "rollup -c ./packages/io-gui/rollup.config.js && find ./packages/io-gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/io-gui/build/* ./packages/io-gui/bundle && rm -rf ./packages/io-gui/build && mv ./packages/io-gui/bundle ./packages/io-gui/build && ./node_modules/.bin/dts-bundle-generator -o packages/io-gui/build/index.d.ts packages/io-gui/build/index.d.ts",
+      "command": "rollup -c ./packages/gui/rollup.config.js && find ./packages/gui/build -type f ! -name '*.d.ts' -delete && cp -r ./packages/gui/build/* ./packages/gui/bundle && rm -rf ./packages/gui/build && mv ./packages/gui/bundle ./packages/gui/build && ./node_modules/.bin/dts-bundle-generator -o packages/gui/build/index.d.ts packages/gui/build/index.d.ts",
       "dependencies": [
         "build:gui"
       ]
@@ -426,47 +426,47 @@
       ]
     },
     "dev:core": {
-      "command": "tsc -w --project ./packages/io-core/tsconfig.json",
+      "command": "tsc -w --project ./packages/core/tsconfig.json",
       "service": true
     },
     "dev:colors": {
-      "command": "tsc -w --project ./packages/io-colors/tsconfig.json",
+      "command": "tsc -w --project ./packages/colors/tsconfig.json",
       "service": true
     },
     "dev:icons": {
-      "command": "tsc -w --project ./packages/io-icons/tsconfig.json",
+      "command": "tsc -w --project ./packages/icons/tsconfig.json",
       "service": true
     },
     "dev:inputs": {
-      "command": "tsc -w --project ./packages/io-inputs/tsconfig.json",
+      "command": "tsc -w --project ./packages/inputs/tsconfig.json",
       "service": true
     },
     "dev:layout": {
-      "command": "tsc -w --project ./packages/io-layout/tsconfig.json",
+      "command": "tsc -w --project ./packages/layout/tsconfig.json",
       "service": true
     },
     "dev:editors": {
-      "command": "tsc -w --project ./packages/io-editors/tsconfig.json",
+      "command": "tsc -w --project ./packages/editors/tsconfig.json",
       "service": true
     },
     "dev:markdown": {
-      "command": "tsc -w --project ./packages/io-markdown/tsconfig.json",
+      "command": "tsc -w --project ./packages/markdown/tsconfig.json",
       "service": true
     },
     "dev:menus": {
-      "command": "tsc -w --project ./packages/io-menus/tsconfig.json",
+      "command": "tsc -w --project ./packages/menus/tsconfig.json",
       "service": true
     },
     "dev:navigation": {
-      "command": "tsc -w --project ./packages/io-navigation/tsconfig.json",
+      "command": "tsc -w --project ./packages/navigation/tsconfig.json",
       "service": true
     },
     "dev:sliders": {
-      "command": "tsc -w --project ./packages/io-sliders/tsconfig.json",
+      "command": "tsc -w --project ./packages/sliders/tsconfig.json",
       "service": true
     },
     "dev:gui": {
-      "command": "tsc -w --project ./packages/io-gui/tsconfig.json",
+      "command": "tsc -w --project ./packages/gui/tsconfig.json",
       "service": true
     }
   },

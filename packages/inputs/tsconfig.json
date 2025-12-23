@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "paths": {
+      "io-inputs": ["./src/index.ts"],
+      "io-core": ["../core"],
+      "io-icons": ["../icons"]
+    }
+  },
+  "include": ["./src"]
+}
