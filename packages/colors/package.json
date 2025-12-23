@@ -27,6 +27,6 @@
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.1",
     "@io-gui/inputs": "^2.0.0-alpha.1",
-    "@io-gui/sliders": "^2.0.0-aplha.1"
+    "@io-gui/sliders": "^2.0.0-alpha.1"
   }
 }
