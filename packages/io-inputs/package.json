@@ -1,6 +1,9 @@
 {
-  "name": "io-inputs",
-  "version": "2.0.0",
+  "name": "@io-gui/io-inputs",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "2.0.0-alpha.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "A set of basic input elements for Io-Gui",
@@ -22,7 +25,7 @@
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "io-core": "^2.0.0",
-    "io-icons": "^2.0.0"
+    "@io-gui/io-core": "^2.0.0",
+    "@io-gui/io-icons": "^2.0.0"
   }
 }

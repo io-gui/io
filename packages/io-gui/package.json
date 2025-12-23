@@ -1,6 +1,9 @@
 {
-  "name": "io-gui",
-  "version": "2.0.0",
+  "name": "@io-gui/io-gui",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "3.0.0-alpha.1",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "Monolitic build of all Io-Gui packages.",
@@ -14,22 +17,21 @@
     "/README.md"
   ],
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["ui","io","gui","iogui","io-gui"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "ui",
+    "io",
+    "gui",
+    "iogui",
+    "io-gui"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {"url": "https://github.com/io-gui/io/issues"},
-  "homepage": "https://iogui.dev",
-  "peerDependencies": {
-    "io-colors": "^2.0.0",
-    "io-core": "^2.0.0",
-    "io-editors": "^2.0.0",
-    "io-icons": "^2.0.0",
-    "io-inputs": "^2.0.0",
-    "io-layout": "^2.0.0",
-    "io-markdown": "^2.0.0",
-    "io-menus": "^2.0.0",
-    "io-navigation": "^2.0.0",
-    "io-sliders": "^2.0.0"
-  }
+  "bugs": {
+    "url": "https://github.com/io-gui/io/issues"
+  },
+  "homepage": "https://iogui.dev"
 }

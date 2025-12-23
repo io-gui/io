@@ -1,6 +1,5 @@
 {
   "name": "io-gui-monorepo",
-  "version": "2.0.0",
   "packageManager": "pnpm@9.5.0",
   "description": "Io-Gui monorepo, a UI framework for web development.",
   "type": "module",
@@ -67,7 +66,9 @@
     "dev:gui": "wireit",
     "test": "web-test-runner \"test.html\"",
     "test:watch": "web-test-runner \"test.html\" --watch",
-    "serve": "wds --watch"
+    "serve": "wds --watch",
+    "publish:dry": "pnpm -r publish --dry-run",
+    "publish:packages": "pnpm -r publish --access public"
   },
   "wireit": {
     "clean": {

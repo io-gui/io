@@ -1,6 +1,9 @@
 {
-  "name": "io-colors",
-  "version": "2.0.0",
+  "name": "@io-gui/io-colors",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "2.0.0-alpha.0",
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "A set of color pickers and editors for Io-Gui.",
@@ -22,8 +25,8 @@
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "io-core": "^2.0.0",
-    "io-inputs": "^2.0.0",
-    "io-sliders": "^2.0.0"
+    "@io-gui/io-core": "^2.0.0",
+    "@io-gui/io-inputs": "^2.0.0",
+    "@io-gui/io-sliders": "^2.0.0"
   }
 }

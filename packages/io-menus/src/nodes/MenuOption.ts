@@ -110,14 +110,12 @@ export class MenuOption extends Node {
     for (let i = 0; i < allItems.length; i++) {
       if (allItems[i].value === value) return allItems[i]
     }
-    return null
   }
   findItemById(id: string) {
     const allItems = this.getAllOptions()
     for (let i = 0; i < allItems.length; i++) {
       if (allItems[i].id === id) return allItems[i]
     }
-    return null
   }
   selectDefault() {
     let walker: MenuOption | undefined = this.mode === 'select' ? this : undefined
