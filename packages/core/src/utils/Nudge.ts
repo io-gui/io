@@ -1,4 +1,4 @@
-import { IoElement } from '../elements/IoElement'
+import { IoElement } from '../elements/IoElement.js'
 
 /**
  * Nudge direction.

@@ -1,11 +1,11 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from 'io-core'
-import { WebGPURenderer, CanvasTarget, Color } from 'three/build/three.webgpu.js';
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
-import { ThreeState } from '../nodes/ThreeState.js';
-import { ViewCameras } from '../nodes/ViewCameras.js';
+import { WebGPURenderer, CanvasTarget } from 'three/webgpu'
+import WebGPU from 'three/addons/capabilities/WebGPU.js'
+import { ThreeState } from '../nodes/ThreeState.js'
+import { ViewCameras } from '../nodes/ViewCameras.js'
 
 if ( WebGPU.isAvailable() === false ) {
-  throw new Error( 'No WebGPU support' );
+  throw new Error( 'No WebGPU support' )
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -14,23 +14,37 @@ const observer = new IntersectionObserver((entries) => {
   })
 })
 
+
 const _renderer = new WebGPURenderer({antialias: false, alpha: true})
-_renderer.setPixelRatio(window.devicePixelRatio)
-_renderer.init()
+
+new Promise((resolve, reject) => {
+  _renderer.setPixelRatio(window.devicePixelRatio)
+  _renderer.init().then(resolve).catch(reject)
+}).then(() => {
+  console.log('renderer initialized')
+}).catch(error => {
+  console.error('renderer initialization failed', error)
+})
 
 const _playingViewports: IoThreeViewport[] = []
 
-_renderer.setAnimationLoop((time: number) => {
-  for (const viewport of _playingViewports) {
-    viewport.onAnimate(time)
-  }
-})
+new Promise((resolve, reject) => {
+  _renderer.setAnimationLoop((time: number) => {
+    for (const viewport of _playingViewports) {
+      viewport.onAnimate(time)
+    }
+  }).then(resolve).catch(reject)
+  }).then(() => {
+    console.log('animation loop initialized')
+  }).catch(error => {
+    console.error('animation loop initialization failed', error)
+  })
 
 export type IoThreeViewportProps = IoElementProps & {
   state: ThreeState | Binding<ThreeState>
   cameraSelect?: string | Binding<string>
   playing?: boolean | Binding<boolean>
-  clearColor?: Color | Binding<Color>
+  clearColor?: number | Binding<number>
   clearAlpha?: number | Binding<number>
 }
 
@@ -81,7 +95,7 @@ export class IoThreeViewport extends IoElement {
 
   constructor(args: IoThreeViewportProps) {
     super(args)
-    this.renderViewport = this.renderViewport.bind(this);
+    this.renderViewport = this.renderViewport.bind(this)
 
     this.renderTarget = new CanvasTarget(document.createElement('canvas'))
     this.appendChild(this.renderTarget.domElement)
@@ -109,6 +123,7 @@ export class IoThreeViewport extends IoElement {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(time: number) {
     if (!this.visible) return
     this.debounce(this.renderViewport)

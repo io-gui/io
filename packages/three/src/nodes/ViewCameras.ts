@@ -1,24 +1,24 @@
 import { Register, Node, ReactiveProperty, Property, NodeProps, Binding } from 'io-core'
-import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/build/three.webgpu.js'
-import { IoThreeViewport } from '../elements/IoThreeViewport.js';
-import { ThreeState } from './ThreeState.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { IoThreeViewport } from '../elements/IoThreeViewport.js'
+import { ThreeState } from './ThreeState.js'
+import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
-const box = new Box3();
-const sphere = new Sphere();
-const center = new Vector3();
-const delta = new Vector3();
+const box = new Box3()
+const sphere = new Sphere()
+const center = new Vector3()
+const delta = new Vector3()
 
 function setAspect(camera: PerspectiveCamera | OrthographicCamera, width: number, height: number) {
   const aspect = width / height
   if (camera instanceof PerspectiveCamera) {
     camera.aspect = aspect
   } else if (camera instanceof OrthographicCamera) {
-    const frustumHeight = camera.top - camera.bottom;
-    camera.left = - frustumHeight * aspect / 2;
-    camera.right = frustumHeight * aspect / 2;
+    const frustumHeight = camera.top - camera.bottom
+    camera.left = - frustumHeight * aspect / 2
+    camera.right = frustumHeight * aspect / 2
   }
-  camera.updateProjectionMatrix();
+  camera.updateProjectionMatrix()
 }
 
 class DefaultCameras {
@@ -109,7 +109,7 @@ export class ViewCameras extends Node {
 
   @ReactiveProperty({type: DefaultCameras, init: null})
   declare private readonly defaultCameras: DefaultCameras
-  
+
   @ReactiveProperty({type: OrbitControls, init: ['this.defaultCameras.perspective']})
   declare private readonly orbitControls: OrbitControls
 
@@ -119,7 +119,7 @@ export class ViewCameras extends Node {
     this.orbitControls.connect(this.viewport)
     this.orbitControls.addEventListener('change', () => {
       this.state.dispatchMutation()
-    });
+    })
 
     if (this.camera === undefined) this.camera = this.defaultCameras.perspective
   }
@@ -150,7 +150,7 @@ export class ViewCameras extends Node {
   }
 
   setSize(width: number, height: number) {
-    if (width === 0 || height === 0) return;
+    if (width === 0 || height === 0) return
     if (this.width !== width || this.height !== height) {
       for (const camera of this.defaultCameras.cameras) {
         setAspect(camera, width, height)
@@ -180,31 +180,31 @@ export class ViewCameras extends Node {
 
   frameObject(object: Object3D, camera: Camera) {
 
-    let distance;
+    let distance
 
-    box.setFromObject( object );
+    box.setFromObject( object )
 
     if ( box.isEmpty() === false ) {
-      box.getCenter( center );
-      distance = box.getBoundingSphere( sphere ).radius;
+      box.getCenter( center )
+      distance = box.getBoundingSphere( sphere ).radius
     } else {
       // Focusing on an Group, AmbientLight, etc
       // TODO: Investigate and make more robust
-      center.setFromMatrixPosition( camera.matrixWorld );
-      distance = 0.1;
+      center.setFromMatrixPosition( camera.matrixWorld )
+      distance = 0.1
     }
 
     // TODO: Consider frustum geometry (fov) when framing
 
-    delta.set( 0, 0, 1 );
-    delta.applyQuaternion( camera.quaternion );
-    delta.multiplyScalar( distance * 2 );
+    delta.set( 0, 0, 1 )
+    delta.applyQuaternion( camera.quaternion )
+    delta.multiplyScalar( distance * 2 )
 
     if (camera instanceof PerspectiveCamera) {
-      camera.near = distance * 0.001;
-      camera.far = distance * 16;
-      camera.updateProjectionMatrix();
-      camera.position.copy( center ).add( delta );
+      camera.near = distance * 0.001
+      camera.far = distance * 16
+      camera.updateProjectionMatrix()
+      camera.position.copy( center ).add( delta )
     } else if (camera instanceof OrthographicCamera) {
       delta.copy(camera.userData.position).multiplyScalar(distance)
       const aspect = this.width / this.height
@@ -214,11 +214,11 @@ export class ViewCameras extends Node {
       camera.right = distance * aspect
 
       camera.near = 0
-      camera.far = distance * 8;
+      camera.far = distance * 8
 
-      camera.position.copy( center ).add( delta);
-      camera.lookAt( center );
-      camera.updateProjectionMatrix();
+      camera.position.copy( center ).add( delta)
+      camera.lookAt( center )
+      camera.updateProjectionMatrix()
     }
   }
 

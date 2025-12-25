@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { Register, IoElement, Storage as $ } from 'io-core'
 import { ioLayout, Split } from 'io-layout'
 import { MenuOption } from 'io-menus'

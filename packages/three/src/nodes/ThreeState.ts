@@ -1,6 +1,5 @@
-import { Register, Node, ReactiveProperty, NodeProps } from 'io-core'
-import { Scene, WebGPURenderer } from 'three/build/three.webgpu.js'
-import { IoThreeViewport } from '../elements/IoThreeViewport.js'
+import { Register, Node, ReactiveProperty } from 'io-core'
+import { Scene, WebGPURenderer } from 'three/webgpu'
 
 @Register
 export class ThreeState extends Node {
@@ -29,6 +28,7 @@ export class ThreeState extends Node {
   onRendererInitialized(renderer: WebGPURenderer) {
     this.renderer = renderer
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onResized(width: number, height: number) {}
   onAnimate() {}
 }

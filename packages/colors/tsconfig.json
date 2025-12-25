@@ -4,9 +4,9 @@
     "outDir": "build",
     "paths": {
       "io-colors": ["./src/index.ts"],
-      "io-core": ["../core"],
-      "io-sliders": ["../sliders"],
-      "io-inputs": ["../inputs"]
+      "io-core": ["../core/"],
+      "io-sliders": ["../sliders/"],
+      "io-inputs": ["../inputs/"]
     }
   },
   "include": ["./src"]

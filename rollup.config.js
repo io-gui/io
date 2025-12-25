@@ -14,6 +14,9 @@ const externals = [
   'io-menus',
   'io-navigation',
   'io-sliders',
+  'three/webgpu',
+  'three/tsl',
+  'three/addons',
 ];
 
 export function makeBundleTarget(src, target, skipExternals = true) {

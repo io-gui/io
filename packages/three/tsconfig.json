@@ -3,9 +3,13 @@
   "compilerOptions": {
     "outDir": "build",
     "paths": {
+      "io-core": ["../core/"],
+      "io-layout": ["../layout/"],
+      "io-menus": ["../menus/"],
       "io-three": ["./src/index.ts"],
-      "io-core": ["../core"]
+      "three/webgpu": ["../node_modules/three/build/three.webgpu.js"],
+      "three/tsl": ["../node_modules/three/build/three.tsl.js"]
     }
   },
-  "include": ["./src", "./lib"]
+  "include": ["./src"]
 }

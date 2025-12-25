@@ -176,12 +176,15 @@ export class IoElement extends HTMLElement {
     unbind(this, name)
   }
   addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions) {
+    if (this._disposed) return
     this._eventDispatcher.addEventListener(type, listener as EventListener, options)
   }
   removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
+    if (this._disposed) return
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
+    if (this._disposed) return
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
   dispose() {

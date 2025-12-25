@@ -527,6 +527,7 @@
     "@stylistic/eslint-plugin": "^5.6.1",
     "@types/chai": "5.2.3",
     "@types/mocha": "10.0.10",
+    "@types/three": "^0.182.0",
     "@web/dev-server-esbuild": "1.0.4",
     "@web/dev-server-import-maps": "0.2.1",
     "@web/dev-server-rollup": "0.6.4",

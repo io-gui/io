@@ -4,16 +4,16 @@
     "outDir": "build",
     "paths": {
       "io-gui": ["./src/index.ts"],
-      "io-colors": ["../colors"],
-      "io-core": ["../core"],
-      "io-editors": ["../editors"],
-      "io-inputs": ["../inputs"],
-      "io-icons": ["../icons"],
-      "io-layout": ["../layout"],
-      "io-markdown": ["../markdown"],
-      "io-menus": ["../menus"],
-      "io-navigation": ["../navigation"],
-      "io-sliders": ["../sliders"]
+      "io-colors": ["../colors/"],
+      "io-core": ["../core/"],
+      "io-editors": ["../editors/"],
+      "io-inputs": ["../inputs/"],
+      "io-icons": ["../icons/"],
+      "io-layout": ["../layout/"],
+      "io-markdown": ["../markdown/"],
+      "io-menus": ["../menus/"],
+      "io-navigation": ["../navigation/"],
+      "io-sliders": ["../sliders/"]
     }
   },
   "include": ["./src"]
