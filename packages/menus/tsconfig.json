@@ -4,9 +4,9 @@
     "outDir": "build",
     "paths": {
       "io-menus": ["./src/index.ts"],
-      "io-core": ["../core/"],
-      "io-inputs": ["../inputs/"],
-      "io-icons": ["../icons/"]
+      "io-core": ["../core"],
+      "io-inputs": ["../inputs"],
+      "io-icons": ["../icons"]
     }
   },
   "include": ["./src"]

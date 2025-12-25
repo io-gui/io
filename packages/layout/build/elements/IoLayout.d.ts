@@ -1,8 +1,8 @@
-import { IoElement, VDOMElement, IoElementProps } from 'io-core';
+import { IoElement, VDOMElement, IoElementProps, Binding } from 'io-core';
 import { MenuOption } from 'io-menus';
 import { Split } from '../nodes/Split.js';
 export type IoLayoutProps = IoElementProps & {
-    split: Split;
+    split: Split | Binding<Split>;
     elements: VDOMElement[];
     addMenuOption: MenuOption;
 };

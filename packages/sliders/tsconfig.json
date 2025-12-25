@@ -4,8 +4,8 @@
     "outDir": "build",
     "paths": {
       "io-sliders": ["./src/index.ts"],
-      "io-core": ["../core/"],
-      "io-inputs": ["../inputs/"]
+      "io-core": ["../core"],
+      "io-inputs": ["../inputs"]
     }
   },
   "include": ["./src"]

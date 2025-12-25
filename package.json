@@ -317,7 +317,9 @@
       "dependencies": [
         "clean:three",
         "lint:three",
-        "build:core"
+        "build:core",
+        "build:layout",
+        "build:menus"
       ]
     },
     "bundle": {

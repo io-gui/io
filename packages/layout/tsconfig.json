@@ -4,12 +4,12 @@
     "outDir": "build",
     "paths": {
       "io-layout": ["./src/index.ts"],
-      "io-core": ["../core/"],
-      "io-editors": ["../editors/"],
-      "io-inputs": ["../inputs/"],
-      "io-icons": ["../icons/"],
-      "io-menus": ["../menus/"],
-      "io-navigation": ["../navigation/"]
+      "io-core": ["../core"],
+      "io-editors": ["../editors"],
+      "io-inputs": ["../inputs"],
+      "io-icons": ["../icons"],
+      "io-menus": ["../menus"],
+      "io-navigation": ["../navigation"]
     }
   },  
   "include": ["./src"]

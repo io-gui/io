@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "lib": ["esnext", "dom"],
     "declaration": true,
     "declarationMap": true,
@@ -11,6 +11,8 @@
     "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "paths": {
+    },
     "types": [
       "../../global.d.ts",
       "../../node_modules/@types/mocha/index.d.ts"
