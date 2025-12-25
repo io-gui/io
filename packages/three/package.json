@@ -25,6 +25,7 @@
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.1"
+    "@io-gui/core": "^2.0.0-alpha.1",
+    "three": ">=0.182.0"
   }
 }

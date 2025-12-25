@@ -1,0 +1,1 @@
+{"version":3,"file":"WebGPUComputeTexture.d.ts","sourceRoot":"","sources":["../../../src/demos/examples/WebGPUComputeTexture.ts"],"names":[],"mappings":"AAAA,OAAO,EAA8C,cAAc,EAAE,cAAc,EAAE,WAAW,EAA8B,MAAM,6BAA6B,CAAA;AAEjK,OAAO,EAAE,UAAU,EAAE,MAAM,2BAA2B,CAAA;AAGtD,qBACa,oBAAqB,SAAQ,UAAU;IAC3C,cAAc,EAAE,cAAc,CAAA;IAC9B,WAAW,EAAE,WAAW,CAAA;;IAuC/B,eAAe,CAAC,QAAQ,EAAE,cAAc;CAIzC"}

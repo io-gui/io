@@ -1,0 +1,1 @@
+{"version":3,"file":"IoThreeViewport.test.js","sourceRoot":"","sources":["../../src/elements/IoThreeViewport.test.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO;IACZ,GAAG;QACD,QAAQ,CAAC,iBAAiB,EAAE,GAAG,EAAE;QACjC,CAAC,CAAC,CAAA;IACJ,CAAC;CACF","sourcesContent":["export default class {\n  run() {\n    describe('IoThreeViewport', () => {\n    })\n  }\n}\n"]}

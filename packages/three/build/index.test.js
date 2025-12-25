@@ -1,1 +1,7 @@
-class IoThreeViewportTest{run(){describe("IoThreeViewport",()=>{})}}class index_test{run(){(new IoThreeViewportTest).run()}}export{index_test as default};
+import IoThreeViewportTest from './elements/IoThreeViewport.test.js';
+export default class {
+    run() {
+        new IoThreeViewportTest().run();
+    }
+}
+//# sourceMappingURL=index.test.js.map
