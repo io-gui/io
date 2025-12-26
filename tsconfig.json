@@ -3,19 +3,25 @@
     "target": "ES2023",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "lib": ["esnext", "dom"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
     "inlineSources": true,
     "strict": true,
+    "strictNullChecks": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "paths": {
-    },
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
     "types": [
       "../../global.d.ts",
       "../../node_modules/@types/mocha/index.d.ts"
     ]
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }
+

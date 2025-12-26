@@ -18,14 +18,8 @@ const observer = new IntersectionObserver((entries) => {
     });
 });
 const _renderer = new WebGPURenderer({ antialias: false, alpha: true });
-new Promise((resolve, reject) => {
-    _renderer.setPixelRatio(window.devicePixelRatio);
-    _renderer.init().then(resolve).catch(reject);
-}).then(() => {
-    console.log('renderer initialized');
-}).catch(error => {
-    console.error('renderer initialization failed', error);
-});
+_renderer.setPixelRatio(window.devicePixelRatio);
+_renderer.init();
 const _playingViewports = [];
 new Promise((resolve, reject) => {
     _renderer.setAnimationLoop((time) => {
