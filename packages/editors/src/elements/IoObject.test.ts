@@ -1,6 +1,6 @@
-import { ioString } from 'io-inputs'
-import { ioSlider } from 'io-sliders'
-import { IoObject } from 'io-editors'
+import { ioString } from '@io-gui/inputs'
+import { ioSlider } from '@io-gui/sliders'
+import { IoObject } from '@io-gui/editors'
 
 const testValue = {
   'number': 0.5,

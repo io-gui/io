@@ -1,4 +1,4 @@
-import { IoElement, Register, input, ReactiveProperty, IoElementProps } from 'io-core'
+import { IoElement, Register, input, ReactiveProperty, IoElementProps } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 import { TodoItemModel } from './TodoItemModel.js'
 

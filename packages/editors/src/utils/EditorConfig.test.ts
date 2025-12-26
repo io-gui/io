@@ -1,5 +1,5 @@
-// import { ioBoolean } from 'io-inputs';
-// import { ioSlider } from 'io-sliders';
+// import { ioBoolean } from '@io-gui/inputs';
+// import { ioSlider } from '@io-gui/sliders';
 // import { getEditorConfig, registerEditorConfig } from './EditorConfig';
 
 export default class {

@@ -1,4 +1,4 @@
-import { Register, Node, ReactiveProperty } from 'io-core'
+import { Register, Node, ReactiveProperty } from '@io-gui/core'
 import { Scene, WebGPURenderer } from 'three/webgpu'
 
 @Register

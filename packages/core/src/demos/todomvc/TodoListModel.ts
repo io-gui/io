@@ -1,4 +1,4 @@
-import { Node, NodeArray, Register, ReactiveProperty } from 'io-core'
+import { Node, NodeArray, Register, ReactiveProperty } from '@io-gui/core'
 import { TodoItemModel } from './TodoItemModel.js'
 
 export class TodoListModel extends Node {

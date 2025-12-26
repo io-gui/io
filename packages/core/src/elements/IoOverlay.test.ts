@@ -1,4 +1,4 @@
-import { IoOverlaySingleton } from 'io-core'
+import { IoOverlaySingleton } from '@io-gui/core'
 
 export default class {
   run() {

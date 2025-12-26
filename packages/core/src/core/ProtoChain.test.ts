@@ -1,4 +1,4 @@
-import { ProtoChain, Node, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from 'io-core'
+import { ProtoChain, Node, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '@io-gui/core'
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}

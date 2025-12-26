@@ -1,7 +1,7 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode, NearestFilter, TextureNode } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
-import { Register } from 'io-core'
-import { ThreeState } from 'io-three'
+import { Register } from '@io-gui/core'
+import { ThreeState } from '@io-gui/three'
 
 @Register
 export class ComputeTextureExample extends ThreeState {
@@ -45,12 +45,6 @@ export class ComputeTextureExample extends ThreeState {
   }
   onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    new Promise((resolve, reject) => {
-      renderer.compute(this.computeNode)!.then(resolve).catch(reject)
-    }).then(() => {
-      console.log('compute node computed')
-    }).catch(error => {
-      console.error('compute node computation failed', error)
-    })
+    renderer.compute(this.computeNode)
   }
 }

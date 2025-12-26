@@ -1,4 +1,4 @@
-import { AnyConstructor } from 'io-core'
+import { AnyConstructor } from '@io-gui/core'
 
 export const SKIPPED_PROPERTIES = [
   '$',

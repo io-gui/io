@@ -1,4 +1,4 @@
-import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from 'io-core'
+import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from '@io-gui/core'
 
 @Register
 class IoGlTest extends IoGl {

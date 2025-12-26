@@ -1,4 +1,4 @@
-import { Register, Node, ReactiveProperty, Property, NodeProps, Binding } from 'io-core'
+import { Register, Node, ReactiveProperty, Property, NodeProps, Binding } from '@io-gui/core'
 import { IoThreeViewport } from '../elements/IoThreeViewport.js'
 import { ThreeState } from './ThreeState.js'
 import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu'

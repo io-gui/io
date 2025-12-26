@@ -1,4 +1,4 @@
-import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveProperty, WithBinding } from 'io-core'
+import { IoElement, Register, IoElementProps, span, ul, li, a, button, ReactiveProperty, WithBinding } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 
 type TodoFooterProps = IoElementProps & {

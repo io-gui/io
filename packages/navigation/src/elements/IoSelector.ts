@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span } from 'io-core'
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span } from '@io-gui/core'
 
 const dummyElement = document.createElement('div')
 /**

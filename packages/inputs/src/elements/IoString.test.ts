@@ -1,4 +1,4 @@
-import { IoString } from 'io-inputs'
+import { IoString } from '@io-gui/inputs'
 
 export default class {
   element = new IoString()

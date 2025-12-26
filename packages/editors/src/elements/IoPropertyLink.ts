@@ -1,5 +1,5 @@
-import { ReactiveProperty, Register, span } from 'io-core'
-import { IoButton, IoButtonProps } from 'io-inputs'
+import { ReactiveProperty, Register, span } from '@io-gui/core'
+import { IoButton, IoButtonProps } from '@io-gui/inputs'
 
 export type IoPropertyLinkProps = IoButtonProps & {
   value?: Object

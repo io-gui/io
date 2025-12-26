@@ -1,4 +1,4 @@
-import { IoBoolean } from 'io-inputs'
+import { IoBoolean } from '@io-gui/inputs'
 
 const element = new IoBoolean()
 element.style.display = 'none'

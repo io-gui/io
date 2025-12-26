@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, h3, div } from 'io-core'
-import { IconsetDB, ioIcon } from 'io-icons'
+import { Register, IoElement, h3, div } from '@io-gui/core'
+import { IconsetDB, ioIcon } from '@io-gui/icons'
 
 export class IoIconsDemo extends IoElement {
   static get Style() {

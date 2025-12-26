@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from 'io-core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeState } from '../nodes/ThreeState.js'
@@ -16,15 +16,8 @@ const observer = new IntersectionObserver((entries) => {
 
 
 const _renderer = new WebGPURenderer({antialias: false, alpha: true})
-
-new Promise((resolve, reject) => {
-  _renderer.setPixelRatio(window.devicePixelRatio)
-  _renderer.init().then(resolve).catch(reject)
-}).then(() => {
-  console.log('renderer initialized')
-}).catch(error => {
-  console.error('renderer initialization failed', error)
-})
+_renderer.setPixelRatio(window.devicePixelRatio)
+_renderer.init()
 
 const _playingViewports: IoThreeViewport[] = []
 

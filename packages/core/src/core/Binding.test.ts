@@ -1,4 +1,4 @@
-import { Binding, Node, Register, ReactiveProperty } from 'io-core'
+import { Binding, Node, Register, ReactiveProperty } from '@io-gui/core'
 
 @Register
 class TestNode extends Node {

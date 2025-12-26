@@ -1,5 +1,5 @@
-import { nextQueue } from 'io-core'
-import { IoSlider } from 'io-sliders'
+import { nextQueue } from '@io-gui/core'
+import { IoSlider } from '@io-gui/sliders'
 
 const element = new IoSlider()
 

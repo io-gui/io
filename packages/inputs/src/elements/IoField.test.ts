@@ -1,4 +1,4 @@
-import { IoField } from 'io-inputs'
+import { IoField } from '@io-gui/inputs'
 
 const element = new IoField()
 element.style.display = 'none'

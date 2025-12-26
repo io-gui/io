@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, WithBinding, Property } from 'io-core'
+import { Register, ReactiveProperty, WithBinding, Property } from '@io-gui/core'
 import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js'
 import { IoField, IoFieldProps } from './IoField.js'
 

@@ -1,5 +1,5 @@
-import { NodeArray } from 'io-core'
-import { MenuOption } from 'io-menus'
+import { NodeArray } from '@io-gui/core'
+import { MenuOption } from '@io-gui/menus'
 
 const testItemArgs = {
   id: 'root',

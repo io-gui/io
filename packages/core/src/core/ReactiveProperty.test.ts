@@ -1,4 +1,4 @@
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from 'io-core'
+import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from '@io-gui/core'
 
 class Object1 {
   constructor(init?: any) {

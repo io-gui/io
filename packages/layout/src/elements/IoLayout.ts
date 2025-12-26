@@ -1,5 +1,5 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property, Binding } from 'io-core'
-import { MenuOption } from 'io-menus'
+import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property, Binding } from '@io-gui/core'
+import { MenuOption } from '@io-gui/menus'
 import { ioSplit } from './IoSplit.js'
 import { Split } from '../nodes/Split.js'
 

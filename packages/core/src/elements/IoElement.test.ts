@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from 'io-core'
+import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from '@io-gui/core'
 
 const element = new IoElement()
 element.style.display = 'none'

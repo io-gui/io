@@ -1,4 +1,4 @@
-import { ChangeQueue, Change, Node, Register } from 'io-core'
+import { ChangeQueue, Change, Node, Register } from '@io-gui/core'
 
 @Register
 class MockNode extends Node {

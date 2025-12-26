@@ -1,5 +1,5 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from 'io-core'
-import { ioButton, ioString } from 'io-inputs'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from '@io-gui/core'
+import { ioButton, ioString } from '@io-gui/inputs'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
 export type IoBreadcrumbsProps = IoElementProps & {

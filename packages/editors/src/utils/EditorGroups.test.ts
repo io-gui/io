@@ -1,4 +1,4 @@
-// import { getEditorGroups } from 'io-editors';
+// import { getEditorGroups } from '@io-gui/editors';
 
 export default class {
   run() {

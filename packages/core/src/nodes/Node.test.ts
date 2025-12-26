@@ -1,4 +1,4 @@
-import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from 'io-core'
+import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '@io-gui/core'
 
 export default class {
   run() {

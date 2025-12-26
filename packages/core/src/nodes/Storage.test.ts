@@ -1,4 +1,4 @@
-import { StorageNode, Storage, Binding } from 'io-core'
+import { StorageNode, Storage, Binding } from '@io-gui/core'
 
 async function afterHashChange(): Promise<void> {
   return new Promise((resolve) => {

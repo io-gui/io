@@ -1,5 +1,5 @@
-import { NudgeDirection, ReactiveProperty, Register } from 'io-core'
-import { ioIcon } from 'io-icons'
+import { NudgeDirection, ReactiveProperty, Register } from '@io-gui/core'
+import { ioIcon } from '@io-gui/icons'
 import { IoMenuItem } from './IoMenuItem.js'
 
 @Register

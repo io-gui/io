@@ -1,4 +1,4 @@
-import { throttle, debounce, nextQueue, Node } from 'io-core'
+import { throttle, debounce, nextQueue, Node } from '@io-gui/core'
 
 export default class {
   run() {

@@ -1,9 +1,9 @@
 //@ts-nocheck
-import { Register, IoElement, div, h1, h4, p, Storage as $ } from 'io-core'
-import { ioLayout, Split } from 'io-layout'
-import { ioCollapsible } from 'io-navigation'
-import { ioMarkdown } from 'io-markdown'
-import { MenuOption } from 'io-menus'
+import { Register, IoElement, div, h1, h4, p, Storage as $ } from '@io-gui/core'
+import { ioLayout, Split } from '@io-gui/layout'
+import { ioCollapsible } from '@io-gui/navigation'
+import { ioMarkdown } from '@io-gui/markdown'
+import { MenuOption } from '@io-gui/menus'
 
 function lorem(length) {
   const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')

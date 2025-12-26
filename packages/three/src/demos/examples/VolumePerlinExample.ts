@@ -2,8 +2,8 @@ import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, Ba
 import { Break, If, vec3, vec4, texture3D, uniform, Fn} from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
-import { Register } from 'io-core'
-import { ThreeState } from 'io-three'
+import { Register } from '@io-gui/core'
+import { ThreeState } from '@io-gui/three'
 
 @Register
 export class VolumePerlinExample extends ThreeState {
