@@ -1,13 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
-      "io-three": ["./src/index.ts"],
-      "io-core": ["../core"],
-      "io-layout": ["../layout"],
-      "io-menus": ["../menus"],
-      "io-inputs": ["../inputs"],
+      "@io-gui/three": ["./src/index.ts"],
+      "@io-gui/core": ["../core"],
+      "@io-gui/layout": ["../layout"],
+      "@io-gui/menus": ["../menus"],
+      "@io-gui/inputs": ["../inputs"],
       "three/webgpu": ["../node_modules/three/build/three.webgpu.js"],
       "three/tsl": ["../node_modules/three/build/three.tsl.js"],
       "three/addons": ["../node_modules/three/examples/jsm"]

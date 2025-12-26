@@ -1,11 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
-      "io-markdown": ["./src/index.ts"],
-      "io-core": ["../core"]
+      "@io-gui/markdown": ["./src/index.ts"],
+      "@io-gui/core": ["../core"]
     }
   },
-  "include": ["./src", "./lib"]
+  "include": ["./src"]
 }

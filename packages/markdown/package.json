@@ -1,29 +1,44 @@
 {
   "name": "@io-gui/markdown",
-  "publishConfig": {
-    "access": "public"
-  },
   "version": "2.0.0-alpha.1",
-  "type": "module",
-  "packageManager": "pnpm@9.5.0",
   "description": "Markdown viewer for Io-Gui.",
-  "main": "build/index.js",
-  "module": "build/index.js",
-  "types": "build/index.d.ts",
-  "files": [
-    "/src/",
-    "/build/",
-    "/demos/",
-    "/LICENSE",
-    "/README.md"
-  ],
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
   "keywords": ["ui","io","gui","iogui","md","markdown","io-markdown"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@9.5.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/src/",
+    "/dist/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "pnpm run clean && tsc"
+  },
+  "devDependencies": {
+    "@io-gui/core": "workspace:*",
+    "dompurify": "3.3.1",
+    "marked": "17.0.1",
+    "marked-highlight": "2.2.3"
+  },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.1"
   }
