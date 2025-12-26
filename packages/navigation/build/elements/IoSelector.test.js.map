@@ -1,0 +1,1 @@
+{"version":3,"file":"IoSelector.test.js","sourceRoot":"","sources":["../../src/elements/IoSelector.test.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO;IACZ;IACA,CAAC;IACD,GAAG;IACH,CAAC;CACF","sourcesContent":["export default class {\n  constructor() {\n  }\n  run() {\n  }\n}\n"]}

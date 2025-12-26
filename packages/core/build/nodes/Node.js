@@ -1,0 +1,438 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var Node_1;
+import { Register } from '../decorators/Register.js';
+import { ProtoChain } from '../core/ProtoChain.js';
+import { Binding } from '../core/Binding.js';
+import { ChangeQueue } from '../core/ChangeQueue.js';
+import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
+import { EventDispatcher } from '../core/EventDispatcher.js';
+import { NodeArray } from '../core/NodeArray.js';
+import { throttle, debounce } from '../core/Queue.js';
+import { ReactiveProperty } from '../decorators/Property.js';
+import { IoElement } from '../elements/IoElement.js';
+export const NODES = {
+    active: new Set(),
+    disposed: new Set(),
+};
+function isNonNodeObject(value) {
+    return (typeof value === 'object' && value !== null && !value._isNode);
+}
+let Node = Node_1 = class Node extends Object {
+    static get ReactiveProperties() {
+        return {};
+    }
+    static get Properties() {
+        return {};
+    }
+    static get Listeners() {
+        return {};
+    }
+    constructor(args) {
+        super();
+        this._protochain.init(this);
+        Object.defineProperty(this, '_changeQueue', { enumerable: false, configurable: true, value: new ChangeQueue(this) });
+        Object.defineProperty(this, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
+        Object.defineProperty(this, '_bindings', { enumerable: false, configurable: true, value: new Map() });
+        Object.defineProperty(this, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(this) });
+        Object.defineProperty(this, '_observedObjectProperties', { enumerable: false, configurable: true, value: [] });
+        Object.defineProperty(this, '_observedNodeProperties', { enumerable: false, configurable: true, value: [] });
+        Object.defineProperty(this, '_parents', { enumerable: false, configurable: true, value: [] });
+        this.init();
+        initReactiveProperties(this);
+        initProperties(this);
+        this.applyProperties(typeof args === 'object' ? args : {}, true);
+        NODES.active.add(this);
+        this.ready();
+        this.dispatchQueue();
+    }
+    // TODO: add types
+    applyProperties(props, skipDispatch = false) {
+        for (const name in props) {
+            if (this._reactiveProperties.has(name)) {
+                this.setProperty(name, props[name], true);
+            }
+            else {
+                if (!name.startsWith('@')) {
+                    this[name] = props[name];
+                    debug: if (props[name] instanceof Binding) {
+                        console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on "${this.constructor.name}"`);
+                    }
+                }
+            }
+        }
+        this._eventDispatcher.applyPropListeners(props);
+        if (!skipDispatch)
+            this.dispatchQueue();
+    }
+    // TODO: add types
+    setProperties(props) {
+        setProperties(this, props);
+    }
+    setProperty(name, value, debounce = false) {
+        if (this._disposed)
+            return;
+        setProperty(this, name, value, debounce);
+    }
+    init() { }
+    ready() { }
+    changed() { }
+    queue(name, value, oldValue) {
+        this._changeQueue.queue(name, value, oldValue);
+    }
+    dispatchQueue(debounce = false) {
+        dispatchQueue(this, debounce);
+    }
+    throttle(func, arg, timeout = 1) {
+        throttle(func, arg, this, timeout);
+    }
+    debounce(func, arg, timeout = 1) {
+        debounce(func, arg, this, timeout);
+    }
+    onPropertyMutated(event) {
+        return onPropertyMutated(this, event);
+    }
+    ;
+    dispatchMutation(object = this, properties = []) {
+        if (object._isNode || object._isIoElement) {
+            this.dispatch('io-object-mutation', { object, properties });
+        }
+        else {
+            this.dispatch('io-object-mutation', { object, properties }, false, window);
+        }
+    }
+    bind(name) {
+        return bind(this, name);
+    }
+    unbind(name) {
+        unbind(this, name);
+    }
+    addEventListener(type, listener, options) {
+        this._eventDispatcher.addEventListener(type, listener, options);
+    }
+    removeEventListener(type, listener, options) {
+        this._eventDispatcher.removeEventListener(type, listener, options);
+    }
+    dispatch(type, detail = undefined, bubbles = false, src) {
+        this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
+    }
+    // TODO: test!
+    addParent(parent) {
+        if (parent._isNode) {
+            this._parents.push(parent);
+        }
+    }
+    removeParent(parent) {
+        if (parent._isNode) {
+            debug: if (!this._parents.includes(parent)) {
+                console.error('Node.removeParent(): Parent not found!', parent);
+            }
+            this._parents.splice(this._parents.indexOf(parent), 1);
+        }
+    }
+    dispose() {
+        dispose(this);
+        NODES.active.delete(this);
+        NODES.disposed.add(this);
+    }
+    Register(ioNodeConstructor) {
+        Object.defineProperty(ioNodeConstructor, '_isNode', { enumerable: false, value: true, writable: false });
+        Object.defineProperty(ioNodeConstructor.prototype, '_isNode', { enumerable: false, value: true, writable: false });
+        Object.defineProperty(ioNodeConstructor, '_isIoElement', { enumerable: false, value: false, writable: false });
+        Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', { enumerable: false, value: false, writable: false });
+        Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
+    }
+};
+__decorate([
+    ReactiveProperty({ type: String, value: 'immediate' })
+], Node.prototype, "reactivity", void 0);
+Node = Node_1 = __decorate([
+    Register
+], Node);
+export { Node };
+export function initReactiveProperties(node) {
+    for (const name in node._protochain.reactiveProperties) {
+        Object.defineProperty(node, name, {
+            get: function () {
+                return node._reactiveProperties.get(name).value;
+            },
+            set: function (value) {
+                node.setProperty(name, value);
+            },
+            configurable: true,
+            enumerable: true,
+        });
+        const property = new ReactivePropertyInstance(node, node._protochain.reactiveProperties[name]);
+        node._reactiveProperties.set(name, property);
+        if (property.binding)
+            property.binding.addTarget(node, name);
+        observeObjectProperty(node, name, property);
+        observeNodeProperty(node, name, property);
+        if (node instanceof IoElement) {
+            if (property.reflect && property.value !== undefined && property.value !== null) {
+                node.setAttribute(name, property.value);
+            }
+        }
+    }
+}
+export function initProperties(node) {
+    for (const name in node._protochain.properties) {
+        let initialValue = node._protochain.properties[name];
+        if (typeof initialValue === 'function') {
+            initialValue = new initialValue();
+        }
+        else if (initialValue instanceof Array) {
+            initialValue = initialValue.slice();
+        }
+        else if (typeof initialValue === 'object') {
+            initialValue = Object.assign({}, initialValue);
+        }
+        node[name] = initialValue;
+    }
+}
+export function setProperties(node, props) {
+    for (const name in props) {
+        if (!node._reactiveProperties.has(name)) {
+            debug: console.warn(`Property "${name}" is not defined`, node);
+            continue;
+        }
+        node.setProperty(name, props[name], true);
+    }
+    node.dispatchQueue();
+}
+export function setProperty(node, name, value, debounce = false) {
+    const prop = node._reactiveProperties.get(name);
+    const oldValue = prop.value;
+    if (value !== oldValue) {
+        const binding = (value instanceof Binding) ? value : null;
+        if (binding) {
+            const oldBinding = prop.binding;
+            if (binding !== oldBinding) {
+                if (oldBinding) {
+                    oldBinding.removeTarget(node, name);
+                }
+                binding.addTarget(node, name);
+                // NOTE: We return here because binding.setTarget() will trigger execution of setProperty() again.
+                return;
+            }
+            else {
+                // NOTE: This was a remedy for an old bug that might not be relevant anymore.
+                // Whenusing change() > template() > setProperties() to batch-set multiple properties with bindings,
+                // it used to cause all but one of those properties to be reset to original value once parent changed.
+                // This ugly hack fixed the bug by setting binding value from target when binding already exists.
+                // TODO: keep an eye on this and remove if not needed.
+                // binding.value = value = prop.value;
+                return;
+            }
+        }
+        observeObjectProperty(node, name, prop);
+        // TODO: test!
+        // TODO: Document magic!
+        if (prop.type === NodeArray && value.constructor === Array) {
+            const nodeArray = prop.value;
+            debug: if (value.some(item => !item._isNode)) {
+                console.error(`Node: Property "${name}" should be assigned as an Array of nodes!`, value);
+            }
+            debug: if (nodeArray.constructor !== NodeArray) {
+                console.error(`Node: Property "${name}" should be initialized as a NodeArray!`, nodeArray);
+            }
+            // TODO: test, benchmark!
+            nodeArray.withInternalOperation(() => {
+                nodeArray.length = 0;
+                nodeArray.push(...value);
+                if (value.length === 0) {
+                    nodeArray.dispatchMutation();
+                }
+            });
+            return;
+        }
+        prop.value = value;
+        // TODO: test!
+        if (value !== oldValue) {
+            let hasNewValueAtOtherProperty = false;
+            let hasOldValueAtOtherProperty = false;
+            node._reactiveProperties.forEach((property, n) => {
+                if (property.value === value && n !== name)
+                    hasNewValueAtOtherProperty = true;
+                if (property.value === oldValue && n !== name)
+                    hasOldValueAtOtherProperty = true;
+            });
+            if (value?._isNode && !hasNewValueAtOtherProperty) {
+                node._observedNodeProperties.push(name);
+                value.addEventListener('io-object-mutation', node.onPropertyMutated);
+                value.addParent(node);
+            }
+            if (oldValue?._isNode && !hasOldValueAtOtherProperty && !oldValue._disposed) {
+                node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1);
+                oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated);
+                oldValue.removeParent(node);
+            }
+        }
+        debug: {
+            if (prop.type === String) {
+                if (typeof value !== 'string') {
+                    console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+                }
+            }
+            else if (prop.type === Number) {
+                if (typeof value !== 'number') {
+                    console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+                }
+            }
+            else if (prop.type === Boolean) {
+                if (typeof value !== 'boolean') {
+                    console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+                }
+            }
+            else if (prop.type === Array) {
+                if (!(value instanceof Array)) {
+                    console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+                }
+            }
+            else if (prop.type === Object) {
+                if (value instanceof Array) {
+                    console.warn(`Wrong type of property "${name}". Value: "${JSON.stringify(value)}". Expected type: ${prop.type.name}`, node);
+                }
+            }
+            else if (prop.type === NodeArray) {
+                if (!(value instanceof NodeArray)) {
+                    console.error(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+                }
+                if (value.some(item => !item._isNode)) {
+                    console.error(`Wrong type of property "${name}". NodeArray items should be nodes!`, value);
+                }
+            }
+            else if (typeof prop.type === 'function') {
+                if (!(value instanceof prop.type)) {
+                    console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node);
+                }
+            }
+        }
+        if (oldValue !== value) {
+            node.queue(name, value, oldValue);
+            node.dispatchQueue(debounce);
+        }
+    }
+}
+export function dispatchQueue(node, debounce = false) {
+    if (node.reactivity === 'debounced' || debounce || node._changeQueue.dispatching) {
+        node.debounce(node._changeQueue.dispatch);
+    }
+    else if (node.reactivity === 'throttled') {
+        node.throttle(node._changeQueue.dispatch);
+    }
+    else if (node.reactivity === 'immediate') {
+        node._changeQueue.dispatch();
+    }
+    debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
+        console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`);
+    }
+}
+export function onPropertyMutated(node, event) {
+    const object = event.detail.object;
+    let hasMutated = false;
+    // TODO: consider situations where node is listening to io-object-mutation events from multiple sources (window and property).
+    // This might cause multiple executions of the same handler.
+    // TODO: consider optimizing. This handler might be called a lot.
+    const properties = [...new Set([...node._observedObjectProperties, ...node._observedNodeProperties])];
+    for (let i = 0; i < properties.length; i++) {
+        const name = properties[i];
+        const value = node._reactiveProperties.get(name).value;
+        if (value === object) {
+            const handlerName = name + 'Mutated';
+            if (typeof node[handlerName] === 'function') {
+                // node.throttle(node[handlerName] as CallbackFunction, event);
+                node[handlerName](event); //TODO: Check for regressions.
+            }
+            hasMutated = true;
+        }
+    }
+    return hasMutated;
+}
+export function observeObjectProperty(node, name, property) {
+    if (!node._observedObjectProperties.includes(name)) {
+        if (isNonNodeObject(property.value)) {
+            node._observedObjectProperties.push(name);
+            if (node._observedObjectProperties.length === 1) {
+                window.addEventListener('io-object-mutation', node.onPropertyMutated);
+            }
+        }
+    }
+}
+export function observeNodeProperty(node, name, property) {
+    if (property.value?._isNode) {
+        let hasSameValueAtOtherProperty = false;
+        node._reactiveProperties.forEach((p, n) => {
+            if (p.value === property.value && n !== name)
+                hasSameValueAtOtherProperty = true;
+        });
+        if (!hasSameValueAtOtherProperty) {
+            node._observedNodeProperties.push(name);
+            property.value.addEventListener('io-object-mutation', node.onPropertyMutated);
+        }
+    }
+}
+export function bind(node, name) {
+    debug: if (!node._reactiveProperties.has(name)) {
+        console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`);
+    }
+    if (!node._bindings.has(name)) {
+        node._bindings.set(name, new Binding(node, name));
+    }
+    return node._bindings.get(name);
+}
+export function unbind(node, name) {
+    const binding = node._bindings.get(name);
+    if (binding) {
+        binding.dispose();
+        node._bindings.delete(name);
+    }
+    const property = node._reactiveProperties.get(name);
+    property?.binding?.removeTarget(node, name);
+}
+export function dispose(node) {
+    debug: if (node._disposed) {
+        console.warn('Node.dispose(): Already disposed!', node.constructor.name);
+    }
+    if (node._disposed)
+        return;
+    node._bindings.forEach((binding, name) => {
+        binding.dispose();
+        node._bindings.delete(name);
+    });
+    delete node._bindings;
+    if (node._observedObjectProperties.length) {
+        window.removeEventListener('io-object-mutation', node.onPropertyMutated);
+        node._observedObjectProperties.length = 0;
+        delete node._observedObjectProperties;
+    }
+    delete node._protochain;
+    node._changeQueue.dispose();
+    delete node._changeQueue;
+    let removed = [];
+    node._reactiveProperties.forEach((property, name) => {
+        property.binding?.removeTarget(node, name);
+        if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
+            property.value.removeEventListener('io-object-mutation', node.onPropertyMutated);
+            removed.push(property.value);
+        }
+    });
+    for (const name in node._protochain.properties) {
+        delete node[name];
+    }
+    // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
+    node._eventDispatcher.dispose();
+    delete node._eventDispatcher;
+    delete node._reactiveProperties;
+    if (node._parents) {
+        node._parents.length = 0;
+        delete node._parents;
+    }
+    Object.defineProperty(node, '_disposed', { value: true });
+}
+;
+//# sourceMappingURL=Node.js.map

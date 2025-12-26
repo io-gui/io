@@ -1,7 +1,7 @@
 import { Node, NodeProps, Binding } from 'io-core';
-import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/build/three.webgpu.js';
 import { IoThreeViewport } from '../elements/IoThreeViewport.js';
 import { ThreeState } from './ThreeState.js';
+import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
 export type ViewCamerasProps = NodeProps & {
     viewport: IoThreeViewport;
     state: ThreeState;

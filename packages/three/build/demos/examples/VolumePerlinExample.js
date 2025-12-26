@@ -4,10 +4,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, BackSide, BoxGeometry } from 'three/build/three.webgpu.js';
-import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/build/three.tsl.js';
-import { RaymarchingBox } from 'three/examples/jsm/tsl/utils/Raymarching.js';
-import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise.js';
+import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, BackSide, BoxGeometry } from 'three/webgpu';
+import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
+import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
+import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Register } from 'io-core';
 import { ThreeState } from 'io-three';
 let VolumePerlinExample = class VolumePerlinExample extends ThreeState {

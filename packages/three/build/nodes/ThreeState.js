@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, Node, ReactiveProperty } from 'io-core';
-import { Scene } from 'three/build/three.webgpu.js';
+import { Scene } from 'three/webgpu';
 let ThreeState = class ThreeState extends Node {
     renderer = null;
     width = 0;
@@ -25,6 +25,7 @@ let ThreeState = class ThreeState extends Node {
     onRendererInitialized(renderer) {
         this.renderer = renderer;
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onResized(width, height) { }
     onAnimate() { }
 };

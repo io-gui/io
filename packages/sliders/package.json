@@ -4,7 +4,7 @@
     "access": "public"
   },
   "version": "2.0.0-alpha.1",
-  "type": "nodenext",
+  "type": "module",
   "packageManager": "pnpm@9.5.0",
   "description": "A set of sliders for Io-Gui.",
   "main": "build/index.js",

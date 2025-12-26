@@ -1,4 +1,4 @@
-import { StorageTexture, WebGPURenderer, ComputeNode } from 'three/build/three.webgpu.js';
+import { StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu';
 import { ThreeState } from 'io-three';
 export declare class ComputeTextureExample extends ThreeState {
     storageTexture: StorageTexture;

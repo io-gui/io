@@ -1,11 +1,10 @@
 import { IoElement, IoElementProps, ReactivityType, Binding } from 'io-core';
-import { Color } from 'three/build/three.webgpu.js';
 import { ThreeState } from '../nodes/ThreeState.js';
 export type IoThreeViewportProps = IoElementProps & {
     state: ThreeState | Binding<ThreeState>;
     cameraSelect?: string | Binding<string>;
     playing?: boolean | Binding<boolean>;
-    clearColor?: Color | Binding<Color>;
+    clearColor?: number | Binding<number>;
     clearAlpha?: number | Binding<number>;
 };
 export declare class IoThreeViewport extends IoElement {

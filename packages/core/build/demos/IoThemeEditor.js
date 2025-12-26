@@ -1,1 +1,90 @@
-import{Register as o,IoElement as r,ThemeSingleton as e}from"io-core";import{ioOptionSelect as l,MenuOption as i}from"io-menus";import{ioButton as n,ioField as d}from"io-inputs";import{ioNumberSlider as t}from"io-sliders";import{ioColorRgba as a}from"io-colors";class IoThemeEditor extends r{static get Style(){return"\n    :host {\n      align-self: start;\n      display: grid;\n      grid-gap: var(--io_spacing);\n      padding: var(--io_spacing3);\n      grid-template-columns: auto 2fr !important;\n    }\n    "}constructor(o){super(o),this.render([l({value:e.bind("themeID"),option:new i({options:[{id:"Light Theme",value:"light"},{id:"Dark Theme",value:"dark"}]})}),n({label:"Reset",action:()=>e.reset()}),d("spacing"),t({value:e.bind("spacing"),min:0,max:20,step:1}),d("lineHeight"),t({value:e.bind("lineHeight"),min:e.bind("fontSize"),max:50,step:1}),d("fontSize"),t({value:e.bind("fontSize"),min:5,max:20,step:1}),d("borderRadius"),t({value:e.bind("borderRadius"),min:0,max:20,step:1}),d("borderWidth"),t({value:e.bind("borderWidth"),min:0,max:5,step:1}),d("borderColor"),a({value:e.bind("borderColor")}),d("borderColorLight"),a({value:e.bind("borderColorLight")}),d("borderColorStrong"),a({value:e.bind("borderColorStrong")}),d("borderColorRed"),a({value:e.bind("borderColorRed")}),d("borderColorBlue"),a({value:e.bind("borderColorBlue")}),d("borderColorGreen"),a({value:e.bind("borderColorGreen")}),d("bgColor"),a({value:e.bind("bgColor")}),d("bgColorStrong"),a({value:e.bind("bgColorStrong")}),d("bgColorLight"),a({value:e.bind("bgColorLight")}),d("bgColorRed"),a({value:e.bind("bgColorRed")}),d("bgColorGreen"),a({value:e.bind("bgColorGreen")}),d("bgColorBlue"),a({value:e.bind("bgColorBlue")}),d("bgColorInput"),a({value:e.bind("bgColorInput")}),d("color"),a({value:e.bind("color")}),d("colorStrong"),a({value:e.bind("colorStrong")}),d("colorLight"),a({value:e.bind("colorLight")}),d("colorRed"),a({value:e.bind("colorRed")}),d("colorGreen"),a({value:e.bind("colorGreen")}),d("colorBlue"),a({value:e.bind("colorBlue")}),d("colorWhite"),a({value:e.bind("colorWhite")}),d("colorInput"),a({value:e.bind("colorInput")}),d("gradientColorStart"),a({value:e.bind("gradientColorStart")}),d("gradientColorEnd"),a({value:e.bind("gradientColorEnd")}),d("shadowColor"),a({value:e.bind("shadowColor")})])}}o(IoThemeEditor);const b=IoThemeEditor.vConstructor;export{IoThemeEditor,b as ioThemeEditor};
+//@ts-nocheck
+import { Register, IoElement, ThemeSingleton } from 'io-core';
+import { MenuOption, ioOptionSelect } from 'io-menus';
+import { ioButton, ioField } from 'io-inputs';
+import { ioNumberSlider } from 'io-sliders';
+import { ioColorRgba } from 'io-colors';
+export class IoThemeEditor extends IoElement {
+    static get Style() {
+        return /* css */ `
+    :host {
+      align-self: start;
+      display: grid;
+      grid-gap: var(--io_spacing);
+      padding: var(--io_spacing3);
+      grid-template-columns: auto 2fr !important;
+    }
+    `;
+    }
+    constructor(props) {
+        super(props);
+        this.render([
+            ioOptionSelect({ value: ThemeSingleton.bind('themeID'), option: new MenuOption({ options: [
+                        { id: 'Light Theme', value: 'light' },
+                        { id: 'Dark Theme', value: 'dark' },
+                    ] }) }),
+            ioButton({ label: 'Reset', action: () => ThemeSingleton.reset() }),
+            ioField('spacing'),
+            ioNumberSlider({ value: ThemeSingleton.bind('spacing'), min: 0, max: 20, step: 1 }),
+            ioField('lineHeight'),
+            ioNumberSlider({ value: ThemeSingleton.bind('lineHeight'), min: ThemeSingleton.bind('fontSize'), max: 50, step: 1 }),
+            ioField('fontSize'),
+            ioNumberSlider({ value: ThemeSingleton.bind('fontSize'), min: 5, max: 20, step: 1 }),
+            ioField('borderRadius'),
+            ioNumberSlider({ value: ThemeSingleton.bind('borderRadius'), min: 0, max: 20, step: 1 }),
+            ioField('borderWidth'),
+            ioNumberSlider({ value: ThemeSingleton.bind('borderWidth'), min: 0, max: 5, step: 1 }),
+            ioField('borderColor'),
+            ioColorRgba({ value: ThemeSingleton.bind('borderColor') }),
+            ioField('borderColorLight'),
+            ioColorRgba({ value: ThemeSingleton.bind('borderColorLight') }),
+            ioField('borderColorStrong'),
+            ioColorRgba({ value: ThemeSingleton.bind('borderColorStrong') }),
+            ioField('borderColorRed'),
+            ioColorRgba({ value: ThemeSingleton.bind('borderColorRed') }),
+            ioField('borderColorBlue'),
+            ioColorRgba({ value: ThemeSingleton.bind('borderColorBlue') }),
+            ioField('borderColorGreen'),
+            ioColorRgba({ value: ThemeSingleton.bind('borderColorGreen') }),
+            ioField('bgColor'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColor') }),
+            ioField('bgColorStrong'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColorStrong') }),
+            ioField('bgColorLight'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColorLight') }),
+            ioField('bgColorRed'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColorRed') }),
+            ioField('bgColorGreen'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColorGreen') }),
+            ioField('bgColorBlue'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColorBlue') }),
+            ioField('bgColorInput'),
+            ioColorRgba({ value: ThemeSingleton.bind('bgColorInput') }),
+            ioField('color'),
+            ioColorRgba({ value: ThemeSingleton.bind('color') }),
+            ioField('colorStrong'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorStrong') }),
+            ioField('colorLight'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorLight') }),
+            ioField('colorRed'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorRed') }),
+            ioField('colorGreen'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorGreen') }),
+            ioField('colorBlue'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorBlue') }),
+            ioField('colorWhite'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorWhite') }),
+            ioField('colorInput'),
+            ioColorRgba({ value: ThemeSingleton.bind('colorInput') }),
+            ioField('gradientColorStart'),
+            ioColorRgba({ value: ThemeSingleton.bind('gradientColorStart') }),
+            ioField('gradientColorEnd'),
+            ioColorRgba({ value: ThemeSingleton.bind('gradientColorEnd') }),
+            ioField('shadowColor'),
+            ioColorRgba({ value: ThemeSingleton.bind('shadowColor') }),
+        ]);
+    }
+}
+Register(IoThemeEditor);
+export const ioThemeEditor = IoThemeEditor.vConstructor;
+//# sourceMappingURL=IoThemeEditor.js.map

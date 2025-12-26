@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, NearestFilter } from 'three/build/three.webgpu.js';
-import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/build/three.tsl.js';
+import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, NearestFilter } from 'three/webgpu';
+import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 import { Register } from 'io-core';
 import { ThreeState } from 'io-three';
 let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
@@ -42,7 +42,13 @@ let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
     }
     onRendererInitialized(renderer) {
         super.onRendererInitialized(renderer);
-        renderer.compute(this.computeNode);
+        new Promise((resolve, reject) => {
+            renderer.compute(this.computeNode).then(resolve).catch(reject);
+        }).then(() => {
+            console.log('compute node computed');
+        }).catch(error => {
+            console.error('compute node computation failed', error);
+        });
     }
 };
 ComputeTextureExample = __decorate([

@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, IoElement, ReactiveProperty } from 'io-core';
-import { WebGPURenderer, CanvasTarget } from 'three/build/three.webgpu.js';
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU.js';
+import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
+import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeState } from '../nodes/ThreeState.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 if (WebGPU.isAvailable() === false) {
@@ -18,13 +18,25 @@ const observer = new IntersectionObserver((entries) => {
     });
 });
 const _renderer = new WebGPURenderer({ antialias: false, alpha: true });
-_renderer.setPixelRatio(window.devicePixelRatio);
-_renderer.init();
+new Promise((resolve, reject) => {
+    _renderer.setPixelRatio(window.devicePixelRatio);
+    _renderer.init().then(resolve).catch(reject);
+}).then(() => {
+    console.log('renderer initialized');
+}).catch(error => {
+    console.error('renderer initialization failed', error);
+});
 const _playingViewports = [];
-_renderer.setAnimationLoop((time) => {
-    for (const viewport of _playingViewports) {
-        viewport.onAnimate(time);
-    }
+new Promise((resolve, reject) => {
+    _renderer.setAnimationLoop((time) => {
+        for (const viewport of _playingViewports) {
+            viewport.onAnimate(time);
+        }
+    }).then(resolve).catch(reject);
+}).then(() => {
+    console.log('animation loop initialized');
+}).catch(error => {
+    console.error('animation loop initialization failed', error);
 });
 let IoThreeViewport = class IoThreeViewport extends IoElement {
     width = 0;
@@ -71,6 +83,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
             _playingViewports.splice(_playingViewports.indexOf(this), 1);
         }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onAnimate(time) {
         if (!this.visible)
             return;

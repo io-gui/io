@@ -49,7 +49,7 @@ export function makeBundleTarget(src, target, skipExternals = true) {
       file: target,
       indent: '  '
     }],
-    // external: skipExternals ? _externals : [],
+    external: skipExternals ? _externals : [],
     onwarn: (warning, warn) => {
       if (warning.code === 'THIS_IS_UNDEFINED') return;
       warn(warning);

@@ -1,1 +1,486 @@
-import{NODES as t,Register as i,IoElement as e,h4 as o,p as n,div as s,span as r}from"io-core";import{ioCollapsible as c}from"io-navigation";import{ioIcon as h}from"io-icons";const a=new Map,l={id:"roots",children:[]};let d=0;function initNodeInfo(t){if(a.has(t))return a.get(t);{const i={id:"node-"+d++,node:t,children:[]};return a.set(t,i),i}}t.active.forEach(t=>{const i=initNodeInfo(t);0===t._parents.length?l.children.length<24&&l.children.push(i):t._parents.forEach(t=>{const e=initNodeInfo(t);e.children.length<24&&e.children.push(i)})});const u=document.createElement("canvas");u.width=256,u.height=256,u.style.position="absolute",u.style.bottom="0",u.style.right="0",u.style.zIndex="1000",u.style.pointerEvents="none",document.body.appendChild(u);const p=u.width/2,f=u.height/2,g=Math.min(u.width,u.height)/60,m=u.getContext("2d");class SimulatedNode{constructor(t,i,e){this.name=t,this.position=i,this.children=[],this.parent=null,this.node=e,this.createVisual(),this.setupEventListeners()}createVisual(){this.radius=.5,this.color="#2196F3",this.originalColor="#2196F3",this.connections=[]}lerpColor(t,i,e){const o=parseInt(t.replace("#",""),16),n=parseInt(i.replace("#",""),16),s=o>>16&255,r=o>>8&255,c=255&o,h=n>>16&255,a=n>>8&255,l=255&n;return`#${(Math.round(s+(h-s)*e)<<16|Math.round(r+(a-r)*e)<<8|Math.round(c+(l-c)*e)).toString(16).padStart(6,"0")}`}setupEventListeners(){this.node&&this.node.addEventListener("io-object-mutation",()=>{this.animateMutation()})}animateMutation(){const t=this.originalColor,i="#FFFF00";this.animateColor(t,i,150,()=>{this.animateColor(i,t,800)})}animateColor(t,i,e,o){const n=Date.now(),animate=()=>{const s=Date.now()-n,r=Math.min(s/e,1);this.color=this.lerpColor(t,i,r),r<1?requestAnimationFrame(animate):o&&o()};animate()}addChild(t){return this.children.push(t),t.parent=this,this.createConnection(t)}createConnection(t){const i={nodeA:this,nodeB:t,color:"#666666"};return this.connections.push(i),i}}const y=function calculateRadialPositions(t){const i={},e=t.children||[],o={};return e.forEach((t,i)=>{const n=i/e.length*Math.PI*2,s=25*Math.cos(n),r=25*Math.sin(n);o[t.id]={x:s,y:r}}),function positionNode(t,e=0,n=0,s=2*Math.PI,r=0,c=1,h={x:0,y:0}){if("roots"!==t.id){const o=4*e+3;let a;if(0===e)a=0;else if(1===e)a=r/c*Math.PI*2;else{a=n-s/2+s/c*(r+.5)}const l=o*Math.cos(a)*2,d=o*Math.sin(a)*2,u=h.x+l,p=h.y+d;i[t.id]={x:u,y:p,z:0}}if(t.children&&t.children.length>0){const i="roots"===t.id?-1:e,r="roots"===t.id?{x:0,y:0}:o[t.id]||h,c=.8/(4*(i+1)+3)*t.children.length;let a;if(-1===i)a=2*Math.PI;else{const t=Math.min(.9*s,Math.PI);a=Math.max(c,Math.min(t,.6*Math.PI))}t.children.forEach((i,s)=>{const c="roots"===t.id?0:e+1,h="roots"===t.id?0:n,l="roots"===t.id?o[i.id]||{x:0,y:0}:r;positionNode(i,c,h,a,s,t.children.length,l)})}}(t),i}(l),x=function createNodesFromTree(t,i){const e={};return function createNode(t){if("roots"!==t.id){const o=i[t.id],n=t.node,s=new SimulatedNode(t.id,o,n);e[t.id]=s}t.children&&t.children.forEach(t=>createNode(t))}(t),e}(l,y),v=function connectNodes(t,i){const e=[];return function connect(t){if("roots"!==t.id){const o=i[t.id];t.children&&o&&t.children.forEach(t=>{const n=i[t.id];if(n){const t=o.addChild(n);e.push(t)}})}t.children&&t.children.forEach(t=>{connect(t)})}(t),e}(l,x),M=new class ForceDirectedLayout{constructor(t,i){this.nodes=t,this.connections=i,this.forces={},this.velocities={},this.damping=.7,this.repulsionStrength=4,this.attractionStrength=.05,this.centerAttractionStrength=.01,this.linkLength=2,this.maxVelocity=1,this.running=!1,this.coolingRate=.99,this.temperature=.1,this.minTemperature=.1,Object.keys(t).forEach(t=>{this.forces[t]={x:0,y:0},this.velocities[t]={x:0,y:0}})}calculateRepulsionForces(){const t=Object.keys(this.nodes);t.forEach(t=>{this.forces[t].x=0,this.forces[t].y=0});for(let i=0;i<t.length;i++)for(let e=i+1;e<t.length;e++){const o=this.nodes[t[i]],n=this.nodes[t[e]],s=o.position.x-n.position.x,r=o.position.y-n.position.y,c=s*s+r*r+.01,h=Math.sqrt(c),a=this.repulsionStrength*this.temperature/(c*h),l=s/h*a,d=r/h*a;this.forces[t[i]].x+=l,this.forces[t[i]].y+=d,this.forces[t[e]].x-=l,this.forces[t[e]].y-=d}}calculateAttractionForces(){this.connections.forEach(t=>{const i=t.nodeA,e=t.nodeB,o=e.position.x-i.position.x,n=e.position.y-i.position.y,s=Math.sqrt(o*o+n*n);let r=this.linkLength;const c=i.children.length,h=e.children.length;c>0&&(r*=1+c**.25),h>0&&(r*=1+h**.25);const a=this.attractionStrength*this.temperature*(s**2-r),l=o/s*a,d=n/s*a;this.forces[i.name].x+=l,this.forces[i.name].y+=d,this.forces[e.name].x-=l,this.forces[e.name].y-=d})}updatePositions(){Object.keys(this.nodes).forEach(t=>{const i=this.nodes[t];if("roots"===t)return;this.velocities[t].x+=this.forces[t].x,this.velocities[t].y+=this.forces[t].y;const e=Math.sqrt(this.velocities[t].x**2+this.velocities[t].y**2);e>this.maxVelocity&&(this.velocities[t].x=this.velocities[t].x/e*this.maxVelocity,this.velocities[t].y=this.velocities[t].y/e*this.maxVelocity),this.velocities[t].x*=this.damping,this.velocities[t].y*=this.damping;const o=i.position.x+this.velocities[t].x,n=i.position.y+this.velocities[t].y;i.position.x=o,i.position.y=n})}calculateCenterAttractionForces(){Object.keys(this.nodes).forEach(t=>{const i=this.nodes[t];if("roots"===t)return;const e=-i.position.x,o=-i.position.y,n=Math.sqrt(e*e+o*o)+.01,s=this.centerAttractionStrength*this.temperature*n,r=e/n*s,c=o/n*s;this.forces[t].x+=r,this.forces[t].y+=c})}step(){this.calculateRepulsionForces(),this.calculateAttractionForces(),this.calculateCenterAttractionForces(),this.updatePositions(),this.temperature>this.minTemperature&&(this.temperature*=this.coolingRate)}start(){this.running=!0,this.temperature=1,this.simulate()}stop(){this.running=!1}reset(){this.temperature=1,Object.keys(this.nodes).forEach(t=>{this.forces[t]={x:0,y:0},this.velocities[t]={x:0,y:0}})}simulate(){this.running&&(this.step(),requestAnimationFrame(()=>this.simulate()))}}(x,v);M.start();const animate=()=>{!function render(){if(m.clearRect(0,0,u.width,u.height),m.fillStyle="black",m.fillRect(0,0,u.width,u.height),0===Object.keys(x).length)return m.fillStyle="red",m.font="12px Arial",void m.fillText("No nodes to render",10,20);Object.values(x).forEach(t=>{t.connections.forEach(t=>{const i=p+t.nodeA.position.x*g,e=f+t.nodeA.position.y*g,o=p+t.nodeB.position.x*g,n=f+t.nodeB.position.y*g;m.strokeStyle=t.color,m.lineWidth=2,m.beginPath(),m.moveTo(i,e),m.lineTo(o,n),m.stroke()})}),Object.values(x).forEach(t=>{const i=p+t.position.x*g,e=f+t.position.y*g,o=t.radius*g;m.fillStyle=t.color,m.beginPath(),m.arc(i,e,o,0,2*Math.PI),m.fill()})}(),requestAnimationFrame(animate)};requestAnimationFrame(animate);class IoChangeVisualization extends e{static get Style(){return"\n    :host {\n      flex: 1 1 auto;\n      overflow: hidden;\n    }\n    :host > io-collapsible {\n      position: absolute;\n      display: inline-block;\n      max-width: 250px;\n      margin: var(--io_spacing2);\n    }\n    :host h4 {\n      font-size: calc(var(--io_fontSize) * 1.1);\n      margin: var(--io_spacing) 0;\n      padding: 0 var(--io_spacing);\n    }\n    :host p {\n      font-size: calc(var(--io_fontSize) * 1);\n      margin: var(--io_spacing2) 0;\n      padding: var(--io_spacing);\n    }\n    :host span {\n      font-size: calc(var(--io_fontSize) * 1.2);\n      height: var(--io_lineHeight);\n      margin-left: var(--io_spacing2);\n      vertical-align: top;\n    }\n    "}ready(){this.render([c({label:"Legend",elements:[o("Io-GUI Node Network Visualization"),n("Interactive visualization of the node relationship network using force-directed layout."),s({class:"legend-item"},[h({class:"legend-color",value:"io:circle_fill",style:{fill:"#2196F3"}}),r("Node")])]})])}}i(IoChangeVisualization);const ioChangeVisualization=function(t){return IoChangeVisualization.vConstructor(t)};export{IoChangeVisualization,ioChangeVisualization};
+//@ts-nocheck
+import { IoElement, Register, div, span, h4, p, NODES } from 'io-core';
+import { ioCollapsible } from 'io-navigation';
+import { ioIcon } from 'io-icons';
+const nodeMap = new Map();
+const MAX_CHILDREN = 24;
+const roots = {
+    id: 'roots',
+    children: []
+};
+let counter = 0;
+function initNodeInfo(node) {
+    if (nodeMap.has(node)) {
+        return nodeMap.get(node);
+    }
+    else {
+        const nodeInfo = {
+            id: `node-${counter++}`,
+            node: node,
+            children: []
+        };
+        nodeMap.set(node, nodeInfo);
+        return nodeInfo;
+    }
+}
+NODES.active.forEach(node => {
+    const nodeInfo = initNodeInfo(node);
+    if (node._parents.length === 0) {
+        if (roots.children.length < MAX_CHILDREN) {
+            roots.children.push(nodeInfo);
+        }
+    }
+    else {
+        node._parents.forEach(parent => {
+            const parentInfo = initNodeInfo(parent);
+            if (parentInfo.children.length < MAX_CHILDREN) {
+                parentInfo.children.push(nodeInfo);
+            }
+        });
+    }
+});
+const canvas = document.createElement('canvas');
+canvas.width = 256;
+canvas.height = 256;
+canvas.style.position = 'absolute';
+canvas.style.bottom = '0';
+canvas.style.right = '0';
+canvas.style.zIndex = '1000';
+canvas.style.pointerEvents = 'none';
+document.body.appendChild(canvas);
+const canvasCenter = { x: canvas.width / 2, y: canvas.height / 2 };
+const scale = Math.min(canvas.width, canvas.height) / 60;
+const ctx = canvas.getContext('2d');
+function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const nodeCount = Object.keys(nodes).length;
+    if (nodeCount === 0) {
+        // Draw debug text if no nodes
+        ctx.fillStyle = 'red';
+        ctx.font = '12px Arial';
+        ctx.fillText('No nodes to render', 10, 20);
+        return;
+    }
+    // Draw connections first (so they appear behind nodes)
+    Object.values(nodes).forEach(node => {
+        node.connections.forEach(connection => {
+            const fromX = canvasCenter.x + connection.nodeA.position.x * scale;
+            const fromY = canvasCenter.y + connection.nodeA.position.y * scale;
+            const toX = canvasCenter.x + connection.nodeB.position.x * scale;
+            const toY = canvasCenter.y + connection.nodeB.position.y * scale;
+            ctx.strokeStyle = connection.color;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+        });
+    });
+    // Draw nodes
+    Object.values(nodes).forEach(node => {
+        const x = canvasCenter.x + node.position.x * scale;
+        const y = canvasCenter.y + node.position.y * scale;
+        const radius = node.radius * scale;
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+class SimulatedNode {
+    constructor(name, position, node) {
+        this.name = name;
+        this.position = position;
+        this.children = [];
+        this.parent = null;
+        this.node = node; // Reference to the actual io-core node
+        this.createVisual();
+        this.setupEventListeners();
+    }
+    createVisual() {
+        this.radius = 0.5; // Increased from 0.5 to make nodes more visible
+        this.color = '#2196F3';
+        this.originalColor = '#2196F3';
+        this.connections = [];
+    }
+    // Helper method to interpolate between hex colors
+    lerpColor(color1, color2, progress) {
+        const hex1 = parseInt(color1.replace('#', ''), 16);
+        const hex2 = parseInt(color2.replace('#', ''), 16);
+        const r1 = (hex1 >> 16) & 255;
+        const g1 = (hex1 >> 8) & 255;
+        const b1 = hex1 & 255;
+        const r2 = (hex2 >> 16) & 255;
+        const g2 = (hex2 >> 8) & 255;
+        const b2 = hex2 & 255;
+        const r = Math.round(r1 + (r2 - r1) * progress);
+        const g = Math.round(g1 + (g2 - g1) * progress);
+        const b = Math.round(b1 + (b2 - b1) * progress);
+        return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+    }
+    setupEventListeners() {
+        if (this.node) {
+            this.node.addEventListener('io-object-mutation', () => {
+                this.animateMutation();
+            });
+        }
+    }
+    animateMutation() {
+        const originalColor = this.originalColor;
+        const mutationColor = '#FFFF00'; // Yellow
+        this.animateColor(originalColor, mutationColor, 150, () => {
+            this.animateColor(mutationColor, originalColor, 800);
+        });
+    }
+    animateColor(from, to, duration, callback) {
+        const startTime = Date.now();
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            this.color = this.lerpColor(from, to, progress);
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            }
+            else if (callback) {
+                callback();
+            }
+        };
+        animate();
+    }
+    addChild(child) {
+        this.children.push(child);
+        child.parent = this;
+        return this.createConnection(child);
+    }
+    createConnection(child) {
+        const connection = {
+            nodeA: this,
+            nodeB: child,
+            color: '#666666'
+        };
+        this.connections.push(connection);
+        return connection;
+    }
+}
+function calculateRadialPositions(treeData) {
+    const positions = {};
+    const levelRadius = 4;
+    const levelSpacing = 3;
+    const minNodeSpacing = 0.8;
+    const clusterSeparation = 25; // Distance between cluster centers
+    // First, position each top-level cluster (roots children) in a circle
+    const topLevelClusters = treeData.children || [];
+    const clusterCenters = {};
+    topLevelClusters.forEach((cluster, index) => {
+        const angle = (index / topLevelClusters.length) * Math.PI * 2;
+        const centerX = Math.cos(angle) * clusterSeparation;
+        const centerY = Math.sin(angle) * clusterSeparation;
+        clusterCenters[cluster.id] = { x: centerX, y: centerY };
+    });
+    function positionNode(node, level = 0, parentAngle = 0, availableAngle = Math.PI * 2, siblingIndex = 0, siblingCount = 1, clusterCenter = { x: 0, y: 0 }) {
+        // Skip positioning for roots since it won't be rendered
+        if (node.id !== 'roots') {
+            const radius = level * levelRadius + levelSpacing;
+            let angle;
+            if (level === 0) {
+                angle = 0;
+            }
+            else {
+                if (level === 1) {
+                    angle = (siblingIndex / siblingCount) * Math.PI * 2;
+                }
+                else {
+                    const angleStep = availableAngle / siblingCount;
+                    angle = parentAngle - availableAngle / 2 + angleStep * (siblingIndex + 0.5);
+                }
+            }
+            // Position relative to cluster center - step by step debugging
+            const cosAngle = Math.cos(angle);
+            const sinAngle = Math.sin(angle);
+            const localX = radius * cosAngle * 2;
+            const localY = radius * sinAngle * 2;
+            const x = clusterCenter.x + localX;
+            const y = clusterCenter.y + localY;
+            positions[node.id] = { x, y, z: 0 };
+        }
+        if (node.children && node.children.length > 0) {
+            // For roots children, treat them as level 0 (root level) with their own cluster center
+            const effectiveLevel = node.id === 'roots' ? -1 : level;
+            const currentClusterCenter = node.id === 'roots' ? { x: 0, y: 0 } :
+                (clusterCenters[node.id] || clusterCenter);
+            const childRadius = (effectiveLevel + 1) * levelRadius + levelSpacing;
+            const minAngleForSpacing = minNodeSpacing / childRadius;
+            const minTotalAngle = minAngleForSpacing * node.children.length;
+            let childAngleSpan;
+            if (effectiveLevel === -1) { // roots children get full circle
+                childAngleSpan = Math.PI * 2;
+            }
+            else {
+                const maxAngleFromParent = Math.min(availableAngle * 0.9, Math.PI);
+                childAngleSpan = Math.max(minTotalAngle, Math.min(maxAngleFromParent, Math.PI * 0.6));
+            }
+            node.children.forEach((child, index) => {
+                const childLevel = node.id === 'roots' ? 0 : level + 1;
+                const childAngle = node.id === 'roots' ? 0 : parentAngle;
+                const childClusterCenter = node.id === 'roots' ?
+                    (clusterCenters[child.id] || { x: 0, y: 0 }) : currentClusterCenter;
+                positionNode(child, childLevel, childAngle, childAngleSpan, index, node.children.length, childClusterCenter);
+            });
+        }
+    }
+    positionNode(treeData);
+    return positions;
+}
+class ForceDirectedLayout {
+    constructor(nodes, connections) {
+        this.nodes = nodes;
+        this.connections = connections;
+        this.forces = {};
+        this.velocities = {};
+        this.damping = 0.7;
+        this.repulsionStrength = 4;
+        this.attractionStrength = 0.05;
+        this.centerAttractionStrength = 0.01;
+        this.linkLength = 2;
+        this.maxVelocity = 1;
+        this.running = false;
+        this.coolingRate = 0.99;
+        this.temperature = 0.1;
+        this.minTemperature = 0.1;
+        Object.keys(nodes).forEach(id => {
+            this.forces[id] = { x: 0, y: 0 };
+            this.velocities[id] = { x: 0, y: 0 };
+        });
+    }
+    calculateRepulsionForces() {
+        const nodeIds = Object.keys(this.nodes);
+        // Reset forces
+        nodeIds.forEach(id => {
+            this.forces[id].x = 0;
+            this.forces[id].y = 0;
+        });
+        // Calculate repulsion between all node pairs
+        for (let i = 0; i < nodeIds.length; i++) {
+            for (let j = i + 1; j < nodeIds.length; j++) {
+                const nodeA = this.nodes[nodeIds[i]];
+                const nodeB = this.nodes[nodeIds[j]];
+                const dx = nodeA.position.x - nodeB.position.x;
+                const dy = nodeA.position.y - nodeB.position.y;
+                const distanceSquared = dx * dx + dy * dy + 0.01;
+                const distance = Math.sqrt(distanceSquared);
+                const force = (this.repulsionStrength * this.temperature) / (distanceSquared * distance);
+                const fx = (dx / distance) * force;
+                const fy = (dy / distance) * force;
+                this.forces[nodeIds[i]].x += fx;
+                this.forces[nodeIds[i]].y += fy;
+                this.forces[nodeIds[j]].x -= fx;
+                this.forces[nodeIds[j]].y -= fy;
+            }
+        }
+    }
+    calculateAttractionForces() {
+        this.connections.forEach(connection => {
+            const nodeA = connection.nodeA;
+            const nodeB = connection.nodeB;
+            const dx = nodeB.position.x - nodeA.position.x;
+            const dy = nodeB.position.y - nodeA.position.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            // Adjust link length based on node connectivity
+            let linkLength = this.linkLength;
+            const nodeAChildren = nodeA.children.length;
+            const nodeBChildren = nodeB.children.length;
+            if (nodeAChildren > 0) {
+                linkLength *= 1 + nodeAChildren ** 0.25;
+            }
+            if (nodeBChildren > 0) {
+                linkLength *= 1 + nodeBChildren ** 0.25;
+            }
+            const force = this.attractionStrength * this.temperature * (distance ** 2 - linkLength);
+            const fx = (dx / distance) * force;
+            const fy = (dy / distance) * force;
+            this.forces[nodeA.name].x += fx;
+            this.forces[nodeA.name].y += fy;
+            this.forces[nodeB.name].x -= fx;
+            this.forces[nodeB.name].y -= fy;
+        });
+    }
+    updatePositions() {
+        Object.keys(this.nodes).forEach(id => {
+            const node = this.nodes[id];
+            // Skip roots since it's not in the simulation
+            if (id === 'roots') {
+                return;
+            }
+            this.velocities[id].x += this.forces[id].x;
+            this.velocities[id].y += this.forces[id].y;
+            // Clamp velocity to maximum
+            const velocity = Math.sqrt(this.velocities[id].x ** 2 + this.velocities[id].y ** 2);
+            if (velocity > this.maxVelocity) {
+                this.velocities[id].x = (this.velocities[id].x / velocity) * this.maxVelocity;
+                this.velocities[id].y = (this.velocities[id].y / velocity) * this.maxVelocity;
+            }
+            this.velocities[id].x *= this.damping;
+            this.velocities[id].y *= this.damping;
+            const newX = node.position.x + this.velocities[id].x;
+            const newY = node.position.y + this.velocities[id].y;
+            node.position.x = newX;
+            node.position.y = newY;
+        });
+    }
+    calculateCenterAttractionForces() {
+        Object.keys(this.nodes).forEach(id => {
+            const node = this.nodes[id];
+            // Skip roots since it's not in the simulation
+            if (id === 'roots') {
+                return;
+            }
+            // Calculate distance from center (0, 0)
+            const dx = -node.position.x;
+            const dy = -node.position.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) + 0.01;
+            // Apply gentle attraction towards center
+            const force = this.centerAttractionStrength * this.temperature * distance;
+            const fx = (dx / distance) * force;
+            const fy = (dy / distance) * force;
+            this.forces[id].x += fx;
+            this.forces[id].y += fy;
+        });
+    }
+    step() {
+        this.calculateRepulsionForces();
+        this.calculateAttractionForces();
+        this.calculateCenterAttractionForces();
+        this.updatePositions();
+        // Cool down the system
+        if (this.temperature > this.minTemperature) {
+            this.temperature *= this.coolingRate;
+        }
+    }
+    start() {
+        this.running = true;
+        this.temperature = 1.0; // Reset temperature when starting
+        this.simulate();
+    }
+    stop() {
+        this.running = false;
+    }
+    reset() {
+        this.temperature = 1.0;
+        Object.keys(this.nodes).forEach(id => {
+            this.forces[id] = { x: 0, y: 0 };
+            this.velocities[id] = { x: 0, y: 0 };
+        });
+    }
+    simulate() {
+        if (!this.running)
+            return;
+        this.step();
+        requestAnimationFrame(() => this.simulate());
+    }
+}
+function createNodesFromTree(treeData, positions) {
+    const nodes = {};
+    function createNode(nodeData) {
+        // Skip roots from visual representation
+        if (nodeData.id !== 'roots') {
+            const position = positions[nodeData.id];
+            const actualNode = nodeData.node; // Get the actual io-core node reference
+            const simulatedNode = new SimulatedNode(nodeData.id, position, actualNode);
+            nodes[nodeData.id] = simulatedNode;
+        }
+        if (nodeData.children) {
+            nodeData.children.forEach(child => createNode(child));
+        }
+    }
+    createNode(treeData);
+    return nodes;
+}
+function connectNodes(treeData, nodes) {
+    const allConnections = [];
+    function connect(nodeData) {
+        // Skip roots connections - only connect from its children onwards
+        if (nodeData.id !== 'roots') {
+            const parentNode = nodes[nodeData.id];
+            if (nodeData.children && parentNode) {
+                nodeData.children.forEach(childData => {
+                    const childNode = nodes[childData.id];
+                    if (childNode) {
+                        const connection = parentNode.addChild(childNode);
+                        allConnections.push(connection);
+                    }
+                });
+            }
+        }
+        if (nodeData.children) {
+            nodeData.children.forEach(childData => {
+                connect(childData);
+            });
+        }
+    }
+    connect(treeData);
+    return allConnections;
+}
+const positions = calculateRadialPositions(roots);
+const nodes = createNodesFromTree(roots, positions);
+const connections = connectNodes(roots, nodes);
+const forceLayout = new ForceDirectedLayout(nodes, connections);
+forceLayout.start();
+const animate = () => {
+    render();
+    requestAnimationFrame(animate);
+};
+requestAnimationFrame(animate);
+export class IoChangeVisualization extends IoElement {
+    static get Style() {
+        return /* css */ `
+    :host {
+      flex: 1 1 auto;
+      overflow: hidden;
+    }
+    :host > io-collapsible {
+      position: absolute;
+      display: inline-block;
+      max-width: 250px;
+      margin: var(--io_spacing2);
+    }
+    :host h4 {
+      font-size: calc(var(--io_fontSize) * 1.1);
+      margin: var(--io_spacing) 0;
+      padding: 0 var(--io_spacing);
+    }
+    :host p {
+      font-size: calc(var(--io_fontSize) * 1);
+      margin: var(--io_spacing2) 0;
+      padding: var(--io_spacing);
+    }
+    :host span {
+      font-size: calc(var(--io_fontSize) * 1.2);
+      height: var(--io_lineHeight);
+      margin-left: var(--io_spacing2);
+      vertical-align: top;
+    }
+    `;
+    }
+    ready() {
+        this.render([
+            ioCollapsible({
+                label: 'Legend',
+                elements: [
+                    h4('Io-GUI Node Network Visualization'),
+                    p('Interactive visualization of the node relationship network using force-directed layout.'),
+                    div({ class: 'legend-item' }, [
+                        ioIcon({ class: 'legend-color', value: 'io:circle_fill', style: { fill: '#2196F3' } }),
+                        span('Node'),
+                    ]),
+                ]
+            }),
+        ]);
+    }
+}
+Register(IoChangeVisualization);
+export const ioChangeVisualization = function (arg0) {
+    return IoChangeVisualization.vConstructor(arg0);
+};
+//# sourceMappingURL=IoChangeVisualization.js.map

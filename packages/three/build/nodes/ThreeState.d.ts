@@ -1,5 +1,5 @@
 import { Node } from 'io-core';
-import { Scene, WebGPURenderer } from 'three/build/three.webgpu.js';
+import { Scene, WebGPURenderer } from 'three/webgpu';
 export declare class ThreeState extends Node {
     scene: Scene;
     renderer: WebGPURenderer | null;

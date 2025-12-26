@@ -5,9 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, Node, ReactiveProperty, Property } from 'io-core';
-import { Box3, Camera, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/build/three.webgpu.js';
 import { ThreeState } from './ThreeState.js';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Box3, Camera, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const box = new Box3();
 const sphere = new Sphere();
 const center = new Vector3();

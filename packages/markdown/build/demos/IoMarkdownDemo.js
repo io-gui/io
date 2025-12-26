@@ -1,1 +1,8 @@
-import{Register as o,IoElement as r}from"io-core";class IoMarkdownDemo extends r{ready(){}}o(IoMarkdownDemo);const e=IoMarkdownDemo.vConstructor;export{IoMarkdownDemo,e as ioMarkdownDemo};
+//@ts-nocheck
+import { Register, IoElement } from 'io-core';
+export class IoMarkdownDemo extends IoElement {
+    ready() { }
+}
+Register(IoMarkdownDemo);
+export const ioMarkdownDemo = IoMarkdownDemo.vConstructor;
+//# sourceMappingURL=IoMarkdownDemo.js.map
