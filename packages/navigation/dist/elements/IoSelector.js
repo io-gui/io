@@ -19,7 +19,7 @@ function importModule(path) {
             resolve(importPath);
         }
         else {
-            void import(importPath)
+            void import(/* @vite-ignore */ importPath)
                 .then(() => {
                 IMPORTED_PATHS[importPath] = true;
                 resolve(importPath);
