@@ -1,4 +1,4 @@
-// import { IoMarkdown } from 'io-markdown';
+// import { IoMarkdown } from '@io-gui/markdown';
 // const element = new IoMarkdown();
 export default class {
     run() {

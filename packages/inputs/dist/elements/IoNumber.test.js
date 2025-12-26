@@ -1,4 +1,4 @@
-import { IoNumber } from 'io-inputs';
+import { IoNumber } from '@io-gui/inputs';
 const element = new IoNumber();
 element.style.display = 'none';
 document.body.appendChild(element);

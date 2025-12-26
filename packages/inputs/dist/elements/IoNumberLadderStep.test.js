@@ -1,4 +1,4 @@
-import { IoNumberLadderStep } from 'io-inputs';
+import { IoNumberLadderStep } from '@io-gui/inputs';
 const step = new IoNumberLadderStep({ value: 1, label: '1' });
 step.style.display = 'none';
 document.body.appendChild(step);

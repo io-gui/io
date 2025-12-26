@@ -1,4 +1,4 @@
-import { applyNativeElementProps, constructElement, div } from 'io-core';
+import { applyNativeElementProps, constructElement, div } from '@io-gui/core';
 export default class {
     run() {
         describe('VDOM', () => {

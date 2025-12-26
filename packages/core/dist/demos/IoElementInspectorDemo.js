@@ -1,11 +1,11 @@
 //@ts-nocheck
-import { Register, IoElement, div, Storage as $, pre, code } from 'io-core';
-import { ioInspector } from 'io-editors';
-import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
-import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders';
-import { ioIcon } from 'io-icons';
-import { ioOptionSelect, MenuOption } from 'io-menus';
-import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from 'io-colors';
+import { Register, IoElement, div, Storage as $, pre, code } from '@io-gui/core';
+import { ioInspector } from '@io-gui/editors';
+import { ioField, ioNumber, ioString, ioBoolean, ioSwitch, ioButton } from '@io-gui/inputs';
+import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from '@io-gui/sliders';
+import { ioIcon } from '@io-gui/icons';
+import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ioColorRgba, ioColorSlider, ioColorSwatch, ioColorPicker } from '@io-gui/colors';
 import { ioStyleContainer } from './IoStyleContainer.js';
 // TODO: Implement IDs in menu options. use ID for selection
 const option = new MenuOption({
@@ -15,14 +15,14 @@ const option = new MenuOption({
                 { id: 'div', value: div('div content') },
             ]
         }, {
-            id: 'io-icons',
+            id: '@io-gui/icons',
             options: [
                 { id: 'io-icon:check', value: ioIcon({ value: 'io:check' }) },
                 { id: 'io-icon:close', value: ioIcon({ value: 'io:close' }) },
                 { id: 'io-icon:circle', value: ioIcon({ value: 'io:circle' }) },
             ]
         }, {
-            id: 'io-inputs',
+            id: '@io-gui/inputs',
             options: [
                 { id: 'io-boolean', value: ioBoolean() },
                 { id: 'io-button', value: ioButton({ label: 'Button' }) },
@@ -31,7 +31,7 @@ const option = new MenuOption({
                 { id: 'io-switch', value: ioSwitch() },
             ]
         }, {
-            id: 'io-sliders',
+            id: '@io-gui/sliders',
             options: [
                 { id: 'io-number-slider', value: ioNumberSlider() },
                 { id: 'io-number-slider-range', value: ioNumberSliderRange() },
@@ -40,7 +40,7 @@ const option = new MenuOption({
                 { id: 'io-slider-range', value: ioSliderRange() },
             ]
         }, {
-            id: 'io-colors',
+            id: '@io-gui/colors',
             options: [
                 { id: 'io-color-rgba', value: ioColorRgba() },
                 { id: 'io-color-slider:r', value: ioColorSlider({ channel: 'r' }) },

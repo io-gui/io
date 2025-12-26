@@ -1,5 +1,5 @@
-import { IoElement, IoElementProps, NodeArray } from 'io-core';
-import { MenuOption } from 'io-menus';
+import { IoElement, IoElementProps, NodeArray } from '@io-gui/core';
+import { MenuOption } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabsProps = IoElementProps & {
     tabs: NodeArray<Tab>;
@@ -15,5 +15,5 @@ export declare class IoTabs extends IoElement {
     onResized(): void;
     changed(): void;
 }
-export declare const ioTabs: (arg0: IoTabsProps) => import("io-core").VDOMElement;
+export declare const ioTabs: (arg0: IoTabsProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoTabs.d.ts.map

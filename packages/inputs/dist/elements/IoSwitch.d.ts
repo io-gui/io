@@ -6,5 +6,5 @@ export declare class IoSwitch extends IoBoolean {
     static get Style(): string;
     changed(): void;
 }
-export declare const ioSwitch: (arg0?: any) => import("io-core").VDOMElement;
+export declare const ioSwitch: (arg0?: any) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoSwitch.d.ts.map

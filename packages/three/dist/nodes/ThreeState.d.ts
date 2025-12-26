@@ -1,4 +1,4 @@
-import { Node } from 'io-core';
+import { Node } from '@io-gui/core';
 import { Scene, WebGPURenderer } from 'three/webgpu';
 export declare class ThreeState extends Node {
     scene: Scene;

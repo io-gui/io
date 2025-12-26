@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-core';
+import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type IoMarkdownProps = IoElementProps & {
     src?: string;
     strip?: string[];
@@ -20,5 +20,5 @@ export declare class IoMarkdown extends IoElement {
     onResized(): void;
     srcChanged(): void;
 }
-export declare const ioMarkdown: (arg0?: IoMarkdownProps) => import("io-core").VDOMElement;
+export declare const ioMarkdown: (arg0?: IoMarkdownProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoMarkdown.d.ts.map

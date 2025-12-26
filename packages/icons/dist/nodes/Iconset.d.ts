@@ -1,4 +1,4 @@
-import { Node } from 'io-core';
+import { Node } from '@io-gui/core';
 export declare const IconsetDB: Record<string, Record<string, string>>;
 /**
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace:id` attribute.

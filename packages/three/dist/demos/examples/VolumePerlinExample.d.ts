@@ -1,4 +1,4 @@
-import { ThreeState } from 'io-three';
+import { ThreeState } from '@io-gui/three';
 export declare class VolumePerlinExample extends ThreeState {
     constructor();
 }

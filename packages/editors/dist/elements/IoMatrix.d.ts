@@ -12,5 +12,5 @@ export declare class IoMatrix extends IoVectorArray {
     _onNumberValueInput(event: CustomEvent): void;
     valueChanged(): void;
 }
-export declare const ioMatrix: (arg0?: IoMatrixProps) => import("io-core").VDOMElement;
+export declare const ioMatrix: (arg0?: IoMatrixProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoMatrix.d.ts.map

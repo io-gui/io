@@ -1,4 +1,4 @@
-import { IoNumberSlider } from 'io-sliders';
+import { IoNumberSlider } from '@io-gui/sliders';
 export default class {
     element: IoNumberSlider;
     constructor();

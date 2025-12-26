@@ -1,4 +1,4 @@
-import { IoInspector } from 'io-editors';
+import { IoInspector } from '@io-gui/editors';
 export default class {
     element = new IoInspector();
     constructor() {

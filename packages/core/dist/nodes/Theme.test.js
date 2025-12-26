@@ -1,4 +1,4 @@
-import { ThemeSingleton } from 'io-core';
+import { ThemeSingleton } from '@io-gui/core';
 const theme = ThemeSingleton;
 const binding = theme._reactiveProperties.get('themeID').binding;
 export default class {

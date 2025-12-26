@@ -1,4 +1,4 @@
-import { AnyConstructor } from 'io-core';
+import { AnyConstructor } from '@io-gui/core';
 export declare const SKIPPED_PROPERTIES: string[];
 export declare function getAllPropertyNames(obj: object): string[];
 type PropertyIdentifier = string | RegExp;

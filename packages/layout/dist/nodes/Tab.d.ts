@@ -1,4 +1,4 @@
-import { Node } from 'io-core';
+import { Node } from '@io-gui/core';
 export type TabProps = {
     id: string;
     label?: string;

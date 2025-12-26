@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, ReactivityType } from 'io-core';
+import { IoElement, IoElementProps, WithBinding, ReactivityType } from '@io-gui/core';
 export type IoColorBaseProps = IoElementProps & {
     value?: WithBinding<{
         r: number;

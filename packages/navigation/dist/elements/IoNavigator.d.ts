@@ -1,5 +1,5 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-core';
-import { MenuOption } from 'io-menus';
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { MenuOption } from '@io-gui/menus';
 import { CachingType } from './IoSelector.js';
 export type MenuPositionType = 'top' | 'left' | 'right';
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none';

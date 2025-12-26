@@ -1,4 +1,4 @@
-import { Node } from 'io-core';
+import { Node } from '@io-gui/core';
 export declare class TodoItemModel extends Node {
     title: string;
     completed: boolean;

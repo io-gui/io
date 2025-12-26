@@ -1,4 +1,4 @@
-import { IoPropertyEditor } from 'io-editors';
+import { IoPropertyEditor } from '@io-gui/editors';
 export default class {
     element: IoPropertyEditor;
     constructor();

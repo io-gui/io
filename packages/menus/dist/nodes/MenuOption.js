@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var MenuOption_1;
-import { Node, Register, ReactiveProperty, NodeArray } from 'io-core';
+import { Node, Register, ReactiveProperty, NodeArray } from '@io-gui/core';
 let MenuOption = MenuOption_1 = class MenuOption extends Node {
     static get Listeners() {
         return {

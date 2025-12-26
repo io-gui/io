@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from 'io-core';
+import { IoElement, IoElementProps } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 type TodoListProps = IoElementProps & {
     model?: TodoListModel;
@@ -12,6 +12,6 @@ export declare class TodoList extends IoElement {
     modelMutated(): void;
     changed(): void;
 }
-export declare const todoList: (arg0: TodoListProps) => import("io-core").VDOMElement;
+export declare const todoList: (arg0: TodoListProps) => import("@io-gui/core").VDOMElement;
 export {};
 //# sourceMappingURL=TodoList.d.ts.map

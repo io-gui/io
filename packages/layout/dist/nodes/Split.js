@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var Split_1;
-import { Node, NodeArray, ReactiveProperty, Register } from 'io-core';
+import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core';
 import { Panel } from './Panel.js';
 let Split = Split_1 = class Split extends Node {
     constructor(args) {

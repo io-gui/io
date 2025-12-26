@@ -1,4 +1,4 @@
-import { IoField, IoFieldProps } from 'io-inputs';
+import { IoField, IoFieldProps } from '@io-gui/inputs';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabProps = IoFieldProps & {
     tab: Tab;
@@ -27,5 +27,5 @@ export declare class IoTab extends IoField {
     tabMutated(): void;
     changed(): void;
 }
-export declare const ioTab: (arg0: IoTabProps) => import("io-core").VDOMElement;
+export declare const ioTab: (arg0: IoTabProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoTab.d.ts.map

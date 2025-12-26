@@ -1,4 +1,4 @@
-import { IoGl, IoElementProps, WithBinding, ListenerDefinition } from 'io-core';
+import { IoGl, IoElementProps, WithBinding, ListenerDefinition } from '@io-gui/core';
 export type IoSliderBaseProps = IoElementProps & {
     value?: WithBinding<number | [number, number]>;
     step?: number | [number, number];

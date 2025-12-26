@@ -1,4 +1,4 @@
-import { IoElement, Change, IoElementProps, WithBinding } from 'io-core';
+import { IoElement, Change, IoElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '../nodes/MenuOption.js';
 export type SelectBy = 'value' | 'id';
 export type IoOptionSelectProps = IoElementProps & {
@@ -26,5 +26,5 @@ export declare class IoOptionSelect extends IoElement {
     optionChanged(change: Change): void;
     changed(): void;
 }
-export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("io-core").VDOMElement;
+export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoOptionSelect.d.ts.map

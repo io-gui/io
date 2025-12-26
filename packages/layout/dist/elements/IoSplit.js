@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, Property, ThemeSingleton } from 'io-core';
-import { MenuOption } from 'io-menus';
+import { Register, ReactiveProperty, IoElement, Property, ThemeSingleton } from '@io-gui/core';
+import { MenuOption } from '@io-gui/menus';
 import { ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
 import { Split } from '../nodes/Split.js';

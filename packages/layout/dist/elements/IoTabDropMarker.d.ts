@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from 'io-core';
+import { IoElement, IoElementProps } from '@io-gui/core';
 import { SplitDirection } from '../nodes/Split.js';
 import { IoPanel } from './IoPanel.js';
 declare class IoTabDropMarker extends IoElement {

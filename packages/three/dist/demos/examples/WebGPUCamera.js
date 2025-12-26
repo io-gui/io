@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { PerspectiveCamera, OrthographicCamera, CameraHelper, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu';
-import { Register } from 'io-core';
-import { ThreeState } from 'io-three';
+import { Register } from '@io-gui/core';
+import { ThreeState } from '@io-gui/three';
 const frustumSize = 600;
 let WebGPUCamera = class WebGPUCamera extends ThreeState {
     perspectiveCamera;

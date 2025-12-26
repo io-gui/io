@@ -1,5 +1,5 @@
-import { IconsetSingleton } from 'io-icons';
-import { IoButton } from 'io-inputs';
+import { IconsetSingleton } from '@io-gui/icons';
+import { IoButton } from '@io-gui/inputs';
 const element = new IoButton();
 element.style.display = 'none';
 document.body.appendChild(element);

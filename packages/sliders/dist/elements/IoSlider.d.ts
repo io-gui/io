@@ -1,4 +1,4 @@
-import { IoGl, IoElementProps, ListenerDefinition, WithBinding } from 'io-core';
+import { IoGl, IoElementProps, ListenerDefinition, WithBinding } from '@io-gui/core';
 export type IoSliderProps = IoElementProps & {
     value?: WithBinding<number>;
     step?: number;
@@ -58,5 +58,5 @@ export declare class IoSlider extends IoGl {
     minChanged(): void;
     maxChanged(): void;
 }
-export declare const ioSlider: (arg0?: IoSliderProps) => import("io-core").VDOMElement;
+export declare const ioSlider: (arg0?: IoSliderProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoSlider.d.ts.map

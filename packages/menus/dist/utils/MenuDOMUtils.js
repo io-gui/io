@@ -1,4 +1,4 @@
-import { IoOverlaySingleton } from 'io-core';
+import { IoOverlaySingleton } from '@io-gui/core';
 const MenuElementTags = ['io-menu-item', 'io-menu-options', 'io-menu-hamburger', 'io-option-select', 'io-string', 'io-menu-tree'];
 const MenuElementTagsSelector = MenuElementTags.join(', ');
 export function getHoveredMenuItem(event) {

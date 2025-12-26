@@ -1,4 +1,4 @@
-import { Node } from 'io-core';
+import { Node } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
 export declare class TodoListModel extends Node {
     items: TodoItemModel[];

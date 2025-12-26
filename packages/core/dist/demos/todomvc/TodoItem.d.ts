@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps } from 'io-core';
+import { IoElement, IoElementProps } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
 import { TodoListModel } from './TodoListModel.js';
 type TodoItemProps = IoElementProps & {
@@ -19,6 +19,6 @@ export declare class TodoItem extends IoElement {
     onBlur(): void;
     onInputKey(event: CustomEvent): void;
 }
-export declare const todoItem: (arg0: TodoItemProps) => import("io-core").VDOMElement;
+export declare const todoItem: (arg0: TodoItemProps) => import("@io-gui/core").VDOMElement;
 export {};
 //# sourceMappingURL=TodoItem.d.ts.map

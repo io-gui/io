@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { IoPropertyEditor } from 'io-editors';
+import { IoPropertyEditor } from '@io-gui/editors';
 // const testValue = {
 //   'number': 0.5,
 //   'string': 'hello',

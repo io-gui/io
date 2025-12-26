@@ -1,4 +1,4 @@
-import { IoObject } from 'io-editors';
+import { IoObject } from '@io-gui/editors';
 export default class {
     element: IoObject;
     constructor();

@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, ReactivityType } from 'io-core';
+import { IoElement, IoElementProps, ReactivityType } from '@io-gui/core';
 import { EditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
@@ -31,5 +31,5 @@ export declare class IoPropertyEditor extends IoElement {
     changeThrottled(): void;
     dispose(): void;
 }
-export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps) => import("io-core").VDOMElement;
+export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoPropertyEditor.d.ts.map

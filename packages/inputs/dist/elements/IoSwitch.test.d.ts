@@ -1,4 +1,4 @@
-import { IoSwitch } from 'io-inputs';
+import { IoSwitch } from '@io-gui/inputs';
 export default class {
     element: IoSwitch;
     constructor();

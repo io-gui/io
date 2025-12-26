@@ -4,9 +4,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from 'io-core';
-import { ioSelector } from 'io-navigation';
-import { MenuOption } from 'io-menus';
+import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { ioSelector } from '@io-gui/navigation';
+import { MenuOption } from '@io-gui/menus';
 import { ioTabs } from './IoTabs.js';
 import { Tab } from '../nodes/Tab.js';
 import { IoLayout } from './IoLayout.js';

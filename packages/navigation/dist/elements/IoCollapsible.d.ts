@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-core';
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type IoCollapsibleProps = IoElementProps & {
     elements?: VDOMElement[];
     label?: string;

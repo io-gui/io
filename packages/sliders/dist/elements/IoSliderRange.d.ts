@@ -1,4 +1,4 @@
-import { WithBinding } from 'io-core';
+import { WithBinding } from '@io-gui/core';
 import { IoSliderBase, IoSliderBaseProps } from './IoSliderBase.js';
 export type IoSliderRangeProps = IoSliderBaseProps & {
     value?: WithBinding<[number, number]>;
@@ -22,5 +22,5 @@ export declare class IoSliderRange extends IoSliderBase {
     onPointermoveThrottled(event: PointerEvent): void;
     static get Frag(): string;
 }
-export declare const ioSliderRange: (arg0?: IoSliderRangeProps) => import("io-core").VDOMElement;
+export declare const ioSliderRange: (arg0?: IoSliderRangeProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoSliderRange.d.ts.map

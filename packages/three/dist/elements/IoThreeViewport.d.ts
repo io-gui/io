@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, ReactivityType, Binding } from 'io-core';
+import { IoElement, IoElementProps, ReactivityType, Binding } from '@io-gui/core';
 import { ThreeState } from '../nodes/ThreeState.js';
 export type IoThreeViewportProps = IoElementProps & {
     state: ThreeState | Binding<ThreeState>;
@@ -32,5 +32,5 @@ export declare class IoThreeViewport extends IoElement {
     renderViewport(): void;
     dispose(): void;
 }
-export declare const ioThreeViewport: (arg0: IoThreeViewportProps) => import("io-core").VDOMElement;
+export declare const ioThreeViewport: (arg0: IoThreeViewportProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoThreeViewport.d.ts.map

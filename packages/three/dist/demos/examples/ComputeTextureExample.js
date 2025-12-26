@@ -6,8 +6,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, NearestFilter } from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
-import { Register } from 'io-core';
-import { ThreeState } from 'io-three';
+import { Register } from '@io-gui/core';
+import { ThreeState } from '@io-gui/three';
 let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
     storageTexture;
     computeNode;
@@ -42,13 +42,7 @@ let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
     }
     onRendererInitialized(renderer) {
         super.onRendererInitialized(renderer);
-        new Promise((resolve, reject) => {
-            renderer.compute(this.computeNode).then(resolve).catch(reject);
-        }).then(() => {
-            console.log('compute node computed');
-        }).catch(error => {
-            console.error('compute node computation failed', error);
-        });
+        renderer.compute(this.computeNode);
     }
 };
 ComputeTextureExample = __decorate([

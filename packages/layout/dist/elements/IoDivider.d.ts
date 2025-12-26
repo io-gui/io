@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, ListenerDefinition } from 'io-core';
+import { IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
 export type IoDividerProps = IoElementProps & {
     orientation: 'vertical' | 'horizontal';
     index: number;
@@ -21,5 +21,5 @@ export declare class IoDivider extends IoElement {
     onTouchmove(event: TouchEvent): void;
     onTouchend(): void;
 }
-export declare const ioDivider: (arg0: IoDividerProps) => import("io-core").VDOMElement;
+export declare const ioDivider: (arg0: IoDividerProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoDivider.d.ts.map

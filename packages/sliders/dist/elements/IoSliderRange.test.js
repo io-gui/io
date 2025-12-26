@@ -1,5 +1,5 @@
-import { nextQueue } from 'io-core';
-import { IoSliderRange } from 'io-sliders';
+import { nextQueue } from '@io-gui/core';
+import { IoSliderRange } from '@io-gui/sliders';
 export default class {
     element = new IoSliderRange();
     constructor() {

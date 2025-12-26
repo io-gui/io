@@ -1,4 +1,4 @@
-import { IoString } from 'io-inputs';
+import { IoString } from '@io-gui/inputs';
 import { IoMenuItem } from '../elements/IoMenuItem.js';
 import { IoMenuOptions } from '../elements/IoMenuOptions.js';
 import { IoMenuTree } from '../elements/IoMenuTree.js';

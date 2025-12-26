@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 //@ts-nocheck
-import { IoElement, Register, section, input, label, ul, ReactiveProperty } from 'io-core';
+import { IoElement, Register, section, input, label, ul, ReactiveProperty } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 import { todoItem } from './TodoItem.js';
 export class TodoList extends IoElement {

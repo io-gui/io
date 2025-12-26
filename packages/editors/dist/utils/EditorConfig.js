@@ -1,8 +1,8 @@
-import { IoElement, IoGl, Theme, Color, Node, } from 'io-core';
-import { ioString, ioNumber, ioSwitch, ioField } from 'io-inputs';
-import { MenuOption, ioOptionSelect } from 'io-menus';
-import { ioNumberSlider } from 'io-sliders';
-import { ioColorRgba } from 'io-colors';
+import { IoElement, IoGl, Theme, Color, Node, } from '@io-gui/core';
+import { ioString, ioNumber, ioSwitch, ioField } from '@io-gui/inputs';
+import { MenuOption, ioOptionSelect } from '@io-gui/menus';
+import { ioNumberSlider } from '@io-gui/sliders';
+import { ioColorRgba } from '@io-gui/colors';
 import { ioVectorArray } from '../elements/IoVectorArray.js';
 import { ioObject } from '../elements/IoObject.js';
 import { getAllPropertyNames } from './EditorGroups.js';

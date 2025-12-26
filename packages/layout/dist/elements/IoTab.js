@@ -4,11 +4,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span, ThemeSingleton } from 'io-core';
-import { IoField, ioField, ioString } from 'io-inputs';
-import { IoContextEditorSingleton } from 'io-editors';
-import { IconsetDB, ioIcon } from 'io-icons';
-import { MenuOption, ioOptionSelect } from 'io-menus';
+import { Register, ReactiveProperty, span, ThemeSingleton } from '@io-gui/core';
+import { IoField, ioField, ioString } from '@io-gui/inputs';
+import { IoContextEditorSingleton } from '@io-gui/editors';
+import { IconsetDB, ioIcon } from '@io-gui/icons';
+import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
 import { tabDragIconSingleton } from './IoTabDragIcon.js';
 const icons = [];

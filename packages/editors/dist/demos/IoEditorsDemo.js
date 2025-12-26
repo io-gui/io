@@ -5,11 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 //@ts-nocheck
-import { Register, IoElement, div, ReactiveProperty } from 'io-core';
-import { MenuOption, ioOptionSelect } from 'io-menus';
-import { ioSlider } from 'io-sliders';
-import { ioString, ioNumber, ioBoolean, ioButton } from 'io-inputs';
-import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from 'io-editors';
+import { Register, IoElement, div, ReactiveProperty } from '@io-gui/core';
+import { MenuOption, ioOptionSelect } from '@io-gui/menus';
+import { ioSlider } from '@io-gui/sliders';
+import { ioString, ioNumber, ioBoolean, ioButton } from '@io-gui/inputs';
+import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from '@io-gui/editors';
 export class IoEditorsDemo extends IoElement {
     static get Style() {
         return /* css */ `

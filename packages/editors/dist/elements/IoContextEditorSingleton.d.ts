@@ -1,4 +1,4 @@
-import { NudgeDirection } from 'io-core';
+import { NudgeDirection } from '@io-gui/core';
 import { IoPropertyEditor } from './IoPropertyEditor.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';

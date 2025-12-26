@@ -1,4 +1,4 @@
-import { IoSliderRange } from 'io-sliders';
+import { IoSliderRange } from '@io-gui/sliders';
 export default class {
     element: IoSliderRange;
     constructor();

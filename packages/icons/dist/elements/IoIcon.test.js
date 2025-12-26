@@ -1,4 +1,4 @@
-import { IoIcon, IconsetSingleton } from 'io-icons';
+import { IoIcon, IconsetSingleton } from '@io-gui/icons';
 const element = new IoIcon({ value: '' });
 element.style.display = 'none';
 document.body.appendChild(element);

@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, ReactiveProperty, div, Property } from 'io-core';
-import { ioBoolean } from 'io-inputs';
+import { IoElement, Register, ReactiveProperty, div, Property } from '@io-gui/core';
+import { ioBoolean } from '@io-gui/inputs';
 /**
  * An element with collapsible content.
  * When clicked or activated by space/enter key, it toggles the visibility of the child elements defined as `elements` property.

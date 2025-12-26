@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton, Theme } from 'io-core';
+import { Register, IoElement, ThemeSingleton, Theme } from '@io-gui/core';
 function lerp(a, b, t) {
     return a + (b - a) * t;
 }

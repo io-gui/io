@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from 'io-core';
+import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type IoNumberSliderProps = IoElementProps & {
     value?: WithBinding<number>;
     step?: number;
@@ -24,5 +24,5 @@ export declare class IoNumberSlider extends IoElement {
     ready(): void;
     changed(): void;
 }
-export declare const ioNumberSlider: (arg0?: IoNumberSliderProps) => import("io-core").VDOMElement;
+export declare const ioNumberSlider: (arg0?: IoNumberSliderProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoNumberSlider.d.ts.map

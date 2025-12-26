@@ -1,5 +1,5 @@
-import { nextQueue } from 'io-core';
-import { IoColorBase } from 'io-colors';
+import { nextQueue } from '@io-gui/core';
+import { IoColorBase } from '@io-gui/colors';
 const element = new IoColorBase();
 element.style.display = 'none';
 document.body.appendChild(element);

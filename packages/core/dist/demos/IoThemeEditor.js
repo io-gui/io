@@ -1,9 +1,9 @@
 //@ts-nocheck
-import { Register, IoElement, ThemeSingleton } from 'io-core';
-import { MenuOption, ioOptionSelect } from 'io-menus';
-import { ioButton, ioField } from 'io-inputs';
-import { ioNumberSlider } from 'io-sliders';
-import { ioColorRgba } from 'io-colors';
+import { Register, IoElement, ThemeSingleton } from '@io-gui/core';
+import { MenuOption, ioOptionSelect } from '@io-gui/menus';
+import { ioButton, ioField } from '@io-gui/inputs';
+import { ioNumberSlider } from '@io-gui/sliders';
+import { ioColorRgba } from '@io-gui/colors';
 export class IoThemeEditor extends IoElement {
     static get Style() {
         return /* css */ `

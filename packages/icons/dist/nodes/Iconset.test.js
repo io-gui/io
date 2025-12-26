@@ -1,4 +1,4 @@
-import { IconsetSingleton } from 'io-icons';
+import { IconsetSingleton } from '@io-gui/icons';
 export default class {
     run() {
         describe('Iconset.test', () => {

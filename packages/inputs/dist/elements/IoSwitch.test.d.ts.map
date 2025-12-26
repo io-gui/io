@@ -1,1 +1,1 @@
-{"version":3,"file":"IoSwitch.test.d.ts","sourceRoot":"","sources":["../../src/elements/IoSwitch.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,WAAW,CAAA;AAEpC,MAAM,CAAC,OAAO;IACZ,OAAO,WAAiB;;IAKxB,GAAG;CA6BJ"}
+{"version":3,"file":"IoSwitch.test.d.ts","sourceRoot":"","sources":["../../src/elements/IoSwitch.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,gBAAgB,CAAA;AAEzC,MAAM,CAAC,OAAO;IACZ,OAAO,WAAiB;;IAKxB,GAAG;CA6BJ"}

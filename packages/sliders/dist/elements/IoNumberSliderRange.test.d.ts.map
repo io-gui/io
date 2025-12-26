@@ -1,1 +1,1 @@
-{"version":3,"file":"IoNumberSliderRange.test.d.ts","sourceRoot":"","sources":["../../src/elements/IoNumberSliderRange.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,mBAAmB,EAAE,MAAM,YAAY,CAAA;AAEhD,MAAM,CAAC,OAAO;IACZ,OAAO,sBAA4B;;IAKnC,KAAK;IAML,GAAG;CA6CJ"}
+{"version":3,"file":"IoNumberSliderRange.test.d.ts","sourceRoot":"","sources":["../../src/elements/IoNumberSliderRange.test.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,mBAAmB,EAAE,MAAM,iBAAiB,CAAA;AAErD,MAAM,CAAC,OAAO;IACZ,OAAO,sBAA4B;;IAKnC,KAAK;IAML,GAAG;CA6CJ"}

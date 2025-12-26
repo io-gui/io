@@ -1,7 +1,7 @@
 //@ts-nocheck
-import { IoElement, Register, div, span, h4, p, NODES } from 'io-core';
-import { ioCollapsible } from 'io-navigation';
-import { ioIcon } from 'io-icons';
+import { IoElement, Register, div, span, h4, p, NODES } from '@io-gui/core';
+import { ioCollapsible } from '@io-gui/navigation';
+import { ioIcon } from '@io-gui/icons';
 const nodeMap = new Map();
 const MAX_CHILDREN = 24;
 const roots = {

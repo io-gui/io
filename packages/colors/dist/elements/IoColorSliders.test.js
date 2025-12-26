@@ -1,4 +1,4 @@
-import { IoColorSlider } from 'io-colors';
+import { IoColorSlider } from '@io-gui/colors';
 // import { expect } from 'chai';
 const element = new IoColorSlider();
 element.style.display = 'none';

@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding, VDOMElement } from 'io-core';
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { EditorConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';

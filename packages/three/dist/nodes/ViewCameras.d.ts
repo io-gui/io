@@ -1,4 +1,4 @@
-import { Node, NodeProps, Binding } from 'io-core';
+import { Node, NodeProps, Binding } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport.js';
 import { ThreeState } from './ThreeState.js';
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';

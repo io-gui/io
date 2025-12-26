@@ -1,4 +1,4 @@
-import { IoButton, IoButtonProps } from 'io-inputs';
+import { IoButton, IoButtonProps } from '@io-gui/inputs';
 export type IoPropertyLinkProps = IoButtonProps & {
     value?: Object;
     showName?: boolean;
@@ -11,5 +11,5 @@ export declare class IoPropertyLink extends IoButton {
     valueMutated(): void;
     changed(): void;
 }
-export declare const ioPropertyLink: (arg0?: IoPropertyLinkProps) => import("io-core").VDOMElement;
+export declare const ioPropertyLink: (arg0?: IoPropertyLinkProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoPropertyLink.d.ts.map

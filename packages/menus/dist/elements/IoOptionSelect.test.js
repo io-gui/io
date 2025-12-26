@@ -1,4 +1,4 @@
-import { IoOptionSelect, MenuOption } from 'io-menus';
+import { IoOptionSelect, MenuOption } from '@io-gui/menus';
 const element = new IoOptionSelect({ value: '', option: new MenuOption({ id: 'test', options: [] }) });
 document.body.appendChild(element);
 element.style.display = 'none';

@@ -1,5 +1,5 @@
 import { PerspectiveCamera, OrthographicCamera, CameraHelper, Group, Mesh } from 'three/webgpu';
-import { ThreeState } from 'io-three';
+import { ThreeState } from '@io-gui/three';
 export declare class WebGPUCamera extends ThreeState {
     perspectiveCamera: PerspectiveCamera;
     orthographicCamera: OrthographicCamera;

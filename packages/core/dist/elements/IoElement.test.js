@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 //@ts-nocheck
-import { Register, IoElement, Node } from 'io-core';
+import { Register, IoElement, Node } from '@io-gui/core';
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element);

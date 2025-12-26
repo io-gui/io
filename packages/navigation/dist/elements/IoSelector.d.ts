@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from 'io-core';
+import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type CachingType = 'proactive' | 'reactive' | 'none';
 export type IoSelectorProps = IoElementProps & {
     elements?: VDOMElement[];

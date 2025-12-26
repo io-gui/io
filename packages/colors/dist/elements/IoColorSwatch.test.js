@@ -1,4 +1,4 @@
-import { IoColorSwatch } from 'io-colors';
+import { IoColorSwatch } from '@io-gui/colors';
 // import { expect } from 'chai';
 const element = new IoColorSwatch();
 element.style.display = 'none';

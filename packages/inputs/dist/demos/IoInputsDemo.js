@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-core';
-import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from 'io-inputs';
+import { Register, IoElement, div } from '@io-gui/core';
+import { ioField, ioString, ioNumber, ioBoolean, ioSwitch, ioButton } from '@io-gui/inputs';
 export class IoInputsDemo extends IoElement {
     static get Style() {
         return /* css */ `

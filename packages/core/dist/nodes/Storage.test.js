@@ -1,4 +1,4 @@
-import { StorageNode, Storage, Binding } from 'io-core';
+import { StorageNode, Storage, Binding } from '@io-gui/core';
 async function afterHashChange() {
     return new Promise((resolve) => {
         self.addEventListener('hashchange', () => {

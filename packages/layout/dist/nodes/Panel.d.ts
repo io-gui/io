@@ -1,4 +1,4 @@
-import { Node, NodeArray } from 'io-core';
+import { Node, NodeArray } from '@io-gui/core';
 import { Tab, TabProps } from './Tab.js';
 export type PanelProps = {
     tabs: Array<TabProps>;

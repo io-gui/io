@@ -1,4 +1,4 @@
-import { WithBinding } from 'io-core';
+import { WithBinding } from '@io-gui/core';
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoStringProps = IoFieldProps & {
     value?: WithBinding<string>;
@@ -30,5 +30,5 @@ export declare class IoString extends IoField {
     valueChanged(): void;
     changed(): void;
 }
-export declare const ioString: (arg0?: IoStringProps) => import("io-core").VDOMElement;
+export declare const ioString: (arg0?: IoStringProps) => import("@io-gui/core").VDOMElement;
 //# sourceMappingURL=IoString.d.ts.map

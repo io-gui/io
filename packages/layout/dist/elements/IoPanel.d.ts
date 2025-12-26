@@ -1,5 +1,5 @@
-import { IoElement, VDOMElement, IoElementProps } from 'io-core';
-import { MenuOption } from 'io-menus';
+import { IoElement, VDOMElement, IoElementProps } from '@io-gui/core';
+import { MenuOption } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
 import { Panel } from '../nodes/Panel.js';
 import { SplitDirection } from '../nodes/Split.js';

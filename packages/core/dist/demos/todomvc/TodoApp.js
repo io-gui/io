@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from 'io-core';
+import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from '@io-gui/core';
 import { TodoListModel } from './TodoListModel.js';
 import { todoInput } from './TodoInput.js';
 import { todoList } from './TodoList.js';

@@ -1,4 +1,4 @@
-import { Node, WithBinding, NodeArray } from 'io-core';
+import { Node, WithBinding, NodeArray } from '@io-gui/core';
 export type MenuOptionMode = 'select' | 'toggle' | 'none';
 export type MenuOptionProps = {
     id?: string;
