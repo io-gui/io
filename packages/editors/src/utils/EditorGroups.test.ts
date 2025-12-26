@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
+import { getEditorGroups, registerEditorGroups } from '@io-gui/editors'
 
 describe('EditorGroups.test', () => {
-  it('should return default groups for an object', () => {
-  })
-  it('should return default groups for a HTMLElement', () => {
+  it('Should be defined', () => {
+    expect(getEditorGroups).toBeDefined()
+    expect(registerEditorGroups).toBeDefined()
   })
 })

@@ -1,4 +1,2 @@
-export default class {
-    run(): void;
-}
+export {};
 //# sourceMappingURL=ProtoChain.test.d.ts.map

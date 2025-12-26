@@ -1,4 +1,2 @@
-export default class {
-    run(): void;
-}
+export {};
 //# sourceMappingURL=EventDispatcher.test.d.ts.map

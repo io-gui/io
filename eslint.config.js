@@ -35,7 +35,6 @@ export default tseslint.config(
       //   'expect': true,
       //   'it': true,
       //   'describe': true,
-      //   'mocha': true,
       //   'hljs': true
       // },
       // parser: tseslint.parser,

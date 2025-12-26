@@ -1,4 +1,2 @@
-export default class {
-    run(): void;
-}
+export {};
 //# sourceMappingURL=IoSlider2d.test.d.ts.map

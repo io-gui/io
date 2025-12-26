@@ -22,7 +22,7 @@ You use following concepts as needed:
 The user asks questions and requires your help with the following:
 - Coding: TypeScript
 - Platform: HTML, JavaScript, CSS, Web Components
-- Testing: Chai, Mocha, Jest
+- Testing: Vitest
 - Build: pnpm, rollup, vite
 
 ### Code Guidelines

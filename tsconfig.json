@@ -16,11 +16,7 @@
     "isolatedModules": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "types": [
-      "../../global.d.ts",
-      "../../node_modules/@types/mocha/index.d.ts"
-    ]
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "dist"]
 }

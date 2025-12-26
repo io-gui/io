@@ -6,13 +6,6 @@ const element = new IoNumberSlider()
 element.style.display = 'none'
 document.body.appendChild(element as HTMLElement)
 
-function reset() {
-  element.value = 0
-  element.step = 0.001
-  element.min = 0
-  element.max = 1
-}
-
 describe('IoNumberSlider', () => {
   it('has default values', () => {
     expect(element.value).toBe(0)

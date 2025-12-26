@@ -1,4 +1,2 @@
-export default class {
-    run(): void;
-}
+export {};
 //# sourceMappingURL=IoColorSwatch.test.d.ts.map
