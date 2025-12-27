@@ -1,5 +1,4 @@
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js';
-import { ReactivityType } from '../nodes/Node.js';
 import { ThemeSingleton } from '../nodes/Theme.js';
 import { IoElement, IoElementProps } from './IoElement.js';
 export declare class IoGl extends IoElement {
@@ -8,7 +7,6 @@ export declare class IoGl extends IoElement {
     theme: typeof ThemeSingleton;
     size: [number, number];
     pxRatio: number;
-    reactivity: ReactivityType;
     static get Vert(): string;
     static get GlUtils(): string;
     static get Frag(): string;

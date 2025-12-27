@@ -7,8 +7,9 @@ describe('IoOptionSelect', () => {
     it('has default values', () => {
     });
     it('matches values', () => {
-        expect(element.textContent).toBe('');
+        expect(element.textContent).toBe('test');
         element.value = 2;
+        expect(element.textContent).toBe('2');
     });
     it('has tabIndex attribute', () => {
     });

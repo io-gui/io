@@ -18,7 +18,7 @@ export type IoObjectProps = IoElementProps & {
 export declare class IoObject extends IoElement {
     static get Style(): string;
     value: Record<string, any> | any[];
-    properties: string[];
+    properties: string[] | null;
     labeled: boolean;
     label: string;
     expanded: boolean;

@@ -19,7 +19,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "/src/",
-    "/build/",
+    "/dist/",
+    "/bundle/",
     "/demos/",
     "/LICENSE",
     "/README.md"

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm -r build",
+    "bundle": "node bundle.js",
     "lint": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",

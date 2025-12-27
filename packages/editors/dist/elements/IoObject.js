@@ -63,7 +63,7 @@ let IoObject = class IoObject extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty()
+    ReactiveProperty({ type: Object })
 ], IoObject.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })
