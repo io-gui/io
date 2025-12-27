@@ -16,7 +16,7 @@ export type IoPropertyEditorProps = IoElementProps & {
  **/
 export declare class IoPropertyEditor extends IoElement {
     static get Style(): string;
-    value: Object | Array<any>;
+    value: object | Array<any>;
     properties: string[];
     labeled: boolean;
     orientation: 'vertical' | 'horizontal';

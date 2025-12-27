@@ -10,7 +10,7 @@ import { ioIcon } from '@io-gui/icons';
 import { getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
-let timeoutOpen = -1;
+let timeoutOpen = undefined;
 let hovered;
 let prevHovered;
 export function onOverlayPointerdown(event) {

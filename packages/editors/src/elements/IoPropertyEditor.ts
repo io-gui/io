@@ -73,7 +73,7 @@ export class IoPropertyEditor extends IoElement {
   // declare reactivity: ReactivityType
 
   @ReactiveProperty()
-  declare value: Object | Array<any>
+  declare value: object | Array<any>
 
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[]
@@ -101,9 +101,9 @@ export class IoPropertyEditor extends IoElement {
 
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation()
-    const id = (event.target as HTMLElement).id as keyof typeof this.value
+    const id = (event.target as HTMLElement).id
     if (id !== undefined) {
-      this.value[id] = event.detail.value
+      (this.value as Record<string, any>)[id] = event.detail.value
       if (!(this.value as Node)._isNode) {
         this.dispatchMutation(this.value)
       }

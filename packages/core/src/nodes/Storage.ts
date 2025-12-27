@@ -15,6 +15,7 @@ class EmulatedLocalStorage {
       return self.localStorage.getItem('Storage:user-permitted') === 'true'
     } catch (error) {
       console.warn('Storage: Cannot access localStorage. Check browser privacy settings!')
+      console.warn(error)
     }
     return false
   }
@@ -37,6 +38,7 @@ class EmulatedLocalStorage {
       }
     } catch (error) {
       console.warn('Storage: Cannot access localStorage. Check browser privacy settings!')
+      console.warn(error)
     }
   }
   setItem(key: string, value: unknown) {
@@ -156,6 +158,7 @@ export class StorageNode extends Node {
           props.value = constructor ? new constructor(value) : value
         } catch (error) {
           props.value = storedValue
+          console.warn(error)
         }
       }
 
@@ -303,6 +306,7 @@ function updateAllFromHash() {
         node.value = JSON.parse(hashValues[h])
       } catch (error) {
         node.value = hashValues[h]
+        console.warn(error)
       }
     }
   }

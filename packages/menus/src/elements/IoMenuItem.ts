@@ -6,7 +6,7 @@ import { MenuOption } from '../nodes/MenuOption.js'
 import { IoMenuOptions } from './IoMenuOptions.js'
 import { IoMenuTree } from './IoMenuTree.js'
 
-let timeoutOpen = -1
+let timeoutOpen: ReturnType<typeof setTimeout> | undefined = undefined
 
 let hovered: IoMenuElementType | undefined
 let prevHovered: IoMenuElementType | undefined

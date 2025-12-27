@@ -7,7 +7,7 @@ import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js'
 
 // TODO: Home, End, PageUp, PageDown?
 
-let focusBacktrack = new WeakMap()
+const focusBacktrack = new WeakMap()
 type Direction = 'ArrowLeft' | 'ArrowRight' | 'ArrowDown' | 'ArrowUp'
 const backtrackDir: Record<Direction, Direction> = {
   ArrowLeft: 'ArrowRight',
@@ -40,8 +40,8 @@ function getRectDistance(rect1: DOMRect, rect2: DOMRect, dirBias: number = 1) {
 }
 
 function getCenterDistance(rect1: DOMRect, rect2: DOMRect, dirBias: number = 1) {
-  let c1 = {x: rect1.x + rect1.width / 2, y: rect1.y + rect1.height / 2}
-  let c2 = {x: rect2.x + rect2.width / 2, y: rect2.y + rect2.height / 2}
+  const c1 = {x: rect1.x + rect1.width / 2, y: rect1.y + rect1.height / 2}
+  const c2 = {x: rect2.x + rect2.width / 2, y: rect2.y + rect2.height / 2}
   let dx = c1.x - c2.x
   let dy = c1.y - c2.y
   dx = dx * dirBias
@@ -82,7 +82,7 @@ function onIoFocusTo(event: CustomEvent) {
 
   const root = inoverlay ? Overlay as HTMLElement : document
   let focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[]
-  let focusableSiblingCandidates = Array.from(src.parentElement.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[]
+  const focusableSiblingCandidates = Array.from(src.parentElement.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`)) as HTMLElement[]
   focusableCandidates = focusableCandidates.filter(el => el.offsetParent !== null)
   focusableCandidates = focusableCandidates.filter(el => {
     const style = window.getComputedStyle(el)

@@ -15,8 +15,8 @@ export type IoInspectorProps = IoElementProps & {
  **/
 export declare class IoInspector extends IoElement {
     static get Style(): string;
-    value: Object | Array<any>;
-    selected: Object | Array<any>;
+    value: object | Array<any>;
+    selected: object | Array<any>;
     search: string;
     config: EditorConfig;
     groups: EditorGroups;

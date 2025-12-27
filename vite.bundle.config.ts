@@ -1,26 +1,6 @@
 import { defineConfig, type Plugin } from 'vite'
-import { readFileSync, existsSync } from 'node:fs'
-import { resolve } from 'node:path'
-
-const packages = [
-  'core',
-  'icons',
-  'inputs',
-  'sliders',
-  'colors',
-  'menus',
-  'navigation',
-  'editors',
-  'layout',
-  'markdown',
-  'three'
-]
-
-/** Additional externals per package (beyond auto-detected peerDependencies) */
-const packageExternals: Record<string, (string | RegExp)[]> = {
-  markdown: ['dompurify', 'marked', 'marked-highlight'],
-  three: ['three/webgpu', 'three/tsl', 'three/addons']
-}
+import path from 'node:path'
+import packages from './packages.config'
 
 /**
  * Vite plugin to strip labeled statement blocks (e.g., `debug: { ... }`)
@@ -73,39 +53,10 @@ function stripLabels(labels: string[] = ['debug']): Plugin {
   }
 }
 
-/**
- * Reads package.json and extracts peer dependencies for externalization
- */
-function getPeerDependencies(packageDir: string): string[] {
-  const pkgPath = resolve(packageDir, 'package.json')
-  if (!existsSync(pkgPath)) return []
-  const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'))
-  return Object.keys(pkg.peerDependencies || {})
-}
-
-/**
- * Gets the package name from PACKAGE env var.
- * Usage: PACKAGE=core vite build --config vite.bundle.config.ts
- */
-function getPackageName(): string {
-  const pkg = process.env.PACKAGE
-  if (!pkg) {
-    throw new Error('PACKAGE environment variable required.\nUsage: PACKAGE=core vite build --config vite.bundle.config.ts')
-  }
-  if (!packages.includes(pkg)) {
-    throw new Error(`Unknown package "${pkg}". Valid packages: ${packages.join(', ')}`)
-  }
-  return pkg
-}
-
-const packageName = getPackageName()
-const packageDir = resolve('packages', packageName)
-// const peerDeps = getPeerDependencies(packageDir)
-// const additionalExternals = packageExternals[packageName] || []
+const packageName = process.env.PACKAGE as string
+const packageDir = path.resolve('packages', packageName)
 
 const externals = [
-  // ...peerDeps,
-  // ...additionalExternals,
   /^@io-gui\//,
   /^three/
 ]
@@ -118,13 +69,18 @@ export default defineConfig({
   build: {
     target: 'esnext',
     lib: {
-      entry: resolve(packageDir, 'src/index.ts'),
+      entry: path.resolve(packageDir, 'src/index.ts'),
       formats: ['es'],
       fileName: () => 'index.js'
     },
-    outDir: resolve(packageDir, 'bundle'),
+    outDir: path.resolve(packageDir, 'bundle'),
     emptyOutDir: true,
-    minify: 'esbuild',
+    minify: 'terser',
+    terserOptions: {
+      format: {
+        comments: /^\s*!|Copyright|@license|@preserve|@copyright/i
+      }
+    },
     sourcemap: true,
     rollupOptions: {
       external: (id) => {
@@ -138,19 +94,5 @@ export default defineConfig({
       }
     }
   },
-  resolve: {
-    alias: {
-      '@io-gui/core': resolve('packages/core/src/index.ts'),
-      '@io-gui/icons': resolve('packages/icons/src/index.ts'),
-      '@io-gui/colors': resolve('packages/colors/src/index.ts'),
-      '@io-gui/editors': resolve('packages/editors/src/index.ts'),
-      '@io-gui/inputs': resolve('packages/inputs/src/index.ts'),
-      '@io-gui/layout': resolve('packages/layout/src/index.ts'),
-      '@io-gui/markdown': resolve('packages/markdown/src/index.ts'),
-      '@io-gui/menus': resolve('packages/menus/src/index.ts'),
-      '@io-gui/navigation': resolve('packages/navigation/src/index.ts'),
-      '@io-gui/sliders': resolve('packages/sliders/src/index.ts'),
-      '@io-gui/three': resolve('packages/three/src/index.ts'),
-    }
-  }
+  resolve: packages.resolve
 })

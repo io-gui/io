@@ -20,6 +20,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       console.error('NodeArray constructor called with non-node!')
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
     const proxy = new Proxy(this, {
       get(target: NodeArray<N>, property: string | symbol) {

@@ -162,7 +162,7 @@ export class IoElement extends HTMLElement {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event)
   };
-  dispatchMutation(object: Object | Node = this, properties: string[] = []) {
+  dispatchMutation(object: object | Node = this, properties: string[] = []) {
     if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties})
     } else {

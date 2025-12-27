@@ -2,7 +2,7 @@ import { ReactiveProperty, Register, span } from '@io-gui/core'
 import { IoButton, IoButtonProps } from '@io-gui/inputs'
 
 export type IoPropertyLinkProps = IoButtonProps & {
-  value?: Object
+  value?: object
   showName?: boolean
 }
 
@@ -26,7 +26,7 @@ export class IoPropertyLink extends IoButton {
   }
 
   @ReactiveProperty()
-  declare value: Object
+  declare value: object
 
   @ReactiveProperty({value: false, type: Boolean})
   declare showName: boolean

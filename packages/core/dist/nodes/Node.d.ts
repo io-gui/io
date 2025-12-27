@@ -16,7 +16,7 @@ export interface NodeConstructor {
     Listeners?: ListenerDefinitions;
     Style?: string;
     name?: string;
-    prototype: NodeConstructor | Object | HTMLElement;
+    prototype: NodeConstructor | object | HTMLElement;
 }
 export declare const NODES: {
     active: Set<Node>;
@@ -58,7 +58,7 @@ export declare class Node extends Object {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
-    dispatchMutation(object?: Object | Node, properties?: string[]): void;
+    dispatchMutation(object?: object | Node, properties?: string[]): void;
     bind<T>(name: string): Binding<T>;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;

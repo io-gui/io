@@ -3,7 +3,7 @@ import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js';
 // TODO: improve focus algorithm
 // Note: focus string field in IoInspector demo and use arrowleft - notice focus shift is not intuitive.
 // TODO: Home, End, PageUp, PageDown?
-let focusBacktrack = new WeakMap();
+const focusBacktrack = new WeakMap();
 const backtrackDir = {
     ArrowLeft: 'ArrowRight',
     ArrowRight: 'ArrowLeft',
@@ -35,8 +35,8 @@ function getRectDistance(rect1, rect2, dirBias = 1) {
     return (dx ** 2 + dy ** 2) ** 0.5;
 }
 function getCenterDistance(rect1, rect2, dirBias = 1) {
-    let c1 = { x: rect1.x + rect1.width / 2, y: rect1.y + rect1.height / 2 };
-    let c2 = { x: rect2.x + rect2.width / 2, y: rect2.y + rect2.height / 2 };
+    const c1 = { x: rect1.x + rect1.width / 2, y: rect1.y + rect1.height / 2 };
+    const c2 = { x: rect2.x + rect2.width / 2, y: rect2.y + rect2.height / 2 };
     let dx = c1.x - c2.x;
     let dy = c1.y - c2.y;
     dx = dx * dirBias;
@@ -72,7 +72,7 @@ function onIoFocusTo(event) {
     }
     const root = inoverlay ? Overlay : document;
     let focusableCandidates = Array.from(root.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`));
-    let focusableSiblingCandidates = Array.from(src.parentElement.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`));
+    const focusableSiblingCandidates = Array.from(src.parentElement.querySelectorAll(`[tabIndex="${src.tabIndex || 0}"]:not([disabled]):not([inert]):not([hidden])`));
     focusableCandidates = focusableCandidates.filter(el => el.offsetParent !== null);
     focusableCandidates = focusableCandidates.filter(el => {
         const style = window.getComputedStyle(el);

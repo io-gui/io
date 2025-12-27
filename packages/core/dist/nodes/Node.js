@@ -413,7 +413,7 @@ export function dispose(node) {
     delete node._protochain;
     node._changeQueue.dispose();
     delete node._changeQueue;
-    let removed = [];
+    const removed = [];
     node._reactiveProperties.forEach((property, name) => {
         property.binding?.removeTarget(node, name);
         if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {

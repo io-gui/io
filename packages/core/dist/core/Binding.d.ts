@@ -18,7 +18,7 @@ type TargetProperties = WeakMap<Node | IoElement, Properties>;
  * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export declare class Binding<T extends unknown> {
+export declare class Binding<T> {
     readonly node: Node | IoElement;
     readonly property: string;
     readonly targets: Array<Node | IoElement>;

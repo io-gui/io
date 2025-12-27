@@ -57,7 +57,7 @@ window.customElements.define('test-div', TestDiv)
 describe('EventDispatcher', () => {
   it('Should initialize with correct values', () => {
     const node = new MockNode1()
-    let eventDispatcher = new EventDispatcher(node)
+    const eventDispatcher = new EventDispatcher(node)
     expect(eventDispatcher.node).toBe(node)
     expect(eventDispatcher.protoListeners).toEqual({event1:[[node.event1Handler]]})
     expect(eventDispatcher.propListeners).toEqual({})
@@ -86,7 +86,7 @@ describe('EventDispatcher', () => {
   })
   it('Should applyPropListeners() correctly', () => {
     const node3 = new MockNode3()
-    let eventDispatcher = new EventDispatcher(node3)
+    const eventDispatcher = new EventDispatcher(node3)
     const handler4 = () => {}
     const handler5 = () => {}
     eventDispatcher.applyPropListeners({'@event3': 'event3Handler', '@event4': handler4})
@@ -106,7 +106,7 @@ describe('EventDispatcher', () => {
   })
   it('Should add/remove listeners correctly', () => {
     const node2 = new MockNode2()
-    let eventDispatcher = new EventDispatcher(node2)
+    const eventDispatcher = new EventDispatcher(node2)
     const listener1 = () => {}
     const listener2 = () => {}
     eventDispatcher.addEventListener('event1', listener1)
@@ -123,7 +123,7 @@ describe('EventDispatcher', () => {
   })
   it('Should not add listeners if already added', () => {
     const node2 = new MockNode2()
-    let eventDispatcher = new EventDispatcher(node2)
+    const eventDispatcher = new EventDispatcher(node2)
     const listener1 = () => {}
     const listener2 = () => {}
     eventDispatcher.addEventListener('event1', listener1)
@@ -135,7 +135,7 @@ describe('EventDispatcher', () => {
   })
   it('Should remove correct listener', () => {
     const node2 = new MockNode2()
-    let eventDispatcher = new EventDispatcher(node2)
+    const eventDispatcher = new EventDispatcher(node2)
     const listener1 = () => {}
     const listener2 = () => {}
     eventDispatcher.addEventListener('event1', listener1)
@@ -149,7 +149,7 @@ describe('EventDispatcher', () => {
   })
   it('Should dispatch added events with correct payloads', () => {
     const node3 = new MockNode3()
-    let eventDispatcher = new EventDispatcher(node3)
+    const eventDispatcher = new EventDispatcher(node3)
     const handler4 = (event: CustomEvent) => {
       (event.target as unknown as MockNode3).eventStack.push(`handler4 ${event.detail}`)
     }

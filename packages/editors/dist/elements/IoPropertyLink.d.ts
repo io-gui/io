@@ -1,11 +1,11 @@
 import { IoButton, IoButtonProps } from '@io-gui/inputs';
 export type IoPropertyLinkProps = IoButtonProps & {
-    value?: Object;
+    value?: object;
     showName?: boolean;
 };
 export declare class IoPropertyLink extends IoButton {
     static get Style(): string;
-    value: Object;
+    value: object;
     showName: boolean;
     appearance: 'inset' | 'outset' | 'neutral';
     valueMutated(): void;

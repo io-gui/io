@@ -79,7 +79,7 @@ export class IoSplit extends IoElement {
         x = rect.width - (event.detail.clientX - rect.left) - dividerSize / 2
         y = rect.height - (event.detail.clientY - rect.top) - dividerSize / 2
       }
-      let size = orientation === 'horizontal' ? x : y
+      const size = orientation === 'horizontal' ? x : y
 
       splits.push(splitElement)
       splitSizes.push(splitSize)

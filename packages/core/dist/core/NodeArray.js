@@ -14,6 +14,7 @@ export class NodeArray extends Array {
         debug: if (!node._isNode && !node._isIoElement) {
             console.error('NodeArray constructor called with non-node!');
         }
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
         const proxy = new Proxy(this, {
             get(target, property) {

@@ -43,8 +43,8 @@ export class ComputeTextureExample extends ThreeState {
     const plane = new Mesh(new PlaneGeometry(1, 1), material)
     this.scene.add(plane)
   }
-  onRendererInitialized(renderer: WebGPURenderer) {
+  async onRendererInitialized(renderer: WebGPURenderer) {
     super.onRendererInitialized(renderer)
-    renderer.compute(this.computeNode)
+    void renderer.compute(this.computeNode)
   }
 }
