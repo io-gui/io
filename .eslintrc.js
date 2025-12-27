@@ -31,7 +31,6 @@ export function makeConfig(projectPath) {
         'expect': true,
         'it': true,
         'describe': true,
-        'mocha': true,
         'hljs': true
       },
       parser: tseslint.parser,

@@ -1,29 +1,26 @@
+import { describe, it, expect } from 'vitest'
 import { IoNumberLadderStep } from '@io-gui/inputs'
 
 const step = new IoNumberLadderStep({value: 1, label: '1'})
 step.style.display = 'none'
 document.body.appendChild(step as HTMLElement)
 
-export default class {
-  run() {
-    describe('IoNumberLadderStep.test', () => {
-      it('Should initialize properties correctly', () => {
-        expect(step.value).to.equal(1)
-        expect(step.role).to.equal('spinbutton')
-      })
-      it('has correct default attributes', () => {
-        expect(step.getAttribute('value')).to.equal(null)
-        expect(step.getAttribute('role')).to.equal('spinbutton')
-      })
-      it('has correct default innerHTML', () => {
-        step.label = '1'
-        expect(step.innerHTML).to.equal('<span>1</span>')
-      })
-      it('should set innerText to match label property', () => {
-        step.label = '0'
-        expect(step.textContent).to.equal('0')
-        step.label = '1'
-      })
-    })
-  }
-}
+describe('IoNumberLadderStep.test', () => {
+  it('Should initialize properties correctly', () => {
+    expect(step.value).toBe(1)
+    expect(step.role).toBe('spinbutton')
+  })
+  it('has correct default attributes', () => {
+    expect(step.getAttribute('value')).toBe(null)
+    expect(step.getAttribute('role')).toBe('spinbutton')
+  })
+  it('has correct default innerHTML', () => {
+    step.label = '1'
+    expect(step.innerHTML).toBe('<span>1</span>')
+  })
+  it('should set innerText to match label property', () => {
+    step.label = '0'
+    expect(step.textContent).toBe('0')
+    step.label = '1'
+  })
+})

@@ -1,1 +1,0 @@
-{"version":3,"file":"index.test.js","sourceRoot":"","sources":["../src/index.test.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,OAAO;IACZ,GAAG;QACD,OAAO,CAAC,GAAG,CAAC,kBAAkB,CAAC,CAAA;IACjC,CAAC;CACF","sourcesContent":["export default class {\n  run() {\n    console.log('TODO:Layout test')\n  }\n}"]}

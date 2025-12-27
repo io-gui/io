@@ -1,44 +1,39 @@
+import { describe, it, expect } from 'vitest';
 import { nextQueue } from '@io-gui/core';
 import { IoSliderRange } from '@io-gui/sliders';
-export default class {
-    element = new IoSliderRange();
-    constructor() {
-        this.element.style.display = 'none';
-        document.body.appendChild(this.element);
-    }
-    reset() {
-        this.element.value = [0, 1];
-        this.element.step = 0.01;
-        this.element.min = 0;
-        this.element.max = 1;
-    }
-    run() {
-        describe('IoSliderRange', () => {
-            it('has default values', () => {
-                this.reset();
-                expect(this.element.value[0]).to.equal(0);
-                expect(this.element.value[1]).to.equal(1);
-                expect(this.element.step).to.equal(0.01);
-                expect(this.element.min).to.equal(0);
-                expect(this.element.max).to.equal(1);
-            });
-            it('has tabIndex attribute', () => {
-                expect(this.element.getAttribute('tabIndex')).to.equal('0');
-            });
-            it('has contenteditable attribute on number field', () => {
-                expect(this.element.getAttribute('contenteditable')).to.equal(null);
-            });
-            it('has a11y attributes', async () => {
-                this.reset();
-                expect(this.element.getAttribute('role')).to.equal('slider');
-                await nextQueue();
-                this.element.min = 0;
-                expect(this.element.getAttribute('aria-valuemin')).to.equal('0');
-                await nextQueue();
-                this.element.max = 1;
-                expect(this.element.getAttribute('aria-valuemax')).to.equal('1');
-            });
-        });
-    }
+const element = new IoSliderRange();
+element.style.display = 'none';
+document.body.appendChild(element);
+function reset() {
+    element.value = [0, 1];
+    element.step = 0.01;
+    element.min = 0;
+    element.max = 1;
 }
+describe('IoSliderRange', () => {
+    it('has default values', () => {
+        reset();
+        expect(element.value[0]).toBe(0);
+        expect(element.value[1]).toBe(1);
+        expect(element.step).toBe(0.01);
+        expect(element.min).toBe(0);
+        expect(element.max).toBe(1);
+    });
+    it('has tabIndex attribute', () => {
+        expect(element.getAttribute('tabIndex')).toBe('0');
+    });
+    it('has contenteditable attribute on number field', () => {
+        expect(element.getAttribute('contenteditable')).toBe(null);
+    });
+    it('has a11y attributes', async () => {
+        reset();
+        expect(element.getAttribute('role')).toBe('slider');
+        await nextQueue();
+        element.min = 0;
+        expect(element.getAttribute('aria-valuemin')).toBe('0');
+        await nextQueue();
+        element.max = 1;
+        expect(element.getAttribute('aria-valuemax')).toBe('1');
+    });
+});
 //# sourceMappingURL=IoSliderRange.test.js.map

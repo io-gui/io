@@ -1,7 +1,2 @@
-import { IoSwitch } from '@io-gui/inputs';
-export default class {
-    element: IoSwitch;
-    constructor();
-    run(): void;
-}
+export {};
 //# sourceMappingURL=IoSwitch.test.d.ts.map

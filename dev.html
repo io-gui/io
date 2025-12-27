@@ -60,19 +60,25 @@
     <script type="importmap">
       {
         "imports": {
-          "io-core": "./packages/core/build/index.js",
-          "io-colors": "./packages/colors/build/index.js",
-          "io-editors": "./packages/editors/build/index.js",
-          "io-icons": "./packages/icons/build/index.js",
-          "io-inputs": "./packages/inputs/build/index.js",
-          "io-layout": "./packages/layout/build/index.js",
-          "io-markdown": "./packages/markdown/build/index.js",
-          "io-menus": "./packages/menus/build/index.js",
-          "io-navigation": "./packages/navigation/build/index.js",
-          "io-sliders": "./packages/sliders/build/index.js",
-          "marked": "./node_modules/marked/lib/marked.esm.js",
-          "marked-highlight": "./node_modules/marked-highlight/src/index.js",
-          "dompurify": "./node_modules/dompurify/dist/purify.es.mjs"
+          "@io-gui/core": "./packages/core/dist/index.js",
+          "@io-gui/colors": "./packages/colors/dist/index.js",
+          "@io-gui/editors": "./packages/editors/dist/index.js",
+          "@io-gui/icons": "./packages/icons/dist/index.js",
+          "@io-gui/inputs": "./packages/inputs/dist/index.js",
+          "@io-gui/layout": "./packages/layout/dist/index.js",
+          "@io-gui/markdown": "./packages/markdown/dist/index.js",
+          "@io-gui/menus": "./packages/menus/dist/index.js",
+          "@io-gui/navigation": "./packages/navigation/dist/index.js",
+          "@io-gui/sliders": "./packages/sliders/dist/index.js",
+          "@io-gui/three": "./packages/three/dist/index.js",
+          "marked": "./packages/markdown/node_modules/marked/lib/marked.esm.js",
+          "marked-highlight": "./packages/markdown/node_modules/marked-highlight/src/index.js",
+          "dompurify": "./packages/markdown/node_modules/dompurify/dist/purify.es.mjs",
+          "three": "./packages/three/node_modules/three/build/three.webgpu.js",
+					"three/webgpu": "./packages/three/node_modules/three/build/three.webgpu.js",
+					"three/tsl": "./packages/three/node_modules/three/build/three.tsl.js",
+					"three/addons/": "./packages/three/node_modules/three/examples/jsm/",
+          "three/": "./packages/three/node_modules/three/"
         }
       }
     </script>
@@ -102,9 +108,9 @@
   </head>
   <body>
     <script type="module">
-      import { IoElement, Register, span } from 'io-core'
-      import { ioSlider } from 'io-sliders';
-      import { ioOptionSelect, MenuOption } from 'io-menus';
+      import { IoElement, Register, span } from '@io-gui/core'
+      import { ioSlider } from '@io-gui/sliders';
+      import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 
       class MyElement extends IoElement {
 

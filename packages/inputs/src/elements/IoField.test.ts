@@ -1,50 +1,47 @@
+import { describe, it, expect } from 'vitest'
 import { IoField } from '@io-gui/inputs'
 
 const element = new IoField()
 element.style.display = 'none'
 document.body.appendChild(element as HTMLElement)
 
-export default class {
-  run() {
-    describe('IoField.test', () => {
-      it('Should have core API functions defined', () => {
-        expect(element.getCaretPosition).to.be.a('function')
-        expect(element.setCaretPosition).to.be.a('function')
-      })
-      it('Should initialize properties correctly', () => {
-        expect(element.value).to.equal('')
-        expect(element.selected).to.equal(false)
-        expect(element._reactiveProperties.get('value')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: false,
-          type: undefined,
-          value: '',
-        })
-        expect(element._reactiveProperties.get('selected')).to.eql({
-          binding: undefined,
-          init: undefined,
-          reflect: true,
-          type: Boolean,
-          value: false,
-        })
-        expect(element.spellcheck).to.equal(false)
-      })
-      it('has correct default attributes', () => {
-        expect(element.getAttribute('icon')).to.equal(null)
-        expect(element.getAttribute('stroke')).to.equal(null)
-        expect(element.getAttribute('value')).to.equal(null)
-        expect(element.getAttribute('selected')).to.equal(null)
-      })
-      it('has correct default innerHTML', () => {
-        expect(element.innerHTML).to.equal('')
-      })
-      it('has reactive attributes', () => {
-        expect(element.getAttribute('selected')).to.equal(null)
-        element.selected = true
-        expect(element.getAttribute('selected')).to.equal('')
-        element.selected = false
-      })
+describe('IoField.test', () => {
+  it('Should have core API functions defined', () => {
+    expect(typeof element.getCaretPosition).toBe('function')
+    expect(typeof element.setCaretPosition).toBe('function')
+  })
+  it('Should initialize properties correctly', () => {
+    expect(element.value).toBe('')
+    expect(element.selected).toBe(false)
+    expect(element._reactiveProperties.get('value')).toEqual({
+      binding: undefined,
+      init: undefined,
+      reflect: false,
+      type: undefined,
+      value: '',
     })
-  }
-}
+    expect(element._reactiveProperties.get('selected')).toEqual({
+      binding: undefined,
+      init: undefined,
+      reflect: true,
+      type: Boolean,
+      value: false,
+    })
+    expect(element.spellcheck).toBe(false)
+  })
+  it('has correct default attributes', () => {
+    expect(element.getAttribute('icon')).toBe(null)
+    expect(element.getAttribute('stroke')).toBe(null)
+    expect(element.getAttribute('value')).toBe(null)
+    expect(element.getAttribute('selected')).toBe(null)
+  })
+  it('has correct default innerHTML', () => {
+    expect(element.innerHTML).toBe('')
+  })
+  it('has reactive attributes', () => {
+    expect(element.getAttribute('selected')).toBe(null)
+    element.selected = true
+    expect(element.getAttribute('selected')).toBe('')
+    element.selected = false
+  })
+})

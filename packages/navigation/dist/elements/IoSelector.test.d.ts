@@ -1,5 +1,2 @@
-export default class {
-    constructor();
-    run(): void;
-}
+export {};
 //# sourceMappingURL=IoSelector.test.d.ts.map
