@@ -50,11 +50,11 @@ export class IoObject extends IoElement {
     `
   }
 
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object})
   declare value: Record<string, any> | any[]
 
   @ReactiveProperty({type: Array, init: null})
-  declare properties: string[]
+  declare properties: string[] | null
 
   @ReactiveProperty(true)
   declare labeled: boolean

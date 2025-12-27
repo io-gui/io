@@ -26,6 +26,6 @@ jobs:
       - name: Install packages
         run: pnpm install
       - name: Bundling
-        run: pnpm bundle
+        run: pnpm build
       - name: Running tests
         run: pnpm test
