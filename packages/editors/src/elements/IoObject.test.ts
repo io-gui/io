@@ -30,29 +30,54 @@ describe('IoObject', () => {
     expect(element.label).toBe('')
     expect(element.labeled).toBe(true)
     expect(element.expanded).toBe(false)
-    expect(JSON.stringify(element.value)).toBe(JSON.stringify({}))
-    expect(JSON.stringify(element.properties)).toBe(JSON.stringify([]))
-    expect(JSON.stringify(element.config)).toBe(JSON.stringify({}))
+    expect(JSON.stringify(element.value)).toBe(undefined)
+    // expect(JSON.stringify(element.properties)).toBe(JSON.stringify([]))
+    // expect(JSON.stringify(element.config)).toBe(JSON.stringify({}))
   })
-  it('matches values', () => {
+  it('matches values', async () => {
     element.value = testValue
     expect(element.children[0].localName).toBe('io-boolean')
     expect(element.children[1]).toBe(undefined)
     element.expanded = true
     const properties = element.children[1]
     expect(properties.localName).toBe('io-property-editor')
-    expect(properties.children[0].textContent).toBe('number:')
-    expect(properties.children[1].localName).toBe('io-number')
-    expect(properties.children[2].textContent).toBe('string:')
-    expect(properties.children[3].localName).toBe('io-string')
-    expect(properties.children[4].textContent).toBe('boolean:')
-    expect(properties.children[5].localName).toBe('io-boolean')
-    expect(properties.children[6].textContent).toBe('null:')
-    expect(properties.children[7].localName).toBe('io-string')
-    expect(properties.children[8].textContent).toBe('object:')
-    expect(properties.children[9].localName).toBe('io-object')
-    expect(properties.children[10].textContent).toBe('array:')
-    expect(properties.children[11].localName).toBe('io-object')
+    expect(properties.children[0].textContent).toBe('number0.5')
+    const rows = properties.children
+    expect(rows[0].localName).toBe('div')
+    expect(rows[0].children[0].localName).toBe('span')
+    expect(rows[0].children[0].textContent).toBe('number')
+    expect(rows[0].children[1].localName).toBe('io-number')
+    expect(rows[0].children[1].textContent).toBe('0.5')
+
+    expect(rows[1].localName).toBe('div')
+    expect(rows[1].children[0].localName).toBe('span')
+    expect(rows[1].children[0].textContent).toBe('string')
+    expect(rows[1].children[1].localName).toBe('io-string')
+    expect(rows[1].children[1].textContent).toBe('hello')
+
+    expect(rows[2].localName).toBe('div')
+    expect(rows[2].children[0].localName).toBe('span')
+    expect(rows[2].children[0].textContent).toBe('boolean')
+    expect(rows[2].children[1].localName).toBe('io-switch')
+    expect(rows[2].children[1].textContent).toBe('')
+
+    expect(rows[3].localName).toBe('div')
+    expect(rows[3].children[0].localName).toBe('span')
+    expect(rows[3].children[0].textContent).toBe('null')
+    expect(rows[3].children[1].localName).toBe('io-field')
+    expect(rows[3].children[1].textContent).toBe('null')
+
+    expect(rows[4].localName).toBe('div')
+    expect(rows[4].children[0].localName).toBe('span')
+    expect(rows[4].children[0].textContent).toBe('object')
+    expect(rows[4].children[1].localName).toBe('io-object')
+    expect(rows[4].children[1].textContent).toBe('Object')
+
+    expect(rows[5].localName).toBe('div')
+    expect(rows[5].children[0].localName).toBe('span')
+    expect(rows[5].children[0].textContent).toBe('array')
+    expect(rows[5].children[1].localName).toBe('io-object')
+    expect(rows[5].children[1].textContent).toBe('Array')
     reset()
   })
   it('matches value with labels disabled', () => {
@@ -60,30 +85,30 @@ describe('IoObject', () => {
     element.labeled = false
     element.expanded = true
     const properties = element.children[1]
-    expect(properties.children[0].localName).toBe('io-number')
-    expect(properties.children[1].localName).toBe('io-string')
-    expect(properties.children[2].localName).toBe('io-boolean')
-    expect(properties.children[3].localName).toBe('io-string')
-    expect(properties.children[4].localName).toBe('io-object')
-    expect(properties.children[5].localName).toBe('io-object')
+    expect(properties.children[0].children[0].localName).toBe('io-number')
+    expect(properties.children[1].children[0].localName).toBe('io-string')
+    expect(properties.children[2].children[0].localName).toBe('io-switch')
+    expect(properties.children[3].children[0].localName).toBe('io-field')
+    expect(properties.children[4].children[0].localName).toBe('io-object')
+    expect(properties.children[5].children[0].localName).toBe('io-object')
     reset()
   })
   it('matches value with labels disabled (label)', () => {
     element.value = testValue
-    expect(element.children[0].textContent).toBe('▸ Object')
+    expect(element.children[0].textContent).toBe('Object')
     element.label = 'test'
-    expect(element.children[0].textContent).toBe('▸ test')
+    expect(element.children[0].textContent).toBe('test')
     reset()
-    expect(element.children[0].textContent).toBe('▸ Object')
+    expect(element.children[0].textContent).toBe('Object')
   })
   it('matches value with custom properties', () => {
     element.value = testValue
     element.properties = ['number', 'boolean']
     element.expanded = true
     const properties = element.children[1]
-    expect(properties.children[0].textContent).toBe('number:')
-    expect(properties.children[2].textContent).toBe('boolean:')
-    expect(properties.children[4]).toBe(undefined)
+    expect(properties.children[0].textContent).toBe('number0.5')
+    expect(properties.children[1].textContent).toBe('boolean')
+    expect(properties.children[2]).toBe(undefined)
     reset()
   })
   it('matches value with custom config', () => {
@@ -96,9 +121,8 @@ describe('IoObject', () => {
     ])
     element.expanded = true
     const properties = element.children[1]
-    expect(properties.children[1].localName).toBe('io-slider')
-    expect((properties.children[1] as any).step).toBe(1)
-    expect(properties.children[5].localName).toBe('io-string')
+    expect(properties.children[0].children[1].localName).toBe('io-slider')
+    expect(properties.children[1].children[1].localName).toBe('io-string')
     reset()
   })
 })

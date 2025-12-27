@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS, ReactivityType } from '@io-gui/core'
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS } from '@io-gui/core'
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig.js'
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js'
@@ -6,7 +6,7 @@ import { ioObject } from './IoObject.js'
 
 export type IoPropertyEditorProps = IoElementProps & {
   value?: Record<string, any> | any[]
-  properties?: string[]
+  properties?: string[] | null
   labeled?: boolean
   orientation?: 'vertical' | 'horizontal'
   config?: EditorConfig
@@ -69,8 +69,8 @@ export class IoPropertyEditor extends IoElement {
     `
   }
 
-  @ReactiveProperty('debounced')
-  declare reactivity: ReactivityType
+  // @ReactiveProperty('debounced')
+  // declare reactivity: ReactivityType
 
   @ReactiveProperty()
   declare value: Object | Array<any>
@@ -112,12 +112,12 @@ export class IoPropertyEditor extends IoElement {
     }
   }
   valueMutated() {
-    this.changed()
-  }
-  changed() {
-    this.throttle(this.changeThrottled)
+    this.changeThrottled()
   }
   changeThrottled() {
+    this.throttle(this.changeThrottled)
+  }
+  changed() {
     const config = getEditorConfig(this.value, this.config)
     const groups = getEditorGroups(this.value, this.groups)
     const widget = getEditorWidget(this.value, this.widgets)
