@@ -30,9 +30,10 @@ export default defineConfig({
     emptyOutDir: false,
     minify: 'terser',
     terserOptions: {
-      keep_fnames: true,
-      keep_classnames: true,
+      mangle: false,
       compress: {
+        keep_fnames: true,
+        keep_classnames: true,
         keep_infinity: true,
       },
       format: {
@@ -47,11 +48,8 @@ export default defineConfig({
         )
       },
       output: {
-        format: 'es',
-        indent: '  ',
         preserveModules: false,
         inlineDynamicImports: true,
-        minifyInternalExports: false
       }
     }
   },
