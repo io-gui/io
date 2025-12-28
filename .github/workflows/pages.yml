@@ -33,7 +33,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build
+        run: pnpm bundle
 
       - name: Replace paths in index.html for production
         run: |
