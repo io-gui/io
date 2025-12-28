@@ -1,7 +1,7 @@
 import { Register } from '../decorators/Register.js'
 import { ReactiveProperty } from '../decorators/Property.js'
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js'
-import { Node, ReactivityType } from '../nodes/Node.js'
+import { Node } from '../nodes/Node.js'
 import { ThemeSingleton, Color } from '../nodes/Theme.js'
 import { IoElement, IoElementProps } from './IoElement.js'
 import { glsl } from './IoGL.glsl.js'
@@ -68,8 +68,8 @@ export class IoGl extends IoElement {
   @ReactiveProperty({type: Number, value: 1})
   declare pxRatio: number
 
-  @ReactiveProperty('throttled')
-  declare reactivity: ReactivityType
+  // @ReactiveProperty('throttled')
+  // declare reactivity: ReactivityType
 
   #needsResize = false
   #canvas: HTMLCanvasElement

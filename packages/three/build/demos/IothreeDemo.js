@@ -1,1 +1,0 @@
-import{Register as e,IoElement as o}from"io-core";class IoThreeDemo extends o{static get Style(){return"\n      :host {\n        display: flex;\n      }\n    "}ready(){}}e(IoThreeDemo);const r=IoThreeDemo.vConstructor;export{IoThreeDemo,r as ioThreeDemo};

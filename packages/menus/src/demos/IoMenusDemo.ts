@@ -1,10 +1,10 @@
 //@ts-nocheck
-import { Register, IoElement, div, span } from 'io-core'
-import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from 'io-menus'
-import { ioSwitch, ioField, ioBoolean } from 'io-inputs'
+import { Register, IoElement, div, span } from '@io-gui/core'
+import { MenuOption, ioMenuTree, ioMenuItem, ioMenuOptions, ioContextMenu, ioOptionSelect } from '@io-gui/menus'
+import { ioSwitch, ioField, ioBoolean } from '@io-gui/inputs'
 // TODO: remove dependencies on io-navigation.
-import 'io-navigation'
-import 'io-icons'
+import '@io-gui/navigation'
+import '@io-gui/icons'
 
 const numberItems = new MenuOption({id: 'numbers', options: [
   {id: 'zero', value: 0, hint: 'Number(0)', icon: 'io:numeric-0-box'},

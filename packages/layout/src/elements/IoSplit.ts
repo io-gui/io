@@ -1,5 +1,5 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from 'io-core'
-import { MenuOption } from 'io-menus'
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from '@io-gui/core'
+import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
 import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js'
@@ -79,7 +79,7 @@ export class IoSplit extends IoElement {
         x = rect.width - (event.detail.clientX - rect.left) - dividerSize / 2
         y = rect.height - (event.detail.clientY - rect.top) - dividerSize / 2
       }
-      let size = orientation === 'horizontal' ? x : y
+      const size = orientation === 'horizontal' ? x : y
 
       splits.push(splitElement)
       splitSizes.push(splitSize)

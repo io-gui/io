@@ -1,11 +1,12 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
-      "io-sliders": ["./src/index.ts"],
-      "io-core": ["../core/"],
-      "io-inputs": ["../inputs/"]
+      "@io-gui/sliders": ["./src/index.ts"],
+      "@io-gui/core": ["../core"],
+      "@io-gui/inputs": ["../inputs"]
     }
   },
   "include": ["./src"]

@@ -1,4 +1,4 @@
-import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register } from 'io-core'
+import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register } from '@io-gui/core'
 import { IoPropertyEditor } from './IoPropertyEditor.js'
 import { EditorGroups } from '../utils/EditorGroups.js'
 import { EditorWidgets } from '../utils/EditorWidgets.js'

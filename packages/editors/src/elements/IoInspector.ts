@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from 'io-core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { EditorConfig } from '../utils/EditorConfig.js'
@@ -15,7 +15,7 @@ export type IoInspectorProps = IoElementProps & {
   widgets?: EditorWidgets
 }
 
-function isNestedObject(value: Object, selected: Object): boolean {
+function isNestedObject(value: object, selected: object): boolean {
   if (value === selected) return true
   if (value instanceof Array) {
     return value.some(v => isNestedObject(v, selected))
@@ -57,10 +57,10 @@ export class IoInspector extends IoElement {
     `
   }
   @ReactiveProperty()
-  declare value: Object | Array<any>
+  declare value: object | Array<any>
 
   @ReactiveProperty()
-  declare selected: Object | Array<any>
+  declare selected: object | Array<any>
 
   @ReactiveProperty({type: String})
   declare search: string

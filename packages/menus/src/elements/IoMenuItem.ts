@@ -1,12 +1,12 @@
-import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection } from 'io-core'
-import { IoField, IoFieldProps } from 'io-inputs'
-import { ioIcon } from 'io-icons'
+import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection } from '@io-gui/core'
+import { IoField, IoFieldProps } from '@io-gui/inputs'
+import { ioIcon } from '@io-gui/icons'
 import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { IoMenuOptions } from './IoMenuOptions.js'
 import { IoMenuTree } from './IoMenuTree.js'
 
-let timeoutOpen = -1
+let timeoutOpen: ReturnType<typeof setTimeout> | undefined = undefined
 
 let hovered: IoMenuElementType | undefined
 let prevHovered: IoMenuElementType | undefined

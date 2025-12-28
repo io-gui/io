@@ -1,4 +1,4 @@
-import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from 'io-core'
+import { IoElement, Register, Storage as $, section, header, h1, div, p, a, span, ReactiveProperty } from '@io-gui/core'
 
 import { TodoListModel } from './TodoListModel.js'
 import { todoInput } from './TodoInput.js'

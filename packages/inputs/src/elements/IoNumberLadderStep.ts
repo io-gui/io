@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, span, Property } from 'io-core'
+import { Register, ReactiveProperty, span, Property } from '@io-gui/core'
 import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoNumberLadderStepProps = IoFieldProps & {

@@ -1,4 +1,4 @@
-import { Node, Register } from 'io-core'
+import { Node, Register } from '@io-gui/core'
 
 export const IconsetDB: Record<string, Record<string, string>> = {}
 

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { IoElement, Register, section, input, label, ul, ReactiveProperty, IoElementProps } from 'io-core'
+import { IoElement, Register, section, input, label, ul, ReactiveProperty, IoElementProps } from '@io-gui/core'
 import { TodoListModel } from './TodoListModel.js'
 import { todoItem } from './TodoItem.js'
 

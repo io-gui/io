@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { Register, IoElement, div } from 'io-core'
-import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from 'io-sliders'
+import { Register, IoElement, div } from '@io-gui/core'
+import { ioSlider, ioSliderRange, ioSlider2d, ioNumberSlider, ioNumberSliderRange } from '@io-gui/sliders'
 
 export class IoSlidersDemo extends IoElement {
   static get Style() {

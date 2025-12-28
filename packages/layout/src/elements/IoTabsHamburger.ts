@@ -1,6 +1,6 @@
-import { Register, NodeArray, ReactiveProperty } from 'io-core'
-import { IoField, IoFieldProps } from 'io-inputs'
-import { ioIcon } from 'io-icons'
+import { Register, NodeArray, ReactiveProperty } from '@io-gui/core'
+import { IoField, IoFieldProps } from '@io-gui/inputs'
+import { ioIcon } from '@io-gui/icons'
 import { Tab } from '../nodes/Tab.js'
 import { IoTabsHamburgerMenuSingleton } from './IoTabsHamburgerMenuSingleton.js'
 

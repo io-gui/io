@@ -25,7 +25,9 @@ jobs:
         run: npm install -g pnpm@latest-10
       - name: Install packages
         run: pnpm install
+      - name: Install playwright
+        run: npx playwright install --with-deps
       - name: Bundling
-        run: pnpm bundle
+        run: pnpm build
       - name: Running tests
         run: pnpm test

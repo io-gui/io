@@ -1,49 +1,45 @@
-import { IoString } from 'io-inputs'
+import { describe, it, expect } from 'vitest'
+import { IoString } from '@io-gui/inputs'
 
-export default class {
-  element = new IoString()
-  constructor() {
-    this.element.style.display = 'none'
-    document.body.appendChild(this.element as HTMLElement)
-  }
-  run() {
-    describe('IoString.test', () => {
-      it('has default values', () => {
-        expect(this.element.value).to.equal('')
-      })
-      it('matches values', () => {
-        this.element.value = 'hello'
-        expect(this.element.textContent).to.equal('hello');
-        (this.element as any).value = false
-        expect(this.element.textContent).to.equal('');
-        (this.element as any).value = null
-        expect(this.element.textContent).to.equal('');
-        (this.element as any).value = undefined
-        expect(this.element.textContent).to.equal('');
-        (this.element as any).value = NaN
-        expect(this.element.textContent).to.equal('');
-        (this.element as any).value = 123
-        expect(this.element.textContent).to.equal('123')
-        this.element.value = ''
-      })
-      it('has tabIndex attribute', () => {
-        expect(this.element.getAttribute('tabIndex')).to.equal('0')
-      })
-      it('has contenteditable attribute', () => {
-        expect(this.element.getAttribute('contenteditable')).to.equal('true')
-      })
-      it('has a11y attributes', () => {
-        expect(this.element.getAttribute('role')).to.equal('textbox');
-        (this.element as any).value = 0
-        expect(this.element.getAttribute('aria-invalid')).to.equal('true')
-        this.element.value = ''
-        expect(this.element.getAttribute('aria-invalid')).to.equal(null)
-      })
-      it('has title attribute', () => {
-        this.element.title = 'Enter text'
-        expect(this.element.getAttribute('title')).to.equal('Enter text')
-        this.element.title = ''
-      })
-    })
-  }
-}
+const element = new IoString()
+element.style.display = 'none'
+document.body.appendChild(element as HTMLElement)
+
+describe('IoString.test', () => {
+  it('has default values', () => {
+    expect(element.value).toBe('')
+  })
+  it('matches values', () => {
+    element.value = 'hello'
+    expect(element.textContent).toBe('hello');
+    (element as any).value = false
+    expect(element.textContent).toBe('');
+    (element as any).value = null
+    expect(element.textContent).toBe('');
+    (element as any).value = undefined
+    expect(element.textContent).toBe('');
+    (element as any).value = NaN
+    expect(element.textContent).toBe('');
+    (element as any).value = 123
+    expect(element.textContent).toBe('123')
+    element.value = ''
+  })
+  it('has tabIndex attribute', () => {
+    expect(element.getAttribute('tabIndex')).toBe('0')
+  })
+  it('has contenteditable attribute', () => {
+    expect(element.getAttribute('contenteditable')).toBe('true')
+  })
+  it('has a11y attributes', () => {
+    expect(element.getAttribute('role')).toBe('textbox');
+    (element as any).value = 0
+    expect(element.getAttribute('aria-invalid')).toBe('true')
+    element.value = ''
+    expect(element.getAttribute('aria-invalid')).toBe(null)
+  })
+  it('has title attribute', () => {
+    element.title = 'Enter text'
+    expect(element.getAttribute('title')).toBe('Enter text')
+    element.title = ''
+  })
+})

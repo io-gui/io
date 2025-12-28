@@ -311,7 +311,7 @@ const defaultPropsMap = new WeakMap<HTMLElement, NativeElementProps>()
  */
 export const applyNativeElementProps = function(element: HTMLElement, props: NativeElementProps) {
 
-  let defaultPropValues: any = defaultPropsMap.get(element) || {}
+  const defaultPropValues: any = defaultPropsMap.get(element) || {}
 
   defaultPropsMap.set(element, defaultPropValues)
 

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, WithBinding, Property } from 'io-core'
+import { Register, ReactiveProperty, WithBinding, Property } from '@io-gui/core'
 import { IoNumberLadderSingleton } from './IoNumberLadderSingleton.js'
 import { IoField, IoFieldProps } from './IoField.js'
 
@@ -213,7 +213,7 @@ export class IoNumber extends IoField {
   }
   _setFromTextNode() {
     // Normalize comma to period for decimal separator
-    let valueText = this.textNode!.trim().replace(',', '.')
+    const valueText = this.textNode!.trim().replace(',', '.')
     let valueNumber = Number(valueText) / this.conversion
     valueNumber = Math.min(this.max, Math.max(this.min, valueNumber))
     valueNumber = Math.round(valueNumber / this.step) * this.step

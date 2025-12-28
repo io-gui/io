@@ -1,4 +1,4 @@
-import { VDOMElement, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM'
+import { VDOMElement, NativeElementProps, OtherHTMLElementProps } from '../vdom/VDOM.js'
 
 // export const HTML_CORE_PROPERTIES: Record<string, string[]> = {
 //   Node: ['ownerDocument','parentNode','parentElement','childNodes','firstChild','lastChild','previousSibling','nextSibling','textContent'],

@@ -1,29 +1,45 @@
 {
   "name": "@io-gui/navigation",
-  "publishConfig": {
-    "access": "public"
-  },
   "version": "2.0.0-alpha.1",
-  "type": "module",
-  "packageManager": "pnpm@9.5.0",
   "description": "A set of navigators for Io-Gui.",
-  "main": "build/index.js",
-  "module": "build/index.js",
-  "types": "build/index.d.ts",
-  "files": [
-    "/src/",
-    "/build/",
-    "/demos/",
-    "/LICENSE",
-    "/README.md"
-  ],
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
+  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
   "keywords": ["ui","io","gui","iogui","io-navigation"],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
   "bugs": {"url": "https://github.com/io-gui/io/issues"},
   "homepage": "https://iogui.dev",
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@9.5.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/src/",
+    "/dist/",
+    "/bundle/",
+    "/LICENSE",
+    "/README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "pnpm run clean && tsc"
+  },
+  "devDependencies": {
+    "@io-gui/core": "workspace:*",
+    "@io-gui/menus": "workspace:*",
+    "@io-gui/inputs": "workspace:*",
+    "@io-gui/icons": "workspace:*"
+  },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.1",
     "@io-gui/menus": "^2.0.0-alpha.1",

@@ -1,10 +1,10 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from 'io-core'
-import { ioButton, ioString } from 'io-inputs'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, div, Property } from '@io-gui/core'
+import { ioButton, ioString } from '@io-gui/inputs'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
 export type IoBreadcrumbsProps = IoElementProps & {
-  value?: Object
-  selected?: WithBinding<Object>
+  value?: object
+  selected?: WithBinding<object>
   search?: WithBinding<string>
 }
 
@@ -67,16 +67,16 @@ export class IoBreadcrumbs extends IoElement {
     `
   }
   @ReactiveProperty({type: Object, init: null})
-  declare value: Object
+  declare value: object
 
   @ReactiveProperty({type: Object, init: null})
-  declare selected: Object
+  declare selected: object
 
   @ReactiveProperty({type: String, reflect: true})
   declare search: string
 
   @Property(Array)
-  declare _crumbs: Array<Object>
+  declare _crumbs: Array<object>
 
   valueChanged() {
     this._crumbs.length = 0

@@ -1,5 +1,5 @@
-import { span, Register } from 'io-core'
-import { ioIcon } from 'io-icons'
+import { span, Register } from '@io-gui/core'
+import { ioIcon } from '@io-gui/icons'
 import { IoBoolean } from './IoBoolean.js'
 
 /**

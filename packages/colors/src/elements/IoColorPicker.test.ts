@@ -1,13 +1,12 @@
-import { IoColorPicker } from 'io-colors'
-// import { expect } from 'chai';
+import { describe, it, expect } from 'vitest'
+import { IoColorPicker } from '@io-gui/colors'
 
 const element = new IoColorPicker()
 element.style.display = 'none'
 document.body.appendChild(element as HTMLElement)
 
-export default class {
-  run() {
-    describe('IoColorPicker.test', () => {
-    })
-  }
-}
+describe('IoColorPicker.test', () => {
+  it('Should be defined', () => {
+    expect(IoColorPicker).toBeDefined()
+  })
+})

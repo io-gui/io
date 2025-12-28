@@ -177,7 +177,7 @@ Each package can be built/linted individually:
 - ESLint for linting with auto-fix
 
 ### Testing
-- Uses Chai and Mocha for testing
+- Uses Vitest for testing
 - Web Test Runner for browser-based tests
 - Test files follow `*.test.ts` pattern
 

@@ -3,7 +3,6 @@ import { Node } from '../nodes/Node.js'
 import { IoElement } from '../elements/IoElement.js'
 
 // TODO: Improve types!
-
 type Properties = string[]
 type TargetProperties = WeakMap<Node | IoElement, Properties>
 
@@ -36,7 +35,7 @@ const isTypeCompatible = (type1: any, type2: any) => {
  * const binding = new Binding<number>(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export class Binding<T extends unknown> {
+export class Binding<T> {
   readonly node: Node | IoElement
   readonly property: string
   readonly targets: Array<Node | IoElement> = []

@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span } from 'io-core'
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span } from '@io-gui/core'
 
 const dummyElement = document.createElement('div')
 /**
@@ -15,7 +15,7 @@ function importModule(path: string) {
     if (!path || IMPORTED_PATHS[importPath]) {
       resolve(importPath)
     } else {
-      void import(importPath)
+      void import(/* @vite-ignore */ importPath)
       .then(() => {
         IMPORTED_PATHS[importPath] = true
         resolve(importPath)

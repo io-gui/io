@@ -1,5 +1,5 @@
-import { Register } from 'io-core'
-import { ioNumber } from 'io-inputs'
+import { Register } from '@io-gui/core'
+import { ioNumber } from '@io-gui/inputs'
 import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
 import { ioColorPicker } from './IoColorPicker.js'
 

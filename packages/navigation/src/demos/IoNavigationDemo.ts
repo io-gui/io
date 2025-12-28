@@ -1,7 +1,7 @@
 //@ts-nocheck
-import { Register, IoElement, div, p, h1, h4 } from 'io-core'
-import { MenuOption } from 'io-menus'
-import { ioNavigator, ioSelector, ioCollapsible } from 'io-navigation'
+import { Register, IoElement, div, p, h1, h4 } from '@io-gui/core'
+import { MenuOption } from '@io-gui/menus'
+import { ioNavigator, ioSelector, ioCollapsible } from '@io-gui/navigation'
 
 function lorem(length) {
   const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')

@@ -1,9 +1,9 @@
-import { Register, ReactiveProperty, span, Property } from 'io-core'
-import { ioIcon } from 'io-icons'
+import { Register, ReactiveProperty, span, Property } from '@io-gui/core'
+import { ioIcon } from '@io-gui/icons'
 import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoButtonProps = IoFieldProps & {
-  action?: Function
+  action?: (value: any) => void
 }
 
 /**
@@ -30,7 +30,7 @@ export class IoButton extends IoField {
   declare value: any
 
   @ReactiveProperty()
-  declare action?: Function
+  declare action?: (value: any) => void
 
   @ReactiveProperty({value: 'outset', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral'

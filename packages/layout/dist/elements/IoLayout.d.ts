@@ -1,0 +1,17 @@
+import { IoElement, VDOMElement, IoElementProps, Binding } from '@io-gui/core';
+import { MenuOption } from '@io-gui/menus';
+import { Split } from '../nodes/Split.js';
+export type IoLayoutProps = IoElementProps & {
+    split: Split | Binding<Split>;
+    elements: VDOMElement[];
+    addMenuOption: MenuOption;
+};
+export declare class IoLayout extends IoElement {
+    static get Style(): string;
+    split: Split;
+    elements: VDOMElement[];
+    private addMenuOption;
+    changed(): void;
+}
+export declare const ioLayout: (arg0: IoLayoutProps) => VDOMElement;
+//# sourceMappingURL=IoLayout.d.ts.map

@@ -1,5 +1,5 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from 'io-core'
-import { ioNumber, ioBoolean } from 'io-inputs'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from '@io-gui/core'
+import { ioNumber, ioBoolean } from '@io-gui/inputs'
 
 export type IoVectorArrayProps = IoElementProps & {
   value?: number[]

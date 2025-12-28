@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS, ReactivityType } from 'io-core'
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS } from '@io-gui/core'
 import { EditorConfig, getEditorConfig } from '../utils/EditorConfig.js'
 import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js'
@@ -6,7 +6,7 @@ import { ioObject } from './IoObject.js'
 
 export type IoPropertyEditorProps = IoElementProps & {
   value?: Record<string, any> | any[]
-  properties?: string[]
+  properties?: string[] | null
   labeled?: boolean
   orientation?: 'vertical' | 'horizontal'
   config?: EditorConfig
@@ -69,11 +69,11 @@ export class IoPropertyEditor extends IoElement {
     `
   }
 
-  @ReactiveProperty('debounced')
-  declare reactivity: ReactivityType
+  // @ReactiveProperty('debounced')
+  // declare reactivity: ReactivityType
 
   @ReactiveProperty()
-  declare value: Object | Array<any>
+  declare value: object | Array<any>
 
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[]
@@ -101,9 +101,9 @@ export class IoPropertyEditor extends IoElement {
 
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation()
-    const id = (event.target as HTMLElement).id as keyof typeof this.value
+    const id = (event.target as HTMLElement).id
     if (id !== undefined) {
-      this.value[id] = event.detail.value
+      (this.value as Record<string, any>)[id] = event.detail.value
       if (!(this.value as Node)._isNode) {
         this.dispatchMutation(this.value)
       }
@@ -112,12 +112,12 @@ export class IoPropertyEditor extends IoElement {
     }
   }
   valueMutated() {
-    this.changed()
-  }
-  changed() {
-    this.throttle(this.changeThrottled)
+    this.changeThrottled()
   }
   changeThrottled() {
+    this.throttle(this.changeThrottled)
+  }
+  changed() {
     const config = getEditorConfig(this.value, this.config)
     const groups = getEditorGroups(this.value, this.groups)
     const widget = getEditorWidget(this.value, this.widgets)

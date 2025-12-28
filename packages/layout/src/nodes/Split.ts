@@ -1,4 +1,4 @@
-import { Node, NodeArray, ReactiveProperty, Register } from 'io-core'
+import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
 import { Panel, PanelProps } from './Panel.js'
 
 export type SplitOrientation = 'horizontal' | 'vertical'
