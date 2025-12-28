@@ -26,10 +26,15 @@ export default defineConfig({
       formats: ['es'],
       fileName: () => 'index.js'
     },
-    outDir: path.resolve(packageDir, 'bundle'),
-    emptyOutDir: true,
+    outDir: path.resolve(packageDir, 'dist'),
+    emptyOutDir: false,
     minify: 'terser',
     terserOptions: {
+      keep_fnames: true,
+      keep_classnames: true,
+      compress: {
+        keep_infinity: true,
+      },
       format: {
         comments: /^\s*!|Copyright|@license|@License|@preserve|@copyright/i
       }
@@ -42,8 +47,11 @@ export default defineConfig({
         )
       },
       output: {
+        format: 'es',
+        indent: '  ',
         preserveModules: false,
-        inlineDynamicImports: true
+        inlineDynamicImports: true,
+        minifyInternalExports: false
       }
     }
   },

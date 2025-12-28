@@ -1,26 +1,6 @@
-export * from './core/Binding.js';
-export * from './core/ChangeQueue.js';
-export * from './core/EventDispatcher.js';
-export * from './core/NodeArray.js';
-export * from './core/ProtoChain.js';
-export * from './core/Queue.js';
-export * from './core/ReactiveProperty.js';
-export * from './vdom/VDOM.js';
-export * from './decorators/Property.js';
-export * from './decorators/Register.js';
-export * from './decorators/Style.js';
-export * from './nodes/Node.js';
-export * from './nodes/Storage.js';
-export * from './nodes/Theme.js';
-export * from './elements/IoElement.js';
-export * from './elements/IoGL.js';
-export * from './elements/IoGL.glsl.js';
-export * from './elements/IoNative.js';
-export * from './elements/IoOverlay.js';
-export * from './utils/Focus.js';
-export * from './utils/Nudge.js';
-/** @License
- * Copyright ©2025 Aleksandar (Aki) Rodic
+/*!
+ * @license
+ * Copyright ©2026 Aleksandar (Aki) Rodic
  *
  * The MIT License
  *
@@ -42,6 +22,27 @@ export * from './utils/Nudge.js';
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+export * from './core/Binding.js';
+export * from './core/ChangeQueue.js';
+export * from './core/EventDispatcher.js';
+export * from './core/NodeArray.js';
+export * from './core/ProtoChain.js';
+export * from './core/Queue.js';
+export * from './core/ReactiveProperty.js';
+export * from './vdom/VDOM.js';
+export * from './decorators/Property.js';
+export * from './decorators/Register.js';
+export * from './decorators/Style.js';
+export * from './nodes/Node.js';
+export * from './nodes/Storage.js';
+export * from './nodes/Theme.js';
+export * from './elements/IoElement.js';
+export * from './elements/IoGL.js';
+export * from './elements/IoGL.glsl.js';
+export * from './elements/IoNative.js';
+export * from './elements/IoOverlay.js';
+export * from './utils/Focus.js';
+export * from './utils/Nudge.js';
 declare const LICENSE = "MIT";
 export { LICENSE };
 //# sourceMappingURL=index.d.ts.map

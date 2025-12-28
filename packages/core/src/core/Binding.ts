@@ -3,7 +3,6 @@ import { Node } from '../nodes/Node.js'
 import { IoElement } from '../elements/IoElement.js'
 
 // TODO: Improve types!
-
 type Properties = string[]
 type TargetProperties = WeakMap<Node | IoElement, Properties>
 

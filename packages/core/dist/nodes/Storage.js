@@ -138,9 +138,8 @@ let StorageNode = class StorageNode extends Node {
                     const value = JSON.parse(storedValue);
                     props.value = constructor ? new constructor(value) : value;
                 }
-                catch (error) {
+                catch {
                     props.value = storedValue;
-                    console.warn(error);
                 }
             }
             super(props);
@@ -290,9 +289,8 @@ function updateAllFromHash() {
             try {
                 node.value = JSON.parse(hashValues[h]);
             }
-            catch (error) {
+            catch {
                 node.value = hashValues[h];
-                console.warn(error);
             }
         }
     }
