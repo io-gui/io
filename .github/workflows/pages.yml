@@ -39,7 +39,7 @@ jobs:
 
       - name: Replace paths in index.html for production
         run: |
-          sed -i 's|./packages/three/node_modules|..|g' index.html
+          sed -i 's|/packages/three/node_modules/three/|/three/|g' index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
