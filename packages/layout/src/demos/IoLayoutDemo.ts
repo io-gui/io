@@ -72,16 +72,16 @@ export class IoLayoutDemo extends IoElement {
     this.render([
       ioLayout({
         elements: [
-          {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/inputs/build/demos/IoInputsDemo.js'}},
-          {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/icons/build/demos/IoIconsDemo.js'}},
-          {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/sliders/build/demos/IoSlidersDemo.js'}},
-          {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/colors/build/demos/IoColorsDemo.js'}},
-          {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/editors/build/demos/IoEditorsDemo.js'}},
-          {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/menus/build/demos/IoMenusDemo.js'}},
-          {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/navigation/build/demos/IoNavigationDemo.js'}},
-          {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/core/build/demos/IoThemeEditor.js'}},
-          {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/core/build/demos/IoElementInspectorDemo.js'}},
-          {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/core/build/demos/IoChangeVisualization.js'}},
+          {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/inputs/dist/demos/IoInputsDemo.js'}},
+          {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/icons/dist/demos/IoIconsDemo.js'}},
+          {tag: 'io-sliders-demo', props: {id: 'Sliders', import: './packages/sliders/dist/demos/IoSlidersDemo.js'}},
+          {tag: 'io-colors-demo', props: {id: 'Colors', import: './packages/colors/dist/demos/IoColorsDemo.js'}},
+          {tag: 'io-editors-demo', props: {id: 'Editors', import: './packages/editors/dist/demos/IoEditorsDemo.js'}},
+          {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/menus/dist/demos/IoMenusDemo.js'}},
+          {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js'}},
+          {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/core/dist/demos/IoThemeEditor.js'}},
+          {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/core/dist/demos/IoElementInspectorDemo.js'}},
+          {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/core/dist/demos/IoChangeVisualization.js'}},
           ioMarkdown({id: 'Getting Started', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md'}),
           ioMarkdown({id: 'Deep Dive', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md'}),
           div({id: 'Doc 1'}, [
