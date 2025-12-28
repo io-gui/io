@@ -28,6 +28,6 @@ jobs:
       - name: Install playwright
         run: npx playwright install --with-deps
       - name: Bundling
-        run: pnpm build
+        run: pnpm bundle
       - name: Running tests
         run: pnpm test
