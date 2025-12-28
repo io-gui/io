@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getEditorConfig, registerEditorConfig } from './EditorConfig';
+import { getEditorConfig, registerEditorConfig } from '@io-gui/editors';
 describe('EditorConfig.test', () => {
     it('Should be defined', () => {
         expect(getEditorConfig).toBeDefined();

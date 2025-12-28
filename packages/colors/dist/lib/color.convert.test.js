@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from './color.convert';
+import { hsl2rgb, rgb2hsl, rgb2hsv, hsv2rgb } from '@io-gui/colors';
 describe('color.convert.test', () => {
     it('should convert rgb to hsl', () => {
         const rgb = [255, 0, 0];

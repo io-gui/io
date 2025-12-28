@@ -17,11 +17,12 @@ describe('IoSlider2d', () => {
     it('has a11y attributes', () => {
         expect(element.getAttribute('role')).toBe('slider');
         element.value = [0.1, 0.1];
-        expect(element.getAttribute('aria-valuenow')).toBe('0.1');
         element.min = [0, 0];
-        expect(element.getAttribute('aria-valuemin')).toBe('0');
         element.max = [1, 1];
-        expect(element.getAttribute('aria-valuemax')).toBe('1');
+        // element.changed()
+        expect(element.getAttribute('aria-valuenow')).toBe('[0.1,0.1]');
+        expect(element.getAttribute('aria-valuemin')).toBe('[0,0]');
+        expect(element.getAttribute('aria-valuemax')).toBe('[1,1]');
     });
 });
 //# sourceMappingURL=IoSlider2d.test.js.map

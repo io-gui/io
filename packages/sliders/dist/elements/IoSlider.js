@@ -162,8 +162,8 @@ let IoSlider = class IoSlider extends IoGl {
     }
     _getPointerCoord(event) {
         const rect = this.#rect || this.getBoundingClientRect();
-        let x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
-        let y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
+        const x = Math.max(0, Math.min(1, (event.clientX - rect.x) / rect.width));
+        const y = Math.max(0, Math.min(1, 1 - (event.clientY - rect.y) / rect.height));
         return Math.pow(this.vertical ? y : x, this.exponent);
     }
     _getValueFromCoord(coord) {

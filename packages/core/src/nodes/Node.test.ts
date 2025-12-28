@@ -474,7 +474,7 @@ describe('Node', () => {
     expect(node3.propChangedEvents).toEqual([])
   })
   it('Should execute throttle/debounce queue in FIFO order', async () => {
-    let order: number[] = []
+    const order: number[] = []
     const node = new Node()
     node.debounce(() => {
       order.push(1)

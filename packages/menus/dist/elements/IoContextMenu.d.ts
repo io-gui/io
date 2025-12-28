@@ -14,7 +14,7 @@ export declare class IoContextMenu extends IoElement {
     expanded: boolean;
     button: number;
     $options: IoMenuOptions;
-    _contextTimeout: number;
+    _contextTimeout: ReturnType<typeof setTimeout>;
     static get ReactiveProperties(): any;
     constructor(args: IoContextMenuProps);
     init(): void;

@@ -153,7 +153,7 @@ describe('ProtoChain', () => {
         expect(constructors).toEqual([IoElement1, IoElement]);
     });
     it('Should include properties declared in `static get Properties()` return oject', () => {
-        let protoChain = new ProtoChain(Node1);
+        const protoChain = new ProtoChain(Node1);
         expect(Object.keys(protoChain.properties)).toEqual(['sprop1']);
         expect(protoChain.properties).toEqual({
             sprop1: 'foo'
@@ -173,7 +173,7 @@ describe('ProtoChain', () => {
         });
     });
     it('Should include properties declared in Property decorator', () => {
-        let protoChain = new ProtoChain(Node3);
+        const protoChain = new ProtoChain(Node3);
         expect(Object.keys(protoChain.properties)).toEqual(['sprop1', 'sprop2']);
         expect(protoChain.properties).toEqual({
             sprop1: 'foo',

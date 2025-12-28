@@ -1,7 +1,7 @@
 import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
 export type IoBreadcrumbsProps = IoElementProps & {
-    value?: Object;
-    selected?: WithBinding<Object>;
+    value?: object;
+    selected?: WithBinding<object>;
     search?: WithBinding<string>;
 };
 /**
@@ -11,10 +11,10 @@ export type IoBreadcrumbsProps = IoElementProps & {
  **/
 export declare class IoBreadcrumbs extends IoElement {
     static get Style(): string;
-    value: Object;
-    selected: Object;
+    value: object;
+    selected: object;
     search: string;
-    _crumbs: Array<Object>;
+    _crumbs: Array<object>;
     valueChanged(): void;
     selectedChanged(): void;
     onClearSearch(): void;

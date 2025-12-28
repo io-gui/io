@@ -4,6 +4,6 @@ export declare class ComputeTextureExample extends ThreeState {
     storageTexture: StorageTexture;
     computeNode: ComputeNode;
     constructor();
-    onRendererInitialized(renderer: WebGPURenderer): void;
+    onRendererInitialized(renderer: WebGPURenderer): Promise<void>;
 }
 //# sourceMappingURL=ComputeTextureExample.d.ts.map

@@ -19,7 +19,7 @@ const observer = new IntersectionObserver((entries) => {
 });
 const _renderer = new WebGPURenderer({ antialias: false, alpha: true });
 _renderer.setPixelRatio(window.devicePixelRatio);
-_renderer.init();
+void _renderer.init();
 const _playingViewports = [];
 new Promise((resolve, reject) => {
     _renderer.setAnimationLoop((time) => {
@@ -107,7 +107,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
             return;
         }
         if (this.state.isRendererInitialized() === false) {
-            this.state.onRendererInitialized(_renderer);
+            void this.state.onRendererInitialized(_renderer);
         }
         if (!this.width || !this.height) {
             return;

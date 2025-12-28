@@ -54,6 +54,8 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
       }
     `;
     }
+    // @ReactiveProperty('throttled')
+    // declare reactivity: ReactivityType
     #needsResize = false;
     #canvas;
     // #counter: HTMLSpanElement;
@@ -336,9 +338,6 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Number, value: 1 })
 ], IoGl.prototype, "pxRatio", void 0);
-__decorate([
-    ReactiveProperty('throttled')
-], IoGl.prototype, "reactivity", void 0);
 IoGl = IoGl_1 = __decorate([
     Register
 ], IoGl);

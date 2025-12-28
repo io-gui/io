@@ -11,7 +11,7 @@ const defaultPropsMap = new WeakMap();
  * @param {Object} props - Element properties.
  */
 export const applyNativeElementProps = function (element, props) {
-    let defaultPropValues = defaultPropsMap.get(element) || {};
+    const defaultPropValues = defaultPropsMap.get(element) || {};
     defaultPropsMap.set(element, defaultPropValues);
     for (const _p in props) {
         const p = _p;

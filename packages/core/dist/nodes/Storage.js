@@ -18,6 +18,7 @@ class EmulatedLocalStorage {
         }
         catch (error) {
             console.warn('Storage: Cannot access localStorage. Check browser privacy settings!');
+            console.warn(error);
         }
         return false;
     }
@@ -42,6 +43,7 @@ class EmulatedLocalStorage {
         }
         catch (error) {
             console.warn('Storage: Cannot access localStorage. Check browser privacy settings!');
+            console.warn(error);
         }
     }
     setItem(key, value) {
@@ -136,7 +138,7 @@ let StorageNode = class StorageNode extends Node {
                     const value = JSON.parse(storedValue);
                     props.value = constructor ? new constructor(value) : value;
                 }
-                catch (error) {
+                catch {
                     props.value = storedValue;
                 }
             }
@@ -287,7 +289,7 @@ function updateAllFromHash() {
             try {
                 node.value = JSON.parse(hashValues[h]);
             }
-            catch (error) {
+            catch {
                 node.value = hashValues[h];
             }
         }

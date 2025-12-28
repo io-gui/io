@@ -21,7 +21,7 @@ export interface NodeConstructor {
   Listeners?: ListenerDefinitions
   Style?: string
   name?: string
-  prototype: NodeConstructor | Object | HTMLElement
+  prototype: NodeConstructor | object | HTMLElement
 }
 
 export const NODES = {
@@ -143,7 +143,7 @@ export class Node extends Object {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event)
   };
-  dispatchMutation(object: Object | Node = this, properties: string[] = []) {
+  dispatchMutation(object: object | Node = this, properties: string[] = []) {
     if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties})
     } else {
@@ -455,7 +455,7 @@ export function dispose(node: Node | IoElement) {
   node._changeQueue.dispose()
   delete (node as any)._changeQueue
 
-  let removed: Node[] = []
+  const removed: Node[] = []
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name)
     if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {

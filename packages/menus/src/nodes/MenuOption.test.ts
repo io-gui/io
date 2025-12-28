@@ -33,7 +33,7 @@ describe('MenuOption', () => {
     expect(option.options.length).toBe(0)
   })
   it('Should initialize correctly from constructor arguments', () => {
-    let option = new MenuOption({
+    const option = new MenuOption({
       value: 1,
       id: 'one',
       label: 'onelabel',
@@ -77,7 +77,7 @@ describe('MenuOption', () => {
     expect(option.options[2].mode).toBe('select')
   })
   it('Should initialize suboptions from constructor arguments', () => {
-    let option = new MenuOption(testItemArgs)
+    const option = new MenuOption(testItemArgs)
     expect(option.options).toBeInstanceOf(NodeArray)
     expect(option.options.length).toBe(2)
     expect(option.options[0].options).toBeInstanceOf(NodeArray)
@@ -86,7 +86,7 @@ describe('MenuOption', () => {
     expect(option.options[1].options.length).toBe(2)
   })
   it('Should select default branch when `selectDefault` is called', () => {
-    let option = new MenuOption(testItemArgs)
+    const option = new MenuOption(testItemArgs)
     option.selectDefault()
     expect(option.selected).toBe(true)
     expect(option.options[0].selected).toBe(true)
@@ -97,7 +97,7 @@ describe('MenuOption', () => {
     expect(option.options[1].options[1].selected).toBe(false)
   })
   it('Should update path when selected', async () => {
-    let option = new MenuOption(testItemArgs)
+    const option = new MenuOption(testItemArgs)
     option.selectDefault()
     expect(option.path).toBe('1,1.1')
     expect(option.options[0].path).toBe('1.1')
@@ -117,7 +117,7 @@ describe('MenuOption', () => {
     expect(option.options[1].options[0].path).toBe('')
   })
   it('Should update selectedID andselectedIDImmediate when selected', async () => {
-    let option = new MenuOption(testItemArgs)
+    const option = new MenuOption(testItemArgs)
     option.selectDefault()
     expect(option.selectedIDImmediate).toBe('1')
     expect(option.options[0].selectedIDImmediate).toBe('1.1')
@@ -131,7 +131,7 @@ describe('MenuOption', () => {
     expect(option.options[1].selectedIDImmediate).toBe('2.2')
   })
   it('Should update selected when selectedID and selectedIDImmediate changes', async () => {
-    let option = new MenuOption(testItemArgs)
+    const option = new MenuOption(testItemArgs)
     option.selectedIDImmediate = '1'
     expect(option.selected).toBe(true)
     expect(option.options[0].selected).toBe(true)

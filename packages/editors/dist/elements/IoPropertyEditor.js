@@ -81,12 +81,12 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         }
     }
     valueMutated() {
-        this.changed();
-    }
-    changed() {
-        this.throttle(this.changeThrottled);
+        this.changeThrottled();
     }
     changeThrottled() {
+        this.throttle(this.changeThrottled);
+    }
+    changed() {
         const config = getEditorConfig(this.value, this.config);
         const groups = getEditorGroups(this.value, this.groups);
         const widget = getEditorWidget(this.value, this.widgets);
@@ -153,9 +153,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         window.removeEventListener('io-object-mutation', this.onPropertyMutated);
     }
 };
-__decorate([
-    ReactiveProperty('debounced')
-], IoPropertyEditor.prototype, "reactivity", void 0);
 __decorate([
     ReactiveProperty()
 ], IoPropertyEditor.prototype, "value", void 0);

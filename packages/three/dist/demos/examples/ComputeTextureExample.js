@@ -40,9 +40,9 @@ let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
         const plane = new Mesh(new PlaneGeometry(1, 1), material);
         this.scene.add(plane);
     }
-    onRendererInitialized(renderer) {
+    async onRendererInitialized(renderer) {
         super.onRendererInitialized(renderer);
-        renderer.compute(this.computeNode);
+        void renderer.compute(this.computeNode);
     }
 };
 ComputeTextureExample = __decorate([
