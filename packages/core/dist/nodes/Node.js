@@ -121,6 +121,7 @@ let Node = Node_1 = class Node extends Object {
         this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
     // TODO: test!
+    // TODO: Consider bubbling up to elements!
     addParent(parent) {
         if (parent._isNode) {
             this._parents.push(parent);
@@ -129,7 +130,7 @@ let Node = Node_1 = class Node extends Object {
     removeParent(parent) {
         if (parent._isNode) {
             debug: if (!this._parents.includes(parent)) {
-                console.error('Node.removeParent(): Parent not found!', parent);
+                console.error('Node.removeParent(): Parent not found!', this, parent);
             }
             this._parents.splice(this._parents.indexOf(parent), 1);
         }

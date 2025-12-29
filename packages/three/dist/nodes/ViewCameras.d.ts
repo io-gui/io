@@ -16,11 +16,15 @@ export declare class ViewCameras extends Node {
     camera: PerspectiveCamera | OrthographicCamera;
     private readonly defaultCameras;
     private readonly orbitControls;
+    static get Listeners(): {
+        'scene-ready': string;
+    };
     constructor(args: ViewCamerasProps);
     cameraSelectChanged(): void;
     setSize(width: number, height: number): void;
     cameraChanged(): void;
     stateChanged(): void;
+    onSceneReady(): void;
     frameObject(object: Object3D, camera: Camera): void;
     dispose(): void;
 }

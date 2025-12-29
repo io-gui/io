@@ -25,5 +25,8 @@
     "typescript-eslint": "^8.50.1",
     "vite": "^7.3.0",
     "vitest": "^4.0.16"
+  },
+  "dependencies": {
+    "three": "link:../../Library/pnpm/global/5/node_modules/three"
   }
 }

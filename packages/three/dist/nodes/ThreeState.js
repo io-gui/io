@@ -10,6 +10,7 @@ let ThreeState = class ThreeState extends Node {
     renderer = null;
     width = 0;
     height = 0;
+    _lastAnimatedFrame = -1;
     setViewportSize(width, height) {
         if (this.width !== width || this.height !== height) {
             if (!!width && !!height) {
@@ -27,7 +28,14 @@ let ThreeState = class ThreeState extends Node {
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onResized(width, height) { }
-    onAnimate() { }
+    animate(time, delta) {
+        if (this._lastAnimatedFrame === time)
+            return;
+        this._lastAnimatedFrame = time;
+        this.onAnimate(delta);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onAnimate(delta) { }
 };
 __decorate([
     ReactiveProperty({ type: Scene, init: null })
