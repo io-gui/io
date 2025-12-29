@@ -1,9 +1,9 @@
 import { defineConfig } from 'vitest/config'
 import { playwright } from '@vitest/browser-playwright'
-import packages from './packages.config'
+import { resolveConfig } from './vite.config'
 
 export default defineConfig({
-  resolve: packages.resolve,
+  resolve: resolveConfig,
   test: {
     browser: {
       enabled: true,

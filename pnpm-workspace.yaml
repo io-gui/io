@@ -1,2 +1,5 @@
 packages:
-  - 'packages/*'
+  - packages/*
+
+overrides:
+  three: link:../../Library/pnpm/global/5/node_modules/three

@@ -2,9 +2,9 @@ import { Register, IoElement, Storage as $ } from '@io-gui/core'
 import { ioLayout, Split } from '@io-gui/layout'
 import { MenuOption } from '@io-gui/menus'
 import { ioThreeViewport } from '@io-gui/three'
-import { ComputeTextureExample } from './examples/ComputeTextureExample.js'
-import { VolumePerlinExample } from './examples/VolumePerlinExample.js'
-import { WebGPUCamera } from './examples/WebGPUCamera.js'
+import { WebGPUComputeTextureExample } from '../examples/webgpu_compute_texture.js'
+import { WebGPUVolumePerlinExample } from '../examples/webgpu_volume_perlin.js'
+import { WebGPUCameraExample } from '../examples/webgpu_camera.js'
 
 const split = new Split({
   children: [
@@ -14,16 +14,16 @@ const split = new Split({
         {
           orientation: 'horizontal',
           children: [
-            {tabs: [{id: 'ComputeTextureExample', icon: 'io:numeric-1-box'}]},
-            {tabs: [{id: 'VolumePerlinExample', icon: 'io:numeric-2-box'}]}
+            {tabs: [{id: 'WebGPUComputeTexture', icon: 'io:numeric-1-box'}]},
+            {tabs: [{id: 'WebGPUVolumePerlin', icon: 'io:numeric-2-box'}]}
           ]
         },
         {
           orientation: 'horizontal',
           children: [
-            {tabs: [{id: 'webGPUCamera', icon: 'io:numeric-3-box'}]},
-            {tabs: [{id: 'webGPUCamera(orthographicCamera)', icon: 'io:numeric-4-box'}]},
-            {tabs: [{id: 'webGPUCamera(PerspectiveCamera)', icon: 'io:numeric-5-box'}]},
+            {tabs: [{id: 'WebGPUCamera', icon: 'io:numeric-3-box'}]},
+            {tabs: [{id: 'WebGPUCamera(OrthographicCamera)', icon: 'io:numeric-4-box'}]},
+            {tabs: [{id: 'WebGPUCamera(PerspectiveCamera)', icon: 'io:numeric-5-box'}]},
           ]
         }
       ]
@@ -45,15 +45,15 @@ export class IoThreeDemo extends IoElement {
     `
   }
   ready() {
-    const webGPUCamera = new WebGPUCamera()
+    const webGPUCamera = new WebGPUCameraExample()
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'ComputeTextureExample', state: new ComputeTextureExample(), cameraSelect: 'front'}),
-          ioThreeViewport({id: 'VolumePerlinExample', state: new VolumePerlinExample()}),
-          ioThreeViewport({id: 'webGPUCamera', state: webGPUCamera, playing: true, cameraSelect: 'top', clearColor: 0x443322}),
-          ioThreeViewport({id: 'webGPUCamera(orthographicCamera)', state: webGPUCamera, playing: true, cameraSelect: 'scene:orthographicCamera'}),
-          ioThreeViewport({id: 'webGPUCamera(PerspectiveCamera)', state: webGPUCamera, playing: true, cameraSelect: 'scene:perspectiveCamera'}),
+          ioThreeViewport({id: 'WebGPUComputeTexture', state: new WebGPUComputeTextureExample(), cameraSelect: 'front'}),
+          ioThreeViewport({id: 'WebGPUVolumePerlin', state: new WebGPUVolumePerlinExample()}),
+          ioThreeViewport({id: 'WebGPUCamera', state: webGPUCamera, playing: true, cameraSelect: 'top', clearColor: 0x443322}),
+          ioThreeViewport({id: 'WebGPUCamera(OrthographicCamera)', state: webGPUCamera, playing: true, cameraSelect: 'scene:orthographicCamera'}),
+          ioThreeViewport({id: 'WebGPUCamera(PerspectiveCamera)', state: webGPUCamera, playing: true, cameraSelect: 'scene:perspectiveCamera'}),
         ],
         split: $({key: 'viewport-split', storage: 'local', value: split}),
         addMenuOption:  new MenuOption({
@@ -61,11 +61,11 @@ export class IoThreeDemo extends IoElement {
           mode: 'none',
           options: [
             {id: 'Viewports', mode: 'none', options: [
-              {id: 'ComputeTextureExample', icon: 'io:numeric-1-box', mode: 'none'},
-              {id: 'VolumePerlinExample', icon: 'io:numeric-2-box', mode: 'none'},
-              {id: 'webGPUCamera', icon: 'io:numeric-3-box', mode: 'none'},
-              {id: 'webGPUCamera(orthographicCamera)', icon: 'io:numeric-4-box', mode: 'none'},
-              {id: 'webGPUCamera(PerspectiveCamera)', icon: 'io:numeric-5-box', mode: 'none'},
+              {id: 'ComputeTexture', icon: 'io:numeric-1-box', mode: 'none'},
+              {id: 'WebGPUVolumePerlin', icon: 'io:numeric-2-box', mode: 'none'},
+              {id: 'WebGPUCamera', icon: 'io:numeric-3-box', mode: 'none'},
+              {id: 'WebGPUCamera(OrthographicCamera)', icon: 'io:numeric-4-box', mode: 'none'},
+              {id: 'WebGPUCamera(PerspectiveCamera)', icon: 'io:numeric-5-box', mode: 'none'},
             ]},
           ],
         }),

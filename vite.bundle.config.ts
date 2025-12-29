@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import path from 'node:path'
-import packages from './packages.config'
+import { resolveConfig } from './vite.config'
 import strip from '@rollup/plugin-strip'
 
 const packageName = process.env.PACKAGE as string
@@ -53,5 +53,5 @@ export default defineConfig({
       }
     }
   },
-  resolve: packages.resolve
+  resolve: resolveConfig
 })
