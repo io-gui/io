@@ -42,6 +42,9 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Clean up node_modules
+        run: rm -rf packages/*/node_modules
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
