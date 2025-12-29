@@ -6,7 +6,7 @@ import { Register } from '@io-gui/core'
 import { ThreeState } from '@io-gui/three'
 
 @Register
-export class WebGPUVolumePerlinExample extends ThreeState {
+export class VolumePerlinExample extends ThreeState {
   constructor() {
     super()
 

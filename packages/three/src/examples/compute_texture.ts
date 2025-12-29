@@ -4,7 +4,7 @@ import { Register } from '@io-gui/core'
 import { ThreeState } from '@io-gui/three'
 
 @Register
-export class WebGPUComputeTextureExample extends ThreeState {
+export class ComputeTextureExample extends ThreeState {
   public storageTexture: StorageTexture
   public computeNode: ComputeNode
   constructor() {

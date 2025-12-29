@@ -1,17 +1,15 @@
-import { PerspectiveCamera, OrthographicCamera, CameraHelper, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
+import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
 import { Register } from '@io-gui/core'
 import { ThreeState } from '@io-gui/three'
 
 const frustumSize = 600
 
 @Register
-export class WebGPUCameraExample extends ThreeState {
+export class CameraExample extends ThreeState {
 
   public perspectiveCamera: PerspectiveCamera
   public orthographicCamera: OrthographicCamera
   public cameraRig: Group
-  public perspectiveCameraHelper: CameraHelper
-  public orthographicCameraHelper: CameraHelper
   public mesh: Mesh
 
   constructor() {
@@ -19,13 +17,9 @@ export class WebGPUCameraExample extends ThreeState {
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
     this.perspectiveCamera.name = 'perspectiveCamera'
-    this.perspectiveCameraHelper = new CameraHelper( this.perspectiveCamera )
-    this.scene.add( this.perspectiveCameraHelper )
 
     this.orthographicCamera = new OrthographicCamera( -1, 1, 1, -1, 150, 1000 )
     this.orthographicCamera.name = 'orthographicCamera'
-    this.orthographicCameraHelper = new CameraHelper( this.orthographicCamera )
-    this.scene.add( this.orthographicCameraHelper )
 
     // counteract different front orientation of cameras vs rig
 
@@ -107,11 +101,9 @@ export class WebGPUCameraExample extends ThreeState {
     this.perspectiveCamera.fov = 35 + 30 * Math.sin( 0.5 * r )
     this.perspectiveCamera.far = this.mesh.position.length()
     this.perspectiveCamera.updateProjectionMatrix()
-    this.perspectiveCameraHelper.update()
 
     this.orthographicCamera.far = this.mesh.position.length()
     this.orthographicCamera.updateProjectionMatrix()
-    this.orthographicCameraHelper.update()
 
     this.cameraRig.lookAt( this.mesh.position )
   }
