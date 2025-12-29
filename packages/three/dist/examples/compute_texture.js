@@ -8,7 +8,7 @@ import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, NearestFilt
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 import { Register } from '@io-gui/core';
 import { ThreeState } from '@io-gui/three';
-let WebGPUComputeTextureExample = class WebGPUComputeTextureExample extends ThreeState {
+let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
     storageTexture;
     computeNode;
     constructor() {
@@ -45,8 +45,8 @@ let WebGPUComputeTextureExample = class WebGPUComputeTextureExample extends Thre
         void renderer.compute(this.computeNode);
     }
 };
-WebGPUComputeTextureExample = __decorate([
+ComputeTextureExample = __decorate([
     Register
-], WebGPUComputeTextureExample);
-export { WebGPUComputeTextureExample };
-//# sourceMappingURL=webgpu_compute_texture.js.map
+], ComputeTextureExample);
+export { ComputeTextureExample };
+//# sourceMappingURL=compute_texture.js.map

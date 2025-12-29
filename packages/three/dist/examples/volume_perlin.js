@@ -10,7 +10,7 @@ import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Register } from '@io-gui/core';
 import { ThreeState } from '@io-gui/three';
-let WebGPUVolumePerlinExample = class WebGPUVolumePerlinExample extends ThreeState {
+let VolumePerlinExample = class VolumePerlinExample extends ThreeState {
     constructor() {
         super();
         const size = 128;
@@ -60,8 +60,8 @@ let WebGPUVolumePerlinExample = class WebGPUVolumePerlinExample extends ThreeSta
         this.scene.add(mesh);
     }
 };
-WebGPUVolumePerlinExample = __decorate([
+VolumePerlinExample = __decorate([
     Register
-], WebGPUVolumePerlinExample);
-export { WebGPUVolumePerlinExample };
-//# sourceMappingURL=webgpu_volume_perlin.js.map
+], VolumePerlinExample);
+export { VolumePerlinExample };
+//# sourceMappingURL=volume_perlin.js.map

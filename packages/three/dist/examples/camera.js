@@ -4,27 +4,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { PerspectiveCamera, OrthographicCamera, CameraHelper, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu';
+import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu';
 import { Register } from '@io-gui/core';
 import { ThreeState } from '@io-gui/three';
 const frustumSize = 600;
-let WebGPUCameraExample = class WebGPUCameraExample extends ThreeState {
+let CameraExample = class CameraExample extends ThreeState {
     perspectiveCamera;
     orthographicCamera;
     cameraRig;
-    perspectiveCameraHelper;
-    orthographicCameraHelper;
     mesh;
     constructor() {
         super();
         this.perspectiveCamera = new PerspectiveCamera(50, 0.5, 150, 1000);
         this.perspectiveCamera.name = 'perspectiveCamera';
-        this.perspectiveCameraHelper = new CameraHelper(this.perspectiveCamera);
-        this.scene.add(this.perspectiveCameraHelper);
         this.orthographicCamera = new OrthographicCamera(-1, 1, 1, -1, 150, 1000);
         this.orthographicCamera.name = 'orthographicCamera';
-        this.orthographicCameraHelper = new CameraHelper(this.orthographicCamera);
-        this.scene.add(this.orthographicCameraHelper);
         // counteract different front orientation of cameras vs rig
         this.orthographicCamera.rotation.y = Math.PI;
         this.perspectiveCamera.rotation.y = Math.PI;
@@ -74,15 +68,13 @@ let WebGPUCameraExample = class WebGPUCameraExample extends ThreeState {
         this.perspectiveCamera.fov = 35 + 30 * Math.sin(0.5 * r);
         this.perspectiveCamera.far = this.mesh.position.length();
         this.perspectiveCamera.updateProjectionMatrix();
-        this.perspectiveCameraHelper.update();
         this.orthographicCamera.far = this.mesh.position.length();
         this.orthographicCamera.updateProjectionMatrix();
-        this.orthographicCameraHelper.update();
         this.cameraRig.lookAt(this.mesh.position);
     }
 };
-WebGPUCameraExample = __decorate([
+CameraExample = __decorate([
     Register
-], WebGPUCameraExample);
-export { WebGPUCameraExample };
-//# sourceMappingURL=webgpu_camera.js.map
+], CameraExample);
+export { CameraExample };
+//# sourceMappingURL=camera.js.map

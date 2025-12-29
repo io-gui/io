@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding, Change } from '@io-gui/core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, Clock } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeState } from '../nodes/ThreeState.js'
@@ -31,7 +31,7 @@ new Promise((resolve, reject) => {
     _currentFrameTime = time
     _currentFrameDelta = _clock.getDelta()
     for (const viewport of _playingViewports) {
-      viewport.onAnimate(time)
+      viewport.onAnimate()
     }
   }).then(resolve).catch(reject)
 }).then(() => {
@@ -123,8 +123,8 @@ export class IoThreeViewport extends IoElement {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onAnimate(time: number) {
+
+  onAnimate() {
     if (!this.visible) return
     this.debounce(this.renderViewport)
   }

@@ -76,6 +76,11 @@ class DefaultCameras {
     }
 }
 let ViewCameras = class ViewCameras extends Node {
+    static get Listeners() {
+        return {
+            'scene-ready': 'onSceneReady'
+        };
+    }
     constructor(args) {
         super(args);
         this.orbitControls.connect(this.viewport);
@@ -109,7 +114,6 @@ let ViewCameras = class ViewCameras extends Node {
         else {
             this.camera = this.defaultCameras.getCamera(this.cameraSelect) || this.defaultCameras.perspective;
         }
-        this.orbitControls.object = this.camera;
     }
     setSize(width, height) {
         if (width === 0 || height === 0)
@@ -127,15 +131,21 @@ let ViewCameras = class ViewCameras extends Node {
         // TODO: redundant if camera is one of the defaults?
         // TODO: Consider leaving scene camera aspect ratio unchanged or:
         // - Set it temporarily to match viewport aspect ratio (show frame mask) and restore it
-        // if (!this.defaultCameras.cameras.includes(this.camera)) {
-        //   console.log('cameraChanged', this.camera, this.width, this.height)
-        //   setAspect(this.camera, this.width, this.height)
-        // }
+        if (!this.defaultCameras.cameras.includes(this.camera)) {
+            this.orbitControls.enabled = false;
+        }
+        else {
+            this.orbitControls.enabled = true;
+            this.orbitControls.object = this.camera;
+        }
     }
     stateChanged() {
         for (const camera of this.defaultCameras.cameras) {
             this.frameObject(this.state.scene, camera);
         }
+    }
+    onSceneReady() {
+        this.frameObject(this.state.scene, this.camera);
     }
     frameObject(object, camera) {
         let distance;
@@ -173,6 +183,7 @@ let ViewCameras = class ViewCameras extends Node {
             camera.lookAt(center);
             camera.updateProjectionMatrix();
         }
+        this.orbitControls.target.copy(center);
     }
     dispose() {
         this.orbitControls.dispose();

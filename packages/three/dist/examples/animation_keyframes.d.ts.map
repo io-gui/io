@@ -1,0 +1,1 @@
+{"version":3,"file":"animation_keyframes.d.ts","sourceRoot":"","sources":["../../src/examples/animation_keyframes.ts"],"names":[],"mappings":"AAAA,OAAO,EACL,cAAc,EAGd,cAAc,EACf,MAAM,cAAc,CAAA;AAKrB,OAAO,EAAE,UAAU,EAAE,MAAM,eAAe,CAAA;AAE1C,qBACa,yBAA0B,SAAQ,UAAU;IAEhD,KAAK,EAAE,cAAc,GAAG,IAAI,CAAO;;IAOpC,qBAAqB,CAAC,QAAQ,EAAE,cAAc;IA6BpD,SAAS,CAAC,KAAK,EAAE,MAAM;CAKxB"}

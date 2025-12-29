@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget } from 'three/webgpu';
+import { WebGPURenderer, CanvasTarget, Clock } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeState } from '../nodes/ThreeState.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
@@ -17,14 +17,21 @@ const observer = new IntersectionObserver((entries) => {
         entry.target.visible = entry.isIntersecting;
     });
 });
+// TODO: Add support for logarithmic depth buffer
+// TODO: Add support for unique renderer instances per viewport
 const _renderer = new WebGPURenderer({ antialias: false, alpha: true });
 _renderer.setPixelRatio(window.devicePixelRatio);
 void _renderer.init();
+const _clock = new Clock();
 const _playingViewports = [];
+let _currentFrameTime = -1;
+let _currentFrameDelta = 0;
 new Promise((resolve, reject) => {
     _renderer.setAnimationLoop((time) => {
+        _currentFrameTime = time;
+        _currentFrameDelta = _clock.getDelta();
         for (const viewport of _playingViewports) {
-            viewport.onAnimate(time);
+            viewport.onAnimate();
         }
     }).then(resolve).catch(reject);
 }).then(() => {
@@ -77,8 +84,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
             _playingViewports.splice(_playingViewports.indexOf(this), 1);
         }
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onAnimate(time) {
+    onAnimate() {
         if (!this.visible)
             return;
         this.debounce(this.renderViewport);
@@ -117,7 +123,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         _renderer.setSize(this.width, this.height);
         _renderer.clear();
         this.state.setViewportSize(this.width, this.height);
-        this.state.onAnimate();
+        this.state.animate(_currentFrameTime, _currentFrameDelta);
         _renderer.render(this.state.scene, this.viewCameras.camera);
     }
     dispose() {

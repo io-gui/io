@@ -24,7 +24,7 @@ export declare class IoThreeViewport extends IoElement {
     connectedCallback(): void;
     disconnectedCallback(): void;
     playingChanged(): void;
-    onAnimate(time: number): void;
+    onAnimate(): void;
     onResized(): void;
     stateChanged(): void;
     stateMutated(): void;
