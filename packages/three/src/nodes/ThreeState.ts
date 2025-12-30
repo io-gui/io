@@ -1,11 +1,20 @@
 import { Register, Node, ReactiveProperty } from '@io-gui/core'
-import { Scene, WebGPURenderer } from 'three/webgpu'
+import { NoToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 
 @Register
 export class ThreeState extends Node {
 
   @ReactiveProperty({type: Scene, init: null})
   declare scene: Scene
+
+  @ReactiveProperty({type: Number, value: 1})
+  declare toneMappingExposure: number
+
+  @ReactiveProperty({type: Number, value: NoToneMapping})
+  declare toneMapping: ToneMapping
+  
+  @ReactiveProperty({type: Object, init: null})
+  declare config: Record<string, unknown>
 
   public renderer: WebGPURenderer | null = null
 

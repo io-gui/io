@@ -1,5 +1,5 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, Clock } from 'three/webgpu'
+import { WebGPURenderer, CanvasTarget, Clock, NeutralToneMapping, ToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeState } from '../nodes/ThreeState.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
@@ -17,6 +17,7 @@ const observer = new IntersectionObserver((entries) => {
 // TODO: Add support for logarithmic depth buffer
 // TODO: Add support for unique renderer instances per viewport
 const _renderer = new WebGPURenderer({antialias: false, alpha: true})
+_renderer.toneMapping = NeutralToneMapping
 _renderer.setPixelRatio(window.devicePixelRatio)
 void _renderer.init()
 
@@ -171,7 +172,17 @@ export class IoThreeViewport extends IoElement {
 
     this.state.setViewportSize(this.width, this.height)
     this.state.animate(_time, _delta)
+
+    const toneMapping = this.renderer.toneMapping
+    const toneMappingExposure = this.renderer.toneMappingExposure
+
+    this.renderer.toneMapping = this.state.toneMapping
+    this.renderer.toneMappingExposure = this.state.toneMappingExposure
+
     this.renderer.render(this.state.scene, this.viewCameras.camera)
+
+    this.renderer.toneMapping = toneMapping
+    this.renderer.toneMappingExposure = toneMappingExposure
   }
 
   dispose() {
