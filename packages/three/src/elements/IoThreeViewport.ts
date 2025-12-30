@@ -23,13 +23,13 @@ void _renderer.init()
 const _clock = new Clock()
 
 const _playingViewports: IoThreeViewport[] = []
-let _currentFrameTime = -1
-let _currentFrameDelta = 0
+let _time = -1
+let _delta = 0
 
 new Promise((resolve, reject) => {
   _renderer.setAnimationLoop((time: number) => {
-    _currentFrameTime = time
-    _currentFrameDelta = _clock.getDelta()
+    _time = time
+    _delta = _clock.getDelta()
     for (const viewport of _playingViewports) {
       viewport.onAnimate()
     }
@@ -41,11 +41,12 @@ new Promise((resolve, reject) => {
 })
 
 export type IoThreeViewportProps = IoElementProps & {
-  state: ThreeState | Binding<ThreeState>
-  cameraSelect?: string | Binding<string>
-  playing?: boolean | Binding<boolean>
   clearColor?: number | Binding<number>
   clearAlpha?: number | Binding<number>
+  state: ThreeState | Binding<ThreeState>
+  playing?: boolean | Binding<boolean>
+  cameraSelect?: string | Binding<string>
+  renderer?: WebGPURenderer
 }
 
 @Register
@@ -72,6 +73,9 @@ export class IoThreeViewport extends IoElement {
 
   @ReactiveProperty({type: String, value: 'perspective'})
   declare cameraSelect: string
+
+  @ReactiveProperty({type: WebGPURenderer, value: _renderer})
+  declare renderer: WebGPURenderer
 
   declare private readonly viewCameras: ViewCameras
   declare private readonly renderTarget: CanvasTarget
@@ -150,30 +154,33 @@ export class IoThreeViewport extends IoElement {
   }
 
   renderViewport() {
-    if (_renderer.initialized === false) {
+    if (this.renderer.initialized === false) {
       this.debounce(this.renderViewport)
       return
     }
     if (this.state.isRendererInitialized() === false) {
-      void this.state.onRendererInitialized(_renderer)
+      void this.state.onRendererInitialized(this.renderer)
     }
     if (!this.width || !this.height) {
       return
     }
-    _renderer.setCanvasTarget(this.renderTarget)
-    _renderer.setClearColor(this.clearColor, this.clearAlpha)
-    _renderer.setSize(this.width, this.height)
-    _renderer.clear()
+    this.renderer.setCanvasTarget(this.renderTarget)
+    this.renderer.setClearColor(this.clearColor, this.clearAlpha)
+    this.renderer.setSize(this.width, this.height)
+    this.renderer.clear()
 
     this.state.setViewportSize(this.width, this.height)
-    this.state.animate(_currentFrameTime, _currentFrameDelta)
-    _renderer.render(this.state.scene, this.viewCameras.camera)
+    this.state.animate(_time, _delta)
+    this.renderer.render(this.state.scene, this.viewCameras.camera)
   }
 
   dispose() {
     super.dispose()
     this.renderTarget.dispose()
     this.viewCameras.dispose()
+    if (this.renderer !== _renderer) {
+      this.renderer.dispose()
+    }
   }
 }
 

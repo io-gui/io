@@ -12,7 +12,7 @@ export class ThreeState extends Node {
   public width: number = 0
   public height: number = 0
 
-  private _lastAnimatedFrame: number = -1
+  private _prevTime: number = -1
 
   setViewportSize(width: number, height: number) {
     if (this.width !== width || this.height !== height) {
@@ -34,8 +34,8 @@ export class ThreeState extends Node {
   onResized(width: number, height: number) {}
 
   animate(time: number, delta: number) {
-    if (this._lastAnimatedFrame === time) return
-    this._lastAnimatedFrame = time
+    if (this._prevTime === time) return
+    this._prevTime = time
     this.onAnimate(delta)
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

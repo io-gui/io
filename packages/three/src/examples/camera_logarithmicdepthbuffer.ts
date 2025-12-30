@@ -51,7 +51,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeState {
 
     // Create camera with extreme near/far planes
     this.camera = new PerspectiveCamera(50, 1, NEAR, FAR)
-    this.camera.name = 'logarithmicCamera'
+    this.camera.name = 'PerspectiveCamera'
     this.scene.add(this.camera)
 
     // Lighting
@@ -142,6 +142,8 @@ export class CameraLogarithmicDepthBufferExample extends ThreeState {
     this.camera.position.y = Math.sin(0.25 * Math.PI * (this.mouse[1] - 0.5)) * zoom
     this.camera.position.z = Math.cos(0.5 * Math.PI * (this.mouse[0] - 0.5)) * zoom
     this.camera.lookAt(this.scene.position)
+
+    if (this.zoompos > 48) {this.zoompos = -100}
   }
 }
 
