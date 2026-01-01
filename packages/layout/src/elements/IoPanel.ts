@@ -84,9 +84,6 @@ export class IoPanel extends IoElement {
       }
     }
   }
-  init() {
-    this.focusTabDebounced = this.focusTabDebounced.bind(this)
-  }
   onNewTabClicked(event: CustomEvent) {
     event.stopPropagation()
     const option: MenuOption = event.detail.option

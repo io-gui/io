@@ -42,6 +42,11 @@ export type NodeProps = {
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
+
+function isNodeObject(value: any) {
+  return (typeof value === 'object' && value !== null && value._isNode)
+}
+
 function isNonNodeObject(value: any) {
   return (typeof value === 'object' && value !== null && !value._isNode)
 }
@@ -148,7 +153,7 @@ export class Node extends Object {
     return onPropertyMutated(this, event)
   };
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
-    if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
+    if (isNodeObject(object) || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties})
     } else {
       this.dispatch('io-object-mutation', {object, properties}, false, window)
@@ -254,6 +259,9 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
   if (value !== oldValue) {
     const binding = (value instanceof Binding) ? value : null
     if (binding) {
+      if (name === 'selectedExampleId') {
+        console.log('binding', binding)
+      }
       const oldBinding = prop.binding
       if (binding !== oldBinding) {
         if (oldBinding) {
@@ -308,12 +316,12 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         if (property.value === value && n !== name) hasNewValueAtOtherProperty = true
         if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true
       })
-      if (value?._isNode && !hasNewValueAtOtherProperty) {
+      if (isNodeObject(value) && !hasNewValueAtOtherProperty) {
         node._observedNodeProperties.push(name)
         value.addEventListener('io-object-mutation', node.onPropertyMutated)
         value.addParent(node)
       }
-      if (oldValue?._isNode && !hasOldValueAtOtherProperty && !oldValue._disposed) {
+      if (isNodeObject(oldValue) && !hasOldValueAtOtherProperty && !oldValue._disposed) {
         node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1)
         oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated)
         oldValue.removeParent(node)
@@ -413,7 +421,7 @@ export function observeObjectProperty(node: Node | IoElement, name: string, prop
 }
 
 export function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
-  if (property.value?._isNode) {
+  if (isNodeObject(property.value)) {
     let hasSameValueAtOtherProperty = false
     node._reactiveProperties.forEach((p, n) => {
       if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true
@@ -469,7 +477,7 @@ export function dispose(node: Node | IoElement) {
   const removed: Node[] = []
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name)
-    if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
+    if (isNodeObject(property.value) && !removed.includes(property.value) && !property.value._disposed) {
       property.value.removeEventListener('io-object-mutation', node.onPropertyMutated)
       removed.push(property.value)
     }

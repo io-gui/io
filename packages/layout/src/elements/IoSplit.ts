@@ -49,7 +49,6 @@ export class IoSplit extends IoElement {
 
   constructor(args: IoSplitProps) {
     super(args)
-    this.splitMutatedDebounced = this.splitMutatedDebounced.bind(this)
   }
 
   onDividerMove(event: CustomEvent) {
