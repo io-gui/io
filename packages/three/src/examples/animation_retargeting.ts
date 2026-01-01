@@ -37,7 +37,7 @@ import {
 } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeState } from '@io-gui/three';
+import { ThreeApplet } from '@io-gui/three';
 
 const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
 	// forked from https://www.shadertoy.com/view/7ly3D1
@@ -55,12 +55,10 @@ const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
 });
 
 @Register
-export class AnimationRetargetingExample extends ThreeState {
-	public clock = new Clock();
+export class AnimationRetargetingExample extends ThreeApplet {
 	public sourceMixer?: AnimationMixer;
 	public targetMixer?: AnimationMixer;
   public camera: PerspectiveCamera;
-
 
 	constructor() {
 		super();
@@ -218,9 +216,7 @@ export class AnimationRetargetingExample extends ThreeState {
 		return mixer;
 	}
 
-	onAnimate() {
-		const delta = this.clock.getDelta();
-
+	onAnimate(delta: number) {
 		if (this.sourceMixer) {
 			this.sourceMixer.update(delta);
 		}

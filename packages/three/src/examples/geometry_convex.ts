@@ -19,10 +19,10 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 @Register
-export class GeometryConvexExample extends ThreeState {
+export class GeometryConvexExample extends ThreeApplet {
 
   public group: Group
 

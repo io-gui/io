@@ -46,6 +46,10 @@ function isNonNodeObject(value: any) {
   return (typeof value === 'object' && value !== null && !value._isNode)
 }
 
+function isNonNodeConstructor(type: AnyConstructor) {
+  return !(type.prototype instanceof IoElement || type.prototype instanceof Object)
+}
+
 @Register
 export class Node extends Object {
 
@@ -393,7 +397,13 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
 }
 export function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
   if (!node._observedObjectProperties.includes(name)) {
-    if(isNonNodeObject(property.value)) {
+
+    if(property.type && isNonNodeConstructor(property.type)) {
+      node._observedObjectProperties.push(name)
+      if (node._observedObjectProperties.length === 1) {
+        window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
+      }
+    } else if (property.value && isNonNodeObject(property.value)) {
       node._observedObjectProperties.push(name)
       if (node._observedObjectProperties.length === 1) {
         window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)

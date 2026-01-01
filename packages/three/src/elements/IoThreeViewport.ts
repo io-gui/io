@@ -1,7 +1,7 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, Clock, NeutralToneMapping, ToneMapping } from 'three/webgpu'
+import { WebGPURenderer, CanvasTarget, Clock, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
-import { ThreeState } from '../nodes/ThreeState.js'
+import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
 
 if ( WebGPU.isAvailable() === false ) {
@@ -44,7 +44,7 @@ new Promise((resolve, reject) => {
 export type IoThreeViewportProps = IoElementProps & {
   clearColor?: number | Binding<number>
   clearAlpha?: number | Binding<number>
-  state: ThreeState | Binding<ThreeState>
+  state: ThreeApplet | Binding<ThreeApplet>
   playing?: boolean | Binding<boolean>
   cameraSelect?: string | Binding<string>
   renderer?: WebGPURenderer
@@ -66,8 +66,8 @@ export class IoThreeViewport extends IoElement {
   @ReactiveProperty({type: String, value: 'throttled'})
   declare reactivity: ReactivityType
 
-  @ReactiveProperty({type: ThreeState, init: null})
-  declare state: ThreeState
+  @ReactiveProperty({type: ThreeApplet, init: null})
+  declare state: ThreeApplet
 
   @ReactiveProperty({type: Boolean})
   declare playing: boolean
@@ -170,7 +170,7 @@ export class IoThreeViewport extends IoElement {
     this.renderer.setSize(this.width, this.height)
     this.renderer.clear()
 
-    this.state.setViewportSize(this.width, this.height)
+    this.state.updateViewportSize(this.width, this.height)
     this.state.animate(_time, _delta)
 
     const toneMapping = this.renderer.toneMapping
@@ -179,7 +179,9 @@ export class IoThreeViewport extends IoElement {
     this.renderer.toneMapping = this.state.toneMapping
     this.renderer.toneMappingExposure = this.state.toneMappingExposure
 
+    this.viewCameras.setOverscan(this.width, this.height, 1)
     this.renderer.render(this.state.scene, this.viewCameras.camera)
+    this.viewCameras.resetOverscan()
 
     this.renderer.toneMapping = toneMapping
     this.renderer.toneMappingExposure = toneMappingExposure

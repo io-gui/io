@@ -22,11 +22,10 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeState } from '@io-gui/three';
+import { ThreeApplet } from '@io-gui/three';
 
 @Register
-export class AnimationRetargetingReadyplayerExample extends ThreeState {
-	public clock = new Clock();
+export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 	public sourceMixer?: AnimationMixer;
 	public targetMixer?: AnimationMixer;
 	public camera: PerspectiveCamera;
@@ -147,8 +146,7 @@ export class AnimationRetargetingReadyplayerExample extends ThreeState {
 		return mixer;
 	}
 
-	onAnimate() {
-		const delta = this.clock.getDelta();
+	onAnimate(delta: number) {
 
 		if (this.sourceMixer) {
 			this.sourceMixer.update(delta);

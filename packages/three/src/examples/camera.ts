@@ -1,11 +1,11 @@
 import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 const frustumSize = 600
 
 @Register
-export class CameraExample extends ThreeState {
+export class CameraExample extends ThreeApplet {
 
   public perspectiveCamera: PerspectiveCamera
   public orthographicCamera: OrthographicCamera

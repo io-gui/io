@@ -1,12 +1,13 @@
 import { Register, IoElement, Storage as $, div } from '@io-gui/core'
 import { ioLayout, Split } from '@io-gui/layout'
 import { MenuOption } from '@io-gui/menus'
+import { ioPropertyEditor } from '@io-gui/editors'
 import { ioThreeViewport } from '@io-gui/three'
 import { WebGPURenderer } from 'three/webgpu'
 import { ComputeTextureExample } from '../examples/compute_texture.js'
 import { VolumePerlinExample } from '../examples/volume_perlin.js'
 import { CameraExample } from '../examples/camera.js'
-import { MiscAnimationGroupsExample } from '../examples/misc_animation_groups.js'
+import { AnimationGroupsExample } from '../examples/animation_groups.js'
 import { AnimationKeyframesExample } from '../examples/animation_keyframes.js'
 import { CameraArrayExample } from '../examples/camera_array.js'
 import { CameraLogarithmicDepthBufferExample } from '../examples/camera_logarithmicdepthbuffer.js'
@@ -16,8 +17,9 @@ import { GeometryConvexExample } from '../examples/geometry_convex.js'
 import { AnimationRetargetingExample } from '../examples/animation_retargeting.js'
 import { AnimationRetargetingReadyplayerExample } from '../examples/animation_retargeting_readyplayer.js'
 import { AnimationBackdropExample } from '../examples/animation_backdrop.js'
+import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js'
 
-const version = 1
+const version = 2
 
 const split = new Split({
   children: [
@@ -28,12 +30,10 @@ const split = new Split({
           orientation: 'horizontal',
           children: [
             {tabs: [
-              {id: 'ComputeTexture'},
-              {id: 'VolumePerlin'},
+              {id: 'TopViewport'},
             ]},
             {tabs: [
-              {id: 'CameraArray'},
-              {id: 'CameraLogDepth'},
+              {id: 'FrontViewport'},
             ]},
           ]
         },
@@ -41,27 +41,11 @@ const split = new Split({
           orientation: 'horizontal',
           children: [
             {tabs: [
-              {id: 'Camera'}
+              {id: 'LeftViewport'},
             ]},
             {tabs: [
-              {id: 'Camera(OrthographicCamera)'},
-              {id: 'Camera(PerspectiveCamera)'},
+              {id: 'PerspectiveViewport'},
             ]},
-          ]
-        },
-        {
-          orientation: 'horizontal',
-          children: [
-            {tabs: [{id: 'MiscAnimationGroups'}]},
-            {tabs: [
-              {id: 'AnimationKeyframes'},
-              {id: 'AnimationRetargeting'},
-              {id: 'AnimationRetargetingReadyplayer'},
-              {id: 'AnimationBackdrop'},
-            ]},
-            {tabs: [{id: 'Geometries'}]},
-            {tabs: [{id: 'GeometryColors'}]},
-            {tabs: [{id: 'GeometryConvex'}]},
           ]
         },
       ]
@@ -85,6 +69,18 @@ export class IoThreeDemo extends IoElement {
         flex: 1 1 auto;
         flex-direction: row;
       }
+      :host  .property-editor {
+        position: relative;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+      }
+      :host .property-editor > io-property-editor {
+        position: absolute;
+        min-width: 240px;
+        top: 0;
+        right: 0;
+      }
     `
   }
   ready() {
@@ -96,31 +92,43 @@ export class IoThreeDemo extends IoElement {
     void _renderer.init()
 
     const _cameraLogarithmicDepthBufferExample = new CameraLogarithmicDepthBufferExample()
+    const _webGPUBackdropAreaExample = new WebGPUBackdropAreaExample()
 
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'ComputeTexture', state: new ComputeTextureExample(), cameraSelect: 'front'}),
-          ioThreeViewport({id: 'VolumePerlin', state: new VolumePerlinExample()}),
+          ioThreeViewport({id: 'TopViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'FrontViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'front'}),
+          ioThreeViewport({id: 'LeftViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'PerspectiveViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'perspective'}),
+
           ioThreeViewport({id: 'Camera', state: _cameraExample, playing: true, cameraSelect: 'top', clearColor: 0x443322}),
           ioThreeViewport({id: 'Camera(OrthographicCamera)', state: _cameraExample, playing: true, cameraSelect: 'scene:orthographicCamera'}),
           ioThreeViewport({id: 'Camera(PerspectiveCamera)', state: _cameraExample, playing: true, cameraSelect: 'scene:perspectiveCamera'}),
-          ioThreeViewport({id: 'MiscAnimationGroups', state: new MiscAnimationGroupsExample(), playing: true}),
-          ioThreeViewport({id: 'AnimationKeyframes', state: new AnimationKeyframesExample(), playing: true}),
-          ioThreeViewport({id: 'AnimationRetargeting', state: new AnimationRetargetingExample(), playing: true, cameraSelect: 'scene:camera'}),
-          ioThreeViewport({id: 'AnimationRetargetingReadyplayer', state: new AnimationRetargetingReadyplayerExample(), playing: true, cameraSelect: 'scene:camera'}),
-          ioThreeViewport({id: 'AnimationBackdrop', state: new AnimationBackdropExample(), playing: true, cameraSelect: 'scene:camera'}),
           ioThreeViewport({id: 'CameraArray', state: new CameraArrayExample(), playing: true, cameraSelect: 'scene:arrayCamera'}),
           div({id: 'CameraLogDepth', class: 'row'}, [
             ioThreeViewport({state: _cameraLogarithmicDepthBufferExample, playing: true, cameraSelect: 'scene:PerspectiveCamera'}),
             ioThreeViewport({state: _cameraLogarithmicDepthBufferExample, playing: true, cameraSelect: 'scene:PerspectiveCamera', renderer: _renderer}),
           ]),
+          ioThreeViewport({id: 'AnimationGroups', state: new AnimationGroupsExample(), playing: true}),
+          ioThreeViewport({id: 'AnimationKeyframes', state: new AnimationKeyframesExample(), playing: true}),
+          ioThreeViewport({id: 'AnimationRetargeting', state: new AnimationRetargetingExample(), playing: true, cameraSelect: 'scene:camera'}),
+          ioThreeViewport({id: 'AnimationRetargetingReadyplayer', state: new AnimationRetargetingReadyplayerExample(), playing: true, cameraSelect: 'scene:camera'}),
+          ioThreeViewport({id: 'AnimationBackdrop', state: new AnimationBackdropExample(), playing: true, cameraSelect: 'scene'}),
+
+          div({id: 'BackdropArea', class: 'property-editor'}, [
+            ioThreeViewport({state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'scene:camera'}),
+            ioPropertyEditor({value: _webGPUBackdropAreaExample.options, config: _webGPUBackdropAreaExample.optionsUIConfig}),
+          ]),
+
           ioThreeViewport({id: 'Geometries', state: new GeometriesExample(), playing: true}),
           ioThreeViewport({id: 'GeometryColors', state: new GeometryColorsExample(), playing: true}),
-          ioThreeViewport({id: 'GeometryConvex', state: new GeometryConvexExample(), playing: true})
+          ioThreeViewport({id: 'GeometryConvex', state: new GeometryConvexExample(), playing: true}),
+          ioThreeViewport({id: 'ComputeTexture', state: new ComputeTextureExample(), cameraSelect: 'front'}),
+          ioThreeViewport({id: 'VolumePerlin', state: new VolumePerlinExample()}),
         ],
         split: $({key: `viewport-split-v${version}`, storage: 'local', value: split}),
-        addMenuOption:  new MenuOption({
+        addMenuOption: new MenuOption({
           id: 'addMenuOption',
           mode: 'none',
           options: [
@@ -130,11 +138,12 @@ export class IoThreeDemo extends IoElement {
               {id: 'Camera', mode: 'none'},
               {id: 'Camera(OrthographicCamera)', mode: 'none'},
               {id: 'Camera(PerspectiveCamera)', mode: 'none'},
-              {id: 'MiscAnimationGroups', mode: 'none'},
+              {id: 'AnimationGroups', mode: 'none'},
               {id: 'AnimationKeyframes', mode: 'none'},
               {id: 'AnimationRetargeting', mode: 'none'},
               {id: 'AnimationRetargetingReadyplayer', mode: 'none'},
               {id: 'AnimationBackdrop', mode: 'none'},
+              {id: 'BackdropArea', mode: 'none'},
               {id: 'CameraArray', mode: 'none'},
               {id: 'CameraLogDepth', mode: 'none'},
               {id: 'Geometries', mode: 'none'},

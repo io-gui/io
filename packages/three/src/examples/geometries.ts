@@ -25,10 +25,10 @@ import {
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js'
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 @Register
-export class GeometriesExample extends ThreeState {
+export class GeometriesExample extends ThreeApplet {
 
   constructor() {
     super()

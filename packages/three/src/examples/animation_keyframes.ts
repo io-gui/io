@@ -8,10 +8,10 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 @Register
-export class AnimationKeyframesExample extends ThreeState {
+export class AnimationKeyframesExample extends ThreeApplet {
 
   public mixer: AnimationMixer | null = null
 

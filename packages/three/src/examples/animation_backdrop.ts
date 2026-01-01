@@ -1,7 +1,6 @@
 import { Register } from '@io-gui/core';
 import {
 	AnimationMixer,
-	Clock,
 	Group,
 	Mesh,
 	MeshStandardNodeMaterial,
@@ -31,11 +30,10 @@ import {
 	output,
 } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeState } from '@io-gui/three';
+import { ThreeApplet } from '@io-gui/three';
 
 @Register
-export class AnimationBackdropExample extends ThreeState {
-	public clock = new Clock();
+export class AnimationBackdropExample extends ThreeApplet {
 	public mixer?: AnimationMixer;
 	public portals: Group;
 	public camera: PerspectiveCamera;
@@ -50,7 +48,6 @@ export class AnimationBackdropExample extends ThreeState {
 		this.camera = new PerspectiveCamera(50, 1, 0.01, 100);
 		this.camera.position.set(1, 2, 3);
 		this.camera.lookAt(0, 1, 0);
-		this.camera.name = 'camera';
 		this.scene.add(this.camera);
 
 		// Background
@@ -126,13 +123,10 @@ export class AnimationBackdropExample extends ThreeState {
 		});
 	}
 
-	onAnimate() {
-		const delta = this.clock.getDelta();
-
+	onAnimate(delta: number) {
 		if (this.mixer) {
 			this.mixer.update(delta);
 		}
-
 		this.portals.rotation.y += delta * 0.5;
 	}
 }

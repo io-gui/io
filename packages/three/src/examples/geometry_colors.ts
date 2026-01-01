@@ -11,10 +11,10 @@ import {
   SRGBColorSpace
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 @Register
-export class GeometryColorsExample extends ThreeState {
+export class GeometryColorsExample extends ThreeApplet {
 
   constructor() {
     super()

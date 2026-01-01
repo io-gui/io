@@ -1,6 +1,6 @@
 import { Register, Node, ReactiveProperty, Property, NodeProps, Binding } from '@io-gui/core'
 import { IoThreeViewport } from '../elements/IoThreeViewport.js'
-import { ThreeState } from './ThreeState.js'
+import { ThreeApplet } from './ThreeApplet.js'
 import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
@@ -8,18 +8,10 @@ const box = new Box3()
 const sphere = new Sphere()
 const center = new Vector3()
 const delta = new Vector3()
+const boxCorner = new Vector3()
+let radius = 0
 
-function setAspect(camera: PerspectiveCamera | OrthographicCamera, width: number, height: number) {
-  const aspect = width / height
-  if (camera instanceof PerspectiveCamera) {
-    camera.aspect = aspect
-  } else if (camera instanceof OrthographicCamera) {
-    const frustumHeight = camera.top - camera.bottom
-    camera.left = - frustumHeight * aspect / 2
-    camera.right = frustumHeight * aspect / 2
-  }
-  camera.updateProjectionMatrix()
-}
+const resetCameras = new WeakMap<Camera, Camera>()
 
 class DefaultCameras {
   public perspective: PerspectiveCamera
@@ -84,7 +76,7 @@ class DefaultCameras {
 
 export type ViewCamerasProps = NodeProps & {
   viewport: IoThreeViewport
-  state: ThreeState
+  state: ThreeApplet
   cameraSelect: string | Binding<string>
 }
 
@@ -98,8 +90,8 @@ export class ViewCameras extends Node {
   @Property()
   declare private viewport: IoThreeViewport
 
-  @ReactiveProperty({type: ThreeState})
-  declare public state: ThreeState
+  @ReactiveProperty({type: ThreeApplet})
+  declare public state: ThreeApplet
 
   @ReactiveProperty({type: String, value: 'perspective'})
   declare public cameraSelect: string
@@ -157,10 +149,6 @@ export class ViewCameras extends Node {
   setSize(width: number, height: number) {
     if (width === 0 || height === 0) return
     if (this.width !== width || this.height !== height) {
-      for (const camera of this.defaultCameras.cameras) {
-        setAspect(camera, width, height)
-      }
-      // setAspect(this.camera, width, height)
       this.width = width
       this.height = height
     }
@@ -175,6 +163,7 @@ export class ViewCameras extends Node {
     } else {
       this.orbitControls.enabled = true
       this.orbitControls.object = this.camera
+      this.orbitControls.enableRotate = !!(this.camera as PerspectiveCamera).isPerspectiveCamera
     }
   }
 
@@ -190,48 +179,84 @@ export class ViewCameras extends Node {
 
   frameObject(object: Object3D, camera: Camera) {
 
-    let distance
-
     box.setFromObject( object )
 
     if ( box.isEmpty() === false ) {
       box.getCenter( center )
-      distance = box.getBoundingSphere( sphere ).radius
+      radius = box.getBoundingSphere( sphere ).radius
     } else {
       // Focusing on an Group, AmbientLight, etc
       // TODO: Investigate and make more robust
       center.setFromMatrixPosition( camera.matrixWorld )
-      distance = 0.1
+      radius = 0.1
     }
 
     // TODO: Consider frustum geometry (fov) when framing
 
     delta.set( 0, 0, 1 )
     delta.applyQuaternion( camera.quaternion )
-    delta.multiplyScalar( distance * 2 )
+    delta.multiplyScalar( radius * 2 )
 
     if (camera instanceof PerspectiveCamera) {
-      camera.near = distance * 0.001
-      camera.far = distance * 16
+
+      camera.near = radius * 0.001
+      camera.far = radius * 16
       camera.updateProjectionMatrix()
       camera.position.copy( center ).add( delta )
+
     } else if (camera instanceof OrthographicCamera) {
-      delta.copy(camera.userData.position).multiplyScalar(distance)
-      const aspect = this.width / this.height
-      camera.top = distance
-      camera.bottom = - distance
-      camera.left = - distance * aspect
-      camera.right = distance * aspect
+
+      delta.copy(camera.userData.position).multiplyScalar(radius)
+      camera.position.copy(center).add(delta)
+      camera.lookAt(center)
+
+      boxCorner.copy(box.max)
+      boxCorner.applyQuaternion(camera.quaternion.clone().invert())
+
+      const halfW = boxCorner.x
+      const halfH = boxCorner.y
+
+      camera.left = -halfW
+      camera.right = halfW
+      camera.bottom = -halfH
+      camera.top = halfH
 
       camera.near = 0
-      camera.far = distance * 8
+      camera.far = radius * 2
 
-      camera.position.copy( center ).add( delta)
-      camera.lookAt( center )
       camera.updateProjectionMatrix()
     }
 
     this.orbitControls.target.copy( center )
+  }
+
+  setOverscan(width: number, height: number, overscan: number) {
+
+    const camera = this.camera
+    const resetCamera = resetCameras.get(camera) || camera.clone()
+    resetCamera.copy(camera)
+    resetCameras.set(camera, resetCamera)
+
+    const aspect = width / height
+    if (camera instanceof PerspectiveCamera) {
+      camera.aspect = aspect
+      camera.fov *= overscan
+    } else if (camera instanceof OrthographicCamera) {
+      camera.top *= overscan
+      camera.bottom *= overscan
+      const frustumHeight = camera.top - camera.bottom
+      camera.left = - frustumHeight * aspect / 2
+      camera.right = frustumHeight * aspect / 2
+    }
+    camera.updateProjectionMatrix()
+  }
+
+  resetOverscan() {
+    const camera = this.camera
+    const resetCamera = resetCameras.get(camera)
+    if (resetCamera) {
+      camera.copy(resetCamera)
+    }
   }
 
   dispose() {

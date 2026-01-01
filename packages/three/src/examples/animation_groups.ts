@@ -13,10 +13,10 @@ import {
   Vector3
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 @Register
-export class MiscAnimationGroupsExample extends ThreeState {
+export class AnimationGroupsExample extends ThreeApplet {
 
   public mixer: AnimationMixer
 

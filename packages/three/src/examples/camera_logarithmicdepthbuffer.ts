@@ -13,7 +13,7 @@ import {
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
 const NEAR = 1e-6
@@ -38,7 +38,7 @@ const labeldata = [
 ]
 
 @Register
-export class CameraLogarithmicDepthBufferExample extends ThreeState {
+export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 
   public camera: PerspectiveCamera
   public zoompos = -100

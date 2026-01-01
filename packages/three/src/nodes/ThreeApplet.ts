@@ -1,8 +1,9 @@
-import { Register, Node, ReactiveProperty } from '@io-gui/core'
+import { Register, Node, ReactiveProperty, AnyConstructor } from '@io-gui/core'
+import { PropertyConfig } from '@io-gui/editors'
 import { NoToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 
 @Register
-export class ThreeState extends Node {
+export class ThreeApplet extends Node {
 
   @ReactiveProperty({type: Scene, init: null})
   declare scene: Scene
@@ -14,7 +15,10 @@ export class ThreeState extends Node {
   declare toneMapping: ToneMapping
   
   @ReactiveProperty({type: Object, init: null})
-  declare config: Record<string, unknown>
+  declare options: Record<string, unknown>
+
+  @ReactiveProperty({type: Map, init: null})
+  declare optionsUIConfig: Map<AnyConstructor, PropertyConfig[]>
 
   public renderer: WebGPURenderer | null = null
 
@@ -23,7 +27,7 @@ export class ThreeState extends Node {
 
   private _prevTime: number = -1
 
-  setViewportSize(width: number, height: number) {
+  updateViewportSize(width: number, height: number) {
     if (this.width !== width || this.height !== height) {
       if (!!width && !!height) {
         this.width = width
