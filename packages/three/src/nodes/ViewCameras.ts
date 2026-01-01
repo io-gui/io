@@ -1,4 +1,4 @@
-import { Register, Node, ReactiveProperty, Property, NodeProps, Binding } from '@io-gui/core'
+import { Register, Node, ReactiveProperty, Property, NodeProps, Binding  } from '@io-gui/core'
 import { IoThreeViewport } from '../elements/IoThreeViewport.js'
 import { ThreeApplet } from './ThreeApplet.js'
 import { Box3, Camera, Object3D, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu'
@@ -7,8 +7,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 const box = new Box3()
 const sphere = new Sphere()
 const center = new Vector3()
+const size = new Vector3()
 const delta = new Vector3()
-const boxCorner = new Vector3()
+const cameraRight = new Vector3()
+const cameraUp = new Vector3()
+const cameraForward = new Vector3()
+const corner = new Vector3()
 let radius = 0
 
 const resetCameras = new WeakMap<Camera, Camera>()
@@ -22,7 +26,7 @@ class DefaultCameras {
   public front: OrthographicCamera
   public back: OrthographicCamera
   constructor() {
-    this.perspective = new PerspectiveCamera(75, 1, 0.1, 1000)
+    this.perspective = new PerspectiveCamera(50, 1, 0.1, 1000)
     this.top = new OrthographicCamera(-1, 1, 1, -1, 0, 1000)
     this.bottom = new OrthographicCamera(-1, 1, 1, -1, 0, 1000)
     this.left = new OrthographicCamera(-1, 1, 1, -1, 0, 1000)
@@ -30,7 +34,8 @@ class DefaultCameras {
     this.front = new OrthographicCamera(-1, 1, 1, -1, 0, 1000)
     this.back = new OrthographicCamera(-1, 1, 1, -1, 0, 1000)
 
-    this.perspective.position.set(0.5, 0.25, 1)
+    this.perspective.userData.position = new Vector3(0.5, 0.25, 1)
+    this.perspective.position.copy(this.perspective.userData.position)
     this.perspective.lookAt(0, 0, 0)
     this.perspective.name = 'perspective'
 
@@ -76,7 +81,7 @@ class DefaultCameras {
 
 export type ViewCamerasProps = NodeProps & {
   viewport: IoThreeViewport
-  state: ThreeApplet
+  applet: ThreeApplet | Binding<ThreeApplet>
   cameraSelect: string | Binding<string>
 }
 
@@ -87,7 +92,7 @@ export class ViewCameras extends Node {
   declare private viewport: IoThreeViewport
 
   @ReactiveProperty({type: ThreeApplet})
-  declare public state: ThreeApplet
+  declare public applet: ThreeApplet
 
   @ReactiveProperty({type: String, value: 'perspective'})
   declare public cameraSelect: string
@@ -112,33 +117,48 @@ export class ViewCameras extends Node {
 
     this.orbitControls.connect(this.viewport)
     this.orbitControls.addEventListener('change', () => {
-      this.state.dispatchMutation()
+      this.applet.dispatchMutation()
     })
 
     if (this.camera === undefined) this.camera = this.defaultCameras.perspective
   }
 
   cameraSelectChanged() {
+    this.debounce(this.cameraSelectChangedDebounced)
+  }
+
+  cameraSelectChangedDebounced() {
+    let matchedCamera: PerspectiveCamera | OrthographicCamera | undefined
     if (this.cameraSelect.startsWith('scene')) {
       const cameraId = this.cameraSelect.split(':')[1] || ''
-      const persp = this.state.scene.getObjectsByProperty('isPerspectiveCamera', true)
-      const ortho = this.state.scene.getObjectsByProperty('isOrthographicCamera', true)
+      const persp = this.applet.scene.getObjectsByProperty('isPerspectiveCamera', true)
+      const ortho = this.applet.scene.getObjectsByProperty('isOrthographicCamera', true)
       const cameras = [...persp, ...ortho]
 
-      let matchedCamera: PerspectiveCamera | OrthographicCamera | undefined
       if (cameraId) {
         matchedCamera = cameras.find(camera => camera.name === cameraId) as PerspectiveCamera | OrthographicCamera | undefined
+        if (!matchedCamera) {
+          console.warn(`Camera ${cameraId} not found in the scene, using default perspective camera`)
+        }
       } else {
         matchedCamera = cameras[0] as PerspectiveCamera | OrthographicCamera | undefined
+        if (!matchedCamera) {
+          console.warn('No cameras found in the scene, using default perspective camera')
+        }
       }
       if (matchedCamera) {
         this.camera = matchedCamera
       } else {
         this.camera = this.defaultCameras.perspective
-        console.warn(`Camera ${cameraId} not found in the scene, using default perspective camera`)
       }
     } else {
-      this.camera = this.defaultCameras.getCamera(this.cameraSelect) || this.defaultCameras.perspective
+      matchedCamera = this.defaultCameras.getCamera(this.cameraSelect)
+      if (matchedCamera) {
+        this.camera = matchedCamera
+      } else {
+        console.warn(`Camera ${this.cameraSelect} not found in the default cameras, using default perspective camera`)
+        this.camera = this.defaultCameras.perspective
+      }
     }
   }
 
@@ -155,14 +175,17 @@ export class ViewCameras extends Node {
     }
   }
 
-  stateChanged() {
+  appletChanged() {
     for (const camera of this.defaultCameras.cameras) {
-      this.frameObject(this.state.scene, camera)
+      camera.position.copy(camera.userData.position)
+      camera.lookAt(0, 0, 0)
+      this.frameObject(this.applet.scene, camera)
     }
+    this.debounce(this.cameraSelectChangedDebounced)
   }
 
   onSceneReady() {
-    this.frameObject(this.state.scene, this.camera)
+    this.appletChanged()
   }
 
   frameObject(object: Object3D, camera: Camera) {
@@ -178,39 +201,64 @@ export class ViewCameras extends Node {
       center.setFromMatrixPosition( camera.matrixWorld )
       radius = 0.1
     }
+   
+    // Project box onto camera axes
+    cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion)
+    cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion)
+    cameraForward.set(0, 0, -1).applyQuaternion(camera.quaternion)
 
-    // TODO: Consider frustum geometry (fov) when framing
+    box.getSize(size).multiplyScalar(0.5)
 
-    delta.set( 0, 0, 1 )
-    delta.applyQuaternion( camera.quaternion )
-    delta.multiplyScalar( radius * 2 )
+    const halfWidth = Math.abs(size.x * cameraRight.x) + Math.abs(size.y * cameraRight.y) + Math.abs(size.z * cameraRight.z)
+    const halfHeight = Math.abs(size.x * cameraUp.x) + Math.abs(size.y * cameraUp.y) + Math.abs(size.z * cameraUp.z)
+    const halfDepth = Math.abs(size.x * cameraForward.x) + Math.abs(size.y * cameraForward.y) + Math.abs(size.z * cameraForward.z)
 
     if (camera instanceof PerspectiveCamera) {
 
-      camera.near = radius * 0.001
-      camera.far = radius * 16
+      const vfov = camera.fov * Math.PI / 180
+      const tanHalfVfov = Math.tan(vfov / 2)
+      const aspect = camera.aspect || 1
+
+      let distance = 0
+      for (let i = 0; i < 8; i++) {
+        corner.set(
+          (i & 1) ? box.max.x : box.min.x,
+          (i & 2) ? box.max.y : box.min.y,
+          (i & 4) ? box.max.z : box.min.z
+        ).sub(center)
+
+        const x = corner.dot(cameraRight)
+        const y = corner.dot(cameraUp)
+        const z = corner.dot(cameraForward)
+
+        const distV = Math.abs(y) / tanHalfVfov - z
+        const distH = Math.abs(x) / (tanHalfVfov * aspect) - z
+        distance = Math.max(distance, distV, distH)
+      }
+
+      delta.set(0, 0, 1)
+        .applyQuaternion(camera.quaternion)
+        .multiplyScalar(distance)
+      camera.position.copy(center).add(delta)
+
+      camera.near = Math.max(halfDepth * 0.1)
+      camera.far = distance + halfDepth * 20
       camera.updateProjectionMatrix()
-      camera.position.copy( center ).add( delta )
 
     } else if (camera instanceof OrthographicCamera) {
 
-      delta.copy(camera.userData.position).multiplyScalar(radius)
+      delta.set(0, 0, 1).applyQuaternion(camera.quaternion).multiplyScalar(radius)
       camera.position.copy(center).add(delta)
       camera.lookAt(center)
 
-      boxCorner.copy(box.max).sub(box.min).multiplyScalar(0.5)
-      boxCorner.applyQuaternion(camera.quaternion.clone().invert())
+      camera.left = -halfWidth
+      camera.right = halfWidth
+      camera.bottom = -halfHeight
+      camera.top = halfHeight
 
-      const halfW = boxCorner.x
-      const halfH = boxCorner.y
-
-      camera.left = -halfW
-      camera.right = halfW
-      camera.bottom = -halfH
-      camera.top = halfH
-
+      camera.zoom = 1
       camera.near = 0
-      camera.far = radius * 2
+      camera.far = radius + halfDepth * 20
 
       camera.updateProjectionMatrix()
     }
@@ -234,11 +282,6 @@ export class ViewCameras extends Node {
       const frustumWidth = camera.right - camera.left
       const frustumAspect = frustumWidth / frustumHeight
 
-      camera.top *= overscan
-      camera.bottom *= overscan
-      camera.left *= overscan
-      camera.right *= overscan
-
       if (frustumAspect > aspect) {
         camera.top = frustumWidth / 2 / aspect
         camera.bottom = -frustumWidth / 2 / aspect
@@ -246,6 +289,11 @@ export class ViewCameras extends Node {
         camera.left = -frustumHeight / 2 * aspect
         camera.right = frustumHeight / 2 * aspect
       }
+
+      camera.top *= overscan
+      camera.bottom *= overscan
+      camera.left *= overscan
+      camera.right *= overscan
     }
     camera.updateProjectionMatrix()
   }

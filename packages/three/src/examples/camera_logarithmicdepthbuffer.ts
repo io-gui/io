@@ -51,7 +51,6 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 
     // Create camera with extreme near/far planes
     this.camera = new PerspectiveCamera(50, 1, NEAR, FAR)
-    this.camera.name = 'PerspectiveCamera'
     this.scene.add(this.camera)
 
     // Lighting

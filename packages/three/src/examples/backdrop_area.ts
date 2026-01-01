@@ -40,7 +40,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 	
 	public materials: Record<string, MeshBasicNodeMaterial>;
 
-  @ReactiveProperty({type: String, value: 'blurred'})
+  @ReactiveProperty({type: String, value: 'depth'})
 	declare public currentMaterial: string
 
 	constructor() {
@@ -59,8 +59,8 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 		// Compare depth from viewportLinearDepth with linearDepth() to create a distance field
 		const depthDistance = viewportLinearDepth.distance(linearDepth());
 
-		const depthAlphaNode = depthDistance.oneMinus().smoothstep(.90, 2).mul(10).saturate();
-		const depthBlurred = hashBlur(viewportSharedTexture(), depthDistance.smoothstep(0, .6).mul(40).clamp().mul(.1));
+		const depthAlphaNode = depthDistance.oneMinus().smoothstep( .90, 2 ).mul( 10 ).saturate();
+		const depthBlurred = hashBlur( viewportSharedTexture(), depthDistance.smoothstep( 0, .6 ).mul( 40 ).clamp().mul( .1 ) );
 
 		// Blurred material
 		this.blurredBlurMaterial = new MeshBasicNodeMaterial();
@@ -109,7 +109,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 			depthWrite: false
 		}));
 		floor.position.set(0, 0, 0);
-		this.scene.add(floor);
+  		// this.scene.add(floor);
 
     this.options = {
 			material: 'blurred',
@@ -151,7 +151,6 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 
       this.dispatchMutation()
       this.dispatch('scene-ready', {scene: this.scene}, true)
-      console.log('scene-ready')
 		});
 	}
 

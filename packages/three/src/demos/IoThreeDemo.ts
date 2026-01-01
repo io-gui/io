@@ -1,6 +1,6 @@
 import { Register, IoElement, Storage as $, div } from '@io-gui/core'
 import { ioLayout, Split } from '@io-gui/layout'
-import { MenuOption } from '@io-gui/menus'
+import { MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioThreeViewport } from '@io-gui/three'
 import { WebGPURenderer } from 'three/webgpu'
@@ -19,7 +19,7 @@ import { AnimationRetargetingReadyplayerExample } from '../examples/animation_re
 import { AnimationBackdropExample } from '../examples/animation_backdrop.js'
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js'
 
-const version = 2
+const version = 3
 
 const split = new Split({
   children: [
@@ -30,10 +30,11 @@ const split = new Split({
           orientation: 'horizontal',
           children: [
             {tabs: [
-              {id: 'TopViewport'},
+              {id: 'Top'},
             ]},
             {tabs: [
-              {id: 'FrontViewport'},
+              {id: 'Front'},
+              {id: 'ExampleSelector'},
             ]},
           ]
         },
@@ -41,10 +42,11 @@ const split = new Split({
           orientation: 'horizontal',
           children: [
             {tabs: [
-              {id: 'LeftViewport'},
+              {id: 'Left'},
             ]},
             {tabs: [
-              {id: 'PerspectiveViewport'},
+              {id: 'Perspective'},
+              {id: 'SceneCamera'},
             ]},
           ]
         },
@@ -84,48 +86,61 @@ export class IoThreeDemo extends IoElement {
     `
   }
   ready() {
-    const _cameraExample = new CameraExample()
-
     const _renderer = new WebGPURenderer({antialias: false, alpha: true, logarithmicDepthBuffer: true})
     _renderer.setPixelRatio(window.devicePixelRatio)
     _renderer.setClearAlpha(0)
     void _renderer.init()
 
-    const _cameraLogarithmicDepthBufferExample = new CameraLogarithmicDepthBufferExample()
     const _webGPUBackdropAreaExample = new WebGPUBackdropAreaExample()
+    const _cameraExample = new CameraExample()
+    const _cameraLogarithmicDepthBufferExample = new CameraLogarithmicDepthBufferExample()
+    const _cameraArrayExample = new CameraArrayExample()
+    const _geometriesExample = new GeometriesExample()
+    const _geometryColorsExample = new GeometryColorsExample()
+    const _geometryConvexExample = new GeometryConvexExample()
+    const _animationGroupsExample = new AnimationGroupsExample()
+    const _animationKeyframesExample = new AnimationKeyframesExample()
+    const _animationRetargetingExample = new AnimationRetargetingExample()
+    const _animationRetargetingReadyplayerExample = new AnimationRetargetingReadyplayerExample()
+    const _animationBackdropExample = new AnimationBackdropExample()
+    const _computeTextureExample = new ComputeTextureExample()
+    const _volumePerlinExample = new VolumePerlinExample()
+    const exampleOptions = new MenuOption({
+      options: [
+        {id: 'Camera Examples', options: [
+          {id: 'Camera', value: _cameraExample},
+          {id: 'CameraLogarithmicDepthBuffer', value: _cameraLogarithmicDepthBufferExample},
+          {id: 'CameraArray', value: _cameraArrayExample},
+        ]},
+        {id: 'Geometries', options: [
+          {id: 'GeometryPrimitives', value: _geometriesExample},
+          {id: 'GeometryColors', value: _geometryColorsExample},
+          {id: 'GeometryConvex', value: _geometryConvexExample},
+        ]},
+        {id: 'Animations', options: [
+          {id: 'AnimationGroups', value: _animationGroupsExample},
+          {id: 'AnimationKeyframes', value: _animationKeyframesExample},
+          {id: 'AnimationRetargeting', value: _animationRetargetingExample},
+          {id: 'AnimationRetargetingReadyplayer', value: _animationRetargetingReadyplayerExample},
+          {id: 'AnimationBackdrop', value: _animationBackdropExample},
+        ]},
+        {id: 'WebGPUBackdropArea', value: _webGPUBackdropAreaExample},
+        {id: 'ComputeTexture', value: _computeTextureExample},
+        {id: 'VolumePerlin', value: _volumePerlinExample},
+      ],
+      selectedID: $({key: 'example', storage: 'hash', value: 'AnimationKeyframes'})
+    })
 
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'TopViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'FrontViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'front'}),
-          ioThreeViewport({id: 'LeftViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'PerspectiveViewport', state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'perspective'}),
-
-          ioThreeViewport({id: 'Camera', state: _cameraExample, playing: true, cameraSelect: 'top', clearColor: 0x443322}),
-          ioThreeViewport({id: 'Camera(OrthographicCamera)', state: _cameraExample, playing: true, cameraSelect: 'scene:orthographicCamera'}),
-          ioThreeViewport({id: 'Camera(PerspectiveCamera)', state: _cameraExample, playing: true, cameraSelect: 'scene:perspectiveCamera'}),
-          ioThreeViewport({id: 'CameraArray', state: new CameraArrayExample(), playing: true, cameraSelect: 'scene:arrayCamera'}),
-          div({id: 'CameraLogDepth', class: 'row'}, [
-            ioThreeViewport({state: _cameraLogarithmicDepthBufferExample, playing: true, cameraSelect: 'scene:PerspectiveCamera'}),
-            ioThreeViewport({state: _cameraLogarithmicDepthBufferExample, playing: true, cameraSelect: 'scene:PerspectiveCamera', renderer: _renderer}),
-          ]),
-          ioThreeViewport({id: 'AnimationGroups', state: new AnimationGroupsExample(), playing: true}),
-          ioThreeViewport({id: 'AnimationKeyframes', state: new AnimationKeyframesExample(), playing: true}),
-          ioThreeViewport({id: 'AnimationRetargeting', state: new AnimationRetargetingExample(), playing: true, cameraSelect: 'scene:camera'}),
-          ioThreeViewport({id: 'AnimationRetargetingReadyplayer', state: new AnimationRetargetingReadyplayerExample(), playing: true, cameraSelect: 'scene:camera'}),
-          ioThreeViewport({id: 'AnimationBackdrop', state: new AnimationBackdropExample(), playing: true, cameraSelect: 'scene'}),
-
-          div({id: 'BackdropArea', class: 'property-editor'}, [
-            ioThreeViewport({state: _webGPUBackdropAreaExample, playing: true, cameraSelect: 'scene:camera'}),
-            ioPropertyEditor({value: _webGPUBackdropAreaExample.options, config: _webGPUBackdropAreaExample.optionsUIConfig}),
-          ]),
-
-          ioThreeViewport({id: 'Geometries', state: new GeometriesExample(), playing: true}),
-          ioThreeViewport({id: 'GeometryColors', state: new GeometryColorsExample(), playing: true}),
-          ioThreeViewport({id: 'GeometryConvex', state: new GeometryConvexExample(), playing: true}),
-          ioThreeViewport({id: 'ComputeTexture', state: new ComputeTextureExample(), cameraSelect: 'front'}),
-          ioThreeViewport({id: 'VolumePerlin', state: new VolumePerlinExample()}),
+          ioThreeViewport({id: 'Top', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Front', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'front'}),
+          ioThreeViewport({id: 'Left', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Perspective', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'SceneCamera', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'scene'}),
+          ioOptionSelect({id: 'ExampleSelector', option: exampleOptions, selectBy: 'id'}),
+          // ioPropertyEditor({value: _webGPUBackdropAreaExample.options, config: _webGPUBackdropAreaExample.optionsUIConfig})
         ],
         split: $({key: `viewport-split-v${version}`, storage: 'local', value: split}),
         addMenuOption: new MenuOption({
@@ -133,22 +148,13 @@ export class IoThreeDemo extends IoElement {
           mode: 'none',
           options: [
             {id: 'Viewports', mode: 'none', options: [
-              {id: 'ComputeTexture', mode: 'none'},
-              {id: 'VolumePerlin', mode: 'none'},
-              {id: 'Camera', mode: 'none'},
-              {id: 'Camera(OrthographicCamera)', mode: 'none'},
-              {id: 'Camera(PerspectiveCamera)', mode: 'none'},
-              {id: 'AnimationGroups', mode: 'none'},
-              {id: 'AnimationKeyframes', mode: 'none'},
-              {id: 'AnimationRetargeting', mode: 'none'},
-              {id: 'AnimationRetargetingReadyplayer', mode: 'none'},
-              {id: 'AnimationBackdrop', mode: 'none'},
-              {id: 'BackdropArea', mode: 'none'},
-              {id: 'CameraArray', mode: 'none'},
-              {id: 'CameraLogDepth', mode: 'none'},
-              {id: 'Geometries', mode: 'none'},
-              {id: 'GeometryColors', mode: 'none'},
-              {id: 'GeometryConvex', mode: 'none'},
+              {id: 'SceneCamera', mode: 'none'},
+              {id: 'Top', mode: 'none'},
+              {id: 'Front', mode: 'none'},
+              {id: 'Left', mode: 'none'},
+              {id: 'Perspective', mode: 'none'},
+              {id: 'SceneCamera', mode: 'none'},
+              {id: 'ExampleSelector', mode: 'none'},
             ]},
           ],
         }),

@@ -1,6 +1,5 @@
 import {
   AmbientLight,
-  AxesHelper,
   BufferGeometry,
   DodecahedronGeometry,
   Group,
@@ -38,10 +37,6 @@ export class GeometryConvexExample extends ThreeApplet {
     const light = new PointLight( 0xffffff, 3, 0, 0 )
     light.position.set( 15, 20, 30 )
     this.scene.add( light )
-
-    // helper
-
-    this.scene.add( new AxesHelper( 20 ) )
 
     // textures
 

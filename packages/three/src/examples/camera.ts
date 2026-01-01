@@ -16,10 +16,10 @@ export class CameraExample extends ThreeApplet {
     super()
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
-    this.perspectiveCamera.name = 'perspectiveCamera'
+    this.perspectiveCamera.name = 'perspective'
 
     this.orthographicCamera = new OrthographicCamera( -1, 1, 1, -1, 150, 1000 )
-    this.orthographicCamera.name = 'orthographicCamera'
+    this.orthographicCamera.name = 'orthographic'
 
     // counteract different front orientation of cameras vs rig
 

@@ -1,6 +1,7 @@
 import {
   AnimationMixer,
   Color,
+  PerspectiveCamera,
   PMREMGenerator,
   WebGPURenderer
 } from 'three/webgpu'
@@ -41,6 +42,12 @@ export class AnimationKeyframesExample extends ThreeApplet {
 
       this.mixer = new AnimationMixer( model )
       this.mixer.clipAction( gltf.animations[ 0 ] ).play()
+
+      const train = gltf.scene.getObjectByName('Object675')!
+      const perspectiveCamera = new PerspectiveCamera( 125, 1, 0.1, 1000 )
+      perspectiveCamera.position.set(110, 0, 30)
+      perspectiveCamera.rotation.set(Math.PI / 2, -Math.PI / 2, 0)
+      train.add(perspectiveCamera)
 
       this.dispatchMutation()
       this.dispatch('scene-ready', {scene: this.scene}, true)

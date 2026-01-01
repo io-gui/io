@@ -44,7 +44,7 @@ new Promise((resolve, reject) => {
 export type IoThreeViewportProps = IoElementProps & {
   clearColor?: number | Binding<number>
   clearAlpha?: number | Binding<number>
-  state: ThreeApplet | Binding<ThreeApplet>
+  applet: ThreeApplet | Binding<ThreeApplet>
   playing?: boolean | Binding<boolean>
   cameraSelect?: string | Binding<string>
   renderer?: WebGPURenderer
@@ -67,7 +67,7 @@ export class IoThreeViewport extends IoElement {
   declare reactivity: ReactivityType
 
   @ReactiveProperty({type: ThreeApplet, init: null})
-  declare state: ThreeApplet
+  declare applet: ThreeApplet
 
   @ReactiveProperty({type: Boolean})
   declare playing: boolean
@@ -105,7 +105,7 @@ export class IoThreeViewport extends IoElement {
     this.renderTarget = new CanvasTarget(document.createElement('canvas'))
     this.appendChild(this.renderTarget.domElement)
 
-    this.viewCameras = new ViewCameras({viewport: this, state: this.state, cameraSelect: this.bind('cameraSelect')})
+    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
 
     this.debounce(this.renderViewport)
   }
@@ -143,10 +143,10 @@ export class IoThreeViewport extends IoElement {
     this.renderViewport()
   }
 
-  stateChanged() {
+  appletChanged() {
     this.debounce(this.renderViewport)
   }
-  stateMutated() {
+  appletMutated() {
     this.debounce(this.renderViewport)
   }
   changed() {
@@ -158,8 +158,8 @@ export class IoThreeViewport extends IoElement {
       this.debounce(this.renderViewport)
       return
     }
-    if (this.state.isRendererInitialized() === false) {
-      void this.state.onRendererInitialized(this.renderer)
+    if (this.applet.isRendererInitialized() === false) {
+      void this.applet.onRendererInitialized(this.renderer)
     }
     if (!this.width || !this.height) {
       return
@@ -169,17 +169,17 @@ export class IoThreeViewport extends IoElement {
     this.renderer.setSize(this.width, this.height)
     this.renderer.clear()
 
-    this.state.updateViewportSize(this.width, this.height)
-    this.state.animate(_time, _delta)
+    this.applet.updateViewportSize(this.width, this.height)
+    this.applet.animate(_time, _delta)
 
     const toneMapping = this.renderer.toneMapping
     const toneMappingExposure = this.renderer.toneMappingExposure
 
-    this.renderer.toneMapping = this.state.toneMapping
-    this.renderer.toneMappingExposure = this.state.toneMappingExposure
+    this.renderer.toneMapping = this.applet.toneMapping
+    this.renderer.toneMappingExposure = this.applet.toneMappingExposure
 
-    this.viewCameras.setOverscan(this.width, this.height, 1)
-    this.renderer.render(this.state.scene, this.viewCameras.camera)
+    this.viewCameras.setOverscan(this.width, this.height, 1.1)
+    this.renderer.render(this.applet.scene, this.viewCameras.camera)
     this.viewCameras.resetOverscan()
 
     this.renderer.toneMapping = toneMapping
@@ -187,12 +187,12 @@ export class IoThreeViewport extends IoElement {
   }
 
   dispose() {
-    super.dispose()
     this.renderTarget.dispose()
     this.viewCameras.dispose()
     if (this.renderer !== _renderer) {
       this.renderer.dispose()
     }
+    super.dispose()
   }
 }
 

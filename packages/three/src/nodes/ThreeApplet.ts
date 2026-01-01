@@ -1,6 +1,14 @@
-import { Register, Node, ReactiveProperty, AnyConstructor } from '@io-gui/core'
+import { Register, Node, ReactiveProperty, AnyConstructor, NodeProps } from '@io-gui/core'
 import { PropertyConfig } from '@io-gui/editors'
 import { NoToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+
+export type ThreeAppletProps = NodeProps & {
+  scene?: Scene
+  toneMappingExposure?: number
+  toneMapping?: ToneMapping
+  options?: Record<string, unknown>
+  optionsUIConfig?: Map<AnyConstructor, PropertyConfig[]>
+}
 
 @Register
 export class ThreeApplet extends Node {
@@ -20,18 +28,20 @@ export class ThreeApplet extends Node {
   @ReactiveProperty({type: Map, init: null})
   declare optionsUIConfig: Map<AnyConstructor, PropertyConfig[]>
 
-  public renderer: WebGPURenderer | null = null
-
-  public width: number = 0
-  public height: number = 0
-
+  private renderer: WebGPURenderer | null = null
+  private _width: number = 0
+  private _height: number = 0
   private _prevTime: number = -1
 
+  constructor(args?: ThreeAppletProps) {
+    super(args)
+  }
+
   updateViewportSize(width: number, height: number) {
-    if (this.width !== width || this.height !== height) {
+    if (this._width !== width || this._height !== height) {
       if (!!width && !!height) {
-        this.width = width
-        this.height = height
+        this._width = width
+        this._height = height
         this.onResized(width, height)
       }
     }
