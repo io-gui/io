@@ -82,10 +82,6 @@ export type ViewCamerasProps = NodeProps & {
 
 @Register
 export class ViewCameras extends Node {
-  @Property(0)
-  declare private width: number
-  @Property(0)
-  declare private height: number
 
   @Property()
   declare private viewport: IoThreeViewport
@@ -146,14 +142,6 @@ export class ViewCameras extends Node {
     }
   }
 
-  setSize(width: number, height: number) {
-    if (width === 0 || height === 0) return
-    if (this.width !== width || this.height !== height) {
-      this.width = width
-      this.height = height
-    }
-  }
-
   cameraChanged() {
     // TODO: redundant if camera is one of the defaults?
     // TODO: Consider leaving scene camera aspect ratio unchanged or:
@@ -210,7 +198,7 @@ export class ViewCameras extends Node {
       camera.position.copy(center).add(delta)
       camera.lookAt(center)
 
-      boxCorner.copy(box.max)
+      boxCorner.copy(box.max).sub(box.min).multiplyScalar(0.5)
       boxCorner.applyQuaternion(camera.quaternion.clone().invert())
 
       const halfW = boxCorner.x
@@ -242,11 +230,22 @@ export class ViewCameras extends Node {
       camera.aspect = aspect
       camera.fov *= overscan
     } else if (camera instanceof OrthographicCamera) {
+      const frustumHeight = camera.top - camera.bottom
+      const frustumWidth = camera.right - camera.left
+      const frustumAspect = frustumWidth / frustumHeight
+
       camera.top *= overscan
       camera.bottom *= overscan
-      const frustumHeight = camera.top - camera.bottom
-      camera.left = - frustumHeight * aspect / 2
-      camera.right = frustumHeight * aspect / 2
+      camera.left *= overscan
+      camera.right *= overscan
+
+      if (frustumAspect > aspect) {
+        camera.top = frustumWidth / 2 / aspect
+        camera.bottom = -frustumWidth / 2 / aspect
+      } else {
+        camera.left = -frustumHeight / 2 * aspect
+        camera.right = frustumHeight / 2 * aspect
+      }
     }
     camera.updateProjectionMatrix()
   }

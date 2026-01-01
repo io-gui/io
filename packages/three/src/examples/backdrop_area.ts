@@ -6,7 +6,6 @@ import {
 	DoubleSide,
 	Mesh,
 	MeshBasicNodeMaterial,
-	PerspectiveCamera,
   Vector3,
 } from 'three/webgpu';
 import {
@@ -31,7 +30,6 @@ import { ioVector } from '@io-gui/editors';
 @Register
 export class WebGPUBackdropAreaExample extends ThreeApplet {
 	public mixer?: AnimationMixer;
-	public camera: PerspectiveCamera;
 	public box: Mesh;
 	
 	// Materials
@@ -49,13 +47,6 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 		super();
 
 		this.toneMappingExposure = 0.9;
-
-		// Camera
-		this.camera = new PerspectiveCamera(50, 1, 0.25, 25);
-		this.camera.position.set(3, 2, 3);
-		this.camera.lookAt(0, 1, 0);
-		this.camera.name = 'camera';
-		this.scene.add(this.camera);
 
 		// Background
 		this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1));
@@ -111,7 +102,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 		this.scene.add(this.box);
 
 		// Floor
-		const floor = new Mesh(new BoxGeometry(5, .01, 5), new MeshBasicNodeMaterial({
+		const floor = new Mesh(new BoxGeometry(3, .01, 3), new MeshBasicNodeMaterial({
 			color: 0xff6600,
 			opacityNode: positionWorld.xz.distance(0).oneMinus().clamp(),
 			transparent: true,
@@ -147,13 +138,6 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 		}
   }
 
-	onResized(width: number, height: number) {
-		super.onResized(width, height);
-		const aspect = width / height;
-		this.camera.aspect = aspect;
-		this.camera.updateProjectionMatrix();
-	}
-
 	private async loadModel() {
 		const loader = new GLTFLoader();
 		loader.load('https://threejs.org/examples/models/gltf/Michelle.glb', (gltf) => {
@@ -164,6 +148,10 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 			action.play();
 
 			this.scene.add(object);
+
+      this.dispatchMutation()
+      this.dispatch('scene-ready', {scene: this.scene}, true)
+      console.log('scene-ready')
 		});
 	}
 

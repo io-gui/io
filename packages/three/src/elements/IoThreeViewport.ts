@@ -140,7 +140,6 @@ export class IoThreeViewport extends IoElement {
     this.height = Math.floor(rect.height)
     this.renderTarget.setSize(this.width, this.height)
     this.renderTarget.setPixelRatio(window.devicePixelRatio)
-    this.viewCameras.setSize(this.width, this.height)
     this.renderViewport()
   }
 
