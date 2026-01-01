@@ -116,12 +116,6 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
     }
   }
 
-  onResized(width: number, height: number) {
-    super.onResized(width, height)
-    this.camera.aspect = width / height
-    this.camera.updateProjectionMatrix()
-  }
-
   onAnimate() {
     const minzoom = labeldata[0].size * labeldata[0].scale * 1
     const maxzoom = labeldata[labeldata.length - 1].size * labeldata[labeldata.length - 1].scale * 100

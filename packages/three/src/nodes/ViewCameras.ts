@@ -269,8 +269,8 @@ export class ViewCameras extends Node {
   setOverscan(width: number, height: number, overscan: number) {
 
     const camera = this.camera
-    const resetCamera = resetCameras.get(camera) || camera.clone()
-    resetCamera.copy(camera)
+    const resetCamera = resetCameras.get(camera) || camera.clone(false)
+    resetCamera.copy(camera, false)
     resetCameras.set(camera, resetCamera)
 
     const aspect = width / height
@@ -302,7 +302,7 @@ export class ViewCameras extends Node {
     const camera = this.camera
     const resetCamera = resetCameras.get(camera)
     if (resetCamera) {
-      camera.copy(resetCamera)
+      camera.copy(resetCamera, false)
     }
   }
 

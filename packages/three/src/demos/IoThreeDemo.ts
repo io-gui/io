@@ -1,9 +1,9 @@
-import { Register, IoElement, Storage as $, div } from '@io-gui/core'
+import { Register, IoElement, Storage as $, div, ReactiveProperty } from '@io-gui/core'
 import { ioLayout, Split } from '@io-gui/layout'
 import { MenuOption, ioOptionSelect } from '@io-gui/menus'
-import { ioPropertyEditor } from '@io-gui/editors'
-import { ioThreeViewport } from '@io-gui/three'
-import { WebGPURenderer } from 'three/webgpu'
+import { ioThreeViewport, ThreeApplet } from '@io-gui/three'
+import { ioField } from '@io-gui/inputs'
+
 import { ComputeTextureExample } from '../examples/compute_texture.js'
 import { VolumePerlinExample } from '../examples/volume_perlin.js'
 import { CameraExample } from '../examples/camera.js'
@@ -18,42 +18,82 @@ import { AnimationRetargetingExample } from '../examples/animation_retargeting.j
 import { AnimationRetargetingReadyplayerExample } from '../examples/animation_retargeting_readyplayer.js'
 import { AnimationBackdropExample } from '../examples/animation_backdrop.js'
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js'
+import { ioThreeProperties } from '../elements/IoThreeProperties.js'
 
 const version = 3
 
 const split = new Split({
   children: [
     {
-      orientation: 'vertical',
+      orientation: 'horizontal',
       children: [
         {
-          orientation: 'horizontal',
+          orientation: 'vertical',
           children: [
-            {tabs: [
-              {id: 'Top'},
-            ]},
-            {tabs: [
-              {id: 'Front'},
-              {id: 'ExampleSelector'},
-            ]},
+            {
+              orientation: 'horizontal',
+              children: [
+                {tabs: [
+                  {id: 'Top'},
+                ]},
+                {tabs: [
+                  {id: 'Front'},
+                ]},
+              ]
+            },
+            {
+              orientation: 'horizontal',
+              children: [
+                {tabs: [
+                  {id: 'Left'},
+                ]},
+                {tabs: [
+                  {id: 'Perspective'},
+                  {id: 'SceneCamera'},
+                ]},
+              ]
+            },
           ]
         },
         {
-          orientation: 'horizontal',
-          children: [
-            {tabs: [
-              {id: 'Left'},
-            ]},
-            {tabs: [
-              {id: 'Perspective'},
-              {id: 'SceneCamera'},
-            ]},
-          ]
-        },
+          flex: '1 1 280px',
+          tabs: [
+            {id: 'ExampleProperties'},
+          ],
+        }
       ]
     }
   ]
 })
+
+const exampleOptions = new MenuOption({
+  options: [
+    {id: 'Camera Examples', options: [
+      {id: 'Camera', value: CameraExample},
+      {id: 'CameraLogarithmicDepthBuffer', value: CameraLogarithmicDepthBufferExample},
+      {id: 'CameraArray', value: CameraArrayExample},
+    ]},
+    {id: 'Geometries', options: [
+      {id: 'GeometryPrimitives', value: GeometriesExample},
+      {id: 'GeometryColors', value: GeometryColorsExample},
+      {id: 'GeometryConvex', value: GeometryConvexExample},
+    ]},
+    {id: 'Animations', options: [
+      {id: 'AnimationGroups', value: AnimationGroupsExample},
+      {id: 'AnimationKeyframes', value: AnimationKeyframesExample},
+      {id: 'AnimationRetargeting', value: AnimationRetargetingExample},
+      {id: 'AnimationRetargetingReadyplayer', value: AnimationRetargetingReadyplayerExample},
+      {id: 'AnimationBackdrop', value: AnimationBackdropExample},
+    ]},
+    {id: 'WebGPUBackdropArea', value: WebGPUBackdropAreaExample},
+    {id: 'ComputeTexture', value: ComputeTextureExample},
+    {id: 'VolumePerlin', value: VolumePerlinExample},
+  ],
+  selectedID: $({key: 'example', storage: 'hash', value: 'AnimationKeyframes'})
+})
+
+
+const initializzedExamples = new WeakMap<typeof ThreeApplet, ThreeApplet>()
 
 export class IoThreeDemo extends IoElement {
   static get Style() {
@@ -71,6 +111,11 @@ export class IoThreeDemo extends IoElement {
         flex: 1 1 auto;
         flex-direction: row;
       }
+      :host  .column {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+      }
       :host  .property-editor {
         position: relative;
         display: flex;
@@ -85,62 +130,52 @@ export class IoThreeDemo extends IoElement {
       }
     `
   }
+
+  @ReactiveProperty({type: ThreeApplet, init: null})
+  declare selectedExample: ThreeApplet
+
+
+  selectedExampleOptionChanged() {
+    const selectedConstructor = exampleOptions.value
+    const initializedExample = initializzedExamples.get(selectedConstructor)
+    if (initializedExample) {
+      this.selectedExample = initializedExample
+    } else {
+      const example = new selectedConstructor()
+      initializzedExamples.set(selectedConstructor, example)
+      this.selectedExample = example
+    }
+  }
+  
   ready() {
-    const _renderer = new WebGPURenderer({antialias: false, alpha: true, logarithmicDepthBuffer: true})
-    _renderer.setPixelRatio(window.devicePixelRatio)
-    _renderer.setClearAlpha(0)
-    void _renderer.init()
-
-    const _webGPUBackdropAreaExample = new WebGPUBackdropAreaExample()
-    const _cameraExample = new CameraExample()
-    const _cameraLogarithmicDepthBufferExample = new CameraLogarithmicDepthBufferExample()
-    const _cameraArrayExample = new CameraArrayExample()
-    const _geometriesExample = new GeometriesExample()
-    const _geometryColorsExample = new GeometryColorsExample()
-    const _geometryConvexExample = new GeometryConvexExample()
-    const _animationGroupsExample = new AnimationGroupsExample()
-    const _animationKeyframesExample = new AnimationKeyframesExample()
-    const _animationRetargetingExample = new AnimationRetargetingExample()
-    const _animationRetargetingReadyplayerExample = new AnimationRetargetingReadyplayerExample()
-    const _animationBackdropExample = new AnimationBackdropExample()
-    const _computeTextureExample = new ComputeTextureExample()
-    const _volumePerlinExample = new VolumePerlinExample()
-    const exampleOptions = new MenuOption({
-      options: [
-        {id: 'Camera Examples', options: [
-          {id: 'Camera', value: _cameraExample},
-          {id: 'CameraLogarithmicDepthBuffer', value: _cameraLogarithmicDepthBufferExample},
-          {id: 'CameraArray', value: _cameraArrayExample},
-        ]},
-        {id: 'Geometries', options: [
-          {id: 'GeometryPrimitives', value: _geometriesExample},
-          {id: 'GeometryColors', value: _geometryColorsExample},
-          {id: 'GeometryConvex', value: _geometryConvexExample},
-        ]},
-        {id: 'Animations', options: [
-          {id: 'AnimationGroups', value: _animationGroupsExample},
-          {id: 'AnimationKeyframes', value: _animationKeyframesExample},
-          {id: 'AnimationRetargeting', value: _animationRetargetingExample},
-          {id: 'AnimationRetargetingReadyplayer', value: _animationRetargetingReadyplayerExample},
-          {id: 'AnimationBackdrop', value: _animationBackdropExample},
-        ]},
-        {id: 'WebGPUBackdropArea', value: _webGPUBackdropAreaExample},
-        {id: 'ComputeTexture', value: _computeTextureExample},
-        {id: 'VolumePerlin', value: _volumePerlinExample},
-      ],
-      selectedID: $({key: 'example', storage: 'hash', value: 'AnimationKeyframes'})
-    })
-
+    exampleOptions.addEventListener('value-changed', this.selectedExampleOptionChanged)
+    this.selectedExampleOptionChanged()
+    // const _renderer = new WebGPURenderer({antialias: false, alpha: true, logarithmicDepthBuffer: true})
+    // _renderer.setPixelRatio(window.devicePixelRatio)
+    // _renderer.setClearAlpha(0)
+    // void _renderer.init()
+  }
+  changed() {
+    console.log('changed')
     this.render([
       ioLayout({
         elements: [
-          ioThreeViewport({id: 'Top', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Front', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'front'}),
-          ioThreeViewport({id: 'Left', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Perspective', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'SceneCamera', applet: exampleOptions.bind('value'), playing: true, cameraSelect: 'scene'}),
-          ioOptionSelect({id: 'ExampleSelector', option: exampleOptions, selectBy: 'id'}),
-          // ioPropertyEditor({value: _webGPUBackdropAreaExample.options, config: _webGPUBackdropAreaExample.optionsUIConfig})
+          ioThreeViewport({id: 'Top', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Front', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'front'}),
+          ioThreeViewport({id: 'Left', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Perspective', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'SceneCamera', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'scene'}),
+
+          div({id: 'ExampleProperties'}, [
+            div({class: 'column'}, [
+              div({class: 'column'}, [
+                ioField({label:'Select Example:'}),
+                ioOptionSelect({option: exampleOptions, selectBy: 'id'}), 
+              ]),
+              ioThreeProperties({applet: this.bind('selectedExample')})
+            ])
+          ])
+
         ],
         split: $({key: `viewport-split-v${version}`, storage: 'local', value: split}),
         addMenuOption: new MenuOption({
@@ -154,7 +189,7 @@ export class IoThreeDemo extends IoElement {
               {id: 'Left', mode: 'none'},
               {id: 'Perspective', mode: 'none'},
               {id: 'SceneCamera', mode: 'none'},
-              {id: 'ExampleSelector', mode: 'none'},
+              {id: 'ExampleProperties', mode: 'none'},
             ]},
           ],
         }),

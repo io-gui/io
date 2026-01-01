@@ -40,7 +40,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 	
 	public materials: Record<string, MeshBasicNodeMaterial>;
 
-  @ReactiveProperty({type: String, value: 'depth'})
+  @ReactiveProperty({type: String, value: 'blurred'})
 	declare public currentMaterial: string
 
 	constructor() {
@@ -108,8 +108,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 			transparent: true,
 			depthWrite: false
 		}));
-		floor.position.set(0, 0, 0);
-  		// this.scene.add(floor);
+  	this.scene.add(floor);
 
     this.options = {
 			material: 'blurred',
@@ -119,8 +118,11 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
     this.optionsUIConfig = new Map([
       [Object, [
         ['material', ioOptionSelect({
-          value: this.bind('currentMaterial'),
-          option: new MenuOption({options: ['blurred', 'depth', 'checker', 'pixel']})
+          option: new MenuOption({
+            selectedID: this.bind('currentMaterial'),
+            options: ['blurred', 'depth', 'checker', 'pixel']
+          }),
+          selectBy: 'id'
         })],
         [Vector3, ioVector({linkable: true})]
       ]],

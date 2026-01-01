@@ -1,4 +1,5 @@
 import { Register } from '@io-gui/core';
+import { ThreeApplet } from '@io-gui/three';
 import {
 	AnimationMixer,
 	Group,
@@ -30,7 +31,6 @@ import {
 	output,
 } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet } from '@io-gui/three';
 
 @Register
 export class AnimationBackdropExample extends ThreeApplet {
@@ -97,13 +97,6 @@ export class AnimationBackdropExample extends ThreeApplet {
 
 		// Load model
 		this.loadModel();
-	}
-
-	onResized(width: number, height: number) {
-		super.onResized(width, height);
-		const aspect = width / height;
-		this.camera.aspect = aspect;
-		this.camera.updateProjectionMatrix();
 	}
 
 	private async loadModel() {
