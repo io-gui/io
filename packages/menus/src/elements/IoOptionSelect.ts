@@ -84,6 +84,19 @@ export class IoOptionSelect extends IoElement {
     if (change.value) {
       change.value.addEventListener('option-selected', this.onOptionSelected)
     }
+
+    let selectedItem
+    if (this.selectBy === 'value') {
+      selectedItem = this.option.value
+      if (selectedItem !== this.value) {
+        this.value = selectedItem
+      }
+    } else if (this.selectBy === 'id') {
+      selectedItem = this.option.selectedID
+      if (selectedItem !== this.value) {
+        this.value = selectedItem
+      }
+    }
   }
   changed() {
     let selectedItem

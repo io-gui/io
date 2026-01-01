@@ -1,4 +1,4 @@
-import { Node, Register, ReactiveProperty, WithBinding, NodeArray } from '@io-gui/core'
+import { Node, Register, ReactiveProperty, WithBinding, NodeArray, option } from '@io-gui/core'
 
 export type MenuOptionMode = 'select' | 'toggle' | 'none'
 
@@ -139,6 +139,8 @@ export class MenuOption extends Node {
     const option = this.findItemById(this.selectedID)
     if (option) {
       option.selected = true
+      // TODO: Test
+      if (option.value !== undefined) this.value = option.value
       this.dispatch('option-selected', {option: option}, false)
     }
   }
@@ -146,7 +148,11 @@ export class MenuOption extends Node {
     if (this.selectedIDImmediate) {
       this.selected = true
       const option = this.options.find(option => option.id === this.selectedIDImmediate)
-      if (option) option.selected = true
+      if (option) {
+        // TODO: Test
+        // if (option.value !== undefined) this.value = option.value
+        option.selected = true
+      }
     }
     this.updatePaths()
   }
