@@ -86,11 +86,13 @@ const localStorage = new EmulatedLocalStorage()
 type StorageNodes = {
   local: Map<string, StorageNode>
   hash: Map<string, StorageNode>
+  none: Map<string, StorageNode>
 }
 
 const nodes: StorageNodes = {
   local: new Map(),
   hash: new Map(),
+  none: new Map(),
 }
 
 let hashValues: Record<string, any> = {}
@@ -98,7 +100,7 @@ let hashValues: Record<string, any> = {}
 export type StorageProps = NodeProps & {
   key: string
   value: any
-  storage?: 'hash' | 'local'
+  storage?: 'hash' | 'local' | 'none'
 }
 
 @Register
@@ -111,7 +113,7 @@ export class StorageNode extends Node {
   declare value: any
 
   @ReactiveProperty({value: 'local', type: String})
-  declare storage: 'hash' | 'local'
+  declare storage: 'hash' | 'local' | 'none'
 
   declare binding: Binding
 
@@ -124,8 +126,8 @@ export class StorageNode extends Node {
       } else {
         if (typeof props.key !== 'string' || !props.key)
           console.warn('Ivalid Storage key!')
-        if (props.storage && ['hash', 'local'].indexOf(props.storage) === -1)
-          console.warn('Ivalid Storage storage!')
+        if (props.storage && ['hash', 'local', 'none'].indexOf(props.storage) === -1)
+          console.warn(`Ivalid storage type! ${props.storage}`)
       }
     }
 
