@@ -113,18 +113,16 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 		}))
   	this.scene.add(floor)
 
-    this.uiConfig = new Map([
-      [Object, [
-        ['material', ioOptionSelect({
-          option: new MenuOption({
-            selectedID: this.bind('material'),
-            options: ['blurred', 'depth', 'checker', 'pixel']
-          }),
-          selectBy: 'id'
-        })],
-        [Vector3, ioVector({linkable: true})]
-      ]],
-    ])
+    this.uiConfig = [
+      ['material', ioOptionSelect({
+        option: new MenuOption({
+          selectedID: this.bind('material'),
+          options: ['blurred', 'depth', 'checker', 'pixel']
+        }),
+        selectBy: 'id'
+      })],
+      [Vector3, ioVector({linkable: true})]
+    ]
 
 		// Load model
 		void this.loadModel()

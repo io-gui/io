@@ -135,7 +135,6 @@ export class IoThreeDemo extends IoElement {
   @ReactiveProperty({type: ThreeApplet, init: null})
   declare selectedExample: ThreeApplet
 
-
   selectedExampleOptionChanged() {
     const selectedOption = exampleOptions.findItemById(exampleOptions.selectedID)
 
@@ -157,14 +156,9 @@ export class IoThreeDemo extends IoElement {
   }
 
   ready() {
-    exampleOptions.addEventListener('value-changed', this.selectedExampleOptionChanged)
+    exampleOptions.addEventListener('option-selected', this.selectedExampleOptionChanged)
     this.selectedExampleOptionChanged()
-    // const _renderer = new WebGPURenderer({antialias: false, alpha: true, logarithmicDepthBuffer: true})
-    // _renderer.setPixelRatio(window.devicePixelRatio)
-    // _renderer.setClearAlpha(0)
-    // void _renderer.init()
-  }
-  changed() {
+
     this.render([
       ioLayout({
         elements: [

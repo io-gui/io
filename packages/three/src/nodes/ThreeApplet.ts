@@ -1,12 +1,12 @@
 import { Register, Node, ReactiveProperty, NodeProps } from '@io-gui/core'
-import { EditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { PropertyConfig, registerEditorGroups } from '@io-gui/editors'
 import { NoToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 
 export type ThreeAppletProps = NodeProps & {
   scene?: Scene
   toneMappingExposure?: number
   toneMapping?: ToneMapping
-  uiConfig?: EditorConfig
+  uiConfig?: PropertyConfig[]
 }
 
 @Register
@@ -22,8 +22,8 @@ export class ThreeApplet extends Node {
   declare toneMapping: ToneMapping
 
   // TODO: dispose uiConfig when applet is disposed
-  @ReactiveProperty({type: Map, init: null})
-  declare uiConfig: EditorConfig
+  @ReactiveProperty({type: Array, init: null})
+  declare uiConfig: PropertyConfig[]
 
   private _renderer: WebGPURenderer | null = null
   private _width: number = 0
