@@ -76,7 +76,7 @@ export class MenuOption extends Node {
     }
 
     args = { ...args }
-    args.id = args.id ?? 'Null' // TODO: Reconsider.
+    args.id = args.id ?? '' // TODO: Reconsider.
     args.label = args.label ?? args.id
     args.value = args.value ?? args.id
     args.options = args.options ?? []
@@ -281,9 +281,9 @@ export class MenuOption extends Node {
       if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
         console.warn('"selected" property is only valid when mode is "select" or "toggle"!', this)
       }
-      if (!this.id) {
-        console.warn('"id" property is required!', this)
-      }
+      // if (!this.id) {
+      //   console.warn('"id" property is required!', this)
+      // }
       if (this.action && typeof this.action !== 'function') {
         console.warn(`Invalid type "${typeof this.action}" of "action" property!`, this)
       }

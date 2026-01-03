@@ -85,31 +85,31 @@ export class IoOptionSelect extends IoElement {
       change.value.addEventListener('option-selected', this.onOptionSelected)
     }
 
-    // if (this.value === undefined) {
-    //   let selectedItem
-    //   if (this.selectBy === 'value') {
-    //     selectedItem = this.option.value
-    //     if (selectedItem !== this.value) {
-    //       // this.option.value = this.value
-    //       this.value = selectedItem
-    //     }
-    //   } else if (this.selectBy === 'id') {
-    //     selectedItem = this.option.selectedID
-    //     if (selectedItem !== this.value) {
-    //       // this.option.selectedID = this.value
-    //       this.value = selectedItem
-    //     }
-    //   }
-    // }
+    //TODO: Cleanup and test
+    if (this.value === undefined) {
+      const selectedID = this.option.selectedID
+      const selectedItem = this.option.findItemById(selectedID)
+      if (this.selectBy === 'value') {
+        if (selectedItem) {
+          this.value = selectedItem.value
+        }
+      } else if (this.selectBy === 'id') {
+        if (selectedItem) {
+          this.value = selectedItem.id
+        }
+      }
+    }
   }
   changed() {
     let selectedItem
+    let label = this.label
     if (this.selectBy === 'value') {
       selectedItem = this.option.findItemByValue(this.value)
+      label = selectedItem ? selectedItem.label : String(this.value)
     } else if (this.selectBy === 'id') {
       selectedItem = this.option.findItemById(this.value)
+      label = selectedItem ? selectedItem.label : String(this.value)
     }
-    const label = selectedItem ? selectedItem.label : this.label || String(this.value)
     this.render([ioMenuItem({option: this.option, label: label, icon: this.icon, direction: 'down'})])
   }
 }
