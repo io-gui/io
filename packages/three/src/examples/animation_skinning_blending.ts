@@ -97,24 +97,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
         ['walkWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
         ['runWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
         [AnimationAction, ioObject({
-          config: new Map([
-            [AnimationAction, [
-              ['blendMode', ioOptionSelect({selectBy: 'value', option: new MenuOption({options: [
-                {value: 2501, id: 'Additive'},
-                {value: 2500, id: 'Normal'},
-                {value: 2502, id: 'Additive2'},
-                {value: 2503, id: 'Additive3'},
-              ]})})],
-              //AnimationBlendMode
-              ['weight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-            ]],
-          ]),
-          groups: new Map([
-            [AnimationAction, {
-              Main: ['name', 'weight', 'time', 'timeScale', 'effectiveWeight', 'effectiveTimeScale'],
-              Hidden: ['loop'],
-            }],
-          ]),
+          expanded: true,
         })],
       ]],
     ])

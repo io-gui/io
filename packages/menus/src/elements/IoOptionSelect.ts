@@ -85,22 +85,22 @@ export class IoOptionSelect extends IoElement {
       change.value.addEventListener('option-selected', this.onOptionSelected)
     }
 
-    if (this.value === undefined) {
-      let selectedItem
-      if (this.selectBy === 'value') {
-        selectedItem = this.option.value
-        if (selectedItem !== this.value) {
-          // this.option.value = this.value
-          this.value = selectedItem
-        }
-      } else if (this.selectBy === 'id') {
-        selectedItem = this.option.selectedID
-        if (selectedItem !== this.value) {
-          // this.option.selectedID = this.value
-          this.value = selectedItem
-        }
-      }
-    }
+    // if (this.value === undefined) {
+    //   let selectedItem
+    //   if (this.selectBy === 'value') {
+    //     selectedItem = this.option.value
+    //     if (selectedItem !== this.value) {
+    //       // this.option.value = this.value
+    //       this.value = selectedItem
+    //     }
+    //   } else if (this.selectBy === 'id') {
+    //     selectedItem = this.option.selectedID
+    //     if (selectedItem !== this.value) {
+    //       // this.option.selectedID = this.value
+    //       this.value = selectedItem
+    //     }
+    //   }
+    // }
   }
   changed() {
     let selectedItem

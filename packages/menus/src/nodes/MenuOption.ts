@@ -75,15 +75,12 @@ export class MenuOption extends Node {
       }
     }
 
-    console.log('args', args)
-
     args = { ...args }
     args.id = args.id ?? 'Null' // TODO: Reconsider.
     args.label = args.label ?? args.id
     args.value = args.value ?? args.id
     args.options = args.options ?? []
     args.options = args.options.map(option => {
-      console.log('option', option)
       return (option instanceof MenuOption) ? option : new MenuOption(option)
     })
 
@@ -143,8 +140,6 @@ export class MenuOption extends Node {
     const option = this.findItemById(this.selectedID)
     if (option) {
       option.selected = true
-      // TODO: Test
-      if (option.value !== undefined) this.value = option.value
       this.dispatch('option-selected', {option: option}, false)
     }
   }
@@ -153,8 +148,6 @@ export class MenuOption extends Node {
       this.selected = true
       const option = this.options.find(option => option.id === this.selectedIDImmediate)
       if (option) {
-        // TODO: Test
-        // if (option.value !== undefined) this.value = option.value
         option.selected = true
       }
     }

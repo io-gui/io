@@ -155,11 +155,6 @@ export class IoPropertyEditor extends IoElement {
 
         Object.assign(finalProps, props)
 
-        if (isFunction) {
-          finalProps.action = value
-          finalProps.label = finalProps.label || id
-        }
-
         let children: string | undefined = undefined
         if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
           children = value
@@ -168,6 +163,11 @@ export class IoPropertyEditor extends IoElement {
         if (tag === 'io-object' || tag === 'io-property-editor') {
           finalProps.config = finalProps.config || this.config
           finalProps.groups = finalProps.groups || this.groups
+        }
+        // NOTE: Functions dont have labels. They are displayed as labeled buttons.
+        if (isFunction) {
+          finalProps.action = value
+          finalProps.label = finalProps.label || id
         }
         vChildren.push(div({class: 'row'}, [
           (this.labeled && !isFunction) ? span(id) : null,

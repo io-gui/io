@@ -1,9 +1,10 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, Binding } from '@io-gui/core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, WithBinding } from '@io-gui/core'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
+import '../nodes/ThreeEditorConfig.js'
 
 export type IoThreePropertiesProps = IoElementProps & {
-  applet: ThreeApplet | Binding
+  applet: WithBinding<ThreeApplet>
 }
 
 @Register

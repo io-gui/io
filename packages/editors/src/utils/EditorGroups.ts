@@ -112,27 +112,25 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
   function aggregateGroups(editorGroups: EditorGroups) {
     for (const [constructorKey, groups] of editorGroups) {
       if (object instanceof constructorKey) {
-        // Reorder aggregatedGroups keys to match the order specified in this config.
-        // Later configs determine the order of overlapping keys.
+
+        // Reorder keys to match the order in the latest config.
         const configKeys = Object.keys(groups)
         const existingKeys = Object.keys(aggregatedGroups)
 
+        // TODO: Test thoroughly.
         if (configKeys.length > 0 && existingKeys.length > 0) {
           const reorderedGroups: PropertyGroups = {}
 
-          // Add keys in the order they appear in config
           for (const key of configKeys) {
             reorderedGroups[key] = aggregatedGroups[key] || []
           }
 
-          // Add remaining existing keys that weren't in config (preserving their order)
           for (const key of existingKeys) {
             if (!(key in reorderedGroups)) {
               reorderedGroups[key] = aggregatedGroups[key]
             }
           }
 
-          // Clear and reassign to update key order
           for (const key of existingKeys) {
             if (configKeys.includes(key)) {
               delete aggregatedGroups[key]
@@ -166,9 +164,9 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
     Main: [],
   }
 
-
   for (const key of getAllPropertyNames(object)) {
     let included = false
+    const isFunction = typeof object[key as keyof typeof object] === 'function'
     for (const g of Object.keys(aggregatedGroups)) {
       groupsRecord[g] = groupsRecord[g] || []
       for (const identifier of aggregatedGroups[g]) {
@@ -182,11 +180,13 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
         }
       }
     }
-    if (!included && typeof object[key as keyof typeof object] !== 'function') {
+    // Functions are not included in groups unless they are explicitly added.
+    // TODO: Test thoroughly.
+    if (!included && !isFunction) {
       groupsRecord.Main.push(key)
     }
   }
-  // TODO: make sure no property belongs to multiple groups.
+  // TODO: make sure and test no property belongs to multiple groups.
   return groupsRecord
 }
 

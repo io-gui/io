@@ -94,7 +94,6 @@ const exampleOptions = new MenuOption({
   selectedID: $({key: 'example', storage: 'hash', value: 'AnimationKeyframes'})
 })
 
-
 const initializzedExamples = new WeakMap<typeof ThreeApplet, ThreeApplet>()
 
 export class IoThreeDemo extends IoElement {
@@ -138,8 +137,16 @@ export class IoThreeDemo extends IoElement {
 
 
   selectedExampleOptionChanged() {
-    const selectedConstructor = exampleOptions.value
+    const selectedOption = exampleOptions.findItemById(exampleOptions.selectedID)
+
+    if (!selectedOption) {
+      console.warn('Selected option not found', exampleOptions.selectedID)
+      return
+    }
+
+    const selectedConstructor = selectedOption.value
     const initializedExample = initializzedExamples.get(selectedConstructor)
+
     if (initializedExample) {
       this.selectedExample = initializedExample
     } else {
@@ -182,17 +189,17 @@ export class IoThreeDemo extends IoElement {
         addMenuOption: new MenuOption({
           id: 'addMenuOption',
           mode: 'none',
-          options: [
-            {id: 'Viewports', mode: 'none', options: [
-              {id: 'SceneCamera', mode: 'none'},
-              {id: 'Top', mode: 'none'},
-              {id: 'Front', mode: 'none'},
-              {id: 'Left', mode: 'none'},
-              {id: 'Perspective', mode: 'none'},
-              {id: 'SceneCamera', mode: 'none'},
-              {id: 'ExampleProperties', mode: 'none'},
-            ]},
-          ],
+          // options: [
+          //   {id: 'Viewports', mode: 'none', options: [
+          //     {id: 'SceneCamera', mode: 'none'},
+          //     {id: 'Top', mode: 'none'},
+          //     {id: 'Front', mode: 'none'},
+          //     {id: 'Left', mode: 'none'},
+          //     {id: 'Perspective', mode: 'none'},
+          //     {id: 'SceneCamera', mode: 'none'},
+          //     {id: 'ExampleProperties', mode: 'none'},
+          //   ]},
+          // ],
         }),
       })
     ])
