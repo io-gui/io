@@ -1,6 +1,6 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS } from '@io-gui/core'
-import { EditorConfig, getEditorConfig } from '../utils/EditorConfig.js'
-import { EditorGroups, getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js'
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
+import { EditorGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js'
 import { ioObject } from './IoObject.js'
 
@@ -9,7 +9,7 @@ export type IoPropertyEditorProps = IoElementProps & {
   properties?: string[] | null
   labeled?: boolean
   orientation?: 'vertical' | 'horizontal'
-  config?: EditorConfig
+  config?: PropertyConfig[]
   groups?: EditorGroups
   widgets?: EditorWidgets
 }
@@ -84,8 +84,8 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty({type: String, value: 'vertical', reflect: true})
   declare orientation: 'vertical' | 'horizontal'
 
-  @ReactiveProperty({type: Map, init: null})
-  declare config: EditorConfig
+  @ReactiveProperty({type: Array, init: null})
+  declare config: PropertyConfig[]
 
   @ReactiveProperty({type: Map, init: null})
   declare groups: EditorGroups
@@ -93,8 +93,11 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets
 
+  private _config: PropertyConfigRecord | null = null
+  private _groups: PropertyGroupsRecord | null = null
+  private _widget: VDOMElement | null = null
+
   init() {
-    this.changeThrottled = this.changeThrottled.bind(this)
     this._observedObjectProperties.push('value')
     window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }
@@ -111,18 +114,45 @@ export class IoPropertyEditor extends IoElement {
       debug: console.warn('IoPropertyEditor: "value-input" recieved from an input without a property id')
     }
   }
-  valueMutated() {
-    this.changeThrottled()
+
+  valueMutated(event: CustomEvent) {
+    this.throttle(this.changed)
   }
-  changeThrottled() {
+  configChanged() {
+    this.throttle(this.configureThrottled)
+  }
+  groupsChanged() {
+    this.throttle(this.configureThrottled)
+  }
+  widgetChanged() {
+    this.throttle(this.configureThrottled)
+  }
+  valueChanged() {
+    this.throttle(this.configureThrottled)
+  }
+  configureThrottled() {
+    this._config = getEditorConfig(this.value, this.config)
+    this._groups = getEditorGroups(this.value, this.groups)
+    this._widget = getEditorWidget(this.value, this.widgets)
     this.throttle(this.changed)
   }
   changed() {
-    if (!this.value) return
+    this.debounce(this.changedDebounced)
+  }
+  changedDebounced() {
+    if (!this.value) {
+      this._config = null
+      this._groups = null
+      this._widget = null
+      this.render([])
+      return
+    }
 
-    const config = getEditorConfig(this.value, this.config)
-    const groups = getEditorGroups(this.value, this.groups)
-    const widget = getEditorWidget(this.value, this.widgets)
+    const config = this._config
+    const groups = this._groups
+    const widget = this._widget
+
+    if (!config || !groups) return
 
     const properties = []
     const vChildren = []
@@ -178,15 +208,25 @@ export class IoPropertyEditor extends IoElement {
       }
     }
 
-    const uuid = genIdentifier(this.value)
+    let uuid = genIdentifier(this.value)
+    let storage: 'local' | 'none' = 'local'
 
     if (!this.properties.length) {
       for (const group in groups) {
+
         if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
+
+          const expanded = group !== 'Advanced' ? true : false
+
+          if (!uuid) {
+            uuid = getTempIdentifier(this.value)
+            storage = 'none'
+          }
+
           vChildren.push(
             ioObject({
               label: group,
-              expanded: $({value: true, storage: 'local', key: uuid + '-' + group}),
+              expanded: $({value: expanded, storage: storage, key: uuid + '-' + group}),
               value: this.value,
               properties: groups[group],
               config: this.config,
@@ -207,17 +247,19 @@ export const ioPropertyEditor = function(arg0?: IoPropertyEditorProps) {
   return IoPropertyEditor.vConstructor(arg0)
 }
 
-// TODO: consider using WeakMap instead of UUID.
 function genIdentifier(object: any) {
-  let UUID = 'io-object-collapse-state-' + object.constructor.name
-  UUID += '-' + (object.guid || object.uuid || object.id || '')
-  const props = JSON.stringify(Object.keys(object))
-  let hash: any = 0
-  for (let i = 0; i < props.length; i++) {
-    hash = ((hash << 5) - hash) + props.charCodeAt(i)
-    hash |= 0
+  const id = object.guid || object.uuid || object.id || object.name
+  if (id) {
+    return 'io-object-collapse-state-' + object.constructor.name + '-' + id
   }
-  hash = (-hash).toString(16)
-  UUID += '-' + hash
-  return UUID
+}
+
+const tempIdentifiers = new WeakMap<object, string>()
+
+function getTempIdentifier(object: any) {
+  if (!tempIdentifiers.has(object)) {
+    const randomuuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    tempIdentifiers.set(object, randomuuid)
+  }
+  return tempIdentifiers.get(object)!
 }

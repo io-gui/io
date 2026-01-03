@@ -1,7 +1,7 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
-import { EditorConfig } from '../utils/EditorConfig.js'
+import { EditorConfig, PropertyConfig } from '../utils/EditorConfig.js'
 import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { EditorWidgets } from '../utils/EditorWidgets.js'
 import { ioPropertyLink } from './IoPropertyLink.js'
@@ -65,8 +65,8 @@ export class IoInspector extends IoElement {
   @ReactiveProperty({type: String})
   declare search: string
 
-  @ReactiveProperty({type: Map, init: null})
-  declare config: EditorConfig
+  @ReactiveProperty({type: Array, init: null})
+  declare config: PropertyConfig[]
 
   @ReactiveProperty({type: Map, init: null})
   declare groups: EditorGroups
@@ -80,7 +80,6 @@ export class IoInspector extends IoElement {
     }
   }
   init() {
-    this.changeThrottled = this.changeThrottled.bind(this)
     this._observedObjectProperties.push('value', 'selected')
     window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }
@@ -118,10 +117,9 @@ export class IoInspector extends IoElement {
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
     ]
 
-    const config = new Map(this.config)
+    const config = [...this.config]
 
-    if (!config.has(Object)) config.set(Object, [])
-    config.get(Object)!.push([Object, ioPropertyLink({showName: true})])
+    config.push([Object, ioPropertyLink({showName: true})])
 
     const properties = []
     if (this.search) {

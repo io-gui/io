@@ -1,7 +1,7 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
-import { EditorConfig } from '../utils/EditorConfig.js'
+import { PropertyConfig } from '../utils/EditorConfig.js'
 import { EditorGroups } from '../utils/EditorGroups.js'
 import { EditorWidgets } from '../utils/EditorWidgets.js'
 
@@ -11,7 +11,7 @@ export type IoObjectProps = IoElementProps & {
   labeled?: boolean
   label?: string
   expanded?: WithBinding<boolean>
-  config?: EditorConfig
+  config?: PropertyConfig[]
   groups?: EditorGroups
   widgets?: EditorWidgets
 }
@@ -65,8 +65,8 @@ export class IoObject extends IoElement {
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({type: Map, init: null})
-  declare config: EditorConfig
+  @ReactiveProperty({type: Array, init: null})
+  declare config: PropertyConfig[]
 
   @ReactiveProperty({type: Map, init: null})
   declare groups: EditorGroups

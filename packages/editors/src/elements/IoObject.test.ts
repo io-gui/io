@@ -21,7 +21,7 @@ function reset() {
   element.labeled = true
   element.expanded = false
   element.value = {}
-  element.config = new Map()
+  element.config = []
   element.properties = []
 }
 
@@ -113,12 +113,10 @@ describe('IoObject', () => {
   })
   it('matches value with custom config', () => {
     element.value = testValue
-    element.config = new Map([
-      [Object, [
-        ['number', ioSlider({step: 1})],
-        ['boolean', ioString()],
-      ]]
-    ])
+    element.config = [
+      ['number', ioSlider({step: 1})],
+      ['boolean', ioString()],
+    ]
     element.expanded = true
     const properties = element.children[1]
     expect(properties.children[0].children[1].localName).toBe('io-slider')

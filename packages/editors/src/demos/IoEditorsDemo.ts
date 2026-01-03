@@ -84,61 +84,51 @@ export class IoEditorsDemo extends IoElement {
             'Vectors and Matrices': [/vector/i, /matrix/i],
           }],
         ]),
-        config: new Map([
-          [Object, [
-            [Number, ioSlider({step: 0.1})],
-            [Array, ioPropertyEditor({labeled: false, class: 'array', config: new Map([
-              [Array, [[Number, ioNumber()]]]
-            ])})],
-            ['vector2', ioVectorArray({linkable: true})],
-            ['vector3', ioVectorArray({linkable: true})],
-            ['vector4', ioVectorArray({linkable: true})],
-            ['matrix2', ioMatrix()],
-            ['matrix3', ioMatrix()],
-            ['matrix4', ioMatrix()],
-          ]]
-        ]),
+        config: [
+          [Number, ioSlider({step: 0.1})],
+          [Array, ioPropertyEditor({labeled: false, class: 'array', config: [[Number, ioNumber()]]})],
+          ['vector2', ioVectorArray({linkable: true})],
+          ['vector3', ioVectorArray({linkable: true})],
+          ['vector4', ioVectorArray({linkable: true})],
+          ['matrix2', ioMatrix()],
+          ['matrix3', ioMatrix()],
+          ['matrix4', ioMatrix()],
+        ],
       }),
       div({class: 'column'}, [
         ioPropertyEditor({
           value: this.object,
           properties: ['number', 'string', 'boolean', 'object'],
-          config: new Map([
-            [Object, [
-              [String, ioString({live: true})],
-              [Number, ioNumber({live: true})],
-            ]]
-          ]),
+          config: [
+            [String, ioString({live: true})],
+            [Number, ioNumber({live: true})],
+          ],
         }),
         ioPropertyEditor({
           value: this.object,
           style: {width: '10rem'},
           properties: ['number', 'string', 'boolean'],
-          config: new Map([
-            [Object, [
-              [Number, ioSlider({step: 0.01})],
-              [Boolean, ioBoolean()],
-            ]]
-          ]),
+          config:[
+            [Number, ioSlider({step: 0.01})],
+            [Boolean, ioBoolean()],
+          ]
         }),
         ioPropertyEditor({
           value: this.object,
           properties: ['number', 'string'],
           // widget: ioField({label: 'Widget Element'}),
-          config: new Map([
-            [Object, [
-              [String, ioString({live: true, appearance: 'neutral'})],
-              // TODO: fix this. 'number' works but breaks other configs.
-              [Number, ioOptionSelect({option: new MenuOption({
-                id: 'number',
-                options: [
-                  {id: 'zero', value: 0},
-                  {id: 'half', value: 0.5},
-                  {id: 'one', value: 1},
-                ],
-              })})],
-            ]]
-          ]),
+          config: [
+            [String, ioString({live: true, appearance: 'neutral'})],
+            // TODO: fix this. 'number' works but breaks other configs.
+            [Number, ioOptionSelect({option: new MenuOption({
+              id: 'number',
+              options: [
+                {id: 'zero', value: 0},
+                {id: 'half', value: 0.5},
+                {id: 'one', value: 1},
+              ],
+            })})],
+          ]
         }),
         // TODO: land option select should not share menu options model with other editors.
         ioPropertyEditor({
@@ -168,26 +158,22 @@ export class IoEditorsDemo extends IoElement {
           value: this.object,
           expanded: true,
           properties: ['number'],
-          config: new Map([
-            [Object, [
-              [Number, ioSlider({step: 0.1})],
-            ]],
-          ]),
+          config: [
+            [Number, ioSlider({step: 0.1})],
+          ],
         }),
         ioObject({
           value: this.object,
           label: 'Object (All Properties)',
-          config: new Map([
-            [Object, [
-              [Array, ioPropertyEditor({labeled: false, class: 'array'})],
-              ['vector2', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['vector3', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['vector4', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['matrix2', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['matrix3', ioPropertyEditor({labeled: false, class: 'array'})],
-              ['matrix4', ioPropertyEditor({labeled: false, class: 'array'})],
-            ]]
-          ]),
+          config: [
+            [Array, ioPropertyEditor({labeled: false, class: 'array'})],
+            ['vector2', ioPropertyEditor({labeled: false, class: 'array'})],
+            ['vector3', ioPropertyEditor({labeled: false, class: 'array'})],
+            ['vector4', ioPropertyEditor({labeled: false, class: 'array'})],
+            ['matrix2', ioPropertyEditor({labeled: false, class: 'array'})],
+            ['matrix3', ioPropertyEditor({labeled: false, class: 'array'})],
+            ['matrix4', ioPropertyEditor({labeled: false, class: 'array'})],
+          ]
         }),
         div({class: 'context-editor-area', '@click': (event: MouseEvent) => {
           event.stopPropagation()
