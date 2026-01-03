@@ -32,7 +32,7 @@ export const NODES = {
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced'
 
 // Utility type to add Binding to all properties of a type
-export type WithBinding<T> = T | Binding<T>
+export type WithBinding<T> = T | Binding
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
@@ -75,7 +75,7 @@ export class Node extends Object {
 
   declare readonly _protochain: ProtoChain
   declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
-  declare readonly _bindings: Map<string, Binding<any>>
+  declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare readonly _observedObjectProperties: string[]
@@ -159,8 +159,8 @@ export class Node extends Object {
       this.dispatch('io-object-mutation', {object, properties}, false, window)
     }
   }
-  bind<T>(name: string): Binding<T> {
-    return bind<T>(this, name)
+  bind(name: string): Binding {
+    return bind(this, name)
   }
   unbind(name: string): void {
     unbind(this, name)
@@ -433,14 +433,14 @@ export function observeNodeProperty(node: Node | IoElement, name: string, proper
   }
 }
 
-export function bind<T>(node: Node | IoElement, name: string) {
+export function bind(node: Node | IoElement, name: string) {
   debug: if (!node._reactiveProperties.has(name)) {
     console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`)
   }
   if (!node._bindings.has(name)) {
-    node._bindings.set(name, new Binding<T>(node, name))
+    node._bindings.set(name, new Binding(node, name))
   }
-  return node._bindings.get(name)! as Binding<T>
+  return node._bindings.get(name)! as Binding
 }
 export function unbind(node: Node | IoElement, name: string) {
   const binding = node._bindings.get(name)

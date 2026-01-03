@@ -3,7 +3,7 @@ import { ioPropertyEditor } from '@io-gui/editors'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 
 export type IoThreePropertiesProps = IoElementProps & {
-  applet: ThreeApplet | Binding<ThreeApplet>
+  applet: ThreeApplet | Binding
 }
 
 @Register
@@ -23,6 +23,7 @@ export class IoThreeProperties extends IoElement {
         max-height: 100%;
       }
       :host > io-property-editor {
+        width: 100%;
         position: absolute;
       }
     `
@@ -34,7 +35,7 @@ export class IoThreeProperties extends IoElement {
 
   changed() {
     this.render([
-      ioPropertyEditor({value: this.applet.options, config: this.applet.optionsUIConfig})
+      ioPropertyEditor({value: this.applet, config: this.applet.uiConfig})
     ])
   }
 }

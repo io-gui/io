@@ -17,6 +17,7 @@ import { GeometryConvexExample } from '../examples/geometry_convex.js'
 import { AnimationRetargetingExample } from '../examples/animation_retargeting.js'
 import { AnimationRetargetingReadyplayerExample } from '../examples/animation_retargeting_readyplayer.js'
 import { AnimationBackdropExample } from '../examples/animation_backdrop.js'
+import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js'
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js'
 import { ioThreeProperties } from '../elements/IoThreeProperties.js'
 
@@ -56,7 +57,7 @@ const split = new Split({
           ]
         },
         {
-          flex: '1 1 280px',
+          flex: '1 1 380px',
           tabs: [
             {id: 'ExampleProperties'},
           ],
@@ -84,6 +85,7 @@ const exampleOptions = new MenuOption({
       {id: 'AnimationRetargeting', value: AnimationRetargetingExample},
       {id: 'AnimationRetargetingReadyplayer', value: AnimationRetargetingReadyplayerExample},
       {id: 'AnimationBackdrop', value: AnimationBackdropExample},
+      {id: 'AnimationSkinningBlending', value: AnimationSkinningBlendingExample},
     ]},
     {id: 'WebGPUBackdropArea', value: WebGPUBackdropAreaExample},
     {id: 'ComputeTexture', value: ComputeTextureExample},
@@ -146,7 +148,7 @@ export class IoThreeDemo extends IoElement {
       this.selectedExample = example
     }
   }
-  
+
   ready() {
     exampleOptions.addEventListener('value-changed', this.selectedExampleOptionChanged)
     this.selectedExampleOptionChanged()
@@ -156,7 +158,6 @@ export class IoThreeDemo extends IoElement {
     // void _renderer.init()
   }
   changed() {
-    console.log('changed')
     this.render([
       ioLayout({
         elements: [
@@ -170,7 +171,7 @@ export class IoThreeDemo extends IoElement {
             div({class: 'column'}, [
               div({class: 'column'}, [
                 ioField({label:'Select Example:'}),
-                ioOptionSelect({option: exampleOptions, selectBy: 'id'}), 
+                ioOptionSelect({option: exampleOptions, selectBy: 'id'}),
               ]),
               ioThreeProperties({applet: this.bind('selectedExample')})
             ])

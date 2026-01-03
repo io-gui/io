@@ -1,4 +1,4 @@
-import { Node, Register, ReactiveProperty, WithBinding, NodeArray, option } from '@io-gui/core'
+import { Node, Register, ReactiveProperty, WithBinding, NodeArray } from '@io-gui/core'
 
 export type MenuOptionMode = 'select' | 'toggle' | 'none'
 
@@ -75,15 +75,19 @@ export class MenuOption extends Node {
       }
     }
 
+    console.log('args', args)
+
     args = { ...args }
-    args.id = args.id ?? 'null' // TODO: Reconsider.
+    args.id = args.id ?? 'Null' // TODO: Reconsider.
     args.label = args.label ?? args.id
     args.value = args.value ?? args.id
     args.options = args.options ?? []
-    args.options = args.options.map(option => (option instanceof MenuOption) ? option : new MenuOption(option))
+    args.options = args.options.map(option => {
+      console.log('option', option)
+      return (option instanceof MenuOption) ? option : new MenuOption(option)
+    })
 
-    const hardenedOptions = args.options as MenuOption[]
-    const selectedOptions = hardenedOptions.filter(option => option.mode === 'select' && option.selected)
+    const selectedOptions = (args.options as MenuOption[]).filter(option => option.mode === 'select' && option.selected)
     for (let i = 1; i < selectedOptions.length; i++) {
       debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
       selectedOptions[i].selected = false

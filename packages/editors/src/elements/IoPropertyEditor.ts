@@ -115,9 +115,11 @@ export class IoPropertyEditor extends IoElement {
     this.changeThrottled()
   }
   changeThrottled() {
-    this.throttle(this.changeThrottled)
+    this.throttle(this.changed)
   }
   changed() {
+    if (!this.value) return
+
     const config = getEditorConfig(this.value, this.config)
     const groups = getEditorGroups(this.value, this.groups)
     const widget = getEditorWidget(this.value, this.widgets)
@@ -145,10 +147,18 @@ export class IoPropertyEditor extends IoElement {
       if (allProps.includes(properties[i])) {
         const id = properties[i] as keyof typeof this.value
         const value = this.value[id]
+        const isFunction = typeof value === 'function'
         const tag = config[id]!.tag
         const props = config[id]!.props as (IoElementProps | undefined) || {}
+
         const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput}
+
         Object.assign(finalProps, props)
+
+        if (isFunction) {
+          finalProps.action = value
+          finalProps.label = finalProps.label || id
+        }
 
         let children: string | undefined = undefined
         if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
@@ -160,7 +170,7 @@ export class IoPropertyEditor extends IoElement {
           finalProps.groups = finalProps.groups || this.groups
         }
         vChildren.push(div({class: 'row'}, [
-          this.labeled ? span(id) : null,
+          (this.labeled && !isFunction) ? span(id) : null,
           {tag: tag, props: finalProps, children: children},
         ]))
       } else {
@@ -176,7 +186,7 @@ export class IoPropertyEditor extends IoElement {
           vChildren.push(
             ioObject({
               label: group,
-              expanded: $({value: false, storage: 'local', key: uuid + '-' + group}),
+              expanded: $({value: true, storage: 'local', key: uuid + '-' + group}),
               value: this.value,
               properties: groups[group],
               config: this.config,

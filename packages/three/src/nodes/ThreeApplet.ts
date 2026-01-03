@@ -1,13 +1,12 @@
-import { Register, Node, ReactiveProperty, AnyConstructor, NodeProps } from '@io-gui/core'
-import { PropertyConfig } from '@io-gui/editors'
+import { Register, Node, ReactiveProperty, NodeProps } from '@io-gui/core'
+import { EditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { NoToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 
 export type ThreeAppletProps = NodeProps & {
   scene?: Scene
   toneMappingExposure?: number
   toneMapping?: ToneMapping
-  options?: Record<string, unknown>
-  optionsUIConfig?: Map<AnyConstructor, PropertyConfig[]>
+  uiConfig?: EditorConfig
 }
 
 @Register
@@ -21,14 +20,12 @@ export class ThreeApplet extends Node {
 
   @ReactiveProperty({type: Number, value: NoToneMapping})
   declare toneMapping: ToneMapping
-  
-  @ReactiveProperty({type: Object, init: null})
-  declare options: Record<string, unknown>
 
+  // TODO: dispose uiConfig when applet is disposed
   @ReactiveProperty({type: Map, init: null})
-  declare optionsUIConfig: Map<AnyConstructor, PropertyConfig[]>
+  declare uiConfig: EditorConfig
 
-  private renderer: WebGPURenderer | null = null
+  private _renderer: WebGPURenderer | null = null
   private _width: number = 0
   private _height: number = 0
   private _prevTime: number = -1
@@ -48,10 +45,10 @@ export class ThreeApplet extends Node {
 
   }
   isRendererInitialized() {
-    return !!this.renderer && this.renderer.initialized === true
+    return !!this._renderer && this._renderer.initialized === true
   }
   onRendererInitialized(renderer: WebGPURenderer) {
-    this.renderer = renderer
+    this._renderer = renderer
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onResized(width: number, height: number) {}
@@ -64,3 +61,16 @@ export class ThreeApplet extends Node {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number) {}
 }
+
+registerEditorGroups(ThreeApplet, {
+  Scene: [
+    'scene',
+  ],
+  Rendering: [
+    'toneMappingExposure',
+    'toneMapping',
+  ],
+  Hidden: [
+    'uiConfig',
+  ]
+})

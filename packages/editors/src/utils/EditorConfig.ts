@@ -1,5 +1,5 @@
 import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from '@io-gui/core'
-import { ioString, ioNumber, ioSwitch, ioField } from '@io-gui/inputs'
+import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
 import { MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
@@ -34,6 +34,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     [Object, ioObject()],
     [null, ioField({disabled: true})],
     [undefined, ioField({disabled: true})],
+    [Function, ioButton()],
   ]],
   [Array, [
     [Number, ioNumber({step: 0.01})],

@@ -19,6 +19,7 @@ const observer = new IntersectionObserver((entries) => {
 const _renderer = new WebGPURenderer({antialias: false, alpha: true})
 _renderer.toneMapping = NeutralToneMapping
 _renderer.setPixelRatio(window.devicePixelRatio)
+_renderer.shadowMap.enabled = true
 void _renderer.init()
 
 const _clock = new Clock()
@@ -42,11 +43,11 @@ new Promise((resolve, reject) => {
 })
 
 export type IoThreeViewportProps = IoElementProps & {
-  clearColor?: number | Binding<number>
-  clearAlpha?: number | Binding<number>
-  applet: ThreeApplet | Binding<ThreeApplet>
-  playing?: boolean | Binding<boolean>
-  cameraSelect?: string | Binding<string>
+  clearColor?: number | Binding
+  clearAlpha?: number | Binding
+  applet: ThreeApplet | Binding
+  playing?: boolean | Binding
+  cameraSelect?: string | Binding
   renderer?: WebGPURenderer
 }
 

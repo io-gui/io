@@ -81,8 +81,8 @@ class DefaultCameras {
 
 export type ViewCamerasProps = NodeProps & {
   viewport: IoThreeViewport
-  applet: ThreeApplet | Binding<ThreeApplet>
-  cameraSelect: string | Binding<string>
+  applet: ThreeApplet | Binding
+  cameraSelect: string | Binding
 }
 
 @Register
@@ -201,7 +201,7 @@ export class ViewCameras extends Node {
       center.setFromMatrixPosition( camera.matrixWorld )
       radius = 0.1
     }
-   
+
     // Project box onto camera axes
     cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion)
     cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion)

@@ -4,7 +4,7 @@ import { ioSplit } from './IoSplit.js'
 import { Split } from '../nodes/Split.js'
 
 export type IoLayoutProps = IoElementProps & {
-  split: Split | Binding<Split>
+  split: Split | Binding
   elements: VDOMElement[]
   addMenuOption: MenuOption
 }

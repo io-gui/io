@@ -1,4 +1,4 @@
-import { AnyConstructor } from '@io-gui/core'
+import { AnyConstructor, Node as IoNode, IoElement } from '@io-gui/core'
 
 export const SKIPPED_PROPERTIES = [
   '$',
@@ -33,7 +33,7 @@ export function getAllPropertyNames(obj: object): string[] {
   do {
     const props = Object.getOwnPropertyNames(curr)
     props.forEach((prop) => {
-      if (allProps.indexOf(prop) === -1 && typeof (obj as any)[prop] !== 'function' && !SKIPPED_PROPERTIES.includes(prop)) {
+      if (allProps.indexOf(prop) === -1 && !SKIPPED_PROPERTIES.includes(prop)) {
         allProps.push(prop)
       }
     })
@@ -50,7 +50,12 @@ export type EditorGroups = Map<AnyConstructor, PropertyGroups>
 
 const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGroups>([
   [Object, {
-    Hidden: [new RegExp(/^_/)],
+    Hidden: [new RegExp(/^_/), 'constructor','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','toString','valueOf','toLocaleString'],
+  }],
+  [Array, {
+    Hidden: [
+      'length', 'constructor', 'at', 'concat', 'copyWithin', 'fill', 'find', 'findIndex', 'findLast', 'findLastIndex', 'lastIndexOf', 'pop', 'push', 'reverse', 'shift', 'unshift', 'slice', 'sort', 'splice', 'includes', 'indexOf', 'join', 'keys', 'entries', 'values', 'forEach', 'filter', 'flat', 'flatMap', 'map', 'every', 'some', 'reduce', 'reduceRight', 'toReversed', 'toSorted', 'toSpliced', 'with', 'toLocaleString', 'toString',
+    ],
   }],
   [Node, {
     Main: [
@@ -80,8 +85,17 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
       'ariaControlsElements','ariaDescribedByElements','ariaDetailsElements','ariaErrorMessageElements','ariaFlowToElements',
       'ariaLabelledByElements',
     ],
-
     Hidden: [],
+  }],
+  [IoNode, {
+    Hidden: [
+      'reactivity',
+    ],
+  }],
+  [IoElement, {
+    Hidden: [
+      'reactivity',
+    ],
   }],
 ])
 
@@ -98,6 +112,35 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
   function aggregateGroups(editorGroups: EditorGroups) {
     for (const [constructorKey, groups] of editorGroups) {
       if (object instanceof constructorKey) {
+        // Reorder aggregatedGroups keys to match the order specified in this config.
+        // Later configs determine the order of overlapping keys.
+        const configKeys = Object.keys(groups)
+        const existingKeys = Object.keys(aggregatedGroups)
+
+        if (configKeys.length > 0 && existingKeys.length > 0) {
+          const reorderedGroups: PropertyGroups = {}
+
+          // Add keys in the order they appear in config
+          for (const key of configKeys) {
+            reorderedGroups[key] = aggregatedGroups[key] || []
+          }
+
+          // Add remaining existing keys that weren't in config (preserving their order)
+          for (const key of existingKeys) {
+            if (!(key in reorderedGroups)) {
+              reorderedGroups[key] = aggregatedGroups[key]
+            }
+          }
+
+          // Clear and reassign to update key order
+          for (const key of existingKeys) {
+            if (configKeys.includes(key)) {
+              delete aggregatedGroups[key]
+            }
+          }
+          Object.assign(aggregatedGroups, reorderedGroups)
+        }
+
         for (const g in groups) {
           aggregatedGroups[g] = aggregatedGroups[g] || []
           aggregatedGroups[g].push(...groups[g])
@@ -139,7 +182,7 @@ export function getEditorGroups(object: object, editorGroups: EditorGroups = new
         }
       }
     }
-    if (!included) {
+    if (!included && typeof object[key as keyof typeof object] !== 'function') {
       groupsRecord.Main.push(key)
     }
   }

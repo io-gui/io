@@ -113,7 +113,7 @@ export class StorageNode extends Node {
   @ReactiveProperty({value: 'local', type: String})
   declare storage: 'hash' | 'local'
 
-  declare binding: Binding<any>
+  declare binding: Binding
 
   declare default: any
 
