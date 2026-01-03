@@ -1,6 +1,6 @@
 import { StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu';
-import { ThreeState } from '@io-gui/three';
-export declare class ComputeTextureExample extends ThreeState {
+import { ThreeApplet } from '@io-gui/three';
+export declare class ComputeTextureExample extends ThreeApplet {
     storageTexture: StorageTexture;
     computeNode: ComputeNode;
     constructor();

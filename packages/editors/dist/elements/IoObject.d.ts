@@ -1,5 +1,5 @@
 import { IoElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
-import { EditorConfig } from '../utils/EditorConfig.js';
+import { PropertyConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoObjectProps = IoElementProps & {
@@ -8,7 +8,7 @@ export type IoObjectProps = IoElementProps & {
     labeled?: boolean;
     label?: string;
     expanded?: WithBinding<boolean>;
-    config?: EditorConfig;
+    config?: PropertyConfig[];
     groups?: EditorGroups;
     widgets?: EditorWidgets;
 };
@@ -22,7 +22,7 @@ export declare class IoObject extends IoElement {
     labeled: boolean;
     label: string;
     expanded: boolean;
-    config: EditorConfig;
+    config: PropertyConfig[];
     groups: EditorGroups;
     widgets: EditorWidgets;
     role: string;

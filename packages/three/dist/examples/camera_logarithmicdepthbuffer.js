@@ -8,7 +8,7 @@ import { AmbientLight, Color, DirectionalLight, Group, MathUtils, Mesh, MeshPhon
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { Register } from '@io-gui/core';
-import { ThreeState } from '@io-gui/three';
+import { ThreeApplet } from '@io-gui/three';
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
 const NEAR = 1e-6;
 const FAR = 1e27;
@@ -29,7 +29,7 @@ const labeldata = [
     { size: 3.08567758e16, scale: 1.0, label: 'ludicrous (1 parsec)' },
     { size: 1e19, scale: 1.0, label: 'mind boggling (1000 light years)' }
 ];
-let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExample extends ThreeState {
+let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExample extends ThreeApplet {
     camera;
     zoompos = -100;
     zoomspeed = 0.015;
@@ -39,7 +39,6 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
         super();
         // Create camera with extreme near/far planes
         this.camera = new PerspectiveCamera(50, 1, NEAR, FAR);
-        this.camera.name = 'logarithmicCamera';
         this.scene.add(this.camera);
         // Lighting
         this.scene.add(new AmbientLight(0x777777));
@@ -91,11 +90,6 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
             console.error(e);
         }
     }
-    onResized(width, height) {
-        super.onResized(width, height);
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-    }
     onAnimate() {
         const minzoom = labeldata[0].size * labeldata[0].scale * 1;
         const maxzoom = labeldata[labeldata.length - 1].size * labeldata[labeldata.length - 1].scale * 100;
@@ -111,6 +105,9 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
         this.camera.position.y = Math.sin(0.25 * Math.PI * (this.mouse[1] - 0.5)) * zoom;
         this.camera.position.z = Math.cos(0.5 * Math.PI * (this.mouse[0] - 0.5)) * zoom;
         this.camera.lookAt(this.scene.position);
+        if (this.zoompos > 48) {
+            this.zoompos = -100;
+        }
     }
 };
 CameraLogarithmicDepthBufferExample = __decorate([

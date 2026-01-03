@@ -3,24 +3,24 @@ import { Node, NodeProps } from '../nodes/Node.js';
 export type StorageProps = NodeProps & {
     key: string;
     value: any;
-    storage?: 'hash' | 'local';
+    storage?: 'hash' | 'local' | 'none';
 };
 export declare class StorageNode extends Node {
     key: string;
     value: any;
-    storage: 'hash' | 'local';
-    binding: Binding<any>;
+    storage: 'hash' | 'local' | 'none';
+    binding: Binding;
     default: any;
     constructor(props: StorageProps);
     dispose(): void;
     clearStorage(): void;
     valueMutated(): void;
-    valueMutatedDebounced(): void;
     valueChanged(): void;
+    valueChangedDebounced(): void;
     removeValueToHash(): void;
     saveValueToHash(): void;
 }
-export declare const Storage: ((props: StorageProps) => Binding<any>) & {
+export declare const Storage: ((props: StorageProps) => Binding) & {
     permit(): void;
     unpermit(): void;
 };

@@ -1,56 +1,101 @@
-import { Register, IoElement, Storage as $ } from '@io-gui/core';
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { Register, IoElement, Storage as $, div, ReactiveProperty } from '@io-gui/core';
 import { ioLayout, Split } from '@io-gui/layout';
-import { MenuOption } from '@io-gui/menus';
-import { ioThreeViewport } from '@io-gui/three';
+import { MenuOption, ioOptionSelect } from '@io-gui/menus';
+import { ioThreeViewport, ThreeApplet } from '@io-gui/three';
+import { ioField } from '@io-gui/inputs';
 import { ComputeTextureExample } from '../examples/compute_texture.js';
 import { VolumePerlinExample } from '../examples/volume_perlin.js';
 import { CameraExample } from '../examples/camera.js';
-import { MiscAnimationGroupsExample } from '../examples/misc_animation_groups.js';
+import { AnimationGroupsExample } from '../examples/animation_groups.js';
 import { AnimationKeyframesExample } from '../examples/animation_keyframes.js';
 import { CameraArrayExample } from '../examples/camera_array.js';
 import { CameraLogarithmicDepthBufferExample } from '../examples/camera_logarithmicdepthbuffer.js';
-const version = 1;
+import { GeometriesExample } from '../examples/geometries.js';
+import { GeometryColorsExample } from '../examples/geometry_colors.js';
+import { GeometryConvexExample } from '../examples/geometry_convex.js';
+import { AnimationRetargetingExample } from '../examples/animation_retargeting.js';
+import { AnimationRetargetingReadyplayerExample } from '../examples/animation_retargeting_readyplayer.js';
+import { AnimationBackdropExample } from '../examples/animation_backdrop.js';
+import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js';
+import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js';
+import { ioThreeProperties } from '../elements/IoThreeProperties.js';
+const version = 3;
 const split = new Split({
     children: [
         {
-            orientation: 'vertical',
+            orientation: 'horizontal',
             children: [
                 {
-                    orientation: 'horizontal',
+                    orientation: 'vertical',
                     children: [
-                        { tabs: [
-                                { id: 'ComputeTexture', icon: 'io:numeric-1-box' },
-                                { id: 'VolumePerlin', icon: 'io:numeric-2-box' },
-                            ] },
-                        { tabs: [
-                                { id: 'CameraArray', icon: 'io:numeric-8-box' },
-                                { id: 'CameraLogDepth', icon: 'io:numeric-9-box' },
-                            ] },
+                        {
+                            orientation: 'horizontal',
+                            children: [
+                                { tabs: [
+                                        { id: 'Top' },
+                                    ] },
+                                { tabs: [
+                                        { id: 'Front' },
+                                    ] },
+                            ]
+                        },
+                        {
+                            orientation: 'horizontal',
+                            children: [
+                                { tabs: [
+                                        { id: 'Left' },
+                                    ] },
+                                { tabs: [
+                                        { id: 'Perspective' },
+                                        { id: 'SceneCamera' },
+                                    ] },
+                            ]
+                        },
                     ]
                 },
                 {
-                    orientation: 'horizontal',
-                    children: [
-                        { tabs: [
-                                { id: 'Camera', icon: 'io:numeric-3-box' }
-                            ] },
-                        { tabs: [
-                                { id: 'Camera(OrthographicCamera)', icon: 'io:numeric-4-box' },
-                                { id: 'Camera(PerspectiveCamera)', icon: 'io:numeric-5-box' },
-                            ] },
-                    ]
-                },
-                {
-                    orientation: 'horizontal',
-                    children: [
-                        { tabs: [{ id: 'MiscAnimationGroups', icon: 'io:numeric-6-box' }] },
-                        { tabs: [{ id: 'AnimationKeyframes', icon: 'io:numeric-7-box' }] },
-                    ]
+                    flex: '1 1 380px',
+                    tabs: [
+                        { id: 'ExampleProperties' },
+                    ],
                 }
             ]
         }
     ]
 });
+const exampleOptions = new MenuOption({
+    options: [
+        { id: 'Camera Examples', options: [
+                { id: 'Camera', value: CameraExample },
+                { id: 'CameraLogarithmicDepthBuffer', value: CameraLogarithmicDepthBufferExample },
+                { id: 'CameraArray', value: CameraArrayExample },
+            ] },
+        { id: 'Geometries', options: [
+                { id: 'GeometryPrimitives', value: GeometriesExample },
+                { id: 'GeometryColors', value: GeometryColorsExample },
+                { id: 'GeometryConvex', value: GeometryConvexExample },
+            ] },
+        { id: 'Animations', options: [
+                { id: 'AnimationGroups', value: AnimationGroupsExample },
+                { id: 'AnimationKeyframes', value: AnimationKeyframesExample },
+                { id: 'AnimationRetargeting', value: AnimationRetargetingExample },
+                { id: 'AnimationRetargetingReadyplayer', value: AnimationRetargetingReadyplayerExample },
+                { id: 'AnimationBackdrop', value: AnimationBackdropExample },
+                { id: 'AnimationSkinningBlending', value: AnimationSkinningBlendingExample },
+            ] },
+        { id: 'WebGPUBackdropArea', value: WebGPUBackdropAreaExample },
+        { id: 'ComputeTexture', value: ComputeTextureExample },
+        { id: 'VolumePerlin', value: VolumePerlinExample },
+    ],
+    selectedID: $({ key: 'example', storage: 'hash', value: 'AnimationKeyframes' })
+});
+const initializzedExamples = new WeakMap();
 export class IoThreeDemo extends IoElement {
     static get Style() {
         return /* css */ `
@@ -62,45 +107,91 @@ export class IoThreeDemo extends IoElement {
         max-width: 100%;
         max-height: 100%;
       }
+      :host  .row {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: row;
+      }
+      :host  .column {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+      }
+      :host  .property-editor {
+        position: relative;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+      }
+      :host .property-editor > io-property-editor {
+        position: absolute;
+        min-width: 240px;
+        top: 0;
+        right: 0;
+      }
     `;
     }
+    selectedExampleOptionChanged() {
+        const selectedOption = exampleOptions.findItemById(exampleOptions.selectedID);
+        if (!selectedOption) {
+            console.warn('Selected option not found', exampleOptions.selectedID);
+            return;
+        }
+        const selectedConstructor = selectedOption.value;
+        const initializedExample = initializzedExamples.get(selectedConstructor);
+        if (initializedExample) {
+            this.selectedExample = initializedExample;
+        }
+        else {
+            const example = new selectedConstructor();
+            initializzedExamples.set(selectedConstructor, example);
+            this.selectedExample = example;
+        }
+    }
     ready() {
-        const Camera = new CameraExample();
+        exampleOptions.addEventListener('option-selected', this.selectedExampleOptionChanged);
+        this.selectedExampleOptionChanged();
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'ComputeTexture', state: new ComputeTextureExample(), cameraSelect: 'front' }),
-                    ioThreeViewport({ id: 'VolumePerlin', state: new VolumePerlinExample() }),
-                    ioThreeViewport({ id: 'Camera', state: Camera, playing: true, cameraSelect: 'top', clearColor: 0x443322 }),
-                    ioThreeViewport({ id: 'Camera(OrthographicCamera)', state: Camera, playing: true, cameraSelect: 'scene:orthographicCamera' }),
-                    ioThreeViewport({ id: 'Camera(PerspectiveCamera)', state: Camera, playing: true, cameraSelect: 'scene:perspectiveCamera' }),
-                    ioThreeViewport({ id: 'MiscAnimationGroups', state: new MiscAnimationGroupsExample(), playing: true }),
-                    ioThreeViewport({ id: 'AnimationKeyframes', state: new AnimationKeyframesExample(), playing: true }),
-                    ioThreeViewport({ id: 'CameraArray', state: new CameraArrayExample(), playing: true, cameraSelect: 'scene:arrayCamera' }),
-                    ioThreeViewport({ id: 'CameraLogDepth', state: new CameraLogarithmicDepthBufferExample(), playing: true, cameraSelect: 'scene:logarithmicCamera' }),
+                    ioThreeViewport({ id: 'Top', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Front', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'front' }),
+                    ioThreeViewport({ id: 'Left', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Perspective', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'perspective' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'scene' }),
+                    div({ id: 'ExampleProperties' }, [
+                        div({ class: 'column' }, [
+                            div({ class: 'column' }, [
+                                ioField({ label: 'Select Example:' }),
+                                ioOptionSelect({ option: exampleOptions, selectBy: 'id' }),
+                            ]),
+                            ioThreeProperties({ applet: this.bind('selectedExample') })
+                        ])
+                    ])
                 ],
                 split: $({ key: `viewport-split-v${version}`, storage: 'local', value: split }),
                 addMenuOption: new MenuOption({
                     id: 'addMenuOption',
                     mode: 'none',
-                    options: [
-                        { id: 'Viewports', mode: 'none', options: [
-                                { id: 'ComputeTexture', icon: 'io:numeric-1-box', mode: 'none' },
-                                { id: 'VolumePerlin', icon: 'io:numeric-2-box', mode: 'none' },
-                                { id: 'Camera', icon: 'io:numeric-3-box', mode: 'none' },
-                                { id: 'Camera(OrthographicCamera)', icon: 'io:numeric-4-box', mode: 'none' },
-                                { id: 'Camera(PerspectiveCamera)', icon: 'io:numeric-5-box', mode: 'none' },
-                                { id: 'MiscAnimationGroups', icon: 'io:numeric-6-box', mode: 'none' },
-                                { id: 'AnimationKeyframes', icon: 'io:numeric-7-box', mode: 'none' },
-                                { id: 'CameraArray', icon: 'io:numeric-8-box', mode: 'none' },
-                                { id: 'CameraLogDepth', icon: 'io:numeric-9-box', mode: 'none' },
-                            ] },
-                    ],
+                    // options: [
+                    //   {id: 'Viewports', mode: 'none', options: [
+                    //     {id: 'SceneCamera', mode: 'none'},
+                    //     {id: 'Top', mode: 'none'},
+                    //     {id: 'Front', mode: 'none'},
+                    //     {id: 'Left', mode: 'none'},
+                    //     {id: 'Perspective', mode: 'none'},
+                    //     {id: 'SceneCamera', mode: 'none'},
+                    //     {id: 'ExampleProperties', mode: 'none'},
+                    //   ]},
+                    // ],
                 }),
             })
         ]);
     }
 }
+__decorate([
+    ReactiveProperty({ type: ThreeApplet, init: null })
+], IoThreeDemo.prototype, "selectedExample", void 0);
 Register(IoThreeDemo);
 export const ioThreeDemo = IoThreeDemo.vConstructor;
 //# sourceMappingURL=IoThreeDemo.js.map

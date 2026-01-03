@@ -78,7 +78,7 @@ __decorate([
     ReactiveProperty({ value: false, reflect: true })
 ], IoObject.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Array, init: null })
 ], IoObject.prototype, "config", void 0);
 __decorate([
     ReactiveProperty({ type: Map, init: null })

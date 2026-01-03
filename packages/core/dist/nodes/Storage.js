@@ -93,6 +93,7 @@ const localStorage = new EmulatedLocalStorage();
 const nodes = {
     local: new Map(),
     hash: new Map(),
+    none: new Map(),
 };
 let hashValues = {};
 let StorageNode = class StorageNode extends Node {
@@ -104,8 +105,8 @@ let StorageNode = class StorageNode extends Node {
             else {
                 if (typeof props.key !== 'string' || !props.key)
                     console.warn('Ivalid Storage key!');
-                if (props.storage && ['hash', 'local'].indexOf(props.storage) === -1)
-                    console.warn('Ivalid Storage storage!');
+                if (props.storage && ['hash', 'local', 'none'].indexOf(props.storage) === -1)
+                    console.warn(`Ivalid storage type! ${props.storage}`);
             }
         }
         if (props.storage === undefined)
@@ -143,7 +144,6 @@ let StorageNode = class StorageNode extends Node {
                 }
             }
             super(props);
-            this.valueMutatedDebounced = this.valueMutatedDebounced.bind(this);
             this.default = def;
             this.binding = this.bind('value');
             this.binding.dispose = () => {
@@ -174,12 +174,12 @@ let StorageNode = class StorageNode extends Node {
         nodes[s].delete(this.key);
     }
     valueMutated() {
-        this.debounce(this.valueMutatedDebounced);
-    }
-    valueMutatedDebounced() {
-        this.valueChanged();
+        this.debounce(this.valueChangedDebounced);
     }
     valueChanged() {
+        this.debounce(this.valueChangedDebounced);
+    }
+    valueChangedDebounced() {
         switch (this.storage) {
             case 'hash': {
                 this.saveValueToHash();

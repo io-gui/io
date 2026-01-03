@@ -1,11 +1,13 @@
 import { IoElement, IoElementProps, ReactivityType, Binding } from '@io-gui/core';
-import { ThreeState } from '../nodes/ThreeState.js';
+import { WebGPURenderer } from 'three/webgpu';
+import { ThreeApplet } from '../nodes/ThreeApplet.js';
 export type IoThreeViewportProps = IoElementProps & {
-    state: ThreeState | Binding<ThreeState>;
-    cameraSelect?: string | Binding<string>;
-    playing?: boolean | Binding<boolean>;
-    clearColor?: number | Binding<number>;
-    clearAlpha?: number | Binding<number>;
+    clearColor?: number | Binding;
+    clearAlpha?: number | Binding;
+    applet: ThreeApplet | Binding;
+    playing?: boolean | Binding;
+    cameraSelect?: string | Binding;
+    renderer?: WebGPURenderer;
 };
 export declare class IoThreeViewport extends IoElement {
     width: number;
@@ -14,9 +16,10 @@ export declare class IoThreeViewport extends IoElement {
     clearColor: number;
     clearAlpha: number;
     reactivity: ReactivityType;
-    state: ThreeState;
+    applet: ThreeApplet;
     playing: boolean;
     cameraSelect: string;
+    renderer: WebGPURenderer;
     private readonly viewCameras;
     private readonly renderTarget;
     static get Style(): string;
@@ -26,8 +29,8 @@ export declare class IoThreeViewport extends IoElement {
     playingChanged(): void;
     onAnimate(): void;
     onResized(): void;
-    stateChanged(): void;
-    stateMutated(): void;
+    appletChanged(): void;
+    appletMutated(): void;
     changed(): void;
     renderViewport(): void;
     dispose(): void;

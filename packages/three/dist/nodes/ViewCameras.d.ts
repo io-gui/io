@@ -1,17 +1,15 @@
 import { Node, NodeProps, Binding } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport.js';
-import { ThreeState } from './ThreeState.js';
+import { ThreeApplet } from './ThreeApplet.js';
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
 export type ViewCamerasProps = NodeProps & {
     viewport: IoThreeViewport;
-    state: ThreeState;
-    cameraSelect: string | Binding<string>;
+    applet: ThreeApplet | Binding;
+    cameraSelect: string | Binding;
 };
 export declare class ViewCameras extends Node {
-    private width;
-    private height;
     private viewport;
-    state: ThreeState;
+    applet: ThreeApplet;
     cameraSelect: string;
     camera: PerspectiveCamera | OrthographicCamera;
     private readonly defaultCameras;
@@ -21,11 +19,13 @@ export declare class ViewCameras extends Node {
     };
     constructor(args: ViewCamerasProps);
     cameraSelectChanged(): void;
-    setSize(width: number, height: number): void;
+    cameraSelectChangedDebounced(): void;
     cameraChanged(): void;
-    stateChanged(): void;
+    appletChanged(): void;
     onSceneReady(): void;
     frameObject(object: Object3D, camera: Camera): void;
+    setOverscan(width: number, height: number, overscan: number): void;
+    resetOverscan(): void;
     dispose(): void;
 }
 //# sourceMappingURL=ViewCameras.d.ts.map

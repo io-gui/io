@@ -55,7 +55,6 @@ let IoInspector = class IoInspector extends IoElement {
         };
     }
     init() {
-        this.changeThrottled = this.changeThrottled.bind(this);
         this._observedObjectProperties.push('value', 'selected');
         window.addEventListener('io-object-mutation', this.onPropertyMutated);
     }
@@ -92,10 +91,8 @@ let IoInspector = class IoInspector extends IoElement {
         const vChildren = [
             ioBreadcrumbs({ value: this.value, selected: this.bind('selected'), search: this.bind('search') }),
         ];
-        const config = new Map(this.config);
-        if (!config.has(Object))
-            config.set(Object, []);
-        config.get(Object).push([Object, ioPropertyLink({ showName: true })]);
+        const config = [...this.config];
+        config.push([Object, ioPropertyLink({ showName: true })]);
         const properties = [];
         if (this.search) {
             for (const key of getAllPropertyNames(this.selected)) {
@@ -133,7 +130,7 @@ __decorate([
     ReactiveProperty({ type: String })
 ], IoInspector.prototype, "search", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Array, init: null })
 ], IoInspector.prototype, "config", void 0);
 __decorate([
     ReactiveProperty({ type: Map, init: null })

@@ -1,6 +1,6 @@
 import { PerspectiveCamera, OrthographicCamera, Group, Mesh } from 'three/webgpu';
-import { ThreeState } from '@io-gui/three';
-export declare class CameraExample extends ThreeState {
+import { ThreeApplet } from '@io-gui/three';
+export declare class CameraExample extends ThreeApplet {
     perspectiveCamera: PerspectiveCamera;
     orthographicCamera: OrthographicCamera;
     cameraRig: Group;

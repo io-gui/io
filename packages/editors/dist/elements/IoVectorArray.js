@@ -50,9 +50,12 @@ let IoVectorArray = class IoVectorArray extends IoElement {
                     value[k] = value[index] * this._ratios[k];
             }
         }
+        // TODO: this was replaced in earlier commit but not sure why. Nodes should dispatch mutations on their own.
         if (!this.value._isNode) {
             this.dispatchMutation(this.value);
         }
+        // Remove this later if no regressions are spotted and no tests are broken.
+        // this.dispatchMutation(this.value)
         this.dispatch('value-input', { property: 'value', value: this.value }, false);
     }
     valueChanged() {
@@ -87,7 +90,7 @@ let IoVectorArray = class IoVectorArray extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    ReactiveProperty({ type: Array })
 ], IoVectorArray.prototype, "value", void 0);
 __decorate([
     ReactiveProperty(1)

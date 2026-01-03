@@ -15,10 +15,10 @@ type TargetProperties = WeakMap<Node | IoElement, Properties>;
  * - Automatically cleans up listeners when disposed
  *
  * @example
- * const binding = new Binding<number>(nodeA, 'value');
+ * const binding = new Binding(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export declare class Binding<T> {
+export declare class Binding {
     readonly node: Node | IoElement;
     readonly property: string;
     readonly targets: Array<Node | IoElement>;
@@ -30,8 +30,8 @@ export declare class Binding<T> {
      * @param {string} property - Name of the sourceproperty
      */
     constructor(node: Node | IoElement, property: string);
-    set value(value: T);
-    get value(): T;
+    set value(value: any);
+    get value(): any;
     /**
      * Adds a target node and property.
      * Sets itself as the binding reference on the target `ReactivePropertyInstance`.

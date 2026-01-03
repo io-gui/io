@@ -5,25 +5,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, Node, ReactiveProperty, Property } from '@io-gui/core';
-import { ThreeState } from './ThreeState.js';
+import { ThreeApplet } from './ThreeApplet.js';
 import { Box3, Camera, OrthographicCamera, PerspectiveCamera, Sphere, Vector3 } from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const box = new Box3();
 const sphere = new Sphere();
 const center = new Vector3();
+const size = new Vector3();
 const delta = new Vector3();
-function setAspect(camera, width, height) {
-    const aspect = width / height;
-    if (camera instanceof PerspectiveCamera) {
-        camera.aspect = aspect;
-    }
-    else if (camera instanceof OrthographicCamera) {
-        const frustumHeight = camera.top - camera.bottom;
-        camera.left = -frustumHeight * aspect / 2;
-        camera.right = frustumHeight * aspect / 2;
-    }
-    camera.updateProjectionMatrix();
-}
+const cameraRight = new Vector3();
+const cameraUp = new Vector3();
+const cameraForward = new Vector3();
+const corner = new Vector3();
+let radius = 0;
+const resetCameras = new WeakMap();
 class DefaultCameras {
     perspective;
     top;
@@ -33,14 +28,15 @@ class DefaultCameras {
     front;
     back;
     constructor() {
-        this.perspective = new PerspectiveCamera(75, 1, 0.1, 1000);
+        this.perspective = new PerspectiveCamera(50, 1, 0.1, 1000);
         this.top = new OrthographicCamera(-1, 1, 1, -1, 0, 1000);
         this.bottom = new OrthographicCamera(-1, 1, 1, -1, 0, 1000);
         this.left = new OrthographicCamera(-1, 1, 1, -1, 0, 1000);
         this.right = new OrthographicCamera(-1, 1, 1, -1, 0, 1000);
         this.front = new OrthographicCamera(-1, 1, 1, -1, 0, 1000);
         this.back = new OrthographicCamera(-1, 1, 1, -1, 0, 1000);
-        this.perspective.position.set(0.5, 0.25, 1);
+        this.perspective.userData.position = new Vector3(0.5, 0.25, 1);
+        this.perspective.position.copy(this.perspective.userData.position);
         this.perspective.lookAt(0, 0, 0);
         this.perspective.name = 'perspective';
         this.top.userData.position = new Vector3(0, 1, 0);
@@ -85,46 +81,49 @@ let ViewCameras = class ViewCameras extends Node {
         super(args);
         this.orbitControls.connect(this.viewport);
         this.orbitControls.addEventListener('change', () => {
-            this.state.dispatchMutation();
+            this.applet.dispatchMutation();
         });
         if (this.camera === undefined)
             this.camera = this.defaultCameras.perspective;
     }
     cameraSelectChanged() {
+        this.debounce(this.cameraSelectChangedDebounced);
+    }
+    cameraSelectChangedDebounced() {
+        let matchedCamera;
         if (this.cameraSelect.startsWith('scene')) {
             const cameraId = this.cameraSelect.split(':')[1] || '';
-            const persp = this.state.scene.getObjectsByProperty('isPerspectiveCamera', true);
-            const ortho = this.state.scene.getObjectsByProperty('isOrthographicCamera', true);
+            const persp = this.applet.scene.getObjectsByProperty('isPerspectiveCamera', true);
+            const ortho = this.applet.scene.getObjectsByProperty('isOrthographicCamera', true);
             const cameras = [...persp, ...ortho];
-            let matchedCamera;
             if (cameraId) {
                 matchedCamera = cameras.find(camera => camera.name === cameraId);
+                if (!matchedCamera) {
+                    console.warn(`Camera ${cameraId} not found in the scene, using default perspective camera`);
+                }
             }
             else {
                 matchedCamera = cameras[0];
+                if (!matchedCamera) {
+                    console.warn('No cameras found in the scene, using default perspective camera');
+                }
             }
             if (matchedCamera) {
                 this.camera = matchedCamera;
             }
             else {
                 this.camera = this.defaultCameras.perspective;
-                console.warn(`Camera ${cameraId} not found in the scene, using default perspective camera`);
             }
         }
         else {
-            this.camera = this.defaultCameras.getCamera(this.cameraSelect) || this.defaultCameras.perspective;
-        }
-    }
-    setSize(width, height) {
-        if (width === 0 || height === 0)
-            return;
-        if (this.width !== width || this.height !== height) {
-            for (const camera of this.defaultCameras.cameras) {
-                setAspect(camera, width, height);
+            matchedCamera = this.defaultCameras.getCamera(this.cameraSelect);
+            if (matchedCamera) {
+                this.camera = matchedCamera;
             }
-            // setAspect(this.camera, width, height)
-            this.width = width;
-            this.height = height;
+            else {
+                console.warn(`Camera ${this.cameraSelect} not found in the default cameras, using default perspective camera`);
+                this.camera = this.defaultCameras.perspective;
+            }
         }
     }
     cameraChanged() {
@@ -137,53 +136,112 @@ let ViewCameras = class ViewCameras extends Node {
         else {
             this.orbitControls.enabled = true;
             this.orbitControls.object = this.camera;
+            this.orbitControls.enableRotate = !!this.camera.isPerspectiveCamera;
         }
     }
-    stateChanged() {
+    appletChanged() {
         for (const camera of this.defaultCameras.cameras) {
-            this.frameObject(this.state.scene, camera);
+            camera.position.copy(camera.userData.position);
+            camera.lookAt(0, 0, 0);
+            this.frameObject(this.applet.scene, camera);
         }
+        this.debounce(this.cameraSelectChangedDebounced);
     }
     onSceneReady() {
-        this.frameObject(this.state.scene, this.camera);
+        this.appletChanged();
     }
     frameObject(object, camera) {
-        let distance;
         box.setFromObject(object);
         if (box.isEmpty() === false) {
             box.getCenter(center);
-            distance = box.getBoundingSphere(sphere).radius;
+            radius = box.getBoundingSphere(sphere).radius;
         }
         else {
             // Focusing on an Group, AmbientLight, etc
             // TODO: Investigate and make more robust
             center.setFromMatrixPosition(camera.matrixWorld);
-            distance = 0.1;
+            radius = 0.1;
         }
-        // TODO: Consider frustum geometry (fov) when framing
-        delta.set(0, 0, 1);
-        delta.applyQuaternion(camera.quaternion);
-        delta.multiplyScalar(distance * 2);
+        // Project box onto camera axes
+        cameraRight.set(1, 0, 0).applyQuaternion(camera.quaternion);
+        cameraUp.set(0, 1, 0).applyQuaternion(camera.quaternion);
+        cameraForward.set(0, 0, -1).applyQuaternion(camera.quaternion);
+        box.getSize(size).multiplyScalar(0.5);
+        const halfWidth = Math.abs(size.x * cameraRight.x) + Math.abs(size.y * cameraRight.y) + Math.abs(size.z * cameraRight.z);
+        const halfHeight = Math.abs(size.x * cameraUp.x) + Math.abs(size.y * cameraUp.y) + Math.abs(size.z * cameraUp.z);
+        const halfDepth = Math.abs(size.x * cameraForward.x) + Math.abs(size.y * cameraForward.y) + Math.abs(size.z * cameraForward.z);
         if (camera instanceof PerspectiveCamera) {
-            camera.near = distance * 0.001;
-            camera.far = distance * 16;
-            camera.updateProjectionMatrix();
+            const vfov = camera.fov * Math.PI / 180;
+            const tanHalfVfov = Math.tan(vfov / 2);
+            const aspect = camera.aspect || 1;
+            let distance = 0;
+            for (let i = 0; i < 8; i++) {
+                corner.set((i & 1) ? box.max.x : box.min.x, (i & 2) ? box.max.y : box.min.y, (i & 4) ? box.max.z : box.min.z).sub(center);
+                const x = corner.dot(cameraRight);
+                const y = corner.dot(cameraUp);
+                const z = corner.dot(cameraForward);
+                const distV = Math.abs(y) / tanHalfVfov - z;
+                const distH = Math.abs(x) / (tanHalfVfov * aspect) - z;
+                distance = Math.max(distance, distV, distH);
+            }
+            delta.set(0, 0, 1)
+                .applyQuaternion(camera.quaternion)
+                .multiplyScalar(distance);
             camera.position.copy(center).add(delta);
+            camera.near = Math.max(halfDepth * 0.1);
+            camera.far = distance + halfDepth * 20;
+            camera.updateProjectionMatrix();
         }
         else if (camera instanceof OrthographicCamera) {
-            delta.copy(camera.userData.position).multiplyScalar(distance);
-            const aspect = this.width / this.height;
-            camera.top = distance;
-            camera.bottom = -distance;
-            camera.left = -distance * aspect;
-            camera.right = distance * aspect;
-            camera.near = 0;
-            camera.far = distance * 8;
+            delta.set(0, 0, 1).applyQuaternion(camera.quaternion).multiplyScalar(radius);
             camera.position.copy(center).add(delta);
             camera.lookAt(center);
+            camera.left = -halfWidth;
+            camera.right = halfWidth;
+            camera.bottom = -halfHeight;
+            camera.top = halfHeight;
+            camera.zoom = 1;
+            camera.near = 0;
+            camera.far = radius + halfDepth * 20;
             camera.updateProjectionMatrix();
         }
         this.orbitControls.target.copy(center);
+    }
+    setOverscan(width, height, overscan) {
+        const camera = this.camera;
+        const resetCamera = resetCameras.get(camera) || camera.clone(false);
+        resetCamera.copy(camera, false);
+        resetCameras.set(camera, resetCamera);
+        const aspect = width / height;
+        if (camera instanceof PerspectiveCamera) {
+            camera.aspect = aspect;
+            camera.fov *= overscan;
+        }
+        else if (camera instanceof OrthographicCamera) {
+            const frustumHeight = camera.top - camera.bottom;
+            const frustumWidth = camera.right - camera.left;
+            const frustumAspect = frustumWidth / frustumHeight;
+            if (frustumAspect > aspect) {
+                camera.top = frustumWidth / 2 / aspect;
+                camera.bottom = -frustumWidth / 2 / aspect;
+            }
+            else {
+                camera.left = -frustumHeight / 2 * aspect;
+                camera.right = frustumHeight / 2 * aspect;
+            }
+            camera.top *= overscan;
+            camera.bottom *= overscan;
+            camera.left *= overscan;
+            camera.right *= overscan;
+        }
+        camera.updateProjectionMatrix();
+    }
+    resetOverscan() {
+        const camera = this.camera;
+        const resetCamera = resetCameras.get(camera);
+        if (resetCamera) {
+            camera.copy(resetCamera, false);
+        }
     }
     dispose() {
         this.orbitControls.dispose();
@@ -191,17 +249,11 @@ let ViewCameras = class ViewCameras extends Node {
     }
 };
 __decorate([
-    Property(0)
-], ViewCameras.prototype, "width", void 0);
-__decorate([
-    Property(0)
-], ViewCameras.prototype, "height", void 0);
-__decorate([
     Property()
 ], ViewCameras.prototype, "viewport", void 0);
 __decorate([
-    ReactiveProperty({ type: ThreeState })
-], ViewCameras.prototype, "state", void 0);
+    ReactiveProperty({ type: ThreeApplet })
+], ViewCameras.prototype, "applet", void 0);
 __decorate([
     ReactiveProperty({ type: String, value: 'perspective' })
 ], ViewCameras.prototype, "cameraSelect", void 0);

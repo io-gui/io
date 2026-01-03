@@ -6,8 +6,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AnimationClip, AnimationMixer, AnimationObjectGroup, BoxGeometry, ColorKeyframeTrack, InterpolateDiscrete, Mesh, MeshBasicMaterial, NumberKeyframeTrack, Quaternion, QuaternionKeyframeTrack, Vector3 } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { ThreeState } from '@io-gui/three';
-let MiscAnimationGroupsExample = class MiscAnimationGroupsExample extends ThreeState {
+import { ThreeApplet } from '@io-gui/three';
+let AnimationGroupsExample = class AnimationGroupsExample extends ThreeApplet {
     mixer;
     constructor() {
         super();
@@ -43,8 +43,8 @@ let MiscAnimationGroupsExample = class MiscAnimationGroupsExample extends ThreeS
         this.mixer.update(delta);
     }
 };
-MiscAnimationGroupsExample = __decorate([
+AnimationGroupsExample = __decorate([
     Register
-], MiscAnimationGroupsExample);
-export { MiscAnimationGroupsExample };
-//# sourceMappingURL=misc_animation_groups.js.map
+], AnimationGroupsExample);
+export { AnimationGroupsExample };
+//# sourceMappingURL=animation_groups.js.map

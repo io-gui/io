@@ -1,7 +1,6 @@
 const editorWidgetsSingleton = new Map([
 // TODO: remove outerHTML debug view
-// [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: new Map([
-//   [HTMLElement, [['outerHTML', div()]]]
+// [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: [['outerHTML', div()]]]
 // ]), labeled: false}}],
 ]);
 export function getEditorWidget(object, editorWidgets = new Map()) {

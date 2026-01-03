@@ -22,7 +22,7 @@ export declare class IoElement extends HTMLElement {
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
     readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
-    readonly _bindings: Map<string, Binding<any>>;
+    readonly _bindings: Map<string, Binding>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
     readonly _observedObjectProperties: string[];
@@ -43,7 +43,7 @@ export declare class IoElement extends HTMLElement {
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
     dispatchMutation(object?: object | Node, properties?: string[]): void;
-    bind<T>(name: string): Binding<T>;
+    bind(name: string): Binding;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;

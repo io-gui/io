@@ -6,9 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { AmbientLight, ArrayCamera, CylinderGeometry, DirectionalLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, Vector4 } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { ThreeState } from '@io-gui/three';
+import { ThreeApplet } from '@io-gui/three';
 const AMOUNT = 6;
-let CameraArrayExample = class CameraArrayExample extends ThreeState {
+let CameraArrayExample = class CameraArrayExample extends ThreeApplet {
     arrayCamera;
     mesh;
     constructor() {

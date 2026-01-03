@@ -1,5 +1,5 @@
 import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
-import { EditorConfig } from '../utils/EditorConfig.js';
+import { EditorConfig, PropertyConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoInspectorProps = IoElementProps & {
@@ -18,7 +18,7 @@ export declare class IoInspector extends IoElement {
     value: object | Array<any>;
     selected: object | Array<any>;
     search: string;
-    config: EditorConfig;
+    config: PropertyConfig[];
     groups: EditorGroups;
     widgets: EditorWidgets;
     static get Listeners(): {

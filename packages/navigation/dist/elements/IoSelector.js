@@ -71,8 +71,6 @@ let IoSelector = class IoSelector extends IoElement {
     init() {
         this.preacheNext = this.preacheNext.bind(this);
         this.startPreache = this.startPreache.bind(this);
-        this.renderDebounced = this.renderDebounced.bind(this);
-        this.anchorChangedDebounced = this.anchorChangedDebounced.bind(this);
         this.scrollToUnsuspend = this.scrollToUnsuspend.bind(this);
         this.onScrollUnsuspend = this.onScrollUnsuspend.bind(this);
     }

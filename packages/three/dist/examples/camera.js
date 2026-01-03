@@ -6,9 +6,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { PerspectiveCamera, OrthographicCamera, Group, BufferGeometry, Float32BufferAttribute, MathUtils, Mesh, MeshBasicMaterial, Points, PointsMaterial, SphereGeometry } from 'three/webgpu';
 import { Register } from '@io-gui/core';
-import { ThreeState } from '@io-gui/three';
+import { ThreeApplet } from '@io-gui/three';
 const frustumSize = 600;
-let CameraExample = class CameraExample extends ThreeState {
+let CameraExample = class CameraExample extends ThreeApplet {
     perspectiveCamera;
     orthographicCamera;
     cameraRig;
@@ -16,9 +16,9 @@ let CameraExample = class CameraExample extends ThreeState {
     constructor() {
         super();
         this.perspectiveCamera = new PerspectiveCamera(50, 0.5, 150, 1000);
-        this.perspectiveCamera.name = 'perspectiveCamera';
+        this.perspectiveCamera.name = 'perspective';
         this.orthographicCamera = new OrthographicCamera(-1, 1, 1, -1, 150, 1000);
-        this.orthographicCamera.name = 'orthographicCamera';
+        this.orthographicCamera.name = 'orthographic';
         // counteract different front orientation of cameras vs rig
         this.orthographicCamera.rotation.y = Math.PI;
         this.perspectiveCamera.rotation.y = Math.PI;

@@ -24,7 +24,7 @@ const isTypeCompatible = (type1, type2) => {
  * - Automatically cleans up listeners when disposed
  *
  * @example
- * const binding = new Binding<number>(nodeA, 'value');
+ * const binding = new Binding(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
 export class Binding {

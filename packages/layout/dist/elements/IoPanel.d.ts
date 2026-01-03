@@ -17,7 +17,6 @@ export declare class IoPanel extends IoElement {
         'io-edit-tab': string;
     };
     onEditTab(event: CustomEvent): void;
-    init(): void;
     onNewTabClicked(event: CustomEvent): void;
     selectIndex(index: number): void;
     selectTab(tab: Tab): void;

@@ -23,7 +23,7 @@ export declare const NODES: {
     disposed: Set<Node>;
 };
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
-export type WithBinding<T> = T | Binding<T>;
+export type WithBinding<T> = T | Binding;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type NodeProps = {
@@ -37,7 +37,7 @@ export declare class Node extends Object {
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
     readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
-    readonly _bindings: Map<string, Binding<any>>;
+    readonly _bindings: Map<string, Binding>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
     readonly _observedObjectProperties: string[];
@@ -59,7 +59,7 @@ export declare class Node extends Object {
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
     dispatchMutation(object?: object | Node, properties?: string[]): void;
-    bind<T>(name: string): Binding<T>;
+    bind(name: string): Binding;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -77,7 +77,7 @@ export declare function dispatchQueue(node: Node | IoElement, debounce?: boolean
 export declare function onPropertyMutated(node: Node | IoElement, event: CustomEvent): boolean;
 export declare function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance): void;
 export declare function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance): void;
-export declare function bind<T>(node: Node | IoElement, name: string): Binding<T>;
+export declare function bind(node: Node | IoElement, name: string): Binding;
 export declare function unbind(node: Node | IoElement, name: string): void;
 export declare function dispose(node: Node | IoElement): void;
 export {};

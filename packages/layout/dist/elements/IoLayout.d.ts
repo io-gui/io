@@ -2,7 +2,7 @@ import { IoElement, VDOMElement, IoElementProps, Binding } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { Split } from '../nodes/Split.js';
 export type IoLayoutProps = IoElementProps & {
-    split: Split | Binding<Split>;
+    split: Split | Binding;
     elements: VDOMElement[];
     addMenuOption: MenuOption;
 };

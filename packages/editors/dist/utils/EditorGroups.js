@@ -1,3 +1,4 @@
+import { Node as IoNode, IoElement } from '@io-gui/core';
 export const SKIPPED_PROPERTIES = [
     '$',
     'ELEMENT_NODE', 'ATTRIBUTE_NODE', 'TEXT_NODE', 'CDATA_SECTION_NODE', 'ENTITY_REFERENCE_NODE', 'ENTITY_NODE',
@@ -30,7 +31,7 @@ export function getAllPropertyNames(obj) {
     do {
         const props = Object.getOwnPropertyNames(curr);
         props.forEach((prop) => {
-            if (allProps.indexOf(prop) === -1 && typeof obj[prop] !== 'function' && !SKIPPED_PROPERTIES.includes(prop)) {
+            if (allProps.indexOf(prop) === -1 && !SKIPPED_PROPERTIES.includes(prop)) {
                 allProps.push(prop);
             }
         });
@@ -42,7 +43,12 @@ export function getAllPropertyNames(obj) {
 }
 const editorGroupsSingleton = new Map([
     [Object, {
-            Hidden: [new RegExp(/^_/)],
+            Hidden: [new RegExp(/^_/), 'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toString', 'valueOf', 'toLocaleString'],
+        }],
+    [Array, {
+            Hidden: [
+                'length', 'constructor', 'at', 'concat', 'copyWithin', 'fill', 'find', 'findIndex', 'findLast', 'findLastIndex', 'lastIndexOf', 'pop', 'push', 'reverse', 'shift', 'unshift', 'slice', 'sort', 'splice', 'includes', 'indexOf', 'join', 'keys', 'entries', 'values', 'forEach', 'filter', 'flat', 'flatMap', 'map', 'every', 'some', 'reduce', 'reduceRight', 'toReversed', 'toSorted', 'toSpliced', 'with', 'toLocaleString', 'toString',
+            ],
         }],
     [Node, {
             Main: [
@@ -74,6 +80,16 @@ const editorGroupsSingleton = new Map([
             ],
             Hidden: [],
         }],
+    [IoNode, {
+            Hidden: [
+                'reactivity',
+            ],
+        }],
+    [IoElement, {
+            Hidden: [
+                'reactivity',
+            ],
+        }],
 ]);
 export function getEditorGroups(object, editorGroups = new Map()) {
     debug: if (!object || !(object instanceof Object)) {
@@ -86,6 +102,27 @@ export function getEditorGroups(object, editorGroups = new Map()) {
     function aggregateGroups(editorGroups) {
         for (const [constructorKey, groups] of editorGroups) {
             if (object instanceof constructorKey) {
+                // Reorder keys to match the order in the latest config.
+                const configKeys = Object.keys(groups);
+                const existingKeys = Object.keys(aggregatedGroups);
+                // TODO: Test thoroughly.
+                if (configKeys.length > 0 && existingKeys.length > 0) {
+                    const reorderedGroups = {};
+                    for (const key of configKeys) {
+                        reorderedGroups[key] = aggregatedGroups[key] || [];
+                    }
+                    for (const key of existingKeys) {
+                        if (!(key in reorderedGroups)) {
+                            reorderedGroups[key] = aggregatedGroups[key];
+                        }
+                    }
+                    for (const key of existingKeys) {
+                        if (configKeys.includes(key)) {
+                            delete aggregatedGroups[key];
+                        }
+                    }
+                    Object.assign(aggregatedGroups, reorderedGroups);
+                }
                 for (const g in groups) {
                     aggregatedGroups[g] = aggregatedGroups[g] || [];
                     aggregatedGroups[g].push(...groups[g]);
@@ -110,6 +147,7 @@ export function getEditorGroups(object, editorGroups = new Map()) {
     };
     for (const key of getAllPropertyNames(object)) {
         let included = false;
+        const isFunction = typeof object[key] === 'function';
         for (const g of Object.keys(aggregatedGroups)) {
             groupsRecord[g] = groupsRecord[g] || [];
             for (const identifier of aggregatedGroups[g]) {
@@ -124,11 +162,13 @@ export function getEditorGroups(object, editorGroups = new Map()) {
                 }
             }
         }
-        if (!included) {
+        // Functions are not included in groups unless they are explicitly added.
+        // TODO: Test thoroughly.
+        if (!included && !isFunction) {
             groupsRecord.Main.push(key);
         }
     }
-    // TODO: make sure no property belongs to multiple groups.
+    // TODO: make sure and test no property belongs to multiple groups.
     return groupsRecord;
 }
 export function registerEditorGroups(constructor, groups) {
