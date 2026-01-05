@@ -1,7 +1,6 @@
 import { AnyConstructor, VDOMElement } from '@io-gui/core';
 type PropertyIdentifier = AnyConstructor | string | RegExp | null | undefined;
-type IsLabeled = true | false;
-export type PropertyConfig = [PropertyIdentifier, VDOMElement, IsLabeled?];
+export type PropertyConfig = [PropertyIdentifier, VDOMElement];
 export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>;
 export type PropertyConfigRecord = Record<string, VDOMElement>;
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>;

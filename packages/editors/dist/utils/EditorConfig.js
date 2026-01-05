@@ -164,7 +164,7 @@ editorConfigSingleton.forEach((propertyTypes, constructor) => {
                 hasType.push(key, ioField({ disabled: true }));
             }
             else {
-                propertyTypes.push([key, ioField({ disabled: true }), true]);
+                propertyTypes.push([key, ioField({ disabled: true })]);
             }
         }
     }
@@ -254,13 +254,13 @@ export function getEditorConfig(object, propertyConfigs) {
 }
 export function registerEditorConfig(constructor, propertyTypes) {
     const existingConfigs = editorConfigSingleton.get(constructor) || [];
-    for (const [PropertyIdentifier, elementCandidate, isLabeled] of propertyTypes) {
+    for (const [PropertyIdentifier, elementCandidate] of propertyTypes) {
         const existingConfig = existingConfigs.find(config => config[0] === PropertyIdentifier);
         if (existingConfig) {
             existingConfig[1] = elementCandidate;
         }
         else {
-            existingConfigs.push([PropertyIdentifier, elementCandidate, isLabeled]);
+            existingConfigs.push([PropertyIdentifier, elementCandidate]);
         }
     }
     editorConfigSingleton.set(constructor, existingConfigs);
