@@ -347,7 +347,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         }
       } else if (prop.type === Object) {
         if (value instanceof Array) {
-          console.warn(`Wrong type of property "${name}". Value: "${JSON.stringify(value)}". Expected type: ${prop.type.name}`, node)
+          console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node)
         }
       } else if (prop.type === NodeArray) {
         if (!(value instanceof NodeArray)) {
