@@ -15,7 +15,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { ThreeApplet } from '@io-gui/three'
 import { ioButton, ioBoolean } from '@io-gui/inputs'
-import { ioPropertyEditor, registerEditorGroups } from '@io-gui/editors'
+import { ioPropertyEditor } from '@io-gui/editors'
 
 const loader = new GLTFLoader()
 
@@ -29,16 +29,15 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   declare isPlaying: boolean
 
   public camera: PerspectiveCamera
-  public mixer?: AnimationMixer
+  public mixer: AnimationMixer = new AnimationMixer(new Group())
   public actions: Record<string, AnimationAction> = {}
 
-  // Pausing/Stepping
+  // Playback
   public stepSize: number = 0.05
+
   // Crossfading
   public useDefaultDuration: boolean = true
   public customDuration: number = 3.5
-  // General Speed
-  public timeScale: number = 1
 
   constructor() {
     super()
@@ -81,8 +80,50 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
       ['isPlaying', ioBoolean({true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
       ['makeSingleStep', ioButton({label: 'Make Single Step'})],
       ['actions', ioPropertyEditor()],
-      [AnimationAction, ioPropertyEditor()],
+      [AnimationAction, ioPropertyEditor({groups: {
+        Playback: [
+          'isActive',
+          'isPlaying',
+          'stepSize',
+          'makeSingleStep',
+        ],
+        Crossfade: [
+          'actions',
+          'walk',
+          'run',
+          'idle',
+          'useDefaultDuration',
+          'customDuration',
+        ],
+        Scene: [
+          'camera',
+        ],
+        Rendering: []
+      }})],
+      [AnimationMixer, ioPropertyEditor({groups: {Hidden: ['stats']}})],
     ]
+
+    this.uiGroups = {
+      Playback: [
+        'isActive',
+        'isPlaying',
+        'stepSize',
+        'makeSingleStep',
+      ],
+      Crossfade: [
+        'actions',
+        'walk',
+        'run',
+        'idle',
+        'useDefaultDuration',
+        'customDuration',
+      ],
+      Scene: [
+        'camera',
+      ],
+      Rendering: [],
+      Hidden: [],
+    }
 
     void this.loadModel()
   }
@@ -117,19 +158,15 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
 
   isActiveChanged() {
     if (this.isActive) {
-      // this.setWeight(this.actions.idle!, this.idleWeight as number)
-      // this.setWeight(this.actions.walk!, this.walkWeight as number)
-      // this.setWeight(this.actions.run!, this.runWeight as number)
       Object.values(this.actions).forEach((action: AnimationAction) => action.play())
     } else {
       Object.values(this.actions).forEach((action: AnimationAction) => action.stop())
     }
-
   }
 
-  // idle = () => { this.prepareCrossFade(this.idleAction!, 1.0) }
-  // walk = () => { this.prepareCrossFade(this.walkAction!, 0.5) }
-  // run = () => { this.prepareCrossFade(this.runAction!, 2.5) }
+  idle = () => { this.prepareCrossFade(this.actions.idle, this.actions.walk, 1.0) }
+  walk = () => { this.prepareCrossFade(this.actions.walk, this.actions.run, 0.5) }
+  run = () => { this.prepareCrossFade(this.actions.run, this.actions.idle, 2.5) }
 
   public makeSingleStep = () => {
     if (this.mixer && !this.isPlaying) {
@@ -137,52 +174,51 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     }
   }
 
-  // private prepareCrossFade(action: AnimationAction, defaultDuration: number) {
-  //   if (!this.mixer) return
+  private prepareCrossFade(startAction: AnimationAction, endAction: AnimationAction, defaultDuration: number) {
 
-  //   // const duration = this.setCrossFadeDuration(defaultDuration)
+    const duration = this.setCrossFadeDuration(defaultDuration)
 
-  //   // // this.unpause()
+    this.isPlaying = true
 
-  //   // if (startAction === this.idleAction) {
-  //   //   this.executeCrossFade(startAction, endAction, duration)
-  //   // } else {
-  //   //   this.synchronizeCrossFade(startAction, endAction, duration)
-  //   // }
-  // }
+    if (startAction === this.actions.idle) {
+      this.executeCrossFade(startAction, endAction, duration)
+    } else {
+      this.synchronizeCrossFade(startAction, endAction, duration)
+    }
+  }
 
-  // private setCrossFadeDuration(defaultDuration: number): number {
-  //   if (this.useDefaultDuration) {
-  //     return defaultDuration
-  //   } else {
-  //     return this.customDuration as number
-  //   }
-  // }
+  private setCrossFadeDuration(defaultDuration: number): number {
+    if (this.useDefaultDuration) {
+      return defaultDuration
+    } else {
+      return this.customDuration as number
+    }
+  }
 
-  // private synchronizeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
-  //   if (!this.mixer) return
+  private synchronizeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
+    if (!this.mixer) return
 
-  //   const onLoopFinished = (event: {action: AnimationAction}) => {
-  //     if (event.action === startAction) {
-  //       this.mixer!.removeEventListener('loop', onLoopFinished as any)
-  //       this.executeCrossFade(startAction, endAction, duration)
-  //     }
-  //   }
+    const onLoopFinished = (event: {action: AnimationAction}) => {
+      if (event.action === startAction) {
+        this.mixer.removeEventListener('loop', onLoopFinished as any)
+        this.executeCrossFade(startAction, endAction, duration)
+      }
+    }
 
-  //   this.mixer.addEventListener('loop', onLoopFinished as any)
-  // }
+    this.mixer.addEventListener('loop', onLoopFinished as any)
+  }
 
-  // private executeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
-  //   this.setWeight(endAction, 1)
-  //   endAction.time = 0
-  //   startAction.crossFadeTo(endAction, duration, true)
-  // }
+  private executeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
+    this.setWeight(endAction, 1)
+    endAction.time = 0
+    startAction.crossFadeTo(endAction, duration, true)
+  }
 
-  // private setWeight(action: AnimationAction, weight: number) {
-  //   action.enabled = true
-  //   action.setEffectiveTimeScale(1)
-  //   action.setEffectiveWeight(weight)
-  // }
+  private setWeight(action: AnimationAction, weight: number) {
+    action.enabled = true
+    action.setEffectiveTimeScale(1)
+    action.setEffectiveWeight(weight)
+  }
 
   onAnimate(delta: number) {
     if (!this.mixer) return
@@ -191,40 +227,11 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
       this.dispatchMutation(this.actions.idle)
       this.dispatchMutation(this.actions.walk)
       this.dispatchMutation(this.actions.run)
+      this.dispatchMutation(this.mixer)
     }
-    // this.dispatchMutation(this.options)
 
     if (this.isPlaying) {
       this.mixer.update(delta)
     }
   }
 }
-
-registerEditorGroups(AnimationSkinningBlendingExample, {
-  Playback: [
-    'isActive',
-    'isPlaying',
-    'stepSize',
-    'makeSingleStep',
-  ],
-  Crossfade: [
-    'actions',
-    'walk',
-    'run',
-    'idle',
-    'useDefaultDuration',
-    'customDuration',
-  ],
-  'General Speed': [
-    'timeScale',
-  ],
-  Rendering: [],
-  Scene: [
-    'camera',
-  ],
-  Hidden: [
-    'mixer',
-    'singleStepMode',
-    'sizeOfNextStep',
-  ],
-})

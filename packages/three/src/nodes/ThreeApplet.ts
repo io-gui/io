@@ -1,6 +1,8 @@
 import { Register, Node, ReactiveProperty, NodeProps } from '@io-gui/core'
-import { PropertyConfig, registerEditorGroups } from '@io-gui/editors'
-import { NoToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { PropertyConfig, PropertyGroups, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 
 export type ThreeAppletProps = NodeProps & {
   scene?: Scene
@@ -25,6 +27,9 @@ export class ThreeApplet extends Node {
   @ReactiveProperty({type: Array, init: null})
   declare uiConfig: PropertyConfig[]
 
+  @ReactiveProperty({type: Object, init: null})
+  declare uiGroups: PropertyGroups
+
   private _renderer: WebGPURenderer | null = null
   private _width: number = 0
   private _height: number = 0
@@ -33,7 +38,6 @@ export class ThreeApplet extends Node {
   constructor(args?: ThreeAppletProps) {
     super(args)
   }
-
   updateViewportSize(width: number, height: number) {
     if (this._width !== width || this._height !== height) {
       if (!!width && !!height) {
@@ -62,6 +66,20 @@ export class ThreeApplet extends Node {
   onAnimate(delta: number) {}
 }
 
+registerEditorConfig(ThreeApplet, [
+  ['toneMappingExposure', ioNumberSlider({min: 0, max: 3, step: 0.01, exponent: 2})],
+  ['toneMapping', ioOptionSelect({option: new MenuOption({options: [
+    {value: NoToneMapping, id: 'NoToneMapping'},
+    {value: LinearToneMapping, id: 'LinearToneMapping'},
+    {value: ReinhardToneMapping, id: 'ReinhardToneMapping'},
+    {value: CineonToneMapping, id: 'CineonToneMapping'},
+    {value: ACESFilmicToneMapping, id: 'ACESFilmicToneMapping'},
+    // {value: CustomToneMapping, id: 'CustomToneMapping'},
+    {value: AgXToneMapping, id: 'AgXToneMapping'},
+    {value: NeutralToneMapping, id: 'NeutralToneMapping'},
+  ]})})],
+])
+
 registerEditorGroups(ThreeApplet, {
   Scene: [
     'scene',
@@ -72,5 +90,6 @@ registerEditorGroups(ThreeApplet, {
   ],
   Hidden: [
     'uiConfig',
+    'uiGroups',
   ]
 })

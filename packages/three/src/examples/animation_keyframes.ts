@@ -1,6 +1,7 @@
 import {
   AnimationMixer,
   Color,
+  Object3D,
   PerspectiveCamera,
   PMREMGenerator,
   WebGPURenderer
@@ -14,7 +15,7 @@ import { ThreeApplet } from '@io-gui/three'
 @Register
 export class AnimationKeyframesExample extends ThreeApplet {
 
-  public mixer: AnimationMixer | null = null
+  public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
   constructor() {
     super()
@@ -43,9 +44,11 @@ export class AnimationKeyframesExample extends ThreeApplet {
       this.mixer = new AnimationMixer( model )
       this.mixer.clipAction( gltf.animations[ 0 ] ).play()
 
+      console.log(this.mixer)
+
       const train = gltf.scene.getObjectByName('Object675')!
       const perspectiveCamera = new PerspectiveCamera( 125, 1, 0.1, 1000 )
-      perspectiveCamera.position.set(110, 0, 30)
+      perspectiveCamera.position.set(140, 0, 30)
       perspectiveCamera.rotation.set(Math.PI / 2, -Math.PI / 2, 0)
       train.add(perspectiveCamera)
 
@@ -59,6 +62,9 @@ export class AnimationKeyframesExample extends ThreeApplet {
   onAnimate(delta: number) {
     if ( this.mixer ) {
       this.mixer.update( delta )
+      debug: {
+        this.dispatchMutation(this.mixer)
+      }
     }
   }
 }

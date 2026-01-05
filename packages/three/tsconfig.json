@@ -13,6 +13,7 @@
       "@io-gui/inputs": ["../inputs"],
       "@io-gui/editors": ["../editors"],
       "@io-gui/sliders": ["../sliders"],
+      "@io-gui/colors": ["../colors"],
       "three/webgpu": ["../node_modules/three/build/three.webgpu.js"],
       "three/tsl": ["../node_modules/three/build/three.tsl.js"],
       "three/addons": ["../node_modules/three/examples/jsm"]
