@@ -1,8 +1,8 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
-import { EditorConfig, PropertyConfig } from '../utils/EditorConfig.js'
-import { EditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js'
+import { PropertyConfig } from '../utils/EditorConfig.js'
+import { getAllPropertyNames, PropertyGroups } from '../utils/EditorGroups.js'
 import { EditorWidgets } from '../utils/EditorWidgets.js'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
@@ -10,8 +10,8 @@ export type IoInspectorProps = IoElementProps & {
   value?: Record<string, any> | any[]
   selected?: WithBinding<Record<string, any> | any[]>
   search?: WithBinding<string>
-  config?: EditorConfig
-  groups?: EditorGroups
+  config?: PropertyConfig[]
+  groups?: PropertyGroups
   widgets?: EditorWidgets
 }
 
@@ -68,8 +68,8 @@ export class IoInspector extends IoElement {
   @ReactiveProperty({type: Array, init: null})
   declare config: PropertyConfig[]
 
-  @ReactiveProperty({type: Map, init: null})
-  declare groups: EditorGroups
+  @ReactiveProperty({type: Object, init: null})
+  declare groups: PropertyGroups
 
   @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets

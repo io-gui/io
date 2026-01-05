@@ -80,7 +80,7 @@ class IoContextEditor extends IoPropertyEditor {
       labeled: props.labeled || true,
       orientation: props.orientation || 'vertical',
       config: props.config || [],
-      groups: props.groups || new Map(),
+      groups: props.groups || {},
       widgets: props.widgets || new Map(),
       expanded: true,
     })
@@ -101,7 +101,7 @@ class IoContextEditor extends IoPropertyEditor {
         labeled: true,
         orientation: 'vertical',
         config: [],
-        groups: new Map(),
+        groups: {},
         widgets: new Map(),
       })
       if (this.onClose) {

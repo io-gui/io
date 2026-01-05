@@ -1,6 +1,6 @@
 import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, Storage as $, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
-import { EditorGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
+import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js'
 import { ioObject } from './IoObject.js'
 
@@ -10,7 +10,7 @@ export type IoPropertyEditorProps = IoElementProps & {
   labeled?: boolean
   orientation?: 'vertical' | 'horizontal'
   config?: PropertyConfig[]
-  groups?: EditorGroups
+  groups?: PropertyGroups
   widgets?: EditorWidgets
 }
 
@@ -44,6 +44,13 @@ export class IoPropertyEditor extends IoElement {
     :host[orientation="horizontal"] > .row {
       flex-direction: column;
     }
+    :host io-property-editor {
+      margin-top: calc(var(--io_spacing) * -1) !important;
+    }
+    :host io-property-editor > .row {
+      /* margin: 0 !important; */
+      padding: 0 !important;
+    }
     :host > .row:last-of-type {
       margin-bottom: var(--io_spacing);
     }
@@ -56,12 +63,17 @@ export class IoPropertyEditor extends IoElement {
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-width: calc(var(--io_lineHeight) * 3);
     }
     :host > .row > span:after {
       display: inline-block;
       margin-left: var(--io_spacing);
       opacity: 0.5;
       content: ':';
+    }
+    :host > .row > :nth-child(2) {
+      flex-grow: 1;
+
     }
     :host io-object {
       margin-right: var(--io_spacing);
@@ -87,8 +99,8 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty({type: Array, init: null})
   declare config: PropertyConfig[]
 
-  @ReactiveProperty({type: Map, init: null})
-  declare groups: EditorGroups
+  @ReactiveProperty({type: Object, init: null})
+  declare groups: PropertyGroups
 
   @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets
@@ -194,6 +206,15 @@ export class IoPropertyEditor extends IoElement {
           finalProps.config = finalProps.config || this.config
           finalProps.groups = finalProps.groups || this.groups
         }
+        if (tag === 'io-object') {
+          let uuid = genIdentifier(value)
+          let storage: 'local' | 'none' = 'local'
+          if (!uuid) {
+            uuid = getTempIdentifier(value)
+            storage = 'none'
+          }
+          finalProps.expanded = $({value: false, storage: storage, key: uuid + '-object-editor'})
+        }
         // NOTE: Functions dont have labels. They are displayed as labeled buttons.
         if (isFunction) {
           finalProps.action = value
@@ -248,7 +269,7 @@ export const ioPropertyEditor = function(arg0?: IoPropertyEditorProps) {
 }
 
 function genIdentifier(object: any) {
-  const id = object.guid || object.uuid || object.id || object.name
+  const id = object.guid || object.uuid || object.id || object.name || object.label
   if (id) {
     return 'io-object-collapse-state-' + object.constructor.name + '-' + id
   }

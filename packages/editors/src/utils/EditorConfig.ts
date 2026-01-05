@@ -23,34 +23,33 @@ function makeSelect(options: any[]) {
   return ioOptionSelect({option})
 }
 
+class ConfigCache<K1 extends object, K2 extends object, V> {
+  private map = new WeakMap<K1, WeakMap<K2, V>>()
 
-// class ConfigCache<K1 extends object, K2 extends object, V> {
-//   private map = new WeakMap<K1, WeakMap<K2, V>>()
+  set(key1: K1, key2: K2, value: V): this {
+    let inner = this.map.get(key1)
+    if (!inner) {
+      inner = new WeakMap<K2, V>()
+      this.map.set(key1, inner)
+    }
+    inner.set(key2, value)
+    return this
+  }
 
-//   set(key1: K1, key2: K2, value: V): this {
-//     let inner = this.map.get(key1)
-//     if (!inner) {
-//       inner = new WeakMap<K2, V>()
-//       this.map.set(key1, inner)
-//     }
-//     inner.set(key2, value)
-//     return this
-//   }
+  get(key1: K1, key2: K2): V | undefined {
+    return this.map.get(key1)?.get(key2)
+  }
 
-//   get(key1: K1, key2: K2): V | undefined {
-//     return this.map.get(key1)?.get(key2)
-//   }
+  has(key1: K1, key2: K2): boolean {
+    return this.map.get(key1)?.has(key2) ?? false
+  }
 
-//   has(key1: K1, key2: K2): boolean {
-//     return this.map.get(key1)?.has(key2) ?? false
-//   }
+  delete(key1: K1, key2: K2): boolean {
+    return this.map.get(key1)?.delete(key2) ?? false
+  }
+}
 
-//   delete(key1: K1, key2: K2): boolean {
-//     return this.map.get(key1)?.delete(key2) ?? false
-//   }
-// }
-
-// const configCache = new ConfigCache<object, object, PropertyConfigRecord>()
+const configCache = new ConfigCache<object, object, PropertyConfigRecord>()
 
 // TODO: Make sure multiple editors dont share the same menu options.
 // TODO: Consider using function to return new view each time editor is configured at runtime.
@@ -194,12 +193,11 @@ export function getEditorConfig(object: object, propertyConfigs: PropertyConfig[
     return {}
   }
 
-  // const cachedConfig = configCache.get(object, propertyConfigs)
-  // if (cachedConfig) {
-  //   console.log('cached config', object, propertyConfigs)
-  //   // console.log('cached config value', cachedConfig)
-  //   // return cachedConfig
-  // }
+  const cachedConfig = configCache.get(object, propertyConfigs)
+  if (cachedConfig) {
+    // TODO: Test cached configs!
+    return cachedConfig
+  }
 
   const aggregatedConfig: PropertyConfigMap = new Map()
   for (const [constructorKey, propertyTypes] of editorConfigSingleton) {
@@ -272,7 +270,7 @@ export function getEditorConfig(object: object, propertyConfigs: PropertyConfig[
     if (!configRecord[key]) console.warn('No config found for', key, value)
   }
 
-  // configCache.set(object, propertyConfigs, configRecord)
+  configCache.set(object, propertyConfigs, configRecord)
 
   return configRecord
 }
