@@ -1,9 +1,4 @@
-import { registerEditorConfig, ioVector, ioPropertyEditor, registerEditorGroups, ioObject } from '@io-gui/editors'
-import {
-  Vector2, Vector3, Vector4, Quaternion, Euler, Color, Matrix2, Matrix3, 
-  Matrix4, Box2, Box3, Sphere, Plane, Frustum
-} from 'three/webgpu'
-import { ioColorRgba } from '@io-gui/colors'
+import { registerEditorGroups } from '@io-gui/editors'
 
 /**
  * This is a root ui config file for three.js EditorConfig's and EditorGroup's
@@ -25,8 +20,8 @@ import { ioColorRgba } from '@io-gui/colors'
 // import './renderers/WebGLCubeRenderTarget.js';
 // import './renderers/WebGLRenderTarget.js';
 // import './renderers/webxr/WebXRController.js';
-// import './scenes/FogExp2.js';
-// import './scenes/Fog.js';
+import './scenes/FogExp2.js';
+import './scenes/Fog.js';
 import './core/Object3D.js';
 import './scenes/Scene.js';
 // import './objects/Sprite.js';
@@ -109,23 +104,23 @@ import './cameras/ArrayCamera.js';
 import './animation/AnimationMixer.js';
 // import './animation/AnimationClip.js';
 import './animation/AnimationAction.js';
-// import './core/RenderTarget.js';
-// import './core/RenderTarget3D.js';
-// import './core/Uniform.js';
-// import './core/UniformsGroup.js';
-// import './core/InstancedBufferGeometry.js';
-// import './core/BufferGeometry.js';
-// import './core/InterleavedBufferAttribute.js';
-// import './core/InstancedInterleavedBuffer.js';
-// import './core/InterleavedBuffer.js';
-// import './core/InstancedBufferAttribute.js';
-// import './core/GLBufferAttribute.js';
-// import './core/BufferAttribute.js';
-// import './core/Raycaster.js';
-// import './core/Layers.js';
-// import './core/EventDispatcher.js';
-// import './core/Clock.js';
-// import './core/Timer.js';
+import './core/EventDispatcher.js';
+import './core/Clock.js';
+import './core/Timer.js';
+import './core/Layers.js';
+import './core/Raycaster.js';
+import './core/BufferAttribute.js';
+import './core/InstancedBufferAttribute.js';
+import './core/GLBufferAttribute.js';
+import './core/InterleavedBuffer.js';
+import './core/InstancedInterleavedBuffer.js';
+import './core/InterleavedBufferAttribute.js';
+import './core/BufferGeometry.js';
+import './core/InstancedBufferGeometry.js';
+import './core/Uniform.js';
+import './core/UniformsGroup.js';
+import './core/RenderTarget.js';
+import './core/RenderTarget3D.js';
 import './math/Interpolant.js';
 import './math/interpolants/QuaternionLinearInterpolant.js';
 import './math/interpolants/LinearInterpolant.js';
@@ -212,6 +207,6 @@ import './math/SphericalHarmonics3.js';
  */
 
 registerEditorGroups(Object, {
-  Advanced: ['id', 'uuid', 'name', 'type', 'userData'],
+  Advanced: ['id', 'uuid', 'type', 'userData'],
   Hidden: [new RegExp(/^is[A-Z]/), '_listeners']
 })

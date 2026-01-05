@@ -11,7 +11,7 @@ registerEditorConfig(Object3D, [
 
 registerEditorGroups(Object3D, {
   Main: [
-    'visible'
+    'visible', 'children', 'parent'
   ],
   Transform: ['position', 'rotation', 'scale', 'quaternion', 'up'],
   Matrices: [
@@ -28,5 +28,5 @@ registerEditorGroups(Object3D, {
     'customDistanceMaterial',
   ],
   Animation: ['animations'],
-  Advanced: ['children', 'parent'],
+  Advanced: [],
 })
