@@ -183,15 +183,24 @@ importers:
         specifier: link:../../../../Library/pnpm/global/5/node_modules/three
         version: link:../../../../Library/pnpm/global/5/node_modules/three
     devDependencies:
+      '@io-gui/colors':
+        specifier: workspace:*
+        version: link:../colors
       '@io-gui/core':
         specifier: workspace:*
         version: link:../core
+      '@io-gui/editors':
+        specifier: workspace:*
+        version: link:../editors
       '@io-gui/layout':
         specifier: workspace:*
         version: link:../layout
       '@io-gui/menus':
         specifier: workspace:*
         version: link:../menus
+      '@io-gui/sliders':
+        specifier: workspace:*
+        version: link:../sliders
       '@types/three':
         specifier: ^0.182.0
         version: 0.182.0
