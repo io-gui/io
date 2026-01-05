@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { nextQueue } from '@io-gui/core';
 import { ioString } from '@io-gui/inputs';
 import { ioSlider } from '@io-gui/sliders';
 import { IoObject } from '@io-gui/editors';
@@ -35,6 +36,7 @@ describe('IoObject', () => {
         expect(element.children[0].localName).toBe('io-boolean');
         expect(element.children[1]).toBe(undefined);
         element.expanded = true;
+        await nextQueue();
         const properties = element.children[1];
         expect(properties.localName).toBe('io-property-editor');
         expect(properties.children[0].textContent).toBe('number0.5');
@@ -71,10 +73,11 @@ describe('IoObject', () => {
         expect(rows[5].children[1].textContent).toBe('Array');
         reset();
     });
-    it('matches value with labels disabled', () => {
+    it('matches value with labels disabled', async () => {
         element.value = testValue;
         element.labeled = false;
         element.expanded = true;
+        await nextQueue();
         const properties = element.children[1];
         expect(properties.children[0].children[0].localName).toBe('io-number');
         expect(properties.children[1].children[0].localName).toBe('io-string');
@@ -92,23 +95,25 @@ describe('IoObject', () => {
         reset();
         expect(element.children[0].textContent).toBe('Object');
     });
-    it('matches value with custom properties', () => {
+    it('matches value with custom properties', async () => {
         element.value = testValue;
         element.properties = ['number', 'boolean'];
         element.expanded = true;
+        await nextQueue();
         const properties = element.children[1];
         expect(properties.children[0].textContent).toBe('number0.5');
         expect(properties.children[1].textContent).toBe('boolean');
         expect(properties.children[2]).toBe(undefined);
         reset();
     });
-    it('matches value with custom config', () => {
+    it('matches value with custom config', async () => {
         element.value = testValue;
         element.config = [
             ['number', ioSlider({ step: 1 })],
             ['boolean', ioString()],
         ];
         element.expanded = true;
+        await nextQueue();
         const properties = element.children[1];
         expect(properties.children[0].children[1].localName).toBe('io-slider');
         expect(properties.children[1].children[1].localName).toBe('io-string');

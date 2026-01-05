@@ -3,6 +3,7 @@ import { Node, NodeProps } from '../nodes/Node.js';
 export type StorageProps = NodeProps & {
     key: string;
     value: any;
+    default?: any;
     storage?: 'hash' | 'local' | 'none';
 };
 export declare class StorageNode extends Node {
@@ -16,7 +17,7 @@ export declare class StorageNode extends Node {
     clearStorage(): void;
     valueMutated(): void;
     valueChanged(): void;
-    valueChangedDebounced(): void;
+    changed(): void;
     removeValueToHash(): void;
     saveValueToHash(): void;
 }

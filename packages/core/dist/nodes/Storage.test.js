@@ -42,7 +42,7 @@ describe('Storage.test.ts', () => {
         });
         node.dispose();
     });
-    it('Should initialize property value from localStorage store if exists', () => {
+    it('Should initialize property value from localStorage store if exists', async () => {
         localStorage.setItem('Storage:test2', '"asd"');
         const node = new StorageNode({ key: 'test2', value: 'buzz', storage: 'local' });
         expect(node.key).toBe('test2');
@@ -66,9 +66,10 @@ describe('Storage.test.ts', () => {
         expect(node1).toBe(node2);
         node1.dispose();
     });
-    it('Should update localStorage store when value changes', () => {
+    it('Should update localStorage store when value changes', async () => {
+        localStorage.removeItem('Storage:test5');
         const node = new StorageNode({ key: 'test5', value: 'one', storage: 'local' });
-        expect(localStorage.getItem('Storage:test5')).toBe('"one"');
+        expect(localStorage.getItem('Storage:test5')).toBe(null);
         node.value = 'two';
         expect(localStorage.getItem('Storage:test5')).toBe('"two"');
         node.value = '2';
@@ -98,10 +99,12 @@ describe('Storage.test.ts', () => {
         self.location.hash = self.location.hash.replace('test6=%223%22', 'test6=false');
         await afterHashChange();
         expect(node.value).toBe(false);
+        node.value = 'one';
+        expect(self.location.hash).not.toContain('test6');
         node.value = [0, 1, 2];
-        expect(self.location.hash).toContain('test6=[0,1,2]');
-        node.value = [0, 1, '2'];
-        expect(self.location.hash).toContain('test6=[0,1,%222%22]');
+        expect(self.location.hash).not.toContain('test6');
+        node.value = { a: 1 };
+        expect(self.location.hash).not.toContain('test6');
         node.value = '2';
         expect(self.location.hash).toContain('test6=%222%22');
         node.dispose();
