@@ -125,12 +125,21 @@ const allClasses = {
   scene: new THREE.Scene(),
   fog: new THREE.Fog(0x000000, 10, 100),
   fogExp2: new THREE.FogExp2(0x000000, 0.002),
-  // Cameras
+  // // Cameras
   Camera: new THREE.Camera(),
   PerspectiveCamera: new THREE.PerspectiveCamera(),
   OrthographicCamera: new THREE.OrthographicCamera(),
   ArrayCamera: new THREE.ArrayCamera(),
   StereoCamera: new THREE.StereoCamera(),
+  // Animation
+  animationClip: new THREE.AnimationClip('test', 1, []),
+  animationObjectGroup: new THREE.AnimationObjectGroup(),
+  numberKeyframeTrack: new THREE.NumberKeyframeTrack('.position[x]', [0, 1, 2], [0, 5, 0]),
+  vectorKeyframeTrack: new THREE.VectorKeyframeTrack('.position', [0, 1, 2], [0, 0, 0, 5, 5, 5, 0, 0, 0]),
+  colorKeyframeTrack: new THREE.ColorKeyframeTrack('.material.color', [0, 1, 2], [1, 0, 0, 0, 1, 0, 0, 0, 1]),
+  quaternionKeyframeTrack: new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0.707, 0.707]),
+  booleanKeyframeTrack: new THREE.BooleanKeyframeTrack('.visible', [0, 1], [true, false]),
+  stringKeyframeTrack: new THREE.StringKeyframeTrack('.name', [0, 1], ['start', 'end']),
   // Math
   cubicInterpolant: new THREE.CubicInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
   discreteInterpolant: new THREE.DiscreteInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),

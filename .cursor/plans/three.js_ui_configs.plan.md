@@ -125,6 +125,8 @@ Use [`packages/three/src/demos/IoThreeDemo.ts`](packages/three/src/demos/IoThree
 
 The demo contains an `allClasses` object with instances of all configured three.js classes. These are rendered via `ioPropertyEditor` in the "AllClasses" tab, allowing you to visually inspect and interact with every configured UI.
 
+**IMPORTANT: When adding new configs, always update `allClasses` in IoThreeDemo.ts!**
+
 **To add a new class for testing:**
 
 ```typescript
@@ -145,6 +147,16 @@ This is essential for verifying that:
 - Groups are organized logically
 - Sliders have appropriate min/max/step values
 - Option selects show all valid constants
+
+## Workflow Checklist
+
+When configuring a new module:
+
+1. Create config files for each class in the module
+2. Update `configs/index.ts` with imports (in inheritance order)
+3. **Add instances to `allClasses` in `IoThreeDemo.ts`**
+4. Update the Progress Tracker in this plan
+5. Test in browser via `pnpm serve`
 
 ## Progress Tracker
 
@@ -177,8 +189,11 @@ This is essential for verifying that:
 - [x] **scenes/** - All classes configured
   - Scene, Fog, FogExp2
 
-- [x] **animation/** - Partial
-  - AnimationMixer, AnimationAction
+- [x] **animation/** - All classes configured
+  - Core: AnimationMixer, AnimationAction, AnimationClip, AnimationObjectGroup
+  - Keyframes: KeyframeTrack (base), BooleanKeyframeTrack, ColorKeyframeTrack, NumberKeyframeTrack, QuaternionKeyframeTrack, StringKeyframeTrack, VectorKeyframeTrack
+  - Internal: PropertyBinding, PropertyMixer
+  - Skipped: AnimationUtils (utility functions only)
 
 ### TODO
 
