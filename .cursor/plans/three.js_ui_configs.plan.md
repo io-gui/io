@@ -119,6 +119,33 @@ In [`packages/three/src/configs/index.ts`](packages/three/src/configs/index.ts):
 2. Use `.js` extension for ES module imports
 3. Keep commented-out imports as reference for unconfigured classes
 
+## Testing and Debugging
+
+Use [`packages/three/src/demos/IoThreeDemo.ts`](packages/three/src/demos/IoThreeDemo.ts) to test and debug UI configurations in the browser.
+
+The demo contains an `allClasses` object with instances of all configured three.js classes. These are rendered via `ioPropertyEditor` in the "AllClasses" tab, allowing you to visually inspect and interact with every configured UI.
+
+**To add a new class for testing:**
+
+```typescript
+const allClasses = {
+  // ... existing classes ...
+  myNewClass: new THREE.MyNewClass(),
+}
+```
+
+**Run the demo:**
+```bash
+pnpm serve
+# Navigate to the three demo page
+```
+
+This is essential for verifying that:
+- Property editors render correctly
+- Groups are organized logically
+- Sliders have appropriate min/max/step values
+- Option selects show all valid constants
+
 ## Progress Tracker
 
 ### Completed
@@ -147,8 +174,8 @@ In [`packages/three/src/configs/index.ts`](packages/three/src/configs/index.ts):
   - Uniforms: Uniform, UniformsGroup
   - Render Targets: RenderTarget, RenderTarget3D
 
-- [x] **scenes/** - Partial
-  - Scene
+- [x] **scenes/** - All classes configured
+  - Scene, Fog, FogExp2
 
 - [x] **animation/** - Partial
   - AnimationMixer, AnimationAction
@@ -176,3 +203,4 @@ In [`packages/three/src/configs/index.ts`](packages/three/src/configs/index.ts):
 - **[AnimationAction.ts](packages/three/src/configs/animation/AnimationAction.ts)** - Uses `ioOptionSelect` for enum constants
 - **[BufferAttribute.ts](packages/three/src/configs/core/BufferAttribute.ts)** - Uses `ioOptionSelect` for GPU usage/type constants
 - **[BufferGeometry.ts](packages/three/src/configs/core/BufferGeometry.ts)** - Groups-only config for geometry properties
+- **[Fog.ts](packages/three/src/configs/scenes/Fog.ts)** - Combined class-based and type-based config for inline editing
