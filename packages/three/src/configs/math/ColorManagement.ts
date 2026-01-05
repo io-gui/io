@@ -1,0 +1,1 @@
+// Color managements is a singleton generic object, so we can't register it as a class

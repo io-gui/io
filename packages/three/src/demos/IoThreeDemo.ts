@@ -3,6 +3,7 @@ import { ioLayout, Split } from '@io-gui/layout'
 import { MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { ioThreeViewport, ThreeApplet } from '@io-gui/three'
 import { ioField } from '@io-gui/inputs'
+import { ioPropertyEditor } from '@io-gui/editors'
 
 import { ComputeTextureExample } from '../examples/compute_texture.js'
 import { VolumePerlinExample } from '../examples/volume_perlin.js'
@@ -20,6 +21,43 @@ import { AnimationBackdropExample } from '../examples/animation_backdrop.js'
 import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js'
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js'
 import { ioThreeProperties } from '../elements/IoThreeProperties.js'
+
+import {
+  ArrayCamera,
+  Box2,
+  Box3,
+  Camera,
+  Color,
+  ColorManagement,
+  Cylindrical,
+  Plane,
+  Euler,
+  Frustum,
+  FrustumArray,
+  Line3,
+  Matrix2,
+  Matrix3,
+  Matrix4,
+  Object3D,
+  Ray,
+  OrthographicCamera,
+  PerspectiveCamera,
+  Scene,
+  Sphere,
+  StereoCamera,
+  Quaternion,
+  Vector2,
+  Vector3,
+  Vector4,
+  Spherical,
+  SphericalHarmonics3,
+  Triangle,
+  Interpolant,
+  QuaternionLinearInterpolant,
+  LinearInterpolant,
+  DiscreteInterpolant,
+  CubicInterpolant,
+} from 'three/webgpu'
 
 const version = 3
 
@@ -102,6 +140,46 @@ const exampleOptions = new MenuOption({
 
 const initializzedExamples = new WeakMap<typeof ThreeApplet, ThreeApplet>()
 
+const allClasses = {
+  //
+  // scene: new Scene(),
+  // object3d: new Object3D(),
+  // Cameras
+  Camera: new Camera(),
+  PerspectiveCamera: new PerspectiveCamera(),
+  OrthographicCamera: new OrthographicCamera(),
+  ArrayCamera: new ArrayCamera(),
+  StereoCamera: new StereoCamera(),
+  // Math
+  cubicInterpolant: new CubicInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  discreteInterpolant: new DiscreteInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  linearInterpolant: new LinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  quaternionLinearInterpolant: new QuaternionLinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  triangle: new Triangle(),
+  spherical: new Spherical(),
+  cylindrical: new Cylindrical(),
+  plane: new Plane(),
+  frustum: new Frustum(),
+  frustumArray: new FrustumArray(),
+  sphere: new Sphere(),
+  ray: new Ray(),
+  matrix2: new Matrix2(),
+  matrix3: new Matrix3(),
+  matrix4: new Matrix4(),
+  box2: new Box2(),
+  box3: new Box3(),
+  line3: new Line3(),
+  euler: new Euler(),
+  vector4: new Vector4(),
+  vector3: new Vector3(),
+  vector2: new Vector2(),
+  quaternion: new Quaternion(),
+  color: new Color(),
+  colorManagement: ColorManagement,
+  sphericalHarmonics3: new SphericalHarmonics3(),
+}
+
+
 export class IoThreeDemo extends IoElement {
   static get Style() {
     return /* css */`
@@ -182,7 +260,9 @@ export class IoThreeDemo extends IoElement {
               ]),
               ioThreeProperties({applet: this.bind('selectedExample')})
             ])
-          ])
+          ]),
+
+          ioPropertyEditor({id: 'AllClasses', value: allClasses})
 
         ],
         split: $({key: `viewport-split-v${version}`, storage: 'local', value: split}),
@@ -198,6 +278,7 @@ export class IoThreeDemo extends IoElement {
               {id: 'Perspective', mode: 'none'},
               {id: 'SceneCamera', mode: 'none'},
               {id: 'ExampleProperties', mode: 'none'},
+              {id: 'AllClasses', mode: 'none'},
             ]},
           ],
         }),

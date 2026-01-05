@@ -1,37 +1,3 @@
----
-name: Three.js Example Conversion
-overview: A systematic approach to convert three.js source examples from self-contained HTML files to TypeScript classes extending ThreeState, delegating renderer, controls, and animation loop management to IoThreeViewport.
-todos:
-  - id: analyze-example
-    content: Analyze source example (imports, scene objects, animation, resize logic)
-    status: completed
-  - id: create-ts-file
-    content: Create TypeScript file with class extending ThreeState
-    status: completed
-    dependencies:
-      - analyze-example
-  - id: convert-imports
-    content: Convert THREE.* to named imports from three/webgpu, three/tsl, three/addons
-    status: completed
-    dependencies:
-      - create-ts-file
-  - id: implement-constructor
-    content: Move scene initialization to constructor()
-    status: completed
-    dependencies:
-      - convert-imports
-  - id: implement-lifecycle
-    content: Implement onAnimate(), onResized(), onRendererInitialized() as needed
-    status: completed
-    dependencies:
-      - implement-constructor
-  - id: test-in-demo
-    content: Add to IoThreeDemo and verify rendering
-    status: completed
-    dependencies:
-      - implement-lifecycle
----
-
 # Three.js Example Conversion Plan
 
 ## Summary of Observations
@@ -68,15 +34,7 @@ export class WebGPU{PascalCaseName}Example extends ThreeState {
 
 ### 1. File and Class Naming
 
-| Source | Converted |
-
-|--------|-----------|
-
-| `webgpu_camera.html` | `webgpu_camera.ts` |
-
-| Class name: | `WebGPUCameraExample` |
-
-Pattern: Keep snake_case filename, convert to PascalCase class name with `Example` suffix.
+| Source | Converted ||--------|-----------|| `webgpu_camera.html` | `webgpu_camera.ts` || Class name: | `WebGPUCameraExample` |Pattern: Keep snake_case filename, convert to PascalCase class name with `Example` suffix.
 
 ### 2. Remove/Delegate (handled by IoThreeViewport)
 
@@ -90,23 +48,7 @@ Pattern: Keep snake_case filename, convert to PascalCase class name with `Exampl
 
 ### 3. Transform
 
-| Source Pattern | Converted Pattern |
-
-|----------------|-------------------|
-
-| `import * as THREE from 'three/webgpu'` | Named imports: `import { Mesh, ... } from 'three/webgpu'` |
-
-| `THREE.SomeThing` | Direct: `SomeThing` |
-
-| Global `let scene, camera, mesh` | Class properties: `public mesh: Mesh` |
-
-| `function init() {}` | `constructor() { super(); ... }` |
-
-| `function animate() {}` | `onAnimate() {}` |
-
-| `function onWindowResize() {}` | `onResized(width, height) {}` |
-
-| `await renderer.init(); renderer.compute(...)` | `async onRendererInitialized(renderer) { await super...; renderer.compute(...) }` |
+| Source Pattern | Converted Pattern ||----------------|-------------------|| `import * as THREE from 'three/webgpu'` | Named imports: `import { Mesh, ... } from 'three/webgpu'` || `THREE.SomeThing` | Direct: `SomeThing` || Global `let scene, camera, mesh` | Class properties: `public mesh: Mesh` || `function init() {}` | `constructor() { super(); ... }` || `function animate() {}` | `onAnimate() {}` || `function onWindowResize() {}` | `onResized(width, height) {}` || `await renderer.init(); renderer.compute(...)` | `async onRendererInitialized(renderer) { await super...; renderer.compute(...) }` |
 
 ### 4. Preserve
 
@@ -129,26 +71,22 @@ If the example requires custom cameras (not just default perspective/ortho views
 
 1. **Analyze** - Read source HTML, identify:
 
-   - Three.js imports needed
-   - Scene objects created
-   - Animation logic
-   - Resize-dependent logic
-   - Async/compute operations
-   - Custom cameras or interaction patterns
+- Three.js imports needed
+- Scene objects created
+- Animation logic
+- Resize-dependent logic
+- Async/compute operations
+- Custom cameras or interaction patterns
 
 2. **Create TypeScript file** - `packages/three/src/examples/{original_name}.ts`
-
 3. **Convert imports** - Replace `THREE.*` with named imports
-
 4. **Define class** - Extend `ThreeState`, add `@Register` decorator
-
 5. **Move initialization** - Scene content from `init()` to `constructor()`
-
 6. **Implement lifecycle methods**:
 
-   - `onAnimate()` for frame updates
-   - `onResized()` for aspect-ratio dependent updates
-   - `onRendererInitialized()` for compute/async operations
+- `onAnimate()` for frame updates
+- `onResized()` for aspect-ratio dependent updates
+- `onRendererInitialized()` for compute/async operations
 
 7. **Add to demo** (optional) - Update [`IoThreeDemo.ts`](packages/three/src/demos/IoThreeDemo.ts) to include the new example
 
@@ -181,25 +119,10 @@ If the example requires custom cameras (not just default perspective/ortho views
 
 ## Reference Comparison
 
-| Source ([`webgpu_camera.html`](packages/three/src_examples/webgpu_camera.html)) | Converted ([`webgpu_camera.ts`](packages/three/src/examples/webgpu_camera.ts)) |
-
-|------|-----------|
-
-| Creates renderer, canvas, animation loop | Delegates to IoThreeViewport |
-
-| Creates OrbitControls | Delegates to ViewCameras |
-
-| Has keyboard listener for O/P camera switch | Cameras accessible via `cameraSelect: 'scene:name'` |
-
-| Window resize handler | `onResized()` method |
-
-| `render()` function with dual viewport | `onAnimate()` updates scene objects |
-
----
+| Source ([`webgpu_camera.html`](packages/three/src_examples/webgpu_camera.html)) | Converted ([`webgpu_camera.ts`](packages/three/src/examples/webgpu_camera.ts)) ||------|-----------|| Creates renderer, canvas, animation loop | Delegates to IoThreeViewport || Creates OrbitControls | Delegates to ViewCameras || Has keyboard listener for O/P camera switch | Cameras accessible via `cameraSelect: 'scene:name'` || Window resize handler | `onResized()` method || `render()` function with dual viewport | `onAnimate()` updates scene objects |---
 
 ## Execution Notes
 
 - Convert one example at a time for review
 - Start with simpler examples to establish patterns
 - Note any deviations or special cases for documentation
-- GUI/Inspector parameters can be tracked as potential future feature

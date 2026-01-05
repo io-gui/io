@@ -1,5 +1,8 @@
-import { registerEditorConfig, ioVector, ioPropertyEditor, registerEditorGroups } from '@io-gui/editors'
-import { Vector2, Vector3, Vector4, Quaternion, Euler, Color, Matrix3, Matrix4 } from 'three/webgpu'
+import { registerEditorConfig, ioVector, ioPropertyEditor, registerEditorGroups, ioObject } from '@io-gui/editors'
+import {
+  Vector2, Vector3, Vector4, Quaternion, Euler, Color, Matrix2, Matrix3, 
+  Matrix4, Box2, Box3, Sphere, Plane, Frustum
+} from 'three/webgpu'
 import { ioColorRgba } from '@io-gui/colors'
 
 /**
@@ -15,6 +18,8 @@ import { ioColorRgba } from '@io-gui/colors'
  * If a class is uncommented, it should have a corresponding config file in the same directory.
  */
 
+// Note: Classes must be imported in order of their inheritance!
+
 // import './renderers/WebGLArrayRenderTarget.js';
 // import './renderers/WebGL3DRenderTarget.js';
 // import './renderers/WebGLCubeRenderTarget.js';
@@ -22,6 +27,7 @@ import { ioColorRgba } from '@io-gui/colors'
 // import './renderers/webxr/WebXRController.js';
 // import './scenes/FogExp2.js';
 // import './scenes/Fog.js';
+import './core/Object3D.js';
 import './scenes/Scene.js';
 // import './objects/Sprite.js';
 // import './objects/LOD.js';
@@ -78,12 +84,12 @@ import './scenes/Scene.js';
 // import './lights/AmbientLight.js';
 // import './lights/Light.js';
 // import './lights/LightProbe.js';
-// import './cameras/StereoCamera.js';
-// import './cameras/PerspectiveCamera.js';
-// import './cameras/OrthographicCamera.js';
-// import './cameras/CubeCamera.js';
-// import './cameras/ArrayCamera.js';
-// import './cameras/Camera.js';
+import './cameras/Camera.js';
+import './cameras/StereoCamera.js';
+import './cameras/PerspectiveCamera.js';
+import './cameras/OrthographicCamera.js';
+import './cameras/CubeCamera.js';
+import './cameras/ArrayCamera.js';
 // import './audio/AudioListener.js';
 // import './audio/PositionalAudio.js';
 // import './audio/AudioContext.js';
@@ -115,40 +121,39 @@ import './animation/AnimationAction.js';
 // import './core/InstancedBufferAttribute.js';
 // import './core/GLBufferAttribute.js';
 // import './core/BufferAttribute.js';
-import './core/Object3D.js';
 // import './core/Raycaster.js';
 // import './core/Layers.js';
 // import './core/EventDispatcher.js';
 // import './core/Clock.js';
 // import './core/Timer.js';
-// import './math/interpolants/QuaternionLinearInterpolant.js';
-// import './math/interpolants/LinearInterpolant.js';
-// import './math/interpolants/DiscreteInterpolant.js';
-// import './math/interpolants/CubicInterpolant.js';
-// import './math/Interpolant.js';
-// import './math/Triangle.js';
+import './math/Interpolant.js';
+import './math/interpolants/QuaternionLinearInterpolant.js';
+import './math/interpolants/LinearInterpolant.js';
+import './math/interpolants/DiscreteInterpolant.js';
+import './math/interpolants/CubicInterpolant.js';
+import './math/Triangle.js';
 // import './math/MathUtils.js';
-// import './math/Spherical.js';
-// import './math/Cylindrical.js';
-// import './math/Plane.js';
-// import './math/Frustum.js';
-// import './math/FrustumArray.js';
-// import './math/Sphere.js';
-// import './math/Ray.js';
-import './math/Matrix4.js';
-import './math/Matrix3.js';
+import './math/Spherical.js';
+import './math/Cylindrical.js';
+import './math/Plane.js';
+import './math/Frustum.js';
+import './math/FrustumArray.js';
+import './math/Sphere.js';
+import './math/Ray.js';
 import './math/Matrix2.js';
-// import './math/Box3.js';
-// import './math/Box2.js';
-// import './math/Line3.js';
-// import './math/Euler.js';
-// import './math/Vector4.js';
-// import './math/Vector3.js';
-// import './math/Vector2.js';
-// import './math/Quaternion.js';
-// import './math/Color.js';
-// import './math/ColorManagement.js';
-// import './math/SphericalHarmonics3.js';
+import './math/Matrix3.js';
+import './math/Matrix4.js';
+import './math/Box2.js';
+import './math/Box3.js';
+import './math/Line3.js';
+import './math/Euler.js';
+import './math/Vector4.js';
+import './math/Vector3.js';
+import './math/Vector2.js';
+import './math/Quaternion.js';
+import './math/Color.js';
+import './math/ColorManagement.js';
+import './math/SphericalHarmonics3.js';
 // import './helpers/SpotLightHelper.js';
 // import './helpers/SkeletonHelper.js';
 // import './helpers/PointLightHelper.js';
@@ -201,23 +206,6 @@ import './math/Matrix2.js';
 // import './nodes/Nodes.js';
 // import './nodes/TSL.js';
 
-
-/**
- * This is the default editor config for property types regardless of the class they belong to.
- * It assigns the confing to `Object` class so that it apples to all classes.
- */
-
-registerEditorConfig(Object, [
-  [Vector2, ioVector({min: -Infinity, max: Infinity, step: 0.1})],
-  [Vector3, ioVector({min: -Infinity, max: Infinity, step: 0.1})],
-  [Vector4, ioVector({min: -Infinity, max: Infinity, step: 0.1})],
-  [Quaternion, ioVector({min: -Infinity, max: Infinity, step: 0.1})],
-  [Euler, ioVector({min: -360, max: 360, step: 1})],
-  [Color, ioColorRgba()],
-  [Matrix3, ioPropertyEditor({labeled: false, properties: ['elements']})],
-  [Matrix4, ioPropertyEditor({labeled: false, properties: ['elements']})],
-])
-
 /**
  * By default, we hide all properties that start with 'is' followed by an uppercase letter.
  * This is to avoid cluttering the inspector with "isObject3D", "isMesh", "isMaterial", etc.
@@ -225,5 +213,5 @@ registerEditorConfig(Object, [
 
 registerEditorGroups(Object, {
   Advanced: ['id', 'uuid', 'name', 'type', 'userData'],
-  Hidden: [new RegExp(/^is[A-Z]/)]
+  Hidden: [new RegExp(/^is[A-Z]/), '_listeners']
 })
