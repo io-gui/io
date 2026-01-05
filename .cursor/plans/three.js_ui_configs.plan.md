@@ -111,6 +111,33 @@ For utility function collections, create a comment-only file explaining they're 
 | `ioColorRgba` | `@io-gui/colors` | Color properties |
 | `ioField` | `@io-gui/inputs` | Read-only display |
 
+## Default Editors (Don't Configure!)
+
+The editor system has built-in defaults for primitive types defined in `@io-gui/editors` `EditorConfig.ts`:
+
+| Type | Default Editor |
+|------|----------------|
+| `String` | `ioString()` |
+| `Number` | `ioNumber({step: 0.01})` |
+| `Boolean` | `ioSwitch()` |
+| `Object` | `ioObject()` |
+| `Function` | `ioButton()` |
+| `null`/`undefined` | `ioField({disabled: true})` |
+
+**IMPORTANT: Only configure properties that need different behavior!**
+
+Examples of when to configure:
+- Use `ioNumberSlider` instead of default `ioNumber` for bounded values (fov, zoom, intensity)
+- Use `ioNumber({min: 0, max: Infinity, step: 1})` for integers or different step values
+- Use `ioColorRgba` for Color properties
+- Use `ioOptionSelect` for enum/constant selections
+- Use `ioVector`, `ioMatrix`, `ioPropertyEditor` for composite types
+
+Do NOT configure:
+- Simple boolean properties (already use `ioSwitch()`)
+- Simple string properties (already use `ioString()`)
+- Generic number properties where default step is fine
+
 ## Index File Rules
 
 In [`packages/three/src/configs/index.ts`](packages/three/src/configs/index.ts):
@@ -195,6 +222,13 @@ When configuring a new module:
   - Internal: PropertyBinding, PropertyMixer
   - Skipped: AnimationUtils (utility functions only)
 
+- [x] **audio/** - All classes configured
+  - AudioListener (extends Object3D)
+  - Audio (extends Object3D) - global non-positional audio
+  - PositionalAudio (extends Audio) - 3D spatialized audio with PannerNode
+  - AudioAnalyser - standalone analyzer class
+  - Skipped: AudioContext (namespace with utility functions)
+
 ### TODO
 
 - [ ] **lights/** - DirectionalLight, PointLight, SpotLight, AmbientLight, HemisphereLight, RectAreaLight, Light, LightProbe
@@ -204,7 +238,6 @@ When configuring a new module:
 - [ ] **geometries/** - All geometry types
 - [ ] **helpers/** - All helper classes
 - [ ] **loaders/** - All loader classes
-- [ ] **audio/** - Audio, AudioListener, PositionalAudio, etc.
 - [ ] **renderers/** - WebGPURenderer, RenderTarget, etc.
 - [ ] **extras/** - Curves, Shape, Path, Controls, etc.
 
