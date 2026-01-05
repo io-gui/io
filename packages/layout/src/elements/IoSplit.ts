@@ -9,7 +9,7 @@ import { Tab } from '../nodes/Tab.js'
 export type IoSplitProps = IoElementProps & {
   split: Split
   elements: VDOMElement[]
-  addMenuOption: MenuOption
+  addMenuOption?: MenuOption
 }
 
 @Register
@@ -34,7 +34,7 @@ export class IoSplit extends IoElement {
   declare elements: VDOMElement[]
 
   @Property({type: MenuOption})
-  declare private addMenuOption: MenuOption
+  declare addMenuOption: MenuOption | undefined
 
   static get Listeners() {
     return {

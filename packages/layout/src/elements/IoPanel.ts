@@ -11,7 +11,7 @@ import { IoLayout } from './IoLayout.js'
 export type IoPanelProps = IoElementProps & {
   panel: Panel
   elements: VDOMElement[]
-  addMenuOption: MenuOption
+  addMenuOption?: MenuOption
 }
 
 @Register
@@ -39,8 +39,8 @@ export class IoPanel extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[]
 
-  @Property(MenuOption)
-  declare private addMenuOption: MenuOption
+  @Property({type: MenuOption})
+  declare addMenuOption: MenuOption | undefined
 
   static get Listeners() {
     return {
