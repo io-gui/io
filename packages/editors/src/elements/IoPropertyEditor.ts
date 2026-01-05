@@ -207,13 +207,7 @@ export class IoPropertyEditor extends IoElement {
           finalProps.groups = finalProps.groups || this.groups
         }
         if (tag === 'io-object') {
-          let uuid = genIdentifier(value)
-          let storage: 'local' | 'none' = 'local'
-          if (!uuid) {
-            uuid = getTempIdentifier(value)
-            storage = 'none'
-          }
-          finalProps.expanded = $({value: false, storage: storage, key: uuid + '-object-editor'})
+          finalProps.persistentExpand = true
         }
         // NOTE: Functions dont have labels. They are displayed as labeled buttons.
         if (isFunction) {
@@ -229,25 +223,14 @@ export class IoPropertyEditor extends IoElement {
       }
     }
 
-    let uuid = genIdentifier(this.value)
-    let storage: 'local' | 'none' = 'local'
-
     if (!this.properties.length) {
       for (const group in groups) {
 
         if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
-
-          const expanded = group !== 'Advanced' ? true : false
-
-          if (!uuid) {
-            uuid = getTempIdentifier(this.value)
-            storage = 'none'
-          }
-
           vChildren.push(
             ioObject({
               label: group,
-              expanded: $({value: expanded, storage: storage, key: uuid + '-' + group}),
+              persistentExpand: true,
               value: this.value,
               properties: groups[group],
               config: this.config,
@@ -266,21 +249,4 @@ export class IoPropertyEditor extends IoElement {
 }
 export const ioPropertyEditor = function(arg0?: IoPropertyEditorProps) {
   return IoPropertyEditor.vConstructor(arg0)
-}
-
-function genIdentifier(object: any) {
-  const id = object.guid || object.uuid || object.id || object.name || object.label
-  if (id) {
-    return 'io-object-collapse-state-' + object.constructor.name + '-' + id
-  }
-}
-
-const tempIdentifiers = new WeakMap<object, string>()
-
-function getTempIdentifier(object: any) {
-  if (!tempIdentifiers.has(object)) {
-    const randomuuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    tempIdentifiers.set(object, randomuuid)
-  }
-  return tempIdentifiers.get(object)!
 }
