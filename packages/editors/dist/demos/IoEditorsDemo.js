@@ -55,12 +55,10 @@ export class IoEditorsDemo extends IoElement {
             ioInspector({
                 value: this.object,
                 // TODO: this.object.object displays broken "number" slider. Investigate!
-                groups: new Map([
-                    [Object, {
-                            'Object Properties': ['object', 'array', 'mixedArray'],
-                            'Vectors and Matrices': [/vector/i, /matrix/i],
-                        }],
-                ]),
+                groups: {
+                    'Object Properties': ['object', 'array', 'mixedArray'],
+                    'Vectors and Matrices': [/vector/i, /matrix/i],
+                },
                 config: [
                     [Number, ioSlider({ step: 0.1 })],
                     [Array, ioPropertyEditor({ labeled: false, class: 'array', config: [[Number, ioNumber()]] })],

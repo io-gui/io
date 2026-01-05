@@ -15,28 +15,28 @@ function makeSelect(options) {
     const option = new MenuOption({ options: options });
     return ioOptionSelect({ option });
 }
-// class ConfigCache<K1 extends object, K2 extends object, V> {
-//   private map = new WeakMap<K1, WeakMap<K2, V>>()
-//   set(key1: K1, key2: K2, value: V): this {
-//     let inner = this.map.get(key1)
-//     if (!inner) {
-//       inner = new WeakMap<K2, V>()
-//       this.map.set(key1, inner)
-//     }
-//     inner.set(key2, value)
-//     return this
-//   }
-//   get(key1: K1, key2: K2): V | undefined {
-//     return this.map.get(key1)?.get(key2)
-//   }
-//   has(key1: K1, key2: K2): boolean {
-//     return this.map.get(key1)?.has(key2) ?? false
-//   }
-//   delete(key1: K1, key2: K2): boolean {
-//     return this.map.get(key1)?.delete(key2) ?? false
-//   }
-// }
-// const configCache = new ConfigCache<object, object, PropertyConfigRecord>()
+class ConfigCache {
+    map = new WeakMap();
+    set(key1, key2, value) {
+        let inner = this.map.get(key1);
+        if (!inner) {
+            inner = new WeakMap();
+            this.map.set(key1, inner);
+        }
+        inner.set(key2, value);
+        return this;
+    }
+    get(key1, key2) {
+        return this.map.get(key1)?.get(key2);
+    }
+    has(key1, key2) {
+        return this.map.get(key1)?.has(key2) ?? false;
+    }
+    delete(key1, key2) {
+        return this.map.get(key1)?.delete(key2) ?? false;
+    }
+}
+const configCache = new ConfigCache();
 // TODO: Make sure multiple editors dont share the same menu options.
 // TODO: Consider using function to return new view each time editor is configured at runtime.
 const editorConfigSingleton = new Map([
@@ -164,7 +164,7 @@ editorConfigSingleton.forEach((propertyTypes, constructor) => {
                 hasType.push(key, ioField({ disabled: true }));
             }
             else {
-                propertyTypes.push([key, ioField({ disabled: true })]);
+                propertyTypes.push([key, ioField({ disabled: true }), true]);
             }
         }
     }
@@ -174,12 +174,11 @@ export function getEditorConfig(object, propertyConfigs) {
         console.warn('`getObjectConfig` should be used with an Object instance');
         return {};
     }
-    // const cachedConfig = configCache.get(object, propertyConfigs)
-    // if (cachedConfig) {
-    //   console.log('cached config', object, propertyConfigs)
-    //   // console.log('cached config value', cachedConfig)
-    //   // return cachedConfig
-    // }
+    const cachedConfig = configCache.get(object, propertyConfigs);
+    if (cachedConfig) {
+        // TODO: Test cached configs!
+        return cachedConfig;
+    }
     const aggregatedConfig = new Map();
     for (const [constructorKey, propertyTypes] of editorConfigSingleton) {
         if (object instanceof constructorKey) {
@@ -250,18 +249,18 @@ export function getEditorConfig(object, propertyConfigs) {
         if (!configRecord[key])
             console.warn('No config found for', key, value);
     }
-    // configCache.set(object, propertyConfigs, configRecord)
+    configCache.set(object, propertyConfigs, configRecord);
     return configRecord;
 }
 export function registerEditorConfig(constructor, propertyTypes) {
     const existingConfigs = editorConfigSingleton.get(constructor) || [];
-    for (const [PropertyIdentifier, elementCandidate] of propertyTypes) {
+    for (const [PropertyIdentifier, elementCandidate, isLabeled] of propertyTypes) {
         const existingConfig = existingConfigs.find(config => config[0] === PropertyIdentifier);
         if (existingConfig) {
             existingConfig[1] = elementCandidate;
         }
         else {
-            existingConfigs.push([PropertyIdentifier, elementCandidate]);
+            existingConfigs.push([PropertyIdentifier, elementCandidate, isLabeled]);
         }
     }
     editorConfigSingleton.set(constructor, existingConfigs);

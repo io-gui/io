@@ -1,5 +1,5 @@
 import { Node, NodeProps } from '@io-gui/core';
-import { PropertyConfig } from '@io-gui/editors';
+import { PropertyConfig, PropertyGroups } from '@io-gui/editors';
 import { Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
 export type ThreeAppletProps = NodeProps & {
     scene?: Scene;
@@ -12,6 +12,7 @@ export declare class ThreeApplet extends Node {
     toneMappingExposure: number;
     toneMapping: ToneMapping;
     uiConfig: PropertyConfig[];
+    uiGroups: PropertyGroups;
     private _renderer;
     private _width;
     private _height;

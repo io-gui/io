@@ -6,13 +6,13 @@ import { SplitDirection } from '../nodes/Split.js';
 export type IoPanelProps = IoElementProps & {
     panel: Panel;
     elements: VDOMElement[];
-    addMenuOption: MenuOption;
+    addMenuOption?: MenuOption;
 };
 export declare class IoPanel extends IoElement {
     static get Style(): string;
     panel: Panel;
     elements: VDOMElement[];
-    private addMenuOption;
+    addMenuOption: MenuOption | undefined;
     static get Listeners(): {
         'io-edit-tab': string;
     };

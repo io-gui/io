@@ -165,7 +165,7 @@ __decorate([
     ReactiveProperty(Array)
 ], IoPanel.prototype, "elements", void 0);
 __decorate([
-    Property(MenuOption)
+    Property({ type: MenuOption })
 ], IoPanel.prototype, "addMenuOption", void 0);
 IoPanel = __decorate([
     Register

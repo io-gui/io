@@ -1,6 +1,6 @@
 import { IoElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
-import { EditorGroups } from '../utils/EditorGroups.js';
+import { PropertyGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoObjectProps = IoElementProps & {
     value?: Record<string, any> | any[];
@@ -9,7 +9,7 @@ export type IoObjectProps = IoElementProps & {
     label?: string;
     expanded?: WithBinding<boolean>;
     config?: PropertyConfig[];
-    groups?: EditorGroups;
+    groups?: PropertyGroups;
     widgets?: EditorWidgets;
 };
 /**
@@ -23,7 +23,7 @@ export declare class IoObject extends IoElement {
     label: string;
     expanded: boolean;
     config: PropertyConfig[];
-    groups: EditorGroups;
+    groups: PropertyGroups;
     widgets: EditorWidgets;
     role: string;
     changed(): void;

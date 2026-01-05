@@ -38,6 +38,13 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     :host[orientation="horizontal"] > .row {
       flex-direction: column;
     }
+    :host io-property-editor {
+      margin-top: calc(var(--io_spacing) * -1) !important;
+    }
+    :host io-property-editor > .row {
+      /* margin: 0 !important; */
+      padding: 0 !important;
+    }
     :host > .row:last-of-type {
       margin-bottom: var(--io_spacing);
     }
@@ -50,12 +57,17 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-width: calc(var(--io_lineHeight) * 3);
     }
     :host > .row > span:after {
       display: inline-block;
       margin-left: var(--io_spacing);
       opacity: 0.5;
       content: ':';
+    }
+    :host > .row > :nth-child(2) {
+      flex-grow: 1;
+
     }
     :host io-object {
       margin-right: var(--io_spacing);
@@ -153,6 +165,15 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     finalProps.config = finalProps.config || this.config;
                     finalProps.groups = finalProps.groups || this.groups;
                 }
+                if (tag === 'io-object') {
+                    let uuid = genIdentifier(value);
+                    let storage = 'local';
+                    if (!uuid) {
+                        uuid = getTempIdentifier(value);
+                        storage = 'none';
+                    }
+                    finalProps.expanded = $({ value: false, storage: storage, key: uuid + '-object-editor' });
+                }
                 // NOTE: Functions dont have labels. They are displayed as labeled buttons.
                 if (isFunction) {
                     finalProps.action = value;
@@ -210,7 +231,7 @@ __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "groups", void 0);
 __decorate([
     ReactiveProperty({ type: Map, init: null })
@@ -223,7 +244,7 @@ export const ioPropertyEditor = function (arg0) {
     return IoPropertyEditor.vConstructor(arg0);
 };
 function genIdentifier(object) {
-    const id = object.guid || object.uuid || object.id || object.name;
+    const id = object.guid || object.uuid || object.id || object.name || object.label;
     if (id) {
         return 'io-object-collapse-state-' + object.constructor.name + '-' + id;
     }

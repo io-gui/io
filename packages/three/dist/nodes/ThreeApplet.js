@@ -5,8 +5,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, Node, ReactiveProperty } from '@io-gui/core';
-import { registerEditorGroups } from '@io-gui/editors';
-import { NoToneMapping, Scene } from 'three/webgpu';
+import { ioNumberSlider } from '@io-gui/sliders';
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
+import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 let ThreeApplet = class ThreeApplet extends Node {
     _renderer = null;
     _width = 0;
@@ -53,10 +55,26 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], ThreeApplet.prototype, "uiConfig", void 0);
+__decorate([
+    ReactiveProperty({ type: Object, init: null })
+], ThreeApplet.prototype, "uiGroups", void 0);
 ThreeApplet = __decorate([
     Register
 ], ThreeApplet);
 export { ThreeApplet };
+registerEditorConfig(ThreeApplet, [
+    ['toneMappingExposure', ioNumberSlider({ min: 0, max: 3, step: 0.01, exponent: 2 })],
+    ['toneMapping', ioOptionSelect({ option: new MenuOption({ options: [
+                    { value: NoToneMapping, id: 'NoToneMapping' },
+                    { value: LinearToneMapping, id: 'LinearToneMapping' },
+                    { value: ReinhardToneMapping, id: 'ReinhardToneMapping' },
+                    { value: CineonToneMapping, id: 'CineonToneMapping' },
+                    { value: ACESFilmicToneMapping, id: 'ACESFilmicToneMapping' },
+                    // {value: CustomToneMapping, id: 'CustomToneMapping'},
+                    { value: AgXToneMapping, id: 'AgXToneMapping' },
+                    { value: NeutralToneMapping, id: 'NeutralToneMapping' },
+                ] }) })],
+]);
 registerEditorGroups(ThreeApplet, {
     Scene: [
         'scene',
@@ -67,6 +85,7 @@ registerEditorGroups(ThreeApplet, {
     ],
     Hidden: [
         'uiConfig',
+        'uiGroups',
     ]
 });
 //# sourceMappingURL=ThreeApplet.js.map

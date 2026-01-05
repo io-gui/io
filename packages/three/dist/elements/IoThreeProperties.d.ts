@@ -1,6 +1,6 @@
 import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
-import '../nodes/ThreeEditorConfig.js';
+import './Three.js';
 export type IoThreePropertiesProps = IoElementProps & {
     applet: WithBinding<ThreeApplet>;
 };

@@ -43,7 +43,11 @@ export function getAllPropertyNames(obj) {
 }
 const editorGroupsSingleton = new Map([
     [Object, {
-            Hidden: [new RegExp(/^_/), 'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toString', 'valueOf', 'toLocaleString'],
+            Hidden: [
+                'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toString', 'valueOf', 'toLocaleString',
+                new RegExp(/^__/),
+            ],
+            Advanced: [new RegExp(/^_(?!_)/)],
         }],
     [Array, {
             Hidden: [
@@ -83,15 +87,19 @@ const editorGroupsSingleton = new Map([
     [IoNode, {
             Hidden: [
                 'reactivity',
+                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+                '_protochain', '_disposed', '_isNode', '_isIoElement',
             ],
         }],
     [IoElement, {
             Hidden: [
                 'reactivity',
+                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+                '_protochain', '_disposed', '_isNode', '_isIoElement',
             ],
         }],
 ]);
-export function getEditorGroups(object, editorGroups = new Map()) {
+export function getEditorGroups(object, propertyGroups) {
     debug: if (!object || !(object instanceof Object)) {
         console.warn('`getEditorGroups` should be used with an Object instance');
         return {};
@@ -141,7 +149,15 @@ export function getEditorGroups(object, editorGroups = new Map()) {
         }
     }
     aggregateGroups(editorGroupsSingleton);
-    aggregateGroups(editorGroups);
+    aggregateGroups(new Map([[Object, propertyGroups]]));
+    const allGroupedNonRegexPropertyNames = [];
+    for (const g of Object.keys(aggregatedGroups)) {
+        for (const identifier of aggregatedGroups[g]) {
+            if (!(identifier instanceof RegExp)) {
+                allGroupedNonRegexPropertyNames.push(identifier);
+            }
+        }
+    }
     const groupsRecord = {
         Main: [],
     };
@@ -156,19 +172,33 @@ export function getEditorGroups(object, editorGroups = new Map()) {
                     included = true;
                     continue;
                 }
-                else if (identifier instanceof RegExp && identifier.test(key)) {
+                else if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
                     groupsRecord[g].push(key);
                     included = true;
                 }
             }
         }
-        // Functions are not included in groups unless they are explicitly added.
+        // Functions are not included in groups unless they are explicitly added to a non-Advanced group.
         // TODO: Test thoroughly.
-        if (!included && !isFunction) {
+        if (!included && !isFunction && !groupsRecord['Advanced']?.includes(key)) {
             groupsRecord.Main.push(key);
         }
     }
-    // TODO: make sure and test no property belongs to multiple groups.
+    // Debug if properties belong to multiple groups.
+    // TODO: Test thoroughly.
+    debug: {
+        for (const g of Object.keys(groupsRecord)) {
+            for (const g2 of Object.keys(groupsRecord)) {
+                if (g !== g2) {
+                    for (const key of groupsRecord[g]) {
+                        if (groupsRecord[g2].includes(key)) {
+                            console.warn(`Property "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`);
+                        }
+                    }
+                }
+            }
+        }
+    }
     return groupsRecord;
 }
 export function registerEditorGroups(constructor, groups) {
@@ -176,16 +206,6 @@ export function registerEditorGroups(constructor, groups) {
     for (const group in groups) {
         existingGroups[group] = existingGroups[group] || [];
         existingGroups[group].push(...groups[group]);
-        // Remove duplicate identifiers that exist in other groups.
-        for (const g in existingGroups) {
-            if (g !== group) {
-                for (const identifier of groups[group]) {
-                    if (existingGroups[g].includes(identifier)) {
-                        existingGroups[g].splice(existingGroups[g].indexOf(identifier), 1);
-                    }
-                }
-            }
-        }
     }
     editorGroupsSingleton.set(constructor, existingGroups);
 }

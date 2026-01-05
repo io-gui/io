@@ -3,13 +3,13 @@ import { MenuOption } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabsProps = IoElementProps & {
     tabs: NodeArray<Tab>;
-    addMenuOption: MenuOption;
+    addMenuOption?: MenuOption;
 };
 export declare class IoTabs extends IoElement {
     static get Style(): string;
     tabs: NodeArray<Tab>;
     overflow: number;
-    addMenuOption: MenuOption;
+    addMenuOption: MenuOption | undefined;
     constructor(args: IoTabsProps);
     tabsMutated(): void;
     onResized(): void;

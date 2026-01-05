@@ -32,6 +32,12 @@ const split = new Split({
             orientation: 'horizontal',
             children: [
                 {
+                    flex: '1 0 380px',
+                    tabs: [
+                        { id: 'ExampleProperties' },
+                    ],
+                },
+                {
                     orientation: 'vertical',
                     children: [
                         {
@@ -60,7 +66,7 @@ const split = new Split({
                     ]
                 },
                 {
-                    flex: '1 1 380px',
+                    flex: '1 0 380px',
                     tabs: [
                         { id: 'ExampleProperties' },
                     ],
@@ -173,17 +179,17 @@ export class IoThreeDemo extends IoElement {
                 addMenuOption: new MenuOption({
                     id: 'addMenuOption',
                     mode: 'none',
-                    // options: [
-                    //   {id: 'Viewports', mode: 'none', options: [
-                    //     {id: 'SceneCamera', mode: 'none'},
-                    //     {id: 'Top', mode: 'none'},
-                    //     {id: 'Front', mode: 'none'},
-                    //     {id: 'Left', mode: 'none'},
-                    //     {id: 'Perspective', mode: 'none'},
-                    //     {id: 'SceneCamera', mode: 'none'},
-                    //     {id: 'ExampleProperties', mode: 'none'},
-                    //   ]},
-                    // ],
+                    options: [
+                        { id: 'Viewports', mode: 'none', options: [
+                                { id: 'SceneCamera', mode: 'none' },
+                                { id: 'Top', mode: 'none' },
+                                { id: 'Front', mode: 'none' },
+                                { id: 'Left', mode: 'none' },
+                                { id: 'Perspective', mode: 'none' },
+                                { id: 'SceneCamera', mode: 'none' },
+                                { id: 'ExampleProperties', mode: 'none' },
+                            ] },
+                    ],
                 }),
             })
         ]);

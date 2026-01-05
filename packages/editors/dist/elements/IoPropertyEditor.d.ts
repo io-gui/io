@@ -1,6 +1,6 @@
 import { IoElement, IoElementProps, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
-import { EditorGroups } from '../utils/EditorGroups.js';
+import { PropertyGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoPropertyEditorProps = IoElementProps & {
     value?: Record<string, any> | any[];
@@ -8,7 +8,7 @@ export type IoPropertyEditorProps = IoElementProps & {
     labeled?: boolean;
     orientation?: 'vertical' | 'horizontal';
     config?: PropertyConfig[];
-    groups?: EditorGroups;
+    groups?: PropertyGroups;
     widgets?: EditorWidgets;
 };
 /**
@@ -21,7 +21,7 @@ export declare class IoPropertyEditor extends IoElement {
     labeled: boolean;
     orientation: 'vertical' | 'horizontal';
     config: PropertyConfig[];
-    groups: EditorGroups;
+    groups: PropertyGroups;
     widgets: EditorWidgets;
     private _config;
     private _groups;

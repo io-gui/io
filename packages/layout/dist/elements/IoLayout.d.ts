@@ -4,13 +4,13 @@ import { Split } from '../nodes/Split.js';
 export type IoLayoutProps = IoElementProps & {
     split: Split | Binding;
     elements: VDOMElement[];
-    addMenuOption: MenuOption;
+    addMenuOption?: MenuOption;
 };
 export declare class IoLayout extends IoElement {
     static get Style(): string;
     split: Split;
     elements: VDOMElement[];
-    private addMenuOption;
+    addMenuOption: MenuOption | undefined;
     changed(): void;
 }
 export declare const ioLayout: (arg0: IoLayoutProps) => VDOMElement;

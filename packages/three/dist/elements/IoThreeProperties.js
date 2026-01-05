@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
 import { ioPropertyEditor } from '@io-gui/editors';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
-import '../nodes/ThreeEditorConfig.js';
+import './Three.js';
 let IoThreeProperties = class IoThreeProperties extends IoElement {
     static get Style() {
         return /* css */ `
@@ -30,7 +30,11 @@ let IoThreeProperties = class IoThreeProperties extends IoElement {
     }
     changed() {
         this.render([
-            ioPropertyEditor({ value: this.applet, config: this.applet.uiConfig })
+            ioPropertyEditor({
+                value: this.applet,
+                config: this.applet.uiConfig,
+                groups: this.applet.uiGroups,
+            })
         ]);
     }
 };

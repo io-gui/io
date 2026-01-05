@@ -133,7 +133,7 @@ __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoInspector.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Object, init: null })
 ], IoInspector.prototype, "groups", void 0);
 __decorate([
     ReactiveProperty({ type: Map, init: null })

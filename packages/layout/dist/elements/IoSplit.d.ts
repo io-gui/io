@@ -7,13 +7,13 @@ import { Tab } from '../nodes/Tab.js';
 export type IoSplitProps = IoElementProps & {
     split: Split;
     elements: VDOMElement[];
-    addMenuOption: MenuOption;
+    addMenuOption?: MenuOption;
 };
 export declare class IoSplit extends IoElement {
     static get Style(): string;
     split: Split;
     elements: VDOMElement[];
-    private addMenuOption;
+    addMenuOption: MenuOption | undefined;
     static get Listeners(): {
         'io-divider-move': string;
         'io-divider-move-end': string;
