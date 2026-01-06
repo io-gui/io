@@ -44,8 +44,6 @@ export class AnimationKeyframesExample extends ThreeApplet {
       this.mixer = new AnimationMixer( model )
       this.mixer.clipAction( gltf.animations[ 0 ] ).play()
 
-      console.log(this.mixer)
-
       const train = gltf.scene.getObjectByName('Object675')!
       const perspectiveCamera = new PerspectiveCamera( 125, 1, 0.1, 1000 )
       perspectiveCamera.position.set(140, 0, 30)
