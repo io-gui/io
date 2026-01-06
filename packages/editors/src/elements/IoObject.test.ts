@@ -70,16 +70,14 @@ describe('IoObject', () => {
     expect(rows[3].children[1].textContent).toBe('null')
 
     expect(rows[4].localName).toBe('div')
-    expect(rows[4].children[0].localName).toBe('span')
-    expect(rows[4].children[0].textContent).toBe('object')
-    expect(rows[4].children[1].localName).toBe('io-object')
-    expect(rows[4].children[1].textContent).toBe('Object')
+    expect(rows[4].children[0].localName).toBe('io-object')
+    expect(rows[4].children[0].textContent).toBe('object: Object')
+    expect(rows[4].children[1]).toBe(undefined)
 
     expect(rows[5].localName).toBe('div')
-    expect(rows[5].children[0].localName).toBe('span')
-    expect(rows[5].children[0].textContent).toBe('array')
-    expect(rows[5].children[1].localName).toBe('io-object')
-    expect(rows[5].children[1].textContent).toBe('Array')
+    expect(rows[5].children[0].localName).toBe('io-object')
+    expect(rows[5].children[0].textContent).toBe('array: Array')
+    expect(rows[5].children[1]).toBe(undefined)
     reset()
   })
   it('matches value with labels disabled', async () => {
