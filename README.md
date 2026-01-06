@@ -1,4 +1,4 @@
-# Io-Gui: UI Framework for JavaScript
+# Io-Gui: UI Framework for Three.js
 
 [![NPM Package][npm]][npm-url]
 [![DeepScan][deepscan]][deepscan-url]
@@ -10,20 +10,20 @@ Io-Gui relies on interoperable reactive **nodes** and **elements** that respond 
 
 To learn about Io-Gui, read the [quick start] and the [deep dive] guide.
 
-Stay in touch on [github] and [bluesky].
+Stay in touch on [github], [twitter] and [bluesky].
 
 ## Development
 
-Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on minimal tooling for development, linting and testing. You should be able to just type `tsc` and get started. However, for the sake of convenience, it uses [pnpm] to run a few development scripts. Using IoGui (esnext) in your project requires no compilation or build tools.
+Io-Gui has no runtime dependencies and only a few development dependencies. Aside from the typescript compiler, Io-Gui relies on minimal tooling for development, Io-Gui uses [pnpm] for package management, [vite] and [vitest] for development and testing. Using IoGui (esnext) in your project requires no compilation or build tools.
 
 To download and develop Io-Gui locally:
 
 ```bash
 git clone https://github.com/io-gui/io.git && cd io
-pnpm i && pnpm dev:core
+pnpm i && pnpm dev
 ```
 
-This will install dev dependencies and start the typescript watch script. You will also need to run `pnpm serve` to run @web/dev-server. Or you can run any other web server of your choice.
+This will install dev dependencies and start the vite watch script and server.
 
 To learn more Io-Gui development, please read [contributing guide](https://github.com/io-gui/io/blob/main/.github/CONTRIBUTING.md) and [code of conduct](https://github.com/io-gui/io/blob/main/.github/CODE_OF_CONDUCT.md), browse and submit [issues](https://github.com/io-gui/io/issues).
 
@@ -36,7 +36,10 @@ To learn more Io-Gui development, please read [contributing guide](https://githu
 
 [github]: https://github.com/io-gui/io/
 [bluesky]: https://bsky.app/profile/akirodic.com
+[twitter]: https://x.com/akirodic
 [pnpm]: https://pnpm.io/
+[vite]: https://vite.dev/
+[vitest]: https://vitest.dev/
 
 
 [io-core.dev]: https://iogui.dev/io/

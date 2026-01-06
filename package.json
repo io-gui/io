@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm lint && pnpm -r build",
+    "build": "pnpm clean && pnpm lint && pnpm -r build",
     "bundle": "pnpm build && node bundle.js",
     "lint": "eslint . --fix",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "clean": "rm -rf packages/**/dist"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -26,7 +27,7 @@
     "vite": "^7.3.0",
     "vitest": "^4.0.16"
   },
-  "dependencies": {
-    "three": "link:../../Library/pnpm/global/5/node_modules/three"
+  "peerDependencies": {
+    "three": ">=0.182.0"
   }
 }

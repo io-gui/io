@@ -47,10 +47,10 @@ document.body.appendChild(
 )
 ```
 
-Alternatively, you can use convenient "@" decorator syntax to define reactive properties and register the element. This syntax requires a transpiler such as Babel or TypeScript.
+It is encouraged to can use convenient "@" decorator syntax to register the element (`@Register`), define properties (`@Property`) and reactive properties (`@ReactiveProperty`).
 
 ```javascript
-import { IoElement, Register, ReactiveProperty, span } from 'io-core'
+import { IoElement, Register, Property, ReactiveProperty, span } from 'io-core'
 
 @Register
 class MyElement extends IoElement {
@@ -63,7 +63,10 @@ class MyElement extends IoElement {
     `;
   }
 
-  @ReactiveProperty('hello')
+  @Property('hello')
+  declare greeting: string;
+
+  @ReactiveProperty('world')
   declare message: string;
 
   ready() {
@@ -72,7 +75,7 @@ class MyElement extends IoElement {
 
   changed() {
     this.render([
-      span(this.message)
+      span(`${this.greeting} ${this.message}`)
     ]);
   }
 

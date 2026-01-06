@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Io-Gui is a reactive web UI framework that provides a consistent reactive foundation supporting multiple architectural patterns. It's organized as a monorepo with packages for different UI components and functionality.
+Io-Gui is organized as a monorepo with packages for different UI components and functionality.
 
 This guide assumes you have basic knowledge of TypeScript, HTML, CSS, and Git. If you need help getting started with Git, check out [GitHub's Git guide](https://help.github.com/en/github/using-git), and for Node.js, see the [Node.js getting started guide](https://nodejs.org/en/docs/guides/getting-started-guide/).
 
@@ -28,10 +28,6 @@ This guide assumes you have basic knowledge of TypeScript, HTML, CSS, and Git. I
    ```bash
    pnpm dev
    ```
-5. In a separate terminal, start the development server:
-   ```bash
-   pnpm serve
-   ```
 
 ## Project Structure
 
@@ -47,7 +43,7 @@ Io-Gui is organized as a monorepo with the following packages:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-gui** - Combined package with all components
+- **io-three** - Three.js UI components and configurations
 
 ## Development Commands
 
@@ -61,55 +57,57 @@ Io-Gui is organized as a monorepo with the following packages:
 - `pnpm serve` - Start @web/dev-server for development
 - `pnpm clean` - Clean all build directories
 
-### Package-Specific Commands
-Each package can be built/linted individually:
-- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
-- `pnpm dev:core`, `pnpm dev:colors`, `pnpm dev:inputs`, etc.
-
 ## Development Workflow
 
 ### Making Changes
 1. Create a new branch from the main branch:
-   ```bash
-   git checkout main
-   git pull origin main
-   git checkout -b feature/your-feature-name
-   ```
+  ```bash
+  git checkout main
+  git pull origin main
+  git checkout -b feature/your-feature-name
+  ```
 
-2. Make your changes in the appropriate package(s) under `/packages/*/src/`
+2. Run development server:
+  ```bash
+  pnpm dev
+  ```
 
-3. Test your changes:
-   ```bash
-   pnpm test
-   pnpm lint
-   ```
+3. Make your changes in the appropriate package(s) under `/packages/*/src/`
 
-4. Build to ensure everything compiles correctly:
-   ```bash
-   pnpm build
-   ```
+4. Test your changes:
+  ```bash
+  pnpm test
+  pnpm lint
+  ```
+
+5. Build to ensure everything compiles correctly:
+  ```bash
+  pnpm bundle
+  ```
+
+6. Commit your changes under `/packages/*/src/`. Do not commit the build `/packages/*/dist/`
 
 ## Code Style Guidelines
 
 ### Code Style
 - Code should require minimal documentation: "Code is documentation"
 - Use clear, descriptive, and easy-to-read variable/property names
-- Don't solve problems by removing debug statements/checks
 - Follow existing code style and linting patterns
 - Minimal Tooling: Avoid complex tools and processes
 - Use the Platform: Rely on native web features
+- Don't add dependencies
 
 ### TypeScript Patterns
 - Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
 - Strong typing with interfaces and type definitions
 - Avoid using `any` whenever possible
-- ES modules with `.js` extensions in imports
-- When importing from another package or a test file, use package name instead of full path
+- Import modules with `.js` extensions if they are in the same package e.g. `import { Node } from '../nodes/Node.js'`
+- Import modules from other package using scoped package name instead e.g. `import { IoElement } from '@io-gui/core'`
+- Virtual DOM factories for Elements are lower-cased. e.g. `ioMarkdown` is a virtual DOM factory for `IoMarkdown` element.
 
 ### Defining New Components
-- Elements extend `IoElement` and use reactive properties
-- Nodes extend `Node` for non-DOM reactive objects
+- Elements extend `IoElement`
+- Nodes (non-DOM Objects) extend `IoNode`
 - Nodes and elements require registration using `Register(IoClassConstructor)` or `@Register` decorator
 - CSS styles defined in static `static get Style()` string
 - CSS selectors have to start with `:host` selector which represents the host element
@@ -132,54 +130,14 @@ Each package can be built/linted individually:
 
 ### DOM Structure
 - Use minimal number of elements in the DOM tree
-- DOM mutations should be articulated by custom elements
-- Reactive elements render and manage their own children
+- Reactive elements render and manage their own children.
+- Never alter children of an IoElement from outside.
 - Elements render content using virtual DOM for efficient updates
 
 ## Development
 The framework has no runtime dependencies - only development dependencies. It uses `pnpm` as the package manager.
 - Make changes to source files in `/packages/*/src/`
 - TypeScript will compile to `/packages/*/build/`
-
-### Monorepo Structure
-The project is organized as a monorepo with packages in `/packages/`:
-
-- **io-core** - Core framework (Node, IoElement, bindings, event system, Storage, Theme)
-- **io-colors** - Color components and utilities
-- **io-icons** - Icon component and default iconset
-- **io-inputs** - Input components (buttons, fields, switches)
-- **io-layout** - Layout components (panels, tabs, splits)
-- **io-editors** - Universal property editors
-- **io-markdown** - Markdown rendering component
-- **io-menus** - Menu components and rich domain models
-- **io-navigation** - Navigation and selection components
-- **io-sliders** - Slider components
-- **io-gui** - Combined package with all components
-
-### Essential Commands
-- `pnpm dev` - Start watch mode for all packages (tsc)
-- `pnpm build` - Build all packages
-- `pnpm lint` - Lint all packages (auto-fixes)
-- `pnpm test` - Run tests with web-test-runner
-- `pnpm test:watch` - Run tests in watch mode
-- `pnpm serve` - Start @web/dev-server for development
-- `pnpm clean` - Clean all build directories
-
-### Package-Specific Commands
-Each package can be built/linted individually:
-- `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
-- `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
-
-### Build System
-- Uses `wireit` for orchestrated builds with dependency management
-- TypeScript compilation with `tsc`
-- Rollup for bundling with tree-shaking
-- ESLint for linting with auto-fix
-
-### Testing
-- Uses Vitest for testing
-- Web Test Runner for browser-based tests
-- Test files follow `*.test.ts` pattern
 
 ## Submitting Changes
 
@@ -190,14 +148,6 @@ Each package can be built/linted individually:
    ```
 3. Create a Pull Request (PR) against the main branch
 4. If your PR is not ready for review, [convert it to a draft PR](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft)
-
-## Important Notes
-
-- **No build files**: Don't include build files in commits unless building a new release
-- **Documentation**: Update documentation when making changes that affect APIs or behavior
-- **Dependencies**: The framework has no runtime dependencies - only development dependencies
-- **Minimal tooling**: The project emphasizes minimal tooling and relies on native web features
-- **Platform usage**: Prefer native web features over complex abstractions
 
 ## Getting Help
 
