@@ -111,6 +111,7 @@ registerEditorConfig(Texture, [
   ]})})],
   ['needsUpdate', ioSwitch({value: false})],
   ['needsPMREMUpdate', ioSwitch({value: false})],
+
 ])
 
 registerEditorGroups(Texture, {
@@ -152,8 +153,6 @@ registerEditorGroups(Texture, {
     'premultiplyAlpha',
   ],
   Advanced: [
-    'needsUpdate',
-    'needsPMREMUpdate',
     'version',
     'pmremVersion',
     'updateRanges',

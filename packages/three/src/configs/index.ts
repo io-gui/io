@@ -37,22 +37,22 @@ import './scenes/Scene.js'
 // import './objects/Line.js';
 // import './objects/Points.js';
 // import './objects/Group.js';
+import './textures/Source.js'
 import './textures/Texture.js'
-// import './textures/VideoTexture.js';
-// import './textures/VideoFrameTexture.js';
-// import './textures/FramebufferTexture.js';
-// import './textures/Source.js';
-// import './textures/DataTexture.js';
-// import './textures/DataArrayTexture.js';
-// import './textures/Data3DTexture.js';
-// import './textures/CompressedTexture.js';
-// import './textures/CompressedArrayTexture.js';
-// import './textures/CompressedCubeTexture.js';
-// import './textures/CubeTexture.js';
-// import './textures/CanvasTexture.js';
-// import './textures/DepthTexture.js';
-// import './textures/CubeDepthTexture.js';
-// import './textures/ExternalTexture.js';
+import './textures/CanvasTexture.js'
+import './textures/VideoTexture.js'
+import './textures/Data3DTexture.js'
+import './textures/DataArrayTexture.js'
+import './textures/DepthTexture.js'
+// import './textures/CompressedTexture.js'
+import './textures/CompressedArrayTexture.js'
+// import './textures/VideoFrameTexture.js'
+// import './textures/FramebufferTexture.js'
+// import './textures/DataTexture.js'
+// import './textures/CompressedCubeTexture.js'
+// import './textures/CubeTexture.js'
+// import './textures/CubeDepthTexture.js'
+// import './textures/ExternalTexture.js'
 // import './geometries/Geometries.js';
 // import './materials/Materials.js';
 // import './loaders/AnimationLoader.js';

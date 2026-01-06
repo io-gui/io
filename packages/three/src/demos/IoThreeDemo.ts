@@ -173,21 +173,28 @@ const allClasses = {
   // colorManagement: THREE.ColorManagement,
   // sph3: new THREE.SphericalHarmonics3(),
   // Textures
+  canvasTexture: new THREE.CanvasTexture(document.createElement('canvas')),
+  compressedArrayTexture: new THREE.CompressedArrayTexture([], THREE.RGBAFormat, 16, 16, THREE.RGBA_S3TC_DXT1_Format),
+  data3DTexture: new THREE.Data3DTexture(new Float64Array(16 * 16 * 16), 16, 16, 16),
+  dataArrayTexture: new THREE.DataArrayTexture(new Float64Array(16 * 16), 16, 16, 1),
+  depthTexture: new THREE.DepthTexture(256, 256),
+  source: new THREE.Source(null),
   texture: new THREE.Texture(),
+  videoTexture: new THREE.VideoTexture(document.createElement('video')),
   // Renderers
-  bundleGroup: new THREE.BundleGroup(),
-  canvasTarget: new THREE.CanvasTarget(document.createElement('canvas')),
-  indirectStorageBufferAttribute: new THREE.IndirectStorageBufferAttribute(new Uint32Array(16), 4),
-  inspectorBase: new THREE.InspectorBase(),
-  postProcessing: new THREE.PostProcessing( new THREE.WebGPURenderer() ),
+  // bundleGroup: new THREE.BundleGroup(),
+  // canvasTarget: new THREE.CanvasTarget(document.createElement('canvas')),
+  // indirectStorageBufferAttribute: new THREE.IndirectStorageBufferAttribute(new Uint32Array(16), 4),
+  // inspectorBase: new THREE.InspectorBase(),
+  // postProcessing: new THREE.PostProcessing( new THREE.WebGPURenderer() ),
 
 
-  quadMesh: new THREE.QuadMesh(),
-  storageTexture: new THREE.StorageTexture(256, 256),
-  storage3DTexture: new THREE.Storage3DTexture(64, 64, 64),
-  storageArrayTexture: new THREE.StorageArrayTexture(128, 128, 8),
-  storageBufferAttribute: new THREE.StorageBufferAttribute(100, 4),
-  storageInstancedBufferAttribute: new THREE.StorageInstancedBufferAttribute(100, 4),
+  // quadMesh: new THREE.QuadMesh(),
+  // storageTexture: new THREE.StorageTexture(256, 256),
+  // storage3DTexture: new THREE.Storage3DTexture(64, 64, 64),
+  // storageArrayTexture: new THREE.StorageArrayTexture(128, 128, 8),
+  // storageBufferAttribute: new THREE.StorageBufferAttribute(100, 4),
+  // storageInstancedBufferAttribute: new THREE.StorageInstancedBufferAttribute(100, 4),
 }
 
 
