@@ -106,7 +106,7 @@ const exampleOptions = new MenuOption({
 const initializzedExamples = new WeakMap<typeof ThreeApplet, ThreeApplet>()
 
 const allClasses = {
-  // // Core
+  // Core
   // bufferAttribute: new THREE.BufferAttribute(new Float32Array(100), 1),
   // BufferGeometry: new THREE.BufferGeometry(),
   // clock: new THREE.Clock(),
@@ -121,22 +121,26 @@ const allClasses = {
   // renderTarget: new THREE.RenderTarget(100, 100),
   // renderTarget3D: new THREE.RenderTarget3D(100, 100, 100),
   // timer: new THREE.Timer(),
-  // // Scenes
+  
+  // Scenes
   // scene: new THREE.Scene(),
   // fog: new THREE.Fog(0x000000, 10, 100),
   // fogExp2: new THREE.FogExp2(0x000000, 0.002),
-  // // // Cameras
+  
+  // Cameras
   // Camera: new THREE.Camera(),
   // PerspectiveCamera: new THREE.PerspectiveCamera(),
   // OrthographicCamera: new THREE.OrthographicCamera(),
   // ArrayCamera: new THREE.ArrayCamera(),
   // StereoCamera: new THREE.StereoCamera(),
-  // // Audio
+  
+  // Audio
   // audioListener: new THREE.AudioListener(),
   // audio: new THREE.Audio(new THREE.AudioListener()),
   // positionalAudio: new THREE.PositionalAudio(new THREE.AudioListener()),
   // audioAnalyser: new THREE.AudioAnalyser(new THREE.Audio(new THREE.AudioListener()), 32),
-  // // Animation
+  
+  // Animation
   // animationClip: new THREE.AnimationClip('test', 1, []),
   // animationObjectGroup: new THREE.AnimationObjectGroup(),
   // numberKeyframeTrack: new THREE.NumberKeyframeTrack('.position[x]', [0, 1, 2], [0, 5, 0]),
@@ -145,7 +149,8 @@ const allClasses = {
   // quaternionKeyframeTrack: new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0.707, 0.707]),
   // booleanKeyframeTrack: new THREE.BooleanKeyframeTrack('.visible', [0, 1], [true, false]),
   // stringKeyframeTrack: new THREE.StringKeyframeTrack('.name', [0, 1], ['start', 'end']),
-  // // Math
+
+  // Math
   // cubicInterpolant: new THREE.CubicInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
   // discreteInterpolant: new THREE.DiscreteInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
   // linearInterpolant: new THREE.LinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
@@ -172,21 +177,34 @@ const allClasses = {
   // color: new THREE.Color(),
   // colorManagement: THREE.ColorManagement,
   // sph3: new THREE.SphericalHarmonics3(),
+
+  // Lights
+  // ambientLight: new THREE.AmbientLight(),
+  // directionalLight: new THREE.DirectionalLight(),
+  // hemisphereLight: new THREE.HemisphereLight(),
+  iesSpotLight: new THREE.IESSpotLight(),
+  // lightProbe: new THREE.LightProbe(),
+  // pointLight: new THREE.PointLight(),
+  projectorLight: new THREE.ProjectorLight(),
+  // rectAreaLight: new THREE.RectAreaLight(),
+  // spotLight: new THREE.SpotLight(),
+
   // Objects
-  batchedMesh: new THREE.BatchedMesh(10, 1000, 2000),
-  bone: new THREE.Bone(),
-  clippingGroup: new THREE.ClippingGroup(),
-  group: new THREE.Group(),
-  instancedMesh: new THREE.InstancedMesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial(), 10),
-  line: new THREE.Line(),
-  lineLoop: new THREE.LineLoop(),
-  lineSegments: new THREE.LineSegments(),
-  lod: new THREE.LOD(),
-  mesh: new THREE.Mesh(),
-  points: new THREE.Points(),
-  skeleton: new THREE.Skeleton(),
-  skinnedMesh: new THREE.SkinnedMesh(),
-  sprite: new THREE.Sprite(),
+  // batchedMesh: new THREE.BatchedMesh(10, 1000, 2000),
+  // bone: new THREE.Bone(),
+  // clippingGroup: new THREE.ClippingGroup(),
+  // group: new THREE.Group(),
+  // instancedMesh: new THREE.InstancedMesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial(), 10),
+  // line: new THREE.Line(),
+  // lineLoop: new THREE.LineLoop(),
+  // lineSegments: new THREE.LineSegments(),
+  // lod: new THREE.LOD(),
+  // mesh: new THREE.Mesh(),
+  // points: new THREE.Points(),
+  // skeleton: new THREE.Skeleton(),
+  // skinnedMesh: new THREE.SkinnedMesh(),
+  // sprite: new THREE.Sprite(),
+
   // Textures
   // canvasTexture: new THREE.CanvasTexture(document.createElement('canvas')),
   // compressedArrayTexture: new THREE.CompressedArrayTexture([], 16, 16, 4, THREE.RGBA_S3TC_DXT1_Format),
@@ -209,14 +227,13 @@ const allClasses = {
   // source: new THREE.Source(null),
   // texture: new THREE.Texture(),
   // videoTexture: new THREE.VideoTexture(document.createElement('video')),
+
   // Renderers
   // bundleGroup: new THREE.BundleGroup(),
   // canvasTarget: new THREE.CanvasTarget(document.createElement('canvas')),
   // indirectStorageBufferAttribute: new THREE.IndirectStorageBufferAttribute(new Uint32Array(16), 4),
   // inspectorBase: new THREE.InspectorBase(),
   // postProcessing: new THREE.PostProcessing( new THREE.WebGPURenderer() ),
-
-
   // quadMesh: new THREE.QuadMesh(),
   // storageTexture: new THREE.StorageTexture(256, 256),
   // storage3DTexture: new THREE.Storage3DTexture(64, 64, 64),

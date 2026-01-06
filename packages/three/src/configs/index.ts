@@ -72,14 +72,18 @@ import './textures/ExternalTexture.js'
 // import './loaders/LoaderUtils.js';
 // import './loaders/Cache.js';
 // import './loaders/AudioLoader.js';
-// import './lights/SpotLight.js';
-// import './lights/PointLight.js';
-// import './lights/RectAreaLight.js';
-// import './lights/HemisphereLight.js';
-// import './lights/DirectionalLight.js';
-// import './lights/AmbientLight.js';
-// import './lights/Light.js';
-// import './lights/LightProbe.js';
+import './lights/Light.js'
+import './lights/AmbientLight.js'
+import './lights/DirectionalLight.js'
+import './lights/HemisphereLight.js'
+import './lights/PointLight.js'
+import './lights/SpotLight.js'
+import './lights/RectAreaLight.js'
+import './lights/LightProbe.js'
+import './lights/LightShadow.js'
+import './lights/DirectionalLightShadow.js'
+import './lights/PointLightShadow.js'
+import './lights/SpotLightShadow.js'
 import './cameras/Camera.js'
 import './cameras/StereoCamera.js'
 import './cameras/PerspectiveCamera.js'
@@ -194,8 +198,8 @@ import './renderers/common/StorageArrayTexture.js'
 import './renderers/common/StorageBufferAttribute.js'
 import './renderers/common/StorageInstancedBufferAttribute.js'
 import './renderers/common/IndirectStorageBufferAttribute.js'
-// import './lights/webgpu/IESSpotLight.js';
-// import './lights/webgpu/ProjectorLight.js';
+import './lights/webgpu/IESSpotLight.js'
+import './lights/webgpu/ProjectorLight.js'
 // import './loaders/nodes/NodeLoader.js';
 // import './loaders/nodes/NodeObjectLoader.js';
 // import './loaders/nodes/NodeMaterialLoader.js';
