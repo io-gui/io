@@ -1,5 +1,5 @@
-import { registerEditorConfig, registerEditorGroups, ioPropertyEditor, ioObject } from "@io-gui/editors"
-import { Frustum, Plane } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups, ioPropertyEditor, ioObject } from '@io-gui/editors'
+import { Frustum, Plane } from 'three/webgpu'
 
 registerEditorConfig(Frustum, [
   ['planes', ioPropertyEditor({config: [

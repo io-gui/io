@@ -1,0 +1,1 @@
+{"version":3,"file":"QuaternionKeyframeTrack.js","sourceRoot":"","sources":["../../../../src/configs/animation/tracks/QuaternionKeyframeTrack.ts"],"names":[],"mappings":";AAAA,8EAA8E;AAC9E,kDAAkD","sourcesContent":["// QuaternionKeyframeTrack extends KeyframeTrack with no additional properties\n// See KeyframeTrack.ts for the base configuration\n\n"]}

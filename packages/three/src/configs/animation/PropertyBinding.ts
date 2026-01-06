@@ -1,5 +1,5 @@
-import { registerEditorGroups } from "@io-gui/editors"
-import { PropertyBinding } from "three/webgpu"
+import { registerEditorGroups } from '@io-gui/editors'
+import { PropertyBinding } from 'three/webgpu'
 
 registerEditorGroups(PropertyBinding, {
   Main: [

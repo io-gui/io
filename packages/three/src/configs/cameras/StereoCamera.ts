@@ -1,7 +1,7 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { ioNumber } from "@io-gui/inputs"
-import { StereoCamera } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioNumber } from '@io-gui/inputs'
+import { StereoCamera } from 'three/webgpu'
 
 registerEditorConfig(StereoCamera, [
   ['aspect', ioNumber({min: 0.01, max: Infinity, step: 0.01})],

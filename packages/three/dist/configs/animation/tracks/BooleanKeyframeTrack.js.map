@@ -1,0 +1,1 @@
+{"version":3,"file":"BooleanKeyframeTrack.js","sourceRoot":"","sources":["../../../../src/configs/animation/tracks/BooleanKeyframeTrack.ts"],"names":[],"mappings":";AAAA,2EAA2E;AAC3E,kDAAkD","sourcesContent":["// BooleanKeyframeTrack extends KeyframeTrack with no additional properties\n// See KeyframeTrack.ts for the base configuration\n\n"]}

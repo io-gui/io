@@ -1,6 +1,6 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { Object3D } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { Object3D } from 'three/webgpu'
 
 registerEditorConfig(Object3D, [
   ['renderOrder', ioNumberSlider({min: 0, max: 100, step: 1})],

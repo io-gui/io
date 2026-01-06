@@ -1,8 +1,8 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumber } from "@io-gui/inputs"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { ioOptionSelect, MenuOption } from "@io-gui/menus"
-import { PositionalAudio } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumber } from '@io-gui/inputs'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioOptionSelect, MenuOption } from '@io-gui/menus'
+import { PositionalAudio } from 'three/webgpu'
 
 /**
  * PositionalAudio extends Audio

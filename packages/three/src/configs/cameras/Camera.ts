@@ -1,5 +1,5 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { Camera } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { Camera } from 'three/webgpu'
 
 registerEditorConfig(Camera, [
 ])

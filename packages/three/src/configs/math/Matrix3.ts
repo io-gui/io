@@ -1,5 +1,5 @@
-import { registerEditorConfig, ioMatrix, ioPropertyEditor } from "@io-gui/editors"
-import { Matrix3 } from "three/webgpu"
+import { registerEditorConfig, ioMatrix, ioPropertyEditor } from '@io-gui/editors'
+import { Matrix3 } from 'three/webgpu'
 
 registerEditorConfig(Matrix3, [
   ['elements', ioMatrix()],

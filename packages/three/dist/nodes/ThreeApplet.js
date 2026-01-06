@@ -76,7 +76,7 @@ registerEditorConfig(ThreeApplet, [
                 ] }) })],
 ]);
 registerEditorGroups(ThreeApplet, {
-    Scene: [
+    Main: [
         'scene',
     ],
     Rendering: [
@@ -86,6 +86,7 @@ registerEditorGroups(ThreeApplet, {
     Hidden: [
         'uiConfig',
         'uiGroups',
-    ]
+    ],
+    Advanced: []
 });
 //# sourceMappingURL=ThreeApplet.js.map

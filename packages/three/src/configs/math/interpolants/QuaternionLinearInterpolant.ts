@@ -1,5 +1,5 @@
-import { registerEditorGroups } from "@io-gui/editors"
-import { QuaternionLinearInterpolant } from "three/webgpu"
+import { registerEditorGroups } from '@io-gui/editors'
+import { QuaternionLinearInterpolant } from 'three/webgpu'
 
 registerEditorGroups(QuaternionLinearInterpolant, {
   Main: [

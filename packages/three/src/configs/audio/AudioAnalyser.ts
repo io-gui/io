@@ -1,5 +1,5 @@
-import { registerEditorGroups, ioPropertyEditor, registerEditorConfig } from "@io-gui/editors"
-import { AudioAnalyser } from "three/webgpu"
+import { registerEditorGroups, ioPropertyEditor, registerEditorConfig } from '@io-gui/editors'
+import { AudioAnalyser } from 'three/webgpu'
 
 /**
  * AudioAnalyser - standalone class for analyzing audio data

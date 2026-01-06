@@ -1,5 +1,5 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { BufferGeometry } from "three/webgpu"
+import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { BufferGeometry } from 'three/webgpu'
 
 registerEditorConfig(BufferGeometry, [
   ['drawRange', ioPropertyEditor()],

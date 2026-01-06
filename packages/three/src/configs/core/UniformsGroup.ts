@@ -1,5 +1,5 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioOptionSelect, MenuOption } from "@io-gui/menus"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
   UniformsGroup,
   StaticDrawUsage,
@@ -11,7 +11,7 @@ import {
   StaticCopyUsage,
   DynamicCopyUsage,
   StreamCopyUsage,
-} from "three/webgpu"
+} from 'three/webgpu'
 
 registerEditorConfig(UniformsGroup, [
   ['usage', ioOptionSelect({selectBy: 'value', option: new MenuOption({options: [

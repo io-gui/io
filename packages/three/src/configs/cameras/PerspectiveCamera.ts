@@ -1,7 +1,7 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { ioNumber } from "@io-gui/inputs"
-import { PerspectiveCamera } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioNumber } from '@io-gui/inputs'
+import { PerspectiveCamera } from 'three/webgpu'
 
 registerEditorConfig(PerspectiveCamera, [
   ['fov', ioNumberSlider({min: 1, max: 180, step: 1})],

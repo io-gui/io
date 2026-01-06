@@ -1,6 +1,6 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumber } from "@io-gui/inputs"
-import { RenderTarget } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumber } from '@io-gui/inputs'
+import { RenderTarget } from 'three/webgpu'
 
 registerEditorConfig(RenderTarget, [
   ['width', ioNumber({min: 1, max: 8192, step: 1})],

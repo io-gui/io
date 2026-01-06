@@ -1,11 +1,11 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumber } from "@io-gui/inputs"
-import { ioOptionSelect, MenuOption } from "@io-gui/menus"
+import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumber } from '@io-gui/inputs'
+import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
   AnimationClip,
   AdditiveAnimationBlendMode,
   NormalAnimationBlendMode,
-} from "three/webgpu"
+} from 'three/webgpu'
 
 registerEditorConfig(AnimationClip, [
   ['duration', ioNumber({min: 0, max: Infinity, step: 0.01})],

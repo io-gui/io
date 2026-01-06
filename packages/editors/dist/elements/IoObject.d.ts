@@ -8,6 +8,7 @@ export type IoObjectProps = IoElementProps & {
     labeled?: boolean;
     label?: string;
     expanded?: WithBinding<boolean>;
+    persistentExpand?: boolean;
     config?: PropertyConfig[];
     groups?: PropertyGroups;
     widgets?: EditorWidgets;
@@ -22,10 +23,12 @@ export declare class IoObject extends IoElement {
     labeled: boolean;
     label: string;
     expanded: boolean;
+    persistentExpand: boolean;
     config: PropertyConfig[];
     groups: PropertyGroups;
     widgets: EditorWidgets;
     role: string;
+    valueChanged(): void;
     changed(): void;
 }
 export declare const ioObject: (arg0?: IoObjectProps) => VDOMElement;

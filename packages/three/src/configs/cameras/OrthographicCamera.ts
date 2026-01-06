@@ -1,7 +1,7 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { ioNumber } from "@io-gui/inputs"
-import { OrthographicCamera } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioNumber } from '@io-gui/inputs'
+import { OrthographicCamera } from 'three/webgpu'
 
 registerEditorConfig(OrthographicCamera, [
   ['left', ioNumber({min: -Infinity, max: Infinity, step: 1})],

@@ -9,6 +9,7 @@ import { ioLayout, Split } from '@io-gui/layout';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioThreeViewport, ThreeApplet } from '@io-gui/three';
 import { ioField } from '@io-gui/inputs';
+import { ioPropertyEditor } from '@io-gui/editors';
 import { ComputeTextureExample } from '../examples/compute_texture.js';
 import { VolumePerlinExample } from '../examples/volume_perlin.js';
 import { CameraExample } from '../examples/camera.js';
@@ -25,6 +26,7 @@ import { AnimationBackdropExample } from '../examples/animation_backdrop.js';
 import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js';
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js';
 import { ioThreeProperties } from '../elements/IoThreeProperties.js';
+import * as THREE from 'three/webgpu';
 const version = 3;
 const split = new Split({
     children: [
@@ -34,7 +36,7 @@ const split = new Split({
                 {
                     flex: '1 0 380px',
                     tabs: [
-                        { id: 'ExampleProperties' },
+                        { id: 'AllClasses' },
                     ],
                 },
                 {
@@ -102,6 +104,74 @@ const exampleOptions = new MenuOption({
     selectedID: $({ key: 'example', storage: 'hash', value: 'AnimationKeyframes' })
 });
 const initializzedExamples = new WeakMap();
+const allClasses = {
+    // Core
+    // bufferAttribute: new THREE.BufferAttribute(new Float32Array(100), 1),
+    // BufferGeometry: new THREE.BufferGeometry(),
+    // clock: new THREE.Clock(),
+    // instancedBufferAttribute: new THREE.InstancedBufferAttribute(new Float32Array(100), 1),
+    // instancedBufferGeometry: new THREE.InstancedBufferGeometry(),
+    // instancedInterleavedBuffer: new THREE.InstancedInterleavedBuffer(new Float32Array(100), 1),
+    // interleavedBuffer: new THREE.InterleavedBuffer(new Float32Array(100), 1),
+    // interleavedBufferAttribute: new THREE.InterleavedBufferAttribute(new THREE.InterleavedBuffer(new Float32Array(100), 1), 3, 0, false),
+    // layers: new THREE.Layers(),
+    // object3d: new THREE.Object3D(),
+    // Raycaster: new THREE.Raycaster(),
+    // renderTarget: new THREE.RenderTarget(100, 100),
+    // renderTarget3D: new THREE.RenderTarget3D(100, 100, 100),
+    // timer: new THREE.Timer(),
+    // // Scenes
+    // scene: new THREE.Scene(),
+    // fog: new THREE.Fog(0x000000, 10, 100),
+    // fogExp2: new THREE.FogExp2(0x000000, 0.002),
+    // // // Cameras
+    // Camera: new THREE.Camera(),
+    // PerspectiveCamera: new THREE.PerspectiveCamera(),
+    // OrthographicCamera: new THREE.OrthographicCamera(),
+    // ArrayCamera: new THREE.ArrayCamera(),
+    // StereoCamera: new THREE.StereoCamera(),
+    // Audio
+    audioListener: new THREE.AudioListener(),
+    audio: new THREE.Audio(new THREE.AudioListener()),
+    positionalAudio: new THREE.PositionalAudio(new THREE.AudioListener()),
+    audioAnalyser: new THREE.AudioAnalyser(new THREE.Audio(new THREE.AudioListener()), 32),
+    // Animation
+    // animationClip: new THREE.AnimationClip('test', 1, []),
+    // animationObjectGroup: new THREE.AnimationObjectGroup(),
+    // numberKeyframeTrack: new THREE.NumberKeyframeTrack('.position[x]', [0, 1, 2], [0, 5, 0]),
+    // vectorKeyframeTrack: new THREE.VectorKeyframeTrack('.position', [0, 1, 2], [0, 0, 0, 5, 5, 5, 0, 0, 0]),
+    // colorKeyframeTrack: new THREE.ColorKeyframeTrack('.material.color', [0, 1, 2], [1, 0, 0, 0, 1, 0, 0, 0, 1]),
+    // quaternionKeyframeTrack: new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0.707, 0.707]),
+    // booleanKeyframeTrack: new THREE.BooleanKeyframeTrack('.visible', [0, 1], [true, false]),
+    // stringKeyframeTrack: new THREE.StringKeyframeTrack('.name', [0, 1], ['start', 'end']),
+    // // Math
+    // cubicInterpolant: new THREE.CubicInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+    // discreteInterpolant: new THREE.DiscreteInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+    // linearInterpolant: new THREE.LinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+    // quaternionLinearInterpolant: new THREE.QuaternionLinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+    // triangle: new THREE.Triangle(),
+    // spherical: new THREE.Spherical(),
+    // cylindrical: new THREE.Cylindrical(),
+    // plane: new THREE.Plane(),
+    // frustum: new THREE.Frustum(),
+    // frustumArray: new THREE.FrustumArray(),
+    // sphere: new THREE.Sphere(),
+    // ray: new THREE.Ray(),
+    // matrix2: new THREE.Matrix2(),
+    // matrix3: new THREE.Matrix3(),
+    // matrix4: new THREE.Matrix4(),
+    // box2: new THREE.Box2(),
+    // box3: new THREE.Box3(),
+    // line3: new THREE.Line3(),
+    // euler: new THREE.Euler(),
+    // vector4: new THREE.Vector4(),
+    // vector3: new THREE.Vector3(),
+    // vector2: new THREE.Vector2(),
+    // quaternion: new THREE.Quaternion(),
+    // color: new THREE.Color(),
+    // colorManagement: THREE.ColorManagement,
+    // sphericalHarmonics3: new THREE.SphericalHarmonics3(),
+};
 export class IoThreeDemo extends IoElement {
     static get Style() {
         return /* css */ `
@@ -173,7 +243,8 @@ export class IoThreeDemo extends IoElement {
                             ]),
                             ioThreeProperties({ applet: this.bind('selectedExample') })
                         ])
-                    ])
+                    ]),
+                    ioPropertyEditor({ id: 'AllClasses', value: allClasses })
                 ],
                 split: $({ key: `viewport-split-v${version}`, storage: 'local', value: split }),
                 addMenuOption: new MenuOption({
@@ -188,6 +259,7 @@ export class IoThreeDemo extends IoElement {
                                 { id: 'Perspective', mode: 'none' },
                                 { id: 'SceneCamera', mode: 'none' },
                                 { id: 'ExampleProperties', mode: 'none' },
+                                { id: 'AllClasses', mode: 'none' },
                             ] },
                     ],
                 }),

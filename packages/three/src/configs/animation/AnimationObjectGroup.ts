@@ -1,5 +1,5 @@
-import { registerEditorGroups } from "@io-gui/editors"
-import { AnimationObjectGroup } from "three/webgpu"
+import { registerEditorGroups } from '@io-gui/editors'
+import { AnimationObjectGroup } from 'three/webgpu'
 
 registerEditorGroups(AnimationObjectGroup, {
   Main: [],

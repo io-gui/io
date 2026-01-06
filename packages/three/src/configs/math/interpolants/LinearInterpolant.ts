@@ -1,5 +1,5 @@
-import { registerEditorGroups } from "@io-gui/editors"
-import { LinearInterpolant } from "three/webgpu"
+import { registerEditorGroups } from '@io-gui/editors'
+import { LinearInterpolant } from 'three/webgpu'
 
 registerEditorGroups(LinearInterpolant, {
   Main: [

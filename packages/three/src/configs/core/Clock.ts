@@ -1,6 +1,6 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumber } from "@io-gui/inputs"
-import { Clock } from "three/webgpu"
+import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumber } from '@io-gui/inputs'
+import { Clock } from 'three/webgpu'
 
 registerEditorConfig(Clock, [
   ['startTime', ioNumber({min: 0, max: Infinity, step: 0.001})],

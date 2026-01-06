@@ -210,7 +210,7 @@
 //   COMPUTE: 'compute',
 //   RENDER: 'render'
 // }
-// export const InterpolationSamplingType = {  
+// export const InterpolationSamplingType = {
 //   PERSPECTIVE: 'perspective',
 //   LINEAR: 'linear',
 //   FLAT: 'flat'

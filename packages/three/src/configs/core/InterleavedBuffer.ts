@@ -1,6 +1,6 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumber } from "@io-gui/inputs"
-import { ioOptionSelect, MenuOption } from "@io-gui/menus"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumber } from '@io-gui/inputs'
+import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
   InterleavedBuffer,
   StaticDrawUsage,
@@ -12,7 +12,7 @@ import {
   StaticCopyUsage,
   DynamicCopyUsage,
   StreamCopyUsage,
-} from "three/webgpu"
+} from 'three/webgpu'
 
 registerEditorConfig(InterleavedBuffer, [
   ['stride', ioNumber({min: 1, max: 64, step: 1})],

@@ -1,0 +1,1 @@
+{"version":3,"file":"NumberKeyframeTrack.js","sourceRoot":"","sources":["../../../../src/configs/animation/tracks/NumberKeyframeTrack.ts"],"names":[],"mappings":";AAAA,0EAA0E;AAC1E,kDAAkD","sourcesContent":["// NumberKeyframeTrack extends KeyframeTrack with no additional properties\n// See KeyframeTrack.ts for the base configuration\n\n"]}

@@ -1,6 +1,6 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumber } from "@io-gui/inputs"
-import { ioOptionSelect, MenuOption } from "@io-gui/menus"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumber } from '@io-gui/inputs'
+import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
   BufferAttribute,
   StaticDrawUsage,
@@ -14,7 +14,7 @@ import {
   StreamCopyUsage,
   FloatType,
   IntType,
-} from "three/webgpu"
+} from 'three/webgpu'
 
 registerEditorConfig(BufferAttribute, [
   ['itemSize', ioNumber({min: 1, max: 16, step: 1})],

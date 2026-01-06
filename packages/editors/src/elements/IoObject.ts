@@ -91,7 +91,7 @@ export class IoObject extends IoElement {
     }
 
     // TODO: Test
-    const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label});
+    const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label})
     const bindingTargets = expandedBinding.targets
     const bindingTargetCount = bindingTargets.length
     const targetIsThis = bindingTargets.some(target => target === this)

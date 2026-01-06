@@ -1,6 +1,6 @@
-import { ioVector, registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { Scene } from "three/webgpu"
+import { ioVector, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { Scene } from 'three/webgpu'
 
 registerEditorConfig(Scene, [
   ['backgroundBlurriness', ioNumberSlider({min: 0, max: 1, step: 0.01})],

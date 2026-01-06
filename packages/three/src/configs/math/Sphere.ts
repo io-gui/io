@@ -1,5 +1,5 @@
-import { registerEditorConfig, ioPropertyEditor } from "@io-gui/editors"
-import { Sphere } from "three/webgpu"
+import { registerEditorConfig, ioPropertyEditor } from '@io-gui/editors'
+import { Sphere } from 'three/webgpu'
 
 registerEditorConfig(Object, [
   [Sphere, ioPropertyEditor()],

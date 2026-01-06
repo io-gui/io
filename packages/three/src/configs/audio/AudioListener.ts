@@ -1,6 +1,6 @@
-import { registerEditorConfig, registerEditorGroups } from "@io-gui/editors"
-import { ioNumberSlider } from "@io-gui/sliders"
-import { AudioListener } from "three/webgpu"
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { AudioListener } from 'three/webgpu'
 
 /**
  * AudioListener extends Object3D
