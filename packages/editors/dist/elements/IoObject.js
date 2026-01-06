@@ -41,6 +41,8 @@ let IoObject = class IoObject extends IoElement {
     `;
     }
     valueChanged() {
+        if (!this.value)
+            return;
         let uuid = genIdentifier(this.value);
         let storage = 'local';
         if (!uuid) {
@@ -77,7 +79,7 @@ let IoObject = class IoObject extends IoElement {
                 properties: this.properties,
                 config: this.config,
                 groups: this.groups,
-                widgets: this.widgets,
+                widget: this.widget,
                 labeled: this.labeled,
                 labelWidth: this.labelWidth,
             }));
@@ -96,7 +98,7 @@ __decorate([
     ReactiveProperty(true)
 ], IoObject.prototype, "labeled", void 0);
 __decorate([
-    ReactiveProperty('')
+    ReactiveProperty('80px')
 ], IoObject.prototype, "labelWidth", void 0);
 __decorate([
     ReactiveProperty('')
@@ -114,8 +116,8 @@ __decorate([
     ReactiveProperty({ type: Object, init: null })
 ], IoObject.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
-], IoObject.prototype, "widgets", void 0);
+    ReactiveProperty({ type: Object })
+], IoObject.prototype, "widget", void 0);
 __decorate([
     Property('region')
 ], IoObject.prototype, "role", void 0);

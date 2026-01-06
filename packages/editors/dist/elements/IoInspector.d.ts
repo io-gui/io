@@ -1,14 +1,13 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { IoElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
-import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoInspectorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     selected?: WithBinding<Record<string, any> | any[]>;
     search?: WithBinding<string>;
     config?: PropertyConfig[];
     groups?: PropertyGroups;
-    widgets?: EditorWidgets;
+    widget?: VDOMElement;
 };
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
@@ -20,7 +19,7 @@ export declare class IoInspector extends IoElement {
     search: string;
     config: PropertyConfig[];
     groups: PropertyGroups;
-    widgets: EditorWidgets;
+    widget: VDOMElement;
     static get Listeners(): {
         'io-button-clicked': string;
     };
@@ -34,5 +33,5 @@ export declare class IoInspector extends IoElement {
     changeThrottled(): void;
     dispose(): void;
 }
-export declare const ioInspector: (arg0?: IoInspectorProps) => import("@io-gui/core").VDOMElement;
+export declare const ioInspector: (arg0?: IoInspectorProps) => VDOMElement;
 //# sourceMappingURL=IoInspector.d.ts.map

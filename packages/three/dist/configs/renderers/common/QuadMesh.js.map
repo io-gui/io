@@ -1,0 +1,1 @@
+{"version":3,"file":"QuadMesh.js","sourceRoot":"","sources":["../../../../src/configs/renderers/common/QuadMesh.ts"],"names":[],"mappings":";AAAA,2EAA2E","sourcesContent":["// This class is almost identical to Mesh, so we don't need to register it.\n\n"]}

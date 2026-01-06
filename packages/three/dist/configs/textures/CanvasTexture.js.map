@@ -1,0 +1,1 @@
+{"version":3,"file":"CanvasTexture.js","sourceRoot":"","sources":["../../../src/configs/textures/CanvasTexture.ts"],"names":[],"mappings":";AAAA,mEAAmE","sourcesContent":["// CanvasTexture extends Texture - no new properties needing config"]}

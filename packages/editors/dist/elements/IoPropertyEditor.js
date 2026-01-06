@@ -113,7 +113,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     configureThrottled() {
         this._config = getEditorConfig(this.value, this.config);
         this._groups = getEditorGroups(this.value, this.groups);
-        this._widget = getEditorWidget(this.value, this.widgets);
+        this._widget = this.widget || getEditorWidget(this.value);
         this.throttle(this.changed);
     }
     changed() {
@@ -171,15 +171,15 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 // NOTE: Functions dont have labels. They are displayed as labeled buttons.
                 const isFunction = typeof value === 'function';
                 if (isFunction) {
-                    finalProps.action = value;
+                    finalProps.action = value.bind(this.value);
                     finalProps.label = finalProps.label || id;
                 }
                 const isIoObject = tag === 'io-object';
                 if (isIoObject) {
-                    finalProps.label = id + ': ' + (finalProps.label || value.constructor?.name);
+                    finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
                 }
                 vChildren.push(div({ class: 'row' }, [
-                    (this.labeled && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth } }, id) : null,
+                    (this.labeled && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth }, title: id }, id) : null,
                     { tag: tag, props: finalProps, children: children },
                 ]));
             }
@@ -230,8 +230,8 @@ __decorate([
     ReactiveProperty({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
-], IoPropertyEditor.prototype, "widgets", void 0);
+    ReactiveProperty({ type: Object })
+], IoPropertyEditor.prototype, "widget", void 0);
 IoPropertyEditor = __decorate([
     Register
 ], IoPropertyEditor);

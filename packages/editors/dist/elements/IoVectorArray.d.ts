@@ -8,6 +8,7 @@ export type IoVectorArrayProps = IoElementProps & {
     linkable?: boolean;
     linked?: WithBinding<boolean>;
     ladder?: boolean;
+    disabled?: boolean;
 };
 /**
  * Input element for vector arrays and objects.
@@ -22,6 +23,7 @@ export declare class IoVectorArray extends IoElement {
     linkable: boolean;
     linked: boolean;
     ladder: boolean;
+    disabled: boolean;
     keys: number[];
     private _ratios;
     _onNumberPointerDown(event: PointerEvent): void;

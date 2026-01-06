@@ -1,0 +1,1 @@
+{"version":3,"file":"CompressedTexture.js","sourceRoot":"","sources":["../../../src/configs/textures/CompressedTexture.ts"],"names":[],"mappings":";AAAA,2DAA2D;AAC3D,uDAAuD","sourcesContent":["// CompressedTexture extends Texture - inherits base config\n// mipmaps array is displayed via default object editor\n\n"]}

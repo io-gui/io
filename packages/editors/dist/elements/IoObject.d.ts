@@ -1,7 +1,6 @@
 import { IoElement, IoElementProps, WithBinding, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
-import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoObjectProps = IoElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[];
@@ -12,7 +11,7 @@ export type IoObjectProps = IoElementProps & {
     persistentExpand?: boolean;
     config?: PropertyConfig[];
     groups?: PropertyGroups;
-    widgets?: EditorWidgets;
+    widget?: VDOMElement;
 };
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
@@ -28,7 +27,7 @@ export declare class IoObject extends IoElement {
     persistentExpand: boolean;
     config: PropertyConfig[];
     groups: PropertyGroups;
-    widgets: EditorWidgets;
+    widget: VDOMElement | undefined;
     role: string;
     valueChanged(): void;
     changed(): void;

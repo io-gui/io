@@ -26,6 +26,5 @@ registerEditorGroups(Object3D, {
         'customDistanceMaterial',
     ],
     Animation: ['animations'],
-    Advanced: [],
 });
 //# sourceMappingURL=Object3D.js.map

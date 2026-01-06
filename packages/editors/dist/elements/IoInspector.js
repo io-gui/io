@@ -109,7 +109,7 @@ let IoInspector = class IoInspector extends IoElement {
                 value: this.selected,
                 config: config,
                 groups: this.groups,
-                widgets: this.widgets,
+                widget: this.widget,
                 properties: properties,
             }));
         }
@@ -136,8 +136,8 @@ __decorate([
     ReactiveProperty({ type: Object, init: null })
 ], IoInspector.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
-], IoInspector.prototype, "widgets", void 0);
+    ReactiveProperty({ type: Object })
+], IoInspector.prototype, "widget", void 0);
 IoInspector = __decorate([
     Register
 ], IoInspector);

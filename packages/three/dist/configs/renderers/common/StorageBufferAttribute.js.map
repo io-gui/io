@@ -1,0 +1,1 @@
+{"version":3,"file":"StorageBufferAttribute.js","sourceRoot":"","sources":["../../../../src/configs/renderers/common/StorageBufferAttribute.ts"],"names":[],"mappings":";AAAA,+EAA+E","sourcesContent":["// This class is identical to BufferAttribute, so we don't need to register it."]}

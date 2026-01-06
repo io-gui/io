@@ -22,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+export * from './elements/IoBuildGeometry.js';
 export * from './elements/IoThreeViewport.js';
 export * from './nodes/ThreeApplet.js';
 //# sourceMappingURL=index.d.ts.map

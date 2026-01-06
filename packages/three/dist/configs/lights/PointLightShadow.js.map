@@ -1,0 +1,1 @@
+{"version":3,"file":"PointLightShadow.js","sourceRoot":"","sources":["../../../src/configs/lights/PointLightShadow.ts"],"names":[],"mappings":";AAAA,8DAA8D","sourcesContent":["// PointLightShadow extends LightShadow - inherits base config\n\n"]}

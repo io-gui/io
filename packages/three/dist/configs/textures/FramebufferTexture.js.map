@@ -1,0 +1,1 @@
+{"version":3,"file":"FramebufferTexture.js","sourceRoot":"","sources":["../../../src/configs/textures/FramebufferTexture.ts"],"names":[],"mappings":";AAAA,4DAA4D","sourcesContent":["// FramebufferTexture extends Texture - inherits base config\n\n"]}

@@ -1,7 +1,6 @@
 import { IoElement, IoElementProps, VDOMElement } from '@io-gui/core';
 import { PropertyConfig } from '../utils/EditorConfig.js';
 import { PropertyGroups } from '../utils/EditorGroups.js';
-import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoPropertyEditorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[] | null;
@@ -10,7 +9,7 @@ export type IoPropertyEditorProps = IoElementProps & {
     orientation?: 'vertical' | 'horizontal';
     config?: PropertyConfig[];
     groups?: PropertyGroups;
-    widgets?: EditorWidgets;
+    widget?: VDOMElement;
 };
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
@@ -24,7 +23,7 @@ export declare class IoPropertyEditor extends IoElement {
     orientation: 'vertical' | 'horizontal';
     config: PropertyConfig[];
     groups: PropertyGroups;
-    widgets: EditorWidgets;
+    widget: VDOMElement | undefined;
     private _config;
     private _groups;
     private _widget;
