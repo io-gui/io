@@ -1,2 +1,7 @@
-// CubeTexture extends Texture - inherits base config
+import { registerEditorGroups } from '@io-gui/editors'
+import { CubeTexture } from 'three/webgpu'
+
+registerEditorGroups(CubeTexture, {
+  Source: ['images'],
+})
 
