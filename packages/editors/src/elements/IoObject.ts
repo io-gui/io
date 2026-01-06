@@ -3,7 +3,6 @@ import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups } from '../utils/EditorGroups.js'
-import { EditorWidgets } from '../utils/EditorWidgets.js'
 
 export type IoObjectProps = IoElementProps & {
   value?: Record<string, any> | any[]
@@ -15,7 +14,7 @@ export type IoObjectProps = IoElementProps & {
   persistentExpand?: boolean
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widgets?: EditorWidgets
+  widget?: VDOMElement
 }
 
 /**
@@ -80,13 +79,14 @@ export class IoObject extends IoElement {
   @ReactiveProperty({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Map, init: null})
-  declare widgets: EditorWidgets
+  @ReactiveProperty({type: Object})
+  declare widget: VDOMElement | undefined
 
   @Property('region')
   declare role: string
 
   valueChanged() {
+    if (!this.value) return
 
     let uuid = genIdentifier(this.value)
     let storage: 'local' | 'none' = 'local'
@@ -127,7 +127,7 @@ export class IoObject extends IoElement {
         properties: this.properties,
         config: this.config,
         groups: this.groups,
-        widgets: this.widgets,
+        widget: this.widget,
         labeled: this.labeled,
         labelWidth: this.labelWidth,
       }))

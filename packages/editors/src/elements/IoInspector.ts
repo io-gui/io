@@ -1,9 +1,8 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span, VDOMElement } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
 import { getAllPropertyNames, PropertyGroups } from '../utils/EditorGroups.js'
-import { EditorWidgets } from '../utils/EditorWidgets.js'
 import { ioPropertyLink } from './IoPropertyLink.js'
 
 export type IoInspectorProps = IoElementProps & {
@@ -12,7 +11,7 @@ export type IoInspectorProps = IoElementProps & {
   search?: WithBinding<string>
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widgets?: EditorWidgets
+  widget?: VDOMElement
 }
 
 function isNestedObject(value: object, selected: object): boolean {
@@ -71,8 +70,8 @@ export class IoInspector extends IoElement {
   @ReactiveProperty({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Map, init: null})
-  declare widgets: EditorWidgets
+  @ReactiveProperty({type: Object})
+  declare widget: VDOMElement
 
   static get Listeners() {
     return {
@@ -140,7 +139,7 @@ export class IoInspector extends IoElement {
           value: this.selected,
           config: config,
           groups: this.groups,
-          widgets: this.widgets,
+          widget: this.widget,
           properties: properties,
         }),
       )

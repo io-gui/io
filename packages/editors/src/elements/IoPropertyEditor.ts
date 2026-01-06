@@ -1,7 +1,7 @@
 import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
-import { EditorWidgets, getEditorWidget } from '../utils/EditorWidgets.js'
+import { getEditorWidget } from '../utils/EditorWidgets.js'
 import { ioObject } from './IoObject.js'
 
 export type IoPropertyEditorProps = IoElementProps & {
@@ -12,7 +12,7 @@ export type IoPropertyEditorProps = IoElementProps & {
   orientation?: 'vertical' | 'horizontal'
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widgets?: EditorWidgets
+  widget?: VDOMElement
 }
 
 /**
@@ -107,8 +107,8 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Map, init: null})
-  declare widgets: EditorWidgets
+  @ReactiveProperty({type: Object})
+  declare widget: VDOMElement | undefined
 
   private _config: PropertyConfigRecord | null = null
   private _groups: PropertyGroupsRecord | null = null
@@ -150,7 +150,7 @@ export class IoPropertyEditor extends IoElement {
   configureThrottled() {
     this._config = getEditorConfig(this.value, this.config)
     this._groups = getEditorGroups(this.value, this.groups)
-    this._widget = getEditorWidget(this.value, this.widgets)
+    this._widget = this.widget || getEditorWidget(this.value)
     this.throttle(this.changed)
   }
   changed() {
@@ -216,13 +216,13 @@ export class IoPropertyEditor extends IoElement {
         // NOTE: Functions dont have labels. They are displayed as labeled buttons.
         const isFunction = typeof value === 'function'
         if (isFunction) {
-          finalProps.action = value
+          finalProps.action = (value as any).bind(this.value)
           finalProps.label = finalProps.label || id
         }
 
         const isIoObject = tag === 'io-object'
         if (isIoObject) {
-          finalProps.label = id + ': ' + (finalProps.label || (value as object).constructor?.name)
+          finalProps.label = id + ': ' + (finalProps.label || (value as object)?.constructor?.name || String(value))
         }
 
         vChildren.push(div({class: 'row'}, [

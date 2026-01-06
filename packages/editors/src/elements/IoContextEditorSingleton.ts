@@ -73,7 +73,7 @@ class IoContextEditor extends IoPropertyEditor {
       orientation: props.orientation || 'vertical',
       config: props.config || [],
       groups: props.groups || {},
-      widgets: props.widgets || new Map(),
+      widget: props.widget,
       expanded: true,
     })
     this.onClose = props.onClose || null
@@ -93,7 +93,7 @@ class IoContextEditor extends IoPropertyEditor {
         labeled: true,
         config: [],
         groups: {},
-        widgets: new Map(),
+        widget: undefined,
       })
       if (this.onClose) {
         this.onClose()
