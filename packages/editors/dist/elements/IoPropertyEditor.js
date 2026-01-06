@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, ReactiveProperty, Register, span, div, Storage as $, HTML_ELEMENTS } from '@io-gui/core';
+import { IoElement, ReactiveProperty, Register, span, div, HTML_ELEMENTS } from '@io-gui/core';
 import { getEditorConfig } from '../utils/EditorConfig.js';
 import { getEditorGroups, getAllPropertyNames } from '../utils/EditorGroups.js';
 import { getEditorWidget } from '../utils/EditorWidgets.js';
@@ -38,6 +38,13 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     :host[orientation="horizontal"] > .row {
       flex-direction: column;
     }
+    :host io-property-editor {
+      margin-top: calc(var(--io_spacing) * -1) !important;
+    }
+    :host io-property-editor > .row {
+      /* margin: 0 !important; */
+      padding: 0 !important;
+    }
     :host > .row:last-of-type {
       margin-bottom: var(--io_spacing);
     }
@@ -50,6 +57,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      min-width: calc(var(--io_lineHeight) * 3);
     }
     :host > .row > span:after {
       display: inline-block;
@@ -57,13 +65,19 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       opacity: 0.5;
       content: ':';
     }
+    :host > .row > :nth-child(2) {
+      flex-grow: 1;
+
+    }
     :host io-object {
       margin-right: var(--io_spacing);
     }
     `;
     }
+    _config = null;
+    _groups = null;
+    _widget = null;
     init() {
-        this.changeThrottled = this.changeThrottled.bind(this);
         this._observedObjectProperties.push('value');
         window.addEventListener('io-object-mutation', this.onPropertyMutated);
     }
@@ -80,16 +94,43 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
             debug: console.warn('IoPropertyEditor: "value-input" recieved from an input without a property id');
         }
     }
-    valueMutated() {
-        this.changeThrottled();
+    valueMutated(event) {
+        this.throttle(this.changed);
     }
-    changeThrottled() {
-        this.throttle(this.changeThrottled);
+    configChanged() {
+        this.throttle(this.configureThrottled);
+    }
+    groupsChanged() {
+        this.throttle(this.configureThrottled);
+    }
+    widgetChanged() {
+        this.throttle(this.configureThrottled);
+    }
+    valueChanged() {
+        this.throttle(this.configureThrottled);
+    }
+    configureThrottled() {
+        this._config = getEditorConfig(this.value, this.config);
+        this._groups = getEditorGroups(this.value, this.groups);
+        this._widget = getEditorWidget(this.value, this.widgets);
+        this.throttle(this.changed);
     }
     changed() {
-        const config = getEditorConfig(this.value, this.config);
-        const groups = getEditorGroups(this.value, this.groups);
-        const widget = getEditorWidget(this.value, this.widgets);
+        this.debounce(this.changedDebounced);
+    }
+    changedDebounced() {
+        if (!this.value) {
+            this._config = null;
+            this._groups = null;
+            this._widget = null;
+            this.render([]);
+            return;
+        }
+        const config = this._config;
+        const groups = this._groups;
+        const widget = this._widget;
+        if (!config || !groups)
+            return;
         const properties = [];
         const vChildren = [];
         if (this.properties.length) {
@@ -111,6 +152,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
             if (allProps.includes(properties[i])) {
                 const id = properties[i];
                 const value = this.value[id];
+                const isFunction = typeof value === 'function';
                 const tag = config[id].tag;
                 const props = config[id].props || {};
                 const finalProps = { id: id, value: value, '@value-input': this._onValueInput };
@@ -123,8 +165,16 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     finalProps.config = finalProps.config || this.config;
                     finalProps.groups = finalProps.groups || this.groups;
                 }
+                if (tag === 'io-object') {
+                    finalProps.persistentExpand = true;
+                }
+                // NOTE: Functions dont have labels. They are displayed as labeled buttons.
+                if (isFunction) {
+                    finalProps.action = value;
+                    finalProps.label = finalProps.label || id;
+                }
                 vChildren.push(div({ class: 'row' }, [
-                    this.labeled ? span(id) : null,
+                    (this.labeled && !isFunction) ? span(id) : null,
                     { tag: tag, props: finalProps, children: children },
                 ]));
             }
@@ -132,13 +182,12 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
             }
         }
-        const uuid = genIdentifier(this.value);
         if (!this.properties.length) {
             for (const group in groups) {
                 if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
                     vChildren.push(ioObject({
                         label: group,
-                        expanded: $({ value: false, storage: 'local', key: uuid + '-' + group }),
+                        persistentExpand: true,
                         value: this.value,
                         properties: groups[group],
                         config: this.config,
@@ -166,10 +215,10 @@ __decorate([
     ReactiveProperty({ type: String, value: 'vertical', reflect: true })
 ], IoPropertyEditor.prototype, "orientation", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "groups", void 0);
 __decorate([
     ReactiveProperty({ type: Map, init: null })
@@ -181,18 +230,4 @@ export { IoPropertyEditor };
 export const ioPropertyEditor = function (arg0) {
     return IoPropertyEditor.vConstructor(arg0);
 };
-// TODO: consider using WeakMap instead of UUID.
-function genIdentifier(object) {
-    let UUID = 'io-object-collapse-state-' + object.constructor.name;
-    UUID += '-' + (object.guid || object.uuid || object.id || '');
-    const props = JSON.stringify(Object.keys(object));
-    let hash = 0;
-    for (let i = 0; i < props.length; i++) {
-        hash = ((hash << 5) - hash) + props.charCodeAt(i);
-        hash |= 0;
-    }
-    hash = (-hash).toString(16);
-    UUID += '-' + hash;
-    return UUID;
-}
 //# sourceMappingURL=IoPropertyEditor.js.map

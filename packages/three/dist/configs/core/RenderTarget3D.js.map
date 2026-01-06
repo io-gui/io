@@ -1,0 +1,1 @@
+{"version":3,"file":"RenderTarget3D.js","sourceRoot":"","sources":["../../../src/configs/core/RenderTarget3D.ts"],"names":[],"mappings":";AAAA,oEAAoE;AACpE,4DAA4D","sourcesContent":["// RenderTarget3D extends RenderTarget with no additional properties\n// The base RenderTarget config handles the 'depth' property\n\n"]}

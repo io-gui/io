@@ -4,8 +4,7 @@ export type EditorWidgets = Map<AnyConstructor, VDOMElement>
 
 const editorWidgetsSingleton: EditorWidgets = new Map<AnyConstructor, VDOMElement>([
   // TODO: remove outerHTML debug view
-  // [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: new Map([
-  //   [HTMLElement, [['outerHTML', div()]]]
+  // [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: [['outerHTML', div()]]]
   // ]), labeled: false}}],
 ])
 

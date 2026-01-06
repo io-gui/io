@@ -106,7 +106,7 @@ export class IoVector extends IoElement {
         if (k !== id && this._ratios[k]) (value as any)[k] = value[id] * this._ratios[k]
       }
     }
-    if (!(this.value as unknown as Node)._isNode) {
+    if (!(this.value as Node)._isNode) {
       this.dispatchMutation(this.value)
     }
     this.dispatch('value-input', {property: 'value', value: this.value}, false)

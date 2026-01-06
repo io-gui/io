@@ -69,7 +69,7 @@ export class IoElement extends HTMLElement {
 
   declare readonly _protochain: ProtoChain
   declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
-  declare readonly _bindings: Map<string, Binding<any>>
+  declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare readonly _observedObjectProperties: string[]
@@ -169,8 +169,8 @@ export class IoElement extends HTMLElement {
       this.dispatch('io-object-mutation', {object, properties}, false, window)
     }
   }
-  bind<T>(name: string): Binding<T> {
-    return bind<T>(this, name)
+  bind(name: string): Binding {
+    return bind(this, name)
   }
   unbind(name: string): void {
     unbind(this, name)
@@ -274,7 +274,7 @@ export class IoElement extends HTMLElement {
         // Update this.$ map of ids.
         debug: {
           if (this.$[vChild.props!.id] !== undefined) {
-            console.warn('IoElement: Duplicate id in template.')
+            console.warn(`IoElement: Duplicate id in template. "${vChild.props!.id}"`)
           }
         }
         this.$[vChild.props!.id] = child

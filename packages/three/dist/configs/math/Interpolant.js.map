@@ -1,0 +1,1 @@
+{"version":3,"file":"Interpolant.js","sourceRoot":"","sources":["../../../src/configs/math/Interpolant.ts"],"names":[],"mappings":";AAAA,sFAAsF;AACtF,2DAA2D","sourcesContent":["// Interpolant is an abstract class, so we register groups on concrete classes instead\n// See ./interpolants/*.ts for concrete interpolant configs"]}

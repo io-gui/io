@@ -6,7 +6,7 @@ document.body.appendChild(element);
 describe('IoInspector', () => {
     it('has default values', () => {
         expect(JSON.stringify(element.value)).toBe(undefined);
-        expect(JSON.stringify(element.config)).toBe(JSON.stringify({}));
+        expect(JSON.stringify(element.config)).toBe(JSON.stringify([]));
     });
 });
 //# sourceMappingURL=IoInspector.test.js.map

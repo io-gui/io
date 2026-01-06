@@ -6,7 +6,7 @@ import { Tab } from '../nodes/Tab.js'
 
 export type IoTabsProps = IoElementProps & {
   tabs: NodeArray<Tab>
-  addMenuOption: MenuOption
+  addMenuOption?: MenuOption
 }
 
 @Register
@@ -61,7 +61,7 @@ export class IoTabs extends IoElement {
   declare overflow: number
 
   @Property({type: MenuOption})
-  declare addMenuOption: MenuOption
+  declare addMenuOption: MenuOption | undefined
 
   constructor(args: IoTabsProps) { super(args) }
 
@@ -86,15 +86,19 @@ export class IoTabs extends IoElement {
   }
 
   changed() {
+
+
+    const hasOptions = this.addMenuOption && this.addMenuOption.options.length > 0
+
     this.render([
       ioTabsHamburger({tabs: this.tabs}),
       ...this.tabs.map(tab => ioTab({tab: tab})),
-      ioMenuItem({
+      hasOptions ?ioMenuItem({
         class: 'add-tab',
         icon: 'io:box_fill_plus',
         direction: 'down',
         option: this.addMenuOption,
-      }),
+      }) : null,
     ])
   }
 }

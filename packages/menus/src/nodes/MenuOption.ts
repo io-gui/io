@@ -76,14 +76,15 @@ export class MenuOption extends Node {
     }
 
     args = { ...args }
-    args.id = args.id ?? 'null' // TODO: Reconsider.
+    args.id = args.id ?? '' // TODO: Reconsider.
     args.label = args.label ?? args.id
     args.value = args.value ?? args.id
     args.options = args.options ?? []
-    args.options = args.options.map(option => (option instanceof MenuOption) ? option : new MenuOption(option))
+    args.options = args.options.map(option => {
+      return (option instanceof MenuOption) ? option : new MenuOption(option)
+    })
 
-    const hardenedOptions = args.options as MenuOption[]
-    const selectedOptions = hardenedOptions.filter(option => option.mode === 'select' && option.selected)
+    const selectedOptions = (args.options as MenuOption[]).filter(option => option.mode === 'select' && option.selected)
     for (let i = 1; i < selectedOptions.length; i++) {
       debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions)
       selectedOptions[i].selected = false
@@ -146,7 +147,9 @@ export class MenuOption extends Node {
     if (this.selectedIDImmediate) {
       this.selected = true
       const option = this.options.find(option => option.id === this.selectedIDImmediate)
-      if (option) option.selected = true
+      if (option) {
+        option.selected = true
+      }
     }
     this.updatePaths()
   }
@@ -278,9 +281,9 @@ export class MenuOption extends Node {
       if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
         console.warn('"selected" property is only valid when mode is "select" or "toggle"!', this)
       }
-      if (!this.id) {
-        console.warn('"id" property is required!', this)
-      }
+      // if (!this.id) {
+      //   console.warn('"id" property is required!', this)
+      // }
       if (this.action && typeof this.action !== 'function') {
         console.warn(`Invalid type "${typeof this.action}" of "action" property!`, this)
       }

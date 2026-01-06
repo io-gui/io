@@ -3,10 +3,10 @@ import { ioIcon } from '@io-gui/icons'
 
 export type IoFieldProps = IoElementProps & {
   value?: WithBinding<any>
-  icon?: string
-  label?: string
-  selected?: boolean
-  disabled?: boolean
+  icon?: WithBinding<string>
+  label?: WithBinding<string>
+  selected?: WithBinding<boolean>
+  disabled?: WithBinding<boolean>
   appearance?: 'neutral' | 'inset' | 'outset'
   pattern?: string
 }

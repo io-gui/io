@@ -10,12 +10,12 @@ import {
   Vector4
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 const AMOUNT = 6
 
 @Register
-export class CameraArrayExample extends ThreeState {
+export class CameraArrayExample extends ThreeApplet {
 
   public arrayCamera: ArrayCamera
   public mesh: Mesh

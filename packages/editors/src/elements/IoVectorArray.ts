@@ -35,7 +35,7 @@ export class IoVectorArray extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: null})
+  @ReactiveProperty({type: Array})
   declare value: number[]
 
   @ReactiveProperty(1)
@@ -84,9 +84,12 @@ export class IoVectorArray extends IoElement {
         if (k !== index && this._ratios[k]) (value as any)[k] = value[index] * this._ratios[k]
       }
     }
+    // TODO: this was replaced in earlier commit but not sure why. Nodes should dispatch mutations on their own.
     if (!(this.value as unknown as Node)._isNode) {
       this.dispatchMutation(this.value)
     }
+    // Remove this later if no regressions are spotted and no tests are broken.
+    // this.dispatchMutation(this.value)
     this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 

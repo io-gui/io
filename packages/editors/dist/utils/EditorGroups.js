@@ -1,3 +1,4 @@
+import { Node as IoNode, IoElement } from '@io-gui/core';
 export const SKIPPED_PROPERTIES = [
     '$',
     'ELEMENT_NODE', 'ATTRIBUTE_NODE', 'TEXT_NODE', 'CDATA_SECTION_NODE', 'ENTITY_REFERENCE_NODE', 'ENTITY_NODE',
@@ -30,7 +31,7 @@ export function getAllPropertyNames(obj) {
     do {
         const props = Object.getOwnPropertyNames(curr);
         props.forEach((prop) => {
-            if (allProps.indexOf(prop) === -1 && typeof obj[prop] !== 'function' && !SKIPPED_PROPERTIES.includes(prop)) {
+            if (allProps.indexOf(prop) === -1 && !SKIPPED_PROPERTIES.includes(prop)) {
                 allProps.push(prop);
             }
         });
@@ -42,7 +43,16 @@ export function getAllPropertyNames(obj) {
 }
 const editorGroupsSingleton = new Map([
     [Object, {
-            Hidden: [new RegExp(/^_/)],
+            Hidden: [
+                'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toString', 'valueOf', 'toLocaleString',
+                new RegExp(/^__/),
+            ],
+            Advanced: [new RegExp(/^_(?!_)/)],
+        }],
+    [Array, {
+            Hidden: [
+                'length', 'constructor', 'at', 'concat', 'copyWithin', 'fill', 'find', 'findIndex', 'findLast', 'findLastIndex', 'lastIndexOf', 'pop', 'push', 'reverse', 'shift', 'unshift', 'slice', 'sort', 'splice', 'includes', 'indexOf', 'join', 'keys', 'entries', 'values', 'forEach', 'filter', 'flat', 'flatMap', 'map', 'every', 'some', 'reduce', 'reduceRight', 'toReversed', 'toSorted', 'toSpliced', 'with', 'toLocaleString', 'toString',
+            ],
         }],
     [Node, {
             Main: [
@@ -74,8 +84,22 @@ const editorGroupsSingleton = new Map([
             ],
             Hidden: [],
         }],
+    [IoNode, {
+            Hidden: [
+                'reactivity',
+                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+                '_protochain', '_disposed', '_isNode', '_isIoElement',
+            ],
+        }],
+    [IoElement, {
+            Hidden: [
+                'reactivity',
+                '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+                '_protochain', '_disposed', '_isNode', '_isIoElement',
+            ],
+        }],
 ]);
-export function getEditorGroups(object, editorGroups = new Map()) {
+export function getEditorGroups(object, propertyGroups) {
     debug: if (!object || !(object instanceof Object)) {
         console.warn('`getEditorGroups` should be used with an Object instance');
         return {};
@@ -86,6 +110,27 @@ export function getEditorGroups(object, editorGroups = new Map()) {
     function aggregateGroups(editorGroups) {
         for (const [constructorKey, groups] of editorGroups) {
             if (object instanceof constructorKey) {
+                // Reorder keys to match the order in the latest config.
+                const configKeys = Object.keys(groups);
+                const existingKeys = Object.keys(aggregatedGroups);
+                // TODO: Test thoroughly.
+                if (configKeys.length > 0 && existingKeys.length > 0) {
+                    const reorderedGroups = {};
+                    for (const key of configKeys) {
+                        reorderedGroups[key] = aggregatedGroups[key] || [];
+                    }
+                    for (const key of existingKeys) {
+                        if (!(key in reorderedGroups)) {
+                            reorderedGroups[key] = aggregatedGroups[key];
+                        }
+                    }
+                    for (const key of existingKeys) {
+                        if (configKeys.includes(key)) {
+                            delete aggregatedGroups[key];
+                        }
+                    }
+                    Object.assign(aggregatedGroups, reorderedGroups);
+                }
                 for (const g in groups) {
                     aggregatedGroups[g] = aggregatedGroups[g] || [];
                     aggregatedGroups[g].push(...groups[g]);
@@ -104,12 +149,21 @@ export function getEditorGroups(object, editorGroups = new Map()) {
         }
     }
     aggregateGroups(editorGroupsSingleton);
-    aggregateGroups(editorGroups);
+    aggregateGroups(new Map([[Object, propertyGroups]]));
+    const allGroupedNonRegexPropertyNames = [];
+    for (const g of Object.keys(aggregatedGroups)) {
+        for (const identifier of aggregatedGroups[g]) {
+            if (!(identifier instanceof RegExp)) {
+                allGroupedNonRegexPropertyNames.push(identifier);
+            }
+        }
+    }
     const groupsRecord = {
         Main: [],
     };
     for (const key of getAllPropertyNames(object)) {
         let included = false;
+        const isFunction = typeof object[key] === 'function';
         for (const g of Object.keys(aggregatedGroups)) {
             groupsRecord[g] = groupsRecord[g] || [];
             for (const identifier of aggregatedGroups[g]) {
@@ -118,17 +172,33 @@ export function getEditorGroups(object, editorGroups = new Map()) {
                     included = true;
                     continue;
                 }
-                else if (identifier instanceof RegExp && identifier.test(key)) {
+                else if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
                     groupsRecord[g].push(key);
                     included = true;
                 }
             }
         }
-        if (!included) {
+        // Functions are not included in groups unless they are explicitly added to a non-Advanced group.
+        // TODO: Test thoroughly.
+        if (!included && !isFunction && !groupsRecord['Advanced']?.includes(key)) {
             groupsRecord.Main.push(key);
         }
     }
-    // TODO: make sure no property belongs to multiple groups.
+    // Debug if properties belong to multiple groups.
+    // TODO: Test thoroughly.
+    debug: {
+        for (const g of Object.keys(groupsRecord)) {
+            for (const g2 of Object.keys(groupsRecord)) {
+                if (g !== g2) {
+                    for (const key of groupsRecord[g]) {
+                        if (groupsRecord[g2].includes(key)) {
+                            console.warn(`Property "${key}" belongs to multiple groups: "${g}" and "${g2}". Removing from "${g}".`);
+                        }
+                    }
+                }
+            }
+        }
+    }
     return groupsRecord;
 }
 export function registerEditorGroups(constructor, groups) {
@@ -136,16 +206,6 @@ export function registerEditorGroups(constructor, groups) {
     for (const group in groups) {
         existingGroups[group] = existingGroups[group] || [];
         existingGroups[group].push(...groups[group]);
-        // Remove duplicate identifiers that exist in other groups.
-        for (const g in existingGroups) {
-            if (g !== group) {
-                for (const identifier of groups[group]) {
-                    if (existingGroups[g].includes(identifier)) {
-                        existingGroups[g].splice(existingGroups[g].indexOf(identifier), 1);
-                    }
-                }
-            }
-        }
     }
     editorGroupsSingleton.set(constructor, existingGroups);
 }

@@ -5,9 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget, Clock } from 'three/webgpu';
+import { WebGPURenderer, CanvasTarget, Clock, NeutralToneMapping } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
-import { ThreeState } from '../nodes/ThreeState.js';
+import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
@@ -20,16 +20,18 @@ const observer = new IntersectionObserver((entries) => {
 // TODO: Add support for logarithmic depth buffer
 // TODO: Add support for unique renderer instances per viewport
 const _renderer = new WebGPURenderer({ antialias: false, alpha: true });
+_renderer.toneMapping = NeutralToneMapping;
 _renderer.setPixelRatio(window.devicePixelRatio);
+_renderer.shadowMap.enabled = true;
 void _renderer.init();
 const _clock = new Clock();
 const _playingViewports = [];
-let _currentFrameTime = -1;
-let _currentFrameDelta = 0;
+let _time = -1;
+let _delta = 0;
 new Promise((resolve, reject) => {
     _renderer.setAnimationLoop((time) => {
-        _currentFrameTime = time;
-        _currentFrameDelta = _clock.getDelta();
+        _time = time;
+        _delta = _clock.getDelta();
         for (const viewport of _playingViewports) {
             viewport.onAnimate();
         }
@@ -64,7 +66,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.renderViewport = this.renderViewport.bind(this);
         this.renderTarget = new CanvasTarget(document.createElement('canvas'));
         this.appendChild(this.renderTarget.domElement);
-        this.viewCameras = new ViewCameras({ viewport: this, state: this.state, cameraSelect: this.bind('cameraSelect') });
+        this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
         this.debounce(this.renderViewport);
     }
     connectedCallback() {
@@ -95,41 +97,51 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.height = Math.floor(rect.height);
         this.renderTarget.setSize(this.width, this.height);
         this.renderTarget.setPixelRatio(window.devicePixelRatio);
-        this.viewCameras.setSize(this.width, this.height);
         this.renderViewport();
     }
-    stateChanged() {
+    appletChanged() {
         this.debounce(this.renderViewport);
     }
-    stateMutated() {
+    appletMutated() {
         this.debounce(this.renderViewport);
     }
     changed() {
         this.debounce(this.renderViewport);
     }
     renderViewport() {
-        if (_renderer.initialized === false) {
+        if (this.renderer.initialized === false) {
             this.debounce(this.renderViewport);
             return;
         }
-        if (this.state.isRendererInitialized() === false) {
-            void this.state.onRendererInitialized(_renderer);
+        if (this.applet.isRendererInitialized() === false) {
+            void this.applet.onRendererInitialized(this.renderer);
         }
         if (!this.width || !this.height) {
             return;
         }
-        _renderer.setCanvasTarget(this.renderTarget);
-        _renderer.setClearColor(this.clearColor, this.clearAlpha);
-        _renderer.setSize(this.width, this.height);
-        _renderer.clear();
-        this.state.setViewportSize(this.width, this.height);
-        this.state.animate(_currentFrameTime, _currentFrameDelta);
-        _renderer.render(this.state.scene, this.viewCameras.camera);
+        this.renderer.setCanvasTarget(this.renderTarget);
+        this.renderer.setClearColor(this.clearColor, this.clearAlpha);
+        this.renderer.setSize(this.width, this.height);
+        this.renderer.clear();
+        this.applet.updateViewportSize(this.width, this.height);
+        this.applet.animate(_time, _delta);
+        const toneMapping = this.renderer.toneMapping;
+        const toneMappingExposure = this.renderer.toneMappingExposure;
+        this.renderer.toneMapping = this.applet.toneMapping;
+        this.renderer.toneMappingExposure = this.applet.toneMappingExposure;
+        this.viewCameras.setOverscan(this.width, this.height, 1.1);
+        this.renderer.render(this.applet.scene, this.viewCameras.camera);
+        this.viewCameras.resetOverscan();
+        this.renderer.toneMapping = toneMapping;
+        this.renderer.toneMappingExposure = toneMappingExposure;
     }
     dispose() {
-        super.dispose();
         this.renderTarget.dispose();
         this.viewCameras.dispose();
+        if (this.renderer !== _renderer) {
+            this.renderer.dispose();
+        }
+        super.dispose();
     }
 };
 __decorate([
@@ -142,14 +154,17 @@ __decorate([
     ReactiveProperty({ type: String, value: 'throttled' })
 ], IoThreeViewport.prototype, "reactivity", void 0);
 __decorate([
-    ReactiveProperty({ type: ThreeState, init: null })
-], IoThreeViewport.prototype, "state", void 0);
+    ReactiveProperty({ type: ThreeApplet, init: null })
+], IoThreeViewport.prototype, "applet", void 0);
 __decorate([
     ReactiveProperty({ type: Boolean })
 ], IoThreeViewport.prototype, "playing", void 0);
 __decorate([
     ReactiveProperty({ type: String, value: 'perspective' })
 ], IoThreeViewport.prototype, "cameraSelect", void 0);
+__decorate([
+    ReactiveProperty({ type: WebGPURenderer, value: _renderer })
+], IoThreeViewport.prototype, "renderer", void 0);
 IoThreeViewport = __decorate([
     Register
 ], IoThreeViewport);

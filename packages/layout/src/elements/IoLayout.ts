@@ -4,9 +4,9 @@ import { ioSplit } from './IoSplit.js'
 import { Split } from '../nodes/Split.js'
 
 export type IoLayoutProps = IoElementProps & {
-  split: Split | Binding<Split>
+  split: Split | Binding
   elements: VDOMElement[]
-  addMenuOption: MenuOption
+  addMenuOption?: MenuOption
 }
 
 @Register
@@ -34,7 +34,7 @@ export class IoLayout extends IoElement {
   declare elements: VDOMElement[]
 
   @Property({type: MenuOption})
-  declare private addMenuOption: MenuOption
+  declare addMenuOption: MenuOption | undefined
 
   changed() {
     this.render([

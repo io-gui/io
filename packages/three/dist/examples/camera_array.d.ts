@@ -1,6 +1,6 @@
 import { ArrayCamera, Mesh } from 'three/webgpu';
-import { ThreeState } from '@io-gui/three';
-export declare class CameraArrayExample extends ThreeState {
+import { ThreeApplet } from '@io-gui/three';
+export declare class CameraArrayExample extends ThreeApplet {
     arrayCamera: ArrayCamera;
     mesh: Mesh;
     constructor();

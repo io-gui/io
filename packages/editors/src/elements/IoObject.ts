@@ -1,8 +1,8 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property, Storage as $ } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
-import { EditorConfig } from '../utils/EditorConfig.js'
-import { EditorGroups } from '../utils/EditorGroups.js'
+import { PropertyConfig } from '../utils/EditorConfig.js'
+import { PropertyGroups } from '../utils/EditorGroups.js'
 import { EditorWidgets } from '../utils/EditorWidgets.js'
 
 export type IoObjectProps = IoElementProps & {
@@ -11,8 +11,9 @@ export type IoObjectProps = IoElementProps & {
   labeled?: boolean
   label?: string
   expanded?: WithBinding<boolean>
-  config?: EditorConfig
-  groups?: EditorGroups
+  persistentExpand?: boolean
+  config?: PropertyConfig[]
+  groups?: PropertyGroups
   widgets?: EditorWidgets
 }
 
@@ -65,17 +66,46 @@ export class IoObject extends IoElement {
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
 
-  @ReactiveProperty({type: Map, init: null})
-  declare config: EditorConfig
+  @ReactiveProperty({value: false})
+  declare persistentExpand: boolean
 
-  @ReactiveProperty({type: Map, init: null})
-  declare groups: EditorGroups
+  @ReactiveProperty({type: Array, init: null})
+  declare config: PropertyConfig[]
+
+  @ReactiveProperty({type: Object, init: null})
+  declare groups: PropertyGroups
 
   @ReactiveProperty({type: Map, init: null})
   declare widgets: EditorWidgets
 
   @Property('region')
   declare role: string
+
+  valueChanged() {
+
+    let uuid = genIdentifier(this.value)
+    let storage: 'local' | 'none' = 'local'
+    if (!uuid) {
+      uuid = getTempIdentifier(this.value)
+      storage = 'none'
+    }
+
+    // TODO: Test
+    const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label})
+    const bindingTargets = expandedBinding.targets
+    const bindingTargetCount = bindingTargets.length
+    const targetIsThis = bindingTargets.some(target => target === this)
+
+    if (bindingTargetCount < 1) {
+      if (!targetIsThis) {
+        const targetP = this._reactiveProperties.get('expanded')!
+        if (targetP.binding && targetP.binding !== expandedBinding) {
+          targetP.binding.removeTarget(this, 'expanded')
+        }
+        expandedBinding.addTarget(this, 'expanded')
+      }
+    }
+  }
 
   changed() {
     const label = this.label || this.value.constructor.name
@@ -102,4 +132,21 @@ export class IoObject extends IoElement {
 }
 export const ioObject = function(arg0?: IoObjectProps) {
   return IoObject.vConstructor(arg0)
+}
+
+function genIdentifier(object: any) {
+  const id = object.guid || object.uuid || object.id || object.name || object.label
+  if (id) {
+    return 'io-object-collapse-state-' + object.constructor.name + '-' + id
+  }
+}
+
+const tempIdentifiers = new WeakMap<object, string>()
+
+function getTempIdentifier(object: any) {
+  if (!tempIdentifiers.has(object)) {
+    const randomuuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    tempIdentifiers.set(object, randomuuid)
+  }
+  return tempIdentifiers.get(object)!
 }

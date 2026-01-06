@@ -1,10 +1,10 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode, NearestFilter, TextureNode } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
 import { Register } from '@io-gui/core'
-import { ThreeState } from '@io-gui/three'
+import { ThreeApplet } from '@io-gui/three'
 
 @Register
-export class ComputeTextureExample extends ThreeState {
+export class ComputeTextureExample extends ThreeApplet {
   public storageTexture: StorageTexture
   public computeNode: ComputeNode
   constructor() {

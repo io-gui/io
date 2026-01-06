@@ -1,0 +1,1 @@
+{"version":3,"file":"MathUtils.js","sourceRoot":"","sources":["../../../src/configs/math/MathUtils.ts"],"names":[],"mappings":";AAAA,2FAA2F","sourcesContent":["// MathUtils is a collection of utility functions, so we don't need to register it directly"]}

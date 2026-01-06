@@ -6,7 +6,7 @@ export type IoSliderProps = IoElementProps & {
     max?: number;
     exponent?: number;
     vertical?: boolean;
-    disabled?: boolean;
+    disabled?: WithBinding<boolean>;
     noscroll?: boolean;
 };
 /**

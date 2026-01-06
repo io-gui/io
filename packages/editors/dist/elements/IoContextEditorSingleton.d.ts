@@ -1,8 +1,8 @@
 import { NudgeDirection } from '@io-gui/core';
 import { IoPropertyEditor } from './IoPropertyEditor.js';
+import { PropertyConfig } from '../utils/EditorConfig.js';
 import { EditorGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
-import { EditorConfig } from '../utils/EditorConfig.js';
 interface IoContextEditorExpandProps {
     source: HTMLElement;
     direction: NudgeDirection;
@@ -10,7 +10,7 @@ interface IoContextEditorExpandProps {
     properties?: string[];
     labeled?: boolean;
     orientation?: 'vertical' | 'horizontal';
-    config?: EditorConfig;
+    config?: PropertyConfig[];
     groups?: EditorGroups;
     widgets?: EditorWidgets;
     onClose?: () => void;

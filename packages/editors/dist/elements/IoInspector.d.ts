@@ -1,13 +1,13 @@
 import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
-import { EditorConfig } from '../utils/EditorConfig.js';
-import { EditorGroups } from '../utils/EditorGroups.js';
+import { PropertyConfig } from '../utils/EditorConfig.js';
+import { PropertyGroups } from '../utils/EditorGroups.js';
 import { EditorWidgets } from '../utils/EditorWidgets.js';
 export type IoInspectorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     selected?: WithBinding<Record<string, any> | any[]>;
     search?: WithBinding<string>;
-    config?: EditorConfig;
-    groups?: EditorGroups;
+    config?: PropertyConfig[];
+    groups?: PropertyGroups;
     widgets?: EditorWidgets;
 };
 /**
@@ -18,8 +18,8 @@ export declare class IoInspector extends IoElement {
     value: object | Array<any>;
     selected: object | Array<any>;
     search: string;
-    config: EditorConfig;
-    groups: EditorGroups;
+    config: PropertyConfig[];
+    groups: PropertyGroups;
     widgets: EditorWidgets;
     static get Listeners(): {
         'io-button-clicked': string;

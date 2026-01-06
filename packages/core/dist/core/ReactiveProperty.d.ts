@@ -13,7 +13,7 @@ import { IoElement } from '../elements/IoElement.js';
 export type ReactivePropertyDefinition = {
     value?: any;
     type?: AnyConstructor;
-    binding?: Binding<any>;
+    binding?: Binding;
     reflect?: boolean;
     init?: any;
 };
@@ -21,7 +21,7 @@ export type ReactivePropertyDefinition = {
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
  * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|ReactivePropertyDefinition)} ReactivePropertyDefinitionLoose
  */
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<any> | ReactivePropertyDefinition;
+export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | ReactivePropertyDefinition;
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
  * It facilitates merging of inherited property definitions from the prototype chain.
@@ -35,7 +35,7 @@ export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<
 export declare class ReactiveProtoProperty {
     value?: any;
     type?: AnyConstructor;
-    binding?: Binding<any>;
+    binding?: Binding;
     reflect?: boolean;
     init?: any;
     /**
@@ -74,7 +74,7 @@ export declare class ReactiveProtoProperty {
 export declare class ReactivePropertyInstance {
     value?: any;
     type?: AnyConstructor;
-    binding?: Binding<any>;
+    binding?: Binding;
     reflect: boolean;
     init?: any;
     /**

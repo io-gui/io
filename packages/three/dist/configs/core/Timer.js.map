@@ -1,0 +1,1 @@
+{"version":3,"file":"Timer.js","sourceRoot":"","sources":["../../../src/configs/core/Timer.ts"],"names":[],"mappings":";AAAA,8DAA8D;AAC9D,6DAA6D","sourcesContent":["// Timer has no public properties - only getter/setter methods\n// It's designed for internal timing use, so no config needed\n\n"]}

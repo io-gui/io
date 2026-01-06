@@ -86,11 +86,13 @@ const localStorage = new EmulatedLocalStorage()
 type StorageNodes = {
   local: Map<string, StorageNode>
   hash: Map<string, StorageNode>
+  none: Map<string, StorageNode>
 }
 
 const nodes: StorageNodes = {
   local: new Map(),
   hash: new Map(),
+  none: new Map(),
 }
 
 let hashValues: Record<string, any> = {}
@@ -98,7 +100,8 @@ let hashValues: Record<string, any> = {}
 export type StorageProps = NodeProps & {
   key: string
   value: any
-  storage?: 'hash' | 'local'
+  default?: any
+  storage?: 'hash' | 'local' | 'none'
 }
 
 @Register
@@ -111,9 +114,9 @@ export class StorageNode extends Node {
   declare value: any
 
   @ReactiveProperty({value: 'local', type: String})
-  declare storage: 'hash' | 'local'
+  declare storage: 'hash' | 'local' | 'none'
 
-  declare binding: Binding<any>
+  declare binding: Binding
 
   declare default: any
 
@@ -124,8 +127,8 @@ export class StorageNode extends Node {
       } else {
         if (typeof props.key !== 'string' || !props.key)
           console.warn('Ivalid Storage key!')
-        if (props.storage && ['hash', 'local'].indexOf(props.storage) === -1)
-          console.warn('Ivalid Storage storage!')
+        if (props.storage && ['hash', 'local', 'none'].indexOf(props.storage) === -1)
+          console.warn(`Ivalid storage type! ${props.storage}`)
       }
     }
 
@@ -142,6 +145,8 @@ export class StorageNode extends Node {
       } else {
         def = props.value
       }
+
+      props.default = def
 
       let storedValue: string | null = null
       switch (props.storage) {
@@ -162,10 +167,6 @@ export class StorageNode extends Node {
       }
 
       super(props)
-
-      this.valueMutatedDebounced = this.valueMutatedDebounced.bind(this)
-
-      this.default = def
 
       this.binding = this.bind('value')
       this.binding.dispose = () => {
@@ -198,22 +199,31 @@ export class StorageNode extends Node {
     nodes[s].delete(this.key)
   }
   valueMutated() {
-    this.debounce(this.valueMutatedDebounced)
-  }
-  valueMutatedDebounced() {
-    this.valueChanged()
+    this.debounce(this.changed)
+    // this.changed()
   }
   valueChanged() {
+    this.changed()
+  }
+  changed() {
     switch (this.storage) {
       case 'hash': {
         this.saveValueToHash()
         break
       }
       case 'local': {
-        if (this.value === null || this.value === undefined || (this.value === this.default && typeof this.value !== 'object')) {
+        if (this.value === this.default || this.value === null || this.value === undefined) {
           localStorage.removeItem('Storage:' + this.key)
         } else {
-          localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value))
+          if (typeof this.value !== 'object') {
+            if (typeof this.value === 'string') {
+              localStorage.setItem('Storage:' + this.key, `"${this.value}"`)
+            } else if (typeof this.value === 'number') {
+              localStorage.setItem('Storage:' + this.key, this.value)
+            }
+          } else {
+            localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value))
+          }
         }
         break
       }
@@ -238,18 +248,25 @@ export class StorageNode extends Node {
     hashValues = parseHash(self.location.hash)
 
     const value = this.value
-    if (value !== undefined && value !== '' && value !== this.default) {
+
+    if (value === this.default || value === null || value === undefined) {
+      delete hashValues[this.key]
+    } else {
       if (typeof value === 'string') {
         if (isNaN(value as unknown as number)) {
-          hashValues[this.key] = value
+          hashValues[this.key] = String(value)
         } else {
           hashValues[this.key] = '"' + value + '"'
         }
+      } else if (typeof value === 'number') {
+        hashValues[this.key] = String(value)
+      } else if (typeof value === 'boolean') {
+        hashValues[this.key] = String(value)
       } else {
-        hashValues[this.key] = JSON.stringify(value)
+        debug: {
+          console.warn('Storage: Cannot serialize value to hash!', value)
+        }
       }
-    } else {
-      delete hashValues[this.key]
     }
 
     let hashString = ''

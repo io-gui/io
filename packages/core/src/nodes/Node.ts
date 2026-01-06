@@ -32,7 +32,7 @@ export const NODES = {
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced'
 
 // Utility type to add Binding to all properties of a type
-export type WithBinding<T> = T | Binding<T>
+export type WithBinding<T> = T | Binding
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
@@ -42,8 +42,17 @@ export type NodeProps = {
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
+
+function isNodeObject(value: any) {
+  return (typeof value === 'object' && value !== null && value._isNode)
+}
+
 function isNonNodeObject(value: any) {
   return (typeof value === 'object' && value !== null && !value._isNode)
+}
+
+function isNonNodeConstructor(type: AnyConstructor) {
+  return !(type.prototype instanceof IoElement || type.prototype instanceof Object)
 }
 
 @Register
@@ -66,7 +75,7 @@ export class Node extends Object {
 
   declare readonly _protochain: ProtoChain
   declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
-  declare readonly _bindings: Map<string, Binding<any>>
+  declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare readonly _observedObjectProperties: string[]
@@ -144,14 +153,14 @@ export class Node extends Object {
     return onPropertyMutated(this, event)
   };
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
-    if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
+    if (isNodeObject(object) || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties})
     } else {
       this.dispatch('io-object-mutation', {object, properties}, false, window)
     }
   }
-  bind<T>(name: string): Binding<T> {
-    return bind<T>(this, name)
+  bind(name: string): Binding {
+    return bind(this, name)
   }
   unbind(name: string): void {
     unbind(this, name)
@@ -250,6 +259,9 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
   if (value !== oldValue) {
     const binding = (value instanceof Binding) ? value : null
     if (binding) {
+      if (name === 'selectedExampleId') {
+        console.log('binding', binding)
+      }
       const oldBinding = prop.binding
       if (binding !== oldBinding) {
         if (oldBinding) {
@@ -304,12 +316,12 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         if (property.value === value && n !== name) hasNewValueAtOtherProperty = true
         if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true
       })
-      if (value?._isNode && !hasNewValueAtOtherProperty) {
+      if (isNodeObject(value) && !hasNewValueAtOtherProperty) {
         node._observedNodeProperties.push(name)
         value.addEventListener('io-object-mutation', node.onPropertyMutated)
         value.addParent(node)
       }
-      if (oldValue?._isNode && !hasOldValueAtOtherProperty && !oldValue._disposed) {
+      if (isNodeObject(oldValue) && !hasOldValueAtOtherProperty && !oldValue._disposed) {
         node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1)
         oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated)
         oldValue.removeParent(node)
@@ -335,7 +347,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         }
       } else if (prop.type === Object) {
         if (value instanceof Array) {
-          console.warn(`Wrong type of property "${name}". Value: "${JSON.stringify(value)}". Expected type: ${prop.type.name}`, node)
+          console.warn(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node)
         }
       } else if (prop.type === NodeArray) {
         if (!(value instanceof NodeArray)) {
@@ -393,7 +405,13 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
 }
 export function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
   if (!node._observedObjectProperties.includes(name)) {
-    if(isNonNodeObject(property.value)) {
+
+    if(property.type && isNonNodeConstructor(property.type)) {
+      node._observedObjectProperties.push(name)
+      if (node._observedObjectProperties.length === 1) {
+        window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
+      }
+    } else if (property.value && isNonNodeObject(property.value)) {
       node._observedObjectProperties.push(name)
       if (node._observedObjectProperties.length === 1) {
         window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
@@ -403,7 +421,7 @@ export function observeObjectProperty(node: Node | IoElement, name: string, prop
 }
 
 export function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
-  if (property.value?._isNode) {
+  if (isNodeObject(property.value)) {
     let hasSameValueAtOtherProperty = false
     node._reactiveProperties.forEach((p, n) => {
       if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true
@@ -415,14 +433,14 @@ export function observeNodeProperty(node: Node | IoElement, name: string, proper
   }
 }
 
-export function bind<T>(node: Node | IoElement, name: string) {
+export function bind(node: Node | IoElement, name: string) {
   debug: if (!node._reactiveProperties.has(name)) {
     console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`)
   }
   if (!node._bindings.has(name)) {
-    node._bindings.set(name, new Binding<T>(node, name))
+    node._bindings.set(name, new Binding(node, name))
   }
-  return node._bindings.get(name)! as Binding<T>
+  return node._bindings.get(name)! as Binding
 }
 export function unbind(node: Node | IoElement, name: string) {
   const binding = node._bindings.get(name)
@@ -459,7 +477,7 @@ export function dispose(node: Node | IoElement) {
   const removed: Node[] = []
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name)
-    if (property.value?._isNode && !removed.includes(property.value) && !property.value._disposed) {
+    if (isNodeObject(property.value) && !removed.includes(property.value) && !property.value._disposed) {
       property.value.removeEventListener('io-object-mutation', node.onPropertyMutated)
       removed.push(property.value)
     }

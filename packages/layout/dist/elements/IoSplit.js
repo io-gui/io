@@ -35,7 +35,6 @@ let IoSplit = class IoSplit extends IoElement {
     // TODO: Make sure one panel is available even when all tabs are removed.
     constructor(args) {
         super(args);
-        this.splitMutatedDebounced = this.splitMutatedDebounced.bind(this);
     }
     onDividerMove(event) {
         event.stopPropagation();

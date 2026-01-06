@@ -20,13 +20,14 @@ let MenuOption = MenuOption_1 = class MenuOption extends Node {
             };
         }
         args = { ...args };
-        args.id = args.id ?? 'null'; // TODO: Reconsider.
+        args.id = args.id ?? ''; // TODO: Reconsider.
         args.label = args.label ?? args.id;
         args.value = args.value ?? args.id;
         args.options = args.options ?? [];
-        args.options = args.options.map(option => (option instanceof MenuOption_1) ? option : new MenuOption_1(option));
-        const hardenedOptions = args.options;
-        const selectedOptions = hardenedOptions.filter(option => option.mode === 'select' && option.selected);
+        args.options = args.options.map(option => {
+            return (option instanceof MenuOption_1) ? option : new MenuOption_1(option);
+        });
+        const selectedOptions = args.options.filter(option => option.mode === 'select' && option.selected);
         for (let i = 1; i < selectedOptions.length; i++) {
             debug: console.warn('Duplicate selected options with mode "select" found!', selectedOptions);
             selectedOptions[i].selected = false;
@@ -93,8 +94,9 @@ let MenuOption = MenuOption_1 = class MenuOption extends Node {
         if (this.selectedIDImmediate) {
             this.selected = true;
             const option = this.options.find(option => option.id === this.selectedIDImmediate);
-            if (option)
+            if (option) {
                 option.selected = true;
+            }
         }
         this.updatePaths();
     }
@@ -230,9 +232,9 @@ let MenuOption = MenuOption_1 = class MenuOption extends Node {
             if (this.selected && ['select', 'toggle'].indexOf(this.mode) === -1) {
                 console.warn('"selected" property is only valid when mode is "select" or "toggle"!', this);
             }
-            if (!this.id) {
-                console.warn('"id" property is required!', this);
-            }
+            // if (!this.id) {
+            //   console.warn('"id" property is required!', this)
+            // }
             if (this.action && typeof this.action !== 'function') {
                 console.warn(`Invalid type "${typeof this.action}" of "action" property!`, this);
             }

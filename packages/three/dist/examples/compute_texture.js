@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, NearestFilter } from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 import { Register } from '@io-gui/core';
-import { ThreeState } from '@io-gui/three';
-let ComputeTextureExample = class ComputeTextureExample extends ThreeState {
+import { ThreeApplet } from '@io-gui/three';
+let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
     storageTexture;
     computeNode;
     constructor() {

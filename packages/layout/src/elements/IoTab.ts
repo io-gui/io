@@ -302,13 +302,11 @@ export class IoTab extends IoField {
       value: this.tab,
       properties: ['id', 'label', 'icon'],
       orientation: 'horizontal',
-      config: new Map([
-        [Object, [
-          ['id', ioField({inert: true})],
-          ['label', ioString({live: true})],
-          ['icon', iconOptions],
-        ]],
-      ]),
+      config: [
+        ['id', ioField({inert: true})],
+        ['label', ioString({live: true})],
+        ['icon', iconOptions],
+      ],
     })
   }
   onKeydown(event: KeyboardEvent) {

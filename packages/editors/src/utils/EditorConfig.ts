@@ -1,5 +1,5 @@
 import { IoElement, IoGl, Theme, Color, AnyConstructor, VDOMElement, Node, } from '@io-gui/core'
-import { ioString, ioNumber, ioSwitch, ioField } from '@io-gui/inputs'
+import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
 import { MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
@@ -23,6 +23,34 @@ function makeSelect(options: any[]) {
   return ioOptionSelect({option})
 }
 
+class ConfigCache<K1 extends object, K2 extends object, V> {
+  private map = new WeakMap<K1, WeakMap<K2, V>>()
+
+  set(key1: K1, key2: K2, value: V): this {
+    let inner = this.map.get(key1)
+    if (!inner) {
+      inner = new WeakMap<K2, V>()
+      this.map.set(key1, inner)
+    }
+    inner.set(key2, value)
+    return this
+  }
+
+  get(key1: K1, key2: K2): V | undefined {
+    return this.map.get(key1)?.get(key2)
+  }
+
+  has(key1: K1, key2: K2): boolean {
+    return this.map.get(key1)?.has(key2) ?? false
+  }
+
+  delete(key1: K1, key2: K2): boolean {
+    return this.map.get(key1)?.delete(key2) ?? false
+  }
+}
+
+const configCache = new ConfigCache<object, object, PropertyConfigRecord>()
+
 // TODO: Make sure multiple editors dont share the same menu options.
 // TODO: Consider using function to return new view each time editor is configured at runtime.
 
@@ -34,6 +62,7 @@ const editorConfigSingleton: EditorConfig = new Map<AnyConstructor, PropertyConf
     [Object, ioObject()],
     [null, ioField({disabled: true})],
     [undefined, ioField({disabled: true})],
+    [Function, ioButton()],
   ]],
   [Array, [
     [Number, ioNumber({step: 0.01})],
@@ -158,10 +187,16 @@ editorConfigSingleton.forEach((propertyTypes, constructor) => {
   }
 })
 
-export function getEditorConfig(object: object, editorConfig: EditorConfig = new Map()): PropertyConfigRecord {
+export function getEditorConfig(object: object, propertyConfigs: PropertyConfig[]): PropertyConfigRecord {
   debug: if (!object || !(object instanceof Object)) {
     console.warn('`getObjectConfig` should be used with an Object instance')
     return {}
+  }
+
+  const cachedConfig = configCache.get(object, propertyConfigs)
+  if (cachedConfig) {
+    // TODO: Test cached configs!
+    return cachedConfig
   }
 
   const aggregatedConfig: PropertyConfigMap = new Map()
@@ -173,15 +208,12 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
     }
   }
 
-  for (const [constructorKey, propertyTypes] of editorConfig) {
-    if (object instanceof constructorKey) {
-      for (const [PropertyIdentifier, config] of propertyTypes) {
-        aggregatedConfig.set(PropertyIdentifier, config)
-      }
-    }
+  for (const [PropertyIdentifier, config] of propertyConfigs) {
+    aggregatedConfig.set(PropertyIdentifier, config)
   }
 
   const configRecord: PropertyConfigRecord = {}
+
   for (const key of getAllPropertyNames(object)) {
     const value = (object as any)[key]
     for (const [PropertyIdentifier, elementCandidate] of aggregatedConfig) {
@@ -192,6 +224,7 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
         element = elementCandidate
       } else if (typeof PropertyIdentifier === 'string' && key === PropertyIdentifier) {
         // ignore io-field elements assigned to read-only object properties
+        // TODO: Consider adding a flag to the element to indicate if it should be ignored.
         if (!(typeof value === 'object' && value !== null && elementCandidate.tag === 'io-field')) {
           element = elementCandidate
         }
@@ -203,12 +236,30 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
         element = elementCandidate
       }
       if (element) {
-        // element = {...element};
-        // if (element.props) {
-        //   element.props = {...element.props};
-        // }
-        // console.log(key, element);
+        // TODO: Test and document this.
+        element = {...element}
+        if (element.props) {
+          element.props = {...element.props}
+        }
         configRecord[key] = element
+      }
+    }
+
+    const vElement = configRecord[key]
+
+    debug: {
+      if (vElement.children) {
+        console.warn('EditorConfig: configured element should not have children', vElement)
+      }
+    }
+
+    const props = vElement.props
+    if (props) {
+      for (const [key, value] of Object.entries(props)) {
+        // TODO: Generalize for other objects that should be cloned / unique.
+        if (value instanceof MenuOption) {
+          props[key] = new MenuOption({}).fromJSON(value.toJSON())
+        }
       }
     }
   }
@@ -218,6 +269,8 @@ export function getEditorConfig(object: object, editorConfig: EditorConfig = new
     const value = (object as any)[key]
     if (!configRecord[key]) console.warn('No config found for', key, value)
   }
+
+  configCache.set(object, propertyConfigs, configRecord)
 
   return configRecord
 }

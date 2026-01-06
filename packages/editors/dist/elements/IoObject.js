@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, Property, Storage as $ } from '@io-gui/core';
 import { ioBoolean } from '@io-gui/inputs';
 import { ioPropertyEditor } from './IoPropertyEditor.js';
 /**
@@ -38,6 +38,28 @@ let IoObject = class IoObject extends IoElement {
       border-color: var(--io_borderColorInset);
     }
     `;
+    }
+    valueChanged() {
+        let uuid = genIdentifier(this.value);
+        let storage = 'local';
+        if (!uuid) {
+            uuid = getTempIdentifier(this.value);
+            storage = 'none';
+        }
+        // TODO: Test
+        const expandedBinding = $({ value: false, storage: storage, key: uuid + '-' + this.label });
+        const bindingTargets = expandedBinding.targets;
+        const bindingTargetCount = bindingTargets.length;
+        const targetIsThis = bindingTargets.some(target => target === this);
+        if (bindingTargetCount < 1) {
+            if (!targetIsThis) {
+                const targetP = this._reactiveProperties.get('expanded');
+                if (targetP.binding && targetP.binding !== expandedBinding) {
+                    targetP.binding.removeTarget(this, 'expanded');
+                }
+                expandedBinding.addTarget(this, 'expanded');
+            }
+        }
     }
     changed() {
         const label = this.label || this.value.constructor.name;
@@ -78,10 +100,13 @@ __decorate([
     ReactiveProperty({ value: false, reflect: true })
 ], IoObject.prototype, "expanded", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ value: false })
+], IoObject.prototype, "persistentExpand", void 0);
+__decorate([
+    ReactiveProperty({ type: Array, init: null })
 ], IoObject.prototype, "config", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
+    ReactiveProperty({ type: Object, init: null })
 ], IoObject.prototype, "groups", void 0);
 __decorate([
     ReactiveProperty({ type: Map, init: null })
@@ -96,4 +121,18 @@ export { IoObject };
 export const ioObject = function (arg0) {
     return IoObject.vConstructor(arg0);
 };
+function genIdentifier(object) {
+    const id = object.guid || object.uuid || object.id || object.name || object.label;
+    if (id) {
+        return 'io-object-collapse-state-' + object.constructor.name + '-' + id;
+    }
+}
+const tempIdentifiers = new WeakMap();
+function getTempIdentifier(object) {
+    if (!tempIdentifiers.has(object)) {
+        const randomuuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        tempIdentifiers.set(object, randomuuid);
+    }
+    return tempIdentifiers.get(object);
+}
 //# sourceMappingURL=IoObject.js.map

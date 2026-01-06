@@ -32,10 +32,10 @@ const isTypeCompatible = (type1: any, type2: any) => {
  * - Automatically cleans up listeners when disposed
  *
  * @example
- * const binding = new Binding<number>(nodeA, 'value');
+ * const binding = new Binding(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export class Binding<T> {
+export class Binding {
   readonly node: Node | IoElement
   readonly property: string
   readonly targets: Array<Node | IoElement> = []
@@ -57,10 +57,10 @@ export class Binding<T> {
     this.onTargetChanged = this.onTargetChanged.bind(this)
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged)
   }
-  set value(value: T) {
+  set value(value: any) {
     (this.node as any)[this.property] = value
   }
-  get value(): T {
+  get value(): any {
     return (this.node as any)[this.property]
   }
   /**

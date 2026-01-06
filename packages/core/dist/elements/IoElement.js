@@ -258,7 +258,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 // Update this.$ map of ids.
                 debug: {
                     if (this.$[vChild.props.id] !== undefined) {
-                        console.warn('IoElement: Duplicate id in template.');
+                        console.warn(`IoElement: Duplicate id in template. "${vChild.props.id}"`);
                     }
                 }
                 this.$[vChild.props.id] = child;

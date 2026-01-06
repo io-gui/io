@@ -1,0 +1,1 @@
+{"version":3,"file":"VectorKeyframeTrack.js","sourceRoot":"","sources":["../../../../src/configs/animation/tracks/VectorKeyframeTrack.ts"],"names":[],"mappings":";AAAA,0EAA0E;AAC1E,kDAAkD","sourcesContent":["// VectorKeyframeTrack extends KeyframeTrack with no additional properties\n// See KeyframeTrack.ts for the base configuration\n\n"]}
