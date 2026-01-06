@@ -24,19 +24,20 @@ import './scenes/FogExp2.js'
 import './scenes/Fog.js'
 import './core/Object3D.js'
 import './scenes/Scene.js'
-// import './objects/Sprite.js';
-// import './objects/LOD.js';
-// import './objects/SkinnedMesh.js';
-// import './objects/Skeleton.js';
-// import './objects/Bone.js';
-// import './objects/Mesh.js';
-// import './objects/InstancedMesh.js';
-// import './objects/BatchedMesh.js';
-// import './objects/LineSegments.js';
-// import './objects/LineLoop.js';
-// import './objects/Line.js';
-// import './objects/Points.js';
-// import './objects/Group.js';
+import './objects/Mesh.js'
+import './objects/SkinnedMesh.js'
+import './objects/InstancedMesh.js'
+import './objects/BatchedMesh.js'
+import './objects/Group.js'
+import './objects/ClippingGroup.js'
+import './objects/Line.js'
+import './objects/LineSegments.js'
+import './objects/LineLoop.js'
+import './objects/Points.js'
+import './objects/Sprite.js'
+import './objects/Bone.js'
+import './objects/Skeleton.js'
+import './objects/LOD.js'
 import './textures/Source.js'
 import './textures/Texture.js'
 import './textures/CanvasTexture.js'
