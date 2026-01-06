@@ -3,18 +3,18 @@ import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups } from '../utils/EditorGroups.js'
-import { EditorWidgets } from '../utils/EditorWidgets.js'
 
 export type IoObjectProps = IoElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[]
   labeled?: boolean
   label?: string
+  labelWidth?: string
   expanded?: WithBinding<boolean>
   persistentExpand?: boolean
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widgets?: EditorWidgets
+  widget?: VDOMElement
 }
 
 /**
@@ -26,6 +26,7 @@ export class IoObject extends IoElement {
     return /* css */`
     :host {
       display: flex;
+      max-width: 100%;
       flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
@@ -60,6 +61,9 @@ export class IoObject extends IoElement {
   @ReactiveProperty(true)
   declare labeled: boolean
 
+  @ReactiveProperty('80px')
+  declare labelWidth: string
+
   @ReactiveProperty('')
   declare label: string
 
@@ -75,13 +79,14 @@ export class IoObject extends IoElement {
   @ReactiveProperty({type: Object, init: null})
   declare groups: PropertyGroups
 
-  @ReactiveProperty({type: Map, init: null})
-  declare widgets: EditorWidgets
+  @ReactiveProperty({type: Object})
+  declare widget: VDOMElement | undefined
 
   @Property('region')
   declare role: string
 
   valueChanged() {
+    if (!this.value) return
 
     let uuid = genIdentifier(this.value)
     let storage: 'local' | 'none' = 'local'
@@ -122,8 +127,9 @@ export class IoObject extends IoElement {
         properties: this.properties,
         config: this.config,
         groups: this.groups,
-        widgets: this.widgets,
+        widget: this.widget,
         labeled: this.labeled,
+        labelWidth: this.labelWidth,
       }))
     }
     this.render(vChildren)

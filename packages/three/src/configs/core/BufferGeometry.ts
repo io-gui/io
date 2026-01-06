@@ -1,31 +1,13 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { BufferGeometry } from 'three/webgpu'
 
 registerEditorConfig(BufferGeometry, [
-  ['drawRange', ioPropertyEditor()],
+  ['index', ioObject({})],
+  ['attributes', ioObject({})],
 ])
 
 registerEditorGroups(BufferGeometry, {
-  Main: [
-    'name',
-    'attributes',
-    'index',
-  ],
-  Bounds: [
-    'boundingBox',
-    'boundingSphere',
-  ],
-  Morph: [
-    'morphAttributes',
-    'morphTargetsRelative',
-  ],
-  Rendering: [
-    'groups',
-    'drawRange',
-  ],
-  Advanced: [
-    'indirect',
-    'indirectOffset',
-  ],
+  Main: ['index', 'attributes', 'boundingBox', 'boundingSphere'],
+  Morphing: ['morphAttributes', 'morphTargetsRelative'],
+  Advanced: ['groups', 'drawRange', 'indirect', 'indirectOffset'],
 })
-

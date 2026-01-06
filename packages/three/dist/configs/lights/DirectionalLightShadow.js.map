@@ -1,0 +1,1 @@
+{"version":3,"file":"DirectionalLightShadow.js","sourceRoot":"","sources":["../../../src/configs/lights/DirectionalLightShadow.ts"],"names":[],"mappings":";AAAA,oEAAoE","sourcesContent":["// DirectionalLightShadow extends LightShadow - inherits base config\n\n"]}

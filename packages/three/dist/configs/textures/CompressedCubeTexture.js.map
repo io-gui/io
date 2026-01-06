@@ -1,0 +1,1 @@
+{"version":3,"file":"CompressedCubeTexture.js","sourceRoot":"","sources":["../../../src/configs/textures/CompressedCubeTexture.ts"],"names":[],"mappings":";AAAA,yEAAyE","sourcesContent":["// CompressedCubeTexture extends CompressedTexture - inherits base config\n\n"]}

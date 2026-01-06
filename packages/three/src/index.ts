@@ -23,5 +23,6 @@
  * THE SOFTWARE.
  */
 
+export * from './elements/IoBuildGeometry.js'
 export * from './elements/IoThreeViewport.js'
 export * from './nodes/ThreeApplet.js'

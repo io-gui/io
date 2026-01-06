@@ -27,7 +27,7 @@ import { AnimationSkinningBlendingExample } from '../examples/animation_skinning
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js';
 import { ioThreeProperties } from '../elements/IoThreeProperties.js';
 import * as THREE from 'three/webgpu';
-const version = 4;
+const version = 5;
 const split = new Split({
     children: [
         {
@@ -70,7 +70,7 @@ const split = new Split({
                 {
                     flex: '1 0 380px',
                     tabs: [
-                        { id: 'ExampleProperties' },
+                        { id: 'ExampleSelector' },
                     ],
                 }
             ]
@@ -124,7 +124,7 @@ const allClasses = {
     scene: new THREE.Scene(),
     fog: new THREE.Fog(0x000000, 10, 100),
     fogExp2: new THREE.FogExp2(0x000000, 0.002),
-    // // Cameras
+    // Cameras
     Camera: new THREE.Camera(),
     PerspectiveCamera: new THREE.PerspectiveCamera(),
     OrthographicCamera: new THREE.OrthographicCamera(),
@@ -170,7 +170,88 @@ const allClasses = {
     quaternion: new THREE.Quaternion(),
     color: new THREE.Color(),
     colorManagement: THREE.ColorManagement,
-    sphericalHarmonics3: new THREE.SphericalHarmonics3(),
+    sph3: new THREE.SphericalHarmonics3(),
+    // Geometries
+    boxGeometry: new THREE.BoxGeometry(1, 1, 1),
+    capsuleGeometry: new THREE.CapsuleGeometry(1, 1, 10),
+    circleGeometry: new THREE.CircleGeometry(1, 10),
+    coneGeometry: new THREE.ConeGeometry(1, 1, 10),
+    cylinderGeometry: new THREE.CylinderGeometry(1, 1, 10),
+    dodecahedronGeometry: new THREE.DodecahedronGeometry(1),
+    edgesGeometry: new THREE.EdgesGeometry(),
+    extrudeGeometry: new THREE.ExtrudeGeometry(),
+    icosahedronGeometry: new THREE.IcosahedronGeometry(),
+    latheGeometry: new THREE.LatheGeometry(),
+    octahedronGeometry: new THREE.OctahedronGeometry(),
+    planeGeometry: new THREE.PlaneGeometry(),
+    polyhedronGeometry: new THREE.PolyhedronGeometry(),
+    ringGeometry: new THREE.RingGeometry(),
+    shapeGeometry: new THREE.ShapeGeometry(),
+    sphereGeometry: new THREE.SphereGeometry(),
+    tetrahedronGeometry: new THREE.TetrahedronGeometry(),
+    torusGeometry: new THREE.TorusGeometry(),
+    torusKnotGeometry: new THREE.TorusKnotGeometry(),
+    tubeGeometry: new THREE.TubeGeometry(),
+    wireframeGeometry: new THREE.WireframeGeometry(),
+    // Lights
+    ambientLight: new THREE.AmbientLight(),
+    directionalLight: new THREE.DirectionalLight(),
+    hemisphereLight: new THREE.HemisphereLight(),
+    iesSpotLight: new THREE.IESSpotLight(),
+    lightProbe: new THREE.LightProbe(),
+    pointLight: new THREE.PointLight(),
+    projectorLight: new THREE.ProjectorLight(),
+    rectAreaLight: new THREE.RectAreaLight(),
+    spotLight: new THREE.SpotLight(),
+    // Objects
+    batchedMesh: new THREE.BatchedMesh(10, 1000, 2000),
+    bone: new THREE.Bone(),
+    clippingGroup: new THREE.ClippingGroup(),
+    group: new THREE.Group(),
+    instancedMesh: new THREE.InstancedMesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial(), 10),
+    line: new THREE.Line(),
+    lineLoop: new THREE.LineLoop(),
+    lineSegments: new THREE.LineSegments(),
+    lod: new THREE.LOD(),
+    mesh: new THREE.Mesh(),
+    points: new THREE.Points(),
+    skeleton: new THREE.Skeleton(),
+    skinnedMesh: new THREE.SkinnedMesh(),
+    sprite: new THREE.Sprite(),
+    // Textures
+    canvasTexture: new THREE.CanvasTexture(document.createElement('canvas')),
+    compressedArrayTexture: new THREE.CompressedArrayTexture([], 16, 16, 4, THREE.RGBA_S3TC_DXT1_Format),
+    compressedCubeTexture: new THREE.CompressedCubeTexture([
+        new THREE.CanvasTexture(document.createElement('canvas')),
+        new THREE.CanvasTexture(document.createElement('canvas')),
+        new THREE.CanvasTexture(document.createElement('canvas')),
+        new THREE.CanvasTexture(document.createElement('canvas')),
+        new THREE.CanvasTexture(document.createElement('canvas')),
+        new THREE.CanvasTexture(document.createElement('canvas')),
+    ], THREE.RGBA_S3TC_DXT1_Format),
+    compressedTexture: new THREE.CompressedTexture([], 16, 16),
+    cubeTexture: new THREE.CubeTexture(),
+    data3DTexture: new THREE.Data3DTexture(new Float64Array(16 * 16 * 16), 16, 16, 16),
+    dataArrayTexture: new THREE.DataArrayTexture(new Float64Array(16 * 16), 16, 16, 1),
+    dataTexture: new THREE.DataTexture(new Uint8Array(16 * 16 * 4), 16, 16),
+    depthTexture: new THREE.DepthTexture(256, 256),
+    externalTexture: new THREE.ExternalTexture(),
+    framebufferTexture: new THREE.FramebufferTexture(256, 256),
+    source: new THREE.Source(null),
+    texture: new THREE.Texture(),
+    videoTexture: new THREE.VideoTexture(document.createElement('video')),
+    // Renderers
+    bundleGroup: new THREE.BundleGroup(),
+    canvasTarget: new THREE.CanvasTarget(document.createElement('canvas')),
+    indirectStorageBufferAttribute: new THREE.IndirectStorageBufferAttribute(new Uint32Array(16), 4),
+    inspectorBase: new THREE.InspectorBase(),
+    postProcessing: new THREE.PostProcessing(new THREE.WebGPURenderer()),
+    quadMesh: new THREE.QuadMesh(),
+    storageTexture: new THREE.StorageTexture(256, 256),
+    storage3DTexture: new THREE.Storage3DTexture(64, 64, 64),
+    storageArrayTexture: new THREE.StorageArrayTexture(128, 128, 8),
+    storageBufferAttribute: new THREE.StorageBufferAttribute(100, 4),
+    storageInstancedBufferAttribute: new THREE.StorageInstancedBufferAttribute(100, 4),
 };
 export class IoThreeDemo extends IoElement {
     static get Style() {
@@ -235,7 +316,7 @@ export class IoThreeDemo extends IoElement {
                     ioThreeViewport({ id: 'Left', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'left' }),
                     ioThreeViewport({ id: 'Perspective', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'perspective' }),
                     ioThreeViewport({ id: 'SceneCamera', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'scene' }),
-                    div({ id: 'ExampleProperties' }, [
+                    div({ id: 'ExampleSelector' }, [
                         div({ class: 'column' }, [
                             div({ class: 'column' }, [
                                 ioField({ label: 'Select Example:' }),
@@ -258,7 +339,7 @@ export class IoThreeDemo extends IoElement {
                                 { id: 'Left', mode: 'none' },
                                 { id: 'Perspective', mode: 'none' },
                                 { id: 'SceneCamera', mode: 'none' },
-                                { id: 'ExampleProperties', mode: 'none' },
+                                { id: 'ExampleSelector', mode: 'none' },
                                 { id: 'AllClasses', mode: 'none' },
                             ] },
                     ],

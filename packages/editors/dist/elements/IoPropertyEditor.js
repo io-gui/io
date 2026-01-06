@@ -29,6 +29,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     :host > .row {
       display: flex;
       flex-direction: row;
+      flex: 1 1 auto;
       margin: var(--io_spacing);
       padding: var(--io_spacing) 0;
       border-radius: var(--io_borderRadius);
@@ -49,6 +50,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       margin-bottom: var(--io_spacing);
     }
     :host > .row > span {
+      flex: 0 0 auto;
       padding: var(--io_borderWidth); /* TODO: verify correctness */
       margin: var(--io_spacing);
       margin-left: var(--io_spacing2);
@@ -57,7 +59,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      min-width: calc(var(--io_lineHeight) * 3);
     }
     :host > .row > span:after {
       display: inline-block;
@@ -65,9 +66,9 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       opacity: 0.5;
       content: ':';
     }
-    :host > .row > :nth-child(2) {
-      flex-grow: 1;
 
+    :host > .row > :not(span) {
+      flex-grow: 1;
     }
     :host io-object {
       margin-right: var(--io_spacing);
@@ -112,7 +113,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     configureThrottled() {
         this._config = getEditorConfig(this.value, this.config);
         this._groups = getEditorGroups(this.value, this.groups);
-        this._widget = getEditorWidget(this.value, this.widgets);
+        this._widget = this.widget || getEditorWidget(this.value);
         this.throttle(this.changed);
     }
     changed() {
@@ -152,7 +153,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
             if (allProps.includes(properties[i])) {
                 const id = properties[i];
                 const value = this.value[id];
-                const isFunction = typeof value === 'function';
                 const tag = config[id].tag;
                 const props = config[id].props || {};
                 const finalProps = { id: id, value: value, '@value-input': this._onValueInput };
@@ -169,12 +169,17 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     finalProps.persistentExpand = true;
                 }
                 // NOTE: Functions dont have labels. They are displayed as labeled buttons.
+                const isFunction = typeof value === 'function';
                 if (isFunction) {
-                    finalProps.action = value;
+                    finalProps.action = value.bind(this.value);
                     finalProps.label = finalProps.label || id;
                 }
+                const isIoObject = tag === 'io-object';
+                if (isIoObject) {
+                    finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
+                }
                 vChildren.push(div({ class: 'row' }, [
-                    (this.labeled && !isFunction) ? span(id) : null,
+                    (this.labeled && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth }, title: id }, id) : null,
                     { tag: tag, props: finalProps, children: children },
                 ]));
             }
@@ -187,6 +192,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
                     vChildren.push(ioObject({
                         label: group,
+                        labelWidth: this.labelWidth,
                         persistentExpand: true,
                         value: this.value,
                         properties: groups[group],
@@ -212,6 +218,9 @@ __decorate([
     ReactiveProperty(true)
 ], IoPropertyEditor.prototype, "labeled", void 0);
 __decorate([
+    ReactiveProperty('80px')
+], IoPropertyEditor.prototype, "labelWidth", void 0);
+__decorate([
     ReactiveProperty({ type: String, value: 'vertical', reflect: true })
 ], IoPropertyEditor.prototype, "orientation", void 0);
 __decorate([
@@ -221,8 +230,8 @@ __decorate([
     ReactiveProperty({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
-], IoPropertyEditor.prototype, "widgets", void 0);
+    ReactiveProperty({ type: Object })
+], IoPropertyEditor.prototype, "widget", void 0);
 IoPropertyEditor = __decorate([
     Register
 ], IoPropertyEditor);

@@ -1,0 +1,1 @@
+// CanvasTexture extends Texture - no new properties needing config

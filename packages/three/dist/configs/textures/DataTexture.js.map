@@ -1,0 +1,1 @@
+{"version":3,"file":"DataTexture.js","sourceRoot":"","sources":["../../../src/configs/textures/DataTexture.ts"],"names":[],"mappings":";AAAA,qDAAqD","sourcesContent":["// DataTexture extends Texture - inherits base config\n\n"]}

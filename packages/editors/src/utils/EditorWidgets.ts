@@ -8,7 +8,7 @@ const editorWidgetsSingleton: EditorWidgets = new Map<AnyConstructor, VDOMElemen
   // ]), labeled: false}}],
 ])
 
-export function getEditorWidget(object: object, editorWidgets: EditorWidgets = new Map()): VDOMElement | null {
+export function getEditorWidget(object: object): VDOMElement | null {
   debug: if (!object || !(object instanceof Object)) {
     console.warn('`getEditorGroups` should be used with an Object instance')
     return null
@@ -24,10 +24,7 @@ export function getEditorWidget(object: object, editorWidgets: EditorWidgets = n
     return matchedWidget
   }
 
-  let widget = getWidget(editorWidgetsSingleton)
-  widget = getWidget(editorWidgets) || widget
-
-  return widget
+  return getWidget(editorWidgetsSingleton)
 }
 
 export function registerEditorWidget(constructor: AnyConstructor, widget: VDOMElement) {

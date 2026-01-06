@@ -9,9 +9,10 @@ Io-Gui implements the same features on top of its base classes - nodes and eleme
 By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
 
 #### Node
-Node is a base class extending `Object` with all of the core features provided by Io-Gui. It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
+Node is a base class extending `Object` with all of the core features provided by Io-Gui.
+It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
-- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash/localStorage
+- `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash or localStorage
 - `MenuOption`: A rich domain model for menu options and their state in io-menus
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
@@ -33,6 +34,7 @@ It can be used to create reactive custom elements that can be bound to node prop
   - Mutation events are automatically dispatched for all nodes and elements
   - Example: `"data"` object property mutation event `"io-object-mutation"` includes `event.detail.object` that equals mutated object
   - Mutation events for generic objects can be dispatched using `this.dispatchMutation(mutatedObject);`
+  - Mutation events for generic objects are emitted on a global event bus (window)
   - Mutation handlers get invoked automatically if they are defined
   - Example: `"data"` object property mutation event invokes `dataMutated()` handler if it exists
 - Bi-directional data flow can be achieved using binding objects
@@ -88,7 +90,7 @@ class MyNode extends Node {
 }
 ```
 
-Here we do the same using decorator syntax in typescript. Note that we use `declare` keyword to tell the compiler that this property definitely exists and has the `boolean` type. Without this keyword, typescript would override our custom property initialization logic.
+Here we do the same using decorator syntax in typescript. Note that we use `declare` keyword to inform typescript compiler that this property is defined and has the `boolean` type.
 
 ```typescript
 // Typescript version with `@Property()` decorator
@@ -100,7 +102,7 @@ class MyNode extends Node {
 
 ### Initial Value Inference
 
-Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` respectively. In other words, when no initial value is specified, it will be inferred from the specified type.
+Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. In other words, when no initial value is specified, it will be inferred from the specified type. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` only if the `init: null` flag is specified. Otherwise, they will be initialized with `undefined`. You can also specify custom initialization arguments in the `init` field. e.g. `{type: Array, init: [1, 2, 3]}` will initialize the property with `new Array(1, 2, 3)`.
 
 ```typescript
 class MyNode extends Node {
@@ -111,7 +113,7 @@ class MyNode extends Node {
 
 Just like initial property value can be inferred from type, a property type can be inferred from its initial value. This is why `@Property(Boolean)` and `@Property(false)` are effectively the same.
 
-When property type is a custom object class the initial value will NOT be inferred. Instead, the users are expected to provide the initial value in the constructor. Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
+Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
 class MyNode extends Node {
@@ -119,7 +121,6 @@ class MyNode extends Node {
   declare color: Color;
 }
 
-// Since we use `Color` type, the constructor argument is mandatory:
 new MyNode({color: new Color()});
 ```
 
@@ -136,24 +137,11 @@ new MyNode().color === new MyNode().color
 // returns true
 ```
 
-So instead of initializing with a shared value we can use `init` field to specify how we want to initialize an object. For example:
+As mentioned above, we can use `init` field to specify how we want to initialize an object. For example:
 
 ```typescript
 // This will initialze value as new Color() for each instance
 @ReactiveProperty({type: Color, init: null})
-```
-
-We can also declare a property with a declaration object. In the following example we declare the `selected` property with a fully specified declaration object. Note that the final result is exactly the same as before as all of the fields in this example are defaults. We will get into each specific field later.
-
-```typescript
-class MyNode extends Node {
-  @ReactiveProperty({
-    type: Boolean,
-    value: false,
-    reflect: false,
-  })
-  declare selected: boolean;
-}
 ```
 
 ### Property Declaration Inheritance
@@ -179,12 +167,12 @@ class MyNode extends MySuperNode {
 
 Now let's get into each specific field of the PropertyDeclaration object. Note that each field is optional.
 
-| field | type | default | description |
-| :---- | :--: | :-----: | :---------- |
-| value | `any` | `undefined` | The initial value of the property |
-| type  | `any` | `undefined` | The type of the property |
-| init | `any` | `undefined` | Specifies how to initialize object property |
-| reflect | `boolean` | `false` | Reflects property to attribute |
+| field   | type       | default     | description                                 |
+| :------ | :--------: | :---------: | :------------------------------------------ |
+| value   | `any`      | `undefined` | The initial value of the property           |
+| type    | `Function` | `undefined` | The type of the property                    |
+| init    | `any`      | `undefined` | Specifies how to initialize object property |
+| reflect | `boolean`  | `false`     | Reflects property to attribute              |
 
 We already covered `value` and `type` in examples above. Now let's dig into the other fields.
 
@@ -281,7 +269,7 @@ class MyElement extends IoElement {
 
 Listeners with handlers specified with `string` value assume that a function with that name exists on the class.
 
-> **Note:** Function names prefixed with `on` or `_` are automatically bound to class instances. This feature might be deprecated in the future.
+> **Note:** Function names prefixed with `on` or `_` are automatically bound to class instances. Also functions suffixed with `Changed`, `Debounced` or `Throttled` are automatically bound to instance.
 
 You can also specify handlers as functions such as:
 
@@ -398,13 +386,6 @@ this.changed();
 
 ### Template Syntax
 
-[comment]: <Uses nested array representation of (virtual) DOM.>
-[comment]: <Template function handles disposal of removed elements.>
-[comment]: <Templates can be brute-forced while DOM updates as performed when needed.>
-[comment]: <Can assign bindings to properties.>
-[comment]: <Inline event listeners can be added using `"on-"` (`"@"` TBD)>
-[comment]: <Element references can be created using `"$"` property.>
-
 Io-Gui elements use hypertext-like array structures to express virtual DOM templates. Internally, the arrays are converted to virtual DOM and rendered as actual DOM elements. During a re-render, the templates will be compared against the existing elements and states so only necessary DOM changes will be performed. Template rendering also takes care of disposing unused elements and connections.
 
 Here is a simple element expressed in the Io-Gui template syntax:
@@ -444,8 +425,11 @@ DOM output:
 </div>
 ```
 
-> **Note:** Io-Gui templates do not set HTML attributes - only properties are set.
-
+* render() function handles disposal of removed elements.
+* render() can be brute-forced while DOM updates as performed when needed.
+* Inline event listeners can be added using `"@"` syntax
+* References are created using `"id"` property and are accessible as `this.$[id]`.
+* VDOM templates do not set HTML attributes - only properties are set.
 
 ### Data Binding
 
@@ -454,7 +438,6 @@ This is a simple yet powerful feature designed to be used with Io-Gui nodes and 
 ```javascript
 // Returns a binding object to source property "value".
 this.bind('value');
-
 ```
 
 To create a two-way data binding between two or more properties, simply assign a binding object to a property:

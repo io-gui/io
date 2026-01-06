@@ -15,11 +15,10 @@ const icons = [];
 for (const set of Object.keys(IconsetDB)) {
     for (const icon of Object.keys(IconsetDB[set])) {
         const id = `${set}:${icon}`;
-        icons.push({ value: id, label: icon, icon: id });
+        icons.push({ value: id, id: icon, icon: id });
     }
 }
-// TODO: consider initializing icon options when needed.
-const iconOptions = ioOptionSelect({ label: 'Select', option: new MenuOption({ id: 'iconselect', options: icons }) });
+const iconOptions = ioOptionSelect({ selectBy: 'value', label: 'Select', option: new MenuOption({ options: icons }) });
 let _dragStartX = 0;
 let _dragStartY = 0;
 // TODO: fix and improve keyboard navigation in all cases.

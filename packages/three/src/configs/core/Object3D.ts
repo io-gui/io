@@ -28,5 +28,4 @@ registerEditorGroups(Object3D, {
     'customDistanceMaterial',
   ],
   Animation: ['animations'],
-  Advanced: [],
 })

@@ -23,7 +23,7 @@ export class IoNumberSlider extends IoElement {
       display: flex;
     }
     :host > io-number {
-      flex: 0 0 3.5em;
+      flex: 0 0 3.8em;
       margin-right: var(--io_spacing);
     }
     :host > io-slider {

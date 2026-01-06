@@ -145,6 +145,9 @@ export function getEditorGroups(object, propertyGroups) {
                         }
                     }
                 }
+                const advanced = aggregatedGroups['Advanced'] || [];
+                delete aggregatedGroups['Advanced'];
+                aggregatedGroups['Advanced'] = advanced;
             }
         }
     }
@@ -183,6 +186,9 @@ export function getEditorGroups(object, propertyGroups) {
         if (!included && !isFunction && !groupsRecord['Advanced']?.includes(key)) {
             groupsRecord.Main.push(key);
         }
+    }
+    for (const g of Object.keys(groupsRecord)) {
+        groupsRecord[g] = [...new Set(groupsRecord[g])];
     }
     // Debug if properties belong to multiple groups.
     // TODO: Test thoroughly.

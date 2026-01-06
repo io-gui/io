@@ -1,0 +1,1 @@
+// This class is identical to StorageBufferAttribute, so we don't need to register it.

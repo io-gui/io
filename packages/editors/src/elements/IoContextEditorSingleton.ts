@@ -1,19 +1,10 @@
 import { IoOverlaySingleton, NudgeDirection, nudge, ReactiveProperty, Register } from '@io-gui/core'
-import { IoPropertyEditor } from './IoPropertyEditor.js'
-import { PropertyConfig } from '../utils/EditorConfig.js'
-import { EditorGroups } from '../utils/EditorGroups.js'
-import { EditorWidgets } from '../utils/EditorWidgets.js'
+import { IoPropertyEditor, IoPropertyEditorProps } from './IoPropertyEditor.js'
 
-interface IoContextEditorExpandProps {
+type IoContextEditorExpandProps = IoPropertyEditorProps & {
   source: HTMLElement
   direction: NudgeDirection
   value: any
-  properties?: string[]
-  labeled?: boolean
-  orientation?: 'vertical' | 'horizontal'
-  config?: PropertyConfig[]
-  groups?: EditorGroups
-  widgets?: EditorWidgets
   onClose?: () => void
 }
 
@@ -78,10 +69,11 @@ class IoContextEditor extends IoPropertyEditor {
       value: props.value,
       properties: props.properties || [],
       labeled: props.labeled || true,
+      labelWidth: props.labelWidth || '80px',
       orientation: props.orientation || 'vertical',
       config: props.config || [],
       groups: props.groups || {},
-      widgets: props.widgets || new Map(),
+      widget: props.widget,
       expanded: true,
     })
     this.onClose = props.onClose || null
@@ -99,10 +91,9 @@ class IoContextEditor extends IoPropertyEditor {
         value: {},
         properties: [],
         labeled: true,
-        orientation: 'vertical',
         config: [],
         groups: {},
-        widgets: new Map(),
+        widget: undefined,
       })
       if (this.onClose) {
         this.onClose()

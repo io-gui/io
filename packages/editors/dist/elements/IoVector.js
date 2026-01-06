@@ -15,6 +15,8 @@ let IoVector = class IoVector extends IoElement {
       :host {
         display: flex;
         flex: 1 1 auto;
+        max-width: 100%;
+        overflow: hidden;
       }
       :host > io-number {
         flex: 1 1 auto;
@@ -77,6 +79,7 @@ let IoVector = class IoVector extends IoElement {
                     min: this.min,
                     max: this.max,
                     ladder: this.ladder,
+                    disabled: this.disabled,
                     '@pointerdown': this._onNumberPointerDown,
                     '@value-input': this._onNumberValueInput,
                 }));
@@ -110,6 +113,9 @@ __decorate([
 __decorate([
     ReactiveProperty(true)
 ], IoVector.prototype, "ladder", void 0);
+__decorate([
+    ReactiveProperty(false)
+], IoVector.prototype, "disabled", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoVector.prototype, "keys", void 0);

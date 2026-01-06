@@ -3,7 +3,7 @@ const editorWidgetsSingleton = new Map([
 // [HTMLElement, {tag: 'io-property-editor', props: {properties: ['outerHTML'], config: [['outerHTML', div()]]]
 // ]), labeled: false}}],
 ]);
-export function getEditorWidget(object, editorWidgets = new Map()) {
+export function getEditorWidget(object) {
     debug: if (!object || !(object instanceof Object)) {
         console.warn('`getEditorGroups` should be used with an Object instance');
         return null;
@@ -17,9 +17,7 @@ export function getEditorWidget(object, editorWidgets = new Map()) {
         }
         return matchedWidget;
     }
-    let widget = getWidget(editorWidgetsSingleton);
-    widget = getWidget(editorWidgets) || widget;
-    return widget;
+    return getWidget(editorWidgetsSingleton);
 }
 export function registerEditorWidget(constructor, widget) {
     editorWidgetsSingleton.set(constructor, widget);

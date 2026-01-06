@@ -15,6 +15,7 @@ let IoObject = class IoObject extends IoElement {
         return /* css */ `
     :host {
       display: flex;
+      max-width: 100%;
       flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
@@ -40,6 +41,8 @@ let IoObject = class IoObject extends IoElement {
     `;
     }
     valueChanged() {
+        if (!this.value)
+            return;
         let uuid = genIdentifier(this.value);
         let storage = 'local';
         if (!uuid) {
@@ -76,8 +79,9 @@ let IoObject = class IoObject extends IoElement {
                 properties: this.properties,
                 config: this.config,
                 groups: this.groups,
-                widgets: this.widgets,
+                widget: this.widget,
                 labeled: this.labeled,
+                labelWidth: this.labelWidth,
             }));
         }
         this.render(vChildren);
@@ -94,6 +98,9 @@ __decorate([
     ReactiveProperty(true)
 ], IoObject.prototype, "labeled", void 0);
 __decorate([
+    ReactiveProperty('80px')
+], IoObject.prototype, "labelWidth", void 0);
+__decorate([
     ReactiveProperty('')
 ], IoObject.prototype, "label", void 0);
 __decorate([
@@ -109,8 +116,8 @@ __decorate([
     ReactiveProperty({ type: Object, init: null })
 ], IoObject.prototype, "groups", void 0);
 __decorate([
-    ReactiveProperty({ type: Map, init: null })
-], IoObject.prototype, "widgets", void 0);
+    ReactiveProperty({ type: Object })
+], IoObject.prototype, "widget", void 0);
 __decorate([
     Property('region')
 ], IoObject.prototype, "role", void 0);

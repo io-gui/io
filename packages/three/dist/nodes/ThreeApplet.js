@@ -87,6 +87,5 @@ registerEditorGroups(ThreeApplet, {
         'uiConfig',
         'uiGroups',
     ],
-    Advanced: []
 });
 //# sourceMappingURL=ThreeApplet.js.map

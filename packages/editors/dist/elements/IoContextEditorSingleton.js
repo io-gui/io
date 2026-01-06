@@ -66,10 +66,11 @@ let IoContextEditor = class IoContextEditor extends IoPropertyEditor {
             value: props.value,
             properties: props.properties || [],
             labeled: props.labeled || true,
+            labelWidth: props.labelWidth || '80px',
             orientation: props.orientation || 'vertical',
             config: props.config || [],
             groups: props.groups || {},
-            widgets: props.widgets || new Map(),
+            widget: props.widget,
             expanded: true,
         });
         this.onClose = props.onClose || null;
@@ -87,10 +88,9 @@ let IoContextEditor = class IoContextEditor extends IoPropertyEditor {
                 value: {},
                 properties: [],
                 labeled: true,
-                orientation: 'vertical',
                 config: [],
                 groups: {},
-                widgets: new Map(),
+                widget: undefined,
             });
             if (this.onClose) {
                 this.onClose();

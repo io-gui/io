@@ -1,0 +1,1 @@
+{"version":3,"file":"StorageInstancedBufferAttribute.js","sourceRoot":"","sources":["../../../../src/configs/renderers/common/StorageInstancedBufferAttribute.ts"],"names":[],"mappings":";AAAA,wFAAwF","sourcesContent":["// This class is identical to InstancedBufferAttribute, so we don't need to register it.\n\n\n"]}

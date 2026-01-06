@@ -1,0 +1,22 @@
+import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioBuildGeometry } from '@io-gui/three'
+import { SphereGeometry } from 'three/webgpu'
+
+registerEditorWidget(SphereGeometry, ioBuildGeometry())
+
+registerEditorConfig(SphereGeometry, [
+  ['parameters', ioPropertyEditor({config: [
+    ['radius', ioNumberSlider({min: 0, max: 10, step: 0.1})],
+    ['widthSegments', ioNumberSlider({min: 3, max: 64, step: 1})],
+    ['heightSegments', ioNumberSlider({min: 2, max: 32, step: 1})],
+    ['phiStart', ioNumberSlider({min: 0, max: Math.PI * 2, step: Math.PI / 180, conversion: 1 / Math.PI * 180})],
+    ['phiLength', ioNumberSlider({min: 0, max: Math.PI * 2, step: Math.PI / 180, conversion: 1 / Math.PI * 180})],
+    ['thetaStart', ioNumberSlider({min: 0, max: Math.PI, step: Math.PI / 180, conversion: 1 / Math.PI * 180})],
+    ['thetaLength', ioNumberSlider({min: 0, max: Math.PI, step: Math.PI / 180, conversion: 1 / Math.PI * 180})],
+  ]})],
+])
+
+registerEditorGroups(SphereGeometry, {
+  Hidden: ['parameters'],
+})

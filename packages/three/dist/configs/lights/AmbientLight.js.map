@@ -1,0 +1,1 @@
+{"version":3,"file":"AmbientLight.js","sourceRoot":"","sources":["../../../src/configs/lights/AmbientLight.ts"],"names":[],"mappings":";AAAA,oDAAoD","sourcesContent":["// AmbientLight extends Light - inherits base config\n\n"]}

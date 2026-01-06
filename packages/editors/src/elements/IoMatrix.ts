@@ -17,6 +17,8 @@ export class IoMatrix extends IoVectorArray {
         align-self: stretch;
         justify-self: stretch;
         grid-gap: var(--io_spacing);
+        max-width: 100%;
+        overflow: hidden;
       }
       :host > *:not(:last-child) {
         margin-right: 0;

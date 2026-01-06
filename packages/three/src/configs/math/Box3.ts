@@ -1,7 +1,6 @@
-import { registerEditorConfig, ioPropertyEditor } from '@io-gui/editors'
+import { registerEditorConfig, ioObject } from '@io-gui/editors'
 import { Box3 } from 'three/webgpu'
 
-
 registerEditorConfig(Object, [
-  [Box3, ioPropertyEditor()],
+  [Box3, ioObject({labelWidth: '42px'})],
 ])

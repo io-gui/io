@@ -1,0 +1,1 @@
+{"version":3,"file":"CubeDepthTexture.js","sourceRoot":"","sources":["../../../src/configs/textures/CubeDepthTexture.ts"],"names":[],"mappings":";AAAA,+DAA+D","sourcesContent":["// CubeDepthTexture extends DepthTexture - inherits base config\n\n"]}

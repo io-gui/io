@@ -137,6 +137,50 @@ Do NOT configure:
 - Simple boolean properties (already use `ioSwitch()`)
 - Simple string properties (already use `ioString()`)
 - Generic number properties where default step is fine
+- Properties that inherit good defaults from parent class configs
+
+## Avoiding Over-Configuration
+
+**IMPORTANT: Less is more! Only add configurations that provide real value.**
+
+### Common Mistakes to Avoid
+
+1. **Don't duplicate parent class groups** - If `BufferAttribute` already has groups for GPU properties, don't redefine them in `StorageBufferAttribute`
+
+2. **Don't configure every enum** - Only configure enums that are commonly changed. Properties like `type` on Texture often don't need a selector if users rarely change them.
+
+3. **Group names should be semantic** - Use domain-specific names like `Source`, `Filtering`, `Wrapping` rather than generic names like `Main`, `Settings`, `Options`
+
+4. **Setter properties need explicit config** - Properties that are setters (like `needsUpdate`, `needsPMREMUpdate`) should use `ioSwitch({value: false})` since they don't have a stored value
+
+5. **Include computed/getter properties in groups** - Read-only getters like `width`, `height`, `depth` can be included in groups for display even without editor config
+
+### Good Group Organization Example (Texture)
+
+```typescript
+registerEditorGroups(Texture, {
+  Source: ['source', 'image', 'renderTarget', 'width', 'height', 'depth'],
+  Mapping: ['mapping', 'channel', 'offset', 'repeat', 'center', 'rotation', 'matrixAutoUpdate', 'matrix', 'flipY'],
+  Filtering: ['magFilter', 'minFilter', 'anisotropy', 'mipmaps', 'generateMipmaps'],
+  Wrapping: ['wrapS', 'wrapT'],
+  Format: ['format', 'internalFormat', 'unpackAlignment', 'colorSpace', 'premultiplyAlpha'],
+  Advanced: ['needsUpdate', 'needsPMREMUpdate', 'version', 'pmremVersion', 'updateRanges'],
+  Hidden: ['onUpdate'],
+})
+```
+
+## Directory Structure Rules
+
+**CRITICAL: Config directory structure MUST mirror three.js source structure!**
+
+```
+three.js source:                     Config files:
+src/renderers/WebGPURenderer.js  →   configs/renderers/WebGPURenderer.ts
+src/renderers/common/QuadMesh.js →   configs/renderers/common/QuadMesh.ts
+src/textures/Texture.js          →   configs/textures/Texture.ts
+```
+
+Do NOT flatten the structure. If three.js has `renderers/common/`, configs must also have `renderers/common/`.
 
 ## Index File Rules
 
@@ -145,6 +189,7 @@ In [`packages/three/src/configs/index.ts`](packages/three/src/configs/index.ts):
 1. **Import order matters**: Classes must be imported in order of their inheritance (base classes first)
 2. Use `.js` extension for ES module imports
 3. Keep commented-out imports as reference for unconfigured classes
+4. **Hidden regex**: Use `/^is[A-Z0-9]/` to catch properties like `is3DTexture` (not just `/^is[A-Z]/`)
 
 ## Testing and Debugging
 
@@ -229,16 +274,43 @@ When configuring a new module:
   - AudioAnalyser - standalone analyzer class
   - Skipped: AudioContext (namespace with utility functions)
 
-### TODO
+- [x] **renderers/** - All classes configured
+  - Core: WebGPURenderer (extends Renderer base class)
+  - Common (in `renderers/common/`): PostProcessing, QuadMesh, BundleGroup, CanvasTarget, InspectorBase
+  - Storage Textures: StorageTexture, Storage3DTexture, StorageArrayTexture
+  - Storage Attributes: StorageBufferAttribute, StorageInstancedBufferAttribute, IndirectStorageBufferAttribute
+  - Internal: Lighting (comment-only)
 
-- [ ] **lights/** - DirectionalLight, PointLight, SpotLight, AmbientLight, HemisphereLight, RectAreaLight, Light, LightProbe
-- [ ] **objects/** - Mesh, Group, SkinnedMesh, Skeleton, Bone, InstancedMesh, BatchedMesh, Line, LineSegments, LineLoop, Points, Sprite, LOD
+- [x] **textures/** - All classes configured
+  - Texture (base class with comprehensive mapping/filtering/wrapping options)
+  - Data3DTexture, DataArrayTexture, CompressedArrayTexture - added `wrapR` config
+  - DepthTexture - added `compareFunction` config
+  - Simple subclasses (CanvasTexture, VideoTexture, etc.) inherit base Texture config
+
+- [x] **objects/** - All classes configured
+  - Base: Mesh, Group, Line, Points, Sprite, Bone, LOD
+  - Mesh subclasses: SkinnedMesh (with bindMode option), InstancedMesh (with count), BatchedMesh
+  - Line subclasses: LineSegments, LineLoop
+  - Group subclasses: ClippingGroup
+  - Standalone: Skeleton
+
+- [x] **lights/** - All classes configured
+  - Light (base class with intensity slider)
+  - Lights: AmbientLight, DirectionalLight, HemisphereLight, PointLight, SpotLight, RectAreaLight, LightProbe
+  - Shadows: LightShadow (base class), DirectionalLightShadow, PointLightShadow, SpotLightShadow
+
+- [x] **geometries/** - All classes configured
+  - BufferGeometry (base class with attributes, morphing, bounds groups)
+  - Basic: BoxGeometry, SphereGeometry, PlaneGeometry, CircleGeometry, RingGeometry
+  - Curved: CylinderGeometry, ConeGeometry, CapsuleGeometry, TorusGeometry, TorusKnotGeometry
+  - Complex: ExtrudeGeometry, LatheGeometry, ShapeGeometry, TubeGeometry
+  - Polyhedra: PolyhedronGeometry, IcosahedronGeometry, OctahedronGeometry, TetrahedronGeometry, DodecahedronGeometry
+  - Utility: EdgesGeometry, WireframeGeometry
+
+### TODO
 - [ ] **materials/** - Material base class and all material types
-- [ ] **textures/** - Texture base class and all texture types
-- [ ] **geometries/** - All geometry types
 - [ ] **helpers/** - All helper classes
 - [ ] **loaders/** - All loader classes
-- [ ] **renderers/** - WebGPURenderer, RenderTarget, etc.
 - [ ] **extras/** - Curves, Shape, Path, Controls, etc.
 
 ## Key Examples
@@ -252,3 +324,5 @@ When configuring a new module:
 - **[BufferAttribute.ts](packages/three/src/configs/core/BufferAttribute.ts)** - Uses `ioOptionSelect` for GPU usage/type constants
 - **[BufferGeometry.ts](packages/three/src/configs/core/BufferGeometry.ts)** - Groups-only config for geometry properties
 - **[Fog.ts](packages/three/src/configs/scenes/Fog.ts)** - Combined class-based and type-based config for inline editing
+- **[WebGPURenderer.ts](packages/three/src/configs/renderers/WebGPURenderer.ts)** - Uses `ioOptionSelect` for tone mapping and color space constants
+- **[Texture.ts](packages/three/src/configs/textures/Texture.ts)** - Comprehensive example with semantic groups (Source, Mapping, Filtering, Wrapping, Format) and setter properties (`needsUpdate`, `needsPMREMUpdate`)

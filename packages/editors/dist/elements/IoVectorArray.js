@@ -80,6 +80,7 @@ let IoVectorArray = class IoVectorArray extends IoElement {
                     min: this.min,
                     max: this.max,
                     ladder: this.ladder,
+                    disabled: this.disabled,
                     '@pointerdown': this._onNumberPointerDown,
                     '@value-input': this._onNumberValueInput,
                 }));
@@ -113,6 +114,9 @@ __decorate([
 __decorate([
     ReactiveProperty(true)
 ], IoVectorArray.prototype, "ladder", void 0);
+__decorate([
+    ReactiveProperty(false)
+], IoVectorArray.prototype, "disabled", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoVectorArray.prototype, "keys", void 0);
