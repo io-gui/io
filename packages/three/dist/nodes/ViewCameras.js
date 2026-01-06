@@ -188,7 +188,7 @@ let ViewCameras = class ViewCameras extends Node {
                 .applyQuaternion(camera.quaternion)
                 .multiplyScalar(distance);
             camera.position.copy(center).add(delta);
-            camera.near = Math.max(halfDepth * 0.1);
+            camera.near = halfDepth * 0.01;
             camera.far = distance + halfDepth * 20;
             camera.updateProjectionMatrix();
         }
