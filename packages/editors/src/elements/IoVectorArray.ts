@@ -10,6 +10,7 @@ export type IoVectorArrayProps = IoElementProps & {
   linkable?: boolean
   linked?: WithBinding<boolean>
   ladder?: boolean
+  disabled?: boolean
 }
 /**
  * Input element for vector arrays and objects.
@@ -58,6 +59,9 @@ export class IoVectorArray extends IoElement {
 
   @ReactiveProperty(true)
   declare ladder: boolean
+
+  @ReactiveProperty(false)
+  declare disabled: boolean
 
   @ReactiveProperty({type: Array, init: null})
   declare keys: number[]
@@ -115,6 +119,7 @@ export class IoVectorArray extends IoElement {
           min: this.min,
           max: this.max,
           ladder: this.ladder,
+          disabled: this.disabled,
           '@pointerdown': this._onNumberPointerDown,
           '@value-input': this._onNumberValueInput,
         }))

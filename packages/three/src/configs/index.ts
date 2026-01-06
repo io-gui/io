@@ -37,6 +37,7 @@ import './scenes/Scene.js'
 // import './objects/Line.js';
 // import './objects/Points.js';
 // import './objects/Group.js';
+import './textures/Texture.js'
 // import './textures/VideoTexture.js';
 // import './textures/VideoFrameTexture.js';
 // import './textures/FramebufferTexture.js';
@@ -52,7 +53,6 @@ import './scenes/Scene.js'
 // import './textures/DepthTexture.js';
 // import './textures/CubeDepthTexture.js';
 // import './textures/ExternalTexture.js';
-// import './textures/Texture.js';
 // import './geometries/Geometries.js';
 // import './materials/Materials.js';
 // import './loaders/AnimationLoader.js';
@@ -149,6 +149,7 @@ import './math/Quaternion.js'
 import './math/Color.js'
 import './math/ColorManagement.js'
 import './math/SphericalHarmonics3.js'
+
 // import './helpers/SpotLightHelper.js';
 // import './helpers/SkeletonHelper.js';
 // import './helpers/PointLightHelper.js';
@@ -176,27 +177,27 @@ import './math/SphericalHarmonics3.js'
 // import './utils.js';
 
 // import './materials/nodes/NodeMaterials.js';
-// import './renderers/webgpu/WebGPURenderer.js';
+import './renderers/WebGPURenderer.js'
 // import './renderers/webgpu/WebGPURenderer.Nodes.js';
-// import './renderers/common/Lighting.js';
-// import './renderers/common/BundleGroup.js';
-// import './renderers/common/QuadMesh.js';
+import './renderers/common/Lighting.js'
+import './renderers/common/BundleGroup.js'
+import './renderers/common/CanvasTarget.js'
+import './renderers/common/QuadMesh.js'
 // import './renderers/common/extras/PMREMGenerator.js';
-// import './renderers/common/PostProcessing.js';
+import './renderers/common/PostProcessing.js'
+import './renderers/common/InspectorBase.js'
 // import './renderers/common/RendererUtils.js';
-// import './renderers/common/StorageTexture.js';
-// import './renderers/common/Storage3DTexture.js';
-// import './renderers/common/StorageArrayTexture.js';
-// import './renderers/common/StorageBufferAttribute.js';
-// import './renderers/common/StorageInstancedBufferAttribute.js';
-// import './renderers/common/IndirectStorageBufferAttribute.js';
+import './renderers/common/StorageTexture.js'
+import './renderers/common/Storage3DTexture.js'
+import './renderers/common/StorageArrayTexture.js'
+import './renderers/common/StorageBufferAttribute.js'
+import './renderers/common/StorageInstancedBufferAttribute.js'
+import './renderers/common/IndirectStorageBufferAttribute.js'
 // import './lights/webgpu/IESSpotLight.js';
 // import './lights/webgpu/ProjectorLight.js';
 // import './loaders/nodes/NodeLoader.js';
 // import './loaders/nodes/NodeObjectLoader.js';
 // import './loaders/nodes/NodeMaterialLoader.js';
-// import './renderers/common/InspectorBase.js';
-// import './renderers/common/CanvasTarget.js';
 // import './objects/ClippingGroup.js';
 // import './nodes/Nodes.js';
 // import './nodes/TSL.js';
@@ -208,5 +209,5 @@ import './math/SphericalHarmonics3.js'
 
 registerEditorGroups(Object, {
   Advanced: ['id', 'uuid', 'type', 'userData'],
-  Hidden: [new RegExp(/^is[A-Z]/), '_listeners']
+  Hidden: [new RegExp(/^is[A-Z0-9]/), '_listeners']
 })

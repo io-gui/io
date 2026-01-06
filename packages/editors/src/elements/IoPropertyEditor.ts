@@ -226,7 +226,7 @@ export class IoPropertyEditor extends IoElement {
         }
 
         vChildren.push(div({class: 'row'}, [
-          (this.labeled && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}}, id) : null,
+          (this.labeled && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}, title: id}, id) : null,
           {tag: tag, props: finalProps, children: children},
         ]))
       } else {

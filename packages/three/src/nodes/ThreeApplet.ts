@@ -92,5 +92,4 @@ registerEditorGroups(ThreeApplet, {
     'uiConfig',
     'uiGroups',
   ],
-  Advanced: []
 })

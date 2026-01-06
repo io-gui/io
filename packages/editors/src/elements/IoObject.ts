@@ -62,7 +62,7 @@ export class IoObject extends IoElement {
   @ReactiveProperty(true)
   declare labeled: boolean
 
-  @ReactiveProperty('')
+  @ReactiveProperty('80px')
   declare labelWidth: string
 
   @ReactiveProperty('')
