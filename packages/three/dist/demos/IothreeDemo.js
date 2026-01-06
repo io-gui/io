@@ -105,46 +105,46 @@ const exampleOptions = new MenuOption({
 });
 const initializzedExamples = new WeakMap();
 const allClasses = {
-    // Core
-    bufferAttribute: new THREE.BufferAttribute(new Float32Array(100), 1),
-    BufferGeometry: new THREE.BufferGeometry(),
-    clock: new THREE.Clock(),
-    instancedBufferAttribute: new THREE.InstancedBufferAttribute(new Float32Array(100), 1),
-    instancedBufferGeometry: new THREE.InstancedBufferGeometry(),
-    instancedInterleavedBuffer: new THREE.InstancedInterleavedBuffer(new Float32Array(100), 1),
-    interleavedBuffer: new THREE.InterleavedBuffer(new Float32Array(100), 1),
-    interleavedBufferAttribute: new THREE.InterleavedBufferAttribute(new THREE.InterleavedBuffer(new Float32Array(100), 1), 3, 0, false),
-    layers: new THREE.Layers(),
-    object3d: new THREE.Object3D(),
-    Raycaster: new THREE.Raycaster(),
-    renderTarget: new THREE.RenderTarget(100, 100),
-    renderTarget3D: new THREE.RenderTarget3D(100, 100, 100),
-    timer: new THREE.Timer(),
-    // Scenes
-    scene: new THREE.Scene(),
-    fog: new THREE.Fog(0x000000, 10, 100),
-    fogExp2: new THREE.FogExp2(0x000000, 0.002),
-    // // Cameras
-    Camera: new THREE.Camera(),
-    PerspectiveCamera: new THREE.PerspectiveCamera(),
-    OrthographicCamera: new THREE.OrthographicCamera(),
-    ArrayCamera: new THREE.ArrayCamera(),
-    StereoCamera: new THREE.StereoCamera(),
-    // Audio
-    audioListener: new THREE.AudioListener(),
-    audio: new THREE.Audio(new THREE.AudioListener()),
-    positionalAudio: new THREE.PositionalAudio(new THREE.AudioListener()),
-    audioAnalyser: new THREE.AudioAnalyser(new THREE.Audio(new THREE.AudioListener()), 32),
-    // Animation
-    animationClip: new THREE.AnimationClip('test', 1, []),
-    animationObjectGroup: new THREE.AnimationObjectGroup(),
-    numberKeyframeTrack: new THREE.NumberKeyframeTrack('.position[x]', [0, 1, 2], [0, 5, 0]),
-    vectorKeyframeTrack: new THREE.VectorKeyframeTrack('.position', [0, 1, 2], [0, 0, 0, 5, 5, 5, 0, 0, 0]),
-    colorKeyframeTrack: new THREE.ColorKeyframeTrack('.material.color', [0, 1, 2], [1, 0, 0, 0, 1, 0, 0, 0, 1]),
-    quaternionKeyframeTrack: new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0.707, 0.707]),
-    booleanKeyframeTrack: new THREE.BooleanKeyframeTrack('.visible', [0, 1], [true, false]),
-    stringKeyframeTrack: new THREE.StringKeyframeTrack('.name', [0, 1], ['start', 'end']),
-    // Math
+    // // Core
+    // bufferAttribute: new THREE.BufferAttribute(new Float32Array(100), 1),
+    // BufferGeometry: new THREE.BufferGeometry(),
+    // clock: new THREE.Clock(),
+    // instancedBufferAttribute: new THREE.InstancedBufferAttribute(new Float32Array(100), 1),
+    // instancedBufferGeometry: new THREE.InstancedBufferGeometry(),
+    // instancedInterleavedBuffer: new THREE.InstancedInterleavedBuffer(new Float32Array(100), 1),
+    // interleavedBuffer: new THREE.InterleavedBuffer(new Float32Array(100), 1),
+    // interleavedBufferAttribute: new THREE.InterleavedBufferAttribute(new THREE.InterleavedBuffer(new Float32Array(100), 1), 3, 0, false),
+    // layers: new THREE.Layers(),
+    // object3d: new THREE.Object3D(),
+    // Raycaster: new THREE.Raycaster(),
+    // renderTarget: new THREE.RenderTarget(100, 100),
+    // renderTarget3D: new THREE.RenderTarget3D(100, 100, 100),
+    // timer: new THREE.Timer(),
+    // // Scenes
+    // scene: new THREE.Scene(),
+    // fog: new THREE.Fog(0x000000, 10, 100),
+    // fogExp2: new THREE.FogExp2(0x000000, 0.002),
+    // // // Cameras
+    // Camera: new THREE.Camera(),
+    // PerspectiveCamera: new THREE.PerspectiveCamera(),
+    // OrthographicCamera: new THREE.OrthographicCamera(),
+    // ArrayCamera: new THREE.ArrayCamera(),
+    // StereoCamera: new THREE.StereoCamera(),
+    // // Audio
+    // audioListener: new THREE.AudioListener(),
+    // audio: new THREE.Audio(new THREE.AudioListener()),
+    // positionalAudio: new THREE.PositionalAudio(new THREE.AudioListener()),
+    // audioAnalyser: new THREE.AudioAnalyser(new THREE.Audio(new THREE.AudioListener()), 32),
+    // // Animation
+    // animationClip: new THREE.AnimationClip('test', 1, []),
+    // animationObjectGroup: new THREE.AnimationObjectGroup(),
+    // numberKeyframeTrack: new THREE.NumberKeyframeTrack('.position[x]', [0, 1, 2], [0, 5, 0]),
+    // vectorKeyframeTrack: new THREE.VectorKeyframeTrack('.position', [0, 1, 2], [0, 0, 0, 5, 5, 5, 0, 0, 0]),
+    // colorKeyframeTrack: new THREE.ColorKeyframeTrack('.material.color', [0, 1, 2], [1, 0, 0, 0, 1, 0, 0, 0, 1]),
+    // quaternionKeyframeTrack: new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0.707, 0.707]),
+    // booleanKeyframeTrack: new THREE.BooleanKeyframeTrack('.visible', [0, 1], [true, false]),
+    // stringKeyframeTrack: new THREE.StringKeyframeTrack('.name', [0, 1], ['start', 'end']),
+    // // Math
     cubicInterpolant: new THREE.CubicInterpolant(null, [1, 11, 2, 22, 3, 33], 2, []),
     discreteInterpolant: new THREE.DiscreteInterpolant(null, [1, 11, 2, 22, 3, 33], 2, []),
     linearInterpolant: new THREE.LinearInterpolant(null, [1, 11, 2, 22, 3, 33], 2, []),
@@ -170,7 +170,7 @@ const allClasses = {
     quaternion: new THREE.Quaternion(),
     color: new THREE.Color(),
     colorManagement: THREE.ColorManagement,
-    sphericalHarmonics3: new THREE.SphericalHarmonics3(),
+    sph3: new THREE.SphericalHarmonics3(),
 };
 export class IoThreeDemo extends IoElement {
     static get Style() {

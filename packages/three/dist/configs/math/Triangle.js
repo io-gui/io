@@ -1,6 +1,6 @@
-import { registerEditorConfig, ioPropertyEditor } from '@io-gui/editors';
+import { registerEditorConfig, ioObject } from '@io-gui/editors';
 import { Triangle } from 'three/webgpu';
 registerEditorConfig(Object, [
-    [Triangle, ioPropertyEditor()],
+    [Triangle, ioObject({ labelWidth: '18px' })],
 ]);
 //# sourceMappingURL=Triangle.js.map

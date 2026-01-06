@@ -6,6 +6,7 @@ export type IoPropertyEditorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[] | null;
     labeled?: boolean;
+    labelWidth?: string;
     orientation?: 'vertical' | 'horizontal';
     config?: PropertyConfig[];
     groups?: PropertyGroups;
@@ -19,6 +20,7 @@ export declare class IoPropertyEditor extends IoElement {
     value: object | Array<any>;
     properties: string[];
     labeled: boolean;
+    labelWidth: string;
     orientation: 'vertical' | 'horizontal';
     config: PropertyConfig[];
     groups: PropertyGroups;

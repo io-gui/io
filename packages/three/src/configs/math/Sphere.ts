@@ -1,6 +1,6 @@
-import { registerEditorConfig, ioPropertyEditor } from '@io-gui/editors'
+import { registerEditorConfig, ioObject } from '@io-gui/editors'
 import { Sphere } from 'three/webgpu'
 
 registerEditorConfig(Object, [
-  [Sphere, ioPropertyEditor()],
+  [Sphere, ioObject({labelWidth: '64px'})],
 ])

@@ -8,6 +8,7 @@ export type IoPropertyEditorProps = IoElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[] | null
   labeled?: boolean
+  labelWidth?: string
   orientation?: 'vertical' | 'horizontal'
   config?: PropertyConfig[]
   groups?: PropertyGroups
@@ -35,6 +36,7 @@ export class IoPropertyEditor extends IoElement {
     :host > .row {
       display: flex;
       flex-direction: row;
+      flex: 1 1 auto;
       margin: var(--io_spacing);
       padding: var(--io_spacing) 0;
       border-radius: var(--io_borderRadius);
@@ -55,6 +57,7 @@ export class IoPropertyEditor extends IoElement {
       margin-bottom: var(--io_spacing);
     }
     :host > .row > span {
+      flex: 0 0 auto;
       padding: var(--io_borderWidth); /* TODO: verify correctness */
       margin: var(--io_spacing);
       margin-left: var(--io_spacing2);
@@ -63,7 +66,6 @@ export class IoPropertyEditor extends IoElement {
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      min-width: calc(var(--io_lineHeight) * 3);
     }
     :host > .row > span:after {
       display: inline-block;
@@ -71,9 +73,9 @@ export class IoPropertyEditor extends IoElement {
       opacity: 0.5;
       content: ':';
     }
-    :host > .row > :nth-child(2) {
-      flex-grow: 1;
 
+    :host > .row > :not(span) {
+      flex-grow: 1;
     }
     :host io-object {
       margin-right: var(--io_spacing);
@@ -92,6 +94,9 @@ export class IoPropertyEditor extends IoElement {
 
   @ReactiveProperty(true)
   declare labeled: boolean
+
+  @ReactiveProperty('80px')
+  declare labelWidth: string
 
   @ReactiveProperty({type: String, value: 'vertical', reflect: true})
   declare orientation: 'vertical' | 'horizontal'
@@ -189,7 +194,6 @@ export class IoPropertyEditor extends IoElement {
       if (allProps.includes(properties[i])) {
         const id = properties[i] as keyof typeof this.value
         const value = this.value[id]
-        const isFunction = typeof value === 'function'
         const tag = config[id]!.tag
         const props = config[id]!.props as (IoElementProps | undefined) || {}
 
@@ -210,12 +214,19 @@ export class IoPropertyEditor extends IoElement {
           finalProps.persistentExpand = true
         }
         // NOTE: Functions dont have labels. They are displayed as labeled buttons.
+        const isFunction = typeof value === 'function'
         if (isFunction) {
           finalProps.action = value
           finalProps.label = finalProps.label || id
         }
+
+        const isIoObject = tag === 'io-object'
+        if (isIoObject) {
+          finalProps.label = id + ': ' + (finalProps.label || (value as object).constructor?.name)
+        }
+
         vChildren.push(div({class: 'row'}, [
-          (this.labeled && !isFunction) ? span(id) : null,
+          (this.labeled && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}}, id) : null,
           {tag: tag, props: finalProps, children: children},
         ]))
       } else {
@@ -230,6 +241,7 @@ export class IoPropertyEditor extends IoElement {
           vChildren.push(
             ioObject({
               label: group,
+              labelWidth: this.labelWidth,
               persistentExpand: true,
               value: this.value,
               properties: groups[group],

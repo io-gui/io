@@ -7,6 +7,7 @@ export type IoObjectProps = IoElementProps & {
     properties?: string[];
     labeled?: boolean;
     label?: string;
+    labelWidth?: string;
     expanded?: WithBinding<boolean>;
     persistentExpand?: boolean;
     config?: PropertyConfig[];
@@ -21,6 +22,7 @@ export declare class IoObject extends IoElement {
     value: Record<string, any> | any[];
     properties: string[] | null;
     labeled: boolean;
+    labelWidth: string;
     label: string;
     expanded: boolean;
     persistentExpand: boolean;

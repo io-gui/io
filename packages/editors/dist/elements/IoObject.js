@@ -15,6 +15,7 @@ let IoObject = class IoObject extends IoElement {
         return /* css */ `
     :host {
       display: flex;
+      max-width: 100%;
       flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
@@ -78,6 +79,7 @@ let IoObject = class IoObject extends IoElement {
                 groups: this.groups,
                 widgets: this.widgets,
                 labeled: this.labeled,
+                labelWidth: this.labelWidth,
             }));
         }
         this.render(vChildren);
@@ -93,6 +95,9 @@ __decorate([
 __decorate([
     ReactiveProperty(true)
 ], IoObject.prototype, "labeled", void 0);
+__decorate([
+    ReactiveProperty('')
+], IoObject.prototype, "labelWidth", void 0);
 __decorate([
     ReactiveProperty('')
 ], IoObject.prototype, "label", void 0);

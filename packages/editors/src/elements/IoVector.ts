@@ -32,6 +32,8 @@ export class IoVector extends IoElement {
       :host {
         display: flex;
         flex: 1 1 auto;
+        max-width: 100%;
+        overflow: hidden;
       }
       :host > io-number {
         flex: 1 1 auto;

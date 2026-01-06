@@ -128,15 +128,6 @@ export class IoEditorsDemo extends IoElement {
             })})],
           ]
         }),
-        // TODO: land option select should not share menu options model with other editors.
-        ioPropertyEditor({
-          value: document.body,
-          properties: ['lang'],
-        }),
-        ioPropertyEditor({
-          value: document.head,
-          properties: ['lang'],
-        }),
         ioButton({label: 'SwitchNestedObject', action: () => {
           this.object.object = {
             name: 'nested object 2',

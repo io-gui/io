@@ -10,6 +10,7 @@ export type IoObjectProps = IoElementProps & {
   properties?: string[]
   labeled?: boolean
   label?: string
+  labelWidth?: string
   expanded?: WithBinding<boolean>
   persistentExpand?: boolean
   config?: PropertyConfig[]
@@ -26,6 +27,7 @@ export class IoObject extends IoElement {
     return /* css */`
     :host {
       display: flex;
+      max-width: 100%;
       flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
@@ -59,6 +61,9 @@ export class IoObject extends IoElement {
 
   @ReactiveProperty(true)
   declare labeled: boolean
+
+  @ReactiveProperty('')
+  declare labelWidth: string
 
   @ReactiveProperty('')
   declare label: string
@@ -124,6 +129,7 @@ export class IoObject extends IoElement {
         groups: this.groups,
         widgets: this.widgets,
         labeled: this.labeled,
+        labelWidth: this.labelWidth,
       }))
     }
     this.render(vChildren)
