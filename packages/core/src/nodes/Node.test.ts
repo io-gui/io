@@ -267,9 +267,9 @@ describe('Node', () => {
     expect(node2._reactiveProperties.get('prop1')!.binding).toBe(binding2)
     expect(node2._reactiveProperties.get('prop3')!.binding).toBe(binding3)
 
-    expect((binding1).targets[0]).toBe(node1)
-    expect((binding2).targets[0]).toBe(node2)
-    expect((binding3).targets[0]).toBe(node2)
+    expect((binding1).targets.has(node1)).toBe(true)
+    expect((binding2).targets.has(node2)).toBe(true)
+    expect((binding3).targets.has(node2)).toBe(true)
 
     expect(node1._reactiveProperties.get('prop1')!.value).toBe('label1')
     expect(node2._reactiveProperties.get('prop1')!.value).toBe('label2')
@@ -325,14 +325,14 @@ describe('Node', () => {
     expect(node.prop1).toBe('label1')
 
     expect(node._reactiveProperties.get('prop1')!.binding).toBe(binding1)
-    expect((binding1).targets[0]).toBe(node)
+    expect((binding1).targets.has(node)).toBe(true)
 
     node.setProperty('prop1', binding2)
     expect(node._reactiveProperties.get('prop1')!.value).toBe('label2')
     expect(node.prop1).toBe('label2')
 
-    expect((binding1).targets[0]).toBe(undefined)
-    expect((binding2).targets[0]).toBe(node)
+    expect((binding1).targets.has(node)).toBe(false)
+    expect((binding2).targets.has(node)).toBe(true)
   })
   it('Should execute attribute reflection on IoElement', () => {
     @Register
@@ -763,8 +763,8 @@ describe('Node', () => {
     const boundNode2 = new TestNode({prop1: binding}) as any
     boundNode2.prop2 = binding
 
-    expect(binding.targets[0]).toBe(boundNode1)
-    expect(binding.targets[1]).toBe(boundNode2)
+    expect(binding.targets.has(boundNode1)).toBe(true)
+    expect(binding.targets.has(boundNode2)).toBe(true)
     expect(binding.targetProperties.get(boundNode1)![0]).toBe('prop1')
     expect(binding.targetProperties.get(boundNode1)![1]).toBe(undefined)
     expect(binding.targetProperties.get(boundNode2)![0]).toBe('prop1')
@@ -780,13 +780,13 @@ describe('Node', () => {
     expect(node.prop1).toBe('two')
     expect(boundNode2.prop1).toBe('two')
 
-    expect(binding.targets.length).toBe(2)
+    expect(binding.targets.size).toBe(2)
 
     boundNode1.dispose()
-    expect(binding.targets.length).toBe(1)
+    expect(binding.targets.size).toBe(1)
 
     boundNode2.dispose()
-    expect(binding.targets.length).toBe(0)
+    expect(binding.targets.size).toBe(0)
 
     node.dispose()
   })
@@ -910,9 +910,10 @@ describe('Node', () => {
     const dstNode1 = new TestNode({prop1: binding0}) as any
     const dstNode3 = new TestNode({prop1: binding0, prop2: binding0}) as any
 
-    expect(binding0.targets[0]).toBe(dstNode0)
-    expect(binding0.targets[1]).toBe(dstNode1)
-    expect(binding0.targets[2]).toBe(dstNode3)
+    expect(binding0.targets.has(dstNode0)).toBe(true)
+    expect(binding0.targets.has(dstNode1)).toBe(true)
+    expect(binding0.targets.has(dstNode3)).toBe(true)
+    expect(binding0.targets.size).toBe(3)
 
     expect(binding0.targetProperties.get(dstNode0)).toEqual(['prop1'])
     expect(binding0.targetProperties.get(dstNode1)).toEqual(['prop1'])

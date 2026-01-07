@@ -98,10 +98,9 @@ export class IoObject extends IoElement {
     // TODO: Test
     const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label})
     const bindingTargets = expandedBinding.targets
-    const bindingTargetCount = bindingTargets.length
-    const targetIsThis = bindingTargets.some(target => target === this)
+    const targetIsThis = bindingTargets.has(this)
 
-    if (bindingTargetCount < 1) {
+    if (bindingTargets.size < 1) {
       if (!targetIsThis) {
         const targetP = this._reactiveProperties.get('expanded')!
         if (targetP.binding && targetP.binding !== expandedBinding) {
