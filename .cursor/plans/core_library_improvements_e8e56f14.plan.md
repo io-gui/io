@@ -4,7 +4,7 @@ overview: Address foundational issues in @io-gui/core including memory leaks, pe
 todos:
   - id: fix-nodes-disposed-leak
     content: Fix memory leak in NODES.disposed Set
-    status: pending
+    status: completed
   - id: error-handling-changequeue
     content: Add try/catch error handling in ChangeQueue.dispatch()
     status: pending
@@ -48,13 +48,12 @@ todos:
 ## Phase 1: Critical Issues
 
 ### 1.1 Fix Memory Leak in NODES.disposed
-**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)
 
-The `NODES.disposed` Set accumulates references forever. Options:
+**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)The `NODES.disposed` Set accumulates references forever. Options:
+
 - **Option A:** Remove `NODES.disposed` entirely (simplest, unless it's used for debugging)
 - **Option B:** Use `WeakSet` instead of `Set` (allows GC but loses iteration)
 - **Option C:** Add periodic cleanup or manual `NODES.cleanup()` method
-
 ```typescript
 // Current (leaks)
 export const NODES = {
@@ -69,10 +68,12 @@ export const NODES = {
 }
 ```
 
-### 1.2 Add Error Handling in ChangeQueue
-**File:** [`packages/core/src/core/ChangeQueue.ts`](packages/core/src/core/ChangeQueue.ts)
 
-Wrap handler invocations in try/catch to prevent queue breakage:
+
+
+### 1.2 Add Error Handling in ChangeQueue
+
+**File:** [`packages/core/src/core/ChangeQueue.ts`](packages/core/src/core/ChangeQueue.ts)Wrap handler invocations in try/catch to prevent queue breakage:
 
 ```typescript
 // In dispatch()
@@ -85,10 +86,11 @@ if ((this.node as any)[property + 'Changed']) {
 }
 ```
 
-### 1.3 Fix O(n²) in ChangeQueue
-**File:** [`packages/core/src/core/ChangeQueue.ts`](packages/core/src/core/ChangeQueue.ts)
 
-Replace splice loop with index-based iteration:
+
+### 1.3 Fix O(n²) in ChangeQueue
+
+**File:** [`packages/core/src/core/ChangeQueue.ts`](packages/core/src/core/ChangeQueue.ts)Replace splice loop with index-based iteration:
 
 ```typescript
 // Current O(n²)
@@ -112,9 +114,8 @@ for (let i = 0; i < changes.length; i++) {
 ## Phase 2: Performance Optimizations
 
 ### 2.1 Convert Observation Arrays to Sets
-**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)
 
-Change `_observedObjectProperties` and `_observedNodeProperties` from `string[]` to `Set<string>`:
+**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)Change `_observedObjectProperties` and `_observedNodeProperties` from `string[]` to `Set<string>`:
 
 ```typescript
 // Declaration changes
@@ -124,10 +125,11 @@ declare readonly _observedNodeProperties: Set<string>
 // Usage changes: includes() → has(), push() → add(), splice() → delete()
 ```
 
-### 2.2 Optimize Queue Lookups
-**File:** [`packages/core/src/core/Queue.ts`](packages/core/src/core/Queue.ts)
 
-Replace array `indexOf` with Set membership:
+
+### 2.2 Optimize Queue Lookups
+
+**File:** [`packages/core/src/core/Queue.ts`](packages/core/src/core/Queue.ts)Replace array `indexOf` with Set membership:
 
 ```typescript
 // Current
@@ -143,10 +145,11 @@ if (!queueSet.has(func)) {
 }
 ```
 
-### 2.3 Optimize Binding Target Lookups
-**File:** [`packages/core/src/core/Binding.ts`](packages/core/src/core/Binding.ts)
 
-Change `targets: Array<Node | IoElement>` to `Set` for O(1) membership checks:
+
+### 2.3 Optimize Binding Target Lookups
+
+**File:** [`packages/core/src/core/Binding.ts`](packages/core/src/core/Binding.ts)Change `targets: Array<Node | IoElement>` to `Set` for O(1) membership checks:
 
 ```typescript
 readonly targets: Set<Node | IoElement> = new Set()
@@ -158,9 +161,8 @@ readonly targets: Set<Node | IoElement> = new Set()
 ## Phase 3: API Improvements
 
 ### 3.1 Add Batch Updates API
-**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)
 
-Add a `batch()` method for atomic multi-property updates:
+**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)Add a `batch()` method for atomic multi-property updates:
 
 ```typescript
 batch(fn: () => void) {
@@ -175,10 +177,11 @@ batch(fn: () => void) {
 }
 ```
 
-### 3.2 Freeze ProtoChain After Init
-**File:** [`packages/core/src/core/ProtoChain.ts`](packages/core/src/core/ProtoChain.ts)
 
-Freeze aggregated properties at end of constructor:
+
+### 3.2 Freeze ProtoChain After Init
+
+**File:** [`packages/core/src/core/ProtoChain.ts`](packages/core/src/core/ProtoChain.ts)Freeze aggregated properties at end of constructor:
 
 ```typescript
 // End of ProtoChain constructor
@@ -189,7 +192,10 @@ Object.freeze(this.handlers)
 Object.freeze(this.constructors)
 ```
 
+
+
 ### 3.3 Add Symbol.toStringTag
+
 **Files:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts), [`packages/core/src/elements/IoElement.ts`](packages/core/src/elements/IoElement.ts)
 
 ```typescript
@@ -203,26 +209,23 @@ get [Symbol.toStringTag]() {
 ## Phase 4: Future Enhancements (Lower Priority)
 
 ### 4.1 TypeScript Type Improvements
+
 - Replace `any` with proper generics in `applyProperties`, `setProperties`
 - Add generic type parameter to `Node<TProps>`
 - Improve event handler type definitions
 
 ### 4.2 NodeArray Complete Implementation
-**File:** [`packages/core/src/core/NodeArray.ts`](packages/core/src/core/NodeArray.ts)
 
-Implement `fill()` and `copyWithin()` properly instead of logging warnings.
+**File:** [`packages/core/src/core/NodeArray.ts`](packages/core/src/core/NodeArray.ts)Implement `fill()` and `copyWithin()` properly instead of logging warnings.
 
 ### 4.3 Computed Properties (Future)
+
 Design and implement `@Computed` decorator for derived properties.
 
 ### 4.4 Serialization Utilities (Future)
-Add `toJSON()`/`fromJSON()` methods for node graph serialization.
 
----
+Add `toJSON()`/`fromJSON()` methods for node graph serialization.---
 
 ## Testing Strategy
 
 Each change should include:
-1. Unit test for the specific fix
-2. Regression test to ensure existing behavior unchanged
-3. Performance benchmark for optimization changes (where applicable)
