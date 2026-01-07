@@ -13,7 +13,7 @@ todos:
     status: completed
   - id: observation-arrays-to-sets
     content: Convert _observedObjectProperties and _observedNodeProperties to Sets
-    status: pending
+    status: completed
   - id: optimize-queue-lookups
     content: Optimize Queue.ts with Set for O(1) function lookups
     status: completed
@@ -215,11 +215,3 @@ get [Symbol.toStringTag]() {
 - Improve event handler type definitions
 
 ### 4.2 NodeArray Complete Implementation
-
-**File:** [`packages/core/src/core/NodeArray.ts`](packages/core/src/core/NodeArray.ts)Implement `fill()` and `copyWithin()` properly instead of logging warnings.
-
-### 4.3 Computed Properties (Future)
-
-Design and implement `@Computed` decorator for derived properties.
-
-### 4.4 Serialization Utilities (Future)

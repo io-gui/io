@@ -43,16 +43,20 @@ export type NodeProps = {
 }
 
 
-function isNodeObject(value: any) {
-  return (typeof value === 'object' && value !== null && value._isNode)
+function isIoObject(value: any) {
+  return (typeof value === 'object' && value !== null && (value._isNode || value._isIoElement))
 }
 
-function isNonNodeObject(value: any) {
-  return (typeof value === 'object' && value !== null && !value._isNode)
+function isNonIoObject(value: any) {
+  return (typeof value === 'object' && value !== null && !(value._isNode || value._isIoElement))
 }
 
-function isNonNodeConstructor(type: AnyConstructor) {
-  return !(type.prototype instanceof IoElement || type.prototype instanceof Object)
+function isIoConstructor(type: AnyConstructor) {
+  return type.prototype?._isNode === true || type.prototype?._isIoElement === true
+}
+
+function isNonIoConstructor(type: AnyConstructor) {
+  return type !== String && type !== Number && type !== Boolean && !isIoConstructor(type)
 }
 
 @Register
@@ -78,8 +82,8 @@ export class Node extends Object {
   declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
-  declare readonly _observedObjectProperties: string[]
-  declare readonly _observedNodeProperties: string[]
+  declare readonly _observedObjectProperties: Set<string>
+  declare readonly _observedNodeProperties: Set<string>
   declare readonly _parents: Array<Node>
   declare readonly _isNode: boolean
   declare readonly _isIoElement: boolean
@@ -93,8 +97,8 @@ export class Node extends Object {
     Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
-    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: []})
-    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: []})
+    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: new Set<string>()})
+    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: new Set<string>()})
     Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []})
 
     this.init()
@@ -153,7 +157,7 @@ export class Node extends Object {
     return onPropertyMutated(this, event)
   };
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
-    if (isNodeObject(object) || (object as IoElement)._isIoElement) {
+    if (isIoObject(object) || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties})
     } else {
       this.dispatch('io-object-mutation', {object, properties}, false, window)
@@ -313,15 +317,27 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
         if (property.value === value && n !== name) hasNewValueAtOtherProperty = true
         if (property.value === oldValue && n !== name) hasOldValueAtOtherProperty = true
       })
-      if (isNodeObject(value) && !hasNewValueAtOtherProperty) {
-        node._observedNodeProperties.push(name)
+      const newIsIo = isIoObject(value)
+      const oldIsIo = isIoObject(oldValue)
+      if (newIsIo && !hasNewValueAtOtherProperty) {
+        node._observedNodeProperties.add(name)
         value.addEventListener('io-object-mutation', node.onPropertyMutated)
-        value.addParent(node)
+        // TODO: Edge case consider improving design.
+        if (value._isIoNode) {
+          value.addParent(node)
+        }
       }
-      if (isNodeObject(oldValue) && !hasOldValueAtOtherProperty && !oldValue._disposed) {
-        node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1)
+      if (oldIsIo && !hasOldValueAtOtherProperty && !oldValue._disposed) {
+        // Only remove from observed set if new value is not also a node
+        // (with Sets, add() then delete() would remove the entry entirely)
+        if (!newIsIo) {
+          node._observedNodeProperties.delete(name)
+        }
         oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated)
-        oldValue.removeParent(node)
+        // TODO: Edge case consider improving design.
+        if (oldValue._isIoNode) {
+          oldValue.removeParent(node)
+        }
       }
     }
 
@@ -401,16 +417,16 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   return hasMutated
 }
 export function observeObjectProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
-  if (!node._observedObjectProperties.includes(name)) {
+  if (!node._observedObjectProperties.has(name)) {
 
-    if(property.type && isNonNodeConstructor(property.type)) {
-      node._observedObjectProperties.push(name)
-      if (node._observedObjectProperties.length === 1) {
+    if(property.type && isNonIoConstructor(property.type)) {
+      node._observedObjectProperties.add(name)
+      if (node._observedObjectProperties.size === 1) {
         window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
       }
-    } else if (property.value && isNonNodeObject(property.value)) {
-      node._observedObjectProperties.push(name)
-      if (node._observedObjectProperties.length === 1) {
+    } else if (property.value && isNonIoObject(property.value)) {
+      node._observedObjectProperties.add(name)
+      if (node._observedObjectProperties.size === 1) {
         window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
       }
     }
@@ -418,13 +434,13 @@ export function observeObjectProperty(node: Node | IoElement, name: string, prop
 }
 
 export function observeNodeProperty(node: Node | IoElement, name: string, property: ReactivePropertyInstance) {
-  if (isNodeObject(property.value)) {
+  if (isIoObject(property.value)) {
     let hasSameValueAtOtherProperty = false
     node._reactiveProperties.forEach((p, n) => {
       if (p.value === property.value && n !== name) hasSameValueAtOtherProperty = true
     })
     if (!hasSameValueAtOtherProperty) {
-      node._observedNodeProperties.push(name)
+      node._observedNodeProperties.add(name)
       property.value.addEventListener('io-object-mutation', node.onPropertyMutated)
     }
   }
@@ -461,9 +477,9 @@ export function dispose(node: Node | IoElement) {
   })
   delete (node as any)._bindings
 
-  if (node._observedObjectProperties.length) {
+  if (node._observedObjectProperties.size) {
     window.removeEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
-    node._observedObjectProperties.length = 0
+    node._observedObjectProperties.clear()
     delete (node as any)._observedObjectProperties
   }
   delete (node as any)._protochain
@@ -474,7 +490,7 @@ export function dispose(node: Node | IoElement) {
   const removed: Node[] = []
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name)
-    if (isNodeObject(property.value) && !removed.includes(property.value) && !property.value._disposed) {
+    if (isIoObject(property.value) && !removed.includes(property.value) && !property.value._disposed) {
       property.value.removeEventListener('io-object-mutation', node.onPropertyMutated)
       removed.push(property.value)
     }
