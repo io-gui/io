@@ -227,5 +227,3 @@ Design and implement `@Computed` decorator for derived properties.
 Add `toJSON()`/`fromJSON()` methods for node graph serialization.---
 
 ## Testing Strategy
-
-Each change should include:

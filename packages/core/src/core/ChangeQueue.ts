@@ -43,7 +43,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  */
 export class ChangeQueue {
   declare readonly node: Node | IoElement
-  declare readonly changes: Change[]
+  declare changes: Change[]
   dispatchedChange = false
   dispatching = false
   /**
@@ -95,9 +95,11 @@ export class ChangeQueue {
     }
     this.dispatching = true
     const properties = []
-    while (this.changes.length) {
-      const change = this.changes[0]
-      this.changes.splice(0, 1)
+    // Snapshot and clear the queue in O(n) instead of O(n²) splice loop
+    const changesToProcess = this.changes
+    this.changes = []
+    for (let i = 0; i < changesToProcess.length; i++) {
+      const change = changesToProcess[i]
       const property = change.property
       if (change.value !== change.oldValue) {
         this.dispatchedChange = true
