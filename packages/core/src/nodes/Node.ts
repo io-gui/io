@@ -297,11 +297,20 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
     }
 
     // Stop observing the old value (only if not shared with another property)
-    if (prop.observer.observing && !hasValueAtOtherProperty(node, prop, oldValue)) {
+    const oldValueShared = hasValueAtOtherProperty(node, prop, oldValue)
+    if (!oldValueShared) {
+      // Always call stop() when value is not shared anymore.
+      // This handles cases where multiple properties shared an Io object and this
+      // property's observer.observing is false (because start() was skipped due to
+      // hasValueAtOtherProperty), but the listener still needs to be removed.
       prop.observer.stop(node, oldValue)
       if (oldValue?._isNode) {
         oldValue.removeParent(node)
       }
+    } else if (prop.observer.observing) {
+      // Reset observing state when skipping stop() due to shared value.
+      // This ensures start() can properly add listeners to subsequent values.
+      prop.observer.observing = false
     }
 
     prop.value = value
@@ -422,10 +431,14 @@ export function dispose(node: Node | IoElement) {
   delete (node as any)._changeQueue
 
   // Stop observing all properties and cleanup
+  // Track stopped values to avoid duplicate removeEventListener calls
   const stoppedValues: any[] = []
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name)
-    if (property.observer.observing && !stoppedValues.includes(property.value)) {
+    // Always try to stop observation for all properties with object values.
+    // Don't rely solely on observer.observing because it can be out of sync
+    // when multiple properties share the same Io object value.
+    if (!stoppedValues.includes(property.value)) {
       property.observer.stop(node, property.value)
       stoppedValues.push(property.value)
     }

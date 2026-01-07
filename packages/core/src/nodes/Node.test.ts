@@ -970,4 +970,131 @@ describe('Node', () => {
     expect(binding1.targets).toBe(undefined)
     expect(binding1.targetProperties).toBe(undefined)
   })
+  it('Should remove "io-object-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
+    @Register
+    class IoObjectNode extends Node {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          label: String,
+        }
+      }
+    }
+    @Register
+    class TestNode extends Node {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          // Property with type: Object, which results in observer.type = 'object'
+          prop: {type: Object, init: null},
+        }
+      }
+    }
+
+    const ioObject = new IoObjectNode()
+    const node = new TestNode() as any
+
+    // Assign Io object to property with type: Object
+    node.prop = ioObject
+
+    // Listener should be added to the Io object
+    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+
+    // Dispose the node - listener should be removed
+    node.dispose()
+
+    // Listener should have been removed
+    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+
+    ioObject.dispose()
+  })
+  it('Should remove "io-object-mutation" listeners when shared Io object value is released by all properties', async () => {
+    @Register
+    class IoObjectNode extends Node {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          label: String,
+        }
+      }
+    }
+    @Register
+    class TestNode extends Node {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          propA: {type: IoObjectNode, init: null},
+          propB: {type: Object, init: null},
+        }
+      }
+    }
+
+    const ioObject = new IoObjectNode()
+    const node = new TestNode() as any
+
+    // Assign same Io object to both properties
+    node.propA = ioObject
+    node.propB = ioObject
+
+    // Listener should be on the Io object (only one, due to hasValueAtOtherProperty optimization)
+    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+
+    // Release from propA - listener should remain (propB still has it)
+    node.propA = null
+
+    // Listener should still be present
+    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+
+    // Release from propB - listener should be removed (no other property has it)
+    node.propB = null
+
+    // Listener should have been removed
+    expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+
+    node.dispose()
+    ioObject.dispose()
+  })
+  it('Should correctly add listeners to new Io object after shared value is released', async () => {
+    @Register
+    class IoObjectNode extends Node {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          label: String,
+        }
+      }
+    }
+    @Register
+    class TestNode extends Node {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          propA: {type: IoObjectNode, init: null},
+          propB: {type: Object, init: null},
+        }
+      }
+    }
+
+    const ioObject1 = new IoObjectNode()
+    const ioObject2 = new IoObjectNode()
+    const node = new TestNode() as any
+
+    // Assign same Io object to both properties
+    node.propA = ioObject1
+    node.propB = ioObject1
+
+    // Change propA to a different Io object (propB still has ioObject1)
+    node.propA = ioObject2
+
+    // ioObject1 should still have a listener (from propB)
+    expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+
+    // ioObject2 should have a listener (from propA)
+    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1)
+    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
+
+    node.dispose()
+
+    // Both should have listeners removed after dispose
+    expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+    expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined)
+
+    ioObject1.dispose()
+    ioObject2.dispose()
+  })
 })

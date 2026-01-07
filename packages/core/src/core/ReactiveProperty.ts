@@ -180,10 +180,13 @@ export class Observer {
 
   /**
    * Stops observing mutations on the given value.
+   * For Io objects, always attempt to remove the listener since multiple properties
+   * might share the same value and the observing state might be out of sync.
    */
   stop(node: Node | IoElement, value: any) {
-    if (!this.observing) return
-
+    // Always try to remove listeners from Io objects, regardless of observing state.
+    // This handles cases where multiple properties share the same Io object value
+    // and the observing state might be out of sync due to hasValueAtOtherProperty logic.
     if (isIoValue(value) && !value._disposed) {
       value.removeEventListener('io-object-mutation', node.onPropertyMutated)
     }
