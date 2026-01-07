@@ -29,7 +29,7 @@ let IoSplit = class IoSplit extends IoElement {
             'io-divider-move-end': 'onDividerMoveEnd',
             'io-panel-remove': 'onPanelRemove',
             'io-split-remove': 'onSplitRemove',
-            'io-split-convert-to-panel': 'onSplitConvertToPanel',
+            'io-split-consolidate': 'onSplitConsolidate',
         };
     }
     // TODO: Make sure one panel is available even when all tabs are removed.
@@ -163,7 +163,7 @@ let IoSplit = class IoSplit extends IoElement {
             this.dispatch('io-split-remove', { split: this.split }, true);
         }
         else if (this.split.children.length === 1) {
-            this.dispatch('io-split-convert-to-panel', { split: this.split }, true);
+            this.dispatch('io-split-consolidate', { split: this.split }, true);
         }
     }
     onSplitRemove(event) {
@@ -172,25 +172,40 @@ let IoSplit = class IoSplit extends IoElement {
         event.stopPropagation();
         const index = this.split.children.indexOf(event.detail.split);
         this.split.children.splice(index, 1);
-        if (this.split.children.length === 2) {
+        if (this.split.children.length === 1) {
+            this.dispatch('io-split-consolidate', { split: this.split }, true);
+        }
+        else if (this.split.children.length === 2) {
             this.split.children[1].flex = '1 1 100%';
         }
     }
-    onSplitConvertToPanel(event) {
+    onSplitConsolidate(event) {
         if (event.detail.split === this.split)
             return;
         event.stopPropagation();
-        this.convertToPanel(event.detail.split);
+        this.consolidateChild(event.detail.split);
+        // Recursive consolidation: if this split now has only 1 child, propagate up the tree
+        if (this.split.children.length === 1) {
+            this.dispatch('io-split-consolidate', { split: this.split }, true);
+        }
     }
     convertToSplit(panel, first, second, orientation) {
         const index = this.split.children.indexOf(panel);
-        this.split.children.splice(index, 1, new Split({ orientation: orientation, children: [first, second] }));
+        const newSplit = new Split({ type: 'split', orientation, children: [] });
+        newSplit.children.push(first, second);
+        this.split.children.splice(index, 1, newSplit);
     }
-    convertToPanel(split) {
-        const panel = split.children[0];
-        const index = this.split.children.indexOf(split);
-        panel.flex = '1 1 100%';
-        this.split.children.splice(index, 1, panel);
+    consolidateChild(childSplit) {
+        const index = this.split.children.indexOf(childSplit);
+        const soleChild = childSplit.children[0];
+        if (soleChild instanceof Panel) {
+            soleChild.flex = '1 1 100%';
+            this.split.children.splice(index, 1, soleChild);
+        }
+        else if (soleChild instanceof Split) {
+            this.split.orientation = soleChild.orientation;
+            this.split.children.splice(index, 1, ...soleChild.children);
+        }
     }
     moveTabToSplit(sourcePanel, panel, tab, direction) {
         const index = this.split.children.indexOf(panel);
@@ -201,17 +216,17 @@ let IoSplit = class IoSplit extends IoElement {
         let newIndex = ['left', 'top'].includes(direction) ? index - 1 : index + 1;
         if (this.split.orientation === orientation) {
             newIndex = Math.max(0, newIndex);
-            this.split.children.splice(newIndex, 0, new Panel({ tabs: [tab] }));
+            this.split.children.splice(newIndex, 0, new Panel({ type: 'panel', tabs: [tab] }));
             sourcePanel.removeTab(tab);
         }
         else {
             if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
                 sourcePanel.removeTab(tab);
                 if (newIndex === -1) {
-                    this.convertToSplit(panel, new Panel({ tabs: [tab] }), panel, orientation);
+                    this.convertToSplit(panel, new Panel({ type: 'panel', tabs: [tab] }), panel, orientation);
                 }
                 else {
-                    this.convertToSplit(panel, panel, new Panel({ tabs: [tab] }), orientation);
+                    this.convertToSplit(panel, panel, new Panel({ type: 'panel', tabs: [tab] }), orientation);
                 }
             }
         }

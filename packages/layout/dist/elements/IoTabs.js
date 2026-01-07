@@ -58,8 +58,13 @@ let IoTabs = class IoTabs extends IoElement {
         this.onResized();
     }
     onResized() {
+        const addMenu = this.querySelector('.add-tab');
+        // TODO: It appears that addMenu rect is required for overflow calculation to work correctly.
+        // But it is not guaranteed to be available since addMenuOptions is optional. Fix!
+        if (!addMenu)
+            return;
         const rect = this.getBoundingClientRect();
-        const addMenuRect = this.querySelector('.add-tab').getBoundingClientRect();
+        const addMenuRect = addMenu.getBoundingClientRect();
         if (this.overflow === -1) {
             if (addMenuRect.right > rect.right) {
                 this.overflow = rect.width;
@@ -70,7 +75,7 @@ let IoTabs = class IoTabs extends IoElement {
         }
     }
     changed() {
-        const hasOptions = this.addMenuOption && this.addMenuOption.options.length > 0;
+        const hasOptions = this.addMenuOption && this.addMenuOption.options?.length > 0;
         this.render([
             ioTabsHamburger({ tabs: this.tabs }),
             ...this.tabs.map(tab => ioTab({ tab: tab })),

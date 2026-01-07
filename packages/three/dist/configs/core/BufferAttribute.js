@@ -1,7 +1,10 @@
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumber } from '@io-gui/inputs';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 import { BufferAttribute, StaticDrawUsage, DynamicDrawUsage, StreamDrawUsage, StaticReadUsage, DynamicReadUsage, StreamReadUsage, StaticCopyUsage, DynamicCopyUsage, StreamCopyUsage, FloatType, IntType, } from 'three/webgpu';
+registerEditorConfig(Object, [
+    [BufferAttribute, ioObject({ labelWidth: '64px' })],
+]);
 registerEditorConfig(BufferAttribute, [
     ['itemSize', ioNumber({ min: 1, max: 16, step: 1 })],
     ['usage', ioOptionSelect({ selectBy: 'value', option: new MenuOption({ options: [

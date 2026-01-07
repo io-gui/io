@@ -4,6 +4,14 @@ import { IoPanel } from './IoPanel.js';
 import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { Tab } from '../nodes/Tab.js';
+/**
+ * TODO ensure that at least one split has flex-grow: 1
+ * There is a bug when you have three splits say:
+ * flex: 0 0 300px
+ * flex: 1 1 auto
+ * flex: 0 0 300px
+ * And when you remove the middle split, the remaining two splits dont fill up the space since none is flex-grow.
+*/
 export type IoSplitProps = IoElementProps & {
     split: Split;
     elements: VDOMElement[];
@@ -19,16 +27,16 @@ export declare class IoSplit extends IoElement {
         'io-divider-move-end': string;
         'io-panel-remove': string;
         'io-split-remove': string;
-        'io-split-convert-to-panel': string;
+        'io-split-consolidate': string;
     };
     constructor(args: IoSplitProps);
     onDividerMove(event: CustomEvent): void;
     onDividerMoveEnd(event: CustomEvent): void;
     onPanelRemove(event: CustomEvent): void;
     onSplitRemove(event: CustomEvent): void;
-    onSplitConvertToPanel(event: CustomEvent): void;
+    onSplitConsolidate(event: CustomEvent): void;
     convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation): void;
-    convertToPanel(split: Split): void;
+    consolidateChild(childSplit: Split): void;
     moveTabToSplit(sourcePanel: IoPanel, panel: Panel, tab: Tab, direction: SplitDirection): void;
     splitMutated(): void;
     splitMutatedDebounced(): void;

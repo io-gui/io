@@ -217,9 +217,6 @@ export function setProperty(node, name, value, debounce = false) {
     if (value !== oldValue) {
         const binding = (value instanceof Binding) ? value : null;
         if (binding) {
-            if (name === 'selectedExampleId') {
-                console.log('binding', binding);
-            }
             const oldBinding = prop.binding;
             if (binding !== oldBinding) {
                 if (oldBinding) {

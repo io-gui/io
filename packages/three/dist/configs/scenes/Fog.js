@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumber } from '@io-gui/inputs';
 import { Fog } from 'three/webgpu';
 registerEditorConfig(Fog, [
@@ -14,6 +14,6 @@ registerEditorGroups(Fog, {
     ],
 });
 registerEditorConfig(Object, [
-    [Fog, ioPropertyEditor()],
+    [Fog, ioObject({ labelWidth: '52px' })],
 ]);
 //# sourceMappingURL=Fog.js.map
