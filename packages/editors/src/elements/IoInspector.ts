@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span, VDOMElement, enablePropertyObservation } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, span, VDOMElement } from '@io-gui/core'
 import { ioBreadcrumbs } from './IoBreadcrumbs.js'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
@@ -55,10 +55,10 @@ export class IoInspector extends IoElement {
     }
     `
   }
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object, init: null})
   declare value: object | Array<any>
 
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object, init: null})
   declare selected: object | Array<any>
 
   @ReactiveProperty({type: String})
@@ -77,10 +77,6 @@ export class IoInspector extends IoElement {
     return {
       'io-button-clicked': 'onLinkClicked',
     }
-  }
-  ready() {
-    enablePropertyObservation(this, 'value')
-    enablePropertyObservation(this, 'selected')
   }
   onLinkClicked(event: CustomEvent) {
     event.stopPropagation()

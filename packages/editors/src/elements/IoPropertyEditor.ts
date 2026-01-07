@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement, enablePropertyObservation } from '@io-gui/core'
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { getEditorWidget } from '../utils/EditorWidgets.js'
@@ -86,7 +86,7 @@ export class IoPropertyEditor extends IoElement {
   // @ReactiveProperty('debounced')
   // declare reactivity: ReactivityType
 
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object, init: null})
   declare value: object | Array<any>
 
   @ReactiveProperty({type: Array, init: null})
@@ -113,10 +113,6 @@ export class IoPropertyEditor extends IoElement {
   private _config: PropertyConfigRecord | null = null
   private _groups: PropertyGroupsRecord | null = null
   private _widget: VDOMElement | null = null
-
-  ready() {
-    enablePropertyObservation(this, 'value')
-  }
 
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation()

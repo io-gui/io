@@ -401,7 +401,7 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
 }
 export function startPropertyObservation(node: Node | IoElement, property: ReactivePropertyInstance) {
   if (property.observer.observing) return
-  if (!property.value) return
+  if (!property.value || typeof property.value !== 'object') return
 
   // Determine observation mode based on actual value (not just declared type)
   // This allows backward compatibility with type-mismatched assignments
@@ -436,36 +436,6 @@ export function stopPropertyObservation(node: Node | IoElement, property: Reacti
   }
   // Note: We don't remove window listener here - it's done at dispose time
   property.observer.observing = false
-}
-
-/**
- * Enables mutation observation for a property regardless of its current value.
- * Useful for components that need to observe mutations on properties that may be
- * initially undefined or need observation before being assigned a value.
- */
-export function enablePropertyObservation(node: Node | IoElement, propertyName: string) {
-  const prop = node._reactiveProperties.get(propertyName)
-  if (!prop) {
-    debug: console.warn(`enablePropertyObservation: Property "${propertyName}" not found`)
-    return
-  }
-  if (prop.observer.observing) return
-
-  // For object-typed properties, enable window listener even if value is null/undefined
-  if (prop.observer.type === 'object') {
-    prop.observer.observing = true
-    if (!node._hasWindowMutationListener) {
-      node._hasWindowMutationListener = true
-      window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
-    }
-  } else if (isIoObject(prop.value)) {
-    // If current value is Io, observe it
-    prop.observer.observing = true
-    prop.value.addEventListener('io-object-mutation', node.onPropertyMutated)
-  } else {
-    // Mark as observing so future value changes are tracked
-    prop.observer.observing = true
-  }
 }
 
 export function bind(node: Node | IoElement, name: string) {
