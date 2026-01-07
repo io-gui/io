@@ -50,6 +50,32 @@ class MockNodeWithThrowingChanged extends Node {
   }
 }
 
+@Register
+class MockNodeWithCascadingChanges extends Node {
+  changeStack: string[] = []
+  prop1Changed(change: Change) {
+    this.changeStack.push(`prop1Changed ${change.value}`)
+    // Cascading change: prop1 changing triggers prop2 change
+    if (change.value === 1) {
+      this._changeQueue.queue('prop2', 'cascaded', '')
+    }
+  }
+  prop2Changed(change: Change) {
+    this.changeStack.push(`prop2Changed ${change.value}`)
+    // Further cascade: prop2 changing triggers prop3 change
+    if (change.value === 'cascaded') {
+      this._changeQueue.queue('prop3', 'final', '')
+    }
+  }
+  prop3Changed(change: Change) {
+    this.changeStack.push(`prop3Changed ${change.value}`)
+  }
+  dispatch() {}
+  changed() {
+    this.changeStack.push('changed')
+  }
+}
+
 describe('ChangeQueue', () => {
   it('Should initialize with correct default values', () => {
     const node = new MockNode()
@@ -180,5 +206,29 @@ describe('ChangeQueue', () => {
     expect(node.changeStack).toEqual(['prop2Changed prop2 3 0', 'changed'])
 
     consoleSpy.mockRestore()
+  })
+  it('Should process cascading changes added during dispatch in the same cycle', () => {
+    const node = new MockNodeWithCascadingChanges()
+    // Use the node's own _changeQueue so cascading queue() calls go to the same queue
+    const changeQueue = node._changeQueue
+
+    // Queue initial change
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+
+    // All cascading changes should have been processed in the same dispatch cycle:
+    // 1. prop1Changed(1) → queues prop2
+    // 2. prop2Changed('cascaded') → queues prop3
+    // 3. prop3Changed('final')
+    // 4. changed() called once at the end
+    expect(node.changeStack).toEqual([
+      'prop1Changed 1',
+      'prop2Changed cascaded',
+      'prop3Changed final',
+      'changed'
+    ])
+
+    // Queue should be empty after dispatch
+    expect(changeQueue.changes.length).toBe(0)
   })
 })

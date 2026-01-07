@@ -95,11 +95,9 @@ export class ChangeQueue {
     }
     this.dispatching = true
     const properties = []
-    // Snapshot and clear the queue in O(n) instead of O(n²) splice loop
-    const changesToProcess = this.changes
-    this.changes = []
-    for (let i = 0; i < changesToProcess.length; i++) {
-      const change = changesToProcess[i]
+    let i = 0
+    while (i < this.changes.length) {
+      const change = this.changes[i]
       const property = change.property
       if (change.value !== change.oldValue) {
         this.dispatchedChange = true
@@ -114,7 +112,9 @@ export class ChangeQueue {
         this.node.dispatch(property + '-changed' as any, change)
         properties.push(property)
       }
+      i++
     }
+    this.changes.length = 0
     if (this.dispatchedChange) {
       try {
         this.node.changed()

@@ -16,10 +16,10 @@ todos:
     status: pending
   - id: optimize-queue-lookups
     content: Optimize Queue.ts with Set for O(1) function lookups
-    status: pending
+    status: completed
   - id: optimize-binding-targets
     content: Change Binding.targets from Array to Set
-    status: pending
+    status: completed
   - id: add-batch-api
     content: Add batch() method for atomic multi-property updates
     status: pending
@@ -223,7 +223,3 @@ get [Symbol.toStringTag]() {
 Design and implement `@Computed` decorator for derived properties.
 
 ### 4.4 Serialization Utilities (Future)
-
-Add `toJSON()`/`fromJSON()` methods for node graph serialization.---
-
-## Testing Strategy
