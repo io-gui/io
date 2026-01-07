@@ -101,14 +101,13 @@ export class IoThreeViewport extends IoElement {
 
   constructor(args: IoThreeViewportProps) {
     super(args)
-    this.renderViewport = this.renderViewport.bind(this)
 
     this.renderTarget = new CanvasTarget(document.createElement('canvas'))
     this.appendChild(this.renderTarget.domElement)
 
     this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
 
-    this.debounce(this.renderViewport)
+    this.debounce(this.renderViewportDebounced)
   }
 
   connectedCallback() {
@@ -132,7 +131,7 @@ export class IoThreeViewport extends IoElement {
 
   onAnimate() {
     if (!this.visible) return
-    this.debounce(this.renderViewport)
+    this.debounce(this.renderViewportDebounced)
   }
 
   onResized() {
@@ -141,22 +140,22 @@ export class IoThreeViewport extends IoElement {
     this.height = Math.floor(rect.height)
     this.renderTarget.setSize(this.width, this.height)
     this.renderTarget.setPixelRatio(window.devicePixelRatio)
-    this.renderViewport()
+    this.renderViewportDebounced()
   }
 
   appletChanged() {
-    this.debounce(this.renderViewport)
+    this.debounce(this.renderViewportDebounced)
   }
   appletMutated() {
-    this.debounce(this.renderViewport)
+    this.debounce(this.renderViewportDebounced)
   }
   changed() {
-    this.debounce(this.renderViewport)
+    this.debounce(this.renderViewportDebounced)
   }
 
-  renderViewport() {
+  renderViewportDebounced() {
     if (this.renderer.initialized === false) {
-      this.debounce(this.renderViewport)
+      this.debounce(this.renderViewportDebounced)
       return
     }
     if (this.applet.isRendererInitialized() === false) {

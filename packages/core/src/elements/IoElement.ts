@@ -145,6 +145,9 @@ export class IoElement extends HTMLElement {
   init() {}
   ready() {}
   changed() {}
+  get [Symbol.toStringTag]() {
+    return this.constructor.name
+  }
   queue(name: string, value: any, oldValue: any) {
     this._changeQueue.queue(name, value, oldValue)
   }
