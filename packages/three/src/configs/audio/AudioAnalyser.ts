@@ -1,4 +1,4 @@
-import { registerEditorGroups, ioPropertyEditor, registerEditorConfig } from '@io-gui/editors'
+import { registerEditorGroups, ioObject, registerEditorConfig } from '@io-gui/editors'
 import { AudioAnalyser } from 'three/webgpu'
 
 /**
@@ -11,6 +11,6 @@ registerEditorGroups(AudioAnalyser, {
 })
 
 registerEditorConfig(Object, [
-  [AudioAnalyser, ioPropertyEditor()],
+  [AudioAnalyser, ioObject()],
 ])
 
