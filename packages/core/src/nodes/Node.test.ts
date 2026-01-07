@@ -101,7 +101,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
-      observer: {type: 'none', observing: false},
+      observer: {type: 'object', observing: true},
     })
     expect(node._reactiveProperties.get('prop6')).toEqual({
       value: 'hello',
@@ -988,7 +988,6 @@ describe('Node', () => {
     class TestNode extends Node {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
-          // Property with type: Object, which results in observer.type = 'object'
           prop: {type: Object, init: null},
         }
       }
@@ -1025,13 +1024,13 @@ describe('Node', () => {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
-          propB: {type: Object, init: null},
+          propB: {type: IoObjectNode, init: null},
         }
       }
     }
 
-    const ioObject = new IoObjectNode()
     const node = new TestNode() as any
+    const ioObject = new IoObjectNode()
 
     // Assign same Io object to both properties
     node.propA = ioObject
@@ -1070,7 +1069,7 @@ describe('Node', () => {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
-          propB: {type: Object, init: null},
+          propB: {type: IoObjectNode, init: null},
         }
       }
     }

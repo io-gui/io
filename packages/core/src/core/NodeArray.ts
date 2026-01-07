@@ -247,9 +247,9 @@ export class NodeArray<N extends Node> extends Array<N> {
     })
   }
   itemMutated(event: CustomEvent) {
-    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window)
+    this.node.dispatch('io-object-mutation', {object: this.proxy, property: event.detail.index})
   }
   dispatchMutation() {
-    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window)
+    this.node.dispatch('io-object-mutation', {object: this.proxy})
   }
 }

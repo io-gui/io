@@ -15,7 +15,7 @@ describe('Queue', () => {
     })
 
     it('Should execute leading edge and queue trailing with latest arg', async () => {
-      let args: string[] = []
+      const args: string[] = []
       const func = (a: string) => { args.push(a) }
       throttle(func, 'first')  // Leading: executes with 'first'
       throttle(func, 'second') // Updates trailing arg
@@ -155,8 +155,8 @@ describe('Queue', () => {
   describe('throttle and debounce together', () => {
 
     it('Should work independently', async () => {
-      let throttleArgs: string[] = []
-      let debounceArgs: string[] = []
+      const throttleArgs: string[] = []
+      const debounceArgs: string[] = []
       const throttleFunc = (a: string) => { throttleArgs.push(a) }
       const debounceFunc = (a: string) => { debounceArgs.push(a) }
 

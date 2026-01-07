@@ -78,7 +78,6 @@ export class Node extends Object {
   declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
-  declare _hasWindowMutationListener: boolean
   declare readonly _parents: Array<Node>
   declare readonly _isNode: boolean
   declare readonly _isIoElement: boolean
@@ -92,7 +91,6 @@ export class Node extends Object {
     Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
-    Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
     Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []})
 
     this.init()
@@ -218,7 +216,7 @@ export function initReactiveProperties(node: Node | IoElement) {
     node._reactiveProperties.set(name, property)
     if (property.binding) property.binding.addTarget(node, name)
 
-    property.observer.start(node, property.value)
+    property.observer.start(property.value)
 
     if (node instanceof IoElement) {
       if (property.reflect && property.value !== undefined && property.value !== null) {
@@ -299,20 +297,21 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       return
     }
 
+    // TODO: Untangle and redesign this mess! P0
     const oldValueShared = hasValueAtOtherProperty(node, prop, oldValue)
     if (!oldValueShared) {
-      prop.observer.stop(node, oldValue)
+      prop.observer.stop(oldValue)
       if (oldValue?._isNode) {
         oldValue.removeParent(node)
       }
-    } else if (prop.observer.observing) {
+    } else {
       prop.observer.observing = false
     }
 
     prop.value = value
 
     if (!hasValueAtOtherProperty(node, prop, value)) {
-      prop.observer.start(node, value)
+      prop.observer.start(value)
       if (value?._isNode) {
         value.addParent(node)
       }
@@ -416,27 +415,13 @@ export function dispose(node: Node | IoElement) {
   })
   delete (node as any)._bindings
 
-  // Remove window mutation listener if attached
-  if (node._hasWindowMutationListener) {
-    window.removeEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
-    node._hasWindowMutationListener = false
-  }
-
   node._changeQueue.dispose()
   delete (node as any)._changeQueue
 
-  // Stop observing all properties and cleanup
-  // Track stopped values to avoid duplicate removeEventListener calls
-  const stoppedValues: any[] = []
   node._reactiveProperties.forEach((property, name) => {
     property.binding?.removeTarget(node, name)
-    // Always try to stop observation for all properties with object values.
-    // Don't rely solely on observer.observing because it can be out of sync
-    // when multiple properties share the same Io object value.
-    if (!stoppedValues.includes(property.value)) {
-      property.observer.stop(node, property.value)
-      stoppedValues.push(property.value)
-    }
+    property.observer.stop(property.value)
+    property.observer.dispose()
   })
 
   for (const name in node._protochain.properties) {
