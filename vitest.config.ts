@@ -24,26 +24,21 @@ const packages = [
   'three',
 ] as const
 
-const sharedBrowserConfig = {
-  browser: {
-    enabled: true,
-    provider: playwright() as any,
-    instances: [
-      { browser: 'chromium' as const },
-    ],
-  },
-}
-
 export default defineConfig({
   resolve: resolveConfig,
   test: {
-    ...sharedBrowserConfig,
     projects: packages.map(pkg =>
       defineProject({
         resolve: resolveConfig,
         test: {
           name: pkg,
-          ...sharedBrowserConfig,
+          browser: {
+            enabled: true,
+            provider: playwright() as any,
+            instances: [
+              { browser: 'chromium' as const, name: `${pkg}-chromium` },
+            ],
+          },
           include: [`packages/${pkg}/src/**/*.test.ts`],
         },
       })
