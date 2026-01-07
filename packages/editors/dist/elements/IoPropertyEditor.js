@@ -78,10 +78,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     _config = null;
     _groups = null;
     _widget = null;
-    init() {
-        this._observedObjectProperties.push('value');
-        window.addEventListener('io-object-mutation', this.onPropertyMutated);
-    }
     _onValueInput(event) {
         event.stopImmediatePropagation();
         const id = event.target.id;
@@ -96,25 +92,25 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         }
     }
     valueMutated(event) {
-        this.throttle(this.changed);
+        this.debounce(this.changed);
     }
     configChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
     groupsChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
     widgetChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
     valueChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
-    configureThrottled() {
+    configureDebounced() {
         this._config = getEditorConfig(this.value, this.config);
         this._groups = getEditorGroups(this.value, this.groups);
         this._widget = this.widget || getEditorWidget(this.value);
-        this.throttle(this.changed);
+        this.debounce(this.changed);
     }
     changed() {
         this.debounce(this.changedDebounced);
@@ -209,7 +205,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty()
+    ReactiveProperty({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })

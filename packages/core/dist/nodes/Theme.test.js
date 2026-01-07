@@ -10,6 +10,7 @@ describe('Theme', () => {
             reflect: false,
             type: String,
             value: theme.themeID,
+            observer: { type: 'none', observing: false },
         });
     });
 });

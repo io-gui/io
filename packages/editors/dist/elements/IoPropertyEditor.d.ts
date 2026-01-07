@@ -27,14 +27,13 @@ export declare class IoPropertyEditor extends IoElement {
     private _config;
     private _groups;
     private _widget;
-    init(): void;
     _onValueInput(event: CustomEvent): void;
     valueMutated(event: CustomEvent): void;
     configChanged(): void;
     groupsChanged(): void;
     widgetChanged(): void;
     valueChanged(): void;
-    configureThrottled(): void;
+    configureDebounced(): void;
     changed(): void;
     changedDebounced(): void;
     dispose(): void;

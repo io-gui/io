@@ -32,7 +32,7 @@ export declare class IoThreeViewport extends IoElement {
     appletChanged(): void;
     appletMutated(): void;
     changed(): void;
-    renderViewport(): void;
+    renderViewportDebounced(): void;
     dispose(): void;
 }
 export declare const ioThreeViewport: (arg0: IoThreeViewportProps) => import("@io-gui/core").VDOMElement;

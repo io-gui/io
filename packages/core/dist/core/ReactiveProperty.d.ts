@@ -68,6 +68,25 @@ export declare class ReactiveProtoProperty {
      */
     toJSON(): any;
 }
+export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
+/**
+ * Manages mutation observation state for a reactive property.
+ * - 'none': Primitives (String, Number, Boolean) - no mutation observation
+ * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'nodearray': NodeArray - dispatches on owner node, observe via self-listener
+ * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ */
+export declare class Observer {
+    private readonly node;
+    private _hasSelfMutationListener;
+    private _hasWindowMutationListener;
+    type: ObservationType;
+    observing: boolean;
+    constructor(node: Node | IoElement);
+    start(value: any): void;
+    stop(value: any): void;
+    dispose(): void;
+}
 /**
  * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
  */
@@ -77,6 +96,7 @@ export declare class ReactivePropertyInstance {
     binding?: Binding;
     reflect: boolean;
     init?: any;
+    readonly observer: Observer;
     /**
      * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
      * @param node owner Node instance

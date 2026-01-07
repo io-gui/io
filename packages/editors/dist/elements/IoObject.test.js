@@ -36,6 +36,9 @@ describe('IoObject', () => {
         expect(element.children[0].localName).toBe('io-boolean');
         expect(element.children[1]).toBe(undefined);
         element.expanded = true;
+        // Wait for debounce chain: IoObject renders -> IoPropertyEditor configureDebounced -> changed -> changedDebounced
+        await nextQueue();
+        await nextQueue();
         await nextQueue();
         const properties = element.children[1];
         expect(properties.localName).toBe('io-property-editor');
@@ -76,6 +79,8 @@ describe('IoObject', () => {
         element.labeled = false;
         element.expanded = true;
         await nextQueue();
+        await nextQueue();
+        await nextQueue();
         const properties = element.children[1];
         expect(properties.children[0].children[0].localName).toBe('io-number');
         expect(properties.children[1].children[0].localName).toBe('io-string');
@@ -98,6 +103,8 @@ describe('IoObject', () => {
         element.properties = ['number', 'boolean'];
         element.expanded = true;
         await nextQueue();
+        await nextQueue();
+        await nextQueue();
         const properties = element.children[1];
         expect(properties.children[0].textContent).toBe('number0.5');
         expect(properties.children[1].textContent).toBe('boolean');
@@ -111,6 +118,8 @@ describe('IoObject', () => {
             ['boolean', ioString()],
         ];
         element.expanded = true;
+        await nextQueue();
+        await nextQueue();
         await nextQueue();
         const properties = element.children[1];
         expect(properties.children[0].children[1].localName).toBe('io-slider');

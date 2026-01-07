@@ -69,6 +69,12 @@ export class ProtoChain {
             this.addHandlers(ioNodeConstructor.prototype);
         }
         debug: this.validateReactiveProperties();
+        // Freeze aggregated properties to prevent accidental modifications
+        Object.freeze(this.constructors);
+        Object.freeze(this.properties);
+        Object.freeze(this.reactiveProperties);
+        Object.freeze(this.listeners);
+        Object.freeze(this.handlers);
     }
     /**
      * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
@@ -76,17 +82,15 @@ export class ProtoChain {
      * @param {Node | IoElement} node - Target node instance
      */
     init(node) {
+        if (this.constructors[0] !== node.constructor) {
+            throw new Error(`${node.constructor.name} not registered! Use @Register decorator before using ${node.constructor.name} class.`);
+        }
         for (let i = this.handlers.length; i--;) {
             Object.defineProperty(node, this.handlers[i], {
                 value: node[this.handlers[i]].bind(node),
                 writable: true,
                 configurable: true
             });
-        }
-        debug: {
-            if (this.constructors[0] !== node.constructor) {
-                console.error(`${node.constructor.name} not registered!\nUse @Register decorator before using ${node.constructor.name} class!`);
-            }
         }
     }
     /**

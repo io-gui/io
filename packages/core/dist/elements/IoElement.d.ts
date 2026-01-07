@@ -25,8 +25,8 @@ export declare class IoElement extends HTMLElement {
     readonly _bindings: Map<string, Binding>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
-    readonly _observedObjectProperties: string[];
-    readonly _observedNodeProperties: string[];
+    _hasWindowMutationListener: boolean;
+    _hasSelfMutationListener: boolean;
     readonly _isIoElement: boolean;
     _disposed: boolean;
     _textNode: Text;
@@ -37,6 +37,7 @@ export declare class IoElement extends HTMLElement {
     init(): void;
     ready(): void;
     changed(): void;
+    get [Symbol.toStringTag](): string;
     queue(name: string, value: any, oldValue: any): void;
     dispatchQueue(debounce?: boolean): void;
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;

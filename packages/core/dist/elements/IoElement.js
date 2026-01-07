@@ -59,8 +59,8 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         Object.defineProperty(this, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
         Object.defineProperty(this, '_bindings', { enumerable: false, configurable: true, value: new Map() });
         Object.defineProperty(this, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(this) });
-        Object.defineProperty(this, '_observedObjectProperties', { enumerable: false, configurable: true, value: [] });
-        Object.defineProperty(this, '_observedNodeProperties', { enumerable: false, configurable: true, value: [] });
+        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
+        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
         // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
         this.init();
         initReactiveProperties(this);
@@ -124,6 +124,9 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     init() { }
     ready() { }
     changed() { }
+    get [Symbol.toStringTag]() {
+        return this.constructor.name;
+    }
     queue(name, value, oldValue) {
         this._changeQueue.queue(name, value, oldValue);
     }
@@ -327,9 +330,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     Register(ioNodeConstructor) {
         Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
         const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
-        Object.defineProperty(ioNodeConstructor, 'localName', { value: localName });
         Object.defineProperty(ioNodeConstructor.prototype, 'localName', { value: localName });
-        Object.defineProperty(ioNodeConstructor, '_isIoElement', { enumerable: false, value: true, writable: false });
         Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', { enumerable: false, value: true, writable: false });
         Object.defineProperty(window, ioNodeConstructor.name, { value: ioNodeConstructor });
         window.customElements.define(localName, ioNodeConstructor);

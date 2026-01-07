@@ -125,4 +125,3 @@ If the example requires custom cameras (not just default perspective/ortho views
 
 - Convert one example at a time for review
 - Start with simpler examples to establish patterns
-- Note any deviations or special cases for documentation

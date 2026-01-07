@@ -65,6 +65,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop1')).toEqual({
             value: false,
@@ -72,6 +73,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop2')).toEqual({
             value: -1,
@@ -79,6 +81,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop3')).toEqual({
             value: 0,
@@ -86,6 +89,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop4')).toEqual({
             value: {},
@@ -93,6 +97,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: null,
+            observer: { type: 'object', observing: true },
         });
         expect(node._reactiveProperties.get('prop5')).toEqual({
             value: [0, 1, 2],
@@ -100,6 +105,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'object', observing: true },
         });
         expect(node._reactiveProperties.get('prop6')).toEqual({
             value: 'hello',
@@ -107,6 +113,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop7')).toEqual({
             value: true,
@@ -114,6 +121,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop8')).toEqual({
             value: 1,
@@ -121,6 +129,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(node._reactiveProperties.get('prop9')).toEqual({
             value: [1, 2, 3],
@@ -128,6 +137,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: [1, 2, 3],
+            observer: { type: 'object', observing: true },
         });
         expect(node._reactiveProperties.get('prop10')).toEqual({
             value: [],
@@ -135,6 +145,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: null,
+            observer: { type: 'object', observing: true },
         });
         node.dispose();
     });
@@ -187,6 +198,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
         expect(protoProps2.prop1.value).toEqual('asd');
         expect(node2._reactiveProperties.get('prop1')).toEqual({
@@ -195,6 +207,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: false,
+            observer: { type: 'none', observing: false },
         });
         expect(node2._reactiveProperties.get('prop2')).toEqual({
             value: null,
@@ -202,6 +215,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: false,
             init: true,
+            observer: { type: 'none', observing: false },
         });
         expect(node2._reactiveProperties.get('prop3')).toEqual({
             value: '',
@@ -209,6 +223,7 @@ describe('Node', () => {
             binding: undefined,
             reflect: true,
             init: undefined,
+            observer: { type: 'none', observing: false },
         });
     });
     it('Should correctly register properties with bindings', () => {
@@ -254,9 +269,9 @@ describe('Node', () => {
         expect(node1._reactiveProperties.get('prop1').binding).toBe(binding1);
         expect(node2._reactiveProperties.get('prop1').binding).toBe(binding2);
         expect(node2._reactiveProperties.get('prop3').binding).toBe(binding3);
-        expect((binding1).targets[0]).toBe(node1);
-        expect((binding2).targets[0]).toBe(node2);
-        expect((binding3).targets[0]).toBe(node2);
+        expect((binding1).targets.has(node1)).toBe(true);
+        expect((binding2).targets.has(node2)).toBe(true);
+        expect((binding3).targets.has(node2)).toBe(true);
         expect(node1._reactiveProperties.get('prop1').value).toBe('label1');
         expect(node2._reactiveProperties.get('prop1').value).toBe('label2');
         expect(node2._reactiveProperties.get('prop3').value).toBe('label3');
@@ -309,12 +324,12 @@ describe('Node', () => {
         expect(node._reactiveProperties.get('prop1').value).toBe('label1');
         expect(node.prop1).toBe('label1');
         expect(node._reactiveProperties.get('prop1').binding).toBe(binding1);
-        expect((binding1).targets[0]).toBe(node);
+        expect((binding1).targets.has(node)).toBe(true);
         node.setProperty('prop1', binding2);
         expect(node._reactiveProperties.get('prop1').value).toBe('label2');
         expect(node.prop1).toBe('label2');
-        expect((binding1).targets[0]).toBe(undefined);
-        expect((binding2).targets[0]).toBe(node);
+        expect((binding1).targets.has(node)).toBe(false);
+        expect((binding2).targets.has(node)).toBe(true);
     });
     it('Should execute attribute reflection on IoElement', () => {
         let TestElementReflection = class TestElementReflection extends IoElement {
@@ -445,7 +460,7 @@ describe('Node', () => {
         await nextQueue();
         expect(node3.propChangedEvents).toEqual([]);
     });
-    it('Should execute throttle/debounce queue in FIFO order', async () => {
+    it('Should execute throttle immediately and debounce deferred', async () => {
         const order = [];
         const node = new Node();
         node.debounce(() => {
@@ -454,13 +469,16 @@ describe('Node', () => {
         node.debounce(() => {
             order.push(2);
         });
-        const throttleFuc = () => {
+        const throttleFunc = () => {
             order.push(0);
         };
-        node.throttle(throttleFuc);
-        node.throttle(throttleFuc);
+        node.throttle(throttleFunc); // Executes immediately (leading edge)
+        node.throttle(throttleFunc); // Updates trailing arg (queued)
+        // Throttle leading already executed, trailing + debounces pending
+        expect(order).toEqual([0]);
         await nextQueue();
-        expect(order).toEqual([1, 2, 0]);
+        // Debounces execute (in insertion order), then trailing throttle
+        expect(order).toEqual([0, 1, 2, 0]);
     });
     it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
         let TestNode = class TestNode extends Node {
@@ -677,8 +695,8 @@ describe('Node', () => {
         const boundNode1 = new TestNode({ prop1: binding });
         const boundNode2 = new TestNode({ prop1: binding });
         boundNode2.prop2 = binding;
-        expect(binding.targets[0]).toBe(boundNode1);
-        expect(binding.targets[1]).toBe(boundNode2);
+        expect(binding.targets.has(boundNode1)).toBe(true);
+        expect(binding.targets.has(boundNode2)).toBe(true);
         expect(binding.targetProperties.get(boundNode1)[0]).toBe('prop1');
         expect(binding.targetProperties.get(boundNode1)[1]).toBe(undefined);
         expect(binding.targetProperties.get(boundNode2)[0]).toBe('prop1');
@@ -691,11 +709,11 @@ describe('Node', () => {
         boundNode1.prop1 = 'two';
         expect(node.prop1).toBe('two');
         expect(boundNode2.prop1).toBe('two');
-        expect(binding.targets.length).toBe(2);
+        expect(binding.targets.size).toBe(2);
         boundNode1.dispose();
-        expect(binding.targets.length).toBe(1);
+        expect(binding.targets.size).toBe(1);
         boundNode2.dispose();
-        expect(binding.targets.length).toBe(0);
+        expect(binding.targets.size).toBe(0);
         node.dispose();
     });
     it('Should correctly handle multiple binding re-assignments in setProperties()', async () => {
@@ -809,9 +827,10 @@ describe('Node', () => {
         dstNode0.prop2 = binding1;
         const dstNode1 = new TestNode({ prop1: binding0 });
         const dstNode3 = new TestNode({ prop1: binding0, prop2: binding0 });
-        expect(binding0.targets[0]).toBe(dstNode0);
-        expect(binding0.targets[1]).toBe(dstNode1);
-        expect(binding0.targets[2]).toBe(dstNode3);
+        expect(binding0.targets.has(dstNode0)).toBe(true);
+        expect(binding0.targets.has(dstNode1)).toBe(true);
+        expect(binding0.targets.has(dstNode3)).toBe(true);
+        expect(binding0.targets.size).toBe(3);
         expect(binding0.targetProperties.get(dstNode0)).toEqual(['prop1']);
         expect(binding0.targetProperties.get(dstNode1)).toEqual(['prop1']);
         expect(binding0.targetProperties.get(dstNode3)).toEqual(['prop1', 'prop2']);
@@ -869,6 +888,122 @@ describe('Node', () => {
         expect(binding1.property).toBe(undefined);
         expect(binding1.targets).toBe(undefined);
         expect(binding1.targetProperties).toBe(undefined);
+    });
+    it('Should remove "io-object-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
+        let IoObjectNode = class IoObjectNode extends Node {
+            static get ReactiveProperties() {
+                return {
+                    label: String,
+                };
+            }
+        };
+        IoObjectNode = __decorate([
+            Register
+        ], IoObjectNode);
+        let TestNode = class TestNode extends Node {
+            static get ReactiveProperties() {
+                return {
+                    prop: { type: Object, init: null },
+                };
+            }
+        };
+        TestNode = __decorate([
+            Register
+        ], TestNode);
+        const ioObject = new IoObjectNode();
+        const node = new TestNode();
+        // Assign Io object to property with type: Object
+        node.prop = ioObject;
+        // Listener should be added to the Io object
+        expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated);
+        // Dispose the node - listener should be removed
+        node.dispose();
+        // Listener should have been removed
+        expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined);
+        ioObject.dispose();
+    });
+    it('Should remove "io-object-mutation" listeners when shared Io object value is released by all properties', async () => {
+        let IoObjectNode = class IoObjectNode extends Node {
+            static get ReactiveProperties() {
+                return {
+                    label: String,
+                };
+            }
+        };
+        IoObjectNode = __decorate([
+            Register
+        ], IoObjectNode);
+        let TestNode = class TestNode extends Node {
+            static get ReactiveProperties() {
+                return {
+                    propA: { type: IoObjectNode, init: null },
+                    propB: { type: IoObjectNode, init: null },
+                };
+            }
+        };
+        TestNode = __decorate([
+            Register
+        ], TestNode);
+        const node = new TestNode();
+        const ioObject = new IoObjectNode();
+        // Assign same Io object to both properties
+        node.propA = ioObject;
+        node.propB = ioObject;
+        // Listener should be on the Io object (only one, due to hasValueAtOtherProperty optimization)
+        expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1);
+        expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated);
+        // Release from propA - listener should remain (propB still has it)
+        node.propA = null;
+        // Listener should still be present
+        expect(ioObject._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1);
+        // Release from propB - listener should be removed (no other property has it)
+        node.propB = null;
+        // Listener should have been removed
+        expect(ioObject._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined);
+        node.dispose();
+        ioObject.dispose();
+    });
+    it('Should correctly add listeners to new Io object after shared value is released', async () => {
+        let IoObjectNode = class IoObjectNode extends Node {
+            static get ReactiveProperties() {
+                return {
+                    label: String,
+                };
+            }
+        };
+        IoObjectNode = __decorate([
+            Register
+        ], IoObjectNode);
+        let TestNode = class TestNode extends Node {
+            static get ReactiveProperties() {
+                return {
+                    propA: { type: IoObjectNode, init: null },
+                    propB: { type: IoObjectNode, init: null },
+                };
+            }
+        };
+        TestNode = __decorate([
+            Register
+        ], TestNode);
+        const ioObject1 = new IoObjectNode();
+        const ioObject2 = new IoObjectNode();
+        const node = new TestNode();
+        // Assign same Io object to both properties
+        node.propA = ioObject1;
+        node.propB = ioObject1;
+        // Change propA to a different Io object (propB still has ioObject1)
+        node.propA = ioObject2;
+        // ioObject1 should still have a listener (from propB)
+        expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1);
+        // ioObject2 should have a listener (from propA)
+        expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'].length).toBe(1);
+        expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated);
+        node.dispose();
+        // Both should have listeners removed after dispose
+        expect(ioObject1._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined);
+        expect(ioObject2._eventDispatcher.addedListeners['io-object-mutation']).toBe(undefined);
+        ioObject1.dispose();
+        ioObject2.dispose();
     });
 });
 //# sourceMappingURL=Node.test.js.map

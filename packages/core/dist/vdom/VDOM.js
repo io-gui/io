@@ -73,7 +73,7 @@ export const constructElement = function (vDOMElement) {
     const props = vDOMElement.props || {};
     // IoElement classes constructed with constructor.
     const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null;
-    if (ConstructorClass && ConstructorClass._isIoElement) {
+    if (ConstructorClass && ConstructorClass.prototype?._isIoElement) {
         return new ConstructorClass(props);
     }
     // Other element classes constructed with document.createElement.

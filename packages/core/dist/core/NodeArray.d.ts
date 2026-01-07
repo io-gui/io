@@ -14,8 +14,8 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     shift(): N | undefined;
     reverse(): N[];
     sort(compareFn?: (a: N, b: N) => number): this;
-    fill(): this;
-    copyWithin(): this;
+    fill(value: N, start?: number, end?: number): this;
+    copyWithin(target: number, start?: number, end?: number): this;
     itemMutated(event: CustomEvent): void;
     dispatchMutation(): void;
 }

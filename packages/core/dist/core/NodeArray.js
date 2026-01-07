@@ -175,19 +175,78 @@ export class NodeArray extends Array {
             return result;
         });
     }
-    fill() {
-        console.warn('NodeArray: fill is not supported');
-        return this;
+    fill(value, start, end) {
+        return this.withInternalOperation(() => {
+            const len = this.length;
+            const relativeStart = start ?? 0;
+            const relativeEnd = end ?? len;
+            const actualStart = relativeStart < 0
+                ? Math.max(len + relativeStart, 0)
+                : Math.min(relativeStart, len);
+            const actualEnd = relativeEnd < 0
+                ? Math.max(len + relativeEnd, 0)
+                : Math.min(relativeEnd, len);
+            for (let i = actualStart; i < actualEnd; i++) {
+                const oldItem = this[i];
+                if (oldItem !== undefined && oldItem._isNode) {
+                    oldItem.removeEventListener('io-object-mutation', this.itemMutated);
+                    oldItem.removeParent(this.node);
+                }
+            }
+            super.fill(value, actualStart, actualEnd);
+            for (let i = actualStart; i < actualEnd; i++) {
+                if (value._isNode) {
+                    value.addEventListener('io-object-mutation', this.itemMutated);
+                    value.addParent(this.node);
+                }
+            }
+            if (actualEnd > actualStart)
+                this.dispatchMutation();
+            return this;
+        });
     }
-    copyWithin() {
-        console.warn('NodeArray: copyWithin is not supported');
-        return this;
+    copyWithin(target, start, end) {
+        return this.withInternalOperation(() => {
+            const len = this.length;
+            const relativeTarget = target;
+            const relativeStart = start ?? 0;
+            const relativeEnd = end ?? len;
+            const actualTarget = relativeTarget < 0
+                ? Math.max(len + relativeTarget, 0)
+                : Math.min(relativeTarget, len);
+            const actualStart = relativeStart < 0
+                ? Math.max(len + relativeStart, 0)
+                : Math.min(relativeStart, len);
+            const actualEnd = relativeEnd < 0
+                ? Math.max(len + relativeEnd, 0)
+                : Math.min(relativeEnd, len);
+            const count = Math.min(actualEnd - actualStart, len - actualTarget);
+            if (count <= 0)
+                return this;
+            for (let i = actualTarget; i < actualTarget + count; i++) {
+                const oldItem = this[i];
+                if (oldItem !== undefined && oldItem._isNode) {
+                    oldItem.removeEventListener('io-object-mutation', this.itemMutated);
+                    oldItem.removeParent(this.node);
+                }
+            }
+            super.copyWithin(actualTarget, actualStart, actualEnd);
+            for (let i = actualTarget; i < actualTarget + count; i++) {
+                const item = this[i];
+                if (item._isNode) {
+                    item.addEventListener('io-object-mutation', this.itemMutated);
+                    item.addParent(this.node);
+                }
+            }
+            this.dispatchMutation();
+            return this;
+        });
     }
     itemMutated(event) {
-        this.node.dispatch('io-object-mutation', { object: this.proxy }, false, window);
+        this.node.dispatch('io-object-mutation', { object: this.proxy, property: event.detail.index });
     }
     dispatchMutation() {
-        this.node.dispatch('io-object-mutation', { object: this.proxy }, false, window);
+        this.node.dispatch('io-object-mutation', { object: this.proxy });
     }
 }
 //# sourceMappingURL=NodeArray.js.map
