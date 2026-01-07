@@ -33,6 +33,12 @@ export class Split extends Node {
         args.children[i] = new Split(splitChild)
       }
     }
+    // Consolidate on construction: if only 1 child and it's a Split, adopt its children and orientation
+    while (args.children.length === 1 && args.children[0] instanceof Split) {
+      const soleChild = args.children[0] as Split
+      args.orientation = soleChild.orientation
+      args.children = [...soleChild.children] as Array<SplitProps | PanelProps>
+    }
     super(args)
   }
   childrenMutated() {

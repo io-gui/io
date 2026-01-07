@@ -2,6 +2,134 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { IoLayout, Split, Panel } from '@io-gui/layout'
 
+describe('Split Construction Consolidation', () => {
+  it('Should consolidate on construction when root has only 1 child that is a Split', () => {
+    // This mimics the IoThreeDemo structure where the root Split has only 1 child (a Split)
+    const split = new Split({
+      children: [
+        {
+          orientation: 'horizontal',
+          children: [
+            {tabs: [{id: 'panelA'}]},
+            {tabs: [{id: 'panelB'}]},
+            {tabs: [{id: 'panelC'}]}
+          ]
+        }
+      ]
+    })
+
+    // After construction, the root should have adopted the child's children and orientation
+    expect(split.children.length).toBe(3)
+    expect(split.orientation).toBe('horizontal')
+    expect(split.children[0]).toBeInstanceOf(Panel)
+    expect(split.children[1]).toBeInstanceOf(Panel)
+    expect(split.children[2]).toBeInstanceOf(Panel)
+  })
+
+  it('Should consolidate nested single-child splits on construction', () => {
+    // Multiple levels of single-child splits should all consolidate
+    const split = new Split({
+      children: [
+        {
+          orientation: 'vertical',
+          children: [
+            {
+              orientation: 'horizontal',
+              children: [
+                {tabs: [{id: 'panelA'}]},
+                {tabs: [{id: 'panelB'}]}
+              ]
+            }
+          ]
+        }
+      ]
+    })
+
+    // Should flatten to just the innermost split's children
+    expect(split.children.length).toBe(2)
+    expect(split.orientation).toBe('horizontal')
+    expect(split.children[0]).toBeInstanceOf(Panel)
+    expect(split.children[1]).toBeInstanceOf(Panel)
+  })
+
+  it('Should NOT consolidate when root has only 1 child that is a Panel', () => {
+    const split = new Split({
+      children: [
+        {tabs: [{id: 'panelA'}]}
+      ]
+    })
+
+    // Single panel should remain as-is
+    expect(split.children.length).toBe(1)
+    expect(split.children[0]).toBeInstanceOf(Panel)
+  })
+
+  it('Should NOT consolidate when root has multiple children', () => {
+    const split = new Split({
+      children: [
+        {tabs: [{id: 'panelA'}]},
+        {
+          orientation: 'vertical',
+          children: [{tabs: [{id: 'panelB'}]}]
+        }
+      ]
+    })
+
+    // Multiple children should not trigger consolidation
+    expect(split.children.length).toBe(2)
+    expect(split.children[0]).toBeInstanceOf(Panel)
+    expect(split.children[1]).toBeInstanceOf(Split)
+  })
+
+  it('Should consolidate complex IoThreeDemo-like structure', () => {
+    // Exact structure from IoThreeDemo
+    const split = new Split({
+      children: [
+        {
+          orientation: 'horizontal',
+          children: [
+            {
+              flex: '1 0 380px',
+              tabs: [{id: 'AllClasses'}],
+            },
+            {
+              orientation: 'vertical',
+              children: [
+                {
+                  orientation: 'horizontal',
+                  children: [
+                    {tabs: [{id: 'Top'}]},
+                    {tabs: [{id: 'Front'}]},
+                  ]
+                },
+                {
+                  orientation: 'horizontal',
+                  children: [
+                    {tabs: [{id: 'Left'}]},
+                    {tabs: [{id: 'Perspective'}]},
+                  ]
+                },
+              ]
+            },
+            {
+              flex: '1 0 380px',
+              tabs: [{id: 'ExampleSelector'}],
+            }
+          ]
+        }
+      ]
+    })
+
+    // Root should adopt the only child's children and orientation
+    expect(split.children.length).toBe(3)
+    expect(split.orientation).toBe('horizontal')
+    expect(split.children[0]).toBeInstanceOf(Panel)
+    expect(split.children[0].flex).toBe('1 0 380px')
+    expect(split.children[1]).toBeInstanceOf(Split)
+    expect(split.children[2]).toBeInstanceOf(Panel)
+  })
+})
+
 describe('IoSplit Consolidation', () => {
   let layout
   let container
@@ -63,30 +191,43 @@ describe('IoSplit Consolidation', () => {
 
   describe('consolidateChild with Split child', () => {
     it('Should adopt child split children and orientation', () => {
+      // Create a structure where childSplit has 1 child that is a Split with multiple children
+      // Note: Since construction-time consolidation now happens, we need to create
+      // this structure programmatically after construction
+      const innerSplit = new Split({
+        orientation: 'vertical',
+        children: [
+          {tabs: [{id: 'panelB'}]},
+          {tabs: [{id: 'panelC'}]}
+        ]
+      })
+
       const split = new Split({
         orientation: 'horizontal',
         children: [
           {tabs: [{id: 'panelA'}]},
-          {
-            orientation: 'vertical',
-            children: [
-              {
-                orientation: 'vertical',
-                children: [
-                  {tabs: [{id: 'panelB'}]},
-                  {tabs: [{id: 'panelC'}]}
-                ]
-              }
-            ]
-          }
+          {tabs: [{id: 'placeholder'}]}  // Placeholder panel
         ]
       })
+
+      // Replace the placeholder with a split that has only 1 child (a Split)
+      const childSplit = new Split({
+        orientation: 'vertical',
+        children: [
+          {tabs: [{id: 'panelB'}]},  // Dummy to prevent construction consolidation
+          {tabs: [{id: 'panelC'}]}
+        ]
+      })
+      // Now manually set it to have only 1 child that is a Split
+      childSplit.children.length = 0
+      childSplit.children.push(innerSplit)
+
+      split.children[1] = childSplit
 
       layout = new IoLayout({split, elements: []})
       container.appendChild(layout)
 
       const rootSplit = layout.querySelector('io-split')
-      const childSplit = split.children[1]
 
       expect(split.children.length).toBe(2)
       expect(childSplit.children.length).toBe(1)
@@ -140,29 +281,38 @@ describe('IoSplit Consolidation', () => {
 
     it('Should handle nested split consolidation via event', () => {
       // Structure: root > childSplit (with 1 child which is a Split)
+      // Since construction-time consolidation happens, we create this programmatically
+      const innerSplit = new Split({
+        orientation: 'horizontal',
+        children: [
+          {tabs: [{id: 'panelB'}]},
+          {tabs: [{id: 'panelC'}]}
+        ]
+      })
+
+      const childSplit = new Split({
+        orientation: 'vertical',
+        children: [
+          {tabs: [{id: 'dummy1'}]},
+          {tabs: [{id: 'dummy2'}]}
+        ]
+      })
+      // Replace with single Split child
+      childSplit.children.length = 0
+      childSplit.children.push(innerSplit)
+
       const split = new Split({
         orientation: 'horizontal',
         children: [
           {tabs: [{id: 'panelA'}]},
-          {
-            orientation: 'vertical',
-            children: [
-              {
-                orientation: 'horizontal',
-                children: [
-                  {tabs: [{id: 'panelB'}]},
-                  {tabs: [{id: 'panelC'}]}
-                ]
-              }
-            ]
-          }
+          {tabs: [{id: 'placeholder'}]}
         ]
       })
+      split.children[1] = childSplit
 
       layout = new IoLayout({split, elements: []})
       container.appendChild(layout)
 
-      const childSplit = split.children[1]
       // Find the nested io-split element
       const childIoSplit = layout.querySelectorAll('io-split')[1]
 
