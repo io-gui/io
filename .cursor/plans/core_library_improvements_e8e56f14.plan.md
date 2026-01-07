@@ -7,10 +7,10 @@ todos:
     status: completed
   - id: error-handling-changequeue
     content: Add try/catch error handling in ChangeQueue.dispatch()
-    status: pending
+    status: completed
   - id: fix-changequeue-on2
     content: Fix O(n²) splice loop in ChangeQueue.dispatch()
-    status: pending
+    status: completed
   - id: observation-arrays-to-sets
     content: Convert _observedObjectProperties and _observedNodeProperties to Sets
     status: pending

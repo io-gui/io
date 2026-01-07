@@ -101,13 +101,24 @@ export class ChangeQueue {
       const property = change.property
       if (change.value !== change.oldValue) {
         this.dispatchedChange = true
-        if ((this.node as any)[property + 'Changed']) (this.node as any)[property + 'Changed'](change)
+        const handlerName = property + 'Changed'
+        if ((this.node as any)[handlerName]) {
+          try {
+            (this.node as any)[handlerName](change)
+          } catch (error) {
+            console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error)
+          }
+        }
         this.node.dispatch(property + '-changed' as any, change)
         properties.push(property)
       }
     }
     if (this.dispatchedChange) {
-      this.node.changed()
+      try {
+        this.node.changed()
+      } catch (error) {
+        console.error(`Error in ${this.node.constructor.name}.changed():`, error)
+      }
       if ((this.node as Node)._isNode) {
         (this.node as Node).dispatchMutation(this.node, properties)
       }

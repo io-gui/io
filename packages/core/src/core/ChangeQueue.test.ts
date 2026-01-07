@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { ChangeQueue, Change, Node, Register } from '@io-gui/core'
 
 @Register
@@ -20,6 +20,33 @@ class MockNode extends Node {
   }
   changed() {
     this.changeStack.push('changed')
+  }
+}
+
+@Register
+class MockNodeWithThrowingHandler extends Node {
+  changeStack: string[] = []
+  prop1Changed() {
+    throw new Error('Intentional error in prop1Changed')
+  }
+  prop2Changed(change: Change) {
+    this.changeStack.push(`prop2Changed ${change.property} ${change.value} ${change.oldValue}`)
+  }
+  dispatch() {}
+  changed() {
+    this.changeStack.push('changed')
+  }
+}
+
+@Register
+class MockNodeWithThrowingChanged extends Node {
+  changeStack: string[] = []
+  prop1Changed(change: Change) {
+    this.changeStack.push(`prop1Changed ${change.property} ${change.value} ${change.oldValue}`)
+  }
+  dispatch() {}
+  changed() {
+    throw new Error('Intentional error in changed')
   }
 }
 
@@ -92,5 +119,66 @@ describe('ChangeQueue', () => {
     changeQueue.dispose()
     expect(changeQueue.node).toBe(undefined)
     expect(changeQueue.changes).toBe(undefined)
+  })
+  it('Should continue processing when a property handler throws an error', () => {
+    const node = new MockNodeWithThrowingHandler()
+    const changeQueue = new ChangeQueue(node)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.queue('prop2', 2, 0)
+    changeQueue.dispatch()
+
+    // prop1Changed throws, but prop2Changed and changed() should still run
+    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'changed'])
+    // dispatching flag should be reset
+    expect(changeQueue.dispatching).toBe(false)
+    // Error should have been logged
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error in MockNodeWithThrowingHandler.prop1Changed():',
+      expect.any(Error)
+    )
+
+    consoleSpy.mockRestore()
+  })
+  it('Should reset dispatching flag when changed() throws an error', () => {
+    const node = new MockNodeWithThrowingChanged()
+    const changeQueue = new ChangeQueue(node)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+
+    // prop1Changed should have run
+    expect(node.changeStack).toEqual(['prop1Changed prop1 1 0'])
+    // dispatching flag should be reset even though changed() threw
+    expect(changeQueue.dispatching).toBe(false)
+    // Error should have been logged
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error in MockNodeWithThrowingChanged.changed():',
+      expect.any(Error)
+    )
+
+    consoleSpy.mockRestore()
+  })
+  it('Should allow subsequent dispatches after a handler error', () => {
+    const node = new MockNodeWithThrowingHandler()
+    const changeQueue = new ChangeQueue(node)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    // First dispatch with error
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+
+    // Reset for next test
+    node.changeStack = []
+
+    // Second dispatch should work normally
+    changeQueue.queue('prop2', 3, 0)
+    changeQueue.dispatch()
+
+    expect(node.changeStack).toEqual(['prop2Changed prop2 3 0', 'changed'])
+
+    consoleSpy.mockRestore()
   })
 })
