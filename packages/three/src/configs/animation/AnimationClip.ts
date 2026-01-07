@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumber } from '@io-gui/inputs'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
@@ -25,6 +25,6 @@ registerEditorGroups(AnimationClip, {
 })
 
 registerEditorConfig(Object, [
-  [AnimationClip, ioPropertyEditor()],
+  [AnimationClip, ioObject()],
 ])
 

@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumber } from '@io-gui/inputs';
 import { Clock } from 'three/webgpu';
 registerEditorConfig(Clock, [
@@ -16,6 +16,6 @@ registerEditorGroups(Clock, {
     ],
 });
 registerEditorConfig(Object, [
-    [Clock, ioPropertyEditor()]
+    [Clock, ioObject()]
 ]);
 //# sourceMappingURL=Clock.js.map

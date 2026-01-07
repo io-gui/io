@@ -10,6 +10,17 @@
     "lint": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:core": "vitest run packages/core",
+    "test:colors": "vitest run packages/colors",
+    "test:editors": "vitest run packages/editors",
+    "test:icons": "vitest run packages/icons",
+    "test:inputs": "vitest run packages/inputs",
+    "test:layout": "vitest run packages/layout",
+    "test:markdown": "vitest run packages/markdown",
+    "test:menus": "vitest run packages/menus",
+    "test:navigation": "vitest run packages/navigation",
+    "test:sliders": "vitest run packages/sliders",
+    "test:three": "vitest run packages/three",
     "clean": "rm -rf packages/**/dist"
   },
   "devDependencies": {

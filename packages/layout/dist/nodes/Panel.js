@@ -8,6 +8,11 @@ import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core';
 import { Tab } from './Tab.js';
 let Panel = class Panel extends Node {
     constructor(args) {
+        debug: {
+            if (args.type !== 'panel') {
+                console.error(`Panel: Invalid type "${args.type}". Expected "panel".`);
+            }
+        }
         args = { ...args };
         if (args.tabs.length > 0 && !args.tabs.find(tab => tab.selected)) {
             args.tabs[0].selected = true;
@@ -49,11 +54,17 @@ let Panel = class Panel extends Node {
     }
     toJSON() {
         return {
+            type: 'panel',
             tabs: this.tabs.map(tab => tab.toJSON()),
             flex: this.flex,
         };
     }
     fromJSON(json) {
+        debug: {
+            if (json.type !== 'panel') {
+                console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`);
+            }
+        }
         this.setProperties({
             tabs: json.tabs.map(tab => new Tab(tab)),
             flex: json.flex ?? '1 1 100%',

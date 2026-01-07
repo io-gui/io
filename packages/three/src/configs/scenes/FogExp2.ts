@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { FogExp2 } from 'three/webgpu'
 
@@ -15,6 +15,6 @@ registerEditorGroups(FogExp2, {
 })
 
 registerEditorConfig(Object, [
-  [FogExp2, ioPropertyEditor()],
+  [FogExp2, ioObject({labelWidth: '52px'})],
 ])
 

@@ -27,51 +27,53 @@ import * as THREE from 'three/webgpu'
 const version = 5
 
 const split = new Split({
+  type: 'split',
+  orientation: 'horizontal',
   children: [
     {
-      orientation: 'horizontal',
+      type: 'panel',
+      flex: '1 0 380px',
+      tabs: [
+        {id: 'AllClasses'},
+      ],
+    },
+    {
+      type: 'split',
+      orientation: 'vertical',
       children: [
         {
-          flex: '1 0 380px',
-          tabs: [
-            {id: 'AllClasses'},
-          ],
-        },
-        {
-          orientation: 'vertical',
+          type: 'split',
+          orientation: 'horizontal',
           children: [
-            {
-              orientation: 'horizontal',
-              children: [
-                {tabs: [
-                  {id: 'Top'},
-                ]},
-                {tabs: [
-                  {id: 'Front'},
-                ]},
-              ]
-            },
-            {
-              orientation: 'horizontal',
-              children: [
-                {tabs: [
-                  {id: 'Left'},
-                ]},
-                {tabs: [
-                  {id: 'Perspective'},
-                  {id: 'SceneCamera'},
-                ]},
-              ]
-            },
+            {type: 'panel', tabs: [
+              {id: 'Top'},
+            ]},
+            {type: 'panel', tabs: [
+              {id: 'Front'},
+            ]},
           ]
         },
         {
-          flex: '1 0 380px',
-          tabs: [
-            {id: 'ExampleSelector'},
-          ],
-        }
+          type: 'split',
+          orientation: 'horizontal',
+          children: [
+            {type: 'panel', tabs: [
+              {id: 'Left'},
+            ]},
+            {type: 'panel', tabs: [
+              {id: 'Perspective'},
+              {id: 'SceneCamera'},
+            ]},
+          ]
+        },
       ]
+    },
+    {
+      type: 'panel',
+      flex: '1 0 380px',
+      tabs: [
+        {id: 'ExampleSelector'},
+      ],
     }
   ]
 })

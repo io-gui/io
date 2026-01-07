@@ -79,7 +79,8 @@ export class IoInspector extends IoElement {
     }
   }
   init() {
-    this._observedObjectProperties.push('value', 'selected')
+    this._observedObjectProperties.add('value')
+    this._observedObjectProperties.add('selected')
     window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }
   onLinkClicked(event: CustomEvent) {

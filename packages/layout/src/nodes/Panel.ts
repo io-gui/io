@@ -2,6 +2,7 @@ import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
 import { Tab, TabProps } from './Tab.js'
 
 export type PanelProps = {
+  type: 'panel'
   tabs: Array<TabProps>
   flex?: string
 }
@@ -16,6 +17,11 @@ export class Panel extends Node {
   declare flex: string
 
   constructor(args: PanelProps) {
+    debug: {
+      if (args.type !== 'panel') {
+        console.error(`Panel: Invalid type "${args.type}". Expected "panel".`)
+      }
+    }
     args = { ...args }
     if (args.tabs.length > 0 && !args.tabs.find(tab => tab.selected)) {
       args.tabs[0].selected = true
@@ -56,11 +62,17 @@ export class Panel extends Node {
   }
   toJSON(): PanelProps {
     return {
+      type: 'panel',
       tabs: this.tabs.map(tab => tab.toJSON()),
       flex: this.flex,
     }
   }
   fromJSON(json: PanelProps) {
+    debug: {
+      if (json.type !== 'panel') {
+        console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`)
+      }
+    }
     this.setProperties({
       tabs: json.tabs.map(tab => new Tab(tab)),
       flex: json.flex ?? '1 1 100%',

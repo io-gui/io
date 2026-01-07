@@ -1,4 +1,4 @@
-import { registerEditorGroups, ioPropertyEditor, registerEditorConfig } from '@io-gui/editors';
+import { registerEditorGroups, ioObject, registerEditorConfig } from '@io-gui/editors';
 import { AudioAnalyser } from 'three/webgpu';
 /**
  * AudioAnalyser - standalone class for analyzing audio data
@@ -8,6 +8,6 @@ registerEditorGroups(AudioAnalyser, {
     Main: ['analyser', 'data'],
 });
 registerEditorConfig(Object, [
-    [AudioAnalyser, ioPropertyEditor()],
+    [AudioAnalyser, ioObject()],
 ]);
 //# sourceMappingURL=AudioAnalyser.js.map

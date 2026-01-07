@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
   KeyframeTrack,
@@ -38,6 +38,6 @@ registerEditorGroups(KeyframeTrack, {
 })
 
 registerEditorConfig(Object, [
-  [KeyframeTrack, ioPropertyEditor()],
+  [KeyframeTrack, ioObject()],
 ])
 

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { ChangeQueue, Change, Node, Register } from '@io-gui/core'
 
 @Register
@@ -18,6 +18,59 @@ class MockNode extends Node {
       this.eventStack.push(`${eventName}`)
     }
   }
+  changed() {
+    this.changeStack.push('changed')
+  }
+}
+
+@Register
+class MockNodeWithThrowingHandler extends Node {
+  changeStack: string[] = []
+  prop1Changed() {
+    throw new Error('Intentional error in prop1Changed')
+  }
+  prop2Changed(change: Change) {
+    this.changeStack.push(`prop2Changed ${change.property} ${change.value} ${change.oldValue}`)
+  }
+  dispatch() {}
+  changed() {
+    this.changeStack.push('changed')
+  }
+}
+
+@Register
+class MockNodeWithThrowingChanged extends Node {
+  changeStack: string[] = []
+  prop1Changed(change: Change) {
+    this.changeStack.push(`prop1Changed ${change.property} ${change.value} ${change.oldValue}`)
+  }
+  dispatch() {}
+  changed() {
+    throw new Error('Intentional error in changed')
+  }
+}
+
+@Register
+class MockNodeWithCascadingChanges extends Node {
+  changeStack: string[] = []
+  prop1Changed(change: Change) {
+    this.changeStack.push(`prop1Changed ${change.value}`)
+    // Cascading change: prop1 changing triggers prop2 change
+    if (change.value === 1) {
+      this._changeQueue.queue('prop2', 'cascaded', '')
+    }
+  }
+  prop2Changed(change: Change) {
+    this.changeStack.push(`prop2Changed ${change.value}`)
+    // Further cascade: prop2 changing triggers prop3 change
+    if (change.value === 'cascaded') {
+      this._changeQueue.queue('prop3', 'final', '')
+    }
+  }
+  prop3Changed(change: Change) {
+    this.changeStack.push(`prop3Changed ${change.value}`)
+  }
+  dispatch() {}
   changed() {
     this.changeStack.push('changed')
   }
@@ -92,5 +145,90 @@ describe('ChangeQueue', () => {
     changeQueue.dispose()
     expect(changeQueue.node).toBe(undefined)
     expect(changeQueue.changes).toBe(undefined)
+  })
+  it('Should continue processing when a property handler throws an error', () => {
+    const node = new MockNodeWithThrowingHandler()
+    const changeQueue = new ChangeQueue(node)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.queue('prop2', 2, 0)
+    changeQueue.dispatch()
+
+    // prop1Changed throws, but prop2Changed and changed() should still run
+    expect(node.changeStack).toEqual(['prop2Changed prop2 2 0', 'changed'])
+    // dispatching flag should be reset
+    expect(changeQueue.dispatching).toBe(false)
+    // Error should have been logged
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error in MockNodeWithThrowingHandler.prop1Changed():',
+      expect.any(Error)
+    )
+
+    consoleSpy.mockRestore()
+  })
+  it('Should reset dispatching flag when changed() throws an error', () => {
+    const node = new MockNodeWithThrowingChanged()
+    const changeQueue = new ChangeQueue(node)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+
+    // prop1Changed should have run
+    expect(node.changeStack).toEqual(['prop1Changed prop1 1 0'])
+    // dispatching flag should be reset even though changed() threw
+    expect(changeQueue.dispatching).toBe(false)
+    // Error should have been logged
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error in MockNodeWithThrowingChanged.changed():',
+      expect.any(Error)
+    )
+
+    consoleSpy.mockRestore()
+  })
+  it('Should allow subsequent dispatches after a handler error', () => {
+    const node = new MockNodeWithThrowingHandler()
+    const changeQueue = new ChangeQueue(node)
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    // First dispatch with error
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+
+    // Reset for next test
+    node.changeStack = []
+
+    // Second dispatch should work normally
+    changeQueue.queue('prop2', 3, 0)
+    changeQueue.dispatch()
+
+    expect(node.changeStack).toEqual(['prop2Changed prop2 3 0', 'changed'])
+
+    consoleSpy.mockRestore()
+  })
+  it('Should process cascading changes added during dispatch in the same cycle', () => {
+    const node = new MockNodeWithCascadingChanges()
+    // Use the node's own _changeQueue so cascading queue() calls go to the same queue
+    const changeQueue = node._changeQueue
+
+    // Queue initial change
+    changeQueue.queue('prop1', 1, 0)
+    changeQueue.dispatch()
+
+    // All cascading changes should have been processed in the same dispatch cycle:
+    // 1. prop1Changed(1) → queues prop2
+    // 2. prop2Changed('cascaded') → queues prop3
+    // 3. prop3Changed('final')
+    // 4. changed() called once at the end
+    expect(node.changeStack).toEqual([
+      'prop1Changed 1',
+      'prop2Changed cascaded',
+      'prop3Changed final',
+      'changed'
+    ])
+
+    // Queue should be empty after dispatch
+    expect(changeQueue.changes.length).toBe(0)
   })
 })

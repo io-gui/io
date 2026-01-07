@@ -43,7 +43,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  */
 export class ChangeQueue {
   declare readonly node: Node | IoElement
-  declare readonly changes: Change[]
+  declare changes: Change[]
   dispatchedChange = false
   dispatching = false
   /**
@@ -95,19 +95,32 @@ export class ChangeQueue {
     }
     this.dispatching = true
     const properties = []
-    while (this.changes.length) {
-      const change = this.changes[0]
-      this.changes.splice(0, 1)
+    let i = 0
+    while (i < this.changes.length) {
+      const change = this.changes[i]
       const property = change.property
       if (change.value !== change.oldValue) {
         this.dispatchedChange = true
-        if ((this.node as any)[property + 'Changed']) (this.node as any)[property + 'Changed'](change)
+        const handlerName = property + 'Changed'
+        if ((this.node as any)[handlerName]) {
+          try {
+            (this.node as any)[handlerName](change)
+          } catch (error) {
+            console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error)
+          }
+        }
         this.node.dispatch(property + '-changed' as any, change)
         properties.push(property)
       }
+      i++
     }
+    this.changes.length = 0
     if (this.dispatchedChange) {
-      this.node.changed()
+      try {
+        this.node.changed()
+      } catch (error) {
+        console.error(`Error in ${this.node.constructor.name}.changed():`, error)
+      }
       if ((this.node as Node)._isNode) {
         (this.node as Node).dispatchMutation(this.node, properties)
       }

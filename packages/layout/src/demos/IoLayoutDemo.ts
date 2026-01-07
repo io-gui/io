@@ -15,11 +15,14 @@ function lorem(length) {
 }
 
 const split = new Split({
+  type: 'split',
   children: [
     {
+      type: 'split',
       orientation: 'vertical',
       children: [
         {
+          type: 'panel',
           tabs: [
             {id: 'Inputs', icon: 'io:toggle_on'},
             {id: 'Sliders', icon: 'io:sliders'},
@@ -27,6 +30,7 @@ const split = new Split({
           ],
         },
         {
+          type: 'panel',
           tabs: [
             {id: 'Getting Started'},
             {id: 'Deep Dive'},
@@ -36,14 +40,16 @@ const split = new Split({
       flex: '0 0 350px',
     },
     {
+      type: 'split',
       orientation: 'vertical',
       children: [
-        {tabs: [{id: 'Change Visualization', icon: 'io:hub'}]},
-        {tabs: [{id: 'Editors', icon: 'io:developer'}]},
-        {tabs: [{id: 'Icons', icon: 'io:image'}], flex: '1 1 50%'},
+        {type: 'panel', tabs: [{id: 'Change Visualization', icon: 'io:hub'}]},
+        {type: 'panel', tabs: [{id: 'Editors', icon: 'io:developer'}]},
+        {type: 'panel', tabs: [{id: 'Icons', icon: 'io:image'}], flex: '1 1 50%'},
       ]
     },
     {
+      type: 'panel',
       tabs: [{id: 'Theme Editor', icon: 'io:tune'}],
       flex: '0 0 350px',
     }

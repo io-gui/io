@@ -9,18 +9,31 @@ import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core';
 import { Panel } from './Panel.js';
 let Split = Split_1 = class Split extends Node {
     constructor(args) {
-        args = { ...args };
-        for (let i = 0; i < args.children.length; i++) {
-            const panelChild = args.children[i];
-            const splitChild = args.children[i];
-            if (panelChild.tabs) {
-                args.children[i] = new Panel(panelChild);
-            }
-            else if (splitChild.children) {
-                args.children[i] = new Split_1(splitChild);
+        debug: {
+            if (args.type !== 'split') {
+                console.error(`Split: Invalid type "${args.type}". Expected "split".`);
             }
         }
-        super(args);
+        let processedChildren = args.children.map(child => {
+            if (child.type === 'panel') {
+                return new Panel(child);
+            }
+            else {
+                return new Split_1(child);
+            }
+        });
+        let orientation = args.orientation;
+        // Consolidate splits containing only one split as child
+        while (processedChildren.length === 1 && processedChildren[0] instanceof Split_1) {
+            const soleChild = processedChildren[0];
+            orientation = soleChild.orientation;
+            processedChildren = [...soleChild.children];
+        }
+        super({
+            ...args,
+            children: processedChildren,
+            orientation,
+        });
     }
     childrenMutated() {
         this.debounce(this.onChildrenMutatedDebounced);
@@ -30,21 +43,25 @@ let Split = Split_1 = class Split extends Node {
     }
     toJSON() {
         return {
+            type: 'split',
             children: this.children.map((child) => child.toJSON()),
             orientation: this.orientation,
             flex: this.flex,
         };
     }
     fromJSON(json) {
+        debug: {
+            if (json.type !== 'split') {
+                console.error(`Split.fromJSON: Invalid type "${json.type}". Expected "split".`);
+            }
+        }
         this.setProperties({
             children: json.children.map((child) => {
-                const panelChild = child;
-                const splitChild = child;
-                if (panelChild.tabs) {
-                    return new Panel(panelChild);
+                if (child.type === 'panel') {
+                    return new Panel(child);
                 }
-                else if (splitChild.children) {
-                    return new Split_1(splitChild);
+                else {
+                    return new Split_1(child);
                 }
             }),
             orientation: json.orientation ?? 'horizontal',
