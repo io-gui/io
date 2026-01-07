@@ -339,10 +339,7 @@ export class IoElement extends HTMLElement {
 
     const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase()
 
-    Object.defineProperty(ioNodeConstructor, 'localName', {value: localName})
     Object.defineProperty(ioNodeConstructor.prototype, 'localName', {value: localName})
-
-    Object.defineProperty(ioNodeConstructor, '_isIoElement', {enumerable: false, value: true, writable: false})
     Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: true, writable: false})
     Object.defineProperty(window, ioNodeConstructor.name, {value: ioNodeConstructor})
 

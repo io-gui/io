@@ -131,6 +131,10 @@ function decodeInitArgument(item: any, node: Node | IoElement) {
 
 export type ObservationType = 'none' | 'io' | 'object'
 
+function isIoValue(value: any): boolean {
+  return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement)
+}
+
 /**
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
@@ -151,6 +155,40 @@ export class Observer {
     } else {
       this.type = 'object'
     }
+  }
+
+  /**
+   * Starts observing mutations on the given value.
+   * - Io values: attaches listener directly to the value
+   * - Non-Io objects: attaches listener to window (if type allows)
+   */
+  start(node: Node | IoElement, value: any) {
+    if (this.observing) return
+    if (!value || typeof value !== 'object') return
+
+    if (isIoValue(value)) {
+      this.observing = true
+      value.addEventListener('io-object-mutation', node.onPropertyMutated)
+    } else if (this.type === 'object') {
+      this.observing = true
+      if (!node._hasWindowMutationListener) {
+        node._hasWindowMutationListener = true
+        window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
+      }
+    }
+  }
+
+  /**
+   * Stops observing mutations on the given value.
+   */
+  stop(node: Node | IoElement, value: any) {
+    if (!this.observing) return
+
+    if (isIoValue(value) && !value._disposed) {
+      value.removeEventListener('io-object-mutation', node.onPropertyMutated)
+    }
+    // Note: Window listener is removed at dispose time, not here
+    this.observing = false
   }
 }
 
