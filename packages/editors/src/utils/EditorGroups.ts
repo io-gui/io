@@ -94,14 +94,14 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
   [IoNode, {
     Hidden: [
       'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isNode', '_isIoElement',
     ],
   }],
   [IoElement, {
     Hidden: [
       'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isNode', '_isIoElement',
     ],
   }],

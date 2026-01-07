@@ -296,26 +296,18 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       return
     }
 
-    // Stop observing the old value (only if not shared with another property)
     const oldValueShared = hasValueAtOtherProperty(node, prop, oldValue)
     if (!oldValueShared) {
-      // Always call stop() when value is not shared anymore.
-      // This handles cases where multiple properties shared an Io object and this
-      // property's observer.observing is false (because start() was skipped due to
-      // hasValueAtOtherProperty), but the listener still needs to be removed.
       prop.observer.stop(node, oldValue)
       if (oldValue?._isNode) {
         oldValue.removeParent(node)
       }
     } else if (prop.observer.observing) {
-      // Reset observing state when skipping stop() due to shared value.
-      // This ensures start() can properly add listeners to subsequent values.
       prop.observer.observing = false
     }
 
     prop.value = value
 
-    // Start observing the new value (only if not shared with another property)
     if (!hasValueAtOtherProperty(node, prop, value)) {
       prop.observer.start(node, value)
       if (value?._isNode) {

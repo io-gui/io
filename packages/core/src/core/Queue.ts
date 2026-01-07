@@ -11,9 +11,9 @@ interface QueueOptions {
 
 let currentFrame = 0
 
-const queueSync: CallbackFunction[] = []
-const queue0: CallbackFunction[] = []
-const queue1: CallbackFunction[] = []
+// const queueSync: CallbackFunction[] = []
+const queue0: Set<CallbackFunction> = new Set()
+const queue1: Set<CallbackFunction> = new Set()
 const queueOptions0: WeakMap<CallbackFunction, QueueOptions> = new WeakMap()
 const queueOptions1: WeakMap<CallbackFunction, QueueOptions> = new WeakMap()
 let queue = queue0
@@ -26,7 +26,7 @@ let queueOptions = queueOptions0
  */
 export async function nextQueue(): Promise<void> {
   return new Promise((resolve) => {
-    queue.push(resolve)
+    queue.add(resolve)
     queueOptions.set(resolve, {
       arg: undefined,
       node: undefined,
@@ -46,8 +46,8 @@ export async function nextQueue(): Promise<void> {
  * throttle(someFunction, 'someArg', someNode);
  */
 export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
-  if (queue.indexOf(func) === -1) {
-    queue.push(func)
+  if (!queue.has(func)) {
+    queue.add(func)
   }
   if (!queueOptions.has(func)) {
     queueOptions.set(func, {
@@ -72,8 +72,8 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElem
  * debounce(someFunction, 'someArg', someNode);
  */
 export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
-  if (queue.indexOf(func) === -1) {
-    queue.push(func)
+  if (!queue.has(func)) {
+    queue.add(func)
   }
   if (!queueOptions.has(func)) {
     queueOptions.set(func, {
@@ -102,8 +102,7 @@ function executeQueue () {
   queue = queue === queue0 ? queue1 : queue0
   queueOptions = queueOptions === queueOptions0 ? queueOptions1 : queueOptions0
 
-  for (let i = 0; i < activeQueue.length; i++) {
-    const func = activeQueue[i]
+  for (const func of activeQueue) {
     const options = activeQueueOptions.get(func)!
     activeQueueOptions.delete(func)
 
@@ -113,8 +112,8 @@ function executeQueue () {
     }
 
     if (options.frame > currentFrame) {
-      if (queue.indexOf(func) === -1) {
-        queue.push(func)
+      if (!queue.has(func)) {
+        queue.add(func)
       }
       if (!queueOptions.has(func)) {
         queueOptions.set(func, options)
@@ -130,8 +129,8 @@ function executeQueue () {
       console.error(e)
     }
   }
-  queueSync.length = 0
-  activeQueue.length = 0
+  // queueSync.length = 0
+  activeQueue.clear()
   requestAnimationFrame(executeQueue)
 }
 requestAnimationFrame(executeQueue)
