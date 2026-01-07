@@ -88,17 +88,15 @@ export class ProtoChain {
    * @param {Node | IoElement} node - Target node instance
    */
   init(node: Node | IoElement) {
+    if (this.constructors[0] !== node.constructor) {
+      throw new Error(`${node.constructor.name} not registered! Use @Register decorator before using ${node.constructor.name} class.`)
+    }
     for (let i = this.handlers.length; i--;) {
       Object.defineProperty(node, this.handlers[i], {
         value: (node as any)[this.handlers[i]].bind(node),
         writable: true,
         configurable: true
       })
-    }
-    debug: {
-      if (this.constructors[0] !== node.constructor) {
-        console.error(`${node.constructor.name} not registered!\nUse @Register decorator before using ${node.constructor.name} class!`)
-      }
     }
   }
   /**
