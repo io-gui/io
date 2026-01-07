@@ -128,25 +128,25 @@ export class IoPropertyEditor extends IoElement {
   }
 
   valueMutated(event: CustomEvent) {
-    this.throttle(this.changed)
+    this.debounce(this.changed)
   }
   configChanged() {
-    this.throttle(this.configureThrottled)
+    this.debounce(this.configureDebounced)
   }
   groupsChanged() {
-    this.throttle(this.configureThrottled)
+    this.debounce(this.configureDebounced)
   }
   widgetChanged() {
-    this.throttle(this.configureThrottled)
+    this.debounce(this.configureDebounced)
   }
   valueChanged() {
-    this.throttle(this.configureThrottled)
+    this.debounce(this.configureDebounced)
   }
-  configureThrottled() {
+  configureDebounced() {
     this._config = getEditorConfig(this.value, this.config)
     this._groups = getEditorGroups(this.value, this.groups)
     this._widget = this.widget || getEditorWidget(this.value)
-    this.throttle(this.changed)
+    this.debounce(this.changed)
   }
   changed() {
     this.debounce(this.changedDebounced)

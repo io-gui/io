@@ -105,9 +105,9 @@ export class IoInspector extends IoElement {
     this.search = ''
   }
   changed() {
-    this.throttle(this.changeThrottled, undefined, 1)
+    this.debounce(this.changedDebounced)
   }
-  changeThrottled() {
+  changedDebounced() {
     const vChildren = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
     ]

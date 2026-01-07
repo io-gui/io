@@ -488,7 +488,7 @@ describe('Node', () => {
 
     expect(node3.propChangedEvents).toEqual([])
   })
-  it('Should execute throttle/debounce queue in FIFO order', async () => {
+  it('Should execute throttle immediately and debounce deferred', async () => {
     const order: number[] = []
     const node = new Node()
     node.debounce(() => {
@@ -497,14 +497,18 @@ describe('Node', () => {
     node.debounce(() => {
       order.push(2)
     })
-    const throttleFuc = () => {
+    const throttleFunc = () => {
       order.push(0)
     }
-    node.throttle(throttleFuc)
-    node.throttle(throttleFuc)
+    node.throttle(throttleFunc) // Executes immediately (leading edge)
+    node.throttle(throttleFunc) // Updates trailing arg (queued)
+
+    // Throttle leading already executed, trailing + debounces pending
+    expect(order).toEqual([0])
 
     await nextQueue()
-    expect(order).toEqual([1, 2, 0])
+    // Debounces execute (in insertion order), then trailing throttle
+    expect(order).toEqual([0, 1, 2, 0])
   })
   it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
     @Register
