@@ -5,6 +5,7 @@ export type SplitOrientation = 'horizontal' | 'vertical'
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
 export type SplitProps = {
+  type: 'split'
   children: Array<SplitProps | PanelProps>
   orientation?: SplitOrientation
   flex?: string
@@ -23,23 +24,34 @@ export class Split extends Node {
   declare flex: string
 
   constructor(args: SplitProps) {
-    args = { ...args }
-    for (let i = 0; i < args.children.length; i++) {
-      const panelChild = args.children[i] as PanelProps
-      const splitChild = args.children[i] as SplitProps
-      if (panelChild.tabs) {
-        args.children[i] = new Panel(panelChild)
-      } else if (splitChild.children) {
-        args.children[i] = new Split(splitChild)
+    debug: {
+      if (args.type !== 'split') {
+        console.error(`Split: Invalid type "${args.type}". Expected "split".`)
       }
     }
-    // Consolidate on construction: if only 1 child and it's a Split, adopt its children and orientation
-    while (args.children.length === 1 && args.children[0] instanceof Split) {
-      const soleChild = args.children[0] as Split
-      args.orientation = soleChild.orientation
-      args.children = [...soleChild.children] as Array<SplitProps | PanelProps>
+
+    let processedChildren: Array<Split | Panel> = args.children.map(child => {
+      if (child.type === 'panel') {
+        return new Panel(child)
+      } else {
+        return new Split(child)
+      }
+    })
+
+    let orientation = args.orientation
+
+    // Consolidate splits containing only one split as child
+    while (processedChildren.length === 1 && processedChildren[0] instanceof Split) {
+      const soleChild = processedChildren[0]
+      orientation = soleChild.orientation
+      processedChildren = [...soleChild.children]
     }
-    super(args)
+
+    super({
+      ...args,
+      children: processedChildren,
+      orientation,
+    })
   }
   childrenMutated() {
     this.debounce(this.onChildrenMutatedDebounced)
@@ -49,20 +61,24 @@ export class Split extends Node {
   }
   toJSON(): SplitProps {
     return {
+      type: 'split',
       children: this.children.map((child: Split | Panel): SplitProps | PanelProps => child.toJSON()),
       orientation: this.orientation,
       flex: this.flex,
     }
   }
   fromJSON(json: SplitProps) {
+    debug: {
+      if (json.type !== 'split') {
+        console.error(`Split.fromJSON: Invalid type "${json.type}". Expected "split".`)
+      }
+    }
     this.setProperties({
-      children: json.children.map((child: SplitProps | PanelProps) => {
-        const panelChild = child as PanelProps
-        const splitChild = child as SplitProps
-        if (panelChild.tabs) {
-          return new Panel(panelChild)
-        } else if (splitChild.children) {
-          return new Split(splitChild)
+      children: json.children.map((child) => {
+        if (child.type === 'panel') {
+          return new Panel(child)
+        } else {
+          return new Split(child)
         }
       }),
       orientation: json.orientation ?? 'horizontal',

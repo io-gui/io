@@ -6,13 +6,15 @@ describe('Split Construction Consolidation', () => {
   it('Should consolidate on construction when root has only 1 child that is a Split', () => {
     // This mimics the IoThreeDemo structure where the root Split has only 1 child (a Split)
     const split = new Split({
+      type: 'split',
       children: [
         {
+          type: 'split',
           orientation: 'horizontal',
           children: [
-            {tabs: [{id: 'panelA'}]},
-            {tabs: [{id: 'panelB'}]},
-            {tabs: [{id: 'panelC'}]}
+            {type: 'panel', tabs: [{id: 'panelA'}]},
+            {type: 'panel', tabs: [{id: 'panelB'}]},
+            {type: 'panel', tabs: [{id: 'panelC'}]}
           ]
         }
       ]
@@ -29,15 +31,18 @@ describe('Split Construction Consolidation', () => {
   it('Should consolidate nested single-child splits on construction', () => {
     // Multiple levels of single-child splits should all consolidate
     const split = new Split({
+      type: 'split',
       children: [
         {
+          type: 'split',
           orientation: 'vertical',
           children: [
             {
+              type: 'split',
               orientation: 'horizontal',
               children: [
-                {tabs: [{id: 'panelA'}]},
-                {tabs: [{id: 'panelB'}]}
+                {type: 'panel', tabs: [{id: 'panelA'}]},
+                {type: 'panel', tabs: [{id: 'panelB'}]}
               ]
             }
           ]
@@ -54,8 +59,9 @@ describe('Split Construction Consolidation', () => {
 
   it('Should NOT consolidate when root has only 1 child that is a Panel', () => {
     const split = new Split({
+      type: 'split',
       children: [
-        {tabs: [{id: 'panelA'}]}
+        {type: 'panel', tabs: [{id: 'panelA'}]}
       ]
     })
 
@@ -66,11 +72,13 @@ describe('Split Construction Consolidation', () => {
 
   it('Should NOT consolidate when root has multiple children', () => {
     const split = new Split({
+      type: 'split',
       children: [
-        {tabs: [{id: 'panelA'}]},
+        {type: 'panel', tabs: [{id: 'panelA'}]},
         {
+          type: 'split',
           orientation: 'vertical',
-          children: [{tabs: [{id: 'panelB'}]}]
+          children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
         }
       ]
     })
@@ -84,34 +92,41 @@ describe('Split Construction Consolidation', () => {
   it('Should consolidate complex IoThreeDemo-like structure', () => {
     // Exact structure from IoThreeDemo
     const split = new Split({
+      type: 'split',
       children: [
         {
+          type: 'split',
           orientation: 'horizontal',
           children: [
             {
+              type: 'panel',
               flex: '1 0 380px',
               tabs: [{id: 'AllClasses'}],
             },
             {
+              type: 'split',
               orientation: 'vertical',
               children: [
                 {
+                  type: 'split',
                   orientation: 'horizontal',
                   children: [
-                    {tabs: [{id: 'Top'}]},
-                    {tabs: [{id: 'Front'}]},
+                    {type: 'panel', tabs: [{id: 'Top'}]},
+                    {type: 'panel', tabs: [{id: 'Front'}]},
                   ]
                 },
                 {
+                  type: 'split',
                   orientation: 'horizontal',
                   children: [
-                    {tabs: [{id: 'Left'}]},
-                    {tabs: [{id: 'Perspective'}]},
+                    {type: 'panel', tabs: [{id: 'Left'}]},
+                    {type: 'panel', tabs: [{id: 'Perspective'}]},
                   ]
                 },
               ]
             },
             {
+              type: 'panel',
               flex: '1 0 380px',
               tabs: [{id: 'ExampleSelector'}],
             }
@@ -149,7 +164,8 @@ describe('IoSplit Consolidation', () => {
 
   it('Should have consolidateChild method defined', () => {
     const split = new Split({
-      children: [{tabs: [{id: 'tab1'}]}]
+      type: 'split',
+      children: [{type: 'panel', tabs: [{id: 'tab1'}]}]
     })
     layout = new IoLayout({split, elements: []})
     container.appendChild(layout)
@@ -161,12 +177,14 @@ describe('IoSplit Consolidation', () => {
   describe('consolidateChild with Panel child', () => {
     it('Should replace child split with its sole panel', () => {
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelA'}]},
+          {type: 'panel', tabs: [{id: 'panelA'}]},
           {
+            type: 'split',
             orientation: 'vertical',
-            children: [{tabs: [{id: 'panelB'}]}]
+            children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
           }
         ]
       })
@@ -195,27 +213,30 @@ describe('IoSplit Consolidation', () => {
       // Note: Since construction-time consolidation now happens, we need to create
       // this structure programmatically after construction
       const innerSplit = new Split({
+        type: 'split',
         orientation: 'vertical',
         children: [
-          {tabs: [{id: 'panelB'}]},
-          {tabs: [{id: 'panelC'}]}
+          {type: 'panel', tabs: [{id: 'panelB'}]},
+          {type: 'panel', tabs: [{id: 'panelC'}]}
         ]
       })
 
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelA'}]},
-          {tabs: [{id: 'placeholder'}]}  // Placeholder panel
+          {type: 'panel', tabs: [{id: 'panelA'}]},
+          {type: 'panel', tabs: [{id: 'placeholder'}]}  // Placeholder panel
         ]
       })
 
       // Replace the placeholder with a split that has only 1 child (a Split)
       const childSplit = new Split({
+        type: 'split',
         orientation: 'vertical',
         children: [
-          {tabs: [{id: 'panelB'}]},  // Dummy to prevent construction consolidation
-          {tabs: [{id: 'panelC'}]}
+          {type: 'panel', tabs: [{id: 'panelB'}]},  // Dummy to prevent construction consolidation
+          {type: 'panel', tabs: [{id: 'panelC'}]}
         ]
       })
       // Now manually set it to have only 1 child that is a Split
@@ -249,12 +270,14 @@ describe('IoSplit Consolidation', () => {
     it('Should consolidate via event when dispatched from nested child IoSplit', () => {
       // Structure: root > childSplit (with only 1 child which is a panel)
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelA'}]},
+          {type: 'panel', tabs: [{id: 'panelA'}]},
           {
+            type: 'split',
             orientation: 'vertical',
-            children: [{tabs: [{id: 'panelB'}]}]
+            children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
           }
         ]
       })
@@ -283,18 +306,20 @@ describe('IoSplit Consolidation', () => {
       // Structure: root > childSplit (with 1 child which is a Split)
       // Since construction-time consolidation happens, we create this programmatically
       const innerSplit = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelB'}]},
-          {tabs: [{id: 'panelC'}]}
+          {type: 'panel', tabs: [{id: 'panelB'}]},
+          {type: 'panel', tabs: [{id: 'panelC'}]}
         ]
       })
 
       const childSplit = new Split({
+        type: 'split',
         orientation: 'vertical',
         children: [
-          {tabs: [{id: 'dummy1'}]},
-          {tabs: [{id: 'dummy2'}]}
+          {type: 'panel', tabs: [{id: 'dummy1'}]},
+          {type: 'panel', tabs: [{id: 'dummy2'}]}
         ]
       })
       // Replace with single Split child
@@ -302,10 +327,11 @@ describe('IoSplit Consolidation', () => {
       childSplit.children.push(innerSplit)
 
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelA'}]},
-          {tabs: [{id: 'placeholder'}]}
+          {type: 'panel', tabs: [{id: 'panelA'}]},
+          {type: 'panel', tabs: [{id: 'placeholder'}]}
         ]
       })
       split.children[1] = childSplit
@@ -336,12 +362,14 @@ describe('IoSplit Consolidation', () => {
   describe('Edge cases', () => {
     it('Should preserve flex values when consolidating panels', () => {
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelA'}], flex: '0 0 200px'},
+          {type: 'panel', tabs: [{id: 'panelA'}], flex: '0 0 200px'},
           {
+            type: 'split',
             orientation: 'vertical',
-            children: [{tabs: [{id: 'panelB'}], flex: '0 0 300px'}]
+            children: [{type: 'panel', tabs: [{id: 'panelB'}], flex: '0 0 300px'}]
           }
         ]
       })
@@ -360,14 +388,16 @@ describe('IoSplit Consolidation', () => {
 
     it('Should handle consolidation when removing split via io-split-remove', () => {
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelA'}]},
+          {type: 'panel', tabs: [{id: 'panelA'}]},
           {
+            type: 'split',
             orientation: 'vertical',
-            children: [{tabs: [{id: 'panelB'}]}]
+            children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
           },
-          {tabs: [{id: 'panelC'}]}
+          {type: 'panel', tabs: [{id: 'panelC'}]}
         ]
       })
 
@@ -393,19 +423,23 @@ describe('IoSplit Consolidation', () => {
       // For consolidation to work via events, we need a grandparent structure
       // root > middleSplit (has childA and childB) > when childA removed, middleSplit consolidates
       const split = new Split({
+        type: 'split',
         orientation: 'horizontal',
         children: [
-          {tabs: [{id: 'panelRoot'}]},
+          {type: 'panel', tabs: [{id: 'panelRoot'}]},
           {
+            type: 'split',
             orientation: 'vertical',
             children: [
               {
+                type: 'split',
                 orientation: 'horizontal',
-                children: [{tabs: [{id: 'panelA'}]}]
+                children: [{type: 'panel', tabs: [{id: 'panelA'}]}]
               },
               {
+                type: 'split',
                 orientation: 'horizontal',
-                children: [{tabs: [{id: 'panelB'}]}]
+                children: [{type: 'panel', tabs: [{id: 'panelB'}]}]
               }
             ]
           }

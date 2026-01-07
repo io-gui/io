@@ -218,7 +218,9 @@ export class IoSplit extends IoElement {
 
   convertToSplit(panel: Panel, first: Panel, second: Panel, orientation: SplitOrientation) {
     const index = this.split.children.indexOf(panel)
-    this.split.children.splice(index, 1, new Split({orientation: orientation, children: [first, second]}))
+    const newSplit = new Split({type: 'split', orientation, children: []})
+    newSplit.children.push(first, second)
+    this.split.children.splice(index, 1, newSplit)
   }
 
   consolidateChild(childSplit: Split) {
@@ -244,15 +246,15 @@ export class IoSplit extends IoElement {
 
     if (this.split.orientation === orientation) {
       newIndex = Math.max(0, newIndex)
-      this.split.children.splice(newIndex, 0, new Panel({tabs: [tab]}))
+      this.split.children.splice(newIndex, 0, new Panel({type: 'panel', tabs: [tab]}))
       sourcePanel.removeTab(tab)
     } else {
       if (panel.tabs.length > 1 || panel !== sourcePanel.panel) {
         sourcePanel.removeTab(tab)
         if (newIndex === -1) {
-          this.convertToSplit(panel, new Panel({tabs: [tab]}), panel, orientation)
+          this.convertToSplit(panel, new Panel({type: 'panel', tabs: [tab]}), panel, orientation)
         } else {
-          this.convertToSplit(panel, panel, new Panel({tabs: [tab]}), orientation)
+          this.convertToSplit(panel, panel, new Panel({type: 'panel', tabs: [tab]}), orientation)
         }
       }
     }
