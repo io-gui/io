@@ -27,51 +27,47 @@ import * as THREE from 'three/webgpu'
 const version = 5
 
 const split = new Split({
+  orientation: 'horizontal',
   children: [
     {
-      orientation: 'horizontal',
+      flex: '1 0 380px',
+      tabs: [
+        {id: 'AllClasses'},
+      ],
+    },
+    {
+      orientation: 'vertical',
       children: [
         {
-          flex: '1 0 380px',
-          tabs: [
-            {id: 'AllClasses'},
-          ],
-        },
-        {
-          orientation: 'vertical',
+          orientation: 'horizontal',
           children: [
-            {
-              orientation: 'horizontal',
-              children: [
-                {tabs: [
-                  {id: 'Top'},
-                ]},
-                {tabs: [
-                  {id: 'Front'},
-                ]},
-              ]
-            },
-            {
-              orientation: 'horizontal',
-              children: [
-                {tabs: [
-                  {id: 'Left'},
-                ]},
-                {tabs: [
-                  {id: 'Perspective'},
-                  {id: 'SceneCamera'},
-                ]},
-              ]
-            },
+            {tabs: [
+              {id: 'Top'},
+            ]},
+            {tabs: [
+              {id: 'Front'},
+            ]},
           ]
         },
         {
-          flex: '1 0 380px',
-          tabs: [
-            {id: 'ExampleSelector'},
-          ],
-        }
+          orientation: 'horizontal',
+          children: [
+            {tabs: [
+              {id: 'Left'},
+            ]},
+            {tabs: [
+              {id: 'Perspective'},
+              {id: 'SceneCamera'},
+            ]},
+          ]
+        },
       ]
+    },
+    {
+      flex: '1 0 380px',
+      tabs: [
+        {id: 'ExampleSelector'},
+      ],
     }
   ]
 })
