@@ -86,7 +86,7 @@ export class IoPropertyEditor extends IoElement {
   // @ReactiveProperty('debounced')
   // declare reactivity: ReactivityType
 
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object, init: null})
   declare value: object | Array<any>
 
   @ReactiveProperty({type: Array, init: null})
@@ -113,11 +113,6 @@ export class IoPropertyEditor extends IoElement {
   private _config: PropertyConfigRecord | null = null
   private _groups: PropertyGroupsRecord | null = null
   private _widget: VDOMElement | null = null
-
-  init() {
-    this._observedObjectProperties.add('value')
-    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
-  }
 
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation()

@@ -33,6 +33,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with null property definition
     propDef = new ReactiveProtoProperty(null)
@@ -46,6 +47,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with undefined property definition
     propDef = new ReactiveProtoProperty(undefined)
@@ -59,6 +61,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with Number property definition
     propDef = new ReactiveProtoProperty(Number)
@@ -72,6 +75,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with type: Number property definition
     propDef = new ReactiveProtoProperty({type: Number})
@@ -85,6 +89,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with number property definition
     propDef = new ReactiveProtoProperty(1)
@@ -98,6 +103,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with value: number property definition
     propDef = new ReactiveProtoProperty({value: 2})
@@ -111,6 +117,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with String property definition
     propDef = new ReactiveProtoProperty(String)
@@ -124,6 +131,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with type: String property definition
     propDef = new ReactiveProtoProperty({type: String})
@@ -137,6 +145,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with string property definition
     propDef = new ReactiveProtoProperty('test')
@@ -150,6 +159,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with value: string property definition
     propDef = new ReactiveProtoProperty({value: 'test'})
@@ -163,6 +173,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with Boolean property definition
     propDef = new ReactiveProtoProperty(Boolean)
@@ -176,6 +187,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with type: Boolean property definition
     propDef = new ReactiveProtoProperty({type: Boolean})
@@ -189,6 +201,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with boolean property definition
     propDef = new ReactiveProtoProperty(true)
@@ -202,6 +215,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with value: boolean property definition
     propDef = new ReactiveProtoProperty({value: true})
@@ -215,6 +229,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     // initialize with Object property definition
     propDef = new ReactiveProtoProperty(Object)
@@ -228,6 +243,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with type: Object property definition
     propDef = new ReactiveProtoProperty({type: Object})
@@ -241,6 +257,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with type: Object property definition and init: null
     propDef = new ReactiveProtoProperty({type: Object, init: null})
@@ -255,6 +272,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: null,
+      observer: {type: 'object', observing: false},
     })
     // initialize with object: value property definition
     const object = {prop: true}
@@ -269,6 +287,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(propDef.value).toBe(object)
     expect(prop.value).toBe(object)
@@ -284,6 +303,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with type: Array property definition
     propDef = new ReactiveProtoProperty({type: Array})
@@ -297,6 +317,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with type: Array property definition and init: null
     propDef = new ReactiveProtoProperty({type: Array, init: null})
@@ -311,6 +332,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: null,
+      observer: {type: 'object', observing: false},
     })
     // initialize with an object property definition with array value
     const array = [1, 2, 3]
@@ -325,6 +347,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(propDef.value).toBe(array)
     expect(prop.value).toBe(array)
@@ -340,6 +363,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with custom Object1 property definition
     propDef = new ReactiveProtoProperty(Object1)
@@ -353,6 +377,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with custom type: Object1 and init: 'test'
     propDef = new ReactiveProtoProperty({type: Object1, init: 'test'})
@@ -367,6 +392,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: 'test',
+      observer: {type: 'object', observing: false},
     })
     // initialize with custom Object1 property definition with initial argument being `this` node reference
     propDef = new ReactiveProtoProperty({type: Object1, init: 'this'})
@@ -381,6 +407,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: 'this',
+      observer: {type: 'object', observing: false},
     })
     // initialize with custom Object1 property definition with initial argument being `this.[propName]` node property reference
     propDef = new ReactiveProtoProperty({type: Object1, init: 'this.label'})
@@ -395,6 +422,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: 'this.label',
+      observer: {type: 'object', observing: false},
     })
     // initialize with an object property definition with custom object1 value property
     const object1 = new Object1()
@@ -410,6 +438,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(prop.value).toBe(object1)
     expect(propDef.value).toBe(object1)
@@ -426,6 +455,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'object', observing: false},
     })
     // initialize with non-default property definition
     propDef = new ReactiveProtoProperty({
@@ -445,6 +475,7 @@ describe('ReactiveProperty', () => {
       binding: undefined,
       reflect: false,
       init: true,
+      observer: {type: 'object', observing: false},
     })
   })
   it('Should register property definitions from decorators.', () => {
@@ -478,6 +509,7 @@ describe('ReactiveProperty', () => {
       binding: binding,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
 
     binding = new Binding(new TestNode({label: 'lorem'}), 'label')
@@ -495,6 +527,7 @@ describe('ReactiveProperty', () => {
       binding: binding,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
   })
   it('Should assign property definitions correctly', () => {

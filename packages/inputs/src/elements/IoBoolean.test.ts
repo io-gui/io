@@ -20,6 +20,7 @@ describe('IoBoolean.test', () => {
       reflect: true,
       type: Boolean,
       value: false,
+      observer: {type: 'none', observing: false},
     })
     expect(element._reactiveProperties.get('true')).toEqual({
       binding: undefined,
@@ -27,6 +28,7 @@ describe('IoBoolean.test', () => {
       reflect: false,
       type: String,
       value: 'true',
+      observer: {type: 'none', observing: false},
     })
     expect(element._reactiveProperties.get('false')).toEqual({
       binding: undefined,
@@ -34,6 +36,7 @@ describe('IoBoolean.test', () => {
       reflect: false,
       type: String,
       value: 'false',
+      observer: {type: 'none', observing: false},
     })
   })
   it('has correct default attributes', () => {

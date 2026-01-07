@@ -129,6 +129,72 @@ function decodeInitArgument(item: any, node: Node | IoElement) {
   } else return item
 }
 
+export type ObservationType = 'none' | 'io' | 'object'
+
+function isIoValue(value: any): boolean {
+  return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement)
+}
+
+/**
+ * Manages mutation observation state for a reactive property.
+ * - 'none': Primitives (String, Number, Boolean) - no mutation observation
+ * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ */
+export class Observer {
+  readonly type: ObservationType
+  observing = false
+
+  constructor(propertyType: AnyConstructor | undefined) {
+    if (!propertyType) {
+      this.type = 'none'
+    } else if (propertyType === String || propertyType === Number || propertyType === Boolean) {
+      this.type = 'none'
+    } else if (propertyType.prototype?._isNode === true || propertyType.prototype?._isIoElement === true) {
+      this.type = 'io'
+    } else {
+      this.type = 'object'
+    }
+  }
+
+  /**
+   * Starts observing mutations on the given value.
+   * - Io values: attaches listener directly to the value
+   * - Non-Io objects: attaches listener to window (if type allows)
+   */
+  start(node: Node | IoElement, value: any) {
+    if (this.observing) return
+    if (!value || typeof value !== 'object') return
+
+    if (isIoValue(value)) {
+      this.observing = true
+      value.addEventListener('io-object-mutation', node.onPropertyMutated)
+    } else if (this.type === 'object') {
+      this.observing = true
+      if (!node._hasWindowMutationListener) {
+        node._hasWindowMutationListener = true
+        window.addEventListener('io-object-mutation', node.onPropertyMutated as unknown as EventListener)
+      }
+    }
+  }
+
+  /**
+   * Stops observing mutations on the given value.
+   * For Io objects, always attempt to remove the listener since multiple properties
+   * might share the same value and the observing state might be out of sync.
+   */
+  stop(node: Node | IoElement, value: any) {
+    // Always try to remove listeners from Io objects, regardless of observing state.
+    // This handles cases where multiple properties share the same Io object value
+    // and the observing state might be out of sync due to hasValueAtOtherProperty logic.
+    if (isIoValue(value) && !value._disposed) {
+      value.removeEventListener('io-object-mutation', node.onPropertyMutated)
+    }
+    // Note: Window listener is removed at dispose time, not here
+    this.observing = false
+  }
+}
+
 /**
  * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
  */
@@ -143,6 +209,8 @@ export class ReactivePropertyInstance {
   reflect = false
   // Initialize property with provided constructor arguments. `null` prevents initialization.
   init?: any = undefined
+  // Mutation observation state for this property.
+  readonly observer: Observer
   /**
    * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
    * @param node owner Node instance
@@ -170,6 +238,7 @@ export class ReactivePropertyInstance {
     this.binding = propDef.binding
     if (typeof propDef.reflect === 'boolean') this.reflect = propDef.reflect
     if (propDef.init !== undefined) this.init = propDef.init
+    this.observer = new Observer(propDef.type)
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value

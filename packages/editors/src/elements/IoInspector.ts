@@ -55,10 +55,10 @@ export class IoInspector extends IoElement {
     }
     `
   }
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object, init: null})
   declare value: object | Array<any>
 
-  @ReactiveProperty()
+  @ReactiveProperty({type: Object, init: null})
   declare selected: object | Array<any>
 
   @ReactiveProperty({type: String})
@@ -77,11 +77,6 @@ export class IoInspector extends IoElement {
     return {
       'io-button-clicked': 'onLinkClicked',
     }
-  }
-  init() {
-    this._observedObjectProperties.add('value')
-    this._observedObjectProperties.add('selected')
-    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
   }
   onLinkClicked(event: CustomEvent) {
     event.stopPropagation()
