@@ -61,6 +61,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop1')).toEqual({
       value: false,
@@ -68,6 +69,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop2')).toEqual({
       value: -1,
@@ -75,6 +77,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop3')).toEqual({
       value: 0,
@@ -82,6 +85,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop4')).toEqual({
       value: {},
@@ -89,6 +93,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: null,
+      observer: {type: 'object', observing: true},
     })
     expect(node._reactiveProperties.get('prop5')).toEqual({
       value: [0, 1, 2],
@@ -96,6 +101,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop6')).toEqual({
       value: 'hello',
@@ -103,6 +109,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop7')).toEqual({
       value: true,
@@ -110,6 +117,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop8')).toEqual({
       value: 1,
@@ -117,6 +125,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
     expect(node._reactiveProperties.get('prop9')).toEqual({
       value: [1, 2, 3],
@@ -124,6 +133,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: [1, 2, 3],
+      observer: {type: 'object', observing: true},
     })
     expect(node._reactiveProperties.get('prop10')).toEqual({
       value: [],
@@ -131,6 +141,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: null,
+      observer: {type: 'object', observing: true},
     })
     node.dispose()
   })
@@ -184,6 +195,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
 
     expect(protoProps2.prop1.value).toEqual('asd')
@@ -193,6 +205,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: false,
+      observer: {type: 'none', observing: false},
     })
     expect(node2._reactiveProperties.get('prop2')).toEqual({
       value: null,
@@ -200,6 +213,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: true,
+      observer: {type: 'none', observing: false},
     })
     expect(node2._reactiveProperties.get('prop3')).toEqual({
       value: '',
@@ -207,6 +221,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: true,
       init: undefined,
+      observer: {type: 'none', observing: false},
     })
   })
   it('Should correctly register properties with bindings', () => {

@@ -129,6 +129,31 @@ function decodeInitArgument(item: any, node: Node | IoElement) {
   } else return item
 }
 
+export type ObservationType = 'none' | 'io' | 'object'
+
+/**
+ * Manages mutation observation state for a reactive property.
+ * - 'none': Primitives (String, Number, Boolean) - no mutation observation
+ * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ */
+export class Observer {
+  readonly type: ObservationType
+  observing = false
+
+  constructor(propertyType: AnyConstructor | undefined) {
+    if (!propertyType) {
+      this.type = 'none'
+    } else if (propertyType === String || propertyType === Number || propertyType === Boolean) {
+      this.type = 'none'
+    } else if (propertyType.prototype?._isNode === true || propertyType.prototype?._isIoElement === true) {
+      this.type = 'io'
+    } else {
+      this.type = 'object'
+    }
+  }
+}
+
 /**
  * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
  */
@@ -143,6 +168,8 @@ export class ReactivePropertyInstance {
   reflect = false
   // Initialize property with provided constructor arguments. `null` prevents initialization.
   init?: any = undefined
+  // Mutation observation state for this property.
+  readonly observer: Observer
   /**
    * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
    * @param node owner Node instance
@@ -170,6 +197,7 @@ export class ReactivePropertyInstance {
     this.binding = propDef.binding
     if (typeof propDef.reflect === 'boolean') this.reflect = propDef.reflect
     if (propDef.init !== undefined) this.init = propDef.init
+    this.observer = new Observer(propDef.type)
 
     if (this.binding instanceof Binding) {
       this.value = this.binding.value

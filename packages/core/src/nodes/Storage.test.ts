@@ -31,6 +31,7 @@ describe('Storage.test.ts', () => {
       init: undefined,
       type: String,
       value: 'test',
+      observer: {type: 'none', observing: false},
     })
 
     expect(node._reactiveProperties.get('value')).toEqual({
@@ -39,6 +40,7 @@ describe('Storage.test.ts', () => {
       init: undefined,
       type: undefined,
       value: 'foo',
+      observer: {type: 'none', observing: false},
     })
 
     expect(node._reactiveProperties.get('storage')).toEqual({
@@ -47,6 +49,7 @@ describe('Storage.test.ts', () => {
       init: undefined,
       type: String,
       value: 'local',
+      observer: {type: 'none', observing: false},
     })
     node.dispose()
   })

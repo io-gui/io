@@ -15,6 +15,7 @@ describe('IoIcon.test', () => {
       reflect: true,
       type: String,
       value: '',
+      observer: {type: 'none', observing: false},
     })
     expect(element._reactiveProperties.get('stroke')).toEqual({
       binding: undefined,
@@ -22,6 +23,7 @@ describe('IoIcon.test', () => {
       reflect: true,
       type: Boolean,
       value: false,
+      observer: {type: 'none', observing: false},
     })
   })
   it('has correct default attributes', () => {

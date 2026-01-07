@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement, enablePropertyObservation } from '@io-gui/core'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { getEditorWidget } from '../utils/EditorWidgets.js'
@@ -114,9 +114,8 @@ export class IoPropertyEditor extends IoElement {
   private _groups: PropertyGroupsRecord | null = null
   private _widget: VDOMElement | null = null
 
-  init() {
-    this._observedObjectProperties.add('value')
-    window.addEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
+  ready() {
+    enablePropertyObservation(this, 'value')
   }
 
   _onValueInput(event: CustomEvent) {

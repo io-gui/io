@@ -46,6 +46,7 @@ describe('IoGL', () => {
       reflect: false,
       type: Array,
       value: [0, 0],
+      observer: {type: 'object', observing: true},
     })
 
     expect(element._reactiveProperties.get('pxRatio')).toEqual({
@@ -54,6 +55,7 @@ describe('IoGL', () => {
       reflect: false,
       type: Number,
       value: window.devicePixelRatio,
+      observer: {type: 'none', observing: false},
     })
 
     expect(element._reactiveProperties.get('theme')).toEqual({
@@ -62,6 +64,7 @@ describe('IoGL', () => {
       reflect: false,
       type: Node,
       value: ThemeSingleton,
+      observer: {type: 'io', observing: true},
     })
   })
   it('has <canvas> element', () => {

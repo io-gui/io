@@ -72,8 +72,7 @@ export class IoElement extends HTMLElement {
   declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
-  declare readonly _observedObjectProperties: Set<string>
-  declare readonly _observedNodeProperties: Set<string>
+  declare _hasWindowMutationListener: boolean
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
@@ -86,8 +85,7 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
-    Object.defineProperty(this, '_observedObjectProperties', {enumerable: false, configurable: true, value: new Set<string>()})
-    Object.defineProperty(this, '_observedNodeProperties', {enumerable: false, configurable: true, value: new Set<string>()})
+    Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
     // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
 
     this.init()
