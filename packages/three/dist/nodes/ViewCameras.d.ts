@@ -15,14 +15,17 @@ export declare class ViewCameras extends Node {
     private readonly defaultCameras;
     private readonly orbitControls;
     static get Listeners(): {
-        'scene-ready': string;
+        'frame-object': string;
     };
     constructor(args: ViewCamerasProps);
     cameraSelectChanged(): void;
     cameraSelectChangedDebounced(): void;
     cameraChanged(): void;
     appletChanged(): void;
-    onSceneReady(): void;
+    onFrameObject(event: CustomEvent<{
+        scene: Object3D;
+    }>): void;
+    frameObjectAll(object: Object3D): void;
     frameObject(object: Object3D, camera: Camera): void;
     setOverscan(width: number, height: number, overscan: number): void;
     resetOverscan(): void;

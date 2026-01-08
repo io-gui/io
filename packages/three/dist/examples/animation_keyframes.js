@@ -38,7 +38,7 @@ let AnimationKeyframesExample = class AnimationKeyframesExample extends ThreeApp
             perspectiveCamera.rotation.set(Math.PI / 2, -Math.PI / 2, 0);
             train.add(perspectiveCamera);
             this.dispatchMutation();
-            this.dispatch('scene-ready', { scene: this.scene }, true);
+            this.dispatch('frame-object', { scene: this.scene }, true);
         }
         catch (e) {
             console.error(e);

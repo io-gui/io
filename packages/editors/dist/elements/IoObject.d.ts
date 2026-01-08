@@ -20,9 +20,9 @@ export declare class IoObject extends IoElement {
     static get Style(): string;
     value: Record<string, any> | any[];
     properties: string[] | null;
+    label: string;
     labeled: boolean;
     labelWidth: string;
-    label: string;
     expanded: boolean;
     persistentExpand: boolean;
     config: PropertyConfig[];

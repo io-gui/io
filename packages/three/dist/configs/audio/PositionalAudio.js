@@ -1,4 +1,4 @@
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors';
 import { ioNumber } from '@io-gui/inputs';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
@@ -34,4 +34,7 @@ registerEditorGroups(PositionalAudio, {
     ],
     WebAudio: ['panner'],
 });
+registerEditorConfig(Object, [
+    [PositionalAudio, ioObject()],
+]);
 //# sourceMappingURL=PositionalAudio.js.map

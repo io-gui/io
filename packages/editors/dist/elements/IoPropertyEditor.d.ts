@@ -4,6 +4,7 @@ import { PropertyGroups } from '../utils/EditorGroups.js';
 export type IoPropertyEditorProps = IoElementProps & {
     value?: Record<string, any> | any[];
     properties?: string[] | null;
+    label?: string;
     labeled?: boolean;
     labelWidth?: string;
     orientation?: 'vertical' | 'horizontal';
@@ -18,6 +19,7 @@ export declare class IoPropertyEditor extends IoElement {
     static get Style(): string;
     value: object | Array<any>;
     properties: string[];
+    label: string;
     labeled: boolean;
     labelWidth: string;
     orientation: 'vertical' | 'horizontal';

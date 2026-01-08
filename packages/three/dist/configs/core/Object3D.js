@@ -9,10 +9,10 @@ registerEditorConfig(Object3D, [
 ]);
 registerEditorGroups(Object3D, {
     Main: [
-        'visible', 'children', 'parent'
+        'name', 'visible', 'parent', 'children'
     ],
-    Transform: ['position', 'rotation', 'scale', 'quaternion', 'up'],
-    Matrices: [
+    Transform: [
+        'position', 'rotation', 'scale', 'quaternion', 'up',
         'matrix', 'matrixWorld', 'normalMatrix', 'matrixWorldInverse', 'modelViewMatrix',
         'matrixAutoUpdate', 'matrixWorldAutoUpdate', 'matrixWorldNeedsUpdate'
     ],

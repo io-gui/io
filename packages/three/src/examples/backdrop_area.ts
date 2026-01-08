@@ -147,7 +147,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
 			this.scene.add(object)
 
       this.dispatchMutation()
-      this.dispatch('scene-ready', {scene: this.scene}, true)
+      this.dispatch('frame-object', {scene: this.scene.children[1]}, true)
 		})
 	}
 

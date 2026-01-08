@@ -74,7 +74,7 @@ class DefaultCameras {
 let ViewCameras = class ViewCameras extends Node {
     static get Listeners() {
         return {
-            'scene-ready': 'onSceneReady'
+            'frame-object': 'onFrameObject'
         };
     }
     constructor(args) {
@@ -140,15 +140,19 @@ let ViewCameras = class ViewCameras extends Node {
         }
     }
     appletChanged() {
+        this.frameObjectAll(this.applet.scene);
+    }
+    onFrameObject(event) {
+        this.frameObjectAll(event.detail.scene);
+    }
+    frameObjectAll(object) {
         for (const camera of this.defaultCameras.cameras) {
             camera.position.copy(camera.userData.position);
             camera.lookAt(0, 0, 0);
-            this.frameObject(this.applet.scene, camera);
+            this.frameObject(object, camera);
         }
+        // TODO: Reconsider
         this.debounce(this.cameraSelectChangedDebounced);
-    }
-    onSceneReady() {
-        this.appletChanged();
     }
     frameObject(object, camera) {
         box.setFromObject(object);

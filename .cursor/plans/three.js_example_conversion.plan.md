@@ -122,6 +122,3 @@ If the example requires custom cameras (not just default perspective/ortho views
 | Source ([`webgpu_camera.html`](packages/three/src_examples/webgpu_camera.html)) | Converted ([`webgpu_camera.ts`](packages/three/src/examples/webgpu_camera.ts)) ||------|-----------|| Creates renderer, canvas, animation loop | Delegates to IoThreeViewport || Creates OrbitControls | Delegates to ViewCameras || Has keyboard listener for O/P camera switch | Cameras accessible via `cameraSelect: 'scene:name'` || Window resize handler | `onResized()` method || `render()` function with dual viewport | `onAnimate()` updates scene objects |---
 
 ## Execution Notes
-
-- Convert one example at a time for review
-- Start with simpler examples to establish patterns

@@ -51,7 +51,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
       train.add(perspectiveCamera)
 
       this.dispatchMutation()
-      this.dispatch('scene-ready', {scene: this.scene}, true)
+      this.dispatch('frame-object', {scene: this.scene}, true)
     } catch ( e ) {
       console.error( e )
     }

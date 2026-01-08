@@ -105,7 +105,7 @@ let WebGPUBackdropAreaExample = class WebGPUBackdropAreaExample extends ThreeApp
             action.play();
             this.scene.add(object);
             this.dispatchMutation();
-            this.dispatch('scene-ready', { scene: this.scene }, true);
+            this.dispatch('frame-object', { scene: this.scene.children[1] }, true);
         });
     }
     onAnimate(delta) {

@@ -108,7 +108,7 @@ export class ViewCameras extends Node {
 
   static get Listeners() {
     return {
-      'scene-ready': 'onSceneReady'
+      'frame-object': 'onFrameObject'
     }
   }
 
@@ -176,16 +176,21 @@ export class ViewCameras extends Node {
   }
 
   appletChanged() {
+    this.frameObjectAll(this.applet.scene)
+  }
+
+  onFrameObject(event: CustomEvent<{scene: Object3D}>) {
+    this.frameObjectAll(event.detail.scene)
+  }
+
+  frameObjectAll(object: Object3D) {
     for (const camera of this.defaultCameras.cameras) {
       camera.position.copy(camera.userData.position)
       camera.lookAt(0, 0, 0)
-      this.frameObject(this.applet.scene, camera)
+      this.frameObject(object, camera)
     }
+    // TODO: Reconsider
     this.debounce(this.cameraSelectChangedDebounced)
-  }
-
-  onSceneReady() {
-    this.appletChanged()
   }
 
   frameObject(object: Object3D, camera: Camera) {

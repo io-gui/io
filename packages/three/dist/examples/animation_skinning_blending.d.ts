@@ -3,6 +3,7 @@ import { ThreeApplet } from '@io-gui/three';
 export declare class AnimationSkinningBlendingExample extends ThreeApplet {
     isActive: boolean;
     isPlaying: boolean;
+    isCrossfading: boolean;
     camera: PerspectiveCamera;
     mixer: AnimationMixer;
     actions: Record<string, AnimationAction>;
@@ -16,8 +17,8 @@ export declare class AnimationSkinningBlendingExample extends ThreeApplet {
     walk: () => void;
     run: () => void;
     makeSingleStep: () => void;
-    private prepareCrossFade;
-    private setCrossFadeDuration;
+    private getCurrentAction;
+    private crossfadeTo;
     private synchronizeCrossFade;
     private executeCrossFade;
     private setWeight;

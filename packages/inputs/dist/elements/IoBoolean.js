@@ -39,8 +39,8 @@ let IoBoolean = class IoBoolean extends IoField {
         const value = this.value ? this.true : this.false;
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
-            this.label ? span(this.label + ':') : null,
-            value ? value.includes('io:') ? ioIcon({ value: value }) : span(value) : null
+            // TODO: Make more robust, it should work with any iconset and show text if no icon is found
+            value ? value.startsWith('io:') ? ioIcon({ value: value }) : span(value) : null
         ]);
     }
 };

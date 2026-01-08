@@ -25,7 +25,3 @@ todos:
 Replace `any` types with proper generics and interfaces throughout the codebase.
 
 ### 1.2 Complete NodeArray Implementation
-
-Implement missing `fill()` and `copyWithin()` methods in NodeArray.---
-
-## Phase 2: Future Enhancements (Lower Priority)

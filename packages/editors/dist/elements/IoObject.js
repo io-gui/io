@@ -94,14 +94,14 @@ __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoObject.prototype, "properties", void 0);
 __decorate([
+    ReactiveProperty({ type: String, value: '' })
+], IoObject.prototype, "label", void 0);
+__decorate([
     ReactiveProperty(true)
 ], IoObject.prototype, "labeled", void 0);
 __decorate([
     ReactiveProperty('80px')
 ], IoObject.prototype, "labelWidth", void 0);
-__decorate([
-    ReactiveProperty('')
-], IoObject.prototype, "label", void 0);
 __decorate([
     ReactiveProperty({ value: false, reflect: true })
 ], IoObject.prototype, "expanded", void 0);

@@ -185,24 +185,40 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
     Main: [],
   }
 
-  for (const key of getAllPropertyNames(object)) {
-    let included = false
-    const isFunction = typeof object[key as keyof typeof object] === 'function'
-    for (const g of Object.keys(aggregatedGroups)) {
-      groupsRecord[g] = groupsRecord[g] || []
-      for (const identifier of aggregatedGroups[g]) {
-        if (identifier === key) {
-          groupsRecord[g].push(key)
-          included = true
-          continue
-        } else if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
-          groupsRecord[g].push(key)
-          included = true
-        }
+  const allPropertyNames = getAllPropertyNames(object)
+  const includedProperties = new Set<string>()
+
+  // First pass: add explicit (non-regex) identifiers in the order they are defined in groups
+  for (const g of Object.keys(aggregatedGroups)) {
+    groupsRecord[g] = groupsRecord[g] || []
+    for (const identifier of aggregatedGroups[g]) {
+      if (!(identifier instanceof RegExp) && allPropertyNames.includes(identifier)) {
+        groupsRecord[g].push(identifier)
+        includedProperties.add(identifier)
       }
     }
+  }
+
+  // Second pass: match regex patterns against remaining properties
+  for (const key of allPropertyNames) {
+    if (includedProperties.has(key)) continue
+
+    const isFunction = typeof object[key as keyof typeof object] === 'function'
+    let included = false
+
+    for (const g of Object.keys(aggregatedGroups)) {
+      for (const identifier of aggregatedGroups[g]) {
+        if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
+          groupsRecord[g].push(key)
+          includedProperties.add(key)
+          included = true
+          break
+        }
+      }
+      if (included) break
+    }
+
     // Functions are not included in groups unless they are explicitly added to a non-Advanced group.
-    // TODO: Test thoroughly.
     if (!included && !isFunction && !groupsRecord['Advanced']?.includes(key)) {
       groupsRecord.Main.push(key)
     }

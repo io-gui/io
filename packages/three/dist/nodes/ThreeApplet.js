@@ -86,6 +86,10 @@ registerEditorGroups(ThreeApplet, {
     Hidden: [
         'uiConfig',
         'uiGroups',
+        '_renderer',
+        '_width',
+        '_height',
+        '_prevTime',
     ],
 });
 //# sourceMappingURL=ThreeApplet.js.map

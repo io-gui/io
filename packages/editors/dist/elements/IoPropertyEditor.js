@@ -174,8 +174,12 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 if (isIoObject) {
                     finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
                 }
+                // TODO: Document and reconsider this
+                const label = finalProps.label || id;
+                const tooltip = label;
+                const hideLabel = finalProps.label === '_hidden_';
                 vChildren.push(div({ class: 'row' }, [
-                    (this.labeled && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth }, title: id }, id) : null,
+                    (this.labeled && !hideLabel && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth }, title: tooltip }, label) : null,
                     { tag: tag, props: finalProps, children: children },
                 ]));
             }
@@ -210,6 +214,9 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "properties", void 0);
+__decorate([
+    ReactiveProperty({ type: String, value: '' })
+], IoPropertyEditor.prototype, "label", void 0);
 __decorate([
     ReactiveProperty(true)
 ], IoPropertyEditor.prototype, "labeled", void 0);
