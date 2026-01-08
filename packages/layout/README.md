@@ -1,4 +1,4 @@
-# Io-Layout
+# @io-gui/layout
 
 A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. IoLayout enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
 

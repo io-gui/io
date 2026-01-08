@@ -1,4 +1,4 @@
-# Io-Navigation
+# @io-gui/navigation
 
 Navigation and content selection components for Io-Gui.
 

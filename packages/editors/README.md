@@ -1,4 +1,4 @@
-# Io-Editors
+# @io-gui/editors
 
 Property editing components for Io-Gui with configurable widget selection and grouping.
 

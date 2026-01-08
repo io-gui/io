@@ -1,4 +1,4 @@
-# Io-Colors
+# @io-gui/colors
 
 Color picker components for Io-Gui with RGB, HSL, and HSV color model support.
 

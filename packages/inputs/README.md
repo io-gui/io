@@ -1,4 +1,4 @@
-# Io-Inputs
+# @io-gui/inputs
 
 Basic input elements for Io-Gui including fields, buttons, and number inputs.
 

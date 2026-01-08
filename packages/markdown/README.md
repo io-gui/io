@@ -1,4 +1,4 @@
-# Io-Markdown
+# @io-gui/markdown
 
 Markdown rendering component for Io-Gui with syntax highlighting and theme support.
 

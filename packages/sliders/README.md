@@ -1,4 +1,4 @@
-# Io-Sliders
+# @io-gui/sliders
 
 WebGL-rendered slider components for Io-Gui.
 

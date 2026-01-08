@@ -1,4 +1,4 @@
-# Io-Icons
+# @io-gui/icons
 
 SVG icon system for Io-Gui with namespace-based icon registration.
 

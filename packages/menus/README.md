@@ -1,4 +1,4 @@
-# Io-Menus
+# @io-gui/menus
 
 Menu system for Io-Gui with a rich domain model for hierarchical option management.
 
