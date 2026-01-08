@@ -91,5 +91,9 @@ registerEditorGroups(ThreeApplet, {
   Hidden: [
     'uiConfig',
     'uiGroups',
+    '_renderer',
+    '_width',
+    '_height',
+    '_prevTime',
   ],
 })

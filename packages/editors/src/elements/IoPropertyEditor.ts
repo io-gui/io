@@ -7,6 +7,7 @@ import { ioObject } from './IoObject.js'
 export type IoPropertyEditorProps = IoElementProps & {
   value?: Record<string, any> | any[]
   properties?: string[] | null
+  label?: string
   labeled?: boolean
   labelWidth?: string
   orientation?: 'vertical' | 'horizontal'
@@ -91,6 +92,9 @@ export class IoPropertyEditor extends IoElement {
 
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[]
+
+  @ReactiveProperty({type: String, value: ''})
+  declare label: string
 
   @ReactiveProperty(true)
   declare labeled: boolean
@@ -220,8 +224,13 @@ export class IoPropertyEditor extends IoElement {
           finalProps.label = id + ': ' + (finalProps.label || (value as object)?.constructor?.name || String(value))
         }
 
+        // TODO: Document and reconsider this
+        const label = finalProps.label || id
+        const tooltip = label
+        const hideLabel = finalProps.label === '_hidden_'
+
         vChildren.push(div({class: 'row'}, [
-          (this.labeled && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}, title: id}, id) : null,
+          (this.labeled && !hideLabel && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}, title: tooltip}, label) : null,
           {tag: tag, props: finalProps, children: children},
         ]))
       } else {

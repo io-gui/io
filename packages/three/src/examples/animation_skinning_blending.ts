@@ -15,6 +15,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { ThreeApplet } from '@io-gui/three'
 import { ioButton, ioBoolean } from '@io-gui/inputs'
+import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor } from '@io-gui/editors'
 
 const loader = new GLTFLoader()
@@ -32,10 +33,8 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   public mixer: AnimationMixer = new AnimationMixer(new Group())
   public actions: Record<string, AnimationAction> = {}
 
-  // Playback
   public stepSize: number = 0.05
 
-  // Crossfading
   public useDefaultDuration: boolean = true
   public customDuration: number = 3.5
 
@@ -77,40 +76,19 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     this.scene.add(ground)
 
     this.uiConfig = [
-      ['isPlaying', ioBoolean({true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
+      ['isPlaying', ioBoolean({label: '_hidden_', true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
       ['makeSingleStep', ioButton({label: 'Make Single Step'})],
-      ['actions', ioPropertyEditor()],
-      [AnimationAction, ioPropertyEditor({groups: {
-        Playback: [
-          'isActive',
-          'isPlaying',
-          'stepSize',
-          'makeSingleStep',
-        ],
-        Crossfade: [
-          'actions',
-          'walk',
-          'run',
-          'idle',
-          'useDefaultDuration',
-          'customDuration',
-        ],
-        Scene: [
-          'camera',
-        ],
-        Rendering: []
-      }})],
-      [AnimationMixer, ioPropertyEditor({groups: {Hidden: ['stats']}})],
+      ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+      ['actions', ioPropertyEditor({label: '_hidden_'})],
     ]
 
     this.uiGroups = {
-      Playback: [
+      Main: [
+        'mixer',
         'isActive',
         'isPlaying',
         'stepSize',
         'makeSingleStep',
-      ],
-      Crossfade: [
         'actions',
         'walk',
         'run',
@@ -118,11 +96,12 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
         'useDefaultDuration',
         'customDuration',
       ],
-      Scene: [
+      Hidden: [
+        'scene',
         'camera',
+        'toneMappingExposure',
+        'toneMapping',
       ],
-      Rendering: [],
-      Hidden: [],
     }
 
     void this.loadModel()

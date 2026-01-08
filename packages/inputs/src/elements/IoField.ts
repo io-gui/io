@@ -288,7 +288,6 @@ export class IoField extends IoElement {
   changed() {
     this.render([
       this.icon ? ioIcon({value: this.icon}) : null,
-      this.label ? span(this.label) : null,
       this.value !== undefined ? span(String(this.value)) : null,
     ])
   }

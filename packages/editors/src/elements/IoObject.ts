@@ -58,14 +58,14 @@ export class IoObject extends IoElement {
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[] | null
 
+  @ReactiveProperty({type: String, value: ''})
+  declare label: string
+
   @ReactiveProperty(true)
   declare labeled: boolean
 
   @ReactiveProperty('80px')
   declare labelWidth: string
-
-  @ReactiveProperty('')
-  declare label: string
 
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
@@ -113,6 +113,7 @@ export class IoObject extends IoElement {
 
   changed() {
     const label = this.label || this.value.constructor.name
+
     const vChildren: VDOMElement[] = []
     vChildren.push(ioBoolean({
       appearance: 'neutral',

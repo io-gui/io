@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { FrustumArray } from 'three/webgpu'
 
 registerEditorConfig(FrustumArray, [
@@ -11,5 +11,5 @@ registerEditorGroups(FrustumArray, {
 })
 
 registerEditorConfig(Object, [
-  [FrustumArray, ioPropertyEditor()],
+  [FrustumArray, ioObject()],
 ])
