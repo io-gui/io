@@ -2,6 +2,8 @@
 
 WebGL-rendered slider components for Io-Gui.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Sliders)
+
 ## Overview
 
 ```

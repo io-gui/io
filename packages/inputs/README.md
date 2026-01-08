@@ -2,6 +2,8 @@
 
 Basic input elements for Io-Gui including fields, buttons, and number inputs.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Inputs)
+
 ## Overview
 
 ```

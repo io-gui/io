@@ -2,6 +2,8 @@
 
 Three.js integration for Io-Gui with WebGPU viewport and editor configurations.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Three)
+
 ## Overview
 
 ```

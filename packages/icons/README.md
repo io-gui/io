@@ -2,6 +2,8 @@
 
 SVG icon system for Io-Gui with namespace-based icon registration.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Icons)
+
 ## Overview
 
 ```

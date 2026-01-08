@@ -2,6 +2,8 @@
 
 Menu system for Io-Gui with a rich domain model for hierarchical option management.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Menus)
+
 ## Overview
 
 ```

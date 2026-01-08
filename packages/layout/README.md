@@ -2,6 +2,8 @@
 
 A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. IoLayout enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Layout)
+
 ## Overview
 
 IoLayout implements a **nested tree structure** for layout management:

@@ -2,6 +2,8 @@
 
 Markdown rendering component for Io-Gui with syntax highlighting and theme support.
 
+All documentation for Io-Gui is written in markdown and rendered with IoMarkdown.
+
 ## Overview
 
 ```

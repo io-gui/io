@@ -2,6 +2,8 @@
 
 Color picker components for Io-Gui with RGB, HSL, and HSV color model support.
 
+See [live examples here](https://iogui.dev/io/#path=Demos,Colors)
+
 ## Overview
 
 ```
