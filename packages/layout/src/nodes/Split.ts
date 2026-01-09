@@ -38,7 +38,7 @@ export class Split extends Node {
       }
     })
 
-    let orientation = args.orientation
+    let orientation = args.orientation ?? 'horizontal'
 
     // Consolidate splits containing only one split as child
     while (processedChildren.length === 1 && processedChildren[0] instanceof Split) {

@@ -13,7 +13,7 @@ todos:
     status: pending
   - id: fix-overflow-detection
     content: Add fallback overflow detection when addMenuOption is absent
-    status: pending
+    status: completed
   - id: test-tab-model
     content: Create Tab.test.ts - construction, defaults, serialization, events
     status: pending
@@ -266,4 +266,3 @@ The following information should be added to the README:
 
 1. **High Priority Bugs**: IoDivider pointer handling, global query selectors
 2. **Model Tests**: Tab, Panel, Split (establish baseline)
-3. **Interaction Tests**: IoDivider, IoPanel, IoTabs
