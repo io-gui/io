@@ -23,5 +23,3 @@ todos:
 ### 1.1 TypeScript Type Improvements
 
 Replace `any` types with proper generics and interfaces throughout the codebase.
-
-### 1.2 Complete NodeArray Implementation
