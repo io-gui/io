@@ -5,6 +5,7 @@ import { IconsetDB, ioIcon } from '@io-gui/icons'
 import { MenuOptionProps, MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { IoTabs } from './IoTabs.js'
 import { IoPanel } from './IoPanel.js'
+import { IoLayout } from './IoLayout.js'
 import { Tab } from '../nodes/Tab.js'
 import { tabDragIconSingleton } from './IoTabDragIcon.js'
 
@@ -177,7 +178,13 @@ export class IoTab extends IoField {
     const x = event.clientX
     const y = event.clientY
     const m = ThemeSingleton.spacing
-    const tabsContainers = document.querySelectorAll('io-tabs')
+    const root = this.closest('io-layout') as IoLayout
+    if (!root) {
+      console.error('IoTab: No io-layout found as a parent of the tab!', this)
+      return
+    }
+    
+    const tabsContainers = root.querySelectorAll('io-tabs')
     for (let i = 0; i < tabsContainers.length; i++) {
       const tabsContainer = tabsContainers[i] as IoTabs
       const targetPanel = tabsContainer.parentElement as IoPanel
@@ -211,7 +218,7 @@ export class IoTab extends IoField {
       }
     }
 
-    const panels = document.querySelectorAll('io-panel')
+    const panels = root.querySelectorAll('io-panel')
     for (let i = 0; i < panels.length; i++) {
       const targetPanel = panels[i] as IoPanel
       const pr = targetPanel.getBoundingClientRect()

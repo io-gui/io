@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: fix-global-queries
     content: Scope tab drag queries to containing IoLayout ancestor
-    status: pending
+    status: completed
   - id: fix-singleton-init
     content: Replace setTimeout singleton initialization with lazy/DOMContentLoaded pattern
     status: pending
@@ -267,4 +267,3 @@ The following information should be added to the README:
 1. **High Priority Bugs**: IoDivider pointer handling, global query selectors
 2. **Model Tests**: Tab, Panel, Split (establish baseline)
 3. **Interaction Tests**: IoDivider, IoPanel, IoTabs
-4. **Drag/Drop Tests**: IoTab, integration scenarios
