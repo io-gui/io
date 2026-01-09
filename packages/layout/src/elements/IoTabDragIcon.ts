@@ -1,7 +1,7 @@
 import { Register, ReactiveProperty, Property, span } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
-import { tabDropMarkerSingleton } from './IoTabDropMarker.js'
+import { ioTabDropMarkerSingleton } from './IoTabDropMarker.js'
 import { Tab } from '../nodes/Tab.js'
 import { SplitDirection } from '../nodes/Split.js'
 import { IoPanel } from './IoPanel.js'
@@ -58,7 +58,7 @@ class IoTabDragIcon extends IoField {
   constructor(args: IoFieldProps = {}) { super(args) }
 
   changed() {
-    tabDropMarkerSingleton.setProperties({
+    ioTabDropMarkerSingleton.setProperties({
       dropTarget: this.dropTarget,
       splitDirection: this.splitDirection,
       dropIndex: this.dropIndex,

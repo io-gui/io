@@ -89,7 +89,5 @@ class IoTabDropMarker extends IoElement {
   }
 }
 
-export const tabDropMarkerSingleton = new IoTabDropMarker()
-setTimeout(() => {
-  document.body.appendChild(tabDropMarkerSingleton as HTMLElement)
-}, 100)
+export const ioTabDropMarkerSingleton = new IoTabDropMarker()
+document.body.appendChild(ioTabDropMarkerSingleton as HTMLElement)

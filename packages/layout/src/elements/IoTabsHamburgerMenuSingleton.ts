@@ -120,7 +120,5 @@ class IoTabsHamburgerMenu extends IoElement {
   }
 }
 
-export const IoTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu()
-setTimeout(() => {
-  IoOverlaySingleton.appendChild(IoTabsHamburgerMenuSingleton as HTMLElement)
-}, 100)
+export const ioTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu()
+IoOverlaySingleton.appendChild(ioTabsHamburgerMenuSingleton as HTMLElement)

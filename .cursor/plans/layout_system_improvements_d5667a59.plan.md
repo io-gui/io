@@ -10,7 +10,7 @@ todos:
     status: completed
   - id: fix-singleton-init
     content: Replace setTimeout singleton initialization with lazy/DOMContentLoaded pattern
-    status: pending
+    status: completed
   - id: fix-overflow-detection
     content: Add fallback overflow detection when addMenuOption is absent
     status: completed
@@ -265,4 +265,3 @@ The following information should be added to the README:
 ## Implementation Priority
 
 1. **High Priority Bugs**: IoDivider pointer handling, global query selectors
-2. **Model Tests**: Tab, Panel, Split (establish baseline)
