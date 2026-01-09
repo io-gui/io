@@ -30,6 +30,7 @@ export class IoPropertyEditor extends IoElement {
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
       font-size: var(--io_fontSize);
+      overflow: hidden;
     }
     :host[orientation="horizontal"] {
       flex-direction: row;
@@ -46,6 +47,7 @@ export class IoPropertyEditor extends IoElement {
     }
     :host[orientation="horizontal"] > .row {
       flex-direction: column;
+      flex: 1 1 0;
     }
     :host io-property-editor {
       margin-top: calc(var(--io_spacing) * -1) !important;

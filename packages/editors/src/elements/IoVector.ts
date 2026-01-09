@@ -37,7 +37,7 @@ export class IoVector extends IoElement {
         overflow: hidden;
       }
       :host > io-number {
-        flex: 1 1 auto;
+        flex: 1 1 0;
       }
       :host > *:not(:last-child) {
         margin-right: var(--io_spacing);
