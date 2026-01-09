@@ -68,7 +68,6 @@ export class CameraExample extends ThreeApplet {
 
     const particles = new Points( geometry, new PointsMaterial( { color: 0xffffff } ) )
     this.scene.add( particles )
-
   }
 
   onResized(width: number, height: number) {
@@ -103,7 +102,7 @@ export class CameraExample extends ThreeApplet {
     debug: {
       this.dispatchMutation(this.perspectiveCamera)
       this.dispatchMutation(this.orthographicCamera)
-      this.dispatchMutation(this.cameraRig)
+      this.dispatchMutation(this.cameraRig.rotation)
     }
   }
 }
