@@ -179,21 +179,21 @@ export class ViewCameras extends Node {
     this.frameObjectAll(this.applet.scene)
   }
 
-  onFrameObject(event: CustomEvent<{scene: Object3D}>) {
-    this.frameObjectAll(event.detail.scene)
+  onFrameObject(event: CustomEvent<{object: Object3D, overscan: number}>) {
+    this.frameObjectAll(event.detail.object, event.detail.overscan)
   }
 
-  frameObjectAll(object: Object3D) {
+  frameObjectAll(object: Object3D, overscan: number = 1) {
     for (const camera of this.defaultCameras.cameras) {
       camera.position.copy(camera.userData.position)
       camera.lookAt(0, 0, 0)
-      this.frameObject(object, camera)
+      this.frameObject(object, camera, overscan)
     }
     // TODO: Reconsider
     this.debounce(this.cameraSelectChangedDebounced)
   }
 
-  frameObject(object: Object3D, camera: Camera) {
+  frameObject(object: Object3D, camera: Camera, overscan: number = 1) {
 
     box.setFromObject( object )
 
@@ -248,6 +248,7 @@ export class ViewCameras extends Node {
 
       camera.near = halfDepth * 0.01
       camera.far = distance + halfDepth * 20
+      camera.zoom = 1 / overscan
       camera.updateProjectionMatrix()
 
     } else if (camera instanceof OrthographicCamera) {
@@ -261,7 +262,7 @@ export class ViewCameras extends Node {
       camera.bottom = -halfHeight
       camera.top = halfHeight
 
-      camera.zoom = 1
+      camera.zoom = 1 / overscan
       camera.near = 0
       camera.far = radius + halfDepth * 20
 
