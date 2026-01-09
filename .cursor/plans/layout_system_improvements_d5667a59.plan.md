@@ -1,0 +1,270 @@
+---
+name: Layout System Improvements
+overview: Comprehensive investigation and improvement of the layout system's drag-and-drop functionality, robustness, and test coverage. The plan covers bug fixes, edge case handling, and thorough testing of domain models, view elements, and interactions.
+todos:
+  - id: fix-divider-pointer
+    content: Fix IoDivider pointer event handling - check hasPointerCapture before cleanup
+    status: completed
+  - id: fix-global-queries
+    content: Scope tab drag queries to containing IoLayout ancestor
+    status: pending
+  - id: fix-singleton-init
+    content: Replace setTimeout singleton initialization with lazy/DOMContentLoaded pattern
+    status: pending
+  - id: fix-overflow-detection
+    content: Add fallback overflow detection when addMenuOption is absent
+    status: pending
+  - id: test-tab-model
+    content: Create Tab.test.ts - construction, defaults, serialization, events
+    status: pending
+  - id: test-panel-model
+    content: Create Panel.test.ts - selection, mutations, serialization
+    status: pending
+    dependencies:
+      - test-tab-model
+  - id: test-split-model
+    content: Extend IoSplit.test.ts - serialization, deep nesting, dispose
+    status: pending
+    dependencies:
+      - test-panel-model
+  - id: test-divider
+    content: Create IoDivider.test.ts - pointer capture, events, touch handling
+    status: pending
+    dependencies:
+      - fix-divider-pointer
+  - id: test-panel-element
+    content: Create IoPanel.test.ts - tab operations, keyboard, last-tab protection
+    status: pending
+  - id: test-tabs-element
+    content: Create IoTabs.test.ts - overflow detection, rendering
+    status: pending
+    dependencies:
+      - fix-overflow-detection
+  - id: test-tab-drag
+    content: Create IoTab.test.ts - drag initiation, singleton state, drop detection
+    status: pending
+    dependencies:
+      - fix-global-queries
+  - id: test-integration
+    content: Create IoLayout.integration.test.ts - full drag-drop flows
+    status: pending
+    dependencies:
+      - test-tab-drag
+  - id: update-readme
+    content: Add missing information to README - multi-layout, IDs, minimums
+    status: pending
+---
+
+# Layout System Investigation and Improvements
+
+## Analysis Summary
+
+After deep analysis of the layout package, I've identified several bugs, edge cases, and areas needing improved test coverage.
+
+### Architecture Overview
+
+```mermaid
+graph TB
+    subgraph domainModels [Domain Models]
+        Tab
+        Panel
+        Split
+    end
+    
+    subgraph elements [View Elements]
+        IoLayout
+        IoSplit
+        IoPanel
+        IoTabs
+        IoTab
+        IoDivider
+    end
+    
+    subgraph singletons [Global Singletons]
+        TabDragIcon[IoTabDragIcon]
+        DropMarker[IoTabDropMarker]
+        HamburgerMenu[IoTabsHamburgerMenuSingleton]
+    end
+    
+    Split --> Panel
+    Split --> Split
+    Panel --> Tab
+    
+    IoLayout --> IoSplit
+    IoSplit --> IoPanel
+    IoSplit --> IoDivider
+    IoPanel --> IoTabs
+    IoTabs --> IoTab
+    
+    IoTab --> TabDragIcon
+    TabDragIcon --> DropMarker
+    IoTabs --> HamburgerMenu
+```
+
+---
+
+## Identified Bugs
+
+### 1. IoDivider Pointer Event Handling (Critical)
+
+**File:** [`packages/layout/src/elements/IoDivider.ts`](packages/layout/src/elements/IoDivider.ts)The `onPointerleave` handler incorrectly cancels the drag operation even when pointer is captured:
+
+```91:110:packages/layout/src/elements/IoDivider.ts
+  onPointerleave(event: PointerEvent) {
+    event.preventDefault()
+    this.removeEventListener('pointermove', this.onPointermove)
+    // ... removes listeners and sets pressed=false
+```
+
+**Fix:** When pointer is captured, `pointerleave` shouldn't fire. However, if it does (browser inconsistency), we should check `hasPointerCapture()` before cleaning up.
+
+### 2. Global Query Selectors in Tab Drag (High Impact)
+
+**File:** [`packages/layout/src/elements/IoTab.ts`](packages/layout/src/elements/IoTab.ts)Lines 180-214 use `document.querySelectorAll('io-tabs')` and `document.querySelectorAll('io-panel')` which queries ALL layout instances on the page. This could cause incorrect drop targets with multiple layouts.**Fix:** Scope queries to the containing IoLayout ancestor.
+
+### 3. Singleton Initialization with setTimeout (Fragile)
+
+**Files:**
+
+- [`packages/layout/src/elements/IoTabDropMarker.ts`](packages/layout/src/elements/IoTabDropMarker.ts) (line 93)
+- [`packages/layout/src/elements/IoTabsHamburgerMenuSingleton.ts`](packages/layout/src/elements/IoTabsHamburgerMenuSingleton.ts) (line 124)
+```typescript
+setTimeout(() => {
+  document.body.appendChild(tabDropMarkerSingleton)
+}, 100)
+```
+
+
+**Fix:** Use lazy initialization pattern or DOMContentLoaded listener.
+
+### 4. Overflow Detection Requires Optional Property
+
+**File:** [`packages/layout/src/elements/IoTabs.ts`](packages/layout/src/elements/IoTabs.ts)
+
+```75:79:packages/layout/src/elements/IoTabs.ts
+  onResized() {
+    const addMenu = this.querySelector('.add-tab')
+    if (!addMenu) return  // Overflow detection silently fails
+```
+
+**Fix:** Implement fallback overflow detection using last tab element when addMenu is absent.---
+
+## Edge Cases to Address
+
+### 1. Flex-grow Preservation on Panel Removal
+
+**File:** [`packages/layout/src/elements/IoSplit.ts`](packages/layout/src/elements/IoSplit.ts) (TODO on line 9-16)When removing a flex panel from between two fixed panels, neither remaining panel fills space.
+
+### 2. Last Tab in Layout Protection
+
+Current protection only covers the simple case. Nested scenarios need verification:
+
+- Single panel with one tab in deeply nested split
+- Removing tab that would cascade to empty layout
+
+### 3. Drop Marker Positioning with Scroll
+
+**File:** [`packages/layout/src/elements/IoTabDropMarker.ts`](packages/layout/src/elements/IoTabDropMarker.ts)Uses `position: fixed` with `getBoundingClientRect()` which works, but should be verified with scrolled containers.
+
+### 4. Duplicate Tab IDs Across Panels
+
+Current behavior silently removes duplicates within a panel. Cross-panel duplicate handling needs definition.---
+
+## README Additions
+
+The following information should be added to the README:
+
+1. **Multiple Layout Instances** - Document limitations with global singletons
+2. **Tab ID Uniqueness** - Document the duplicate ID handling behavior
+3. **Minimum Panel Sizes** - Document the `ThemeSingleton.fieldHeight` based minimums
+4. **Storage Serialization Limitations** - Document what isn't persisted (e.g., transient drag state)
+
+---
+
+## Test Implementation Plan
+
+### Phase 1: Domain Model Tests
+
+**Tab Tests** (`Tab.test.ts`):
+
+- Construction with all property combinations
+- Label defaulting to id
+- toJSON/fromJSON roundtrip
+- Property change events
+
+**Panel Tests** (`Panel.test.ts`):
+
+- Tab auto-selection on construction
+- setSelected with valid/invalid ids
+- getSelected behavior
+- Tab array mutations and events
+- toJSON/fromJSON roundtrip
+- dispose cleanup
+
+**Split Tests** (extend `IoSplit.test.ts`):
+
+- Construction consolidation (already covered)
+- Deep nesting consolidation
+- Mixed Panel/Split children
+- toJSON/fromJSON roundtrip
+- dispose cleanup
+
+### Phase 2: Element Interaction Tests
+
+**IoDivider Tests** (`IoDivider.test.ts`):
+
+- Pointer capture and release
+- Event dispatching (io-divider-move, io-divider-move-end)
+- Touch event handling
+- Visual state (pressed attribute)
+
+**IoPanel Tests** (`IoPanel.test.ts`):
+
+- Tab selection via click
+- Tab removal via keyboard
+- Tab reordering via keyboard
+- addTab with duplicates
+- removeTab with last-tab protection
+- moveTabToSplit scenarios
+
+**IoTabs Tests** (`IoTabs.test.ts`):
+
+- Overflow detection triggering
+- Overflow hysteresis behavior
+- Tab rendering from NodeArray
+
+### Phase 3: Drag and Drop Tests
+
+**IoTab Drag Tests** (`IoTab.test.ts`):
+
+- Drag initiation threshold (10px)
+- Singleton state management
+- Drop target detection in tab bar
+- Drop target detection in panel content
+- Split direction calculation
+- Drag cancellation cleanup
+
+**Integration Tests** (`IoLayout.integration.test.ts`):
+
+- Complete drag-and-drop flow
+- Tab movement between panels
+- New split creation via drag
+- Panel consolidation after tab removal
+
+### Phase 4: Edge Case Tests
+
+**Stress Tests**:
+
+- Rapid tab switching
+- Concurrent drag operations
+- Window resize during operations
+- Deep nesting performance
+
+---
+
+## Implementation Priority
+
+1. **High Priority Bugs**: IoDivider pointer handling, global query selectors
+2. **Model Tests**: Tab, Panel, Split (establish baseline)
+3. **Interaction Tests**: IoDivider, IoPanel, IoTabs
+4. **Drag/Drop Tests**: IoTab, integration scenarios

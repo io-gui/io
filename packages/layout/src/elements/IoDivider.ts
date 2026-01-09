@@ -89,8 +89,8 @@ export class IoDivider extends IoElement {
     event.preventDefault()
     event.stopPropagation()
     this.addEventListener('pointermove', this.onPointermove)
-    this.addEventListener('pointerleave', this.onPointerleave)
     this.addEventListener('pointerup', this.onPointerup)
+    this.addEventListener('pointercancel', this.onPointercancel)
     this.setPointerCapture(event.pointerId)
     this.pressed = true
   }
@@ -102,18 +102,11 @@ export class IoDivider extends IoElement {
       clientY: event.clientY,
     }, true)
   }
-  onPointerleave(event: PointerEvent) {
-    event.preventDefault()
-    this.removeEventListener('pointermove', this.onPointermove)
-    this.removeEventListener('pointerleave', this.onPointerleave)
-    this.removeEventListener('pointerup', this.onPointerup)
-    this.pressed = false
-  }
   onPointerup(event: PointerEvent) {
     event.preventDefault()
     this.removeEventListener('pointermove', this.onPointermove)
-    this.removeEventListener('pointerleave', this.onPointerleave)
     this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
     this.releasePointerCapture(event.pointerId)
     this.pressed = false
     this.dispatch('io-divider-move-end', {
@@ -121,6 +114,13 @@ export class IoDivider extends IoElement {
       clientX: event.clientX,
       clientY: event.clientY,
     }, true)
+  }
+  onPointercancel(event: PointerEvent) {
+    event.preventDefault()
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
+    this.pressed = false
   }
   onTouchstart(event: TouchEvent) {
     this.addEventListener('touchmove', this.onTouchmove, {passive: false})
