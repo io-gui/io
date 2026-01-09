@@ -259,5 +259,3 @@ The following information should be added to the README:
 - Concurrent drag operations
 - Window resize during operations
 - Deep nesting performance
-
----

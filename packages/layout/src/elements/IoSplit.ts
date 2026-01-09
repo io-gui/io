@@ -6,14 +6,6 @@ import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
 
-/**
- * TODO ensure that at least one split has flex-grow: 1
- * There is a bug when you have three splits say:
- * flex: 0 0 300px
- * flex: 1 1 auto
- * flex: 0 0 300px
- * And when you remove the middle split, the remaining two splits dont fill up the space since none is flex-grow.
-*/
 
 export type IoSplitProps = IoElementProps & {
   split: Split
@@ -191,6 +183,8 @@ export class IoSplit extends IoElement {
       this.dispatch('io-split-remove', {split: this.split}, true)
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
+    } else {
+      this.ensureFlexGrow()
     }
   }
 
@@ -201,8 +195,15 @@ export class IoSplit extends IoElement {
     this.split.children.splice(index, 1)
     if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
-    } else if (this.split.children.length === 2) {
-      this.split.children[1].flex = '1 1 100%'
+    } else {
+      this.ensureFlexGrow()
+    }
+  }
+
+  ensureFlexGrow() {
+    const hasFlexGrow = this.split.children.some(child => child.flex.startsWith('1'))
+    if (!hasFlexGrow && this.split.children.length > 0) {
+      this.split.children[0].flex = '1 1 auto'
     }
   }
 
