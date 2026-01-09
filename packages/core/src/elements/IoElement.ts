@@ -2,7 +2,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
-import { Node, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js'
+import { Node, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
@@ -166,11 +166,7 @@ export class IoElement extends HTMLElement {
     return onPropertyMutated(this, event)
   };
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
-    if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
-      this.dispatch('io-object-mutation', {object, properties})
-    } else {
-      this.dispatch('io-object-mutation', {object, properties}, false, window)
-    }
+    dispatchMutation(this, object, properties)
   }
   bind(name: string): Binding {
     return bind(this, name)

@@ -152,11 +152,7 @@ export class Node extends Object {
     return onPropertyMutated(this, event)
   }
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
-    if (isIoObject(object) || (object as IoElement)._isIoElement) {
-      this.dispatch('io-object-mutation', {object, properties})
-    } else {
-      this.dispatch('io-object-mutation', {object, properties}, false, window)
-    }
+    dispatchMutation(this, object, properties)
   }
   bind(name: string): Binding {
     return bind(this, name)
@@ -367,6 +363,15 @@ export function dispatchQueue(node: Node | IoElement, debounce = false) {
   }
   debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
     console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`)
+  }
+}
+
+// TODO: Consider using global event bus for all mutation events!
+export function dispatchMutation(node: Node | IoElement, object: object | Node, properties: string[]) {
+  if (isIoObject(object)) {
+    node.dispatch('io-object-mutation', {object, properties})
+  } else {
+    node.dispatch('io-object-mutation', {object, properties}, false, window)
   }
 }
 export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {

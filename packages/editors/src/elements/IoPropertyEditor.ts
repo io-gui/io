@@ -1,4 +1,5 @@
 import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { IoField } from '@io-gui/inputs'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
 import { getEditorWidget } from '../utils/EditorWidgets.js'
@@ -120,6 +121,8 @@ export class IoPropertyEditor extends IoElement {
   private _groups: PropertyGroupsRecord | null = null
   private _widget: VDOMElement | null = null
 
+  private _propertyEditors: Record<string, IoField> = {}
+
   _onValueInput(event: CustomEvent) {
     event.stopImmediatePropagation()
     const id = (event.target as HTMLElement).id
@@ -133,9 +136,6 @@ export class IoPropertyEditor extends IoElement {
     }
   }
 
-  valueMutated(event: CustomEvent) {
-    this.debounce(this.changed)
-  }
   configChanged() {
     this.debounce(this.configureDebounced)
   }
@@ -149,120 +149,139 @@ export class IoPropertyEditor extends IoElement {
     this.debounce(this.configureDebounced)
   }
   configureDebounced() {
-    this._config = getEditorConfig(this.value, this.config)
-    this._groups = getEditorGroups(this.value, this.groups)
-    this._widget = this.widget || getEditorWidget(this.value)
-    this.debounce(this.changed)
-  }
-  changed() {
-    this.debounce(this.changedDebounced)
-  }
-  changedDebounced() {
-    if (!this.value) {
+    this._propertyEditors = {}
+    if (!this.value || typeof this.value !== 'object') {
       this._config = null
       this._groups = null
       this._widget = null
       this.render([])
       return
-    }
-
-    const config = this._config
-    const groups = this._groups
-    const widget = this._widget
-
-    if (!config || !groups) return
-
-    const properties = []
-    const vChildren = []
-
-    if (this.properties.length) {
-      properties.push(...this.properties)
     } else {
-      if (widget) {
-        const widgetWithValue = {
-          tag: widget.tag,
-          props: Object.assign({value: this.value}, widget.props),
-          children: widget.children
-        }
-        vChildren.push(widgetWithValue)
-      }
-      properties.push(...groups.Main)
-    }
+      this._config = getEditorConfig(this.value, this.config)
+      this._groups = getEditorGroups(this.value, this.groups)
+      this._widget = this.widget || getEditorWidget(this.value)
 
-    const allProps = getAllPropertyNames(this.value)
+      const config = this._config
+      const groups = this._groups
+      const widget = this._widget
 
-    for (let i = 0; i < properties.length; i++) {
-      if (allProps.includes(properties[i])) {
-        const id = properties[i] as keyof typeof this.value
-        const value = this.value[id]
-        const tag = config[id]!.tag
-        const props = config[id]!.props as (IoElementProps | undefined) || {}
+      if (!config || !groups) return
 
-        const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput}
+      const properties = []
+      const vChildren = []
 
-        Object.assign(finalProps, props)
-
-        let children: string | undefined = undefined
-        if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
-          children = value
-        }
-
-        if (tag === 'io-object' || tag === 'io-property-editor') {
-          finalProps.config = finalProps.config || this.config
-          finalProps.groups = finalProps.groups || this.groups
-        }
-        if (tag === 'io-object') {
-          finalProps.persistentExpand = true
-        }
-        // NOTE: Functions dont have labels. They are displayed as labeled buttons.
-        const isFunction = typeof value === 'function'
-        if (isFunction) {
-          finalProps.action = (value as any).bind(this.value)
-          finalProps.label = finalProps.label || id
-        }
-
-        const isIoObject = tag === 'io-object'
-        if (isIoObject) {
-          finalProps.label = id + ': ' + (finalProps.label || (value as object)?.constructor?.name || String(value))
-        }
-
-        // TODO: Document and reconsider this
-        const label = finalProps.label || id
-        const tooltip = label
-        const hideLabel = finalProps.label === '_hidden_'
-
-        vChildren.push(div({class: 'row'}, [
-          (this.labeled && !hideLabel && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}, title: tooltip}, label) : null,
-          {tag: tag, props: finalProps, children: children},
-        ]))
+      if (this.properties.length) {
+        properties.push(...this.properties)
       } else {
-        debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`)
+        if (widget) {
+          const widgetWithValue = {
+            tag: widget.tag,
+            props: Object.assign({value: this.value}, widget.props),
+            children: widget.children
+          }
+          vChildren.push(widgetWithValue)
+        }
+        properties.push(...groups.Main)
       }
-    }
 
-    if (!this.properties.length) {
-      for (const group in groups) {
+      const allProps = getAllPropertyNames(this.value)
 
-        if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
-          vChildren.push(
-            ioObject({
-              label: group,
-              labelWidth: this.labelWidth,
-              persistentExpand: true,
-              value: this.value,
-              properties: groups[group],
-              config: this.config,
-            }),
-          )
+      for (let i = 0; i < properties.length; i++) {
+        if (allProps.includes(properties[i])) {
+          const id = properties[i] as keyof typeof this.value
+          const value = this.value[id]
+          const tag = config[id]!.tag
+          const props = config[id]!.props as (IoElementProps | undefined) || {}
+
+          const finalProps: any = {id: id, value: value, '@value-input': this._onValueInput}
+
+          Object.assign(finalProps, props)
+
+          let children: string | undefined = undefined
+          if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
+            children = value
+          }
+
+          if (tag === 'io-object' || tag === 'io-property-editor') {
+            finalProps.config = finalProps.config || this.config
+            finalProps.groups = finalProps.groups || this.groups
+          }
+          if (tag === 'io-object') {
+            finalProps.persistentExpand = true
+          }
+          // NOTE: Functions dont have labels. They are displayed as labeled buttons.
+          const isFunction = typeof value === 'function'
+          if (isFunction) {
+            finalProps.action = (value as any).bind(this.value)
+            finalProps.label = finalProps.label || id
+          }
+
+          const isIoObject = tag === 'io-object'
+          if (isIoObject) {
+            finalProps.label = id + ': ' + (finalProps.label || (value as object)?.constructor?.name || String(value))
+          }
+
+          // TODO: Document and reconsider this
+          const label = finalProps.label || id
+          const tooltip = label
+          const hideLabel = finalProps.label === '_hidden_'
+
+          if (finalProps.class) {
+            finalProps.class += ' io-property-editor-field'
+          } else {
+            finalProps.class = 'io-property-editor-field'
+          }
+
+          vChildren.push(div({class: 'row'}, [
+            (this.labeled && !hideLabel && !isFunction && !isIoObject) ? span({style: {width: this.labelWidth}, title: tooltip}, label) : null,
+            {tag: tag, props: finalProps, children: children},
+          ]))
+        } else {
+          debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`)
+        }
+      }
+
+      if (!this.properties.length) {
+        for (const group in groups) {
+
+          if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
+            vChildren.push(
+              ioObject({
+                label: group,
+                labelWidth: this.labelWidth,
+                persistentExpand: true,
+                value: this.value,
+                properties: groups[group],
+                config: this.config,
+              }),
+            )
+          }
+        }
+      }
+
+      this.render(vChildren)
+
+      for ( const child of Object.values(this.$) ) {
+        if (child.classList.contains('io-property-editor-field')) {
+          this._propertyEditors[child.id] = child as IoField
         }
       }
     }
-
-    this.render(vChildren)
+  }
+  valueMutated() {
+    this.throttle(this.changedThrottled)
+  }
+  changed() {
+    this.throttle(this.changedThrottled)
+  }
+  changedThrottled() {
+    for (const id in this._propertyEditors) {
+      this._propertyEditors[id].value = this.value[id as keyof typeof this.value]
+    }
   }
   dispose() {
     super.dispose()
-    window.removeEventListener('io-object-mutation', this.onPropertyMutated as unknown as EventListener)
+    this._propertyEditors = {}
   }
 }
 export const ioPropertyEditor = function(arg0?: IoPropertyEditorProps) {
