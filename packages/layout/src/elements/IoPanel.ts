@@ -116,6 +116,7 @@ export class IoPanel extends IoElement {
   addTab(tab: Tab, index?: number) {
     const existingIndex = this.panel.tabs.findIndex(t => t.id === tab.id)
     if (existingIndex !== -1) {
+      console.warn(`IoPanel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`)
       this.panel.tabs.splice(existingIndex, 1)
     }
     index = index ?? this.panel.tabs.length

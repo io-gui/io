@@ -261,7 +261,3 @@ The following information should be added to the README:
 - Deep nesting performance
 
 ---
-
-## Implementation Priority
-
-1. **High Priority Bugs**: IoDivider pointer handling, global query selectors
