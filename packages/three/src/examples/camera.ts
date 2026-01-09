@@ -21,8 +21,6 @@ export class CameraExample extends ThreeApplet {
     this.orthographicCamera = new OrthographicCamera( -1, 1, 1, -1, 150, 1000 )
     this.orthographicCamera.name = 'orthographic'
 
-    // counteract different front orientation of cameras vs rig
-
     this.orthographicCamera.rotation.y = Math.PI
     this.perspectiveCamera.rotation.y = Math.PI
 
@@ -55,16 +53,14 @@ export class CameraExample extends ThreeApplet {
     mesh3.position.z = 150
     this.cameraRig.add( mesh3 )
 
-    //
-
     const geometry = new BufferGeometry()
     const vertices = []
 
     for ( let i = 0; i < 10000; i ++ ) {
 
-      vertices.push( MathUtils.randFloatSpread( 2000 ) ) // x
-      vertices.push( MathUtils.randFloatSpread( 2000 ) ) // y
-      vertices.push( MathUtils.randFloatSpread( 2000 ) ) // z
+      vertices.push( MathUtils.randFloatSpread( 2000 ) )
+      vertices.push( MathUtils.randFloatSpread( 2000 ) )
+      vertices.push( MathUtils.randFloatSpread( 2000 ) )
 
     }
 
@@ -77,16 +73,7 @@ export class CameraExample extends ThreeApplet {
 
   onResized(width: number, height: number) {
     super.onResized(width, height)
-    const aspect = width / height
-
-    this.perspectiveCamera.aspect = aspect
-    this.perspectiveCamera.updateProjectionMatrix()
-
-    this.orthographicCamera.left = - frustumSize * aspect / 2
-    this.orthographicCamera.right = frustumSize * aspect / 2
-    this.orthographicCamera.top = frustumSize / 2
-    this.orthographicCamera.bottom = - frustumSize / 2
-    this.orthographicCamera.updateProjectionMatrix()
+    this.perspectiveCamera.aspect =  width / height
   }
   onAnimate() {
     const r = Date.now() * 0.0005
@@ -102,9 +89,21 @@ export class CameraExample extends ThreeApplet {
     this.perspectiveCamera.far = this.mesh.position.length()
     this.perspectiveCamera.updateProjectionMatrix()
 
+    const aspect = this.perspectiveCamera.aspect;
+
+    this.orthographicCamera.left = - frustumSize * aspect / 2 * (Math.sin( 0.5 * r ) / 2 + 0.5)
+    this.orthographicCamera.right = frustumSize * aspect / 2 * (Math.sin( 0.5 * r ) / 2 + 0.5)
+    this.orthographicCamera.top = frustumSize / 2 * (Math.sin( 0.5 * r ) / 2 + 0.5)
+    this.orthographicCamera.bottom = - frustumSize / 2 * (Math.sin( 0.5 * r ) / 2 + 0.5)
     this.orthographicCamera.far = this.mesh.position.length()
     this.orthographicCamera.updateProjectionMatrix()
 
     this.cameraRig.lookAt( this.mesh.position )
+
+    debug: {
+      this.dispatchMutation(this.perspectiveCamera)
+      this.dispatchMutation(this.orthographicCamera)
+      this.dispatchMutation(this.cameraRig)
+    }
   }
 }

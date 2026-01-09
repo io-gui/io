@@ -150,7 +150,7 @@ export class Node extends Object {
   }
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event)
-  };
+  }
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
     if (isIoObject(object) || (object as IoElement)._isIoElement) {
       this.dispatch('io-object-mutation', {object, properties})

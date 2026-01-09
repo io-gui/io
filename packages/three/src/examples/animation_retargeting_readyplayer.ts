@@ -1,12 +1,13 @@
-import { Register } from '@io-gui/core'
+import { ReactiveProperty, Register } from '@io-gui/core'
 import {
 	AnimationMixer,
 	BoxGeometry,
+	Camera,
 	DirectionalLight,
+	Group,
 	HemisphereLight,
 	Mesh,
 	NodeMaterial,
-	PerspectiveCamera,
 	Skeleton,
 	SkeletonHelper,
 } from 'three/webgpu'
@@ -18,26 +19,32 @@ import {
 	reflector,
 	positionWorld,
 } from 'three/tsl'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
 import { ThreeApplet } from '@io-gui/three'
+import { registerEditorConfig } from '@io-gui/editors'
+import { ioPropertyEditor } from '@io-gui/editors'
+
+const gltfLoader = new GLTFLoader()
+const fbxLoader = new FBXLoader()
 
 @Register
 export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
-	public sourceMixer?: AnimationMixer
-	public targetMixer?: AnimationMixer
-	public camera: PerspectiveCamera
+
+  @ReactiveProperty({type: AnimationMixer, init: new Group()})
+	declare public sourceMixer: AnimationMixer
+
+  @ReactiveProperty({type: AnimationMixer, init: new Group()})
+	declare public targetMixer: AnimationMixer
 
 	constructor() {
 		super()
 
-		// Background
 		const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
 		const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))
 		this.scene.backgroundNode = horizontalEffect.add(lightEffect)
 
-		// Lights
 		const light = new HemisphereLight(0x311649, 0x0c5d68, 10)
 		this.scene.add(light)
 
@@ -49,7 +56,6 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 		keyLight.position.set(3, 5, 3)
 		this.scene.add(keyLight)
 
-		// Floor with reflection
 		const reflection = reflector()
 		reflection.target.rotateX(-Math.PI / 2)
 		this.scene.add(reflection.target)
@@ -66,49 +72,34 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 		floor.position.set(0, 0, 0)
 		this.scene.add(floor)
 
-		// Camera
-		this.camera = new PerspectiveCamera(40, 1, .25, 50)
-		this.camera.position.set(0, 3, 5)
-    this.camera.lookAt(0, 1, 0)
-		this.camera.name = 'camera'
-		this.scene.add(this.camera)
-
-		// Load and setup models
 		void this.loadModels()
 	}
 
-	onResized(width: number, height: number) {
-		super.onResized(width, height)
-		const aspect = width / height
-		this.camera.aspect = aspect
-		this.camera.updateProjectionMatrix()
-	}
-
 	private async loadModels() {
-		const [sourceModel, targetModel] = await Promise.all([
+		const [sourceModel, targetModel]: [Group, GLTF] = await Promise.all([
 			new Promise((resolve, reject) => {
-				new FBXLoader().load('https://threejs.org/examples/models/fbx/mixamo.fbx', resolve as any, undefined, reject)
+				fbxLoader.load('https://threejs.org/examples/models/fbx/mixamo.fbx', resolve as (group: Group) => void, undefined, reject)
 			}),
 			new Promise((resolve, reject) => {
-				new GLTFLoader().load('https://threejs.org/examples/models/gltf/readyplayer.me.glb', resolve as any, undefined, reject)
+				gltfLoader.load('https://threejs.org/examples/models/gltf/readyplayer.me.glb', resolve as (gltf: GLTF) => void, undefined, reject)
 			})
-		])
+		]) as [Group, GLTF]
 
-		// Add models to scene
-		this.scene.add(sourceModel as any)
-		this.scene.add((targetModel as any).scene);
+    const models = new Group()
+    models.add(sourceModel)
+    models.add(targetModel.scene)
+    this.scene.add(models)
+    
+		sourceModel.position.x -= .9;
+		targetModel.scene.position.x += .9;
+    
+		sourceModel.scale.setScalar(.01)
 
-		// Reposition models
-		(sourceModel as any).position.x -= .9;
-		(targetModel as any).scene.position.x += .9;
-
-		// Readjust model - mixamo use centimeters, readyplayer.me use meters (three.js scale is meters)
-		(sourceModel as any).scale.setScalar(.01)
-
-		// Retarget
 		const source = this.getSource(sourceModel)
 		this.sourceMixer = source.mixer
 		this.targetMixer = this.retargetModel(source, targetModel)
+
+    this.dispatch('frame-object', {object: models, overscan: 1.5}, true)
 	}
 
 	private getSource(sourceModel: any) {
@@ -154,6 +145,15 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 		if (this.targetMixer) {
 			this.targetMixer.update(delta)
 		}
-	}
+
+    debug: {
+      this.dispatchMutation(this.sourceMixer)
+      this.dispatchMutation(this.targetMixer)
+    }
+  }
 }
 
+registerEditorConfig(AnimationRetargetingReadyplayerExample, [
+  ['sourceMixer', ioPropertyEditor({label: '_hidden_'})],
+  ['targetMixer', ioPropertyEditor({label: '_hidden_'})],
+])

@@ -101,8 +101,6 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
       Hidden: [
         'scene',
         'camera',
-        'toneMappingExposure',
-        'toneMapping',
       ],
     }
 
