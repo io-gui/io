@@ -16,15 +16,15 @@ todos:
     status: completed
   - id: test-tab-model
     content: Create Tab.test.ts - construction, defaults, serialization, events
-    status: pending
+    status: completed
   - id: test-panel-model
     content: Create Panel.test.ts - selection, mutations, serialization
-    status: pending
+    status: completed
     dependencies:
       - test-tab-model
   - id: test-split-model
     content: Extend IoSplit.test.ts - serialization, deep nesting, dispose
-    status: pending
+    status: completed
     dependencies:
       - test-panel-model
   - id: test-divider

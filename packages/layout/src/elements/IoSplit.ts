@@ -2,10 +2,11 @@ import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Pro
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
-import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js'
+import { Split, SplitOrientation } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
 
+export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
 export type IoSplitProps = IoElementProps & {
   split: Split

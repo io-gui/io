@@ -1,7 +1,7 @@
 import { Register, ReactiveProperty, IoElement, IoElementProps, ThemeSingleton } from '@io-gui/core'
-import { IoTab } from './IoTab.js'
-import { SplitDirection } from '../nodes/Split.js'
+import { SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
+import { IoTab } from './IoTab.js'
 
 @Register
 class IoTabDropMarker extends IoElement {

@@ -3,7 +3,7 @@ import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { ioTabDropMarkerSingleton } from './IoTabDropMarker.js'
 import { Tab } from '../nodes/Tab.js'
-import { SplitDirection } from '../nodes/Split.js'
+import { SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
 
 @Register

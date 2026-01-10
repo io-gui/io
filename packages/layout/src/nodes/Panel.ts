@@ -7,6 +7,20 @@ export type PanelProps = {
   flex?: string
 }
 
+function deduplicateTabs<T extends TabProps>(tabs: Array<T>, context: string): Array<T> {
+  const seenIds = new Set<string>()
+  const uniqueTabs: Array<T> = []
+  for (const tab of tabs) {
+    if (seenIds.has(tab.id)) {
+      console.warn(`${context}: Duplicate tab id "${tab.id}" - keeping first occurrence`)
+    } else {
+      seenIds.add(tab.id)
+      uniqueTabs.push(tab)
+    }
+  }
+  return uniqueTabs
+}
+
 @Register
 export class Panel extends Node {
 
@@ -23,6 +37,8 @@ export class Panel extends Node {
       }
     }
     args = { ...args }
+    args.tabs = deduplicateTabs(args.tabs, 'Panel')
+
     if (args.tabs.length > 0 && !args.tabs.find(tab => tab.selected)) {
       args.tabs[0].selected = true
     }
@@ -73,14 +89,15 @@ export class Panel extends Node {
         console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`)
       }
     }
+    const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON')
     this.setProperties({
-      tabs: json.tabs.map(tab => new Tab(tab)),
+      tabs: uniqueTabs.map(tab => new Tab(tab)),
       flex: json.flex ?? '1 1 100%',
     })
     return this
   }
   dispose() {
-    this.tabs.length = 0 // TODO: test magic!
+    this.tabs.length = 0
     super.dispose()
   }
 }

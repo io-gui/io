@@ -2,10 +2,9 @@ import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Pro
 import { ioSelector } from '@io-gui/navigation'
 import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
-import { IoSplit } from './IoSplit.js'
+import { IoSplit, SplitDirection } from './IoSplit.js'
 import { Tab } from '../nodes/Tab.js'
 import { Panel } from '../nodes/Panel.js'
-import { SplitDirection } from '../nodes/Split.js'
 import { IoLayout } from './IoLayout.js'
 
 export type IoPanelProps = IoElementProps & {
