@@ -37,7 +37,7 @@ todos:
     status: pending
   - id: test-tabs-element
     content: Create IoTabs.test.ts - overflow detection, rendering
-    status: completed
+    status: in_progress
     dependencies:
       - fix-overflow-detection
   - id: test-tab-drag
@@ -260,5 +260,3 @@ The following information should be added to the README:
 ### Phase 4: Edge Case Tests
 
 **Stress Tests**:
-
-- Rapid tab switching

@@ -90,6 +90,14 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Reactive properties defined in static `static get ReactiveProperties()` object or `@ReactiveProperty` decorators
 - Non-reactive properties defined in static `static get Properties()` object or `@Property` decorators
 
+### Singleton Pattern
+When using singletons that hold shared state:
+- The singleton should own both state AND behavior operating on that state
+- View elements should capture events and forward them to singleton methods
+- Avoid direct property manipulation from views - use methods instead
+- This keeps views focused on event handling and rendering
+- Example: `IoTab` captures pointer events and forwards to `tabDragIconSingleton.updateDrag()`, `endDrag()`, `cancelDrag()`
+
 ### Runtime Type Checking
 - Use `debug: {}` labeled scoped blocks to write runtime debug code such as type checking etc
 - Debug code should not alter the state in any way

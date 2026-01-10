@@ -1,9 +1,8 @@
-import { Register, ReactiveProperty, span, ThemeSingleton } from '@io-gui/core'
+import { Register, ReactiveProperty, span } from '@io-gui/core'
 import { IoField, IoFieldProps, ioField, ioString } from '@io-gui/inputs'
 import { IoContextEditorSingleton } from '@io-gui/editors'
 import { IconsetDB, ioIcon } from '@io-gui/icons'
 import { MenuOptionProps, MenuOption, ioOptionSelect } from '@io-gui/menus'
-import { IoTabs } from './IoTabs.js'
 import { IoPanel } from './IoPanel.js'
 import { IoLayout } from './IoLayout.js'
 import { Tab } from '../nodes/Tab.js'
@@ -17,14 +16,11 @@ for (const set of Object.keys(IconsetDB)) {
   }
 }
 
-const iconOptions = ioOptionSelect({selectBy: 'value', label: 'Select', option: new MenuOption({options: icons})})
+const iconOptions = ioOptionSelect({selectBy: 'value', label: 'Icon', option: new MenuOption({options: icons})})
 
 export type IoTabProps = IoFieldProps & {
   tab: Tab
 }
-
-let _dragStartX = 0
-let _dragStartY = 0
 
 // TODO: fix and improve keyboard navigation in all cases.
 @Register
@@ -143,8 +139,7 @@ export class IoTab extends IoField {
     event.preventDefault()
     event.stopPropagation()
     this.setPointerCapture(event.pointerId)
-    _dragStartX = event.clientX
-    _dragStartY = event.clientY
+    tabDragIconSingleton.setStartPosition(event.clientX, event.clientY)
     super.onPointerdown(event)
     if (event.buttons === 2) {
       this.expandContextEditor()
@@ -156,125 +151,15 @@ export class IoTab extends IoField {
     event.preventDefault()
     if (event.buttons !== 1) return
     const panel = this.parentElement!.parentElement as IoPanel
-    if (!tabDragIconSingleton.dragging) {
-      const dx = Math.abs(_dragStartX - event.clientX)
-      const dy = Math.abs(_dragStartY - event.clientY)
-      if (dx > 10 || dy > 10) {
-        tabDragIconSingleton.setProperties({
-          tab: this.tab,
-          dragging: true,
-          dropSource: panel,
-          dropTarget: null,
-          dropIndex: -1,
-        })
-        tabDragIconSingleton.style.top = event.clientY + 'px'
-        tabDragIconSingleton.style.left = event.clientX + 'px'
-      }
-      return
-    }
-    tabDragIconSingleton.style.top = event.clientY + 'px'
-    tabDragIconSingleton.style.left = event.clientX + 'px'
-
-    const x = event.clientX
-    const y = event.clientY
-    const m = ThemeSingleton.spacing
     const root = this.closest('io-layout') as IoLayout
-    if (!root) {
-      console.error('IoTab: No io-layout found as a parent of the tab!', this)
-      return
-    }
-
-    const tabsContainers = root.querySelectorAll('io-tabs')
-    for (let i = 0; i < tabsContainers.length; i++) {
-      const tabsContainer = tabsContainers[i] as IoTabs
-      const targetPanel = tabsContainer.parentElement as IoPanel
-      const tcr = tabsContainer.getBoundingClientRect()
-      if (y >= tcr.top && y <= tcr.bottom && x >= tcr.left && x <= tcr.right) {
-        const tabs = tabsContainer.querySelectorAll('io-tab')
-        if (tabs.length === 0) {
-          tabDragIconSingleton.setProperties({
-            dropTarget: targetPanel,
-            splitDirection: 'none',
-            dropIndex: 0,
-          })
-          return
-        }
-        for (let j = 0; j < tabs.length; j++) {
-          const tab = tabs[j] as IoTab
-          const tr = tab.getBoundingClientRect()
-          const isLast = j === tabs.length - 1
-          // TODO: consider hovering empty tab space.
-          if (y >= tr.top - m && y <= tr.bottom + m && x >= tr.left - m && (x <= tr.right + m || isLast && x <= tcr.right)) {
-            const side = x < tr.left + tr.width / 2 ? 'left' : 'right'
-            const dropIndex = side === 'left' ? j : j + 1
-            tabDragIconSingleton.setProperties({
-              dropTarget: targetPanel,
-              splitDirection: 'none',
-              dropIndex: dropIndex,
-            })
-            return
-          }
-        }
-      }
-    }
-
-    const panels = root.querySelectorAll('io-panel')
-    for (let i = 0; i < panels.length; i++) {
-      const targetPanel = panels[i] as IoPanel
-      const pr = targetPanel.getBoundingClientRect()
-      if (y >= pr.top && y <= pr.bottom && x >= pr.left && x <= pr.right) {
-        // get xy relative to panel center
-        const rx = (x - pr.left - pr.width / 2) / pr.width * 2
-        const ry = (y - pr.top - pr.height / 2) / pr.height * 2
-        let direction = 'none'
-
-        if (Math.abs(rx) < 0.5 && Math.abs(ry) < 0.5) {
-          direction = 'center'
-        } else if (ry > 0 && Math.abs(ry) > Math.abs(rx)) {
-          direction = 'bottom'
-        } else if (ry < 0 && Math.abs(ry) > Math.abs(rx)) {
-          direction = 'top'
-        } else if (rx > 0 && Math.abs(rx) > Math.abs(ry)) {
-          direction = 'right'
-        } else if (rx < 0 && Math.abs(rx) > Math.abs(ry)) {
-          direction = 'left'
-        }
-
-        tabDragIconSingleton.setProperties({
-          dropTarget: targetPanel,
-          splitDirection: direction,
-          dropIndex: -1,
-        })
-        return
-      }
-    }
+    tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root)
   }
   onPointerup(event: PointerEvent) {
     event.preventDefault()
     super.onPointerup(event)
     this.releasePointerCapture(event.pointerId)
     if (tabDragIconSingleton.dragging) {
-      const source = tabDragIconSingleton.dropSource
-      const target = tabDragIconSingleton.dropTarget
-      const index = tabDragIconSingleton.dropIndex
-      const direction = tabDragIconSingleton.splitDirection
-
-      if (target && index !== -1) {
-        if (source && source !== target) {
-          source.removeTab(this.tab)
-        }
-        target.addTab(this.tab, index)
-      } else if (source && target && direction !== 'none') {
-        target.moveTabToSplit(source, this.tab, direction)
-      }
-
-      tabDragIconSingleton.setProperties({
-        dragging: false,
-        dropSource: null,
-        dropTarget: null,
-        splitDirection: 'none',
-        dropIndex: -1,
-      })
+      tabDragIconSingleton.endDrag()
     } else {
       this.onClick()
     }
@@ -283,13 +168,7 @@ export class IoTab extends IoField {
     event.preventDefault()
     event.stopPropagation()
     super.onPointercancel(event)
-    tabDragIconSingleton.setProperties({
-      dragging: false,
-      dropSource: null,
-      dropTarget: null,
-      splitDirection: 'none',
-      dropIndex: -1,
-    })
+    tabDragIconSingleton.cancelDrag()
   }
   onPointerleave(event: PointerEvent) {
     event.preventDefault()
