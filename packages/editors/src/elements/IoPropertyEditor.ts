@@ -276,7 +276,9 @@ export class IoPropertyEditor extends IoElement {
   }
   changedThrottled() {
     for (const id in this._propertyEditors) {
-      this._propertyEditors[id].value = this.value[id as keyof typeof this.value]
+      const value = this.value[id as keyof typeof this.value]
+      const editor = this._propertyEditors[id]
+      editor.value = value
     }
   }
   dispose() {

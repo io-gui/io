@@ -37,7 +37,7 @@ todos:
     status: pending
   - id: test-tabs-element
     content: Create IoTabs.test.ts - overflow detection, rendering
-    status: in_progress
+    status: completed
     dependencies:
       - fix-overflow-detection
   - id: test-tab-drag
@@ -255,8 +255,3 @@ The following information should be added to the README:
 - Complete drag-and-drop flow
 - Tab movement between panels
 - New split creation via drag
-- Panel consolidation after tab removal
-
-### Phase 4: Edge Case Tests
-
-**Stress Tests**:

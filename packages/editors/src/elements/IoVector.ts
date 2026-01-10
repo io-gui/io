@@ -115,7 +115,6 @@ export class IoVector extends IoElement {
     if (!(this.value as Node)._isNode) {
       this.dispatchMutation(this.value)
     }
-    this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
   valueChanged() {

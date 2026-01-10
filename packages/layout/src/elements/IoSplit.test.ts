@@ -1,6 +1,6 @@
 //@ts-nocheck
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { IoLayout, Split, Panel } from '@io-gui/layout'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { IoLayout, Split, Panel, Tab, IoSplit, IoPanel } from '@io-gui/layout'
 
 describe('Split Construction Consolidation', () => {
   it('Should consolidate on construction when root has only 1 child that is a Split', () => {
@@ -470,6 +470,341 @@ describe('IoSplit Consolidation', () => {
       expect(split.children[0].tabs[0].id).toBe('panelRoot')
       expect(split.children[1]).toBeInstanceOf(Panel)
       expect(split.children[1].tabs[0].id).toBe('panelB')
+    })
+  })
+})
+
+describe('IoSplit View Element', () => {
+  let layout: IoLayout
+  let container: HTMLElement
+
+  beforeEach(() => {
+    container = document.createElement('div')
+    container.style.display = 'none'
+    document.body.appendChild(container)
+  })
+
+  afterEach(() => {
+    if (layout) {
+      layout.remove()
+    }
+    container.remove()
+  })
+
+  describe('moveTabToSplit', () => {
+    it('Should add panel to left when same orientation', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
+          {type: 'panel', tabs: [{id: 'tab3'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
+      const targetPanel = split.children[0] as Panel
+      const tab = split.children[0].tabs[1]
+
+      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'left')
+
+      expect(split.children.length).toBe(3)
+      expect(split.children[0]).toBeInstanceOf(Panel)
+      expect(split.children[0].tabs[0].id).toBe('tab2')
+    })
+
+    it('Should add panel to right when same orientation', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
+          {type: 'panel', tabs: [{id: 'tab3'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
+      const targetPanel = split.children[0] as Panel
+      const tab = split.children[0].tabs[1]
+
+      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'right')
+
+      expect(split.children.length).toBe(3)
+      expect(split.children[1].tabs[0].id).toBe('tab2')
+    })
+
+    it('Should create nested split for perpendicular direction (top)', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
+          {type: 'panel', tabs: [{id: 'tab3'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
+      const targetPanel = split.children[0] as Panel
+      const tab = split.children[0].tabs[1]
+
+      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'top')
+
+      expect(split.children.length).toBe(2)
+      expect(split.children[0]).toBeInstanceOf(Split)
+      expect(split.children[0].orientation).toBe('vertical')
+    })
+
+    it('Should create nested split for perpendicular direction (bottom)', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}, {id: 'tab2'}]},
+          {type: 'panel', tabs: [{id: 'tab3'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
+      const targetPanel = split.children[0] as Panel
+      const tab = split.children[0].tabs[1]
+
+      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'bottom')
+
+      expect(split.children.length).toBe(2)
+      expect(split.children[0]).toBeInstanceOf(Split)
+      expect(split.children[0].orientation).toBe('vertical')
+      expect(split.children[0].children[1].tabs[0].id).toBe('tab2')
+    })
+  })
+
+  describe('convertToSplit', () => {
+    it('Should convert panel to split with two children', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'horizontal',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {type: 'panel', tabs: [{id: 'tab2'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const panelToConvert = split.children[0] as Panel
+      const newPanel1 = new Panel({type: 'panel', tabs: [{id: 'new1'}]})
+      const newPanel2 = new Panel({type: 'panel', tabs: [{id: 'new2'}]})
+
+      ioSplit.convertToSplit(panelToConvert, newPanel1, newPanel2, 'vertical')
+
+      expect(split.children[0]).toBeInstanceOf(Split)
+      expect(split.children[0].orientation).toBe('vertical')
+      expect(split.children[0].children.length).toBe(2)
+      expect(split.children[0].children[0].tabs[0].id).toBe('new1')
+      expect(split.children[0].children[1].tabs[0].id).toBe('new2')
+    })
+  })
+
+  describe('ensureFlexGrow', () => {
+    it('Should set first child to flex grow when none have it', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}], flex: '0 0 200px'},
+          {type: 'panel', tabs: [{id: 'tab2'}], flex: '0 0 300px'}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      ioSplit.ensureFlexGrow()
+
+      expect(split.children[0].flex).toBe('1 1 auto')
+    })
+
+    it('Should not change flex when at least one child has flex grow', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}], flex: '0 0 200px'},
+          {type: 'panel', tabs: [{id: 'tab2'}], flex: '1 1 100%'}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      ioSplit.ensureFlexGrow()
+
+      expect(split.children[0].flex).toBe('0 0 200px')
+      expect(split.children[1].flex).toBe('1 1 100%')
+    })
+  })
+
+  describe('Rendering', () => {
+    it('Should render io-panel for Panel children', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {type: 'panel', tabs: [{id: 'tab2'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const panels = layout.querySelectorAll('io-panel')
+      expect(panels.length).toBe(2)
+    })
+
+    it('Should render io-split for Split children', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {
+            type: 'split',
+            children: [
+              {type: 'panel', tabs: [{id: 'tab2'}]},
+              {type: 'panel', tabs: [{id: 'tab3'}]}
+            ]
+          }
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const splits = layout.querySelectorAll('io-split')
+      expect(splits.length).toBe(2)
+    })
+
+    it('Should render io-divider between children', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {type: 'panel', tabs: [{id: 'tab2'}]},
+          {type: 'panel', tabs: [{id: 'tab3'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const dividers = layout.querySelectorAll('io-divider')
+      expect(dividers.length).toBe(2)
+    })
+
+    it('Should set orientation attribute', () => {
+      const split = new Split({
+        type: 'split',
+        orientation: 'vertical',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {type: 'panel', tabs: [{id: 'tab2'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split')
+      expect(ioSplit.getAttribute('orientation')).toBe('vertical')
+    })
+  })
+
+  describe('Static Properties', () => {
+    it('Should have Style getter', () => {
+      expect(IoSplit.Style).toBeDefined()
+      expect(typeof IoSplit.Style).toBe('string')
+      expect(IoSplit.Style).toContain(':host')
+      expect(IoSplit.Style).toContain('flex-direction')
+    })
+
+    it('Should have Listeners getter', () => {
+      expect(IoSplit.Listeners).toBeDefined()
+      expect(IoSplit.Listeners['io-divider-move']).toBe('onDividerMove')
+      expect(IoSplit.Listeners['io-divider-move-end']).toBe('onDividerMoveEnd')
+      expect(IoSplit.Listeners['io-panel-remove']).toBe('onPanelRemove')
+      expect(IoSplit.Listeners['io-split-remove']).toBe('onSplitRemove')
+      expect(IoSplit.Listeners['io-split-consolidate']).toBe('onSplitConsolidate')
+    })
+  })
+
+  describe('Panel removal via event', () => {
+    it('Should remove empty panel and dispatch io-split-remove when all children removed', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const removeSpy = vi.fn()
+      ioSplit.addEventListener('io-split-remove', removeSpy)
+
+      split.children[0].tabs.length = 0
+
+      const ioPanel = layout.querySelector('io-panel') as IoPanel
+      ioPanel.dispatchEvent(new CustomEvent('io-panel-remove', {
+        detail: {panel: split.children[0]},
+        bubbles: true
+      }))
+
+      expect(removeSpy).toHaveBeenCalled()
+    })
+
+    it('Should dispatch io-split-consolidate when only one child remains', () => {
+      const split = new Split({
+        type: 'split',
+        children: [
+          {type: 'panel', tabs: [{id: 'tab1'}]},
+          {type: 'panel', tabs: [{id: 'tab2'}]}
+        ]
+      })
+
+      layout = new IoLayout({split, elements: []})
+      container.appendChild(layout)
+
+      const ioSplit = layout.querySelector('io-split') as IoSplit
+      const consolidateSpy = vi.fn()
+      ioSplit.addEventListener('io-split-consolidate', consolidateSpy)
+
+      split.children[0].tabs.length = 0
+
+      const ioPanel = layout.querySelectorAll('io-panel')[0] as IoPanel
+      ioPanel.dispatchEvent(new CustomEvent('io-panel-remove', {
+        detail: {panel: split.children[0]},
+        bubbles: true
+      }))
+
+      expect(consolidateSpy).toHaveBeenCalled()
     })
   })
 })
