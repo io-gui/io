@@ -24,7 +24,7 @@ todos:
     status: pending
   - id: refactor-divider-move
     content: Extract helper methods from onDividerMove for readability
-    status: pending
+    status: completed
 ---
 
 # IoSplit Improvements Plan
@@ -209,24 +209,14 @@ newSplit.children.push(first, second)
 
 // Could be:
 const newSplit = new Split({type: 'split', orientation, children: [first, second]})
+
+
+
+
+
+
+
+
+
+
 ```
-
-Note: May need to pass raw props `{type: 'panel', tabs: [...]}` rather than Panel instances depending on Split constructor behavior.---
-
-## Implementation Priority
-
-| Priority | Issue | Impact |
-
-|----------|-------|--------|
-
-| High | #2 Missing guard in onSplitRemove | Could remove wrong child |
-
-| High | #3 Guard in consolidateChild | Runtime error if empty |
-
-| Medium | #1 Dead code in onPanelRemove | Code clarity |
-
-| Medium | #6 Last panel protection | UX edge case |
-
-| Low | #4, #5 Orphaned mutation handlers | Dead code |
-
-| Low | #7 Arrow key tab movement | Feature enhancement |

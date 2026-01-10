@@ -2,54 +2,15 @@
 name: Layout System Improvements
 overview: Comprehensive investigation and improvement of the layout system's drag-and-drop functionality, robustness, and test coverage. The plan covers bug fixes, edge case handling, and thorough testing of domain models, view elements, and interactions.
 todos:
-  - id: fix-divider-pointer
-    content: Fix IoDivider pointer event handling - check hasPointerCapture before cleanup
-    status: completed
-  - id: fix-global-queries
-    content: Scope tab drag queries to containing IoLayout ancestor
-    status: completed
-  - id: fix-singleton-init
-    content: Replace setTimeout singleton initialization with lazy/DOMContentLoaded pattern
-    status: completed
-  - id: fix-overflow-detection
-    content: Add fallback overflow detection when addMenuOption is absent
-    status: completed
-  - id: test-tab-model
-    content: Create Tab.test.ts - construction, defaults, serialization, events
-    status: completed
-  - id: test-panel-model
-    content: Create Panel.test.ts - selection, mutations, serialization
-    status: completed
-    dependencies:
-      - test-tab-model
-  - id: test-split-model
-    content: Extend IoSplit.test.ts - serialization, deep nesting, dispose
-    status: completed
-    dependencies:
-      - test-panel-model
   - id: test-divider
     content: Create IoDivider.test.ts - pointer capture, events, touch handling
     status: pending
-    dependencies:
-      - fix-divider-pointer
   - id: test-panel-element
     content: Create IoPanel.test.ts - tab operations, keyboard, last-tab protection
     status: pending
-  - id: test-tabs-element
-    content: Create IoTabs.test.ts - overflow detection, rendering
-    status: completed
-    dependencies:
-      - fix-overflow-detection
-  - id: test-tab-drag
-    content: Create IoTab.test.ts - drag initiation, singleton state, drop detection
-    status: completed
-    dependencies:
-      - fix-global-queries
   - id: test-integration
     content: Create IoLayout.integration.test.ts - full drag-drop flows
     status: pending
-    dependencies:
-      - test-tab-drag
   - id: update-readme
     content: Add missing information to README - multi-layout, IDs, minimums
     status: pending

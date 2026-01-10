@@ -153,7 +153,7 @@ export class IoPanel extends IoElement {
     if (tabs[index]) tabs[index].focus()
   }
   panelMutated() {
-    this.changed()
+    this.debounce(this.changed)
   }
   changed() {
     this.render([

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { applyNativeElementProps, constructElement, div } from '@io-gui/core'
+import { Register, IoElement, applyNativeElementProps, constructElement, div, span, ReactivePropertyDefinitions } from '@io-gui/core'
 
 describe('VDOM', () => {
   it('Should construct an native DIV element', () => {
@@ -67,5 +67,60 @@ describe('VDOM', () => {
     expect(element.getAttribute('tabindex')).toBe('1')
     expect(element.getAttribute('contenteditable')).toBe(null)
     expect(element.getAttribute('spellcheck')).toBe(null)
+  })
+  it('Should clear text content when reusing element with undefined children', () => {
+    // This test verifies that when a span with text content is reused
+    // for a vDOM element with undefined children, the text content is cleared.
+    // Bug scenario: IoTab renders [span.drop-marker, span.label("Text"), ...]
+    // When tab selection changes, positions shift and span.label becomes span.drop-marker
+    // The text content "Text" should be cleared but wasn't due to the bug.
+
+    @Register
+    class TestVDOMClearChildren extends IoElement {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          showMarker: false,
+        }
+      }
+      declare showMarker: boolean
+      ready() {
+        this.changed()
+      }
+      changed() {
+        // Mimics IoTab render pattern where selected tab has a drop-marker span
+        // and all tabs have a label span. When showMarker changes, the first
+        // span switches between drop-marker (no children) and label (with text).
+        if (this.showMarker) {
+          this.render([
+            span({class: 'drop-marker'}),  // no children - should be empty
+            span({class: 'label'}, 'Label Text'),
+          ])
+        } else {
+          this.render([
+            span({class: 'label'}, 'Label Text'),
+          ])
+        }
+      }
+    }
+
+    const element = new TestVDOMClearChildren()
+    document.body.appendChild(element as unknown as HTMLElement)
+
+    // Initial render without marker - just the label span
+    expect(element.children.length).toBe(1)
+    expect(element.children[0].className).toBe('label')
+    expect(element.children[0].textContent).toBe('Label Text')
+
+    // Now show marker - first span should be drop-marker with NO text content
+    element.showMarker = true
+    expect(element.children.length).toBe(2)
+    expect(element.children[0].className).toBe('drop-marker')
+    // BUG: The drop-marker span inherited text content from the previous label span
+    // because it was reused (same tag 'span') and vChild.children was undefined
+    expect(element.children[0].textContent).toBe('')  // This should pass after fix
+    expect(element.children[1].className).toBe('label')
+    expect(element.children[1].textContent).toBe('Label Text')
+
+    element.remove()
   })
 })
