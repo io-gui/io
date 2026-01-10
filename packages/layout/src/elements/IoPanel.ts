@@ -125,20 +125,19 @@ export class IoPanel extends IoElement {
     this.selectIndex(index)
   }
   removeTab(tab: Tab) {
-    // Prevent removing the last tab from a layout with only one split, panel and a tab.
-    const parentSplit = this.parentElement as IoSplit
-    const grandParentLayout = (parentSplit.parentElement instanceof IoLayout) ? parentSplit.parentElement : null
-    if (grandParentLayout && parentSplit.split.children.length === 1 && this.panel.tabs.length === 1) {
-      return
-    }
-
     const index = this.panel.tabs.indexOf(tab)
     this.panel.tabs.splice(index, 1)
     if (this.panel.tabs.length > 0) {
       const newIndex = Math.min(index, this.panel.tabs.length - 1)
       this.selectIndex(newIndex)
     } else {
-      this.dispatch('io-panel-remove', {panel: this.panel}, true)
+      const parentSplit = this.parentElement as IoSplit
+      const isRootPanel = parentSplit.parentElement instanceof IoLayout &&
+      parentSplit.split.children.length === 1
+      // If this is the last panel at root level, don't remove
+      if (!isRootPanel) {
+        this.dispatch('io-panel-remove', {panel: this.panel}, true)
+      }
     }
   }
   moveTab(tab: Tab, index: number) {

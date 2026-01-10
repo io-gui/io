@@ -183,9 +183,8 @@ export class IoSplit extends IoElement {
       this.dispatch('io-split-remove', {split: this.split}, true)
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
-    } else {
-      this.ensureFlexGrow()
     }
+    this.ensureFlexGrow()
   }
 
   onSplitRemove(event: CustomEvent) {
@@ -195,9 +194,8 @@ export class IoSplit extends IoElement {
     this.split.children.splice(index, 1)
     if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
-    } else {
-      this.ensureFlexGrow()
     }
+    this.ensureFlexGrow()
   }
 
   ensureFlexGrow() {

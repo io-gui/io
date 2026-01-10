@@ -67,7 +67,6 @@ export class IoTabs extends IoElement {
 
   tabsMutated() {
     this.changed()
-
     this.overflow = -1
     this.onResized()
   }

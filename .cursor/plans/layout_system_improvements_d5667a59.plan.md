@@ -53,6 +53,12 @@ todos:
   - id: update-readme
     content: Add missing information to README - multi-layout, IDs, minimums
     status: pending
+  - id: auto-generate-add-menu
+    content: Auto-generate addMenuOption from element IDs when not provided
+    status: pending
+  - id: frozen-layout-state
+    content: Add frozen state to disable tab editing (add menu and tab removal)
+    status: pending
 ---
 
 # Layout System Investigation and Improvements
@@ -258,4 +264,3 @@ The following information should be added to the README:
 - Rapid tab switching
 - Concurrent drag operations
 - Window resize during operations
-- Deep nesting performance
