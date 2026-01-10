@@ -168,9 +168,13 @@ Current protection only covers the simple case. Nested scenarios need verificati
 - Single panel with one tab in deeply nested split
 - Removing tab that would cascade to empty layout
 
-### 3. Drop Marker Positioning with Scroll
+### 3. ~~Drop Marker Positioning with Scroll~~ (Non-issue)
 
-**File:** [`packages/layout/src/elements/IoTabDropMarker.ts`](packages/layout/src/elements/IoTabDropMarker.ts)Uses `position: fixed` with `getBoundingClientRect()` which works, but should be verified with scrolled containers.
+**File:** [`packages/layout/src/elements/IoTabDropMarker.ts`](packages/layout/src/elements/IoTabDropMarker.ts)
+
+Uses `position: fixed` with `getBoundingClientRect()`. Both use viewport-relative coordinates, so they match regardless of scroll position. Tested and confirmed working with scrolled panel contents.
+
+**Edge case note:** Would break only if an ancestor has `transform`/`perspective`/`filter` CSS (creates new containing block for `fixed`), but this is a known CSS quirk, not a layout system bug.
 
 ### 4. Duplicate Tab IDs Across Panels
 
@@ -263,4 +267,3 @@ The following information should be added to the README:
 
 - Rapid tab switching
 - Concurrent drag operations
-- Window resize during operations
