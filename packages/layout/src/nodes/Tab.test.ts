@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { Tab, TabProps } from './Tab.js'
+import { Tab, TabProps } from '@io-gui/layout'
 
 describe('Tab', () => {
 

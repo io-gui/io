@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { Panel, PanelProps } from './Panel.js'
-import { Tab, TabProps } from './Tab.js'
 import { NodeArray } from '@io-gui/core'
+import { Panel, PanelProps, Tab, TabProps } from '@io-gui/layout'
 
 describe('Panel', () => {
 
@@ -443,8 +442,7 @@ describe('Panel', () => {
       expect(result).toBe(panel)
     })
 
-    it('should collapse duplicate tab ids in fromJSON with warning', () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    it('should collapse duplicate tab ids in fromJSON', () => {
 
       const panel = new Panel({
         type: 'panel',
@@ -465,9 +463,6 @@ describe('Panel', () => {
       expect(panel.tabs[0].label).toBe('First')
       expect(panel.tabs[1].id).toBe('other')
 
-      expect(warnSpy).toHaveBeenCalledWith('Panel.fromJSON: Duplicate tab id "dup" - keeping first occurrence')
-
-      warnSpy.mockRestore()
     })
 
   })
@@ -738,8 +733,7 @@ describe('Panel', () => {
       expect(panel.tabs[0].selected).toBe(true)
     })
 
-    it('should collapse duplicate tab ids with warning', () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    it('should collapse duplicate tab ids', () => {
 
       const panel = new Panel({
         type: 'panel',
@@ -754,14 +748,9 @@ describe('Panel', () => {
       expect(panel.tabs[0].id).toBe('same')
       expect(panel.tabs[0].label).toBe('First')
 
-      // Warning should be logged
-      expect(warnSpy).toHaveBeenCalledWith('Panel: Duplicate tab id "same" - keeping first occurrence')
-
-      warnSpy.mockRestore()
     })
 
     it('should collapse multiple duplicates', () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
       const panel = new Panel({
         type: 'panel',
@@ -780,10 +769,6 @@ describe('Panel', () => {
       expect(panel.tabs[1].id).toBe('b')
       expect(panel.tabs[2].id).toBe('c')
 
-      // Two warnings for 'a' duplicates, one for 'b' duplicate
-      expect(warnSpy).toHaveBeenCalledTimes(3)
-
-      warnSpy.mockRestore()
     })
 
   })

@@ -30,7 +30,7 @@ export class Tab extends Node {
     }
     super({
       ...args,
-      label: !!args.label ? args.label : args.id,
+      label: args.label ? args.label : args.id,
     })
   }
   toJSON(): TabProps {
@@ -43,9 +43,9 @@ export class Tab extends Node {
   fromJSON(json: TabProps) {
     this.setProperties({
       id: json.id,
-      label: !!json.label ? json.label : json.id,
-      icon: !!json.icon ? json.icon : '',
-      selected: !!json.selected ? json.selected : false,
+      label: json.label ? json.label : json.id,
+      icon: json.icon ? json.icon : '',
+      selected: json.selected ? json.selected : false,
     })
     return this
   }

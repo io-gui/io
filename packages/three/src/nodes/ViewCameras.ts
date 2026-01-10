@@ -179,7 +179,7 @@ export class ViewCameras extends Node {
     this.frameObjectAll(this.applet.scene)
   }
 
-  onFrameObject(event: CustomEvent<{object: Object3D, overscan: number}>) {
+  onFrameObject(event: CustomEvent<{object: Object3D; overscan: number}>) {
     this.frameObjectAll(event.detail.object, event.detail.overscan)
   }
 

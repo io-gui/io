@@ -37,12 +37,12 @@ todos:
     status: pending
   - id: test-tabs-element
     content: Create IoTabs.test.ts - overflow detection, rendering
-    status: pending
+    status: completed
     dependencies:
       - fix-overflow-detection
   - id: test-tab-drag
     content: Create IoTab.test.ts - drag initiation, singleton state, drop detection
-    status: pending
+    status: completed
     dependencies:
       - fix-global-queries
   - id: test-integration
@@ -170,11 +170,7 @@ Current protection only covers the simple case. Nested scenarios need verificati
 
 ### 3. ~~Drop Marker Positioning with Scroll~~ (Non-issue)
 
-**File:** [`packages/layout/src/elements/IoTabDropMarker.ts`](packages/layout/src/elements/IoTabDropMarker.ts)
-
-Uses `position: fixed` with `getBoundingClientRect()`. Both use viewport-relative coordinates, so they match regardless of scroll position. Tested and confirmed working with scrolled panel contents.
-
-**Edge case note:** Would break only if an ancestor has `transform`/`perspective`/`filter` CSS (creates new containing block for `fixed`), but this is a known CSS quirk, not a layout system bug.
+**File:** [`packages/layout/src/elements/IoTabDropMarker.ts`](packages/layout/src/elements/IoTabDropMarker.ts)Uses `position: fixed` with `getBoundingClientRect()`. Both use viewport-relative coordinates, so they match regardless of scroll position. Tested and confirmed working with scrolled panel contents.**Edge case note:** Would break only if an ancestor has `transform`/`perspective`/`filter` CSS (creates new containing block for `fixed`), but this is a known CSS quirk, not a layout system bug.
 
 ### 4. Duplicate Tab IDs Across Panels
 
@@ -266,4 +262,3 @@ The following information should be added to the README:
 **Stress Tests**:
 
 - Rapid tab switching
-- Concurrent drag operations

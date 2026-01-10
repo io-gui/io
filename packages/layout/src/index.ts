@@ -32,7 +32,7 @@ export * from './elements/IoTabDragIcon.js'
 export * from './elements/IoTabDropMarker.js'
 export * from './elements/IoTabs.js'
 export * from './elements/IoTabsHamburger.js'
-export * from './elements/ioTabsHamburgerMenuSingleton.js'
+export * from './elements/IoTabsHamburgerMenuSingleton.js'
 
 export * from './nodes/Panel.js'
 export * from './nodes/Split.js'

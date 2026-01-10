@@ -2,7 +2,6 @@ import { ReactiveProperty, Register } from '@io-gui/core'
 import {
 	AnimationMixer,
 	BoxGeometry,
-	Camera,
 	DirectionalLight,
 	Group,
 	HemisphereLight,
@@ -89,10 +88,10 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
     models.add(sourceModel)
     models.add(targetModel.scene)
     this.scene.add(models)
-    
-		sourceModel.position.x -= .9;
-		targetModel.scene.position.x += .9;
-    
+
+		sourceModel.position.x -= .9
+		targetModel.scene.position.x += .9
+
 		sourceModel.scale.setScalar(.01)
 
 		const source = this.getSource(sourceModel)

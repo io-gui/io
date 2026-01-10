@@ -40,7 +40,7 @@ class IoTabsHamburgerMenu extends IoElement {
       :host > io-tab[selected] {
         background-color: var(--io_bgColor) !important;
       }
-      :host > io-tab > .marker {
+      :host > io-tab > .io-tab-drop-marker {
         border-radius: 0;
       }
     `

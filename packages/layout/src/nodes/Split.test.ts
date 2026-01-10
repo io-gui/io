@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { Split, SplitProps } from './Split.js'
-import { Panel } from './Panel.js'
 import { NodeArray } from '@io-gui/core'
+import { Split, SplitProps, Panel } from '@io-gui/layout'
 
 describe('Split', () => {
 

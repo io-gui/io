@@ -30,20 +30,19 @@ class IoTabDragIcon extends IoField {
         white-space: nowrap;
         padding: 0 var(--io_spacing);
       }
-      :host > .label {}
     `
   }
 
   @ReactiveProperty({type: Boolean, reflect: true})
   declare dragging: boolean
 
-  @ReactiveProperty(null)
+  @ReactiveProperty()
   declare tab: Tab | null
 
-  @ReactiveProperty(null)
+  @ReactiveProperty()
   declare dropSource: IoPanel | null
 
-  @ReactiveProperty(null)
+  @ReactiveProperty()
   declare dropTarget: IoPanel | null
 
   @ReactiveProperty({type: String, value: 'none', reflect: true})
@@ -52,7 +51,7 @@ class IoTabDragIcon extends IoField {
   @ReactiveProperty({type: Number, value: -1})
   declare dropIndex: number
 
-  @Property(-1)
+  @Property({type: Number, value: -1})
   declare tabIndex: number
 
   constructor(args: IoFieldProps = {}) { super(args) }

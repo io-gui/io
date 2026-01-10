@@ -88,7 +88,7 @@ export class CameraExample extends ThreeApplet {
     this.perspectiveCamera.far = this.mesh.position.length()
     this.perspectiveCamera.updateProjectionMatrix()
 
-    const aspect = this.perspectiveCamera.aspect;
+    const aspect = this.perspectiveCamera.aspect
 
     this.orthographicCamera.left = - frustumSize * aspect / 2 * (Math.sin( 0.5 * r ) / 2 + 0.5)
     this.orthographicCamera.right = frustumSize * aspect / 2 * (Math.sin( 0.5 * r ) / 2 + 0.5)

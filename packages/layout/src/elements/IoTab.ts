@@ -67,7 +67,7 @@ export class IoTab extends IoField {
       :host > .io-icon:not([value=' ']) {
         margin: 0 var(--io_spacing2) 0 0;
       }
-      :host > .marker {
+      :host > .io-tab-drop-marker {
         position: absolute;
         top: 0;
         left: 0;
@@ -183,7 +183,7 @@ export class IoTab extends IoField {
       console.error('IoTab: No io-layout found as a parent of the tab!', this)
       return
     }
-    
+
     const tabsContainers = root.querySelectorAll('io-tabs')
     for (let i = 0; i < tabsContainers.length; i++) {
       const tabsContainer = tabsContainers[i] as IoTabs
@@ -330,10 +330,11 @@ export class IoTab extends IoField {
   }
   changed() {
     this.setAttribute('selected', this.tab.selected)
+    this.setAttribute('title', this.tab.label)
     this.render([
-      this.tab.selected ? span({class: 'marker'}) : null,
-      ioIcon({class: 'io-icon', value: this.tab.icon || ' '}),
-      span({class: 'label'}, this.tab.label),
+      this.tab.selected ? span({class: 'io-tab-drop-marker'}) : null,
+      this.tab.icon ? ioIcon({value: this.tab.icon}) : null,
+      span({class: 'io-tab-label'}, this.tab.label),
       ioIcon({value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onDeleteClick, '@pointerdown': this.preventDefault}),
     ])
   }
