@@ -29,15 +29,16 @@ export declare class IoPropertyEditor extends IoElement {
     private _config;
     private _groups;
     private _widget;
+    private _propertyEditors;
     _onValueInput(event: CustomEvent): void;
-    valueMutated(event: CustomEvent): void;
     configChanged(): void;
     groupsChanged(): void;
     widgetChanged(): void;
     valueChanged(): void;
     configureDebounced(): void;
+    valueMutated(): void;
     changed(): void;
-    changedDebounced(): void;
+    changedThrottled(): void;
     dispose(): void;
 }
 export declare const ioPropertyEditor: (arg0?: IoPropertyEditorProps) => VDOMElement;

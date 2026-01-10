@@ -1,8 +1,8 @@
 import { IoElement, VDOMElement, IoElementProps } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
+import { SplitDirection } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
 import { Panel } from '../nodes/Panel.js';
-import { SplitDirection } from '../nodes/Split.js';
 export type IoPanelProps = IoElementProps & {
     panel: Panel;
     elements: VDOMElement[];

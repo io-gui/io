@@ -4,6 +4,7 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     node: Node | IoElement;
     private proxy;
     private _isInternalOperation;
+    private _observers;
     static get [Symbol.species](): ArrayConstructor;
     constructor(node: Node | IoElement, ...args: any[]);
     withInternalOperation<T>(operation: () => T): T;
@@ -16,6 +17,8 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     sort(compareFn?: (a: N, b: N) => number): this;
     fill(value: N, start?: number, end?: number): this;
     copyWithin(target: number, start?: number, end?: number): this;
+    addObserver(node: Node | IoElement): void;
+    removeObserver(node: Node | IoElement): void;
     itemMutated(event: CustomEvent): void;
     dispatchMutation(): void;
 }

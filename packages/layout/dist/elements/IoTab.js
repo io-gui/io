@@ -61,7 +61,7 @@ let IoTab = class IoTab extends IoField {
       :host > .io-icon:not([value=' ']) {
         margin: 0 var(--io_spacing2) 0 0;
       }
-      :host > .marker {
+      :host > .io-tab-drop-marker {
         position: absolute;
         top: 0;
         left: 0;
@@ -164,7 +164,12 @@ let IoTab = class IoTab extends IoField {
         const x = event.clientX;
         const y = event.clientY;
         const m = ThemeSingleton.spacing;
-        const tabsContainers = document.querySelectorAll('io-tabs');
+        const root = this.closest('io-layout');
+        if (!root) {
+            console.error('IoTab: No io-layout found as a parent of the tab!', this);
+            return;
+        }
+        const tabsContainers = root.querySelectorAll('io-tabs');
         for (let i = 0; i < tabsContainers.length; i++) {
             const tabsContainer = tabsContainers[i];
             const targetPanel = tabsContainer.parentElement;
@@ -197,7 +202,7 @@ let IoTab = class IoTab extends IoField {
                 }
             }
         }
-        const panels = document.querySelectorAll('io-panel');
+        const panels = root.querySelectorAll('io-panel');
         for (let i = 0; i < panels.length; i++) {
             const targetPanel = panels[i];
             const pr = targetPanel.getBoundingClientRect();
@@ -314,9 +319,9 @@ let IoTab = class IoTab extends IoField {
     changed() {
         this.setAttribute('selected', this.tab.selected);
         this.render([
-            this.tab.selected ? span({ class: 'marker' }) : null,
-            ioIcon({ class: 'io-icon', value: this.tab.icon || ' ' }),
-            span({ class: 'label' }, this.tab.label),
+            this.tab.selected ? span({ class: 'io-tab-drop-marker' }) : null,
+            ioIcon({ value: this.tab.icon || ' ' }),
+            span(this.tab.label),
             ioIcon({ value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onDeleteClick, '@pointerdown': this.preventDefault }),
         ]);
     }

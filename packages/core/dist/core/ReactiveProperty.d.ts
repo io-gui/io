@@ -73,7 +73,7 @@ export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
  * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
- * - 'nodearray': NodeArray - dispatches on owner node, observe via self-listener
+ * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
  * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
  */
 export declare class Observer {

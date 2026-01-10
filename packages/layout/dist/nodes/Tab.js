@@ -7,23 +7,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Node, ReactiveProperty, Register } from '@io-gui/core';
 let Tab = class Tab extends Node {
     constructor(args) {
-        args.label = args.label ?? args.id;
-        super(args);
+        debug: {
+            if (!args.id) {
+                console.error('Tab: construction error - empty id');
+            }
+        }
+        super({
+            ...args,
+            label: args.label ? args.label : args.id,
+        });
     }
     toJSON() {
-        return {
-            id: this.id,
-            label: this.label,
-            icon: this.icon,
-            selected: this.selected,
-        };
+        const json = { id: this.id };
+        if (this.label !== this.id)
+            json.label = this.label;
+        if (this.icon)
+            json.icon = this.icon;
+        if (this.selected)
+            json.selected = this.selected;
+        return json;
     }
     fromJSON(json) {
         this.setProperties({
             id: json.id,
-            label: json.label ?? json.id,
-            icon: json.icon ?? '',
-            selected: json.selected ?? false,
+            label: json.label ? json.label : json.id,
+            icon: json.icon ? json.icon : '',
+            selected: json.selected ? json.selected : false,
         });
         return this;
     }

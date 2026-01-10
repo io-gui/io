@@ -120,7 +120,7 @@ function isIoValue(value) {
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
  * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
- * - 'nodearray': NodeArray - dispatches on owner node, observe via self-listener
+ * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
  * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
  */
 export class Observer {
@@ -144,6 +144,9 @@ export class Observer {
         else if (value instanceof NodeArray) {
             this.type = 'nodearray';
             this.observing = true;
+            // Register this node as an observer of the NodeArray
+            value.addObserver(this.node);
+            // Also need self-listener to handle the dispatched events
             if (!this._hasSelfMutationListener) {
                 this._hasSelfMutationListener = true;
                 this.node.addEventListener('io-object-mutation', this.node.onPropertyMutated);
@@ -164,6 +167,9 @@ export class Observer {
         // if (this.type === 'io' && !value._disposed) {
         if (isIoValue(value) && !value._disposed) {
             value.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
+        }
+        else if (value instanceof NodeArray) {
+            value.removeObserver(this.node);
         }
         this.observing = false;
         // Note: Window and self listeners are removed at dispose time, not here

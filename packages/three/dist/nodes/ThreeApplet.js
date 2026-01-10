@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register, Node, ReactiveProperty } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 let ThreeApplet = class ThreeApplet extends Node {
@@ -74,16 +74,15 @@ registerEditorConfig(ThreeApplet, [
                     { value: AgXToneMapping, id: 'AgXToneMapping' },
                     { value: NeutralToneMapping, id: 'NeutralToneMapping' },
                 ] }) })],
+    ['scene', ioPropertyEditor({ properties: ['children'], label: '_hidden_' })],
 ]);
 registerEditorGroups(ThreeApplet, {
     Main: [
         'scene',
     ],
-    Rendering: [
-        'toneMappingExposure',
-        'toneMapping',
-    ],
     Hidden: [
+        'toneMapping',
+        'toneMappingExposure',
         'uiConfig',
         'uiGroups',
         '_renderer',

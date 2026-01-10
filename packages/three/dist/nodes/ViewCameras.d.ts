@@ -23,10 +23,11 @@ export declare class ViewCameras extends Node {
     cameraChanged(): void;
     appletChanged(): void;
     onFrameObject(event: CustomEvent<{
-        scene: Object3D;
+        object: Object3D;
+        overscan: number;
     }>): void;
-    frameObjectAll(object: Object3D): void;
-    frameObject(object: Object3D, camera: Camera): void;
+    frameObjectAll(object: Object3D, overscan?: number): void;
+    frameObject(object: Object3D, camera: Camera, overscan?: number): void;
     setOverscan(width: number, height: number, overscan: number): void;
     resetOverscan(): void;
     dispose(): void;

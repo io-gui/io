@@ -133,17 +133,17 @@ export function getEditorGroups(object, propertyGroups) {
                 }
                 for (const g in groups) {
                     aggregatedGroups[g] = aggregatedGroups[g] || [];
-                    aggregatedGroups[g].push(...groups[g]);
-                    // Remove duplicate identifiers that exist in other groups.
-                    for (const ag in aggregatedGroups) {
-                        if (ag !== g) {
-                            for (const identifier of groups[g]) {
-                                if (aggregatedGroups[ag].includes(identifier)) {
-                                    aggregatedGroups[ag].splice(aggregatedGroups[ag].indexOf(identifier), 1);
+                    for (const identifier of groups[g]) {
+                        if (!(identifier instanceof RegExp)) {
+                            for (const ag in aggregatedGroups) {
+                                const idx = aggregatedGroups[ag].indexOf(identifier);
+                                if (idx !== -1) {
+                                    aggregatedGroups[ag].splice(idx, 1);
                                 }
                             }
                         }
                     }
+                    aggregatedGroups[g].push(...groups[g]);
                 }
                 const advanced = aggregatedGroups['Advanced'] || [];
                 delete aggregatedGroups['Advanced'];

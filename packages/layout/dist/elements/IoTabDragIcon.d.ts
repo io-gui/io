@@ -1,6 +1,6 @@
 import { IoField, IoFieldProps } from '@io-gui/inputs';
 import { Tab } from '../nodes/Tab.js';
-import { SplitDirection } from '../nodes/Split.js';
+import { SplitDirection } from './IoSplit.js';
 import { IoPanel } from './IoPanel.js';
 declare class IoTabDragIcon extends IoField {
     static get Style(): string;

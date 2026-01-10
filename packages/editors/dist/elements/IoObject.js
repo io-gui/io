@@ -34,7 +34,10 @@ let IoObject = class IoObject extends IoElement {
       content: "▾";
     }
     :host > io-property-editor {
-      margin: var(--io_spacing);
+      /* margin: var(--io_spacing); */
+      margin: calc(var(--io_spacing) * 2);
+      margin-top: calc(var(--io_spacing) * 2) !important;
+      margin-left: calc(var(--io_spacing) * 4);
       border: var(--io_border);
       border-color: var(--io_borderColorInset);
     }

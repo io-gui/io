@@ -97,8 +97,6 @@ __decorate([
 IoTabDropMarker = __decorate([
     Register
 ], IoTabDropMarker);
-export const tabDropMarkerSingleton = new IoTabDropMarker();
-setTimeout(() => {
-    document.body.appendChild(tabDropMarkerSingleton);
-}, 100);
+export const ioTabDropMarkerSingleton = new IoTabDropMarker();
+document.body.appendChild(ioTabDropMarkerSingleton);
 //# sourceMappingURL=IoTabDropMarker.js.map

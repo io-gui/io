@@ -73,6 +73,7 @@ export declare function initProperties(node: Node | IoElement): void;
 export declare function setProperties(node: Node | IoElement, props: any): void;
 export declare function setProperty(node: Node | IoElement, name: string, value: any, debounce?: boolean): void;
 export declare function dispatchQueue(node: Node | IoElement, debounce?: boolean): void;
+export declare function dispatchMutation(node: Node | IoElement, object: object | Node, properties: string[]): void;
 export declare function onPropertyMutated(node: Node | IoElement, event: CustomEvent): boolean;
 export declare function bind(node: Node | IoElement, name: string): Binding;
 export declare function unbind(node: Node | IoElement, name: string): void;

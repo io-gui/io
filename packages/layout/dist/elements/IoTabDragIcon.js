@@ -7,7 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveProperty, Property, span } from '@io-gui/core';
 import { IoField } from '@io-gui/inputs';
 import { ioIcon } from '@io-gui/icons';
-import { tabDropMarkerSingleton } from './IoTabDropMarker.js';
+import { ioTabDropMarkerSingleton } from './IoTabDropMarker.js';
+import { Tab } from '../nodes/Tab.js';
+import { IoPanel } from './IoPanel.js';
 let IoTabDragIcon = class IoTabDragIcon extends IoField {
     static get Style() {
         return /* css */ `
@@ -31,12 +33,11 @@ let IoTabDragIcon = class IoTabDragIcon extends IoField {
         white-space: nowrap;
         padding: 0 var(--io_spacing);
       }
-      :host > .label {}
     `;
     }
     constructor(args = {}) { super(args); }
     changed() {
-        tabDropMarkerSingleton.setProperties({
+        ioTabDropMarkerSingleton.setProperties({
             dropTarget: this.dropTarget,
             splitDirection: this.splitDirection,
             dropIndex: this.dropIndex,
@@ -51,13 +52,13 @@ __decorate([
     ReactiveProperty({ type: Boolean, reflect: true })
 ], IoTabDragIcon.prototype, "dragging", void 0);
 __decorate([
-    ReactiveProperty(null)
+    ReactiveProperty({ type: Tab })
 ], IoTabDragIcon.prototype, "tab", void 0);
 __decorate([
-    ReactiveProperty(null)
+    ReactiveProperty({ type: IoPanel })
 ], IoTabDragIcon.prototype, "dropSource", void 0);
 __decorate([
-    ReactiveProperty(null)
+    ReactiveProperty({ type: IoPanel })
 ], IoTabDragIcon.prototype, "dropTarget", void 0);
 __decorate([
     ReactiveProperty({ type: String, value: 'none', reflect: true })
@@ -66,7 +67,7 @@ __decorate([
     ReactiveProperty({ type: Number, value: -1 })
 ], IoTabDragIcon.prototype, "dropIndex", void 0);
 __decorate([
-    Property(-1)
+    Property({ type: Number, value: -1 })
 ], IoTabDragIcon.prototype, "tabIndex", void 0);
 IoTabDragIcon = __decorate([
     Register

@@ -1,11 +1,9 @@
-import { AnimationMixer, PerspectiveCamera } from 'three/webgpu';
+import { AnimationMixer } from 'three/webgpu';
 import { ThreeApplet } from '@io-gui/three';
 export declare class AnimationRetargetingReadyplayerExample extends ThreeApplet {
-    sourceMixer?: AnimationMixer;
-    targetMixer?: AnimationMixer;
-    camera: PerspectiveCamera;
+    sourceMixer: AnimationMixer;
+    targetMixer: AnimationMixer;
     constructor();
-    onResized(width: number, height: number): void;
     private loadModels;
     private getSource;
     private retargetModel;

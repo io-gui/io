@@ -2,6 +2,7 @@
 export class NodeArray extends Array {
     node;
     _isInternalOperation = false;
+    _observers = new Set();
     static get [Symbol.species]() { return Array; }
     constructor(node, ...args) {
         super(...args);
@@ -11,6 +12,8 @@ export class NodeArray extends Array {
         // console.log('NodeArray constructor', args);
         this.itemMutated = this.itemMutated.bind(this);
         this.dispatchMutation = this.dispatchMutation.bind(this);
+        // Owner is the primary observer
+        this._observers.add(node);
         debug: if (!node._isNode && !node._isIoElement) {
             console.error('NodeArray constructor called with non-node!');
         }
@@ -242,11 +245,21 @@ export class NodeArray extends Array {
             return this;
         });
     }
+    addObserver(node) {
+        this._observers.add(node);
+    }
+    removeObserver(node) {
+        this._observers.delete(node);
+    }
     itemMutated(event) {
-        this.node.dispatch('io-object-mutation', { object: this.proxy, property: event.detail.index });
+        for (const observer of this._observers) {
+            observer.dispatch('io-object-mutation', { object: this.proxy, property: event.detail.index });
+        }
     }
     dispatchMutation() {
-        this.node.dispatch('io-object-mutation', { object: this.proxy });
+        for (const observer of this._observers) {
+            observer.dispatch('io-object-mutation', { object: this.proxy });
+        }
     }
 }
 //# sourceMappingURL=NodeArray.js.map

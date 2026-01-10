@@ -24,6 +24,7 @@ import { AnimationRetargetingExample } from '../examples/animation_retargeting.j
 import { AnimationRetargetingReadyplayerExample } from '../examples/animation_retargeting_readyplayer.js';
 import { AnimationBackdropExample } from '../examples/animation_backdrop.js';
 import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js';
+import { AnimationSkinningAdditiveBlendingExample } from '../examples/animation_skinning_additive_blending.js';
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js';
 import { ioThreeProperties } from '../elements/IoThreeProperties.js';
 import * as THREE from 'three/webgpu';
@@ -98,6 +99,7 @@ const exampleOptions = new MenuOption({
                 { id: 'AnimationRetargetingReadyplayer', value: AnimationRetargetingReadyplayerExample },
                 { id: 'AnimationBackdrop', value: AnimationBackdropExample },
                 { id: 'AnimationSkinningBlending', value: AnimationSkinningBlendingExample },
+                { id: 'AnimationSkinningAdditiveBlending', value: AnimationSkinningAdditiveBlendingExample },
             ] },
         { id: 'WebGPUBackdropArea', value: WebGPUBackdropAreaExample },
         { id: 'ComputeTexture', value: ComputeTextureExample },

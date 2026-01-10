@@ -71,8 +71,6 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
             Hidden: [
                 'scene',
                 'camera',
-                'toneMappingExposure',
-                'toneMapping',
             ],
         };
         void this.loadModel();

@@ -15,8 +15,8 @@ export declare class IoDivider extends IoElement {
     constructor(args: IoDividerProps);
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
-    onPointerleave(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
+    onPointercancel(event: PointerEvent): void;
     onTouchstart(event: TouchEvent): void;
     onTouchmove(event: TouchEvent): void;
     onTouchend(): void;

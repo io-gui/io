@@ -1,5 +1,5 @@
 import { IoElement, IoElementProps } from '@io-gui/core';
-import { SplitDirection } from '../nodes/Split.js';
+import { SplitDirection } from './IoSplit.js';
 import { IoPanel } from './IoPanel.js';
 declare class IoTabDropMarker extends IoElement {
     static get Style(): string;
@@ -9,6 +9,6 @@ declare class IoTabDropMarker extends IoElement {
     constructor(args?: IoElementProps);
     changed(): void;
 }
-export declare const tabDropMarkerSingleton: IoTabDropMarker;
+export declare const ioTabDropMarkerSingleton: IoTabDropMarker;
 export {};
 //# sourceMappingURL=IoTabDropMarker.d.ts.map

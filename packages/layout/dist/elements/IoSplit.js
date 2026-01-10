@@ -165,6 +165,7 @@ let IoSplit = class IoSplit extends IoElement {
         else if (this.split.children.length === 1) {
             this.dispatch('io-split-consolidate', { split: this.split }, true);
         }
+        this.ensureFlexGrow();
     }
     onSplitRemove(event) {
         if (event.detail.split === this.split)
@@ -175,8 +176,12 @@ let IoSplit = class IoSplit extends IoElement {
         if (this.split.children.length === 1) {
             this.dispatch('io-split-consolidate', { split: this.split }, true);
         }
-        else if (this.split.children.length === 2) {
-            this.split.children[1].flex = '1 1 100%';
+        this.ensureFlexGrow();
+    }
+    ensureFlexGrow() {
+        const hasFlexGrow = this.split.children.some(child => child.flex.startsWith('1'));
+        if (!hasFlexGrow && this.split.children.length > 0) {
+            this.split.children[0].flex = '1 1 auto';
         }
     }
     onSplitConsolidate(event) {
