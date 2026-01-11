@@ -1,7 +1,19 @@
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioNumber } from '@io-gui/inputs'
 import { PerspectiveCamera } from 'three/webgpu'
+
+registerEditorWidget(PerspectiveCamera, ioPropertyEditor({
+  properties: [
+    'fov',
+    'aspect',
+    'near',
+    'far',
+    'zoom',
+    'updateProjectionMatrix'
+  ],
+  labelWidth: '52px',
+}))
 
 registerEditorConfig(PerspectiveCamera, [
   ['fov', ioNumberSlider({min: 1, max: 180, step: 0.01})],
@@ -15,18 +27,18 @@ registerEditorConfig(PerspectiveCamera, [
 ])
 
 registerEditorGroups(PerspectiveCamera, {
-  Main: [
-    'fov',
-    'aspect',
-    'near',
-    'far',
-    'zoom',
-  ],
   Film: [
     'focus',
     'filmGauge',
     'filmOffset',
   ],
   Advanced: ['view'],
+  Hidden: [
+    'fov',
+    'aspect',
+    'near',
+    'far',
+    'zoom',
+  ]
 })
 
