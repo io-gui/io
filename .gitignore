@@ -9,3 +9,4 @@ npm-debug.log
 .vs/
 .vscode/
 .wireit
+.playwright-browsers/

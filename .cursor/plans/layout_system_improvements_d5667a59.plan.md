@@ -13,7 +13,7 @@ todos:
     status: completed
   - id: test-integration
     content: Create IoLayout.integration.test.ts - full drag-drop flows
-    status: pending
+    status: completed
   - id: update-readme
     content: Add missing information to README - multi-layout, IDs, minimums
     status: pending
@@ -202,7 +202,3 @@ The following information should be added to the README:
 - Overflow detection triggering
 - Overflow hysteresis behavior
 - Tab rendering from NodeArray
-
-### Phase 3: Drag and Drop Tests
-
-**IoTab Drag Tests** (`IoTab.test.ts`):
