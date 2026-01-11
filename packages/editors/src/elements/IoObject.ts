@@ -117,14 +117,17 @@ export class IoObject extends IoElement {
   changed() {
     const label = this.label || this.value.constructor.name
 
+    const propCount = Object.keys(this.value).length;
+
     const vChildren: VDOMElement[] = []
     vChildren.push(ioBoolean({
       appearance: 'neutral',
       true: label,
       false: label,
-      value: this.bind('expanded')}
-    ))
-    if (this.expanded) {
+      value: this.bind('expanded'),
+      disabled: propCount === 0 ? true : false
+    }))
+    if (this.expanded && propCount > 0) {
       vChildren.push(ioPropertyEditor({
         value: this.value,
         properties: this.properties,
