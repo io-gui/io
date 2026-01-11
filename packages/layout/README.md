@@ -215,7 +215,7 @@ Global singleton rendered at cursor position during tab drag. Shows tab icon and
 - `splitDirection` - 'none', 'center', 'left', 'right', 'top', 'bottom'
 - `dropIndex` - Target index within tabs (-1 for split operations)
 
-### IoTabDropMarker
+### IoTabDropRect
 
 Global singleton showing drop location preview.
 

@@ -4,7 +4,7 @@ import { IoPanel } from './IoPanel.js'
 import { IoTab } from './IoTab.js'
 
 @Register
-class IoTabDropMarker extends IoElement {
+class IoTabDropRect extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -89,5 +89,6 @@ class IoTabDropMarker extends IoElement {
   }
 }
 
-export const ioTabDropMarkerSingleton = new IoTabDropMarker()
-document.body.appendChild(ioTabDropMarkerSingleton as HTMLElement)
+export const ioTabDropRectSingleton = new IoTabDropRect()
+document.body.appendChild(ioTabDropRectSingleton as HTMLElement)
+

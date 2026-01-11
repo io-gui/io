@@ -10,7 +10,7 @@ import {
   Panel,
   Tab,
   tabDragIconSingleton,
-  ioTabDropMarkerSingleton,
+  ioTabDropRectSingleton,
 } from '@io-gui/layout'
 
 /**
@@ -469,9 +469,9 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
       // Cancel
       tabDragIconSingleton.cancelDrag()
 
-      expect(ioTabDropMarkerSingleton.dropTarget).toBeNull()
-      expect(ioTabDropMarkerSingleton.dropIndex).toBe(-1)
-      expect(ioTabDropMarkerSingleton.splitDirection).toBe('none')
+      expect(ioTabDropRectSingleton.dropTarget).toBeNull()
+      expect(ioTabDropRectSingleton.dropIndex).toBe(-1)
+      expect(ioTabDropRectSingleton.splitDirection).toBe('none')
     })
   })
 
@@ -500,8 +500,8 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         dropIndex: -1,
       })
 
-      expect(ioTabDropMarkerSingleton.dropTarget).toBe(ioPanel)
-      expect(ioTabDropMarkerSingleton.splitDirection).toBe('left')
+      expect(ioTabDropRectSingleton.dropTarget).toBe(ioPanel)
+      expect(ioTabDropRectSingleton.splitDirection).toBe('left')
     })
 
     it('should show drag icon with dragging attribute', () => {
@@ -822,7 +822,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
       const ioPanel = layout.querySelector('io-panel') as IoPanel
 
       // Initial state
-      expect(ioTabDropMarkerSingleton.dropIndex).toBe(-1)
+      expect(ioTabDropRectSingleton.dropIndex).toBe(-1)
 
       // Update drag icon state
       tabDragIconSingleton.setProperties({
@@ -832,8 +832,8 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
       })
 
       // Drop marker should be in sync
-      expect(ioTabDropMarkerSingleton.dropTarget).toBe(ioPanel)
-      expect(ioTabDropMarkerSingleton.dropIndex).toBe(2)
+      expect(ioTabDropRectSingleton.dropTarget).toBe(ioPanel)
+      expect(ioTabDropRectSingleton.dropIndex).toBe(2)
     })
 
     it('should reset drop marker when drag ends', () => {
@@ -848,9 +848,9 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
 
       tabDragIconSingleton.cancelDrag()
 
-      expect(ioTabDropMarkerSingleton.dropTarget).toBeNull()
-      expect(ioTabDropMarkerSingleton.splitDirection).toBe('none')
-      expect(ioTabDropMarkerSingleton.dropIndex).toBe(-1)
+      expect(ioTabDropRectSingleton.dropTarget).toBeNull()
+      expect(ioTabDropRectSingleton.splitDirection).toBe('none')
+      expect(ioTabDropRectSingleton.dropIndex).toBe(-1)
     })
   })
 

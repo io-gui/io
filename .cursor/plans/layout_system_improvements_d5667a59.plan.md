@@ -200,5 +200,3 @@ The following information should be added to the README:
 **IoTabs Tests** (`IoTabs.test.ts`):
 
 - Overflow detection triggering
-- Overflow hysteresis behavior
-- Tab rendering from NodeArray

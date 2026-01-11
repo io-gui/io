@@ -120,6 +120,7 @@ export class IoDivider extends IoElement {
     this.removeEventListener('pointermove', this.onPointermove)
     this.removeEventListener('pointerup', this.onPointerup)
     this.removeEventListener('pointercancel', this.onPointercancel)
+    this.releasePointerCapture(event.pointerId)
     this.pressed = false
   }
   onTouchstart(event: TouchEvent) {
