@@ -23,7 +23,7 @@ export class IoField extends IoElement {
         border: var(--io_border);
         border-color: transparent;
         border-radius: var(--io_borderRadius);
-        padding: var(--io_spacing) calc(var(--io_spacing3) + var(--io_borderWidth));
+        padding: var(--io_spacing) var(--io_spacing2);
         color: var(--io_color);
         overflow: hidden;
         text-overflow: ellipsis;
