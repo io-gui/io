@@ -73,14 +73,6 @@ export class IoPanel extends IoElement {
         this.moveTab(tab, index + 1)
         break
       }
-      case 'ArrowUp': {
-        // TODO: move tab to panel above or split the panel
-        break
-      }
-      case 'ArrowDown': {
-        // TODO: move tab to panel below or split the panel
-        break
-      }
     }
   }
   onNewTabClicked(event: CustomEvent) {

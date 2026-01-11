@@ -210,9 +210,3 @@ The following information should be added to the README:
 - Drop target detection in panel content
 - Split direction calculation
 - Drag cancellation cleanup
-
-**Integration Tests** (`IoLayout.integration.test.ts`):
-
-- Complete drag-and-drop flow
-- Tab movement between panels
-- New split creation via drag
