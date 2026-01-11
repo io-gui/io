@@ -87,7 +87,7 @@ export class IoSplit extends IoElement {
     orientation: SplitOrientation,
     rect: DOMRect,
     dividerSize: number,
-    pointer: {clientX: number, clientY: number}
+    pointer: {clientX: number; clientY: number}
   ): SplitMeasurements {
     const splits: HTMLElement[] = []
     const splitSizes: number[] = []

@@ -40,7 +40,8 @@ export class IoTab extends IoField {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-        padding-right: var(--io_lineHeight);
+        padding-right: calc(var(--io_lineHeight) / 2);
+        padding-left: calc(var(--io_lineHeight) / 2);
       }
       :host[pressed] {
         border-color: unset !important;

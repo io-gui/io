@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { NodeArray, nextQueue } from '@io-gui/core'
+import { NodeArray } from '@io-gui/core'
 import { IoTabs, Tab } from '@io-gui/layout'
 import { MenuOption } from '@io-gui/menus'
 

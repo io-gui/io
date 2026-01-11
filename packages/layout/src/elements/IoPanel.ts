@@ -147,11 +147,29 @@ export class IoPanel extends IoElement {
   panelMutated() {
     this.debounce(this.changed)
   }
+  getAddMenuOption(): MenuOption | undefined {
+    if (this.addMenuOption && this.addMenuOption.options?.length > 0) {
+      return this.addMenuOption
+    }
+    if (!this.elements || this.elements.length === 0) return undefined
+
+    const existingTabIds = new Set(this.panel.tabs.map(tab => tab.id))
+    const options = this.elements
+      .filter(el => el.props?.id && !existingTabIds.has(el.props.id))
+      .map(el => new MenuOption({
+        id: el.props!.id,
+        label: el.props!.label ?? el.props!.id,
+        icon: el.props!.icon ?? '',
+      }))
+
+    if (options.length === 0) return undefined
+    return new MenuOption({options})
+  }
   changed() {
     this.render([
       ioTabs({
         tabs: this.panel.tabs,
-        addMenuOption: this.addMenuOption,
+        addMenuOption: this.getAddMenuOption(),
         '@io-menu-option-clicked': this.onNewTabClicked,
       }),
       ioSelector({

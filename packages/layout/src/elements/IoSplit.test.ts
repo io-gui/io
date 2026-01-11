@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { IoLayout, Split, Panel, Tab, IoSplit, IoPanel } from '@io-gui/layout'
+import { IoLayout, Split, Panel, IoSplit, IoPanel } from '@io-gui/layout'
 
 describe('Split Construction Consolidation', () => {
   it('Should consolidate on construction when root has only 1 child that is a Split', () => {
