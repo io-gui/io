@@ -4,10 +4,13 @@ overview: Comprehensive investigation and improvement of the layout system's dra
 todos:
   - id: test-divider
     content: Create IoDivider.test.ts - pointer capture, events, touch handling
-    status: pending
+    status: completed
   - id: test-panel-element
     content: Create IoPanel.test.ts - tab operations, keyboard, last-tab protection
-    status: pending
+    status: completed
+  - id: test-layout-element
+    content: Create IoLayout.test.ts - rendering, split management, elements
+    status: completed
   - id: test-integration
     content: Create IoLayout.integration.test.ts - full drag-drop flows
     status: pending
@@ -16,7 +19,7 @@ todos:
     status: pending
   - id: auto-generate-add-menu
     content: Auto-generate addMenuOption from element IDs when not provided
-    status: pending
+    status: completed
   - id: frozen-layout-state
     content: Add frozen state to disable tab editing (add menu and tab removal)
     status: pending
@@ -203,10 +206,3 @@ The following information should be added to the README:
 ### Phase 3: Drag and Drop Tests
 
 **IoTab Drag Tests** (`IoTab.test.ts`):
-
-- Drag initiation threshold (10px)
-- Singleton state management
-- Drop target detection in tab bar
-- Drop target detection in panel content
-- Split direction calculation
-- Drag cancellation cleanup

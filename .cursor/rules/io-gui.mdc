@@ -163,3 +163,5 @@ Each package can be built/linted individually:
 - Uses Vitest for testing
 - Web Test Runner for browser-based tests
 - Test files follow `*.test.ts` pattern
+- Install playwright browsers with `pnpm exec playwright install chromium 2>&1`
+- Run tests with `pnpm test` or `pnpm test:[package]` for individual packages

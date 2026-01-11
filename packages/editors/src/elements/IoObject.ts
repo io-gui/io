@@ -117,7 +117,7 @@ export class IoObject extends IoElement {
   changed() {
     const label = this.label || this.value.constructor.name
 
-    const propCount = Object.keys(this.value).length;
+    const propCount = Object.keys(this.value).length
 
     const vChildren: VDOMElement[] = []
     vChildren.push(ioBoolean({
