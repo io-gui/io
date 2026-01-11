@@ -44,6 +44,11 @@ let IoSplit = class IoSplit extends IoElement {
         const dividerSize = ThemeSingleton.spacing3;
         const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - dividerSize * (this.children.length - 1) / 2;
         const minSize = orientation === 'horizontal' ? ThemeSingleton.fieldHeight * 4 : ThemeSingleton.fieldHeight;
+        const measurements = this.collectSplitMeasurements(orientation, rect, dividerSize, event.detail);
+        const distribution = this.calculateSpaceDistribution(measurements, index);
+        this.applyResizeSizes(measurements, distribution, index, totalSpace, minSize);
+    }
+    collectSplitMeasurements(orientation, rect, dividerSize, pointer) {
         const splits = [];
         const splitSizes = [];
         const splitResize = [];
@@ -51,18 +56,21 @@ let IoSplit = class IoSplit extends IoElement {
             const splitElement = this.children[i];
             const splitRect = splitElement.getBoundingClientRect();
             const splitSize = orientation === 'horizontal' ? splitRect.width : splitRect.height;
-            let x = event.detail.clientX - splitRect.left - dividerSize / 2;
-            let y = event.detail.clientY - splitRect.top - dividerSize / 2;
+            let x = pointer.clientX - splitRect.left - dividerSize / 2;
+            let y = pointer.clientY - splitRect.top - dividerSize / 2;
             if (i === this.children.length - 1) {
-                // NOTE: The last panel should be sized from the end.
-                x = rect.width - (event.detail.clientX - rect.left) - dividerSize / 2;
-                y = rect.height - (event.detail.clientY - rect.top) - dividerSize / 2;
+                x = rect.width - (pointer.clientX - rect.left) - dividerSize / 2;
+                y = rect.height - (pointer.clientY - rect.top) - dividerSize / 2;
             }
             const size = orientation === 'horizontal' ? x : y;
             splits.push(splitElement);
             splitSizes.push(splitSize);
             splitResize.push(size);
         }
+        return { splits, splitSizes, splitResize };
+    }
+    calculateSpaceDistribution(measurements, index) {
+        const { splits, splitSizes } = measurements;
         let fixedSpaceBefore = 0;
         let fixedSpaceAfter = 0;
         let flexSpace = 0;
@@ -71,7 +79,6 @@ let IoSplit = class IoSplit extends IoElement {
         for (let i = 0; i < splits.length; i++) {
             let idx = index;
             if (idx === splits.length - 2) {
-                // NOTE: The last divider manipulates the panel after the split.
                 idx = splits.length - 1;
             }
             if (splits[i].style.flex.endsWith('%')) {
@@ -92,31 +99,28 @@ let IoSplit = class IoSplit extends IoElement {
                 }
             }
         }
+        return { fixedSpaceBefore, fixedSpaceAfter, flexSpace, flexCountBefore, flexCountAfter };
+    }
+    applyResizeSizes(measurements, distribution, index, totalSpace, minSize) {
+        const { splits, splitSizes, splitResize } = measurements;
+        const { fixedSpaceBefore, fixedSpaceAfter, flexSpace, flexCountBefore, flexCountAfter } = distribution;
         if (index === 0) {
             const maxSize = totalSpace - minSize * flexCountAfter - fixedSpaceAfter;
             const size = Math.max(minSize, Math.min(maxSize, splitResize[0]));
-            // Set fixed size for the first panel.
             splits[index].style.flex = `0 0 ${size}px`;
-            // Prevent flex splits from compressing below minSize.
             for (let i = 0; i < splits.length; i++) {
-                if (splits[i].style.flex.endsWith('%')) {
-                    if (i !== index) {
-                        splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`;
-                    }
+                if (splits[i].style.flex.endsWith('%') && i !== index) {
+                    splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`;
                 }
             }
         }
         else if (index === splits.length - 2) {
             const maxSize = totalSpace - minSize * flexCountBefore - fixedSpaceBefore;
             const size = Math.max(minSize, Math.min(maxSize, splitResize[index + 1]));
-            // Set fixed size for the last panel.
             splits[index + 1].style.flex = `0 0 ${size}px`;
-            // Prevent flex splits from compressing below minSize.
             for (let i = 0; i < splits.length; i++) {
-                if (splits[i].style.flex.endsWith('%')) {
-                    if (i !== index + 1) {
-                        splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`;
-                    }
+                if (splits[i].style.flex.endsWith('%') && i !== index + 1) {
+                    splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`;
                 }
             }
         }
@@ -124,7 +128,6 @@ let IoSplit = class IoSplit extends IoElement {
             const maxSize = splitSizes[index] + splitSizes[index + 1] - minSize;
             const size = Math.max(minSize, Math.min(maxSize, splitResize[index]));
             const sizeNext = splitSizes[index + 1] - (size - splitSizes[index]);
-            // Apply flex sizes
             for (let i = 0; i < splits.length; i++) {
                 if (splits[i].style.flex.endsWith('%')) {
                     if (i === index) {
@@ -150,8 +153,6 @@ let IoSplit = class IoSplit extends IoElement {
         }
     }
     onPanelRemove(event) {
-        if (event.detail.panel === this.split)
-            return;
         event.stopPropagation();
         for (let i = this.split.children.length; i--;) {
             const child = this.split.children[i];
@@ -172,6 +173,8 @@ let IoSplit = class IoSplit extends IoElement {
             return;
         event.stopPropagation();
         const index = this.split.children.indexOf(event.detail.split);
+        if (index === -1)
+            return;
         this.split.children.splice(index, 1);
         if (this.split.children.length === 1) {
             this.dispatch('io-split-consolidate', { split: this.split }, true);
@@ -202,6 +205,8 @@ let IoSplit = class IoSplit extends IoElement {
     }
     consolidateChild(childSplit) {
         const index = this.split.children.indexOf(childSplit);
+        if (index === -1 || childSplit.children.length === 0)
+            return;
         const soleChild = childSplit.children[0];
         if (soleChild instanceof Panel) {
             soleChild.flex = '1 1 100%';
@@ -237,10 +242,7 @@ let IoSplit = class IoSplit extends IoElement {
         }
     }
     splitMutated() {
-        this.debounce(this.splitMutatedDebounced);
-    }
-    splitMutatedDebounced() {
-        this.changed();
+        this.debounce(this.changed);
     }
     changed() {
         this.setAttribute('orientation', this.split.orientation);

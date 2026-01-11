@@ -55,7 +55,6 @@ let IoVector = class IoVector extends IoElement {
         if (!this.value._isNode) {
             this.dispatchMutation(this.value);
         }
-        this.dispatch('value-input', { property: 'value', value: this.value }, false);
     }
     valueChanged() {
         this.keys.length = 0;

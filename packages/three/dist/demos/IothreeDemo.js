@@ -343,8 +343,10 @@ export class IoThreeDemo extends IoElement {
                                 { id: 'Left', mode: 'none' },
                                 { id: 'Perspective', mode: 'none' },
                                 { id: 'SceneCamera', mode: 'none' },
-                                { id: 'ExampleSelector', mode: 'none' },
+                            ] },
+                        { id: 'Debug', mode: 'none', options: [
                                 { id: 'AllClasses', mode: 'none' },
+                                { id: 'ExampleSelector', mode: 'none' },
                             ] },
                     ],
                 }),

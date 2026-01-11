@@ -5,6 +5,18 @@ import { Split, SplitOrientation } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { Tab } from '../nodes/Tab.js';
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
+interface SplitMeasurements {
+    splits: HTMLElement[];
+    splitSizes: number[];
+    splitResize: number[];
+}
+interface SpaceDistribution {
+    fixedSpaceBefore: number;
+    fixedSpaceAfter: number;
+    flexSpace: number;
+    flexCountBefore: number;
+    flexCountAfter: number;
+}
 export type IoSplitProps = IoElementProps & {
     split: Split;
     elements: VDOMElement[];
@@ -24,6 +36,12 @@ export declare class IoSplit extends IoElement {
     };
     constructor(args: IoSplitProps);
     onDividerMove(event: CustomEvent): void;
+    collectSplitMeasurements(orientation: SplitOrientation, rect: DOMRect, dividerSize: number, pointer: {
+        clientX: number;
+        clientY: number;
+    }): SplitMeasurements;
+    calculateSpaceDistribution(measurements: SplitMeasurements, index: number): SpaceDistribution;
+    applyResizeSizes(measurements: SplitMeasurements, distribution: SpaceDistribution, index: number, totalSpace: number, minSize: number): void;
     onDividerMoveEnd(event: CustomEvent): void;
     onPanelRemove(event: CustomEvent): void;
     onSplitRemove(event: CustomEvent): void;
@@ -33,8 +51,8 @@ export declare class IoSplit extends IoElement {
     consolidateChild(childSplit: Split): void;
     moveTabToSplit(sourcePanel: IoPanel, panel: Panel, tab: Tab, direction: SplitDirection): void;
     splitMutated(): void;
-    splitMutatedDebounced(): void;
     changed(): void;
 }
 export declare const ioSplit: (arg0: IoSplitProps) => VDOMElement;
+export {};
 //# sourceMappingURL=IoSplit.d.ts.map

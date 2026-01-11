@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Split, Panel } from '@io-gui/layout';
 import { NodeArray } from '@io-gui/core';
+import { Split, Panel } from '@io-gui/layout';
 describe('Split', () => {
     describe('Construction', () => {
         it('should construct with single panel child', () => {

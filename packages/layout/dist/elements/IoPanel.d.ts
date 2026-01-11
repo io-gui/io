@@ -26,6 +26,7 @@ export declare class IoPanel extends IoElement {
     moveTab(tab: Tab, index: number): void;
     focusTabDebounced(index: number): void;
     panelMutated(): void;
+    getAddMenuOption(): MenuOption | undefined;
     changed(): void;
 }
 export declare const ioPanel: (arg0: IoPanelProps) => VDOMElement;

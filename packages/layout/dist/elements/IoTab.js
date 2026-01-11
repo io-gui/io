@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, span, ThemeSingleton } from '@io-gui/core';
+import { Register, ReactiveProperty, span } from '@io-gui/core';
 import { IoField, ioField, ioString } from '@io-gui/inputs';
 import { IoContextEditorSingleton } from '@io-gui/editors';
 import { IconsetDB, ioIcon } from '@io-gui/icons';
@@ -18,9 +18,7 @@ for (const set of Object.keys(IconsetDB)) {
         icons.push({ value: id, id: icon, icon: id });
     }
 }
-const iconOptions = ioOptionSelect({ selectBy: 'value', label: 'Select', option: new MenuOption({ options: icons }) });
-let _dragStartX = 0;
-let _dragStartY = 0;
+const iconOptions = ioOptionSelect({ selectBy: 'value', label: 'Icon', option: new MenuOption({ options: icons }) });
 // TODO: fix and improve keyboard navigation in all cases.
 let IoTab = class IoTab extends IoField {
     static get Style() {
@@ -38,7 +36,8 @@ let IoTab = class IoTab extends IoField {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         border-color: var(--io_borderColorLight);
-        padding-right: var(--io_lineHeight);
+        padding-right: calc(var(--io_lineHeight) / 2);
+        padding-left: calc(var(--io_lineHeight) / 2);
       }
       :host[pressed] {
         border-color: unset !important;
@@ -128,8 +127,7 @@ let IoTab = class IoTab extends IoField {
         event.preventDefault();
         event.stopPropagation();
         this.setPointerCapture(event.pointerId);
-        _dragStartX = event.clientX;
-        _dragStartY = event.clientY;
+        tabDragIconSingleton.setStartPosition(event.clientX, event.clientY);
         super.onPointerdown(event);
         if (event.buttons === 2) {
             this.expandContextEditor();
@@ -143,123 +141,15 @@ let IoTab = class IoTab extends IoField {
         if (event.buttons !== 1)
             return;
         const panel = this.parentElement.parentElement;
-        if (!tabDragIconSingleton.dragging) {
-            const dx = Math.abs(_dragStartX - event.clientX);
-            const dy = Math.abs(_dragStartY - event.clientY);
-            if (dx > 10 || dy > 10) {
-                tabDragIconSingleton.setProperties({
-                    tab: this.tab,
-                    dragging: true,
-                    dropSource: panel,
-                    dropTarget: null,
-                    dropIndex: -1,
-                });
-                tabDragIconSingleton.style.top = event.clientY + 'px';
-                tabDragIconSingleton.style.left = event.clientX + 'px';
-            }
-            return;
-        }
-        tabDragIconSingleton.style.top = event.clientY + 'px';
-        tabDragIconSingleton.style.left = event.clientX + 'px';
-        const x = event.clientX;
-        const y = event.clientY;
-        const m = ThemeSingleton.spacing;
         const root = this.closest('io-layout');
-        if (!root) {
-            console.error('IoTab: No io-layout found as a parent of the tab!', this);
-            return;
-        }
-        const tabsContainers = root.querySelectorAll('io-tabs');
-        for (let i = 0; i < tabsContainers.length; i++) {
-            const tabsContainer = tabsContainers[i];
-            const targetPanel = tabsContainer.parentElement;
-            const tcr = tabsContainer.getBoundingClientRect();
-            if (y >= tcr.top && y <= tcr.bottom && x >= tcr.left && x <= tcr.right) {
-                const tabs = tabsContainer.querySelectorAll('io-tab');
-                if (tabs.length === 0) {
-                    tabDragIconSingleton.setProperties({
-                        dropTarget: targetPanel,
-                        splitDirection: 'none',
-                        dropIndex: 0,
-                    });
-                    return;
-                }
-                for (let j = 0; j < tabs.length; j++) {
-                    const tab = tabs[j];
-                    const tr = tab.getBoundingClientRect();
-                    const isLast = j === tabs.length - 1;
-                    // TODO: consider hovering empty tab space.
-                    if (y >= tr.top - m && y <= tr.bottom + m && x >= tr.left - m && (x <= tr.right + m || isLast && x <= tcr.right)) {
-                        const side = x < tr.left + tr.width / 2 ? 'left' : 'right';
-                        const dropIndex = side === 'left' ? j : j + 1;
-                        tabDragIconSingleton.setProperties({
-                            dropTarget: targetPanel,
-                            splitDirection: 'none',
-                            dropIndex: dropIndex,
-                        });
-                        return;
-                    }
-                }
-            }
-        }
-        const panels = root.querySelectorAll('io-panel');
-        for (let i = 0; i < panels.length; i++) {
-            const targetPanel = panels[i];
-            const pr = targetPanel.getBoundingClientRect();
-            if (y >= pr.top && y <= pr.bottom && x >= pr.left && x <= pr.right) {
-                // get xy relative to panel center
-                const rx = (x - pr.left - pr.width / 2) / pr.width * 2;
-                const ry = (y - pr.top - pr.height / 2) / pr.height * 2;
-                let direction = 'none';
-                if (Math.abs(rx) < 0.5 && Math.abs(ry) < 0.5) {
-                    direction = 'center';
-                }
-                else if (ry > 0 && Math.abs(ry) > Math.abs(rx)) {
-                    direction = 'bottom';
-                }
-                else if (ry < 0 && Math.abs(ry) > Math.abs(rx)) {
-                    direction = 'top';
-                }
-                else if (rx > 0 && Math.abs(rx) > Math.abs(ry)) {
-                    direction = 'right';
-                }
-                else if (rx < 0 && Math.abs(rx) > Math.abs(ry)) {
-                    direction = 'left';
-                }
-                tabDragIconSingleton.setProperties({
-                    dropTarget: targetPanel,
-                    splitDirection: direction,
-                    dropIndex: -1,
-                });
-                return;
-            }
-        }
+        tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root);
     }
     onPointerup(event) {
         event.preventDefault();
         super.onPointerup(event);
         this.releasePointerCapture(event.pointerId);
         if (tabDragIconSingleton.dragging) {
-            const source = tabDragIconSingleton.dropSource;
-            const target = tabDragIconSingleton.dropTarget;
-            const index = tabDragIconSingleton.dropIndex;
-            const direction = tabDragIconSingleton.splitDirection;
-            if (target && index !== -1) {
-                if (source && source !== target) {
-                    source.removeTab(this.tab);
-                }
-                target.addTab(this.tab, index);
-            }
-            else if (source && target && direction !== 'none') {
-                target.moveTabToSplit(source, this.tab, direction);
-            }
-            tabDragIconSingleton.setProperties({
-                dragging: false,
-                dropSource: null,
-                dropTarget: null,
-                splitDirection: 'none',
-                dropIndex: -1,
-            });
+            tabDragIconSingleton.endDrag();
         }
         else {
             this.onClick();
@@ -269,13 +159,7 @@ let IoTab = class IoTab extends IoField {
         event.preventDefault();
         event.stopPropagation();
         super.onPointercancel(event);
-        tabDragIconSingleton.setProperties({
-            dragging: false,
-            dropSource: null,
-            dropTarget: null,
-            splitDirection: 'none',
-            dropIndex: -1,
-        });
+        tabDragIconSingleton.cancelDrag();
     }
     onPointerleave(event) {
         event.preventDefault();
@@ -318,10 +202,11 @@ let IoTab = class IoTab extends IoField {
     }
     changed() {
         this.setAttribute('selected', this.tab.selected);
+        this.setAttribute('title', this.tab.label);
         this.render([
             this.tab.selected ? span({ class: 'io-tab-drop-marker' }) : null,
-            ioIcon({ value: this.tab.icon || ' ' }),
-            span(this.tab.label),
+            this.tab.icon ? ioIcon({ value: this.tab.icon }) : null,
+            span({ class: 'io-tab-label' }, this.tab.label),
             ioIcon({ value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onDeleteClick, '@pointerdown': this.preventDefault }),
         ]);
     }

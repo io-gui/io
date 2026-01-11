@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Panel, Tab } from '@io-gui/layout';
 import { NodeArray } from '@io-gui/core';
+import { Panel, Tab } from '@io-gui/layout';
 describe('Panel', () => {
     describe('Construction', () => {
         it('should construct with empty tabs array', () => {

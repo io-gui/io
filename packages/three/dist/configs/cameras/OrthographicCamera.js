@@ -8,12 +8,12 @@ registerEditorWidget(OrthographicCamera, ioPropertyEditor({
         'right',
         'top',
         'bottom',
-        // 'near',
-        // 'far',
-        // 'zoom',
+        'near',
+        'far',
+        'zoom',
+        'updateProjectionMatrix'
     ],
-    labelWidth: 'auto',
-    orientation: 'horizontal',
+    labelWidth: '52px',
 }));
 registerEditorConfig(OrthographicCamera, [
     ['left', ioNumber({ min: -Infinity, max: Infinity, step: 0.01 })],

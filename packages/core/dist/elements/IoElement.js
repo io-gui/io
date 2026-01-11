@@ -261,7 +261,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 }
                 this.$[vChild.props.id] = child;
             }
-            if (vChild.children !== undefined) { // TODO: test this! Look for more cases of truthy check bugs!
+            if (vChild.children !== undefined) {
                 if (typeof vChild.children === 'string') {
                     // Set textNode value.
                     this._flattenTextNode(child);
@@ -272,6 +272,10 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                     const vDOMElementsOnly = vChild.children.filter(item => item !== null);
                     this.traverse(vDOMElementsOnly, child, noDispose);
                 }
+            }
+            else if (!child._isIoElement) {
+                // Clear children for native elements. IoElements manage their own children by design
+                child.textContent = '';
             }
         }
     }

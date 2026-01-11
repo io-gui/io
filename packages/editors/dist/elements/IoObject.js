@@ -68,14 +68,16 @@ let IoObject = class IoObject extends IoElement {
     }
     changed() {
         const label = this.label || this.value.constructor.name;
+        const propCount = Object.keys(this.value).length;
         const vChildren = [];
         vChildren.push(ioBoolean({
             appearance: 'neutral',
             true: label,
             false: label,
-            value: this.bind('expanded')
+            value: this.bind('expanded'),
+            disabled: propCount === 0 ? true : false
         }));
-        if (this.expanded) {
+        if (this.expanded && propCount > 0) {
             vChildren.push(ioPropertyEditor({
                 value: this.value,
                 properties: this.properties,
