@@ -97,10 +97,10 @@ export class IoTab extends IoField {
         right: var(--io_spacing);
         top: var(--io_spacing);
         pointer-events: inherit;
-        background: linear-gradient(to right, transparent 0%, var(--io_bgColor) 25%);
+        background: linear-gradient(to right, transparent 0%, var(--io_bgColor) 5%);
       }
       :host[selected] > .io-close-icon {
-        background: linear-gradient(to right, transparent 0%, var(--io_bgColorLight) 25%);
+        background: linear-gradient(to right, transparent 0%, var(--io_bgColorLight) 5%);
       }
       :host > .io-close-icon:hover {
         transform: scale(0.5);

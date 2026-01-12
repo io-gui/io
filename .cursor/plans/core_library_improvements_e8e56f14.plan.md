@@ -34,15 +34,7 @@ Replace `any` types with proper generics and interfaces throughout the codebase.
 
 ### 2.1 Current State Analysis
 
-The `Observer` class in `ReactiveProperty.ts` currently has **three different mutation observation patterns**:| Type | Pattern | Event Target | Listener Location |
-
-|------|---------|--------------|-------------------|
-
-| `io` | Direct listener | Value itself (Node/IoElement) | On the value |
-
-| `nodearray` | Multi-observer | NodeArray dispatches to observers | Self-listener on node |
-
-| `object` | Global event bus | `window` | Window listener |**Files involved:**
+The `Observer` class in `ReactiveProperty.ts` currently has **three different mutation observation patterns**:| Type | Pattern | Event Target | Listener Location ||------|---------|--------------|-------------------|| `io` | Direct listener | Value itself (Node/IoElement) | On the value || `nodearray` | Multi-observer | NodeArray dispatches to observers | Self-listener on node || `object` | Global event bus | `window` | Window listener |**Files involved:**
 
 - `packages/core/src/core/ReactiveProperty.ts` - `Observer` class
 - `packages/core/src/core/NodeArray.ts` - `_observers` Set, `addObserver()`, `removeObserver()`
@@ -140,19 +132,7 @@ Based on benchmark results, select the approach that:
 
 ### 2.5 Decision Criteria
 
-| Criterion | Weight | Notes |
-
-|-----------|--------|-------|
-
-| Performance (dispatch time) | High | Must not regress |
-
-| Memory efficiency | Medium | Reasonable overhead acceptable |
-
-| Code simplicity | High | Reduce maintenance burden |
-
-| API consistency | High | Same pattern for all types |
-
-| Backward compatibility | Medium | Breaking changes acceptable if justified |
+| Criterion | Weight | Notes ||-----------|--------|-------|| Performance (dispatch time) | High | Must not regress || Memory efficiency | Medium | Reasonable overhead acceptable || Code simplicity | High | Reduce maintenance burden || API consistency | High | Same pattern for all types || Backward compatibility | Medium | Breaking changes acceptable if justified |
 
 ### 2.6 Current Recommendation
 
@@ -161,4 +141,3 @@ Based on benchmark results, select the approach that:
 - Already proven to work with NodeArray
 - Targeted dispatch is efficient
 - Node base class can be extended naturally
-- Plain objects can use a Proxy wrapper or explicit registration

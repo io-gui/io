@@ -75,7 +75,7 @@ export class IoSplit extends IoElement {
 
     const dividerSize = ThemeSingleton.spacing3
     const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - dividerSize * (this.children.length - 1) / 2
-    const minSize = orientation === 'horizontal' ? ThemeSingleton.fieldHeight * 4 : ThemeSingleton.fieldHeight
+    const minSize = ThemeSingleton.fieldHeight * 4
 
     const measurements = this.collectSplitMeasurements(orientation, rect, dividerSize, event.detail)
     const distribution = this.calculateSpaceDistribution(measurements, index)
@@ -125,7 +125,8 @@ export class IoSplit extends IoElement {
 
     for (let i = 0; i < splits.length; i++) {
       let idx = index
-      if (idx === splits.length - 2) {
+      // Adjust idx for last-divider case unless first and last divider are the same (2 splits)
+      if (idx === splits.length - 2 && idx !== 0) {
         idx = splits.length - 1
       }
       if (splits[i].style.flex.endsWith('%')) {

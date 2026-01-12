@@ -7,6 +7,7 @@ export type IoLayoutProps = IoElementProps & {
   split: Split | Binding
   elements: VDOMElement[]
   addMenuOption?: MenuOption
+  frozen?: boolean
 }
 
 @Register
@@ -24,6 +25,10 @@ export class IoLayout extends IoElement {
         max-width: 100%;
         max-height: 100%;
       }
+      :host[frozen] .io-close-icon,
+      :host[frozen] .io-tabs-add-tab {
+        display: none;
+      }
     `
   }
 
@@ -35,6 +40,9 @@ export class IoLayout extends IoElement {
 
   @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
+
+  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  declare frozen: boolean
 
   changed() {
     this.render([
