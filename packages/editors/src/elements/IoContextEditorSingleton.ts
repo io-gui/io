@@ -70,10 +70,9 @@ class IoContextEditor extends IoPropertyEditor {
       properties: props.properties || [],
       labeled: props.labeled || true,
       labelWidth: props.labelWidth || '80px',
-      orientation: props.orientation || 'vertical',
       config: props.config || [],
       groups: props.groups || {},
-      widget: props.widget,
+      widget: props.widget || undefined,
       expanded: true,
     })
     this.onClose = props.onClose || null

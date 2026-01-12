@@ -60,11 +60,6 @@ describe('IoTab', () => {
       expect(span?.textContent).toBe('Test Tab')
     })
 
-    it('should render close icon button', () => {
-      const closeIcon = ioTab.querySelector('.io-close-icon')
-      expect(closeIcon).toBeTruthy()
-    })
-
     it('should update selected attribute when tab.selected changes', () => {
       expect(ioTab.getAttribute('selected')).toBe(null)
       tab.selected = true

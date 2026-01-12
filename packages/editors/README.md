@@ -120,7 +120,6 @@ type IoPropertyEditorProps = {
   groups?: PropertyGroups
   labeled?: boolean           // Show labels (default: true)
   labelWidth?: string         // Label width (default: '80px')
-  orientation?: 'vertical' | 'horizontal'
   widget?: VDOMElement        // Override auto-detected widget
 }
 ```

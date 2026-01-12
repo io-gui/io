@@ -1,5 +1,5 @@
 import { Register, ReactiveProperty, span } from '@io-gui/core'
-import { IoField, IoFieldProps, ioField, ioString } from '@io-gui/inputs'
+import { IoField, IoFieldProps, ioField, ioString, ioButton } from '@io-gui/inputs'
 import { IoContextEditorSingleton } from '@io-gui/editors'
 import { IconsetDB, ioIcon } from '@io-gui/icons'
 import { MenuOptionProps, MenuOption, ioOptionSelect } from '@io-gui/menus'
@@ -54,9 +54,6 @@ export class IoTab extends IoField {
         border-bottom-color: var(--io_bgColorLight);
         z-index: 1;
       }
-      :host[overflow]:not([selected]) > .io-close-icon {
-        display: none;
-      }
       :host[selected]:focus {
         color: var(--io_colorWhite);
         z-index: 2;
@@ -81,31 +78,6 @@ export class IoTab extends IoField {
         pointer-events: none;
         display: inline-block;
         white-space: nowrap;
-      }
-      :host:not(:hover) > .io-close-icon {
-        opacity: 0;
-        transform: scale(0.2);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
-      }
-      :host:hover > .io-close-icon {
-        opacity: 1;
-        transform: scale(0.4);
-        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity linear 0.2s;
-      }
-      :host > .io-close-icon {
-        position: absolute;
-        right: var(--io_spacing);
-        top: var(--io_spacing);
-        pointer-events: inherit;
-        background: linear-gradient(to right, transparent 0%, var(--io_bgColor) 5%);
-      }
-      :host[selected] > .io-close-icon {
-        background: linear-gradient(to right, transparent 0%, var(--io_bgColorLight) 5%);
-      }
-      :host > .io-close-icon:hover {
-        transform: scale(0.5);
-        fill: var(--io_colorStrong);
-        stroke: var(--io_colorStrong);
       }
     `
   }
@@ -135,6 +107,7 @@ export class IoTab extends IoField {
   preventDefault(event: Event) {
     event.stopPropagation()
     event.preventDefault()
+    this.expandContextEditor()
   }
   onPointerdown(event: PointerEvent) {
     event.preventDefault()
@@ -142,9 +115,7 @@ export class IoTab extends IoField {
     this.setPointerCapture(event.pointerId)
     tabDragIconSingleton.setStartPosition(event.clientX, event.clientY)
     super.onPointerdown(event)
-    if (event.buttons === 2) {
-      this.expandContextEditor()
-    } else {
+    if (event.buttons === 1) {
       this.focus()
     }
   }
@@ -182,17 +153,21 @@ export class IoTab extends IoField {
     this.dispatch('io-edit-tab', {tab: this.tab, key: 'Backspace'}, true)
   }
   expandContextEditor() {
+    const deleteAction = () => {
+      IoContextEditorSingleton.expanded = false
+      this.onDeleteClick()
+    }
     IoContextEditorSingleton.expand({
       source: this,
       direction: 'down',
       value: this.tab,
-      properties: ['id', 'label', 'icon'],
+      properties: ['label', 'icon'],
       orientation: 'horizontal',
       config: [
-        ['id', ioField({inert: true})],
         ['label', ioString({live: true})],
         ['icon', iconOptions],
       ],
+      widget: ioButton({label: 'Delete Tab', icon: 'io:close', action: deleteAction}),
     })
   }
   onKeydown(event: KeyboardEvent) {
@@ -215,7 +190,6 @@ export class IoTab extends IoField {
       this.tab.selected ? span({class: 'io-tab-drop-marker'}) : null,
       this.tab.icon ? ioIcon({value: this.tab.icon}) : null,
       span({class: 'io-tab-label'}, this.tab.label),
-      ioIcon({value: 'io:close', size: 'small', class: 'io-close-icon', '@click': this.onDeleteClick, '@pointerdown': this.preventDefault}),
     ])
   }
 }

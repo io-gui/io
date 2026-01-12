@@ -11,7 +11,6 @@ export type IoPropertyEditorProps = IoElementProps & {
   label?: string
   labeled?: boolean
   labelWidth?: string
-  orientation?: 'vertical' | 'horizontal'
   config?: PropertyConfig[]
   groups?: PropertyGroups
   widget?: VDOMElement
@@ -33,9 +32,6 @@ export class IoPropertyEditor extends IoElement {
       font-size: var(--io_fontSize);
       overflow: hidden;
     }
-    :host[orientation="horizontal"] {
-      flex-direction: row;
-    }
     :host > .row {
       display: flex;
       flex-direction: row;
@@ -45,10 +41,6 @@ export class IoPropertyEditor extends IoElement {
       border-radius: var(--io_borderRadius);
       margin-bottom: 0;
       background-color: var(--io_bgColorLight);
-    }
-    :host[orientation="horizontal"] > .row {
-      flex-direction: column;
-      flex: 1 1 0;
     }
     :host io-property-editor {
       margin-top: calc(var(--io_spacing) * -1) !important;
@@ -104,9 +96,6 @@ export class IoPropertyEditor extends IoElement {
 
   @ReactiveProperty('80px')
   declare labelWidth: string
-
-  @ReactiveProperty({type: String, value: 'vertical', reflect: true})
-  declare orientation: 'vertical' | 'horizontal'
 
   @ReactiveProperty({type: Array, init: null})
   declare config: PropertyConfig[]
@@ -170,17 +159,17 @@ export class IoPropertyEditor extends IoElement {
       const properties = []
       const vChildren = []
 
+      if (widget) {
+        const widgetWithValue = {
+          tag: widget.tag,
+          props: Object.assign({value: this.value}, widget.props),
+          children: widget.children
+        }
+        vChildren.push(widgetWithValue)
+      }
       if (this.properties.length) {
         properties.push(...this.properties)
       } else {
-        if (widget) {
-          const widgetWithValue = {
-            tag: widget.tag,
-            props: Object.assign({value: this.value}, widget.props),
-            children: widget.children
-          }
-          vChildren.push(widgetWithValue)
-        }
         properties.push(...groups.Main)
       }
 
