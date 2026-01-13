@@ -45,7 +45,7 @@ const split = new Split({
       children: [
         {type: 'panel', tabs: [{id: 'Change Visualization', icon: 'io:hub'}]},
         {type: 'panel', tabs: [{id: 'Editors', icon: 'io:developer'}]},
-        {type: 'panel', tabs: [{id: 'Icons', icon: 'io:image'}], flex: '1 1 50%'},
+        {type: 'panel', tabs: [{id: 'Icons', icon: 'io:image'}]},
       ]
     },
     {

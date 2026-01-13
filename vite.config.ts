@@ -8,9 +8,10 @@ export const resolveConfig = {
     { find: '@io-gui/colors', replacement: new URL('./packages/colors/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/editors', replacement: new URL('./packages/editors/src/index.ts', import.meta.url).pathname },
     { find: /\/packages\/editors\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/editors/src/demos/$1.ts', import.meta.url).pathname },
-
+    
     { find: '@io-gui/inputs', replacement: new URL('./packages/inputs/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/layout', replacement: new URL('./packages/layout/src/index.ts', import.meta.url).pathname },
+    { find: /\/packages\/layout\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/layout/src/demos/$1.ts', import.meta.url).pathname },
     { find: '@io-gui/markdown', replacement: new URL('./packages/markdown/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/menus', replacement: new URL('./packages/menus/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/navigation', replacement: new URL('./packages/navigation/src/index.ts', import.meta.url).pathname },
