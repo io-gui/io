@@ -58,10 +58,10 @@ All new classes must be registered before use.
 ```javascript
 // Javascript flavor
 class MyNode extends Node {}
-Register(MyNode);
+Register(MyNode)
 
 class MyElement extends IoElement {}
-Register(MyElement);
+Register(MyElement)
 ```
 
 ```typescript
@@ -96,7 +96,7 @@ Here we do the same using decorator syntax in typescript. Note that we use `decl
 // Typescript version with `@Property()` decorator
 class MyNode extends Node {
   @Property(false)
-  declare selected: boolean;
+  declare selected: boolean
 }
 ```
 
@@ -107,7 +107,7 @@ Alternatively, a property can be declared by specifying only the type. The resul
 ```typescript
 class MyNode extends Node {
   @Property(Boolean)
-  declare selected: boolean;
+  declare selected: boolean
 }
 ```
 
@@ -118,10 +118,10 @@ Note that ANY initial value specified in property declaration can be overridden 
 ```typescript
 class MyNode extends Node {
   @Property(Color)
-  declare color: Color;
+  declare color: Color
 }
 
-new MyNode({color: new Color()});
+new MyNode({color: new Color()})
 ```
 
 While it is possible to specify object instances as values in property declaration it is important to note that such initial values will be shared across all instances of the class.
@@ -130,7 +130,7 @@ While it is possible to specify object instances as values in property declarati
 class MyNode extends Node {
   // This is not recommended!
   @ReactiveProperty({value: new Color()})
-  declare color: Color;
+  declare color: Color
 }
 
 new MyNode().color === new MyNode().color
@@ -154,12 +154,12 @@ class MySuperNode extends Node {
     value: false,
     reflect: true,
   })
-  declare selected: boolean;
+  declare selected: boolean
 }
 
 class MyNode extends MySuperNode {
   @Property(true)
-  declare selected: boolean;
+  declare selected: boolean
 }
 ```
 
@@ -191,7 +191,7 @@ class MyElement extends IoElement {
     `;
   }
   @ReactiveProperty({value: false, reflect: true})
-  declare selected: boolean;
+  declare selected: boolean
 }
 ```
 
@@ -305,30 +305,30 @@ Here is an example of a node fully rigged to handle changes of its `selected` pr
 @Register
 class MyNode extends Node {
   @Property(false)
-  declare selected: boolean;
+  declare selected: boolean
   selectedChanged(change: Change) {
     // This will happen first
-    console.log(change.property);
-    console.log(change.value);
-    console.log(change.oldValue);
+    console.log(change.property)
+    console.log(change.value)
+    console.log(change.oldValue)
   }
   changed() {
     // This will happen last
-    console.log('Something changed');
+    console.log('Something changed')
   }
 }
 
-const node = new MyNode();
+const node = new MyNode()
 node.addEventListener('selected-changed',
   (event: CustomEvent) => {
     // This will happen second
-    console.log(event.detail.property);
-    console.log(event.detail.value);
-    console.log(event.detail.oldValue);
+    console.log(event.detail.property)
+    console.log(event.detail.value)
+    console.log(event.detail.oldValue)
   }
 )
 
-node.selected = true;
+node.selected = true
 ```
 
 Note that change handler functions are provided with a `change` payload that includes property name as well as `oldValue` and new `value`. Similarly, the change event provides the same change payload as `event.detail`.
@@ -338,14 +338,14 @@ Note that change handler functions are provided with a `change` payload that inc
 Since `change()` function gets invoked every time a reactive property changes we can get into a scenario where multiple property changes invoke `change()` function causing it to do unnecessary work. For example changing `prop1` and `prop2` in sequence will invoke following sequence of change functions.
 
 ```javascript
-this.prop1 = value1;
-this.prop2 = value2;
+this.prop1 = value1
+this.prop2 = value2
 
 // Sequence of change functions:
-this.prop1Changed(change);
-this.changed(); // This can be avoided!
-this.prop2Changed(change);
-this.changed();
+this.prop1Changed(change)
+this.changed() // This can be avoided!
+this.prop2Changed(change)
+this.changed()
 ```
 
 This sequence of invocations is fine but we can avoid executing the `change()` function twice by using the `setProperties()` method to set both properties at the same time.
@@ -354,12 +354,12 @@ This sequence of invocations is fine but we can avoid executing the `change()` f
 this.setProperties({
   prop1: value1,
   prop2: value2,
-});
+})
 
 // Sequence of change functions:
-this.prop1Changed(change);
-this.prop2Changed(change);
-this.changed();
+this.prop1Changed(change)
+this.prop2Changed(change)
+this.changed()
 ```
 
 ### Debounced Reactivity
@@ -371,17 +371,17 @@ Just like in the batching example above we can get into a scenario where change 
 In asynchronous regime, nodes don't invoke change events until the next `requestAnimationFrame` cycle. Multiple property changes can happen during this time and the resulting sequence of change events and handler function invocations will be automatically batched.
 
 ```javascript
-this.prop1 = 1;
-this.prop1 = 2;
-this.prop1 = 3;
-this.prop2 = 'a';
-this.prop2 = 'b';
-this.prop2 = 'c';
+this.prop1 = 1
+this.prop1 = 2
+this.prop1 = 3
+this.prop2 = 'a'
+this.prop2 = 'b'
+this.prop2 = 'c'
 
 // Sequence of change functions:
-this.prop1Changed(change); // change.oldValue === 1
-this.prop2Changed(change); // change.oldValue === 'a'
-this.changed();
+this.prop1Changed(change) // change.oldValue === 1
+this.prop2Changed(change) // change.oldValue === 'a'
+this.changed()
 ```
 
 ### Template Syntax
@@ -392,6 +392,7 @@ Here is a simple element expressed in the Io-Gui template syntax:
 
 ```javascript
 myElement({prop: "propvalue"}, "Hello io!")
+// returns {tag: 'my-element', props: {prop: "propvalue"}, children: 'Hello io!'}
 ```
 
 DOM output:
@@ -410,7 +411,7 @@ this.render([
   div([
     this.items.map(i => span({class: 'item'}, i))
   ])
-]);
+])
 ```
 
 DOM output:
@@ -437,27 +438,27 @@ This is a simple yet powerful feature designed to be used with Io-Gui nodes and 
 
 ```javascript
 // Returns a binding object to source property "value".
-this.bind('value');
+this.bind('value')
 ```
 
 To create a two-way data binding between two or more properties, simply assign a binding object to a property:
 
 ```javascript
-const myNode = new MyNode();
-const slider = new IoSlider();
-slider.value = myNode.bind('value');
+const myNode = new MyNode()
+const slider = new IoSlider()
+slider.value = myNode.bind('value')
 ```
 
 We can also assign bindings in the constructor:
 
 ```javascript
-new IoSlider({value: myNode.bind('value')});
+new IoSlider({value: myNode.bind('value')})
 ```
 
 Or we can assign it to an element using template syntax:
 
 ```javascript
-this.render([ioSlider({value: this.bind('value')})]);
+this.render([ioSlider({value: this.bind('value')})])
 ```
 
 The binding is event-based, meaning that the binding object will assign change event listeners to its source node and its targets.

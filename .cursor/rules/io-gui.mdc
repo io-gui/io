@@ -2,12 +2,6 @@
 alwaysApply: true
 ---
 
-**Note**: No need to run any `pnpm` commands - they will be run by the user.
-
-Don't solve problems by removing debug statements/checks
-
-**Avoid unnecessary inline comments** - if the code is self-explanatory through descriptive names and clear logic, don't add comments that just restate what the code obviously does
-
 ## Project Overview
 
 Io-Gui is a reactive web UI framework that provides a consistent reactive foundation that supports multiple architectural patterns. It takes a multi-paradigm approach because different UI problems require different architectural solutions. Io-Gui adapts its architecture to the problem domain while maintaining consistent reactive principles throughout.
@@ -63,17 +57,6 @@ It can be used to create reactive custom elements that can be bound to node prop
 - **Binding** - Manages two-way data flow using change events
 - **VDOM** - Virtual DOM implementation for efficient rendering
 
-
-## Code Style Guidelines
-
-### Code Style
-- Code should require minimal documentation: "Code is documentation"
-- Use clear, descriptive, and easy-to-read variable/property names
-- Don't solve problems by removing debug statements/checks
-- Follow existing code style and linting patterns
-- Minimal Tooling: Avoid complex tools and processes
-- Use the Platform: Rely on native web features
-
 ### TypeScript Patterns
 - Use decorators (`@Register`, `@ReactiveProperty`, `@Property`)
 - Strong typing with interfaces and type definitions
@@ -121,7 +104,7 @@ When using singletons that hold shared state:
 ## Development
 The framework has no runtime dependencies - only development dependencies. It uses `pnpm` as the package manager.
 - Make changes to source files in `/packages/*/src/`
-- TypeScript will compile to `/packages/*/build/`
+- TypeScript will compile to `/packages/*/dist/`
 
 ### Monorepo Structure
 The project is organized as a monorepo with packages in `/packages/`:
@@ -136,7 +119,7 @@ The project is organized as a monorepo with packages in `/packages/`:
 - **io-menus** - Menu components and rich domain models
 - **io-navigation** - Navigation and selection components
 - **io-sliders** - Slider components
-- **io-gui** - Combined package with all components
+- **io-three** - Three js components
 
 ### Essential Commands
 - `pnpm dev` - Start watch mode for all packages (tsc)
@@ -144,20 +127,13 @@ The project is organized as a monorepo with packages in `/packages/`:
 - `pnpm lint` - Lint all packages (auto-fixes)
 - `pnpm test` - Run tests with web-test-runner
 - `pnpm test:watch` - Run tests in watch mode
-- `pnpm serve` - Start @web/dev-server for development
 - `pnpm clean` - Clean all build directories
+- Installing new npm packages is not allowed
 
 ### Package-Specific Commands
 Each package can be built/linted individually:
 - `pnpm build:core`, `pnpm build:colors`, `pnpm build:inputs`, etc.
 - `pnpm lint:core`, `pnpm lint:colors`, `pnpm lint:inputs`, etc.
-
-### Build System
-- Uses `wireit` for orchestrated builds with dependency management
-- TypeScript compilation with `tsc`
-- Rollup for bundling with tree-shaking
-- ESLint for linting with auto-fix
-- Avoid installing new packages whenever possible
 
 ### Testing
 - Uses Vitest for testing

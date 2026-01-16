@@ -10,51 +10,13 @@ You can learn more about nodes and elements in the [deep dive] guide. To quickly
 
 ## Making an Element
 
-Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property.
-
-```javascript
-import { IoElement, Register, span } from 'io-core'
-
-class MyElement extends IoElement {
-  static get Style() {
-    return /* css */`
-      :host {
-        display: inline-block;
-      }
-    `;
-  }
-
-  static get ReactiveProperties() {
-    return {
-      message: 'hello'
-    }
-  }
-
-  ready() {
-    this.changed();
-  }
-
-  changed() {
-    this.render([
-      span(this.message)
-    ]);
-  }
-}
-Register(MyElement);
-
-document.body.appendChild(
-  new MyElement({message: 'Hello World'})
-)
-```
-
-It is encouraged to can use convenient "@" decorator syntax to register the element (`@Register`), define properties (`@Property`) and reactive properties (`@ReactiveProperty`).
+Here is a basic example of a reactive element `<my-element>` with style declaration and a `message` property. Use "@" decorator syntax to register the element (`@Register`), define properties (`@Property`) and reactive properties (`@ReactiveProperty`).
 
 ```javascript
 import { IoElement, Register, Property, ReactiveProperty, span } from 'io-core'
 
 @Register
 class MyElement extends IoElement {
-
   static get Style() {
     return /* css */`
       :host {
@@ -78,8 +40,11 @@ class MyElement extends IoElement {
       span(`${this.greeting} ${this.message}`)
     ]);
   }
-
 }
+
+document.body.appendChild(
+  new MyElement({message: 'Hello World'})
+)
 ```
 
 ## Making a Website
@@ -146,8 +111,8 @@ Here, we can replicate the previous example using the `render()` function and vi
 
 ```typescript
 import { IoElement, Register, span } from 'io-core'
-import { ioSlider } from 'io-sliders';
-import { ioOptionSelect, MenuOption } from 'io-menus';
+import { ioSlider } from 'io-sliders'
+import { ioOptionSelect, MenuOption } from 'io-menus'
 
 class MyElement extends IoElement {
 
@@ -160,30 +125,23 @@ class MyElement extends IoElement {
     `;
   }
 
-  static get ReactiveProperties() {
-    return {
-      numberValue: {
-        type: Number,
-        value: 0
-      },
-      menuOption: {
-        type: MenuOption,
-        value: new MenuOption({options: [
-          {id: 'Zero', value: 0},
-          {id: 'One', value: 1},
-          {id: 'Two', value: 2},
-          {id: 'Three', value: 3},
-        ]})
-      }
-    }
-  }
+  @ReactiveProperty({type: Number, value: 0})
+  declare numberValue: number
+
+  @ReactiveProperty({type: MenuOption, value: new MenuOption({options: [
+    {id: 'Zero', value: 0},
+    {id: 'One', value: 1},
+    {id: 'Two', value: 2},
+    {id: 'Three', value: 3},
+  ]})})
+  declare menuOption: MenuOption
 
   ready() {
-    this.changed();
+    this.changed()
   }
 
   onValueInput(event) {
-    this.numberValue = event.detail.value;
+    this.numberValue = event.detail.value
   }
 
   changed() {
@@ -195,10 +153,10 @@ class MyElement extends IoElement {
         option: this.menuOption,
         '@value-input': this.onValueInput,
       })
-    ]);
+    ])
   }
 }
-Register(MyElement);
+Register(MyElement)
 
 document.body.appendChild(
   new MyElement()
@@ -218,5 +176,5 @@ Note that two-way data flow can introduce unexpected states in more complex scen
 
 To learn more read the [deep dive] guide.
 
-[index.html]: https://github.com/io-gui/io/blob/main/index.html#L104
+[index.html]: https://github.com/io-gui/io/blob/main/index.html
 [deep dive]: https://iogui.dev/io/#path=Docs,Deep%20Dive
