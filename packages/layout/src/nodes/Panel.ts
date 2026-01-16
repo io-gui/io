@@ -4,7 +4,7 @@ import { Tab, TabProps } from './Tab.js'
 export type PanelProps = {
   type: 'panel'
   tabs: Array<TabProps>
-  flex?: string
+  size?: number | 'auto'
 }
 
 function deduplicateTabs<T extends TabProps>(tabs: Array<T>, context: string): Array<T> {
@@ -27,8 +27,8 @@ export class Panel extends Node {
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
 
-  @ReactiveProperty({type: String, value: '1 1 100%'})
-  declare flex: string
+  @ReactiveProperty({value: 'auto'})
+  declare size: number | 'auto'
 
   constructor(args: PanelProps) {
     debug: {
@@ -77,11 +77,12 @@ export class Panel extends Node {
     this.tabs.dispatchMutation()
   }
   toJSON(): PanelProps {
-    return {
+    const json: PanelProps = {
       type: 'panel',
       tabs: this.tabs.map(tab => tab.toJSON()),
-      flex: this.flex,
     }
+    if (this.size !== 'auto') json.size = this.size
+    return json
   }
   fromJSON(json: PanelProps) {
     debug: {
@@ -92,7 +93,7 @@ export class Panel extends Node {
     const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON')
     this.setProperties({
       tabs: uniqueTabs.map(tab => new Tab(tab)),
-      flex: json.flex ?? '1 1 100%',
+      size: json.size ?? 'auto',
     })
     return this
   }

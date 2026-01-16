@@ -75,36 +75,36 @@ describe('Split', () => {
       expect(split.orientation).toBe('vertical')
     })
 
-    it('should default flex to "1 1 100%"', () => {
+    it('should default size to "auto"', () => {
       const split = new Split({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
       })
 
-      expect(split.flex).toBe('1 1 100%')
+      expect(split.size).toBe('auto')
     })
 
-    it('should accept custom flex value', () => {
+    it('should accept custom size value', () => {
       const split = new Split({
         type: 'split',
-        flex: '0 0 400px',
+        size: 400,
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
       })
 
-      expect(split.flex).toBe('0 0 400px')
+      expect(split.size).toBe(400)
     })
 
-    it('should preserve child flex values', () => {
+    it('should preserve child size values', () => {
       const split = new Split({
         type: 'split',
         children: [
-          { type: 'panel', tabs: [{ id: 'tab1' }], flex: '0 0 200px' },
-          { type: 'panel', tabs: [{ id: 'tab2' }], flex: '1 1 auto' }
+          { type: 'panel', tabs: [{ id: 'tab1' }], size: 200 },
+          { type: 'panel', tabs: [{ id: 'tab2' }], size: 'auto' }
         ]
       })
 
-      expect((split.children[0] as Panel).flex).toBe('0 0 200px')
-      expect((split.children[1] as Panel).flex).toBe('1 1 auto')
+      expect((split.children[0] as Panel).size).toBe(200)
+      expect((split.children[1] as Panel).size).toBe('auto')
     })
 
   })
@@ -321,7 +321,7 @@ describe('Split', () => {
         children: [
           { type: 'panel', tabs: [{ id: 'tab1' }] }
         ],
-        flex: '1 1 100%'
+        size: 'auto'
       })
 
       const json = split.toJSON()
@@ -329,7 +329,7 @@ describe('Split', () => {
       expect(json.type).toBe('split')
       // Default values are omitted for compact serialization
       expect(json.orientation).toBeUndefined()
-      expect(json.flex).toBeUndefined()
+      expect(json.size).toBeUndefined()
       expect(json.children).toHaveLength(1)
       expect(json.children[0].type).toBe('panel')
     })
@@ -346,16 +346,16 @@ describe('Split', () => {
       expect(json.orientation).toBe('vertical')
     })
 
-    it('should include non-default flex in JSON', () => {
+    it('should include non-default size in JSON', () => {
       const split = new Split({
         type: 'split',
-        flex: '0 0 300px',
+        size: 300,
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
       })
 
       const json = split.toJSON()
 
-      expect(json.flex).toBe('0 0 300px')
+      expect(json.size).toBe(300)
     })
 
     it('should serialize nested splits', () => {
@@ -395,21 +395,21 @@ describe('Split', () => {
       expect(json.children[0]).not.toBeInstanceOf(Panel)
     })
 
-    it('should preserve all child flex values', () => {
+    it('should preserve all child size values', () => {
       const split = new Split({
         type: 'split',
         children: [
-          { type: 'panel', tabs: [{ id: 't1' }], flex: '0 0 100px' },
-          { type: 'panel', tabs: [{ id: 't2' }], flex: '1 1 auto' },
-          { type: 'panel', tabs: [{ id: 't3' }], flex: '0 0 200px' }
+          { type: 'panel', tabs: [{ id: 't1' }], size: 100 },
+          { type: 'panel', tabs: [{ id: 't2' }], size: 'auto' },
+          { type: 'panel', tabs: [{ id: 't3' }], size: 200 }
         ]
       })
 
       const json = split.toJSON()
 
-      expect(json.children[0].flex).toBe('0 0 100px')
-      expect(json.children[1].flex).toBe('1 1 auto')
-      expect(json.children[2].flex).toBe('0 0 200px')
+      expect(json.children[0].size).toBe(100)
+      expect(json.children[1].size).toBeUndefined() // 'auto' is default, omitted
+      expect(json.children[2].size).toBe(200)
     })
 
   })
@@ -425,7 +425,7 @@ describe('Split', () => {
       split.fromJSON({
         type: 'split',
         orientation: 'vertical',
-        flex: '0 0 500px',
+        size: 500,
         children: [
           { type: 'panel', tabs: [{ id: 'restored1' }] },
           { type: 'panel', tabs: [{ id: 'restored2' }] }
@@ -433,7 +433,7 @@ describe('Split', () => {
       })
 
       expect(split.orientation).toBe('vertical')
-      expect(split.flex).toBe('0 0 500px')
+      expect(split.size).toBe(500)
       expect(split.children.length).toBe(2)
       expect((split.children[0] as Panel).tabs[0].id).toBe('restored1')
       expect((split.children[1] as Panel).tabs[0].id).toBe('restored2')
@@ -480,10 +480,10 @@ describe('Split', () => {
       expect(split.orientation).toBe('horizontal')
     })
 
-    it('should default flex when not in JSON', () => {
+    it('should default size when not in JSON', () => {
       const split = new Split({
         type: 'split',
-        flex: '0 0 100px',
+        size: 100,
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
@@ -492,7 +492,7 @@ describe('Split', () => {
         children: [{ type: 'panel', tabs: [{ id: 'restored' }] }]
       } as SplitProps)
 
-      expect(split.flex).toBe('1 1 100%')
+      expect(split.size).toBe('auto')
     })
 
     it('should return self for chaining', () => {
@@ -577,10 +577,10 @@ describe('Split', () => {
       const original = new Split({
         type: 'split',
         orientation: 'vertical',
-        flex: '0 0 300px',
+        size: 300,
         children: [
-          { type: 'panel', tabs: [{ id: 'tab1', label: 'Tab 1' }], flex: '1 1 auto' },
-          { type: 'panel', tabs: [{ id: 'tab2', selected: true }], flex: '0 0 100px' }
+          { type: 'panel', tabs: [{ id: 'tab1', label: 'Tab 1' }], size: 'auto' },
+          { type: 'panel', tabs: [{ id: 'tab2', selected: true }], size: 100 }
         ]
       })
 
@@ -592,7 +592,7 @@ describe('Split', () => {
       restored.fromJSON(json)
 
       expect(restored.orientation).toBe(original.orientation)
-      expect(restored.flex).toBe(original.flex)
+      expect(restored.size).toBe(original.size)
       expect(restored.children.length).toBe(original.children.length)
     })
 
@@ -601,16 +601,16 @@ describe('Split', () => {
         type: 'split',
         orientation: 'horizontal',
         children: [
-          { type: 'panel', tabs: [{ id: 'sidebar' }], flex: '0 0 200px' },
+          { type: 'panel', tabs: [{ id: 'sidebar' }], size: 200 },
           {
             type: 'split',
             orientation: 'vertical',
             children: [
               { type: 'panel', tabs: [{ id: 'main' }] },
-              { type: 'panel', tabs: [{ id: 'console' }], flex: '0 0 150px' }
+              { type: 'panel', tabs: [{ id: 'console' }], size: 150 }
             ]
           },
-          { type: 'panel', tabs: [{ id: 'properties' }], flex: '0 0 250px' }
+          { type: 'panel', tabs: [{ id: 'properties' }], size: 250 }
         ]
       })
 
@@ -957,16 +957,16 @@ describe('Split', () => {
       expect(split.orientation).toBe('vertical')
     })
 
-    it('should allow changing flex after construction', () => {
+    it('should allow changing size after construction', () => {
       const split = new Split({
         type: 'split',
-        flex: '1 1 100%',
+        size: 'auto',
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
-      split.flex = '0 0 500px'
+      split.size = 500
 
-      expect(split.flex).toBe('0 0 500px')
+      expect(split.size).toBe(500)
     })
 
     it('should handle mixed orientation in nested structure', () => {

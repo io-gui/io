@@ -100,7 +100,7 @@ describe('Split Construction Consolidation', () => {
           children: [
             {
               type: 'panel',
-              flex: '1 0 380px',
+              size: 380,
               tabs: [{id: 'AllClasses'}],
             },
             {
@@ -127,7 +127,7 @@ describe('Split Construction Consolidation', () => {
             },
             {
               type: 'panel',
-              flex: '1 0 380px',
+              size: 380,
               tabs: [{id: 'ExampleSelector'}],
             }
           ]
@@ -139,7 +139,7 @@ describe('Split Construction Consolidation', () => {
     expect(split.children.length).toBe(3)
     expect(split.orientation).toBe('horizontal')
     expect(split.children[0]).toBeInstanceOf(Panel)
-    expect(split.children[0].flex).toBe('1 0 380px')
+    expect(split.children[0].size).toBe(380)
     expect(split.children[1]).toBeInstanceOf(Split)
     expect(split.children[2]).toBeInstanceOf(Panel)
   })
@@ -203,7 +203,7 @@ describe('IoSplit Consolidation', () => {
       expect(split.children.length).toBe(2)
       expect(split.children[1]).toBeInstanceOf(Panel)
       expect(split.children[1].tabs[0].id).toBe('panelB')
-      expect(split.children[1].flex).toBe('1 1 100%')
+      expect(split.children[1].size).toBe('auto')
     })
   })
 
@@ -360,16 +360,16 @@ describe('IoSplit Consolidation', () => {
   })
 
   describe('Edge cases', () => {
-    it('Should preserve flex values when consolidating panels', () => {
+    it('Should preserve size values when consolidating panels', () => {
       const split = new Split({
         type: 'split',
         orientation: 'horizontal',
         children: [
-          {type: 'panel', tabs: [{id: 'panelA'}], flex: '0 0 200px'},
+          {type: 'panel', tabs: [{id: 'panelA'}], size: 200},
           {
             type: 'split',
             orientation: 'vertical',
-            children: [{type: 'panel', tabs: [{id: 'panelB'}], flex: '0 0 300px'}]
+            children: [{type: 'panel', tabs: [{id: 'panelB'}], size: 300}]
           }
         ]
       })
@@ -382,8 +382,8 @@ describe('IoSplit Consolidation', () => {
 
       rootSplit.consolidateChild(childSplit)
 
-      expect(split.children[0].flex).toBe('0 0 200px')
-      expect(split.children[1].flex).toBe('1 1 100%')
+      expect(split.children[0].size).toBe(200)
+      expect(split.children[1].size).toBe('auto')
     })
 
     it('Should handle consolidation when removing split via io-split-remove', () => {
@@ -622,13 +622,13 @@ describe('IoSplit View Element', () => {
     })
   })
 
-  describe('ensureFlexGrow', () => {
-    it('Should set first child to flex grow when none have it', () => {
+  describe('ensureAutoSize', () => {
+    it('Should set first child to auto size when none have it', () => {
       const split = new Split({
         type: 'split',
         children: [
-          {type: 'panel', tabs: [{id: 'tab1'}], flex: '0 0 200px'},
-          {type: 'panel', tabs: [{id: 'tab2'}], flex: '0 0 300px'}
+          {type: 'panel', tabs: [{id: 'tab1'}], size: 200},
+          {type: 'panel', tabs: [{id: 'tab2'}], size: 300}
         ]
       })
 
@@ -636,17 +636,17 @@ describe('IoSplit View Element', () => {
       container.appendChild(layout)
 
       const ioSplit = layout.querySelector('io-split') as IoSplit
-      ioSplit.ensureFlexGrow()
+      ioSplit.ensureAutoSize()
 
-      expect(split.children[0].flex).toBe('1 1 auto')
+      expect(split.children[0].size).toBe('auto')
     })
 
-    it('Should not change flex when at least one child has flex grow', () => {
+    it('Should not change size when at least one child has auto size', () => {
       const split = new Split({
         type: 'split',
         children: [
-          {type: 'panel', tabs: [{id: 'tab1'}], flex: '0 0 200px'},
-          {type: 'panel', tabs: [{id: 'tab2'}], flex: '1 1 100%'}
+          {type: 'panel', tabs: [{id: 'tab1'}], size: 200},
+          {type: 'panel', tabs: [{id: 'tab2'}], size: 'auto'}
         ]
       })
 
@@ -654,10 +654,10 @@ describe('IoSplit View Element', () => {
       container.appendChild(layout)
 
       const ioSplit = layout.querySelector('io-split') as IoSplit
-      ioSplit.ensureFlexGrow()
+      ioSplit.ensureAutoSize()
 
-      expect(split.children[0].flex).toBe('0 0 200px')
-      expect(split.children[1].flex).toBe('1 1 100%')
+      expect(split.children[0].size).toBe(200)
+      expect(split.children[1].size).toBe('auto')
     })
   })
 

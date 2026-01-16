@@ -476,13 +476,13 @@ describe('IoLayout', () => {
     })
   })
 
-  describe('Flex Values', () => {
-    it('should apply flex values from split', () => {
+  describe('Size Values', () => {
+    it('should apply size values from split', () => {
       const split = new Split({
         type: 'split',
         children: [
-          { type: 'panel', tabs: [{ id: 'fixed' }], flex: '0 0 200px' },
-          { type: 'panel', tabs: [{ id: 'grow' }], flex: '1 1 100%' }
+          { type: 'panel', tabs: [{ id: 'fixed' }], size: 200 },
+          { type: 'panel', tabs: [{ id: 'grow' }], size: 'auto' }
         ]
       })
 
@@ -491,7 +491,7 @@ describe('IoLayout', () => {
 
       const panels = layout.querySelectorAll('io-panel')
       expect(panels[0].style.flex).toBe('0 0 200px')
-      expect(panels[1].style.flex).toBe('1 1 100%')
+      expect(panels[1].style.flex).toBe('1 1 auto')
     })
   })
 })

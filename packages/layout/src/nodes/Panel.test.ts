@@ -84,23 +84,23 @@ describe('Panel', () => {
       expect(panel.tabs[1].selected).toBe(true)
     })
 
-    it('should default flex to "1 1 100%"', () => {
+    it('should default size to "auto"', () => {
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'tab1' }]
       })
 
-      expect(panel.flex).toBe('1 1 100%')
+      expect(panel.size).toBe('auto')
     })
 
-    it('should accept custom flex value', () => {
+    it('should accept custom size value', () => {
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'tab1' }],
-        flex: '0 0 300px'
+        size: 300
       })
 
-      expect(panel.flex).toBe('0 0 300px')
+      expect(panel.size).toBe(300)
     })
 
     it('should create independent Tab instances (not shared)', () => {
@@ -334,13 +334,13 @@ describe('Panel', () => {
           { id: 'tab1', label: 'Tab 1' },
           { id: 'tab2', selected: true }
         ],
-        flex: '0 0 200px'
+        size: 200
       })
 
       const json = panel.toJSON()
 
       expect(json.type).toBe('panel')
-      expect(json.flex).toBe('0 0 200px')
+      expect(json.size).toBe(200)
       expect(json.tabs).toHaveLength(2)
       expect(json.tabs[0].id).toBe('tab1')
       expect(json.tabs[0].label).toBe('Tab 1')
@@ -387,7 +387,7 @@ describe('Panel', () => {
           { id: 'restored1', label: 'Restored' },
           { id: 'restored2', selected: true }
         ],
-        flex: '1 0 400px'
+        size: 400
       })
 
       expect(panel.tabs.length).toBe(2)
@@ -395,7 +395,7 @@ describe('Panel', () => {
       expect(panel.tabs[0].label).toBe('Restored')
       expect(panel.tabs[1].id).toBe('restored2')
       expect(panel.tabs[1].selected).toBe(true)
-      expect(panel.flex).toBe('1 0 400px')
+      expect(panel.size).toBe(400)
     })
 
     it('should replace existing tabs', () => {
@@ -413,11 +413,11 @@ describe('Panel', () => {
       expect(panel.tabs[0].id).toBe('new1')
     })
 
-    it('should default flex when not in JSON', () => {
+    it('should default size when not in JSON', () => {
       const panel = new Panel({
         type: 'panel',
         tabs: [{ id: 'test' }],
-        flex: '0 0 100px'
+        size: 100
       })
 
       panel.fromJSON({
@@ -425,7 +425,7 @@ describe('Panel', () => {
         tabs: [{ id: 'restored' }]
       } as PanelProps)
 
-      expect(panel.flex).toBe('1 1 100%')
+      expect(panel.size).toBe('auto')
     })
 
     it('should return self for chaining', () => {
@@ -476,7 +476,7 @@ describe('Panel', () => {
           { id: 'tab1', label: 'Label 1', icon: 'icon1' },
           { id: 'tab2', label: 'Label 2', selected: true }
         ],
-        flex: '0 0 250px'
+        size: 250
       })
 
       const json = original.toJSON()
@@ -487,7 +487,7 @@ describe('Panel', () => {
       restored.fromJSON(json)
 
       expect(restored.tabs.length).toBe(original.tabs.length)
-      expect(restored.flex).toBe(original.flex)
+      expect(restored.size).toBe(original.size)
 
       for (let i = 0; i < original.tabs.length; i++) {
         expect(restored.tabs[i].id).toBe(original.tabs[i].id)
@@ -504,7 +504,7 @@ describe('Panel', () => {
           { id: 'rt1' },
           { id: 'rt2', selected: true }
         ],
-        flex: '1 1 50%'
+        size: 150
       })
 
       const json1 = original.toJSON()

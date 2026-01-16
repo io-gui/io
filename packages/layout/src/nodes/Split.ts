@@ -7,7 +7,7 @@ export type SplitProps = {
   type: 'split'
   children: Array<SplitProps | PanelProps>
   orientation?: SplitOrientation
-  flex?: string
+  size?: number | 'auto'
 }
 
 function createChild(child: SplitProps | PanelProps): Split | Panel {
@@ -37,8 +37,8 @@ export class Split extends Node {
   @ReactiveProperty({type: String, value: 'horizontal'})
   declare orientation: SplitOrientation
 
-  @ReactiveProperty({type: String, value: '1 1 100%'})
-  declare flex: string
+  @ReactiveProperty({value: 'auto'})
+  declare size: number | 'auto'
 
   constructor(args: SplitProps) {
     debug: {
@@ -68,7 +68,7 @@ export class Split extends Node {
       children: this.children.map((child: Split | Panel) => child.toJSON()),
     }
     if (this.orientation !== 'horizontal') json.orientation = this.orientation
-    if (this.flex !== '1 1 100%') json.flex = this.flex
+    if (this.size !== 'auto') json.size = this.size
     return json
   }
   fromJSON(json: SplitProps) {
@@ -83,7 +83,7 @@ export class Split extends Node {
     this.setProperties({
       children: consolidated.children,
       orientation: consolidated.orientation,
-      flex: json.flex ?? '1 1 100%',
+      size: json.size ?? 'auto',
     })
     return this
   }

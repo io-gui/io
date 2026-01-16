@@ -8,18 +8,8 @@ import { Tab } from '../nodes/Tab.js'
 
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
-interface SplitMeasurements {
-  splits: HTMLElement[]
-  splitSizes: number[]
-  splitResize: number[]
-}
-
-interface SpaceDistribution {
-  fixedSpaceBefore: number
-  fixedSpaceAfter: number
-  flexSpace: number
-  flexCountBefore: number
-  flexCountAfter: number
+function sizeToFlex(size: number | 'auto'): string {
+  return size === 'auto' ? '1 1 auto' : `0 0 ${size}px`
 }
 
 export type IoSplitProps = IoElementProps & {
@@ -69,141 +59,125 @@ export class IoSplit extends IoElement {
 
   onDividerMove(event: CustomEvent) {
     event.stopPropagation()
-    const index = event.detail.index
+    const dividerIndex = event.detail.index
     const rect = this.getBoundingClientRect()
     const orientation = this.split.orientation
-
     const dividerSize = ThemeSingleton.spacing3
-    const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - dividerSize * (this.children.length - 1) / 2
     const minSize = ThemeSingleton.fieldHeight * 4
 
-    const measurements = this.collectSplitMeasurements(orientation, rect, dividerSize, event.detail)
-    const distribution = this.calculateSpaceDistribution(measurements, index)
-
-    this.applyResizeSizes(measurements, distribution, index, totalSpace, minSize)
-  }
-
-  collectSplitMeasurements(
-    orientation: SplitOrientation,
-    rect: DOMRect,
-    dividerSize: number,
-    pointer: {clientX: number; clientY: number}
-  ): SplitMeasurements {
     const splits: HTMLElement[] = []
-    const splitSizes: number[] = []
-    const splitResize: number[] = []
-
     for (let i = 0; i < this.children.length; i += 2) {
-      const splitElement = this.children[i] as HTMLElement
+      splits.push(this.children[i] as HTMLElement)
+    }
+
+    const isFirstDivider = dividerIndex === 0
+    const isLastDivider = dividerIndex === splits.length - 2
+
+    if (isFirstDivider) {
+      const splitElement = splits[0]
       const splitRect = splitElement.getBoundingClientRect()
-      const splitSize = orientation === 'horizontal' ? splitRect.width : splitRect.height
+      const pointerPos = orientation === 'horizontal'
+        ? event.detail.clientX - splitRect.left - dividerSize / 2
+        : event.detail.clientY - splitRect.top - dividerSize / 2
 
-      let x = pointer.clientX - splitRect.left - dividerSize / 2
-      let y = pointer.clientY - splitRect.top - dividerSize / 2
-      if (i === this.children.length - 1) {
-        x = rect.width - (pointer.clientX - rect.left) - dividerSize / 2
-        y = rect.height - (pointer.clientY - rect.top) - dividerSize / 2
-      }
-      const size = orientation === 'horizontal' ? x : y
-
-      splits.push(splitElement)
-      splitSizes.push(splitSize)
-      splitResize.push(size)
-    }
-
-    return {splits, splitSizes, splitResize}
-  }
-
-  calculateSpaceDistribution(measurements: SplitMeasurements, index: number): SpaceDistribution {
-    const {splits, splitSizes} = measurements
-
-    let fixedSpaceBefore = 0
-    let fixedSpaceAfter = 0
-    let flexSpace = 0
-    let flexCountBefore = 0
-    let flexCountAfter = 0
-
-    for (let i = 0; i < splits.length; i++) {
-      let idx = index
-      // Adjust idx for last-divider case unless first and last divider are the same (2 splits)
-      if (idx === splits.length - 2 && idx !== 0) {
-        idx = splits.length - 1
-      }
-      if (splits[i].style.flex.endsWith('%')) {
-        flexSpace += splitSizes[i]
-        if (i < idx) {
-          flexCountBefore++
-        } else if (i > idx) {
-          flexCountAfter++
-        }
-      } else {
-        if (i < idx) {
-          fixedSpaceBefore += splitSizes[i]
-        } else if (i > idx) {
-          fixedSpaceAfter += splitSizes[i]
+      let fixedSpaceAfter = 0
+      let autoCountAfter = 0
+      for (let i = 1; i < splits.length; i++) {
+        const child = this.split.children[i]
+        if (child.size === 'auto') {
+          autoCountAfter++
+        } else {
+          fixedSpaceAfter += child.size
         }
       }
-    }
+      const totalDividerSpace = dividerSize * (splits.length - 1)
+      const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - totalDividerSpace
+      const maxSize = totalSpace - minSize * autoCountAfter - fixedSpaceAfter
+      const size = Math.max(minSize, Math.min(maxSize, pointerPos))
+      splitElement.style.flex = `0 0 ${size}px`
 
-    return {fixedSpaceBefore, fixedSpaceAfter, flexSpace, flexCountBefore, flexCountAfter}
-  }
+    } else if (isLastDivider) {
+      const splitElement = splits[splits.length - 1]
+      const pointerPos = orientation === 'horizontal'
+        ? rect.right - event.detail.clientX - dividerSize / 2
+        : rect.bottom - event.detail.clientY - dividerSize / 2
 
-  applyResizeSizes(
-    measurements: SplitMeasurements,
-    distribution: SpaceDistribution,
-    index: number,
-    totalSpace: number,
-    minSize: number
-  ) {
-    const {splits, splitSizes, splitResize} = measurements
-    const {fixedSpaceBefore, fixedSpaceAfter, flexSpace, flexCountBefore, flexCountAfter} = distribution
-
-    if (index === 0) {
-      const maxSize = totalSpace - minSize * flexCountAfter - fixedSpaceAfter
-      const size = Math.max(minSize, Math.min(maxSize, splitResize[0]))
-      splits[index].style.flex = `0 0 ${size}px`
-      for (let i = 0; i < splits.length; i++) {
-        if (splits[i].style.flex.endsWith('%') && i !== index) {
-          splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`
+      let fixedSpaceBefore = 0
+      let autoCountBefore = 0
+      for (let i = 0; i < splits.length - 1; i++) {
+        const child = this.split.children[i]
+        if (child.size === 'auto') {
+          autoCountBefore++
+        } else {
+          fixedSpaceBefore += child.size
         }
       }
-
-    } else if (index === splits.length - 2) {
-      const maxSize = totalSpace - minSize * flexCountBefore - fixedSpaceBefore
-      const size = Math.max(minSize, Math.min(maxSize, splitResize[index + 1]))
-      splits[index + 1].style.flex = `0 0 ${size}px`
-      for (let i = 0; i < splits.length; i++) {
-        if (splits[i].style.flex.endsWith('%') && i !== index + 1) {
-          splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`
-        }
-      }
+      const totalDividerSpace = dividerSize * (splits.length - 1)
+      const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - totalDividerSpace
+      const maxSize = totalSpace - minSize * autoCountBefore - fixedSpaceBefore
+      const size = Math.max(minSize, Math.min(maxSize, pointerPos))
+      splitElement.style.flex = `0 0 ${size}px`
 
     } else {
-      const maxSize = splitSizes[index] + splitSizes[index + 1] - minSize
-      const size = Math.max(minSize, Math.min(maxSize, splitResize[index]))
-      const sizeNext = splitSizes[index + 1] - (size - splitSizes[index])
-      for (let i = 0; i < splits.length; i++) {
-        if (splits[i].style.flex.endsWith('%')) {
-          if (i === index) {
-            splits[i].style.flex = `1 1 ${size / flexSpace * 100}%`
-          } else if (i === index + 1) {
-            splits[i].style.flex = `1 1 ${sizeNext / flexSpace * 100}%`
-          } else {
-            splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`
-          }
-        }
-      }
+      const leftSplit = splits[dividerIndex]
+      const rightSplit = splits[dividerIndex + 1]
+      const leftRect = leftSplit.getBoundingClientRect()
+      const rightRect = rightSplit.getBoundingClientRect()
+
+      const combinedSize = orientation === 'horizontal'
+        ? leftRect.width + rightRect.width
+        : leftRect.height + rightRect.height
+
+      const pointerPos = orientation === 'horizontal'
+        ? event.detail.clientX - leftRect.left - dividerSize / 2
+        : event.detail.clientY - leftRect.top - dividerSize / 2
+
+      const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos))
+      const rightSize = combinedSize - leftSize
+
+      leftSplit.style.flex = `0 0 ${leftSize}px`
+      rightSplit.style.flex = `0 0 ${rightSize}px`
     }
   }
 
   onDividerMoveEnd(event: CustomEvent) {
     event.stopPropagation()
-    let index = 0
+    const dividerIndex = event.detail.index
+    const orientation = this.split.orientation
+
+    const splits: HTMLElement[] = []
     for (let i = 0; i < this.children.length; i += 2) {
-      const splitElement = this.children[i] as HTMLElement
-      this.split.children[index].flex = splitElement.style.flex
-      index++
+      splits.push(this.children[i] as HTMLElement)
     }
+
+    const isFirstDivider = dividerIndex === 0
+    const isLastDivider = dividerIndex === splits.length - 2
+
+    if (isFirstDivider) {
+      const splitElement = splits[0]
+      const rect = splitElement.getBoundingClientRect()
+      const size = Math.round(orientation === 'horizontal' ? rect.width : rect.height)
+      this.split.children[0].size = size
+
+    } else if (isLastDivider) {
+      const splitElement = splits[splits.length - 1]
+      const rect = splitElement.getBoundingClientRect()
+      const size = Math.round(orientation === 'horizontal' ? rect.width : rect.height)
+      this.split.children[splits.length - 1].size = size
+
+    } else {
+      const leftSplit = splits[dividerIndex]
+      const rightSplit = splits[dividerIndex + 1]
+      const leftRect = leftSplit.getBoundingClientRect()
+      const rightRect = rightSplit.getBoundingClientRect()
+
+      const leftSize = Math.round(orientation === 'horizontal' ? leftRect.width : leftRect.height)
+      const rightSize = Math.round(orientation === 'horizontal' ? rightRect.width : rightRect.height)
+
+      this.split.children[dividerIndex].size = leftSize
+      this.split.children[dividerIndex + 1].size = rightSize
+    }
+    this.ensureAutoSize()
   }
 
   onPanelRemove(event: CustomEvent) {
@@ -219,7 +193,7 @@ export class IoSplit extends IoElement {
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
-    this.ensureFlexGrow()
+    this.ensureAutoSize()
   }
 
   onSplitRemove(event: CustomEvent) {
@@ -232,13 +206,13 @@ export class IoSplit extends IoElement {
     if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
-    this.ensureFlexGrow()
+    this.ensureAutoSize()
   }
 
-  ensureFlexGrow() {
-    const hasFlexGrow = this.split.children.some(child => child.flex.startsWith('1'))
-    if (!hasFlexGrow && this.split.children.length > 0) {
-      this.split.children[0].flex = '1 1 auto'
+  ensureAutoSize() {
+    const hasAutoSize = this.split.children.some(child => child.size === 'auto')
+    if (!hasAutoSize && this.split.children.length > 0) {
+      this.split.children[0].size = 'auto'
     }
   }
 
@@ -264,11 +238,12 @@ export class IoSplit extends IoElement {
     if (index === -1 || childSplit.children.length === 0) return
     const soleChild = childSplit.children[0]
     if (soleChild instanceof Panel) {
-      soleChild.flex = '1 1 100%'
+      soleChild.size = 'auto'
       this.split.children.splice(index, 1, soleChild)
     } else if (soleChild instanceof Split) {
       this.split.orientation = soleChild.orientation
       this.split.children.splice(index, 1, ...soleChild.children)
+      this.ensureAutoSize()
     }
   }
 
@@ -300,7 +275,7 @@ export class IoSplit extends IoElement {
   }
   changed() {
     this.setAttribute('orientation', this.split.orientation)
-    this.style.flex = this.split.flex
+    this.style.flex = sizeToFlex(this.split.size)
     // TODO: Validate split
     const vChildren: VDOMElement[] = []
     for (let i = 0; i < this.split.children.length; i++) {
@@ -308,14 +283,14 @@ export class IoSplit extends IoElement {
       if (child instanceof Split) {
         vChildren.push(ioSplit({
           split: child,
-          style: {flex: child.flex},
+          style: {flex: sizeToFlex(child.size)},
           elements: this.elements,
           addMenuOption: this.addMenuOption,
         }))
       } else if (child instanceof Panel) {
         vChildren.push(ioPanel({
           panel: child,
-          style: {flex: child.flex},
+          style: {flex: sizeToFlex(child.size)},
           elements: this.elements,
           addMenuOption: this.addMenuOption,
         }))
