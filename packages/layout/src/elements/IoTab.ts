@@ -1,5 +1,5 @@
 import { Register, ReactiveProperty, span } from '@io-gui/core'
-import { IoField, IoFieldProps, ioField, ioString, ioButton } from '@io-gui/inputs'
+import { IoField, IoFieldProps, ioString, ioButton } from '@io-gui/inputs'
 import { IoContextEditorSingleton } from '@io-gui/editors'
 import { IconsetDB, ioIcon } from '@io-gui/icons'
 import { MenuOptionProps, MenuOption, ioOptionSelect } from '@io-gui/menus'
@@ -91,7 +91,7 @@ export class IoTab extends IoField {
   static get Listeners() {
     return {
       'click': 'preventDefault',
-      'contextmenu': 'preventDefault',
+      'contextmenu': 'onContextMenu',
     }
   }
 
@@ -105,6 +105,11 @@ export class IoTab extends IoField {
     event.preventDefault()
   }
   preventDefault(event: Event) {
+    event.stopPropagation()
+    event.preventDefault()
+  }
+  // TODO: test on iOS
+  onContextMenu(event: MouseEvent) {
     event.stopPropagation()
     event.preventDefault()
     this.expandContextEditor()

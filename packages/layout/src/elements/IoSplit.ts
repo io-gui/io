@@ -39,8 +39,14 @@ export class IoSplit extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[]
 
+  @ReactiveProperty({type: Object, value: null})
+  declare leadingDrawer: Split | Panel | null
+
+  @ReactiveProperty({type: Object, value: null})
+  declare trailingDrawer: Split | Panel | null
+
   @Property({type: MenuOption})
-  declare addMenuOption: MenuOption | undefined
+  declare addMenuOption: MenuOption | undefined  
 
   static get Listeners() {
     return {
@@ -55,6 +61,77 @@ export class IoSplit extends IoElement {
 
   constructor(args: IoSplitProps) {
     super(args)
+  }
+
+  onResized() {
+    this.debounce(this.calculateCollapsedDrawersDebounced)
+  }
+  calculateCollapsedDrawersDebounced() {
+    const split = this.split
+    const children = split.children
+    const orientation = split.orientation
+    const rect = this.getBoundingClientRect()
+    let size: number = Infinity
+    let minSize = 0
+    const sizes: Array<number> = []
+
+    if (orientation ===  'horizontal') {
+      size = rect.width
+    } else {
+      size = rect.height
+    }
+    children.forEach(child => {
+      if (child.size === 'auto') {
+        // TODO: implement minsize prop
+        minSize += 300
+        sizes.push(300)
+      } else if (typeof child.size === 'number') {
+        minSize += child.size
+        sizes.push(child.size)
+      } else {
+        debug: {
+          console.error('IoSplit: Cannot determine minSize of split!')
+        }
+      }
+    })
+
+    let collapsePriority: 'start' | 'end' = 'end'
+    const lastIndex = children.length - 1 
+    const bothAuto = children[0].size === 'auto' && children[lastIndex].size === 'auto'
+    const noneAuto = children[0].size !== 'auto' && children[lastIndex].size !== 'auto'
+    if (noneAuto) {
+      collapsePriority = children[0].size <= children[lastIndex].size ? 'start' : 'end'
+    } else if (!bothAuto) {
+      collapsePriority = children[lastIndex].size === 'auto' ? 'start' : 'end'
+    }
+    const collapsedSize = collapsePriority === 'start' ? sizes[0] : sizes[sizes.length - 1]
+
+    if (size < minSize) {
+      if (children.length >= 3 && size < (minSize - collapsedSize)) {
+        this.setProperties({
+          leadingDrawer: children[0],
+          trailingDrawer: children[lastIndex],
+        })
+      } else if (children.length >= 2) {
+        if (collapsePriority === 'start') {
+          this.setProperties({
+            leadingDrawer: children[0],
+            trailingDrawer: null,
+          })
+        } else {
+          this.setProperties({
+            leadingDrawer: null,
+            trailingDrawer: children[lastIndex],
+          })
+        }
+      }
+
+    } else {
+      this.setProperties({
+        leadingDrawer: null,
+        trailingDrawer: null,
+      })
+    }
   }
 
   onDividerMove(event: CustomEvent) {
@@ -178,6 +255,7 @@ export class IoSplit extends IoElement {
       this.split.children[dividerIndex + 1].size = rightSize
     }
     this.ensureAutoSize()
+    this.debounce(this.calculateCollapsedDrawersDebounced)
   }
 
   onPanelRemove(event: CustomEvent) {
@@ -276,9 +354,18 @@ export class IoSplit extends IoElement {
   changed() {
     this.setAttribute('orientation', this.split.orientation)
     this.style.flex = sizeToFlex(this.split.size)
+    const lastIndex = this.split.children.length - 1
     // TODO: Validate split
     const vChildren: VDOMElement[] = []
     for (let i = 0; i < this.split.children.length; i++) {
+
+      if (i === 0 && this.leadingDrawer !== null) {
+        continue
+      }
+      if (i === lastIndex && this.trailingDrawer !== null) {
+        continue
+      }
+
       const child = this.split.children[i]
       if (child instanceof Split) {
         vChildren.push(ioSplit({
@@ -297,7 +384,9 @@ export class IoSplit extends IoElement {
       } else debug: {
         console.warn('IOSplit: Invalid child type', child)
       }
-      if (i < this.split.children.length - 1) {
+
+      let lastDividerIndex = this.trailingDrawer === null ? lastIndex : lastIndex - 1
+      if (i < lastDividerIndex) {
         vChildren.push(ioDivider({orientation: this.split.orientation, index: i}))
       }
     }
