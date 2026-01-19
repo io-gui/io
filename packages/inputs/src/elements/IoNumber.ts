@@ -100,7 +100,7 @@ export class IoNumber extends IoField {
     })
   }
   onPointerdown(event: PointerEvent) {
-    if (event.pointerType === 'touch') event.preventDefault()
+    // if (event.pointerType === 'touch') event.preventDefault()
     this.addEventListener('pointermove', this.onPointermove)
     this.addEventListener('pointerup', this.onPointerup)
     if (document.activeElement === this as unknown as Element && event.button === 0) return
