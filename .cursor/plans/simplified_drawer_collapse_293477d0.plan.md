@@ -12,7 +12,7 @@ todos:
       - collapse-state
   - id: bugfixes
     content: Fix index comparison, divider indexing, and initial calculation bugs
-    status: pending
+    status: completed
   - id: io-drawer
     content: Create IoDrawer element for collapsed content display
     status: pending
