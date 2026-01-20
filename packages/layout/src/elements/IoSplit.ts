@@ -5,12 +5,9 @@ import { ioDivider } from './IoDivider.js'
 import { Split, SplitOrientation } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
+import { sizeToFlex } from './IoLayout.js'
 
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
-
-function sizeToFlex(size: number | 'auto'): string {
-  return size === 'auto' ? '1 1 auto' : `0 0 ${size}px`
-}
 
 export type IoSplitProps = IoElementProps & {
   split: Split
@@ -30,6 +27,9 @@ export class IoSplit extends IoElement {
       :host[orientation='vertical'] {
         flex-direction: column;
       }
+      :host:not([hasvisibleautosize]) > .io-split-last-visible {
+        flex: 1 1 auto !important;
+      }
     `
   }
 
@@ -46,7 +46,10 @@ export class IoSplit extends IoElement {
   declare trailingDrawer: Split | Panel | null
 
   @Property({type: MenuOption})
-  declare addMenuOption: MenuOption | undefined  
+  declare addMenuOption: MenuOption | undefined
+
+  @ReactiveProperty({type: Boolean, value: true, reflect: true})
+  declare hasVisibleAutoSize: boolean
 
   static get Listeners() {
     return {
@@ -67,6 +70,9 @@ export class IoSplit extends IoElement {
     this.debounce(this.calculateCollapsedDrawersDebounced)
   }
   calculateCollapsedDrawersDebounced() {
+    this.calculateCollapsedDrawers()
+  }
+  calculateCollapsedDrawers() {
     const split = this.split
     const children = split.children
     const orientation = split.orientation
@@ -136,125 +142,51 @@ export class IoSplit extends IoElement {
 
   onDividerMove(event: CustomEvent) {
     event.stopPropagation()
-    const dividerIndex = event.detail.index
-    const rect = this.getBoundingClientRect()
+
     const orientation = this.split.orientation
     const dividerSize = ThemeSingleton.spacing3
     const minSize = ThemeSingleton.fieldHeight * 4
 
-    const splits: HTMLElement[] = []
-    for (let i = 0; i < this.children.length; i += 2) {
-      splits.push(this.children[i] as HTMLElement)
-    }
+    const leftSplit = event.detail.element.previousElementSibling as HTMLElement
+    const rightSplit = event.detail.element.nextElementSibling as HTMLElement
+    const leftRect = leftSplit.getBoundingClientRect()
+    const rightRect = rightSplit.getBoundingClientRect()
 
-    const isFirstDivider = dividerIndex === 0
-    const isLastDivider = dividerIndex === splits.length - 2
+    const combinedSize = orientation === 'horizontal'
+      ? leftRect.width + rightRect.width
+      : leftRect.height + rightRect.height
 
-    if (isFirstDivider) {
-      const splitElement = splits[0]
-      const splitRect = splitElement.getBoundingClientRect()
-      const pointerPos = orientation === 'horizontal'
-        ? event.detail.clientX - splitRect.left - dividerSize / 2
-        : event.detail.clientY - splitRect.top - dividerSize / 2
+    const pointerPos = orientation === 'horizontal'
+      ? event.detail.clientX - leftRect.left - dividerSize / 2
+      : event.detail.clientY - leftRect.top - dividerSize / 2
 
-      let fixedSpaceAfter = 0
-      let autoCountAfter = 0
-      for (let i = 1; i < splits.length; i++) {
-        const child = this.split.children[i]
-        if (child.size === 'auto') {
-          autoCountAfter++
-        } else {
-          fixedSpaceAfter += child.size
-        }
-      }
-      const totalDividerSpace = dividerSize * (splits.length - 1)
-      const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - totalDividerSpace
-      const maxSize = totalSpace - minSize * autoCountAfter - fixedSpaceAfter
-      const size = Math.max(minSize, Math.min(maxSize, pointerPos))
-      splitElement.style.flex = `0 0 ${size}px`
+    const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos))
+    const rightSize = combinedSize - leftSize
 
-    } else if (isLastDivider) {
-      const splitElement = splits[splits.length - 1]
-      const pointerPos = orientation === 'horizontal'
-        ? rect.right - event.detail.clientX - dividerSize / 2
-        : rect.bottom - event.detail.clientY - dividerSize / 2
-
-      let fixedSpaceBefore = 0
-      let autoCountBefore = 0
-      for (let i = 0; i < splits.length - 1; i++) {
-        const child = this.split.children[i]
-        if (child.size === 'auto') {
-          autoCountBefore++
-        } else {
-          fixedSpaceBefore += child.size
-        }
-      }
-      const totalDividerSpace = dividerSize * (splits.length - 1)
-      const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - totalDividerSpace
-      const maxSize = totalSpace - minSize * autoCountBefore - fixedSpaceBefore
-      const size = Math.max(minSize, Math.min(maxSize, pointerPos))
-      splitElement.style.flex = `0 0 ${size}px`
-
-    } else {
-      const leftSplit = splits[dividerIndex]
-      const rightSplit = splits[dividerIndex + 1]
-      const leftRect = leftSplit.getBoundingClientRect()
-      const rightRect = rightSplit.getBoundingClientRect()
-
-      const combinedSize = orientation === 'horizontal'
-        ? leftRect.width + rightRect.width
-        : leftRect.height + rightRect.height
-
-      const pointerPos = orientation === 'horizontal'
-        ? event.detail.clientX - leftRect.left - dividerSize / 2
-        : event.detail.clientY - leftRect.top - dividerSize / 2
-
-      const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos))
-      const rightSize = combinedSize - leftSize
-
-      leftSplit.style.flex = `0 0 ${leftSize}px`
-      rightSplit.style.flex = `0 0 ${rightSize}px`
-    }
+    leftSplit.style.flex = `0 0 ${leftSize}px`
+    rightSplit.style.flex = `0 0 ${rightSize}px`
   }
 
   onDividerMoveEnd(event: CustomEvent) {
     event.stopPropagation()
-    const dividerIndex = event.detail.index
     const orientation = this.split.orientation
 
-    const splits: HTMLElement[] = []
-    for (let i = 0; i < this.children.length; i += 2) {
-      splits.push(this.children[i] as HTMLElement)
+    const childrenElements = this.querySelectorAll(':scope > io-split, :scope > io-panel')
+    for (let i = 0; i < childrenElements.length; i++) {
+      const child = childrenElements[i] as IoSplit | IoPanel
+      const childmodel = child instanceof IoSplit ? child.split : child.panel
+
+      const childRect = child.getBoundingClientRect()
+      const childSize = orientation === 'horizontal' ? childRect.width : childRect.height
+
+      if (childmodel.size === 'auto') {
+        child.style.flex = '1 1 auto'
+      } else {
+        childmodel.size = childSize
+      }
     }
 
-    const isFirstDivider = dividerIndex === 0
-    const isLastDivider = dividerIndex === splits.length - 2
-
-    if (isFirstDivider) {
-      const splitElement = splits[0]
-      const rect = splitElement.getBoundingClientRect()
-      const size = Math.round(orientation === 'horizontal' ? rect.width : rect.height)
-      this.split.children[0].size = size
-
-    } else if (isLastDivider) {
-      const splitElement = splits[splits.length - 1]
-      const rect = splitElement.getBoundingClientRect()
-      const size = Math.round(orientation === 'horizontal' ? rect.width : rect.height)
-      this.split.children[splits.length - 1].size = size
-
-    } else {
-      const leftSplit = splits[dividerIndex]
-      const rightSplit = splits[dividerIndex + 1]
-      const leftRect = leftSplit.getBoundingClientRect()
-      const rightRect = rightSplit.getBoundingClientRect()
-
-      const leftSize = Math.round(orientation === 'horizontal' ? leftRect.width : leftRect.height)
-      const rightSize = Math.round(orientation === 'horizontal' ? rightRect.width : rightRect.height)
-
-      this.split.children[dividerIndex].size = leftSize
-      this.split.children[dividerIndex + 1].size = rightSize
-    }
-    this.ensureAutoSize()
+    this.ensureOneIsAutoSize()
     this.debounce(this.calculateCollapsedDrawersDebounced)
   }
 
@@ -271,7 +203,7 @@ export class IoSplit extends IoElement {
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
-    this.ensureAutoSize()
+    this.ensureOneIsAutoSize()
   }
 
   onSplitRemove(event: CustomEvent) {
@@ -284,14 +216,21 @@ export class IoSplit extends IoElement {
     if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
-    this.ensureAutoSize()
+    this.ensureOneIsAutoSize()
   }
 
-  ensureAutoSize() {
+  ensureOneIsAutoSize() {
     const hasAutoSize = this.split.children.some(child => child.size === 'auto')
     if (!hasAutoSize && this.split.children.length > 0) {
-      this.split.children[0].size = 'auto'
+      const i = Math.min(1, this.split.children.length - 1)
+      this.split.children[i].size = 'auto'
     }
+
+    this.hasVisibleAutoSize = this.split.children.some((child, i) => {
+      if (i === 0 && this.leadingDrawer !== null) return false
+      if (i === this.split.children.length - 1 && this.trailingDrawer !== null) return false
+      return child.size === 'auto'
+    })
   }
 
   onSplitConsolidate(event: CustomEvent) {
@@ -321,7 +260,7 @@ export class IoSplit extends IoElement {
     } else if (soleChild instanceof Split) {
       this.split.orientation = soleChild.orientation
       this.split.children.splice(index, 1, ...soleChild.children)
-      this.ensureAutoSize()
+      this.ensureOneIsAutoSize()
     }
   }
 
@@ -349,15 +288,19 @@ export class IoSplit extends IoElement {
     }
   }
   splitMutated() {
-    this.debounce(this.changed)
+    this.calculateCollapsedDrawers()
+    this.changed()
+  }
+  splitChanged() {
+    this.calculateCollapsedDrawers()
   }
   changed() {
     this.setAttribute('orientation', this.split.orientation)
-    this.style.flex = sizeToFlex(this.split.size)
-    const lastIndex = this.split.children.length - 1
+    const childCount = this.split.children.length
+    const lastIndex = childCount - 1
     // TODO: Validate split
     const vChildren: VDOMElement[] = []
-    for (let i = 0; i < this.split.children.length; i++) {
+    for (let i = 0; i < childCount; i++) {
 
       if (i === 0 && this.leadingDrawer !== null) {
         continue
@@ -366,11 +309,14 @@ export class IoSplit extends IoElement {
         continue
       }
 
+      const isLastVisible = (i === lastIndex - 1 && this.trailingDrawer !== null) || (i === lastIndex && this.trailingDrawer === null)
+
       const child = this.split.children[i]
       if (child instanceof Split) {
         vChildren.push(ioSplit({
           split: child,
           style: {flex: sizeToFlex(child.size)},
+          class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
           addMenuOption: this.addMenuOption,
         }))
@@ -378,6 +324,7 @@ export class IoSplit extends IoElement {
         vChildren.push(ioPanel({
           panel: child,
           style: {flex: sizeToFlex(child.size)},
+          class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
           addMenuOption: this.addMenuOption,
         }))
@@ -385,9 +332,10 @@ export class IoSplit extends IoElement {
         console.warn('IOSplit: Invalid child type', child)
       }
 
-      let lastDividerIndex = this.trailingDrawer === null ? lastIndex : lastIndex - 1
-      if (i < lastDividerIndex) {
-        vChildren.push(ioDivider({orientation: this.split.orientation, index: i}))
+      if (!isLastVisible) {
+        vChildren.push(ioDivider({
+          orientation: this.split.orientation,
+        }))
       }
     }
     this.render(vChildren)

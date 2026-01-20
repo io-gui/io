@@ -1,8 +1,7 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from '@io-gui/core'
+import { Register, ReactiveProperty, IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core'
 
 export type IoDividerProps = IoElementProps & {
   orientation: 'vertical' | 'horizontal'
-  index: number
 }
 
 @Register
@@ -73,9 +72,6 @@ export class IoDivider extends IoElement {
   @ReactiveProperty({value: 'horizontal', type: String, reflect: true})
   declare orientation: 'horizontal' | 'vertical'
 
-  @Property(Number)
-  declare index: number
-
   static get Listeners() {
     return {
       'pointerdown': 'onPointerdown',
@@ -97,9 +93,9 @@ export class IoDivider extends IoElement {
   onPointermove(event: PointerEvent) {
     event.preventDefault()
     this.dispatch('io-divider-move', {
-      index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
+      element: this,
     }, true)
   }
   onPointerup(event: PointerEvent) {
@@ -110,9 +106,9 @@ export class IoDivider extends IoElement {
     this.releasePointerCapture(event.pointerId)
     this.pressed = false
     this.dispatch('io-divider-move-end', {
-      index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
+      element: this,
     }, true)
   }
   onPointercancel(event: PointerEvent) {

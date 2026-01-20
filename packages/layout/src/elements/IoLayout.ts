@@ -3,6 +3,10 @@ import { MenuOption } from '@io-gui/menus'
 import { ioSplit } from './IoSplit.js'
 import { Split } from '../nodes/Split.js'
 
+export function sizeToFlex(size: number | 'auto'): string {
+  return size === 'auto' ? '1 1 auto' : `0 0 ${size}px`
+}
+
 export type IoLayoutProps = IoElementProps & {
   split: Split | Binding
   elements: VDOMElement[]
@@ -48,6 +52,7 @@ export class IoLayout extends IoElement {
     this.render([
       ioSplit({
         split: this.split,
+        style: {flex: sizeToFlex(this.split.size)},
         elements: this.elements,
         addMenuOption: this.addMenuOption,
       })
