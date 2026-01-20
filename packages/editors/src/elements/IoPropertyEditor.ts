@@ -264,7 +264,9 @@ export class IoPropertyEditor extends IoElement {
     this.throttle(this.changedThrottled)
   }
   changedThrottled() {
+    if (!this.value || typeof this.value !== 'object') return
     for (const id in this._propertyEditors) {
+      if (!(id in this.value)) continue
       const value = this.value[id as keyof typeof this.value]
       const editor = this._propertyEditors[id]
       editor.value = value

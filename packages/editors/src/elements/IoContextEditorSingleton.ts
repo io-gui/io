@@ -78,11 +78,12 @@ class IoContextEditor extends IoPropertyEditor {
     this.onClose = props.onClose || null
     // TODO: nudge: 'none' should open at cursor position like context menu
     nudge(this, props.source, props.direction)
-    this.debounce(this.onExpand)
+    this.debounce(this.onExpand, undefined, 2)
   }
   onExpand() {
-    (this.querySelector('[tabindex="0"]:not([inert])') as HTMLElement)?.focus()
     // TODO: keyboard focus navigation
+    // TODO: Restore in-overlay focus after ioOptionSelect collapse
+    ;(this.querySelector('[tabindex="0"]:not([inert])') as HTMLElement)?.focus()
   }
   expandedChanged() {
     if (!this.expanded) {
