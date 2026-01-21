@@ -195,18 +195,16 @@ describe('IoTab', () => {
       expect(focusSpy).toHaveBeenCalled()
     })
 
-    it('should expand context editor on right button pointerdown', () => {
+    it('should expand context editor on contextmenu', () => {
       const expandSpy = vi.spyOn(ioTab, 'expandContextEditor')
-      const event = new PointerEvent('pointerdown', {
-        pointerId: 1,
-        buttons: 2,
+      const event = new MouseEvent('contextmenu', {
         clientX: 100,
         clientY: 100,
         bubbles: true,
         cancelable: true,
       })
 
-      ioTab.onPointerdown(event)
+      ioTab.onContextMenu(event)
 
       expect(expandSpy).toHaveBeenCalled()
     })
@@ -790,7 +788,7 @@ describe('IoTab', () => {
     it('should have Listeners getter', () => {
       expect(IoTab.Listeners).toBeDefined()
       expect(IoTab.Listeners.click).toBe('preventDefault')
-      expect(IoTab.Listeners.contextmenu).toBe('preventDefault')
+      expect(IoTab.Listeners.contextmenu).toBe('onContextMenu')
     })
   })
 

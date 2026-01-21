@@ -476,13 +476,13 @@ describe('IoLayout', () => {
     })
   })
 
-  describe('Size Values', () => {
-    it('should apply size values from split', () => {
+  describe('Flex Values', () => {
+    it('should apply flex values from split', () => {
       const split = new Split({
         type: 'split',
         children: [
-          { type: 'panel', tabs: [{ id: 'fixed' }], size: 200 },
-          { type: 'panel', tabs: [{ id: 'grow' }], size: 'auto' }
+          { type: 'panel', tabs: [{ id: 'fixed' }], flex: '0 0 200px' },
+          { type: 'panel', tabs: [{ id: 'grow' }], flex: '1 1 auto' }
         ]
       })
 

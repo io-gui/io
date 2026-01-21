@@ -85,10 +85,12 @@ export class IoSplit extends IoElement {
     this.calculateCollapsedDrawers()
   }
   calculateCollapsedDrawers() {
+    const rect = this.getBoundingClientRect()
+    if (rect.width === 0 && rect.height === 0) return
+
     const split = this.split
     const children = split.children
     const orientation = split.orientation
-    const rect = this.getBoundingClientRect()
     let size: number = Infinity
     let minSize = 0
     const sizes: Array<number> = []
