@@ -25,7 +25,7 @@ import { ioThreeProperties } from '../elements/IoThreeProperties.js'
 
 import * as THREE from 'three/webgpu'
 
-const version = 5.2
+const version = 5.3
 
 const split = new Split({
   type: 'split',
@@ -33,43 +33,60 @@ const split = new Split({
   children: [
     {
       type: 'panel',
-      flex: '0 0 380px',
+      flex: '0 0 280px',
       tabs: [{id: 'AllClasses'}],
     },
     {
       type: 'split',
+      flex: '2 1 auto',
       orientation: 'vertical',
       children: [
         {
           type: 'split',
           orientation: 'horizontal',
           children: [
-            {type: 'panel', tabs: [
-              {id: 'Top'},
-            ]},
-            {type: 'panel', tabs: [
-              {id: 'Front'},
-            ]},
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Top'},
+              ]
+            },
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Front'},
+              ]
+            },
           ]
         },
         {
           type: 'split',
           orientation: 'horizontal',
           children: [
-            {type: 'panel', tabs: [
-              {id: 'Left'},
-            ]},
-            {type: 'panel', tabs: [
-              {id: 'Perspective'},
-              {id: 'SceneCamera'},
-            ]},
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Left'},
+              ]
+            },
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Perspective'},
+                {id: 'SceneCamera'},
+              ]
+            },
           ]
         },
       ]
     },
     {
       type: 'panel',
-      flex: '0 0 380px',
+      flex: '0 0 280px',
       tabs: [
         {id: 'ExampleSelector'},
       ],

@@ -9,9 +9,9 @@ import { Tab } from '../nodes/Tab.js'
 export function parseFlexBasis(flex: string): number {
   const parts = flex.trim().split(/\s+/)
   const basis = parts[2] ?? 'auto'
-  if (basis === 'auto' || basis === '0') return 380
+  if (basis === 'auto' || basis === '0') return 240
   const match = basis.match(/^(\d+(?:\.\d+)?)px$/)
-  return match ? parseInt(match[1], 10) : 380
+  return match ? parseInt(match[1], 10) : 240
 }
 
 export function hasFlexGrow(flex: string): boolean {
