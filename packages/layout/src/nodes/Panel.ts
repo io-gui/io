@@ -4,7 +4,7 @@ import { Tab, TabProps } from './Tab.js'
 export type PanelProps = {
   type: 'panel'
   tabs: Array<TabProps>
-  size?: number | 'auto'
+  flex?: string
 }
 
 function deduplicateTabs<T extends TabProps>(tabs: Array<T>, context: string): Array<T> {
@@ -27,8 +27,8 @@ export class Panel extends Node {
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
 
-  @ReactiveProperty({value: 'auto'})
-  declare size: number | 'auto'
+  @ReactiveProperty({type: String, value: '1 1 auto'})
+  declare flex: string
 
   constructor(args: PanelProps) {
     debug: {
@@ -76,12 +76,20 @@ export class Panel extends Node {
     })
     this.tabs.dispatchMutation()
   }
+  flexChanged() {
+    debug: {
+      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+      if (!flexRegex.test(this.flex)) {
+        console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
+      }
+    }
+  }
   toJSON(): PanelProps {
     const json: PanelProps = {
       type: 'panel',
       tabs: this.tabs.map(tab => tab.toJSON()),
     }
-    if (this.size !== 'auto') json.size = this.size
+    if (this.flex !== '1 1 auto') json.flex = this.flex
     return json
   }
   fromJSON(json: PanelProps) {
@@ -93,7 +101,7 @@ export class Panel extends Node {
     const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON')
     this.setProperties({
       tabs: uniqueTabs.map(tab => new Tab(tab)),
-      size: json.size ?? 'auto',
+      flex: json.flex ?? '1 1 auto',
     })
     return this
   }

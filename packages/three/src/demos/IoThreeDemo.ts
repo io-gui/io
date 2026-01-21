@@ -25,7 +25,7 @@ import { ioThreeProperties } from '../elements/IoThreeProperties.js'
 
 import * as THREE from 'three/webgpu'
 
-const version = 5.1
+const version = 5.2
 
 const split = new Split({
   type: 'split',
@@ -33,10 +33,8 @@ const split = new Split({
   children: [
     {
       type: 'panel',
-      size: 380,
-      tabs: [
-        {id: 'AllClasses'},
-      ],
+      flex: '0 0 380px',
+      tabs: [{id: 'AllClasses'}],
     },
     {
       type: 'split',
@@ -71,7 +69,7 @@ const split = new Split({
     },
     {
       type: 'panel',
-      size: 380,
+      flex: '0 0 380px',
       tabs: [
         {id: 'ExampleSelector'},
       ],

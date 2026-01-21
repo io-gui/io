@@ -40,20 +40,8 @@ Add responsive collapse behavior to IoLayout where panels automatically collapse
 ## Key Design Decisions
 
 - **Per-split drawers**: Each IoSplit has left/right (horizontal) or top/bottom (vertical) drawers
-- **Edge-to-middle collapse**: First and last children collapse before middle children
-- **Outer-first per orientation**: Outer splits collapse before inner splits of same orientation
-- **Structure preserved**: Collapsed splits render full structure inside drawer
-- **No drag-and-drop initially**: Focus on button/menu-based interactions
-
-## Data Model Changes
-
-### [`packages/layout/src/nodes/Panel.ts`](packages/layout/src/nodes/Panel.ts)
-
-- Add `minSize?: number` property (default: `size` if fixed, or 300 if auto)
-
-### [`packages/layout/src/nodes/Split.ts`](packages/layout/src/nodes/Split.ts)
-
-- Add `minSize?: number` property (minimum before this split collapses to parent's drawer)
+- **Edge collapse only**: First and last children collapse only
+- **Structure preserved**: Collapsed splits render children inside drawer
 
 ## New Elements
 
@@ -70,63 +58,12 @@ Add responsive collapse behavior to IoLayout where panels automatically collapse
 - Shows icon indicating collapsed content exists
 - Positioned at left/right (H splits) or top/bottom (V splits)
 
-## Core Algorithm
-
-```
-evaluateCollapse(split, availableSize):
-  1. Calculate requiredSize = sum of children's effective minSize
-  2. While availableSize < requiredSize AND collapsible children exist:
-     a. Find edge child (first or last, alternating)
-     b. Mark as collapsed
-     c. Recalculate requiredSize
-  3. Return { visibleChildren, collapsedLeft/Top, collapsedRight/Bottom }
-```
-
 ## Implementation Phases
 
-### Phase 1: minSize Property
-
-Add minSize to data models with defaults and serialization.
-
-### Phase 2: Collapse State Calculation  
-
-Implement algorithm in IoSplit to determine which children should collapse based on container size.
-
-### Phase 3: Drawer Elements
+### Phase 1: Drawer Elements
 
 Create IoDrawer and IoDrawerHandle components with basic open/close behavior.
 
-### Phase 4: IoSplit Integration
+### Phase 2: IoSplit Integration
 
 Modify IoSplit.changed() to render drawers and drawer handles alongside visible children.
-
-### Phase 5: Mobile Interaction
-
-Add "Split Left/Right/Top/Bottom" menu option to panels for creating splits without drag-and-drop.
-
-Add "Expand" option to drawer panels for swapping with visible content.
-
-## File Changes Summary
-
-| File | Changes |
-
-|------|---------|
-
-| `nodes/Panel.ts` | Add `minSize` property |
-
-| `nodes/Split.ts` | Add `minSize` property |
-
-| `elements/IoSplit.ts` | Add collapse logic, render drawers |
-
-| `elements/IoDrawer.ts` | New - drawer container |
-
-| `elements/IoDrawerHandle.ts` | New - edge toggle button |
-
-| `index.ts` | Export new elements |
-
-## Testing Strategy
-
-- Unit tests for collapse algorithm with various split configurations
-- Tests for minSize calculation and defaults
-- Tests for drawer open/close state management
-- Visual testing on multiple viewport sizes

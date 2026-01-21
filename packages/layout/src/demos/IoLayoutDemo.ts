@@ -6,7 +6,7 @@ import { ioMarkdown } from '@io-gui/markdown'
 import { MenuOption } from '@io-gui/menus'
 
 
-const VERSION = 0
+const VERSION = 1
 
 function lorem(length) {
   const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ')
@@ -22,11 +22,12 @@ const split = new Split({
   children: [
     {
       type: 'split',
+      flex: '0 0 350px',
       orientation: 'vertical',
       children: [
         {
           type: 'panel',
-          size: 260,
+          flex: '0 0 260px',
           tabs: [
             {id: 'Inputs', icon: 'io:toggle_on'},
             {id: 'Sliders', icon: 'io:sliders'},
@@ -41,20 +42,33 @@ const split = new Split({
           ]
         }
       ],
-      size: 350,
     },
     {
       type: 'split',
       orientation: 'vertical',
       children: [
-        {type: 'panel', size: 480, tabs: [{id: 'Editors', icon: 'io:developer'}]},
-        {type: 'panel', tabs: [{id: 'Icons', icon: 'io:image'}]},
+        {
+          type: 'panel',
+          flex: '0 0 480px',
+          tabs: [
+            {id: 'Editors', icon: 'io:developer'}
+          ]
+        },
+        {
+          type: 'panel',
+          flex: '0 0 480px',
+          tabs: [
+            {id: 'Icons', icon: 'io:image'}
+          ]
+        },
       ]
     },
     {
       type: 'panel',
-      tabs: [{id: 'Theme Editor', icon: 'io:tune'}],
-      size: 330,
+      flex: '0 0 330px',
+      tabs: [
+        {id: 'Theme Editor', icon: 'io:tune'}
+      ],
     }
   ]
 })

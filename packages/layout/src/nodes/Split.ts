@@ -7,7 +7,7 @@ export type SplitProps = {
   type: 'split'
   children: Array<SplitProps | PanelProps>
   orientation?: SplitOrientation
-  size?: number | 'auto'
+  flex?: string
 }
 
 function createChild(child: SplitProps | PanelProps): Split | Panel {
@@ -37,8 +37,8 @@ export class Split extends Node {
   @ReactiveProperty({type: String, value: 'horizontal'})
   declare orientation: SplitOrientation
 
-  @ReactiveProperty({value: 'auto'})
-  declare size: number | 'auto'
+  @ReactiveProperty({type: String, value: '1 1 auto'})
+  declare flex: string
 
   constructor(args: SplitProps) {
     debug: {
@@ -62,13 +62,21 @@ export class Split extends Node {
   onChildrenMutatedDebounced() {
     this.dispatchMutation()
   }
+  flexChanged() {
+    debug: {
+      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+      if (!flexRegex.test(this.flex)) {
+        console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
+      }
+    }
+  }
   toJSON(): SplitProps {
     const json: SplitProps = {
       type: 'split',
       children: this.children.map((child: Split | Panel) => child.toJSON()),
     }
     if (this.orientation !== 'horizontal') json.orientation = this.orientation
-    if (this.size !== 'auto') json.size = this.size
+    if (this.flex !== '1 1 auto') json.flex = this.flex
     return json
   }
   fromJSON(json: SplitProps) {
@@ -83,7 +91,7 @@ export class Split extends Node {
     this.setProperties({
       children: consolidated.children,
       orientation: consolidated.orientation,
-      size: json.size ?? 'auto',
+      flex: json.flex ?? '1 1 auto',
     })
     return this
   }

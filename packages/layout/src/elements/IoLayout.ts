@@ -52,7 +52,7 @@ export class IoLayout extends IoElement {
     this.render([
       ioSplit({
         split: this.split,
-        style: {flex: sizeToFlex(this.split.size)},
+        style: {flex: this.split.flex},
         elements: this.elements,
         addMenuOption: this.addMenuOption,
       })

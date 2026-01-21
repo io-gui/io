@@ -5,7 +5,19 @@ import { ioDivider } from './IoDivider.js'
 import { Split, SplitOrientation } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
-import { sizeToFlex } from './IoLayout.js'
+
+export function parseFlexBasis(flex: string): number {
+  const parts = flex.trim().split(/\s+/)
+  const basis = parts[2] ?? 'auto'
+  if (basis === 'auto' || basis === '0') return 380
+  const match = basis.match(/^(\d+(?:\.\d+)?)px$/)
+  return match ? parseInt(match[1], 10) : 380
+}
+
+export function hasFlexGrow(flex: string): boolean {
+  const grow = parseFloat(flex.trim().split(/\s+/)[0] ?? '0')
+  return !isNaN(grow) && grow > 0
+}
 
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
@@ -27,7 +39,7 @@ export class IoSplit extends IoElement {
       :host[orientation='vertical'] {
         flex-direction: column;
       }
-      :host:not([hasvisibleautosize]) > .io-split-last-visible {
+      :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
       }
     `
@@ -49,7 +61,7 @@ export class IoSplit extends IoElement {
   declare addMenuOption: MenuOption | undefined
 
   @ReactiveProperty({type: Boolean, value: true, reflect: true})
-  declare hasVisibleAutoSize: boolean
+  declare hasVisibleFlexGrow: boolean
 
   static get Listeners() {
     return {
@@ -81,34 +93,27 @@ export class IoSplit extends IoElement {
     let minSize = 0
     const sizes: Array<number> = []
 
-    if (orientation ===  'horizontal') {
+    if (orientation === 'horizontal') {
       size = rect.width
     } else {
       size = rect.height
     }
     children.forEach(child => {
-      if (child.size === 'auto') {
-        // TODO: implement minsize prop
-        minSize += 300
-        sizes.push(300)
-      } else if (typeof child.size === 'number') {
-        minSize += child.size
-        sizes.push(child.size)
-      } else {
-        debug: {
-          console.error('IoSplit: Cannot determine minSize of split!')
-        }
-      }
+      const childMinSize = parseFlexBasis(child.flex)
+      minSize += childMinSize
+      sizes.push(childMinSize)
     })
 
     let collapsePriority: 'start' | 'end' = 'end'
-    const lastIndex = children.length - 1 
-    const bothAuto = children[0].size === 'auto' && children[lastIndex].size === 'auto'
-    const noneAuto = children[0].size !== 'auto' && children[lastIndex].size !== 'auto'
-    if (noneAuto) {
-      collapsePriority = children[0].size <= children[lastIndex].size ? 'start' : 'end'
-    } else if (!bothAuto) {
-      collapsePriority = children[lastIndex].size === 'auto' ? 'start' : 'end'
+    const lastIndex = children.length - 1
+    const firstGrows = hasFlexGrow(children[0].flex)
+    const lastGrows = hasFlexGrow(children[lastIndex].flex)
+    const bothGrow = firstGrows && lastGrows
+    const neitherGrows = !firstGrows && !lastGrows
+    if (neitherGrows) {
+      collapsePriority = sizes[0] <= sizes[lastIndex] ? 'start' : 'end'
+    } else if (!bothGrow) {
+      collapsePriority = lastGrows ? 'start' : 'end'
     }
     const collapsedSize = collapsePriority === 'start' ? sizes[0] : sizes[sizes.length - 1]
 
@@ -179,14 +184,15 @@ export class IoSplit extends IoElement {
       const childRect = child.getBoundingClientRect()
       const childSize = orientation === 'horizontal' ? childRect.width : childRect.height
 
-      if (childmodel.size === 'auto') {
-        child.style.flex = '1 1 auto'
+      if (hasFlexGrow(childmodel.flex)) {
+        // TODO: Reconsider. Test
+        child.style.flex = childmodel.flex
       } else {
-        childmodel.size = childSize
+        childmodel.flex = `0 0 ${childSize}px`
       }
     }
 
-    this.ensureOneIsAutoSize()
+    this.ensureOneHasFlexGrow()
     this.debounce(this.calculateCollapsedDrawersDebounced)
   }
 
@@ -203,7 +209,7 @@ export class IoSplit extends IoElement {
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
-    this.ensureOneIsAutoSize()
+    this.ensureOneHasFlexGrow()
   }
 
   onSplitRemove(event: CustomEvent) {
@@ -216,20 +222,20 @@ export class IoSplit extends IoElement {
     if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
-    this.ensureOneIsAutoSize()
+    this.ensureOneHasFlexGrow()
   }
 
-  ensureOneIsAutoSize() {
-    const hasAutoSize = this.split.children.some(child => child.size === 'auto')
-    if (!hasAutoSize && this.split.children.length > 0) {
+  ensureOneHasFlexGrow() {
+    const hasGrow = this.split.children.some(child => hasFlexGrow(child.flex))
+    if (!hasGrow && this.split.children.length > 0) {
       const i = Math.min(1, this.split.children.length - 1)
-      this.split.children[i].size = 'auto'
+      this.split.children[i].flex = '1 1 auto'
     }
 
-    this.hasVisibleAutoSize = this.split.children.some((child, i) => {
+    this.hasVisibleFlexGrow = this.split.children.some((child, i) => {
       if (i === 0 && this.leadingDrawer !== null) return false
       if (i === this.split.children.length - 1 && this.trailingDrawer !== null) return false
-      return child.size === 'auto'
+      return hasFlexGrow(child.flex)
     })
   }
 
@@ -255,12 +261,12 @@ export class IoSplit extends IoElement {
     if (index === -1 || childSplit.children.length === 0) return
     const soleChild = childSplit.children[0]
     if (soleChild instanceof Panel) {
-      soleChild.size = 'auto'
+      soleChild.flex = '1 1 auto'
       this.split.children.splice(index, 1, soleChild)
     } else if (soleChild instanceof Split) {
       this.split.orientation = soleChild.orientation
       this.split.children.splice(index, 1, ...soleChild.children)
-      this.ensureOneIsAutoSize()
+      this.ensureOneHasFlexGrow()
     }
   }
 
@@ -315,7 +321,7 @@ export class IoSplit extends IoElement {
       if (child instanceof Split) {
         vChildren.push(ioSplit({
           split: child,
-          style: {flex: sizeToFlex(child.size)},
+          style: {flex: child.flex},
           class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
           addMenuOption: this.addMenuOption,
@@ -323,7 +329,7 @@ export class IoSplit extends IoElement {
       } else if (child instanceof Panel) {
         vChildren.push(ioPanel({
           panel: child,
-          style: {flex: sizeToFlex(child.size)},
+          style: {flex: child.flex},
           class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
           addMenuOption: this.addMenuOption,
