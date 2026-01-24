@@ -7,7 +7,6 @@ export type IoPropertyEditorProps = IoElementProps & {
     label?: string;
     labeled?: boolean;
     labelWidth?: string;
-    orientation?: 'vertical' | 'horizontal';
     config?: PropertyConfig[];
     groups?: PropertyGroups;
     widget?: VDOMElement;
@@ -22,7 +21,6 @@ export declare class IoPropertyEditor extends IoElement {
     label: string;
     labeled: boolean;
     labelWidth: string;
-    orientation: 'vertical' | 'horizontal';
     config: PropertyConfig[];
     groups: PropertyGroups;
     widget: VDOMElement | undefined;

@@ -54,8 +54,7 @@ let IoNumber = class IoNumber extends IoField {
         });
     }
     onPointerdown(event) {
-        if (event.pointerType === 'touch')
-            event.preventDefault();
+        // if (event.pointerType === 'touch') event.preventDefault()
         this.addEventListener('pointermove', this.onPointermove);
         this.addEventListener('pointerup', this.onPointerup);
         if (document.activeElement === this && event.button === 0)

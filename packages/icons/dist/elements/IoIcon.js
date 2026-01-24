@@ -28,6 +28,11 @@ let IoIcon = class IoIcon extends IoElement {
         height: var(--io_fieldHeight);
         min-width: var(--io_fieldHeight);
       }
+      :host[size=large] {
+        width: calc(var(--io_fieldHeight) * 2);
+        height: calc(var(--io_fieldHeight) * 2);
+        min-width: calc(var(--io_fieldHeight) * 2);
+      }
       :host:not([value]) {
         display: none;
       }

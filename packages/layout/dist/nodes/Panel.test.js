@@ -69,12 +69,12 @@ describe('Panel', () => {
             expect(panel.tabs[0].selected).toBe(false);
             expect(panel.tabs[1].selected).toBe(true);
         });
-        it('should default flex to "1 1 100%"', () => {
+        it('should default flex to "1 1 auto"', () => {
             const panel = new Panel({
                 type: 'panel',
                 tabs: [{ id: 'tab1' }]
             });
-            expect(panel.flex).toBe('1 1 100%');
+            expect(panel.flex).toBe('1 1 auto');
         });
         it('should accept custom flex value', () => {
             const panel = new Panel({
@@ -304,14 +304,14 @@ describe('Panel', () => {
                     { id: 'restored1', label: 'Restored' },
                     { id: 'restored2', selected: true }
                 ],
-                flex: '1 0 400px'
+                flex: '0 0 400px'
             });
             expect(panel.tabs.length).toBe(2);
             expect(panel.tabs[0].id).toBe('restored1');
             expect(panel.tabs[0].label).toBe('Restored');
             expect(panel.tabs[1].id).toBe('restored2');
             expect(panel.tabs[1].selected).toBe(true);
-            expect(panel.flex).toBe('1 0 400px');
+            expect(panel.flex).toBe('0 0 400px');
         });
         it('should replace existing tabs', () => {
             const panel = new Panel({
@@ -335,7 +335,7 @@ describe('Panel', () => {
                 type: 'panel',
                 tabs: [{ id: 'restored' }]
             });
-            expect(panel.flex).toBe('1 1 100%');
+            expect(panel.flex).toBe('1 1 auto');
         });
         it('should return self for chaining', () => {
             const panel = new Panel({
@@ -399,7 +399,7 @@ describe('Panel', () => {
                     { id: 'rt1' },
                     { id: 'rt2', selected: true }
                 ],
-                flex: '1 1 50%'
+                flex: '0 0 150px'
             });
             const json1 = original.toJSON();
             const restored = new Panel({

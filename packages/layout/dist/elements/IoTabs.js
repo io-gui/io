@@ -78,7 +78,7 @@ let IoTabs = class IoTabs extends IoElement {
             ioTabsHamburger({ tabs: this.tabs }),
             ...this.tabs.map(tab => ioTab({ tab: tab })),
             hasOptions ? ioMenuItem({
-                class: 'add-tab',
+                class: 'io-tabs-add-tab',
                 icon: 'io:box_fill_plus',
                 direction: 'down',
                 option: this.addMenuOption,

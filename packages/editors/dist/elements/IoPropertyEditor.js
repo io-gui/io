@@ -24,9 +24,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       font-size: var(--io_fontSize);
       overflow: hidden;
     }
-    :host[orientation="horizontal"] {
-      flex-direction: row;
-    }
     :host > .row {
       display: flex;
       flex-direction: row;
@@ -36,10 +33,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       border-radius: var(--io_borderRadius);
       margin-bottom: 0;
       background-color: var(--io_bgColorLight);
-    }
-    :host[orientation="horizontal"] > .row {
-      flex-direction: column;
-      flex: 1 1 0;
     }
     :host io-property-editor {
       margin-top: calc(var(--io_spacing) * -1) !important;
@@ -118,7 +111,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         else {
             this._config = getEditorConfig(this.value, this.config);
             this._groups = getEditorGroups(this.value, this.groups);
-            this._widget = this.widget || getEditorWidget(this.value);
+            this._widget = this.widget !== undefined ? this.widget : getEditorWidget(this.value);
             const config = this._config;
             const groups = this._groups;
             const widget = this._widget;
@@ -126,18 +119,19 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 return;
             const properties = [];
             const vChildren = [];
+            if (widget) {
+                const widgetWithValue = {
+                    tag: widget.tag,
+                    // widget: null prevents recursive widget lookup in nested io-property-editors
+                    props: Object.assign({ value: this.value, widget: null }, widget.props),
+                    children: widget.children
+                };
+                vChildren.push(widgetWithValue);
+            }
             if (this.properties.length) {
                 properties.push(...this.properties);
             }
             else {
-                if (widget) {
-                    const widgetWithValue = {
-                        tag: widget.tag,
-                        props: Object.assign({ value: this.value }, widget.props),
-                        children: widget.children
-                    };
-                    vChildren.push(widgetWithValue);
-                }
                 properties.push(...groups.Main);
             }
             const allProps = getAllPropertyNames(this.value);
@@ -203,6 +197,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     }
                 }
             }
+            console.log('vChildren', JSON.stringify(vChildren, null, 2));
             this.render(vChildren);
             for (const child of Object.values(this.$)) {
                 if (child.classList.contains('io-property-editor-field')) {
@@ -218,7 +213,11 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         this.throttle(this.changedThrottled);
     }
     changedThrottled() {
+        if (!this.value || typeof this.value !== 'object')
+            return;
         for (const id in this._propertyEditors) {
+            if (!(id in this.value))
+                continue;
             const value = this.value[id];
             const editor = this._propertyEditors[id];
             editor.value = value;
@@ -244,9 +243,6 @@ __decorate([
 __decorate([
     ReactiveProperty('80px')
 ], IoPropertyEditor.prototype, "labelWidth", void 0);
-__decorate([
-    ReactiveProperty({ type: String, value: 'vertical', reflect: true })
-], IoPropertyEditor.prototype, "orientation", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "config", void 0);

@@ -4,6 +4,7 @@ import { ioLayout, Split } from '@io-gui/layout';
 import { ioCollapsible } from '@io-gui/navigation';
 import { ioMarkdown } from '@io-gui/markdown';
 import { MenuOption } from '@io-gui/menus';
+const VERSION = 1;
 function lorem(length) {
     const words = 'Lorem ipsum dolor sit amet consectetur adipiscing elit Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua'.split(' ');
     let lorem = '';
@@ -17,10 +18,12 @@ const split = new Split({
     children: [
         {
             type: 'split',
+            flex: '0 0 350px',
             orientation: 'vertical',
             children: [
                 {
                     type: 'panel',
+                    flex: '0 0 260px',
                     tabs: [
                         { id: 'Inputs', icon: 'io:toggle_on' },
                         { id: 'Sliders', icon: 'io:sliders' },
@@ -35,21 +38,33 @@ const split = new Split({
                     ]
                 }
             ],
-            flex: '0 0 350px',
         },
         {
             type: 'split',
             orientation: 'vertical',
             children: [
-                { type: 'panel', tabs: [{ id: 'Change Visualization', icon: 'io:hub' }] },
-                { type: 'panel', tabs: [{ id: 'Editors', icon: 'io:developer' }] },
-                { type: 'panel', tabs: [{ id: 'Icons', icon: 'io:image' }], flex: '1 1 50%' },
+                {
+                    type: 'panel',
+                    flex: '1 1 auto',
+                    tabs: [
+                        { id: 'Editors', icon: 'io:developer' }
+                    ]
+                },
+                {
+                    type: 'panel',
+                    flex: '0 0 280px',
+                    tabs: [
+                        { id: 'Icons', icon: 'io:image' }
+                    ]
+                },
             ]
         },
         {
             type: 'panel',
-            tabs: [{ id: 'Theme Editor', icon: 'io:tune' }],
-            flex: '0 0 350px',
+            flex: '0 0 330px',
+            tabs: [
+                { id: 'Theme Editor', icon: 'io:tune' }
+            ],
         }
     ]
 });
@@ -84,7 +99,6 @@ export class IoLayoutDemo extends IoElement {
                     { tag: 'io-navigation-demo', props: { id: 'Navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js' } },
                     { tag: 'io-theme-editor', props: { id: 'Theme Editor', import: './packages/core/dist/demos/IoThemeEditor.js' } },
                     { tag: 'io-element-inspector-demo', props: { id: 'Element Inspector', import: './packages/core/dist/demos/IoElementInspectorDemo.js' } },
-                    { tag: 'io-change-visualization', props: { id: 'Change Visualization', import: './packages/core/dist/demos/IoChangeVisualization.js' } },
                     ioMarkdown({ id: 'Getting Started', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/quick-start.md' }),
                     ioMarkdown({ id: 'Deep Dive', strip: ['https://iogui.dev/io/'], sanitize: false, src: './docs/deep-dive.md' }),
                     div({ id: 'Doc 1' }, [
@@ -148,12 +162,11 @@ export class IoLayoutDemo extends IoElement {
                                 { id: 'Navigation', mode: 'none', icon: 'io:dashboard' },
                                 { id: 'Theme Editor', icon: 'io:tune', mode: 'none' },
                                 { id: 'Element Inspector', icon: 'io:visibility', mode: 'none' },
-                                { id: 'Change Visualization', icon: 'io:hub', mode: 'none' },
                             ] },
                     ],
                 }),
                 // split: split,
-                split: $({ key: 'split', storage: 'local', value: split })
+                split: $({ key: `io-layout-demo-split-${VERSION}`, storage: 'local', value: split })
             })
         ]);
     }

@@ -14,6 +14,7 @@ export declare class Split extends Node {
     constructor(args: SplitProps);
     childrenMutated(): void;
     onChildrenMutatedDebounced(): void;
+    flexChanged(): void;
     toJSON(): SplitProps;
     fromJSON(json: SplitProps): this;
     dispose(): void;

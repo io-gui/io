@@ -28,6 +28,23 @@ let IoString = class IoString extends IoField {
     `;
     }
     constructor(args = {}) { super(args); }
+    onPointerdown(event) {
+        // if (event.pointerType === 'touch') event.preventDefault()
+        this.addEventListener('pointermove', this.onPointermove);
+        this.addEventListener('pointerup', this.onPointerup);
+        // If already focused, let browser handle cursor placement naturally
+        if (document.activeElement === this && event.button === 0)
+            return;
+    }
+    onPointerup(event) {
+        this.removeEventListener('pointermove', this.onPointermove);
+        this.removeEventListener('pointerup', this.onPointerup);
+        // Focus and set caret to end only when gaining focus programmatically
+        if (document.activeElement !== this) {
+            this.focus();
+            this.setCaretPosition(this.textNode.length);
+        }
+    }
     get textNode() {
         this._flattenTextNode(this);
         return this._textNode.nodeValue;
@@ -60,13 +77,6 @@ let IoString = class IoString extends IoField {
         this._setFromTextNode();
         this.scrollTop = 0;
         this.scrollLeft = 0;
-    }
-    onPointerup(event) {
-        super.onPointerup(event);
-        if (document.activeElement !== this) {
-            this.focus();
-            this.setCaretPosition(this.textNode.length);
-        }
     }
     onKeydown(event) {
         const range = window.getSelection().getRangeAt(0);

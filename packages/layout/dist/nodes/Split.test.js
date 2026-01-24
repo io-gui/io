@@ -62,12 +62,12 @@ describe('Split', () => {
             });
             expect(split.orientation).toBe('vertical');
         });
-        it('should default flex to "1 1 100%"', () => {
+        it('should default flex to "1 1 auto"', () => {
             const split = new Split({
                 type: 'split',
                 children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
             });
-            expect(split.flex).toBe('1 1 100%');
+            expect(split.flex).toBe('1 1 auto');
         });
         it('should accept custom flex value', () => {
             const split = new Split({
@@ -268,7 +268,7 @@ describe('Split', () => {
                 children: [
                     { type: 'panel', tabs: [{ id: 'tab1' }] }
                 ],
-                flex: '1 1 100%'
+                flex: '1 1 auto'
             });
             const json = split.toJSON();
             expect(json.type).toBe('split');
@@ -338,7 +338,7 @@ describe('Split', () => {
             });
             const json = split.toJSON();
             expect(json.children[0].flex).toBe('0 0 100px');
-            expect(json.children[1].flex).toBe('1 1 auto');
+            expect(json.children[1].flex).toBeUndefined(); // '1 1 auto' is default, omitted
             expect(json.children[2].flex).toBe('0 0 200px');
         });
     });
@@ -408,7 +408,7 @@ describe('Split', () => {
                 type: 'split',
                 children: [{ type: 'panel', tabs: [{ id: 'restored' }] }]
             });
-            expect(split.flex).toBe('1 1 100%');
+            expect(split.flex).toBe('1 1 auto');
         });
         it('should return self for chaining', () => {
             const split = new Split({
@@ -792,7 +792,7 @@ describe('Split', () => {
         it('should allow changing flex after construction', () => {
             const split = new Split({
                 type: 'split',
-                flex: '1 1 100%',
+                flex: '1 1 auto',
                 children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
             });
             split.flex = '0 0 500px';

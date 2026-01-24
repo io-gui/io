@@ -66,7 +66,7 @@ let IoPanel = class IoPanel extends IoElement {
         if (option.id && option.options.length === 0) {
             const tab = new Tab({ id: option.id, label: option.label, icon: option.icon });
             this.addTab(tab);
-            const addMenuOption = this.querySelector('.add-tab');
+            const addMenuOption = this.querySelector('.io-tabs-add-tab');
             if (addMenuOption)
                 addMenuOption.expanded = false;
         }

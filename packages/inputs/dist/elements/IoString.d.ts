@@ -18,12 +18,13 @@ export declare class IoString extends IoField {
     contentEditable: string;
     role: string;
     constructor(args?: IoStringProps);
+    onPointerdown(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
     get textNode(): string | null;
     set textNode(value: string | null);
     _setFromTextNode(): void;
     _setObjectFromTextNodeJSON(): void;
     onBlur(event: FocusEvent): void;
-    onPointerup(event: PointerEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;
     ready(): void;

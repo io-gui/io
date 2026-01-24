@@ -268,9 +268,10 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                     child._textNode.nodeValue = String(vChild.children);
                 }
                 else if (vChild.children instanceof Array) {
-                    // Traverse deeper.
-                    const vDOMElementsOnly = vChild.children.filter(item => item !== null);
-                    this.traverse(vDOMElementsOnly, child, noDispose);
+                    if (!child._isIoElement) {
+                        const vDOMElementsOnly = vChild.children.filter(item => item !== null);
+                        this.traverse(vDOMElementsOnly, child, noDispose);
+                    }
                 }
             }
             else if (!child._isIoElement) {

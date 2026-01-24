@@ -57,14 +57,14 @@ describe('IoTabs', () => {
             expect(hamburger).toBeTruthy();
         });
         it('should not render add menu when addMenuOption is undefined', () => {
-            const addMenu = ioTabs.querySelector('.add-tab');
+            const addMenu = ioTabs.querySelector('.io-tabs-add-tab');
             expect(addMenu).toBeNull();
         });
         it('should not render add menu when addMenuOption has no options', () => {
             const emptyMenuOption = new MenuOption({ options: [] });
             const tabsWithEmptyMenu = new IoTabs({ tabs, addMenuOption: emptyMenuOption });
             container.appendChild(tabsWithEmptyMenu);
-            const addMenu = tabsWithEmptyMenu.querySelector('.add-tab');
+            const addMenu = tabsWithEmptyMenu.querySelector('.io-tabs-add-tab');
             expect(addMenu).toBeNull();
             tabsWithEmptyMenu.remove();
         });
@@ -72,7 +72,7 @@ describe('IoTabs', () => {
             const menuOption = new MenuOption({ options: [{ id: 'new', label: 'New Tab' }] });
             const tabsWithMenu = new IoTabs({ tabs, addMenuOption: menuOption });
             container.appendChild(tabsWithMenu);
-            const addMenu = tabsWithMenu.querySelector('.add-tab');
+            const addMenu = tabsWithMenu.querySelector('.io-tabs-add-tab');
             expect(addMenu).toBeTruthy();
             tabsWithMenu.remove();
         });

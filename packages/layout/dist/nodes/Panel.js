@@ -67,12 +67,22 @@ let Panel = class Panel extends Node {
         });
         this.tabs.dispatchMutation();
     }
+    flexChanged() {
+        debug: {
+            const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+            if (!flexRegex.test(this.flex)) {
+                console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`);
+            }
+        }
+    }
     toJSON() {
-        return {
+        const json = {
             type: 'panel',
             tabs: this.tabs.map(tab => tab.toJSON()),
-            flex: this.flex,
         };
+        if (this.flex !== '1 1 auto')
+            json.flex = this.flex;
+        return json;
     }
     fromJSON(json) {
         debug: {
@@ -83,7 +93,7 @@ let Panel = class Panel extends Node {
         const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON');
         this.setProperties({
             tabs: uniqueTabs.map(tab => new Tab(tab)),
-            flex: json.flex ?? '1 1 100%',
+            flex: json.flex ?? '1 1 auto',
         });
         return this;
     }
@@ -96,7 +106,7 @@ __decorate([
     ReactiveProperty({ type: NodeArray, init: 'this' })
 ], Panel.prototype, "tabs", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '1 1 100%' })
+    ReactiveProperty({ type: String, value: '1 1 auto' })
 ], Panel.prototype, "flex", void 0);
 Panel = __decorate([
     Register

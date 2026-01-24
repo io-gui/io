@@ -1,6 +1,45 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { IoLayout, Split, Panel, IoSplit } from '@io-gui/layout';
+import { IoLayout, Split, Panel, IoSplit, parseFlexBasis, hasFlexGrow } from '@io-gui/layout';
+describe('Flex Utility Functions', () => {
+    describe('parseFlexBasis', () => {
+        it('should return pixel value from flex-basis', () => {
+            expect(parseFlexBasis('0 0 200px')).toBe(200);
+            expect(parseFlexBasis('1 1 300px')).toBe(300);
+            expect(parseFlexBasis('0 1 150px')).toBe(150);
+        });
+        it('should return default 240 for auto basis', () => {
+            expect(parseFlexBasis('1 1 auto')).toBe(240);
+        });
+        it('should return default 240 for 0 basis', () => {
+            expect(parseFlexBasis('1 1 0')).toBe(240);
+            expect(parseFlexBasis('2 1 0')).toBe(240);
+        });
+        it('should handle whitespace variations', () => {
+            expect(parseFlexBasis('  0 0 200px  ')).toBe(200);
+            expect(parseFlexBasis('0  0  200px')).toBe(200);
+        });
+        it('should return default 300 for non-pixel values', () => {
+            expect(parseFlexBasis('1 1 50%')).toBe(240);
+            expect(parseFlexBasis('1 1 10em')).toBe(240);
+        });
+    });
+    describe('hasFlexGrow', () => {
+        it('should return true when flex-grow > 0', () => {
+            expect(hasFlexGrow('1 1 auto')).toBe(true);
+            expect(hasFlexGrow('2 0 0')).toBe(true);
+            expect(hasFlexGrow('0.5 1 auto')).toBe(true);
+        });
+        it('should return false when flex-grow is 0', () => {
+            expect(hasFlexGrow('0 0 200px')).toBe(false);
+            expect(hasFlexGrow('0 1 auto')).toBe(false);
+        });
+        it('should handle whitespace variations', () => {
+            expect(hasFlexGrow('  1 1 auto  ')).toBe(true);
+            expect(hasFlexGrow('  0 0 200px  ')).toBe(false);
+        });
+    });
+});
 describe('Split Construction Consolidation', () => {
     it('Should consolidate on construction when root has only 1 child that is a Split', () => {
         // This mimics the IoThreeDemo structure where the root Split has only 1 child (a Split)
@@ -91,7 +130,7 @@ describe('Split Construction Consolidation', () => {
                     children: [
                         {
                             type: 'panel',
-                            flex: '1 0 380px',
+                            flex: '0 0 380px',
                             tabs: [{ id: 'AllClasses' }],
                         },
                         {
@@ -118,7 +157,7 @@ describe('Split Construction Consolidation', () => {
                         },
                         {
                             type: 'panel',
-                            flex: '1 0 380px',
+                            flex: '0 0 380px',
                             tabs: [{ id: 'ExampleSelector' }],
                         }
                     ]
@@ -129,7 +168,7 @@ describe('Split Construction Consolidation', () => {
         expect(split.children.length).toBe(3);
         expect(split.orientation).toBe('horizontal');
         expect(split.children[0]).toBeInstanceOf(Panel);
-        expect(split.children[0].flex).toBe('1 0 380px');
+        expect(split.children[0].flex).toBe('0 0 380px');
         expect(split.children[1]).toBeInstanceOf(Split);
         expect(split.children[2]).toBeInstanceOf(Panel);
     });
@@ -182,7 +221,7 @@ describe('IoSplit Consolidation', () => {
             expect(split.children.length).toBe(2);
             expect(split.children[1]).toBeInstanceOf(Panel);
             expect(split.children[1].tabs[0].id).toBe('panelB');
-            expect(split.children[1].flex).toBe('1 1 100%');
+            expect(split.children[1].flex).toBe('1 1 auto');
         });
     });
     describe('consolidateChild with Split child', () => {
@@ -336,7 +375,7 @@ describe('IoSplit Consolidation', () => {
             const childSplit = split.children[1];
             rootSplit.consolidateChild(childSplit);
             expect(split.children[0].flex).toBe('0 0 200px');
-            expect(split.children[1].flex).toBe('1 1 100%');
+            expect(split.children[1].flex).toBe('1 1 auto');
         });
         it('Should handle consolidation when removing split via io-split-remove', () => {
             const split = new Split({
@@ -418,7 +457,7 @@ describe('IoSplit View Element', () => {
     let container;
     beforeEach(() => {
         container = document.createElement('div');
-        container.style.display = 'none';
+        container.style.visibility = 'hidden';
         document.body.appendChild(container);
     });
     afterEach(() => {
@@ -533,8 +572,8 @@ describe('IoSplit View Element', () => {
             expect(split.children[0].children[1].tabs[0].id).toBe('new2');
         });
     });
-    describe('ensureFlexGrow', () => {
-        it('Should set first child to flex grow when none have it', () => {
+    describe('ensureOneHasFlexGrow', () => {
+        it('Should set second child to flex-grow when none have it', () => {
             const split = new Split({
                 type: 'split',
                 children: [
@@ -545,23 +584,23 @@ describe('IoSplit View Element', () => {
             layout = new IoLayout({ split, elements: [] });
             container.appendChild(layout);
             const ioSplit = layout.querySelector('io-split');
-            ioSplit.ensureFlexGrow();
-            expect(split.children[0].flex).toBe('1 1 auto');
+            ioSplit.ensureOneHasFlexGrow();
+            expect(split.children[1].flex).toBe('1 1 auto');
         });
-        it('Should not change flex when at least one child has flex grow', () => {
+        it('Should not change flex when at least one child has flex-grow', () => {
             const split = new Split({
                 type: 'split',
                 children: [
                     { type: 'panel', tabs: [{ id: 'tab1' }], flex: '0 0 200px' },
-                    { type: 'panel', tabs: [{ id: 'tab2' }], flex: '1 1 100%' }
+                    { type: 'panel', tabs: [{ id: 'tab2' }], flex: '1 1 auto' }
                 ]
             });
             layout = new IoLayout({ split, elements: [] });
             container.appendChild(layout);
             const ioSplit = layout.querySelector('io-split');
-            ioSplit.ensureFlexGrow();
+            ioSplit.ensureOneHasFlexGrow();
             expect(split.children[0].flex).toBe('0 0 200px');
-            expect(split.children[1].flex).toBe('1 1 100%');
+            expect(split.children[1].flex).toBe('1 1 auto');
         });
     });
     describe('Rendering', () => {

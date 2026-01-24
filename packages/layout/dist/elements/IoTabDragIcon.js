@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveProperty, span, ThemeSingleton } from '@io-gui/core';
 import { IoField } from '@io-gui/inputs';
 import { ioIcon } from '@io-gui/icons';
-import { ioTabDropMarkerSingleton } from './IoTabDropMarker.js';
+import { ioTabDropRectSingleton } from './IoTabDropRect.js';
 const DRAG_THRESHOLD = 10;
 let IoTabDragIcon = class IoTabDragIcon extends IoField {
     static get Style() {
@@ -153,7 +153,7 @@ let IoTabDragIcon = class IoTabDragIcon extends IoField {
         });
     }
     changed() {
-        ioTabDropMarkerSingleton.setProperties({
+        ioTabDropRectSingleton.setProperties({
             dropTarget: this.dropTarget,
             splitDirection: this.splitDirection,
             dropIndex: this.dropIndex,

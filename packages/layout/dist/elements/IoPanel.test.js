@@ -276,6 +276,9 @@ describe('IoPanel', () => {
             });
             multiLayout = new IoLayout({ split: multiSplit, elements: [] });
             container.appendChild(multiLayout);
+            // Reset collapse state since container has display:none (getBoundingClientRect returns 0)
+            const ioSplit = multiLayout.querySelector('io-split');
+            ioSplit.setProperties({ leadingDrawer: null, trailingDrawer: null });
             sourcePanelElement = multiLayout.querySelectorAll('io-panel')[0];
             targetPanelElement = multiLayout.querySelectorAll('io-panel')[1];
         });

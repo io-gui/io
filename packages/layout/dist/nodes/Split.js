@@ -40,6 +40,14 @@ let Split = class Split extends Node {
     onChildrenMutatedDebounced() {
         this.dispatchMutation();
     }
+    flexChanged() {
+        debug: {
+            const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+            if (!flexRegex.test(this.flex)) {
+                console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`);
+            }
+        }
+    }
     toJSON() {
         const json = {
             type: 'split',
@@ -47,7 +55,7 @@ let Split = class Split extends Node {
         };
         if (this.orientation !== 'horizontal')
             json.orientation = this.orientation;
-        if (this.flex !== '1 1 100%')
+        if (this.flex !== '1 1 auto')
             json.flex = this.flex;
         return json;
     }
@@ -62,7 +70,7 @@ let Split = class Split extends Node {
         this.setProperties({
             children: consolidated.children,
             orientation: consolidated.orientation,
-            flex: json.flex ?? '1 1 100%',
+            flex: json.flex ?? '1 1 auto',
         });
         return this;
     }
@@ -78,7 +86,7 @@ __decorate([
     ReactiveProperty({ type: String, value: 'horizontal' })
 ], Split.prototype, "orientation", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '1 1 100%' })
+    ReactiveProperty({ type: String, value: '1 1 auto' })
 ], Split.prototype, "flex", void 0);
 Split = __decorate([
     Register

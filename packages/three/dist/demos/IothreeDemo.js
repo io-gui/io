@@ -28,52 +28,67 @@ import { AnimationSkinningAdditiveBlendingExample } from '../examples/animation_
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js';
 import { ioThreeProperties } from '../elements/IoThreeProperties.js';
 import * as THREE from 'three/webgpu';
-const version = 5;
+const version = 5.3;
 const split = new Split({
     type: 'split',
     orientation: 'horizontal',
     children: [
         {
             type: 'panel',
-            flex: '1 0 380px',
-            tabs: [
-                { id: 'AllClasses' },
-            ],
+            flex: '0 0 280px',
+            tabs: [{ id: 'AllClasses' }],
         },
         {
             type: 'split',
+            flex: '2 1 auto',
             orientation: 'vertical',
             children: [
                 {
                     type: 'split',
                     orientation: 'horizontal',
                     children: [
-                        { type: 'panel', tabs: [
+                        {
+                            type: 'panel',
+                            flex: '1 1 50%',
+                            tabs: [
                                 { id: 'Top' },
-                            ] },
-                        { type: 'panel', tabs: [
+                            ]
+                        },
+                        {
+                            type: 'panel',
+                            flex: '1 1 50%',
+                            tabs: [
                                 { id: 'Front' },
-                            ] },
+                            ]
+                        },
                     ]
                 },
                 {
                     type: 'split',
                     orientation: 'horizontal',
                     children: [
-                        { type: 'panel', tabs: [
+                        {
+                            type: 'panel',
+                            flex: '1 1 50%',
+                            tabs: [
                                 { id: 'Left' },
-                            ] },
-                        { type: 'panel', tabs: [
+                            ]
+                        },
+                        {
+                            type: 'panel',
+                            flex: '1 1 50%',
+                            tabs: [
                                 { id: 'Perspective' },
                                 { id: 'SceneCamera' },
-                            ] },
+                            ]
+                        },
                     ]
                 },
             ]
         },
         {
             type: 'panel',
-            flex: '1 0 380px',
+            flex: '0 0 280px',
             tabs: [
                 { id: 'ExampleSelector' },
             ],

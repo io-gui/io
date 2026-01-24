@@ -113,24 +113,9 @@ describe('IoDivider', () => {
             divider.onPointermove(event);
             expect(handler).toHaveBeenCalledTimes(1);
             const detail = handler.mock.calls[0][0].detail;
-            expect(detail.index).toBe(0);
+            expect(detail.element).toBe(divider);
             expect(detail.clientX).toBe(100);
             expect(detail.clientY).toBe(200);
-        });
-        it('should dispatch io-divider-move with correct index', () => {
-            const indexedDivider = new IoDivider({ orientation: 'horizontal', index: 5 });
-            container.appendChild(indexedDivider);
-            const handler = vi.fn();
-            indexedDivider.addEventListener('io-divider-move', handler);
-            const event = new PointerEvent('pointermove', {
-                clientX: 50,
-                clientY: 75,
-                bubbles: true,
-                cancelable: true,
-            });
-            indexedDivider.onPointermove(event);
-            expect(handler.mock.calls[0][0].detail.index).toBe(5);
-            indexedDivider.remove();
         });
         it('should bubble io-divider-move event', () => {
             const handler = vi.fn();
@@ -202,7 +187,7 @@ describe('IoDivider', () => {
             divider.onPointerup(event);
             expect(handler).toHaveBeenCalledTimes(1);
             const detail = handler.mock.calls[0][0].detail;
-            expect(detail.index).toBe(0);
+            expect(detail.element).toBe(divider);
             expect(detail.clientX).toBe(150);
             expect(detail.clientY).toBe(250);
         });
@@ -470,18 +455,6 @@ describe('IoDivider', () => {
             expect(divider.orientation).toBe('vertical');
             expect(divider.getAttribute('orientation')).toBe('vertical');
         });
-        it('should pass orientation in move events', () => {
-            const horizontalHandler = vi.fn();
-            divider.addEventListener('io-divider-move', horizontalHandler);
-            divider.onPointermove(new PointerEvent('pointermove', {
-                clientX: 100,
-                clientY: 50,
-                bubbles: true,
-                cancelable: true,
-            }));
-            // Event contains index but orientation is on the element
-            expect(horizontalHandler.mock.calls[0][0].detail.index).toBe(0);
-        });
     });
     describe('Edge Cases', () => {
         it('should handle rapid down/up sequence', () => {
@@ -505,32 +478,6 @@ describe('IoDivider', () => {
             }
             expect(endHandler).toHaveBeenCalledTimes(5);
             expect(divider.pressed).toBe(false);
-        });
-        it('should handle zero index', () => {
-            expect(divider.index).toBe(0);
-            const handler = vi.fn();
-            divider.addEventListener('io-divider-move', handler);
-            divider.onPointermove(new PointerEvent('pointermove', {
-                clientX: 100,
-                clientY: 50,
-                bubbles: true,
-                cancelable: true,
-            }));
-            expect(handler.mock.calls[0][0].detail.index).toBe(0);
-        });
-        it('should handle large index', () => {
-            const largeDivider = new IoDivider({ orientation: 'horizontal', index: 999 });
-            container.appendChild(largeDivider);
-            const handler = vi.fn();
-            largeDivider.addEventListener('io-divider-move', handler);
-            largeDivider.onPointermove(new PointerEvent('pointermove', {
-                clientX: 100,
-                clientY: 50,
-                bubbles: true,
-                cancelable: true,
-            }));
-            expect(handler.mock.calls[0][0].detail.index).toBe(999);
-            largeDivider.remove();
         });
     });
 });
