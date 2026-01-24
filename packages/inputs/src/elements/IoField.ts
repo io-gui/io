@@ -29,7 +29,6 @@ export class IoField extends IoElement {
         white-space: nowrap;
         font-size: var(--io_fontSize);
         text-size-adjust: 100%;
-        contain: inline-size;
         overflow: hidden;
         @apply --unselectable;
       }

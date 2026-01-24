@@ -5,7 +5,6 @@ import {
   IoSplit,
   IoPanel,
   IoTab,
-  IoTabs,
   Split,
   Panel,
   Tab,
@@ -203,7 +202,6 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
     })
 
     it('should trigger click when no drag occurred', () => {
-      const ioTab = layout.querySelector('io-tab') as IoTab
       const panel = layout.split.children[0] as Panel
 
       // Initially tab1 is selected
@@ -273,7 +271,6 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
     })
 
     it('should move tab to another panel center', () => {
-      const sourceTabElement = sourcePanelElement.querySelector('io-tab') as IoTab
       const originalTab = sourcePanel.tabs[0]
 
       expect(sourcePanel.tabs.length).toBe(2)
@@ -312,7 +309,6 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
     let targetPanel: Panel
     let ioSplit: IoSplit
     let sourcePanelElement: IoPanel
-    let targetPanelElement: IoPanel
 
     beforeEach(() => {
       const split = new Split({
@@ -341,7 +337,6 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
 
       const panels = layout.querySelectorAll('io-panel')
       sourcePanelElement = panels[0] as IoPanel
-      targetPanelElement = panels[1] as IoPanel
     })
 
     it('should create new split when dropping left in same orientation', () => {
@@ -513,7 +508,6 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
     })
 
     it('should display tab label in drag icon', () => {
-      const ioTab = layout.querySelector('io-tab') as IoTab
       const tab = (layout.split.children[0] as Panel).tabs[0]
 
       tabDragIconSingleton.tab = tab

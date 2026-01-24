@@ -527,7 +527,7 @@ describe('IoSplit View Element', () => {
 
   beforeEach(() => {
     container = document.createElement('div')
-    container.style.visibility = 'hidden';
+    container.style.visibility = 'hidden'
     document.body.appendChild(container)
   })
 

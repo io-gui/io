@@ -284,9 +284,10 @@ export class IoElement extends HTMLElement {
           this._flattenTextNode(child as HTMLElement);
           (child as IoElement)._textNode.nodeValue = String(vChild.children)
         } else if (vChild.children instanceof Array) {
-          // Traverse deeper.
-          const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
-          this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
+          if (!(child as IoElement)._isIoElement) {
+            const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
+            this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
+          }
         }
       } else if (!(child as IoElement)._isIoElement) {
         // Clear children for native elements. IoElements manage their own children by design

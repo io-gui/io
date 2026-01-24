@@ -1,7 +1,8 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from '@io-gui/core'
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton, div } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
+import { ioDrawer, IoDrawer } from './IoDrawer.js'
 import { Split, SplitOrientation } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
@@ -32,6 +33,7 @@ export class IoSplit extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        position: relative;
         display: flex;
         overflow: hidden;
         flex-direction: row;
@@ -41,6 +43,18 @@ export class IoSplit extends IoElement {
       }
       :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
+      }
+      :host:not([showveil]) > .io-split-veil {
+        display: none;
+        pointer-events: none;
+      }
+      :host[showveil] > .io-split-veil {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background-color: rgba(0, 0, 0, 0.5);
+        pointer-events: auto;
+        cursor: pointer;
       }
     `
   }
@@ -63,6 +77,9 @@ export class IoSplit extends IoElement {
   @ReactiveProperty({type: Boolean, value: true, reflect: true})
   declare hasVisibleFlexGrow: boolean
 
+  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  declare showVeil: boolean
+
   static get Listeners() {
     return {
       'io-divider-move': 'onDividerMove',
@@ -70,6 +87,7 @@ export class IoSplit extends IoElement {
       'io-panel-remove': 'onPanelRemove',
       'io-split-remove': 'onSplitRemove',
       'io-split-consolidate': 'onSplitConsolidate',
+      'io-drawer-expanded-changed': 'onDrawerExpandedChanged',
     }
   }
   // TODO: Make sure one panel is available even when all tabs are removed.
@@ -295,6 +313,28 @@ export class IoSplit extends IoElement {
       }
     }
   }
+
+  onDrawerExpandedChanged(event: CustomEvent) {
+    event.stopPropagation()
+    this.updateVeil()
+  }
+
+  updateVeil() {
+    const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
+    this.showVeil = drawers.some(drawer => drawer.expanded)
+  }
+
+  collapseAllDrawers() {
+    const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
+    drawers.forEach(drawer => drawer.expanded = false)
+  }
+
+  onVeilClick(event: MouseEvent) {
+    event.stopPropagation()
+    // TODO: this should trigger onDrawerExpandedChanged and updateVeil
+    this.collapseAllDrawers()
+  }
+
   splitMutated() {
     this.calculateCollapsedDrawers()
     this.changed()
@@ -306,8 +346,26 @@ export class IoSplit extends IoElement {
     this.setAttribute('orientation', this.split.orientation)
     const childCount = this.split.children.length
     const lastIndex = childCount - 1
-    // TODO: Validate split
+    const orientation = this.split.orientation
+
     const vChildren: VDOMElement[] = []
+
+    vChildren.push(div({
+      class: 'io-split-veil',
+      '@click': this.onVeilClick,
+    }))
+
+    if (this.leadingDrawer !== null) {
+      vChildren.push(ioDrawer({
+        orientation: orientation,
+        direction: 'leading',
+        child: this.leadingDrawer,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      }))
+    }
+
+    // Render visible children
     for (let i = 0; i < childCount; i++) {
 
       if (i === 0 && this.leadingDrawer !== null) {
@@ -342,10 +400,21 @@ export class IoSplit extends IoElement {
 
       if (!isLastVisible) {
         vChildren.push(ioDivider({
-          orientation: this.split.orientation,
+          orientation: orientation,
         }))
       }
     }
+
+    if (this.trailingDrawer !== null) {
+      vChildren.push(ioDrawer({
+        orientation: orientation,
+        direction: 'trailing',
+        child: this.trailingDrawer,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      }))
+    }
+
     this.render(vChildren)
   }
 }

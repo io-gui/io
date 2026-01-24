@@ -167,7 +167,6 @@ export class IoTab extends IoField {
       direction: 'down',
       value: this.tab,
       properties: ['label', 'icon'],
-      orientation: 'horizontal',
       config: [
         ['label', ioString({live: true})],
         ['icon', iconOptions],
