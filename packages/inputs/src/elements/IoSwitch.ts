@@ -18,7 +18,6 @@ export class IoSwitch extends IoBoolean {
       :host:focus {
         outline: 0 !important;
         border-color: transparent !important;
-        z-index: 1;
       }
       :host:focus > span:before {
         @apply --io_focus;
@@ -62,7 +61,7 @@ export class IoSwitch extends IoBoolean {
         border-radius: var(--io_lineHeight);
         transition-timing-function: ease-in-out;
         transition: left 0.25s;
-        z-index: 2;
+        z-index: 1;
       }
       :host[value] > span:after {
         background-color: var(--io_bgColorBlue);
