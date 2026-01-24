@@ -43,7 +43,6 @@ export class IoInspector extends IoElement {
     }
     :host > io-breadcrumbs {
       margin: 0 var(--io_spacing);
-      z-index: 1;
     }
     :host > span {
       padding: var(--io_spacing) var(--io_spacing3);

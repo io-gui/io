@@ -148,7 +148,7 @@ export class IoPropertyEditor extends IoElement {
     } else {
       this._config = getEditorConfig(this.value, this.config)
       this._groups = getEditorGroups(this.value, this.groups)
-      this._widget = this.widget || getEditorWidget(this.value)
+      this._widget = this.widget !== undefined ? this.widget : getEditorWidget(this.value)
 
       const config = this._config
       const groups = this._groups
@@ -162,7 +162,8 @@ export class IoPropertyEditor extends IoElement {
       if (widget) {
         const widgetWithValue = {
           tag: widget.tag,
-          props: Object.assign({value: this.value}, widget.props),
+          // widget: null prevents recursive widget lookup in nested io-property-editors
+          props: Object.assign({value: this.value, widget: null}, widget.props),
           children: widget.children
         }
         vChildren.push(widgetWithValue)
