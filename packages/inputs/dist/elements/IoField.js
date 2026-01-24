@@ -19,11 +19,11 @@ let IoField = class IoField extends IoElement {
         border-radius: var(--io_borderRadius);
         padding: var(--io_spacing) var(--io_spacing2);
         color: var(--io_color);
-        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: var(--io_fontSize);
         text-size-adjust: 100%;
+        overflow: hidden;
         @apply --unselectable;
       }
       :host:focus {

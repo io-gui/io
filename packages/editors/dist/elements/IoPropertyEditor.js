@@ -197,7 +197,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     }
                 }
             }
-            console.log('vChildren', JSON.stringify(vChildren, null, 2));
             this.render(vChildren);
             for (const child of Object.values(this.$)) {
                 if (child.classList.contains('io-property-editor-field')) {

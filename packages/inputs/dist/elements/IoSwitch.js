@@ -22,7 +22,6 @@ let IoSwitch = class IoSwitch extends IoBoolean {
       :host:focus {
         outline: 0 !important;
         border-color: transparent !important;
-        /* z-index: 1; */
       }
       :host:focus > span:before {
         @apply --io_focus;

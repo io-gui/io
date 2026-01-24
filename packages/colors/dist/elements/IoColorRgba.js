@@ -21,7 +21,6 @@ let IoColorRgba = class IoColorRgba extends IoColorBase {
       }
       :host > io-number {
         flex: 1 0 0;
-        contain: inline-size;
       }
       :host > io-number#r {
         border-bottom-color: var(--io_bgColorRed);
