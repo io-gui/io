@@ -146,6 +146,12 @@ let ViewCameras = class ViewCameras extends Node {
         this.frameObjectAll(event.detail.object, event.detail.overscan);
     }
     frameObjectAll(object, overscan = 1) {
+        debug: {
+            if (object === undefined) {
+                console.error('frameObject: object is undefined');
+                return;
+            }
+        }
         for (const camera of this.defaultCameras.cameras) {
             camera.position.copy(camera.userData.position);
             camera.lookAt(0, 0, 0);

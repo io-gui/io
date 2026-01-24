@@ -37,32 +37,54 @@ export class IoDrawer extends IoElement {
         height: var(--io_lineHeight) !important;
         cursor: ns-resize;
       }
-      :host[orientation="horizontal"][direction="trailing"] {
-        /* flex-direction: row-reverse; */
-      }
-      :host[orientation="vertical"][direction="trailing"] {
-        /* flex-direction: column-reverse; */
-      }
 
       :host > .io-drawer-content {
         position: relative;
-        overflow: hidden;
-        inset: 0;
         display: flex;
+        overflow: hidden;
+        transition: transform 0.125s ease-out;
+        justify-content: flex-end;
       }
       :host[orientation="horizontal"] > .io-drawer-content {
-        transform: translateX(0);
-        position: relative;
-        flex-direction: row;
         height: 100%;
         width: var(--io-drawer-size);
-        transition: transform 0.125s ease-out;
+      }
+      :host[orientation="vertical"] > .io-drawer-content {
+        width: 100%;
+        height: var(--io-drawer-size);
+        flex-direction: column;
+      }
+
+      :host[orientation="horizontal"][direction="leading"] > .io-drawer-content {
+        transform: translateX(calc(var(--io-drawer-size) * -1 + var(--io_lineHeight)));
+        flex-direction: row;
       }
       :host[orientation="horizontal"][direction="leading"][expanded] > .io-drawer-content {
-        transform: translateX(calc(var(--io-drawer-size) - var(--io_lineHeight)));
+        transform: translateX(0);
+      }
+
+      :host[orientation="horizontal"][direction="trailing"] > .io-drawer-content {
+        transform: translateX(0);
+        flex-direction: row-reverse;
       }
       :host[orientation="horizontal"][direction="trailing"][expanded] > .io-drawer-content {
         transform: translateX(calc(var(--io-drawer-size) * -1 + var(--io_lineHeight)));
+      }
+
+      :host[orientation="vertical"][direction="leading"] > .io-drawer-content {
+        transform: translateY(calc(var(--io-drawer-size) * -1 + var(--io_lineHeight)));
+        flex-direction: column;
+      }
+      :host[orientation="vertical"][direction="leading"][expanded] > .io-drawer-content {
+        transform: translateY(0);
+      }
+
+      :host[orientation="vertical"][direction="trailing"] > .io-drawer-content {
+        transform: translateY(0);
+        flex-direction: column-reverse;
+      }
+      :host[orientation="vertical"][direction="trailing"][expanded] > .io-drawer-content {
+        transform: translateY(calc(var(--io-drawer-size) * -1 + var(--io_lineHeight)));
       }
 
       :host > .io-drawer-content > .io-drawer-handle {
@@ -70,64 +92,24 @@ export class IoDrawer extends IoElement {
         align-items: center;
         background-color: var(--io_bgColorLight);
         border: var(--io_border);
+        border-color: var(--io_borderColorStrong);
+        @apply --unselectable;
+      }
+      :host[orientation="horizontal"] > .io-drawer-content > .io-drawer-handle {
         border-top: 0;
         border-bottom: 0;
-        border-color: var(--io_borderColorInset);
-        @apply --unselectable;
+        flex-direction: row;
+      }
+      :host[orientation="vertical"] > .io-drawer-content > .io-drawer-handle {
+        border-left: 0;
+        border-right: 0;
+        flex-direction: column;
       }
 
       :host > .io-drawer-content > io-panel,
       :host > .io-drawer-content > io-split {
         flex: 0 0 auto;
       }
-      /* :host[orientation="horizontal"] > .io-drawer-handle {
-        width: var(--io_lineHeight);
-        border-width: 0 var(--io_borderWidth);
-      }
-      :host[orientation="vertical"] > .io-drawer-handle {
-        height: var(--io_lineHeight);
-        border-width: var(--io_borderWidth) 0;
-      }
-      :host > .io-drawer-handle:hover {
-        background-color: var(--io_bgColorLight);
-      }
-      :host > .io-drawer-handle:active {
-        background-color: var(--io_bgColorBlue);
-      }
-      :host > .io-drawer-handle > io-icon {
-        opacity: 0.5;
-        transition: transform 0.2s ease-out;
-      }
-      :host[expanded] > .io-drawer-handle > io-icon {
-        opacity: 1;
-      }
-      
-      :host[orientation="horizontal"] > .io-drawer-content {
-        width: 0;
-        height: 100%;
-      }
-      :host[orientation="horizontal"][expanded] > .io-drawer-content {
-        width: var(--io-drawer-size);
-      }
-      :host[orientation="vertical"] > .io-drawer-content {
-        height: 0;
-        width: 100%;
-      }
-      :host[orientation="vertical"][expanded] > .io-drawer-content {
-        height: var(--io-drawer-size);
-      }
-      :host > .io-drawer-content > io-panel,
-      :host > .io-drawer-content > io-split {
-        flex: 1 1 auto;
-      }
-      :host[orientation="horizontal"] > .io-drawer-content > io-panel,
-      :host[orientation="horizontal"] > .io-drawer-content > io-split {
-        min-width: var(--io-drawer-size);
-      }
-      :host[orientation="vertical"] > .io-drawer-content > io-panel,
-      :host[orientation="vertical"] > .io-drawer-content > io-split {
-        min-height: var(--io-drawer-size);
-      } */
     `
   }
 
@@ -160,13 +142,12 @@ export class IoDrawer extends IoElement {
   }
 
   expandedChanged() {
-    console.log('onExpandedChanged', this.expanded)
-    this.dispatch('io-drawer-expanded-changed', undefined, true)
+    this.dispatch('io-drawer-expanded-changed', {element:this}, true)
   }
 
   changed() {
     const drawerSize = parseFlexBasis(this.child.flex)
-    this.style.setProperty('--io-drawer-size', `${drawerSize + ThemeSingleton.lineHeight}px`)
+    const contentSize = drawerSize + ThemeSingleton.lineHeight
     const style = this.orientation === 'horizontal' ? {width: `${drawerSize}px`} : {height: `${drawerSize}px`} as Record<string, string>
 
     let childVDOM: VDOMElement | null = null
@@ -189,19 +170,23 @@ export class IoDrawer extends IoElement {
       }
     }
 
-    let icon = ''
-    if (this.orientation === 'horizontal') {
-      icon = this.direction === 'leading' ? 'io:triangle_right' : 'io:triangle_left'
-    } else {
-      icon = this.direction === 'leading' ? 'io:triangle_down' : 'io:triangle_up'
-    }
+    const icon = {
+      horizontal: {
+        leading: this.expanded ? 'io:triangle_left' : 'io:triangle_right',
+        trailing: this.expanded ? 'io:triangle_right' : 'io:triangle_left',
+      },
+      vertical: {
+        leading: this.expanded ? 'io:triangle_up' : 'io:triangle_down',
+        trailing: this.expanded ? 'io:triangle_down' : 'io:triangle_up',
+      }
+    }[this.orientation][this.direction]
 
     this.render([
-      div({class: 'io-drawer-content'}, [
+      div({class: 'io-drawer-content', style: {'--io-drawer-size': `${contentSize}px`}}, [
+        childVDOM,
         div({class: 'io-drawer-handle', '@click': this.onClick}, [
           ioIcon({value: icon, size: 'small'})
         ]),
-        childVDOM
       ])
     ])
   }

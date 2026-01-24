@@ -44,15 +44,18 @@ export class IoSplit extends IoElement {
       :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
       }
-      :host:not([showveil]) > .io-split-veil {
-        display: none;
+      :host > .io-split-veil {
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.125s ease-out;
+        background-color: rgba(0, 0, 0, 1);
         pointer-events: none;
+        z-index: 2;
+        inset: 0;
       }
       :host[showveil] > .io-split-veil {
-        position: absolute;
-        inset: 0;
-        z-index: 2;
-        background-color: rgba(0, 0, 0, 0.5);
+        display: block;
+        opacity: 0.5;
         pointer-events: auto;
         cursor: pointer;
       }
@@ -315,6 +318,11 @@ export class IoSplit extends IoElement {
   }
 
   onDrawerExpandedChanged(event: CustomEvent) {
+    const srcDrawer = event.detail.element as IoDrawer
+    if (srcDrawer.expanded) {
+      const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
+      drawers.forEach(drawer => drawer !== srcDrawer && (drawer.expanded = false))
+    }
     event.stopPropagation()
     this.updateVeil()
   }
