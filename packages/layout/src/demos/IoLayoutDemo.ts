@@ -49,14 +49,14 @@ const split = new Split({
       children: [
         {
           type: 'panel',
-          flex: '0 0 480px',
+          flex: '1 1 auto',
           tabs: [
             {id: 'Editors', icon: 'io:developer'}
           ]
         },
         {
           type: 'panel',
-          flex: '0 0 480px',
+          flex: '0 0 280px',
           tabs: [
             {id: 'Icons', icon: 'io:image'}
           ]
