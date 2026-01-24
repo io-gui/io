@@ -78,7 +78,7 @@ export class Panel extends Node {
   }
   flexChanged() {
     debug: {
-      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
       if (!flexRegex.test(this.flex)) {
         console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
       }
