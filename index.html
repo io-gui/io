@@ -4,13 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <title>Io-Gui: The Artisinal Web Framework</title>
+    <title>Io-Gui, a UI framework for Three.js</title>
 
-    <meta name="keywords" content="io, gui, ui, ux, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, framework, javascript, web development, webdev" />
+    <meta name="keywords" content="io, gui, ui, three, threejs, three.js, 3D, WebGPU, navigation, menu, iogui, web components, custom elements, reactive, data binding, user interface, library, framework, javascript, web development, webdev" />
     
-    <meta itemprop="name" content="Io-Gui, a UI framework for web development." />
-    <meta name="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
-    <meta itemprop="description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta itemprop="name" content="Io-Gui, a UI framework for Three.js" />
+    <meta name="description" content="Io-Gui, a reactive UI framework for Three.js" />
+    <meta itemprop="description" content="Io-Gui, a reactive UI framework for Three.js" />
 
     <!-- Web application enable -->
     <meta name="mobile-web-app-capable" content="yes" />
@@ -43,15 +43,15 @@
 
     <!-- Social sharing data -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Io-Gui: The Artisinal Web Framework" />
-    <meta name="twitter:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta name="twitter:title" content="Io-Gui, a UI framework for Three.js" />
+    <meta name="twitter:description" content="Io-Gui, a reactive UI framework for Three.js" />
     <meta name="twitter:site" content="iogui.dev" />
     <meta name="twitter:creator" content="akirodic" />
     <meta name="twitter:image" content="https://iogui.dev/io/images/logo/io-512.png?002">
-    <meta name="twitter:image:alt" content="Io-Gui: The Artisinal Web Framework">
+    <meta name="twitter:image:alt" content="Io-Gui, a UI framework for Three.js">
     <meta property="og:type" content="article" />
-    <meta property="og:title" content="Io-Gui: The Artisinal Web Framework" />
-    <meta property="og:description" content="Introducing Io-Gui, the artisinal web framework hand-crafted on a heirloom mechanical keyboard and debugged with old-fasioned console.log statements. Each component is meticulously carved into an authentic dependency-free and build-free vanilla JavaScript, aged in a git archive for precisely 2.5 years." />
+    <meta property="og:title" content="Io-Gui, a UI framework for Three.js" />
+    <meta property="og:description" content="Io-Gui, a reactive UI framework for Three.js" />
     <meta property="og:image" content="https://iogui.dev/io/images/logo/io-512.png?002" />
     <meta property="og:locale" content="en_US" />
 
@@ -186,8 +186,6 @@
           {id: 'Layout'},
           {id: 'Three'},
           {id: 'Theme Editor'},
-          {id: 'Element Inspector'},
-          {id: 'Change Visualization'},
           {id: 'TODO MVC App'},
         ]}
       ],
@@ -263,8 +261,8 @@
             {tag: 'io-layout-demo', props: {id: 'Layout', import: './packages/layout/dist/demos/IoLayoutDemo.js'}},
             {tag: 'io-three-demo', props: {id: 'Three', import: './packages/three/dist/demos/IoThreeDemo.js'}},
             {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/core/dist/demos/IoThemeEditor.js'}},
-            {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/core/dist/demos/IoElementInspectorDemo.js'}},
-            {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/core/dist/demos/IoChangeVisualization.js'}},
+            // {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/core/dist/demos/IoElementInspectorDemo.js'}},
+            // {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/core/dist/demos/IoChangeVisualization.js'}},
             iframe({id: 'TODO MVC App', src: './packages/core/src/demos/todomvc/index.html'}),
           ]
         }),

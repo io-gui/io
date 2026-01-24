@@ -37,7 +37,6 @@ let IoInspector = class IoInspector extends IoElement {
     }
     :host > io-breadcrumbs {
       margin: 0 var(--io_spacing);
-      z-index: 1;
     }
     :host > span {
       padding: var(--io_spacing) var(--io_spacing3);
@@ -53,10 +52,6 @@ let IoInspector = class IoInspector extends IoElement {
         return {
             'io-button-clicked': 'onLinkClicked',
         };
-    }
-    init() {
-        this._observedObjectProperties.push('value', 'selected');
-        window.addEventListener('io-object-mutation', this.onPropertyMutated);
     }
     onLinkClicked(event) {
         event.stopPropagation();
@@ -85,9 +80,9 @@ let IoInspector = class IoInspector extends IoElement {
         this.search = '';
     }
     changed() {
-        this.throttle(this.changeThrottled, undefined, 1);
+        this.debounce(this.changedDebounced);
     }
-    changeThrottled() {
+    changedDebounced() {
         const vChildren = [
             ioBreadcrumbs({ value: this.value, selected: this.bind('selected'), search: this.bind('search') }),
         ];
@@ -121,10 +116,10 @@ let IoInspector = class IoInspector extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty()
+    ReactiveProperty({ type: Object, init: null })
 ], IoInspector.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty()
+    ReactiveProperty({ type: Object, init: null })
 ], IoInspector.prototype, "selected", void 0);
 __decorate([
     ReactiveProperty({ type: String })

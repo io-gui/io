@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, ReactiveProperty, IoElement, Property } from '@io-gui/core';
+import { Register, ReactiveProperty, IoElement } from '@io-gui/core';
 let IoDivider = class IoDivider extends IoElement {
     static get Style() {
         return /* css */ `
@@ -76,38 +76,39 @@ let IoDivider = class IoDivider extends IoElement {
         event.preventDefault();
         event.stopPropagation();
         this.addEventListener('pointermove', this.onPointermove);
-        this.addEventListener('pointerleave', this.onPointerleave);
         this.addEventListener('pointerup', this.onPointerup);
+        this.addEventListener('pointercancel', this.onPointercancel);
         this.setPointerCapture(event.pointerId);
         this.pressed = true;
     }
     onPointermove(event) {
         event.preventDefault();
         this.dispatch('io-divider-move', {
-            index: this.index,
             clientX: event.clientX,
             clientY: event.clientY,
+            element: this,
         }, true);
-    }
-    onPointerleave(event) {
-        event.preventDefault();
-        this.removeEventListener('pointermove', this.onPointermove);
-        this.removeEventListener('pointerleave', this.onPointerleave);
-        this.removeEventListener('pointerup', this.onPointerup);
-        this.pressed = false;
     }
     onPointerup(event) {
         event.preventDefault();
         this.removeEventListener('pointermove', this.onPointermove);
-        this.removeEventListener('pointerleave', this.onPointerleave);
         this.removeEventListener('pointerup', this.onPointerup);
+        this.removeEventListener('pointercancel', this.onPointercancel);
         this.releasePointerCapture(event.pointerId);
         this.pressed = false;
         this.dispatch('io-divider-move-end', {
-            index: this.index,
             clientX: event.clientX,
             clientY: event.clientY,
+            element: this,
         }, true);
+    }
+    onPointercancel(event) {
+        event.preventDefault();
+        this.removeEventListener('pointermove', this.onPointermove);
+        this.removeEventListener('pointerup', this.onPointerup);
+        this.removeEventListener('pointercancel', this.onPointercancel);
+        this.releasePointerCapture(event.pointerId);
+        this.pressed = false;
     }
     onTouchstart(event) {
         this.addEventListener('touchmove', this.onTouchmove, { passive: false });
@@ -127,9 +128,6 @@ __decorate([
 __decorate([
     ReactiveProperty({ value: 'horizontal', type: String, reflect: true })
 ], IoDivider.prototype, "orientation", void 0);
-__decorate([
-    Property(Number)
-], IoDivider.prototype, "index", void 0);
 IoDivider = __decorate([
     Register
 ], IoDivider);

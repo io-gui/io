@@ -113,6 +113,78 @@ function decodeInitArgument(item, node) {
     else
         return item;
 }
+function isIoValue(value) {
+    return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement);
+}
+/**
+ * Manages mutation observation state for a reactive property.
+ * - 'none': Primitives (String, Number, Boolean) - no mutation observation
+ * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
+ * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
+ */
+export class Observer {
+    type = 'none';
+    observing = false;
+    constructor(node) {
+        Object.defineProperty(this, 'node', { enumerable: false, configurable: false, writable: false, value: node });
+        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
+        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
+    }
+    start(value) {
+        if (this.observing)
+            return;
+        if (!value || typeof value !== 'object')
+            return;
+        if (isIoValue(value)) {
+            this.type = 'io';
+            this.observing = true;
+            value.addEventListener('io-object-mutation', this.node.onPropertyMutated);
+        }
+        else if (value instanceof NodeArray) {
+            this.type = 'nodearray';
+            this.observing = true;
+            // Register this node as an observer of the NodeArray
+            value.addObserver(this.node);
+            // Also need self-listener to handle the dispatched events
+            if (!this._hasSelfMutationListener) {
+                this._hasSelfMutationListener = true;
+                this.node.addEventListener('io-object-mutation', this.node.onPropertyMutated);
+            }
+        }
+        else {
+            this.type = 'object';
+            this.observing = true;
+            if (!this._hasWindowMutationListener) {
+                this._hasWindowMutationListener = true;
+                window.addEventListener('io-object-mutation', this.node.onPropertyMutated);
+            }
+        }
+    }
+    stop(value) {
+        // TODO: Reconsider
+        // if (!this.observing) return
+        // if (this.type === 'io' && !value._disposed) {
+        if (isIoValue(value) && !value._disposed) {
+            value.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
+        }
+        else if (value instanceof NodeArray) {
+            value.removeObserver(this.node);
+        }
+        this.observing = false;
+        // Note: Window and self listeners are removed at dispose time, not here
+    }
+    dispose() {
+        if (this._hasSelfMutationListener) {
+            this.node.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
+            this._hasSelfMutationListener = false;
+        }
+        if (this._hasWindowMutationListener) {
+            window.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
+            this._hasWindowMutationListener = false;
+        }
+    }
+}
 /**
  * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.
  */
@@ -127,6 +199,8 @@ export class ReactivePropertyInstance {
     reflect = false;
     // Initialize property with provided constructor arguments. `null` prevents initialization.
     init = undefined;
+    // Mutation observation state for this property.
+    observer;
     /**
      * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
      * @param node owner Node instance
@@ -191,6 +265,8 @@ export class ReactivePropertyInstance {
                 }
             }
         }
+        this.observer = new Observer(node);
+        this.observer.start(this.value);
         debug: {
             if (this.value !== undefined && this.init !== undefined) {
                 if ([String, Number, Boolean].indexOf(this.type) !== -1) {

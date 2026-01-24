@@ -1,10 +1,10 @@
 import { Register, ReactiveProperty, IoElement, IoElementProps, ThemeSingleton } from '@io-gui/core'
-import { IoTab } from './IoTab.js'
-import { SplitDirection } from '../nodes/Split.js'
+import { SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
+import { IoTab } from './IoTab.js'
 
 @Register
-class IoTabDropMarker extends IoElement {
+class IoTabDropRect extends IoElement {
   static get Style() {
     return /* css */`
       :host {
@@ -89,7 +89,6 @@ class IoTabDropMarker extends IoElement {
   }
 }
 
-export const tabDropMarkerSingleton = new IoTabDropMarker()
-setTimeout(() => {
-  document.body.appendChild(tabDropMarkerSingleton as HTMLElement)
-}, 100)
+export const ioTabDropRectSingleton = new IoTabDropRect()
+document.body.appendChild(ioTabDropRectSingleton as HTMLElement)
+

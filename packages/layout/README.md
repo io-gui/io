@@ -1,6 +1,8 @@
-# Io-Layout
+# @io-gui/layout
 
 A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. IoLayout enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
+
+See [live examples here](https://iogui.dev/io/#path=Demos,Layout)
 
 ## Overview
 
@@ -213,7 +215,7 @@ Global singleton rendered at cursor position during tab drag. Shows tab icon and
 - `splitDirection` - 'none', 'center', 'left', 'right', 'top', 'bottom'
 - `dropIndex` - Target index within tabs (-1 for split operations)
 
-### IoTabDropMarker
+### IoTabDropRect
 
 Global singleton showing drop location preview.
 
@@ -294,6 +296,103 @@ Parent elements receive mutation, may propagate up
 | `io-split-remove` | IoSplit | `{ split }` | Split became empty |
 | `io-split-consolidate` | IoSplit | `{ split }` | Split has single child, needs consolidation |
 | `io-menu-option-clicked` | IoMenuItem | `{ option }` | Add new tab from menu |
+
+## Important Considerations
+
+### Multiple Layout Instances
+
+IoLayout uses **global singletons** for drag-and-drop functionality:
+
+- `tabDragIconSingleton` - Shows tab icon at cursor during drag
+- `ioTabDropRectSingleton` - Shows drop target preview
+- `ioTabsHamburgerMenuSingleton` - Overflow menu for hidden tabs
+
+**Limitations when using multiple `IoLayout` instances on the same page:**
+
+1. **One drag operation at a time** - Singletons are shared globally, so only one tab drag can occur across all layout instances simultaneously
+2. **Drop target scoping** - Drop targets are scoped to the IoLayout ancestor of the dragged tab. Tabs cannot be dragged between separate IoLayout instances.
+3. **Shared hamburger menu** - The overflow menu is shared, though it correctly displays tabs from whichever panel triggered it
+
+This architecture works well for the common case of a single layout per page. For multiple independent layouts, be aware of the shared drag state.
+
+### Tab ID Uniqueness
+
+Tab IDs serve two purposes:
+1. **Content matching** - The `id` property matches tabs to content elements in the `elements` array
+2. **Identity within panels** - Each tab in a panel should have a unique `id`
+
+**Within a single panel:**
+When adding a tab, if a tab with the same `id` already exists in that panel, the existing tab is removed first (with a console warning):
+```typescript
+addTab(tab: Tab, index?: number) {
+  const existingIndex = this.panel.tabs.findIndex(t => t.id === tab.id)
+  if (existingIndex !== -1) {
+    console.warn(`IoPanel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`)
+    this.panel.tabs.splice(existingIndex, 1)
+  }
+  // ... add at new position
+}
+```
+
+**Across panels:**
+Duplicate IDs across different panels are **allowed** and can be useful when:
+- Multiple panels should display the same content (e.g., split view of same document)
+- Each panel independently selects which content to show
+
+However, consider that:
+- All tabs with the same ID will display the same content
+- Removing a tab only affects that specific panel
+- No automatic synchronization occurs between panels with duplicate IDs
+
+### Minimum Panel Sizes
+
+Panels have enforced minimum size `ThemeSingleton.fieldHeight * 4` during resize operations to prevent them from becoming unusably small. These values scale with the theme's `fieldHeight` setting, ensuring usability across different display densities and theme configurations.
+
+**Note:** These minimums apply during user resize operations via IoDivider. Programmatically setting smaller flex values is possible but may result in cramped UI.
+
+### Storage and Serialization
+
+When using `Storage` for layout persistence, understanding what gets serialized helps avoid unexpected behavior.
+
+**What IS persisted:**
+- Layout structure (nested splits and panels)
+- Split orientations (`'horizontal'` or `'vertical'`)
+- Panel flex values (only if different from default `'1 1 100%'`)
+- Tab data: `id`, `label` (if different from id), `icon` (if set), `selected` state
+- All nested children recursively
+
+**What is NOT persisted:**
+- Transient drag state (`tabDragIconSingleton` properties)
+- Runtime element references (`dropSource`, `dropTarget`)
+- Overflow state (`IoTabs.overflow` value)
+- DOM-specific state (scroll positions, focus)
+
+**Serialization example:**
+```typescript
+// This structure with defaults:
+new Split({
+  type: 'split',
+  orientation: 'horizontal',  // default, omitted in JSON
+  flex: '1 1 100%',          // default, omitted in JSON
+  children: [{
+    type: 'panel',
+    flex: '0 0 200px',       // non-default, included
+    tabs: [{ id: 'A', label: 'A' }]  // label equals id, omitted
+  }]
+})
+
+// Serializes to:
+{
+  type: 'split',
+  children: [{
+    type: 'panel',
+    flex: '0 0 200px',
+    tabs: [{ id: 'A' }]
+  }]
+}
+```
+
+---
 
 ## Nuances and Edge Cases
 

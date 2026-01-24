@@ -4,30 +4,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register } from '@io-gui/core';
+import { ReactiveProperty, Register } from '@io-gui/core';
 import { ThreeApplet } from '@io-gui/three';
-import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, PerspectiveCamera, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
+import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
 import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 let AnimationBackdropExample = class AnimationBackdropExample extends ThreeApplet {
-    mixer;
     portals;
-    camera;
     constructor() {
         super();
         this.toneMapping = NeutralToneMapping;
         this.toneMappingExposure = 0.3;
-        // Camera
-        this.camera = new PerspectiveCamera(50, 1, 0.01, 100);
-        this.camera.position.set(1, 2, 3);
-        this.camera.lookAt(0, 1, 0);
-        this.scene.add(this.camera);
         // Background
         this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff));
         // Light
         const light = new SpotLight(0xffffff, 1);
+        light.position.set(1, 2, 3);
+        light.lookAt(0, 1, 0);
         light.power = 2000;
-        this.camera.add(light);
+        this.scene.add(light);
         // Portals
         this.portals = new Group();
         this.scene.add(this.portals);
@@ -64,6 +59,7 @@ let AnimationBackdropExample = class AnimationBackdropExample extends ThreeApple
             this.mixer = new AnimationMixer(object);
             const mesh = object.children[0].children[0];
             const material = mesh.material;
+            // TODO: Time is respecting the animation mixer timeScale
             material.outputNode = oscSine(time.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2));
             const action = this.mixer.clipAction(gltf.animations[0]);
             action.play();
@@ -71,12 +67,16 @@ let AnimationBackdropExample = class AnimationBackdropExample extends ThreeApple
         });
     }
     onAnimate(delta) {
-        if (this.mixer) {
-            this.mixer.update(delta);
+        this.mixer.update(delta);
+        debug: {
+            this.dispatchMutation(this.mixer);
         }
-        this.portals.rotation.y += delta * 0.5;
+        this.portals.rotation.y += delta * this.mixer.timeScale * 0.5;
     }
 };
+__decorate([
+    ReactiveProperty({ type: AnimationMixer, init: new Group() })
+], AnimationBackdropExample.prototype, "mixer", void 0);
 AnimationBackdropExample = __decorate([
     Register
 ], AnimationBackdropExample);

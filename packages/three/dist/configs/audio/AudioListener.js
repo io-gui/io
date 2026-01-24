@@ -1,4 +1,4 @@
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { AudioListener } from 'three/webgpu';
 /**
@@ -13,4 +13,7 @@ registerEditorGroups(AudioListener, {
     Main: ['timeDelta'],
     WebAudio: ['context', 'gain', 'filter'],
 });
+registerEditorConfig(Object, [
+    [AudioListener, ioObject()],
+]);
 //# sourceMappingURL=AudioListener.js.map

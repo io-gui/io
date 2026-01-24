@@ -1,4 +1,4 @@
-import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { registerEditorConfig, registerEditorGroups, ioObject } from '@io-gui/editors';
 import { ioNumber } from '@io-gui/inputs';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { Audio } from 'three/webgpu';
@@ -41,4 +41,7 @@ registerEditorGroups(Audio, {
         'filters',
     ],
 });
+registerEditorConfig(Object, [
+    [Audio, ioObject({ label: 'Audio' })],
+]);
 //# sourceMappingURL=Audio.js.map

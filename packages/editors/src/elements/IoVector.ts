@@ -37,7 +37,7 @@ export class IoVector extends IoElement {
         overflow: hidden;
       }
       :host > io-number {
-        flex: 1 1 auto;
+        flex: 1 1 0;
       }
       :host > *:not(:last-child) {
         margin-right: var(--io_spacing);
@@ -115,7 +115,6 @@ export class IoVector extends IoElement {
     if (!(this.value as Node)._isNode) {
       this.dispatchMutation(this.value)
     }
-    this.dispatch('value-input', {property: 'value', value: this.value}, false)
   }
 
   valueChanged() {

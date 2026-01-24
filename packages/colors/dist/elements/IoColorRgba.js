@@ -16,7 +16,8 @@ let IoColorRgba = class IoColorRgba extends IoColorBase {
         return /* css */ `
       :host {
         display: flex;
-        flex: 0 1 auto;
+        flex: 1 1 auto;
+        overflow: hidden;
       }
       :host > io-number {
         flex: 1 0 0;

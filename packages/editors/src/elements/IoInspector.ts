@@ -43,7 +43,6 @@ export class IoInspector extends IoElement {
     }
     :host > io-breadcrumbs {
       margin: 0 var(--io_spacing);
-      z-index: 1;
     }
     :host > span {
       padding: var(--io_spacing) var(--io_spacing3);
@@ -105,9 +104,9 @@ export class IoInspector extends IoElement {
     this.search = ''
   }
   changed() {
-    this.throttle(this.changeThrottled, undefined, 1)
+    this.debounce(this.changedDebounced)
   }
-  changeThrottled() {
+  changedDebounced() {
     const vChildren = [
       ioBreadcrumbs({value: this.value, selected: this.bind('selected'), search: this.bind('search')}),
     ]

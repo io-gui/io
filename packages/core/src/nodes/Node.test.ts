@@ -101,7 +101,7 @@ describe('Node', () => {
       binding: undefined,
       reflect: false,
       init: undefined,
-      observer: {type: 'none', observing: false},
+      observer: {type: 'object', observing: true},
     })
     expect(node._reactiveProperties.get('prop6')).toEqual({
       value: 'hello',
@@ -267,9 +267,9 @@ describe('Node', () => {
     expect(node2._reactiveProperties.get('prop1')!.binding).toBe(binding2)
     expect(node2._reactiveProperties.get('prop3')!.binding).toBe(binding3)
 
-    expect((binding1).targets[0]).toBe(node1)
-    expect((binding2).targets[0]).toBe(node2)
-    expect((binding3).targets[0]).toBe(node2)
+    expect((binding1).targets.has(node1)).toBe(true)
+    expect((binding2).targets.has(node2)).toBe(true)
+    expect((binding3).targets.has(node2)).toBe(true)
 
     expect(node1._reactiveProperties.get('prop1')!.value).toBe('label1')
     expect(node2._reactiveProperties.get('prop1')!.value).toBe('label2')
@@ -325,14 +325,14 @@ describe('Node', () => {
     expect(node.prop1).toBe('label1')
 
     expect(node._reactiveProperties.get('prop1')!.binding).toBe(binding1)
-    expect((binding1).targets[0]).toBe(node)
+    expect((binding1).targets.has(node)).toBe(true)
 
     node.setProperty('prop1', binding2)
     expect(node._reactiveProperties.get('prop1')!.value).toBe('label2')
     expect(node.prop1).toBe('label2')
 
-    expect((binding1).targets[0]).toBe(undefined)
-    expect((binding2).targets[0]).toBe(node)
+    expect((binding1).targets.has(node)).toBe(false)
+    expect((binding2).targets.has(node)).toBe(true)
   })
   it('Should execute attribute reflection on IoElement', () => {
     @Register
@@ -488,7 +488,7 @@ describe('Node', () => {
 
     expect(node3.propChangedEvents).toEqual([])
   })
-  it('Should execute throttle/debounce queue in FIFO order', async () => {
+  it('Should execute throttle immediately and debounce deferred', async () => {
     const order: number[] = []
     const node = new Node()
     node.debounce(() => {
@@ -497,14 +497,18 @@ describe('Node', () => {
     node.debounce(() => {
       order.push(2)
     })
-    const throttleFuc = () => {
+    const throttleFunc = () => {
       order.push(0)
     }
-    node.throttle(throttleFuc)
-    node.throttle(throttleFuc)
+    node.throttle(throttleFunc) // Executes immediately (leading edge)
+    node.throttle(throttleFunc) // Updates trailing arg (queued)
+
+    // Throttle leading already executed, trailing + debounces pending
+    expect(order).toEqual([0])
 
     await nextQueue()
-    expect(order).toEqual([1, 2, 0])
+    // Debounces execute (in insertion order), then trailing throttle
+    expect(order).toEqual([0, 1, 2, 0])
   })
   it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
     @Register
@@ -759,8 +763,8 @@ describe('Node', () => {
     const boundNode2 = new TestNode({prop1: binding}) as any
     boundNode2.prop2 = binding
 
-    expect(binding.targets[0]).toBe(boundNode1)
-    expect(binding.targets[1]).toBe(boundNode2)
+    expect(binding.targets.has(boundNode1)).toBe(true)
+    expect(binding.targets.has(boundNode2)).toBe(true)
     expect(binding.targetProperties.get(boundNode1)![0]).toBe('prop1')
     expect(binding.targetProperties.get(boundNode1)![1]).toBe(undefined)
     expect(binding.targetProperties.get(boundNode2)![0]).toBe('prop1')
@@ -776,13 +780,13 @@ describe('Node', () => {
     expect(node.prop1).toBe('two')
     expect(boundNode2.prop1).toBe('two')
 
-    expect(binding.targets.length).toBe(2)
+    expect(binding.targets.size).toBe(2)
 
     boundNode1.dispose()
-    expect(binding.targets.length).toBe(1)
+    expect(binding.targets.size).toBe(1)
 
     boundNode2.dispose()
-    expect(binding.targets.length).toBe(0)
+    expect(binding.targets.size).toBe(0)
 
     node.dispose()
   })
@@ -906,9 +910,10 @@ describe('Node', () => {
     const dstNode1 = new TestNode({prop1: binding0}) as any
     const dstNode3 = new TestNode({prop1: binding0, prop2: binding0}) as any
 
-    expect(binding0.targets[0]).toBe(dstNode0)
-    expect(binding0.targets[1]).toBe(dstNode1)
-    expect(binding0.targets[2]).toBe(dstNode3)
+    expect(binding0.targets.has(dstNode0)).toBe(true)
+    expect(binding0.targets.has(dstNode1)).toBe(true)
+    expect(binding0.targets.has(dstNode3)).toBe(true)
+    expect(binding0.targets.size).toBe(3)
 
     expect(binding0.targetProperties.get(dstNode0)).toEqual(['prop1'])
     expect(binding0.targetProperties.get(dstNode1)).toEqual(['prop1'])
@@ -983,7 +988,6 @@ describe('Node', () => {
     class TestNode extends Node {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
-          // Property with type: Object, which results in observer.type = 'object'
           prop: {type: Object, init: null},
         }
       }
@@ -1020,13 +1024,13 @@ describe('Node', () => {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
-          propB: {type: Object, init: null},
+          propB: {type: IoObjectNode, init: null},
         }
       }
     }
 
-    const ioObject = new IoObjectNode()
     const node = new TestNode() as any
+    const ioObject = new IoObjectNode()
 
     // Assign same Io object to both properties
     node.propA = ioObject
@@ -1065,7 +1069,7 @@ describe('Node', () => {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
-          propB: {type: Object, init: null},
+          propB: {type: IoObjectNode, init: null},
         }
       }
     }

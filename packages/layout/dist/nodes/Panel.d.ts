@@ -13,6 +13,7 @@ export declare class Panel extends Node {
     onTabsMutatedDebounced(): void;
     getSelected(): string;
     setSelected(id: string): void;
+    flexChanged(): void;
     toJSON(): PanelProps;
     fromJSON(json: PanelProps): this;
     dispose(): void;

@@ -1,8 +1,7 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, ListenerDefinition } from '@io-gui/core'
+import { Register, ReactiveProperty, IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core'
 
 export type IoDividerProps = IoElementProps & {
   orientation: 'vertical' | 'horizontal'
-  index: number
 }
 
 @Register
@@ -73,9 +72,6 @@ export class IoDivider extends IoElement {
   @ReactiveProperty({value: 'horizontal', type: String, reflect: true})
   declare orientation: 'horizontal' | 'vertical'
 
-  @Property(Number)
-  declare index: number
-
   static get Listeners() {
     return {
       'pointerdown': 'onPointerdown',
@@ -89,38 +85,39 @@ export class IoDivider extends IoElement {
     event.preventDefault()
     event.stopPropagation()
     this.addEventListener('pointermove', this.onPointermove)
-    this.addEventListener('pointerleave', this.onPointerleave)
     this.addEventListener('pointerup', this.onPointerup)
+    this.addEventListener('pointercancel', this.onPointercancel)
     this.setPointerCapture(event.pointerId)
     this.pressed = true
   }
   onPointermove(event: PointerEvent) {
     event.preventDefault()
     this.dispatch('io-divider-move', {
-      index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
+      element: this,
     }, true)
-  }
-  onPointerleave(event: PointerEvent) {
-    event.preventDefault()
-    this.removeEventListener('pointermove', this.onPointermove)
-    this.removeEventListener('pointerleave', this.onPointerleave)
-    this.removeEventListener('pointerup', this.onPointerup)
-    this.pressed = false
   }
   onPointerup(event: PointerEvent) {
     event.preventDefault()
     this.removeEventListener('pointermove', this.onPointermove)
-    this.removeEventListener('pointerleave', this.onPointerleave)
     this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
     this.releasePointerCapture(event.pointerId)
     this.pressed = false
     this.dispatch('io-divider-move-end', {
-      index: this.index,
       clientX: event.clientX,
       clientY: event.clientY,
+      element: this,
     }, true)
+  }
+  onPointercancel(event: PointerEvent) {
+    event.preventDefault()
+    this.removeEventListener('pointermove', this.onPointermove)
+    this.removeEventListener('pointerup', this.onPointerup)
+    this.removeEventListener('pointercancel', this.onPointercancel)
+    this.releasePointerCapture(event.pointerId)
+    this.pressed = false
   }
   onTouchstart(event: TouchEvent) {
     this.addEventListener('touchmove', this.onTouchmove, {passive: false})

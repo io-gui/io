@@ -17,6 +17,7 @@ describe('IoField.test', () => {
             reflect: false,
             type: undefined,
             value: '',
+            observer: { type: 'none', observing: false },
         });
         expect(element._reactiveProperties.get('selected')).toEqual({
             binding: undefined,
@@ -24,6 +25,7 @@ describe('IoField.test', () => {
             reflect: true,
             type: Boolean,
             value: false,
+            observer: { type: 'none', observing: false },
         });
         expect(element.spellcheck).toBe(false);
     });

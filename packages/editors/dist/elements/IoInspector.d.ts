@@ -23,14 +23,13 @@ export declare class IoInspector extends IoElement {
     static get Listeners(): {
         'io-button-clicked': string;
     };
-    init(): void;
     onLinkClicked(event: CustomEvent): void;
     valueChanged(): void;
     valueMutated(): void;
     selectedMutated(): void;
     selectedChanged(): void;
     changed(): void;
-    changeThrottled(): void;
+    changedDebounced(): void;
     dispose(): void;
 }
 export declare const ioInspector: (arg0?: IoInspectorProps) => VDOMElement;

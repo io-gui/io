@@ -22,9 +22,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
       font-size: var(--io_fontSize);
-    }
-    :host[orientation="horizontal"] {
-      flex-direction: row;
+      overflow: hidden;
     }
     :host > .row {
       display: flex;
@@ -35,9 +33,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       border-radius: var(--io_borderRadius);
       margin-bottom: 0;
       background-color: var(--io_bgColorLight);
-    }
-    :host[orientation="horizontal"] > .row {
-      flex-direction: column;
     }
     :host io-property-editor {
       margin-top: calc(var(--io_spacing) * -1) !important;
@@ -78,10 +73,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     _config = null;
     _groups = null;
     _widget = null;
-    init() {
-        this._observedObjectProperties.push('value');
-        window.addEventListener('io-object-mutation', this.onPropertyMutated);
-    }
+    _propertyEditors = {};
     _onValueInput(event) {
         event.stopImmediatePropagation();
         const id = event.target.id;
@@ -95,134 +87,161 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
             debug: console.warn('IoPropertyEditor: "value-input" recieved from an input without a property id');
         }
     }
-    valueMutated(event) {
-        this.throttle(this.changed);
-    }
     configChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
     groupsChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
     widgetChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
     valueChanged() {
-        this.throttle(this.configureThrottled);
+        this.debounce(this.configureDebounced);
     }
-    configureThrottled() {
-        this._config = getEditorConfig(this.value, this.config);
-        this._groups = getEditorGroups(this.value, this.groups);
-        this._widget = this.widget || getEditorWidget(this.value);
-        this.throttle(this.changed);
-    }
-    changed() {
-        this.debounce(this.changedDebounced);
-    }
-    changedDebounced() {
-        if (!this.value) {
+    configureDebounced() {
+        this._propertyEditors = {};
+        if (!this.value || typeof this.value !== 'object') {
             this._config = null;
             this._groups = null;
             this._widget = null;
             this.render([]);
             return;
         }
-        const config = this._config;
-        const groups = this._groups;
-        const widget = this._widget;
-        if (!config || !groups)
-            return;
-        const properties = [];
-        const vChildren = [];
-        if (this.properties.length) {
-            properties.push(...this.properties);
-        }
         else {
+            this._config = getEditorConfig(this.value, this.config);
+            this._groups = getEditorGroups(this.value, this.groups);
+            this._widget = this.widget !== undefined ? this.widget : getEditorWidget(this.value);
+            const config = this._config;
+            const groups = this._groups;
+            const widget = this._widget;
+            if (!config || !groups)
+                return;
+            const properties = [];
+            const vChildren = [];
             if (widget) {
                 const widgetWithValue = {
                     tag: widget.tag,
-                    props: Object.assign({ value: this.value }, widget.props),
+                    // widget: null prevents recursive widget lookup in nested io-property-editors
+                    props: Object.assign({ value: this.value, widget: null }, widget.props),
                     children: widget.children
                 };
                 vChildren.push(widgetWithValue);
             }
-            properties.push(...groups.Main);
-        }
-        const allProps = getAllPropertyNames(this.value);
-        for (let i = 0; i < properties.length; i++) {
-            if (allProps.includes(properties[i])) {
-                const id = properties[i];
-                const value = this.value[id];
-                const tag = config[id].tag;
-                const props = config[id].props || {};
-                const finalProps = { id: id, value: value, '@value-input': this._onValueInput };
-                Object.assign(finalProps, props);
-                let children = undefined;
-                if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
-                    children = value;
-                }
-                if (tag === 'io-object' || tag === 'io-property-editor') {
-                    finalProps.config = finalProps.config || this.config;
-                    finalProps.groups = finalProps.groups || this.groups;
-                }
-                if (tag === 'io-object') {
-                    finalProps.persistentExpand = true;
-                }
-                // NOTE: Functions dont have labels. They are displayed as labeled buttons.
-                const isFunction = typeof value === 'function';
-                if (isFunction) {
-                    finalProps.action = value.bind(this.value);
-                    finalProps.label = finalProps.label || id;
-                }
-                const isIoObject = tag === 'io-object';
-                if (isIoObject) {
-                    finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
-                }
-                vChildren.push(div({ class: 'row' }, [
-                    (this.labeled && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth }, title: id }, id) : null,
-                    { tag: tag, props: finalProps, children: children },
-                ]));
+            if (this.properties.length) {
+                properties.push(...this.properties);
             }
             else {
-                debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
+                properties.push(...groups.Main);
             }
-        }
-        if (!this.properties.length) {
-            for (const group in groups) {
-                if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
-                    vChildren.push(ioObject({
-                        label: group,
-                        labelWidth: this.labelWidth,
-                        persistentExpand: true,
-                        value: this.value,
-                        properties: groups[group],
-                        config: this.config,
-                    }));
+            const allProps = getAllPropertyNames(this.value);
+            for (let i = 0; i < properties.length; i++) {
+                if (allProps.includes(properties[i])) {
+                    const id = properties[i];
+                    const value = this.value[id];
+                    const tag = config[id].tag;
+                    const props = config[id].props || {};
+                    const finalProps = { id: id, value: value, '@value-input': this._onValueInput };
+                    Object.assign(finalProps, props);
+                    let children = undefined;
+                    if (HTML_ELEMENTS.includes(tag) && typeof value === 'string') {
+                        children = value;
+                    }
+                    if (tag === 'io-object' || tag === 'io-property-editor') {
+                        finalProps.config = finalProps.config || this.config;
+                        finalProps.groups = finalProps.groups || this.groups;
+                    }
+                    if (tag === 'io-object') {
+                        finalProps.persistentExpand = true;
+                    }
+                    // NOTE: Functions dont have labels. They are displayed as labeled buttons.
+                    const isFunction = typeof value === 'function';
+                    if (isFunction) {
+                        finalProps.action = value.bind(this.value);
+                        finalProps.label = finalProps.label || id;
+                    }
+                    const isIoObject = tag === 'io-object';
+                    if (isIoObject) {
+                        finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
+                    }
+                    // TODO: Document and reconsider this
+                    const label = finalProps.label || id;
+                    const tooltip = label;
+                    const hideLabel = finalProps.label === '_hidden_';
+                    if (finalProps.class) {
+                        finalProps.class += ' io-property-editor-field';
+                    }
+                    else {
+                        finalProps.class = 'io-property-editor-field';
+                    }
+                    vChildren.push(div({ class: 'row' }, [
+                        (this.labeled && !hideLabel && !isFunction && !isIoObject) ? span({ style: { width: this.labelWidth }, title: tooltip }, label) : null,
+                        { tag: tag, props: finalProps, children: children },
+                    ]));
+                }
+                else {
+                    debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
+                }
+            }
+            if (!this.properties.length) {
+                for (const group in groups) {
+                    if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
+                        vChildren.push(ioObject({
+                            label: group,
+                            labelWidth: this.labelWidth,
+                            persistentExpand: true,
+                            value: this.value,
+                            properties: groups[group],
+                            config: this.config,
+                        }));
+                    }
+                }
+            }
+            this.render(vChildren);
+            for (const child of Object.values(this.$)) {
+                if (child.classList.contains('io-property-editor-field')) {
+                    this._propertyEditors[child.id] = child;
                 }
             }
         }
-        this.render(vChildren);
+    }
+    valueMutated() {
+        this.throttle(this.changedThrottled);
+    }
+    changed() {
+        this.throttle(this.changedThrottled);
+    }
+    changedThrottled() {
+        if (!this.value || typeof this.value !== 'object')
+            return;
+        for (const id in this._propertyEditors) {
+            if (!(id in this.value))
+                continue;
+            const value = this.value[id];
+            const editor = this._propertyEditors[id];
+            editor.value = value;
+        }
     }
     dispose() {
         super.dispose();
-        window.removeEventListener('io-object-mutation', this.onPropertyMutated);
+        this._propertyEditors = {};
     }
 };
 __decorate([
-    ReactiveProperty()
+    ReactiveProperty({ type: Object, init: null })
 ], IoPropertyEditor.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "properties", void 0);
+__decorate([
+    ReactiveProperty({ type: String, value: '' })
+], IoPropertyEditor.prototype, "label", void 0);
 __decorate([
     ReactiveProperty(true)
 ], IoPropertyEditor.prototype, "labeled", void 0);
 __decorate([
     ReactiveProperty('80px')
 ], IoPropertyEditor.prototype, "labelWidth", void 0);
-__decorate([
-    ReactiveProperty({ type: String, value: 'vertical', reflect: true })
-], IoPropertyEditor.prototype, "orientation", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoPropertyEditor.prototype, "config", void 0);

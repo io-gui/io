@@ -31,8 +31,8 @@ describe('Binding', () => {
         const binding = new Binding(node, 'prop1');
         expect(binding.node).toBe(node);
         expect(binding.property).toBe('prop1');
-        expect(binding.targets instanceof Array).toBe(true);
-        expect(binding.targets.length).toBe(0);
+        expect(binding.targets instanceof Set).toBe(true);
+        expect(binding.targets.size).toBe(0);
         expect(binding.targetProperties instanceof WeakMap).toBe(true);
     });
     it('Should set source and target properties', () => {
@@ -78,11 +78,11 @@ describe('Binding', () => {
             'prop1-changed': [[binding1.onTargetChanged]],
             'prop2-changed': [[binding1.onTargetChanged]]
         });
-        expect(binding0.targets[0]).toBe(dstNode0);
-        expect(binding0.targets[1]).toBe(undefined);
-        expect(binding1.targets[0]).toBe(dstNode0);
-        expect(binding1.targets[1]).toBe(dstNode1);
-        expect(binding1.targets[2]).toBe(undefined);
+        expect(binding0.targets.has(dstNode0)).toBe(true);
+        expect(binding0.targets.size).toBe(1);
+        expect(binding1.targets.has(dstNode0)).toBe(true);
+        expect(binding1.targets.has(dstNode1)).toBe(true);
+        expect(binding1.targets.size).toBe(2);
         expect(dstNode0._reactiveProperties.get('prop1').binding).toBe(binding0);
         expect(dstNode0._reactiveProperties.get('prop2').binding).toBe(binding1);
         expect(dstNode1._reactiveProperties.get('prop1').binding).toBe(binding1);
@@ -122,12 +122,12 @@ describe('Binding', () => {
         binding1.addTarget(dstNode1, 'prop1');
         const srcNode2 = new TestNode();
         const binding2 = new Binding(srcNode2, 'prop1');
-        expect(binding1.targets).toContain(dstNode1);
+        expect(binding1.targets.has(dstNode1)).toBe(true);
         let binding1targetProps = binding1.getTargetProperties(dstNode1);
         expect(binding1targetProps.length).toBe(1);
         expect(binding1targetProps[0]).toBe('prop1');
         binding2.addTarget(dstNode1, 'prop1');
-        expect(binding1.targets).toEqual([]);
+        expect(binding1.targets.size).toBe(0);
         binding1targetProps = binding1.getTargetProperties(dstNode1);
         expect(binding1targetProps.length).toBe(0);
     });

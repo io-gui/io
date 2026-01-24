@@ -1,11 +1,10 @@
-import { Register } from '@io-gui/core'
+import { ReactiveProperty, Register } from '@io-gui/core'
 import { ThreeApplet } from '@io-gui/three'
 import {
 	AnimationMixer,
 	Group,
 	Mesh,
 	MeshStandardNodeMaterial,
-	PerspectiveCamera,
 	SphereGeometry,
 	SpotLight,
 	MathUtils,
@@ -34,9 +33,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 @Register
 export class AnimationBackdropExample extends ThreeApplet {
-	public mixer?: AnimationMixer
-	public portals: Group
-	public camera: PerspectiveCamera
+
+  @ReactiveProperty({type: AnimationMixer, init: new Group()})
+	declare public mixer: AnimationMixer
+
+  public portals: Group
 
 	constructor() {
 		super()
@@ -44,19 +45,15 @@ export class AnimationBackdropExample extends ThreeApplet {
     this.toneMapping = NeutralToneMapping
 		this.toneMappingExposure = 0.3
 
-		// Camera
-		this.camera = new PerspectiveCamera(50, 1, 0.01, 100)
-		this.camera.position.set(1, 2, 3)
-		this.camera.lookAt(0, 1, 0)
-		this.scene.add(this.camera)
-
 		// Background
 		this.scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff))
 
 		// Light
 		const light = new SpotLight(0xffffff, 1)
+    light.position.set(1, 2, 3)
+		light.lookAt(0, 1, 0)
 		light.power = 2000
-		this.camera.add(light)
+		this.scene.add(light)
 
 		// Portals
 		this.portals = new Group()
@@ -107,7 +104,9 @@ export class AnimationBackdropExample extends ThreeApplet {
 
       const mesh = object.children[0].children[0] as Mesh
 			const material = mesh.material as MeshStandardNodeMaterial
-			material.outputNode = oscSine(time.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2))
+
+      // TODO: Time is respecting the animation mixer timeScale
+      material.outputNode = oscSine(time.mul(.1)).mix(output, posterize(output.add(.1), 4).mul(2))
 
 			const action = this.mixer.clipAction(gltf.animations[0])
 			action.play()
@@ -117,10 +116,11 @@ export class AnimationBackdropExample extends ThreeApplet {
 	}
 
 	onAnimate(delta: number) {
-		if (this.mixer) {
-			this.mixer.update(delta)
-		}
-		this.portals.rotation.y += delta * 0.5
+    this.mixer.update(delta)
+    debug: {
+      this.dispatchMutation(this.mixer)
+    }
+		this.portals.rotation.y += delta * this.mixer.timeScale * 0.5
 	}
 }
 

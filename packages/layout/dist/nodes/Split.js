@@ -4,35 +4,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var Split_1;
 import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core';
 import { Panel } from './Panel.js';
-let Split = Split_1 = class Split extends Node {
+function createChild(child) {
+    return child.type === 'panel' ? new Panel(child) : new Split(child);
+}
+function consolidateChildren(children, orientation) {
+    let result = children;
+    let resultOrientation = orientation;
+    while (result.length === 1 && result[0] instanceof Split) {
+        const soleChild = result[0];
+        resultOrientation = soleChild.orientation;
+        result = [...soleChild.children];
+    }
+    return { children: result, orientation: resultOrientation };
+}
+let Split = class Split extends Node {
     constructor(args) {
         debug: {
             if (args.type !== 'split') {
                 console.error(`Split: Invalid type "${args.type}". Expected "split".`);
             }
         }
-        let processedChildren = args.children.map(child => {
-            if (child.type === 'panel') {
-                return new Panel(child);
-            }
-            else {
-                return new Split_1(child);
-            }
-        });
-        let orientation = args.orientation;
-        // Consolidate splits containing only one split as child
-        while (processedChildren.length === 1 && processedChildren[0] instanceof Split_1) {
-            const soleChild = processedChildren[0];
-            orientation = soleChild.orientation;
-            processedChildren = [...soleChild.children];
-        }
+        const processedChildren = args.children.map(createChild);
+        const consolidated = consolidateChildren(processedChildren, args.orientation ?? 'horizontal');
         super({
             ...args,
-            children: processedChildren,
-            orientation,
+            children: consolidated.children,
+            orientation: consolidated.orientation,
         });
     }
     childrenMutated() {
@@ -41,13 +40,24 @@ let Split = Split_1 = class Split extends Node {
     onChildrenMutatedDebounced() {
         this.dispatchMutation();
     }
+    flexChanged() {
+        debug: {
+            const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+            if (!flexRegex.test(this.flex)) {
+                console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`);
+            }
+        }
+    }
     toJSON() {
-        return {
+        const json = {
             type: 'split',
             children: this.children.map((child) => child.toJSON()),
-            orientation: this.orientation,
-            flex: this.flex,
         };
+        if (this.orientation !== 'horizontal')
+            json.orientation = this.orientation;
+        if (this.flex !== '1 1 auto')
+            json.flex = this.flex;
+        return json;
     }
     fromJSON(json) {
         debug: {
@@ -55,22 +65,17 @@ let Split = Split_1 = class Split extends Node {
                 console.error(`Split.fromJSON: Invalid type "${json.type}". Expected "split".`);
             }
         }
+        const processedChildren = json.children.map(createChild);
+        const consolidated = consolidateChildren(processedChildren, json.orientation ?? 'horizontal');
         this.setProperties({
-            children: json.children.map((child) => {
-                if (child.type === 'panel') {
-                    return new Panel(child);
-                }
-                else {
-                    return new Split_1(child);
-                }
-            }),
-            orientation: json.orientation ?? 'horizontal',
-            flex: json.flex ?? '1 1 100%',
+            children: consolidated.children,
+            orientation: consolidated.orientation,
+            flex: json.flex ?? '1 1 auto',
         });
         return this;
     }
     dispose() {
-        this.children.length = 0; // TODO: test magic!
+        this.children.length = 0;
         super.dispose();
     }
 };
@@ -81,9 +86,9 @@ __decorate([
     ReactiveProperty({ type: String, value: 'horizontal' })
 ], Split.prototype, "orientation", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '1 1 100%' })
+    ReactiveProperty({ type: String, value: '1 1 auto' })
 ], Split.prototype, "flex", void 0);
-Split = Split_1 = __decorate([
+Split = __decorate([
     Register
 ], Split);
 export { Split };

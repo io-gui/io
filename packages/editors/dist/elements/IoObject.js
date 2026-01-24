@@ -34,7 +34,10 @@ let IoObject = class IoObject extends IoElement {
       content: "▾";
     }
     :host > io-property-editor {
-      margin: var(--io_spacing);
+      /* margin: var(--io_spacing); */
+      margin: calc(var(--io_spacing) * 2);
+      margin-top: calc(var(--io_spacing) * 2) !important;
+      margin-left: calc(var(--io_spacing) * 4);
       border: var(--io_border);
       border-color: var(--io_borderColorInset);
     }
@@ -52,9 +55,8 @@ let IoObject = class IoObject extends IoElement {
         // TODO: Test
         const expandedBinding = $({ value: false, storage: storage, key: uuid + '-' + this.label });
         const bindingTargets = expandedBinding.targets;
-        const bindingTargetCount = bindingTargets.length;
-        const targetIsThis = bindingTargets.some(target => target === this);
-        if (bindingTargetCount < 1) {
+        const targetIsThis = bindingTargets.has(this);
+        if (bindingTargets.size < 1) {
             if (!targetIsThis) {
                 const targetP = this._reactiveProperties.get('expanded');
                 if (targetP.binding && targetP.binding !== expandedBinding) {
@@ -66,14 +68,16 @@ let IoObject = class IoObject extends IoElement {
     }
     changed() {
         const label = this.label || this.value.constructor.name;
+        const propCount = Object.keys(this.value).length;
         const vChildren = [];
         vChildren.push(ioBoolean({
             appearance: 'neutral',
             true: label,
             false: label,
-            value: this.bind('expanded')
+            value: this.bind('expanded'),
+            disabled: propCount === 0 ? true : false
         }));
-        if (this.expanded) {
+        if (this.expanded && propCount > 0) {
             vChildren.push(ioPropertyEditor({
                 value: this.value,
                 properties: this.properties,
@@ -95,14 +99,14 @@ __decorate([
     ReactiveProperty({ type: Array, init: null })
 ], IoObject.prototype, "properties", void 0);
 __decorate([
+    ReactiveProperty({ type: String, value: '' })
+], IoObject.prototype, "label", void 0);
+__decorate([
     ReactiveProperty(true)
 ], IoObject.prototype, "labeled", void 0);
 __decorate([
     ReactiveProperty('80px')
 ], IoObject.prototype, "labelWidth", void 0);
-__decorate([
-    ReactiveProperty('')
-], IoObject.prototype, "label", void 0);
 __decorate([
     ReactiveProperty({ value: false, reflect: true })
 ], IoObject.prototype, "expanded", void 0);

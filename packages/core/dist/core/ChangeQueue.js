@@ -74,20 +74,34 @@ export class ChangeQueue {
         }
         this.dispatching = true;
         const properties = [];
-        while (this.changes.length) {
-            const change = this.changes[0];
-            this.changes.splice(0, 1);
+        let i = 0;
+        while (i < this.changes.length) {
+            const change = this.changes[i];
             const property = change.property;
             if (change.value !== change.oldValue) {
                 this.dispatchedChange = true;
-                if (this.node[property + 'Changed'])
-                    this.node[property + 'Changed'](change);
+                const handlerName = property + 'Changed';
+                if (this.node[handlerName]) {
+                    try {
+                        this.node[handlerName](change);
+                    }
+                    catch (error) {
+                        console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error);
+                    }
+                }
                 this.node.dispatch(property + '-changed', change);
                 properties.push(property);
             }
+            i++;
         }
+        this.changes.length = 0;
         if (this.dispatchedChange) {
-            this.node.changed();
+            try {
+                this.node.changed();
+            }
+            catch (error) {
+                console.error(`Error in ${this.node.constructor.name}.changed():`, error);
+            }
             if (this.node._isNode) {
                 this.node.dispatchMutation(this.node, properties);
             }

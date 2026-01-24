@@ -8,13 +8,12 @@ export class IoThemeEditor extends IoElement {
     static get Style() {
         return /* css */ `
     :host {
-      align-self: start;
+      align-self: stretch;
       display: grid;
       grid-gap: var(--io_spacing);
       padding: var(--io_spacing3);
-      grid-template-columns: auto 2fr !important;
-    }
-    `;
+      grid-template-columns: auto minmax(0, 1fr) !important;
+    }    `;
     }
     constructor(props) {
         super(props);

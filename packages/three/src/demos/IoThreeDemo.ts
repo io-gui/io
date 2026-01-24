@@ -19,12 +19,13 @@ import { AnimationRetargetingExample } from '../examples/animation_retargeting.j
 import { AnimationRetargetingReadyplayerExample } from '../examples/animation_retargeting_readyplayer.js'
 import { AnimationBackdropExample } from '../examples/animation_backdrop.js'
 import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js'
+import { AnimationSkinningAdditiveBlendingExample } from '../examples/animation_skinning_additive_blending.js'
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js'
 import { ioThreeProperties } from '../elements/IoThreeProperties.js'
 
 import * as THREE from 'three/webgpu'
 
-const version = 5
+const version = 5.3
 
 const split = new Split({
   type: 'split',
@@ -32,45 +33,60 @@ const split = new Split({
   children: [
     {
       type: 'panel',
-      flex: '1 0 380px',
-      tabs: [
-        {id: 'AllClasses'},
-      ],
+      flex: '0 0 280px',
+      tabs: [{id: 'AllClasses'}],
     },
     {
       type: 'split',
+      flex: '2 1 auto',
       orientation: 'vertical',
       children: [
         {
           type: 'split',
           orientation: 'horizontal',
           children: [
-            {type: 'panel', tabs: [
-              {id: 'Top'},
-            ]},
-            {type: 'panel', tabs: [
-              {id: 'Front'},
-            ]},
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Top'},
+              ]
+            },
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Front'},
+              ]
+            },
           ]
         },
         {
           type: 'split',
           orientation: 'horizontal',
           children: [
-            {type: 'panel', tabs: [
-              {id: 'Left'},
-            ]},
-            {type: 'panel', tabs: [
-              {id: 'Perspective'},
-              {id: 'SceneCamera'},
-            ]},
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Left'},
+              ]
+            },
+            {
+              type: 'panel',
+              flex: '1 1 50%',
+              tabs: [
+                {id: 'Perspective'},
+                {id: 'SceneCamera'},
+              ]
+            },
           ]
         },
       ]
     },
     {
       type: 'panel',
-      flex: '1 0 380px',
+      flex: '0 0 280px',
       tabs: [
         {id: 'ExampleSelector'},
       ],
@@ -97,6 +113,7 @@ const exampleOptions = new MenuOption({
       {id: 'AnimationRetargetingReadyplayer', value: AnimationRetargetingReadyplayerExample},
       {id: 'AnimationBackdrop', value: AnimationBackdropExample},
       {id: 'AnimationSkinningBlending', value: AnimationSkinningBlendingExample},
+      {id: 'AnimationSkinningAdditiveBlending', value: AnimationSkinningAdditiveBlendingExample},
     ]},
     {id: 'WebGPUBackdropArea', value: WebGPUBackdropAreaExample},
     {id: 'ComputeTexture', value: ComputeTextureExample},
@@ -108,6 +125,34 @@ const exampleOptions = new MenuOption({
 const initializzedExamples = new WeakMap<typeof ThreeApplet, ThreeApplet>()
 
 const allClasses = {
+  // Math
+  euler: new THREE.Euler(),
+  vector4: new THREE.Vector4(),
+  vector3: new THREE.Vector3(),
+  vector2: new THREE.Vector2(),
+  quaternion: new THREE.Quaternion(),
+  color: new THREE.Color(),
+  colorManagement: THREE.ColorManagement,
+  sph3: new THREE.SphericalHarmonics3(),
+  cubicInterpolant: new THREE.CubicInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  discreteInterpolant: new THREE.DiscreteInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  linearInterpolant: new THREE.LinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  quaternionLinearInterpolant: new THREE.QuaternionLinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
+  triangle: new THREE.Triangle(),
+  spherical: new THREE.Spherical(),
+  cylindrical: new THREE.Cylindrical(),
+  plane: new THREE.Plane(),
+  frustum: new THREE.Frustum(),
+  frustumArray: new THREE.FrustumArray(),
+  sphere: new THREE.Sphere(),
+  ray: new THREE.Ray(),
+  matrix2: new THREE.Matrix2(),
+  matrix3: new THREE.Matrix3(),
+  matrix4: new THREE.Matrix4(),
+  box2: new THREE.Box2(),
+  box3: new THREE.Box3(),
+  line3: new THREE.Line3(),
+
   // Core
   bufferAttribute: new THREE.BufferAttribute(new Float32Array(100), 1),
   BufferGeometry: new THREE.BufferGeometry(),
@@ -151,34 +196,6 @@ const allClasses = {
   quaternionKeyframeTrack: new THREE.QuaternionKeyframeTrack('.quaternion', [0, 1], [0, 0, 0, 1, 0, 0, 0.707, 0.707]),
   booleanKeyframeTrack: new THREE.BooleanKeyframeTrack('.visible', [0, 1], [true, false]),
   stringKeyframeTrack: new THREE.StringKeyframeTrack('.name', [0, 1], ['start', 'end']),
-
-  // Math
-  cubicInterpolant: new THREE.CubicInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
-  discreteInterpolant: new THREE.DiscreteInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
-  linearInterpolant: new THREE.LinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
-  quaternionLinearInterpolant: new THREE.QuaternionLinearInterpolant( null, [ 1, 11, 2, 22, 3, 33 ], 2, [] ),
-  triangle: new THREE.Triangle(),
-  spherical: new THREE.Spherical(),
-  cylindrical: new THREE.Cylindrical(),
-  plane: new THREE.Plane(),
-  frustum: new THREE.Frustum(),
-  frustumArray: new THREE.FrustumArray(),
-  sphere: new THREE.Sphere(),
-  ray: new THREE.Ray(),
-  matrix2: new THREE.Matrix2(),
-  matrix3: new THREE.Matrix3(),
-  matrix4: new THREE.Matrix4(),
-  box2: new THREE.Box2(),
-  box3: new THREE.Box3(),
-  line3: new THREE.Line3(),
-  euler: new THREE.Euler(),
-  vector4: new THREE.Vector4(),
-  vector3: new THREE.Vector3(),
-  vector2: new THREE.Vector2(),
-  quaternion: new THREE.Quaternion(),
-  color: new THREE.Color(),
-  colorManagement: THREE.ColorManagement,
-  sph3: new THREE.SphericalHarmonics3(),
 
   // Geometries
   boxGeometry: new THREE.BoxGeometry( 1, 1, 1 ),
@@ -365,8 +382,10 @@ export class IoThreeDemo extends IoElement {
               {id: 'Left', mode: 'none'},
               {id: 'Perspective', mode: 'none'},
               {id: 'SceneCamera', mode: 'none'},
-              {id: 'ExampleSelector', mode: 'none'},
+            ]},
+            {id: 'Debug', mode: 'none', options: [
               {id: 'AllClasses', mode: 'none'},
+              {id: 'ExampleSelector', mode: 'none'},
             ]},
           ],
         }),

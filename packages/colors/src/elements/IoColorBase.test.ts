@@ -31,8 +31,10 @@ describe('IoColorBase.test', () => {
     expect(element.value).toEqual({r: 0.25, g: 0.5, b: 0.5, a: 1})
   })
   it('Should reactively update on value change', async () => {
-    element.value = {r: 0.25, g: 0.75, b: 1, a: 0.5}
+    // Ensure throttle delay from previous test has expired
     await nextQueue()
+    element.value = {r: 0.25, g: 0.75, b: 1, a: 0.5}
+    // With throttled reactivity, change handler executes immediately on first call after delay
     expect(element.rgba).toEqual([0.25, 0.75, 1, 0.5])
     expect(element.hsv).toEqual([0.5555555555555557, 0.75, 1])
     expect(element.hsl).toEqual([0.5555555555555556, 1, 0.625])

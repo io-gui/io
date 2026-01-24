@@ -40,7 +40,7 @@ class IoTabsHamburgerMenu extends IoElement {
       :host > io-tab[selected] {
         background-color: var(--io_bgColor) !important;
       }
-      :host > io-tab > .marker {
+      :host > io-tab > .io-tab-drop-marker {
         border-radius: 0;
       }
     `
@@ -120,7 +120,5 @@ class IoTabsHamburgerMenu extends IoElement {
   }
 }
 
-export const IoTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu()
-setTimeout(() => {
-  IoOverlaySingleton.appendChild(IoTabsHamburgerMenuSingleton as HTMLElement)
-}, 100)
+export const ioTabsHamburgerMenuSingleton = new IoTabsHamburgerMenu()
+IoOverlaySingleton.appendChild(ioTabsHamburgerMenuSingleton as HTMLElement)

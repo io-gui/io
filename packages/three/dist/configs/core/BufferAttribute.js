@@ -1,5 +1,5 @@
 import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
-import { ioNumber } from '@io-gui/inputs';
+import { ioNumber, ioSwitch } from '@io-gui/inputs';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 import { BufferAttribute, StaticDrawUsage, DynamicDrawUsage, StreamDrawUsage, StaticReadUsage, DynamicReadUsage, StreamReadUsage, StaticCopyUsage, DynamicCopyUsage, StreamCopyUsage, FloatType, IntType, } from 'three/webgpu';
 registerEditorConfig(Object, [
@@ -23,6 +23,7 @@ registerEditorConfig(BufferAttribute, [
                     { value: IntType, id: 'Int' },
                 ] }) })],
     ['version', ioNumber({ min: 0, max: Infinity, step: 1 })],
+    ['needsUpdate', ioSwitch({ label: 'Needs Update', value: false })],
 ]);
 registerEditorGroups(BufferAttribute, {
     Main: [

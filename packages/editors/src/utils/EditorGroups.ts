@@ -94,14 +94,14 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
   [IoNode, {
     Hidden: [
       'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isNode', '_isIoElement',
     ],
   }],
   [IoElement, {
     Hidden: [
       'reactivity',
-      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_observedObjectProperties', '_observedNodeProperties', '_parents',
+      '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',
       '_protochain', '_disposed', '_isNode', '_isIoElement',
     ],
   }],
@@ -149,17 +149,17 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
 
         for (const g in groups) {
           aggregatedGroups[g] = aggregatedGroups[g] || []
-          aggregatedGroups[g].push(...groups[g])
-          // Remove duplicate identifiers that exist in other groups.
-          for (const ag in aggregatedGroups) {
-            if (ag !== g) {
-              for (const identifier of groups[g]) {
-                if (aggregatedGroups[ag].includes(identifier)) {
-                  aggregatedGroups[ag].splice(aggregatedGroups[ag].indexOf(identifier), 1)
+          for (const identifier of groups[g]) {
+            if (!(identifier instanceof RegExp)) {
+              for (const ag in aggregatedGroups) {
+                const idx = aggregatedGroups[ag].indexOf(identifier)
+                if (idx !== -1) {
+                  aggregatedGroups[ag].splice(idx, 1)
                 }
               }
             }
           }
+          aggregatedGroups[g].push(...groups[g])
         }
 
         const advanced = aggregatedGroups['Advanced'] || []
@@ -185,24 +185,40 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
     Main: [],
   }
 
-  for (const key of getAllPropertyNames(object)) {
-    let included = false
-    const isFunction = typeof object[key as keyof typeof object] === 'function'
-    for (const g of Object.keys(aggregatedGroups)) {
-      groupsRecord[g] = groupsRecord[g] || []
-      for (const identifier of aggregatedGroups[g]) {
-        if (identifier === key) {
-          groupsRecord[g].push(key)
-          included = true
-          continue
-        } else if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
-          groupsRecord[g].push(key)
-          included = true
-        }
+  const allPropertyNames = getAllPropertyNames(object)
+  const includedProperties = new Set<string>()
+
+  // First pass: add explicit (non-regex) identifiers in the order they are defined in groups
+  for (const g of Object.keys(aggregatedGroups)) {
+    groupsRecord[g] = groupsRecord[g] || []
+    for (const identifier of aggregatedGroups[g]) {
+      if (!(identifier instanceof RegExp) && allPropertyNames.includes(identifier)) {
+        groupsRecord[g].push(identifier)
+        includedProperties.add(identifier)
       }
     }
+  }
+
+  // Second pass: match regex patterns against remaining properties
+  for (const key of allPropertyNames) {
+    if (includedProperties.has(key)) continue
+
+    const isFunction = typeof object[key as keyof typeof object] === 'function'
+    let included = false
+
+    for (const g of Object.keys(aggregatedGroups)) {
+      for (const identifier of aggregatedGroups[g]) {
+        if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
+          groupsRecord[g].push(key)
+          includedProperties.add(key)
+          included = true
+          break
+        }
+      }
+      if (included) break
+    }
+
     // Functions are not included in groups unless they are explicitly added to a non-Advanced group.
-    // TODO: Test thoroughly.
     if (!included && !isFunction && !groupsRecord['Advanced']?.includes(key)) {
       groupsRecord.Main.push(key)
     }

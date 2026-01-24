@@ -24,12 +24,13 @@
  */
 
 export * from './elements/IoDivider.js'
+export * from './elements/IoDrawer.js'
 export * from './elements/IoLayout.js'
 export * from './elements/IoPanel.js'
 export * from './elements/IoSplit.js'
 export * from './elements/IoTab.js'
 export * from './elements/IoTabDragIcon.js'
-export * from './elements/IoTabDropMarker.js'
+export * from './elements/IoTabDropRect.js'
 export * from './elements/IoTabs.js'
 export * from './elements/IoTabsHamburger.js'
 export * from './elements/IoTabsHamburgerMenuSingleton.js'

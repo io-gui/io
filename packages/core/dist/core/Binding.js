@@ -30,7 +30,7 @@ const isTypeCompatible = (type1, type2) => {
 export class Binding {
     node;
     property;
-    targets = [];
+    targets = new Set();
     targetProperties = new WeakMap();
     /**
      * Creates a binding object for specified source `node` and `property`.
@@ -74,8 +74,8 @@ export class Binding {
             if (targetProps.indexOf(property) !== -1)
                 console.error(`Target property "${property}" already added!`);
         }
-        if (this.targets.indexOf(target) === -1)
-            this.targets.push(target);
+        if (!this.targets.has(target))
+            this.targets.add(target);
         if (targetProps.indexOf(property) === -1) {
             targetProps.push(property);
             const targetP = target._reactiveProperties.get(property);
@@ -137,14 +137,14 @@ export class Binding {
             targetProperties.length = 0;
         }
         if (targetProperties.length === 0)
-            this.targets.splice(this.targets.indexOf(target), 1);
+            this.targets.delete(target);
     }
     /**
      * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
      * @param {ChangeEvent} event - Property change event.
      */
     onTargetChanged(event) {
-        debug: if (this.targets.indexOf(event.target) === -1) {
+        debug: if (!this.targets.has(event.target)) {
             console.error('onTargetChanged() should never fire if target is not accounted for!');
         }
         const oldValue = this.value;
@@ -164,8 +164,7 @@ export class Binding {
             console.error('onSourceChanged() should always originate form source node!');
         }
         const value = event.detail.value;
-        for (let i = this.targets.length; i--;) {
-            const target = this.targets[i];
+        for (const target of this.targets) {
             const targetProperties = this.getTargetProperties(target);
             for (let j = targetProperties.length; j--;) {
                 const propName = targetProperties[j];
@@ -195,15 +194,15 @@ export class Binding {
      */
     toJSON() {
         const targetProperties = [];
-        for (let i = 0; i < this.targets.length; i++) {
-            const target = this.targets[i];
-            const props = this.getTargetProperties(target);
-            targetProperties[i] = props;
+        const targetNames = [];
+        for (const target of this.targets) {
+            targetNames.push(target.constructor.name);
+            targetProperties.push(this.getTargetProperties(target));
         }
         return {
             node: this.node.constructor.name,
             property: this.property,
-            targets: this.targets.map(t => t.constructor.name),
+            targets: targetNames,
             targetProperties: targetProperties,
         };
     }
@@ -212,10 +211,10 @@ export class Binding {
      */
     dispose() {
         this.node.removeEventListener(`${this.property}-changed`, this.onSourceChanged);
-        for (let i = this.targets.length; i--;) {
-            this.removeTarget(this.targets[i]);
+        for (const target of this.targets) {
+            this.removeTarget(target);
         }
-        this.targets.length = 0;
+        this.targets.clear();
         delete this.node;
         delete this.property;
         delete this.targets;

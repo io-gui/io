@@ -3,10 +3,15 @@ import { MenuOption } from '@io-gui/menus'
 import { ioSplit } from './IoSplit.js'
 import { Split } from '../nodes/Split.js'
 
+export function sizeToFlex(size: number | 'auto'): string {
+  return size === 'auto' ? '1 1 auto' : `0 0 ${size}px`
+}
+
 export type IoLayoutProps = IoElementProps & {
   split: Split | Binding
   elements: VDOMElement[]
   addMenuOption?: MenuOption
+  frozen?: boolean
 }
 
 @Register
@@ -24,6 +29,10 @@ export class IoLayout extends IoElement {
         max-width: 100%;
         max-height: 100%;
       }
+      :host[frozen] .io-close-icon,
+      :host[frozen] .io-tabs-add-tab {
+        display: none;
+      }
     `
   }
 
@@ -36,10 +45,14 @@ export class IoLayout extends IoElement {
   @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
+  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  declare frozen: boolean
+
   changed() {
     this.render([
       ioSplit({
         split: this.split,
+        style: {flex: this.split.flex},
         elements: this.elements,
         addMenuOption: this.addMenuOption,
       })

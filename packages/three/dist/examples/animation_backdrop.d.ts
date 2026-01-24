@@ -1,9 +1,8 @@
 import { ThreeApplet } from '@io-gui/three';
-import { AnimationMixer, Group, PerspectiveCamera } from 'three/webgpu';
+import { AnimationMixer, Group } from 'three/webgpu';
 export declare class AnimationBackdropExample extends ThreeApplet {
-    mixer?: AnimationMixer;
+    mixer: AnimationMixer;
     portals: Group;
-    camera: PerspectiveCamera;
     constructor();
     private loadModel;
     onAnimate(delta: number): void;

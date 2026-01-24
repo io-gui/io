@@ -21,7 +21,7 @@ type TargetProperties = WeakMap<Node | IoElement, Properties>;
 export declare class Binding {
     readonly node: Node | IoElement;
     readonly property: string;
-    readonly targets: Array<Node | IoElement>;
+    readonly targets: Set<Node | IoElement>;
     readonly targetProperties: TargetProperties;
     /**
      * Creates a binding object for specified source `node` and `property`.

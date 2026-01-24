@@ -37,7 +37,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  */
 export declare class ChangeQueue {
     readonly node: Node | IoElement;
-    readonly changes: Change[];
+    changes: Change[];
     dispatchedChange: boolean;
     dispatching: boolean;
     /**

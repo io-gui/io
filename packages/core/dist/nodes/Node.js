@@ -17,16 +17,18 @@ import { ReactiveProperty } from '../decorators/Property.js';
 import { IoElement } from '../elements/IoElement.js';
 export const NODES = {
     active: new Set(),
-    disposed: new Set(),
+    disposed: new WeakSet(),
 };
-function isNodeObject(value) {
-    return (typeof value === 'object' && value !== null && value._isNode);
+function isIoObject(value) {
+    return (typeof value === 'object' && value !== null && (value._isNode || value._isIoElement));
 }
-function isNonNodeObject(value) {
-    return (typeof value === 'object' && value !== null && !value._isNode);
-}
-function isNonNodeConstructor(type) {
-    return !(type.prototype instanceof IoElement || type.prototype instanceof Object);
+function hasValueAtOtherProperty(node, prop, value) {
+    let found = false;
+    node._reactiveProperties.forEach((p) => {
+        if (p !== prop && p.value === value)
+            found = true;
+    });
+    return found;
 }
 let Node = Node_1 = class Node extends Object {
     static get ReactiveProperties() {
@@ -45,8 +47,6 @@ let Node = Node_1 = class Node extends Object {
         Object.defineProperty(this, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
         Object.defineProperty(this, '_bindings', { enumerable: false, configurable: true, value: new Map() });
         Object.defineProperty(this, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(this) });
-        Object.defineProperty(this, '_observedObjectProperties', { enumerable: false, configurable: true, value: [] });
-        Object.defineProperty(this, '_observedNodeProperties', { enumerable: false, configurable: true, value: [] });
         Object.defineProperty(this, '_parents', { enumerable: false, configurable: true, value: [] });
         this.init();
         initReactiveProperties(this);
@@ -87,6 +87,9 @@ let Node = Node_1 = class Node extends Object {
     init() { }
     ready() { }
     changed() { }
+    get [Symbol.toStringTag]() {
+        return this.constructor.name;
+    }
     queue(name, value, oldValue) {
         this._changeQueue.queue(name, value, oldValue);
     }
@@ -102,14 +105,8 @@ let Node = Node_1 = class Node extends Object {
     onPropertyMutated(event) {
         return onPropertyMutated(this, event);
     }
-    ;
     dispatchMutation(object = this, properties = []) {
-        if (isNodeObject(object) || object._isIoElement) {
-            this.dispatch('io-object-mutation', { object, properties });
-        }
-        else {
-            this.dispatch('io-object-mutation', { object, properties }, false, window);
-        }
+        dispatchMutation(this, object, properties);
     }
     bind(name) {
         return bind(this, name);
@@ -147,9 +144,7 @@ let Node = Node_1 = class Node extends Object {
         NODES.disposed.add(this);
     }
     Register(ioNodeConstructor) {
-        Object.defineProperty(ioNodeConstructor, '_isNode', { enumerable: false, value: true, writable: false });
         Object.defineProperty(ioNodeConstructor.prototype, '_isNode', { enumerable: false, value: true, writable: false });
-        Object.defineProperty(ioNodeConstructor, '_isIoElement', { enumerable: false, value: false, writable: false });
         Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', { enumerable: false, value: false, writable: false });
         Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
     }
@@ -177,8 +172,7 @@ export function initReactiveProperties(node) {
         node._reactiveProperties.set(name, property);
         if (property.binding)
             property.binding.addTarget(node, name);
-        observeObjectProperty(node, name, property);
-        observeNodeProperty(node, name, property);
+        property.observer.start(property.value);
         if (node instanceof IoElement) {
             if (property.reflect && property.value !== undefined && property.value !== null) {
                 node.setAttribute(name, property.value);
@@ -236,7 +230,6 @@ export function setProperty(node, name, value, debounce = false) {
                 return;
             }
         }
-        observeObjectProperty(node, name, prop);
         // TODO: test!
         // TODO: Document magic!
         if (prop.type === NodeArray && value.constructor === Array) {
@@ -257,26 +250,22 @@ export function setProperty(node, name, value, debounce = false) {
             });
             return;
         }
-        prop.value = value;
-        // TODO: test!
-        if (value !== oldValue) {
-            let hasNewValueAtOtherProperty = false;
-            let hasOldValueAtOtherProperty = false;
-            node._reactiveProperties.forEach((property, n) => {
-                if (property.value === value && n !== name)
-                    hasNewValueAtOtherProperty = true;
-                if (property.value === oldValue && n !== name)
-                    hasOldValueAtOtherProperty = true;
-            });
-            if (isNodeObject(value) && !hasNewValueAtOtherProperty) {
-                node._observedNodeProperties.push(name);
-                value.addEventListener('io-object-mutation', node.onPropertyMutated);
-                value.addParent(node);
-            }
-            if (isNodeObject(oldValue) && !hasOldValueAtOtherProperty && !oldValue._disposed) {
-                node._observedNodeProperties.splice(node._observedNodeProperties.indexOf(name), 1);
-                oldValue.removeEventListener('io-object-mutation', node.onPropertyMutated);
+        // TODO: Untangle and redesign this mess! P0
+        const oldValueShared = hasValueAtOtherProperty(node, prop, oldValue);
+        if (!oldValueShared) {
+            prop.observer.stop(oldValue);
+            if (oldValue?._isNode) {
                 oldValue.removeParent(node);
+            }
+        }
+        else {
+            prop.observer.observing = false;
+        }
+        prop.value = value;
+        if (!hasValueAtOtherProperty(node, prop, value)) {
+            prop.observer.start(value);
+            if (value?._isNode) {
+                value.addParent(node);
             }
         }
         debug: {
@@ -339,55 +328,28 @@ export function dispatchQueue(node, debounce = false) {
         console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`);
     }
 }
+// TODO: Consider using global event bus for all mutation events!
+export function dispatchMutation(node, object, properties) {
+    if (isIoObject(object)) {
+        node.dispatch('io-object-mutation', { object, properties });
+    }
+    else {
+        node.dispatch('io-object-mutation', { object, properties }, false, window);
+    }
+}
 export function onPropertyMutated(node, event) {
     const object = event.detail.object;
     let hasMutated = false;
-    // TODO: consider situations where node is listening to io-object-mutation events from multiple sources (window and property).
-    // This might cause multiple executions of the same handler.
-    // TODO: consider optimizing. This handler might be called a lot.
-    const properties = [...new Set([...node._observedObjectProperties, ...node._observedNodeProperties])];
-    for (let i = 0; i < properties.length; i++) {
-        const name = properties[i];
-        const value = node._reactiveProperties.get(name).value;
-        if (value === object) {
+    node._reactiveProperties.forEach((prop, name) => {
+        if (prop.observer.observing && prop.value === object) {
             const handlerName = name + 'Mutated';
             if (typeof node[handlerName] === 'function') {
-                // node.throttle(node[handlerName] as CallbackFunction, event);
-                node[handlerName](event); //TODO: Check for regressions.
+                node[handlerName](event);
             }
             hasMutated = true;
         }
-    }
+    });
     return hasMutated;
-}
-export function observeObjectProperty(node, name, property) {
-    if (!node._observedObjectProperties.includes(name)) {
-        if (property.type && isNonNodeConstructor(property.type)) {
-            node._observedObjectProperties.push(name);
-            if (node._observedObjectProperties.length === 1) {
-                window.addEventListener('io-object-mutation', node.onPropertyMutated);
-            }
-        }
-        else if (property.value && isNonNodeObject(property.value)) {
-            node._observedObjectProperties.push(name);
-            if (node._observedObjectProperties.length === 1) {
-                window.addEventListener('io-object-mutation', node.onPropertyMutated);
-            }
-        }
-    }
-}
-export function observeNodeProperty(node, name, property) {
-    if (isNodeObject(property.value)) {
-        let hasSameValueAtOtherProperty = false;
-        node._reactiveProperties.forEach((p, n) => {
-            if (p.value === property.value && n !== name)
-                hasSameValueAtOtherProperty = true;
-        });
-        if (!hasSameValueAtOtherProperty) {
-            node._observedNodeProperties.push(name);
-            property.value.addEventListener('io-object-mutation', node.onPropertyMutated);
-        }
-    }
 }
 export function bind(node, name) {
     debug: if (!node._reactiveProperties.has(name)) {
@@ -418,25 +380,17 @@ export function dispose(node) {
         node._bindings.delete(name);
     });
     delete node._bindings;
-    if (node._observedObjectProperties.length) {
-        window.removeEventListener('io-object-mutation', node.onPropertyMutated);
-        node._observedObjectProperties.length = 0;
-        delete node._observedObjectProperties;
-    }
-    delete node._protochain;
     node._changeQueue.dispose();
     delete node._changeQueue;
-    const removed = [];
     node._reactiveProperties.forEach((property, name) => {
         property.binding?.removeTarget(node, name);
-        if (isNodeObject(property.value) && !removed.includes(property.value) && !property.value._disposed) {
-            property.value.removeEventListener('io-object-mutation', node.onPropertyMutated);
-            removed.push(property.value);
-        }
+        property.observer.stop(property.value);
+        property.observer.dispose();
     });
     for (const name in node._protochain.properties) {
         delete node[name];
     }
+    delete node._protochain;
     // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
     node._eventDispatcher.dispose();
     delete node._eventDispatcher;

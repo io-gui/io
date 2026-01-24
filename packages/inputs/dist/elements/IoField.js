@@ -17,13 +17,13 @@ let IoField = class IoField extends IoElement {
         border: var(--io_border);
         border-color: transparent;
         border-radius: var(--io_borderRadius);
-        padding: var(--io_spacing) calc(var(--io_spacing3) + var(--io_borderWidth));
+        padding: var(--io_spacing) var(--io_spacing2);
         color: var(--io_color);
-        overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         font-size: var(--io_fontSize);
         text-size-adjust: 100%;
+        overflow: hidden;
         @apply --unselectable;
       }
       :host:focus {
@@ -248,7 +248,6 @@ let IoField = class IoField extends IoElement {
     changed() {
         this.render([
             this.icon ? ioIcon({ value: this.icon }) : null,
-            this.label ? span(this.label) : null,
             this.value !== undefined ? span(String(this.value)) : null,
         ]);
     }

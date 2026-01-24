@@ -6,6 +6,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core';
 import { Tab } from './Tab.js';
+function deduplicateTabs(tabs, context) {
+    const seenIds = new Set();
+    const uniqueTabs = [];
+    for (const tab of tabs) {
+        if (seenIds.has(tab.id)) {
+            console.warn(`${context}: Duplicate tab id "${tab.id}" - keeping first occurrence`);
+        }
+        else {
+            seenIds.add(tab.id);
+            uniqueTabs.push(tab);
+        }
+    }
+    return uniqueTabs;
+}
 let Panel = class Panel extends Node {
     constructor(args) {
         debug: {
@@ -14,6 +28,7 @@ let Panel = class Panel extends Node {
             }
         }
         args = { ...args };
+        args.tabs = deduplicateTabs(args.tabs, 'Panel');
         if (args.tabs.length > 0 && !args.tabs.find(tab => tab.selected)) {
             args.tabs[0].selected = true;
         }
@@ -52,12 +67,22 @@ let Panel = class Panel extends Node {
         });
         this.tabs.dispatchMutation();
     }
+    flexChanged() {
+        debug: {
+            const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/;
+            if (!flexRegex.test(this.flex)) {
+                console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`);
+            }
+        }
+    }
     toJSON() {
-        return {
+        const json = {
             type: 'panel',
             tabs: this.tabs.map(tab => tab.toJSON()),
-            flex: this.flex,
         };
+        if (this.flex !== '1 1 auto')
+            json.flex = this.flex;
+        return json;
     }
     fromJSON(json) {
         debug: {
@@ -65,14 +90,15 @@ let Panel = class Panel extends Node {
                 console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`);
             }
         }
+        const uniqueTabs = deduplicateTabs(json.tabs, 'Panel.fromJSON');
         this.setProperties({
-            tabs: json.tabs.map(tab => new Tab(tab)),
-            flex: json.flex ?? '1 1 100%',
+            tabs: uniqueTabs.map(tab => new Tab(tab)),
+            flex: json.flex ?? '1 1 auto',
         });
         return this;
     }
     dispose() {
-        this.tabs.length = 0; // TODO: test magic!
+        this.tabs.length = 0;
         super.dispose();
     }
 };
@@ -80,7 +106,7 @@ __decorate([
     ReactiveProperty({ type: NodeArray, init: 'this' })
 ], Panel.prototype, "tabs", void 0);
 __decorate([
-    ReactiveProperty({ type: String, value: '1 1 100%' })
+    ReactiveProperty({ type: String, value: '1 1 auto' })
 ], Panel.prototype, "flex", void 0);
 Panel = __decorate([
     Register

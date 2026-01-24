@@ -15,6 +15,7 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { ThreeApplet } from '@io-gui/three'
 import { ioButton, ioBoolean } from '@io-gui/inputs'
+import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor } from '@io-gui/editors'
 
 const loader = new GLTFLoader()
@@ -28,14 +29,14 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   @ReactiveProperty({type: Boolean, value: false})
   declare isPlaying: boolean
 
+  public isCrossfading: boolean = false
+
   public camera: PerspectiveCamera
   public mixer: AnimationMixer = new AnimationMixer(new Group())
   public actions: Record<string, AnimationAction> = {}
 
-  // Playback
   public stepSize: number = 0.05
 
-  // Crossfading
   public useDefaultDuration: boolean = true
   public customDuration: number = 3.5
 
@@ -77,52 +78,30 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     this.scene.add(ground)
 
     this.uiConfig = [
-      ['isPlaying', ioBoolean({true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
+      ['isPlaying', ioBoolean({label: '_hidden_', true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
       ['makeSingleStep', ioButton({label: 'Make Single Step'})],
-      ['actions', ioPropertyEditor()],
-      [AnimationAction, ioPropertyEditor({groups: {
-        Playback: [
-          'isActive',
-          'isPlaying',
-          'stepSize',
-          'makeSingleStep',
-        ],
-        Crossfade: [
-          'actions',
-          'walk',
-          'run',
-          'idle',
-          'useDefaultDuration',
-          'customDuration',
-        ],
-        Scene: [
-          'camera',
-        ],
-        Rendering: []
-      }})],
-      [AnimationMixer, ioPropertyEditor({groups: {Hidden: ['stats']}})],
+      ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+      ['actions', ioPropertyEditor({label: '_hidden_'})],
     ]
 
     this.uiGroups = {
-      Playback: [
+      Main: [
         'isActive',
         'isPlaying',
+        'mixer',
+        'actions',
+        'idle',
+        'walk',
+        'run',
+        'useDefaultDuration',
+        'customDuration',
         'stepSize',
         'makeSingleStep',
       ],
-      Crossfade: [
-        'actions',
-        'walk',
-        'run',
-        'idle',
-        'useDefaultDuration',
-        'customDuration',
-      ],
-      Scene: [
+      Hidden: [
+        'scene',
         'camera',
       ],
-      Rendering: [],
-      Hidden: [],
     }
 
     void this.loadModel()
@@ -147,26 +126,33 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
         run: this.mixer.clipAction(gltf.animations[1]),
       }
 
+      this.setWeight(this.actions.idle, 0)
+      this.setWeight(this.actions.walk, 1)
+      this.setWeight(this.actions.run, 0)
+
       this.setProperties({
         isActive: true,
         isPlaying: true,
       })
 
-      this.dispatch('scene-ready', {scene: this.scene}, true)
+      this.dispatch('frame-object', {scene: model}, true)
     })
   }
 
   isActiveChanged() {
     if (this.isActive) {
       Object.values(this.actions).forEach((action: AnimationAction) => action.play())
+      this.setWeight(this.actions.idle, 0)
+      this.setWeight(this.actions.walk, 1)
+      this.setWeight(this.actions.run, 0)
     } else {
       Object.values(this.actions).forEach((action: AnimationAction) => action.stop())
     }
   }
 
-  idle = () => { this.prepareCrossFade(this.actions.idle, this.actions.walk, 1.0) }
-  walk = () => { this.prepareCrossFade(this.actions.walk, this.actions.run, 0.5) }
-  run = () => { this.prepareCrossFade(this.actions.run, this.actions.idle, 2.5) }
+  idle = () => { this.crossfadeTo('idle', 1.0) }
+  walk = () => { this.crossfadeTo('walk', 0.5) }
+  run = () => { this.crossfadeTo('run', 2.5) }
 
   public makeSingleStep = () => {
     if (this.mixer && !this.isPlaying) {
@@ -174,24 +160,33 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
     }
   }
 
-  private prepareCrossFade(startAction: AnimationAction, endAction: AnimationAction, defaultDuration: number) {
+  private getCurrentAction(): AnimationAction | null {
+    for (const action of Object.values(this.actions)) {
+      if (action.getEffectiveWeight() >= 0.99) {
+        return action
+      }
+    }
+    return null
+  }
 
-    const duration = this.setCrossFadeDuration(defaultDuration)
+  private crossfadeTo(targetName: string, defaultDuration: number) {
+    if (this.isCrossfading) return
 
+    const targetAction = this.actions[targetName]
+    if (!targetAction) return
+
+    const startAction = this.getCurrentAction()
+    if (!startAction || startAction === targetAction) return
+
+    const duration = this.useDefaultDuration ? defaultDuration : this.customDuration
+
+    this.isCrossfading = true
     this.isPlaying = true
 
     if (startAction === this.actions.idle) {
-      this.executeCrossFade(startAction, endAction, duration)
+      this.executeCrossFade(startAction, targetAction, duration)
     } else {
-      this.synchronizeCrossFade(startAction, endAction, duration)
-    }
-  }
-
-  private setCrossFadeDuration(defaultDuration: number): number {
-    if (this.useDefaultDuration) {
-      return defaultDuration
-    } else {
-      return this.customDuration as number
+      this.synchronizeCrossFade(startAction, targetAction, duration)
     }
   }
 
@@ -209,13 +204,21 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   }
 
   private executeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
-    this.setWeight(endAction, 1)
+    endAction.enabled = true
     endAction.time = 0
+    endAction.setEffectiveTimeScale(1)
+    endAction.setEffectiveWeight(1)
     startAction.crossFadeTo(endAction, duration, true)
+
+    setTimeout(() => {
+      this.isCrossfading = false
+      startAction.setEffectiveWeight(0)
+      startAction.enabled = false
+    }, duration * 1000)
   }
 
   private setWeight(action: AnimationAction, weight: number) {
-    action.enabled = true
+    action.enabled = weight !== 0 ? true : false
     action.setEffectiveTimeScale(1)
     action.setEffectiveWeight(weight)
   }

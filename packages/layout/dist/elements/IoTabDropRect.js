@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, ReactiveProperty, IoElement, ThemeSingleton } from '@io-gui/core';
-let IoTabDropMarker = class IoTabDropMarker extends IoElement {
+let IoTabDropRect = class IoTabDropRect extends IoElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -87,18 +87,16 @@ let IoTabDropMarker = class IoTabDropMarker extends IoElement {
 };
 __decorate([
     ReactiveProperty(null)
-], IoTabDropMarker.prototype, "dropTarget", void 0);
+], IoTabDropRect.prototype, "dropTarget", void 0);
 __decorate([
     ReactiveProperty({ type: String, value: 'none', reflect: true })
-], IoTabDropMarker.prototype, "splitDirection", void 0);
+], IoTabDropRect.prototype, "splitDirection", void 0);
 __decorate([
     ReactiveProperty({ type: Number, value: -1, reflect: true })
-], IoTabDropMarker.prototype, "dropIndex", void 0);
-IoTabDropMarker = __decorate([
+], IoTabDropRect.prototype, "dropIndex", void 0);
+IoTabDropRect = __decorate([
     Register
-], IoTabDropMarker);
-export const tabDropMarkerSingleton = new IoTabDropMarker();
-setTimeout(() => {
-    document.body.appendChild(tabDropMarkerSingleton);
-}, 100);
-//# sourceMappingURL=IoTabDropMarker.js.map
+], IoTabDropRect);
+export const ioTabDropRectSingleton = new IoTabDropRect();
+document.body.appendChild(ioTabDropRectSingleton);
+//# sourceMappingURL=IoTabDropRect.js.map

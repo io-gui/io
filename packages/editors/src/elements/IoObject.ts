@@ -45,7 +45,10 @@ export class IoObject extends IoElement {
       content: "▾";
     }
     :host > io-property-editor {
-      margin: var(--io_spacing);
+      /* margin: var(--io_spacing); */
+      margin: calc(var(--io_spacing) * 2);
+      margin-top: calc(var(--io_spacing) * 2) !important;
+      margin-left: calc(var(--io_spacing) * 4);
       border: var(--io_border);
       border-color: var(--io_borderColorInset);
     }
@@ -58,14 +61,14 @@ export class IoObject extends IoElement {
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[] | null
 
+  @ReactiveProperty({type: String, value: ''})
+  declare label: string
+
   @ReactiveProperty(true)
   declare labeled: boolean
 
   @ReactiveProperty('80px')
   declare labelWidth: string
-
-  @ReactiveProperty('')
-  declare label: string
 
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
@@ -98,10 +101,9 @@ export class IoObject extends IoElement {
     // TODO: Test
     const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label})
     const bindingTargets = expandedBinding.targets
-    const bindingTargetCount = bindingTargets.length
-    const targetIsThis = bindingTargets.some(target => target === this)
+    const targetIsThis = bindingTargets.has(this)
 
-    if (bindingTargetCount < 1) {
+    if (bindingTargets.size < 1) {
       if (!targetIsThis) {
         const targetP = this._reactiveProperties.get('expanded')!
         if (targetP.binding && targetP.binding !== expandedBinding) {
@@ -114,14 +116,18 @@ export class IoObject extends IoElement {
 
   changed() {
     const label = this.label || this.value.constructor.name
+
+    const propCount = Object.keys(this.value).length
+
     const vChildren: VDOMElement[] = []
     vChildren.push(ioBoolean({
       appearance: 'neutral',
       true: label,
       false: label,
-      value: this.bind('expanded')}
-    ))
-    if (this.expanded) {
+      value: this.bind('expanded'),
+      disabled: propCount === 0 ? true : false
+    }))
+    if (this.expanded && propCount > 0) {
       vChildren.push(ioPropertyEditor({
         value: this.value,
         properties: this.properties,

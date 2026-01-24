@@ -2,7 +2,7 @@ import { IoElement, IoElementProps, NodeArray } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { Tab } from '../nodes/Tab.js';
 export type IoTabsProps = IoElementProps & {
-    tabs: NodeArray<Tab>;
+    tabs: Array<Tab>;
     addMenuOption?: MenuOption;
 };
 export declare class IoTabs extends IoElement {

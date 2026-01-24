@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property, NodeArray } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, NodeArray } from '@io-gui/core';
 import { MenuOption, ioMenuItem } from '@io-gui/menus';
 import { ioTab } from './IoTab.js';
 import { ioTabsHamburger } from './IoTabsHamburger.js';
@@ -58,15 +58,13 @@ let IoTabs = class IoTabs extends IoElement {
         this.onResized();
     }
     onResized() {
-        const addMenu = this.querySelector('.add-tab');
-        // TODO: It appears that addMenu rect is required for overflow calculation to work correctly.
-        // But it is not guaranteed to be available since addMenuOptions is optional. Fix!
-        if (!addMenu)
+        const lastElement = this.children[this.children.length - 1];
+        if (!lastElement)
             return;
         const rect = this.getBoundingClientRect();
-        const addMenuRect = addMenu.getBoundingClientRect();
+        const lastElementRect = lastElement.getBoundingClientRect();
         if (this.overflow === -1) {
-            if (addMenuRect.right > rect.right) {
+            if (lastElementRect.right > rect.right) {
                 this.overflow = rect.width;
             }
         }
@@ -80,7 +78,7 @@ let IoTabs = class IoTabs extends IoElement {
             ioTabsHamburger({ tabs: this.tabs }),
             ...this.tabs.map(tab => ioTab({ tab: tab })),
             hasOptions ? ioMenuItem({
-                class: 'add-tab',
+                class: 'io-tabs-add-tab',
                 icon: 'io:box_fill_plus',
                 direction: 'down',
                 option: this.addMenuOption,
@@ -95,7 +93,7 @@ __decorate([
     ReactiveProperty({ type: Number, value: -1, reflect: true })
 ], IoTabs.prototype, "overflow", void 0);
 __decorate([
-    Property({ type: MenuOption })
+    ReactiveProperty({ type: MenuOption })
 ], IoTabs.prototype, "addMenuOption", void 0);
 IoTabs = __decorate([
     Register

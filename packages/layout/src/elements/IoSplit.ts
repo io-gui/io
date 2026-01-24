@@ -1,19 +1,26 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton } from '@io-gui/core'
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton, div } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
-import { Split, SplitDirection, SplitOrientation } from '../nodes/Split.js'
+import { ioDrawer, IoDrawer } from './IoDrawer.js'
+import { Split, SplitOrientation } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
 
-/**
- * TODO ensure that at least one split has flex-grow: 1
- * There is a bug when you have three splits say:
- * flex: 0 0 300px
- * flex: 1 1 auto
- * flex: 0 0 300px
- * And when you remove the middle split, the remaining two splits dont fill up the space since none is flex-grow.
-*/
+export function parseFlexBasis(flex: string): number {
+  const parts = flex.trim().split(/\s+/)
+  const basis = parts[2] ?? 'auto'
+  if (basis === 'auto' || basis === '0') return 240
+  const match = basis.match(/^(\d+(?:\.\d+)?)px$/)
+  return match ? parseInt(match[1], 10) : 240
+}
+
+export function hasFlexGrow(flex: string): boolean {
+  const grow = parseFloat(flex.trim().split(/\s+/)[0] ?? '0')
+  return !isNaN(grow) && grow > 0
+}
+
+export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
 export type IoSplitProps = IoElementProps & {
   split: Split
@@ -26,12 +33,31 @@ export class IoSplit extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        position: relative;
         display: flex;
         overflow: hidden;
         flex-direction: row;
       }
       :host[orientation='vertical'] {
         flex-direction: column;
+      }
+      :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
+        flex: 1 1 auto !important;
+      }
+      :host > .io-split-veil {
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.125s ease-out;
+        background-color: rgba(0, 0, 0, 1);
+        pointer-events: none;
+        z-index: 2;
+        inset: 0;
+      }
+      :host[showveil] > .io-split-veil {
+        display: block;
+        opacity: 0.5;
+        pointer-events: auto;
+        cursor: pointer;
       }
     `
   }
@@ -42,8 +68,20 @@ export class IoSplit extends IoElement {
   @ReactiveProperty(Array)
   declare elements: VDOMElement[]
 
+  @ReactiveProperty({type: Object, value: null})
+  declare leadingDrawer: Split | Panel | null
+
+  @ReactiveProperty({type: Object, value: null})
+  declare trailingDrawer: Split | Panel | null
+
   @Property({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
+
+  @ReactiveProperty({type: Boolean, value: true, reflect: true})
+  declare hasVisibleFlexGrow: boolean
+
+  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  declare showVeil: boolean
 
   static get Listeners() {
     return {
@@ -52,6 +90,7 @@ export class IoSplit extends IoElement {
       'io-panel-remove': 'onPanelRemove',
       'io-split-remove': 'onSplitRemove',
       'io-split-consolidate': 'onSplitConsolidate',
+      'io-drawer-expanded-changed': 'onDrawerExpandedChanged',
     }
   }
   // TODO: Make sure one panel is available even when all tabs are removed.
@@ -60,126 +99,127 @@ export class IoSplit extends IoElement {
     super(args)
   }
 
+  onResized() {
+    this.debounce(this.calculateCollapsedDrawersDebounced)
+  }
+  calculateCollapsedDrawersDebounced() {
+    this.calculateCollapsedDrawers()
+  }
+  calculateCollapsedDrawers() {
+    const rect = this.getBoundingClientRect()
+    if (rect.width === 0 && rect.height === 0) return
+
+    const split = this.split
+    const children = split.children
+    const orientation = split.orientation
+    let size: number = Infinity
+    let minSize = 0
+    const sizes: Array<number> = []
+
+    if (orientation === 'horizontal') {
+      size = rect.width
+    } else {
+      size = rect.height
+    }
+    children.forEach(child => {
+      const childMinSize = parseFlexBasis(child.flex)
+      minSize += childMinSize
+      sizes.push(childMinSize)
+    })
+
+    let collapsePriority: 'start' | 'end' = 'end'
+    const lastIndex = children.length - 1
+    const firstGrows = hasFlexGrow(children[0].flex)
+    const lastGrows = hasFlexGrow(children[lastIndex].flex)
+    const bothGrow = firstGrows && lastGrows
+    const neitherGrows = !firstGrows && !lastGrows
+    if (neitherGrows) {
+      collapsePriority = sizes[0] <= sizes[lastIndex] ? 'start' : 'end'
+    } else if (!bothGrow) {
+      collapsePriority = lastGrows ? 'start' : 'end'
+    }
+    const collapsedSize = collapsePriority === 'start' ? sizes[0] : sizes[sizes.length - 1]
+
+    if (size < minSize) {
+      if (children.length >= 3 && size < (minSize - collapsedSize)) {
+        this.setProperties({
+          leadingDrawer: children[0],
+          trailingDrawer: children[lastIndex],
+        })
+      } else if (children.length >= 2) {
+        if (collapsePriority === 'start') {
+          this.setProperties({
+            leadingDrawer: children[0],
+            trailingDrawer: null,
+          })
+        } else {
+          this.setProperties({
+            leadingDrawer: null,
+            trailingDrawer: children[lastIndex],
+          })
+        }
+      }
+
+    } else {
+      this.setProperties({
+        leadingDrawer: null,
+        trailingDrawer: null,
+      })
+    }
+  }
+
   onDividerMove(event: CustomEvent) {
     event.stopPropagation()
-    const index = event.detail.index
-    const rect = this.getBoundingClientRect()
+
     const orientation = this.split.orientation
-
     const dividerSize = ThemeSingleton.spacing3
-    const totalSpace = (orientation === 'horizontal' ? rect.width : rect.height) - dividerSize * (this.children.length - 1) / 2
-    const minSize = orientation === 'horizontal' ? ThemeSingleton.fieldHeight * 4 : ThemeSingleton.fieldHeight
+    const minSize = ThemeSingleton.fieldHeight * 4
 
-    const splits = []
-    const splitSizes = []
-    const splitResize = []
+    const leftSplit = event.detail.element.previousElementSibling as HTMLElement
+    const rightSplit = event.detail.element.nextElementSibling as HTMLElement
+    const leftRect = leftSplit.getBoundingClientRect()
+    const rightRect = rightSplit.getBoundingClientRect()
 
-    for (let i = 0; i < this.children.length; i += 2) {
-      const splitElement = this.children[i] as HTMLElement
+    const combinedSize = orientation === 'horizontal'
+      ? leftRect.width + rightRect.width
+      : leftRect.height + rightRect.height
 
-      const splitRect = splitElement.getBoundingClientRect()
-      const splitSize = orientation === 'horizontal' ? splitRect.width : splitRect.height
+    const pointerPos = orientation === 'horizontal'
+      ? event.detail.clientX - leftRect.left - dividerSize / 2
+      : event.detail.clientY - leftRect.top - dividerSize / 2
 
-      let x = event.detail.clientX - splitRect.left - dividerSize / 2
-      let y = event.detail.clientY - splitRect.top - dividerSize / 2
-      if (i === this.children.length - 1) {
-        // NOTE: The last panel should be sized from the end.
-        x = rect.width - (event.detail.clientX - rect.left) - dividerSize / 2
-        y = rect.height - (event.detail.clientY - rect.top) - dividerSize / 2
-      }
-      const size = orientation === 'horizontal' ? x : y
+    const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos))
+    const rightSize = combinedSize - leftSize
 
-      splits.push(splitElement)
-      splitSizes.push(splitSize)
-      splitResize.push(size)
-    }
-
-    let fixedSpaceBefore = 0
-    let fixedSpaceAfter = 0
-    let flexSpace = 0
-    let flexCountBefore = 0
-    let flexCountAfter = 0
-
-    for (let i = 0; i < splits.length; i++) {
-      let idx = index
-      if (idx === splits.length - 2) {
-        // NOTE: The last divider manipulates the panel after the split.
-        idx = splits.length - 1
-      }
-      if (splits[i].style.flex.endsWith('%')) {
-        flexSpace += splitSizes[i]
-        if (i < idx) {
-          flexCountBefore++
-        } else if (i > idx) {
-          flexCountAfter++
-        }
-      } else {
-        if (i < idx) {
-          fixedSpaceBefore += splitSizes[i]
-        } else if (i > idx) {
-          fixedSpaceAfter += splitSizes[i]
-        }
-      }
-    }
-
-    if (index === 0) {
-      const maxSize = totalSpace - minSize * flexCountAfter - fixedSpaceAfter
-      const size = Math.max(minSize, Math.min(maxSize, splitResize[0]))
-      // Set fixed size for the first panel.
-      splits[index].style.flex = `0 0 ${size}px`
-      // Prevent flex splits from compressing below minSize.
-      for (let i = 0; i < splits.length; i++) {
-        if (splits[i].style.flex.endsWith('%')) {
-          if (i !== index) {
-            splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`
-          }
-        }
-      }
-
-    } else if (index === splits.length - 2) {
-      const maxSize = totalSpace - minSize * flexCountBefore - fixedSpaceBefore
-      const size = Math.max(minSize, Math.min(maxSize, splitResize[index + 1]))
-      // Set fixed size for the last panel.
-      splits[index + 1].style.flex = `0 0 ${size}px`
-      // Prevent flex splits from compressing below minSize.
-      for (let i = 0; i < splits.length; i++) {
-        if (splits[i].style.flex.endsWith('%')) {
-          if (i !== index + 1) {
-            splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`
-          }
-        }
-      }
-    } else {
-      const maxSize = splitSizes[index] + splitSizes[index + 1] - minSize
-      const size = Math.max(minSize, Math.min(maxSize, splitResize[index]))
-      const sizeNext = splitSizes[index + 1] - (size - splitSizes[index])
-      // Apply flex sizes
-      for (let i = 0; i < splits.length; i++) {
-        if (splits[i].style.flex.endsWith('%')) {
-          if (i === index) {
-            splits[i].style.flex = `1 1 ${size / flexSpace * 100}%`
-          } else if (i === index + 1) {
-            splits[i].style.flex = `1 1 ${sizeNext / flexSpace * 100}%`
-          } else {
-            splits[i].style.flex = `1 1 ${Math.max(minSize, splitSizes[i]) / flexSpace * 100}%`
-          }
-        }
-      }
-    }
+    leftSplit.style.flex = `0 0 ${leftSize}px`
+    rightSplit.style.flex = `0 0 ${rightSize}px`
   }
 
   onDividerMoveEnd(event: CustomEvent) {
     event.stopPropagation()
-    let index = 0
-    for (let i = 0; i < this.children.length; i += 2) {
-      const splitElement = this.children[i] as HTMLElement
-      this.split.children[index].flex = splitElement.style.flex
-      index++
+    const orientation = this.split.orientation
+
+    const childrenElements = this.querySelectorAll(':scope > io-split, :scope > io-panel')
+    for (let i = 0; i < childrenElements.length; i++) {
+      const child = childrenElements[i] as IoSplit | IoPanel
+      const childmodel = child instanceof IoSplit ? child.split : child.panel
+
+      const childRect = child.getBoundingClientRect()
+      const childSize = orientation === 'horizontal' ? childRect.width : childRect.height
+
+      if (hasFlexGrow(childmodel.flex)) {
+        // TODO: Reconsider. Test
+        child.style.flex = childmodel.flex
+      } else {
+        childmodel.flex = `0 0 ${childSize}px`
+      }
     }
+
+    this.ensureOneHasFlexGrow()
+    this.debounce(this.calculateCollapsedDrawersDebounced)
   }
 
   onPanelRemove(event: CustomEvent) {
-    if (event.detail.panel === this.split) return
     event.stopPropagation()
     for (let i = this.split.children.length; i--;) {
       const child = this.split.children[i]
@@ -192,18 +232,34 @@ export class IoSplit extends IoElement {
     } else if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
     }
+    this.ensureOneHasFlexGrow()
   }
 
   onSplitRemove(event: CustomEvent) {
     if (event.detail.split === this.split) return
     event.stopPropagation()
     const index = this.split.children.indexOf(event.detail.split)
+    if (index === -1) return
     this.split.children.splice(index, 1)
+
     if (this.split.children.length === 1) {
       this.dispatch('io-split-consolidate', {split: this.split}, true)
-    } else if (this.split.children.length === 2) {
-      this.split.children[1].flex = '1 1 100%'
     }
+    this.ensureOneHasFlexGrow()
+  }
+
+  ensureOneHasFlexGrow() {
+    const hasGrow = this.split.children.some(child => hasFlexGrow(child.flex))
+    if (!hasGrow && this.split.children.length > 0) {
+      const i = Math.min(1, this.split.children.length - 1)
+      this.split.children[i].flex = '1 1 auto'
+    }
+
+    this.hasVisibleFlexGrow = this.split.children.some((child, i) => {
+      if (i === 0 && this.leadingDrawer !== null) return false
+      if (i === this.split.children.length - 1 && this.trailingDrawer !== null) return false
+      return hasFlexGrow(child.flex)
+    })
   }
 
   onSplitConsolidate(event: CustomEvent) {
@@ -225,14 +281,15 @@ export class IoSplit extends IoElement {
 
   consolidateChild(childSplit: Split) {
     const index = this.split.children.indexOf(childSplit)
+    if (index === -1 || childSplit.children.length === 0) return
     const soleChild = childSplit.children[0]
-
     if (soleChild instanceof Panel) {
-      soleChild.flex = '1 1 100%'
+      soleChild.flex = '1 1 auto'
       this.split.children.splice(index, 1, soleChild)
     } else if (soleChild instanceof Split) {
       this.split.orientation = soleChild.orientation
       this.split.children.splice(index, 1, ...soleChild.children)
+      this.ensureOneHasFlexGrow()
     }
   }
 
@@ -259,23 +316,81 @@ export class IoSplit extends IoElement {
       }
     }
   }
-  splitMutated() {
-    this.debounce(this.splitMutatedDebounced)
+
+  onDrawerExpandedChanged(event: CustomEvent) {
+    const srcDrawer = event.detail.element as IoDrawer
+    if (srcDrawer.expanded) {
+      const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
+      drawers.forEach(drawer => drawer !== srcDrawer && (drawer.expanded = false))
+    }
+    event.stopPropagation()
+    this.updateVeil()
   }
-  splitMutatedDebounced() {
+
+  updateVeil() {
+    const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
+    this.showVeil = drawers.some(drawer => drawer.expanded)
+  }
+
+  collapseAllDrawers() {
+    const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
+    drawers.forEach(drawer => drawer.expanded = false)
+  }
+
+  onVeilClick(event: MouseEvent) {
+    event.stopPropagation()
+    // TODO: this should trigger onDrawerExpandedChanged and updateVeil
+    this.collapseAllDrawers()
+  }
+
+  splitMutated() {
+    this.calculateCollapsedDrawers()
     this.changed()
+  }
+  splitChanged() {
+    this.calculateCollapsedDrawers()
   }
   changed() {
     this.setAttribute('orientation', this.split.orientation)
-    this.style.flex = this.split.flex
-    // TODO: Validate split
+    const childCount = this.split.children.length
+    const lastIndex = childCount - 1
+    const orientation = this.split.orientation
+
     const vChildren: VDOMElement[] = []
-    for (let i = 0; i < this.split.children.length; i++) {
+
+    vChildren.push(div({
+      class: 'io-split-veil',
+      '@click': this.onVeilClick,
+    }))
+
+    if (this.leadingDrawer !== null) {
+      vChildren.push(ioDrawer({
+        orientation: orientation,
+        direction: 'leading',
+        child: this.leadingDrawer,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      }))
+    }
+
+    // Render visible children
+    for (let i = 0; i < childCount; i++) {
+
+      if (i === 0 && this.leadingDrawer !== null) {
+        continue
+      }
+      if (i === lastIndex && this.trailingDrawer !== null) {
+        continue
+      }
+
+      const isLastVisible = (i === lastIndex - 1 && this.trailingDrawer !== null) || (i === lastIndex && this.trailingDrawer === null)
+
       const child = this.split.children[i]
       if (child instanceof Split) {
         vChildren.push(ioSplit({
           split: child,
           style: {flex: child.flex},
+          class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
           addMenuOption: this.addMenuOption,
         }))
@@ -283,16 +398,31 @@ export class IoSplit extends IoElement {
         vChildren.push(ioPanel({
           panel: child,
           style: {flex: child.flex},
+          class: isLastVisible ? 'io-split-last-visible' : '',
           elements: this.elements,
           addMenuOption: this.addMenuOption,
         }))
       } else debug: {
         console.warn('IOSplit: Invalid child type', child)
       }
-      if (i < this.split.children.length - 1) {
-        vChildren.push(ioDivider({orientation: this.split.orientation, index: i}))
+
+      if (!isLastVisible) {
+        vChildren.push(ioDivider({
+          orientation: orientation,
+        }))
       }
     }
+
+    if (this.trailingDrawer !== null) {
+      vChildren.push(ioDrawer({
+        orientation: orientation,
+        direction: 'trailing',
+        child: this.trailingDrawer,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      }))
+    }
+
     this.render(vChildren)
   }
 }

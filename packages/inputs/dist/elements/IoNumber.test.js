@@ -21,6 +21,7 @@ describe('IoNumber.test', () => {
             reflect: false,
             type: Number,
             value: 1,
+            observer: { type: 'none', observing: false },
         });
         expect(element._reactiveProperties.get('step')).toEqual({
             binding: undefined,
@@ -28,6 +29,7 @@ describe('IoNumber.test', () => {
             reflect: false,
             type: Number,
             value: 0.0001,
+            observer: { type: 'none', observing: false },
         });
         expect(element._reactiveProperties.get('min')).toEqual({
             binding: undefined,
@@ -35,6 +37,7 @@ describe('IoNumber.test', () => {
             reflect: false,
             type: Number,
             value: -Infinity,
+            observer: { type: 'none', observing: false },
         });
         expect(element._reactiveProperties.get('max')).toEqual({
             binding: undefined,
@@ -42,6 +45,7 @@ describe('IoNumber.test', () => {
             reflect: false,
             type: Number,
             value: Infinity,
+            observer: { type: 'none', observing: false },
         });
     });
     it('has correct default attributes', () => {

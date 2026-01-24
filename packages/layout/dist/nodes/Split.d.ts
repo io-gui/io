@@ -1,7 +1,6 @@
 import { Node, NodeArray } from '@io-gui/core';
 import { Panel, PanelProps } from './Panel.js';
 export type SplitOrientation = 'horizontal' | 'vertical';
-export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
 export type SplitProps = {
     type: 'split';
     children: Array<SplitProps | PanelProps>;
@@ -15,6 +14,7 @@ export declare class Split extends Node {
     constructor(args: SplitProps);
     childrenMutated(): void;
     onChildrenMutatedDebounced(): void;
+    flexChanged(): void;
     toJSON(): SplitProps;
     fromJSON(json: SplitProps): this;
     dispose(): void;

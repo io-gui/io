@@ -2,38 +2,17 @@
 name: Core Library Improvements
 overview: Address foundational issues in @io-gui/core including memory leaks, performance optimizations, error handling, and API improvements. Issues are prioritized by urgency and impact.
 todos:
-  - id: fix-nodes-disposed-leak
-    content: Fix memory leak in NODES.disposed Set
-    status: completed
-  - id: error-handling-changequeue
-    content: Add try/catch error handling in ChangeQueue.dispatch()
-    status: completed
-  - id: fix-changequeue-on2
-    content: Fix O(n²) splice loop in ChangeQueue.dispatch()
-    status: completed
-  - id: observation-arrays-to-sets
-    content: Convert _observedObjectProperties and _observedNodeProperties to Sets
-    status: completed
-  - id: optimize-queue-lookups
-    content: Optimize Queue.ts with Set for O(1) function lookups
-    status: completed
-  - id: optimize-binding-targets
-    content: Change Binding.targets from Array to Set
-    status: completed
-  - id: add-batch-api
-    content: Add batch() method for atomic multi-property updates
-    status: pending
-  - id: freeze-protochain
-    content: Freeze ProtoChain properties after initialization
-    status: pending
-  - id: add-tostringtag
-    content: Add Symbol.toStringTag to Node and IoElement
-    status: pending
   - id: typescript-improvements
     content: Improve TypeScript types (replace any, add generics)
     status: pending
   - id: nodearray-complete
     content: Implement fill() and copyWithin() in NodeArray
+    status: completed
+  - id: mutation-benchmark
+    content: Create mutation observation benchmark to measure performance
+    status: pending
+  - id: mutation-unification
+    content: Unify object mutation observation patterns
     status: pending
   - id: computed-properties
     content: Design and implement @Computed decorator (future)
@@ -45,173 +24,120 @@ todos:
 
 # Core Library Improvements Plan
 
-## Phase 1: Critical Issues
+## Phase 1: Type Improvements
 
-### 1.1 Fix Memory Leak in NODES.disposed
+### 1.1 TypeScript Type Improvements
 
-**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)The `NODES.disposed` Set accumulates references forever. Options:
+Replace `any` types with proper generics and interfaces throughout the codebase.---
 
-- **Option A:** Remove `NODES.disposed` entirely (simplest, unless it's used for debugging)
-- **Option B:** Use `WeakSet` instead of `Set` (allows GC but loses iteration)
-- **Option C:** Add periodic cleanup or manual `NODES.cleanup()` method
-```typescript
-// Current (leaks)
-export const NODES = {
-  active: new Set<Node>(),
-  disposed: new Set<Node>(),  // ← Never cleaned
-}
+## Phase 2: Mutation Observation Unification
 
-// Recommended: Remove or use WeakSet
-export const NODES = {
-  active: new Set<Node>(),
-  disposed: new WeakSet<Node>(),
-}
-```
+### 2.1 Current State Analysis
 
+The `Observer` class in `ReactiveProperty.ts` currently has **three different mutation observation patterns**:| Type | Pattern | Event Target | Listener Location ||------|---------|--------------|-------------------|| `io` | Direct listener | Value itself (Node/IoElement) | On the value || `nodearray` | Multi-observer | NodeArray dispatches to observers | Self-listener on node || `object` | Global event bus | `window` | Window listener |**Files involved:**
 
+- `packages/core/src/core/ReactiveProperty.ts` - `Observer` class
+- `packages/core/src/core/NodeArray.ts` - `_observers` Set, `addObserver()`, `removeObserver()`
+- `packages/core/src/nodes/Node.ts` - `dispatchMutation()`, `onPropertyMutated()`
 
+### 2.2 Problems with Current Approach
 
-### 1.2 Add Error Handling in ChangeQueue
+1. **Complexity**: Three different code paths to maintain
+2. **Inconsistent APIs**: Each type has different registration/dispatch mechanisms
+3. **Memory management**: Different cleanup strategies for each type
+4. **Cognitive overhead**: Developers must understand which pattern applies when
 
-**File:** [`packages/core/src/core/ChangeQueue.ts`](packages/core/src/core/ChangeQueue.ts)Wrap handler invocations in try/catch to prevent queue breakage:
+### 2.3 Proposed Solutions
 
-```typescript
-// In dispatch()
-if ((this.node as any)[property + 'Changed']) {
-  try {
-    (this.node as any)[property + 'Changed'](change)
-  } catch (e) {
-    console.error(`Error in ${property}Changed handler:`, e)
-  }
-}
-```
+#### Option A: Unified Global Event Bus
 
+All mutation events dispatch to a central event bus (could be `window` or a dedicated `MutationBus` singleton).**Pros:**
 
+- Single code path for all types
+- Consistent API
+- Simpler `Observer` class
 
-### 1.3 Fix O(n²) in ChangeQueue
+**Cons:**
 
-**File:** [`packages/core/src/core/ChangeQueue.ts`](packages/core/src/core/ChangeQueue.ts)Replace splice loop with index-based iteration:
+- Every node must filter events it doesn't care about
+- Potential performance impact with many nodes/mutations
+- More events traversing the system
 
-```typescript
-// Current O(n²)
-while (this.changes.length) {
-  const change = this.changes[0]
-  this.changes.splice(0, 1)
-  // ...
-}
+#### Option B: Unified Observer Pattern (like NodeArray)
 
-// Fixed O(n)
-const changes = this.changes
-this.changes = []
-for (let i = 0; i < changes.length; i++) {
-  const change = changes[i]
-  // ...
-}
-```
+All observable objects (Nodes, NodeArrays, plain objects) maintain an `_observers` Set.**Pros:**
 
----
+- Targeted dispatch (only observers receive events)
+- Consistent API across all types
+- Good performance (no filtering needed)
 
-## Phase 2: Performance Optimizations
+**Cons:**
 
-### 2.1 Convert Observation Arrays to Sets
+- Requires modifying `Node` base class to add observer tracking
+- Plain objects would need wrapping or Proxy
+- More memory per observable object
 
-**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)Change `_observedObjectProperties` and `_observedNodeProperties` from `string[]` to `Set<string>`:
+#### Option C: WeakMap-based Observer Registry
 
-```typescript
-// Declaration changes
-declare readonly _observedObjectProperties: Set<string>
-declare readonly _observedNodeProperties: Set<string>
+A central `WeakMap<object, Set<Node>>` tracks observers for any object.**Pros:**
 
-// Usage changes: includes() → has(), push() → add(), splice() → delete()
-```
+- No modification to observed objects
+- Automatic cleanup via WeakMap
+- Works for any object type
 
+**Cons:**
 
+- Central registry lookup on every mutation
+- Potential memory overhead for the registry
+- Requires all mutations to go through a central dispatcher
 
-### 2.2 Optimize Queue Lookups
+### 2.4 Implementation Plan
 
-**File:** [`packages/core/src/core/Queue.ts`](packages/core/src/core/Queue.ts)Replace array `indexOf` with Set membership:
+#### Step 1: Create Mutation Observation Benchmark
+
+Before making changes, establish baseline performance metrics:
 
 ```typescript
-// Current
-if (queue.indexOf(func) === -1) {
-  queue.push(func)
-}
-
-// Optimized: Use Set for O(1) lookup
-const queueSet = new Set<CallbackFunction>()
-if (!queueSet.has(func)) {
-  queue.push(func)
-  queueSet.add(func)
-}
+// benchmark/mutation-observation.bench.ts
+// Scenarios to measure:
+// 1. Many nodes observing few mutations
+// 2. Few nodes observing many mutations  
+// 3. Deep object hierarchies with mutations
+// 4. NodeArray mutations with multiple observers
+// 5. Cross-component mutation propagation
 ```
 
+**Metrics to collect:**
 
+- Time to dispatch mutation event
+- Time for observers to receive event
+- Memory usage per observer relationship
+- GC pressure from event objects
 
-### 2.3 Optimize Binding Target Lookups
+#### Step 2: Prototype Each Solution
 
-**File:** [`packages/core/src/core/Binding.ts`](packages/core/src/core/Binding.ts)Change `targets: Array<Node | IoElement>` to `Set` for O(1) membership checks:
+Create isolated prototypes of each approach to compare:
 
-```typescript
-readonly targets: Set<Node | IoElement> = new Set()
-// indexOf() → has(), push() → add(), splice() → delete()
-```
+- Implement in separate branch/files
+- Run benchmarks against each
+- Document findings
 
----
+#### Step 3: Choose and Implement
 
-## Phase 3: API Improvements
+Based on benchmark results, select the approach that:
 
-### 3.1 Add Batch Updates API
+1. Maintains or improves current performance
+2. Reduces code complexity
+3. Provides consistent developer experience
 
-**File:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts)Add a `batch()` method for atomic multi-property updates:
+### 2.5 Decision Criteria
 
-```typescript
-batch(fn: () => void) {
-  const prevReactivity = this.reactivity
-  this.reactivity = 'debounced'
-  try {
-    fn()
-  } finally {
-    this.reactivity = prevReactivity
-    this.dispatchQueue()
-  }
-}
-```
+| Criterion | Weight | Notes ||-----------|--------|-------|| Performance (dispatch time) | High | Must not regress || Memory efficiency | Medium | Reasonable overhead acceptable || Code simplicity | High | Reduce maintenance burden || API consistency | High | Same pattern for all types || Backward compatibility | Medium | Breaking changes acceptable if justified |
 
+### 2.6 Current Recommendation
 
+**Lean toward Option B (Unified Observer Pattern)** because:
 
-### 3.2 Freeze ProtoChain After Init
-
-**File:** [`packages/core/src/core/ProtoChain.ts`](packages/core/src/core/ProtoChain.ts)Freeze aggregated properties at end of constructor:
-
-```typescript
-// End of ProtoChain constructor
-Object.freeze(this.reactiveProperties)
-Object.freeze(this.properties)
-Object.freeze(this.listeners)
-Object.freeze(this.handlers)
-Object.freeze(this.constructors)
-```
-
-
-
-### 3.3 Add Symbol.toStringTag
-
-**Files:** [`packages/core/src/nodes/Node.ts`](packages/core/src/nodes/Node.ts), [`packages/core/src/elements/IoElement.ts`](packages/core/src/elements/IoElement.ts)
-
-```typescript
-get [Symbol.toStringTag]() {
-  return this.constructor.name
-}
-```
-
----
-
-## Phase 4: Future Enhancements (Lower Priority)
-
-### 4.1 TypeScript Type Improvements
-
-- Replace `any` with proper generics in `applyProperties`, `setProperties`
-- Add generic type parameter to `Node<TProps>`
-- Improve event handler type definitions
-
-### 4.2 NodeArray Complete Implementation
+- Already proven to work with NodeArray
+- Targeted dispatch is efficient
+- Node base class can be extended naturally

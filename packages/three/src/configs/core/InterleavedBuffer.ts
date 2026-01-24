@@ -1,5 +1,5 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
-import { ioNumber } from '@io-gui/inputs'
+import { ioNumber, ioSwitch } from '@io-gui/inputs'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 import {
   InterleavedBuffer,
@@ -28,6 +28,7 @@ registerEditorConfig(InterleavedBuffer, [
     {value: StreamCopyUsage, id: 'StreamCopy'},
   ]})})],
   ['version', ioNumber({min: 0, max: Infinity, step: 1})],
+  ['needsUpdate', ioSwitch({label: 'Needs Update', value: false})],
 ])
 
 registerEditorGroups(InterleavedBuffer, {

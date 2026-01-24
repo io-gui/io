@@ -251,10 +251,10 @@ export class IoGl extends IoElement {
   }
   themeMutated() {
     this.updateThemeUniforms()
-    this.throttle(this.onRender)
+    this.debounce(this.onRender)
   }
   changed() {
-    this.throttle(this.onRender)
+    this.debounce(this.onRender)
   }
   onRender() {
     const width = Math.floor(this.size[0] * this.pxRatio)

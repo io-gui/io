@@ -5,6 +5,7 @@ import { IoElement } from '../elements/IoElement.js'
 export class NodeArray<N extends Node> extends Array<N> {
   declare private proxy: typeof Proxy
   private _isInternalOperation = false
+  private _observers = new Set<Node | IoElement>()
 
   static get [Symbol.species]() { return Array }
 
@@ -15,6 +16,9 @@ export class NodeArray<N extends Node> extends Array<N> {
     // console.log('NodeArray constructor', args);
     this.itemMutated = this.itemMutated.bind(this)
     this.dispatchMutation = this.dispatchMutation.bind(this)
+
+    // Owner is the primary observer
+    this._observers.add(node)
 
     debug: if (!(node as Node)._isNode && !(node as IoElement)._isIoElement) {
       console.error('NodeArray constructor called with non-node!')
@@ -170,18 +174,96 @@ export class NodeArray<N extends Node> extends Array<N> {
       return result
     })
   }
-  fill() {
-    console.warn('NodeArray: fill is not supported')
-    return this
+  fill(value: N, start?: number, end?: number): this {
+    return this.withInternalOperation(() => {
+      const len = this.length
+      const relativeStart = start ?? 0
+      const relativeEnd = end ?? len
+
+      const actualStart = relativeStart < 0
+        ? Math.max(len + relativeStart, 0)
+        : Math.min(relativeStart, len)
+      const actualEnd = relativeEnd < 0
+        ? Math.max(len + relativeEnd, 0)
+        : Math.min(relativeEnd, len)
+
+      for (let i = actualStart; i < actualEnd; i++) {
+        const oldItem = this[i]
+        if (oldItem !== undefined && oldItem._isNode) {
+          oldItem.removeEventListener('io-object-mutation', this.itemMutated)
+          oldItem.removeParent(this.node as Node)
+        }
+      }
+
+      super.fill(value, actualStart, actualEnd)
+
+      for (let i = actualStart; i < actualEnd; i++) {
+        if (value._isNode) {
+          value.addEventListener('io-object-mutation', this.itemMutated)
+          value.addParent(this.node as Node)
+        }
+      }
+
+      if (actualEnd > actualStart) this.dispatchMutation()
+      return this
+    })
   }
-  copyWithin() {
-    console.warn('NodeArray: copyWithin is not supported')
-    return this
+  copyWithin(target: number, start?: number, end?: number): this {
+    return this.withInternalOperation(() => {
+      const len = this.length
+      const relativeTarget = target
+      const relativeStart = start ?? 0
+      const relativeEnd = end ?? len
+
+      const actualTarget = relativeTarget < 0
+        ? Math.max(len + relativeTarget, 0)
+        : Math.min(relativeTarget, len)
+      const actualStart = relativeStart < 0
+        ? Math.max(len + relativeStart, 0)
+        : Math.min(relativeStart, len)
+      const actualEnd = relativeEnd < 0
+        ? Math.max(len + relativeEnd, 0)
+        : Math.min(relativeEnd, len)
+
+      const count = Math.min(actualEnd - actualStart, len - actualTarget)
+      if (count <= 0) return this
+
+      for (let i = actualTarget; i < actualTarget + count; i++) {
+        const oldItem = this[i]
+        if (oldItem !== undefined && oldItem._isNode) {
+          oldItem.removeEventListener('io-object-mutation', this.itemMutated)
+          oldItem.removeParent(this.node as Node)
+        }
+      }
+
+      super.copyWithin(actualTarget, actualStart, actualEnd)
+
+      for (let i = actualTarget; i < actualTarget + count; i++) {
+        const item = this[i]
+        if (item._isNode) {
+          item.addEventListener('io-object-mutation', this.itemMutated)
+          item.addParent(this.node as Node)
+        }
+      }
+
+      this.dispatchMutation()
+      return this
+    })
+  }
+  addObserver(node: Node | IoElement) {
+    this._observers.add(node)
+  }
+  removeObserver(node: Node | IoElement) {
+    this._observers.delete(node)
   }
   itemMutated(event: CustomEvent) {
-    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window)
+    for (const observer of this._observers) {
+      observer.dispatch('io-object-mutation', {object: this.proxy, property: event.detail.index})
+    }
   }
   dispatchMutation() {
-    this.node.dispatch('io-object-mutation', {object: this.proxy}, false, window)
+    for (const observer of this._observers) {
+      observer.dispatch('io-object-mutation', {object: this.proxy})
+    }
   }
 }

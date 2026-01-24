@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumber } from '@io-gui/inputs'
 import { Layers } from 'three/webgpu'
 
@@ -11,5 +11,5 @@ registerEditorGroups(Layers, {
 })
 
 registerEditorConfig(Object, [
-  [Layers, ioPropertyEditor()],
+  [Layers, ioObject()],
 ])

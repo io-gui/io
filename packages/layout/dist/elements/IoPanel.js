@@ -58,14 +58,6 @@ let IoPanel = class IoPanel extends IoElement {
                 this.moveTab(tab, index + 1);
                 break;
             }
-            case 'ArrowUp': {
-                // TODO: move tab to panel above or split the panel
-                break;
-            }
-            case 'ArrowDown': {
-                // TODO: move tab to panel below or split the panel
-                break;
-            }
         }
     }
     onNewTabClicked(event) {
@@ -74,7 +66,7 @@ let IoPanel = class IoPanel extends IoElement {
         if (option.id && option.options.length === 0) {
             const tab = new Tab({ id: option.id, label: option.label, icon: option.icon });
             this.addTab(tab);
-            const addMenuOption = this.querySelector('.add-tab');
+            const addMenuOption = this.querySelector('.io-tabs-add-tab');
             if (addMenuOption)
                 addMenuOption.expanded = false;
         }
@@ -102,6 +94,7 @@ let IoPanel = class IoPanel extends IoElement {
     addTab(tab, index) {
         const existingIndex = this.panel.tabs.findIndex(t => t.id === tab.id);
         if (existingIndex !== -1) {
+            console.warn(`IoPanel.addTab: Duplicate tab id "${tab.id}", removing duplicate tab.`);
             this.panel.tabs.splice(existingIndex, 1);
         }
         index = index ?? this.panel.tabs.length;
@@ -110,12 +103,6 @@ let IoPanel = class IoPanel extends IoElement {
         this.selectIndex(index);
     }
     removeTab(tab) {
-        // Prevent removing the last tab from a layout with only one split, panel and a tab.
-        const parentSplit = this.parentElement;
-        const grandParentLayout = (parentSplit.parentElement instanceof IoLayout) ? parentSplit.parentElement : null;
-        if (grandParentLayout && parentSplit.split.children.length === 1 && this.panel.tabs.length === 1) {
-            return;
-        }
         const index = this.panel.tabs.indexOf(tab);
         this.panel.tabs.splice(index, 1);
         if (this.panel.tabs.length > 0) {
@@ -123,7 +110,13 @@ let IoPanel = class IoPanel extends IoElement {
             this.selectIndex(newIndex);
         }
         else {
-            this.dispatch('io-panel-remove', { panel: this.panel }, true);
+            const parentSplit = this.parentElement;
+            const isRootPanel = parentSplit.parentElement instanceof IoLayout &&
+                parentSplit.split.children.length === 1;
+            // If this is the last panel at root level, don't remove
+            if (!isRootPanel) {
+                this.dispatch('io-panel-remove', { panel: this.panel }, true);
+            }
         }
     }
     moveTab(tab, index) {
@@ -141,13 +134,31 @@ let IoPanel = class IoPanel extends IoElement {
             tabs[index].focus();
     }
     panelMutated() {
-        this.changed();
+        this.debounce(this.changed);
+    }
+    getAddMenuOption() {
+        if (this.addMenuOption && this.addMenuOption.options?.length > 0) {
+            return this.addMenuOption;
+        }
+        if (!this.elements || this.elements.length === 0)
+            return undefined;
+        const existingTabIds = new Set(this.panel.tabs.map(tab => tab.id));
+        const options = this.elements
+            .filter(el => el.props?.id && !existingTabIds.has(el.props.id))
+            .map(el => new MenuOption({
+            id: el.props.id,
+            label: el.props.label ?? el.props.id,
+            icon: el.props.icon ?? '',
+        }));
+        if (options.length === 0)
+            return undefined;
+        return new MenuOption({ options });
     }
     changed() {
         this.render([
             ioTabs({
                 tabs: this.panel.tabs,
-                addMenuOption: this.addMenuOption,
+                addMenuOption: this.getAddMenuOption(),
                 '@io-menu-option-clicked': this.onNewTabClicked,
             }),
             ioSelector({

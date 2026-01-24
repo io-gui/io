@@ -9,7 +9,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, disposeChildren, toVDOM } from '../vdom/VDOM.js';
-import { dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/Node.js';
+import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/Node.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
 import { EventDispatcher } from '../core/EventDispatcher.js';
@@ -59,8 +59,8 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         Object.defineProperty(this, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
         Object.defineProperty(this, '_bindings', { enumerable: false, configurable: true, value: new Map() });
         Object.defineProperty(this, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(this) });
-        Object.defineProperty(this, '_observedObjectProperties', { enumerable: false, configurable: true, value: [] });
-        Object.defineProperty(this, '_observedNodeProperties', { enumerable: false, configurable: true, value: [] });
+        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
+        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
         // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
         this.init();
         initReactiveProperties(this);
@@ -124,6 +124,9 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     init() { }
     ready() { }
     changed() { }
+    get [Symbol.toStringTag]() {
+        return this.constructor.name;
+    }
     queue(name, value, oldValue) {
         this._changeQueue.queue(name, value, oldValue);
     }
@@ -141,12 +144,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     }
     ;
     dispatchMutation(object = this, properties = []) {
-        if (object._isNode || object._isIoElement) {
-            this.dispatch('io-object-mutation', { object, properties });
-        }
-        else {
-            this.dispatch('io-object-mutation', { object, properties }, false, window);
-        }
+        dispatchMutation(this, object, properties);
     }
     bind(name) {
         return bind(this, name);
@@ -263,17 +261,22 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 }
                 this.$[vChild.props.id] = child;
             }
-            if (vChild.children !== undefined) { // TODO: test this! Look for more cases of truthy check bugs!
+            if (vChild.children !== undefined) {
                 if (typeof vChild.children === 'string') {
                     // Set textNode value.
                     this._flattenTextNode(child);
                     child._textNode.nodeValue = String(vChild.children);
                 }
                 else if (vChild.children instanceof Array) {
-                    // Traverse deeper.
-                    const vDOMElementsOnly = vChild.children.filter(item => item !== null);
-                    this.traverse(vDOMElementsOnly, child, noDispose);
+                    if (!child._isIoElement) {
+                        const vDOMElementsOnly = vChild.children.filter(item => item !== null);
+                        this.traverse(vDOMElementsOnly, child, noDispose);
+                    }
                 }
+            }
+            else if (!child._isIoElement) {
+                // Clear children for native elements. IoElements manage their own children by design
+                child.textContent = '';
             }
         }
     }
@@ -327,9 +330,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     Register(ioNodeConstructor) {
         Object.defineProperty(ioNodeConstructor.prototype, '_protochain', { value: new ProtoChain(ioNodeConstructor) });
         const localName = ioNodeConstructor.name.replace(/([a-z])([A-Z,0-9])/g, '$1-$2').toLowerCase();
-        Object.defineProperty(ioNodeConstructor, 'localName', { value: localName });
         Object.defineProperty(ioNodeConstructor.prototype, 'localName', { value: localName });
-        Object.defineProperty(ioNodeConstructor, '_isIoElement', { enumerable: false, value: true, writable: false });
         Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', { enumerable: false, value: true, writable: false });
         Object.defineProperty(window, ioNodeConstructor.name, { value: ioNodeConstructor });
         window.customElements.define(localName, ioNodeConstructor);

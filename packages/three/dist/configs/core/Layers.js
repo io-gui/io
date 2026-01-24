@@ -1,4 +1,4 @@
-import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioObject, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ioNumber } from '@io-gui/inputs';
 import { Layers } from 'three/webgpu';
 registerEditorConfig(Layers, [
@@ -8,6 +8,6 @@ registerEditorGroups(Layers, {
     Main: ['mask'],
 });
 registerEditorConfig(Object, [
-    [Layers, ioPropertyEditor()],
+    [Layers, ioObject()],
 ]);
 //# sourceMappingURL=Layers.js.map

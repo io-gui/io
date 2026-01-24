@@ -2,7 +2,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
-import { Node, ReactivityType, dispose, bind, unbind, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js'
+import { Node, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
@@ -73,6 +73,7 @@ export class IoElement extends HTMLElement {
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare _hasWindowMutationListener: boolean
+  declare _hasSelfMutationListener: boolean
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
@@ -86,6 +87,7 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
     Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
+    Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
     // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
 
     this.init()
@@ -145,6 +147,9 @@ export class IoElement extends HTMLElement {
   init() {}
   ready() {}
   changed() {}
+  get [Symbol.toStringTag]() {
+    return this.constructor.name
+  }
   queue(name: string, value: any, oldValue: any) {
     this._changeQueue.queue(name, value, oldValue)
   }
@@ -161,11 +166,7 @@ export class IoElement extends HTMLElement {
     return onPropertyMutated(this, event)
   };
   dispatchMutation(object: object | Node = this, properties: string[] = []) {
-    if ((object as Node)._isNode || (object as IoElement)._isIoElement) {
-      this.dispatch('io-object-mutation', {object, properties})
-    } else {
-      this.dispatch('io-object-mutation', {object, properties}, false, window)
-    }
+    dispatchMutation(this, object, properties)
   }
   bind(name: string): Binding {
     return bind(this, name)
@@ -277,16 +278,20 @@ export class IoElement extends HTMLElement {
         }
         this.$[vChild.props!.id] = child
       }
-      if (vChild.children !== undefined) { // TODO: test this! Look for more cases of truthy check bugs!
+      if (vChild.children !== undefined) {
         if (typeof vChild.children === 'string') {
           // Set textNode value.
           this._flattenTextNode(child as HTMLElement);
           (child as IoElement)._textNode.nodeValue = String(vChild.children)
         } else if (vChild.children instanceof Array) {
-          // Traverse deeper.
-          const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
-          this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
+          if (!(child as IoElement)._isIoElement) {
+            const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
+            this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
+          }
         }
+      } else if (!(child as IoElement)._isIoElement) {
+        // Clear children for native elements. IoElements manage their own children by design
+        child.textContent = ''
       }
     }
   }

@@ -1,13 +1,11 @@
 import { IoElement, IoElementProps, ListenerDefinition } from '@io-gui/core';
 export type IoDividerProps = IoElementProps & {
     orientation: 'vertical' | 'horizontal';
-    index: number;
 };
 export declare class IoDivider extends IoElement {
     static get Style(): string;
     pressed: boolean;
     orientation: 'horizontal' | 'vertical';
-    index: number;
     static get Listeners(): {
         pointerdown: string;
         touchstart: ListenerDefinition;
@@ -15,8 +13,8 @@ export declare class IoDivider extends IoElement {
     constructor(args: IoDividerProps);
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
-    onPointerleave(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
+    onPointercancel(event: PointerEvent): void;
     onTouchstart(event: TouchEvent): void;
     onTouchmove(event: TouchEvent): void;
     onTouchend(): void;

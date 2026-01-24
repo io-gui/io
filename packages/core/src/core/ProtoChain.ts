@@ -81,6 +81,13 @@ export class ProtoChain {
       this.addHandlers(ioNodeConstructor.prototype as Node | IoElement)
     }
     debug: this.validateReactiveProperties()
+
+    // Freeze aggregated properties to prevent accidental modifications
+    Object.freeze(this.constructors)
+    Object.freeze(this.properties)
+    Object.freeze(this.reactiveProperties)
+    Object.freeze(this.listeners)
+    Object.freeze(this.handlers)
   }
   /**
    * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.

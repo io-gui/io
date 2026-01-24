@@ -1,11 +1,11 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, Property, NodeArray } from '@io-gui/core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, NodeArray } from '@io-gui/core'
 import { MenuOption, ioMenuItem } from '@io-gui/menus'
 import { ioTab } from './IoTab.js'
 import { ioTabsHamburger } from './IoTabsHamburger.js'
 import { Tab } from '../nodes/Tab.js'
 
 export type IoTabsProps = IoElementProps & {
-  tabs: NodeArray<Tab>
+  tabs: Array<Tab>
   addMenuOption?: MenuOption
 }
 
@@ -60,29 +60,26 @@ export class IoTabs extends IoElement {
   @ReactiveProperty({type: Number, value: -1, reflect: true})
   declare overflow: number
 
-  @Property({type: MenuOption})
+  @ReactiveProperty({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
   constructor(args: IoTabsProps) { super(args) }
 
   tabsMutated() {
     this.changed()
-
     this.overflow = -1
     this.onResized()
   }
 
   onResized() {
-    const addMenu = this.querySelector('.add-tab')
-    // TODO: It appears that addMenu rect is required for overflow calculation to work correctly.
-    // But it is not guaranteed to be available since addMenuOptions is optional. Fix!
-    if (!addMenu) return
+    const lastElement = this.children[this.children.length - 1]
+    if (!lastElement) return
 
     const rect = this.getBoundingClientRect()
-    const addMenuRect = addMenu.getBoundingClientRect()
+    const lastElementRect = lastElement.getBoundingClientRect()
 
     if (this.overflow === -1) {
-      if (addMenuRect.right > rect.right) {
+      if (lastElementRect.right > rect.right) {
         this.overflow = rect.width
       }
     } else if (rect.width > (this.overflow + 32)) {
@@ -96,7 +93,7 @@ export class IoTabs extends IoElement {
       ioTabsHamburger({tabs: this.tabs}),
       ...this.tabs.map(tab => ioTab({tab: tab})),
       hasOptions ?ioMenuItem({
-        class: 'add-tab',
+        class: 'io-tabs-add-tab',
         icon: 'io:box_fill_plus',
         direction: 'down',
         option: this.addMenuOption,

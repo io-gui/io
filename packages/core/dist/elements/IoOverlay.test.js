@@ -9,6 +9,7 @@ describe('IoOverlay', () => {
             reflect: true,
             type: Boolean,
             value: false,
+            observer: { type: 'none', observing: false },
         });
     });
 });

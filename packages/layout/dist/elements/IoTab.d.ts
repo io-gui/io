@@ -15,6 +15,7 @@ export declare class IoTab extends IoField {
     onResized(): void;
     onTouchmove(event: TouchEvent): void;
     preventDefault(event: Event): void;
+    onContextMenu(event: MouseEvent): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;
