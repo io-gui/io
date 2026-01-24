@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach } from 'vitest'
-import { ioDrawer } from '@io-gui/layout'
+import { IoDrawer } from '@io-gui/layout'
 import { Panel } from '../nodes/Panel.js'
 import { Tab } from '../nodes/Tab.js'
 
@@ -77,161 +77,161 @@ describe('IoDrawer', () => {
     })
   })
 
-  // describe('Attribute Reflection', () => {
-  //   it('should reflect orientation to attribute', () => {
-  //     expect(drawer.getAttribute('orientation')).toBe('horizontal')
+//   describe('Attribute Reflection', () => {
+//     it('should reflect orientation to attribute', () => {
+//       expect(drawer.getAttribute('orientation')).toBe('horizontal')
 
-  //     drawer.orientation = 'vertical'
-  //     expect(drawer.getAttribute('orientation')).toBe('vertical')
-  //   })
+//       drawer.orientation = 'vertical'
+//       expect(drawer.getAttribute('orientation')).toBe('vertical')
+//     })
 
-  //   it('should reflect direction to attribute', () => {
-  //     expect(drawer.getAttribute('direction')).toBe('leading')
+//     it('should reflect direction to attribute', () => {
+//       expect(drawer.getAttribute('direction')).toBe('leading')
 
-  //     drawer.direction = 'trailing'
-  //     expect(drawer.getAttribute('direction')).toBe('trailing')
-  //   })
+//       drawer.direction = 'trailing'
+//       expect(drawer.getAttribute('direction')).toBe('trailing')
+//     })
 
-  //   it('should reflect expanded to attribute when true', () => {
-  //     expect(drawer.hasAttribute('expanded')).toBe(false)
+//     it('should reflect expanded to attribute when true', () => {
+//       expect(drawer.hasAttribute('expanded')).toBe(false)
 
-  //     drawer.expanded = true
-  //     expect(drawer.hasAttribute('expanded')).toBe(true)
+//       drawer.expanded = true
+//       expect(drawer.hasAttribute('expanded')).toBe(true)
 
-  //     drawer.expanded = false
-  //     expect(drawer.hasAttribute('expanded')).toBe(false)
-  //   })
+//       drawer.expanded = false
+//       expect(drawer.hasAttribute('expanded')).toBe(false)
+//     })
 
-  //   it('should reflect dragging to attribute when true', () => {
-  //     expect(drawer.hasAttribute('dragging')).toBe(false)
+//     it('should reflect dragging to attribute when true', () => {
+//       expect(drawer.hasAttribute('dragging')).toBe(false)
 
-  //     drawer.dragging = true
-  //     expect(drawer.hasAttribute('dragging')).toBe(true)
+//       drawer.dragging = true
+//       expect(drawer.hasAttribute('dragging')).toBe(true)
 
-  //     drawer.dragging = false
-  //     expect(drawer.hasAttribute('dragging')).toBe(false)
-  //   })
-  // })
+//       drawer.dragging = false
+//       expect(drawer.hasAttribute('dragging')).toBe(false)
+//     })
+//   })
 
-  // describe('Drawer Size Calculation', () => {
-  //   it('should calculate size from child flexBasis', () => {
-  //     const size = drawer.getDrawerSize()
-  //     expect(size).toBe(200)
-  //   })
+//   describe('Drawer Size Calculation', () => {
+//     it('should calculate size from child flexBasis', () => {
+//       const size = drawer.getDrawerSize()
+//       expect(size).toBe(200)
+//     })
 
-  //   it('should clamp size to maxSize', () => {
-  //     drawer.maxSize = 150
-  //     const size = drawer.getDrawerSize()
-  //     expect(size).toBe(150)
-  //   })
+//     it('should clamp size to maxSize', () => {
+//       drawer.maxSize = 150
+//       const size = drawer.getDrawerSize()
+//       expect(size).toBe(150)
+//     })
 
-  //   it('should return 0 when no child', () => {
-  //     drawer.child = null
-  //     const size = drawer.getDrawerSize()
-  //     expect(size).toBe(0)
-  //   })
+//     it('should return 0 when no child', () => {
+//       drawer.child = null
+//       const size = drawer.getDrawerSize()
+//       expect(size).toBe(0)
+//     })
 
-  //   it('should handle auto flex basis', () => {
-  //     panel.flex = '1 1 auto'
-  //     const size = drawer.getDrawerSize()
-  //     expect(size).toBe(240)
-  //   })
-  // })
+//     it('should handle auto flex basis', () => {
+//       panel.flex = '1 1 auto'
+//       const size = drawer.getDrawerSize()
+//       expect(size).toBe(240)
+//     })
+//   })
 
-  // describe('Click Toggle', () => {
-  //   it('should toggle expanded on handle click', () => {
-  //     const handle = drawer.querySelector('.io-drawer-handle') as HTMLElement
+//   describe('Click Toggle', () => {
+//     it('should toggle expanded on handle click', () => {
+//       const handle = drawer.querySelector('.io-drawer-handle') as HTMLElement
 
-  //     const downEvent = new PointerEvent('pointerdown', {
-  //       pointerId: 1,
-  //       bubbles: true,
-  //       cancelable: true,
-  //       target: handle,
-  //     })
-  //     Object.defineProperty(downEvent, 'target', { value: handle })
+//       const downEvent = new PointerEvent('pointerdown', {
+//         pointerId: 1,
+//         bubbles: true,
+//         cancelable: true,
+//         target: handle,
+//       })
+//       Object.defineProperty(downEvent, 'target', { value: handle })
 
-  //     drawer.onPointerdown(downEvent)
+//       drawer.onPointerdown(downEvent)
 
-  //     const upEvent = new PointerEvent('pointerup', {
-  //       pointerId: 1,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     })
-  //     drawer.onPointerup(upEvent)
+//       const upEvent = new PointerEvent('pointerup', {
+//         pointerId: 1,
+//         bubbles: true,
+//         cancelable: true,
+//       })
+//       drawer.onPointerup(upEvent)
 
-  //     expect(drawer.expanded).toBe(true)
-  //   })
+//       expect(drawer.expanded).toBe(true)
+//     })
 
-  //   it('should dispatch io-drawer-expanded-changed on toggle', () => {
-  //     const handler = vi.fn()
-  //     drawer.addEventListener('io-drawer-expanded-changed', handler)
+//     it('should dispatch io-drawer-expanded-changed on toggle', () => {
+//       const handler = vi.fn()
+//       drawer.addEventListener('io-drawer-expanded-changed', handler)
 
-  //     const handle = drawer.querySelector('.io-drawer-handle') as HTMLElement
+//       const handle = drawer.querySelector('.io-drawer-handle') as HTMLElement
 
-  //     const downEvent = new PointerEvent('pointerdown', {
-  //       pointerId: 1,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     })
-  //     Object.defineProperty(downEvent, 'target', { value: handle })
+//       const downEvent = new PointerEvent('pointerdown', {
+//         pointerId: 1,
+//         bubbles: true,
+//         cancelable: true,
+//       })
+//       Object.defineProperty(downEvent, 'target', { value: handle })
 
-  //     drawer.onPointerdown(downEvent)
+//       drawer.onPointerdown(downEvent)
 
-  //     const upEvent = new PointerEvent('pointerup', {
-  //       pointerId: 1,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     })
-  //     drawer.onPointerup(upEvent)
+//       const upEvent = new PointerEvent('pointerup', {
+//         pointerId: 1,
+//         bubbles: true,
+//         cancelable: true,
+//       })
+//       drawer.onPointerup(upEvent)
 
-  //     expect(handler).toHaveBeenCalledTimes(1)
-  //     const detail = handler.mock.calls[0][0].detail
-  //     expect(detail.direction).toBe('leading')
-  //     expect(detail.expanded).toBe(true)
-  //   })
+//       expect(handler).toHaveBeenCalledTimes(1)
+//       const detail = handler.mock.calls[0][0].detail
+//       expect(detail.direction).toBe('leading')
+//       expect(detail.expanded).toBe(true)
+//     })
 
-  //   it('should not toggle when clicking outside handle', () => {
-  //     const downEvent = new PointerEvent('pointerdown', {
-  //       pointerId: 1,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     })
-  //     Object.defineProperty(downEvent, 'target', { value: drawer })
+//     it('should not toggle when clicking outside handle', () => {
+//       const downEvent = new PointerEvent('pointerdown', {
+//         pointerId: 1,
+//         bubbles: true,
+//         cancelable: true,
+//       })
+//       Object.defineProperty(downEvent, 'target', { value: drawer })
 
-  //     drawer.onPointerdown(downEvent)
+//       drawer.onPointerdown(downEvent)
 
-  //     expect(drawer.expanded).toBe(false)
-  //   })
-  // })
+//       expect(drawer.expanded).toBe(false)
+//     })
+//   })
 
-  // describe('Drag Expand', () => {
-  //   it('should set expanded on drag threshold', () => {
-  //     const handle = drawer.querySelector('.io-drawer-handle') as HTMLElement
+//   describe('Drag Expand', () => {
+//     it('should set expanded on drag threshold', () => {
+//       const handle = drawer.querySelector('.io-drawer-handle') as HTMLElement
 
-  //     const downEvent = new PointerEvent('pointerdown', {
-  //       pointerId: 1,
-  //       clientX: 10,
-  //       clientY: 50,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     })
-  //     Object.defineProperty(downEvent, 'target', { value: handle })
+//       const downEvent = new PointerEvent('pointerdown', {
+//         pointerId: 1,
+//         clientX: 10,
+//         clientY: 50,
+//         bubbles: true,
+//         cancelable: true,
+//       })
+//       Object.defineProperty(downEvent, 'target', { value: handle })
 
-  //     drawer.onPointerdown(downEvent)
+//       drawer.onPointerdown(downEvent)
 
-  //     const moveEvent = new PointerEvent('pointermove', {
-  //       pointerId: 1,
-  //       clientX: 100,
-  //       clientY: 50,
-  //       bubbles: true,
-  //       cancelable: true,
-  //     })
+//       const moveEvent = new PointerEvent('pointermove', {
+//         pointerId: 1,
+//         clientX: 100,
+//         clientY: 50,
+//         bubbles: true,
+//         cancelable: true,
+//       })
 
-  //     drawer.onPointermove(moveEvent)
+//       drawer.onPointermove(moveEvent)
 
-  //     expect(drawer.dragging).toBe(true)
-  //     expect(drawer.expanded).toBe(true)
-  //   })
+//       expect(drawer.dragging).toBe(true)
+//       expect(drawer.expanded).toBe(true)
+//     })
 
 //     it('should dispatch expanded event on drag start', () => {
 //       const handler = vi.fn()
@@ -683,5 +683,5 @@ describe('IoDrawer', () => {
 
 //     expect(vdom).toBeDefined()
 //     expect(vdom.tag).toBe('io-drawer')
-  // })
+//   })
 })
