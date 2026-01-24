@@ -12,12 +12,11 @@ export class IoColorRgba extends IoColorBase {
     return /* css */`
       :host {
         display: flex;
-        flex: 0 1 auto;
+        flex: 1 1 auto;
         overflow: hidden;
       }
       :host > io-number {
         flex: 1 0 0;
-        overflow: hidden;
       }
       :host > io-number#r {
         border-bottom-color: var(--io_bgColorRed);
