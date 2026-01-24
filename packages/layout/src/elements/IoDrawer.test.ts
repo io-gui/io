@@ -1,8 +1,7 @@
 //@ts-nocheck
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { IoDrawer, ioDrawer } from '@io-gui/layout'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { ioDrawer } from '@io-gui/layout'
 import { Panel } from '../nodes/Panel.js'
-import { Split } from '../nodes/Split.js'
 import { Tab } from '../nodes/Tab.js'
 
 describe('IoDrawer', () => {
