@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, ReactiveNode } from '@io-gui/core'
 import { ioNumber, ioBoolean } from '@io-gui/inputs'
 
 export type IoVectorProps = IoElementProps & {
@@ -112,7 +112,7 @@ export class IoVector extends IoElement {
         if (k !== id && this._ratios[k]) (value as any)[k] = value[id] * this._ratios[k]
       }
     }
-    if (!(this.value as Node)._isNode) {
+    if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
   }

@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Node } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, ReactiveNode } from '@io-gui/core'
 import { ioNumber, ioBoolean } from '@io-gui/inputs'
 
 export type IoVectorArrayProps = IoElementProps & {
@@ -89,7 +89,7 @@ export class IoVectorArray extends IoElement {
       }
     }
     // TODO: this was replaced in earlier commit but not sure why. Nodes should dispatch mutations on their own.
-    if (!(this.value as unknown as Node)._isNode) {
+    if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
     // Remove this later if no regressions are spotted and no tests are broken.

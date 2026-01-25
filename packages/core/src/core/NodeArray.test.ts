@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import { Node, Register, ReactivePropertyDefinitions } from '@io-gui/core'
+import { ReactiveNode, Register, ReactivePropertyDefinitions } from '@io-gui/core'
 import { NodeArray } from './NodeArray.js'
 
 @Register
-class TestNode extends Node {
+class TestNode extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       label: ''
@@ -14,7 +14,7 @@ class TestNode extends Node {
 }
 
 @Register
-class ParentNode extends Node {
+class ParentNode extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       items: {type: Array, init: null}

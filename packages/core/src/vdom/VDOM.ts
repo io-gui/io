@@ -327,6 +327,7 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
 
     if (p === 'style') {
       for (const s in prop) {
+        // TODO: Consider supporting importance
         element.style.setProperty(s, prop[s])
       }
     } else if ((p as any) === 'class') {

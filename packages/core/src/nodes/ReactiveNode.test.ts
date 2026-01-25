@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { Change, Binding, Node, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '@io-gui/core'
+import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '@io-gui/core'
 
-describe('Node', () => {
+describe('ReactiveNode', () => {
   it('Should have all core API functions defined', () => {
-    const node = new Node()
+    const node = new ReactiveNode()
     expect(typeof node.setProperty).toBe('function')
     expect(typeof node.applyProperties).toBe('function')
     expect(typeof node.setProperties).toBe('function')
@@ -23,7 +23,7 @@ describe('Node', () => {
   })
   it('Should register reactive property definitions with correct defaults', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop0: { type: String },
@@ -147,7 +147,7 @@ describe('Node', () => {
   })
   it('Should aggregate reactive property definitions from prototype chain', () => {
     @Register
-    class Object1 extends Node {
+    class Object1 extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: {
@@ -226,7 +226,7 @@ describe('Node', () => {
   })
   it('Should correctly register properties with bindings', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): any {
         return {
           label: ''
@@ -240,7 +240,7 @@ describe('Node', () => {
     const binding3 = new Binding(new TestNode({label: 'label3'}), 'label')
 
     @Register
-    class Object1 extends Node {
+    class Object1 extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: binding1,
@@ -277,7 +277,7 @@ describe('Node', () => {
   })
   it('Should correctly get/set properties', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: {
@@ -298,7 +298,7 @@ describe('Node', () => {
   it('Should correctly get/set bound properties', () => {
 
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           label: '',
@@ -311,7 +311,7 @@ describe('Node', () => {
     const binding2 = new Binding(new TestNode({label: 'label2'}), 'label')
 
     @Register
-    class TestNode2 extends Node {
+    class TestNode2 extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: binding1
@@ -358,7 +358,7 @@ describe('Node', () => {
   })
   it('Should dispatch "[propName]-changed" events correctly', async () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propChangedEvents: {type: Array, init: null},
@@ -490,7 +490,7 @@ describe('Node', () => {
   })
   it('Should execute throttle immediately and debounce deferred', async () => {
     const order: number[] = []
-    const node = new Node()
+    const node = new ReactiveNode()
     node.debounce(() => {
       order.push(1)
     })
@@ -512,7 +512,7 @@ describe('Node', () => {
   })
   it('Should add/remove "io-object-mutation" event listeners to properties of Node type', async () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop: Number,
@@ -538,7 +538,7 @@ describe('Node', () => {
     expect(subnode2._eventDispatcher.addedListeners['io-object-mutation'][0][0]).toBe(node.onPropertyMutated)
 
     @Register
-    class TestNode2 extends Node {
+    class TestNode2 extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop: {type: TestNode, init: null},
@@ -576,7 +576,7 @@ describe('Node', () => {
   })
   it('Should correctly invoke handler functions on property changes', async () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       changedCounter = 0
       prop1Changes: Change[] = []
       prop2Changes: Change[] = []
@@ -675,7 +675,7 @@ describe('Node', () => {
   })
   it('Should invoke property mutation handler functions on mutation events', async () => {
     @Register
-    class TestSubNode extends Node {
+    class TestSubNode extends ReactiveNode {
       static get ReactiveProperties(): any {
         return {
           a: {
@@ -686,7 +686,7 @@ describe('Node', () => {
     }
 
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       changedCounter = 0
       obj1MutatedCounter = 0
       obj2MutatedCounter = 0
@@ -742,7 +742,7 @@ describe('Node', () => {
   })
   it('Should correctly bind properties using binding system', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: String,
@@ -792,7 +792,7 @@ describe('Node', () => {
   })
   it('Should correctly handle multiple binding re-assignments in setProperties()', async () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: 'subnode1',
@@ -804,7 +804,7 @@ describe('Node', () => {
     }
 
     @Register
-    class TestNodeTarget extends Node {
+    class TestNodeTarget extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           subnode: {type: TestNode, init: null},
@@ -889,7 +889,7 @@ describe('Node', () => {
   })
   it('Should correctly manage binding targets and target properties', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: String,
@@ -937,7 +937,7 @@ describe('Node', () => {
   })
   it('Should return existing binding or create new one on bind()', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: String,
@@ -952,7 +952,7 @@ describe('Node', () => {
   })
   it('Should dispose bindings correctly', () => {
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop1: String,
@@ -977,7 +977,7 @@ describe('Node', () => {
   })
   it('Should remove "io-object-mutation" listeners from Io objects assigned to properties with type: Object', async () => {
     @Register
-    class IoObjectNode extends Node {
+    class IoObjectNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           label: String,
@@ -985,7 +985,7 @@ describe('Node', () => {
       }
     }
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop: {type: Object, init: null},
@@ -1012,7 +1012,7 @@ describe('Node', () => {
   })
   it('Should remove "io-object-mutation" listeners when shared Io object value is released by all properties', async () => {
     @Register
-    class IoObjectNode extends Node {
+    class IoObjectNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           label: String,
@@ -1020,7 +1020,7 @@ describe('Node', () => {
       }
     }
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},
@@ -1057,7 +1057,7 @@ describe('Node', () => {
   })
   it('Should correctly add listeners to new Io object after shared value is released', async () => {
     @Register
-    class IoObjectNode extends Node {
+    class IoObjectNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           label: String,
@@ -1065,7 +1065,7 @@ describe('Node', () => {
       }
     }
     @Register
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           propA: {type: IoObjectNode, init: null},

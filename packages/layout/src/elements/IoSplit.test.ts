@@ -685,7 +685,7 @@ describe('IoSplit View Element', () => {
       const ioSplit = layout.querySelector('io-split') as IoSplit
       ioSplit.ensureOneHasFlexGrow()
 
-      expect(split.children[1].flex).toBe('1 1 auto')
+      expect(split.children[1].flex).toBe('1 1 300px')
     })
 
     it('Should not change flex when at least one child has flex-grow', () => {

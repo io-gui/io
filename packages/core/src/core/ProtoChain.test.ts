@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ProtoChain, Node, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '@io-gui/core'
+import { ProtoChain, ReactiveNode, ReactiveProperty, ReactivePropertyDefinitions, ListenerDefinitions, IoElement, Register, Property } from '@io-gui/core'
 
 class Array1 extends Array {}
 class Array2 extends Array1 {}
@@ -16,7 +16,7 @@ class HTMLElement3 extends HTMLElement2 {}
 // TODO: Fix init field testing. Based on old implementation.
 
 @Register
-class Node1 extends Node {
+class Node1 extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
       prop1: {
@@ -133,10 +133,10 @@ describe('ProtoChain', () => {
     expect(constructors).toEqual([Object3, Object2, Object1])
     constructors = new ProtoChain(HTMLElement3).constructors
     expect(constructors).toEqual([HTMLElement3, HTMLElement2, HTMLElement1])
-    constructors = new ProtoChain(Node).constructors
-    expect(constructors).toEqual([Node])
+    constructors = new ProtoChain(ReactiveNode).constructors
+    expect(constructors).toEqual([ReactiveNode])
     constructors = new ProtoChain(Node1).constructors
-    expect(constructors).toEqual([Node1, Node])
+    expect(constructors).toEqual([Node1, ReactiveNode])
     constructors = new ProtoChain(IoElement1).constructors
     expect(constructors).toEqual([IoElement1, IoElement])
   })
@@ -233,7 +233,7 @@ describe('ProtoChain', () => {
   it('Should bind auto-binding functions with `.init(node)` function', () => {
     const protoChain = new ProtoChain(MockNode2)
     const node = new MockNode2()
-    protoChain.init(node as unknown as Node)
+    protoChain.init(node as unknown as ReactiveNode)
     expect(node.function1.name).toBe('function1')
     expect(node.onFunction1.name).toBe('bound onFunction1')
     expect(node._onFunction1.name).toBe('bound _onFunction1')

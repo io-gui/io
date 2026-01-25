@@ -1,4 +1,4 @@
-import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
+import { ReactiveNode, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
 import { Panel, PanelProps } from './Panel.js'
 
 export type SplitOrientation = 'horizontal' | 'vertical'
@@ -29,7 +29,7 @@ function consolidateChildren(
 }
 
 @Register
-export class Split extends Node {
+export class Split extends ReactiveNode {
 
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare children: NodeArray<Split | Panel>
@@ -63,11 +63,12 @@ export class Split extends Node {
     this.dispatchMutation()
   }
   flexChanged() {
-    debug: {
-      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
-      if (!flexRegex.test(this.flex)) {
-        console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
+    const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
+    if (!flexRegex.test(this.flex)) {
+      debug: {
+        console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
       }
+      this.flex = '0 1 auto'
     }
   }
   toJSON(): SplitProps {

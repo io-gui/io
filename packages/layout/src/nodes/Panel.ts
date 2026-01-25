@@ -1,4 +1,4 @@
-import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
+import { ReactiveNode, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
 import { Tab, TabProps } from './Tab.js'
 
 export type PanelProps = {
@@ -22,7 +22,7 @@ function deduplicateTabs<T extends TabProps>(tabs: Array<T>, context: string): A
 }
 
 @Register
-export class Panel extends Node {
+export class Panel extends ReactiveNode {
 
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare tabs: NodeArray<Tab>
@@ -77,11 +77,12 @@ export class Panel extends Node {
     this.tabs.dispatchMutation()
   }
   flexChanged() {
-    debug: {
-      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
-      if (!flexRegex.test(this.flex)) {
-        console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
+    const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
+    if (!flexRegex.test(this.flex)) {
+      debug: {
+        console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
       }
+      this.flex = '0 1 auto'
     }
   }
   toJSON(): PanelProps {

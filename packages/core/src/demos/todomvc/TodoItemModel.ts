@@ -1,6 +1,6 @@
-import { Node, Register, ReactiveProperty } from '@io-gui/core'
+import { ReactiveNode, Register, ReactiveProperty } from '@io-gui/core'
 
-export class TodoItemModel extends Node {
+export class TodoItemModel extends ReactiveNode {
   @ReactiveProperty({type: String})
   declare title: string
 

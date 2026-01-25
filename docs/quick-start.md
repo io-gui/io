@@ -4,7 +4,7 @@ Io-Gui is a reactive web UI framework that provides a consistent reactive founda
 
 Io-Gui relies on interoperable reactive **nodes** and **elements** that respond to state changes and mutations. They provide a base for a reactive architecture that combines the best aspects of declarative component-based design, with reactive and composable development patterns.
 
-Io-Gui is incrementally adoptable. You can use its core classes `Node` and `IoElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
+Io-Gui is incrementally adoptable. You can use its core classes `ReactiveNode` and `IoElement` to create your own nodes and elements, build anything from a simple website to an app, or you can import and use one of its nodes and elements in your own architecture.
 
 You can learn more about nodes and elements in the [deep dive] guide. To quickly import Io-Gui and get started, continue reading this article.
 

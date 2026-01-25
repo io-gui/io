@@ -1,4 +1,4 @@
-import { Node } from '../nodes/Node.js'
+import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
 export type CallbackFunction = (arg?: any) => void
@@ -8,7 +8,7 @@ interface QueueOptions {
   frame: number
 }
 
-type QueueKey = { node: Node | IoElement | undefined; func: CallbackFunction }
+type QueueKey = { node: ReactiveNode | IoElement | undefined; func: CallbackFunction }
 
 let currentFrame = 0
 
@@ -17,14 +17,14 @@ const queue1: Map<QueueKey, QueueOptions> = new Map()
 let queue = queue0
 
 // Key registry - shared across both buffers
-const keysByNode: WeakMap<Node | IoElement, Map<CallbackFunction, QueueKey>> = new WeakMap()
+const keysByNode: WeakMap<ReactiveNode | IoElement, Map<CallbackFunction, QueueKey>> = new WeakMap()
 const keysByFunc: Map<CallbackFunction, QueueKey> = new Map()
 
 // Throttle: tracks when each node+func can next execute immediately
-const throttleNextFrame: WeakMap<Node | IoElement, Map<CallbackFunction, number>> = new WeakMap()
+const throttleNextFrame: WeakMap<ReactiveNode | IoElement, Map<CallbackFunction, number>> = new WeakMap()
 const throttleNextFrameGlobal: Map<CallbackFunction, number> = new Map()
 
-function getKey(func: CallbackFunction, node?: Node | IoElement): QueueKey {
+function getKey(func: CallbackFunction, node?: ReactiveNode | IoElement): QueueKey {
   if (node) {
     let funcMap = keysByNode.get(node)
     if (!funcMap) {
@@ -64,7 +64,7 @@ export async function nextQueue(): Promise<void> {
  * - Queues trailing call with latest argument
  * - Respects delay between executions
  */
-export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
+export function throttle(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay = 1) {
   if (node?._disposed) return
 
   const key = getKey(func, node)
@@ -107,7 +107,7 @@ export function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElem
   }
 }
 
-export function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay = 1) {
+export function debounce(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay = 1) {
   const key = getKey(func, node)
   queue.set(key, { arg, frame: currentFrame + delay })
 }

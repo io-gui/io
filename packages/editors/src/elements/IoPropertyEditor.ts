@@ -1,4 +1,4 @@
-import { IoElement, ReactiveProperty, Register, IoElementProps, Node, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
+import { IoElement, ReactiveProperty, Register, IoElementProps, ReactiveNode, span, div, HTML_ELEMENTS, VDOMElement } from '@io-gui/core'
 import { IoField } from '@io-gui/inputs'
 import { PropertyConfig, PropertyConfigRecord, getEditorConfig } from '../utils/EditorConfig.js'
 import { PropertyGroups, getEditorGroups, PropertyGroupsRecord, getAllPropertyNames } from '../utils/EditorGroups.js'
@@ -117,7 +117,7 @@ export class IoPropertyEditor extends IoElement {
     const id = (event.target as HTMLElement).id
     if (id !== undefined) {
       (this.value as Record<string, any>)[id] = event.detail.value
-      if (!(this.value as Node)._isNode) {
+      if (!(this.value as unknown as ReactiveNode)._isNode) {
         this.dispatchMutation(this.value)
       }
     } else {

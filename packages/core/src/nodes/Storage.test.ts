@@ -132,7 +132,7 @@ describe('Storage.test.ts', () => {
 
     if (!permited || permited === 'false') localStorage.setItem('Storage:user-permitted', 'false')
   })
-  it('Storage should return binding to StorageNode Node', () => {
+  it('Storage should return binding to StorageNode', () => {
     const storage = Storage({key: 'test', value: ''})
     storage.value = 'foo'
     expect(storage).toBeInstanceOf(Binding)

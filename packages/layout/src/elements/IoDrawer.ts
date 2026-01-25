@@ -3,7 +3,7 @@ import { ioIcon } from '@io-gui/icons'
 import { MenuOption } from '@io-gui/menus'
 import { Split } from '../nodes/Split.js'
 import { Panel } from '../nodes/Panel.js'
-import { ioSplit, parseFlexBasis } from './IoSplit.js'
+import { IoSplit, ioSplit, parseFlexBasis } from './IoSplit.js'
 import { ioPanel } from './IoPanel.js'
 
 export type DrawerDirection = 'leading' | 'trailing'
@@ -11,6 +11,7 @@ export type DrawerDirection = 'leading' | 'trailing'
 export type IoDrawerProps = IoElementProps & {
   orientation: 'horizontal' | 'vertical'
   direction: DrawerDirection
+  parent: IoSplit
   child: Split | Panel | null
   elements: VDOMElement[]
   addMenuOption?: MenuOption
@@ -123,6 +124,9 @@ export class IoDrawer extends IoElement {
   declare expanded: boolean
 
   @ReactiveProperty({type: Object})
+  declare parent: IoSplit
+
+  @ReactiveProperty({type: Object})
   declare child: Split | Panel
 
   @ReactiveProperty(Array)
@@ -145,8 +149,19 @@ export class IoDrawer extends IoElement {
     this.dispatch('io-drawer-expanded-changed', {element:this}, true)
   }
 
+  childMutated() {
+    this.changed()
+  }
+
   changed() {
-    const drawerSize = parseFlexBasis(this.child.flex)
+    let availableSize = Infinity
+    const parent = this.parent as IoSplit
+    if (parent) {
+      const parentRect = parent.getBoundingClientRect()
+      availableSize = this.orientation === 'horizontal' ? parentRect.width : parentRect.height
+    }
+
+    const drawerSize = Math.min(parseFlexBasis(this.child.flex), availableSize - ThemeSingleton.lineHeight * 2)
     const contentSize = drawerSize + ThemeSingleton.lineHeight
     const style = this.orientation === 'horizontal' ? {width: `${drawerSize}px`} : {height: `${drawerSize}px`} as Record<string, string>
 

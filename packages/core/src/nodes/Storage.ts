@@ -1,7 +1,7 @@
 import { ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { Binding } from '../core/Binding.js'
-import { Node, NodeProps, AnyConstructor } from '../nodes/Node.js'
+import { ReactiveNode, ReactiveNodeProps, AnyConstructor } from '../nodes/ReactiveNode.js'
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>
@@ -97,7 +97,7 @@ const nodes: StorageNodes = {
 
 let hashValues: Record<string, any> = {}
 
-export type StorageProps = NodeProps & {
+export type StorageProps = ReactiveNodeProps & {
   key: string
   value: any
   default?: any
@@ -105,7 +105,7 @@ export type StorageProps = NodeProps & {
 }
 
 @Register
-export class StorageNode extends Node {
+export class StorageNode extends ReactiveNode {
 
   @ReactiveProperty({value: '', type: String})
   declare key: string
