@@ -1,10 +1,10 @@
 import { Binding } from './Binding.js'
-import { AnyConstructor, Node } from '../nodes/Node.js'
+import { AnyConstructor, ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 import { NodeArray } from '../core/NodeArray.js'
 
 /**
- * Configuration for a property of an Node class.
+ * Configuration for a property of a ReactiveNode class.
  * @typedef {Object} ReactivePropertyDefinition
  * @property {*} [value] The property's value. Can be any type unless `type` is specified.
  * @property {AnyConstructor} [type] Constructor function defining the property's type.
@@ -115,7 +115,7 @@ export class ReactiveProtoProperty {
   }
 }
 
-function decodeInitArgument(item: any, node: Node | IoElement) {
+function decodeInitArgument(item: any, node: ReactiveNode | IoElement) {
   if (item === 'this') {
     return node
   } else if (typeof item === 'string' && item.startsWith('this.')) {
@@ -138,18 +138,18 @@ function isIoValue(value: any): boolean {
 /**
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
  * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
  * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
  */
 export class Observer {
-  declare private readonly node: Node | IoElement
+  declare private readonly node: ReactiveNode | IoElement
   declare private _hasSelfMutationListener: boolean
   declare private _hasWindowMutationListener: boolean
   type: ObservationType = 'none'
   observing = false
 
-  constructor(node: Node | IoElement) {
+  constructor(node: ReactiveNode | IoElement) {
     Object.defineProperty(this, 'node', {enumerable: false, configurable: false, writable: false, value: node})
     Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
     Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
@@ -226,10 +226,10 @@ export class ReactivePropertyInstance {
   readonly observer: Observer
   /**
    * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
-   * @param node owner Node instance
+   * @param node owner ReactiveNode instance
    * @param propDef ReactiveProtoProperty object
    */
-  constructor(node: Node | IoElement, propDef: ReactiveProtoProperty) {
+  constructor(node: ReactiveNode | IoElement, propDef: ReactiveProtoProperty) {
     debug: {
       Object.keys(propDef).forEach(key => {
         if (['value', 'type', 'reflect', 'init', 'binding'].indexOf(key) === -1) {

@@ -1,4 +1,4 @@
-import { Node, ReactiveProperty, Register } from '@io-gui/core'
+import { ReactiveNode, ReactiveProperty, Register } from '@io-gui/core'
 
 export type TabProps = {
   id: string
@@ -8,7 +8,7 @@ export type TabProps = {
 }
 
 @Register
-export class Tab extends Node {
+export class Tab extends ReactiveNode {
 
   @ReactiveProperty({type: String, value: ''})
   declare id: string

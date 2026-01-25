@@ -1,5 +1,5 @@
 import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js'
-import { Node, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/Node.js'
+import { ReactiveNode, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
 export const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>> = new WeakMap()
@@ -13,13 +13,13 @@ export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropert
  *
  * @example
  * \@Register
- * class MyClass extends Node {
+ * class MyClass extends ReactiveNode {
  *   \@Property('default text')
  *   declare title: string;
  * }
  */
 export function Property(initialValue: any = undefined) {
-  return (target: Node | IoElement, propertyName: string) => {
+  return (target: ReactiveNode | IoElement, propertyName: string) => {
     const constructor = target.constructor as AnyConstructor
     const properties = propertyDecorators.get(constructor) || {}
     propertyDecorators.set(constructor, properties)
@@ -35,20 +35,20 @@ export function Property(initialValue: any = undefined) {
  *
  * @example
  * \@Register
- * class MyClass extends Node {
+ * class MyClass extends ReactiveNode {
  *   \@ReactiveProperty({type: String, value: 'default text', reflect: true})
  *   declare title: string;
  * }
  *
  * @example
  * \@Register
- * class MyClass extends Node {
+ * class MyClass extends ReactiveNode {
  *   \@ReactiveProperty({type: Array, init: [0, 0]})
  *   declare size: [number, number];
  * }
  */
 export function ReactiveProperty(defLoose: ReactivePropertyDefinitionLoose = {}) {
-  return (target: Node | IoElement, propertyName: string) => {
+  return (target: ReactiveNode | IoElement, propertyName: string) => {
     const constructor = target.constructor as AnyConstructor
     const properties = reactivePropertyDecorators.get(constructor) || {}
     reactivePropertyDecorators.set(constructor, properties)

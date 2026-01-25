@@ -4,11 +4,11 @@ A lightweight (~22KB gzipped) reactive framework for nodes and custom elements.
 
 ## Core Classes
 
-### Node
+### ReactiveNode
 Reactive `Object` with all Io-Gui features. Use for data models, state containers, and business logic.
 
 ### IoElement
-Reactive `HTMLElement` with Node features plus virtual DOM rendering and CSS style management.
+Reactive `HTMLElement` with ReactiveNode features plus virtual DOM rendering and CSS style management.
 
 Both share identical APIs: reactive properties, bindings, event dispatch, change handlers, and lifecycle methods.
 
@@ -20,7 +20,7 @@ Both share identical APIs: reactive properties, bindings, event dispatch, change
 
 ```typescript
 @Register
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   @ReactiveProperty({type: String, value: ''})
   declare label: string
 }
@@ -52,7 +52,7 @@ static get ReactiveProperties() {
 | Option | Description |
 |--------|-------------|
 | `value` | Initial value |
-| `type` | Constructor (String, Number, Boolean, Array, Object, Node, etc.) |
+| `type` | Constructor (String, Number, Boolean, Array, Object, ReactiveNode, etc.) |
 | `binding` | Binding object for two-way sync |
 | `reflect` | If `true`, syncs to HTML attribute (IoElement only) |
 | `init` | Constructor arguments. Use `null` for empty init, `'this'` for NodeArray |
@@ -129,19 +129,19 @@ targetNode.prop = binding  // Target syncs to source
 
 ## Object Mutation Observation
 
-### Node-typed Properties
+### ReactiveNode-typed Properties
 Automatically observed. Mutations trigger `[propName]Mutated()` handlers.
 
 ```typescript
-@ReactiveProperty({type: MyNode, init: null})
-declare data: MyNode
+@ReactiveProperty({type: MyReactiveNode, init: null})
+declare data: MyReactiveNode
 
 dataMutated(event: CustomEvent) {
   // Called when data or its descendants mutate
 }
 ```
 
-### Non-Node Objects
+### Non-ReactiveNode Objects
 Observed but require manual mutation dispatch:
 
 ```typescript
@@ -150,11 +150,11 @@ this.dispatchMutation(this.plainObject)
 ```
 
 ### NodeArray
-A Proxy-wrapped Array that auto-dispatches mutations on all mutating operations (`push`, `splice`, etc.). Items must be `Node` instances.
+A Proxy-wrapped Array that auto-dispatches mutations on all mutating operations (`push`, `splice`, etc.). Items must be `ReactiveNode` instances.
 
 ```typescript
 @ReactiveProperty({type: NodeArray, init: 'this'})
-declare items: NodeArray<MyNode>
+declare items: NodeArray<MyReactiveNode>
 
 itemsMutated() {
   // Called on any array modification
@@ -196,8 +196,8 @@ const element = new MyElement({
 this.dispatch('my-event', {data: 42}, true) // type, detail, bubbles
 ```
 
-### Event Propagation for Nodes
-Non-DOM Nodes bubble events through `_parents` array. Add/remove parents with `addParent()`/`removeParent()`.
+### Event Propagation for ReactiveNodes
+Non-DOM ReactiveNodes bubble events through `_parents` array. Add/remove parents with `addParent()`/`removeParent()`.
 
 ---
 
@@ -365,7 +365,7 @@ debug: {
 
 1. **Forgetting `@Register`**: Classes must be registered before use
 2. **Arrow function handlers**: Won't auto-bind; use regular methods for `on*` handlers
-3. **Direct object mutation**: Must call `dispatchMutation()` for non-Node objects
+3. **Direct object mutation**: Must call `dispatchMutation()` for non-ReactiveNode objects
 4. **NodeArray init**: Must use `init: 'this'` to get owner reference
 5. **Disposed nodes**: Operations on disposed nodes are no-ops
 6. **Binding loops**: Circular bindings are prevented; same-binding assignment exits early

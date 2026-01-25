@@ -1,4 +1,4 @@
-import { Node, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
+import { ReactiveNode, NodeArray, ReactiveProperty, Register } from '@io-gui/core'
 import { Panel, PanelProps } from './Panel.js'
 
 export type SplitOrientation = 'horizontal' | 'vertical'
@@ -29,7 +29,7 @@ function consolidateChildren(
 }
 
 @Register
-export class Split extends Node {
+export class Split extends ReactiveNode {
 
   @ReactiveProperty({type: NodeArray, init: 'this'})
   declare children: NodeArray<Split | Panel>

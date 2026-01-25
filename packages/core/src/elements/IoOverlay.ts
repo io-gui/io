@@ -1,6 +1,6 @@
 import { ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
-import { ListenerDefinitions } from '../nodes/Node.js'
+import { ListenerDefinitions } from '../nodes/ReactiveNode.js'
 import { IoElement, IoElementProps } from './IoElement.js'
 
 let focusRestoreTarget: Element | null = null

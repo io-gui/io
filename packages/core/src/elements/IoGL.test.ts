@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from '@io-gui/core'
+import { IoGl, ReactiveNode, ThemeSingleton, ReactiveProperty, Register } from '@io-gui/core'
 
 @Register
 class IoGlTest extends IoGl {
@@ -62,7 +62,7 @@ describe('IoGL', () => {
       binding: undefined,
       init: undefined,
       reflect: false,
-      type: Node,
+      type: ReactiveNode,
       value: ThemeSingleton,
       observer: {type: 'io', observing: true},
     })

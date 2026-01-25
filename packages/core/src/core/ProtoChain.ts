@@ -1,6 +1,6 @@
 import { ReactiveProtoProperty } from './ReactiveProperty.js'
 import { ListenerDefinition, hardenListenerDefinition } from './EventDispatcher.js'
-import { Node, NodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions, AnyConstructor } from '../nodes/Node.js'
+import { ReactiveNode, ReactiveNodeConstructor, ReactivePropertyDefinitions, ListenerDefinitions, AnyConstructor } from '../nodes/ReactiveNode.js'
 import { reactivePropertyDecorators } from '../decorators/Property.js'
 import { propertyDecorators } from '../decorators/Property.js'
 import { styleDecorators } from '../decorators/Style.js'
@@ -8,7 +8,7 @@ import { IoElement } from '../elements/IoElement.js'
 
 // TODO: Improve types!
 
-type ProtoConstructors = Array<NodeConstructor>
+type ProtoConstructors = Array<ReactiveNodeConstructor>
 type ProtoHandlers = string[]
 type ReactiveProtoProperties = { [property: string]: ReactiveProtoProperty }
 type ProtoListeners = { [property: string]: ListenerDefinition[] }
@@ -51,9 +51,9 @@ export class ProtoChain {
   handlers: ProtoHandlers = []
   /**
    * Creates an instance of `ProtoChain` for specified class constructor.
-   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+   * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
    */
-  constructor(ioNodeConstructor: NodeConstructor) {
+  constructor(ioNodeConstructor: ReactiveNodeConstructor) {
     let proto = ioNodeConstructor.prototype
     // Iterate through the prototype chain to aggregate constructors.
     // Terminates at `HTMLElement`, `Object` or `Array`.
@@ -78,7 +78,7 @@ export class ProtoChain {
       this.addListeners(ioNodeConstructor.Listeners)
       this.addStyle(ioNodeConstructor.Style)
       this.addStyleFromDecorators(ioNodeConstructor)
-      this.addHandlers(ioNodeConstructor.prototype as Node | IoElement)
+      this.addHandlers(ioNodeConstructor.prototype as ReactiveNode | IoElement)
     }
     debug: this.validateReactiveProperties()
 
@@ -92,9 +92,9 @@ export class ProtoChain {
   /**
    * Auto-binds event handler methods (starting with 'on[A-Z]' or '_on[A-Z]') to preserve their 'this' context.
    * NOTE: Defining handlers as arrow functions will not work because they are not defined before constructor has finished.
-   * @param {Node | IoElement} node - Target node instance
+   * @param {ReactiveNode | IoElement} node - Target node instance
    */
-  init(node: Node | IoElement) {
+  init(node: ReactiveNode | IoElement) {
     if (this.constructors[0] !== node.constructor) {
       throw new Error(`${node.constructor.name} not registered! Use @Register decorator before using ${node.constructor.name} class.`)
     }
@@ -108,9 +108,9 @@ export class ProtoChain {
   }
   /**
    * Adds properties defined in decorators to the properties array.
-   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+   * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
    */
-  addPropertiesFromDecorators(ioNodeConstructor: NodeConstructor) {
+  addPropertiesFromDecorators(ioNodeConstructor: ReactiveNodeConstructor) {
     const props = propertyDecorators.get(ioNodeConstructor as AnyConstructor)
     if (props) for (const name in props) {
       this.properties[name] = props[name]
@@ -128,9 +128,9 @@ export class ProtoChain {
   }
   /**
    * Adds reactive properties defined in decorators to the properties array.
-   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+   * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
    */
-  addReactivePropertiesFromDecorators(ioNodeConstructor: NodeConstructor) {
+  addReactivePropertiesFromDecorators(ioNodeConstructor: ReactiveNodeConstructor) {
     const props = reactivePropertyDecorators.get(ioNodeConstructor as AnyConstructor)
     if (props) for (const name in props) {
       const protoProperty = new ReactiveProtoProperty(props[name])
@@ -191,9 +191,9 @@ export class ProtoChain {
   };
   /**
    * Adds style defined in decorators to the style string.
-   * @param {NodeConstructor} ioNodeConstructor - Owner `Node` constructor.
+   * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
    */
-  addStyleFromDecorators(ioNodeConstructor: NodeConstructor) {
+  addStyleFromDecorators(ioNodeConstructor: ReactiveNodeConstructor) {
     const style = styleDecorators.get(ioNodeConstructor as AnyConstructor)
     if (style) {
       this.style = this.style ? this.style + '\n' + style : style
@@ -201,9 +201,9 @@ export class ProtoChain {
   }
   /**
    * Adds function names that start with "on[A-Z]" or "_on[A-Z]" to the handlers array.
-   * @param {Node} proto - Prototype object to search for handlers
+   * @param {ReactiveNode} proto - Prototype object to search for handlers
    */
-  addHandlers(proto: Node | IoElement) {
+  addHandlers(proto: ReactiveNode | IoElement) {
     const names = Object.getOwnPropertyNames(proto)
     for (let j = 0; j < names.length; j++) {
       const fn = names[j]

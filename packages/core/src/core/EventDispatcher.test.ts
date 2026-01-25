@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
-import { Node, Register, ListenerDefinitions, EventDispatcher } from '@io-gui/core'
+import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher } from '@io-gui/core'
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`)
 }
 
 @Register
-class MockNode1 extends Node {
+class MockNode1 extends ReactiveNode {
   eventStack: string[] = []
   static get Listeners(): ListenerDefinitions {
     return {

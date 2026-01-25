@@ -1,15 +1,15 @@
-import { Node } from '../nodes/Node.js'
+import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
 // TODO: test!!!
-export class NodeArray<N extends Node> extends Array<N> {
+export class NodeArray<N extends ReactiveNode> extends Array<N> {
   declare private proxy: typeof Proxy
   private _isInternalOperation = false
-  private _observers = new Set<Node | IoElement>()
+  private _observers = new Set<ReactiveNode | IoElement>()
 
   static get [Symbol.species]() { return Array }
 
-  constructor(public node: Node | IoElement, ...args: any[]) {
+  constructor(public node: ReactiveNode | IoElement, ...args: any[]) {
     super(...args)
     // TODO: Avoid creating empty NodeArrays in models!
     // TODO: Test thoroughly! Check initializations with items!
@@ -20,7 +20,7 @@ export class NodeArray<N extends Node> extends Array<N> {
     // Owner is the primary observer
     this._observers.add(node)
 
-    debug: if (!(node as Node)._isNode && !(node as IoElement)._isIoElement) {
+    debug: if (!(node as ReactiveNode)._isNode && !(node as IoElement)._isIoElement) {
       console.error('NodeArray constructor called with non-node!')
     }
 
@@ -47,7 +47,7 @@ export class NodeArray<N extends Node> extends Array<N> {
                 const item = target[i]
                 if (item._isNode) {
                   item.removeEventListener('io-object-mutation', self.itemMutated)
-                  item.removeParent(self.node as Node)
+                  item.removeParent(self.node as ReactiveNode)
                 }
               }
             } else if (newLength > oldLength) {
@@ -65,12 +65,12 @@ export class NodeArray<N extends Node> extends Array<N> {
           const oldValue = target[index]
           if (oldValue !== undefined && oldValue._isNode && !self._isInternalOperation) {
             oldValue.removeEventListener('io-object-mutation', self.itemMutated)
-            oldValue.removeParent(self.node as Node)
+            oldValue.removeParent(self.node as ReactiveNode)
           }
           target[property as any] = value
           if (value._isNode && !self._isInternalOperation) {
             value.addEventListener('io-object-mutation', self.itemMutated)
-            value.addParent(self.node)
+            value.addParent(self.node as ReactiveNode)
           }
           if (!self._isInternalOperation) self.dispatchMutation()
           return true
@@ -97,7 +97,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const item = this[i]
         if (item._isNode) {
           item.removeEventListener('io-object-mutation', this.itemMutated)
-          item.removeParent(this.node as Node)
+          item.removeParent(this.node as ReactiveNode)
         }
       }
       const result = super.splice(start, deleteCount, ...items)
@@ -105,7 +105,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const item = this[i]
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated)
-          item.addParent(this.node as Node)
+          item.addParent(this.node as ReactiveNode)
         }
       }
       if (deleteCount || items.length) this.dispatchMutation()
@@ -118,7 +118,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       for (const item of items) {
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated)
-          item.addParent(this.node as Node)
+          item.addParent(this.node as ReactiveNode)
         }
       }
       if (items.length) this.dispatchMutation()
@@ -131,7 +131,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       for (const item of items) {
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated)
-          item.addParent(this.node as Node)
+          item.addParent(this.node as ReactiveNode)
         }
       }
       if (items.length) this.dispatchMutation()
@@ -143,7 +143,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       const item = super.pop()
       if (item !== undefined && item._isNode) {
         item.removeEventListener('io-object-mutation', this.itemMutated)
-        item.removeParent(this.node as Node)
+        item.removeParent(this.node as ReactiveNode)
       }
       if (item !== undefined) this.dispatchMutation()
       return item
@@ -154,7 +154,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       const item = super.shift()
       if (item !== undefined && item._isNode) {
         item.removeEventListener('io-object-mutation', this.itemMutated)
-        item.removeParent(this.node as Node)
+        item.removeParent(this.node as ReactiveNode)
       }
       if (item !== undefined) this.dispatchMutation()
       return item
@@ -191,7 +191,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const oldItem = this[i]
         if (oldItem !== undefined && oldItem._isNode) {
           oldItem.removeEventListener('io-object-mutation', this.itemMutated)
-          oldItem.removeParent(this.node as Node)
+          oldItem.removeParent(this.node as ReactiveNode)
         }
       }
 
@@ -200,7 +200,7 @@ export class NodeArray<N extends Node> extends Array<N> {
       for (let i = actualStart; i < actualEnd; i++) {
         if (value._isNode) {
           value.addEventListener('io-object-mutation', this.itemMutated)
-          value.addParent(this.node as Node)
+          value.addParent(this.node as ReactiveNode)
         }
       }
 
@@ -232,7 +232,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const oldItem = this[i]
         if (oldItem !== undefined && oldItem._isNode) {
           oldItem.removeEventListener('io-object-mutation', this.itemMutated)
-          oldItem.removeParent(this.node as Node)
+          oldItem.removeParent(this.node as ReactiveNode)
         }
       }
 
@@ -242,7 +242,7 @@ export class NodeArray<N extends Node> extends Array<N> {
         const item = this[i]
         if (item._isNode) {
           item.addEventListener('io-object-mutation', this.itemMutated)
-          item.addParent(this.node as Node)
+          item.addParent(this.node as ReactiveNode)
         }
       }
 
@@ -250,10 +250,10 @@ export class NodeArray<N extends Node> extends Array<N> {
       return this
     })
   }
-  addObserver(node: Node | IoElement) {
+  addObserver(node: ReactiveNode | IoElement) {
     this._observers.add(node)
   }
-  removeObserver(node: Node | IoElement) {
+  removeObserver(node: ReactiveNode | IoElement) {
     this._observers.delete(node)
   }
   itemMutated(event: CustomEvent) {

@@ -2,7 +2,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
-import { Node, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js'
+import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
@@ -166,7 +166,7 @@ export class IoElement extends HTMLElement {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event)
   };
-  dispatchMutation(object: object | Node = this, properties: string[] = []) {
+  dispatchMutation(object: object | ReactiveNode = this, properties: string[] = []) {
     dispatchMutation(this, object, properties)
   }
   bind(name: string): Binding {
@@ -183,7 +183,7 @@ export class IoElement extends HTMLElement {
     if (this._disposed) return
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
-  dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
+  dispatch(type: string, detail: any = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
     if (this._disposed) return
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }

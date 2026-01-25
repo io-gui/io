@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Node } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, ReactiveNode } from '@io-gui/core'
 import {ioNumber} from '@io-gui/inputs'
 import {ioSliderRange} from './IoSliderRange.js'
 
@@ -57,13 +57,13 @@ export class IoNumberSliderRange extends IoElement {
     const item = event.composedPath()[0]
     if (item === this.$.number0) this.value[0] = event.detail.value
     if (item === this.$.number1) this.value[1] = event.detail.value
-    if (!(this.value as unknown as Node)._isNode) {
+    if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
   }
   _onSliderSet(event: CustomEvent) {
     this.value = event.detail.value
-    if (!(this.value as unknown as Node)._isNode) {
+    if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
   }

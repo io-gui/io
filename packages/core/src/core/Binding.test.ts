@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, Node, Register, ReactiveProperty } from '@io-gui/core'
+import { Binding, ReactiveNode, Register, ReactiveProperty } from '@io-gui/core'
 
 @Register
-class TestNode extends Node {
+class TestNode extends ReactiveNode {
   @ReactiveProperty({type: Number, value: 0})
   declare prop1: number
   @ReactiveProperty({type: Number, value: 0})
@@ -10,7 +10,7 @@ class TestNode extends Node {
 }
 
 @Register
-class TestNodeString extends Node {
+class TestNodeString extends ReactiveNode {
   @ReactiveProperty({type: String, value: ''})
   declare strProp: string
 }

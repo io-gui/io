@@ -1,4 +1,4 @@
-import { AnyConstructor, Node as IoNode, IoElement } from '@io-gui/core'
+import { AnyConstructor, ReactiveNode, IoElement } from '@io-gui/core'
 
 export const SKIPPED_PROPERTIES = [
   '$',
@@ -37,7 +37,7 @@ export function getAllPropertyNames(obj: object): string[] {
         allProps.push(prop)
       }
     })
-    if (curr.constructor === Node) break
+    if (curr.constructor === window.Node) break
     //@ts-ignore no-cond-assign
   } while ((curr = Object.getPrototypeOf(curr)))
   return allProps
@@ -91,7 +91,7 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
     ],
     Hidden: [],
   }],
-  [IoNode, {
+  [ReactiveNode, {
     Hidden: [
       'reactivity',
       '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',

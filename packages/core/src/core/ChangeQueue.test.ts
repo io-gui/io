@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { ChangeQueue, Change, Node, Register } from '@io-gui/core'
+import { ChangeQueue, Change, ReactiveNode, Register } from '@io-gui/core'
 
 @Register
-class MockNode extends Node {
+class MockNode extends ReactiveNode {
   eventStack: string[] = []
   changeStack: string[] = []
   prop1Changed(change: Change) {
@@ -24,7 +24,7 @@ class MockNode extends Node {
 }
 
 @Register
-class MockNodeWithThrowingHandler extends Node {
+class MockNodeWithThrowingHandler extends ReactiveNode {
   changeStack: string[] = []
   prop1Changed() {
     throw new Error('Intentional error in prop1Changed')
@@ -39,7 +39,7 @@ class MockNodeWithThrowingHandler extends Node {
 }
 
 @Register
-class MockNodeWithThrowingChanged extends Node {
+class MockNodeWithThrowingChanged extends ReactiveNode {
   changeStack: string[] = []
   prop1Changed(change: Change) {
     this.changeStack.push(`prop1Changed ${change.property} ${change.value} ${change.oldValue}`)
@@ -51,7 +51,7 @@ class MockNodeWithThrowingChanged extends Node {
 }
 
 @Register
-class MockNodeWithCascadingChanges extends Node {
+class MockNodeWithCascadingChanges extends ReactiveNode {
   changeStack: string[] = []
   prop1Changed(change: Change) {
     this.changeStack.push(`prop1Changed ${change.value}`)

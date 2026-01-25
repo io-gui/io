@@ -1,4 +1,4 @@
-import { Node, Register, ReactiveProperty, WithBinding, NodeArray } from '@io-gui/core'
+import { ReactiveNode, Register, ReactiveProperty, WithBinding, NodeArray } from '@io-gui/core'
 
 export type MenuOptionMode = 'select' | 'toggle' | 'none'
 
@@ -19,7 +19,7 @@ export type MenuOptionProps = {
 }
 
 @Register
-export class MenuOption extends Node {
+export class MenuOption extends ReactiveNode {
 
   @ReactiveProperty({value: '', type: String})
   declare id: string
