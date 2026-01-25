@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { Binding, Node, Register, ReactiveProperty } from '@io-gui/core';
-let TestNode = class TestNode extends Node {
+import { Binding, ReactiveNode, Register, ReactiveProperty } from '@io-gui/core';
+let TestNode = class TestNode extends ReactiveNode {
 };
 __decorate([
     ReactiveProperty({ type: Number, value: 0 })
@@ -17,7 +17,7 @@ __decorate([
 TestNode = __decorate([
     Register
 ], TestNode);
-let TestNodeString = class TestNodeString extends Node {
+let TestNodeString = class TestNodeString extends ReactiveNode {
 };
 __decorate([
     ReactiveProperty({ type: String, value: '' })

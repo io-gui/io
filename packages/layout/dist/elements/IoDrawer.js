@@ -117,8 +117,17 @@ let IoDrawer = class IoDrawer extends IoElement {
     expandedChanged() {
         this.dispatch('io-drawer-expanded-changed', { element: this }, true);
     }
+    childMutated() {
+        this.changed();
+    }
     changed() {
-        const drawerSize = parseFlexBasis(this.child.flex);
+        let availableSize = Infinity;
+        const parent = this.parent;
+        if (parent) {
+            const parentRect = parent.getBoundingClientRect();
+            availableSize = this.orientation === 'horizontal' ? parentRect.width : parentRect.height;
+        }
+        const drawerSize = Math.min(parseFlexBasis(this.child.flex), availableSize - ThemeSingleton.lineHeight * 2);
         const contentSize = drawerSize + ThemeSingleton.lineHeight;
         const style = this.orientation === 'horizontal' ? { width: `${drawerSize}px` } : { height: `${drawerSize}px` };
         let childVDOM = null;
@@ -169,6 +178,9 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Boolean, value: false, reflect: true })
 ], IoDrawer.prototype, "expanded", void 0);
+__decorate([
+    ReactiveProperty({ type: Object })
+], IoDrawer.prototype, "parent", void 0);
 __decorate([
     ReactiveProperty({ type: Object })
 ], IoDrawer.prototype, "child", void 0);

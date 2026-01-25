@@ -35,13 +35,13 @@ export class Binding {
     /**
      * Creates a binding object for specified source `node` and `property`.
      * It attaches a `[propName]-changed` listener to the source node.
-     * @param {Node | IoElement} node - Source node
+     * @param {ReactiveNode | IoElement} node - Source node
      * @param {string} property - Name of the sourceproperty
      */
     constructor(node, property) {
         debug: {
             if (!node._isNode && !node._isIoElement)
-                console.warn('Source node is not a Node or IoElement instance!');
+                console.warn('Source node is not a ReactiveNode or IoElement instance!');
             if (!node._reactiveProperties.has(property))
                 console.warn(`Source node does not have a reactive property "${property}"!`);
         }
@@ -61,14 +61,14 @@ export class Binding {
      * Adds a target node and property.
      * Sets itself as the binding reference on the target `ReactivePropertyInstance`.
      * Adds a `[propName]-changed` listener to the target node.
-     * @param {Node | IoElement} target - Target node
+     * @param {ReactiveNode | IoElement} target - Target node
      * @param {string} property - Target property
      */
     addTarget(target, property) {
         const targetProps = this.getTargetProperties(target);
         debug: {
             if (!target._isNode && !target._isIoElement)
-                console.warn('Target node is not a Node or IoElement instance!');
+                console.warn('Target node is not a ReactiveNode or IoElement instance!');
             if (!target._reactiveProperties.has(property))
                 console.warn(`Target node does not have a reactive property "${property}"!`);
             if (targetProps.indexOf(property) !== -1)
@@ -106,7 +106,7 @@ export class Binding {
      * If `property` is not specified, it removes all target properties.
      * Removes binding reference from the target `ReactivePropertyInstance`.
      * Removes `[propName]-changed` listener from the target node.
-     * @param {Node | IoElement} target - Target node
+     * @param {ReactiveNode | IoElement} target - Target node
      * @param {string} property - Target property
      */
     removeTarget(target, property) {
@@ -179,7 +179,7 @@ export class Binding {
     }
     /**
      * Returns a list of target properties for specified target node.
-     * @param {Node | IoElement} target - Target node.
+     * @param {ReactiveNode | IoElement} target - Target node.
      * @return {Properties} list of target property names.
      */
     getTargetProperties(target) {

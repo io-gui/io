@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from '@io-gui/core'
+import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, ReactiveNode, Register, reactivePropertyDecorators } from '@io-gui/core'
 
 class Object1 {
   constructor(init?: any) {
@@ -11,7 +11,7 @@ class Object1 {
 }
 
 @Register
-class TestNode extends Node {
+class TestNode extends ReactiveNode {
   @ReactiveProperty('default')
   declare label: string
   constructor(args?: any) {super(args)}
@@ -479,7 +479,7 @@ describe('ReactiveProperty', () => {
     })
   })
   it('Should register property definitions from decorators.', () => {
-    class TestClass extends Node {
+    class TestClass extends ReactiveNode {
       @ReactiveProperty('value1')
       declare prop1: string
       @ReactiveProperty({value: 'value2', type: String})

@@ -1,6 +1,6 @@
-import { Node } from '@io-gui/core';
+import { ReactiveNode } from '@io-gui/core';
 import { TodoItemModel } from './TodoItemModel.js';
-export declare class TodoListModel extends Node {
+export declare class TodoListModel extends ReactiveNode {
     items: TodoItemModel[];
     static get Listeners(): {
         'delete-item': string;

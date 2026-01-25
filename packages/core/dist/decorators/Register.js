@@ -1,11 +1,11 @@
 /**
- * Registers a new Node or IoElement subclass. This needs to be called for each new class that extends Node or IoElement.
- * @param {Node | IoElement} ioNodeConstructor - Node class to register.
+ * Registers a new ReactiveNode or IoElement subclass. This needs to be called for each new class that extends ReactiveNode or IoElement.
+ * @param {ReactiveNode | IoElement} ioNodeConstructor - ReactiveNode class to register.
  *
  * @example
- * // Creating a new Node subclass.
+ * // Creating a new ReactiveNode subclass.
  * \@Register
- * class MyNode extends Node {
+ * class MyNode extends ReactiveNode {
  * }
  *
  * @example
@@ -16,7 +16,7 @@
  *
  * @example
  * //Javascript without decorator syntax.
- * class MyNode extends Node {
+ * class MyNode extends ReactiveNode {
  * }
  * Register(MyNode);
 */

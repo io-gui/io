@@ -9,7 +9,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, disposeChildren, toVDOM } from '../vdom/VDOM.js';
-import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/Node.js';
+import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/ReactiveNode.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
 import { EventDispatcher } from '../core/EventDispatcher.js';
@@ -81,6 +81,7 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                 }
                 else if (name === 'style') {
                     for (const s in props[name]) {
+                        // TODO: Consider supporting importance
                         this.style[s] = props[name][s];
                     }
                 }

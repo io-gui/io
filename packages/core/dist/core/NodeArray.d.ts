@@ -1,12 +1,12 @@
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-export declare class NodeArray<N extends Node> extends Array<N> {
-    node: Node | IoElement;
+export declare class NodeArray<N extends ReactiveNode> extends Array<N> {
+    node: ReactiveNode | IoElement;
     private proxy;
     private _isInternalOperation;
     private _observers;
     static get [Symbol.species](): ArrayConstructor;
-    constructor(node: Node | IoElement, ...args: any[]);
+    constructor(node: ReactiveNode | IoElement, ...args: any[]);
     withInternalOperation<T>(operation: () => T): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];
     push(...items: N[]): number;
@@ -17,8 +17,8 @@ export declare class NodeArray<N extends Node> extends Array<N> {
     sort(compareFn?: (a: N, b: N) => number): this;
     fill(value: N, start?: number, end?: number): this;
     copyWithin(target: number, start?: number, end?: number): this;
-    addObserver(node: Node | IoElement): void;
-    removeObserver(node: Node | IoElement): void;
+    addObserver(node: ReactiveNode | IoElement): void;
+    removeObserver(node: ReactiveNode | IoElement): void;
     itemMutated(event: CustomEvent): void;
     dispatchMutation(): void;
 }

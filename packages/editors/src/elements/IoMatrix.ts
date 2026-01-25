@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Node } from '@io-gui/core'
+import { Register, ReactiveProperty, ReactiveNode } from '@io-gui/core'
 import { IoVectorArray, IoVectorArrayProps } from './IoVectorArray.js'
 
 export type IoMatrixProps = IoVectorArrayProps & {
@@ -44,7 +44,7 @@ export class IoMatrix extends IoVectorArray {
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement
     this.value[item.id as any] = event.detail.value
-    if (!(this.value as unknown as Node)._isNode) {
+    if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
     this.dispatch('value-input', {property: 'value', value: this.value}, false)

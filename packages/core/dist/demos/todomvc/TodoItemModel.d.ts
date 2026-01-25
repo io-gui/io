@@ -1,5 +1,5 @@
-import { Node } from '@io-gui/core';
-export declare class TodoItemModel extends Node {
+import { ReactiveNode } from '@io-gui/core';
+export declare class TodoItemModel extends ReactiveNode {
     title: string;
     completed: boolean;
     toggle: () => void;

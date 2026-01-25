@@ -35,7 +35,7 @@ const split = new Split({
     children: [
         {
             type: 'panel',
-            flex: '0 0 280px',
+            flex: '0 0 200px',
             tabs: [{ id: 'AllClasses' }],
         },
         {
@@ -45,6 +45,7 @@ const split = new Split({
             children: [
                 {
                     type: 'split',
+                    flex: '1 1 50%',
                     orientation: 'horizontal',
                     children: [
                         {
@@ -65,6 +66,7 @@ const split = new Split({
                 },
                 {
                     type: 'split',
+                    flex: '1 1 50%',
                     orientation: 'horizontal',
                     children: [
                         {
@@ -88,7 +90,7 @@ const split = new Split({
         },
         {
             type: 'panel',
-            flex: '0 0 280px',
+            flex: '0 0 220px',
             tabs: [
                 { id: 'ExampleSelector' },
             ],

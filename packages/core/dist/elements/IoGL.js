@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var IoGl_1;
 import { Register } from '../decorators/Register.js';
 import { ReactiveProperty } from '../decorators/Property.js';
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { ThemeSingleton, Color } from '../nodes/Theme.js';
 import { IoElement } from './IoElement.js';
 import { glsl } from './IoGL.glsl.js';
@@ -330,7 +330,7 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Node, value: ThemeSingleton })
+    ReactiveProperty({ type: ReactiveNode, value: ThemeSingleton })
 ], IoGl.prototype, "theme", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: [0, 0] })

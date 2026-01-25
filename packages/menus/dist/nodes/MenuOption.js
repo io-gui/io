@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var MenuOption_1;
-import { Node, Register, ReactiveProperty, NodeArray } from '@io-gui/core';
-let MenuOption = MenuOption_1 = class MenuOption extends Node {
+import { ReactiveNode, Register, ReactiveProperty, NodeArray } from '@io-gui/core';
+let MenuOption = MenuOption_1 = class MenuOption extends ReactiveNode {
     static get Listeners() {
         return {
             'option-selected-changed': 'onOptionSelectedChanged',

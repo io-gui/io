@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register } from '../decorators/Register.js';
 import { ReactiveProperty } from '../decorators/Property.js';
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { Storage as $ } from '../nodes/Storage.js';
 const THEME_VERSION = 'v0.11';
 const styleElement = document.createElement('style');
@@ -139,7 +139,7 @@ const compositeVariables = /* css */ `
  *
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
-let Theme = class Theme extends Node {
+let Theme = class Theme extends ReactiveNode {
     static get ReactiveProperties() {
         const props = {};
         for (const p in LIGHT_THEME) {

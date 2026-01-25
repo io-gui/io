@@ -1,13 +1,13 @@
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 /**
- * Registers a new Node or IoElement subclass. This needs to be called for each new class that extends Node or IoElement.
- * @param {Node | IoElement} ioNodeConstructor - Node class to register.
+ * Registers a new ReactiveNode or IoElement subclass. This needs to be called for each new class that extends ReactiveNode or IoElement.
+ * @param {ReactiveNode | IoElement} ioNodeConstructor - ReactiveNode class to register.
  *
  * @example
- * // Creating a new Node subclass.
+ * // Creating a new ReactiveNode subclass.
  * \@Register
- * class MyNode extends Node {
+ * class MyNode extends ReactiveNode {
  * }
  *
  * @example
@@ -18,9 +18,9 @@ import { IoElement } from '../elements/IoElement.js';
  *
  * @example
  * //Javascript without decorator syntax.
- * class MyNode extends Node {
+ * class MyNode extends ReactiveNode {
  * }
  * Register(MyNode);
 */
-export declare function Register(ioNodeConstructor: typeof Node | typeof IoElement): void;
+export declare function Register(ioNodeConstructor: typeof ReactiveNode | typeof IoElement): void;
 //# sourceMappingURL=Register.d.ts.map

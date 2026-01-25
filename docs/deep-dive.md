@@ -8,8 +8,8 @@ Io-Gui implements the same features on top of its base classes - nodes and eleme
 
 By doing this, it achieves reactive interoperability with predictable data flow patterns between nodes and elements.
 
-#### Node
-Node is a base class extending `Object` with all of the core features provided by Io-Gui.
+#### ReactiveNode
+ReactiveNode is a base class extending `Object` with all of the core features provided by Io-Gui.
 It can be used to create reactive data models and state containers with business logic. Some examples of nodes are:
 - `ThemeSingleton`: Io-Gui's theme system that responsively renders CSS variables to document 
 - `StorageNode` and `Storage`: Data persistence node/factory for data storage in location.hash or localStorage
@@ -17,7 +17,7 @@ It can be used to create reactive data models and state containers with business
 - `Tab`, `Panel` and `Split`: Rich domain models for tabbed-split-panel layout in io-layout
 
 #### IoElement
-IoElement is a custom element base class extending `HTMLElement` with Node functionality as well as some DOM functionality such as:
+IoElement is a custom element base class extending `HTMLElement` with ReactiveNode functionality as well as some DOM functionality such as:
 - Virtual DOM rendering
 - Style declaration with inheritance
 
@@ -57,7 +57,7 @@ All new classes must be registered before use.
 
 ```javascript
 // Javascript flavor
-class MyNode extends Node {}
+class MyNode extends ReactiveNode {}
 Register(MyNode)
 
 class MyElement extends IoElement {}
@@ -67,7 +67,7 @@ Register(MyElement)
 ```typescript
 // Typescript flavor with experimentalDecorators: true
 @Register
-class MyNode extends Node {}
+class MyNode extends ReactiveNode {}
 
 @Register
 class MyElement extends IoElement {}
@@ -81,7 +81,7 @@ In the following example, we define a boolean property called `selected` by spec
 
 ```javascript
 // Javascript version with `static get ReactiveProperties()` object
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   static get ReactiveProperties() {
     return {
       selected: false
@@ -94,7 +94,7 @@ Here we do the same using decorator syntax in typescript. Note that we use `decl
 
 ```typescript
 // Typescript version with `@Property()` decorator
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   @Property(false)
   declare selected: boolean
 }
@@ -105,7 +105,7 @@ class MyNode extends Node {
 Alternatively, a property can be declared by specifying only the type. The result of the following declaration is exactly the same since initial value for `Boolean` is inferred to `false`, just like `Number` is `0` and `String` is `""`. In other words, when no initial value is specified, it will be inferred from the specified type. Properties with type `Object` and `Array` will be initialized with `new Object()` and `new Array()` only if the `init: null` flag is specified. Otherwise, they will be initialized with `undefined`. You can also specify custom initialization arguments in the `init` field. e.g. `{type: Array, init: [1, 2, 3]}` will initialize the property with `new Array(1, 2, 3)`.
 
 ```typescript
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   @Property(Boolean)
   declare selected: boolean
 }
@@ -116,7 +116,7 @@ Just like initial property value can be inferred from type, a property type can 
 Note that ANY initial value specified in property declaration can be overridden by a value specified in the constructor.
 
 ```typescript
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   @Property(Color)
   declare color: Color
 }
@@ -127,7 +127,7 @@ new MyNode({color: new Color()})
 While it is possible to specify object instances as values in property declaration it is important to note that such initial values will be shared across all instances of the class.
 
 ```typescript
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   // This is not recommended!
   @ReactiveProperty({value: new Color()})
   declare color: Color
@@ -149,7 +149,7 @@ As mentioned above, we can use `init` field to specify how we want to initialize
 Property definitions respect inheritance. This means that if a subclass extends a superclass and defines a property with the same name, the subclass's definition will overwrite the superclass's definition but only for explicitly specified parts of the property declaration. In the following example `MyNode` will inherit explicit property declaration from `MySuperNode` but it will override the initial value to `true`. 
 
 ```typescript
-class MySuperNode extends Node {
+class MySuperNode extends ReactiveNode {
   @ReactiveProperty({
     value: false,
     reflect: true,
@@ -303,7 +303,7 @@ Here is an example of a node fully rigged to handle changes of its `selected` pr
 
 ```typescript
 @Register
-class MyNode extends Node {
+class MyNode extends ReactiveNode {
   @Property(false)
   declare selected: boolean
   selectedChanged(change: Change) {

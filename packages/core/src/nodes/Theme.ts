@@ -1,6 +1,6 @@
 import { Register } from '../decorators/Register.js'
 import { ReactiveProperty } from '../decorators/Property.js'
-import { ReactivePropertyDefinitions, Node, ReactivityType } from '../nodes/Node.js'
+import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js'
 import { Storage as $ } from '../nodes/Storage.js'
 
 const THEME_VERSION = 'v0.11'
@@ -196,7 +196,7 @@ const compositeVariables = /* css */`
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
 @Register
-export class Theme extends Node {
+export class Theme extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     const props: ReactivePropertyDefinitions = {}
     for (const p in LIGHT_THEME) {

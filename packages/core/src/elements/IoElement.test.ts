@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect } from 'vitest'
-import { Register, IoElement, Node, Change, ReactivePropertyDefinitions } from '@io-gui/core'
+import { Register, IoElement, ReactiveNode, Change, ReactivePropertyDefinitions } from '@io-gui/core'
 
 const element = new IoElement()
 element.style.display = 'none'
@@ -35,7 +35,7 @@ describe('IoElement', () => {
     expect(terstElement.getAttribute('prop0')).toBe('0')
   })
   it('Invokes change events and functions', () => {
-    class TestNode extends Node {
+    class TestNode extends ReactiveNode {
       static get ReactiveProperties(): ReactivePropertyDefinitions {
         return {
           prop0: 0,

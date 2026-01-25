@@ -1,5 +1,5 @@
 /**
- * This class is used internally by the framework to manage property changes in `Node` and `IoElement` nodes.
+ * This class is used internally by the framework to manage property changes in `ReactiveNode` and `IoElement` nodes.
  *
  * This class implements a First-In-First-Out (FIFO) queue that:
  * - Collects property changes and their associated values
@@ -14,7 +14,7 @@
  * times within a single execution cycle.
  *
  * @example
- * const node = new Node();
+ * const node = new ReactiveNode();
  * const changeQueue = new ChangeQueue(node);
  * changeQueue.queue('prop1', 1, 0);
  * changeQueue.queue('prop1', 2, 1);
@@ -24,8 +24,8 @@ export class ChangeQueue {
     dispatchedChange = false;
     dispatching = false;
     /**
-     * Creates change queue for the specified owner instance of `Node`.
-     * @param {Node} node - Owner node.
+     * Creates change queue for the specified owner instance of `ReactiveNode`.
+     * @param {ReactiveNode} node - Owner node.
      */
     constructor(node) {
         this.changes = [];

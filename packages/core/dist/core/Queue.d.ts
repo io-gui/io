@@ -1,4 +1,4 @@
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 export type CallbackFunction = (arg?: any) => void;
 /**
@@ -12,6 +12,6 @@ export declare function nextQueue(): Promise<void>;
  * - Queues trailing call with latest argument
  * - Respects delay between executions
  */
-export declare function throttle(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay?: number): void;
-export declare function debounce(func: CallbackFunction, arg?: any, node?: Node | IoElement, delay?: number): void;
+export declare function throttle(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay?: number): void;
+export declare function debounce(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay?: number): void;
 //# sourceMappingURL=Queue.d.ts.map

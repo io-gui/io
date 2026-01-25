@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, Node, Register, reactivePropertyDecorators } from '@io-gui/core';
+import { Binding, ReactiveProtoProperty, ReactivePropertyInstance, ReactiveProperty, ReactiveNode, Register, reactivePropertyDecorators } from '@io-gui/core';
 class Object1 {
     constructor(init) {
         if (init !== undefined) {
@@ -14,7 +14,7 @@ class Object1 {
     }
     prop = true;
 }
-let TestNode = class TestNode extends Node {
+let TestNode = class TestNode extends ReactiveNode {
     constructor(args) { super(args); }
 };
 __decorate([
@@ -483,7 +483,7 @@ describe('ReactiveProperty', () => {
         });
     });
     it('Should register property definitions from decorators.', () => {
-        class TestClass extends Node {
+        class TestClass extends ReactiveNode {
         }
         __decorate([
             ReactiveProperty('value1')

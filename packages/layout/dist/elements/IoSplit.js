@@ -156,8 +156,8 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
             : event.detail.clientY - leftRect.top - dividerSize / 2;
         const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos));
         const rightSize = combinedSize - leftSize;
-        leftSplit.style.flex = `0 0 ${leftSize}px`;
-        rightSplit.style.flex = `0 0 ${rightSize}px`;
+        leftSplit.style.setProperty('flex', `0 0 ${leftSize}px`);
+        rightSplit.style.setProperty('flex', `0 0 ${rightSize}px`);
     }
     onDividerMoveEnd(event) {
         event.stopPropagation();
@@ -169,8 +169,8 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
             const childRect = child.getBoundingClientRect();
             const childSize = orientation === 'horizontal' ? childRect.width : childRect.height;
             if (hasFlexGrow(childmodel.flex)) {
-                // TODO: Reconsider. Test
-                child.style.flex = childmodel.flex;
+                const [grow, shrink] = childmodel.flex.trim().split(/\s+/);
+                childmodel.flex = `${grow} ${shrink} ${childSize}px`;
             }
             else {
                 childmodel.flex = `0 0 ${childSize}px`;
@@ -212,7 +212,9 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         const hasGrow = this.split.children.some(child => hasFlexGrow(child.flex));
         if (!hasGrow && this.split.children.length > 0) {
             const i = Math.min(1, this.split.children.length - 1);
-            this.split.children[i].flex = '1 1 auto';
+            const child = this.split.children[i];
+            const currentBasis = parseFlexBasis(child.flex);
+            child.flex = `1 1 ${currentBasis}px`;
         }
         this.hasVisibleFlexGrow = this.split.children.some((child, i) => {
             if (i === 0 && this.leadingDrawer !== null)
@@ -294,9 +296,14 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         const drawers = [...this.querySelectorAll(':scope > io-drawer')];
         drawers.forEach(drawer => drawer.expanded = false);
     }
+    leadingDrawerChanged() {
+        this.collapseAllDrawers();
+    }
+    trailingDrawerChanged() {
+        this.collapseAllDrawers();
+    }
     onVeilClick(event) {
         event.stopPropagation();
-        // TODO: this should trigger onDrawerExpandedChanged and updateVeil
         this.collapseAllDrawers();
     }
     splitMutated() {
@@ -320,6 +327,7 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
             vChildren.push(ioDrawer({
                 orientation: orientation,
                 direction: 'leading',
+                parent: this,
                 child: this.leadingDrawer,
                 elements: this.elements,
                 addMenuOption: this.addMenuOption,
@@ -367,6 +375,7 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
             vChildren.push(ioDrawer({
                 orientation: orientation,
                 direction: 'trailing',
+                parent: this,
                 child: this.trailingDrawer,
                 elements: this.elements,
                 addMenuOption: this.addMenuOption,

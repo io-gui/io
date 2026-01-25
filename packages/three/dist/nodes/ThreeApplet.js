@@ -4,12 +4,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, Node, ReactiveProperty } from '@io-gui/core';
+import { Register, ReactiveNode, ReactiveProperty } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
 import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
-let ThreeApplet = class ThreeApplet extends Node {
+let ThreeApplet = class ThreeApplet extends ReactiveNode {
     _renderer = null;
     _width = 0;
     _height = 0;

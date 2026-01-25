@@ -1,6 +1,6 @@
 import { ProtoChain } from '../core/ProtoChain.js';
 import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
-import { Node, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/Node.js';
+import { ReactiveNode, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js';
 import { Binding } from '../core/Binding.js';
 import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
 import { ChangeQueue } from '../core/ChangeQueue.js';
@@ -43,12 +43,12 @@ export declare class IoElement extends HTMLElement {
     throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
-    dispatchMutation(object?: object | Node, properties?: string[]): void;
+    dispatchMutation(object?: object | ReactiveNode, properties?: string[]): void;
     bind(name: string): Binding;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-    dispatch(type: string, detail?: any, bubbles?: boolean, src?: Node | HTMLElement | Document | Window): void;
+    dispatch(type: string, detail?: any, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
     dispose(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;

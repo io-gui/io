@@ -1,13 +1,13 @@
-import { Node, NodeProps, Binding } from '@io-gui/core';
+import { ReactiveNode, ReactiveNodeProps, Binding } from '@io-gui/core';
 import { IoThreeViewport } from '../elements/IoThreeViewport.js';
 import { ThreeApplet } from './ThreeApplet.js';
 import { Camera, Object3D, OrthographicCamera, PerspectiveCamera } from 'three/webgpu';
-export type ViewCamerasProps = NodeProps & {
+export type ViewCamerasProps = ReactiveNodeProps & {
     viewport: IoThreeViewport;
     applet: ThreeApplet | Binding;
     cameraSelect: string | Binding;
 };
-export declare class ViewCameras extends Node {
+export declare class ViewCameras extends ReactiveNode {
     private viewport;
     applet: ThreeApplet;
     cameraSelect: string;

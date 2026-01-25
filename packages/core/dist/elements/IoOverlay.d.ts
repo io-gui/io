@@ -1,4 +1,4 @@
-import { ListenerDefinitions } from '../nodes/Node.js';
+import { ListenerDefinitions } from '../nodes/ReactiveNode.js';
 import { IoElement, IoElementProps } from './IoElement.js';
 /**
  * This element is designed to be used as a singleton `IoOverlaySingleton`.

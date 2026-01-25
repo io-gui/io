@@ -1,4 +1,4 @@
-import { Node, NodeArray } from '@io-gui/core';
+import { ReactiveNode, NodeArray } from '@io-gui/core';
 import { Panel, PanelProps } from './Panel.js';
 export type SplitOrientation = 'horizontal' | 'vertical';
 export type SplitProps = {
@@ -7,7 +7,7 @@ export type SplitProps = {
     orientation?: SplitOrientation;
     flex?: string;
 };
-export declare class Split extends Node {
+export declare class Split extends ReactiveNode {
     children: NodeArray<Split | Panel>;
     orientation: SplitOrientation;
     flex: string;

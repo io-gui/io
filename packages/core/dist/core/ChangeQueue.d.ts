@@ -1,4 +1,4 @@
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 export interface Change {
     property: string;
@@ -9,12 +9,12 @@ export interface Changes {
     [property: string]: Change;
 }
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-    readonly target: Node | IoElement;
+    readonly target: ReactiveNode | IoElement;
     readonly detail: Change;
-    readonly path: Node[];
+    readonly path: ReactiveNode[];
 }
 /**
- * This class is used internally by the framework to manage property changes in `Node` and `IoElement` nodes.
+ * This class is used internally by the framework to manage property changes in `ReactiveNode` and `IoElement` nodes.
  *
  * This class implements a First-In-First-Out (FIFO) queue that:
  * - Collects property changes and their associated values
@@ -29,22 +29,22 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * times within a single execution cycle.
  *
  * @example
- * const node = new Node();
+ * const node = new ReactiveNode();
  * const changeQueue = new ChangeQueue(node);
  * changeQueue.queue('prop1', 1, 0);
  * changeQueue.queue('prop1', 2, 1);
  * changeQueue.dispatch();
  */
 export declare class ChangeQueue {
-    readonly node: Node | IoElement;
+    readonly node: ReactiveNode | IoElement;
     changes: Change[];
     dispatchedChange: boolean;
     dispatching: boolean;
     /**
-     * Creates change queue for the specified owner instance of `Node`.
-     * @param {Node} node - Owner node.
+     * Creates change queue for the specified owner instance of `ReactiveNode`.
+     * @param {ReactiveNode} node - Owner node.
      */
-    constructor(node: Node | IoElement);
+    constructor(node: ReactiveNode | IoElement);
     /**
      * Adds property change payload to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.

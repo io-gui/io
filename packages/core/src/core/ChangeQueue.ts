@@ -1,4 +1,4 @@
-import { Node } from '../nodes/Node.js'
+import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
 // TODO: Improve types!
@@ -14,13 +14,13 @@ export interface Changes {
 }
 
 export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
-  readonly target: Node | IoElement
+  readonly target: ReactiveNode | IoElement
   readonly detail: Change
-  readonly path: Node[]
+  readonly path: ReactiveNode[]
 }
 
 /**
- * This class is used internally by the framework to manage property changes in `Node` and `IoElement` nodes.
+ * This class is used internally by the framework to manage property changes in `ReactiveNode` and `IoElement` nodes.
  *
  * This class implements a First-In-First-Out (FIFO) queue that:
  * - Collects property changes and their associated values
@@ -35,22 +35,22 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * times within a single execution cycle.
  *
  * @example
- * const node = new Node();
+ * const node = new ReactiveNode();
  * const changeQueue = new ChangeQueue(node);
  * changeQueue.queue('prop1', 1, 0);
  * changeQueue.queue('prop1', 2, 1);
  * changeQueue.dispatch();
  */
 export class ChangeQueue {
-  declare readonly node: Node | IoElement
+  declare readonly node: ReactiveNode | IoElement
   declare changes: Change[]
   dispatchedChange = false
   dispatching = false
   /**
-   * Creates change queue for the specified owner instance of `Node`.
-   * @param {Node} node - Owner node.
+   * Creates change queue for the specified owner instance of `ReactiveNode`.
+   * @param {ReactiveNode} node - Owner node.
    */
-  constructor(node: Node | IoElement) {
+  constructor(node: ReactiveNode | IoElement) {
     this.changes = []
     this.node = node
     Object.defineProperty(this, 'dispatch', {
@@ -121,8 +121,8 @@ export class ChangeQueue {
       } catch (error) {
         console.error(`Error in ${this.node.constructor.name}.changed():`, error)
       }
-      if ((this.node as Node)._isNode) {
-        (this.node as Node).dispatchMutation(this.node, properties)
+      if ((this.node as ReactiveNode)._isNode) {
+        (this.node as ReactiveNode).dispatchMutation(this.node, properties)
       }
     }
     this.dispatchedChange = false

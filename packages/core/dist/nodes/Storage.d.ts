@@ -1,12 +1,12 @@
 import { Binding } from '../core/Binding.js';
-import { Node, NodeProps } from '../nodes/Node.js';
-export type StorageProps = NodeProps & {
+import { ReactiveNode, ReactiveNodeProps } from '../nodes/ReactiveNode.js';
+export type StorageProps = ReactiveNodeProps & {
     key: string;
     value: any;
     default?: any;
     storage?: 'hash' | 'local' | 'none';
 };
-export declare class StorageNode extends Node {
+export declare class StorageNode extends ReactiveNode {
     key: string;
     value: any;
     storage: 'hash' | 'local' | 'none';

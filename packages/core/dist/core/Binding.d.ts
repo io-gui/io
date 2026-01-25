@@ -1,8 +1,8 @@
 import { ChangeEvent } from './ChangeQueue.js';
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 type Properties = string[];
-type TargetProperties = WeakMap<Node | IoElement, Properties>;
+type TargetProperties = WeakMap<ReactiveNode | IoElement, Properties>;
 /**
  * This class is used internally by the framework to enable two-way data synchronization between reactive properties.
  * It manages bindings between a source node's reactive property and one or more target nodes and reactive properties.
@@ -19,36 +19,36 @@ type TargetProperties = WeakMap<Node | IoElement, Properties>;
  * binding.addTarget(nodeB, 'value');
  */
 export declare class Binding {
-    readonly node: Node | IoElement;
+    readonly node: ReactiveNode | IoElement;
     readonly property: string;
-    readonly targets: Set<Node | IoElement>;
+    readonly targets: Set<ReactiveNode | IoElement>;
     readonly targetProperties: TargetProperties;
     /**
      * Creates a binding object for specified source `node` and `property`.
      * It attaches a `[propName]-changed` listener to the source node.
-     * @param {Node | IoElement} node - Source node
+     * @param {ReactiveNode | IoElement} node - Source node
      * @param {string} property - Name of the sourceproperty
      */
-    constructor(node: Node | IoElement, property: string);
+    constructor(node: ReactiveNode | IoElement, property: string);
     set value(value: any);
     get value(): any;
     /**
      * Adds a target node and property.
      * Sets itself as the binding reference on the target `ReactivePropertyInstance`.
      * Adds a `[propName]-changed` listener to the target node.
-     * @param {Node | IoElement} target - Target node
+     * @param {ReactiveNode | IoElement} target - Target node
      * @param {string} property - Target property
      */
-    addTarget(target: Node | IoElement, property: string): void;
+    addTarget(target: ReactiveNode | IoElement, property: string): void;
     /**
      * Removes target node and property.
      * If `property` is not specified, it removes all target properties.
      * Removes binding reference from the target `ReactivePropertyInstance`.
      * Removes `[propName]-changed` listener from the target node.
-     * @param {Node | IoElement} target - Target node
+     * @param {ReactiveNode | IoElement} target - Target node
      * @param {string} property - Target property
      */
-    removeTarget(target: Node | IoElement, property?: string): void;
+    removeTarget(target: ReactiveNode | IoElement, property?: string): void;
     /**
      * Event handler that updates source property when one of the targets emits `[propName]-changed` event.
      * @param {ChangeEvent} event - Property change event.
@@ -61,10 +61,10 @@ export declare class Binding {
     onSourceChanged(event: ChangeEvent): void;
     /**
      * Returns a list of target properties for specified target node.
-     * @param {Node | IoElement} target - Target node.
+     * @param {ReactiveNode | IoElement} target - Target node.
      * @return {Properties} list of target property names.
      */
-    getTargetProperties(target: Node | IoElement): Properties;
+    getTargetProperties(target: ReactiveNode | IoElement): Properties;
     /**
      * Returns a JSON representation of the binding.
      * This is required for `JSON.stringify(protoProperties)` in `ProtoChain`.

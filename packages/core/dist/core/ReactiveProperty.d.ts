@@ -1,8 +1,8 @@
 import { Binding } from './Binding.js';
-import { AnyConstructor, Node } from '../nodes/Node.js';
+import { AnyConstructor, ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 /**
- * Configuration for a property of an Node class.
+ * Configuration for a property of a ReactiveNode class.
  * @typedef {Object} ReactivePropertyDefinition
  * @property {*} [value] The property's value. Can be any type unless `type` is specified.
  * @property {AnyConstructor} [type] Constructor function defining the property's type.
@@ -72,7 +72,7 @@ export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
 /**
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
  * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
  * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
  */
@@ -82,7 +82,7 @@ export declare class Observer {
     private _hasWindowMutationListener;
     type: ObservationType;
     observing: boolean;
-    constructor(node: Node | IoElement);
+    constructor(node: ReactiveNode | IoElement);
     start(value: any): void;
     stop(value: any): void;
     dispose(): void;
@@ -99,9 +99,9 @@ export declare class ReactivePropertyInstance {
     readonly observer: Observer;
     /**
      * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
-     * @param node owner Node instance
+     * @param node owner ReactiveNode instance
      * @param propDef ReactiveProtoProperty object
      */
-    constructor(node: Node | IoElement, propDef: ReactiveProtoProperty);
+    constructor(node: ReactiveNode | IoElement, propDef: ReactiveProtoProperty);
 }
 //# sourceMappingURL=ReactiveProperty.d.ts.map

@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var Node_1;
+var ReactiveNode_1;
 import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { Binding } from '../core/Binding.js';
@@ -30,7 +30,7 @@ function hasValueAtOtherProperty(node, prop, value) {
     });
     return found;
 }
-let Node = Node_1 = class Node extends Object {
+let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
     static get ReactiveProperties() {
         return {};
     }
@@ -133,7 +133,7 @@ let Node = Node_1 = class Node extends Object {
     removeParent(parent) {
         if (parent._isNode) {
             debug: if (!this._parents.includes(parent)) {
-                console.error('Node.removeParent(): Parent not found!', this, parent);
+                console.error('ReactiveNode.removeParent(): Parent not found!', this, parent);
             }
             this._parents.splice(this._parents.indexOf(parent), 1);
         }
@@ -151,11 +151,11 @@ let Node = Node_1 = class Node extends Object {
 };
 __decorate([
     ReactiveProperty({ type: String, value: 'immediate' })
-], Node.prototype, "reactivity", void 0);
-Node = Node_1 = __decorate([
+], ReactiveNode.prototype, "reactivity", void 0);
+ReactiveNode = ReactiveNode_1 = __decorate([
     Register
-], Node);
-export { Node };
+], ReactiveNode);
+export { ReactiveNode };
 export function initReactiveProperties(node) {
     for (const name in node._protochain.reactiveProperties) {
         Object.defineProperty(node, name, {
@@ -325,7 +325,7 @@ export function dispatchQueue(node, debounce = false) {
         node._changeQueue.dispatch();
     }
     debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
-        console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`);
+        console.warn(`ReactiveNode.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`);
     }
 }
 // TODO: Consider using global event bus for all mutation events!
@@ -371,7 +371,7 @@ export function unbind(node, name) {
 }
 export function dispose(node) {
     debug: if (node._disposed) {
-        console.warn('Node.dispose(): Already disposed!', node.constructor.name);
+        console.warn('ReactiveNode.dispose(): Already disposed!', node.constructor.name);
     }
     if (node._disposed)
         return;
@@ -402,4 +402,4 @@ export function dispose(node) {
     Object.defineProperty(node, '_disposed', { value: true });
 }
 ;
-//# sourceMappingURL=Node.js.map
+//# sourceMappingURL=ReactiveNode.js.map

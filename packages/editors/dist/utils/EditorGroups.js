@@ -1,4 +1,4 @@
-import { Node as IoNode, IoElement } from '@io-gui/core';
+import { ReactiveNode, IoElement } from '@io-gui/core';
 export const SKIPPED_PROPERTIES = [
     '$',
     'ELEMENT_NODE', 'ATTRIBUTE_NODE', 'TEXT_NODE', 'CDATA_SECTION_NODE', 'ENTITY_REFERENCE_NODE', 'ENTITY_NODE',
@@ -35,7 +35,7 @@ export function getAllPropertyNames(obj) {
                 allProps.push(prop);
             }
         });
-        if (curr.constructor === Node)
+        if (curr.constructor === window.Node)
             break;
         //@ts-ignore no-cond-assign
     } while ((curr = Object.getPrototypeOf(curr)));
@@ -84,7 +84,7 @@ const editorGroupsSingleton = new Map([
             ],
             Hidden: [],
         }],
-    [IoNode, {
+    [ReactiveNode, {
             Hidden: [
                 'reactivity',
                 '_changeQueue', '_reactiveProperties', '_bindings', '_eventDispatcher', '_parents',

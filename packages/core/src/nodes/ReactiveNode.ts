@@ -15,18 +15,18 @@ export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinit
 export type ListenerDefinitions = {
   [key: string]: ListenerDefinitionLoose
 }
-export interface NodeConstructor {
+export interface ReactiveNodeConstructor {
   ReactiveProperties?: ReactivePropertyDefinitions
   Properties?: Record<string, any>
   Listeners?: ListenerDefinitions
   Style?: string
   name?: string
-  prototype: NodeConstructor | object | HTMLElement
+  prototype: ReactiveNodeConstructor | object | HTMLElement
 }
 
 export const NODES = {
-  active: new Set<Node>(),
-  disposed: new WeakSet<Node>(),
+  active: new Set<ReactiveNode>(),
+  disposed: new WeakSet<ReactiveNode>(),
 }
 
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced'
@@ -37,7 +37,7 @@ export type WithBinding<T> = T | Binding
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
 
-export type NodeProps = {
+export type ReactiveNodeProps = {
   reactivity?: ReactivityType
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
@@ -47,7 +47,7 @@ function isIoObject(value: any) {
   return (typeof value === 'object' && value !== null && (value._isNode || value._isIoElement))
 }
 
-function hasValueAtOtherProperty(node: Node | IoElement, prop: ReactivePropertyInstance, value: any): boolean {
+function hasValueAtOtherProperty(node: ReactiveNode | IoElement, prop: ReactivePropertyInstance, value: any): boolean {
   let found = false
   node._reactiveProperties.forEach((p) => {
     if (p !== prop && p.value === value) found = true
@@ -56,7 +56,7 @@ function hasValueAtOtherProperty(node: Node | IoElement, prop: ReactivePropertyI
 }
 
 @Register
-export class Node extends Object {
+export class ReactiveNode extends Object {
 
   @ReactiveProperty({type: String, value: 'immediate'})
   declare reactivity: ReactivityType
@@ -78,7 +78,7 @@ export class Node extends Object {
   declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
-  declare readonly _parents: Array<Node>
+  declare readonly _parents: Array<ReactiveNode>
   declare readonly _isNode: boolean
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
@@ -151,7 +151,7 @@ export class Node extends Object {
   onPropertyMutated(event: CustomEvent) {
     return onPropertyMutated(this, event)
   }
-  dispatchMutation(object: object | Node = this, properties: string[] = []) {
+  dispatchMutation(object: object | ReactiveNode = this, properties: string[] = []) {
     dispatchMutation(this, object, properties)
   }
   bind(name: string): Binding {
@@ -166,20 +166,20 @@ export class Node extends Object {
   removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions) {
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
-  dispatch(type: string, detail: any = undefined, bubbles = false, src?: Node | HTMLElement | Document | Window) {
+  dispatch(type: string, detail: any = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
   // TODO: test!
   // TODO: Consider bubbling up to elements!
-  addParent(parent: Node) {
+  addParent(parent: ReactiveNode) {
     if (parent._isNode) {
       this._parents.push(parent)
     }
   }
-  removeParent(parent: Node) {
+  removeParent(parent: ReactiveNode) {
     if (parent._isNode) {
       debug: if (!this._parents.includes(parent)) {
-        console.error('Node.removeParent(): Parent not found!', this, parent)
+        console.error('ReactiveNode.removeParent(): Parent not found!', this, parent)
       }
       this._parents.splice(this._parents.indexOf(parent), 1)
     }
@@ -189,14 +189,14 @@ export class Node extends Object {
     NODES.active.delete(this)
     NODES.disposed.add(this)
   }
-  Register(ioNodeConstructor: typeof Node) {
+  Register(ioNodeConstructor: typeof ReactiveNode) {
     Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true, writable: false})
     Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: false, writable: false})
     Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)})
   }
 }
 
-export function initReactiveProperties(node: Node | IoElement) {
+export function initReactiveProperties(node: ReactiveNode | IoElement) {
   for (const name in node._protochain.reactiveProperties) {
     Object.defineProperty(node, name, {
       get: function() {
@@ -221,7 +221,7 @@ export function initReactiveProperties(node: Node | IoElement) {
     }
   }
 }
-export function initProperties(node: Node | IoElement) {
+export function initProperties(node: ReactiveNode | IoElement) {
   for (const name in node._protochain.properties) {
     let initialValue = node._protochain.properties[name]
     if (typeof initialValue === 'function') {
@@ -234,7 +234,7 @@ export function initProperties(node: Node | IoElement) {
     (node as any)[name] = initialValue
   }
 }
-export function setProperties(node: Node | IoElement, props: any) {
+export function setProperties(node: ReactiveNode | IoElement, props: any) {
   for (const name in props) {
     if (!node._reactiveProperties.has(name)) {
       debug: console.warn(`Property "${name}" is not defined`, node)
@@ -244,7 +244,7 @@ export function setProperties(node: Node | IoElement, props: any) {
   }
   node.dispatchQueue()
 }
-export function setProperty(node: Node | IoElement, name: string, value: any, debounce = false) {
+export function setProperty(node: ReactiveNode | IoElement, name: string, value: any, debounce = false) {
   const prop = node._reactiveProperties.get(name)!
   const oldValue = prop.value
 
@@ -273,7 +273,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
     // TODO: test!
     // TODO: Document magic!
     if (prop.type === NodeArray && value.constructor === Array) {
-      const nodeArray = prop.value as NodeArray<Node>
+      const nodeArray = prop.value as NodeArray<ReactiveNode>
 
       debug: if ((value as Array<any>).some(item => !item._isNode)) {
         console.error(`Node: Property "${name}" should be assigned as an Array of nodes!`, value)
@@ -285,7 +285,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
       // TODO: test, benchmark!
       nodeArray.withInternalOperation(() => {
         nodeArray.length = 0
-        nodeArray.push(...value as Array<Node>)
+        nodeArray.push(...value as Array<ReactiveNode>)
         if (value.length === 0) {
           nodeArray.dispatchMutation()
         }
@@ -353,7 +353,7 @@ export function setProperty(node: Node | IoElement, name: string, value: any, de
     }
   }
 }
-export function dispatchQueue(node: Node | IoElement, debounce = false) {
+export function dispatchQueue(node: ReactiveNode | IoElement, debounce = false) {
   if (node.reactivity === 'debounced' || debounce || node._changeQueue.dispatching) {
     node.debounce(node._changeQueue.dispatch)
   } else if (node.reactivity === 'throttled') {
@@ -362,26 +362,26 @@ export function dispatchQueue(node: Node | IoElement, debounce = false) {
     node._changeQueue.dispatch()
   }
   debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
-    console.warn(`Node.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`)
+    console.warn(`ReactiveNode.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`)
   }
 }
 
 // TODO: Consider using global event bus for all mutation events!
-export function dispatchMutation(node: Node | IoElement, object: object | Node, properties: string[]) {
+export function dispatchMutation(node: ReactiveNode | IoElement, object: object | ReactiveNode, properties: string[]) {
   if (isIoObject(object)) {
     node.dispatch('io-object-mutation', {object, properties})
   } else {
     node.dispatch('io-object-mutation', {object, properties}, false, window)
   }
 }
-export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
+export function onPropertyMutated(node: ReactiveNode | IoElement, event: CustomEvent) {
   const object = event.detail.object
 
   let hasMutated = false
   node._reactiveProperties.forEach((prop, name) => {
     if (prop.observer.observing && prop.value === object) {
-      const handlerName = name + 'Mutated' as keyof Node
-      if (typeof (node as Node)[handlerName] === 'function') {
+      const handlerName = name + 'Mutated' as keyof ReactiveNode
+      if (typeof (node as ReactiveNode)[handlerName] === 'function') {
         (node as any)[handlerName](event)
       }
       hasMutated = true
@@ -389,7 +389,7 @@ export function onPropertyMutated(node: Node | IoElement, event: CustomEvent) {
   })
   return hasMutated
 }
-export function bind(node: Node | IoElement, name: string) {
+export function bind(node: ReactiveNode | IoElement, name: string) {
   debug: if (!node._reactiveProperties.has(name)) {
     console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`)
   }
@@ -398,7 +398,7 @@ export function bind(node: Node | IoElement, name: string) {
   }
   return node._bindings.get(name)! as Binding
 }
-export function unbind(node: Node | IoElement, name: string) {
+export function unbind(node: ReactiveNode | IoElement, name: string) {
   const binding = node._bindings.get(name)
   if (binding) {
     binding.dispose()
@@ -407,9 +407,9 @@ export function unbind(node: Node | IoElement, name: string) {
   const property = node._reactiveProperties.get(name)
   property?.binding?.removeTarget(node, name)
 }
-export function dispose(node: Node | IoElement) {
+export function dispose(node: ReactiveNode | IoElement) {
   debug: if (node._disposed) {
-    console.warn('Node.dispose(): Already disposed!', node.constructor.name)
+    console.warn('ReactiveNode.dispose(): Already disposed!', node.constructor.name)
   }
 
   if (node._disposed) return
@@ -430,7 +430,7 @@ export function dispose(node: Node | IoElement) {
   })
 
   for (const name in node._protochain.properties) {
-    delete (node as Node)[name as keyof Node]
+    delete (node as ReactiveNode)[name as keyof ReactiveNode]
   }
   delete (node as any)._protochain
 

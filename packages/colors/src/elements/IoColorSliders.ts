@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, glsl, WithBinding, Node } from '@io-gui/core'
+import { Register, ReactiveProperty, glsl, WithBinding, ReactiveNode } from '@io-gui/core'
 import { IoSlider, IoSlider2d } from '@io-gui/sliders'
 import { IoColorBase, IoColorBaseProps } from './IoColorBase.js'
 
@@ -94,7 +94,7 @@ export class IoColorSlider extends IoColorBase {
     }
     if (oldValue === JSON.stringify(this.value)) return
 
-    if (!(this.value as unknown as Node)._isNode) {
+    if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
     this.dispatch('value-input', {property: 'value', value: this.value}, false)

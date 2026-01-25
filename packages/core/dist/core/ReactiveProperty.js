@@ -119,7 +119,7 @@ function isIoValue(value) {
 /**
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
- * - 'io': Io types (Node, IoElement subclasses) - observe on the value itself
+ * - 'io': Io types (ReactiveNode, IoElement subclasses) - observe on the value itself
  * - 'nodearray': NodeArray - registers as observer, receives mutations via self-listener
  * - 'object': Non-Io objects (Object, Array, etc.) - observe via window (global event bus)
  */
@@ -203,7 +203,7 @@ export class ReactivePropertyInstance {
     observer;
     /**
      * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
-     * @param node owner Node instance
+     * @param node owner ReactiveNode instance
      * @param propDef ReactiveProtoProperty object
      */
     constructor(node, propDef) {

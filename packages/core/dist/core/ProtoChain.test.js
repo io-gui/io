@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { ProtoChain, Node, ReactiveProperty, IoElement, Register, Property } from '@io-gui/core';
+import { ProtoChain, ReactiveNode, ReactiveProperty, IoElement, Register, Property } from '@io-gui/core';
 class Array1 extends Array {
 }
 class Array2 extends Array1 {
@@ -25,7 +25,7 @@ class HTMLElement2 extends HTMLElement1 {
 class HTMLElement3 extends HTMLElement2 {
 }
 // TODO: Fix init field testing. Based on old implementation.
-let Node1 = class Node1 extends Node {
+let Node1 = class Node1 extends ReactiveNode {
     static get ReactiveProperties() {
         return {
             prop1: {
@@ -145,10 +145,10 @@ describe('ProtoChain', () => {
         expect(constructors).toEqual([Object3, Object2, Object1]);
         constructors = new ProtoChain(HTMLElement3).constructors;
         expect(constructors).toEqual([HTMLElement3, HTMLElement2, HTMLElement1]);
-        constructors = new ProtoChain(Node).constructors;
-        expect(constructors).toEqual([Node]);
+        constructors = new ProtoChain(ReactiveNode).constructors;
+        expect(constructors).toEqual([ReactiveNode]);
         constructors = new ProtoChain(Node1).constructors;
-        expect(constructors).toEqual([Node1, Node]);
+        expect(constructors).toEqual([Node1, ReactiveNode]);
         constructors = new ProtoChain(IoElement1).constructors;
         expect(constructors).toEqual([IoElement1, IoElement]);
     });

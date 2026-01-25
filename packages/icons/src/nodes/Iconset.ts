@@ -1,4 +1,4 @@
-import { Node, Register } from '@io-gui/core'
+import { ReactiveNode, Register } from '@io-gui/core'
 
 export const IconsetDB: Record<string, Record<string, string>> = {}
 
@@ -6,7 +6,7 @@ export const IconsetDB: Record<string, Record<string, string>> = {}
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace:id` attribute.
  **/
 @Register
-class Iconset extends Node {
+class Iconset extends ReactiveNode {
   registerIcons(name: string, svg: string) {
     const stagingElement = document.createElement('div')
     stagingElement.innerHTML = svg

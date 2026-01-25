@@ -36,6 +36,7 @@ const split = new Split({
         },
         {
           type: 'panel',
+          flex: '1 1 auto',
           tabs: [
             {id: 'Getting Started'},
             {id: 'Deep Dive'},
@@ -45,6 +46,7 @@ const split = new Split({
     },
     {
       type: 'split',
+      flex: '1 1 auto',
       orientation: 'vertical',
       children: [
         {
