@@ -337,9 +337,15 @@ export class IoSplit extends IoElement {
     drawers.forEach(drawer => drawer.expanded = false)
   }
 
+  leadingDrawerChanged() {
+    this.collapseAllDrawers()
+  }
+  trailingDrawerChanged() {
+    this.collapseAllDrawers()
+  }
+
   onVeilClick(event: MouseEvent) {
     event.stopPropagation()
-    // TODO: this should trigger onDrawerExpandedChanged and updateVeil
     this.collapseAllDrawers()
   }
 
@@ -367,6 +373,7 @@ export class IoSplit extends IoElement {
       vChildren.push(ioDrawer({
         orientation: orientation,
         direction: 'leading',
+        split: this,
         child: this.leadingDrawer,
         elements: this.elements,
         addMenuOption: this.addMenuOption,
@@ -417,6 +424,7 @@ export class IoSplit extends IoElement {
       vChildren.push(ioDrawer({
         orientation: orientation,
         direction: 'trailing',
+        split: this,
         child: this.trailingDrawer,
         elements: this.elements,
         addMenuOption: this.addMenuOption,
