@@ -5,8 +5,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect, vi } from 'vitest';
-import { ChangeQueue, Node, Register } from '@io-gui/core';
-let MockNode = class MockNode extends Node {
+import { ChangeQueue, ReactiveNode, Register } from '@io-gui/core';
+let MockNode = class MockNode extends ReactiveNode {
     eventStack = [];
     changeStack = [];
     prop1Changed(change) {
@@ -30,7 +30,7 @@ let MockNode = class MockNode extends Node {
 MockNode = __decorate([
     Register
 ], MockNode);
-let MockNodeWithThrowingHandler = class MockNodeWithThrowingHandler extends Node {
+let MockNodeWithThrowingHandler = class MockNodeWithThrowingHandler extends ReactiveNode {
     changeStack = [];
     prop1Changed() {
         throw new Error('Intentional error in prop1Changed');
@@ -46,7 +46,7 @@ let MockNodeWithThrowingHandler = class MockNodeWithThrowingHandler extends Node
 MockNodeWithThrowingHandler = __decorate([
     Register
 ], MockNodeWithThrowingHandler);
-let MockNodeWithThrowingChanged = class MockNodeWithThrowingChanged extends Node {
+let MockNodeWithThrowingChanged = class MockNodeWithThrowingChanged extends ReactiveNode {
     changeStack = [];
     prop1Changed(change) {
         this.changeStack.push(`prop1Changed ${change.property} ${change.value} ${change.oldValue}`);
@@ -59,7 +59,7 @@ let MockNodeWithThrowingChanged = class MockNodeWithThrowingChanged extends Node
 MockNodeWithThrowingChanged = __decorate([
     Register
 ], MockNodeWithThrowingChanged);
-let MockNodeWithCascadingChanges = class MockNodeWithCascadingChanges extends Node {
+let MockNodeWithCascadingChanges = class MockNodeWithCascadingChanges extends ReactiveNode {
     changeStack = [];
     prop1Changed(change) {
         this.changeStack.push(`prop1Changed ${change.value}`);

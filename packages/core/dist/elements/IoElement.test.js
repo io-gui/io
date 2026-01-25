@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 //@ts-nocheck
 import { describe, it, expect } from 'vitest';
-import { Register, IoElement, Node } from '@io-gui/core';
+import { Register, IoElement, ReactiveNode } from '@io-gui/core';
 const element = new IoElement();
 element.style.display = 'none';
 document.body.appendChild(element);
@@ -36,7 +36,7 @@ describe('IoElement', () => {
         expect(terstElement.getAttribute('prop0')).toBe('0');
     });
     it('Invokes change events and functions', () => {
-        class TestNode extends Node {
+        class TestNode extends ReactiveNode {
             static get ReactiveProperties() {
                 return {
                     prop0: 0,

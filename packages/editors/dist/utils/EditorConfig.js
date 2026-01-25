@@ -1,4 +1,4 @@
-import { IoElement, IoGl, Theme, Color, Node, } from '@io-gui/core';
+import { IoElement, IoGl, Theme, Color, ReactiveNode } from '@io-gui/core';
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioNumberSlider } from '@io-gui/sliders';
@@ -127,7 +127,7 @@ const editorConfigSingleton = new Map([
         ]],
     [Element, []],
     [HTMLElement, []],
-    [Node, [
+    [ReactiveNode, [
             ['reactivity', ioOptionSelect({ option: new MenuOption({ options: ['none', 'debounced', 'immediate'] }) })],
         ]],
     [IoElement, [

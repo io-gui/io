@@ -1,4 +1,4 @@
-import { Node, WithBinding, NodeArray } from '@io-gui/core';
+import { ReactiveNode, WithBinding, NodeArray } from '@io-gui/core';
 export type MenuOptionMode = 'select' | 'toggle' | 'none';
 export type MenuOptionProps = {
     id?: string;
@@ -15,7 +15,7 @@ export type MenuOptionProps = {
     path?: WithBinding<string>;
     options?: Array<string | number | boolean | null | undefined | MenuOptionProps>;
 };
-export declare class MenuOption extends Node {
+export declare class MenuOption extends ReactiveNode {
     id: string;
     value: any;
     label: string;

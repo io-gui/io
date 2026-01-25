@@ -1,5 +1,5 @@
 import { ChangeEvent } from './ChangeQueue.js';
-import { Node } from '../nodes/Node.js';
+import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 /**
  * Event listener types.
@@ -25,8 +25,8 @@ export interface ChangeEventListener {
 export interface IoEventListener {
     (event: {
         detail: any;
-        target: Node | IoElement | EventTarget;
-        path: Array<Node | IoElement | EventTarget>;
+        target: ReactiveNode | IoElement | EventTarget;
+        path: Array<ReactiveNode | IoElement | EventTarget>;
     }): void;
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener | EventListenerOrEventListenerObject;
@@ -55,37 +55,37 @@ export declare const hardenListenerDefinition: (listenerDefinition: ListenerDefi
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {Node | IoElement | EventTarget} node - The node instance containing potential method references
+ * @param {ReactiveNode | IoElement | EventTarget} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
-export declare const listenerFromDefinition: (node: Node | IoElement | EventTarget, def: ListenerDefinition) => Listener;
+export declare const listenerFromDefinition: (node: ReactiveNode | IoElement | EventTarget, def: ListenerDefinition) => Listener;
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
- * It makes events of all `Node` class instances compatible with DOM events.
+ * It makes events of all `ReactiveNode` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
  *  - `protoListeners` specified as `get Listeners()` return value of class.
  *  - `propListeners` specified as inline properties prefixed with "@".
  *  - `addedListeners` explicitly added/removed using `addEventListener()` and `removeEventListener()`.
  */
 export declare class EventDispatcher {
-    readonly node: Node | IoElement | EventTarget;
+    readonly node: ReactiveNode | IoElement | EventTarget;
     readonly nodeIsEventTarget: boolean;
     readonly protoListeners: Listeners;
     readonly propListeners: Listeners;
     readonly addedListeners: Listeners;
     /**
-     * Creates an instance of `EventDispatcher` for specified `Node` instance.
+     * Creates an instance of `EventDispatcher` for specified `ReactiveNode` instance.
      * It initializes `protoListeners` from `ProtoChain`.
-     * @param {Node | IoElement | EventTarget} node owner Node
+     * @param {ReactiveNode | IoElement | EventTarget} node owner ReactiveNode
      */
-    constructor(node: Node | IoElement | EventTarget);
+    constructor(node: ReactiveNode | IoElement | EventTarget);
     /**
      * Sets `protoListeners` specified as `get Listeners()` class definitions.
      * Definitions from subclass replace the ones from parent class.
-     * @param {Node | IoElement} node owner Node
+     * @param {ReactiveNode | IoElement} node owner ReactiveNode
      */
-    setProtoListeners(node: Node | IoElement): void;
+    setProtoListeners(node: ReactiveNode | IoElement): void;
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
@@ -115,9 +115,9 @@ export declare class EventDispatcher {
      * @param {string} name - Name of the event
      * @param {any} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
-     * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
+     * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: Node | IoElement | EventTarget, path?: Array<Node | IoElement | EventTarget>): void;
+    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.

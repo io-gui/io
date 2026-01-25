@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { IoGl, Node, ThemeSingleton, ReactiveProperty, Register } from '@io-gui/core';
+import { IoGl, ReactiveNode, ThemeSingleton, ReactiveProperty, Register } from '@io-gui/core';
 let IoGlTest = class IoGlTest extends IoGl {
     static get Frag() {
         return /* glsl */ `
@@ -65,7 +65,7 @@ describe('IoGL', () => {
             binding: undefined,
             init: undefined,
             reflect: false,
-            type: Node,
+            type: ReactiveNode,
             value: ThemeSingleton,
             observer: { type: 'io', observing: true },
         });

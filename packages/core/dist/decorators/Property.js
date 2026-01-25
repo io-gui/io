@@ -8,7 +8,7 @@ export const reactivePropertyDecorators = new WeakMap();
  *
  * @example
  * \@Register
- * class MyClass extends Node {
+ * class MyClass extends ReactiveNode {
  *   \@Property('default text')
  *   declare title: string;
  * }
@@ -30,14 +30,14 @@ export function Property(initialValue = undefined) {
  *
  * @example
  * \@Register
- * class MyClass extends Node {
+ * class MyClass extends ReactiveNode {
  *   \@ReactiveProperty({type: String, value: 'default text', reflect: true})
  *   declare title: string;
  * }
  *
  * @example
  * \@Register
- * class MyClass extends Node {
+ * class MyClass extends ReactiveNode {
  *   \@ReactiveProperty({type: Array, init: [0, 0]})
  *   declare size: [number, number];
  * }

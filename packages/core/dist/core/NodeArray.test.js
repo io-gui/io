@@ -5,9 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect, vi } from 'vitest';
-import { Node, Register } from '@io-gui/core';
+import { ReactiveNode, Register } from '@io-gui/core';
 import { NodeArray } from './NodeArray.js';
-let TestNode = class TestNode extends Node {
+let TestNode = class TestNode extends ReactiveNode {
     static get ReactiveProperties() {
         return {
             label: ''
@@ -18,7 +18,7 @@ let TestNode = class TestNode extends Node {
 TestNode = __decorate([
     Register
 ], TestNode);
-let ParentNode = class ParentNode extends Node {
+let ParentNode = class ParentNode extends ReactiveNode {
     static get ReactiveProperties() {
         return {
             items: { type: Array, init: null }

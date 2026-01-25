@@ -4,12 +4,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Node, Register } from '@io-gui/core';
+import { ReactiveNode, Register } from '@io-gui/core';
 export const IconsetDB = {};
 /**
  * Global database for SVG assets to be used with `IoIcon`. Icons are registered using `namespace:id` attribute.
  **/
-let Iconset = class Iconset extends Node {
+let Iconset = class Iconset extends ReactiveNode {
     registerIcons(name, svg) {
         const stagingElement = document.createElement('div');
         stagingElement.innerHTML = svg;

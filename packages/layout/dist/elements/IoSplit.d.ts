@@ -45,6 +45,8 @@ export declare class IoSplit extends IoElement {
     onDrawerExpandedChanged(event: CustomEvent): void;
     updateVeil(): void;
     collapseAllDrawers(): void;
+    leadingDrawerChanged(): void;
+    trailingDrawerChanged(): void;
     onVeilClick(event: MouseEvent): void;
     splitMutated(): void;
     splitChanged(): void;

@@ -1,4 +1,4 @@
-import { ReactivePropertyDefinitions, Node, ReactivityType } from '../nodes/Node.js';
+import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js';
 export declare class Color {
     r: number;
     g: number;
@@ -55,7 +55,7 @@ export declare const DARK_THEME: ThemeVars;
  *
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
-export declare class Theme extends Node {
+export declare class Theme extends ReactiveNode {
     static get ReactiveProperties(): ReactivePropertyDefinitions;
     spacing: number;
     spacing2: number;

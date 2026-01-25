@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { throttle, debounce, nextQueue, Node } from '@io-gui/core';
+import { throttle, debounce, nextQueue, ReactiveNode } from '@io-gui/core';
 describe('Queue', () => {
     describe('throttle - leading + trailing edge', () => {
         it('Should execute immediately on first call (leading edge)', async () => {
@@ -49,7 +49,7 @@ describe('Queue', () => {
         it('Should not execute if node is disposed', async () => {
             let count = 0;
             const func = () => { count++; };
-            const node = new Node();
+            const node = new ReactiveNode();
             node.dispose();
             throttle(func, undefined, node);
             expect(count).toBe(0);
@@ -105,7 +105,7 @@ describe('Queue', () => {
         it('Should abort if node is disposed', async () => {
             let count = 0;
             const func = () => { count++; };
-            const node = new Node();
+            const node = new ReactiveNode();
             debounce(func, undefined, node);
             node.dispose();
             await nextQueue();

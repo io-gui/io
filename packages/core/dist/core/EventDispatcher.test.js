@@ -5,11 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { Node, Register, EventDispatcher } from '@io-gui/core';
+import { ReactiveNode, Register, EventDispatcher } from '@io-gui/core';
 const handlerFunction = (event) => {
     event.target.eventStack.push(`handlerFunction ${event.detail}`);
 };
-let MockNode1 = class MockNode1 extends Node {
+let MockNode1 = class MockNode1 extends ReactiveNode {
     eventStack = [];
     static get Listeners() {
         return {
@@ -254,6 +254,68 @@ describe('EventDispatcher', () => {
         expect(eventDispatcher.protoListeners).toBe(undefined);
         expect(eventDispatcher.propListeners).toBe(undefined);
         expect(eventDispatcher.addedListeners).toBe(undefined);
+    });
+    it('Should not dispatch bubbling events to disposed parents', () => {
+        const parent = new MockNode1();
+        const child = new MockNode1();
+        child.addParent(parent);
+        const parentHandler = (event) => {
+            parent.eventStack.push(`parentHandler ${event.detail}`);
+        };
+        const childHandler = (event) => {
+            child.eventStack.push(`childHandler ${event.detail}`);
+        };
+        parent._eventDispatcher.addEventListener('test-event', parentHandler);
+        child._eventDispatcher.addEventListener('test-event', childHandler);
+        // Dispatch bubbling event - parent should receive it
+        child._eventDispatcher.dispatchEvent('test-event', 1, true);
+        expect(child.eventStack).toEqual(['childHandler 1']);
+        expect(parent.eventStack).toEqual(['parentHandler 1']);
+        // Reset stacks
+        child.eventStack = [];
+        parent.eventStack = [];
+        // Dispose the parent (simulates parent being removed from layout)
+        parent.dispose();
+        // Child still has parent in _parents array but parent is disposed
+        // Dispatch bubbling event - should not error and should not reach disposed parent
+        child._eventDispatcher.dispatchEvent('test-event', 2, true);
+        expect(child.eventStack).toEqual(['childHandler 2']);
+        // Parent should not have received event (disposed)
+        expect(parent.eventStack).toEqual([]);
+    });
+    it('Should handle complex parent-child disposal scenarios', () => {
+        // Simulates IoLayout scenario: grandparent > parent > child
+        // Parent gets disposed when child moves to drawer
+        const grandparent = new MockNode1();
+        const parent = new MockNode1();
+        const child = new MockNode1();
+        parent.addParent(grandparent);
+        child.addParent(parent);
+        const stacks = { grandparent: [], parent: [], child: [] };
+        grandparent._eventDispatcher.addEventListener('bubble-event', () => {
+            stacks.grandparent.push('received');
+        });
+        parent._eventDispatcher.addEventListener('bubble-event', () => {
+            stacks.parent.push('received');
+        });
+        child._eventDispatcher.addEventListener('bubble-event', () => {
+            stacks.child.push('received');
+        });
+        // Normal bubbling works
+        child._eventDispatcher.dispatchEvent('bubble-event', null, true);
+        expect(stacks).toEqual({ grandparent: ['received'], parent: ['received'], child: ['received'] });
+        // Reset
+        stacks.grandparent = [];
+        stacks.parent = [];
+        stacks.child = [];
+        // Dispose parent (middle of chain)
+        parent.dispose();
+        // Child dispatches - should reach child but skip disposed parent
+        // Grandparent won't receive because parent (the link) is disposed
+        child._eventDispatcher.dispatchEvent('bubble-event', null, true);
+        expect(stacks.child).toEqual(['received']);
+        expect(stacks.parent).toEqual([]); // Disposed
+        expect(stacks.grandparent).toEqual([]); // Not reachable (parent link broken)
     });
 });
 //# sourceMappingURL=EventDispatcher.test.js.map

@@ -13,7 +13,7 @@ const LISTENER_OPTIONS = ['capture', 'passive'];
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
- * @param {Node | IoElement | EventTarget} node - The node instance containing potential method references
+ * @param {ReactiveNode | IoElement | EventTarget} node - The node instance containing potential method references
  * @param {ListenerDefinition} def - The listener definition to normalize
  * @return {Listener} Normalized [listener, options?] tuple
  */
@@ -44,7 +44,7 @@ export const listenerFromDefinition = (node, def) => {
 };
 /**
  * Internal utility class responsible for handling listeners and dispatching events.
- * It makes events of all `Node` class instances compatible with DOM events.
+ * It makes events of all `ReactiveNode` class instances compatible with DOM events.
  * It maintains three independent lists of listeners:
  *  - `protoListeners` specified as `get Listeners()` return value of class.
  *  - `propListeners` specified as inline properties prefixed with "@".
@@ -57,9 +57,9 @@ export class EventDispatcher {
     propListeners = {};
     addedListeners = {};
     /**
-     * Creates an instance of `EventDispatcher` for specified `Node` instance.
+     * Creates an instance of `EventDispatcher` for specified `ReactiveNode` instance.
      * It initializes `protoListeners` from `ProtoChain`.
-     * @param {Node | IoElement | EventTarget} node owner Node
+     * @param {ReactiveNode | IoElement | EventTarget} node owner ReactiveNode
      */
     constructor(node) {
         this.node = node;
@@ -69,7 +69,7 @@ export class EventDispatcher {
     /**
      * Sets `protoListeners` specified as `get Listeners()` class definitions.
      * Definitions from subclass replace the ones from parent class.
-     * @param {Node | IoElement} node owner Node
+     * @param {ReactiveNode | IoElement} node owner ReactiveNode
      */
     setProtoListeners(node) {
         for (const name in node._protochain?.listeners) {
@@ -227,9 +227,11 @@ export class EventDispatcher {
      * @param {string} name - Name of the event
      * @param {any} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
-     * @param {Node | IoElement | EventTarget} [node] - Event target override to dispatch the event from
+     * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
     dispatchEvent(name, detail, bubbles = true, node = this.node, path = []) {
+        if (this.node._disposed)
+            return;
         path = [...path, node];
         if ((node instanceof EventTarget)) {
             EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, { detail: detail, bubbles: bubbles, composed: true, cancelable: true }));
@@ -257,9 +259,9 @@ export class EventDispatcher {
             }
             if (bubbles) {
                 for (const parent of node._parents) {
-                    if (parent._isNode || parent._isIoElement) {
+                    if ((parent._isNode || parent._isIoElement) && !parent._disposed) {
                         // TODO: prevent event multiplication when children contain multiple instances of the same node.
-                        // TODO: enable propagation across Node / IoElement boundaries?
+                        // TODO: enable propagation across ReactiveNode / IoElement boundaries?
                         // TODO: implement stopPropagation() and stopImmediatePropagation()
                         parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path);
                     }

@@ -23,6 +23,7 @@ export const applyNativeElementProps = function (element, props) {
             defaultPropValues[p] = element[p];
         if (p === 'style') {
             for (const s in prop) {
+                // TODO: Consider supporting importance
                 element.style.setProperty(s, prop[s]);
             }
         }
