@@ -33,7 +33,7 @@ const split = new Split({
   children: [
     {
       type: 'panel',
-      flex: '0 0 280px',
+      flex: '0 0 200px',
       tabs: [{id: 'AllClasses'}],
     },
     {
@@ -86,7 +86,7 @@ const split = new Split({
     },
     {
       type: 'panel',
-      flex: '0 0 280px',
+      flex: '0 0 22 0px',
       tabs: [
         {id: 'ExampleSelector'},
       ],
