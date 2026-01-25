@@ -373,7 +373,7 @@ export class IoSplit extends IoElement {
       vChildren.push(ioDrawer({
         orientation: orientation,
         direction: 'leading',
-        split: this,
+        parent: this,
         child: this.leadingDrawer,
         elements: this.elements,
         addMenuOption: this.addMenuOption,
@@ -424,7 +424,7 @@ export class IoSplit extends IoElement {
       vChildren.push(ioDrawer({
         orientation: orientation,
         direction: 'trailing',
-        split: this,
+        parent: this,
         child: this.trailingDrawer,
         elements: this.elements,
         addMenuOption: this.addMenuOption,

@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, div, ThemeSingleton, ReactivityType } from '@io-gui/core'
+import { Register, ReactiveProperty, IoElement, IoElementProps, VDOMElement, div, ThemeSingleton } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
 import { MenuOption } from '@io-gui/menus'
 import { Split } from '../nodes/Split.js'
@@ -11,6 +11,7 @@ export type DrawerDirection = 'leading' | 'trailing'
 export type IoDrawerProps = IoElementProps & {
   orientation: 'horizontal' | 'vertical'
   direction: DrawerDirection
+  parent: IoSplit
   child: Split | Panel | null
   elements: VDOMElement[]
   addMenuOption?: MenuOption
@@ -113,9 +114,6 @@ export class IoDrawer extends IoElement {
     `
   }
 
-  // @ReactiveProperty({ value: 'debounced' })
-  // declare reactivity: ReactivityType
-
   @ReactiveProperty({type: String, value: 'horizontal', reflect: true})
   declare orientation: 'horizontal' | 'vertical'
 
@@ -126,7 +124,7 @@ export class IoDrawer extends IoElement {
   declare expanded: boolean
 
   @ReactiveProperty({type: Object})
-  declare split: IoSplit
+  declare parent: IoSplit
 
   @ReactiveProperty({type: Object})
   declare child: Split | Panel
@@ -153,7 +151,7 @@ export class IoDrawer extends IoElement {
 
 
   changed() {
-    const parent = this.split as IoSplit
+    const parent = this.parent as IoSplit
     const parentRect = parent.getBoundingClientRect()
     const parentSize = this.orientation === 'horizontal' ? parentRect.width : parentRect.height
 
