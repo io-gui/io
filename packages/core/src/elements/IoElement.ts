@@ -110,6 +110,7 @@ export class IoElement extends HTMLElement {
           this.className = props[name]
         } else if (name === 'style') {
           for (const s in props[name]) {
+            // TODO: Consider supporting importance
             this.style[s as any] = props[name][s]
           }
         } else if (name.startsWith('data-')) {

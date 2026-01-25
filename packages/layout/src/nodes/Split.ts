@@ -63,11 +63,12 @@ export class Split extends Node {
     this.dispatchMutation()
   }
   flexChanged() {
-    debug: {
-      const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
-      if (!flexRegex.test(this.flex)) {
-        console.warn(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
+    const flexRegex = /^[\d.]+\s+[\d.]+\s+(?:auto|[\d.]+(?:px|%))$/
+    if (!flexRegex.test(this.flex)) {
+      debug: {
+        console.error(`Split: Invalid flex value "${this.flex}". Expected a valid CSS flex value.`)
       }
+      this.flex = '0 1 auto'
     }
   }
   toJSON(): SplitProps {

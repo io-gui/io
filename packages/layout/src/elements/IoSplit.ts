@@ -191,8 +191,8 @@ export class IoSplit extends IoElement {
     const leftSize = Math.max(minSize, Math.min(combinedSize - minSize, pointerPos))
     const rightSize = combinedSize - leftSize
 
-    leftSplit.style.flex = `0 0 ${leftSize}px`
-    rightSplit.style.flex = `0 0 ${rightSize}px`
+    leftSplit.style.setProperty('flex', `0 0 ${leftSize}px`)
+    rightSplit.style.setProperty('flex', `0 0 ${rightSize}px`)
   }
 
   onDividerMoveEnd(event: CustomEvent) {
@@ -208,8 +208,8 @@ export class IoSplit extends IoElement {
       const childSize = orientation === 'horizontal' ? childRect.width : childRect.height
 
       if (hasFlexGrow(childmodel.flex)) {
-        // TODO: Reconsider. Test
-        child.style.flex = childmodel.flex
+        const [grow, shrink] = childmodel.flex.trim().split(/\s+/)
+        childmodel.flex = `${grow} ${shrink} ${childSize}px`
       } else {
         childmodel.flex = `0 0 ${childSize}px`
       }
@@ -252,7 +252,9 @@ export class IoSplit extends IoElement {
     const hasGrow = this.split.children.some(child => hasFlexGrow(child.flex))
     if (!hasGrow && this.split.children.length > 0) {
       const i = Math.min(1, this.split.children.length - 1)
-      this.split.children[i].flex = '1 1 auto'
+      const child = this.split.children[i]
+      const currentBasis = parseFlexBasis(child.flex)
+      child.flex = `1 1 ${currentBasis}px`
     }
 
     this.hasVisibleFlexGrow = this.split.children.some((child, i) => {
