@@ -1,7 +1,7 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorWidget, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
-import { ioBuildGeometry } from '@io-gui/three'
 import { IcosahedronGeometry } from 'three/webgpu'
+import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js'
 
 registerEditorWidget(IcosahedronGeometry, ioBuildGeometry())
 

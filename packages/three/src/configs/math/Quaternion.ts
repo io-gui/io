@@ -1,5 +1,5 @@
 import { registerEditorConfig } from '@io-gui/editors'
-import { ioQuaternion } from '@io-gui/three'
+import { ioQuaternion } from '../../elements/math/IoQuaternion.js'
 import { Quaternion } from 'three/webgpu'
 
 registerEditorConfig(Object, [

@@ -1,7 +1,7 @@
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups, registerEditorWidget } from '@io-gui/editors'
 import { ioObject } from '@io-gui/editors'
-import { ioBuildGeometry } from '@io-gui/three'
 import { ExtrudeGeometry } from 'three/webgpu'
+import { ioBuildGeometry } from '../../elements/IoBuildGeometry.js'
 
 registerEditorWidget(ExtrudeGeometry, ioBuildGeometry())
 

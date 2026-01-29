@@ -23,16 +23,17 @@
  * THE SOFTWARE.
  */
 
+export * from './elements/math/IoEuler.js'
+export * from './elements/math/IoMatrix2.js'
+export * from './elements/math/IoMatrix3.js'
+export * from './elements/math/IoMatrix4.js'
+export * from './elements/math/IoQuaternion.js'
+export * from './elements/math/IoVector2.js'
+export * from './elements/math/IoVector3.js'
+export * from './elements/math/IoVector4.js'
+
 export * from './elements/IoBuildGeometry.js'
-export * from './elements/IoEuler.js'
-export * from './elements/IoMatrix2.js'
-export * from './elements/IoMatrix3.js'
-export * from './elements/IoMatrix4.js'
-export * from './elements/IoQuaternion.js'
 export * from './elements/IoThreeViewport.js'
-export * from './elements/IoVector2.js'
-export * from './elements/IoVector3.js'
-export * from './elements/IoVector4.js'
 export * from './nodes/ThreeApplet.js'
 
 import './configs/index.js'

@@ -1,7 +1,7 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
-import { ioEuler } from '@io-gui/three'
 import { Scene } from 'three/webgpu'
+import { ioEuler } from '../../elements/math/IoEuler.js'
 
 registerEditorConfig(Scene, [
   ['backgroundBlurriness', ioNumberSlider({min: 0, max: 1, step: 0.01})],

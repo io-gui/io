@@ -26,7 +26,7 @@ export type IoSplitProps = IoElementProps & {
   split: WithBinding<Split>
   elements: VDOMElement[]
   addMenuOption?: MenuOption
-  frozen?: boolean
+  editable?: boolean
 }
 
 @Register
@@ -63,8 +63,8 @@ export class IoSplit extends IoElement {
         pointer-events: auto;
         cursor: pointer;
       }
-      :host[frozen] .io-close-icon,
-      :host[frozen] .io-tabs-add-tab {
+      :host:not([editable]) .io-close-icon,
+      :host:not([editable]) .io-tabs-add-tab {
         display: none;
       }
     `
@@ -92,7 +92,7 @@ export class IoSplit extends IoElement {
   declare showVeil: boolean
 
   @ReactiveProperty({type: Boolean, value: false, reflect: true})
-  declare frozen: boolean
+  declare editable: boolean
 
   static get Listeners() {
     return {

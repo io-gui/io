@@ -1,7 +1,9 @@
 import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
 import { ioNumberSlider } from '@io-gui/sliders'
-import { ioVector3, ioEuler, ioQuaternion } from '@io-gui/three'
 import { Object3D } from 'three/webgpu'
+import { ioVector3 } from '../../elements/math/IoVector3.js'
+import { ioEuler } from '../../elements/math/IoEuler.js'
+import { ioQuaternion } from '../../elements/math/IoQuaternion.js'
 
 registerEditorConfig(Object3D, [
   ['renderOrder', ioNumberSlider({min: 0, max: 100, step: 1})],
