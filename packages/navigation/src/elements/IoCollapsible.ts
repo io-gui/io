@@ -67,16 +67,16 @@ export class IoCollapsible extends IoElement {
     `
   }
 
-  @ReactiveProperty(Array)
+  @ReactiveProperty({type: Array, init: null})
   declare elements: VDOMElement[]
 
-  @ReactiveProperty('')
+  @ReactiveProperty({value: '', type: String})
   declare label: string
 
   @ReactiveProperty({value: 'column', reflect: true})
   declare direction: 'column' | 'row'
 
-  @ReactiveProperty('')
+  @ReactiveProperty({value: '', type: String})
   declare icon: string
 
   @ReactiveProperty({value: false, reflect: true})

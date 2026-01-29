@@ -72,7 +72,7 @@ export class IoSelector extends IoElement {
     `
   }
 
-  @ReactiveProperty(Array)
+  @ReactiveProperty({type: Array, init: null})
   declare elements: VDOMElement[]
 
   @ReactiveProperty({value: '', type: String})
@@ -161,6 +161,7 @@ export class IoSelector extends IoElement {
   elementsChanged() {
     // TODO: make sure all elements have props and id if selectable!
     // TODO: fix and test edge case where reusing element in templete() might return cache from the previous element if keys collide!
+    this.selectedChanged()
     this.startPreache()
   }
   selectedChanged() {
@@ -184,8 +185,6 @@ export class IoSelector extends IoElement {
     }
 
     id = id.split('#')[0]
-    // TODO: what if <io-selector> is reused in template() and ID collides?
-    if (id === (this.childNodes[0] as IoElement)?.id) return
 
     this.render([], this, cache)
     this.scrollTo(0, 0)
