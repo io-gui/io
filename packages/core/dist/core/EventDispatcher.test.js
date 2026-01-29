@@ -284,7 +284,7 @@ describe('EventDispatcher', () => {
         expect(parent.eventStack).toEqual([]);
     });
     it('Should handle complex parent-child disposal scenarios', () => {
-        // Simulates IoLayout scenario: grandparent > parent > child
+        // Simulates IoSplit scenario: grandparent > parent > child
         // Parent gets disposed when child moves to drawer
         const grandparent = new MockNode1();
         const parent = new MockNode1();

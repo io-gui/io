@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton, div } from '@io-gui/core'
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton, div, WithBinding } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
@@ -23,9 +23,10 @@ export function hasFlexGrow(flex: string): boolean {
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
 export type IoSplitProps = IoElementProps & {
-  split: Split
+  split: WithBinding<Split>
   elements: VDOMElement[]
   addMenuOption?: MenuOption
+  frozen?: boolean
 }
 
 @Register
@@ -33,6 +34,9 @@ export class IoSplit extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        flex: 1 1 100%;
+        max-width: 100%;
+        max-height: 100%;
         position: relative;
         display: flex;
         overflow: hidden;
@@ -59,6 +63,10 @@ export class IoSplit extends IoElement {
         pointer-events: auto;
         cursor: pointer;
       }
+      :host[frozen] .io-close-icon,
+      :host[frozen] .io-tabs-add-tab {
+        display: none;
+      }
     `
   }
 
@@ -82,6 +90,9 @@ export class IoSplit extends IoElement {
 
   @ReactiveProperty({type: Boolean, value: false, reflect: true})
   declare showVeil: boolean
+
+  @ReactiveProperty({type: Boolean, value: false, reflect: true})
+  declare frozen: boolean
 
   static get Listeners() {
     return {

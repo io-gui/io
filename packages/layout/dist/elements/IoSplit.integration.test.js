@@ -1,8 +1,8 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { IoLayout, IoTab, Split, Panel, Tab, tabDragIconSingleton, ioTabDropRectSingleton, } from '@io-gui/layout';
+import { IoSplit, IoTab, Split, Panel, Tab, tabDragIconSingleton, ioTabDropRectSingleton, } from '@io-gui/layout';
 /**
- * Integration tests for IoLayout drag-drop flows.
+ * Integration tests for IoSplit drag-drop flows.
  *
  * These tests verify the complete drag-drop interaction flows including:
  * - Tab reordering within the same panel
@@ -10,7 +10,7 @@ import { IoLayout, IoTab, Split, Panel, Tab, tabDragIconSingleton, ioTabDropRect
  * - Tab moving to create new splits
  * - Drag cancellation and edge cases
  */
-describe('IoLayout Integration - Drag Drop Flows', () => {
+describe('IoSplit Integration - Drag Drop Flows', () => {
     let layout;
     let container;
     function createPointerEvent(type, options = {}) {
@@ -90,7 +90,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
         });
         it('should initiate drag after moving past threshold', () => {
@@ -205,7 +205,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             sourcePanel = split.children[0];
             targetPanel = split.children[1];
@@ -261,11 +261,11 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             sourcePanel = split.children[0];
             targetPanel = split.children[1];
-            ioSplit = layout.querySelector('io-split');
+            ioSplit = layout;
             const panels = layout.querySelectorAll('io-panel');
             sourcePanelElement = panels[0];
         });
@@ -327,7 +327,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
         });
         it('should cancel drag on pointercancel event', () => {
@@ -383,7 +383,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
         });
         it('should update drop marker when drag icon properties change', () => {
@@ -418,7 +418,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                 type: 'split',
                 children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const ioPanel = layout.querySelector('io-panel');
             // Test center detection via direct property setting
@@ -436,7 +436,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                 type: 'split',
                 children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const ioPanel = layout.querySelector('io-panel');
             // Test various directions
@@ -460,7 +460,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     { type: 'panel', tabs: [{ id: 'only-tab' }] },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const panel = split.children[0];
             const ioPanel = layout.querySelector('io-panel');
@@ -478,7 +478,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     { type: 'panel', tabs: [{ id: 'only-tab' }] },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const ioPanel = layout.querySelector('io-panel');
             const removeSpy = vi.fn();
@@ -496,7 +496,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     { type: 'panel', tabs: [{ id: 'tab2' }] },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const panels = layout.querySelectorAll('io-panel');
             const secondPanel = panels[1];
@@ -526,7 +526,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             sourcePanel = split.children[0];
             targetPanel = split.children[1];
@@ -595,7 +595,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const panels = layout.querySelectorAll('io-panel');
             expect(panels.length).toBe(3);
@@ -625,7 +625,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             // Get the nested split
             const nestedSplit = split.children[1];
@@ -650,7 +650,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                 type: 'split',
                 children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
         });
         it('should sync drop marker with drag icon state changes', () => {
@@ -682,7 +682,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         });
     });
     describe('Edge Cases and Error Handling', () => {
-        it('should handle drag when no io-layout ancestor exists', () => {
+        it('should handle drag when no root io-split ancestor exists', () => {
             // Create a standalone io-tab not within a layout
             const tab = new Tab({ id: 'orphan-tab' });
             const ioTab = new IoTab({ tab });
@@ -706,7 +706,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                 type: 'split',
                 children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const ioTab = layout.querySelector('io-tab');
             for (let i = 0; i < 5; i++) {
@@ -736,7 +736,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
                     },
                 ],
             });
-            layout = new IoLayout({ split, elements: [] });
+            layout = new IoSplit({ split, elements: [] });
             container.appendChild(layout);
             const ioPanel = layout.querySelector('io-panel');
             const panel = ioPanel.panel;
@@ -752,7 +752,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         });
     });
 });
-describe('IoLayout Integration - Multiple Instances', () => {
+describe('IoSplit Integration - Multiple Instances', () => {
     let layout1;
     let layout2;
     let container;
@@ -770,14 +770,14 @@ describe('IoLayout Integration - Multiple Instances', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'layout1-tab' }] }],
         });
-        layout1 = new IoLayout({ split: split1, elements: [] });
+        layout1 = new IoSplit({ split: split1, elements: [] });
         layout1.style.cssText = 'width: 800px; height: 600px; float: left;';
         container.appendChild(layout1);
         const split2 = new Split({
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'layout2-tab' }] }],
         });
-        layout2 = new IoLayout({ split: split2, elements: [] });
+        layout2 = new IoSplit({ split: split2, elements: [] });
         layout2.style.cssText = 'width: 800px; height: 600px; float: left;';
         container.appendChild(layout2);
     });
@@ -822,7 +822,7 @@ describe('IoLayout Integration - Multiple Instances', () => {
         expect(tabDragIconSingleton.dragging).toBe(true);
         expect(tabDragIconSingleton.dropSource).toBe(panel1);
         // Note: Cross-layout drag behavior depends on the root passed to updateDrag
-        // which is scoped by closest('io-layout')
+        // which is scoped by closest('io-split[root]')
     });
     it('should maintain independent layout states', () => {
         const panel1 = layout1.split.children[0];
@@ -834,7 +834,7 @@ describe('IoLayout Integration - Multiple Instances', () => {
         expect(panel2.tabs.length).toBe(1);
     });
 });
-describe('IoLayout Integration - State Persistence', () => {
+describe('IoSplit Integration - State Persistence', () => {
     let container;
     beforeEach(() => {
         container = document.createElement('div');
@@ -861,7 +861,7 @@ describe('IoLayout Integration - State Persistence', () => {
                 { type: 'panel', tabs: [{ id: 'tab3' }] },
             ],
         });
-        const layout = new IoLayout({ split, elements: [] });
+        const layout = new IoSplit({ split, elements: [] });
         container.appendChild(layout);
         // Move tab from first to second panel
         const sourcePanelElement = layout.querySelectorAll('io-panel')[0];
@@ -885,7 +885,7 @@ describe('IoLayout Integration - State Persistence', () => {
             ],
         };
         const split = new Split(initialJson);
-        const layout = new IoLayout({ split, elements: [] });
+        const layout = new IoSplit({ split, elements: [] });
         container.appendChild(layout);
         const panels = layout.querySelectorAll('io-panel');
         expect(panels.length).toBe(2);
@@ -894,4 +894,4 @@ describe('IoLayout Integration - State Persistence', () => {
         layout.remove();
     });
 });
-//# sourceMappingURL=IoLayout.integration.test.js.map
+//# sourceMappingURL=IoSplit.integration.test.js.map

@@ -116,7 +116,7 @@ let IoTab = class IoTab extends IoField {
         if (event.buttons !== 1)
             return;
         const panel = this.parentElement.parentElement;
-        const root = this.closest('io-layout');
+        const root = this.closest('io-split[root]');
         tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root);
     }
     onPointerup(event) {

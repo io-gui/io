@@ -28,6 +28,9 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
     static get Style() {
         return /* css */ `
       :host {
+        flex: 1 1 100%;
+        max-width: 100%;
+        max-height: 100%;
         position: relative;
         display: flex;
         overflow: hidden;
@@ -53,6 +56,10 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         opacity: 0.5;
         pointer-events: auto;
         cursor: pointer;
+      }
+      :host[frozen] .io-close-icon,
+      :host[frozen] .io-tabs-add-tab {
+        display: none;
       }
     `;
     }
@@ -405,6 +412,9 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Boolean, value: false, reflect: true })
 ], IoSplit.prototype, "showVeil", void 0);
+__decorate([
+    ReactiveProperty({ type: Boolean, value: false, reflect: true })
+], IoSplit.prototype, "frozen", void 0);
 IoSplit = IoSplit_1 = __decorate([
     Register
 ], IoSplit);

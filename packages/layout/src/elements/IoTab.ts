@@ -4,7 +4,7 @@ import { IoContextEditorSingleton } from '@io-gui/editors'
 import { IconsetDB, ioIcon } from '@io-gui/icons'
 import { MenuOptionProps, MenuOption, ioOptionSelect } from '@io-gui/menus'
 import { IoPanel } from './IoPanel.js'
-import { IoLayout } from './IoLayout.js'
+import { IoSplit } from './IoSplit.js'
 import { Tab } from '../nodes/Tab.js'
 import { tabDragIconSingleton } from './IoTabDragIcon.js'
 
@@ -128,7 +128,7 @@ export class IoTab extends IoField {
     event.preventDefault()
     if (event.buttons !== 1) return
     const panel = this.parentElement!.parentElement as IoPanel
-    const root = this.closest('io-layout') as IoLayout
+    const root = this.closest('io-split[root]') as IoSplit
     tabDragIconSingleton.updateDrag(this.tab, panel, event.clientX, event.clientY, root)
   }
   onPointerup(event: PointerEvent) {

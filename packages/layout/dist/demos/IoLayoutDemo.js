@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { Register, IoElement, div, h1, h4, p, Storage as $ } from '@io-gui/core';
-import { ioLayout, Split } from '@io-gui/layout';
+import { ioSplit, Split } from '@io-gui/layout';
 import { ioCollapsible } from '@io-gui/navigation';
 import { ioMarkdown } from '@io-gui/markdown';
 import { MenuOption } from '@io-gui/menus';
@@ -70,7 +70,7 @@ const split = new Split({
         }
     ]
 });
-export class IoLayoutDemo extends IoElement {
+export class IoSplitDemo extends IoElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -80,9 +80,6 @@ export class IoLayoutDemo extends IoElement {
         flex: 1 1 100%;
         align-self: stretch;
       }
-      :host io-layout {
-        flex: 1 1 100%;
-      }
       :host io-panel > io-selector > div {
         padding: var(--io_lineHeight);
       }
@@ -90,7 +87,7 @@ export class IoLayoutDemo extends IoElement {
     }
     ready() {
         this.render([
-            ioLayout({
+            ioSplit({
                 elements: [
                     { tag: 'io-inputs-demo', props: { id: 'Inputs', import: './packages/inputs/dist/demos/IoInputsDemo.js' } },
                     { tag: 'io-icons-demo', props: { id: 'Icons', import: './packages/icons/dist/demos/IoIconsDemo.js' } },
@@ -173,6 +170,6 @@ export class IoLayoutDemo extends IoElement {
         ]);
     }
 }
-Register(IoLayoutDemo);
-export const ioLayoutDemo = IoLayoutDemo.vConstructor;
+Register(IoSplitDemo);
+export const ioSplitDemo = IoSplitDemo.vConstructor;
 //# sourceMappingURL=IoLayoutDemo.js.map

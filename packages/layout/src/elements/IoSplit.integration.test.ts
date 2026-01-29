@@ -1,7 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import {
-  IoLayout,
   IoSplit,
   IoPanel,
   IoTab,
@@ -13,7 +12,7 @@ import {
 } from '@io-gui/layout'
 
 /**
- * Integration tests for IoLayout drag-drop flows.
+ * Integration tests for IoSplit drag-drop flows.
  *
  * These tests verify the complete drag-drop interaction flows including:
  * - Tab reordering within the same panel
@@ -21,8 +20,8 @@ import {
  * - Tab moving to create new splits
  * - Drag cancellation and edge cases
  */
-describe('IoLayout Integration - Drag Drop Flows', () => {
-  let layout: IoLayout
+describe('IoSplit Integration - Drag Drop Flows', () => {
+  let layout: IoSplit
   let container: HTMLElement
 
   function createPointerEvent(
@@ -120,7 +119,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
     })
 
@@ -259,7 +258,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       sourcePanel = split.children[0] as Panel
@@ -328,12 +327,12 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       sourcePanel = split.children[0] as Panel
       targetPanel = split.children[1] as Panel
-      ioSplit = layout.querySelector('io-split') as IoSplit
+      ioSplit = layout
 
       const panels = layout.querySelectorAll('io-panel')
       sourcePanelElement = panels[0] as IoPanel
@@ -413,7 +412,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
     })
 
@@ -481,7 +480,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
     })
 
@@ -525,7 +524,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const ioPanel = layout.querySelector('io-panel') as IoPanel
@@ -547,7 +546,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const ioPanel = layout.querySelector('io-panel') as IoPanel
@@ -574,7 +573,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           { type: 'panel', tabs: [{ id: 'only-tab' }] },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const panel = split.children[0] as Panel
@@ -596,7 +595,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           { type: 'panel', tabs: [{ id: 'only-tab' }] },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const ioPanel = layout.querySelector('io-panel') as IoPanel
@@ -618,7 +617,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           { type: 'panel', tabs: [{ id: 'tab2' }] },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const panels = layout.querySelectorAll('io-panel')
@@ -653,7 +652,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       sourcePanel = split.children[0] as Panel
@@ -741,7 +740,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const panels = layout.querySelectorAll('io-panel')
@@ -776,7 +775,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       // Get the nested split
@@ -808,7 +807,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
     })
 
@@ -849,7 +848,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
   })
 
   describe('Edge Cases and Error Handling', () => {
-    it('should handle drag when no io-layout ancestor exists', () => {
+    it('should handle drag when no root io-split ancestor exists', () => {
       // Create a standalone io-tab not within a layout
       const tab = new Tab({ id: 'orphan-tab' })
       const ioTab = new IoTab({ tab })
@@ -877,7 +876,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const ioTab = layout.querySelector('io-tab') as IoTab
@@ -913,7 +912,7 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
           },
         ],
       })
-      layout = new IoLayout({ split, elements: [] })
+      layout = new IoSplit({ split, elements: [] })
       container.appendChild(layout)
 
       const ioPanel = layout.querySelector('io-panel') as IoPanel
@@ -934,9 +933,9 @@ describe('IoLayout Integration - Drag Drop Flows', () => {
   })
 })
 
-describe('IoLayout Integration - Multiple Instances', () => {
-  let layout1: IoLayout
-  let layout2: IoLayout
+describe('IoSplit Integration - Multiple Instances', () => {
+  let layout1: IoSplit
+  let layout2: IoSplit
   let container: HTMLElement
 
   beforeEach(() => {
@@ -954,7 +953,7 @@ describe('IoLayout Integration - Multiple Instances', () => {
       type: 'split',
       children: [{ type: 'panel', tabs: [{ id: 'layout1-tab' }] }],
     })
-    layout1 = new IoLayout({ split: split1, elements: [] })
+    layout1 = new IoSplit({ split: split1, elements: [] })
     layout1.style.cssText = 'width: 800px; height: 600px; float: left;'
     container.appendChild(layout1)
 
@@ -962,7 +961,7 @@ describe('IoLayout Integration - Multiple Instances', () => {
       type: 'split',
       children: [{ type: 'panel', tabs: [{ id: 'layout2-tab' }] }],
     })
-    layout2 = new IoLayout({ split: split2, elements: [] })
+    layout2 = new IoSplit({ split: split2, elements: [] })
     layout2.style.cssText = 'width: 800px; height: 600px; float: left;'
     container.appendChild(layout2)
   })
@@ -1014,7 +1013,7 @@ describe('IoLayout Integration - Multiple Instances', () => {
     expect(tabDragIconSingleton.dropSource).toBe(panel1)
 
     // Note: Cross-layout drag behavior depends on the root passed to updateDrag
-    // which is scoped by closest('io-layout')
+    // which is scoped by closest('io-split[root]')
   })
 
   it('should maintain independent layout states', () => {
@@ -1030,7 +1029,7 @@ describe('IoLayout Integration - Multiple Instances', () => {
   })
 })
 
-describe('IoLayout Integration - State Persistence', () => {
+describe('IoSplit Integration - State Persistence', () => {
   let container: HTMLElement
 
   beforeEach(() => {
@@ -1061,7 +1060,7 @@ describe('IoLayout Integration - State Persistence', () => {
         { type: 'panel', tabs: [{ id: 'tab3' }] },
       ],
     })
-    const layout = new IoLayout({ split, elements: [] })
+    const layout = new IoSplit({ split, elements: [] })
     container.appendChild(layout)
 
     // Move tab from first to second panel
@@ -1092,7 +1091,7 @@ describe('IoLayout Integration - State Persistence', () => {
     }
 
     const split = new Split(initialJson)
-    const layout = new IoLayout({ split, elements: [] })
+    const layout = new IoSplit({ split, elements: [] })
     container.appendChild(layout)
 
     const panels = layout.querySelectorAll('io-panel')

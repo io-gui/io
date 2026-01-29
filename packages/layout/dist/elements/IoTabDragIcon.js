@@ -61,7 +61,7 @@ let IoTabDragIcon = class IoTabDragIcon extends IoField {
         this.style.top = y + 'px';
         this.style.left = x + 'px';
         if (!root) {
-            console.error('IoTabDragIcon: No io-layout found!');
+            console.error('IoTabDragIcon: No root io-split found!');
             return;
         }
         this.detectDropTargets(x, y, root);

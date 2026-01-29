@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, IoElement, Storage as $, div, ReactiveProperty } from '@io-gui/core';
-import { ioLayout, Split } from '@io-gui/layout';
+import { ioSplit, Split } from '@io-gui/layout';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioThreeViewport, ThreeApplet } from '@io-gui/three';
 import { ioField } from '@io-gui/inputs';
@@ -331,7 +331,7 @@ export class IoThreeDemo extends IoElement {
     }
     changed() {
         this.render([
-            ioLayout({
+            ioSplit({
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.selectedExample, playing: true, cameraSelect: 'top' }),
                     ioThreeViewport({ id: 'Front', applet: this.selectedExample, playing: true, cameraSelect: 'front' }),
