@@ -1,8 +1,9 @@
-import { registerEditorConfig, ioMatrix, ioObject } from '@io-gui/editors'
+import { registerEditorConfig, ioObject } from '@io-gui/editors'
+import { ioMatrix2 } from '@io-gui/three'
 import { Matrix2 } from 'three/webgpu'
 
 registerEditorConfig(Matrix2, [
-  ['elements', ioMatrix()],
+  ['elements', ioMatrix2()],
 ])
 
 registerEditorConfig(Object, [

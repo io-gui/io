@@ -18,6 +18,7 @@ export default defineConfig({
       enabled: true,
       provider: playwright() as any,
       instances: [{ browser: 'chromium' }],
+      screenshotFailures: false,
     },
     include: ['packages/*/src/**/*.test.ts'],
   },

@@ -1,15 +1,8 @@
-import { Register, IoElement, Property, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, ReactiveNode } from '@io-gui/core'
-import { ioNumber, ioBoolean } from '@io-gui/inputs'
+import { Register, IoElement, Property, ReactiveProperty, IoElementProps, VDOMElement, ReactiveNode } from '@io-gui/core'
+import { ioNumber } from '@io-gui/inputs'
 
 export type IoMatrixBaseProps = IoElementProps & {
   value?: number[]
-  conversion?: number
-  step?: number
-  min?: number
-  max?: number
-  linkable?: boolean
-  linked?: WithBinding<boolean>
-  ladder?: boolean
   disabled?: boolean
 }
 /**
@@ -44,47 +37,14 @@ export class IoMatrixBase extends IoElement {
   @ReactiveProperty({type: Array})
   declare value: Array<number>
 
-  @ReactiveProperty(1)
-  declare conversion: number
-
-  @ReactiveProperty(0.001)
-  declare step: number
-
-  @ReactiveProperty(-Infinity)
-  declare min: number
-
-  @ReactiveProperty(Infinity)
-  declare max: number
-
-  @ReactiveProperty(false)
-  declare linkable: boolean
-
-  @ReactiveProperty(false)
-  declare linked: boolean
-
-  @ReactiveProperty(true)
-  declare ladder: boolean
-
-  @ReactiveProperty(false)
+  @ReactiveProperty({value: false, type: Boolean})
   declare disabled: boolean
 
-  @Property()
+  @Property({type: Array, init: null})
   declare keys: number[]
-
-  private _ratios: any = {}
 
   constructor(args: IoMatrixBaseProps) {
     super(args)
-  }
-
-  _onNumberPointerDown(event: PointerEvent) {
-    const item = event.composedPath()[0] as HTMLElement
-    const id = item.id as keyof typeof this.value
-    this._ratios = {}
-    if (this.linked && this.value[id] !== 0) {
-      const value = this.value as any
-      for (const k of this.keys as [keyof typeof value]) this._ratios[k] = value[k] / value[id]
-    }
   }
 
   _onNumberValueInput(event: CustomEvent) {
@@ -93,15 +53,13 @@ export class IoMatrixBase extends IoElement {
     if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }
-    this.dispatch('value-input', {property: 'value', value: this.value}, false)
+    // TODO: Rewise and normalize 'value-input' event
+    this.dispatch('value-input', {property: item.id, value: this.value}, false)
   }
 
   valueChanged() {
     this.keys.length = 0
     this.keys = Array.from(Array(this.value.length).keys())
-    debug: if (this.keys.find(k => [0, 1, 2, 3].indexOf(k) === -1)) {
-      console.warn('IoMatrixBase: Unrecognized vector type!')
-    }
   }
 
   valueMutated() {
@@ -112,23 +70,14 @@ export class IoMatrixBase extends IoElement {
     for (const k of this.keys) {
       if (this.value[k] !== undefined) {
         vChildren.push(ioNumber({
-          id: String(k), // Consider removing global id collisions
+          id: String(k),
           value: this.value[k],
-          conversion: this.conversion,
-          step: this.step,
-          min: this.min,
-          max: this.max,
-          ladder: this.ladder,
+          step: 0.00001,
           disabled: this.disabled,
-          '@pointerdown': this._onNumberPointerDown,
           '@value-input': this._onNumberValueInput,
         }))
       }
     }
-    vChildren.push(this.linkable ? ioBoolean({value: this.bind('linked') as any, true: 'io:link', false: 'io:unlink'}) : null)
     this.render(vChildren)
   }
-}
-export const ioMatrixBase = function(arg0?: IoMatrixBaseProps) {
-  return IoMatrixBase.vConstructor(arg0)
 }

@@ -23,9 +23,8 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet } from '@io-gui/three'
+import { ThreeApplet, ioVector3 } from '@io-gui/three'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
-import { ioVector } from '@io-gui/editors'
 
 @Register
 export class WebGPUBackdropAreaExample extends ThreeApplet {
@@ -121,7 +120,7 @@ export class WebGPUBackdropAreaExample extends ThreeApplet {
         }),
         selectBy: 'id'
       })],
-      [Vector3, ioVector({linkable: true})]
+      [Vector3, ioVector3({linkable: true})]
     ]
 
 		// Load model

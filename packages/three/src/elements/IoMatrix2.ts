@@ -1,4 +1,4 @@
-import { Property, Register } from '@io-gui/core'
+import { Register } from '@io-gui/core'
 import { IoMatrixBase, IoMatrixBaseProps } from './IoMatrixBase.js'
 
 export type IoMatrix2Props = IoMatrixBaseProps & {
@@ -14,8 +14,6 @@ export class IoMatrix2 extends IoMatrixBase {
       }
     `
   }
-  @Property([0, 1, 2, 3])
-  declare keys: number[]
 }
 
 export const ioMatrix2 = function(arg0?: IoMatrix2Props) {
