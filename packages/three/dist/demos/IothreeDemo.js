@@ -26,7 +26,6 @@ import { AnimationBackdropExample } from '../examples/animation_backdrop.js';
 import { AnimationSkinningBlendingExample } from '../examples/animation_skinning_blending.js';
 import { AnimationSkinningAdditiveBlendingExample } from '../examples/animation_skinning_additive_blending.js';
 import { WebGPUBackdropAreaExample } from '../examples/backdrop_area.js';
-import { ioThreeProperties } from '../elements/IoThreeProperties.js';
 import * as THREE from 'three/webgpu';
 const version = 5.3;
 const split = new Split({
@@ -329,21 +328,27 @@ export class IoThreeDemo extends IoElement {
     ready() {
         exampleOptions.addEventListener('option-selected', this.selectedExampleOptionChanged);
         this.selectedExampleOptionChanged();
+    }
+    changed() {
         this.render([
             ioLayout({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'top' }),
-                    ioThreeViewport({ id: 'Front', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'front' }),
-                    ioThreeViewport({ id: 'Left', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'left' }),
-                    ioThreeViewport({ id: 'Perspective', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'perspective' }),
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.bind('selectedExample'), playing: true, cameraSelect: 'scene' }),
+                    ioThreeViewport({ id: 'Top', applet: this.selectedExample, playing: true, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Front', applet: this.selectedExample, playing: true, cameraSelect: 'front' }),
+                    ioThreeViewport({ id: 'Left', applet: this.selectedExample, playing: true, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Perspective', applet: this.selectedExample, playing: true, cameraSelect: 'perspective' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.selectedExample, playing: true, cameraSelect: 'scene' }),
                     div({ id: 'ExampleSelector' }, [
                         div({ class: 'column' }, [
                             div({ class: 'column' }, [
                                 ioField({ label: 'Select Example:' }),
                                 ioOptionSelect({ option: exampleOptions, selectBy: 'id' }),
                             ]),
-                            ioThreeProperties({ applet: this.bind('selectedExample') })
+                            ioPropertyEditor({
+                                value: this.selectedExample,
+                                config: this.selectedExample.uiConfig,
+                                groups: this.selectedExample.uiGroups,
+                            })
                         ])
                     ]),
                     ioPropertyEditor({ id: 'AllClasses', value: allClasses })

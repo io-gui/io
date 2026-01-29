@@ -97,6 +97,11 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         this.debounce(this.configureDebounced);
     }
     valueChanged() {
+        debug: {
+            if ((this.value !== null && typeof this.value !== 'object') && !Array.isArray(this.value)) {
+                console.warn('IoPropertyEditor: value is not an object or array', this, this.value);
+            }
+        }
         this.debounce(this.configureDebounced);
     }
     configureDebounced() {
@@ -228,7 +233,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    ReactiveProperty()
 ], IoPropertyEditor.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })

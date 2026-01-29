@@ -307,7 +307,7 @@ describe('IoSelector', () => {
       container.appendChild(selector)
 
       expect(selector.getAttribute('loading')).toBe('')
-      
+
       selector.loading = false
       expect(selector.getAttribute('loading')).toBeNull()
     })

@@ -9,9 +9,8 @@ import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicN
 import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale, } from 'three/tsl';
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet } from '@io-gui/three';
+import { ThreeApplet, ioVector3 } from '@io-gui/three';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
-import { ioVector } from '@io-gui/editors';
 let WebGPUBackdropAreaExample = class WebGPUBackdropAreaExample extends ThreeApplet {
     mixer;
     box;
@@ -85,7 +84,7 @@ let WebGPUBackdropAreaExample = class WebGPUBackdropAreaExample extends ThreeApp
                     }),
                     selectBy: 'id'
                 })],
-            [Vector3, ioVector({ linkable: true })]
+            [Vector3, ioVector3({ linkable: true })]
         ];
         // Load model
         void this.loadModel();

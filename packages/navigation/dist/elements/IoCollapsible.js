@@ -71,16 +71,16 @@ let IoCollapsible = class IoCollapsible extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty(Array)
+    ReactiveProperty({ type: Array, init: null })
 ], IoCollapsible.prototype, "elements", void 0);
 __decorate([
-    ReactiveProperty('')
+    ReactiveProperty({ value: '', type: String })
 ], IoCollapsible.prototype, "label", void 0);
 __decorate([
     ReactiveProperty({ value: 'column', reflect: true })
 ], IoCollapsible.prototype, "direction", void 0);
 __decorate([
-    ReactiveProperty('')
+    ReactiveProperty({ value: '', type: String })
 ], IoCollapsible.prototype, "icon", void 0);
 __decorate([
     ReactiveProperty({ value: false, reflect: true })

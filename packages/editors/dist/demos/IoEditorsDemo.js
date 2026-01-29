@@ -9,7 +9,7 @@ import { Register, IoElement, div, ReactiveProperty } from '@io-gui/core';
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioSlider } from '@io-gui/sliders';
 import { ioString, ioNumber, ioBoolean, ioButton } from '@io-gui/inputs';
-import { ioPropertyEditor, ioVectorArray, ioMatrix, ioInspector, ioObject, IoContextEditorSingleton } from '@io-gui/editors';
+import { ioPropertyEditor, ioInspector, ioObject, IoContextEditorSingleton } from '@io-gui/editors';
 export class IoEditorsDemo extends IoElement {
     static get Style() {
         return /* css */ `
@@ -57,17 +57,10 @@ export class IoEditorsDemo extends IoElement {
                 // TODO: this.object.object displays broken "number" slider. Investigate!
                 groups: {
                     'Object Properties': ['object', 'array', 'mixedArray'],
-                    'Vectors and Matrices': [/vector/i, /matrix/i],
                 },
                 config: [
                     [Number, ioSlider({ step: 0.1 })],
                     [Array, ioPropertyEditor({ labeled: false, class: 'array', config: [[Number, ioNumber()]] })],
-                    ['vector2', ioVectorArray({ linkable: true })],
-                    ['vector3', ioVectorArray({ linkable: true })],
-                    ['vector4', ioVectorArray({ linkable: true })],
-                    ['matrix2', ioMatrix()],
-                    ['matrix3', ioMatrix()],
-                    ['matrix4', ioMatrix()],
                 ],
             }),
             div({ class: 'column' }, [
@@ -133,12 +126,6 @@ export class IoEditorsDemo extends IoElement {
                     label: 'Object (All Properties)',
                     config: [
                         [Array, ioPropertyEditor({ labeled: false, class: 'array' })],
-                        ['vector2', ioPropertyEditor({ labeled: false, class: 'array' })],
-                        ['vector3', ioPropertyEditor({ labeled: false, class: 'array' })],
-                        ['vector4', ioPropertyEditor({ labeled: false, class: 'array' })],
-                        ['matrix2', ioPropertyEditor({ labeled: false, class: 'array' })],
-                        ['matrix3', ioPropertyEditor({ labeled: false, class: 'array' })],
-                        ['matrix4', ioPropertyEditor({ labeled: false, class: 'array' })],
                     ]
                 }),
                 div({ class: 'context-editor-area', '@click': (event) => {
@@ -173,12 +160,6 @@ __decorate([
                 },
             },
             array: [...Array(32).keys()],
-            vector2: [0, 1],
-            vector3: [0, 1, 2],
-            vector4: [0, 1, 2, 3],
-            matrix2: [1, 0, 0, 1],
-            matrix3: [1, 0, 0, 0, 1, 0, 0, 0, 1],
-            matrix4: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
         } })
 ], IoEditorsDemo.prototype, "object", void 0);
 Register(IoEditorsDemo);

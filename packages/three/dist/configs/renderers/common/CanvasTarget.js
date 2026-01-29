@@ -1,10 +1,11 @@
-import { registerEditorConfig, registerEditorGroups, ioVector } from '@io-gui/editors';
-import { ioNumber } from '@io-gui/inputs';
+import { ioSwitch, ioNumber } from '@io-gui/inputs';
+import { registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
+import { ioVector4 } from '@io-gui/three';
 import { CanvasTarget, Vector4 } from 'three/webgpu';
 registerEditorConfig(CanvasTarget, [
     [Number, ioNumber({ disabled: true })],
-    [Vector4, ioVector({ disabled: true })],
-    [Boolean, ioVector({ disabled: true })],
+    [Vector4, ioVector4({ disabled: true })],
+    [Boolean, ioSwitch({ disabled: true })],
 ]);
 registerEditorGroups(CanvasTarget, {
     Main: [

@@ -2,8 +2,6 @@ import { Register, IoElement, ReactiveProperty, Property, IoElementProps, VDOMEl
 import { ioNumber, ioBoolean } from '@io-gui/inputs'
 import { Vector4 } from 'three/webgpu'
 
-const keys: Array<keyof Vector4> = ['x', 'y', 'z', 'w']
-
 export type IoVectorBaseProps = IoElementProps & {
   value?: Vector4
   conversion?: number

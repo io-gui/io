@@ -3,7 +3,6 @@ import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
 import { MenuOption, ioOptionSelect } from '@io-gui/menus';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioColorRgba } from '@io-gui/colors';
-import { ioVectorArray } from '../elements/IoVectorArray.js';
 import { ioObject } from '../elements/IoObject.js';
 import { getAllPropertyNames } from './EditorGroups.js';
 function makeSelect(options) {
@@ -134,8 +133,8 @@ const editorConfigSingleton = new Map([
             ['reactivity', ioOptionSelect({ option: new MenuOption({ options: ['none', 'debounced', 'immediate'] }) })],
         ]],
     [IoGl, [
-            ['size', ioVectorArray({ step: 1 })],
-            ['color', ioVectorArray({ step: 1 })],
+            ['size', ioObject()],
+            ['color', ioObject()],
         ]],
     [Theme, [
             [Number, ioNumberSlider({ step: 1, min: 0, max: 20 })],

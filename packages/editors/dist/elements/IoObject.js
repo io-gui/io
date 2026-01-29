@@ -46,6 +46,11 @@ let IoObject = class IoObject extends IoElement {
     valueChanged() {
         if (!this.value)
             return;
+        debug: {
+            if (typeof this.value !== 'object' && !Array.isArray(this.value)) {
+                console.warn('IoObject: value is not an object or array', this, this.value);
+            }
+        }
         let uuid = genIdentifier(this.value);
         let storage = 'local';
         if (!uuid) {
@@ -93,7 +98,7 @@ let IoObject = class IoObject extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object })
+    ReactiveProperty()
 ], IoObject.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })

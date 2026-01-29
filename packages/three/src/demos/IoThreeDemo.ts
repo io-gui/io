@@ -344,7 +344,7 @@ export class IoThreeDemo extends IoElement {
       this.selectedExample = example
     }
   }
-  
+
   ready() {
     exampleOptions.addEventListener('option-selected', this.selectedExampleOptionChanged)
     this.selectedExampleOptionChanged()

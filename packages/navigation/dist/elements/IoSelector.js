@@ -127,6 +127,7 @@ let IoSelector = class IoSelector extends IoElement {
     elementsChanged() {
         // TODO: make sure all elements have props and id if selectable!
         // TODO: fix and test edge case where reusing element in templete() might return cache from the previous element if keys collide!
+        this.selectedChanged();
         this.startPreache();
     }
     selectedChanged() {
@@ -149,9 +150,6 @@ let IoSelector = class IoSelector extends IoElement {
             return;
         }
         id = id.split('#')[0];
-        // TODO: what if <io-selector> is reused in template() and ID collides?
-        if (id === this.childNodes[0]?.id)
-            return;
         this.render([], this, cache);
         this.scrollTo(0, 0);
         const vElement = this.elements.find((element) => { return element.props?.id === id; });
@@ -242,7 +240,7 @@ let IoSelector = class IoSelector extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty(Array)
+    ReactiveProperty({ type: Array, init: null })
 ], IoSelector.prototype, "elements", void 0);
 __decorate([
     ReactiveProperty({ value: '', type: String })
