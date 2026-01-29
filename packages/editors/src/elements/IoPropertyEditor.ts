@@ -82,8 +82,8 @@ export class IoPropertyEditor extends IoElement {
   // @ReactiveProperty('debounced')
   // declare reactivity: ReactivityType
 
-  @ReactiveProperty({type: Object, init: null})
-  declare value: object | Array<any>
+  @ReactiveProperty()
+  declare value: object | Array<unknown>
 
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[]
@@ -135,6 +135,11 @@ export class IoPropertyEditor extends IoElement {
     this.debounce(this.configureDebounced)
   }
   valueChanged() {
+    debug: {
+      if ((this.value !== null && typeof this.value !== 'object') && !Array.isArray(this.value)) {
+        console.warn('IoPropertyEditor: value is not an object or array', this, this.value)
+      }
+    }
     this.debounce(this.configureDebounced)
   }
   configureDebounced() {

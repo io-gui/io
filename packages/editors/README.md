@@ -56,7 +56,7 @@ type PropertyConfig = {
 import { registerEditorConfig } from 'io-editors'
 
 registerEditorConfig(MyClass, [
-  { name: 'position', tag: 'io-vector', props: { labels: ['x', 'y', 'z'] } },
+  { name: 'position', tag: 'io-vector3', props: { labels: ['x', 'y', 'z'] } },
   { name: /Color$/, tag: 'io-color-picker' },
 ])
 ```
@@ -150,29 +150,6 @@ type IoObjectProps = {
 - Expand state persisted by object identifier (`guid`, `uuid`, `id`, `name`, or `label`)
 - Falls back to temporary identifier for anonymous objects
 - Stored in localStorage
-
-### IoVector
-
-Editor for numeric arrays/objects with labeled components.
-
-```typescript
-type IoVectorProps = {
-  value: number[] | Record<string, number>
-  keys?: string[]             // Component keys
-  labels?: string[]           // Component labels (e.g., ['X', 'Y', 'Z'])
-}
-```
-
-### IoMatrix
-
-Grid editor for matrix values (2D arrays or flat arrays).
-
-```typescript
-type IoMatrixProps = {
-  value: number[]
-  columns?: number            // Number of columns
-}
-```
 
 ### IoBreadcrumbs
 
