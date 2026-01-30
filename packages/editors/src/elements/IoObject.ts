@@ -30,7 +30,7 @@ export class IoObject extends IoElement {
       flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
-      border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
+      border-radius: var(--io_borderRadius);
     }
     :host > io-boolean {
       padding: var(--io_spacing) var(--io_spacing2);
