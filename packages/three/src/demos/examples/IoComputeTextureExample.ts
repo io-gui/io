@@ -63,7 +63,7 @@ export class IoComputeTextureExample extends IoThreeExample {
       ioSplit({
         elements: [
           ioThreeViewport({id: 'Front', applet: this.applet, playing: true, cameraSelect: 'front'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups})
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({
           type: 'split',

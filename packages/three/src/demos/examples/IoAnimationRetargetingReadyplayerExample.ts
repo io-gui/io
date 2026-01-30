@@ -157,12 +157,12 @@ export class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationRetargetingReadyplayerExample, init: null})
   declare applet: AnimationRetargetingReadyplayerExample
 
-  init() {
-    this.uiConfig = [
-      ['sourceMixer', ioPropertyEditor({label: '_hidden_'})],
-      ['targetMixer', ioPropertyEditor({label: '_hidden_'})],
-    ]
-  }
+  // init() {
+  //   this.uiConfig = [
+  //     ['sourceMixer', ioPropertyEditor({label: '_hidden_'})],
+  //     ['targetMixer', ioPropertyEditor({label: '_hidden_'})],
+  //   ]
+  // }
 }
 
 export const ioAnimationRetargetingReadyplayerExample = IoAnimationRetargetingReadyplayerExample.vConstructor

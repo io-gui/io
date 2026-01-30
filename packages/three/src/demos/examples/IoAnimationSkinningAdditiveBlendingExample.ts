@@ -289,45 +289,45 @@ export class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationSkinningAdditiveBlendingExample, init: null})
   declare applet: AnimationSkinningAdditiveBlendingExample
 
-  init() {
-    this.uiConfig = [
-      ['showSkeleton', ioBoolean({label: 'Show Skeleton'})],
-      ['timeScale', ioNumberSlider({min: 0, max: 1.5, step: 0.01})],
-      ['sneakPoseWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-      ['sadPoseWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-      ['agreeWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-      ['headShakeWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-    ]
+  // init() {
+  //   this.uiConfig = [
+  //     ['showSkeleton', ioBoolean({label: 'Show Skeleton'})],
+  //     ['timeScale', ioNumberSlider({min: 0, max: 1.5, step: 0.01})],
+  //     ['sneakPoseWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  //     ['sadPoseWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  //     ['agreeWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  //     ['headShakeWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  //   ]
 
-    this.uiGroups = {
-      Main: [
-        'isLoaded',
-        'showSkeleton',
-        'timeScale',
-      ],
-      'Base Actions': [
-        'idle',
-        'walk',
-        'run',
-      ],
-      'Additive Weights': [
-        'sneakPoseWeight',
-        'sadPoseWeight',
-        'agreeWeight',
-        'headShakeWeight',
-      ],
-      Hidden: [
-        'scene',
-        'camera',
-        'mixer',
-        'allActions',
-        'baseActions',
-        'additiveActions',
-        'currentBaseAction',
-        'skeleton',
-      ],
-    }
-  }
+  //   this.uiGroups = {
+  //     Main: [
+  //       'isLoaded',
+  //       'showSkeleton',
+  //       'timeScale',
+  //     ],
+  //     'Base Actions': [
+  //       'idle',
+  //       'walk',
+  //       'run',
+  //     ],
+  //     'Additive Weights': [
+  //       'sneakPoseWeight',
+  //       'sadPoseWeight',
+  //       'agreeWeight',
+  //       'headShakeWeight',
+  //     ],
+  //     Hidden: [
+  //       'scene',
+  //       'camera',
+  //       'mixer',
+  //       'allActions',
+  //       'baseActions',
+  //       'additiveActions',
+  //       'currentBaseAction',
+  //       'skeleton',
+  //     ],
+  //   }
+  // }
 }
 
 export const ioAnimationSkinningAdditiveBlendingExample = IoAnimationSkinningAdditiveBlendingExample.vConstructor

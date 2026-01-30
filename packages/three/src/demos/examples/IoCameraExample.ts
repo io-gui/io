@@ -116,7 +116,7 @@ export class CameraExample extends ThreeApplet {
 }
 
 const cameraObject = ioObject({expanded: true, widget: null,
-  properties: ['fov','far','aspect','left','right','top','bottom','matrixWorld', 'projectionMatrix'],
+  properties: ['fov','far','aspect','left','right','top','bottom','matrixWorld','projectionMatrix'],
   config: [
     ['far', ioNumberSlider({min: 700, max: 1000, step: 1})],
     ['left', ioNumberSlider({min: -500, max: 0, step: 0.1})],

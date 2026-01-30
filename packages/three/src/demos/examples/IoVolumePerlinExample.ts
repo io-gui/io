@@ -79,7 +79,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
       ioSplit({
         elements: [
           ioThreeViewport({id: 'Scene', applet: this.applet, playing: true, cameraSelect: 'scene'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups})
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({
           type: 'split',

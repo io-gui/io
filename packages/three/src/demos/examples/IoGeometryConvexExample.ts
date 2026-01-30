@@ -132,31 +132,24 @@ export class IoGeometryConvexExample extends IoThreeExample {
         ],
         split: new Split({
           type: 'split',
-          orientation: 'horizontal',
+          orientation: 'vertical',
           children: [
             {
               type: 'split',
-              flex: '2 1 auto',
-              orientation: 'vertical',
+              flex: '1 1 60px',
+              orientation: 'horizontal',
               children: [
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Top'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Left'}]}
-                  ]
-                },
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Perspective'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneCamera'}]},
-                  ]
-                }
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Top'}]},
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Left'}]}
+              ]
+            },
+            {
+              type: 'split',
+              flex: '1 1 60px',
+              orientation: 'horizontal',
+              children: [
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Perspective'}]},
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCamera'}]},
               ]
             }
           ]

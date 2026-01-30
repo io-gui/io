@@ -165,22 +165,8 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
           type: 'split',
           orientation: 'horizontal',
           children: [
-            {
-              type: 'split',
-              flex: '2 1 auto',
-              orientation: 'vertical',
-              children: [
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneCamera'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneCameraLog'}]},
-                  ]
-                }
-              ]
-            },
+            {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCamera'}]},
+            {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCameraLog'}]},
           ]
         })
       })

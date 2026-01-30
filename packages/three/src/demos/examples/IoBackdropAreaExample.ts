@@ -152,17 +152,17 @@ export class IoBackdropAreaExample extends IoThreeExample {
   @ReactiveProperty({type: BackdropAreaExample, init: null})
   declare applet: BackdropAreaExample
 
-  init() {
-    this.uiConfig = [
-      ['material', ioOptionSelect({
-        option: new MenuOption({
-          options: ['blurred', 'depth', 'checker', 'pixel']
-        }),
-        selectBy: 'id'
-      })],
-      [Vector3, ioVector3({linkable: true})]
-    ]
-  }
+  // init() {
+  //   this.uiConfig = [
+  //     ['material', ioOptionSelect({
+  //       option: new MenuOption({
+  //         options: ['blurred', 'depth', 'checker', 'pixel']
+  //       }),
+  //       selectBy: 'id'
+  //     })],
+  //     [Vector3, ioVector3({linkable: true})]
+  //   ]
+  // }
 }
 
 export const ioBackdropAreaExample = IoBackdropAreaExample.vConstructor
