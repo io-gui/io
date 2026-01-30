@@ -21,12 +21,6 @@ export class IoPanel extends IoElement {
         overflow: hidden;
         flex-direction: column;
         flex: 1 1 auto;
-        background-color: var(--io_bgColorLight);
-      }
-      :host > io-selector {
-        margin-top: calc(-1 * var(--io_borderWidth));
-        border-top: var(--io_border);
-        border-top-color: var(--io_borderColorStrong);
       }
     `
   }
