@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher } from '@io-gui/core'
+import { ReactiveNode, Register, ListenerDefinitions, EventDispatcher, IoElement, ReactiveProperty } from '@io-gui/core'
 
 const handlerFunction = (event: CustomEvent) => {
   (event.target as unknown as MockNode1).eventStack.push(`handlerFunction ${event.detail}`)
@@ -330,5 +330,61 @@ describe('EventDispatcher', () => {
     expect(stacks.child).toEqual(['received'])
     expect(stacks.parent).toEqual([])  // Disposed
     expect(stacks.grandparent).toEqual([])  // Not reachable (parent link broken)
+  })
+  it('Should bubble events from ReactiveNode to IoElement parent (cross-border bubbling)', () => {
+    // Create a ReactiveNode that will be a child
+    @Register
+    class ChildNode extends ReactiveNode {
+      eventStack: string[] = []
+      static get Listeners(): ListenerDefinitions {
+        return {
+          'cross-border-event': 'onCrossBorderEvent',
+        }
+      }
+      onCrossBorderEvent(event: CustomEvent) {
+        this.eventStack.push(`child ${event.detail}`)
+      }
+    }
+
+    // Create an IoElement that owns the ReactiveNode as a property
+    @Register
+    class ParentElement extends IoElement {
+      eventStack: string[] = []
+
+      @ReactiveProperty({type: ChildNode, init: null})
+      declare childNode: ChildNode
+
+      static get Listeners(): ListenerDefinitions {
+        return {
+          'cross-border-event': 'onCrossBorderEvent',
+        }
+      }
+      onCrossBorderEvent(event: CustomEvent) {
+        this.eventStack.push(`parent ${event.detail}`)
+      }
+    }
+
+    const parent = new ParentElement()
+    const child = new ChildNode()
+
+    // Assign the child node to the parent element's property
+    // This should call child.addParent(parent)
+    parent.childNode = child
+
+    // Verify the parent was added
+    expect(child._parents.includes(parent)).toBe(true)
+
+    // Dispatch a bubbling event from the child
+    child.dispatch('cross-border-event', 'test-data', true)
+
+    // The child should have received the event
+    expect(child.eventStack).toEqual(['child test-data'])
+
+    // The parent element should also have received the bubbling event
+    expect(parent.eventStack).toEqual(['parent test-data'])
+
+    // Clean up
+    parent.dispose()
+    child.dispose()
   })
 })
