@@ -82,7 +82,7 @@ export class IoSplit extends IoElement {
   @ReactiveProperty({type: Object, value: null})
   declare trailingDrawer: Split | Panel | null
 
-  @Property({type: MenuOption})
+  @ReactiveProperty({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
   @ReactiveProperty({type: Boolean, value: true, reflect: true})
