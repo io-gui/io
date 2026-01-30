@@ -1,7 +1,7 @@
 import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, WebGPURenderer, ComputeNode, NearestFilter, TextureNode } from 'three/webgpu'
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { ioSplit, Split } from '@io-gui/layout'
 
@@ -9,8 +9,8 @@ import { ioSplit, Split } from '@io-gui/layout'
 export class ComputeTextureExample extends ThreeApplet {
   public storageTexture: StorageTexture
   public computeNode: ComputeNode
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
     const width = 32, height = 32
     this.storageTexture = new StorageTexture(width, height)
 

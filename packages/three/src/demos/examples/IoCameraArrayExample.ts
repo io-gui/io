@@ -10,7 +10,7 @@ import {
   Vector4
 } from 'three/webgpu'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeViewport, ThreeAppletProps } from '@io-gui/three'
 
 const AMOUNT = 6
 
@@ -20,8 +20,8 @@ export class CameraArrayExample extends ThreeApplet {
   public arrayCamera: ArrayCamera
   public mesh: Mesh
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     const subCameras: PerspectiveCamera[] = []
 
@@ -114,7 +114,7 @@ export class CameraArrayExample extends ThreeApplet {
 @Register
 export class IoCameraArrayExample extends IoThreeViewport {
 
-  @ReactiveProperty({type: CameraArrayExample, init: null})
+  @ReactiveProperty({type: CameraArrayExample, init: {playing: true}})
   declare applet: CameraArrayExample
 
 }

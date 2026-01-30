@@ -103,7 +103,8 @@ export class IoThreeViewport extends IoElement {
     this.visible = false
   }
 
-  onAppletAnimate() {
+  onAppletAnimate(event: CustomEvent) {
+    event.stopPropagation()
     if (!this.visible) return
     this.renderViewport()
   }
@@ -167,9 +168,6 @@ export class IoThreeViewport extends IoElement {
     delete (this as any).applet
     this.renderTarget.dispose()
     this.viewCameras.dispose()
-    if (this.renderer !== _renderer) {
-      this.renderer.dispose()
-    }
     super.dispose()
   }
 }

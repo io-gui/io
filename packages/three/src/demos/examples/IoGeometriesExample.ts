@@ -26,7 +26,7 @@ import {
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js'
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { Split, ioSplit } from '@io-gui/layout'
 import { ioPropertyEditor, ioObject } from '@io-gui/editors'
 
@@ -35,8 +35,8 @@ export class GeometriesExample extends ThreeApplet {
 
   public geometries: BufferGeometry[] = []
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     const ambientLight = new AmbientLight( 0xcccccc, 1.5 )
     this.scene.add( ambientLight )

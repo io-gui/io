@@ -23,8 +23,7 @@ import {
 } from 'three/tsl'
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet, IoThreeExample, ioVector3 } from '@io-gui/three'
-import { ioOptionSelect, MenuOption } from '@io-gui/menus'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 @Register
 export class BackdropAreaExample extends ThreeApplet {
@@ -44,8 +43,8 @@ export class BackdropAreaExample extends ThreeApplet {
   @ReactiveProperty({type: String, value: 'blurred'})
   declare public material: string
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     this.toneMappingExposure = 0.9
 

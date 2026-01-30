@@ -3,14 +3,14 @@ import { Break, If, vec3, vec4, texture3D, uniform, Fn} from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioPropertyEditor } from '@io-gui/editors'
 
 @Register
 export class VolumePerlinExample extends ThreeApplet {
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     const size = 128
     const data = new Uint8Array( size * size * size )

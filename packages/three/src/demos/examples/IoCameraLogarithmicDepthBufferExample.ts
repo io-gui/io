@@ -13,7 +13,7 @@ import {
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { Split, ioSplit } from '@io-gui/layout'
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter
@@ -47,8 +47,8 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
   public minzoomspeed = 0.015
   public mouse = [0.5, 0.5]
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     // Create camera with extreme near/far planes
     this.camera = new PerspectiveCamera(50, 1, NEAR, FAR)
@@ -165,8 +165,8 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
           type: 'split',
           orientation: 'horizontal',
           children: [
-            {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCamera'}]},
-            {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCameraLog'}]},
+            {type: 'panel',flex: '1 1 120px',tabs: [{id: 'SceneCamera'}]},
+            {type: 'panel',flex: '1 1 120px',tabs: [{id: 'SceneCameraLog'}]},
           ]
         })
       })
