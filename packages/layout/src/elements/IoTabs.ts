@@ -15,12 +15,14 @@ export class IoTabs extends IoElement {
     return /* css */`
       :host {
         display: flex;
-        background-color: var(--io_bgColorStrong);
         padding-top: var(--io_spacing);
         padding-left: var(--io_spacing);
         padding-right: var(--io_spacing);
+        border-bottom: var(--io_border);
+        border-bottom-color: var(--io_borderColorStrong);
       }
       :host io-tab {
+        margin-bottom: calc(-1 * var(--io_borderWidth));
         transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
       }
       :host:not([overflow="-1"]) io-tab {
@@ -34,7 +36,6 @@ export class IoTabs extends IoElement {
       }
       :host > io-tabs-hamburger {
         margin-bottom: var(--io_spacing);
-        /* transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1); */
       }
       :host > io-menu-item {
         margin-left: auto;
