@@ -1,1 +1,0 @@
-{"version":3,"file":"compute_texture.d.ts","sourceRoot":"","sources":["../../src/examples/compute_texture.ts"],"names":[],"mappings":"AAAA,OAAO,EAA8C,cAAc,EAAE,cAAc,EAAE,WAAW,EAA8B,MAAM,cAAc,CAAA;AAGlJ,OAAO,EAAE,WAAW,EAAE,MAAM,eAAe,CAAA;AAE3C,qBACa,qBAAsB,SAAQ,WAAW;IAC7C,cAAc,EAAE,cAAc,CAAA;IAC9B,WAAW,EAAE,WAAW,CAAA;;IAqCzB,qBAAqB,CAAC,QAAQ,EAAE,cAAc;CAIrD"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"IoMatrix4.d.ts","sourceRoot":"","sources":["../../../src/elements/math/IoMatrix4.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,iBAAiB,EAAE,MAAM,mBAAmB,CAAA;AAEnE,MAAM,MAAM,cAAc,GAAG,iBAAiB,GAAG;IAC/C,KAAK,CAAC,EAAE,MAAM,EAAE,CAAA;CACjB,CAAA;AAED,qBACa,SAAU,SAAQ,YAAY;IACzC,MAAM,KAAK,KAAK,WAMf;CACF;AAED,eAAO,MAAM,SAAS,GAAY,OAAO,cAAc,uCAEtD,CAAA"}

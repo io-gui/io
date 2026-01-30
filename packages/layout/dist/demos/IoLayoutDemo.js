@@ -70,7 +70,7 @@ const split = new Split({
         }
     ]
 });
-export class IoSplitDemo extends IoElement {
+export class IoLayoutDemo extends IoElement {
     static get Style() {
         return /* css */ `
       :host {
@@ -170,6 +170,6 @@ export class IoSplitDemo extends IoElement {
         ]);
     }
 }
-Register(IoSplitDemo);
-export const ioSplitDemo = IoSplitDemo.vConstructor;
+Register(IoLayoutDemo);
+export const ioLayoutDemo = IoLayoutDemo.vConstructor;
 //# sourceMappingURL=IoLayoutDemo.js.map

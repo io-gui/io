@@ -11,7 +11,7 @@ export type IoSplitProps = IoElementProps & {
     split: WithBinding<Split>;
     elements: VDOMElement[];
     addMenuOption?: MenuOption;
-    frozen?: boolean;
+    editable?: boolean;
 };
 export declare class IoSplit extends IoElement {
     static get Style(): string;
@@ -22,7 +22,7 @@ export declare class IoSplit extends IoElement {
     addMenuOption: MenuOption | undefined;
     hasVisibleFlexGrow: boolean;
     showVeil: boolean;
-    frozen: boolean;
+    editable: boolean;
     static get Listeners(): {
         'io-divider-move': string;
         'io-divider-move-end': string;

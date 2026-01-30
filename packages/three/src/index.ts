@@ -33,6 +33,7 @@ export * from './elements/math/IoVector3.js'
 export * from './elements/math/IoVector4.js'
 
 export * from './elements/IoBuildGeometry.js'
+export * from './elements/IoThreeExample.js'
 export * from './elements/IoThreeViewport.js'
 export * from './nodes/ThreeApplet.js'
 

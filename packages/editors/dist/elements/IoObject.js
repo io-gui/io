@@ -58,7 +58,7 @@ let IoObject = class IoObject extends IoElement {
             storage = 'none';
         }
         // TODO: Test
-        const expandedBinding = $({ value: false, storage: storage, key: uuid + '-' + this.label });
+        const expandedBinding = $({ value: this.expanded ?? false, storage: storage, key: uuid + '-' + this.label });
         const bindingTargets = expandedBinding.targets;
         const targetIsThis = bindingTargets.has(this);
         if (bindingTargets.size < 1) {

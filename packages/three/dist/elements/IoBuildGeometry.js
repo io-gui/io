@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, div } from '@io-gui/core';
 import { ioButton } from '@io-gui/inputs';
 import { ioPropertyEditor } from '@io-gui/editors';
 let IoBuildGeometry = class IoBuildGeometry extends IoElement {
@@ -13,6 +13,13 @@ let IoBuildGeometry = class IoBuildGeometry extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+      }
+      :host > div {
+        display: flex;
+        flex-direction: row;
+      }
+      :host > div > * {
+        flex: 1 1 auto;
       }
     `;
     }
@@ -36,7 +43,9 @@ let IoBuildGeometry = class IoBuildGeometry extends IoElement {
         geometry.copy(newGeometry);
         newGeometry.dispose();
         geometry.computeVertexNormals();
-        geometry.computeTangents();
+        if (geometry.index && geometry.attributes.position && geometry.attributes.normal && geometry.attributes.uv) {
+            geometry.computeTangents();
+        }
         geometry.computeBoundingSphere();
         geometry.computeBoundingBox();
         this.dispatchMutation(geometry);
@@ -44,46 +53,56 @@ let IoBuildGeometry = class IoBuildGeometry extends IoElement {
         this.dispatchMutation(geometry.boundingSphere);
     }
     changed() {
-        const hasParameters = this.value && this.value.parameters;
+        const geometry = this.value;
+        if (!geometry) {
+            this.render([]);
+            return;
+        }
+        const hasParameters = geometry && geometry.parameters;
+        const hasIndexNormalsUv = geometry.index && geometry.attributes.position && geometry.attributes.normal && geometry.attributes.uv;
         this.render([
             ioPropertyEditor({
-                value: this.value,
+                widget: null,
+                value: geometry,
                 properties: ['parameters'],
                 labeled: false,
             }),
-            ioButton({
-                label: 'Build Geometry',
-                action: () => this.buildGeometry(),
-                disabled: !hasParameters,
-            }),
-            ioButton({
-                label: 'Compute Vertex Normals',
-                action: () => {
-                    this.value?.computeVertexNormals();
-                },
-            }),
-            ioButton({
-                label: 'Compute Tangents',
-                action: () => {
-                    this.value?.computeTangents();
-                },
-            }),
-            ioButton({
-                label: 'Compute Bounding Sphere',
-                action: () => {
-                    this.value?.computeBoundingSphere();
-                    this.dispatchMutation(this.value.boundingSphere);
-                    this.dispatchMutation(this.value.boundingSphere.center);
-                },
-            }),
-            ioButton({
-                label: 'Compute Bounding Box',
-                action: () => {
-                    this.value?.computeBoundingBox();
-                    this.dispatchMutation(this.value.boundingBox.max);
-                    this.dispatchMutation(this.value.boundingBox.min);
-                },
-            }),
+            div([
+                ioButton({
+                    label: 'Build',
+                    action: () => this.buildGeometry(),
+                    disabled: !hasParameters,
+                }),
+                ioButton({
+                    label: 'vtx',
+                    action: () => {
+                        geometry?.computeVertexNormals();
+                    },
+                }),
+                ioButton({
+                    label: 'tng',
+                    disabled: !hasIndexNormalsUv,
+                    action: () => {
+                        geometry?.computeTangents();
+                    },
+                }),
+                ioButton({
+                    label: 'bSphere',
+                    action: () => {
+                        geometry?.computeBoundingSphere();
+                        this.dispatchMutation(geometry.boundingSphere);
+                        this.dispatchMutation(geometry.boundingSphere.center);
+                    },
+                }),
+                ioButton({
+                    label: 'bBox',
+                    action: () => {
+                        geometry?.computeBoundingBox();
+                        this.dispatchMutation(geometry.boundingBox.max);
+                        this.dispatchMutation(geometry.boundingBox.min);
+                    },
+                }),
+            ])
         ]);
     }
 };

@@ -8,6 +8,7 @@ import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
 import { ioSelector } from '@io-gui/navigation';
 import { MenuOption } from '@io-gui/menus';
 import { ioTabs } from './IoTabs.js';
+import { IoSplit } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
 let IoPanel = class IoPanel extends IoElement {
     static get Style() {
@@ -110,7 +111,7 @@ let IoPanel = class IoPanel extends IoElement {
         }
         else {
             const parentSplit = this.parentElement;
-            const isRootPanel = parentSplit.hasAttribute('root') &&
+            const isRootPanel = !(parentSplit.parentElement instanceof IoSplit) &&
                 parentSplit.split.children.length === 1;
             // If this is the last panel at root level, don't remove
             if (!isRootPanel) {

@@ -7,10 +7,10 @@ registerEditorWidget(PlaneGeometry, ioBuildGeometry())
 
 registerEditorConfig(PlaneGeometry, [
   ['parameters', ioPropertyEditor({config: [
-    ['width', ioNumberSlider({min: 0, max: 10, step: 0.1})],
-    ['height', ioNumberSlider({min: 0, max: 10, step: 0.1})],
-    ['widthSegments', ioNumberSlider({min: 1, max: 10, step: 1})],
-    ['heightSegments', ioNumberSlider({min: 1, max: 10, step: 1})],
+    ['width', ioNumberSlider({min: 0, max: 1000, step: 0.1})],
+    ['height', ioNumberSlider({min: 0, max: 1000, step: 0.1})],
+    ['widthSegments', ioNumberSlider({min: 1, max: 64, step: 1})],
+    ['heightSegments', ioNumberSlider({min: 1, max: 64, step: 1})],
   ]})],
 ])
 

@@ -57,8 +57,8 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         pointer-events: auto;
         cursor: pointer;
       }
-      :host[frozen] .io-close-icon,
-      :host[frozen] .io-tabs-add-tab {
+      :host:not([editable]) .io-close-icon,
+      :host:not([editable]) .io-tabs-add-tab {
         display: none;
       }
     `;
@@ -414,7 +414,7 @@ __decorate([
 ], IoSplit.prototype, "showVeil", void 0);
 __decorate([
     ReactiveProperty({ type: Boolean, value: false, reflect: true })
-], IoSplit.prototype, "frozen", void 0);
+], IoSplit.prototype, "editable", void 0);
 IoSplit = IoSplit_1 = __decorate([
     Register
 ], IoSplit);

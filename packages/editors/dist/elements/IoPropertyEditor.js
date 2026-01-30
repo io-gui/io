@@ -22,7 +22,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
       font-size: var(--io_fontSize);
-      overflow: hidden;
+      overflow: auto;
     }
     :host > .row {
       display: flex;
@@ -167,7 +167,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     }
                     const isIoObject = tag === 'io-object';
                     if (isIoObject) {
-                        finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
+                        finalProps.label = finalProps.label || id + ': ' + value?.constructor?.name || String(value);
                     }
                     // TODO: Document and reconsider this
                     const label = finalProps.label || id;
@@ -196,6 +196,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                             labelWidth: this.labelWidth,
                             persistentExpand: true,
                             value: this.value,
+                            widget: null,
                             properties: groups[group],
                             config: this.config,
                         }));

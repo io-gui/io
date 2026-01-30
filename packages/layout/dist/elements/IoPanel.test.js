@@ -277,8 +277,7 @@ describe('IoPanel', () => {
             multiLayout = new IoSplit({ split: multiSplit, elements: [] });
             container.appendChild(multiLayout);
             // Reset collapse state since container has display:none (getBoundingClientRect returns 0)
-            const ioSplit = multiLayout.querySelector('io-split');
-            ioSplit.setProperties({ leadingDrawer: null, trailingDrawer: null });
+            multiLayout.setProperties({ leadingDrawer: null, trailingDrawer: null });
             sourcePanelElement = multiLayout.querySelectorAll('io-panel')[0];
             targetPanelElement = multiLayout.querySelectorAll('io-panel')[1];
         });
@@ -293,8 +292,7 @@ describe('IoPanel', () => {
             expect(targetPanelElement.panel.tabs.find(t => t.id === 'src-tab2')).toBeTruthy();
         });
         it('should call parent split for directional moves', () => {
-            const parentSplit = multiLayout.querySelector('io-split');
-            const moveTabToSplitSpy = vi.spyOn(parentSplit, 'moveTabToSplit');
+            const moveTabToSplitSpy = vi.spyOn(multiLayout, 'moveTabToSplit');
             const tab = sourcePanelElement.panel.tabs[1];
             targetPanelElement.moveTabToSplit(sourcePanelElement, tab, 'left');
             expect(moveTabToSplitSpy).toHaveBeenCalledWith(sourcePanelElement, targetPanelElement.panel, tab, 'left');

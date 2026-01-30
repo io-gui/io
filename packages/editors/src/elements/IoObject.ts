@@ -14,7 +14,7 @@ export type IoObjectProps = IoElementProps & {
   persistentExpand?: boolean
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widget?: VDOMElement
+  widget?: VDOMElement | null
 }
 
 /**
@@ -83,7 +83,7 @@ export class IoObject extends IoElement {
   declare groups: PropertyGroups
 
   @ReactiveProperty({type: Object})
-  declare widget: VDOMElement | undefined
+  declare widget: VDOMElement | undefined | null
 
   @Property('region')
   declare role: string
@@ -105,7 +105,7 @@ export class IoObject extends IoElement {
     }
 
     // TODO: Test
-    const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label})
+    const expandedBinding = $({value: this.expanded ?? false, storage: storage, key: uuid + '-' + this.label})
     const bindingTargets = expandedBinding.targets
     const targetIsThis = bindingTargets.has(this)
 

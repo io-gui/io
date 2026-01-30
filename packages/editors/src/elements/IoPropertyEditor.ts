@@ -13,7 +13,7 @@ export type IoPropertyEditorProps = IoElementProps & {
   labelWidth?: string
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widget?: VDOMElement
+  widget?: VDOMElement | null
 }
 
 /**
@@ -30,7 +30,7 @@ export class IoPropertyEditor extends IoElement {
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
       font-size: var(--io_fontSize);
-      overflow: hidden;
+      overflow: auto;
     }
     :host > .row {
       display: flex;
@@ -104,7 +104,7 @@ export class IoPropertyEditor extends IoElement {
   declare groups: PropertyGroups
 
   @ReactiveProperty({type: Object})
-  declare widget: VDOMElement | undefined
+  declare widget: VDOMElement | undefined | null
 
   private _config: PropertyConfigRecord | null = null
   private _groups: PropertyGroupsRecord | null = null
@@ -213,7 +213,7 @@ export class IoPropertyEditor extends IoElement {
 
           const isIoObject = tag === 'io-object'
           if (isIoObject) {
-            finalProps.label = id + ': ' + (finalProps.label || (value as object)?.constructor?.name || String(value))
+            finalProps.label = finalProps.label ||id + ': ' + (value as object)?.constructor?.name || String(value)
           }
 
           // TODO: Document and reconsider this
@@ -246,6 +246,7 @@ export class IoPropertyEditor extends IoElement {
                 labelWidth: this.labelWidth,
                 persistentExpand: true,
                 value: this.value,
+                widget: null,
                 properties: groups[group],
                 config: this.config,
               }),
