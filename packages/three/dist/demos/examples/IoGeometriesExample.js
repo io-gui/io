@@ -1,0 +1,154 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+import { AmbientLight, BoxGeometry, CapsuleGeometry, CircleGeometry, CylinderGeometry, IcosahedronGeometry, LatheGeometry, Mesh, MeshPhongMaterial, OctahedronGeometry, PlaneGeometry, PointLight, RepeatWrapping, RingGeometry, SphereGeometry, SRGBColorSpace, TetrahedronGeometry, TextureLoader, TorusGeometry, TorusKnotGeometry, Vector2, DoubleSide, BufferGeometry } from 'three/webgpu';
+import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
+import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
+import { Register, ReactiveProperty } from '@io-gui/core';
+import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { Split, ioSplit } from '@io-gui/layout';
+import { ioPropertyEditor, ioObject } from '@io-gui/editors';
+let GeometriesExample = class GeometriesExample extends ThreeApplet {
+    geometries = [];
+    constructor() {
+        super();
+        const ambientLight = new AmbientLight(0xcccccc, 1.5);
+        this.scene.add(ambientLight);
+        const pointLight = new PointLight(0xffffff, 2.5, 0, 0);
+        pointLight.position.set(0, 500, 0);
+        this.scene.add(pointLight);
+        const map = new TextureLoader().load('https://threejs.org/examples/textures/uv_grid_opengl.jpg');
+        map.wrapS = map.wrapT = RepeatWrapping;
+        map.anisotropy = 16;
+        map.colorSpace = SRGBColorSpace;
+        const material = new MeshPhongMaterial({ map: map, side: DoubleSide });
+        let object;
+        let geometry;
+        // Row 1: Basic polyhedra
+        object = new Mesh(new SphereGeometry(75, 20, 10), material);
+        object.position.set(-300, 0, 300);
+        this.scene.add(object);
+        object = new Mesh(new IcosahedronGeometry(75), material);
+        object.position.set(-100, 0, 300);
+        this.scene.add(object);
+        object = new Mesh(new OctahedronGeometry(75), material);
+        object.position.set(100, 0, 300);
+        this.scene.add(object);
+        object = new Mesh(new TetrahedronGeometry(75), material);
+        object.position.set(300, 0, 300);
+        this.scene.add(object);
+        // Row 2: Flat and box shapes
+        object = new Mesh(new PlaneGeometry(100, 100, 4, 4), material);
+        object.position.set(-300, 0, 100);
+        this.scene.add(object);
+        object = new Mesh(new BoxGeometry(100, 100, 100, 4, 4, 4), material);
+        object.position.set(-100, 0, 100);
+        this.scene.add(object);
+        object = new Mesh(new CircleGeometry(50, 20, 0, Math.PI * 2), material);
+        object.position.set(100, 0, 100);
+        this.scene.add(object);
+        object = new Mesh(new RingGeometry(10, 50, 20, 5, 0, Math.PI * 2), material);
+        object.position.set(300, 0, 100);
+        this.scene.add(object);
+        // Row 3: Revolution and toroidal shapes
+        object = new Mesh(new CylinderGeometry(25, 75, 100, 40, 5), material);
+        object.position.set(-300, 0, -100);
+        this.scene.add(object);
+        const points = [];
+        for (let i = 0; i < 50; i++) {
+            points.push(new Vector2(Math.sin(i * 0.2) * Math.sin(i * 0.1) * 15 + 50, (i - 5) * 2));
+        }
+        object = new Mesh(new LatheGeometry(points, 20), material);
+        object.position.set(-100, 0, -100);
+        this.scene.add(object);
+        object = new Mesh(new TorusGeometry(50, 20, 20, 20), material);
+        object.position.set(100, 0, -100);
+        this.scene.add(object);
+        object = new Mesh(new TorusKnotGeometry(50, 10, 50, 20), material);
+        object.position.set(300, 0, -100);
+        this.scene.add(object);
+        // Row 4: Capsule and parametric geometries
+        object = new Mesh(new CapsuleGeometry(20, 50), material);
+        object.position.set(-300, 0, -300);
+        this.scene.add(object);
+        geometry = new ParametricGeometry(plane, 10, 10);
+        geometry.scale(100, 100, 100);
+        geometry.center();
+        object = new Mesh(geometry, material);
+        object.position.set(-100, 0, -300);
+        this.scene.add(object);
+        geometry = new ParametricGeometry(klein, 20, 20);
+        object = new Mesh(geometry, material);
+        object.position.set(100, 0, -300);
+        object.scale.multiplyScalar(5);
+        this.scene.add(object);
+        geometry = new ParametricGeometry(mobius, 20, 20);
+        object = new Mesh(geometry, material);
+        object.position.set(300, 0, -300);
+        object.scale.multiplyScalar(30);
+        this.scene.add(object);
+        this.scene.children.forEach((child) => {
+            if (child instanceof Mesh) {
+                this.geometries.push(child.geometry);
+            }
+        });
+    }
+    onAnimate() {
+        const timer = Date.now() * 0.0001;
+        this.scene.traverse((object) => {
+            if (object.isMesh === true) {
+                object.rotation.x = timer * 5;
+                object.rotation.y = timer * 2.5;
+            }
+        });
+    }
+};
+GeometriesExample = __decorate([
+    Register
+], GeometriesExample);
+export { GeometriesExample };
+let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
+    ready() {
+        this.render([
+            ioSplit({
+                elements: [
+                    ioThreeViewport({ id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet.geometries, config: [
+                            [BufferGeometry, ioObject({ properties: ['/'] })],
+                        ], groups: this.uiGroups })
+                ],
+                split: new Split({
+                    type: 'split',
+                    orientation: 'horizontal',
+                    children: [
+                        {
+                            type: 'split',
+                            flex: '2 1 auto',
+                            orientation: 'vertical',
+                            children: [
+                                { type: 'panel', flex: '1 1 100%', tabs: [{ id: 'Top' }] },
+                            ]
+                        },
+                        {
+                            type: 'panel',
+                            flex: '0 0 320px',
+                            tabs: [{ id: 'PropertyEditor' }]
+                        }
+                    ]
+                })
+            })
+        ]);
+    }
+};
+__decorate([
+    ReactiveProperty({ type: GeometriesExample, init: null })
+], IoGeometriesExample.prototype, "applet", void 0);
+IoGeometriesExample = __decorate([
+    Register
+], IoGeometriesExample);
+export { IoGeometriesExample };
+export const ioGeometriesExample = IoGeometriesExample.vConstructor;
+//# sourceMappingURL=IoGeometriesExample.js.map

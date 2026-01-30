@@ -11,14 +11,14 @@ export type IoObjectProps = IoElementProps & {
     persistentExpand?: boolean;
     config?: PropertyConfig[];
     groups?: PropertyGroups;
-    widget?: VDOMElement;
+    widget?: VDOMElement | null;
 };
 /**
  * Object property editor. It displays a set of labeled property editors for the `value` object inside io-collapsible element. It can be configured to use custom property editors and display only specified properties.
  **/
 export declare class IoObject extends IoElement {
     static get Style(): string;
-    value: Record<string, any> | any[];
+    value: Record<string, unknown> | Array<unknown>;
     properties: string[] | null;
     label: string;
     labeled: boolean;
@@ -27,7 +27,7 @@ export declare class IoObject extends IoElement {
     persistentExpand: boolean;
     config: PropertyConfig[];
     groups: PropertyGroups;
-    widget: VDOMElement | undefined;
+    widget: VDOMElement | undefined | null;
     role: string;
     valueChanged(): void;
     changed(): void;

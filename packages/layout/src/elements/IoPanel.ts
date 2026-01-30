@@ -5,7 +5,6 @@ import { ioTabs } from './IoTabs.js'
 import { IoSplit, SplitDirection } from './IoSplit.js'
 import { Tab } from '../nodes/Tab.js'
 import { Panel } from '../nodes/Panel.js'
-import { IoLayout } from './IoLayout.js'
 
 export type IoPanelProps = IoElementProps & {
   panel: Panel
@@ -123,8 +122,8 @@ export class IoPanel extends IoElement {
       this.selectIndex(newIndex)
     } else {
       const parentSplit = this.parentElement as IoSplit
-      const isRootPanel = parentSplit.parentElement instanceof IoLayout &&
-      parentSplit.split.children.length === 1
+      const isRootPanel = !(parentSplit.parentElement instanceof IoSplit) &&
+        parentSplit.split.children.length === 1
       // If this is the last panel at root level, don't remove
       if (!isRootPanel) {
         this.dispatch('io-panel-remove', {panel: this.panel}, true)
@@ -173,6 +172,7 @@ export class IoPanel extends IoElement {
         '@io-menu-option-clicked': this.onNewTabClicked,
       }),
       ioSelector({
+        caching: 'none', // TODO: Make caching work with mutable elements
         selected: this.panel.getSelected(),
         elements: this.elements,
         anchor: '',

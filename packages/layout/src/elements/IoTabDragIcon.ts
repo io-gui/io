@@ -3,9 +3,8 @@ import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { ioTabDropRectSingleton } from './IoTabDropRect.js'
 import { Tab } from '../nodes/Tab.js'
-import { SplitDirection } from './IoSplit.js'
+import { IoSplit, SplitDirection } from './IoSplit.js'
 import { IoPanel } from './IoPanel.js'
-import { IoLayout } from './IoLayout.js'
 import { IoTabs } from './IoTabs.js'
 
 const DRAG_THRESHOLD = 10
@@ -65,7 +64,7 @@ class IoTabDragIcon extends IoField {
     this._startY = y
   }
 
-  updateDrag(tab: Tab, sourcePanel: IoPanel, x: number, y: number, root: IoLayout | null) {
+  updateDrag(tab: Tab, sourcePanel: IoPanel, x: number, y: number, root: IoSplit | null) {
     if (!this.dragging) {
       const dx = Math.abs(this._startX - x)
       const dy = Math.abs(this._startY - y)
@@ -87,14 +86,14 @@ class IoTabDragIcon extends IoField {
     this.style.left = x + 'px'
 
     if (!root) {
-      console.error('IoTabDragIcon: No io-layout found!')
+      console.error('IoTabDragIcon: No root io-split found!')
       return
     }
 
     this.detectDropTargets(x, y, root)
   }
 
-  private detectDropTargets(x: number, y: number, root: IoLayout) {
+  private detectDropTargets(x: number, y: number, root: IoSplit) {
     const m = ThemeSingleton.spacing
 
     // Check tab bars first (higher priority)

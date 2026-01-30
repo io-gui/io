@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, WithBinding } from '@io-gui/core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, WithBinding, div } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
 import { BufferGeometry, type NormalOrGLBufferAttributes } from 'three/webgpu'
@@ -20,6 +20,13 @@ export class IoBuildGeometry extends IoElement {
       :host {
         display: flex;
         flex-direction: column;
+      }
+      :host > div {
+        display: flex;
+        flex-direction: row;
+      }
+      :host > div > * {
+        flex: 1 1 auto;
       }
     `
   }
@@ -48,7 +55,11 @@ export class IoBuildGeometry extends IoElement {
     newGeometry.dispose()
 
     geometry.computeVertexNormals()
-    geometry.computeTangents()
+
+    if (geometry.index && geometry.attributes.position && geometry.attributes.normal && geometry.attributes.uv) {
+      geometry.computeTangents()
+    }
+
     geometry.computeBoundingSphere()
     geometry.computeBoundingBox()
 
@@ -58,46 +69,56 @@ export class IoBuildGeometry extends IoElement {
   }
 
   changed() {
-    const hasParameters = this.value && (this.value as any).parameters
+    const geometry = this.value
+    if (!geometry) {
+      this.render([])
+      return
+    }
+    const hasParameters = geometry && (geometry as any).parameters
+    const hasIndexNormalsUv = geometry.index && geometry.attributes.position && geometry.attributes.normal && geometry.attributes.uv
     this.render([
       ioPropertyEditor({
-        value: this.value as any,
+        widget: null,
+        value: geometry as any,
         properties: ['parameters'],
         labeled: false,
       }),
-      ioButton({
-        label: 'Build Geometry',
-        action: () => this.buildGeometry(),
-        disabled: !hasParameters,
-      }),
-      ioButton({
-        label: 'Compute Vertex Normals',
-        action: () => {
-          this.value?.computeVertexNormals()
-        },
-      }),
-      ioButton({
-        label: 'Compute Tangents',
-        action: () => {
-          this.value?.computeTangents()
-        },
-      }),
-      ioButton({
-        label: 'Compute Bounding Sphere',
-        action: () => {
-          this.value?.computeBoundingSphere()
-          this.dispatchMutation(this.value!.boundingSphere!)
-          this.dispatchMutation(this.value!.boundingSphere!.center!)
-        },
-      }),
-      ioButton({
-        label: 'Compute Bounding Box',
-        action: () => {
-          this.value?.computeBoundingBox()
-          this.dispatchMutation(this.value!.boundingBox!.max!)
-          this.dispatchMutation(this.value!.boundingBox!.min!)
-        },
-      }),
+      div([
+        ioButton({
+          label: 'Build',
+          action: () => this.buildGeometry(),
+          disabled: !hasParameters,
+        }),
+        ioButton({
+          label: 'vtx',
+          action: () => {
+            geometry?.computeVertexNormals()
+          },
+        }),
+        ioButton({
+          label: 'tng',
+          disabled: !hasIndexNormalsUv,
+          action: () => {
+            geometry?.computeTangents()
+          },
+        }),
+        ioButton({
+          label: 'bSphere',
+          action: () => {
+            geometry?.computeBoundingSphere()
+            this.dispatchMutation(geometry!.boundingSphere!)
+            this.dispatchMutation(geometry!.boundingSphere!.center!)
+          },
+        }),
+        ioButton({
+          label: 'bBox',
+          action: () => {
+            geometry?.computeBoundingBox()
+            this.dispatchMutation(geometry!.boundingBox!.max!)
+            this.dispatchMutation(geometry!.boundingBox!.min!)
+          },
+        }),
+      ])
     ])
   }
 }

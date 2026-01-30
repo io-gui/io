@@ -22,7 +22,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
       background-color: var(--io_bgColor);
       border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
       font-size: var(--io_fontSize);
-      overflow: hidden;
+      overflow: auto;
     }
     :host > .row {
       display: flex;
@@ -97,6 +97,11 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
         this.debounce(this.configureDebounced);
     }
     valueChanged() {
+        debug: {
+            if ((this.value !== null && typeof this.value !== 'object') && !Array.isArray(this.value)) {
+                console.warn('IoPropertyEditor: value is not an object or array', this, this.value);
+            }
+        }
         this.debounce(this.configureDebounced);
     }
     configureDebounced() {
@@ -162,7 +167,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     }
                     const isIoObject = tag === 'io-object';
                     if (isIoObject) {
-                        finalProps.label = id + ': ' + (finalProps.label || value?.constructor?.name || String(value));
+                        finalProps.label = finalProps.label || id + ': ' + value?.constructor?.name || String(value);
                     }
                     // TODO: Document and reconsider this
                     const label = finalProps.label || id;
@@ -191,6 +196,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                             labelWidth: this.labelWidth,
                             persistentExpand: true,
                             value: this.value,
+                            widget: null,
                             properties: groups[group],
                             config: this.config,
                         }));
@@ -228,7 +234,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object, init: null })
+    ReactiveProperty()
 ], IoPropertyEditor.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })

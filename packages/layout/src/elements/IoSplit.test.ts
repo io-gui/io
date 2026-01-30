@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { IoLayout, Split, Panel, IoSplit, IoPanel, parseFlexBasis, hasFlexGrow } from '@io-gui/layout'
+import { Split, Panel, IoSplit, IoPanel, parseFlexBasis, hasFlexGrow } from '@io-gui/layout'
 
 describe('Flex Utility Functions', () => {
   describe('parseFlexBasis', () => {
@@ -193,8 +193,8 @@ describe('Split Construction Consolidation', () => {
 })
 
 describe('IoSplit Consolidation', () => {
-  let layout
-  let container
+  let layout: IoSplit
+  let container: HTMLElement
 
   beforeEach(() => {
     container = document.createElement('div')
@@ -214,11 +214,10 @@ describe('IoSplit Consolidation', () => {
       type: 'split',
       children: [{type: 'panel', tabs: [{id: 'tab1'}]}]
     })
-    layout = new IoLayout({split, elements: []})
+    layout = new IoSplit({split, elements: []})
     container.appendChild(layout)
 
-    const ioSplit = layout.querySelector('io-split')
-    expect(typeof ioSplit.consolidateChild).toBe('function')
+    expect(typeof layout.consolidateChild).toBe('function')
   })
 
   describe('consolidateChild with Panel child', () => {
@@ -236,16 +235,15 @@ describe('IoSplit Consolidation', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const rootSplit = layout.querySelector('io-split')
       const childSplit = split.children[1]
 
       expect(split.children.length).toBe(2)
       expect(split.children[1]).toBeInstanceOf(Split)
 
-      rootSplit.consolidateChild(childSplit)
+      layout.consolidateChild(childSplit)
 
       expect(split.children.length).toBe(2)
       expect(split.children[1]).toBeInstanceOf(Panel)
@@ -292,16 +290,14 @@ describe('IoSplit Consolidation', () => {
 
       split.children[1] = childSplit
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
-
-      const rootSplit = layout.querySelector('io-split')
 
       expect(split.children.length).toBe(2)
       expect(childSplit.children.length).toBe(1)
       expect(childSplit.children[0]).toBeInstanceOf(Split)
 
-      rootSplit.consolidateChild(childSplit)
+      layout.consolidateChild(childSplit)
 
       expect(split.children.length).toBe(3)
       expect(split.orientation).toBe('vertical')
@@ -329,12 +325,12 @@ describe('IoSplit Consolidation', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       const childSplit = split.children[1]
       // Find the nested io-split element (second io-split in the DOM)
-      const childIoSplit = layout.querySelectorAll('io-split')[1]
+      const childIoSplit = layout.querySelectorAll('io-split')[0]
 
       // Dispatch event from child - it should bubble to parent rootSplit
       childIoSplit.dispatchEvent(new CustomEvent('io-split-consolidate', {
@@ -383,11 +379,11 @@ describe('IoSplit Consolidation', () => {
       })
       split.children[1] = childSplit
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       // Find the nested io-split element
-      const childIoSplit = layout.querySelectorAll('io-split')[1]
+      const childIoSplit = layout.querySelectorAll('io-split')[0]
 
       // Dispatch event from child - it should bubble to parent rootSplit
       childIoSplit.dispatchEvent(new CustomEvent('io-split-consolidate', {
@@ -421,13 +417,12 @@ describe('IoSplit Consolidation', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const rootSplit = layout.querySelector('io-split')
       const childSplit = split.children[1]
 
-      rootSplit.consolidateChild(childSplit)
+      layout.consolidateChild(childSplit)
 
       expect(split.children[0].flex).toBe('0 0 200px')
       expect(split.children[1].flex).toBe('1 1 auto')
@@ -448,15 +443,14 @@ describe('IoSplit Consolidation', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       expect(split.children.length).toBe(3)
 
       const childSplit = split.children[1]
-      const rootSplit = layout.querySelector('io-split')
 
-      rootSplit.dispatchEvent(new CustomEvent('io-split-remove', {
+      layout.dispatchEvent(new CustomEvent('io-split-remove', {
         detail: {split: childSplit},
         bubbles: true
       }))
@@ -493,7 +487,7 @@ describe('IoSplit Consolidation', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       const middleSplit = split.children[1]
@@ -502,7 +496,7 @@ describe('IoSplit Consolidation', () => {
       const childSplitToRemove = middleSplit.children[0]
 
       // Find the grandchild IoSplit element and dispatch from it
-      const grandchildIoSplit = layout.querySelectorAll('io-split')[2]
+      const grandchildIoSplit = layout.querySelectorAll('io-split')[1]
 
       grandchildIoSplit.dispatchEvent(new CustomEvent('io-split-remove', {
         detail: {split: childSplitToRemove},
@@ -522,7 +516,7 @@ describe('IoSplit Consolidation', () => {
 })
 
 describe('IoSplit View Element', () => {
-  let layout: IoLayout
+  let layout: IoSplit
   let container: HTMLElement
 
   beforeEach(() => {
@@ -549,15 +543,14 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
       const targetPanel = split.children[0] as Panel
       const tab = split.children[0].tabs[1]
 
-      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'left')
+      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'left')
 
       expect(split.children.length).toBe(3)
       expect(split.children[0]).toBeInstanceOf(Panel)
@@ -574,15 +567,14 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
       const targetPanel = split.children[0] as Panel
       const tab = split.children[0].tabs[1]
 
-      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'right')
+      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'right')
 
       expect(split.children.length).toBe(3)
       expect(split.children[1].tabs[0].id).toBe('tab2')
@@ -598,15 +590,14 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
       const targetPanel = split.children[0] as Panel
       const tab = split.children[0].tabs[1]
 
-      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'top')
+      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'top')
 
       expect(split.children.length).toBe(2)
       expect(split.children[0]).toBeInstanceOf(Split)
@@ -623,15 +614,14 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const sourcePanel = layout.querySelectorAll('io-panel')[0] as IoPanel
       const targetPanel = split.children[0] as Panel
       const tab = split.children[0].tabs[1]
 
-      ioSplit.moveTabToSplit(sourcePanel, targetPanel, tab, 'bottom')
+      layout.moveTabToSplit(sourcePanel, targetPanel, tab, 'bottom')
 
       expect(split.children.length).toBe(2)
       expect(split.children[0]).toBeInstanceOf(Split)
@@ -651,15 +641,14 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const panelToConvert = split.children[0] as Panel
       const newPanel1 = new Panel({type: 'panel', tabs: [{id: 'new1'}]})
       const newPanel2 = new Panel({type: 'panel', tabs: [{id: 'new2'}]})
 
-      ioSplit.convertToSplit(panelToConvert, newPanel1, newPanel2, 'vertical')
+      layout.convertToSplit(panelToConvert, newPanel1, newPanel2, 'vertical')
 
       expect(split.children[0]).toBeInstanceOf(Split)
       expect(split.children[0].orientation).toBe('vertical')
@@ -679,11 +668,10 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
-      ioSplit.ensureOneHasFlexGrow()
+      layout.ensureOneHasFlexGrow()
 
       expect(split.children[1].flex).toBe('1 1 300px')
     })
@@ -697,11 +685,10 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
-      ioSplit.ensureOneHasFlexGrow()
+      layout.ensureOneHasFlexGrow()
 
       expect(split.children[0].flex).toBe('0 0 200px')
       expect(split.children[1].flex).toBe('1 1 auto')
@@ -718,7 +705,7 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       const panels = layout.querySelectorAll('io-panel')
@@ -740,11 +727,11 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       const splits = layout.querySelectorAll('io-split')
-      expect(splits.length).toBe(2)
+      expect(splits.length).toBe(1)
     })
 
     it('Should render io-divider between children', () => {
@@ -757,7 +744,7 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
       const dividers = layout.querySelectorAll('io-divider')
@@ -774,11 +761,10 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split')
-      expect(ioSplit.getAttribute('orientation')).toBe('vertical')
+      expect(layout.getAttribute('orientation')).toBe('vertical')
     })
   })
 
@@ -809,12 +795,11 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const removeSpy = vi.fn()
-      ioSplit.addEventListener('io-split-remove', removeSpy)
+      layout.addEventListener('io-split-remove', removeSpy)
 
       split.children[0].tabs.length = 0
 
@@ -836,12 +821,11 @@ describe('IoSplit View Element', () => {
         ]
       })
 
-      layout = new IoLayout({split, elements: []})
+      layout = new IoSplit({split, elements: []})
       container.appendChild(layout)
 
-      const ioSplit = layout.querySelector('io-split') as IoSplit
       const consolidateSpy = vi.fn()
-      ioSplit.addEventListener('io-split-consolidate', consolidateSpy)
+      layout.addEventListener('io-split-consolidate', consolidateSpy)
 
       split.children[0].tabs.length = 0
 

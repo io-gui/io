@@ -1,4 +1,4 @@
-import { VDOMElement, IoElement, IoElementProps } from '@io-gui/core';
+import { VDOMElement, IoElement, IoElementProps, WithBinding } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { IoPanel } from './IoPanel.js';
 import { Split, SplitOrientation } from '../nodes/Split.js';
@@ -8,9 +8,10 @@ export declare function parseFlexBasis(flex: string): number;
 export declare function hasFlexGrow(flex: string): boolean;
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center';
 export type IoSplitProps = IoElementProps & {
-    split: Split;
+    split: WithBinding<Split>;
     elements: VDOMElement[];
     addMenuOption?: MenuOption;
+    editable?: boolean;
 };
 export declare class IoSplit extends IoElement {
     static get Style(): string;
@@ -21,6 +22,7 @@ export declare class IoSplit extends IoElement {
     addMenuOption: MenuOption | undefined;
     hasVisibleFlexGrow: boolean;
     showVeil: boolean;
+    editable: boolean;
     static get Listeners(): {
         'io-divider-move': string;
         'io-divider-move-end': string;

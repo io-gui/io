@@ -8,8 +8,8 @@ import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
 import { ioSelector } from '@io-gui/navigation';
 import { MenuOption } from '@io-gui/menus';
 import { ioTabs } from './IoTabs.js';
+import { IoSplit } from './IoSplit.js';
 import { Tab } from '../nodes/Tab.js';
-import { IoLayout } from './IoLayout.js';
 let IoPanel = class IoPanel extends IoElement {
     static get Style() {
         return /* css */ `
@@ -111,7 +111,7 @@ let IoPanel = class IoPanel extends IoElement {
         }
         else {
             const parentSplit = this.parentElement;
-            const isRootPanel = parentSplit.parentElement instanceof IoLayout &&
+            const isRootPanel = !(parentSplit.parentElement instanceof IoSplit) &&
                 parentSplit.split.children.length === 1;
             // If this is the last panel at root level, don't remove
             if (!isRootPanel) {
@@ -162,6 +162,7 @@ let IoPanel = class IoPanel extends IoElement {
                 '@io-menu-option-clicked': this.onNewTabClicked,
             }),
             ioSelector({
+                caching: 'none', // TODO: Make caching work with mutable elements
                 selected: this.panel.getSelected(),
                 elements: this.elements,
                 anchor: '',

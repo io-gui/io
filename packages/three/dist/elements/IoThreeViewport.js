@@ -67,6 +67,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.appendChild(this.renderTarget.domElement);
         this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
         this.debounce(this.renderViewportDebounced);
+        this.playingChanged();
     }
     connectedCallback() {
         super.connectedCallback();
@@ -78,10 +79,10 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.visible = false;
     }
     playingChanged() {
-        if (this.playing) {
+        if (this.playing === true && _playingViewports.includes(this) === false) {
             _playingViewports.push(this);
         }
-        else if (_playingViewports.includes(this)) {
+        else if (this.playing === false && _playingViewports.includes(this)) {
             _playingViewports.splice(_playingViewports.indexOf(this), 1);
         }
     }

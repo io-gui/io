@@ -1,23 +1,22 @@
 # @io-gui/layout
 
-A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. IoLayout enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
+A reactive, drag-and-drop tabbed panel layout system built on Io-Gui's reactive architecture. IoSplit enables IDE-like split panel interfaces where users can arrange, resize, and reorganize content through intuitive drag-and-drop interactions.
 
 See [live examples here](https://iogui.dev/io/#path=Demos,Layout)
 
 ## Overview
 
-IoLayout implements a **nested tree structure** for layout management:
+IoSplit implements a **nested tree structure** for layout management:
 
 ```
-IoLayout
-└── IoSplit (root)
-    ├── IoSplit (nested)
-    │   ├── IoPanel
-    │   │   └── IoTabs → IoTab[]
-    │   └── IoDivider
-    │   └── IoPanel
-    └── IoDivider
-    └── IoPanel
+IoSplit (root)
+  ├── IoSplit (nested)
+  │   ├── IoPanel
+  │   │   └── IoTabs → IoTab[]
+  │   └── IoDivider
+  │   └── IoPanel
+  └── IoDivider
+  └── IoPanel
 ```
 
 The system separates **domain models** (data) from **elements** (UI), following Io-Gui's reactive architecture:
@@ -90,38 +89,6 @@ type SplitProps = {
 - Mutation events from children bubble up through debounced handlers
 
 ## Elements
-
-### IoLayout
-
-The top-level container element. It renders a single root `IoSplit`.
-
-```typescript
-type IoLayoutProps = {
-  split: Split | Binding          // The root Split model
-  elements: VDOMElement[]         // Content elements matched by tab id
-  addMenuOption?: MenuOption      // Optional menu for adding new tabs
-}
-```
-
-**Usage:**
-```typescript
-ioLayout({
-  split: new Split({
-    type: 'split',
-    children: [
-      { type: 'panel', tabs: [{ id: 'Editor' }, { id: 'Preview' }] },
-      { type: 'panel', tabs: [{ id: 'Console' }], flex: '0 0 200px' }
-    ]
-  }),
-  elements: [
-    div({ id: 'Editor' }, 'Editor content'),
-    div({ id: 'Preview' }, 'Preview content'),
-    div({ id: 'Console' }, 'Console output'),
-  ]
-})
-```
-
-The `elements` array provides content matched to tabs via the `id` property. IoLayout passes these to `IoSelector` inside each `IoPanel` for content switching.
 
 ### IoSplit
 
@@ -301,16 +268,16 @@ Parent elements receive mutation, may propagate up
 
 ### Multiple Layout Instances
 
-IoLayout uses **global singletons** for drag-and-drop functionality:
+IoSplit uses **global singletons** for drag-and-drop functionality:
 
 - `tabDragIconSingleton` - Shows tab icon at cursor during drag
 - `ioTabDropRectSingleton` - Shows drop target preview
 - `ioTabsHamburgerMenuSingleton` - Overflow menu for hidden tabs
 
-**Limitations when using multiple `IoLayout` instances on the same page:**
+**Limitations when using multiple `IoSplit` instances on the same page:**
 
 1. **One drag operation at a time** - Singletons are shared globally, so only one tab drag can occur across all layout instances simultaneously
-2. **Drop target scoping** - Drop targets are scoped to the IoLayout ancestor of the dragged tab. Tabs cannot be dragged between separate IoLayout instances.
+2. **Drop target scoping** - Drop targets are scoped to the IoSplit ancestor of the dragged tab. Tabs cannot be dragged between separate IoSplit instances.
 3. **Shared hamburger menu** - The overflow menu is shared, though it correctly displays tabs from whichever panel triggered it
 
 This architecture works well for the common case of a single layout per page. For multiple independent layouts, be aware of the shared drag state.
@@ -395,15 +362,6 @@ new Split({
 ---
 
 ## Nuances and Edge Cases
-
-### Last Tab Protection
-The system prevents removing the last tab from the last panel in a layout. In `IoPanel.removeTab()`:
-```typescript
-const grandParentLayout = (parentSplit.parentElement instanceof IoLayout) ? parentSplit.parentElement : null
-if (grandParentLayout && parentSplit.split.children.length === 1 && this.panel.tabs.length === 1) {
-  return  // Abort removal
-}
-```
 
 ### Duplicate Tab IDs
 When adding a tab, if a tab with the same `id` exists in the panel, it's removed first:

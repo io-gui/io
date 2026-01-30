@@ -137,8 +137,10 @@ Each package can be built/linted individually:
 
 ### Testing
 - Uses Vitest for testing
+- There is no need to build packages before testing. Vitest will run tests form .test.ts source files directly
 - Web Test Runner for browser-based tests
 - Test files follow `*.test.ts` pattern
 - Run tests with `pnpm test` or `pnpm test:[package]` for individual packages
 - If playwright browsers are not installed in sandbox try `source .env && pnpm test:[package] 2>&1`
 - If that fails, install playwright browsers with `pnpm exec playwright install chromium 2>&1`
+- Use `nextQueue()` from `@io-gui/core` to wait for next queue tick in tests. Dont use `await new Promise`

@@ -1,8 +1,9 @@
-import { registerEditorConfig, ioMatrix, ioObject } from '@io-gui/editors'
+import { registerEditorConfig, ioObject } from '@io-gui/editors'
 import { Matrix4 } from 'three/webgpu'
+import { ioMatrix4 } from '../../elements/math/IoMatrix4.js'
 
 registerEditorConfig(Matrix4, [
-  ['elements', ioMatrix()],
+  ['elements', ioMatrix4()],
 ])
 
 registerEditorConfig(Object, [

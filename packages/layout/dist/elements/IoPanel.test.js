@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { IoLayout, IoPanel, Split, Panel, Tab } from '@io-gui/layout';
+import { IoPanel, IoSplit, Split, Panel, Tab } from '@io-gui/layout';
 import { MenuOption } from '@io-gui/menus';
 describe('IoPanel', () => {
     let panel;
@@ -24,7 +24,7 @@ describe('IoPanel', () => {
                 }
             ]
         });
-        layout = new IoLayout({ split, elements: [] });
+        layout = new IoSplit({ split, elements: [] });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
         panel = ioPanel.panel;
@@ -209,7 +209,7 @@ describe('IoPanel', () => {
                     { type: 'panel', tabs: [{ id: 'panelB-tab1' }] },
                 ]
             });
-            const multiLayout = new IoLayout({ split: multiSplit, elements: [] });
+            const multiLayout = new IoSplit({ split: multiSplit, elements: [] });
             container.appendChild(multiLayout);
             const panelB = multiLayout.querySelectorAll('io-panel')[1];
             const removeSpy = vi.fn();
@@ -233,7 +233,7 @@ describe('IoPanel', () => {
                     }
                 ]
             });
-            const nestedLayout = new IoLayout({ split: nestedSplit, elements: [] });
+            const nestedLayout = new IoSplit({ split: nestedSplit, elements: [] });
             container.appendChild(nestedLayout);
             // Due to construction consolidation, we should have a single panel
             const onlyPanel = nestedLayout.querySelector('io-panel');
@@ -274,11 +274,10 @@ describe('IoPanel', () => {
                     { type: 'panel', tabs: [{ id: 'tgt-tab1' }] },
                 ]
             });
-            multiLayout = new IoLayout({ split: multiSplit, elements: [] });
+            multiLayout = new IoSplit({ split: multiSplit, elements: [] });
             container.appendChild(multiLayout);
             // Reset collapse state since container has display:none (getBoundingClientRect returns 0)
-            const ioSplit = multiLayout.querySelector('io-split');
-            ioSplit.setProperties({ leadingDrawer: null, trailingDrawer: null });
+            multiLayout.setProperties({ leadingDrawer: null, trailingDrawer: null });
             sourcePanelElement = multiLayout.querySelectorAll('io-panel')[0];
             targetPanelElement = multiLayout.querySelectorAll('io-panel')[1];
         });
@@ -293,8 +292,7 @@ describe('IoPanel', () => {
             expect(targetPanelElement.panel.tabs.find(t => t.id === 'src-tab2')).toBeTruthy();
         });
         it('should call parent split for directional moves', () => {
-            const parentSplit = multiLayout.querySelector('io-split');
-            const moveTabToSplitSpy = vi.spyOn(parentSplit, 'moveTabToSplit');
+            const moveTabToSplitSpy = vi.spyOn(multiLayout, 'moveTabToSplit');
             const tab = sourcePanelElement.panel.tabs[1];
             targetPanelElement.moveTabToSplit(sourcePanelElement, tab, 'left');
             expect(moveTabToSplitSpy).toHaveBeenCalledWith(sourcePanelElement, targetPanelElement.panel, tab, 'left');
@@ -434,7 +432,7 @@ describe('IoPanel', () => {
             });
             // Manually set the first child to empty panel
             emptySplit.children[0] = emptyPanel;
-            const emptyLayout = new IoLayout({ split: emptySplit, elements: [] });
+            const emptyLayout = new IoSplit({ split: emptySplit, elements: [] });
             container.appendChild(emptyLayout);
             const emptyIoPanel = emptyLayout.querySelector('io-panel');
             // Should not crash
@@ -473,10 +471,10 @@ describe('Auto-generate addMenuOption', () => {
         const customMenuOption = new MenuOption({
             options: [{ id: 'custom-option', label: 'Custom' }]
         });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [{ tag: 'div', props: { id: 'element1' } }],
-            addMenuOption: customMenuOption
+            addMenuOption: customMenuOption,
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
@@ -489,13 +487,13 @@ describe('Auto-generate addMenuOption', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
         });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [
                 { tag: 'div', props: { id: 'element1' } },
                 { tag: 'div', props: { id: 'element2', label: 'Element Two' } },
                 { tag: 'div', props: { id: 'element3', icon: 'test-icon' } },
-            ]
+            ],
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
@@ -513,13 +511,13 @@ describe('Auto-generate addMenuOption', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'tab1' }, { id: 'element2' }] }]
         });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [
                 { tag: 'div', props: { id: 'element1' } },
                 { tag: 'div', props: { id: 'element2' } }, // already a tab
                 { tag: 'div', props: { id: 'element3' } },
-            ]
+            ],
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
@@ -533,7 +531,7 @@ describe('Auto-generate addMenuOption', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
         });
-        layout = new IoLayout({ split, elements: [] });
+        layout = new IoSplit({ split, elements: [] });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
         const result = ioPanel.getAddMenuOption();
@@ -544,12 +542,12 @@ describe('Auto-generate addMenuOption', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'element1' }, { id: 'element2' }] }]
         });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [
                 { tag: 'div', props: { id: 'element1' } },
                 { tag: 'div', props: { id: 'element2' } },
-            ]
+            ],
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
@@ -561,14 +559,14 @@ describe('Auto-generate addMenuOption', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
         });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [
                 { tag: 'div', props: { id: 'element1' } },
                 { tag: 'div', props: {} }, // no id
                 { tag: 'div' }, // no props
                 { tag: 'div', props: { id: 'element2' } },
-            ]
+            ],
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
@@ -581,12 +579,12 @@ describe('Auto-generate addMenuOption', () => {
             type: 'split',
             children: [{ type: 'panel', tabs: [{ id: 'tab1' }] }]
         });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [
                 { tag: 'div', props: { id: 'element1' } },
                 { tag: 'div', props: { id: 'element2' } },
-            ]
+            ],
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');
@@ -607,10 +605,10 @@ describe('Auto-generate addMenuOption', () => {
         });
         // Empty MenuOption with no options
         const emptyMenuOption = new MenuOption({ options: [] });
-        layout = new IoLayout({
+        layout = new IoSplit({
             split,
             elements: [{ tag: 'div', props: { id: 'element1' } }],
-            addMenuOption: emptyMenuOption
+            addMenuOption: emptyMenuOption,
         });
         container.appendChild(layout);
         ioPanel = layout.querySelector('io-panel');

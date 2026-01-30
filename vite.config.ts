@@ -12,12 +12,14 @@ export const resolveConfig = {
     { find: /\/packages\/editors\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/editors/src/demos/$1.ts', import.meta.url).pathname },
 
     { find: '@io-gui/inputs', replacement: new URL('./packages/inputs/src/index.ts', import.meta.url).pathname },
+    { find: /\/packages\/inputs\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/inputs/src/demos/$1.ts', import.meta.url).pathname },
     { find: '@io-gui/layout', replacement: new URL('./packages/layout/src/index.ts', import.meta.url).pathname },
     { find: /\/packages\/layout\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/layout/src/demos/$1.ts', import.meta.url).pathname },
     { find: '@io-gui/markdown', replacement: new URL('./packages/markdown/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/menus', replacement: new URL('./packages/menus/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/navigation', replacement: new URL('./packages/navigation/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/sliders', replacement: new URL('./packages/sliders/src/index.ts', import.meta.url).pathname },
+    { find: /\/packages\/sliders\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/sliders/src/demos/$1.ts', import.meta.url).pathname },
 
     { find: '@io-gui/three', replacement: new URL('./packages/three/src/index.ts', import.meta.url).pathname },
     { find: /\/packages\/three\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/three/src/demos/$1.ts', import.meta.url).pathname },

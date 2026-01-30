@@ -9,21 +9,21 @@ export type IoPropertyEditorProps = IoElementProps & {
     labelWidth?: string;
     config?: PropertyConfig[];
     groups?: PropertyGroups;
-    widget?: VDOMElement;
+    widget?: VDOMElement | null;
 };
 /**
  * Object editor. It displays a set of labeled property editors for the `value` object. Labels can be omitted by setting `labeled` property to false.
  **/
 export declare class IoPropertyEditor extends IoElement {
     static get Style(): string;
-    value: object | Array<any>;
+    value: object | Array<unknown>;
     properties: string[];
     label: string;
     labeled: boolean;
     labelWidth: string;
     config: PropertyConfig[];
     groups: PropertyGroups;
-    widget: VDOMElement | undefined;
+    widget: VDOMElement | undefined | null;
     private _config;
     private _groups;
     private _widget;

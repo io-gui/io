@@ -51,7 +51,7 @@ export class IoNavigator extends IoElement {
     `
   }
 
-  @ReactiveProperty(Array)
+  @ReactiveProperty({type: Array, init: null})
   declare elements: VDOMElement[]
 
   @ReactiveProperty({type: MenuOption})

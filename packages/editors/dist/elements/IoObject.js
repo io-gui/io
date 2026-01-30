@@ -46,6 +46,11 @@ let IoObject = class IoObject extends IoElement {
     valueChanged() {
         if (!this.value)
             return;
+        debug: {
+            if (typeof this.value !== 'object' && !Array.isArray(this.value)) {
+                console.warn('IoObject: value is not an object or array', this, this.value);
+            }
+        }
         let uuid = genIdentifier(this.value);
         let storage = 'local';
         if (!uuid) {
@@ -53,7 +58,7 @@ let IoObject = class IoObject extends IoElement {
             storage = 'none';
         }
         // TODO: Test
-        const expandedBinding = $({ value: false, storage: storage, key: uuid + '-' + this.label });
+        const expandedBinding = $({ value: this.expanded ?? false, storage: storage, key: uuid + '-' + this.label });
         const bindingTargets = expandedBinding.targets;
         const targetIsThis = bindingTargets.has(this);
         if (bindingTargets.size < 1) {
@@ -93,7 +98,7 @@ let IoObject = class IoObject extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Object })
+    ReactiveProperty()
 ], IoObject.prototype, "value", void 0);
 __decorate([
     ReactiveProperty({ type: Array, init: null })

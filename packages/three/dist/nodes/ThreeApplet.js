@@ -52,12 +52,6 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Number, value: NoToneMapping })
 ], ThreeApplet.prototype, "toneMapping", void 0);
-__decorate([
-    ReactiveProperty({ type: Array, init: null })
-], ThreeApplet.prototype, "uiConfig", void 0);
-__decorate([
-    ReactiveProperty({ type: Object, init: null })
-], ThreeApplet.prototype, "uiGroups", void 0);
 ThreeApplet = __decorate([
     Register
 ], ThreeApplet);
@@ -83,8 +77,6 @@ registerEditorGroups(ThreeApplet, {
     Hidden: [
         'toneMapping',
         'toneMappingExposure',
-        'uiConfig',
-        'uiGroups',
         '_renderer',
         '_width',
         '_height',

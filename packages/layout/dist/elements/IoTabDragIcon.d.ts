@@ -1,8 +1,7 @@
 import { IoField, IoFieldProps } from '@io-gui/inputs';
 import { Tab } from '../nodes/Tab.js';
-import { SplitDirection } from './IoSplit.js';
+import { IoSplit, SplitDirection } from './IoSplit.js';
 import { IoPanel } from './IoPanel.js';
-import { IoLayout } from './IoLayout.js';
 declare class IoTabDragIcon extends IoField {
     static get Style(): string;
     dragging: boolean;
@@ -15,7 +14,7 @@ declare class IoTabDragIcon extends IoField {
     private _startY;
     constructor(args?: IoFieldProps);
     setStartPosition(x: number, y: number): void;
-    updateDrag(tab: Tab, sourcePanel: IoPanel, x: number, y: number, root: IoLayout | null): void;
+    updateDrag(tab: Tab, sourcePanel: IoPanel, x: number, y: number, root: IoSplit | null): void;
     private detectDropTargets;
     private calculateSplitDirection;
     endDrag(): void;

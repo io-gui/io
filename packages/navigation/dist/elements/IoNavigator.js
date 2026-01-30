@@ -80,7 +80,7 @@ let IoNavigator = class IoNavigator extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty(Array)
+    ReactiveProperty({ type: Array, init: null })
 ], IoNavigator.prototype, "elements", void 0);
 __decorate([
     ReactiveProperty({ type: MenuOption })

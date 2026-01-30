@@ -16,7 +16,7 @@ const isTypeCompatible = (type1: any, type2: any) => {
   if (type1 === type2) return true
   // Handle class inheritance
   if (typeof type1 === 'function' && typeof type2 === 'function') {
-    return type1 instanceof type2 || type2 instanceof type1
+    return type1.prototype instanceof type2 || type2.prototype instanceof type1
   }
   return false
 }

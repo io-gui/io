@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>Io-Gui, a UI framework for Three.js</title>
 
@@ -184,7 +184,30 @@
           {id: 'Menus'},
           {id: 'Navigation'},
           {id: 'Layout'},
-          {id: 'Three'},
+          {id: 'Three', options: [
+            {id: 'Camera Examples', options: [
+              {id: 'Camera'},
+              {id: 'CameraLogarithmicDepthBuffer'},
+              {id: 'CameraArray'},
+            ]},
+            {id: 'Geometries', options: [
+              {id: 'GeometryPrimitives'},
+              {id: 'GeometryColors'},
+              {id: 'GeometryConvex'},
+            ]},
+            {id: 'Animations', options: [
+              {id: 'AnimationGroups'},
+              {id: 'AnimationKeyframes'},
+              {id: 'AnimationRetargeting'},
+              {id: 'AnimationRetargetingReadyplayer'},
+              {id: 'AnimationBackdrop'},
+              {id: 'AnimationSkinningBlending'},
+              {id: 'AnimationSkinningAdditiveBlending'},
+            ]},
+            {id: 'BackdropArea'},
+            {id: 'ComputeTexture'},
+            {id: 'VolumePerlin'},
+          ]},
           {id: 'Theme Editor'},
           {id: 'TODO MVC App'},
         ]}
@@ -200,7 +223,7 @@
       menu: 'top',
       option: MENU_OPTION,
       caching: 'proactive',
-      depth: 2,
+      depth: 3,
       widget: ioIcon({value: 'io:io', size: 'medium', style: {margin: '0 0.5em'}}),
       elements: [
         ioMarkdown({id: 'About', strip: [siteRoot], src: './README.md'}),
@@ -248,8 +271,8 @@
           ]
         }),
         ioSelector({id: 'Demos',
-          selected: MENU_OPTION.findItemById('Demos').bind('selectedID'),
-          caching: 'reactive',
+          selected: MENU_OPTION.findItemById('Demos').bind('selectedIDImmediate'),
+          caching: 'proactive',
           elements: [
             {tag: 'io-inputs-demo', props: {id: 'Inputs', import: './packages/inputs/dist/demos/IoInputsDemo.js'}},
             {tag: 'io-icons-demo', props: {id: 'Icons', import: './packages/icons/dist/demos/IoIconsDemo.js'}},
@@ -259,7 +282,29 @@
             {tag: 'io-menus-demo', props: {id: 'Menus', import: './packages/menus/dist/demos/IoMenusDemo.js'}},
             {tag: 'io-navigation-demo', props: {id: 'Navigation', import: './packages/navigation/dist/demos/IoNavigationDemo.js'}},
             {tag: 'io-layout-demo', props: {id: 'Layout', import: './packages/layout/dist/demos/IoLayoutDemo.js'}},
-            {tag: 'io-three-demo', props: {id: 'Three', import: './packages/three/dist/demos/IoThreeDemo.js'}},
+            ioNavigator({id: 'Three', class: 'navigator', select: 'all', widget: h4({class: 'heading'}, 'Three.js Examples'),
+              option: MENU_OPTION.findItemById('Demos').findItemById('Three'),
+              select: 'deep',
+              caching: 'reactive',
+              elements: [
+                {tag: 'io-camera-example', props: {id: 'Camera', import: './packages/three/dist/demos/examples/IoCameraExample.js'}},
+                {tag: 'io-camera-logarithmic-depth-buffer-example', props: {id: 'CameraLogarithmicDepthBuffer', import: './packages/three/dist/demos/examples/IoCameraLogarithmicDepthBufferExample.js'}},
+                {tag: 'io-camera-array-example', props: {id: 'CameraArray', playing: true, cameraSelect: 'scene', import: './packages/three/dist/demos/examples/IoCameraArrayExample.js'}},
+                {tag: 'io-geometries-example', props: {id: 'GeometryPrimitives', import: './packages/three/dist/demos/examples/IoGeometriesExample.js'}},
+                {tag: 'io-geometry-colors-example', props: {id: 'GeometryColors', import: './packages/three/dist/demos/examples/IoGeometryColorsExample.js'}},
+                {tag: 'io-geometry-convex-example', props: {id: 'GeometryConvex', import: './packages/three/dist/demos/examples/IoGeometryConvexExample.js'}},
+                {tag: 'io-animation-groups-example', props: {id: 'AnimationGroups', import: './packages/three/dist/demos/examples/IoAnimationGroupsExample.js'}},
+                {tag: 'io-animation-keyframes-example', props: {id: 'AnimationKeyframes', import: './packages/three/dist/demos/examples/IoAnimationKeyframesExample.js'}},
+                {tag: 'io-animation-retargeting-example', props: {id: 'AnimationRetargeting', import: './packages/three/dist/demos/examples/IoAnimationRetargetingExample.js'}},
+                {tag: 'io-animation-retargeting-readyplayer-example', props: {id: 'AnimationRetargetingReadyplayer', import: './packages/three/dist/demos/examples/IoAnimationRetargetingReadyplayerExample.js'}},
+                {tag: 'io-animation-backdrop-example', props: {id: 'AnimationBackdrop', import: './packages/three/dist/demos/examples/IoAnimationBackdropExample.js'}},
+                {tag: 'io-animation-skinning-blending-example', props: {id: 'AnimationSkinningBlending', import: './packages/three/dist/demos/examples/IoAnimationSkinningBlendingExample.js'}},
+                {tag: 'io-animation-skinning-additive-blending-example', props: {id: 'AnimationSkinningAdditiveBlending', import: './packages/three/dist/demos/examples/IoAnimationSkinningAdditiveBlendingExample.js'}},
+                {tag: 'io-backdrop-area-example', props: {id: 'BackdropArea', import: './packages/three/dist/demos/examples/IoBackdropAreaExample.js'}},
+                {tag: 'io-compute-texture-example', props: {id: 'ComputeTexture', import: './packages/three/dist/demos/examples/IoComputeTextureExample.js'}},
+                {tag: 'io-volume-perlin-example', props: {id: 'VolumePerlin', import: './packages/three/dist/demos/examples/IoVolumePerlinExample.js'}},
+              ]
+            }),
             {tag: 'io-theme-editor', props: {id: 'Theme Editor', import: './packages/core/dist/demos/IoThemeEditor.js'}},
             // {tag: 'io-element-inspector-demo', props: {id: 'Element Inspector', import: './packages/core/dist/demos/IoElementInspectorDemo.js'}},
             // {tag: 'io-change-visualization', props: {id: 'Change Visualization', import: './packages/core/dist/demos/IoChangeVisualization.js'}},

@@ -14,7 +14,7 @@ export type IoObjectProps = IoElementProps & {
   persistentExpand?: boolean
   config?: PropertyConfig[]
   groups?: PropertyGroups
-  widget?: VDOMElement
+  widget?: VDOMElement | null
 }
 
 /**
@@ -55,8 +55,8 @@ export class IoObject extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Object})
-  declare value: Record<string, any> | any[]
+  @ReactiveProperty()
+  declare value: Record<string, unknown> | Array<unknown>
 
   @ReactiveProperty({type: Array, init: null})
   declare properties: string[] | null
@@ -83,13 +83,19 @@ export class IoObject extends IoElement {
   declare groups: PropertyGroups
 
   @ReactiveProperty({type: Object})
-  declare widget: VDOMElement | undefined
+  declare widget: VDOMElement | undefined | null
 
   @Property('region')
   declare role: string
 
   valueChanged() {
     if (!this.value) return
+
+    debug: {
+      if (typeof this.value !== 'object' && !Array.isArray(this.value)) {
+        console.warn('IoObject: value is not an object or array', this, this.value)
+      }
+    }
 
     let uuid = genIdentifier(this.value)
     let storage: 'local' | 'none' = 'local'
@@ -99,7 +105,7 @@ export class IoObject extends IoElement {
     }
 
     // TODO: Test
-    const expandedBinding = $({value: false, storage: storage, key: uuid + '-' + this.label})
+    const expandedBinding = $({value: this.expanded ?? false, storage: storage, key: uuid + '-' + this.label})
     const bindingTargets = expandedBinding.targets
     const targetIsThis = bindingTargets.has(this)
 

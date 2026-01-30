@@ -71,8 +71,6 @@ export class IoNumberSlider extends IoElement {
         id: 'number',
         value: this.value,
         step: this.step,
-        min: this.min * this.conversion,
-        max: this.max * this.conversion,
         conversion: this.conversion,
         '@value-input': this._onNumberSet,
       }),
