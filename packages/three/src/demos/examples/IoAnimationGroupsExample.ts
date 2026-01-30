@@ -71,7 +71,7 @@ export class AnimationGroupsExample extends ThreeApplet {
 @Register
 export class IoAnimationGroupsExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationGroupsExample, init: {playing: true}})
+  @ReactiveProperty({type: AnimationGroupsExample, init: {isPlaying: true}})
   declare applet: AnimationGroupsExample
 
 }

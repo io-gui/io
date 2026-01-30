@@ -37,7 +37,8 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
+import { ioSplit, Split } from '@io-gui/layout'
 
 const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
   // forked from https://www.shadertoy.com/view/7ly3D1
@@ -236,8 +237,47 @@ export class AnimationRetargetingExample extends ThreeApplet {
 @Register
 export class IoAnimationRetargetingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationRetargetingExample, init: {playing: true}})
+  @ReactiveProperty({type: AnimationRetargetingExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingExample
+
+  ready() {
+
+    this.render([
+      ioSplit({
+        elements: [
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Back', applet: this.applet, cameraSelect: 'back'}),
+          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
+        ],
+        split: new Split({
+          type: 'split',
+          orientation: 'vertical',
+          children: [
+            {
+              type: 'split',
+              flex: '1 1 60px',
+              orientation: 'horizontal',
+              children: [
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Top'}]},
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Left'}]}
+              ]
+            },
+            {
+              type: 'split',
+              flex: '1 1 60px',
+              orientation: 'horizontal',
+              children: [
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Back'}]},
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCamera'}]},
+              ]
+            }
+          ]
+        })
+      })
+    ])
+
+  }
 
 }
 

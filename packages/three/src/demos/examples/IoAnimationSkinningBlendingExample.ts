@@ -13,7 +13,11 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
+import { ioSplit, Split } from '@io-gui/layout'
+import { ioObject, ioPropertyEditor } from '@io-gui/editors'
+import { ioNumberSlider } from '@io-gui/sliders'
+import { ioButton } from '@io-gui/inputs'
 
 const loader = new GLTFLoader()
 
@@ -25,8 +29,9 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
 
   @ReactiveProperty({type: Boolean, value: false})
   declare isPlaying: boolean
-
-  public isCrossfading: boolean = false
+  
+  @ReactiveProperty({type: Boolean, value: false})
+  declare isCrossfading: boolean
 
   public camera: PerspectiveCamera
   public mixer: AnimationMixer = new AnimationMixer(new Group())
@@ -125,9 +130,11 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   run = () => { this.crossfadeTo('run', 2.5) }
 
   public makeSingleStep = () => {
-    if (this.mixer && !this.isPlaying) {
+    this.isPlaying = false
+    if (this.mixer) {
       this.mixer.update(this.stepSize)
     }
+    this.dispatch('three-applet-needs-render', undefined, true)
   }
 
   private getCurrentAction(): AnimationAction | null {
@@ -212,37 +219,89 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
 @Register
 export class IoAnimationSkinningBlendingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationSkinningBlendingExample, init: {playing: true}})
+  @ReactiveProperty({type: AnimationSkinningBlendingExample, init: {isPlaying: true}})
   declare applet: AnimationSkinningBlendingExample
 
-  // init() {
-  //   this.uiConfig = [
-  //     ['isPlaying', ioBoolean({label: '_hidden_', true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
-  //     ['makeSingleStep', ioButton({label: 'Make Single Step'})],
-  //     ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-  //     ['actions', ioPropertyEditor({label: '_hidden_'})],
-  //   ]
+  ready() {
 
-  //   this.uiGroups = {
-  //     Main: [
-  //       'isActive',
-  //       'isPlaying',
-  //       'mixer',
-  //       'actions',
-  //       'idle',
-  //       'walk',
-  //       'run',
-  //       'useDefaultDuration',
-  //       'customDuration',
-  //       'stepSize',
-  //       'makeSingleStep',
-  //     ],
-  //     Hidden: [
-  //       'scene',
-  //       'camera',
-  //     ],
-  //   }
-  // }
+    this.render([
+      ioSplit({
+        elements: [
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Back', applet: this.applet, cameraSelect: 'back'}),
+          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet,
+            config: [
+              [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
+              [AnimationAction, ioObject({expanded: true, properties: ['weight']})],
+              ['makeSingleStep', ioButton({label: 'Make Single Step'})],
+              ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+              ['actions', ioPropertyEditor({label: '_hidden_'})],
+              [Function, ioButton({disabled: this.applet.bind('isCrossfading')})],
+            ],
+            groups: {
+              Main: [
+                'isActive',
+                'isPlaying',
+                'mixer',
+                'actions',
+                'idle',
+                'walk',
+                'run',
+                'useDefaultDuration',
+                'customDuration',
+                'stepSize',
+                'makeSingleStep',
+              ],
+              Hidden: [
+                'scene',
+                'camera',
+              ],
+            }
+          })
+        ],
+        split: new Split({
+          type: 'split',
+          orientation: 'horizontal',
+          children: [
+            {
+              type: 'split',
+              flex: '2 1 auto',
+              orientation: 'vertical',
+              children: [
+                {
+                  type: 'split',
+                  flex: '1 1 50%',
+                  orientation: 'horizontal',
+                  children: [
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Top'}]},
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Left'}]}
+                  ]
+                },
+                {
+                  type: 'split',
+                  flex: '1 1 50%',
+                  orientation: 'horizontal',
+                  children: [
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Back'}]},
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneCamera'}]},
+                  ]
+                }
+              ]
+            },
+            {
+              type: 'panel',
+              flex: '0 0 280px',
+              tabs: [{id: 'PropertyEditor'}]
+            }
+          ]
+        })
+      })
+    ])
+
+  }
+
 }
 
 export const ioAnimationSkinningBlendingExample = IoAnimationSkinningBlendingExample.vConstructor

@@ -117,7 +117,7 @@ export class GeometryConvexExample extends ThreeApplet {
 @Register
 export class IoGeometryConvexExample extends IoThreeExample {
 
-  @ReactiveProperty({type: GeometryConvexExample, init: {playing: true}})
+  @ReactiveProperty({type: GeometryConvexExample, init: {isPlaying: true}})
   declare applet: GeometryConvexExample
 
   ready() {
@@ -127,8 +127,8 @@ export class IoGeometryConvexExample extends IoThreeExample {
         elements: [
           ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
           ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Front', applet: this.applet, cameraSelect: 'front'}),
           ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
         ],
         split: new Split({
           type: 'split',
@@ -148,8 +148,8 @@ export class IoGeometryConvexExample extends IoThreeExample {
               flex: '1 1 60px',
               orientation: 'horizontal',
               children: [
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Front'}]},
                 {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Perspective'}]},
-                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'SceneCamera'}]},
               ]
             }
           ]

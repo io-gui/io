@@ -144,7 +144,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 @Register
 export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraLogarithmicDepthBufferExample, init: {playing: true}})
+  @ReactiveProperty({type: CameraLogarithmicDepthBufferExample, init: {isPlaying: true}})
   declare applet: CameraLogarithmicDepthBufferExample
 
   @ReactiveProperty({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})

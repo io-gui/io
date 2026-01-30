@@ -54,6 +54,13 @@ export class IoBuildGeometry extends IoElement {
     geometry.copy(newGeometry as BufferGeometry)
     newGeometry.dispose()
 
+    for (const name in geometry.attributes) {
+      geometry.attributes[name].needsUpdate = true
+    }
+    if (geometry.index) {
+      geometry.index.needsUpdate = true
+    }
+
     geometry.computeVertexNormals()
 
     if (geometry.index && geometry.attributes.position && geometry.attributes.normal && geometry.attributes.uv) {

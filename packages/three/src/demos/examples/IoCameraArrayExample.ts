@@ -114,7 +114,7 @@ export class CameraArrayExample extends ThreeApplet {
 @Register
 export class IoCameraArrayExample extends IoThreeViewport {
 
-  @ReactiveProperty({type: CameraArrayExample, init: {playing: true}})
+  @ReactiveProperty({type: CameraArrayExample, init: {isPlaying: true}})
   declare applet: CameraArrayExample
 
 }

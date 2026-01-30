@@ -21,7 +21,7 @@ import {
 import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
 
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
@@ -153,15 +153,9 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 @Register
 export class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationRetargetingReadyplayerExample, init: {playing: true}})
+  @ReactiveProperty({type: AnimationRetargetingReadyplayerExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingReadyplayerExample
 
-  // init() {
-  //   this.uiConfig = [
-  //     ['sourceMixer', ioPropertyEditor({label: '_hidden_'})],
-  //     ['targetMixer', ioPropertyEditor({label: '_hidden_'})],
-  //   ]
-  // }
 }
 
 export const ioAnimationRetargetingReadyplayerExample = IoAnimationRetargetingReadyplayerExample.vConstructor

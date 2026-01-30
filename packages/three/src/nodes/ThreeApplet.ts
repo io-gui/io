@@ -8,7 +8,7 @@ export type ThreeAppletProps = ReactiveNodeProps & {
   scene?: Scene
   toneMappingExposure?: number
   toneMapping?: ToneMapping
-  playing?: boolean
+  isPlaying?: boolean
 }
 
 const _playingApplets: ThreeApplet[] = []
@@ -33,7 +33,7 @@ export class ThreeApplet extends ReactiveNode {
   declare toneMapping: ToneMapping
 
   @ReactiveProperty({type: Boolean, value: false})
-  declare playing: boolean
+  declare isPlaying: boolean
 
   private _renderer: WebGPURenderer | null = null
   private _width: number = 0
@@ -43,23 +43,23 @@ export class ThreeApplet extends ReactiveNode {
 
   constructor(args?: ThreeAppletProps) {
     super(args)
-    this.playingChanged()
+    this.isPlayingChanged()
   }
 
-  playingChanged() {
-    if (this.playing === true && _playingApplets.includes(this) === false) {
+  isPlayingChanged() {
+    if (this.isPlaying === true && _playingApplets.includes(this) === false) {
       _playingApplets.push(this)
-    } else if (this.playing === false && _playingApplets.includes(this)) {
+    } else if (this.isPlaying === false && _playingApplets.includes(this)) {
       _playingApplets.splice(_playingApplets.indexOf(this), 1)
     }
   }
 
   onRAF() {
-    if (!this.playing) return
+    if (!this.isPlaying) return
     const delta = this._clock.getDelta()
     const time = this._clock.getElapsedTime()
     this.onAnimate(delta, time)
-    this.dispatch('io-three-animate', {time, delta}, true)
+    this.dispatch('three-applet-needs-render', undefined, true)
   }
 
   updateViewportSize(width: number, height: number) {
@@ -84,10 +84,10 @@ export class ThreeApplet extends ReactiveNode {
   onResized(width: number, height: number) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onAnimate(delta?: number, time?: number) {}
+  onAnimate(delta: number, time: number) {}
 
   dispose() {
-    this.playing = false
+    this.isPlaying = false
     super.dispose()
   }
 }
@@ -100,7 +100,6 @@ registerEditorConfig(ThreeApplet, [
     {value: ReinhardToneMapping, id: 'ReinhardToneMapping'},
     {value: CineonToneMapping, id: 'CineonToneMapping'},
     {value: ACESFilmicToneMapping, id: 'ACESFilmicToneMapping'},
-    // {value: CustomToneMapping, id: 'CustomToneMapping'},
     {value: AgXToneMapping, id: 'AgXToneMapping'},
     {value: NeutralToneMapping, id: 'NeutralToneMapping'},
   ]})})],
@@ -112,14 +111,12 @@ registerEditorGroups(ThreeApplet, {
     'scene',
   ],
   Hidden: [
-    'playing',
+    'isPlaying',
     'toneMapping',
     'toneMappingExposure',
     '_renderer',
     '_width',
     '_height',
-    '_prevTime',
-    '_rafId',
     '_clock',
   ],
 })

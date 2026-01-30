@@ -139,7 +139,7 @@ registerEditorConfig(CameraExample, [
 @Register
 export class IoCameraExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraExample, init: {playing: true}})
+  @ReactiveProperty({type: CameraExample, init: {isPlaying: true}})
   declare applet: CameraExample
 
   ready() {

@@ -9,6 +9,7 @@ export type IoNumberSliderProps = IoElementProps & {
   max?: number
   exponent?: number
   conversion?: number
+  disabled?: WithBinding<boolean>
 }
 
 /**
@@ -51,6 +52,9 @@ export class IoNumberSlider extends IoElement {
   @ReactiveProperty(1)
   declare conversion: number
 
+  @ReactiveProperty(false)
+  declare disabled: boolean
+
   constructor(args: IoNumberSliderProps = {}) { super(args) }
 
   _onNumberSet(event: CustomEvent) {
@@ -72,6 +76,7 @@ export class IoNumberSlider extends IoElement {
         value: this.value,
         step: this.step,
         conversion: this.conversion,
+        disabled: this.disabled,
         '@value-input': this._onNumberSet,
       }),
       ioSlider({
@@ -81,6 +86,7 @@ export class IoNumberSlider extends IoElement {
         min: this.min * this.conversion,
         max: this.max * this.conversion,
         exponent: this.exponent,
+        disabled: this.disabled,
         '@value-input': this._onSliderSet,
       }),
     ])

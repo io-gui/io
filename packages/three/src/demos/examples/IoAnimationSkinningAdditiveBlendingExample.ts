@@ -10,19 +10,14 @@ import {
   HemisphereLight,
   Mesh,
   MeshPhongMaterial,
-  PerspectiveCamera,
   PlaneGeometry,
-  SkeletonHelper,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
+import { ioSplit, Split } from '@io-gui/layout'
+import { ioObject, ioPropertyEditor } from '@io-gui/editors'
 
 const loader = new GLTFLoader()
-
-interface ActionSettings {
-  weight: number
-  action?: AnimationAction
-}
 
 @Register
 export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
@@ -30,53 +25,25 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
   @ReactiveProperty({type: Boolean, value: false})
   declare isLoaded: boolean
 
-  @ReactiveProperty({type: Boolean, value: false})
-  declare showSkeleton: boolean
-
-  @ReactiveProperty({type: Number, value: 1})
-  declare timeScale: number
-
-  // Additive action weights
-  @ReactiveProperty({type: Number, value: 0})
-  declare sneakPoseWeight: number
-
-  @ReactiveProperty({type: Number, value: 0})
-  declare sadPoseWeight: number
-
-  @ReactiveProperty({type: Number, value: 0})
-  declare agreeWeight: number
-
-  @ReactiveProperty({type: Number, value: 0})
-  declare headShakeWeight: number
-
-  public camera: PerspectiveCamera
   public mixer: AnimationMixer = new AnimationMixer(new Group())
-  public skeleton: SkeletonHelper | null = null
 
   public currentBaseAction: string = 'idle'
-  public allActions: AnimationAction[] = []
 
-  public baseActions: Record<string, ActionSettings> = {
-    idle: { weight: 1 },
-    walk: { weight: 0 },
-    run: { weight: 0 },
+  public baseActions: Record<string, AnimationAction | null> = {
+    idle: null,
+    walk: null,
+    run: null,
   }
 
-  public additiveActions: Record<string, ActionSettings> = {
-    sneak_pose: { weight: 0 },
-    sad_pose: { weight: 0 },
-    agree: { weight: 0 },
-    headShake: { weight: 0 },
+  public additiveActions: Record<string, AnimationAction | null> = {
+    sneak_pose: null,
+    sad_pose: null,
+    agree: null,
+    headShake: null,
   }
 
   constructor(args: ThreeAppletProps) {
     super(args)
-
-    // Camera
-    this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100)
-    this.camera.position.set(-1, 2, 3)
-    this.camera.lookAt(0, 1, 0)
-    this.scene.add(this.camera)
 
     // Scene setup
     this.scene.background = new Color(0xa0a0a0)
@@ -120,10 +87,6 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
         }
       })
 
-      this.skeleton = new SkeletonHelper(model)
-      this.skeleton.visible = this.showSkeleton
-      this.scene.add(this.skeleton)
-
       this.mixer = new AnimationMixer(model)
       const animations = gltf.animations
 
@@ -131,12 +94,12 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
         let clip = animations[i]
         const name = clip.name
 
-        if (this.baseActions[name]) {
+        if (name in this.baseActions) {
           const action = this.mixer.clipAction(clip)
-          this.activateAction(action)
-          this.baseActions[name].action = action
-          this.allActions.push(action)
-        } else if (this.additiveActions[name]) {
+          this.setWeight(action, name === 'idle' ? 1 : 0)
+          action.play()
+          this.baseActions[name] = action
+        } else if (name in this.additiveActions) {
           // Make the clip additive and remove the reference frame
           AnimationUtils.makeClipAdditive(clip)
 
@@ -145,10 +108,12 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
           }
 
           const action = this.mixer.clipAction(clip)
-          this.activateAction(action)
-          this.additiveActions[name].action = action
-          this.allActions.push(action)
+          this.setWeight(action, 0)
+          action.play()
+          this.additiveActions[name] = action
         }
+        this.additiveActions = Object.assign({}, this.additiveActions)
+        this.dispatchMutation(this.additiveActions)
       }
 
       this.setProperties({
@@ -159,72 +124,21 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
     })
   }
 
-  private activateAction(action: AnimationAction) {
-    const clip = action.getClip()
-    const settings = this.baseActions[clip.name] || this.additiveActions[clip.name]
-    this.setWeight(action, settings.weight)
-    action.play()
-  }
-
   private setWeight(action: AnimationAction, weight: number) {
     action.enabled = true
     action.setEffectiveTimeScale(1)
     action.setEffectiveWeight(weight)
   }
 
-  showSkeletonChanged() {
-    if (this.skeleton) {
-      this.skeleton.visible = this.showSkeleton
-    }
-  }
-
-  timeScaleChanged() {
-    this.mixer.timeScale = this.timeScale
-  }
-
-  // Additive weight change handlers
-  sneakPoseWeightChanged() {
-    const settings = this.additiveActions['sneak_pose']
-    if (settings.action) {
-      this.setWeight(settings.action, this.sneakPoseWeight)
-      settings.weight = this.sneakPoseWeight
-    }
-  }
-
-  sadPoseWeightChanged() {
-    const settings = this.additiveActions['sad_pose']
-    if (settings.action) {
-      this.setWeight(settings.action, this.sadPoseWeight)
-      settings.weight = this.sadPoseWeight
-    }
-  }
-
-  agreeWeightChanged() {
-    const settings = this.additiveActions['agree']
-    if (settings.action) {
-      this.setWeight(settings.action, this.agreeWeight)
-      settings.weight = this.agreeWeight
-    }
-  }
-
-  headShakeWeightChanged() {
-    const settings = this.additiveActions['headShake']
-    if (settings.action) {
-      this.setWeight(settings.action, this.headShakeWeight)
-      settings.weight = this.headShakeWeight
-    }
-  }
-
   // Base action crossfade triggers
+  none = () => { this.prepareCrossFade(null) }
   idle = () => { this.prepareCrossFade('idle') }
   walk = () => { this.prepareCrossFade('walk') }
   run = () => { this.prepareCrossFade('run') }
 
-  private prepareCrossFade(targetName: string) {
-    const currentSettings = this.baseActions[this.currentBaseAction]
-    const currentAction = currentSettings?.action || null
-    const targetSettings = this.baseActions[targetName]
-    const targetAction = targetSettings?.action || null
+  private prepareCrossFade(targetName: string | null) {
+    const currentAction = this.baseActions[this.currentBaseAction]
+    const targetAction = targetName ? this.baseActions[targetName] : null
 
     if (currentAction === targetAction) return
 
@@ -236,7 +150,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
       this.synchronizeCrossFade(currentAction, targetAction, duration)
     }
 
-    this.currentBaseAction = targetAction ? targetName : 'None'
+    this.currentBaseAction = targetName || 'None'
   }
 
   private synchronizeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
@@ -268,13 +182,15 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
   onAnimate(delta: number) {
     if (!this.isLoaded || !this.mixer) return
 
-    // Update effective weights for UI feedback
-    for (const action of this.allActions) {
-      const clip = action.getClip()
-      const settings = this.baseActions[clip.name] || this.additiveActions[clip.name]
-      if (settings) {
-        settings.weight = action.getEffectiveWeight()
-      }
+    debug: {
+      // Dispatch mutations for UI reactivity
+      Object.values(this.baseActions).forEach(action => {
+        if (action) this.dispatchMutation(action)
+      })
+      Object.values(this.additiveActions).forEach(action => {
+        if (action) this.dispatchMutation(action)
+      })
+      this.dispatchMutation(this.mixer)
     }
 
     this.mixer.update(delta)
@@ -284,48 +200,84 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
 @Register
 export class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationSkinningAdditiveBlendingExample, init: {playing: true}})
+  @ReactiveProperty({type: AnimationSkinningAdditiveBlendingExample, init: {isPlaying: true}})
   declare applet: AnimationSkinningAdditiveBlendingExample
 
-  // init() {
-  //   this.uiConfig = [
-  //     ['showSkeleton', ioBoolean({label: 'Show Skeleton'})],
-  //     ['timeScale', ioNumberSlider({min: 0, max: 1.5, step: 0.01})],
-  //     ['sneakPoseWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-  //     ['sadPoseWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-  //     ['agreeWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-  //     ['headShakeWeight', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-  //   ]
+  ready() {
 
-  //   this.uiGroups = {
-  //     Main: [
-  //       'isLoaded',
-  //       'showSkeleton',
-  //       'timeScale',
-  //     ],
-  //     'Base Actions': [
-  //       'idle',
-  //       'walk',
-  //       'run',
-  //     ],
-  //     'Additive Weights': [
-  //       'sneakPoseWeight',
-  //       'sadPoseWeight',
-  //       'agreeWeight',
-  //       'headShakeWeight',
-  //     ],
-  //     Hidden: [
-  //       'scene',
-  //       'camera',
-  //       'mixer',
-  //       'allActions',
-  //       'baseActions',
-  //       'additiveActions',
-  //       'currentBaseAction',
-  //       'skeleton',
-  //     ],
-  //   }
-  // }
+    this.render([
+      ioSplit({
+        elements: [
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Back', applet: this.applet, cameraSelect: 'back'}),
+          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet,
+            config: [
+              [AnimationMixer, ioObject({expanded: true, properties: ['timeScale']})],
+              [AnimationAction, ioObject({expanded: true, properties: ['weight']})],
+              ['additiveActions', ioPropertyEditor({label: '_hidden_'})],
+            ],
+            groups: {
+              'Main': [
+                'none',
+                'idle',
+                'walk',
+                'run',
+                'additiveActions',
+                'mixer',
+              ],
+              Hidden: [
+                'isLoaded',
+                'scene',
+                'camera',
+                'baseActions',
+                'currentBaseAction',
+              ],
+            }
+          })
+        ],
+        split: new Split({
+          type: 'split',
+          orientation: 'horizontal',
+          children: [
+            {
+              type: 'split',
+              flex: '2 1 auto',
+              orientation: 'vertical',
+              children: [
+                {
+                  type: 'split',
+                  flex: '1 1 50%',
+                  orientation: 'horizontal',
+                  children: [
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Top'}]},
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Left'}]}
+                  ]
+                },
+                {
+                  type: 'split',
+                  flex: '1 1 50%',
+                  orientation: 'horizontal',
+                  children: [
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Back'}]},
+                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Perspective'}]},
+                  ]
+                }
+              ]
+            },
+            {
+              type: 'panel',
+              flex: '0 0 280px',
+              tabs: [{id: 'PropertyEditor'}]
+            }
+          ]
+        })
+      })
+    ])
+
+  }
+
 }
 
 export const ioAnimationSkinningAdditiveBlendingExample = IoAnimationSkinningAdditiveBlendingExample.vConstructor

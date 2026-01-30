@@ -1,4 +1,4 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from '@io-gui/core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding, Property } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
@@ -55,6 +55,9 @@ export class IoThreeViewport extends IoElement {
   @ReactiveProperty({type: WebGPURenderer, value: _renderer})
   declare renderer: WebGPURenderer
 
+  @Property(0)
+  declare tabIndex: number
+
   declare private readonly viewCameras: ViewCameras
   declare private readonly renderTarget: CanvasTarget
 
@@ -68,16 +71,22 @@ export class IoThreeViewport extends IoElement {
         max-width: 100%;
         max-height: 100%;
         overflow: hidden;
+        border: var(--io_border);
+        border-color: transparent;
       }
       :host > canvas {
         position: absolute;
+      }
+      :host:focus {
+        border: var(--io_border);
+        border-color: var(--io_colorWhite);
       }
     `
   }
 
   static get Listeners() {
     return {
-      'io-three-animate': 'onAppletAnimate',
+      'three-applet-needs-render': 'onAppletNeedsRender',
     }
   }
 
@@ -103,7 +112,7 @@ export class IoThreeViewport extends IoElement {
     this.visible = false
   }
 
-  onAppletAnimate(event: CustomEvent) {
+  onAppletNeedsRender(event: CustomEvent) {
     event.stopPropagation()
     if (!this.visible) return
     this.renderViewport()

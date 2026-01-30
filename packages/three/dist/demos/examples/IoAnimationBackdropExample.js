@@ -9,7 +9,7 @@ import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 import { AnimationMixer, Group, Mesh, MeshStandardNodeMaterial, SphereGeometry, SpotLight, MathUtils, NeutralToneMapping, } from 'three/webgpu';
 import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize, grayscale, saturation, viewportSafeUV, screenUV, checker, uv, time, oscSine, output, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-let AnimationBackdropExample = class AnimationBackdropExample extends ThreeApplet {
+let BackdropExample = class BackdropExample extends ThreeApplet {
     portals;
     constructor(args) {
         super(args);
@@ -76,19 +76,19 @@ let AnimationBackdropExample = class AnimationBackdropExample extends ThreeApple
 };
 __decorate([
     ReactiveProperty({ type: AnimationMixer, init: new Group() })
-], AnimationBackdropExample.prototype, "mixer", void 0);
-AnimationBackdropExample = __decorate([
+], BackdropExample.prototype, "mixer", void 0);
+BackdropExample = __decorate([
     Register
-], AnimationBackdropExample);
-export { AnimationBackdropExample };
-let IoAnimationBackdropExample = class IoAnimationBackdropExample extends IoThreeExample {
+], BackdropExample);
+export { BackdropExample };
+let IoBackdropExample = class IoBackdropExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationBackdropExample, init: { playing: true } })
-], IoAnimationBackdropExample.prototype, "applet", void 0);
-IoAnimationBackdropExample = __decorate([
+    ReactiveProperty({ type: BackdropExample, init: { playing: true } })
+], IoBackdropExample.prototype, "applet", void 0);
+IoBackdropExample = __decorate([
     Register
-], IoAnimationBackdropExample);
-export { IoAnimationBackdropExample };
-export const ioAnimationBackdropExample = IoAnimationBackdropExample.vConstructor;
-//# sourceMappingURL=IoAnimationBackdropExample.js.map
+], IoBackdropExample);
+export { IoBackdropExample };
+export const ioBackdropExample = IoBackdropExample.vConstructor;
+//# sourceMappingURL=IoBackdropExample.js.map
