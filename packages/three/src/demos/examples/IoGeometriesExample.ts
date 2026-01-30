@@ -168,7 +168,7 @@ export class IoGeometriesExample extends IoThreeExample {
           ioThreeViewport({id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet.geometries, config: [
             [BufferGeometry, ioObject({properties: ['/']})],
-          ], groups: this.uiGroups})
+          ]})
         ],
         split: new Split({
           type: 'split',

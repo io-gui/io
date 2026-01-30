@@ -29,12 +29,6 @@ export class IoThreeExample extends IoElement {
     `
   }
 
-  @ReactiveProperty({type: Array, init: null})
-  declare uiConfig: PropertyConfig[]
-
-  @ReactiveProperty({type: Object, init: null})
-  declare uiGroups: PropertyGroups
-
   @ReactiveProperty({type: ThreeApplet, init: null})
   declare applet: ThreeApplet
 
@@ -47,7 +41,7 @@ export class IoThreeExample extends IoElement {
           ioThreeViewport({id: 'Left', applet: this.applet, playing: true, cameraSelect: 'left'}),
           ioThreeViewport({id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective'}),
           ioThreeViewport({id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups})
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({
           type: 'split',

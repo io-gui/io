@@ -218,34 +218,34 @@ export class IoAnimationSkinningBlendingExample extends IoThreeExample {
   @ReactiveProperty({type: AnimationSkinningBlendingExample, init: null})
   declare applet: AnimationSkinningBlendingExample
 
-  init() {
-    this.uiConfig = [
-      ['isPlaying', ioBoolean({label: '_hidden_', true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
-      ['makeSingleStep', ioButton({label: 'Make Single Step'})],
-      ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
-      ['actions', ioPropertyEditor({label: '_hidden_'})],
-    ]
+  // init() {
+  //   this.uiConfig = [
+  //     ['isPlaying', ioBoolean({label: '_hidden_', true: 'io:circle_pause', false: 'io:circle_fill_arrow_right'})],
+  //     ['makeSingleStep', ioButton({label: 'Make Single Step'})],
+  //     ['stepSize', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+  //     ['actions', ioPropertyEditor({label: '_hidden_'})],
+  //   ]
 
-    this.uiGroups = {
-      Main: [
-        'isActive',
-        'isPlaying',
-        'mixer',
-        'actions',
-        'idle',
-        'walk',
-        'run',
-        'useDefaultDuration',
-        'customDuration',
-        'stepSize',
-        'makeSingleStep',
-      ],
-      Hidden: [
-        'scene',
-        'camera',
-      ],
-    }
-  }
+  //   this.uiGroups = {
+  //     Main: [
+  //       'isActive',
+  //       'isPlaying',
+  //       'mixer',
+  //       'actions',
+  //       'idle',
+  //       'walk',
+  //       'run',
+  //       'useDefaultDuration',
+  //       'customDuration',
+  //       'stepSize',
+  //       'makeSingleStep',
+  //     ],
+  //     Hidden: [
+  //       'scene',
+  //       'camera',
+  //     ],
+  //   }
+  // }
 }
 
 export const ioAnimationSkinningBlendingExample = IoAnimationSkinningBlendingExample.vConstructor
