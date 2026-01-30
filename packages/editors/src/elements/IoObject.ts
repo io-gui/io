@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property, Storage as $ } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property, Storage as $, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
@@ -118,6 +118,10 @@ export class IoObject extends IoElement {
         expandedBinding.addTarget(this, 'expanded')
       }
     }
+  }
+
+  expandedChanged() {
+    clearFocusBacktrack()
   }
 
   changed() {

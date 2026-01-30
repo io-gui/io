@@ -127,7 +127,7 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
                 ],
                 split: new Split({
                     type: 'split',
-                    orientation: 'horizontal',
+                    orientation: 'vertical',
                     children: [
                         { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCamera' }] },
                         { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCameraLog' }] },

@@ -175,6 +175,7 @@ export class ReactiveNode extends Object {
     }
   }
   removeParent(parent: ReactiveNode | IoElement) {
+    if (this._disposed) return
     if ((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) {
       const index = this._parents.indexOf(parent)
       if (index !== -1) {
@@ -300,7 +301,7 @@ export function setProperty(node: ReactiveNode | IoElement, name: string, value:
     const oldValueShared = hasValueAtOtherProperty(node, prop, oldValue)
     if (!oldValueShared) {
       prop.observer.stop(oldValue)
-      if (oldValue?._isNode) {
+      if (oldValue?._isNode && !oldValue._disposed) {
         oldValue.removeParent(node)
       }
     } else {

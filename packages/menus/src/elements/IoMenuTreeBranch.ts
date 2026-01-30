@@ -1,4 +1,4 @@
-import { IoElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property } from '@io-gui/core'
+import { IoElement, Register, ReactiveProperty, IoElementProps, WithBinding, Property, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuTree } from './IoMenuTree.js'
@@ -58,6 +58,10 @@ export class IoMenuTreeBranch extends IoElement {
 
   optionMutated() {
     if (this.option.selected) this.expanded = this.option.selected
+  }
+
+  expandedChanged() {
+    clearFocusBacktrack()
   }
 
   changed() {

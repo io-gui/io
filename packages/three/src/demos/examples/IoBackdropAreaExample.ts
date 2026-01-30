@@ -148,7 +148,7 @@ export class BackdropAreaExample extends ThreeApplet {
 @Register
 export class IoBackdropAreaExample extends IoThreeExample {
 
-  @ReactiveProperty({type: BackdropAreaExample, init: null})
+  @ReactiveProperty({type: BackdropAreaExample, init: {playing: true}})
   declare applet: BackdropAreaExample
 
   // init() {

@@ -157,32 +157,20 @@ export class IoCameraExample extends IoThreeExample {
           orientation: 'horizontal',
           children: [
             {
+              type: 'panel',flex: '1 1 33.33%',tabs: [{id: 'Perspective'}]
+            },
+            {
               type: 'split',
-              flex: '2 1 auto',
+              flex: '1 1 33.33%',
               orientation: 'vertical',
               children: [
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Perspective'}]},
-                  ]
-                },
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'ScenePerspective'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneOrthographic'}]},
-                  ]
-                }
+                {type: 'panel',flex: '1 1 33.33%',tabs: [{id: 'ScenePerspective'}]},
+                {type: 'panel',flex: '1 1 33.33%',tabs: [{id: 'SceneOrthographic'}]},
               ]
             },
             {
               type: 'panel',
-              flex: '0 0 380px',
+              flex: '0 0 280px',
               tabs: [{id: 'PropertyEditor'}]
             }
           ]

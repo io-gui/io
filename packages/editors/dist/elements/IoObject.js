@@ -4,7 +4,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Property, Storage as $ } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, Property, Storage as $, clearFocusBacktrack } from '@io-gui/core';
 import { ioBoolean } from '@io-gui/inputs';
 import { ioPropertyEditor } from './IoPropertyEditor.js';
 /**
@@ -70,6 +70,9 @@ let IoObject = class IoObject extends IoElement {
                 expandedBinding.addTarget(this, 'expanded');
             }
         }
+    }
+    expandedChanged() {
+        clearFocusBacktrack();
     }
     changed() {
         const label = this.label || this.value.constructor.name;

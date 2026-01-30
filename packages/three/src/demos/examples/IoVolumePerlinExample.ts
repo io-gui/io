@@ -78,7 +78,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Scene', applet: this.applet, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({
@@ -90,7 +90,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
               flex: '2 1 auto',
               orientation: 'vertical',
               children: [
-                {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Scene'}]},
+                {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Perspective'}]},
               ]
             },
             {

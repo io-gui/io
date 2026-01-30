@@ -112,7 +112,7 @@ export { BackdropAreaExample };
 let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: BackdropAreaExample, init: null })
+    ReactiveProperty({ type: BackdropAreaExample, init: { playing: true } })
 ], IoBackdropAreaExample.prototype, "applet", void 0);
 IoBackdropAreaExample = __decorate([
     Register
