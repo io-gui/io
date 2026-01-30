@@ -154,6 +154,11 @@ export class IoDrawer extends IoElement {
   }
 
   changed() {
+    if (!this.child) {
+      this.render([])
+      return
+    }
+
     let availableSize = Infinity
     const parent = this.parent as IoSplit
     if (parent) {
@@ -167,22 +172,20 @@ export class IoDrawer extends IoElement {
 
     let childVDOM: VDOMElement | null = null
 
-    if (this.child) {
-      if (this.child instanceof Split) {
-        childVDOM = ioSplit({
-          split: this.child,
-          style: style,
-          elements: this.elements,
-          addMenuOption: this.addMenuOption,
-        })
-      } else if (this.child instanceof Panel) {
-        childVDOM = ioPanel({
-          panel: this.child,
-          style: style,
-          elements: this.elements,
-          addMenuOption: this.addMenuOption,
-        })
-      }
+    if (this.child instanceof Split) {
+      childVDOM = ioSplit({
+        split: this.child,
+        style: style,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      })
+    } else if (this.child instanceof Panel) {
+      childVDOM = ioPanel({
+        panel: this.child,
+        style: style,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      })
     }
 
     const icon = {
