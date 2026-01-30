@@ -1,7 +1,7 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, WithBinding, div } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
-import { BufferGeometry, type NormalOrGLBufferAttributes } from 'three/webgpu'
+import { BufferGeometry, MathUtils, type NormalOrGLBufferAttributes } from 'three/webgpu'
 
 type GeometryConstructor<T extends BufferGeometry<NormalOrGLBufferAttributes>> = new (...args: any[]) => T
 
@@ -51,8 +51,15 @@ export class IoBuildGeometry extends IoElement {
     const parameterValues = Object.values(parameters)
 
     const newGeometry = new GeometryClass(...parameterValues)
+
+    const version = geometry.index?.version ?? 0
     geometry.copy(newGeometry as BufferGeometry)
     newGeometry.dispose()
+
+    // Workaround for #32903
+    if (geometry.index) {
+      geometry.index.version = version
+    }
 
     for (const name in geometry.attributes) {
       geometry.attributes[name].needsUpdate = true
