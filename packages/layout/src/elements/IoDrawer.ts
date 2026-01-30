@@ -7,9 +7,10 @@ import { IoSplit, ioSplit, parseFlexBasis } from './IoSplit.js'
 import { ioPanel } from './IoPanel.js'
 
 export type DrawerDirection = 'leading' | 'trailing'
+export type DrawerOrientation = 'horizontal' | 'vertical'
 
 export type IoDrawerProps = IoElementProps & {
-  orientation: 'horizontal' | 'vertical'
+  orientation: DrawerOrientation
   direction: DrawerDirection
   parent: IoSplit
   child: Split | Panel | null

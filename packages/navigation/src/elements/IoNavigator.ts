@@ -1,19 +1,22 @@
-import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register } from '@io-gui/core'
+import { IoElement, VDOMElement, ReactiveProperty, IoElementProps, WithBinding, Register, div } from '@io-gui/core'
 import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus'
 import { CachingType, ioSelector } from './IoSelector.js'
+import { ioNavigatorDrawer, IoNavigatorDrawer } from './IoNavigatorDrawer.js'
 
-export type MenuPositionType = 'top' | 'left' | 'right'
 export type SelectType = 'shallow' | 'deep' | 'all' | 'none'
+
+export type MenuPosition = 'top' | 'left'
 
 export type IoNavigatorProps = IoElementProps & {
   option?: MenuOption
   elements?: VDOMElement[]
   widget?: VDOMElement
-  menu?: MenuPositionType
+  menu?: MenuPosition
   depth?: number
   select?: SelectType
   caching?: CachingType
   anchor?: WithBinding<string>
+  minWidth?: number
 }
 
 @Register
@@ -22,12 +25,15 @@ export class IoNavigator extends IoElement {
     return /* css */`
       :host {
         display: flex;
-        flex-direction: column;
-        flex: 1 1 auto;
+        flex: 1 1 100%;
+        max-width: 100%;
+        max-height: 100%;
+        position: relative;
+        overflow: hidden;
+        flex-direction: row-reverse;
       }
-      :host[menu=left],
-      :host[menu=right] {
-        flex-direction: row;
+      :host[menu='top'] {
+        flex-direction: column-reverse;
       }
       :host > io-menu-tree {
         align-self: stretch;
@@ -37,16 +43,27 @@ export class IoNavigator extends IoElement {
         overflow-y: auto;
         border-radius: 0;
       }
-      :host[menu=left] > io-menu-tree {
-        border-width: 0 var(--io_borderWidth) 0 0;
-      }
-      :host[menu=left] > io-menu-tree {
+      :host > io-menu-tree {
         border-width: 0 var(--io_borderWidth) 0 0;
       }
       :host > io-menu-options {
         border: none;
         border-bottom: var(--io_border);
         border-radius: 0;
+      }
+      :host > .io-veil {
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.125s ease-out;
+        background-color: rgba(0, 0, 0, 1);
+        pointer-events: none;
+        inset: 0;
+      }
+      :host[showveil] > .io-veil {
+        display: block;
+        opacity: 0.5;
+        pointer-events: auto;
+        cursor: pointer;
       }
     `
   }
@@ -61,7 +78,7 @@ export class IoNavigator extends IoElement {
   declare widget: VDOMElement | null
 
   @ReactiveProperty({value: 'left', type: String, reflect: true})
-  declare menu: MenuPositionType
+  declare menu: MenuPosition
 
   @ReactiveProperty({value: Infinity, type: Number})
   declare depth: number
@@ -72,8 +89,67 @@ export class IoNavigator extends IoElement {
   @ReactiveProperty({value: 'none', type: String})
   declare caching: CachingType
 
+  @ReactiveProperty({value: 570, type: Number})
+  declare minWidth: number
+
   @ReactiveProperty({value: '', type: String})
   declare anchor: string
+
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  declare collapsed: boolean
+
+  @ReactiveProperty({value: false, type: Boolean, reflect: true})
+  declare showVeil: boolean
+
+  static get Listeners() {
+    return {
+      'io-drawer-expanded-changed': 'onDrawerExpandedChanged',
+    }
+  }
+
+  onResized() {
+    this.debounce(this.calculateCollapsedDebounced)
+  }
+
+  calculateCollapsedDebounced() {
+    this.calculateCollapsed()
+  }
+
+  calculateCollapsed() {
+    if (this.menu === 'top') {
+      this.collapsed = false
+      return
+    }
+
+    const rect = this.getBoundingClientRect()
+    if (rect.width === 0 && rect.height === 0) return
+
+    this.collapsed = rect.width < this.minWidth
+  }
+
+  onDrawerExpandedChanged(event: CustomEvent) {
+    event.stopPropagation()
+    const srcDrawer = event.detail.element as IoNavigatorDrawer
+    this.showVeil = srcDrawer.expanded
+  }
+
+  collapseDrawer() {
+    const drawer = this.querySelector('io-navigator-drawer') as IoNavigatorDrawer
+    if (drawer) drawer.expanded = false
+  }
+
+  onVeilClick(event: MouseEvent) {
+    event.stopPropagation()
+    this.collapseDrawer()
+  }
+
+  collapsedChanged() {
+    this.collapseDrawer()
+  }
+
+  menuChanged() {
+    this.calculateCollapsed()
+  }
 
   optionMutated() {
     this.changed()
@@ -86,28 +162,36 @@ export class IoNavigator extends IoElement {
       depth: this.depth
     }
 
-    // TODO: add widget and test collapse!!
     let selected = ''
     if (this.select === 'shallow') selected = this.option.selectedIDImmediate
     if (this.select === 'deep') selected = this.option.selectedID
     if (this.select === 'all') selected = '*'
     if (this.select === 'none') selected = ''
 
+    const selectorElement = ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements})
+    const veil = div({class: 'io-veil', '@click': this.onVeilClick})
+
     if (this.menu === 'top') {
       this.render([
+        selectorElement,
         ioMenuOptions({horizontal: true, ...sharedMenuConfig}),
-        ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements}),
       ])
     } else if (this.menu === 'left') {
-      this.render([
-        ioMenuTree({...sharedMenuConfig}),
-        ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements}),
-      ])
-    } else if (this.menu === 'right') {
-      this.render([
-        ioSelector({selected: selected, anchor: this.bind('anchor'), caching: this.caching,elements: this.elements}),
-        ioMenuTree({...sharedMenuConfig}),
-      ])
+      if (this.collapsed) {
+        this.render([
+          selectorElement,
+          veil,
+          ioNavigatorDrawer({
+            direction: 'left',
+            menuContent: ioMenuTree({...sharedMenuConfig}),
+          }),
+        ])
+      } else {
+        this.render([
+          selectorElement,
+          ioMenuTree({...sharedMenuConfig}),
+        ])
+      }
     }
   }
 }

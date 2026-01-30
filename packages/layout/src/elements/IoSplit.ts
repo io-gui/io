@@ -22,6 +22,8 @@ export function hasFlexGrow(flex: string): boolean {
 
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
+// TODO: child<->drawer caching
+
 export type IoSplitProps = IoElementProps & {
   split: WithBinding<Split>
   elements: VDOMElement[]
@@ -34,11 +36,11 @@ export class IoSplit extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex: 1 1 100%;
         max-width: 100%;
         max-height: 100%;
         position: relative;
-        display: flex;
         overflow: hidden;
         flex-direction: row;
       }
@@ -48,7 +50,7 @@ export class IoSplit extends IoElement {
       :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
       }
-      :host > .io-split-veil {
+      :host > .io-veil {
         position: absolute;
         opacity: 0;
         transition: opacity 0.125s ease-out;
@@ -57,7 +59,7 @@ export class IoSplit extends IoElement {
         z-index: 2;
         inset: 0;
       }
-      :host[showveil] > .io-split-veil {
+      :host[showveil] > .io-veil {
         display: block;
         opacity: 0.5;
         pointer-events: auto;
@@ -331,12 +333,12 @@ export class IoSplit extends IoElement {
   }
 
   onDrawerExpandedChanged(event: CustomEvent) {
+    event.stopPropagation()
     const srcDrawer = event.detail.element as IoDrawer
     if (srcDrawer.expanded) {
       const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
       drawers.forEach(drawer => drawer !== srcDrawer && (drawer.expanded = false))
     }
-    event.stopPropagation()
     this.updateVeil()
   }
 
@@ -377,10 +379,8 @@ export class IoSplit extends IoElement {
 
     const vChildren: VDOMElement[] = []
 
-    vChildren.push(div({
-      class: 'io-split-veil',
-      '@click': this.onVeilClick,
-    }))
+    const veil = div({class: 'io-veil', '@click': this.onVeilClick})
+    vChildren.push(veil)
 
     if (this.leadingDrawer !== null) {
       vChildren.push(ioDrawer({
