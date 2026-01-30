@@ -23,7 +23,6 @@ export class IoDrawer extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        z-index: 2;
         pointer-events: auto;
         position: relative;
       }
@@ -46,6 +45,7 @@ export class IoDrawer extends IoElement {
         overflow: hidden;
         transition: transform 0.125s ease-out;
         justify-content: flex-end;
+        background-color: var(--io_bgColorStrong);
       }
       :host[orientation="horizontal"] > .io-drawer-content {
         height: 100%;

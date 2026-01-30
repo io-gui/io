@@ -142,7 +142,7 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
     }
 };
 __decorate([
-    ReactiveProperty({ type: CameraLogarithmicDepthBufferExample, init: { playing: true } })
+    ReactiveProperty({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "applet", void 0);
 __decorate([
     ReactiveProperty({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })

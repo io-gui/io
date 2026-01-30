@@ -5,34 +5,28 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { ReactiveProperty, Register } from '@io-gui/core';
-import { AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, SkeletonHelper, } from 'three/webgpu';
+import { AnimationAction, AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ioSplit, Split } from '@io-gui/layout';
+import { ioObject, ioPropertyEditor } from '@io-gui/editors';
 const loader = new GLTFLoader();
 let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
-    camera;
     mixer = new AnimationMixer(new Group());
-    skeleton = null;
     currentBaseAction = 'idle';
-    allActions = [];
     baseActions = {
-        idle: { weight: 1 },
-        walk: { weight: 0 },
-        run: { weight: 0 },
+        idle: null,
+        walk: null,
+        run: null,
     };
     additiveActions = {
-        sneak_pose: { weight: 0 },
-        sad_pose: { weight: 0 },
-        agree: { weight: 0 },
-        headShake: { weight: 0 },
+        sneak_pose: null,
+        sad_pose: null,
+        agree: null,
+        headShake: null,
     };
     constructor(args) {
         super(args);
-        // Camera
-        this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
-        this.camera.position.set(-1, 2, 3);
-        this.camera.lookAt(0, 1, 0);
-        this.scene.add(this.camera);
         // Scene setup
         this.scene.background = new Color(0xa0a0a0);
         this.scene.fog = new Fog(0xa0a0a0, 10, 50);
@@ -65,31 +59,30 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
                     object.castShadow = true;
                 }
             });
-            this.skeleton = new SkeletonHelper(model);
-            this.skeleton.visible = this.showSkeleton;
-            this.scene.add(this.skeleton);
             this.mixer = new AnimationMixer(model);
             const animations = gltf.animations;
             for (let i = 0; i < animations.length; i++) {
                 let clip = animations[i];
                 const name = clip.name;
-                if (this.baseActions[name]) {
+                if (name in this.baseActions) {
                     const action = this.mixer.clipAction(clip);
-                    this.activateAction(action);
-                    this.baseActions[name].action = action;
-                    this.allActions.push(action);
+                    this.setWeight(action, name === 'idle' ? 1 : 0);
+                    action.play();
+                    this.baseActions[name] = action;
                 }
-                else if (this.additiveActions[name]) {
+                else if (name in this.additiveActions) {
                     // Make the clip additive and remove the reference frame
                     AnimationUtils.makeClipAdditive(clip);
                     if (clip.name.endsWith('_pose')) {
                         clip = AnimationUtils.subclip(clip, clip.name, 2, 3, 30);
                     }
                     const action = this.mixer.clipAction(clip);
-                    this.activateAction(action);
-                    this.additiveActions[name].action = action;
-                    this.allActions.push(action);
+                    this.setWeight(action, 0);
+                    action.play();
+                    this.additiveActions[name] = action;
                 }
+                this.additiveActions = Object.assign({}, this.additiveActions);
+                this.dispatchMutation(this.additiveActions);
             }
             this.setProperties({
                 isLoaded: true,
@@ -97,63 +90,19 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
             this.dispatch('frame-object', { object: model }, true);
         });
     }
-    activateAction(action) {
-        const clip = action.getClip();
-        const settings = this.baseActions[clip.name] || this.additiveActions[clip.name];
-        this.setWeight(action, settings.weight);
-        action.play();
-    }
     setWeight(action, weight) {
         action.enabled = true;
         action.setEffectiveTimeScale(1);
         action.setEffectiveWeight(weight);
     }
-    showSkeletonChanged() {
-        if (this.skeleton) {
-            this.skeleton.visible = this.showSkeleton;
-        }
-    }
-    timeScaleChanged() {
-        this.mixer.timeScale = this.timeScale;
-    }
-    // Additive weight change handlers
-    sneakPoseWeightChanged() {
-        const settings = this.additiveActions['sneak_pose'];
-        if (settings.action) {
-            this.setWeight(settings.action, this.sneakPoseWeight);
-            settings.weight = this.sneakPoseWeight;
-        }
-    }
-    sadPoseWeightChanged() {
-        const settings = this.additiveActions['sad_pose'];
-        if (settings.action) {
-            this.setWeight(settings.action, this.sadPoseWeight);
-            settings.weight = this.sadPoseWeight;
-        }
-    }
-    agreeWeightChanged() {
-        const settings = this.additiveActions['agree'];
-        if (settings.action) {
-            this.setWeight(settings.action, this.agreeWeight);
-            settings.weight = this.agreeWeight;
-        }
-    }
-    headShakeWeightChanged() {
-        const settings = this.additiveActions['headShake'];
-        if (settings.action) {
-            this.setWeight(settings.action, this.headShakeWeight);
-            settings.weight = this.headShakeWeight;
-        }
-    }
     // Base action crossfade triggers
+    none = () => { this.prepareCrossFade(null); };
     idle = () => { this.prepareCrossFade('idle'); };
     walk = () => { this.prepareCrossFade('walk'); };
     run = () => { this.prepareCrossFade('run'); };
     prepareCrossFade(targetName) {
-        const currentSettings = this.baseActions[this.currentBaseAction];
-        const currentAction = currentSettings?.action || null;
-        const targetSettings = this.baseActions[targetName];
-        const targetAction = targetSettings?.action || null;
+        const currentAction = this.baseActions[this.currentBaseAction];
+        const targetAction = targetName ? this.baseActions[targetName] : null;
         if (currentAction === targetAction)
             return;
         const duration = 0.35;
@@ -163,7 +112,7 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
         else {
             this.synchronizeCrossFade(currentAction, targetAction, duration);
         }
-        this.currentBaseAction = targetAction ? targetName : 'None';
+        this.currentBaseAction = targetName || 'None';
     }
     synchronizeCrossFade(startAction, endAction, duration) {
         const onLoopFinished = (event) => {
@@ -192,13 +141,17 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
     onAnimate(delta) {
         if (!this.isLoaded || !this.mixer)
             return;
-        // Update effective weights for UI feedback
-        for (const action of this.allActions) {
-            const clip = action.getClip();
-            const settings = this.baseActions[clip.name] || this.additiveActions[clip.name];
-            if (settings) {
-                settings.weight = action.getEffectiveWeight();
-            }
+        debug: {
+            // Dispatch mutations for UI reactivity
+            Object.values(this.baseActions).forEach(action => {
+                if (action)
+                    this.dispatchMutation(action);
+            });
+            Object.values(this.additiveActions).forEach(action => {
+                if (action)
+                    this.dispatchMutation(action);
+            });
+            this.dispatchMutation(this.mixer);
         }
         this.mixer.update(delta);
     }
@@ -206,32 +159,86 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
 __decorate([
     ReactiveProperty({ type: Boolean, value: false })
 ], AnimationSkinningAdditiveBlendingExample.prototype, "isLoaded", void 0);
-__decorate([
-    ReactiveProperty({ type: Boolean, value: false })
-], AnimationSkinningAdditiveBlendingExample.prototype, "showSkeleton", void 0);
-__decorate([
-    ReactiveProperty({ type: Number, value: 1 })
-], AnimationSkinningAdditiveBlendingExample.prototype, "timeScale", void 0);
-__decorate([
-    ReactiveProperty({ type: Number, value: 0 })
-], AnimationSkinningAdditiveBlendingExample.prototype, "sneakPoseWeight", void 0);
-__decorate([
-    ReactiveProperty({ type: Number, value: 0 })
-], AnimationSkinningAdditiveBlendingExample.prototype, "sadPoseWeight", void 0);
-__decorate([
-    ReactiveProperty({ type: Number, value: 0 })
-], AnimationSkinningAdditiveBlendingExample.prototype, "agreeWeight", void 0);
-__decorate([
-    ReactiveProperty({ type: Number, value: 0 })
-], AnimationSkinningAdditiveBlendingExample.prototype, "headShakeWeight", void 0);
 AnimationSkinningAdditiveBlendingExample = __decorate([
     Register
 ], AnimationSkinningAdditiveBlendingExample);
 export { AnimationSkinningAdditiveBlendingExample };
 let IoAnimationSkinningAdditiveBlendingExample = class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
+    ready() {
+        this.render([
+            ioSplit({
+                elements: [
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
+                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                        config: [
+                            [AnimationMixer, ioObject({ expanded: true, properties: ['timeScale'] })],
+                            [AnimationAction, ioObject({ expanded: true, properties: ['weight'] })],
+                            ['additiveActions', ioPropertyEditor({ label: '_hidden_' })],
+                        ],
+                        groups: {
+                            'Main': [
+                                'none',
+                                'idle',
+                                'walk',
+                                'run',
+                                'additiveActions',
+                                'mixer',
+                            ],
+                            Hidden: [
+                                'isLoaded',
+                                'scene',
+                                'camera',
+                                'baseActions',
+                                'currentBaseAction',
+                            ],
+                        }
+                    })
+                ],
+                split: new Split({
+                    type: 'split',
+                    orientation: 'horizontal',
+                    children: [
+                        {
+                            type: 'split',
+                            flex: '2 1 auto',
+                            orientation: 'vertical',
+                            children: [
+                                {
+                                    type: 'split',
+                                    flex: '1 1 50%',
+                                    orientation: 'horizontal',
+                                    children: [
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
+                                    ]
+                                },
+                                {
+                                    type: 'split',
+                                    flex: '1 1 50%',
+                                    orientation: 'horizontal',
+                                    children: [
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Back' }] },
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Perspective' }] },
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'panel',
+                            flex: '0 0 280px',
+                            tabs: [{ id: 'PropertyEditor' }]
+                        }
+                    ]
+                })
+            })
+        ]);
+    }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningAdditiveBlendingExample, init: { playing: true } })
+    ReactiveProperty({ type: AnimationSkinningAdditiveBlendingExample, init: { isPlaying: true } })
 ], IoAnimationSkinningAdditiveBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningAdditiveBlendingExample = __decorate([
     Register

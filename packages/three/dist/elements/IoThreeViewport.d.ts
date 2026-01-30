@@ -18,16 +18,17 @@ export declare class IoThreeViewport extends IoElement {
     applet: ThreeApplet;
     cameraSelect: string;
     renderer: WebGPURenderer;
+    tabIndex: number;
     private readonly viewCameras;
     private readonly renderTarget;
     static get Style(): string;
     static get Listeners(): {
-        'io-three-animate': string;
+        'three-applet-needs-render': string;
     };
     constructor(args: IoThreeViewportProps);
     connectedCallback(): void;
     disconnectedCallback(): void;
-    onAppletAnimate(event: CustomEvent): void;
+    onAppletNeedsRender(event: CustomEvent): void;
     onResized(): void;
     appletChanged(): void;
     appletMutated(): void;

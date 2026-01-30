@@ -85,8 +85,8 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
                 elements: [
                     ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Front', applet: this.applet, cameraSelect: 'front' }),
                     ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                 ],
                 split: new Split({
                     type: 'split',
@@ -106,8 +106,8 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
                             flex: '1 1 60px',
                             orientation: 'horizontal',
                             children: [
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Front' }] },
                                 { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Perspective' }] },
-                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'SceneCamera' }] },
                             ]
                         }
                     ]
@@ -117,7 +117,7 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
     }
 };
 __decorate([
-    ReactiveProperty({ type: GeometryConvexExample, init: { playing: true } })
+    ReactiveProperty({ type: GeometryConvexExample, init: { isPlaying: true } })
 ], IoGeometryConvexExample.prototype, "applet", void 0);
 IoGeometryConvexExample = __decorate([
     Register

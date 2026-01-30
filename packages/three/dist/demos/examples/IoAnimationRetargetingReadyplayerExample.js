@@ -113,7 +113,7 @@ export { AnimationRetargetingReadyplayerExample };
 let IoAnimationRetargetingReadyplayerExample = class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationRetargetingReadyplayerExample, init: { playing: true } })
+    ReactiveProperty({ type: AnimationRetargetingReadyplayerExample, init: { isPlaying: true } })
 ], IoAnimationRetargetingReadyplayerExample.prototype, "applet", void 0);
 IoAnimationRetargetingReadyplayerExample = __decorate([
     Register

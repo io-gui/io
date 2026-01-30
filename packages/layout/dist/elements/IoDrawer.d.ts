@@ -4,8 +4,9 @@ import { Split } from '../nodes/Split.js';
 import { Panel } from '../nodes/Panel.js';
 import { IoSplit } from './IoSplit.js';
 export type DrawerDirection = 'leading' | 'trailing';
+export type DrawerOrientation = 'horizontal' | 'vertical';
 export type IoDrawerProps = IoElementProps & {
-    orientation: 'horizontal' | 'vertical';
+    orientation: DrawerOrientation;
     direction: DrawerDirection;
     parent: IoSplit;
     child: Split | Panel | null;

@@ -143,7 +143,7 @@ let IoCameraExample = class IoCameraExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: CameraExample, init: { playing: true } })
+    ReactiveProperty({ type: CameraExample, init: { isPlaying: true } })
 ], IoCameraExample.prototype, "applet", void 0);
 IoCameraExample = __decorate([
     Register

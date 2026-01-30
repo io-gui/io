@@ -5,12 +5,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { ReactiveProperty, Register } from '@io-gui/core';
-import { AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
+import { AnimationAction, AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ioSplit, Split } from '@io-gui/layout';
+import { ioObject, ioPropertyEditor } from '@io-gui/editors';
+import { ioNumberSlider } from '@io-gui/sliders';
+import { ioButton } from '@io-gui/inputs';
 const loader = new GLTFLoader();
 let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends ThreeApplet {
-    isCrossfading = false;
     camera;
     mixer = new AnimationMixer(new Group());
     actions = {};
@@ -87,9 +90,11 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
     walk = () => { this.crossfadeTo('walk', 0.5); };
     run = () => { this.crossfadeTo('run', 2.5); };
     makeSingleStep = () => {
-        if (this.mixer && !this.isPlaying) {
+        this.isPlaying = false;
+        if (this.mixer) {
             this.mixer.update(this.stepSize);
         }
+        this.dispatch('three-applet-needs-render', undefined, true);
     };
     getCurrentAction() {
         for (const action of Object.values(this.actions)) {
@@ -166,14 +171,94 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Boolean, value: false })
 ], AnimationSkinningBlendingExample.prototype, "isPlaying", void 0);
+__decorate([
+    ReactiveProperty({ type: Boolean, value: false })
+], AnimationSkinningBlendingExample.prototype, "isCrossfading", void 0);
 AnimationSkinningBlendingExample = __decorate([
     Register
 ], AnimationSkinningBlendingExample);
 export { AnimationSkinningBlendingExample };
 let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExample extends IoThreeExample {
+    ready() {
+        this.render([
+            ioSplit({
+                elements: [
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                        config: [
+                            [AnimationMixer, ioObject({ expanded: true, properties: ['timeScale'] })],
+                            [AnimationAction, ioObject({ expanded: true, properties: ['weight'] })],
+                            ['makeSingleStep', ioButton({ label: 'Make Single Step' })],
+                            ['stepSize', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
+                            ['actions', ioPropertyEditor({ label: '_hidden_' })],
+                            [Function, ioButton({ disabled: this.applet.bind('isCrossfading') })],
+                        ],
+                        groups: {
+                            Main: [
+                                'isActive',
+                                'isPlaying',
+                                'mixer',
+                                'actions',
+                                'idle',
+                                'walk',
+                                'run',
+                                'useDefaultDuration',
+                                'customDuration',
+                                'stepSize',
+                                'makeSingleStep',
+                            ],
+                            Hidden: [
+                                'scene',
+                                'camera',
+                            ],
+                        }
+                    })
+                ],
+                split: new Split({
+                    type: 'split',
+                    orientation: 'horizontal',
+                    children: [
+                        {
+                            type: 'split',
+                            flex: '2 1 auto',
+                            orientation: 'vertical',
+                            children: [
+                                {
+                                    type: 'split',
+                                    flex: '1 1 50%',
+                                    orientation: 'horizontal',
+                                    children: [
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
+                                    ]
+                                },
+                                {
+                                    type: 'split',
+                                    flex: '1 1 50%',
+                                    orientation: 'horizontal',
+                                    children: [
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Back' }] },
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'panel',
+                            flex: '0 0 280px',
+                            tabs: [{ id: 'PropertyEditor' }]
+                        }
+                    ]
+                })
+            })
+        ]);
+    }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningBlendingExample, init: { playing: true } })
+    ReactiveProperty({ type: AnimationSkinningBlendingExample, init: { isPlaying: true } })
 ], IoAnimationSkinningBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningBlendingExample = __decorate([
     Register

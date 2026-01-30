@@ -1,7 +1,7 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, WithBinding, div } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import { ioPropertyEditor } from '@io-gui/editors'
-import { BufferGeometry, MathUtils, type NormalOrGLBufferAttributes } from 'three/webgpu'
+import { BufferGeometry, type NormalOrGLBufferAttributes } from 'three/webgpu'
 
 type GeometryConstructor<T extends BufferGeometry<NormalOrGLBufferAttributes>> = new (...args: any[]) => T
 

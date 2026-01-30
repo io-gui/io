@@ -50,13 +50,21 @@ export class IoSplit extends IoElement {
       :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
       }
+      :host > io-drawer[direction="leading"] {
+        position: absolute;
+        left: calc(2 * var(--io_borderWidth));
+        top: 0;
+        height: 100%;
+      }
+      :host:has(> io-drawer[direction="leading"]) {
+        padding-left: calc(2 * var(--io_borderWidth) + var(--io_lineHeight));
+      }
       :host > .io-veil {
         position: absolute;
         opacity: 0;
         transition: opacity 0.125s ease-out;
         background-color: rgba(0, 0, 0, 1);
         pointer-events: none;
-        z-index: 2;
         inset: 0;
       }
       :host[showveil] > .io-veil {
@@ -379,20 +387,6 @@ export class IoSplit extends IoElement {
 
     const vChildren: VDOMElement[] = []
 
-    const veil = div({class: 'io-veil', '@click': this.onVeilClick})
-    vChildren.push(veil)
-
-    if (this.leadingDrawer !== null) {
-      vChildren.push(ioDrawer({
-        orientation: orientation,
-        direction: 'leading',
-        parent: this,
-        child: this.leadingDrawer,
-        elements: this.elements,
-        addMenuOption: this.addMenuOption,
-      }))
-    }
-
     // Render visible children
     for (let i = 0; i < childCount; i++) {
 
@@ -433,6 +427,19 @@ export class IoSplit extends IoElement {
       }
     }
 
+    const veil = div({class: 'io-veil', '@click': this.onVeilClick})
+    vChildren.push(veil)
+
+    if (this.leadingDrawer !== null) {
+      vChildren.push(ioDrawer({
+        orientation: orientation,
+        direction: 'leading',
+        parent: this,
+        child: this.leadingDrawer,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      }))
+    }
     if (this.trailingDrawer !== null) {
       vChildren.push(ioDrawer({
         orientation: orientation,

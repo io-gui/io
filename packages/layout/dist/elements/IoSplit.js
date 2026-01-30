@@ -28,11 +28,11 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
     static get Style() {
         return /* css */ `
       :host {
+        display: flex;
         flex: 1 1 100%;
         max-width: 100%;
         max-height: 100%;
         position: relative;
-        display: flex;
         overflow: hidden;
         flex-direction: row;
       }
@@ -42,16 +42,24 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
       :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
       }
-      :host > .io-split-veil {
+      :host > io-drawer[direction="leading"] {
+        position: absolute;
+        left: calc(2 * var(--io_borderWidth));
+        top: 0;
+        height: 100%;
+      }
+      :host:has(> io-drawer[direction="leading"]) {
+        padding-left: calc(2 * var(--io_borderWidth) + var(--io_lineHeight));
+      }
+      :host > .io-veil {
         position: absolute;
         opacity: 0;
         transition: opacity 0.125s ease-out;
         background-color: rgba(0, 0, 0, 1);
         pointer-events: none;
-        z-index: 2;
         inset: 0;
       }
-      :host[showveil] > .io-split-veil {
+      :host[showveil] > .io-veil {
         display: block;
         opacity: 0.5;
         pointer-events: auto;
@@ -287,12 +295,12 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         }
     }
     onDrawerExpandedChanged(event) {
+        event.stopPropagation();
         const srcDrawer = event.detail.element;
         if (srcDrawer.expanded) {
             const drawers = [...this.querySelectorAll(':scope > io-drawer')];
             drawers.forEach(drawer => drawer !== srcDrawer && (drawer.expanded = false));
         }
-        event.stopPropagation();
         this.updateVeil();
     }
     updateVeil() {
@@ -326,20 +334,6 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         const lastIndex = childCount - 1;
         const orientation = this.split.orientation;
         const vChildren = [];
-        vChildren.push(div({
-            class: 'io-split-veil',
-            '@click': this.onVeilClick,
-        }));
-        if (this.leadingDrawer !== null) {
-            vChildren.push(ioDrawer({
-                orientation: orientation,
-                direction: 'leading',
-                parent: this,
-                child: this.leadingDrawer,
-                elements: this.elements,
-                addMenuOption: this.addMenuOption,
-            }));
-        }
         // Render visible children
         for (let i = 0; i < childCount; i++) {
             if (i === 0 && this.leadingDrawer !== null) {
@@ -377,6 +371,18 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
                     orientation: orientation,
                 }));
             }
+        }
+        const veil = div({ class: 'io-veil', '@click': this.onVeilClick });
+        vChildren.push(veil);
+        if (this.leadingDrawer !== null) {
+            vChildren.push(ioDrawer({
+                orientation: orientation,
+                direction: 'leading',
+                parent: this,
+                child: this.leadingDrawer,
+                elements: this.elements,
+                addMenuOption: this.addMenuOption,
+            }));
         }
         if (this.trailingDrawer !== null) {
             vChildren.push(ioDrawer({

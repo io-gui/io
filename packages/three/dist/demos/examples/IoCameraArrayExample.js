@@ -83,7 +83,7 @@ export { CameraArrayExample };
 let IoCameraArrayExample = class IoCameraArrayExample extends IoThreeViewport {
 };
 __decorate([
-    ReactiveProperty({ type: CameraArrayExample, init: { playing: true } })
+    ReactiveProperty({ type: CameraArrayExample, init: { isPlaying: true } })
 ], IoCameraArrayExample.prototype, "applet", void 0);
 IoCameraArrayExample = __decorate([
     Register

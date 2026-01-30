@@ -14,7 +14,7 @@ registerEditorConfig(Object3D, [
 ]);
 registerEditorGroups(Object3D, {
     Main: [
-        'name', 'visible', 'position', 'rotation', 'scale', 'parent', 'children'
+        'name', 'visible', 'position', 'rotation', 'scale'
     ],
     Rendering: [
         'castShadow',
@@ -32,7 +32,7 @@ registerEditorGroups(Object3D, {
         'matrixAutoUpdate', 'matrixWorldAutoUpdate', 'matrixWorldNeedsUpdate'
     ],
     Hidden: [
-        'static',
+        'static', 'parent', 'children'
     ],
 });
 //# sourceMappingURL=Object3D.js.map

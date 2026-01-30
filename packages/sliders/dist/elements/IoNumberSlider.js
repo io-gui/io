@@ -46,6 +46,7 @@ let IoNumberSlider = class IoNumberSlider extends IoElement {
                 value: this.value,
                 step: this.step,
                 conversion: this.conversion,
+                disabled: this.disabled,
                 '@value-input': this._onNumberSet,
             }),
             ioSlider({
@@ -55,6 +56,7 @@ let IoNumberSlider = class IoNumberSlider extends IoElement {
                 min: this.min * this.conversion,
                 max: this.max * this.conversion,
                 exponent: this.exponent,
+                disabled: this.disabled,
                 '@value-input': this._onSliderSet,
             }),
         ]);
@@ -78,6 +80,9 @@ __decorate([
 __decorate([
     ReactiveProperty(1)
 ], IoNumberSlider.prototype, "conversion", void 0);
+__decorate([
+    ReactiveProperty(false)
+], IoNumberSlider.prototype, "disabled", void 0);
 IoNumberSlider = __decorate([
     Register
 ], IoNumberSlider);

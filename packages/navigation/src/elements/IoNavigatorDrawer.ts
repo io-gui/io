@@ -33,6 +33,7 @@ export class IoNavigatorDrawer extends IoElement {
         border-top: 0 !important;
         border-bottom: 0 !important;
         justify-content: flex-end;
+        background-color: var(--io_bgColorStrong);
       }
 
       :host[direction="left"] > .io-drawer-content {

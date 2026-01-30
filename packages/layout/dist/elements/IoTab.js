@@ -38,6 +38,7 @@ let IoTab = class IoTab extends IoField {
         border-color: var(--io_borderColorLight);
         padding-right: calc(var(--io_lineHeight) / 2);
         padding-left: calc(var(--io_lineHeight) / 2);
+        border-bottom-color: var(--io_borderColorStrong);
       }
       :host[pressed] {
         border-color: unset !important;
@@ -48,11 +49,9 @@ let IoTab = class IoTab extends IoField {
         background-color: var(--io_bgColorLight) !important;
         border-color: var(--io_borderColorStrong);
         border-bottom-color: var(--io_bgColorLight);
-        z-index: 1;
       }
       :host[selected]:focus {
         color: var(--io_colorWhite);
-        z-index: 2;
       }
       :host > .io-icon:not([value=' ']) {
         margin: 0 var(--io_spacing2) 0 0;

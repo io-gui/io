@@ -50,7 +50,7 @@ export { AnimationGroupsExample };
 let IoAnimationGroupsExample = class IoAnimationGroupsExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationGroupsExample, init: { playing: true } })
+    ReactiveProperty({ type: AnimationGroupsExample, init: { isPlaying: true } })
 ], IoAnimationGroupsExample.prototype, "applet", void 0);
 IoAnimationGroupsExample = __decorate([
     Register

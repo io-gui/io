@@ -29,7 +29,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
 
   @ReactiveProperty({type: Boolean, value: false})
   declare isPlaying: boolean
-  
+
   @ReactiveProperty({type: Boolean, value: false})
   declare isCrossfading: boolean
 

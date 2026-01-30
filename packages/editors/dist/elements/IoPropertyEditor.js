@@ -65,9 +65,6 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
     :host > .row > :not(span) {
       flex-grow: 1;
     }
-    :host io-object {
-      margin-right: var(--io_spacing);
-    }
     `;
     }
     _config = null;
