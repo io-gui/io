@@ -157,7 +157,7 @@ export class GeometriesExample extends ThreeApplet {
 @Register
 export class IoGeometriesExample extends IoThreeExample {
 
-  @ReactiveProperty({type: GeometriesExample, init: null})
+  @ReactiveProperty({type: GeometriesExample, init: {playing: true}})
   declare applet: GeometriesExample
 
   ready() {
@@ -165,7 +165,7 @@ export class IoGeometriesExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet.geometries, config: [
             [BufferGeometry, ioObject({properties: ['/']})],
           ]})

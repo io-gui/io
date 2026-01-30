@@ -13,15 +13,15 @@ import {
   Vector3
 } from 'three/webgpu'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 @Register
 export class AnimationGroupsExample extends ThreeApplet {
 
   public mixer: AnimationMixer
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     // all objects of this animation group share a common animation state
     const animationGroup = new AnimationObjectGroup()
@@ -71,7 +71,7 @@ export class AnimationGroupsExample extends ThreeApplet {
 @Register
 export class IoAnimationGroupsExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationGroupsExample, init: null})
+  @ReactiveProperty({type: AnimationGroupsExample, init: {playing: true}})
   declare applet: AnimationGroupsExample
 
 }

@@ -10,15 +10,15 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps   } from '@io-gui/three'
 
 @Register
 export class AnimationKeyframesExample extends ThreeApplet {
 
   public mixer: AnimationMixer = new AnimationMixer(new Object3D())
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
     this.scene.background = new Color( 0xbfe3dd )
   }
 
@@ -70,7 +70,7 @@ export class AnimationKeyframesExample extends ThreeApplet {
 @Register
 export class IoAnimationKeyframesExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationKeyframesExample, init: null})
+  @ReactiveProperty({type: AnimationKeyframesExample, init: {playing: true}})
   declare applet: AnimationKeyframesExample
 
 }

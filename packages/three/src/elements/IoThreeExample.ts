@@ -1,7 +1,7 @@
 import { Register, IoElement, ReactiveProperty } from '@io-gui/core'
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioThreeViewport } from '@io-gui/three'
-import { ioPropertyEditor, PropertyConfig, PropertyGroups } from '@io-gui/editors'
+import { ioPropertyEditor } from '@io-gui/editors'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 
 export class IoThreeExample extends IoElement {
@@ -37,10 +37,10 @@ export class IoThreeExample extends IoElement {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', applet: this.applet, playing: true, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({

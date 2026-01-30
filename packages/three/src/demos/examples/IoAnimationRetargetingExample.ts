@@ -37,7 +37,7 @@ import {
 } from 'three/tsl'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 const lightSpeed = /*#__PURE__*/ Fn<[Node]>(([suv_immutable]) => {
   // forked from https://www.shadertoy.com/view/7ly3D1
@@ -61,8 +61,8 @@ export class AnimationRetargetingExample extends ThreeApplet {
   public camera: PerspectiveCamera
   public group: Group = new Group()
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     // this.toneMapping = NeutralToneMapping;
 
@@ -236,7 +236,7 @@ export class AnimationRetargetingExample extends ThreeApplet {
 @Register
 export class IoAnimationRetargetingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationRetargetingExample, init: null})
+  @ReactiveProperty({type: AnimationRetargetingExample, init: {playing: true}})
   declare applet: AnimationRetargetingExample
 
 }

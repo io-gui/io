@@ -13,10 +13,7 @@ import {
   PlaneGeometry,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
-import { ioButton, ioBoolean } from '@io-gui/inputs'
-import { ioNumberSlider } from '@io-gui/sliders'
-import { ioPropertyEditor } from '@io-gui/editors'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 const loader = new GLTFLoader()
 
@@ -40,8 +37,8 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
   public useDefaultDuration: boolean = true
   public customDuration: number = 3.5
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     // Camera
     this.camera = new PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 100 )
@@ -215,7 +212,7 @@ export class AnimationSkinningBlendingExample extends ThreeApplet {
 @Register
 export class IoAnimationSkinningBlendingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationSkinningBlendingExample, init: null})
+  @ReactiveProperty({type: AnimationSkinningBlendingExample, init: {playing: true}})
   declare applet: AnimationSkinningBlendingExample
 
   // init() {

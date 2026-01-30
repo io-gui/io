@@ -144,7 +144,7 @@ export class CameraLogarithmicDepthBufferExample extends ThreeApplet {
 @Register
 export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraLogarithmicDepthBufferExample, init: null})
+  @ReactiveProperty({type: CameraLogarithmicDepthBufferExample, init: {playing: true}})
   declare applet: CameraLogarithmicDepthBufferExample
 
   @ReactiveProperty({type: WebGPURenderer, init: {antialias: true, logarithmicDepthBuffer: true}})
@@ -158,8 +158,8 @@ export class IoCameraLogarithmicDepthBufferExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene'}),
-          ioThreeViewport({id: 'SceneCameraLog', applet: this.applet, playing: true, cameraSelect: 'scene', renderer: this.renderer}),
+          ioThreeViewport({id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer}),
         ],
         split: new Split({
           type: 'split',

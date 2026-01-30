@@ -15,9 +15,7 @@ import {
   SkeletonHelper,
 } from 'three/webgpu'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
-import { ioBoolean } from '@io-gui/inputs'
-import { ioNumberSlider } from '@io-gui/sliders'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 const loader = new GLTFLoader()
 
@@ -71,8 +69,8 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
     headShake: { weight: 0 },
   }
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     // Camera
     this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100)
@@ -286,7 +284,7 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
 @Register
 export class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationSkinningAdditiveBlendingExample, init: null})
+  @ReactiveProperty({type: AnimationSkinningAdditiveBlendingExample, init: {playing: true}})
   declare applet: AnimationSkinningAdditiveBlendingExample
 
   // init() {

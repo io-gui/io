@@ -1,5 +1,5 @@
 import { ReactiveProperty, Register } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 import {
   AnimationMixer,
   Group,
@@ -39,8 +39,8 @@ export class AnimationBackdropExample extends ThreeApplet {
 
   public portals: Group
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     this.toneMapping = NeutralToneMapping
     this.toneMappingExposure = 0.3
@@ -127,7 +127,7 @@ export class AnimationBackdropExample extends ThreeApplet {
 @Register
 export class IoAnimationBackdropExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationBackdropExample, init: null})
+  @ReactiveProperty({type: AnimationBackdropExample, init: {playing: true}})
   declare applet: AnimationBackdropExample
 
 }

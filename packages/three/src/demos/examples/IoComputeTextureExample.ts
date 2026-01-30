@@ -54,7 +54,7 @@ export class ComputeTextureExample extends ThreeApplet {
 @Register
 export class IoComputeTextureExample extends IoThreeExample {
 
-  @ReactiveProperty({type: ComputeTextureExample, init: null})
+  @ReactiveProperty({type: ComputeTextureExample, init: {playing: true}})
   declare applet: ComputeTextureExample
 
   ready() {
@@ -62,7 +62,7 @@ export class IoComputeTextureExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Front', applet: this.applet, playing: true, cameraSelect: 'front'}),
+          ioThreeViewport({id: 'Front', applet: this.applet, cameraSelect: 'front'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({

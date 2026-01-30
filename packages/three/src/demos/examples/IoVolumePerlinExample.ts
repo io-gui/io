@@ -70,7 +70,7 @@ export class VolumePerlinExample extends ThreeApplet {
 @Register
 export class IoVolumePerlinExample extends IoThreeExample {
 
-  @ReactiveProperty({type: VolumePerlinExample, init: null})
+  @ReactiveProperty({type: VolumePerlinExample, init: {playing: true}})
   declare applet: VolumePerlinExample
 
   ready() {
@@ -78,7 +78,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Scene', applet: this.applet, playing: true, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Scene', applet: this.applet, cameraSelect: 'scene'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet})
         ],
         split: new Split({
