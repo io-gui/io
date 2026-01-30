@@ -1,12 +1,12 @@
 import { PerspectiveCamera, WebGPURenderer } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class CameraLogarithmicDepthBufferExample extends ThreeApplet {
     camera: PerspectiveCamera;
     zoompos: number;
     zoomspeed: number;
     minzoomspeed: number;
     mouse: number[];
-    constructor();
+    constructor(args: ThreeAppletProps);
     onRendererInitialized(renderer: WebGPURenderer): Promise<void>;
     onAnimate(): void;
 }

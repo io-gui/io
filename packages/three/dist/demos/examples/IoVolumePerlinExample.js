@@ -13,8 +13,8 @@ import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioSplit, Split } from '@io-gui/layout';
 import { ioPropertyEditor } from '@io-gui/editors';
 let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         const size = 128;
         const data = new Uint8Array(size * size * size);
         let i = 0;
@@ -71,8 +71,8 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Scene', applet: this.applet, playing: true, cameraSelect: 'scene' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups })
+                    ioThreeViewport({ id: 'Scene', applet: this.applet, cameraSelect: 'scene' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet })
                 ],
                 split: new Split({
                     type: 'split',
@@ -98,7 +98,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: VolumePerlinExample, init: null })
+    ReactiveProperty({ type: VolumePerlinExample, init: { playing: true } })
 ], IoVolumePerlinExample.prototype, "applet", void 0);
 IoVolumePerlinExample = __decorate([
     Register

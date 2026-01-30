@@ -13,8 +13,8 @@ import { Split, ioSplit } from '@io-gui/layout';
 import { ioPropertyEditor, ioObject } from '@io-gui/editors';
 let GeometriesExample = class GeometriesExample extends ThreeApplet {
     geometries = [];
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         const ambientLight = new AmbientLight(0xcccccc, 1.5);
         this.scene.add(ambientLight);
         const pointLight = new PointLight(0xffffff, 2.5, 0, 0);
@@ -115,10 +115,10 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
                     ioPropertyEditor({ id: 'PropertyEditor', value: this.applet.geometries, config: [
                             [BufferGeometry, ioObject({ properties: ['/'] })],
-                        ], groups: this.uiGroups })
+                        ] })
                 ],
                 split: new Split({
                     type: 'split',
@@ -144,7 +144,7 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: GeometriesExample, init: null })
+    ReactiveProperty({ type: GeometriesExample, init: { playing: true } })
 ], IoGeometriesExample.prototype, "applet", void 0);
 IoGeometriesExample = __decorate([
     Register

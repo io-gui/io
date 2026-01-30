@@ -11,8 +11,8 @@ import { float, vec3, color, viewportSharedTexture, hue, blendOverlay, posterize
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 let AnimationBackdropExample = class AnimationBackdropExample extends ThreeApplet {
     portals;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.toneMapping = NeutralToneMapping;
         this.toneMappingExposure = 0.3;
         // Background
@@ -84,7 +84,7 @@ export { AnimationBackdropExample };
 let IoAnimationBackdropExample = class IoAnimationBackdropExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationBackdropExample, init: null })
+    ReactiveProperty({ type: AnimationBackdropExample, init: { playing: true } })
 ], IoAnimationBackdropExample.prototype, "applet", void 0);
 IoAnimationBackdropExample = __decorate([
     Register

@@ -8,8 +8,8 @@ import { BufferAttribute, CanvasTexture, Color, DirectionalLight, IcosahedronGeo
 import { Register, ReactiveProperty } from '@io-gui/core';
 import { ThreeApplet, IoThreeViewport } from '@io-gui/three';
 let GeometryColorsExample = class GeometryColorsExample extends ThreeApplet {
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.scene.background = new Color(0xffffff);
         const light = new DirectionalLight(0xffffff, 3);
         light.position.set(0, 0, 1);

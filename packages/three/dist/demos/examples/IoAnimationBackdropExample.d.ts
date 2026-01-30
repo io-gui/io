@@ -1,9 +1,9 @@
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 import { AnimationMixer, Group } from 'three/webgpu';
 export declare class AnimationBackdropExample extends ThreeApplet {
     mixer: AnimationMixer;
     portals: Group;
-    constructor();
+    constructor(args: ThreeAppletProps);
     private loadModel;
     onAnimate(delta: number): void;
 }

@@ -1,8 +1,8 @@
 import { AnimationMixer, WebGPURenderer } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class AnimationKeyframesExample extends ThreeApplet {
     mixer: AnimationMixer;
-    constructor();
+    constructor(args: ThreeAppletProps);
     onRendererInitialized(renderer: WebGPURenderer): Promise<void>;
     onAnimate(delta: number): void;
 }

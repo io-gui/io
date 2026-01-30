@@ -5,12 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { ReactiveProperty, Register } from '@io-gui/core';
-import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicNodeMaterial, Vector3, } from 'three/webgpu';
+import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicNodeMaterial, } from 'three/webgpu';
 import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale, } from 'three/tsl';
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet, IoThreeExample, ioVector3 } from '@io-gui/three';
-import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     mixer;
     box;
@@ -21,8 +20,8 @@ let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     pixelMaterial;
     materials;
     boxScale;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.toneMappingExposure = 0.9;
         // Background
         this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1));
@@ -111,17 +110,6 @@ BackdropAreaExample = __decorate([
 ], BackdropAreaExample);
 export { BackdropAreaExample };
 let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
-    init() {
-        this.uiConfig = [
-            ['material', ioOptionSelect({
-                    option: new MenuOption({
-                        options: ['blurred', 'depth', 'checker', 'pixel']
-                    }),
-                    selectBy: 'id'
-                })],
-            [Vector3, ioVector3({ linkable: true })]
-        ];
-    }
 };
 __decorate([
     ReactiveProperty({ type: BackdropAreaExample, init: null })

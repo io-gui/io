@@ -8,8 +8,6 @@ import { ReactiveProperty, Register } from '@io-gui/core';
 import { AnimationMixer, AnimationUtils, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, SkeletonHelper, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
-import { ioBoolean } from '@io-gui/inputs';
-import { ioNumberSlider } from '@io-gui/sliders';
 const loader = new GLTFLoader();
 let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
     camera;
@@ -28,8 +26,8 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
         agree: { weight: 0 },
         headShake: { weight: 0 },
     };
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // Camera
         this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
         this.camera.position.set(-1, 2, 3);
@@ -231,47 +229,9 @@ AnimationSkinningAdditiveBlendingExample = __decorate([
 ], AnimationSkinningAdditiveBlendingExample);
 export { AnimationSkinningAdditiveBlendingExample };
 let IoAnimationSkinningAdditiveBlendingExample = class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
-    init() {
-        this.uiConfig = [
-            ['showSkeleton', ioBoolean({ label: 'Show Skeleton' })],
-            ['timeScale', ioNumberSlider({ min: 0, max: 1.5, step: 0.01 })],
-            ['sneakPoseWeight', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
-            ['sadPoseWeight', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
-            ['agreeWeight', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
-            ['headShakeWeight', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
-        ];
-        this.uiGroups = {
-            Main: [
-                'isLoaded',
-                'showSkeleton',
-                'timeScale',
-            ],
-            'Base Actions': [
-                'idle',
-                'walk',
-                'run',
-            ],
-            'Additive Weights': [
-                'sneakPoseWeight',
-                'sadPoseWeight',
-                'agreeWeight',
-                'headShakeWeight',
-            ],
-            Hidden: [
-                'scene',
-                'camera',
-                'mixer',
-                'allActions',
-                'baseActions',
-                'additiveActions',
-                'currentBaseAction',
-                'skeleton',
-            ],
-        };
-    }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningAdditiveBlendingExample, init: null })
+    ReactiveProperty({ type: AnimationSkinningAdditiveBlendingExample, init: { playing: true } })
 ], IoAnimationSkinningAdditiveBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningAdditiveBlendingExample = __decorate([
     Register

@@ -1,5 +1,5 @@
 import { AnimationAction, AnimationMixer, PerspectiveCamera, SkeletonHelper } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 interface ActionSettings {
     weight: number;
     action?: AnimationAction;
@@ -19,7 +19,7 @@ export declare class AnimationSkinningAdditiveBlendingExample extends ThreeApple
     allActions: AnimationAction[];
     baseActions: Record<string, ActionSettings>;
     additiveActions: Record<string, ActionSettings>;
-    constructor();
+    constructor(args: ThreeAppletProps);
     private loadModel;
     private activateAction;
     private setWeight;
@@ -39,7 +39,6 @@ export declare class AnimationSkinningAdditiveBlendingExample extends ThreeApple
 }
 export declare class IoAnimationSkinningAdditiveBlendingExample extends IoThreeExample {
     applet: AnimationSkinningAdditiveBlendingExample;
-    init(): void;
 }
 export declare const ioAnimationSkinningAdditiveBlendingExample: (arg0?: import("@io-gui/core").IoElementProps | Array<import("@io-gui/core").VDOMElement | null> | string, arg1?: Array<import("@io-gui/core").VDOMElement | null> | string) => import("@io-gui/core").VDOMElement;
 export {};

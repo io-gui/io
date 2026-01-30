@@ -1,6 +1,6 @@
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class VolumePerlinExample extends ThreeApplet {
-    constructor();
+    constructor(args: ThreeAppletProps);
 }
 export declare class IoVolumePerlinExample extends IoThreeExample {
     applet: VolumePerlinExample;

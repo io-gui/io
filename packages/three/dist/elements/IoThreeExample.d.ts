@@ -1,10 +1,7 @@
 import { IoElement } from '@io-gui/core';
-import { PropertyConfig, PropertyGroups } from '@io-gui/editors';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 export declare class IoThreeExample extends IoElement {
     static get Style(): string;
-    uiConfig: PropertyConfig[];
-    uiGroups: PropertyGroups;
     applet: ThreeApplet;
     ready(): void;
     dispose(): void;

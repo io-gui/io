@@ -7,15 +7,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveNode, ReactiveProperty } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Clock, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
+const _playingApplets = [];
+function rAFLoop() {
+    for (const applet of _playingApplets) {
+        applet.onRAF();
+    }
+    requestAnimationFrame(rAFLoop);
+}
+rAFLoop();
 let ThreeApplet = class ThreeApplet extends ReactiveNode {
     _renderer = null;
     _width = 0;
     _height = 0;
-    _prevTime = -1;
+    _clock = new Clock();
     constructor(args) {
         super(args);
+        this.playingChanged();
+    }
+    playingChanged() {
+        if (this.playing === true && _playingApplets.includes(this) === false) {
+            _playingApplets.push(this);
+        }
+        else if (this.playing === false && _playingApplets.includes(this)) {
+            _playingApplets.splice(_playingApplets.indexOf(this), 1);
+        }
+    }
+    onRAF() {
+        if (!this.playing)
+            return;
+        const delta = this._clock.getDelta();
+        const time = this._clock.getElapsedTime();
+        this.onAnimate(delta, time);
+        this.dispatch('io-three-animate', { time, delta }, true);
     }
     updateViewportSize(width, height) {
         if (this._width !== width || this._height !== height) {
@@ -34,14 +59,12 @@ let ThreeApplet = class ThreeApplet extends ReactiveNode {
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onResized(width, height) { }
-    animate(time, delta) {
-        if (this._prevTime === time)
-            return;
-        this._prevTime = time;
-        this.onAnimate(delta);
-    }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onAnimate(delta) { }
+    onAnimate(delta, time) { }
+    dispose() {
+        this.playing = false;
+        super.dispose();
+    }
 };
 __decorate([
     ReactiveProperty({ type: Scene, init: null })
@@ -52,6 +75,9 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: Number, value: NoToneMapping })
 ], ThreeApplet.prototype, "toneMapping", void 0);
+__decorate([
+    ReactiveProperty({ type: Boolean, value: false })
+], ThreeApplet.prototype, "playing", void 0);
 ThreeApplet = __decorate([
     Register
 ], ThreeApplet);
@@ -75,12 +101,15 @@ registerEditorGroups(ThreeApplet, {
         'scene',
     ],
     Hidden: [
+        'playing',
         'toneMapping',
         'toneMappingExposure',
         '_renderer',
         '_width',
         '_height',
         '_prevTime',
+        '_rafId',
+        '_clock',
     ],
 });
 //# sourceMappingURL=ThreeApplet.js.map

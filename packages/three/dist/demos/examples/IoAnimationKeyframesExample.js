@@ -12,8 +12,8 @@ import { Register, ReactiveProperty } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 let AnimationKeyframesExample = class AnimationKeyframesExample extends ThreeApplet {
     mixer = new AnimationMixer(new Object3D());
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.scene.background = new Color(0xbfe3dd);
     }
     async onRendererInitialized(renderer) {
@@ -60,7 +60,7 @@ export { AnimationKeyframesExample };
 let IoAnimationKeyframesExample = class IoAnimationKeyframesExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationKeyframesExample, init: null })
+    ReactiveProperty({ type: AnimationKeyframesExample, init: { playing: true } })
 ], IoAnimationKeyframesExample.prototype, "applet", void 0);
 IoAnimationKeyframesExample = __decorate([
     Register

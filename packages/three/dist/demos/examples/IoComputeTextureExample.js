@@ -13,8 +13,8 @@ import { ioSplit, Split } from '@io-gui/layout';
 let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
     storageTexture;
     computeNode;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         const width = 32, height = 32;
         this.storageTexture = new StorageTexture(width, height);
         const computeTexture = Fn(({ storageTexture }) => {
@@ -56,8 +56,8 @@ let IoComputeTextureExample = class IoComputeTextureExample extends IoThreeExamp
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Front', applet: this.applet, playing: true, cameraSelect: 'front' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups })
+                    ioThreeViewport({ id: 'Front', applet: this.applet, cameraSelect: 'front' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet })
                 ],
                 split: new Split({
                     type: 'split',
@@ -83,7 +83,7 @@ let IoComputeTextureExample = class IoComputeTextureExample extends IoThreeExamp
     }
 };
 __decorate([
-    ReactiveProperty({ type: ComputeTextureExample, init: null })
+    ReactiveProperty({ type: ComputeTextureExample, init: { playing: true } })
 ], IoComputeTextureExample.prototype, "applet", void 0);
 IoComputeTextureExample = __decorate([
     Register

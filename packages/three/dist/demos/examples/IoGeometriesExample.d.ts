@@ -1,8 +1,8 @@
 import { BufferGeometry } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class GeometriesExample extends ThreeApplet {
     geometries: BufferGeometry[];
-    constructor();
+    constructor(args: ThreeAppletProps);
     onAnimate(): void;
 }
 export declare class IoGeometriesExample extends IoThreeExample {

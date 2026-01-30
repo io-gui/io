@@ -273,7 +273,8 @@ class IoMenusDemo extends IoElement {
                         { id: 'home' },
                         { id: 'food', options: [
                                 { id: 'fruits', options: [
-                                        { id: 'apples', selected: true },
+                                        // {id: 'apples', selected: true},
+                                        { id: 'apples' },
                                         { id: 'mangos' },
                                         { id: 'bannanas' },
                                     ] }
@@ -290,7 +291,7 @@ class IoMenusDemo extends IoElement {
                                         { id: 'selectable' },
                                     ] },
                             ] },
-                    ] }) }),
+                    ], path: 'food,fruits,apples' }) }),
         ]);
     }
 }

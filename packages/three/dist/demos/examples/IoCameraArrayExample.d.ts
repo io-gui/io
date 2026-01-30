@@ -1,9 +1,9 @@
 import { ArrayCamera, Mesh } from 'three/webgpu';
-import { ThreeApplet, IoThreeViewport } from '@io-gui/three';
+import { ThreeApplet, IoThreeViewport, ThreeAppletProps } from '@io-gui/three';
 export declare class CameraArrayExample extends ThreeApplet {
     arrayCamera: ArrayCamera;
     mesh: Mesh;
-    constructor();
+    constructor(args: ThreeAppletProps);
     onResized(width: number, height: number): void;
     updateCameras(width: number, height: number): void;
     onAnimate(): void;

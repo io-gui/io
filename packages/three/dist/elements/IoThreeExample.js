@@ -37,11 +37,11 @@ export class IoThreeExample extends IoElement {
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top' }),
-                    ioThreeViewport({ id: 'Left', applet: this.applet, playing: true, cameraSelect: 'left' }),
-                    ioThreeViewport({ id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective' }),
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups })
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet })
                 ],
                 split: new Split({
                     type: 'split',
@@ -87,12 +87,6 @@ export class IoThreeExample extends IoElement {
         super.dispose();
     }
 }
-__decorate([
-    ReactiveProperty({ type: Array, init: null })
-], IoThreeExample.prototype, "uiConfig", void 0);
-__decorate([
-    ReactiveProperty({ type: Object, init: null })
-], IoThreeExample.prototype, "uiGroups", void 0);
 __decorate([
     ReactiveProperty({ type: ThreeApplet, init: null })
 ], IoThreeExample.prototype, "applet", void 0);

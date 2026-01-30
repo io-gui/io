@@ -11,8 +11,8 @@ const AMOUNT = 6;
 let CameraArrayExample = class CameraArrayExample extends ThreeApplet {
     arrayCamera;
     mesh;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         const subCameras = [];
         for (let i = 0; i < AMOUNT * AMOUNT; i++) {
             const subCamera = new PerspectiveCamera(40, 1, 0.1, 10);
@@ -83,7 +83,7 @@ export { CameraArrayExample };
 let IoCameraArrayExample = class IoCameraArrayExample extends IoThreeViewport {
 };
 __decorate([
-    ReactiveProperty({ type: CameraArrayExample, init: null })
+    ReactiveProperty({ type: CameraArrayExample, init: { playing: true } })
 ], IoCameraArrayExample.prototype, "applet", void 0);
 IoCameraArrayExample = __decorate([
     Register

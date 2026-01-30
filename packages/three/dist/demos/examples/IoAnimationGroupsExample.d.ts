@@ -1,8 +1,8 @@
 import { AnimationMixer } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class AnimationGroupsExample extends ThreeApplet {
     mixer: AnimationMixer;
-    constructor();
+    constructor(args: ThreeAppletProps);
     onAnimate(delta: number): void;
 }
 export declare class IoAnimationGroupsExample extends IoThreeExample {

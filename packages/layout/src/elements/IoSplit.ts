@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton, div, WithBinding } from '@io-gui/core'
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'

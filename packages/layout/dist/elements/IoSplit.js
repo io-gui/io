@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 var IoSplit_1;
-import { Register, ReactiveProperty, IoElement, Property, ThemeSingleton, div } from '@io-gui/core';
+import { Register, ReactiveProperty, IoElement, ThemeSingleton, div } from '@io-gui/core';
 import { MenuOption } from '@io-gui/menus';
 import { ioPanel } from './IoPanel.js';
 import { ioDivider } from './IoDivider.js';
@@ -404,7 +404,7 @@ __decorate([
     ReactiveProperty({ type: Object, value: null })
 ], IoSplit.prototype, "trailingDrawer", void 0);
 __decorate([
-    Property({ type: MenuOption })
+    ReactiveProperty({ type: MenuOption })
 ], IoSplit.prototype, "addMenuOption", void 0);
 __decorate([
     ReactiveProperty({ type: Boolean, value: true, reflect: true })

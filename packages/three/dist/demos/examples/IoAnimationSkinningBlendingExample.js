@@ -8,9 +8,6 @@ import { ReactiveProperty, Register } from '@io-gui/core';
 import { AnimationMixer, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshPhongMaterial, PerspectiveCamera, PlaneGeometry, } from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
-import { ioButton, ioBoolean } from '@io-gui/inputs';
-import { ioNumberSlider } from '@io-gui/sliders';
-import { ioPropertyEditor } from '@io-gui/editors';
 const loader = new GLTFLoader();
 let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample extends ThreeApplet {
     isCrossfading = false;
@@ -20,8 +17,8 @@ let AnimationSkinningBlendingExample = class AnimationSkinningBlendingExample ex
     stepSize = 0.05;
     useDefaultDuration = true;
     customDuration = 3.5;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // Camera
         this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 100);
         this.camera.position.set(1, 2, -3);
@@ -174,36 +171,9 @@ AnimationSkinningBlendingExample = __decorate([
 ], AnimationSkinningBlendingExample);
 export { AnimationSkinningBlendingExample };
 let IoAnimationSkinningBlendingExample = class IoAnimationSkinningBlendingExample extends IoThreeExample {
-    init() {
-        this.uiConfig = [
-            ['isPlaying', ioBoolean({ label: '_hidden_', true: 'io:circle_pause', false: 'io:circle_fill_arrow_right' })],
-            ['makeSingleStep', ioButton({ label: 'Make Single Step' })],
-            ['stepSize', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
-            ['actions', ioPropertyEditor({ label: '_hidden_' })],
-        ];
-        this.uiGroups = {
-            Main: [
-                'isActive',
-                'isPlaying',
-                'mixer',
-                'actions',
-                'idle',
-                'walk',
-                'run',
-                'useDefaultDuration',
-                'customDuration',
-                'stepSize',
-                'makeSingleStep',
-            ],
-            Hidden: [
-                'scene',
-                'camera',
-            ],
-        };
-    }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationSkinningBlendingExample, init: null })
+    ReactiveProperty({ type: AnimationSkinningBlendingExample, init: { playing: true } })
 ], IoAnimationSkinningBlendingExample.prototype, "applet", void 0);
 IoAnimationSkinningBlendingExample = __decorate([
     Register

@@ -14,8 +14,8 @@ import { ioSplit, Split } from '@io-gui/layout';
 import { ioThreeViewport } from '@io-gui/three';
 let GeometryConvexExample = class GeometryConvexExample extends ThreeApplet {
     group;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // ambient light
         this.scene.add(new AmbientLight(0x666666));
         // point light
@@ -83,38 +83,31 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top' }),
-                    ioThreeViewport({ id: 'Left', applet: this.applet, playing: true, cameraSelect: 'left' }),
-                    ioThreeViewport({ id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective' }),
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene' }),
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
                 ],
                 split: new Split({
                     type: 'split',
-                    orientation: 'horizontal',
+                    orientation: 'vertical',
                     children: [
                         {
                             type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
+                            flex: '1 1 60px',
+                            orientation: 'horizontal',
                             children: [
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
-                                    ]
-                                },
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Perspective' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
-                                    ]
-                                }
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Top' }] },
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Left' }] }
+                            ]
+                        },
+                        {
+                            type: 'split',
+                            flex: '1 1 60px',
+                            orientation: 'horizontal',
+                            children: [
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Perspective' }] },
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'SceneCamera' }] },
                             ]
                         }
                     ]
@@ -124,7 +117,7 @@ let IoGeometryConvexExample = class IoGeometryConvexExample extends IoThreeExamp
     }
 };
 __decorate([
-    ReactiveProperty({ type: GeometryConvexExample, init: null })
+    ReactiveProperty({ type: GeometryConvexExample, init: { playing: true } })
 ], IoGeometryConvexExample.prototype, "applet", void 0);
 IoGeometryConvexExample = __decorate([
     Register

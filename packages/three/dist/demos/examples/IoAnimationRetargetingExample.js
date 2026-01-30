@@ -29,8 +29,8 @@ let AnimationRetargetingExample = class AnimationRetargetingExample extends Thre
     targetMixer;
     camera;
     group = new Group();
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // this.toneMapping = NeutralToneMapping;
         // Background
         const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), time.mul(.1)), hue(color(0x02274f), time.mul(.5)));
@@ -175,7 +175,7 @@ export { AnimationRetargetingExample };
 let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationRetargetingExample, init: null })
+    ReactiveProperty({ type: AnimationRetargetingExample, init: { playing: true } })
 ], IoAnimationRetargetingExample.prototype, "applet", void 0);
 IoAnimationRetargetingExample = __decorate([
     Register

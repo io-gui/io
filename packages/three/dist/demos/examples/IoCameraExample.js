@@ -16,8 +16,8 @@ let CameraExample = class CameraExample extends ThreeApplet {
     orthographicCamera;
     cameraRig;
     mesh;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.perspectiveCamera = new PerspectiveCamera(50, 0.5, 150, 1000);
         this.perspectiveCamera.name = 'perspective';
         this.orthographicCamera = new OrthographicCamera(-1, 1, 1, -1, 150, 1000);
@@ -110,9 +110,9 @@ let IoCameraExample = class IoCameraExample extends IoThreeExample {
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective' }),
-                    ioThreeViewport({ id: 'ScenePerspective', applet: this.applet, playing: true, cameraSelect: 'scene:perspective' }),
-                    ioThreeViewport({ id: 'SceneOrthographic', applet: this.applet, playing: true, cameraSelect: 'scene:orthographic' }),
+                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
+                    ioThreeViewport({ id: 'ScenePerspective', applet: this.applet, cameraSelect: 'scene:perspective' }),
+                    ioThreeViewport({ id: 'SceneOrthographic', applet: this.applet, cameraSelect: 'scene:orthographic' }),
                     ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, properties: ['perspectiveCamera', 'orthographicCamera'] })
                 ],
                 split: new Split({
@@ -155,7 +155,7 @@ let IoCameraExample = class IoCameraExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: CameraExample, init: null })
+    ReactiveProperty({ type: CameraExample, init: { playing: true } })
 ], IoCameraExample.prototype, "applet", void 0);
 IoCameraExample = __decorate([
     Register

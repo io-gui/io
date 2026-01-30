@@ -1,8 +1,8 @@
 import { Group } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class GeometryConvexExample extends ThreeApplet {
     group: Group;
-    constructor();
+    constructor(args: ThreeAppletProps);
     onAnimate(): void;
 }
 export declare class IoGeometryConvexExample extends IoThreeExample {

@@ -123,19 +123,20 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
     dispatch(type, detail = undefined, bubbles = false, src) {
         this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
     }
-    // TODO: test!
-    // TODO: Consider bubbling up to elements!
     addParent(parent) {
-        if (parent._isNode) {
+        if (parent._isNode || parent._isIoElement) {
             this._parents.push(parent);
         }
     }
     removeParent(parent) {
-        if (parent._isNode) {
-            debug: if (!this._parents.includes(parent)) {
-                console.error('ReactiveNode.removeParent(): Parent not found!', this, parent);
+        if (parent._isNode || parent._isIoElement) {
+            const index = this._parents.indexOf(parent);
+            if (index !== -1) {
+                this._parents.splice(index, 1);
             }
-            this._parents.splice(this._parents.indexOf(parent), 1);
+            else {
+                debug: console.warn('ReactiveNode.removeParent(): Parent not found!', this, parent);
+            }
         }
     }
     dispose() {
@@ -173,6 +174,9 @@ export function initReactiveProperties(node) {
         if (property.binding)
             property.binding.addTarget(node, name);
         property.observer.start(property.value);
+        if (property.value?._isNode) {
+            property.value.addParent(node);
+        }
         if (node instanceof IoElement) {
             if (property.reflect && property.value !== undefined && property.value !== null) {
                 node.setAttribute(name, property.value);
