@@ -9,7 +9,9 @@ import { AmbientLight, AnimationMixer, BoxGeometry, DoubleSide, Mesh, MeshBasicN
 import { color, positionWorld, linearDepth, viewportLinearDepth, viewportSharedTexture, screenUV, hue, time, checker, uv, modelScale, } from 'three/tsl';
 import { hashBlur } from 'three/addons/tsl/display/hashBlur.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { ThreeApplet, IoThreeExample, ioVector3 } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ioVector3 } from '@io-gui/three';
+import { ioSplit, Split } from '@io-gui/layout';
+import { ioPropertyEditor } from '@io-gui/editors';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     mixer;
@@ -21,8 +23,8 @@ let BackdropAreaExample = class BackdropAreaExample extends ThreeApplet {
     pixelMaterial;
     materials;
     boxScale;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         this.toneMappingExposure = 0.9;
         // Background
         this.scene.backgroundNode = hue(screenUV.y.mix(color(0x66bbff), color(0x4466ff)), time.mul(0.1));
@@ -111,20 +113,69 @@ BackdropAreaExample = __decorate([
 ], BackdropAreaExample);
 export { BackdropAreaExample };
 let IoBackdropAreaExample = class IoBackdropAreaExample extends IoThreeExample {
-    init() {
-        this.uiConfig = [
-            ['material', ioOptionSelect({
-                    option: new MenuOption({
-                        options: ['blurred', 'depth', 'checker', 'pixel']
-                    }),
-                    selectBy: 'id'
-                })],
-            [Vector3, ioVector3({ linkable: true })]
-        ];
+    ready() {
+        this.render([
+            ioSplit({
+                elements: [
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                        properties: ['material', 'boxScale'],
+                        config: [
+                            ['material', ioOptionSelect({
+                                    option: new MenuOption({
+                                        options: ['blurred', 'depth', 'checker', 'pixel']
+                                    }),
+                                    selectBy: 'id'
+                                })],
+                            [Vector3, ioVector3({ linkable: true })]
+                        ]
+                    })
+                ],
+                split: new Split({
+                    type: 'split',
+                    orientation: 'horizontal',
+                    children: [
+                        {
+                            type: 'split',
+                            flex: '2 1 auto',
+                            orientation: 'vertical',
+                            children: [
+                                {
+                                    type: 'split',
+                                    flex: '1 1 50%',
+                                    orientation: 'horizontal',
+                                    children: [
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Top' }] },
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Left' }] }
+                                    ]
+                                },
+                                {
+                                    type: 'split',
+                                    flex: '1 1 50%',
+                                    orientation: 'horizontal',
+                                    children: [
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'Back' }] },
+                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'panel',
+                            flex: '0 0 280px',
+                            tabs: [{ id: 'PropertyEditor' }]
+                        }
+                    ]
+                })
+            })
+        ]);
     }
 };
 __decorate([
-    ReactiveProperty({ type: BackdropAreaExample, init: null })
+    ReactiveProperty({ type: BackdropAreaExample, init: { isPlaying: true } })
 ], IoBackdropAreaExample.prototype, "applet", void 0);
 IoBackdropAreaExample = __decorate([
     Register

@@ -1,6 +1,12 @@
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class VolumePerlinExample extends ThreeApplet {
-    constructor();
+    private thresholdUniform;
+    private stepsUniform;
+    threshold: number;
+    steps: number;
+    constructor(args: ThreeAppletProps);
+    thresholdChanged(): void;
+    stepsChanged(): void;
 }
 export declare class IoVolumePerlinExample extends IoThreeExample {
     applet: VolumePerlinExample;

@@ -16,6 +16,7 @@ export declare class IoMenuTreeBranch extends IoElement {
     expanded: boolean;
     role: string;
     optionMutated(): void;
+    expandedChanged(): void;
     changed(): void;
 }
 export declare const ioMenuTreeBranch: (arg0?: IoMenuTreeBranchProps) => import("@io-gui/core").VDOMElement;

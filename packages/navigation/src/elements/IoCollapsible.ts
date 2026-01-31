@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property } from '@io-gui/core'
+import { IoElement, VDOMElement, Register, ReactiveProperty, div, IoElementProps, WithBinding, Property, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 
 export type IoCollapsibleProps = IoElementProps & {
@@ -84,6 +84,10 @@ export class IoCollapsible extends IoElement {
 
   @Property('region')
   declare role: string
+
+  expandedChanged() {
+    clearFocusBacktrack()
+  }
 
   changed() {
     this.render([

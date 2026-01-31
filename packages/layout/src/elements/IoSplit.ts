@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, Property, ThemeSingleton, div, WithBinding } from '@io-gui/core'
+import { Register, ReactiveProperty, VDOMElement, IoElement, IoElementProps, ThemeSingleton, div, WithBinding } from '@io-gui/core'
 import { MenuOption } from '@io-gui/menus'
 import { IoPanel, ioPanel } from './IoPanel.js'
 import { ioDivider } from './IoDivider.js'
@@ -22,6 +22,8 @@ export function hasFlexGrow(flex: string): boolean {
 
 export type SplitDirection = 'none' | 'left' | 'right' | 'top' | 'bottom' | 'center'
 
+// TODO: child<->drawer caching
+
 export type IoSplitProps = IoElementProps & {
   split: WithBinding<Split>
   elements: VDOMElement[]
@@ -34,11 +36,11 @@ export class IoSplit extends IoElement {
   static get Style() {
     return /* css */`
       :host {
+        display: flex;
         flex: 1 1 100%;
         max-width: 100%;
         max-height: 100%;
         position: relative;
-        display: flex;
         overflow: hidden;
         flex-direction: row;
       }
@@ -48,16 +50,24 @@ export class IoSplit extends IoElement {
       :host:not([hasvisibleflexgrow]) > .io-split-last-visible {
         flex: 1 1 auto !important;
       }
-      :host > .io-split-veil {
+      :host > io-drawer[direction="leading"] {
+        position: absolute;
+        left: calc(2 * var(--io_borderWidth));
+        top: 0;
+        height: 100%;
+      }
+      :host:has(> io-drawer[direction="leading"]) {
+        padding-left: calc(2 * var(--io_borderWidth) + var(--io_lineHeight));
+      }
+      :host > .io-veil {
         position: absolute;
         opacity: 0;
         transition: opacity 0.125s ease-out;
         background-color: rgba(0, 0, 0, 1);
         pointer-events: none;
-        z-index: 2;
         inset: 0;
       }
-      :host[showveil] > .io-split-veil {
+      :host[showveil] > .io-veil {
         display: block;
         opacity: 0.5;
         pointer-events: auto;
@@ -82,7 +92,7 @@ export class IoSplit extends IoElement {
   @ReactiveProperty({type: Object, value: null})
   declare trailingDrawer: Split | Panel | null
 
-  @Property({type: MenuOption})
+  @ReactiveProperty({type: MenuOption})
   declare addMenuOption: MenuOption | undefined
 
   @ReactiveProperty({type: Boolean, value: true, reflect: true})
@@ -331,12 +341,12 @@ export class IoSplit extends IoElement {
   }
 
   onDrawerExpandedChanged(event: CustomEvent) {
+    event.stopPropagation()
     const srcDrawer = event.detail.element as IoDrawer
     if (srcDrawer.expanded) {
       const drawers = [...this.querySelectorAll(':scope > io-drawer')] as IoDrawer[]
       drawers.forEach(drawer => drawer !== srcDrawer && (drawer.expanded = false))
     }
-    event.stopPropagation()
     this.updateVeil()
   }
 
@@ -376,22 +386,6 @@ export class IoSplit extends IoElement {
     const orientation = this.split.orientation
 
     const vChildren: VDOMElement[] = []
-
-    vChildren.push(div({
-      class: 'io-split-veil',
-      '@click': this.onVeilClick,
-    }))
-
-    if (this.leadingDrawer !== null) {
-      vChildren.push(ioDrawer({
-        orientation: orientation,
-        direction: 'leading',
-        parent: this,
-        child: this.leadingDrawer,
-        elements: this.elements,
-        addMenuOption: this.addMenuOption,
-      }))
-    }
 
     // Render visible children
     for (let i = 0; i < childCount; i++) {
@@ -433,6 +427,19 @@ export class IoSplit extends IoElement {
       }
     }
 
+    const veil = div({class: 'io-veil', '@click': this.onVeilClick})
+    vChildren.push(veil)
+
+    if (this.leadingDrawer !== null) {
+      vChildren.push(ioDrawer({
+        orientation: orientation,
+        direction: 'leading',
+        parent: this,
+        child: this.leadingDrawer,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      }))
+    }
     if (this.trailingDrawer !== null) {
       vChildren.push(ioDrawer({
         orientation: orientation,

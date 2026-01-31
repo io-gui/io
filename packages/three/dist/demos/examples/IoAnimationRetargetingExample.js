@@ -9,7 +9,8 @@ import { AnimationMixer, BoxGeometry, DirectionalLight, Euler, PerspectiveCamera
 import { color, screenUV, hue, reflector, time, Fn, vec2, length, atan, float, sin, cos, vec3, sub, mul, pow, blendDodge, normalWorldGeometry, } from 'three/tsl';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
+import { ioSplit, Split } from '@io-gui/layout';
 const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
     // forked from https://www.shadertoy.com/view/7ly3D1
     const suv = vec2(suv_immutable);
@@ -29,8 +30,8 @@ let AnimationRetargetingExample = class AnimationRetargetingExample extends Thre
     targetMixer;
     camera;
     group = new Group();
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // this.toneMapping = NeutralToneMapping;
         // Background
         const coloredVignette = screenUV.distance(.5).mix(hue(color(0x0175ad), time.mul(.1)), hue(color(0x02274f), time.mul(.5)));
@@ -173,9 +174,45 @@ AnimationRetargetingExample = __decorate([
 ], AnimationRetargetingExample);
 export { AnimationRetargetingExample };
 let IoAnimationRetargetingExample = class IoAnimationRetargetingExample extends IoThreeExample {
+    ready() {
+        this.render([
+            ioSplit({
+                elements: [
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioThreeViewport({ id: 'Left', applet: this.applet, cameraSelect: 'left' }),
+                    ioThreeViewport({ id: 'Back', applet: this.applet, cameraSelect: 'back' }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
+                ],
+                split: new Split({
+                    type: 'split',
+                    orientation: 'vertical',
+                    children: [
+                        {
+                            type: 'split',
+                            flex: '1 1 60px',
+                            orientation: 'horizontal',
+                            children: [
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Top' }] },
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Left' }] }
+                            ]
+                        },
+                        {
+                            type: 'split',
+                            flex: '1 1 60px',
+                            orientation: 'horizontal',
+                            children: [
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'Back' }] },
+                                { type: 'panel', flex: '1 1 60px', tabs: [{ id: 'SceneCamera' }] },
+                            ]
+                        }
+                    ]
+                })
+            })
+        ]);
+    }
 };
 __decorate([
-    ReactiveProperty({ type: AnimationRetargetingExample, init: null })
+    ReactiveProperty({ type: AnimationRetargetingExample, init: { isPlaying: true } })
 ], IoAnimationRetargetingExample.prototype, "applet", void 0);
 IoAnimationRetargetingExample = __decorate([
     Register

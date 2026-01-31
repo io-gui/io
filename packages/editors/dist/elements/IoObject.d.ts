@@ -30,6 +30,7 @@ export declare class IoObject extends IoElement {
     widget: VDOMElement | undefined | null;
     role: string;
     valueChanged(): void;
+    expandedChanged(): void;
     changed(): void;
 }
 export declare const ioObject: (arg0?: IoObjectProps) => VDOMElement;

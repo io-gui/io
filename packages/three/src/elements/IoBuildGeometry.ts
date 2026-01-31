@@ -51,8 +51,22 @@ export class IoBuildGeometry extends IoElement {
     const parameterValues = Object.values(parameters)
 
     const newGeometry = new GeometryClass(...parameterValues)
+
+    const version = geometry.index?.version ?? 0
     geometry.copy(newGeometry as BufferGeometry)
     newGeometry.dispose()
+
+    // Workaround for #32903
+    if (geometry.index) {
+      geometry.index.version = version
+    }
+
+    for (const name in geometry.attributes) {
+      geometry.attributes[name].needsUpdate = true
+    }
+    if (geometry.index) {
+      geometry.index.needsUpdate = true
+    }
 
     geometry.computeVertexNormals()
 

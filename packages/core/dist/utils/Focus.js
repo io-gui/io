@@ -3,7 +3,7 @@ import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js';
 // TODO: improve focus algorithm
 // Note: focus string field in IoInspector demo and use arrowleft - notice focus shift is not intuitive.
 // TODO: Home, End, PageUp, PageDown?
-const focusBacktrack = new WeakMap();
+let focusBacktrack = new WeakMap();
 const backtrackDir = {
     ArrowLeft: 'ArrowRight',
     ArrowRight: 'ArrowLeft',
@@ -15,6 +15,9 @@ function setFocusBacktrack(element, dir, source) {
         dir: backtrackDir[dir],
         source: source
     });
+}
+export function clearFocusBacktrack() {
+    focusBacktrack = new WeakMap();
 }
 function getRectDistance(rect1, rect2, dirBias = 1) {
     if (rect1.right > rect2.left && rect2.right > rect1.left && rect1.bottom > rect2.top && rect2.bottom > rect1.top) {

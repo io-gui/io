@@ -1,11 +1,11 @@
 import { PerspectiveCamera, OrthographicCamera, Group, Mesh } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class CameraExample extends ThreeApplet {
     perspectiveCamera: PerspectiveCamera;
     orthographicCamera: OrthographicCamera;
     cameraRig: Group;
     mesh: Mesh;
-    constructor();
+    constructor(args: ThreeAppletProps);
     onResized(width: number, height: number): void;
     onAnimate(): void;
 }

@@ -18,7 +18,7 @@ import { instancedBufferAttribute, texture, float, color } from 'three/tsl'
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js'
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioThreeViewport } from '@io-gui/three'
 
@@ -27,8 +27,8 @@ export class GeometryConvexExample extends ThreeApplet {
 
   public group: Group
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     // ambient light
 
@@ -117,7 +117,7 @@ export class GeometryConvexExample extends ThreeApplet {
 @Register
 export class IoGeometryConvexExample extends IoThreeExample {
 
-  @ReactiveProperty({type: GeometryConvexExample, init: null})
+  @ReactiveProperty({type: GeometryConvexExample, init: {isPlaying: true}})
   declare applet: GeometryConvexExample
 
   ready() {
@@ -125,38 +125,31 @@ export class IoGeometryConvexExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top'}),
-          ioThreeViewport({id: 'Left', applet: this.applet, playing: true, cameraSelect: 'left'}),
-          ioThreeViewport({id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene'}),
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
+          ioThreeViewport({id: 'Left', applet: this.applet, cameraSelect: 'left'}),
+          ioThreeViewport({id: 'Front', applet: this.applet, cameraSelect: 'front'}),
+          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
         ],
         split: new Split({
           type: 'split',
-          orientation: 'horizontal',
+          orientation: 'vertical',
           children: [
             {
               type: 'split',
-              flex: '2 1 auto',
-              orientation: 'vertical',
+              flex: '1 1 60px',
+              orientation: 'horizontal',
               children: [
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Top'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Left'}]}
-                  ]
-                },
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'Perspective'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneCamera'}]},
-                  ]
-                }
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Top'}]},
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Left'}]}
+              ]
+            },
+            {
+              type: 'split',
+              flex: '1 1 60px',
+              orientation: 'horizontal',
+              children: [
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Front'}]},
+                {type: 'panel',flex: '1 1 60px',tabs: [{id: 'Perspective'}]},
               ]
             }
           ]

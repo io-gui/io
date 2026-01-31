@@ -17,6 +17,7 @@ export const resolveConfig = {
     { find: /\/packages\/layout\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/layout/src/demos/$1.ts', import.meta.url).pathname },
     { find: '@io-gui/markdown', replacement: new URL('./packages/markdown/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/menus', replacement: new URL('./packages/menus/src/index.ts', import.meta.url).pathname },
+    { find: /\/packages\/menus\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/menus/src/demos/$1.ts', import.meta.url).pathname },
     { find: '@io-gui/navigation', replacement: new URL('./packages/navigation/src/index.ts', import.meta.url).pathname },
     { find: '@io-gui/sliders', replacement: new URL('./packages/sliders/src/index.ts', import.meta.url).pathname },
     { find: /\/packages\/sliders\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/sliders/src/demos/$1.ts', import.meta.url).pathname },

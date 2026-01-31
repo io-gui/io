@@ -1,14 +1,24 @@
 import { Register, ReactiveNode, ReactiveProperty, ReactiveNodeProps } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Clock, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 
 export type ThreeAppletProps = ReactiveNodeProps & {
   scene?: Scene
   toneMappingExposure?: number
   toneMapping?: ToneMapping
+  isPlaying?: boolean
 }
+
+const _playingApplets: ThreeApplet[] = []
+function rAFLoop() {
+  for (const applet of _playingApplets) {
+    applet.onRAF()
+  }
+  requestAnimationFrame(rAFLoop)
+}
+rAFLoop()
 
 @Register
 export class ThreeApplet extends ReactiveNode {
@@ -22,14 +32,36 @@ export class ThreeApplet extends ReactiveNode {
   @ReactiveProperty({type: Number, value: NoToneMapping})
   declare toneMapping: ToneMapping
 
+  @ReactiveProperty({type: Boolean, value: false})
+  declare isPlaying: boolean
+
   private _renderer: WebGPURenderer | null = null
   private _width: number = 0
   private _height: number = 0
-  private _prevTime: number = -1
+
+  private readonly _clock: Clock = new Clock()
 
   constructor(args?: ThreeAppletProps) {
     super(args)
+    this.isPlayingChanged()
   }
+
+  isPlayingChanged() {
+    if (this.isPlaying === true && _playingApplets.includes(this) === false) {
+      _playingApplets.push(this)
+    } else if (this.isPlaying === false && _playingApplets.includes(this)) {
+      _playingApplets.splice(_playingApplets.indexOf(this), 1)
+    }
+  }
+
+  onRAF() {
+    if (!this.isPlaying) return
+    const delta = this._clock.getDelta()
+    const time = this._clock.getElapsedTime()
+    this.onAnimate(delta, time)
+    this.dispatch('three-applet-needs-render', undefined, true)
+  }
+
   updateViewportSize(width: number, height: number) {
     if (this._width !== width || this._height !== height) {
       if (!!width && !!height) {
@@ -38,24 +70,26 @@ export class ThreeApplet extends ReactiveNode {
         this.onResized(width, height)
       }
     }
-
   }
+
   isRendererInitialized() {
     return !!this._renderer && this._renderer.initialized === true
   }
+
   onRendererInitialized(renderer: WebGPURenderer) {
     this._renderer = renderer
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onResized(width: number, height: number) {}
 
-  animate(time: number, delta: number) {
-    if (this._prevTime === time) return
-    this._prevTime = time
-    this.onAnimate(delta)
-  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onAnimate(delta: number) {}
+  onAnimate(delta: number, time: number) {}
+
+  dispose() {
+    this.isPlaying = false
+    super.dispose()
+  }
 }
 
 registerEditorConfig(ThreeApplet, [
@@ -66,7 +100,6 @@ registerEditorConfig(ThreeApplet, [
     {value: ReinhardToneMapping, id: 'ReinhardToneMapping'},
     {value: CineonToneMapping, id: 'CineonToneMapping'},
     {value: ACESFilmicToneMapping, id: 'ACESFilmicToneMapping'},
-    // {value: CustomToneMapping, id: 'CustomToneMapping'},
     {value: AgXToneMapping, id: 'AgXToneMapping'},
     {value: NeutralToneMapping, id: 'NeutralToneMapping'},
   ]})})],
@@ -78,11 +111,12 @@ registerEditorGroups(ThreeApplet, {
     'scene',
   ],
   Hidden: [
+    'isPlaying',
     'toneMapping',
     'toneMappingExposure',
     '_renderer',
     '_width',
     '_height',
-    '_prevTime',
+    '_clock',
   ],
 })

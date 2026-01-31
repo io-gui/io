@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { ReactiveNode, Register, EventDispatcher } from '@io-gui/core';
+import { ReactiveNode, Register, EventDispatcher, IoElement, ReactiveProperty } from '@io-gui/core';
 const handlerFunction = (event) => {
     event.target.eventStack.push(`handlerFunction ${event.detail}`);
 };
@@ -316,6 +316,57 @@ describe('EventDispatcher', () => {
         expect(stacks.child).toEqual(['received']);
         expect(stacks.parent).toEqual([]); // Disposed
         expect(stacks.grandparent).toEqual([]); // Not reachable (parent link broken)
+    });
+    it('Should bubble events from ReactiveNode to IoElement parent (cross-border bubbling)', () => {
+        // Create a ReactiveNode that will be a child
+        let ChildNode = class ChildNode extends ReactiveNode {
+            eventStack = [];
+            static get Listeners() {
+                return {
+                    'cross-border-event': 'onCrossBorderEvent',
+                };
+            }
+            onCrossBorderEvent(event) {
+                this.eventStack.push(`child ${event.detail}`);
+            }
+        };
+        ChildNode = __decorate([
+            Register
+        ], ChildNode);
+        // Create an IoElement that owns the ReactiveNode as a property
+        let ParentElement = class ParentElement extends IoElement {
+            eventStack = [];
+            static get Listeners() {
+                return {
+                    'cross-border-event': 'onCrossBorderEvent',
+                };
+            }
+            onCrossBorderEvent(event) {
+                this.eventStack.push(`parent ${event.detail}`);
+            }
+        };
+        __decorate([
+            ReactiveProperty({ type: ChildNode, init: null })
+        ], ParentElement.prototype, "childNode", void 0);
+        ParentElement = __decorate([
+            Register
+        ], ParentElement);
+        const parent = new ParentElement();
+        const child = new ChildNode();
+        // Assign the child node to the parent element's property
+        // This should call child.addParent(parent)
+        parent.childNode = child;
+        // Verify the parent was added
+        expect(child._parents.includes(parent)).toBe(true);
+        // Dispatch a bubbling event from the child
+        child.dispatch('cross-border-event', 'test-data', true);
+        // The child should have received the event
+        expect(child.eventStack).toEqual(['child test-data']);
+        // The parent element should also have received the bubbling event
+        expect(parent.eventStack).toEqual(['parent test-data']);
+        // Clean up
+        parent.dispose();
+        child.dispose();
     });
 });
 //# sourceMappingURL=EventDispatcher.test.js.map

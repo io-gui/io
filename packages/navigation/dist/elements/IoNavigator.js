@@ -4,20 +4,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, ReactiveProperty, Register } from '@io-gui/core';
+import { IoElement, ReactiveProperty, Register, div } from '@io-gui/core';
 import { MenuOption, ioMenuOptions, ioMenuTree } from '@io-gui/menus';
 import { ioSelector } from './IoSelector.js';
+import { ioNavigatorDrawer } from './IoNavigatorDrawer.js';
 let IoNavigator = class IoNavigator extends IoElement {
     static get Style() {
         return /* css */ `
       :host {
         display: flex;
-        flex-direction: column;
-        flex: 1 1 auto;
+        flex: 1 1 100%;
+        max-width: 100%;
+        max-height: 100%;
+        position: relative;
+        overflow: hidden;
+        flex-direction: row-reverse;
       }
-      :host[menu=left],
-      :host[menu=right] {
-        flex-direction: row;
+      :host[menu='top'] {
+        flex-direction: column-reverse;
       }
       :host > io-menu-tree {
         align-self: stretch;
@@ -27,10 +31,7 @@ let IoNavigator = class IoNavigator extends IoElement {
         overflow-y: auto;
         border-radius: 0;
       }
-      :host[menu=left] > io-menu-tree {
-        border-width: 0 var(--io_borderWidth) 0 0;
-      }
-      :host[menu=left] > io-menu-tree {
+      :host > io-menu-tree {
         border-width: 0 var(--io_borderWidth) 0 0;
       }
       :host > io-menu-options {
@@ -38,7 +39,62 @@ let IoNavigator = class IoNavigator extends IoElement {
         border-bottom: var(--io_border);
         border-radius: 0;
       }
+      :host > .io-veil {
+        position: absolute;
+        opacity: 0;
+        transition: opacity 0.125s ease-out;
+        background-color: rgba(0, 0, 0, 1);
+        pointer-events: none;
+        inset: 0;
+      }
+      :host[showveil] > .io-veil {
+        display: block;
+        opacity: 0.5;
+        pointer-events: auto;
+        cursor: pointer;
+      }
     `;
+    }
+    static get Listeners() {
+        return {
+            'io-drawer-expanded-changed': 'onDrawerExpandedChanged',
+        };
+    }
+    onResized() {
+        this.debounce(this.calculateCollapsedDebounced);
+    }
+    calculateCollapsedDebounced() {
+        this.calculateCollapsed();
+    }
+    calculateCollapsed() {
+        if (this.menu === 'top') {
+            this.collapsed = false;
+            return;
+        }
+        const rect = this.getBoundingClientRect();
+        if (rect.width === 0 && rect.height === 0)
+            return;
+        this.collapsed = rect.width < this.minWidth;
+    }
+    onDrawerExpandedChanged(event) {
+        event.stopPropagation();
+        const srcDrawer = event.detail.element;
+        this.showVeil = srcDrawer.expanded;
+    }
+    collapseDrawer() {
+        const drawer = this.querySelector('io-navigator-drawer');
+        if (drawer)
+            drawer.expanded = false;
+    }
+    onVeilClick(event) {
+        event.stopPropagation();
+        this.collapseDrawer();
+    }
+    collapsedChanged() {
+        this.collapseDrawer();
+    }
+    menuChanged() {
+        this.calculateCollapsed();
     }
     optionMutated() {
         this.changed();
@@ -49,7 +105,6 @@ let IoNavigator = class IoNavigator extends IoElement {
             widget: this.widget,
             depth: this.depth
         };
-        // TODO: add widget and test collapse!!
         let selected = '';
         if (this.select === 'shallow')
             selected = this.option.selectedIDImmediate;
@@ -59,23 +114,31 @@ let IoNavigator = class IoNavigator extends IoElement {
             selected = '*';
         if (this.select === 'none')
             selected = '';
+        const selectorElement = ioSelector({ selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements });
+        const veil = div({ class: 'io-veil', '@click': this.onVeilClick });
         if (this.menu === 'top') {
             this.render([
+                selectorElement,
                 ioMenuOptions({ horizontal: true, ...sharedMenuConfig }),
-                ioSelector({ selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements }),
             ]);
         }
         else if (this.menu === 'left') {
-            this.render([
-                ioMenuTree({ ...sharedMenuConfig }),
-                ioSelector({ selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements }),
-            ]);
-        }
-        else if (this.menu === 'right') {
-            this.render([
-                ioSelector({ selected: selected, anchor: this.bind('anchor'), caching: this.caching, elements: this.elements }),
-                ioMenuTree({ ...sharedMenuConfig }),
-            ]);
+            if (this.collapsed) {
+                this.render([
+                    selectorElement,
+                    veil,
+                    ioNavigatorDrawer({
+                        direction: 'left',
+                        menuContent: ioMenuTree({ ...sharedMenuConfig }),
+                    }),
+                ]);
+            }
+            else {
+                this.render([
+                    selectorElement,
+                    ioMenuTree({ ...sharedMenuConfig }),
+                ]);
+            }
         }
     }
 };
@@ -101,8 +164,17 @@ __decorate([
     ReactiveProperty({ value: 'none', type: String })
 ], IoNavigator.prototype, "caching", void 0);
 __decorate([
+    ReactiveProperty({ value: 570, type: Number })
+], IoNavigator.prototype, "minWidth", void 0);
+__decorate([
     ReactiveProperty({ value: '', type: String })
 ], IoNavigator.prototype, "anchor", void 0);
+__decorate([
+    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+], IoNavigator.prototype, "collapsed", void 0);
+__decorate([
+    ReactiveProperty({ value: false, type: Boolean, reflect: true })
+], IoNavigator.prototype, "showVeil", void 0);
 IoNavigator = __decorate([
     Register
 ], IoNavigator);

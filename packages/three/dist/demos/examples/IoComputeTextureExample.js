@@ -4,26 +4,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture, NearestFilter } from 'three/webgpu';
+import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, StorageTexture } from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 import { Register, ReactiveProperty } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { ioPropertyEditor } from '@io-gui/editors';
-import { ioSplit, Split } from '@io-gui/layout';
 let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
     storageTexture;
     computeNode;
-    constructor() {
-        super();
-        const width = 32, height = 32;
+    constructor(args) {
+        super(args);
+        const width = 512, height = 512;
         this.storageTexture = new StorageTexture(width, height);
         const computeTexture = Fn(({ storageTexture }) => {
             const posX = instanceIndex.mod(width);
             const posY = instanceIndex.div(width);
             const indexUV = uvec2(posX, posY);
             // https://www.shadertoy.com/view/Xst3zN
-            const x = float(posX).div(2.0);
-            const y = float(posY).div(2.0);
+            const x = float(posX).div(50.0);
+            const y = float(posY).div(50.0);
             const v1 = x.sin();
             const v2 = y.sin();
             const v3 = x.add(y).sin();
@@ -37,8 +35,6 @@ let ComputeTextureExample = class ComputeTextureExample extends ThreeApplet {
         this.computeNode = computeTexture({ storageTexture: this.storageTexture }).compute(width * height);
         const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
         material.colorNode = texture(this.storageTexture);
-        material.colorNode.value.minFilter = NearestFilter;
-        material.colorNode.value.magFilter = NearestFilter;
         const plane = new Mesh(new PlaneGeometry(1, 1), material);
         this.scene.add(plane);
     }
@@ -54,31 +50,7 @@ export { ComputeTextureExample };
 let IoComputeTextureExample = class IoComputeTextureExample extends IoThreeExample {
     ready() {
         this.render([
-            ioSplit({
-                elements: [
-                    ioThreeViewport({ id: 'Front', applet: this.applet, playing: true, cameraSelect: 'front' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups })
-                ],
-                split: new Split({
-                    type: 'split',
-                    orientation: 'horizontal',
-                    children: [
-                        {
-                            type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
-                            children: [
-                                { type: 'panel', flex: '1 1 100%', tabs: [{ id: 'Front' }] },
-                            ]
-                        },
-                        {
-                            type: 'panel',
-                            flex: '0 0 320px',
-                            tabs: [{ id: 'PropertyEditor' }]
-                        }
-                    ]
-                })
-            })
+            ioThreeViewport({ id: 'Front', applet: this.applet, cameraSelect: 'front' }),
         ]);
     }
 };

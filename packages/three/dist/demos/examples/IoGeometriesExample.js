@@ -13,8 +13,9 @@ import { Split, ioSplit } from '@io-gui/layout';
 import { ioPropertyEditor, ioObject } from '@io-gui/editors';
 let GeometriesExample = class GeometriesExample extends ThreeApplet {
     geometries = [];
-    constructor() {
-        super();
+    material;
+    constructor(args) {
+        super(args);
         const ambientLight = new AmbientLight(0xcccccc, 1.5);
         this.scene.add(ambientLight);
         const pointLight = new PointLight(0xffffff, 2.5, 0, 0);
@@ -25,6 +26,7 @@ let GeometriesExample = class GeometriesExample extends ThreeApplet {
         map.anisotropy = 16;
         map.colorSpace = SRGBColorSpace;
         const material = new MeshPhongMaterial({ map: map, side: DoubleSide });
+        this.material = material;
         let object;
         let geometry;
         // Row 1: Basic polyhedra
@@ -96,12 +98,17 @@ let GeometriesExample = class GeometriesExample extends ThreeApplet {
             }
         });
     }
-    onAnimate() {
-        const timer = Date.now() * 0.0001;
+    onAnimate(delta, time) {
+        if (this.material.wireframe) {
+            this.material.emissive.set(0xffffff);
+        }
+        else {
+            this.material.emissive.set(0x000000);
+        }
         this.scene.traverse((object) => {
             if (object.isMesh === true) {
-                object.rotation.x = timer * 5;
-                object.rotation.y = timer * 2.5;
+                object.rotation.x = time * 0.5;
+                object.rotation.y = time * 0.25;
             }
         });
     }
@@ -115,10 +122,12 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet.geometries, config: [
-                            [BufferGeometry, ioObject({ properties: ['/'] })],
-                        ], groups: this.uiGroups })
+                    ioThreeViewport({ id: 'Top', applet: this.applet, cameraSelect: 'top' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, properties: ['material', 'geometries'], config: [
+                            ['geometries', ioPropertyEditor({ label: '_hidden_' })],
+                            [BufferGeometry, ioObject({ properties: [''] })],
+                            [MeshPhongMaterial, ioPropertyEditor({ label: '_hidden_', properties: ['wireframe'] })],
+                        ] })
                 ],
                 split: new Split({
                     type: 'split',
@@ -144,7 +153,7 @@ let IoGeometriesExample = class IoGeometriesExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: GeometriesExample, init: null })
+    ReactiveProperty({ type: GeometriesExample, init: { isPlaying: true } })
 ], IoGeometriesExample.prototype, "applet", void 0);
 IoGeometriesExample = __decorate([
     Register

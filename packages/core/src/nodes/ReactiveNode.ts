@@ -78,7 +78,7 @@ export class ReactiveNode extends Object {
   declare readonly _bindings: Map<string, Binding>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
-  declare readonly _parents: Array<ReactiveNode>
+  declare readonly _parents: Array<ReactiveNode | IoElement>
   declare readonly _isNode: boolean
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
@@ -169,19 +169,20 @@ export class ReactiveNode extends Object {
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
-  // TODO: test!
-  // TODO: Consider bubbling up to elements!
-  addParent(parent: ReactiveNode) {
-    if (parent._isNode) {
+  addParent(parent: ReactiveNode | IoElement) {
+    if ((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) {
       this._parents.push(parent)
     }
   }
-  removeParent(parent: ReactiveNode) {
-    if (parent._isNode) {
-      debug: if (!this._parents.includes(parent)) {
-        console.error('ReactiveNode.removeParent(): Parent not found!', this, parent)
+  removeParent(parent: ReactiveNode | IoElement) {
+    if (this._disposed) return
+    if ((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) {
+      const index = this._parents.indexOf(parent)
+      if (index !== -1) {
+        this._parents.splice(index, 1)
+      } else {
+        debug: console.warn('ReactiveNode.removeParent(): Parent not found!', this, parent)
       }
-      this._parents.splice(this._parents.indexOf(parent), 1)
     }
   }
   dispose() {
@@ -213,6 +214,9 @@ export function initReactiveProperties(node: ReactiveNode | IoElement) {
     if (property.binding) property.binding.addTarget(node, name)
 
     property.observer.start(property.value)
+    if (property.value?._isNode) {
+      property.value.addParent(node)
+    }
 
     if (node instanceof IoElement) {
       if (property.reflect && property.value !== undefined && property.value !== null) {
@@ -297,7 +301,7 @@ export function setProperty(node: ReactiveNode | IoElement, name: string, value:
     const oldValueShared = hasValueAtOtherProperty(node, prop, oldValue)
     if (!oldValueShared) {
       prop.observer.stop(oldValue)
-      if (oldValue?._isNode) {
+      if (oldValue?._isNode && !oldValue._disposed) {
         oldValue.removeParent(node)
       }
     } else {

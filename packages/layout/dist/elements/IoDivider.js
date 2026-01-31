@@ -32,7 +32,6 @@ let IoDivider = class IoDivider extends IoElement {
         position: absolute;
         top: 50%;
         left: 50%;
-        z-index: 1;
         opacity: 0;
       }
       :host:before {

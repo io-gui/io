@@ -1,9 +1,9 @@
 import { StorageTexture, WebGPURenderer, ComputeNode } from 'three/webgpu';
-import { ThreeApplet, IoThreeExample } from '@io-gui/three';
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three';
 export declare class ComputeTextureExample extends ThreeApplet {
     storageTexture: StorageTexture;
     computeNode: ComputeNode;
-    constructor();
+    constructor(args: ThreeAppletProps);
     onRendererInitialized(renderer: WebGPURenderer): Promise<void>;
 }
 export declare class IoComputeTextureExample extends IoThreeExample {

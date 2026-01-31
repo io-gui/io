@@ -7,9 +7,10 @@ import { IoSplit, ioSplit, parseFlexBasis } from './IoSplit.js'
 import { ioPanel } from './IoPanel.js'
 
 export type DrawerDirection = 'leading' | 'trailing'
+export type DrawerOrientation = 'horizontal' | 'vertical'
 
 export type IoDrawerProps = IoElementProps & {
-  orientation: 'horizontal' | 'vertical'
+  orientation: DrawerOrientation
   direction: DrawerDirection
   parent: IoSplit
   child: Split | Panel | null
@@ -22,7 +23,6 @@ export class IoDrawer extends IoElement {
   static get Style() {
     return /* css */`
       :host {
-        z-index: 2;
         pointer-events: auto;
         position: relative;
       }
@@ -45,6 +45,7 @@ export class IoDrawer extends IoElement {
         overflow: hidden;
         transition: transform 0.125s ease-out;
         justify-content: flex-end;
+        background-color: var(--io_bgColorStrong);
       }
       :host[orientation="horizontal"] > .io-drawer-content {
         height: 100%;
@@ -154,6 +155,11 @@ export class IoDrawer extends IoElement {
   }
 
   changed() {
+    if (!this.child) {
+      this.render([])
+      return
+    }
+
     let availableSize = Infinity
     const parent = this.parent as IoSplit
     if (parent) {
@@ -167,22 +173,20 @@ export class IoDrawer extends IoElement {
 
     let childVDOM: VDOMElement | null = null
 
-    if (this.child) {
-      if (this.child instanceof Split) {
-        childVDOM = ioSplit({
-          split: this.child,
-          style: style,
-          elements: this.elements,
-          addMenuOption: this.addMenuOption,
-        })
-      } else if (this.child instanceof Panel) {
-        childVDOM = ioPanel({
-          panel: this.child,
-          style: style,
-          elements: this.elements,
-          addMenuOption: this.addMenuOption,
-        })
-      }
+    if (this.child instanceof Split) {
+      childVDOM = ioSplit({
+        split: this.child,
+        style: style,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      })
+    } else if (this.child instanceof Panel) {
+      childVDOM = ioPanel({
+        panel: this.child,
+        style: style,
+        elements: this.elements,
+        addMenuOption: this.addMenuOption,
+      })
     }
 
     const icon = {

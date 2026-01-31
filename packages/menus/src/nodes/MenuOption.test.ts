@@ -213,4 +213,69 @@ describe('MenuOption', () => {
     expect(option.options[1].options[0].path).toBe('')
 
   })
+  it('Should set selected=true in optionsMutated when child is selected', () => {
+    const option = new MenuOption(testItemArgs)
+
+    // First, set up a valid selection state
+    option.options[0].selected = true
+    option.options[0].options[0].selected = true
+
+    // Now manually set root.selected = false by directly modifying the property value
+    // This simulates an edge case where selected became false but selectedIDImmediate is still set
+    const selectedProp = option._reactiveProperties.get('selected')!
+    selectedProp.value = false
+
+    // Track path-changed events
+    const pathChanges: string[] = []
+    option.addEventListener('path-changed', (e: CustomEvent) => {
+      pathChanges.push(e.detail.value)
+    })
+
+    // Select a different leaf in the same branch (root's selectedIDImmediate stays '1')
+    option.options[0].options[1].selected = true
+
+    // Without fix: selected stays false, updatePaths() returns early with path=''
+    // With fix: optionsMutated sets selected=true, updatePaths() builds correct path
+    expect(option.selected).toBe(true)
+    expect(option.path).toBe('1,1.2')
+    expect(pathChanges).toContain('1,1.2')
+  })
+  it('Should update ancestor paths when selecting sibling after path-based initialization', () => {
+    // This test mirrors the exact scenario from IoMenusDemo where selection is
+    // initialized via path property instead of selected: true
+    const option = new MenuOption({id: 'root', options: [
+      {id: 'home'},
+      {id: 'food', options: [
+        {id: 'fruits', options: [
+          {id: 'apples'},
+          {id: 'mangos'},
+          {id: 'bananas'},
+        ]}
+      ]},
+    ], path: 'food,fruits,apples'})
+
+    // Verify initial state is correct after path-based initialization
+    expect(option.selected).toBe(true)
+    expect(option.path).toBe('food,fruits,apples')
+    expect(option.selectedIDImmediate).toBe('food')
+    expect(option.options[1].path).toBe('fruits,apples')
+    expect(option.options[1].options[0].path).toBe('apples')
+
+    // Track path-changed events on root
+    const rootPathChanges: string[] = []
+    option.addEventListener('path-changed', (e: CustomEvent) => {
+      rootPathChanges.push(e.detail.value)
+    })
+
+    // Select a sibling fruit (mangos) - root's selectedIDImmediate stays 'food'
+    const mangos = option.findItemById('mangos')!
+    mangos.selected = true
+
+    // Without fix: ancestor paths don't update because selected isn't set in optionsMutated
+    // With fix: optionsMutated sets selected=true, allowing updatePaths() to work correctly
+    expect(option.path).toBe('food,fruits,mangos')
+    expect(option.options[1].path).toBe('fruits,mangos')
+    expect(option.options[1].options[0].path).toBe('mangos')
+    expect(rootPathChanges).toContain('food,fruits,mangos')
+  })
 })

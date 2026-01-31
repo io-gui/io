@@ -36,8 +36,8 @@ let CameraLogarithmicDepthBufferExample = class CameraLogarithmicDepthBufferExam
     zoomspeed = 0.015;
     minzoomspeed = 0.015;
     mouse = [0.5, 0.5];
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // Create camera with extreme near/far planes
         this.camera = new PerspectiveCamera(50, 1, NEAR, FAR);
         this.scene.add(this.camera);
@@ -122,29 +122,15 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, playing: true, cameraSelect: 'scene' }),
-                    ioThreeViewport({ id: 'SceneCameraLog', applet: this.applet, playing: true, cameraSelect: 'scene', renderer: this.renderer }),
+                    ioThreeViewport({ id: 'SceneCamera', applet: this.applet, cameraSelect: 'scene' }),
+                    ioThreeViewport({ id: 'SceneCameraLog', applet: this.applet, cameraSelect: 'scene', renderer: this.renderer }),
                 ],
                 split: new Split({
                     type: 'split',
-                    orientation: 'horizontal',
+                    orientation: 'vertical',
                     children: [
-                        {
-                            type: 'split',
-                            flex: '2 1 auto',
-                            orientation: 'vertical',
-                            children: [
-                                {
-                                    type: 'split',
-                                    flex: '1 1 50%',
-                                    orientation: 'horizontal',
-                                    children: [
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCamera' }] },
-                                        { type: 'panel', flex: '1 1 50%', tabs: [{ id: 'SceneCameraLog' }] },
-                                    ]
-                                }
-                            ]
-                        },
+                        { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCamera' }] },
+                        { type: 'panel', flex: '1 1 120px', tabs: [{ id: 'SceneCameraLog' }] },
                     ]
                 })
             })
@@ -156,7 +142,7 @@ let IoCameraLogarithmicDepthBufferExample = class IoCameraLogarithmicDepthBuffer
     }
 };
 __decorate([
-    ReactiveProperty({ type: CameraLogarithmicDepthBufferExample, init: null })
+    ReactiveProperty({ type: CameraLogarithmicDepthBufferExample, init: { isPlaying: true } })
 ], IoCameraLogarithmicDepthBufferExample.prototype, "applet", void 0);
 __decorate([
     ReactiveProperty({ type: WebGPURenderer, init: { antialias: true, logarithmicDepthBuffer: true } })

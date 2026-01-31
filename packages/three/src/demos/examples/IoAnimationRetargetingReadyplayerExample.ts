@@ -21,8 +21,7 @@ import {
 import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js'
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js'
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
-import { ioPropertyEditor } from '@io-gui/editors'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 
 const gltfLoader = new GLTFLoader()
 const fbxLoader = new FBXLoader()
@@ -36,8 +35,8 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
   @ReactiveProperty({type: AnimationMixer, init: new Group()})
   declare public targetMixer: AnimationMixer
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     const horizontalEffect = screenUV.x.mix(color(0x13172b), color(0x311649))
     const lightEffect = screenUV.distance(vec2(0.5, 1.0)).oneMinus().mul(color(0x0c5d68))
@@ -154,15 +153,9 @@ export class AnimationRetargetingReadyplayerExample extends ThreeApplet {
 @Register
 export class IoAnimationRetargetingReadyplayerExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationRetargetingReadyplayerExample, init: null})
+  @ReactiveProperty({type: AnimationRetargetingReadyplayerExample, init: {isPlaying: true}})
   declare applet: AnimationRetargetingReadyplayerExample
 
-  init() {
-    this.uiConfig = [
-      ['sourceMixer', ioPropertyEditor({label: '_hidden_'})],
-      ['targetMixer', ioPropertyEditor({label: '_hidden_'})],
-    ]
-  }
 }
 
 export const ioAnimationRetargetingReadyplayerExample = IoAnimationRetargetingReadyplayerExample.vConstructor

@@ -7,7 +7,7 @@ import { IoOverlaySingleton as Overlay } from '../elements/IoOverlay.js'
 
 // TODO: Home, End, PageUp, PageDown?
 
-const focusBacktrack = new WeakMap()
+let focusBacktrack = new WeakMap()
 type Direction = 'ArrowLeft' | 'ArrowRight' | 'ArrowDown' | 'ArrowUp'
 const backtrackDir: Record<Direction, Direction> = {
   ArrowLeft: 'ArrowRight',
@@ -21,6 +21,10 @@ function setFocusBacktrack(element: HTMLElement | IoElement, dir: Direction, sou
     dir: backtrackDir[dir],
     source: source
   })
+}
+
+export function clearFocusBacktrack() {
+  focusBacktrack = new WeakMap()
 }
 
 function getRectDistance(rect1: DOMRect, rect2: DOMRect, dirBias: number = 1) {

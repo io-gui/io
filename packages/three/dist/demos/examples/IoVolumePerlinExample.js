@@ -10,11 +10,14 @@ import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import { Register, ReactiveProperty } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
-import { ioSplit, Split } from '@io-gui/layout';
 import { ioPropertyEditor } from '@io-gui/editors';
+import { ioSplit, Split } from '@io-gui/layout';
+import { ioNumberSlider } from '@io-gui/sliders';
 let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
-    constructor() {
-        super();
+    thresholdUniform;
+    stepsUniform;
+    constructor(args) {
+        super(args);
         const size = 128;
         const data = new Uint8Array(size * size * size);
         let i = 0;
@@ -48,20 +51,32 @@ let VolumePerlinExample = class VolumePerlinExample extends ThreeApplet {
             });
             return finalColor;
         });
-        const threshold = uniform(0.6);
-        const steps = uniform(200);
+        this.thresholdUniform = uniform(this.threshold);
+        this.stepsUniform = uniform(this.steps);
         const material = new NodeMaterial();
         material.colorNode = opaqueRaymarchingTexture({
             texture: texture3D(texture, null, 0),
-            steps,
-            threshold
+            steps: this.stepsUniform,
+            threshold: this.thresholdUniform
         });
         material.side = BackSide;
         material.transparent = true;
         const mesh = new Mesh(new BoxGeometry(1, 1, 1), material);
         this.scene.add(mesh);
     }
+    thresholdChanged() {
+        this.thresholdUniform.value = this.threshold;
+    }
+    stepsChanged() {
+        this.stepsUniform.value = this.steps;
+    }
 };
+__decorate([
+    ReactiveProperty({ type: Number, value: 0.6 })
+], VolumePerlinExample.prototype, "threshold", void 0);
+__decorate([
+    ReactiveProperty({ type: Number, value: 200 })
+], VolumePerlinExample.prototype, "steps", void 0);
 VolumePerlinExample = __decorate([
     Register
 ], VolumePerlinExample);
@@ -71,8 +86,14 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
         this.render([
             ioSplit({
                 elements: [
-                    ioThreeViewport({ id: 'Scene', applet: this.applet, playing: true, cameraSelect: 'scene' }),
-                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups })
+                    ioThreeViewport({ id: 'Perspective', applet: this.applet, cameraSelect: 'perspective' }),
+                    ioPropertyEditor({ id: 'PropertyEditor', value: this.applet,
+                        properties: ['threshold', 'steps'],
+                        config: [
+                            ['threshold', ioNumberSlider({ min: 0, max: 1, step: 0.01 })],
+                            ['steps', ioNumberSlider({ min: 0, max: 300, step: 1 })]
+                        ]
+                    })
                 ],
                 split: new Split({
                     type: 'split',
@@ -83,7 +104,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
                             flex: '2 1 auto',
                             orientation: 'vertical',
                             children: [
-                                { type: 'panel', flex: '1 1 100%', tabs: [{ id: 'Scene' }] },
+                                { type: 'panel', flex: '1 1 100%', tabs: [{ id: 'Perspective' }] },
                             ]
                         },
                         {
@@ -98,7 +119,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: VolumePerlinExample, init: null })
+    ReactiveProperty({ type: VolumePerlinExample, init: { isPlaying: true } })
 ], IoVolumePerlinExample.prototype, "applet", void 0);
 IoVolumePerlinExample = __decorate([
     Register

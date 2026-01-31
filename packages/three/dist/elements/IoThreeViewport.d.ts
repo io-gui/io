@@ -5,7 +5,6 @@ export type IoThreeViewportProps = IoElementProps & {
     clearColor?: number | Binding;
     clearAlpha?: number | Binding;
     applet: ThreeApplet | Binding;
-    playing?: boolean | Binding;
     cameraSelect?: string | Binding;
     renderer?: WebGPURenderer;
 };
@@ -17,22 +16,25 @@ export declare class IoThreeViewport extends IoElement {
     clearAlpha: number;
     reactivity: ReactivityType;
     applet: ThreeApplet;
-    playing: boolean;
     cameraSelect: string;
     renderer: WebGPURenderer;
+    tabIndex: number;
     private readonly viewCameras;
     private readonly renderTarget;
     static get Style(): string;
+    static get Listeners(): {
+        'three-applet-needs-render': string;
+    };
     constructor(args: IoThreeViewportProps);
     connectedCallback(): void;
     disconnectedCallback(): void;
-    playingChanged(): void;
-    onAnimate(): void;
+    onAppletNeedsRender(event: CustomEvent): void;
     onResized(): void;
     appletChanged(): void;
     appletMutated(): void;
     changed(): void;
     renderViewportDebounced(): void;
+    renderViewport(): void;
     dispose(): void;
 }
 export declare const ioThreeViewport: (arg0: IoThreeViewportProps) => import("@io-gui/core").VDOMElement;

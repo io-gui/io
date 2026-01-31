@@ -313,9 +313,8 @@ export class EventDispatcher {
       }
       if (bubbles) {
         for (const parent of node._parents) {
-          if ((parent._isNode || parent._isIoElement) && !parent._disposed) {
+          if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed) {
             // TODO: prevent event multiplication when children contain multiple instances of the same node.
-            // TODO: enable propagation across ReactiveNode / IoElement boundaries?
             // TODO: implement stopPropagation() and stopImmediatePropagation()
             parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path)
           }

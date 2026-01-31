@@ -18,6 +18,7 @@ export declare class IoCollapsible extends IoElement {
     icon: string;
     expanded: boolean;
     role: string;
+    expandedChanged(): void;
     changed(): void;
 }
 export declare const ioCollapsible: (arg0?: IoCollapsibleProps) => VDOMElement;

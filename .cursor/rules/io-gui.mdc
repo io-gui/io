@@ -63,6 +63,8 @@ It can be used to create reactive custom elements that can be bound to node prop
 - Avoid using `any` whenever possible
 - ES modules with `.js` extensions in imports
 - When importing from another package or a test file, use package name instead of full path
+- There is no need to bind methods to this if their name starts with `_on` or `on`, or if it ends with `Changed`, `Mutated`, `Debounced` or `Throttled`
+- When importing from another package or a test file, use package name instead of full path. Example: `import { ioButton } from '@io-gui/inputs'`
 
 ### Defining New Components
 - Elements extend `IoElement` and use reactive properties

@@ -1,5 +1,5 @@
 import { ReactiveProperty, Register } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps } from '@io-gui/three'
 import {
   AnimationMixer,
   Group,
@@ -32,15 +32,15 @@ import {
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 @Register
-export class AnimationBackdropExample extends ThreeApplet {
+export class BackdropExample extends ThreeApplet {
 
   @ReactiveProperty({type: AnimationMixer, init: new Group()})
   declare public mixer: AnimationMixer
 
   public portals: Group
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     this.toneMapping = NeutralToneMapping
     this.toneMappingExposure = 0.3
@@ -125,11 +125,11 @@ export class AnimationBackdropExample extends ThreeApplet {
 }
 
 @Register
-export class IoAnimationBackdropExample extends IoThreeExample {
+export class IoBackdropExample extends IoThreeExample {
 
-  @ReactiveProperty({type: AnimationBackdropExample, init: null})
-  declare applet: AnimationBackdropExample
+  @ReactiveProperty({type: BackdropExample, init: {isPlaying: true}})
+  declare applet: BackdropExample
 
 }
 
-export const ioAnimationBackdropExample = IoAnimationBackdropExample.vConstructor
+export const ioBackdropExample = IoBackdropExample.vConstructor

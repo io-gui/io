@@ -40,7 +40,7 @@ export declare class ReactiveNode extends Object {
     readonly _bindings: Map<string, Binding>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
-    readonly _parents: Array<ReactiveNode>;
+    readonly _parents: Array<ReactiveNode | IoElement>;
     readonly _isNode: boolean;
     readonly _isIoElement: boolean;
     _disposed: boolean;
@@ -63,8 +63,8 @@ export declare class ReactiveNode extends Object {
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
     dispatch(type: string, detail?: any, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
-    addParent(parent: ReactiveNode): void;
-    removeParent(parent: ReactiveNode): void;
+    addParent(parent: ReactiveNode | IoElement): void;
+    removeParent(parent: ReactiveNode | IoElement): void;
     dispose(): void;
     Register(ioNodeConstructor: typeof ReactiveNode): void;
 }

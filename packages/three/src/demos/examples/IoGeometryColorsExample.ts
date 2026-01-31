@@ -11,13 +11,13 @@ import {
   SRGBColorSpace
 } from 'three/webgpu'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeViewport, ThreeAppletProps } from '@io-gui/three'
 
 @Register
 export class GeometryColorsExample extends ThreeApplet {
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     this.scene.background = new Color( 0xffffff )
 

@@ -9,8 +9,8 @@ import { Register, ReactiveProperty } from '@io-gui/core';
 import { ThreeApplet, IoThreeExample } from '@io-gui/three';
 let AnimationGroupsExample = class AnimationGroupsExample extends ThreeApplet {
     mixer;
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
         // all objects of this animation group share a common animation state
         const animationGroup = new AnimationObjectGroup();
         const geometry = new BoxGeometry(5, 5, 5);
@@ -50,7 +50,7 @@ export { AnimationGroupsExample };
 let IoAnimationGroupsExample = class IoAnimationGroupsExample extends IoThreeExample {
 };
 __decorate([
-    ReactiveProperty({ type: AnimationGroupsExample, init: null })
+    ReactiveProperty({ type: AnimationGroupsExample, init: { isPlaying: true } })
 ], IoAnimationGroupsExample.prototype, "applet", void 0);
 IoAnimationGroupsExample = __decorate([
     Register

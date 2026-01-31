@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property, Storage as $ } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, VDOMElement, Property, Storage as $, clearFocusBacktrack } from '@io-gui/core'
 import { ioBoolean } from '@io-gui/inputs'
 import { ioPropertyEditor } from './IoPropertyEditor.js'
 import { PropertyConfig } from '../utils/EditorConfig.js'
@@ -30,7 +30,7 @@ export class IoObject extends IoElement {
       flex-direction: column;
       color: var(--io_colorInput);
       background-color: var(--io_bgColor);
-      border-radius: calc(var(--io_borderRadius) + var(--io_spacing));
+      border-radius: var(--io_borderRadius);
     }
     :host > io-boolean {
       padding: var(--io_spacing) var(--io_spacing2);
@@ -118,6 +118,10 @@ export class IoObject extends IoElement {
         expandedBinding.addTarget(this, 'expanded')
       }
     }
+  }
+
+  expandedChanged() {
+    clearFocusBacktrack()
   }
 
   changed() {

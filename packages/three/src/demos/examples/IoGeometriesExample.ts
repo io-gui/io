@@ -26,7 +26,7 @@ import {
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js'
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 import { Split, ioSplit } from '@io-gui/layout'
 import { ioPropertyEditor, ioObject } from '@io-gui/editors'
 
@@ -34,9 +34,10 @@ import { ioPropertyEditor, ioObject } from '@io-gui/editors'
 export class GeometriesExample extends ThreeApplet {
 
   public geometries: BufferGeometry[] = []
+  public material: MeshPhongMaterial
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     const ambientLight = new AmbientLight( 0xcccccc, 1.5 )
     this.scene.add( ambientLight )
@@ -51,6 +52,7 @@ export class GeometriesExample extends ThreeApplet {
     map.colorSpace = SRGBColorSpace
 
     const material = new MeshPhongMaterial( { map: map, side: DoubleSide } )
+    this.material = material
 
     let object: Mesh
     let geometry
@@ -142,13 +144,17 @@ export class GeometriesExample extends ThreeApplet {
     })
   }
 
-  onAnimate() {
-    const timer = Date.now() * 0.0001
+  onAnimate(delta: number, time: number) {
+    if (this.material.wireframe) {
+      this.material.emissive.set(0xffffff)
+    } else {
+      this.material.emissive.set(0x000000)
+    }
 
     this.scene.traverse( ( object ) => {
       if ( (object as Mesh).isMesh === true ) {
-        object.rotation.x = timer * 5
-        object.rotation.y = timer * 2.5
+        object.rotation.x = time * 0.5
+        object.rotation.y = time * 0.25
       }
     })
   }
@@ -157,7 +163,7 @@ export class GeometriesExample extends ThreeApplet {
 @Register
 export class IoGeometriesExample extends IoThreeExample {
 
-  @ReactiveProperty({type: GeometriesExample, init: null})
+  @ReactiveProperty({type: GeometriesExample, init: {isPlaying: true}})
   declare applet: GeometriesExample
 
   ready() {
@@ -165,10 +171,12 @@ export class IoGeometriesExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Top', applet: this.applet, playing: true, cameraSelect: 'top'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet.geometries, config: [
-            [BufferGeometry, ioObject({properties: ['/']})],
-          ], groups: this.uiGroups})
+          ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet, properties: ['material', 'geometries'], config: [
+            ['geometries', ioPropertyEditor({label: '_hidden_'})],
+            [BufferGeometry, ioObject({properties: ['']})],
+            [MeshPhongMaterial, ioPropertyEditor({label: '_hidden_', properties: ['wireframe']})],
+          ]})
         ],
         split: new Split({
           type: 'split',

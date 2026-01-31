@@ -1,5 +1,5 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, Clock, NeutralToneMapping } from 'three/webgpu'
+import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding, Property } from '@io-gui/core'
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
@@ -22,31 +22,10 @@ _renderer.setPixelRatio(window.devicePixelRatio)
 _renderer.shadowMap.enabled = true
 void _renderer.init()
 
-const _clock = new Clock()
-
-const _playingViewports: IoThreeViewport[] = []
-let _time = -1
-let _delta = 0
-
-new Promise((resolve, reject) => {
-  _renderer.setAnimationLoop((time: number) => {
-    _time = time
-    _delta = _clock.getDelta()
-    for (const viewport of _playingViewports) {
-      viewport.onAnimate()
-    }
-  }).then(resolve).catch(reject)
-}).then(() => {
-  console.log('animation loop initialized')
-}).catch(error => {
-  console.error('animation loop initialization failed', error)
-})
-
 export type IoThreeViewportProps = IoElementProps & {
   clearColor?: number | Binding
   clearAlpha?: number | Binding
   applet: ThreeApplet | Binding
-  playing?: boolean | Binding
   cameraSelect?: string | Binding
   renderer?: WebGPURenderer
 }
@@ -70,14 +49,14 @@ export class IoThreeViewport extends IoElement {
   @ReactiveProperty({type: ThreeApplet, init: null})
   declare applet: ThreeApplet
 
-  @ReactiveProperty({type: Boolean})
-  declare playing: boolean
-
   @ReactiveProperty({type: String, value: 'perspective'})
   declare cameraSelect: string
 
   @ReactiveProperty({type: WebGPURenderer, value: _renderer})
   declare renderer: WebGPURenderer
+
+  @Property(0)
+  declare tabIndex: number
 
   declare private readonly viewCameras: ViewCameras
   declare private readonly renderTarget: CanvasTarget
@@ -92,11 +71,23 @@ export class IoThreeViewport extends IoElement {
         max-width: 100%;
         max-height: 100%;
         overflow: hidden;
+        border: var(--io_border);
+        border-color: transparent;
       }
       :host > canvas {
         position: absolute;
       }
+      :host:focus {
+        border: var(--io_border);
+        border-color: var(--io_colorWhite);
+      }
     `
+  }
+
+  static get Listeners() {
+    return {
+      'three-applet-needs-render': 'onAppletNeedsRender',
+    }
   }
 
   constructor(args: IoThreeViewportProps) {
@@ -108,8 +99,6 @@ export class IoThreeViewport extends IoElement {
     this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
 
     this.debounce(this.renderViewportDebounced)
-
-    this.playingChanged()
   }
 
   connectedCallback() {
@@ -119,21 +108,14 @@ export class IoThreeViewport extends IoElement {
   disconnectedCallback() {
     super.disconnectedCallback()
     observer.unobserve(this)
+    // TODO: Visibility observe
     this.visible = false
   }
 
-  playingChanged() {
-    if (this.playing === true && _playingViewports.includes(this) === false) {
-      _playingViewports.push(this)
-    } else if (this.playing === false && _playingViewports.includes(this)) {
-      _playingViewports.splice(_playingViewports.indexOf(this), 1)
-    }
-  }
-
-
-  onAnimate() {
+  onAppletNeedsRender(event: CustomEvent) {
+    event.stopPropagation()
     if (!this.visible) return
-    this.debounce(this.renderViewportDebounced)
+    this.renderViewport()
   }
 
   onResized() {
@@ -160,19 +142,22 @@ export class IoThreeViewport extends IoElement {
       this.debounce(this.renderViewportDebounced)
       return
     }
+    this.applet.updateViewportSize(this.width, this.height)
+    this.renderViewport()
+  }
+  renderViewport() {
+    if (this.renderer.initialized === false) return
     if (this.applet.isRendererInitialized() === false) {
       void this.applet.onRendererInitialized(this.renderer)
     }
-    if (!this.width || !this.height) {
-      return
-    }
+    if (!this.width || !this.height) return
+
     this.renderer.setCanvasTarget(this.renderTarget)
     this.renderer.setClearColor(this.clearColor, this.clearAlpha)
     this.renderer.setSize(this.width, this.height)
     this.renderer.clear()
 
     this.applet.updateViewportSize(this.width, this.height)
-    this.applet.animate(_time, _delta)
 
     const toneMapping = this.renderer.toneMapping
     const toneMappingExposure = this.renderer.toneMappingExposure
@@ -189,11 +174,9 @@ export class IoThreeViewport extends IoElement {
   }
 
   dispose() {
+    delete (this as any).applet
     this.renderTarget.dispose()
     this.viewCameras.dispose()
-    if (this.renderer !== _renderer) {
-      this.renderer.dispose()
-    }
     super.dispose()
   }
 }

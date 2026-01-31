@@ -1,16 +1,26 @@
-import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, BackSide, BoxGeometry, Texture3DNode, Node } from 'three/webgpu'
+import { Mesh, NodeMaterial, Data3DTexture, RedFormat, LinearFilter, Vector3, BackSide, BoxGeometry, Texture3DNode, Node, UniformNode } from 'three/webgpu'
 import { Break, If, vec3, vec4, texture3D, uniform, Fn} from 'three/tsl'
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js'
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js'
 import { Register, ReactiveProperty } from '@io-gui/core'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
-import { ioSplit, Split } from '@io-gui/layout'
+import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '@io-gui/three'
 import { ioPropertyEditor } from '@io-gui/editors'
+import { ioSplit, Split } from '@io-gui/layout'
+import { ioNumberSlider } from '@io-gui/sliders'
 
 @Register
 export class VolumePerlinExample extends ThreeApplet {
-  constructor() {
-    super()
+  private thresholdUniform: UniformNode<number>
+  private stepsUniform: UniformNode<number>
+
+  @ReactiveProperty({type: Number, value: 0.6})
+  declare threshold: number
+
+  @ReactiveProperty({type: Number, value: 200})
+  declare steps: number
+
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     const size = 128
     const data = new Uint8Array( size * size * size )
@@ -36,7 +46,7 @@ export class VolumePerlinExample extends ThreeApplet {
     texture.unpackAlignment = 1
     texture.needsUpdate = true
 
-    const opaqueRaymarchingTexture = Fn(({texture, steps, threshold}: {texture: Texture3DNode; steps: number; threshold: number}) => {
+    const opaqueRaymarchingTexture = Fn(({texture, steps, threshold}: {texture: Texture3DNode; steps: UniformNode<number>; threshold: UniformNode<number>}) => {
       const finalColor = vec4(0).toVar()
       RaymarchingBox(steps, ({positionRay}: {positionRay: Node}) => {
         const mapValue = texture.sample(positionRay.add(0.5)).r.toVar()
@@ -50,14 +60,14 @@ export class VolumePerlinExample extends ThreeApplet {
       return finalColor
     })
 
-    const threshold = uniform( 0.6 )
-    const steps = uniform( 200 )
+    this.thresholdUniform = uniform(this.threshold)
+    this.stepsUniform = uniform(this.steps)
 
     const material = new NodeMaterial()
     material.colorNode = opaqueRaymarchingTexture({
       texture: texture3D( texture, null, 0 ),
-      steps,
-      threshold
+      steps: this.stepsUniform,
+      threshold: this.thresholdUniform
     })
     material.side = BackSide
     material.transparent = true
@@ -65,12 +75,20 @@ export class VolumePerlinExample extends ThreeApplet {
     const mesh = new Mesh( new BoxGeometry( 1, 1, 1 ), material )
     this.scene.add( mesh )
   }
+
+  thresholdChanged() {
+    this.thresholdUniform.value = this.threshold
+  }
+
+  stepsChanged() {
+    this.stepsUniform.value = this.steps
+  }
 }
 
 @Register
 export class IoVolumePerlinExample extends IoThreeExample {
 
-  @ReactiveProperty({type: VolumePerlinExample, init: null})
+  @ReactiveProperty({type: VolumePerlinExample, init: {isPlaying: true}})
   declare applet: VolumePerlinExample
 
   ready() {
@@ -78,8 +96,14 @@ export class IoVolumePerlinExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Scene', applet: this.applet, playing: true, cameraSelect: 'scene'}),
-          ioPropertyEditor({id: 'PropertyEditor', value: this.applet, config: this.uiConfig, groups: this.uiGroups})
+          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
+          ioPropertyEditor({id: 'PropertyEditor', value: this.applet,
+            properties: ['threshold', 'steps'],
+            config: [
+              ['threshold', ioNumberSlider({min: 0, max: 1, step: 0.01})],
+              ['steps', ioNumberSlider({min: 0, max: 300, step: 1})]
+            ]
+          })
         ],
         split: new Split({
           type: 'split',
@@ -90,7 +114,7 @@ export class IoVolumePerlinExample extends IoThreeExample {
               flex: '2 1 auto',
               orientation: 'vertical',
               children: [
-                {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Scene'}]},
+                {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Perspective'}]},
               ]
             },
             {

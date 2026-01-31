@@ -3,7 +3,7 @@ import { Register, ReactiveProperty } from '@io-gui/core'
 import { Split, ioSplit } from '@io-gui/layout'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, ioObject } from '@io-gui/editors'
-import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three'
+import { ThreeApplet, IoThreeExample, ioThreeViewport, ThreeAppletProps } from '@io-gui/three'
 
 const frustumSize = 600
 
@@ -15,8 +15,8 @@ export class CameraExample extends ThreeApplet {
   public cameraRig: Group
   public mesh: Mesh
 
-  constructor() {
-    super()
+  constructor(args: ThreeAppletProps) {
+    super(args)
 
     this.perspectiveCamera = new PerspectiveCamera( 50, 0.5, 150, 1000 )
     this.perspectiveCamera.name = 'perspective'
@@ -116,7 +116,7 @@ export class CameraExample extends ThreeApplet {
 }
 
 const cameraObject = ioObject({expanded: true, widget: null,
-  properties: ['fov','far','aspect','left','right','top','bottom','matrixWorld', 'projectionMatrix'],
+  properties: ['fov','far','aspect','left','right','top','bottom','matrixWorld','projectionMatrix'],
   config: [
     ['far', ioNumberSlider({min: 700, max: 1000, step: 1})],
     ['left', ioNumberSlider({min: -500, max: 0, step: 0.1})],
@@ -139,7 +139,7 @@ registerEditorConfig(CameraExample, [
 @Register
 export class IoCameraExample extends IoThreeExample {
 
-  @ReactiveProperty({type: CameraExample, init: null})
+  @ReactiveProperty({type: CameraExample, init: {isPlaying: true}})
   declare applet: CameraExample
 
   ready() {
@@ -147,9 +147,9 @@ export class IoCameraExample extends IoThreeExample {
     this.render([
       ioSplit({
         elements: [
-          ioThreeViewport({id: 'Perspective', applet: this.applet, playing: true, cameraSelect: 'perspective'}),
-          ioThreeViewport({id: 'ScenePerspective', applet: this.applet, playing: true, cameraSelect: 'scene:perspective'}),
-          ioThreeViewport({id: 'SceneOrthographic', applet: this.applet, playing: true, cameraSelect: 'scene:orthographic'}),
+          ioThreeViewport({id: 'Perspective', applet: this.applet, cameraSelect: 'perspective'}),
+          ioThreeViewport({id: 'ScenePerspective', applet: this.applet, cameraSelect: 'scene:perspective'}),
+          ioThreeViewport({id: 'SceneOrthographic', applet: this.applet, cameraSelect: 'scene:orthographic'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet, properties: ['perspectiveCamera','orthographicCamera']})
         ],
         split: new Split({
@@ -157,32 +157,20 @@ export class IoCameraExample extends IoThreeExample {
           orientation: 'horizontal',
           children: [
             {
+              type: 'panel',flex: '1 1 33.33%',tabs: [{id: 'Perspective'}]
+            },
+            {
               type: 'split',
-              flex: '2 1 auto',
+              flex: '1 1 33.33%',
               orientation: 'vertical',
               children: [
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 100%',tabs: [{id: 'Perspective'}]},
-                  ]
-                },
-                {
-                  type: 'split',
-                  flex: '1 1 50%',
-                  orientation: 'horizontal',
-                  children: [
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'ScenePerspective'}]},
-                    {type: 'panel',flex: '1 1 50%',tabs: [{id: 'SceneOrthographic'}]},
-                  ]
-                }
+                {type: 'panel',flex: '1 1 33.33%',tabs: [{id: 'ScenePerspective'}]},
+                {type: 'panel',flex: '1 1 33.33%',tabs: [{id: 'SceneOrthographic'}]},
               ]
             },
             {
               type: 'panel',
-              flex: '0 0 380px',
+              flex: '0 0 280px',
               tabs: [{id: 'PropertyEditor'}]
             }
           ]

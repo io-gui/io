@@ -6,6 +6,7 @@ export type IoNumberSliderProps = IoElementProps & {
     max?: number;
     exponent?: number;
     conversion?: number;
+    disabled?: WithBinding<boolean>;
 };
 /**
  * Input element for `Number` data type combining `IoNumber` and `IoSlider`
@@ -18,6 +19,7 @@ export declare class IoNumberSlider extends IoElement {
     max: number;
     exponent: number;
     conversion: number;
+    disabled: boolean;
     constructor(args?: IoNumberSliderProps);
     _onNumberSet(event: CustomEvent): void;
     _onSliderSet(event: CustomEvent): void;

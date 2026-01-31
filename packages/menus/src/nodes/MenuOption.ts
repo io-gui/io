@@ -234,11 +234,10 @@ export class MenuOption extends ReactiveNode {
     if (path.length) this.selectedID = path[path.length - 1]
   }
   optionsMutated(event: CustomEvent) {
-    // console.log('optionsMutated', this.id, this.options.length);
     const selectedIDImmediate = this.getSelectedIDImmediate()
     if (this.mode === 'select' && selectedIDImmediate && this.options.length) {
       this.setProperties({
-        // selected: !!selectedIDImmediate,
+        selected: true,
         selectedIDImmediate: selectedIDImmediate,
       })
     }

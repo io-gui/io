@@ -4,8 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget, Clock, NeutralToneMapping } from 'three/webgpu';
+import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
@@ -24,23 +24,6 @@ _renderer.toneMapping = NeutralToneMapping;
 _renderer.setPixelRatio(window.devicePixelRatio);
 _renderer.shadowMap.enabled = true;
 void _renderer.init();
-const _clock = new Clock();
-const _playingViewports = [];
-let _time = -1;
-let _delta = 0;
-new Promise((resolve, reject) => {
-    _renderer.setAnimationLoop((time) => {
-        _time = time;
-        _delta = _clock.getDelta();
-        for (const viewport of _playingViewports) {
-            viewport.onAnimate();
-        }
-    }).then(resolve).catch(reject);
-}).then(() => {
-    console.log('animation loop initialized');
-}).catch(error => {
-    console.error('animation loop initialization failed', error);
-});
 let IoThreeViewport = class IoThreeViewport extends IoElement {
     width = 0;
     height = 0;
@@ -55,11 +38,22 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         max-width: 100%;
         max-height: 100%;
         overflow: hidden;
+        border: var(--io_border);
+        border-color: transparent;
       }
       :host > canvas {
         position: absolute;
       }
+      :host:focus {
+        border: var(--io_border);
+        border-color: var(--io_colorWhite);
+      }
     `;
+    }
+    static get Listeners() {
+        return {
+            'three-applet-needs-render': 'onAppletNeedsRender',
+        };
     }
     constructor(args) {
         super(args);
@@ -67,7 +61,6 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.appendChild(this.renderTarget.domElement);
         this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
         this.debounce(this.renderViewportDebounced);
-        this.playingChanged();
     }
     connectedCallback() {
         super.connectedCallback();
@@ -76,20 +69,14 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     disconnectedCallback() {
         super.disconnectedCallback();
         observer.unobserve(this);
+        // TODO: Visibility observe
         this.visible = false;
     }
-    playingChanged() {
-        if (this.playing === true && _playingViewports.includes(this) === false) {
-            _playingViewports.push(this);
-        }
-        else if (this.playing === false && _playingViewports.includes(this)) {
-            _playingViewports.splice(_playingViewports.indexOf(this), 1);
-        }
-    }
-    onAnimate() {
+    onAppletNeedsRender(event) {
+        event.stopPropagation();
         if (!this.visible)
             return;
-        this.debounce(this.renderViewportDebounced);
+        this.renderViewport();
     }
     onResized() {
         const rect = this.getBoundingClientRect();
@@ -113,18 +100,22 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
             this.debounce(this.renderViewportDebounced);
             return;
         }
+        this.applet.updateViewportSize(this.width, this.height);
+        this.renderViewport();
+    }
+    renderViewport() {
+        if (this.renderer.initialized === false)
+            return;
         if (this.applet.isRendererInitialized() === false) {
             void this.applet.onRendererInitialized(this.renderer);
         }
-        if (!this.width || !this.height) {
+        if (!this.width || !this.height)
             return;
-        }
         this.renderer.setCanvasTarget(this.renderTarget);
         this.renderer.setClearColor(this.clearColor, this.clearAlpha);
         this.renderer.setSize(this.width, this.height);
         this.renderer.clear();
         this.applet.updateViewportSize(this.width, this.height);
-        this.applet.animate(_time, _delta);
         const toneMapping = this.renderer.toneMapping;
         const toneMappingExposure = this.renderer.toneMappingExposure;
         this.renderer.toneMapping = this.applet.toneMapping;
@@ -136,11 +127,9 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.renderer.toneMappingExposure = toneMappingExposure;
     }
     dispose() {
+        delete this.applet;
         this.renderTarget.dispose();
         this.viewCameras.dispose();
-        if (this.renderer !== _renderer) {
-            this.renderer.dispose();
-        }
         super.dispose();
     }
 };
@@ -157,14 +146,14 @@ __decorate([
     ReactiveProperty({ type: ThreeApplet, init: null })
 ], IoThreeViewport.prototype, "applet", void 0);
 __decorate([
-    ReactiveProperty({ type: Boolean })
-], IoThreeViewport.prototype, "playing", void 0);
-__decorate([
     ReactiveProperty({ type: String, value: 'perspective' })
 ], IoThreeViewport.prototype, "cameraSelect", void 0);
 __decorate([
     ReactiveProperty({ type: WebGPURenderer, value: _renderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
+__decorate([
+    Property(0)
+], IoThreeViewport.prototype, "tabIndex", void 0);
 IoThreeViewport = __decorate([
     Register
 ], IoThreeViewport);
