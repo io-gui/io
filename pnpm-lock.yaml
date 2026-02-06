@@ -55,6 +55,12 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(terser@5.44.1)
 
+  apps/circuits:
+    dependencies:
+      '@io-gui/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+
   apps/todo:
     dependencies:
       '@io-gui/core':
