@@ -1,4 +1,4 @@
-/** Named color → hex map used throughout the game. */
+/** Named color -> hex map used throughout the game. */
 const color: Record<string, string> = {
   white:  '#ffffff',
   red:    '#e52800',

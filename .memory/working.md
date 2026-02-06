@@ -9,7 +9,9 @@
 ## Active Patterns
 
 ### Architectural Insights
-(to be populated)
+- Apps use `<custom-element>` tags directly in HTML (e.g. `<circuits-app>`)
+- Apps are embedded in the root `index.html` via `iframe()` helper + nav entry
+- Workspace deps use `"workspace:*"` in `package.json`
 
 ### Code Patterns That Worked
 (to be populated)
@@ -24,7 +26,8 @@
 ## Package-Specific Notes
 
 ### io-core
-(none)
+- `tsconfig.json` include path: use `"./src"` (relative with dot)
+- `IoSelector.Listeners` return type: `ListenerDefinitions`
 
 ### io-three
 (none)

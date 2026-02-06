@@ -1,10 +1,8 @@
-import { Pin, pinsFromString } from './pin';
-import { Line, linesFromString } from './line';
-import type { PinData } from './pin';
-import type { LineData } from './line';
-import scene from './scene';
-import local from '../app/local';
-import score from './score';
+import { Pin, pinsFromString } from './pin.js';
+import { Line, linesFromString } from './line.js';
+import type { PinData } from './pin.js';
+import type { LineData } from './line.js';
+import type { Scene } from './scene.js';
 
 export type DrawMode = 'pin' | 'line' | 'delete';
 
@@ -29,6 +27,14 @@ export class Game {
   drawColor = 'white';
   undoStack: string[] = [];
   redoStack: string[] = [];
+  currentLevel = '';
+
+  scene: Scene | null = null;
+
+  /** Callback invoked after save — host element persists state. */
+  onSave: ((level: string, json: string) => void) | null = null;
+  /** Callback invoked on completion change. */
+  onComplete: ((level: string, completed: boolean) => void) | null = null;
 
   init(): void {
     this.width = 4;
@@ -37,21 +43,19 @@ export class Game {
     this.lines = {};
     this.drawMode = 'line';
     this.drawColor = 'white';
-    scene.initGrid(this.width, this.height);
-    scene.render(this.pins, this.lines);
+    this._renderScene();
   }
 
-  // ── Level loading ─────────────────────────────────────────────────
+  // -- Level loading --
 
-  load(level: string): void {
+  load(level: string, savedState?: string): void {
     this.init();
     this.redoStack = [];
     this.undoStack = [];
-    local.set('currentLevel', level);
+    this.currentLevel = level;
 
-    const localLevel = local.get(level);
-    if (localLevel) {
-      this.fromJSON(String(localLevel));
+    if (savedState) {
+      this.fromJSON(savedState);
       this.save();
       this.updateUndoStack();
       this.propagateColors();
@@ -60,9 +64,13 @@ export class Game {
     }
   }
 
+  clear() {
+    this.init();
+  }
+
   async reset(level: string): Promise<void> {
     try {
-      const resp = await fetch('/levels/' + level + '.json');
+      const resp = await fetch('./public/levels/' + level + '.json');
       if (!resp.ok) throw new Error('Level not found');
       const text = await resp.text();
       this.fromJSON(text);
@@ -76,7 +84,7 @@ export class Game {
     }
   }
 
-  // ── Serialisation ─────────────────────────────────────────────────
+  // -- Serialisation --
 
   fromJSON(jsonText: string): void {
     const state: LevelData = JSON.parse(jsonText);
@@ -84,8 +92,7 @@ export class Game {
     this.height = state.height;
     this.pins = pinsFromString(state.pins);
     this.lines = linesFromString(state.lines);
-    scene.initGrid(this.width, this.height);
-    scene.render(this.pins, this.lines);
+    this.initScene();
   }
 
   toJSON(): string {
@@ -116,11 +123,12 @@ export class Game {
   }
 
   save(): void {
-    const currentLevel = local.get('currentLevel');
-    if (currentLevel) localStorage[String(currentLevel)] = this.toJSON();
+    if (this.currentLevel && this.onSave) {
+      this.onSave(this.currentLevel, this.toJSON());
+    }
   }
 
-  // ── Undo / Redo ───────────────────────────────────────────────────
+  // -- Undo / Redo --
 
   updateUndoStack(): void {
     const state = this.toJSON();
@@ -150,12 +158,12 @@ export class Game {
     }
   }
 
-  // ── Pin operations ────────────────────────────────────────────────
+  // -- Pin operations --
 
   addPin(x: number, y: number, c: string, ID: number): void {
     if (!this.getPinColor(x, y)) {
       this.pins[ID] = new Pin(x, y, c, ID);
-      scene.render(this.pins, this.lines);
+      this._renderScene();
     }
   }
 
@@ -165,7 +173,7 @@ export class Game {
         delete this.pins[i];
       }
     }
-    scene.render(this.pins, this.lines);
+    this._renderScene();
   }
 
   getPinColor(x: number, y: number): string | false {
@@ -182,7 +190,7 @@ export class Game {
     return false;
   }
 
-  // ── Line operations ───────────────────────────────────────────────
+  // -- Line operations --
 
   /**
    * Add / extend a line.
@@ -219,7 +227,7 @@ export class Game {
       }
     }
 
-    scene.render(this.pins, this.lines);
+    this._renderScene();
     return endDrag;
   }
 
@@ -270,14 +278,14 @@ export class Game {
       for (const pos of this.lines[i].pos) {
         if (pos[0] === x && pos[1] === y) {
           delete this.lines[i];
-          scene.render(this.pins, this.lines);
+          this._renderScene();
           return;
         }
       }
     }
   }
 
-  // ── Colour propagation ────────────────────────────────────────────
+  // -- Colour propagation --
 
   resetColors(): void {
     for (const i in this.lines) this.lines[i].c2 = this.lines[i].c;
@@ -316,10 +324,10 @@ export class Game {
       }
     }
 
-    scene.render(this.pins, this.lines);
+    this._renderScene();
   }
 
-  // ── Completion check ──────────────────────────────────────────────
+  // -- Completion check --
 
   checkCompletion(): void {
     let completed = true;
@@ -337,15 +345,23 @@ export class Game {
       }
     }
 
-    const currentLevel = String(local.get('currentLevel') ?? '');
-    if (completed) {
-      score.set(currentLevel, true);
-      console.log(currentLevel, 'completed!');
-    } else {
-      score.set(currentLevel, false);
+    if (this.onComplete) {
+      this.onComplete(this.currentLevel, completed);
+    }
+  }
+
+  // -- Internal --
+
+  initScene(): void {
+    if (this.scene) {
+      this.scene.initGrid(this.width, this.height, this.scene.canvasWidth, this.scene.canvasHeight);
+      this.scene.render(this.pins, this.lines);
+    }
+  }
+
+  private _renderScene(): void {
+    if (this.scene) {
+      this.scene.render(this.pins, this.lines);
     }
   }
 }
-
-const game = new Game();
-export default game;

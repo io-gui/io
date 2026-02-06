@@ -143,6 +143,8 @@ Example: working in `packages/three/src/`
 - Project-wide insights → commit to root `.memory/`
 - When unsure → prefer the branch (more specific is better)
 
+**IMPORTANT**: Before writing to root `.memory/`, check if a local `.memory/` exists in the subtree you're working on (e.g. `apps/circuits/.memory/`). If it does, write there. Root is only for cross-cutting, project-wide patterns.
+
 ### Branch Structure
 
 Branches use the same three-tier structure (`now.md`, `working.md`, `archive.md`) but only create files as needed. A branch with just `working.md` is fine — don't create empty files.

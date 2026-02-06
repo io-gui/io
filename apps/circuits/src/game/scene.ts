@@ -1,11 +1,11 @@
-import color from '../app/color';
-import type { Pin } from './pin';
-import type { Line } from './line';
+import color from './color.js';
+import type { Pin } from './pin.js';
+import type { Line } from './line.js';
 
 /**
  * Scene — manages layered HTML5 canvases and renders the game state.
  *
- * Layer stack (bottom → top):
+ * Layer stack (bottom -> top):
  *   grid   – static grid lines (redrawn on initGrid)
  *   layer0 – grey "underlines"
  *   layer1 – coloured lines + pins
@@ -17,7 +17,7 @@ interface CanvasLayer {
   ctx: CanvasRenderingContext2D;
 }
 
-class Scene {
+export class Scene {
   layers: Record<string, CanvasLayer> = {};
   canvasWidth = 0;
   canvasHeight = 0;
@@ -28,44 +28,20 @@ class Scene {
   gridOffsetY = 0;
   markerRadius = 0;
 
-  /** Create the four layered canvases inside #canvas-holder. */
-  init(): void {
-    const holder = document.getElementById('canvas-holder');
-    if (!holder) return;
-
-    holder.innerHTML = '';
-    this.canvasWidth = holder.offsetWidth;
-    this.canvasHeight = holder.offsetHeight;
-
-    const dpr = window.devicePixelRatio || 1;
-    const names = ['grid', 'layer0', 'layer1', 'top'] as const;
-    const zIndexes = [100, 101, 102, 105];
-
-    for (let i = 0; i < names.length; i++) {
-      const canvas = document.createElement('canvas');
-      canvas.width = this.canvasWidth * dpr;
-      canvas.height = this.canvasHeight * dpr;
-      canvas.style.width = this.canvasWidth + 'px';
-      canvas.style.height = this.canvasHeight + 'px';
-      canvas.style.position = 'absolute';
-      canvas.style.zIndex = String(zIndexes[i]);
-      if (names[i] === 'top') canvas.id = 'canvas-top';
-      holder.appendChild(canvas);
-
+  /** Set up layers from externally provided canvases. */
+  init(canvases: Record<string, HTMLCanvasElement>): void {
+    this.layers = {};
+    for (const name in canvases) {
+      const canvas = canvases[name];
       const ctx = canvas.getContext('2d')!;
-      ctx.scale(dpr, dpr);
-
-      this.layers[names[i]] = { canvas, ctx };
+      this.layers[name] = { canvas, ctx };
     }
   }
 
   /** Recalculate grid geometry and draw the static grid. */
-  initGrid(gameWidth: number, gameHeight: number): void {
-    const holder = document.getElementById('canvas-holder');
-    if (!holder) return;
-
-    this.canvasWidth = holder.offsetWidth;
-    this.canvasHeight = holder.offsetHeight;
+  initGrid(gameWidth: number, gameHeight: number, containerWidth: number, containerHeight: number): void {
+    this.canvasWidth = containerWidth;
+    this.canvasHeight = containerHeight;
     const dpr = window.devicePixelRatio || 1;
 
     for (const name in this.layers) {
@@ -122,7 +98,7 @@ class Scene {
     this.markerRadius = this.canvasWidth * 0.1;
   }
 
-  // ── Rendering ──────────────────────────────────────────────────────
+  // -- Rendering --
 
   /** Full re-render of lines and pins on the dynamic layers. */
   render(pins: Record<number, Pin>, lines: Record<number, Line>): void {
@@ -142,7 +118,7 @@ class Scene {
     for (const id in pins)  this._drawPinFill(pins[id]);
   }
 
-  // ── Line drawing helpers ───────────────────────────────────────────
+  // -- Line drawing helpers --
 
   private _lineParams(line: Line) {
     const isGrey = line.c === 'grey';
@@ -202,7 +178,7 @@ class Scene {
     p.ctx.restore();
   }
 
-  // ── Pin drawing helpers ────────────────────────────────────────────
+  // -- Pin drawing helpers --
 
   private _drawPinStroke(pin: Pin): void {
     const ctx = this.layers.layer1.ctx;
@@ -240,7 +216,7 @@ class Scene {
     }
   }
 
-  // ── Touch marker ──────────────────────────────────────────────────
+  // -- Touch marker --
 
   drawMarker(touchX: number, touchY: number): void {
     const ctx = this.layers.top?.ctx;
@@ -260,6 +236,3 @@ class Scene {
     ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
 }
-
-const scene = new Scene();
-export default scene;

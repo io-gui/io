@@ -45,3 +45,10 @@ Memory architecture is for development context, not app state.
 memory patterns to io-gui development context.
 Three files: now.md, working.md, archive.md
 Added to .gitignore (can be tracked later if desired)
+
+## 2026-02-06
+
+### [fix] Memory scoping — circuits changes written to wrong scope
+Wrote circuits-app-specific changes to root `.memory/` instead of `apps/circuits/.memory/`.
+Root memory is for project-wide insights only. App/package-specific changes go to their local `.memory/`.
+Only project-wide patterns (like app integration via iframe) belong in root working memory.

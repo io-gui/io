@@ -60,6 +60,15 @@ importers:
       '@io-gui/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@io-gui/inputs':
+        specifier: workspace:*
+        version: link:../../packages/inputs
+      '@io-gui/layout':
+        specifier: workspace:*
+        version: link:../../packages/layout
+      '@io-gui/navigation':
+        specifier: workspace:*
+        version: link:../../packages/navigation
 
   apps/todo:
     dependencies:

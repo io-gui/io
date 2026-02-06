@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span } from '@io-gui/core'
+import { Register, IoElement, VDOMElement, IoElementProps, disposeChildren, ReactiveProperty, WithBinding, Property, span, ListenerDefinitions } from '@io-gui/core'
 
 const dummyElement = document.createElement('div')
 /**
@@ -100,7 +100,7 @@ export class IoSelector extends IoElement {
   @Property(false)
   declare private onScrollSuspended: boolean
 
-  static get Listeners() {
+  static get Listeners(): ListenerDefinitions {
     return {
       scroll: 'onScrollChanged',
     }

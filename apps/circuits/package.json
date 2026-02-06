@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@io-gui/core": "workspace:*"
+    "@io-gui/core": "workspace:*",
+    "@io-gui/inputs": "workspace:*",
+    "@io-gui/layout": "workspace:*",
+    "@io-gui/navigation": "workspace:*"
   }
 }
