@@ -11,7 +11,9 @@ import { ReactivePropertyInstance } from '../core/ReactiveProperty.js'
 import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
 
 const resizeObserver = new ResizeObserver(entries => {
-  for (const entry of entries) (entry.target as any).onResized()
+  for (const entry of entries) {
+    (entry.target as any).onResized()
+  }
 })
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never

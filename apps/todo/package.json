@@ -1,0 +1,9 @@
+{
+  "name": "@io-gui/todo",
+  "version": "2.0.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@io-gui/core": "workspace:*"
+  }
+}
