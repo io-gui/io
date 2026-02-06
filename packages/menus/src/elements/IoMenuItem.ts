@@ -135,6 +135,7 @@ export class IoMenuItem extends IoField {
     const o = this.option
     if (this.hasmore) {
       if (!this.expanded) this.expanded = true
+      return
     } else if (o.mode === 'toggle') {
       o.selected = !o.selected
     } else {

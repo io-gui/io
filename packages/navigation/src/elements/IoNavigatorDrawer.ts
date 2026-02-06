@@ -109,6 +109,21 @@ export class IoNavigatorDrawer extends IoElement {
     super(args)
   }
 
+  static get Listeners() {
+    return {
+      'io-menu-option-clicked': 'onMenuOptionClicked',
+      'io-menu-tree-resized': 'onMenuTreeResized',
+    }
+  }
+
+  onMenuOptionClicked() {
+    this.expanded = false
+  }
+
+  onMenuTreeResized() {
+    this.throttle(this.updateDrawerSizeThrottled)
+  }
+
   onClick(event: MouseEvent) {
     event.preventDefault()
     event.stopPropagation()
