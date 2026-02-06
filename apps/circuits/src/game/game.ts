@@ -1,48 +1,51 @@
-import { Pin, pinsFromString } from './pin.js';
-import { Line, linesFromString } from './line.js';
-import type { PinData } from './pin.js';
-import type { LineData } from './line.js';
-import type { Scene } from './scene.js';
+import { Pad } from "./pad.js";
+import { Line } from "./line.js";
+import type { PadData } from "./pad.js";
+import type { LineData } from "./line.js";
 
-export type DrawMode = 'pin' | 'line' | 'delete';
+export type DrawMode = "pad" | "line" | "delete";
 
 interface LevelData {
   width: number;
   height: number;
-  pins: Record<string, PinData>;
-  lines: Record<string, LineData>;
+  pads: PadData[];
+  lines: LineData[];
 }
 
 /**
  * Game — central state machine.
- * Manages pins, lines, load/save, undo/redo, colour propagation,
+ * Manages pads, lines, load/save, undo/redo, colour propagation,
  * and completion checking.
  */
 export class Game {
   width = 4;
   height = 5;
-  pins: Record<number, Pin> = {};
+  pads: Record<number, Pad> = {};
   lines: Record<number, Line> = {};
-  drawMode: DrawMode = 'line';
-  drawColor = 'white';
+  padColors: Record<number, string> = {};
+  lineColors: Record<number, string> = {};
+  drawMode: DrawMode = "line";
+  drawColor = "white";
   undoStack: string[] = [];
   redoStack: string[] = [];
-  currentLevel = '';
-
-  scene: Scene | null = null;
+  currentLevel = "";
 
   /** Callback invoked after save — host element persists state. */
   onSave: ((level: string, json: string) => void) | null = null;
   /** Callback invoked on completion change. */
   onComplete: ((level: string, completed: boolean) => void) | null = null;
+  /** Callback invoked when grid dimensions change and scene needs re-init. */
+  onInitScene: (() => void) | null = null;
+  /** Callback invoked when game state changes and scene needs re-render. */
+  onRender: (() => void) | null = null;
 
   init(): void {
     this.width = 4;
     this.height = 5;
-    this.pins = {};
+    this.pads = {};
     this.lines = {};
-    this.drawMode = 'line';
-    this.drawColor = 'white';
+    this.drawMode = "line";
+    this.drawColor = "white";
     this._renderScene();
   }
 
@@ -70,17 +73,16 @@ export class Game {
 
   async reset(level: string): Promise<void> {
     try {
-      const resp = await fetch('./public/levels/' + level + '.json');
-      if (!resp.ok) throw new Error('Level not found');
+      const resp = await fetch("./public/levels/" + level + ".json");
+      if (!resp.ok) throw new Error("Level not found");
       const text = await resp.text();
       this.fromJSON(text);
-      for (const i in this.pins)  this.pins[i].isReadonly = true;
-      for (const i in this.lines) this.lines[i].isReadonly = true;
+      for (const i in this.lines) this.lines[i].readonly = true;
       this.save();
       this.updateUndoStack();
       this.propagateColors();
     } catch (e) {
-      console.warn('Could not load level:', level, e);
+      console.warn("Could not load level:", level, e);
     }
   }
 
@@ -90,36 +92,32 @@ export class Game {
     const state: LevelData = JSON.parse(jsonText);
     this.width = state.width;
     this.height = state.height;
-    this.pins = pinsFromString(state.pins);
-    this.lines = linesFromString(state.lines);
+    this.pads = {};
+    for (const p of state.pads) {
+      this.pads[p.ID] = Pad.fromJSON(p);
+    }
+    this.lines = {};
+    for (const l of state.lines) {
+      this.lines[l.ID] = Line.fromJSON(l);
+    }
     this.initScene();
   }
 
   toJSON(): string {
     return JSON.stringify({
-      width:  this.width,
+      width: this.width,
       height: this.height,
-      pins:   this._cleanPins(),
-      lines:  this._cleanLines(),
+      pads: this._cleanPads(),
+      lines: this._cleanLines(),
     });
   }
 
-  private _cleanPins(): Record<string, PinData> {
-    const out: Record<string, PinData> = {};
-    for (const i in this.pins) {
-      const p = this.pins[i];
-      out[i] = { x: p.x, y: p.y, c: p.c, readonly: p.isReadonly, ID: p.ID };
-    }
-    return out;
+  private _cleanPads(): PadData[] {
+    return Object.values(this.pads).map(p => p.toJSON());
   }
 
-  private _cleanLines(): Record<string, LineData> {
-    const out: Record<string, LineData> = {};
-    for (const i in this.lines) {
-      const l = this.lines[i];
-      out[i] = { ID: l.ID, c: l.c, pos: l.pos };
-    }
-    return out;
+  private _cleanLines(): LineData[] {
+    return Object.values(this.lines).map(l => l.toJSON());
   }
 
   save(): void {
@@ -158,34 +156,34 @@ export class Game {
     }
   }
 
-  // -- Pin operations --
+  // -- Pad operations --
 
-  addPin(x: number, y: number, c: string, ID: number): void {
-    if (!this.getPinColor(x, y)) {
-      this.pins[ID] = new Pin(x, y, c, ID);
+  addPad(ID: number, x: number, y: number, color: string): void {
+    if (!this.getPadColor(x, y)) {
+      this.pads[ID] = new Pad(ID, [x, y], color);
       this._renderScene();
     }
   }
 
-  deletePin(x: number, y: number): void {
-    for (const i in this.pins) {
-      if (this.pins[i] && this.pins[i].x === x && this.pins[i].y === y) {
-        delete this.pins[i];
+  deletePad(x: number, y: number): void {
+    for (const i in this.pads) {
+      if (this.pads[i] && this.pads[i].pos[0] === x && this.pads[i].pos[1] === y) {
+        delete this.pads[i];
       }
     }
     this._renderScene();
   }
 
-  getPinColor(x: number, y: number): string | false {
-    for (const i in this.pins) {
-      if (this.pins[i].x === x && this.pins[i].y === y) return this.pins[i].c2;
+  getPadColor(x: number, y: number): string | false {
+    for (const i in this.pads) {
+      if (this.pads[i].pos[0] === x && this.pads[i].pos[1] === y) return this.padColors[this.pads[i].ID] ?? this.pads[i].color;
     }
     return false;
   }
 
-  getPinID(x: number, y: number): number | false {
-    for (const i in this.pins) {
-      if (this.pins[i].x === x && this.pins[i].y === y) return this.pins[i].ID;
+  getPadID(x: number, y: number): number | false {
+    for (const i in this.pads) {
+      if (this.pads[i].pos[0] === x && this.pads[i].pos[1] === y) return this.pads[i].ID;
     }
     return false;
   }
@@ -194,37 +192,47 @@ export class Game {
 
   /**
    * Add / extend a line.
-   * Returns true if the line reached a destination pin (drag should stop).
+   * Returns true if the line reached a destination pad (drag should stop).
    */
-  addLine(x: number, y: number, c: string, ID: number): boolean {
-    const pinID = this.getPinID(x, y);
-    const pinColor = this.getPinColor(x, y);
+  addLine(ID: number, x: number, y: number, color: string): boolean {
+    const padID = this.getPadID(x, y);
+    const padColor = this.getPadColor(x, y);
     const lineCount = this.getLineCount(x, y);
-    let endDrag = false;
 
-    let connectionLimit = 2;
-    if (pinID !== false && this.pins[pinID].c !== 'white') {
-      connectionLimit = 1;
+    // Connection limit: colored pads allow 1, white pads allow 2
+    const connectionLimit = (padID !== false && this.pads[padID].color !== "white") ? 1 : 2;
+    if (lineCount >= connectionLimit) {
+      this._renderScene();
+      return false;
     }
 
-    if (lineCount < connectionLimit) {
-      if (!this.lines[ID] && pinColor) {
-        // Start a new line from a pin
-        this.lines[ID] = new Line(x, y, c, ID, pinColor);
-      } else if (this.lines[ID]) {
-        const lineColor = this.lines[ID].c2;
+    // --- Start a new line from a pad ---
+    if (!this.lines[ID]) {
+      if (!padColor) { this._renderScene(); return false; }
+      this.lines[ID] = new Line(ID, [x, y], color);
+      this.lineColors[ID] = padColor as string;
+      this._renderScene();
+      return false;
+    }
 
-        if (!pinColor && (!lineCount || c === 'grey')) {
-          this.lines[ID].addSegment(x, y, this.lines);
-        } else if (
-          pinColor === 'white' ||
-          pinColor === lineColor ||
-          ((lineColor === 'white' || lineColor === 'grey') && pinColor)
-        ) {
-          this.lines[ID].addSegment(x, y, this.lines);
-          endDrag = true;
-        }
-      }
+    // --- Extend existing line ---
+    if (!this._checkCrossing(this.lines[ID], x, y)) {
+      this._renderScene();
+      return false;
+    }
+
+    const lineColor = this.lineColors[ID] ?? this.lines[ID].color;
+    let endDrag = false;
+
+    if (!padColor && (!lineCount || color === "grey")) {
+      this.lines[ID].addSegment(x, y);
+    } else if (
+      padColor === "white" ||
+      padColor === lineColor ||
+      ((lineColor === "white" || lineColor === "grey") && padColor)
+    ) {
+      this.lines[ID].addSegment(x, y);
+      endDrag = true;
     }
 
     this._renderScene();
@@ -234,7 +242,7 @@ export class Game {
   getLineColor(x: number, y: number): string | false {
     for (const i in this.lines) {
       for (const pos of this.lines[i].pos) {
-        if (pos[0] === x && pos[1] === y) return this.lines[i].c;
+        if (pos[0] === x && pos[1] === y) return this.lines[i].color;
       }
     }
     return false;
@@ -244,7 +252,8 @@ export class Game {
     let count = 0;
     for (const i in this.lines) {
       for (const pos of this.lines[i].pos) {
-        if (pos[0] === x && pos[1] === y && this.lines[i].c === 'white') count++;
+        if (pos[0] === x && pos[1] === y && this.lines[i].color === "white")
+          count++;
       }
     }
     return count;
@@ -254,7 +263,7 @@ export class Game {
     let count = 0;
     for (const i in this.lines) {
       for (const pos of this.lines[i].pos) {
-        if (pos[0] === x && pos[1] === y && this.lines[i].c === 'grey') count++;
+        if (pos[0] === x && pos[1] === y && this.lines[i].color === "grey") count++;
       }
     }
     return count;
@@ -263,9 +272,9 @@ export class Game {
   checkLine(ID: number): void {
     if (this.lines[ID]) {
       const first = this.lines[ID].pos[0];
-      const last  = this.lines[ID].pos[this.lines[ID].pos.length - 1];
-      const pc1 = this.getPinColor(first[0], first[1]);
-      const pc2 = this.getPinColor(last[0], last[1]);
+      const last = this.lines[ID].pos[this.lines[ID].pos.length - 1];
+      const pc1 = this.getPadColor(first[0], first[1]);
+      const pc2 = this.getPadColor(last[0], last[1]);
       if (!pc1 || !pc2 || (first[0] === last[0] && first[1] === last[1])) {
         this.undo();
       }
@@ -285,11 +294,37 @@ export class Game {
     }
   }
 
+  /** Prevent diagonal lines from crossing other diagonals (unless grey). */
+  private _checkCrossing(line: Line, x: number, y: number): boolean {
+    const last = line.pos[line.pos.length - 1];
+    const mx = (x + last[0]) / 2;
+    const my = (y + last[1]) / 2;
+
+    for (const id in this.lines) {
+      const other = this.lines[id];
+      if (line.color === "grey" || other.color === "grey") continue;
+      const pos = other.pos;
+      for (let i = 1; i < pos.length; i++) {
+        if (
+          Math.abs(pos[i][0] - pos[i - 1][0]) === 1 &&
+          Math.abs(pos[i][1] - pos[i - 1][1]) === 1 &&
+          (pos[i][0] + pos[i - 1][0]) / 2 === mx &&
+          (pos[i][1] + pos[i - 1][1]) / 2 === my
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   // -- Colour propagation --
 
   resetColors(): void {
-    for (const i in this.lines) this.lines[i].c2 = this.lines[i].c;
-    for (const i in this.pins)  this.pins[i].c2 = this.pins[i].c;
+    this.lineColors = {};
+    this.padColors = {};
+    for (const i in this.lines) this.lineColors[this.lines[i].ID] = this.lines[i].color;
+    for (const i in this.pads) this.padColors[this.pads[i].ID] = this.pads[i].color;
   }
 
   propagateColors(): void {
@@ -299,26 +334,26 @@ export class Game {
       for (const i in this.lines) {
         const line = this.lines[i];
         const first = line.pos[0];
-        const last  = line.pos[line.pos.length - 1];
+        const last = line.pos[line.pos.length - 1];
 
-        const pin1ID = this.getPinID(first[0], first[1]);
-        const pin2ID = this.getPinID(last[0], last[1]);
-        if (pin1ID === false || pin2ID === false) continue;
+        const pad1ID = this.getPadID(first[0], first[1]);
+        const pad2ID = this.getPadID(last[0], last[1]);
+        if (pad1ID === false || pad2ID === false) continue;
 
-        const c1 = this.pins[pin1ID].c2;
-        const c2 = this.pins[pin2ID].c2;
+        const c1 = this.padColors[pad1ID];
+        const c2 = this.padColors[pad2ID];
 
-        if (c1 !== 'white' && c2 !== 'white') {
-          if (c1 === c2) line.c2 = c1;
+        if (c1 !== "white" && c2 !== "white") {
+          if (c1 === c2) this.lineColors[line.ID] = c1;
         } else {
-          if (c1 !== 'white') {
-            line.c2 = c1;
-            this.pins[pin1ID].c2 = c1;
-            this.pins[pin2ID].c2 = c1;
+          if (c1 !== "white") {
+            this.lineColors[line.ID] = c1;
+            this.padColors[pad1ID] = c1;
+            this.padColors[pad2ID] = c1;
           } else {
-            line.c2 = c2;
-            this.pins[pin1ID].c2 = c2;
-            this.pins[pin2ID].c2 = c2;
+            this.lineColors[line.ID] = c2;
+            this.padColors[pad1ID] = c2;
+            this.padColors[pad2ID] = c2;
           }
         }
       }
@@ -332,36 +367,49 @@ export class Game {
   checkCompletion(): void {
     let completed = true;
 
-    for (const i in this.pins) {
-      const pin = this.pins[i];
-      const nConn  = this.getLineCount(pin.x, pin.y);
-      const nUnder = this.getUnderlineCount(pin.x, pin.y);
+    for (const i in this.pads) {
+      const pad = this.pads[i];
+      const nConn = this.getLineCount(pad.pos[0], pad.pos[1]);
+      const nUnder = this.getUnderlineCount(pad.pos[0], pad.pos[1]);
 
-      if (pin.isReadonly) {
-        if (nConn !== 1 && pin.c !== 'white') completed = false;
+      if (pad.color !== "white") {
+        if (nConn !== 1) completed = false;
       } else {
-        if (nConn !== 2 && pin.c === 'white' && pin.c2 !== 'white') completed = false;
-        if (nConn !== 1 && nUnder !== 1 && pin.c === 'white' && pin.c2 !== 'white') completed = false;
+        const pc = this.padColors[pad.ID] ?? pad.color;
+        if (nConn !== 2 && pc !== "white")
+          completed = false;
+        if (
+          nConn !== 1 &&
+          nUnder !== 1 &&
+          pc !== "white"
+        )
+          completed = false;
       }
     }
+
 
     if (this.onComplete) {
       this.onComplete(this.currentLevel, completed);
     }
   }
 
+  // -- Move finalisation --
+
+  finalizeMove(lineID: number): void {
+    this.save();
+    this.updateUndoStack();
+    this.checkLine(lineID);
+    this.propagateColors();
+    this.checkCompletion();
+  }
+
   // -- Internal --
 
   initScene(): void {
-    if (this.scene) {
-      this.scene.initGrid(this.width, this.height, this.scene.canvasWidth, this.scene.canvasHeight);
-      this.scene.render(this.pins, this.lines);
-    }
+    this.onInitScene?.();
   }
 
   private _renderScene(): void {
-    if (this.scene) {
-      this.scene.render(this.pins, this.lines);
-    }
+    this.onRender?.();
   }
 }

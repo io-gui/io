@@ -66,6 +66,9 @@ importers:
       '@io-gui/layout':
         specifier: workspace:*
         version: link:../../packages/layout
+      '@io-gui/menus':
+        specifier: workspace:*
+        version: link:../../packages/menus
       '@io-gui/navigation':
         specifier: workspace:*
         version: link:../../packages/navigation

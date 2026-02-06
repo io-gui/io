@@ -14,7 +14,7 @@ src/
     game.ts          — pure state machine, callbacks for save/complete
     scene.ts         — accepts canvas refs via init(), no DOM queries
     score.ts         — pure data container, toJSON/fromJSON
-    pin.ts           — unchanged from reference
+    pad.ts           — unchanged from reference (renamed from pin)
     line.ts          — unchanged from reference
     color.ts         — unchanged, moved from app/
 ```

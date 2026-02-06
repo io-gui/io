@@ -1,1 +1,146 @@
-{"width":4,"height":5,"pins":{"9523":{"x":4,"y":1,"c":"green","readonly":false,"ID":9523},"13925":{"x":4,"y":2,"c":"white","readonly":false,"ID":13925},"52210":{"x":0,"y":3,"c":"white","readonly":false,"ID":52210},"52660":{"x":1,"y":2,"c":"white","readonly":false,"ID":52660},"67794":{"x":2,"y":2,"c":"white","readonly":false,"ID":67794},"83642":{"x":1,"y":5,"c":"green","readonly":false,"ID":83642},"83684":{"x":3,"y":5,"c":"orange","readonly":false,"ID":83684},"85661":{"x":1,"y":0,"c":"orange","readonly":false,"ID":85661},"88078":{"x":1,"y":1,"c":"white","readonly":false,"ID":88078},"88444":{"x":2,"y":4,"c":"white","readonly":false,"ID":88444}},"lines":{"8805":{"ID":8805,"c":"white","pos":[[1,1],[2,1],[3,2],[4,2]]},"33154":{"ID":33154,"c":"grey","pos":[[2,2],[1,3],[0,3]]},"46707":{"ID":46707,"c":"white","pos":[[1,2],[2,3],[2,4]]}}}
+{
+  "width": 4,
+  "height": 5,
+  "pads": [
+    {
+      "pos": [
+        4,
+        1
+      ],
+      "color": "green",
+      "ID": 9523
+    },
+    {
+      "pos": [
+        4,
+        2
+      ],
+      "color": "white",
+      "ID": 13925
+    },
+    {
+      "pos": [
+        0,
+        3
+      ],
+      "color": "white",
+      "ID": 52210
+    },
+    {
+      "pos": [
+        1,
+        2
+      ],
+      "color": "white",
+      "ID": 52660
+    },
+    {
+      "pos": [
+        2,
+        2
+      ],
+      "color": "white",
+      "ID": 67794
+    },
+    {
+      "pos": [
+        1,
+        5
+      ],
+      "color": "green",
+      "ID": 83642
+    },
+    {
+      "pos": [
+        3,
+        5
+      ],
+      "color": "orange",
+      "ID": 83684
+    },
+    {
+      "pos": [
+        1,
+        0
+      ],
+      "color": "orange",
+      "ID": 85661
+    },
+    {
+      "pos": [
+        1,
+        1
+      ],
+      "color": "white",
+      "ID": 88078
+    },
+    {
+      "pos": [
+        2,
+        4
+      ],
+      "color": "white",
+      "ID": 88444
+    }
+  ],
+  "lines": [
+    {
+      "ID": 8805,
+      "color": "white",
+      "pos": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          2
+        ]
+      ]
+    },
+    {
+      "ID": 33154,
+      "color": "grey",
+      "pos": [
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          0,
+          3
+        ]
+      ]
+    },
+    {
+      "ID": 46707,
+      "color": "white",
+      "pos": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ]
+      ]
+    }
+  ]
+}

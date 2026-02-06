@@ -3,11 +3,27 @@
   "version": "2.0.0-alpha.1",
   "description": "A set of basic input elements for Io-Gui",
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["ui","io","gui","iogui","inputs","input","string","number","boolean","io-inputs"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "ui",
+    "io",
+    "gui",
+    "iogui",
+    "inputs",
+    "input",
+    "string",
+    "number",
+    "boolean",
+    "io-inputs"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {"url": "https://github.com/io-gui/io/issues"},
+  "bugs": {
+    "url": "https://github.com/io-gui/io/issues"
+  },
   "homepage": "https://iogui.dev",
   "publishConfig": {
     "access": "public"
