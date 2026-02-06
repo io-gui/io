@@ -1,7 +1,7 @@
 import { Register, ReactiveNode, ReactiveProperty, ReactiveNodeProps } from '@io-gui/core'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors'
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Clock, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu'
 import { ioOptionSelect, MenuOption } from '@io-gui/menus'
 
 export type ThreeAppletProps = ReactiveNodeProps & {
@@ -39,10 +39,11 @@ export class ThreeApplet extends ReactiveNode {
   private _width: number = 0
   private _height: number = 0
 
-  private readonly _clock: Clock = new Clock()
+  private readonly _timer: Timer = new Timer()
 
   constructor(args?: ThreeAppletProps) {
     super(args)
+    this._timer.connect(document);
     this.isPlayingChanged()
   }
 
@@ -56,8 +57,9 @@ export class ThreeApplet extends ReactiveNode {
 
   onRAF() {
     if (!this.isPlaying) return
-    const delta = this._clock.getDelta()
-    const time = this._clock.getElapsedTime()
+    this._timer.update();
+    const delta = this._timer.getDelta()
+    const time = this._timer.getElapsed()
     this.onAnimate(delta, time)
     this.dispatch('three-applet-needs-render', undefined, true)
   }
@@ -89,6 +91,7 @@ export class ThreeApplet extends ReactiveNode {
   dispose() {
     this.isPlaying = false
     super.dispose()
+    // this._timer.disconnect();
   }
 }
 
@@ -117,6 +120,6 @@ registerEditorGroups(ThreeApplet, {
     '_renderer',
     '_width',
     '_height',
-    '_clock',
+    '_timer',
   ],
 })
