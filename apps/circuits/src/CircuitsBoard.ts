@@ -522,8 +522,8 @@ export class CircuitsBoard extends IoElement {
 
     if (
       distance < 0.5 &&
-      this._touchX <= this.game.width + 0.5 &&
-      this._touchY <= this.game.height + 0.5 &&
+      // this._touchX <= this.game.width + 0.5 &&
+      // this._touchY <= this.game.height + 0.5 &&
       this._touchX >= -0.5 &&
       this._touchY >= -0.5
     ) {

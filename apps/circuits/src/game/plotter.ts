@@ -15,11 +15,15 @@ export interface PointAt {
  */
 @Register
 export class Plotter extends ReactiveNode {
+  width = 0
+  height = 0
   pads: Pad[] = []
   terminals: Terminal[] = []
   lines: Line[] = []
 
-  connect(pads: Pad[], terminals: Terminal[], lines: Line[]) {
+  connect(pads: Pad[], terminals: Terminal[], lines: Line[], width: number, height: number) {
+    this.width = width
+    this.height = height
     this.pads = pads
     this.terminals = terminals
     this.lines = lines
