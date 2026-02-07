@@ -21,7 +21,7 @@
     "test:navigation": "vitest run packages/navigation",
     "test:sliders": "vitest run packages/sliders",
     "test:three": "vitest run packages/three",
-    "clean": "rm -rf packages/**/dist"
+    "clean": "rm -rf packages/**/dist apps/**/dist"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

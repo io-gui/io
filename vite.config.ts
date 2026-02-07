@@ -1,31 +1,45 @@
 import { defineConfig } from 'vite'
 
+function packageAlias(packageName: string) {
+  return [
+    {
+      find: `@io-gui/${packageName}`,
+      replacement: new URL(
+        `./packages/${packageName}/src/index.ts`,
+        import.meta.url,
+      ).pathname,
+    },
+    {
+      find: new RegExp(`/packages/${packageName}/dist/demos/(.*)\\.js$`),
+      replacement: new URL(
+        `./packages/${packageName}/src/demos/$1.ts`,
+        import.meta.url,
+      ).pathname,
+    },
+  ]
+}
+
 export const resolveConfig = {
   alias: [
-    // Package aliases
-    { find: '@io-gui/core', replacement: new URL('./packages/core/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/core\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/core/src/demos/$1.ts', import.meta.url).pathname },
-
-    { find: '@io-gui/icons', replacement: new URL('./packages/icons/src/index.ts', import.meta.url).pathname },
-    { find: '@io-gui/colors', replacement: new URL('./packages/colors/src/index.ts', import.meta.url).pathname },
-    { find: '@io-gui/editors', replacement: new URL('./packages/editors/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/editors\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/editors/src/demos/$1.ts', import.meta.url).pathname },
-
-    { find: '@io-gui/inputs', replacement: new URL('./packages/inputs/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/inputs\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/inputs/src/demos/$1.ts', import.meta.url).pathname },
-    { find: '@io-gui/layout', replacement: new URL('./packages/layout/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/layout\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/layout/src/demos/$1.ts', import.meta.url).pathname },
-    { find: '@io-gui/markdown', replacement: new URL('./packages/markdown/src/index.ts', import.meta.url).pathname },
-    { find: '@io-gui/menus', replacement: new URL('./packages/menus/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/menus\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/menus/src/demos/$1.ts', import.meta.url).pathname },
-    { find: '@io-gui/navigation', replacement: new URL('./packages/navigation/src/index.ts', import.meta.url).pathname },
-    { find: '@io-gui/sliders', replacement: new URL('./packages/sliders/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/sliders\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/sliders/src/demos/$1.ts', import.meta.url).pathname },
-
-    { find: '@io-gui/three', replacement: new URL('./packages/three/src/index.ts', import.meta.url).pathname },
-    { find: /\/packages\/three\/dist\/demos\/(.*)\.js$/, replacement: new URL('./packages/three/src/demos/$1.ts', import.meta.url).pathname },
-    { find: /\/packages\/three\/dist\/examples\/(.*)\.js$/, replacement: new URL('./packages/three/src/examples/$1.ts', import.meta.url).pathname },
-  ]
+    ...packageAlias('core'),
+    ...packageAlias('icons'),
+    ...packageAlias('colors'),
+    ...packageAlias('editors'),
+    ...packageAlias('inputs'),
+    ...packageAlias('layout'),
+    ...packageAlias('markdown'),
+    ...packageAlias('menus'),
+    ...packageAlias('navigation'),
+    ...packageAlias('sliders'),
+    ...packageAlias('three'),
+    {
+      find: /\/packages\/three\/dist\/examples\/(.*)\.js$/,
+      replacement: new URL(
+        './packages/three/src/examples/$1.ts',
+        import.meta.url,
+      ).pathname,
+    },
+  ],
 }
 
 export default defineConfig({
@@ -44,6 +58,5 @@ export default defineConfig({
       target: 'esnext',
     },
   },
-  resolve: resolveConfig
+  resolve: resolveConfig,
 })
-

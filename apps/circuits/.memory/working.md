@@ -3,6 +3,7 @@
 ## Architecture
 
 ### File Structure
+
 ```
 src/
   CircuitsApp.ts     — root, Storage routing ($page hash, $level local), score persistence
@@ -20,6 +21,7 @@ src/
 ```
 
 ### Key Patterns
+
 - Page switching via CSS `:host[page="levels"]` / `:host[page="game"]` attribute selectors
 - Storage bindings: `$page` (hash) for routing, `$level` (local) for current level
 - Game class uses `onSave`/`onComplete` callbacks (not on IoElement, so no auto-bind conflict)
@@ -29,6 +31,7 @@ src/
 - Editor canvas init deferred to first `active=true` via `requestAnimationFrame`
 
 ### What Was Removed (absorbed into IoElements)
+
 - `app/bindings.ts` → Listeners + @event handlers in VDOM
 - `app/navigation.ts` → Storage hash routing
 - `app/touches.ts` → PointerEvents
@@ -37,6 +40,7 @@ src/
 - `game/plotter.ts` → CircuitsBoard pointer handlers
 
 ### io-gui Gotchas Discovered
+
 - Methods named `on[A-Z]*` are auto-bound by ProtoChain — don't use for callback properties on IoElements
 - `render()` with same VDOM structure efficiently diffs (no canvas recreation)
 - `static get Listeners()` return type should be `Record<string, string>`

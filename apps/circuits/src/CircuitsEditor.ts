@@ -1,19 +1,19 @@
-import { IoElement, Register } from "@io-gui/core";
-import { ioButton } from "@io-gui/inputs";
-import type { DrawMode } from "./game/game.js";
+import { IoElement, Register } from '@io-gui/core'
+import { ioButton } from '@io-gui/inputs'
+import type { DrawMode } from './game/game.js'
 
-const PAD_COLORS_ROW = [
-  "red",
-  "green",
-  "blue",
-  "pink",
-  "yellow",
-  "orange",
-  "purple",
-  "brown",
-  "grey",
-  "black",
-] as const;
+const TERMINAL_COLORS = [
+  'red',
+  'green',
+  'blue',
+  'pink',
+  'yellow',
+  'orange',
+  'purple',
+  'brown',
+  'grey',
+  'black',
+] as const
 
 @Register
 export class CircuitsEditor extends IoElement {
@@ -35,34 +35,32 @@ export class CircuitsEditor extends IoElement {
         justify-content: center;
         width: 100%;
       }
-    `;
+    `
   }
 
   ready() {
-    this.changed();
+    this.changed()
   }
 
   changed() {
     this.render([
-      this._padButton("white"),
-      ...PAD_COLORS_ROW.map((c) => this._padButton(c)),
-      this._modeButton("Line W", "line", "white"),
-      this._modeButton("Line G", "line", "grey"),
-      this._modeButton("Delete", "delete", "red"),
-    ]);
-  }
-
-  private _padButton(color: string) {
-    return ioButton({ label: color, action: () => this._select("pad", color) });
+      ioButton({ label: 'Pad', action: () => this._select('pad', 'white') }),
+      ...TERMINAL_COLORS.map((c) =>
+        ioButton({ label: c, action: () => this._select('terminal', c) }),
+      ),
+      this._modeButton('Line W', 'line', 'white'),
+      this._modeButton('Line G', 'line', 'grey'),
+      this._modeButton('Delete', 'delete', 'red'),
+    ])
   }
 
   private _modeButton(label: string, mode: DrawMode, color: string) {
-    return ioButton({ label, action: () => this._select(mode, color) });
+    return ioButton({ label, action: () => this._select(mode, color) })
   }
 
   private _select(mode: DrawMode, color: string) {
-    this.dispatch("editor-select", { mode, color }, true);
+    this.dispatch('editor-select', { mode, color }, true)
   }
 }
 
-export const circuitsEditor = CircuitsEditor.vConstructor;
+export const circuitsEditor = CircuitsEditor.vConstructor

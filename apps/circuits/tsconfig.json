@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@io-gui/core": ["../../packages/core"],
+      "@io-gui/inputs": ["../../packages/inputs"],
+      "@io-gui/layout": ["../../packages/layout"],
+      "@io-gui/menus": ["../../packages/menus"],
+      "@io-gui/navigation": ["../../packages/navigation"]
+    }
+  },
+  "include": ["./src"]
+}
