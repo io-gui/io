@@ -1,4 +1,4 @@
-import { Register, ReactiveNode } from "@io-gui/core";
+import { Register, ReactiveNode, ReactiveProperty, Property, Storage as $, Binding } from "@io-gui/core";
 import { Pad, type PadData } from "./items/pad.js";
 import {
   Terminal,
@@ -30,84 +30,100 @@ export class Game extends ReactiveNode {
   pads: Pad[] = [];
   terminals: Terminal[] = [];
   lines: Line[] = [];
-  private plotter = new Plotter();
-  padColors: Record<number, TerminalColor> = {};
-  terminalColors: Record<number, TerminalColor> = {};
-  lineColors: Record<number, TerminalColor> = {};
+
   drawMode: DrawMode = "line";
   drawColor: TerminalColor = "white";
   drawLayer = 0;
+
   undoStack: string[] = [];
   redoStack: string[] = [];
-  currentLevel = "";
 
-  /** Callback invoked after save — host element persists state. */
-  onSave: ((level: string, json: string) => void) | null = null;
-  /** Callback invoked on completion change. */
-  onComplete: ((level: string, completed: boolean) => void) | null = null;
-  /** Callback invoked when grid dimensions change and scene needs re-init. */
-  onInitScene: (() => void) | null = null;
-  /** Callback invoked when game state changes and scene needs re-render. */
-  onRender: (() => void) | null = null;
+  padColors: Record<number, TerminalColor> = {};
+  terminalColors: Record<number, TerminalColor> = {};
+  lineColors: Record<number, TerminalColor> = {};
 
-  init(): void {
+  @ReactiveProperty({value: '', type: String})
+  declare currentLevel: string;
+  
+  @ReactiveProperty({type: Plotter, init: null})
+  declare plotter: Plotter;
+
+  @Property($({key: 'null-level-state', value: {}, storage: 'local'}))
+  declare storedState: Binding;
+
+  clear() {
     this.width = 4;
     this.height = 5;
     this.pads = [];
     this.terminals = [];
     this.lines = [];
+    this.plotter.connect(this.pads, this.terminals, this.lines);
     this.drawMode = "line";
     this.drawColor = "white";
     this.drawLayer = 0;
-    this._renderScene();
-  }
-
-  // -- Level loading --
-
-  load(level: string, savedState?: string): void {
-    this.init();
     this.redoStack = [];
     this.undoStack = [];
-    this.currentLevel = level;
+  }
 
-    if (savedState) {
-      this.fromJSON(savedState);
-      this.save();
-      this.updateUndoStack();
-      this.propagateColors();
-    } else {
-      void this.reset(level);
+  async initialize() {
+    this.clear();
+    this.storedState = $({key: `${this.currentLevel}-level-state`, value: {}, storage: 'local'});
+
+    if (this.currentLevel) {
+      if (Object.keys(this.storedState.value).length === 0) {
+        await this.load(this.currentLevel);
+      } else {
+        this.fromJSON(JSON.stringify(this.storedState.value));
+        this.propagateColors();
+      }
     }
+
+    this.dispatch("game-render", undefined, true);
   }
 
-  clear() {
-    this.init();
+  currentLevelChanged() {
+    this.initialize().then(() => {
+      this.dispatch("game-init-scene", undefined, true);
+    });
   }
 
-  async reset(level: string): Promise<void> {
+  reload() {
+    this.storedState.value = {};
+    void this.initialize();
+  }
+
+  async load(level: string): Promise<void> {
     try {
       const resp = await fetch("./public/levels/" + level + ".json");
-      if (!resp.ok) throw new Error("Level not found");
+      if (!resp.ok) console.error("Level not found");
       const text = await resp.text();
       this.fromJSON(text);
-      this.save();
-      this.updateUndoStack();
       this.propagateColors();
+      this.save();
     } catch (e) {
       console.warn("Could not load level:", level, e);
     }
   }
 
-  // -- Serialisation --
+  save(): void {
+    this.storedState.value = {
+      width: this.width,
+      height: this.height,
+      pads: this.pads.map((p) => p.toJSON()),
+      terminals: this.terminals.map((t) => t.toJSON()),
+      lines: this.lines.map((l) => l.toJSON()),
+    }
+  }
 
   fromJSON(jsonText: string): void {
+    this.clear();
     const state: LevelData = JSON.parse(jsonText);
     this.width = state.width;
     this.height = state.height;
     this.pads = state.pads.map((p) => Pad.fromJSON(p));
     this.terminals = state.terminals.map((t) => Terminal.fromJSON(t));
     this.lines = state.lines.map((l) => Line.fromJSON(l as LineData));
-    this.initScene();
+    this.plotter.connect(this.pads, this.terminals, this.lines);
   }
 
   toJSON(): string {
@@ -120,22 +136,6 @@ export class Game extends ReactiveNode {
     });
   }
 
-  private _getLineById(id: number): Line | undefined {
-    return this.plotter.getLineById(this.lines, id);
-  }
-
-  private _getTerminalById(id: number): Terminal | undefined {
-    return this.terminals.find((t) => t.ID === id);
-  }
-
-  save(): void {
-    if (this.currentLevel && this.onSave) {
-      this.onSave(this.currentLevel, this.toJSON());
-    }
-  }
-
-  // -- Undo / Redo --
-
   updateUndoStack(): void {
     const state = this.toJSON();
     if (state !== this.undoStack[this.undoStack.length - 1]) {
@@ -147,9 +147,9 @@ export class Game extends ReactiveNode {
     if (this.undoStack.length > 1) {
       this.fromJSON(this.undoStack[this.undoStack.length - 2]);
       this.redoStack.push(this.undoStack.pop()!);
-      this.save();
       this.propagateColors();
-      this.checkCompletion();
+      this.save();
+      this.dispatch("game-render", undefined, true);
     }
   }
 
@@ -158,17 +158,18 @@ export class Game extends ReactiveNode {
       const state = this.redoStack.pop()!;
       this.fromJSON(state);
       this.undoStack.push(state);
-      this.save();
       this.propagateColors();
-      this.checkCompletion();
+      this.save();
+      this.dispatch("game-render", undefined, true);
     }
   }
 
-  getPointAt(
-    x: number,
-    y: number,
-  ): { id: number; color: string; isTerminal: boolean } | false {
-    const point = this.plotter.getPointAt(this.pads, this.terminals, x, y);
+  private _getTerminalById(id: number): Terminal | undefined {
+    return this.terminals.find((t) => t.ID === id);
+  }
+
+  getPointAt(x: number, y: number): { id: number; color: string; isTerminal: boolean } | false {
+    const point = this.plotter.getPointAt(x, y);
     if (!point) return false;
     const color = point.isTerminal
       ? (this.terminalColors[point.id] ??
@@ -176,65 +177,6 @@ export class Game extends ReactiveNode {
         "white")
       : (this.padColors[point.id] ?? "white");
     return { id: point.id, color, isTerminal: point.isTerminal };
-  }
-
-  // -- Pad operations --
-
-  addPad(ID: number, x: number, y: number): void {
-    if (this.plotter.addPad(this.pads, this.terminals, ID, x, y)) {
-      this._renderScene();
-    }
-  }
-
-  addTerminal(ID: number, x: number, y: number, color: TerminalColor): void {
-    if (this.plotter.addTerminal(this.pads, this.terminals, ID, x, y, color)) {
-      this._renderScene();
-    }
-  }
-
-  deletePad(x: number, y: number): void {
-    if (this.plotter.deletePad(this.pads, x, y)) this._renderScene();
-  }
-
-  deleteTerminal(x: number, y: number): void {
-    if (this.plotter.deleteTerminal(this.terminals, x, y)) this._renderScene();
-  }
-
-  // -- Line operations --
-
-  /**
-   * Add / extend a line.
-   * Returns true if the line reached a destination pad or terminal (drag should stop).
-   */
-  addLine(ID: number, x: number, y: number, layer: number): boolean {
-    const point = this.getPointAt(x, y);
-    const pointColor = point ? point.color : false;
-    const line = this._getLineById(ID);
-    const lineColor =
-      line && (this.lineColors[ID] ?? (line.layer === 0 ? "white" : "grey"));
-
-    const shouldEndDrag = (p: { id: number; isTerminal: boolean }) => {
-      const c = p.isTerminal
-        ? (this.terminalColors[p.id] ??
-          this._getTerminalById(p.id)?.color ??
-          "white")
-        : (this.padColors[p.id] ?? "white");
-      return (
-        c === "white" ||
-        c === lineColor ||
-        ((lineColor === "white" || lineColor === "grey") && !!c)
-      );
-    };
-
-    const result = this.plotter.addLine( this.pads, this.terminals, this.lines, ID, x, y, layer, shouldEndDrag );
-
-    if (result.added && !line) {
-      this.lineColors[ID] =
-        layer === 0 ? (pointColor as TerminalColor) : ("grey" as TerminalColor);
-    }
-
-    this._renderScene();
-    return result.endDrag;
   }
 
   getLineColor(x: number, y: number): string | false {
@@ -247,32 +189,6 @@ export class Game extends ReactiveNode {
       }
     }
     return false;
-  }
-
-  getLineCount(x: number, y: number): number {
-    return this.plotter.getLineCount(this.lines, x, y);
-  }
-
-  getUnderlineCount(x: number, y: number): number {
-    return this.plotter.getUnderlineCount(this.lines, x, y);
-  }
-
-  checkLine(ID: number): void {
-    const line = this._getLineById(ID);
-    if (line) {
-      const first = line.pos[0];
-      const last = line.pos[line.pos.length - 1];
-      const p1 = this.getPointAt(first[0], first[1]);
-      const p2 = this.getPointAt(last[0], last[1]);
-      if (!p1 || !p2 || (first[0] === last[0] && first[1] === last[1])) {
-        this.undo();
-      }
-      this.redoStack = [];
-    }
-  }
-
-  deleteLine(x: number, y: number): void {
-    if (this.plotter.deleteLine(this.lines, x, y)) this._renderScene();
   }
 
   // -- Colour propagation --
@@ -323,49 +239,32 @@ export class Game extends ReactiveNode {
       }
     }
 
-    this._renderScene();
-  }
+    this.dispatch("game-render", undefined, true);
 
-  // -- Completion check --
-
-  checkCompletion(): void {
     let completed = true;
 
     for (const term of this.terminals) {
-      const nConn = this.getLineCount(term.pos[0], term.pos[1]);
+      const nConn = this.plotter.getLineCount(term.pos[0], term.pos[1]);
       if (nConn !== 1) completed = false;
     }
 
     for (const pad of this.pads) {
-      const nConn = this.getLineCount(pad.pos[0], pad.pos[1]);
-      const nUnder = this.getUnderlineCount(pad.pos[0], pad.pos[1]);
+      const nConn = this.plotter.getLineCount(pad.pos[0], pad.pos[1]);
+      const nUnder = this.plotter.getUnderlineCount(pad.pos[0], pad.pos[1]);
       const pc = this.padColors[pad.ID] ?? "white";
       if (nConn !== 2 && pc !== "white") completed = false;
       if (nConn !== 1 && nUnder !== 1 && pc !== "white") completed = false;
     }
 
-    if (this.onComplete) {
-      this.onComplete(this.currentLevel, completed);
-    }
+    this.dispatch("game-complete", { level: this.currentLevel, completed }, true);
   }
-
-  // -- Move finalisation --
 
   finalizeMove(lineID: number): void {
-    this.save();
-    this.updateUndoStack();
-    this.checkLine(lineID);
-    this.propagateColors();
-    this.checkCompletion();
-  }
-
-  // -- Internal --
-
-  initScene(): void {
-    this.onInitScene?.();
-  }
-
-  private _renderScene(): void {
-    this.onRender?.();
+    if (this.plotter.verifyLineComplete(lineID)) {
+      this.updateUndoStack();
+      this.propagateColors();
+      this.save();
+    }
+    this.dispatch("game-render", undefined, true);
   }
 }

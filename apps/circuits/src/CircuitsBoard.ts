@@ -329,6 +329,8 @@ export class CircuitsBoard extends IoElement {
   static get Listeners(): Record<string, string> {
     return {
       pointerdown: "onPointerdown",
+      "game-init-scene": "onGameInitScene",
+      "game-render": "onGameRender",
     };
   }
 
@@ -383,7 +385,6 @@ export class CircuitsBoard extends IoElement {
     if (rect.width === 0 || rect.height === 0) return;
 
     if (this.game) {
-      this._wireGameCallbacks();
       this.scene.initGrid(
         this.game.width,
         this.game.height,
@@ -402,41 +403,37 @@ export class CircuitsBoard extends IoElement {
   }
 
   gameChanged() {
-    this._wireGameCallbacks();
     this._initScene();
   }
 
-  private _wireGameCallbacks(): void {
-    if (!this.game) return;
-    this.game.onInitScene = () => {
-      const rect = this.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
-      this.scene.initGrid(
-        this.game.width,
-        this.game.height,
-        rect.width,
-        rect.height,
-      );
-      this.scene.render(
-        this.game.pads,
-        this.game.terminals,
-        this.game.lines,
-        this.game.padColors,
-        this.game.terminalColors,
-        this.game.lineColors,
-      );
-    };
-    this.game.onRender = () => {
-      this.scene.render(
-        this.game.pads,
-        this.game.terminals,
-        this.game.lines,
-        this.game.padColors,
-        this.game.terminalColors,
-        this.game.lineColors,
-      );
-    };
-  }
+  onGameInitScene() {
+    const rect = this.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    this.scene.initGrid(
+      this.game.width,
+      this.game.height,
+      rect.width,
+      rect.height,
+    );
+    this.scene.render(
+      this.game.pads,
+      this.game.terminals,
+      this.game.lines,
+      this.game.padColors,
+      this.game.terminalColors,
+      this.game.lineColors,
+    );
+  };
+  onGameRender() {
+    this.scene.render(
+      this.game.pads,
+      this.game.terminals,
+      this.game.lines,
+      this.game.padColors,
+      this.game.terminalColors,
+      this.game.lineColors,
+    );
+  };
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault();
@@ -452,10 +449,10 @@ export class CircuitsBoard extends IoElement {
     if (!this.game) return;
 
     if (this.game.drawMode === "pad") {
-      this.game.addPad(this._randomID, this._gridX, this._gridY);
+      this.game.plotter.addPad(this._randomID, this._gridX, this._gridY);
     }
     if (this.game.drawMode === "terminal") {
-      this.game.addTerminal(
+      this.game.plotter.addTerminal(
         this._randomID,
         this._gridX,
         this._gridY,
@@ -463,7 +460,7 @@ export class CircuitsBoard extends IoElement {
       );
     }
     if (this.game.drawMode === "line") {
-      this.game.addLine(
+      this.game.plotter.addLineSegment(
         this._randomID,
         this._gridX,
         this._gridY,
@@ -471,9 +468,9 @@ export class CircuitsBoard extends IoElement {
       );
     }
     if (this.game.drawMode === "delete") {
-      this.game.deletePad(this._gridX, this._gridY);
-      this.game.deleteTerminal(this._gridX, this._gridY);
-      this.game.deleteLine(this._gridX, this._gridY);
+      this.game.plotter.deletePad(this._gridX, this._gridY);
+      this.game.plotter.deleteTerminal(this._gridX, this._gridY);
+      this.game.plotter.deleteLine(this._gridX, this._gridY);
     }
   }
 
@@ -489,7 +486,7 @@ export class CircuitsBoard extends IoElement {
       this._drag &&
       (this._gridX !== this._gridXOld || this._gridY !== this._gridYOld)
     ) {
-      const endDrag = this.game.addLine(
+      const { endDrag } = this.game.plotter.addLineSegment(
         this._randomID,
         this._gridX,
         this._gridY,

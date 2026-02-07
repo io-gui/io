@@ -52,3 +52,8 @@ Added to .gitignore (can be tracked later if desired)
 Wrote circuits-app-specific changes to root `.memory/` instead of `apps/circuits/.memory/`.
 Root memory is for project-wide insights only. App/package-specific changes go to their local `.memory/`.
 Only project-wide patterns (like app integration via iframe) belong in root working memory.
+
+## 2026-02-07
+
+### [pattern] Io events: bubbling + Listeners, not listener wrangling
+User refactored Game event consumer code: use `dispatch(..., true)` from source node; consumers declare `static get Listeners()` mapping event names to handler methods. Avoid manual addEventListener in ready(), _gameForListeners, _wireGameCallbacks, and add/remove when game instance changes. Promoted to working memory.

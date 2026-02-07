@@ -1,4 +1,4 @@
-import { IoElement, Register, ReactiveProperty, IoElementProps, div, WithBinding } from '@io-gui/core'
+import { IoElement, Register, ReactiveProperty, IoElementProps, div, WithBinding, ListenerDefinitions } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import { Game } from './game/game.js'
 import { circuitsBoard } from './CircuitsBoard.js'
@@ -25,25 +25,28 @@ export class CircuitsGame extends IoElement {
     `
   }
 
+  static get Listeners(): ListenerDefinitions {
+    return {
+      "game-complete": "onGameComplete",
+    };
+  }
+
   @ReactiveProperty({value: '', type: String})
   declare level: string
 
   @ReactiveProperty({type: Game, init: null})
   declare game: Game
 
-  saveFn: ((level: string, json: string) => void) | null = null
   completeFn: ((level: string, completed: boolean) => void) | null = null
 
   constructor(args: CircuitsGameProps) { super(args) }
 
   ready() {
-    this.game.onSave = (level: string, json: string) => {
-      if (this.saveFn) this.saveFn(level, json)
-    }
-    this.game.onComplete = (level: string, completed: boolean) => {
-      if (this.completeFn) this.completeFn(level, completed)
-    }
     this.changed()
+  }
+
+  onGameComplete(event: CustomEvent<{ level: string; completed: boolean }>) {
+    if (this.completeFn) this.completeFn(event.detail.level, event.detail.completed)
   }
 
   changed() {
@@ -60,12 +63,7 @@ export class CircuitsGame extends IoElement {
   }
 
   levelChanged() {
-    if (!this.level) {
-      this.game.clear()
-      return
-    }
-    const savedState = localStorage.getItem(this.level) || undefined
-    this.game.load(this.level, savedState)
+    this.game.currentLevel = this.level
     const board = this.querySelector('circuits-board') as IoElement | null
     if (board) (board as any).gameChanged()
   }
@@ -79,7 +77,7 @@ export class CircuitsGame extends IoElement {
   }
 
   onReset() {
-    void this.game.reset(this.level)
+    this.game.reload()
   }
 
   onEdit() {
