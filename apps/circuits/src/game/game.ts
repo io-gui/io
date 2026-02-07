@@ -1,3 +1,4 @@
+import { Register, ReactiveNode } from "@io-gui/core";
 import { Pad, type PadData } from "./items/pad.js";
 import {
   Terminal,
@@ -5,6 +6,7 @@ import {
   type TerminalColor,
 } from "./items/terminal.js";
 import { Line, type LineData } from "./items/line.js";
+import { Plotter } from "./plotter.js";
 
 export type DrawMode = "pad" | "terminal" | "line" | "delete";
 
@@ -12,7 +14,7 @@ interface LevelData {
   width: number;
   height: number;
   pads: PadData[];
-  terminals?: TerminalData[];
+  terminals: TerminalData[];
   lines: LineData[];
 }
 
@@ -21,12 +23,14 @@ interface LevelData {
  * Manages pads, lines, load/save, undo/redo, colour propagation,
  * and completion checking.
  */
-export class Game {
+@Register
+export class Game extends ReactiveNode {
   width = 4;
   height = 5;
   pads: Pad[] = [];
   terminals: Terminal[] = [];
   lines: Line[] = [];
+  private plotter = new Plotter();
   padColors: Record<number, TerminalColor> = {};
   terminalColors: Record<number, TerminalColor> = {};
   lineColors: Record<number, TerminalColor> = {};
@@ -101,7 +105,7 @@ export class Game {
     this.width = state.width;
     this.height = state.height;
     this.pads = state.pads.map((p) => Pad.fromJSON(p));
-    this.terminals = (state.terminals ?? []).map((t) => Terminal.fromJSON(t));
+    this.terminals = state.terminals.map((t) => Terminal.fromJSON(t));
     this.lines = state.lines.map((l) => Line.fromJSON(l as LineData));
     this.initScene();
   }
@@ -110,26 +114,14 @@ export class Game {
     return JSON.stringify({
       width: this.width,
       height: this.height,
-      pads: this._cleanPads(),
-      terminals: this._cleanTerminals(),
-      lines: this._cleanLines(),
+      pads: this.pads.map((p) => p.toJSON()),
+      terminals: this.terminals.map((t) => t.toJSON()),
+      lines: this.lines.map((l) => l.toJSON()),
     });
   }
 
-  private _cleanPads(): PadData[] {
-    return this.pads.map((p) => p.toJSON());
-  }
-
-  private _cleanTerminals(): TerminalData[] {
-    return this.terminals.map((t) => t.toJSON());
-  }
-
-  private _cleanLines(): LineData[] {
-    return this.lines.map((l) => l.toJSON());
-  }
-
   private _getLineById(id: number): Line | undefined {
-    return this.lines.find((l) => l.ID === id);
+    return this.plotter.getLineById(this.lines, id);
   }
 
   private _getTerminalById(id: number): Terminal | undefined {
@@ -176,57 +168,36 @@ export class Game {
     x: number,
     y: number,
   ): { id: number; color: string; isTerminal: boolean } | false {
-    for (const pad of this.pads) {
-      if (pad.pos[0] === x && pad.pos[1] === y)
-        return {
-          id: pad.ID,
-          color: this.padColors[pad.ID] ?? "white",
-          isTerminal: false,
-        };
-    }
-    for (const term of this.terminals) {
-      if (term.pos[0] === x && term.pos[1] === y)
-        return {
-          id: term.ID,
-          color: this.terminalColors[term.ID] ?? term.color,
-          isTerminal: true,
-        };
-    }
-    return false;
+    const point = this.plotter.getPointAt(this.pads, this.terminals, x, y);
+    if (!point) return false;
+    const color = point.isTerminal
+      ? (this.terminalColors[point.id] ??
+        this._getTerminalById(point.id)?.color ??
+        "white")
+      : (this.padColors[point.id] ?? "white");
+    return { id: point.id, color, isTerminal: point.isTerminal };
   }
 
   // -- Pad operations --
 
   addPad(ID: number, x: number, y: number): void {
-    if (!this.getPointAt(x, y)) {
-      this.pads.push(new Pad(ID, [x, y]));
+    if (this.plotter.addPad(this.pads, this.terminals, ID, x, y)) {
       this._renderScene();
     }
   }
 
   addTerminal(ID: number, x: number, y: number, color: TerminalColor): void {
-    if (!this.getPointAt(x, y)) {
-      this.terminals.push(new Terminal(ID, [x, y], color));
+    if (this.plotter.addTerminal(this.pads, this.terminals, ID, x, y, color)) {
       this._renderScene();
     }
   }
 
   deletePad(x: number, y: number): void {
-    const idx = this.pads.findIndex((p) => p.pos[0] === x && p.pos[1] === y);
-    if (idx !== -1) {
-      this.pads.splice(idx, 1);
-      this._renderScene();
-    }
+    if (this.plotter.deletePad(this.pads, x, y)) this._renderScene();
   }
 
   deleteTerminal(x: number, y: number): void {
-    const idx = this.terminals.findIndex(
-      (t) => t.pos[0] === x && t.pos[1] === y,
-    );
-    if (idx !== -1) {
-      this.terminals.splice(idx, 1);
-      this._renderScene();
-    }
+    if (this.plotter.deleteTerminal(this.terminals, x, y)) this._renderScene();
   }
 
   // -- Line operations --
@@ -238,49 +209,32 @@ export class Game {
   addLine(ID: number, x: number, y: number, layer: number): boolean {
     const point = this.getPointAt(x, y);
     const pointColor = point ? point.color : false;
-    const lineCount = this.getLineCount(x, y);
-
-    const connectionLimit = point ? (point.isTerminal ? 1 : 2) : 0;
-    if (point && lineCount >= connectionLimit) {
-      this._renderScene();
-      return false;
-    }
-
     const line = this._getLineById(ID);
-    if (!line) {
-      if (!pointColor) {
-        this._renderScene();
-        return false;
-      }
-      this.lines.push(new Line(ID, [x, y], layer));
+    const lineColor =
+      line && (this.lineColors[ID] ?? (line.layer === 0 ? "white" : "grey"));
+
+    const shouldEndDrag = (p: { id: number; isTerminal: boolean }) => {
+      const c = p.isTerminal
+        ? (this.terminalColors[p.id] ??
+          this._getTerminalById(p.id)?.color ??
+          "white")
+        : (this.padColors[p.id] ?? "white");
+      return (
+        c === "white" ||
+        c === lineColor ||
+        ((lineColor === "white" || lineColor === "grey") && !!c)
+      );
+    };
+
+    const result = this.plotter.addLine( this.pads, this.terminals, this.lines, ID, x, y, layer, shouldEndDrag );
+
+    if (result.added && !line) {
       this.lineColors[ID] =
         layer === 0 ? (pointColor as TerminalColor) : ("grey" as TerminalColor);
-      this._renderScene();
-      return false;
-    }
-
-    if (!this._checkCrossing(line, x, y)) {
-      this._renderScene();
-      return false;
-    }
-
-    const lineColor =
-      this.lineColors[ID] ?? (line.layer === 0 ? "white" : "grey");
-    let endDrag = false;
-
-    if (!pointColor && (!lineCount || layer === -1)) {
-      line.plotSegment(x, y);
-    } else if (
-      pointColor === "white" ||
-      pointColor === lineColor ||
-      ((lineColor === "white" || lineColor === "grey") && pointColor)
-    ) {
-      line.plotSegment(x, y);
-      endDrag = true;
     }
 
     this._renderScene();
-    return endDrag;
+    return result.endDrag;
   }
 
   getLineColor(x: number, y: number): string | false {
@@ -296,23 +250,11 @@ export class Game {
   }
 
   getLineCount(x: number, y: number): number {
-    let count = 0;
-    for (const line of this.lines) {
-      for (const pos of line.pos) {
-        if (pos[0] === x && pos[1] === y && line.layer === 0) count++;
-      }
-    }
-    return count;
+    return this.plotter.getLineCount(this.lines, x, y);
   }
 
   getUnderlineCount(x: number, y: number): number {
-    let count = 0;
-    for (const line of this.lines) {
-      for (const pos of line.pos) {
-        if (pos[0] === x && pos[1] === y && line.layer === -1) count++;
-      }
-    }
-    return count;
+    return this.plotter.getUnderlineCount(this.lines, x, y);
   }
 
   checkLine(ID: number): void {
@@ -330,36 +272,7 @@ export class Game {
   }
 
   deleteLine(x: number, y: number): void {
-    const idx = this.lines.findIndex((l) =>
-      l.pos.some(([px, py]) => px === x && py === y),
-    );
-    if (idx !== -1) {
-      this.lines.splice(idx, 1);
-      this._renderScene();
-    }
-  }
-
-  /** Prevent diagonal lines from crossing other diagonals on the same layer. */
-  private _checkCrossing(line: Line, x: number, y: number): boolean {
-    const last = line.pos[line.pos.length - 1];
-    const mx = (x + last[0]) / 2;
-    const my = (y + last[1]) / 2;
-
-    for (const other of this.lines) {
-      if (other.layer !== line.layer) continue;
-      const pos = other.pos;
-      for (let i = 1; i < pos.length; i++) {
-        if (
-          Math.abs(pos[i][0] - pos[i - 1][0]) === 1 &&
-          Math.abs(pos[i][1] - pos[i - 1][1]) === 1 &&
-          (pos[i][0] + pos[i - 1][0]) / 2 === mx &&
-          (pos[i][1] + pos[i - 1][1]) / 2 === my
-        ) {
-          return false;
-        }
-      }
-    }
-    return true;
+    if (this.plotter.deleteLine(this.lines, x, y)) this._renderScene();
   }
 
   // -- Colour propagation --
