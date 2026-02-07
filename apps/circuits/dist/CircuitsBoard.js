@@ -84,21 +84,20 @@ export class Scene {
             return;
         ctx0.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         ctx1.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        for (const id in lines)
-            this._drawLineStroke(lines[id]);
-        for (const id in pads)
-            this._drawPadStroke(pads[id]);
-        for (const id in terminals)
-            this._drawTerminalStroke(terminals[id]);
-        for (const id in lines) {
-            const line = lines[id];
+        for (const line of lines)
+            this._drawLineStroke(line);
+        for (const pad of pads)
+            this._drawPadStroke(pad);
+        for (const term of terminals)
+            this._drawTerminalStroke(term);
+        for (const line of lines) {
             const fillColor = lineColors[line.ID] ?? (line.layer === 0 ? 'white' : 'grey');
             this._drawLineFill(line, fillColor);
         }
-        for (const id in pads)
-            this._drawPadFill(pads[id], padColors[pads[id].ID] ?? 'white');
-        for (const id in terminals)
-            this._drawTerminalFill(terminals[id], terminalColors[terminals[id].ID] ?? terminals[id].color);
+        for (const pad of pads)
+            this._drawPadFill(pad, padColors[pad.ID] ?? 'white');
+        for (const term of terminals)
+            this._drawTerminalFill(term, terminalColors[term.ID] ?? term.color);
     }
     // -- Line drawing helpers --
     static _layerToCanvas = {

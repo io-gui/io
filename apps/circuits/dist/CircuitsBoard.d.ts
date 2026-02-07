@@ -31,7 +31,7 @@ export declare class Scene {
     /** Recalculate grid geometry and draw the static grid. */
     initGrid(gameWidth: number, gameHeight: number, containerWidth: number, containerHeight: number): void;
     /** Full re-render of lines, pads and terminals on the dynamic layers. */
-    render(pads: Record<number, Pad>, terminals: Record<number, Terminal>, lines: Record<number, Line>, padColors?: Record<number, string>, terminalColors?: Record<number, string>, lineColors?: Record<number, string>): void;
+    render(pads: Pad[], terminals: Terminal[], lines: Line[], padColors?: Record<number, string>, terminalColors?: Record<number, string>, lineColors?: Record<number, string>): void;
     private static readonly _layerToCanvas;
     private _lineParams;
     private _buildLinePath;

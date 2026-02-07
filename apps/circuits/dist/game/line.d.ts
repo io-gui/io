@@ -17,9 +17,7 @@ export declare class Line {
     addSegment(x: number, y: number): boolean;
     removeLast(): void;
     toJSON(): LineData;
-    static fromJSON(data: LineData & {
-        color?: string;
-    }): Line;
+    static fromJSON(data: LineData): Line;
     /** Prevent backtracking over more than one step. */
     private _checkDirection;
     /** Erase last segment if user drags back to prev node. */

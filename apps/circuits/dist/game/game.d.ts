@@ -10,9 +10,9 @@ export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete';
 export declare class Game {
     width: number;
     height: number;
-    pads: Record<number, Pad>;
-    terminals: Record<number, Terminal>;
-    lines: Record<number, Line>;
+    pads: Pad[];
+    terminals: Terminal[];
+    lines: Line[];
     padColors: Record<number, string>;
     terminalColors: Record<number, string>;
     lineColors: Record<number, string>;
@@ -39,6 +39,8 @@ export declare class Game {
     private _cleanPads;
     private _cleanTerminals;
     private _cleanLines;
+    private _getLineById;
+    private _getTerminalById;
     save(): void;
     updateUndoStack(): void;
     undo(): void;

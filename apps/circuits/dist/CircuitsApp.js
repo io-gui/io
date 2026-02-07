@@ -12,6 +12,7 @@ import { circuitsEditor } from './CircuitsEditor.js';
 import { Game } from './game/game.js';
 $.permit();
 const $level = $({ key: 'level', storage: 'hash', value: '' });
+const $completed = $({ key: 'circuits-completed', storage: 'local', value: '[]' });
 let CircuitsApp = class CircuitsApp extends IoElement {
     static get Style() {
         return /* css */ `
@@ -35,6 +36,7 @@ let CircuitsApp = class CircuitsApp extends IoElement {
         };
     }
     ready() {
+        const completedIds = this._getCompletedIds();
         this.render([
             ioSplit({
                 split: new Split({
@@ -46,12 +48,38 @@ let CircuitsApp = class CircuitsApp extends IoElement {
                     ],
                 }),
                 elements: [
-                    circuitsLevels({ id: 'levels' }),
+                    circuitsLevels({ id: 'levels', completedLevels: completedIds }),
                     circuitsGame({ id: 'game', level: $level, game: this.game }),
                     circuitsEditor({ id: 'editor' }),
                 ],
             }),
         ]);
+        const gameEl = this.querySelector('#game');
+        if (gameEl) {
+            gameEl.completeFn = (level, completed) => this.onLevelComplete(level, completed);
+        }
+    }
+    _getCompletedIds() {
+        try {
+            return JSON.parse($completed.value || '[]');
+        }
+        catch {
+            return [];
+        }
+    }
+    _setCompletedIds(ids) {
+        $completed.value = JSON.stringify(ids);
+    }
+    onLevelComplete(level, completed) {
+        if (!completed)
+            return;
+        const ids = this._getCompletedIds();
+        if (ids.includes(level))
+            return;
+        this._setCompletedIds([...ids, level]);
+        const levelsEl = this.querySelector('#levels');
+        if (levelsEl?.refreshCompleted)
+            levelsEl.refreshCompleted(this._getCompletedIds());
     }
     onEditorSelect(event) {
         event.stopPropagation();

@@ -28,12 +28,7 @@ export class Line {
         return { ID: this.ID, pos: this.pos, layer: this.layer };
     }
     static fromJSON(data) {
-        const layer = 'layer' in data && typeof data.layer === 'number'
-            ? data.layer
-            : data.color === 'grey'
-                ? -1
-                : 0;
-        const line = new Line(data.ID, data.pos[0], layer);
+        const line = new Line(data.ID, data.pos[0], data.layer);
         for (let j = 1; j < data.pos.length; j++) {
             line.addSegment(data.pos[j][0], data.pos[j][1]);
         }

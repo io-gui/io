@@ -4,12 +4,16 @@ import {
   ReactiveProperty,
   IoElementProps,
   canvas,
-} from '@io-gui/core'
-import { Game } from './game/game.js'
-import { COLORS } from './game/colors.js'
-import type { Pad } from './game/pad.js'
-import type { Terminal } from './game/terminal.js'
-import type { Line } from './game/line.js'
+} from "@io-gui/core";
+import { Game } from "./game/game.js";
+import { Pad } from "./game/items/pad.js";
+import {
+  Terminal,
+  type TerminalColor,
+  TERMINAL_COLORS as COLORS,
+} from "./game/items/terminal.js";
+import { Line } from "./game/items/line.js";
+
 /**
  * Scene — manages layered HTML5 canvases and renders the game state.
  *
@@ -21,28 +25,28 @@ import type { Line } from './game/line.js'
  */
 
 interface CanvasLayer {
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
 }
 
 export class Scene {
-  layers: Record<string, CanvasLayer> = {}
-  canvasWidth = 0
-  canvasHeight = 0
-  gridWidth = 0
-  gridHeight = 0
-  gridUnit = 0
-  gridOffsetX = 0
-  gridOffsetY = 0
-  markerRadius = 0
+  layers: Record<string, CanvasLayer> = {};
+  canvasWidth = 0;
+  canvasHeight = 0;
+  gridWidth = 0;
+  gridHeight = 0;
+  gridUnit = 0;
+  gridOffsetX = 0;
+  gridOffsetY = 0;
+  markerRadius = 0;
 
   /** Set up layers from externally provided canvases. */
   init(canvases: Record<string, HTMLCanvasElement>): void {
-    this.layers = {}
+    this.layers = {};
     for (const name in canvases) {
-      const canvas = canvases[name]
-      const ctx = canvas.getContext('2d')!
-      this.layers[name] = { canvas, ctx }
+      const canvas = canvases[name];
+      const ctx = canvas.getContext("2d")!;
+      this.layers[name] = { canvas, ctx };
     }
   }
 
@@ -53,128 +57,126 @@ export class Scene {
     containerWidth: number,
     containerHeight: number,
   ): void {
-    this.canvasWidth = containerWidth
-    this.canvasHeight = containerHeight
-    const dpr = window.devicePixelRatio || 1
+    this.canvasWidth = containerWidth;
+    this.canvasHeight = containerHeight;
+    const dpr = window.devicePixelRatio || 1;
 
     for (const name in this.layers) {
-      const { canvas } = this.layers[name]
-      canvas.width = this.canvasWidth * dpr
-      canvas.height = this.canvasHeight * dpr
-      canvas.style.width = this.canvasWidth + 'px'
-      canvas.style.height = this.canvasHeight + 'px'
-      this.layers[name].ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      const { canvas } = this.layers[name];
+      canvas.width = this.canvasWidth * dpr;
+      canvas.height = this.canvasHeight * dpr;
+      canvas.style.width = this.canvasWidth + "px";
+      canvas.style.height = this.canvasHeight + "px";
+      this.layers[name].ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    this.gridWidth = gameWidth
-    this.gridHeight = gameHeight
+    this.gridWidth = gameWidth;
+    this.gridHeight = gameHeight;
 
     // Calculate unit size so the grid fits with a half-unit margin
     if (
       this.canvasHeight / this.gridHeight >
       this.canvasWidth / this.gridWidth
     ) {
-      this.gridUnit = this.canvasWidth / (this.gridWidth + 1)
+      this.gridUnit = this.canvasWidth / (this.gridWidth + 1);
     } else {
-      this.gridUnit = this.canvasHeight / (this.gridHeight + 1)
+      this.gridUnit = this.canvasHeight / (this.gridHeight + 1);
     }
 
-    this.gridOffsetX = (this.canvasWidth - this.gridUnit * this.gridWidth) / 2
+    this.gridOffsetX = (this.canvasWidth - this.gridUnit * this.gridWidth) / 2;
     this.gridOffsetY =
-      (this.canvasHeight - this.gridUnit * this.gridHeight) / 2
+      (this.canvasHeight - this.gridUnit * this.gridHeight) / 2;
 
     // --- Draw static grid ---
-    const ctx = this.layers.grid.ctx
-    ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+    const ctx = this.layers.grid.ctx;
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-    ctx.fillStyle = 'rgba(255,255,255,0.2)'
+    ctx.fillStyle = "rgba(255,255,255,0.2)";
     ctx.fillRect(
       this.gridOffsetX,
       this.gridOffsetY,
       this.gridWidth * this.gridUnit,
       this.gridHeight * this.gridUnit,
-    )
+    );
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.5)'
-    ctx.lineWidth = 1
+    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+    ctx.lineWidth = 1;
 
     for (let i = 0; i <= gameWidth; i++) {
-      const x = i * this.gridUnit + this.gridOffsetX
-      ctx.beginPath()
-      ctx.moveTo(x, this.gridOffsetY)
-      ctx.lineTo(x, this.gridHeight * this.gridUnit + this.gridOffsetY)
-      ctx.stroke()
+      const x = i * this.gridUnit + this.gridOffsetX;
+      ctx.beginPath();
+      ctx.moveTo(x, this.gridOffsetY);
+      ctx.lineTo(x, this.gridHeight * this.gridUnit + this.gridOffsetY);
+      ctx.stroke();
     }
 
     for (let j = 0; j <= gameHeight; j++) {
-      const y = j * this.gridUnit + this.gridOffsetY
-      ctx.beginPath()
-      ctx.moveTo(this.gridOffsetX, y)
-      ctx.lineTo(this.gridWidth * this.gridUnit + this.gridOffsetX, y)
-      ctx.stroke()
+      const y = j * this.gridUnit + this.gridOffsetY;
+      ctx.beginPath();
+      ctx.moveTo(this.gridOffsetX, y);
+      ctx.lineTo(this.gridWidth * this.gridUnit + this.gridOffsetX, y);
+      ctx.stroke();
     }
 
-    this.markerRadius = this.canvasWidth * 0.1
+    this.markerRadius = this.canvasWidth * 0.1;
   }
 
   // -- Rendering --
 
   /** Full re-render of lines, pads and terminals on the dynamic layers. */
   render(
-    pads: Record<number, Pad>,
-    terminals: Record<number, Terminal>,
-    lines: Record<number, Line>,
-    padColors: Record<number, string> = {},
-    terminalColors: Record<number, string> = {},
-    lineColors: Record<number, string> = {},
+    pads: Pad[],
+    terminals: Terminal[],
+    lines: Line[],
+    padColors: Record<number, TerminalColor> = {},
+    terminalColors: Record<number, TerminalColor> = {},
+    lineColors: Record<number, TerminalColor> = {},
   ): void {
-    const ctx0 = this.layers.layer0?.ctx
-    const ctx1 = this.layers.layer1?.ctx
-    if (!ctx0 || !ctx1) return
+    const ctx0 = this.layers.layer0?.ctx;
+    const ctx1 = this.layers.layer1?.ctx;
+    if (!ctx0 || !ctx1) return;
 
-    ctx0.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
-    ctx1.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+    ctx0.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    ctx1.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
-    for (const id in lines) this._drawLineStroke(lines[id])
-    for (const id in pads) this._drawPadStroke(pads[id])
-    for (const id in terminals) this._drawTerminalStroke(terminals[id])
+    for (const line of lines) this._drawLineStroke(line);
+    for (const pad of pads) this._drawPadStroke(pad);
+    for (const term of terminals) this._drawTerminalStroke(term);
 
-    for (const id in lines) {
-      const line = lines[id]
+    for (const line of lines) {
       const fillColor =
-        lineColors[line.ID] ?? (line.layer === 0 ? 'white' : 'grey')
-      this._drawLineFill(line, fillColor)
+        lineColors[line.ID] ??
+        ((line.layer === 0 ? "white" : "grey") as TerminalColor);
+      this._drawLineFill(line, fillColor);
     }
-    for (const id in pads)
-      this._drawPadFill(pads[id], padColors[pads[id].ID] ?? 'white')
-    for (const id in terminals)
-      this._drawTerminalFill(
-        terminals[id],
-        terminalColors[terminals[id].ID] ?? terminals[id].color,
-      )
+    for (const pad of pads)
+      this._drawPadFill(pad, padColors[pad.ID] ?? "white");
+    for (const term of terminals)
+      this._drawTerminalFill(term, terminalColors[term.ID] ?? term.color);
   }
 
   // -- Line drawing helpers --
 
-  private static readonly _layerToCanvas: Record<number, 'layer0' | 'layer1'> = {
-    [-1]: 'layer0',
-    0: 'layer1',
-  }
+  private static readonly _layerToCanvas: Record<number, "layer0" | "layer1"> =
+    {
+      [-1]: "layer0",
+      0: "layer1",
+    };
 
   private _lineParams(line: Line) {
-    const isBottom = line.layer === -1
-    const layerName = Scene._layerToCanvas[line.layer] ?? 'layer1'
-    const ctx = this.layers[layerName]?.ctx ?? this.layers.layer1.ctx
-    let radius = this.gridUnit / 4
-    let strokeW = 3
-    let strokeColor = 'rgba(0,0,0,1)'
-    let opacity = 1
+    const isBottom = line.layer === -1;
+    const layerName = Scene._layerToCanvas[line.layer] ?? "layer1";
+    const ctx = this.layers[layerName]?.ctx ?? this.layers.layer1.ctx;
+    let radius = this.gridUnit / 4;
+    let strokeW = 3;
+    let strokeColor = "rgba(0,0,0,1)";
+    let opacity = 1;
 
     if (isBottom) {
-      radius *= 1.4
-      strokeW *= 4
-      strokeColor = 'rgba(128,128,128,0.25)'
-      opacity = 0.25
+      radius *= 1.4;
+      strokeW *= 4;
+      strokeColor = "rgba(128,128,128,0.25)";
+      opacity = 0.25;
     }
 
     return {
@@ -183,120 +185,120 @@ export class Scene {
       strokeW,
       strokeColor,
       opacity,
-    }
+    };
   }
 
   private _buildLinePath(
     ctx: CanvasRenderingContext2D,
     positions: [number, number][],
   ): void {
-    ctx.beginPath()
+    ctx.beginPath();
     for (let i = 0; i < positions.length; i++) {
-      const x = positions[i][0] * this.gridUnit + this.gridOffsetX
-      const y = positions[i][1] * this.gridUnit + this.gridOffsetY
-      if (i === 0) ctx.moveTo(x, y)
-      else ctx.lineTo(x, y)
+      const x = positions[i][0] * this.gridUnit + this.gridOffsetX;
+      const y = positions[i][1] * this.gridUnit + this.gridOffsetY;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     }
   }
 
   private _drawLineStroke(line: Line): void {
-    if (line.pos.length < 2) return
-    const p = this._lineParams(line)
-    p.ctx.save()
-    p.ctx.globalAlpha = p.opacity
-    p.ctx.lineCap = 'round'
-    p.ctx.lineJoin = 'round'
-    this._buildLinePath(p.ctx, line.pos)
-    p.ctx.strokeStyle = p.strokeColor
-    p.ctx.lineWidth = p.radius + p.strokeW * 2
-    p.ctx.stroke()
-    p.ctx.restore()
+    if (line.pos.length < 2) return;
+    const p = this._lineParams(line);
+    p.ctx.save();
+    p.ctx.globalAlpha = p.opacity;
+    p.ctx.lineCap = "round";
+    p.ctx.lineJoin = "round";
+    this._buildLinePath(p.ctx, line.pos);
+    p.ctx.strokeStyle = p.strokeColor;
+    p.ctx.lineWidth = p.radius + p.strokeW * 2;
+    p.ctx.stroke();
+    p.ctx.restore();
   }
 
-  private _drawLineFill(line: Line, color: string): void {
-    if (line.pos.length < 2) return
-    const p = this._lineParams(line)
-    p.ctx.save()
-    p.ctx.globalAlpha = p.opacity
-    p.ctx.lineCap = 'round'
-    p.ctx.lineJoin = 'round'
-    this._buildLinePath(p.ctx, line.pos)
-    p.ctx.strokeStyle = COLORS[color] ?? '#fff'
-    p.ctx.lineWidth = p.radius
-    p.ctx.stroke()
-    p.ctx.restore()
+  private _drawLineFill(line: Line, color: TerminalColor): void {
+    if (line.pos.length < 2) return;
+    const p = this._lineParams(line);
+    p.ctx.save();
+    p.ctx.globalAlpha = p.opacity;
+    p.ctx.lineCap = "round";
+    p.ctx.lineJoin = "round";
+    this._buildLinePath(p.ctx, line.pos);
+    p.ctx.strokeStyle = COLORS[color] ?? "#fff";
+    p.ctx.lineWidth = p.radius;
+    p.ctx.stroke();
+    p.ctx.restore();
   }
 
   // -- Pad drawing helpers (pads are always white circles) --
 
   private _drawPadStroke(pad: Pad): void {
-    const ctx = this.layers.layer1.ctx
-    const xx = pad.pos[0] * this.gridUnit + this.gridOffsetX
-    const yy = pad.pos[1] * this.gridUnit + this.gridOffsetY
-    const r = this.gridUnit / 3
-    const sw = 3
-    ctx.beginPath()
-    ctx.arc(xx, yy, r + sw, 0, Math.PI * 2)
-    ctx.fillStyle = 'rgba(0,0,0,1)'
-    ctx.fill()
+    const ctx = this.layers.layer1.ctx;
+    const xx = pad.pos[0] * this.gridUnit + this.gridOffsetX;
+    const yy = pad.pos[1] * this.gridUnit + this.gridOffsetY;
+    const r = this.gridUnit / 3;
+    const sw = 3;
+    ctx.beginPath();
+    ctx.arc(xx, yy, r + sw, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0,0,0,1)";
+    ctx.fill();
   }
 
-  private _drawPadFill(pad: Pad, color: string): void {
-    const ctx = this.layers.layer1.ctx
-    const xx = pad.pos[0] * this.gridUnit + this.gridOffsetX
-    const yy = pad.pos[1] * this.gridUnit + this.gridOffsetY
-    const r = this.gridUnit / 3
-    ctx.beginPath()
-    ctx.arc(xx, yy, r, 0, Math.PI * 2)
-    ctx.fillStyle = COLORS[color] ?? '#fff'
-    ctx.fill()
+  private _drawPadFill(pad: Pad, color: TerminalColor): void {
+    const ctx = this.layers.layer1.ctx;
+    const xx = pad.pos[0] * this.gridUnit + this.gridOffsetX;
+    const yy = pad.pos[1] * this.gridUnit + this.gridOffsetY;
+    const r = this.gridUnit / 3;
+    ctx.beginPath();
+    ctx.arc(xx, yy, r, 0, Math.PI * 2);
+    ctx.fillStyle = COLORS[color] ?? "#fff";
+    ctx.fill();
   }
 
   // -- Terminal drawing helpers (terminals are colored squares) --
 
   private _drawTerminalStroke(terminal: Terminal): void {
-    const ctx = this.layers.layer1.ctx
-    const xx = terminal.pos[0] * this.gridUnit + this.gridOffsetX
-    const yy = terminal.pos[1] * this.gridUnit + this.gridOffsetY
-    const r = this.gridUnit / 3
-    const sw = 3
-    ctx.fillStyle = 'rgba(0,0,0,1)'
-    ctx.fillRect(xx - r - sw, yy - r - sw, (r + sw) * 2, (r + sw) * 2)
+    const ctx = this.layers.layer1.ctx;
+    const xx = terminal.pos[0] * this.gridUnit + this.gridOffsetX;
+    const yy = terminal.pos[1] * this.gridUnit + this.gridOffsetY;
+    const r = this.gridUnit / 3;
+    const sw = 3;
+    ctx.fillStyle = "rgba(0,0,0,1)";
+    ctx.fillRect(xx - r - sw, yy - r - sw, (r + sw) * 2, (r + sw) * 2);
   }
 
-  private _drawTerminalFill(terminal: Terminal, color: string): void {
-    const ctx = this.layers.layer1.ctx
-    const xx = terminal.pos[0] * this.gridUnit + this.gridOffsetX
-    const yy = terminal.pos[1] * this.gridUnit + this.gridOffsetY
-    const r = this.gridUnit / 3
-    ctx.fillStyle = COLORS[color] ?? '#fff'
-    ctx.fillRect(xx - r, yy - r, r * 2, r * 2)
+  private _drawTerminalFill(terminal: Terminal, color: TerminalColor): void {
+    const ctx = this.layers.layer1.ctx;
+    const xx = terminal.pos[0] * this.gridUnit + this.gridOffsetX;
+    const yy = terminal.pos[1] * this.gridUnit + this.gridOffsetY;
+    const r = this.gridUnit / 3;
+    ctx.fillStyle = COLORS[color] ?? "#fff";
+    ctx.fillRect(xx - r, yy - r, r * 2, r * 2);
   }
 
   // -- Touch marker --
 
   drawMarker(touchX: number, touchY: number): void {
-    const ctx = this.layers.top?.ctx
-    if (!ctx) return
-    ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
-    const xx = touchX * this.gridUnit + this.gridOffsetX
-    const yy = touchY * this.gridUnit + this.gridOffsetY
-    ctx.beginPath()
-    ctx.arc(xx, yy, this.markerRadius, 0, Math.PI * 2)
-    ctx.fillStyle = 'rgba(255,255,255,0.05)'
-    ctx.fill()
+    const ctx = this.layers.top?.ctx;
+    if (!ctx) return;
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    const xx = touchX * this.gridUnit + this.gridOffsetX;
+    const yy = touchY * this.gridUnit + this.gridOffsetY;
+    ctx.beginPath();
+    ctx.arc(xx, yy, this.markerRadius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.05)";
+    ctx.fill();
   }
 
   hideMarker(): void {
-    const ctx = this.layers.top?.ctx
-    if (!ctx) return
-    ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight)
+    const ctx = this.layers.top?.ctx;
+    if (!ctx) return;
+    ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
 }
 
 type CircuitsBoardProps = IoElementProps & {
-  game?: Game
-}
+  game?: Game;
+};
 
 /**
  * CircuitsBoard — canvas-based game board IoElement.
@@ -321,73 +323,73 @@ export class CircuitsBoard extends IoElement {
         top: 0;
         left: 0;
       }
-    `
+    `;
   }
 
   static get Listeners(): Record<string, string> {
     return {
-      pointerdown: 'onPointerdown',
-    }
+      pointerdown: "onPointerdown",
+    };
   }
 
   @ReactiveProperty({ type: Game })
-  declare game: Game
+  declare game: Game;
 
   @ReactiveProperty({ type: Scene, init: null })
-  declare scene: Scene
+  declare scene: Scene;
 
   // Plotter state
-  private _touchX = 0
-  private _touchY = 0
-  private _gridX = 0
-  private _gridY = 0
-  private _gridXOld = 0
-  private _gridYOld = 0
-  private _drag = false
-  private _randomID = 0
+  private _touchX = 0;
+  private _touchY = 0;
+  private _gridX = 0;
+  private _gridY = 0;
+  private _gridXOld = 0;
+  private _gridYOld = 0;
+  private _drag = false;
+  private _randomID = 0;
 
   constructor(args: CircuitsBoardProps = {}) {
-    super(args)
+    super(args);
   }
 
   ready() {
-    this.changed()
+    this.changed();
   }
 
   changed() {
     this.render([
-      canvas({ id: 'grid', style: { zIndex: '100' } }),
-      canvas({ id: 'layer0', style: { zIndex: '101' } }),
-      canvas({ id: 'layer1', style: { zIndex: '102' } }),
-      canvas({ id: 'top', style: { zIndex: '105' } }),
-    ])
-    this._initScene()
+      canvas({ id: "grid", style: { zIndex: "100" } }),
+      canvas({ id: "layer0", style: { zIndex: "101" } }),
+      canvas({ id: "layer1", style: { zIndex: "102" } }),
+      canvas({ id: "top", style: { zIndex: "105" } }),
+    ]);
+    this._initScene();
   }
 
   onResized() {
-    this._initScene()
+    this._initScene();
   }
 
   private _initScene(): void {
-    const grid = this.querySelector('#grid') as HTMLCanvasElement
-    const layer0 = this.querySelector('#layer0') as HTMLCanvasElement
-    const layer1 = this.querySelector('#layer1') as HTMLCanvasElement
-    const top = this.querySelector('#top') as HTMLCanvasElement
-    if (!grid || !layer0 || !layer1 || !top) return
+    const grid = this.querySelector("#grid") as HTMLCanvasElement;
+    const layer0 = this.querySelector("#layer0") as HTMLCanvasElement;
+    const layer1 = this.querySelector("#layer1") as HTMLCanvasElement;
+    const top = this.querySelector("#top") as HTMLCanvasElement;
+    if (!grid || !layer0 || !layer1 || !top) return;
 
-    this.scene.init({ grid, layer0, layer1, top })
+    this.scene.init({ grid, layer0, layer1, top });
 
-    const rect = this.getBoundingClientRect()
-    if (rect.width === 0 || rect.height === 0) return
+    const rect = this.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
 
     if (this.game) {
-      this._wireGameCallbacks()
+      this._wireGameCallbacks();
       this.scene.initGrid(
         this.game.width,
         this.game.height,
         rect.width,
         rect.height,
-      )
+      );
       this.scene.render(
         this.game.pads,
         this.game.terminals,
@@ -395,26 +397,26 @@ export class CircuitsBoard extends IoElement {
         this.game.padColors,
         this.game.terminalColors,
         this.game.lineColors,
-      )
+      );
     }
   }
 
   gameChanged() {
-    this._wireGameCallbacks()
-    this._initScene()
+    this._wireGameCallbacks();
+    this._initScene();
   }
 
   private _wireGameCallbacks(): void {
-    if (!this.game) return
+    if (!this.game) return;
     this.game.onInitScene = () => {
-      const rect = this.getBoundingClientRect()
-      if (rect.width === 0 || rect.height === 0) return
+      const rect = this.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
       this.scene.initGrid(
         this.game.width,
         this.game.height,
         rect.width,
         rect.height,
-      )
+      );
       this.scene.render(
         this.game.pads,
         this.game.terminals,
@@ -422,8 +424,8 @@ export class CircuitsBoard extends IoElement {
         this.game.padColors,
         this.game.terminalColors,
         this.game.lineColors,
-      )
-    }
+      );
+    };
     this.game.onRender = () => {
       this.scene.render(
         this.game.pads,
@@ -432,58 +434,58 @@ export class CircuitsBoard extends IoElement {
         this.game.padColors,
         this.game.terminalColors,
         this.game.lineColors,
-      )
-    }
+      );
+    };
   }
 
   onPointerdown(event: PointerEvent) {
-    event.preventDefault()
-    this.setPointerCapture(event.pointerId)
-    this.addEventListener('pointermove', this.onPointermove)
-    this.addEventListener('pointerup', this.onPointerup)
+    event.preventDefault();
+    this.setPointerCapture(event.pointerId);
+    this.addEventListener("pointermove", this.onPointermove);
+    this.addEventListener("pointerup", this.onPointerup);
 
-    this._randomID = Math.floor(Math.random() * 100000)
-    this._drag = true
-    this._initPosition(event)
-    this.scene.drawMarker(this._touchX, this._touchY)
+    this._randomID = Math.floor(Math.random() * 100000);
+    this._drag = true;
+    this._initPosition(event);
+    this.scene.drawMarker(this._touchX, this._touchY);
 
-    if (!this.game) return
+    if (!this.game) return;
 
-    if (this.game.drawMode === 'pad') {
-      this.game.addPad(this._randomID, this._gridX, this._gridY)
+    if (this.game.drawMode === "pad") {
+      this.game.addPad(this._randomID, this._gridX, this._gridY);
     }
-    if (this.game.drawMode === 'terminal') {
+    if (this.game.drawMode === "terminal") {
       this.game.addTerminal(
         this._randomID,
         this._gridX,
         this._gridY,
         this.game.drawColor,
-      )
+      );
     }
-    if (this.game.drawMode === 'line') {
+    if (this.game.drawMode === "line") {
       this.game.addLine(
         this._randomID,
         this._gridX,
         this._gridY,
         this.game.drawLayer,
-      )
+      );
     }
-    if (this.game.drawMode === 'delete') {
-      this.game.deletePad(this._gridX, this._gridY)
-      this.game.deleteTerminal(this._gridX, this._gridY)
-      this.game.deleteLine(this._gridX, this._gridY)
+    if (this.game.drawMode === "delete") {
+      this.game.deletePad(this._gridX, this._gridY);
+      this.game.deleteTerminal(this._gridX, this._gridY);
+      this.game.deleteLine(this._gridX, this._gridY);
     }
   }
 
   onPointermove(event: PointerEvent) {
-    event.preventDefault()
-    this._updatePosition(event)
-    this.scene.drawMarker(this._touchX, this._touchY)
+    event.preventDefault();
+    this._updatePosition(event);
+    this.scene.drawMarker(this._touchX, this._touchY);
 
-    if (!this.game) return
+    if (!this.game) return;
 
     if (
-      this.game.drawMode === 'line' &&
+      this.game.drawMode === "line" &&
       this._drag &&
       (this._gridX !== this._gridXOld || this._gridY !== this._gridYOld)
     ) {
@@ -492,55 +494,55 @@ export class CircuitsBoard extends IoElement {
         this._gridX,
         this._gridY,
         this.game.drawLayer,
-      )
-      if (endDrag) this._drag = false
+      );
+      if (endDrag) this._drag = false;
     }
   }
 
   onPointerup(event: PointerEvent) {
-    event.preventDefault()
-    this.releasePointerCapture(event.pointerId)
-    this.removeEventListener('pointermove', this.onPointermove)
-    this.removeEventListener('pointerup', this.onPointerup)
+    event.preventDefault();
+    this.releasePointerCapture(event.pointerId);
+    this.removeEventListener("pointermove", this.onPointermove);
+    this.removeEventListener("pointerup", this.onPointerup);
 
-    this._drag = false
-    this.scene.hideMarker()
+    this._drag = false;
+    this.scene.hideMarker();
 
-    if (!this.game) return
+    if (!this.game) return;
 
-    this.game.finalizeMove(this._randomID)
+    this.game.finalizeMove(this._randomID);
   }
 
   private _initPosition(event: PointerEvent): void {
-    const rect = this.getBoundingClientRect()
+    const rect = this.getBoundingClientRect();
 
     this._touchX =
       (event.clientX - rect.left - this.scene.gridOffsetX) /
-      this.scene.gridUnit
+      this.scene.gridUnit;
     this._touchY =
-      (event.clientY - rect.top - this.scene.gridOffsetY) / this.scene.gridUnit
+      (event.clientY - rect.top - this.scene.gridOffsetY) / this.scene.gridUnit;
 
-    this._gridX = Math.round(this._touchX)
-    this._gridY = Math.round(this._touchY)
-    this._gridXOld = this._gridX
-    this._gridYOld = this._gridY
+    this._gridX = Math.round(this._touchX);
+    this._gridY = Math.round(this._touchY);
+    this._gridXOld = this._gridX;
+    this._gridYOld = this._gridY;
   }
 
   private _updatePosition(event: PointerEvent): void {
-    const rect = this.getBoundingClientRect()
+    const rect = this.getBoundingClientRect();
 
     this._touchX =
       (event.clientX - rect.left - this.scene.gridOffsetX) /
-      this.scene.gridUnit
+      this.scene.gridUnit;
     this._touchY =
-      (event.clientY - rect.top - this.scene.gridOffsetY) / this.scene.gridUnit
+      (event.clientY - rect.top - this.scene.gridOffsetY) / this.scene.gridUnit;
 
     const distance = Math.sqrt(
       Math.pow(this._touchX - Math.round(this._touchX), 2) +
         Math.pow(this._touchY - Math.round(this._touchY), 2),
-    )
+    );
 
-    if (!this.game) return
+    if (!this.game) return;
 
     if (
       distance < 0.5 &&
@@ -549,20 +551,20 @@ export class CircuitsBoard extends IoElement {
       this._touchX >= -0.5 &&
       this._touchY >= -0.5
     ) {
-      this._gridXOld = this._gridX
-      this._gridYOld = this._gridY
+      this._gridXOld = this._gridX;
+      this._gridYOld = this._gridY;
 
-      this._gridX = Math.round(this._touchX)
-      this._gridY = Math.round(this._touchY)
+      this._gridX = Math.round(this._touchX);
+      this._gridY = Math.round(this._touchY);
 
-      if (this._gridX > this._gridXOld) this._gridX = this._gridXOld + 1
-      if (this._gridX < this._gridXOld) this._gridX = this._gridXOld - 1
-      if (this._gridY > this._gridYOld) this._gridY = this._gridYOld + 1
-      if (this._gridY < this._gridYOld) this._gridY = this._gridYOld - 1
+      if (this._gridX > this._gridXOld) this._gridX = this._gridXOld + 1;
+      if (this._gridX < this._gridXOld) this._gridX = this._gridXOld - 1;
+      if (this._gridY > this._gridYOld) this._gridY = this._gridYOld + 1;
+      if (this._gridY < this._gridYOld) this._gridY = this._gridYOld - 1;
     }
   }
 }
-Register(CircuitsBoard)
+Register(CircuitsBoard);
 export const circuitsBoard = function (arg0: CircuitsBoardProps) {
-  return CircuitsBoard.vConstructor(arg0)
-}
+  return CircuitsBoard.vConstructor(arg0);
+};
