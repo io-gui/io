@@ -53,7 +53,10 @@ export type IoMenuItemProps = IoFieldProps & {
 }
 
 /**
- * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions` from the `option.options` array. Options are expand in the direction specified by `direction` property. If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected` atribute is set on menu options whose `option.value` matches selected value.
+ * It displays `option.icon`, `option.label` and `option.hint` property and it creates expandable `IoMenuOptions`
+ * from the `option.options` array. Options are expand in the direction specified by `direction` property.
+ * If `selectable` property is set, selecting an option sets its `value` to the entire menu tree and `selected`
+ * attribute is set on menu options whose `option.value` matches selected value.
  **/
 
 // TODO: fix and improve keyboard navigation in all cases.

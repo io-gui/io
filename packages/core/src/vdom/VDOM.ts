@@ -8,27 +8,31 @@ export type VDOMElement = {
   children?: Array<VDOMElement | null> | string
 }
 
-type IntegerNumeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32
+type IntegerNumeric = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 |
+  21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 | 32
 type IntegerString = `${IntegerNumeric}`
 type IntegerAny = IntegerNumeric | IntegerString
 type Boolean = boolean | 'true' | 'false'
-type Lang = 'ab'|'aa'|'af'|'ak'|'sq'|'am'|'ar'|'an'|'hy'|'as'|'av'|'ae'|'ay'|'az'|'bm'|'ba'|'eu'|'be'|'bn'|'bh'|'bi'|'bs'|'br'|'bg'|'my'|'ca'|'ch'|'ce'|
-      'ny'|'zh'|'zh-ans'|'zh-ant'|'cv'|'kw'|'co'|'cr'|'hr'|'cs'|'da'|'dv'|'nl'|'dz'|'en'|'eo'|'et'|'ee'|'fo'|'fj'|'fi'|'fr'|'ff'|'gl'|'gd'|
-      'ka'|'de'|'el'|'kl'|'gn'|'gu'|'ht'|'ha'|'he'|'hz'|'hi'|'ho'|'hu'|'is'|'io'|'ig'|'id in'|'ia'|'ie'|'iu'|'ik'|'ga'|'it'|'ja'|'jv'|'kn'|
-      'kr'|'ks'|'kk'|'km'|'ki'|'rw'|'rn'|'ky'|'kv'|'kg'|'ko'|'ku'|'kj'|'lo'|'la'|'lv'|'li'|'ln'|'lt'|'lu'|'lg'|'lb'|'gv'|'mk'|'mg'|'ms'|'ml'|'mt'|
-      'mi'|'mr'|'mh'|'mo'|'mn'|'na'|'nv'|'ng'|'nd'|'ne'|'no'|'nb'|'nn'|'oc'|'oj'|'cu'|'or'|'om'|'os'|'pi'|'ps'|'fa'|'pl'|'pt'|'pa'|'qu'|'rm'|
-      'ro'|'ru'|'se'|'sm'|'sg'|'sa'|'sr'|'sh'|'st'|'tn'|'sn'|'ii'|'sd'|'si'|'ss'|'sk'|'sl'|'so'|'nr'|'es'|'su'|'sw'|'sv'|'tl'|'ty'|'tg'|'ta'|
-      'tt'|'te'|'th'|'bo'|'ti'|'to'|'ts'|'tr'|'tk'|'tw'|'ug'|'uk'|'ur'|'uz'|'ve'|'vi'|'vo'|'wa'|'cy'|'wo'|'fy'|'xh'|'yi'|'ji'|'yo'|'za'|'zu'
+type Lang = 'ab'|'aa'|'af'|'ak'|'sq'|'am'|'ar'|'an'|'hy'|'as'|'av'|'ae'|'ay'|'az'|'bm'|'ba'|'eu'|'be'|'bn'|'bh'|
+  'bi'|'bs'|'br'|'bg'|'my'|'ca'|'ch'|'ce'|'ny'|'zh'|'zh-ans'|'zh-ant'|'cv'|'kw'|'co'|'cr'|'hr'|'cs'|'da'|'dv'|'nl'|
+  'dz'|'en'|'eo'|'et'|'ee'|'fo'|'fj'|'fi'|'fr'|'ff'|'gl'|'gd'|'ka'|'de'|'el'|'kl'|'gn'|'gu'|'ht'|'ha'|'he'|'hz'|'hi'|
+  'ho'|'hu'|'is'|'io'|'ig'|'id in'|'ia'|'ie'|'iu'|'ik'|'ga'|'it'|'ja'|'jv'|'kn'|'kr'|'ks'|'kk'|'km'|'ki'|'rw'|'rn'|
+  'ky'|'kv'|'kg'|'ko'|'ku'|'kj'|'lo'|'la'|'lv'|'li'|'ln'|'lt'|'lu'|'lg'|'lb'|'gv'|'mk'|'mg'|'ms'|'ml'|'mt'|'mi'|'mr'|
+  'mh'|'mo'|'mn'|'na'|'nv'|'ng'|'nd'|'ne'|'no'|'nb'|'nn'|'oc'|'oj'|'cu'|'or'|'om'|'os'|'pi'|'ps'|'fa'|'pl'|'pt'|'pa'|
+  'qu'|'rm'|'ro'|'ru'|'se'|'sm'|'sg'|'sa'|'sr'|'sh'|'st'|'tn'|'sn'|'ii'|'sd'|'si'|'ss'|'sk'|'sl'|'so'|'nr'|'es'|'su'|
+  'sw'|'sv'|'tl'|'ty'|'tg'|'ta'|'tt'|'te'|'th'|'bo'|'ti'|'to'|'ts'|'tr'|'tk'|'tw'|'ug'|'uk'|'ur'|'uz'|'ve'|'vi'|'vo'|
+  'wa'|'cy'|'wo'|'fy'|'xh'|'yi'|'ji'|'yo'|'za'|'zu'
 
 type PropsWithUndefined<T> = {[K in keyof T]: T[K] | undefined}
 
 export type AriaProps = PropsWithUndefined<{
-  role?: 'alert'|'alertdialog'|'application'|'article'|'banner'|'button'|'cell'|'checkbox'|'columnheader'|'combobox'|'complementary'|
-      'contentinfo'|'definition'|'dialog'|'directory'|'document'|'feed'|'figure'|'form'|'grid'|'gridcell'|'group'|'heading'|'img'|
-      'link'|'list'|'listbox'|'listitem'|'log'|'main'|'marquee'|'math'|'menu'|'menubar'|'menuitem'|'menuitemcheckbox'|'menuitemradio'|
-      'navigation'|'none'|'note'|'option'|'presentation'|'progressbar'|'radio'|'radiogroup'|'region'|'row'|'rowgroup'|'rowheader'|
-      'scrollbar'|'search'|'searchbox'|'separator'|'slider'|'spinbutton'|'status'|'switch'|'tab'|'table'|'tablist'|'tabpanel'|'term'|
-      'textbox'|'timer'|'toolbar'|'tooltip'|'tree'|'treegrid'|'treeitem'
+  role?: 'alert'|'alertdialog'|'application'|'article'|'banner'|'button'|'cell'|'checkbox'|'columnheader'|'combobox'|
+    'complementary'|'contentinfo'|'definition'|'dialog'|'directory'|'document'|'feed'|'figure'|'form'|'grid'|
+    'gridcell'|'group'|'heading'|'img'|'link'|'list'|'listbox'|'listitem'|'log'|'main'|'marquee'|'math'|'menu'|
+    'menubar'|'menuitem'|'menuitemcheckbox'|'menuitemradio'|'navigation'|'none'|'note'|'option'|'presentation'|
+    'progressbar'|'radio'|'radiogroup'|'region'|'row'|'rowgroup'|'rowheader'|'scrollbar'|'search'|'searchbox'|
+    'separator'|'slider'|'spinbutton'|'status'|'switch'|'tab'|'table'|'tablist'|'tabpanel'|'term'|'textbox'|'timer'|
+    'toolbar'|'tooltip'|'tree'|'treegrid'|'treeitem'
   ariaAtomic?: Boolean
   ariaAutoComplete?: 'inline' | 'list' | 'both' | 'none'
   ariaBusy?: Boolean
@@ -90,7 +94,8 @@ export type OtherHTMLElementProps = PropsWithUndefined<{
   relList?: DOMTokenList
   hreflang?: Lang
   type?: string
-  referrerPolicy?: 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'
+  referrerPolicy?: 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' |
+    'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'
   text?: string
   coords?: string
   charset?: string
@@ -261,7 +266,20 @@ export type OtherHTMLElementProps = PropsWithUndefined<{
 }>
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
+type AnyEventHandler = ((event: CustomEvent<any>) => void) |
+  ((event: PointerEvent) => void) |
+  ((event: KeyboardEvent) => void) |
+  ((event: MouseEvent) => void) |
+  ((event: TouchEvent) => void) |
+  ((event: WheelEvent) => void) |
+  ((event: InputEvent) => void) |
+  ((event: ClipboardEvent) => void) |
+  ((event: DragEvent) => void) |
+  ((event: FocusEvent) => void) |
+  ((event: TransitionEvent) => void) |
+  ((event: AnimationEvent) => void) |
+  ((event: ErrorEvent) => void) |
+  ((event: Event) => void)
 
 export type NativeElementProps = AriaProps & PropsWithUndefined<{
   [key: prefix<string, '@'>]: string | AnyEventHandler
@@ -359,7 +377,11 @@ export const applyNativeElementProps = function(element: HTMLElement, props: Nat
     }
   }
   if (!(element as IoElement)._eventDispatcher) {
-    Object.defineProperty(element, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoElement)})
+    Object.defineProperty(
+      element,
+      '_eventDispatcher',
+      {enumerable: false, configurable: true, value: new EventDispatcher(element as unknown as IoElement)}
+    )
   }
   (element as IoElement)._eventDispatcher.applyPropListeners(props)
 }

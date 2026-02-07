@@ -331,7 +331,8 @@ export function dispatchQueue(node, debounce = false) {
         node._changeQueue.dispatch();
     }
     debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
-        console.warn(`ReactiveNode.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`);
+        console.warn(`ReactiveNode.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}".
+      Expected one of: "immediate", "throttled", "debounced".`);
     }
 }
 // TODO: Consider using global event bus for all mutation events!

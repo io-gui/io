@@ -5,24 +5,26 @@ export const SKIPPED_PROPERTIES = [
   'ELEMENT_NODE','ATTRIBUTE_NODE','TEXT_NODE','CDATA_SECTION_NODE','ENTITY_REFERENCE_NODE','ENTITY_NODE',
   'PROCESSING_INSTRUCTION_NODE','COMMENT_NODE','DOCUMENT_NODE','DOCUMENT_TYPE_NODE','DOCUMENT_FRAGMENT_NODE',
   'NOTATION_NODE','DOCUMENT_POSITION_DISCONNECTED','DOCUMENT_POSITION_PRECEDING','DOCUMENT_POSITION_FOLLOWING',
-  'DOCUMENT_POSITION_CONTAINS','DOCUMENT_POSITION_CONTAINED_BY','DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC',  // Event Handlers
-  'onbeforecopy','onbeforecut','onbeforepaste','onsearch','onfullscreenchange',
-  'onfullscreenerror','onwebkitfullscreenchange','onwebkitfullscreenerror','namespaceURI',
-  'onbeforexrselect','onabort','onbeforeinput','onbeforematch','onbeforetoggle','onblur','oncancel','oncanplay',
-  'oncanplaythrough','onchange','onclick','onclose','oncontentvisibilityautostatechange','oncontextlost','oncontextmenu',
-  'oncontextrestored','oncuechange','ondblclick','ondrag','ondragend','ondragenter','ondragleave','ondragover','ondragstart',
-  'ondrop','ondurationchange','onemptied','onended','onerror','onfocus','onformdata','oninput','oninvalid','onkeydown',
-  'onkeypress','onkeyup','onload','onloadeddata','onloadedmetadata','onloadstart','onmousedown','onmouseenter','onmouseleave',
-  'onmousemove','onmouseout','onmouseover','onmouseup','onmousewheel','onpause','onplay','onplaying','onprogress',
-  'onratechange','onreset','onresize','onscroll','onsecuritypolicyviolation','onseeked','onseeking','onselect','onslotchange',
+  'DOCUMENT_POSITION_CONTAINS','DOCUMENT_POSITION_CONTAINED_BY','DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC',
+  // Event Handlers
+  'onbeforecopy','onbeforecut','onbeforepaste','onsearch','onfullscreenchange','onfullscreenerror',
+  'onwebkitfullscreenchange','onwebkitfullscreenerror','namespaceURI','onbeforexrselect','onabort','onbeforeinput',
+  'onbeforematch','onbeforetoggle','onblur','oncancel','oncanplay','oncanplaythrough','onchange','onclick','onclose',
+  'oncontentvisibilityautostatechange','oncontextlost','oncontextmenu','oncontextrestored','oncuechange','ondblclick',
+  'ondrag','ondragend','ondragenter','ondragleave','ondragover','ondragstart','ondrop','ondurationchange','onemptied',
+  'onended','onerror','onfocus','onformdata','oninput','oninvalid','onkeydown','onkeypress','onkeyup','onload',
+  'onloadeddata','onloadedmetadata','onloadstart','onmousedown','onmouseenter','onmouseleave','onmousemove',
+  'onmouseout','onmouseover','onmouseup','onmousewheel','onpause','onplay','onplaying','onprogress','onratechange',
+  'onreset','onresize','onscroll','onsecuritypolicyviolation','onseeked','onseeking','onselect','onslotchange',
   'onstalled','onsubmit','onsuspend','ontimeupdate','ontoggle','onvolumechange','onwaiting','onwebkitanimationend',
-  'onwebkitanimationiteration','onwebkitanimationstart','onwebkittransitionend','onwheel','onauxclick','ongotpointercapture',
-  'onlostpointercapture','onpointerdown','onpointermove','onpointerrawupdate','onpointerup','onpointercancel','onpointerover',
-  'onpointerout','onpointerenter','onpointerleave','onselectstart','onselectionchange','onanimationend','onanimationiteration',
-  'onanimationstart','ontransitionrun','ontransitionstart','ontransitionend','ontransitioncancel','oncopy','oncut','onpaste',
-  'oncommand','onscrollend','onscrollsnapchange','onscrollsnapchangin','onscrollsnapchanging','onafterprint','onbeforeprint',
-  'onbeforeunload','onhashchange','onlanguagechange','onmessage','onmessageerror','onoffline','ononline','onpagehide','onpageshow',
-  'onpopstate','onrejectionhandled','onstorage','onunhandledrejection','onunload','onenterpictureinpicture','onreadystatechange',
+  'onwebkitanimationiteration','onwebkitanimationstart','onwebkittransitionend','onwheel','onauxclick',
+  'ongotpointercapture','onlostpointercapture','onpointerdown','onpointermove','onpointerrawupdate','onpointerup',
+  'onpointercancel','onpointerover','onpointerout','onpointerenter','onpointerleave','onselectstart',
+  'onselectionchange','onanimationend','onanimationiteration','onanimationstart','ontransitionrun','ontransitionstart',
+  'ontransitionend','ontransitioncancel','oncopy','oncut','onpaste','oncommand','onscrollend','onscrollsnapchange',
+  'onscrollsnapchangin','onscrollsnapchanging','onafterprint','onbeforeprint','onbeforeunload','onhashchange',
+  'onlanguagechange','onmessage','onmessageerror','onoffline','ononline','onpagehide','onpageshow','onpopstate',
+  'onrejectionhandled','onstorage','onunhandledrejection','onunload','onenterpictureinpicture','onreadystatechange',
   'onpointerlockchange','onpointerlockerror','onfreeze','onprerenderingchange','onresume','onvisibilitychange',
   'onleavepictureinpicture',
 ]
@@ -58,7 +60,10 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
   }],
   [Array, {
     Hidden: [
-      'length', 'constructor', 'at', 'concat', 'copyWithin', 'fill', 'find', 'findIndex', 'findLast', 'findLastIndex', 'lastIndexOf', 'pop', 'push', 'reverse', 'shift', 'unshift', 'slice', 'sort', 'splice', 'includes', 'indexOf', 'join', 'keys', 'entries', 'values', 'forEach', 'filter', 'flat', 'flatMap', 'map', 'every', 'some', 'reduce', 'reduceRight', 'toReversed', 'toSorted', 'toSpliced', 'with', 'toLocaleString', 'toString',
+      'length', 'constructor', 'at', 'concat', 'copyWithin', 'fill', 'find', 'findIndex', 'findLast', 'findLastIndex',
+      'lastIndexOf', 'pop', 'push', 'reverse', 'shift', 'unshift', 'slice', 'sort', 'splice', 'includes', 'indexOf',
+      'join', 'keys', 'entries', 'values', 'forEach', 'filter', 'flat', 'flatMap', 'map', 'every', 'some', 'reduce',
+      'reduceRight', 'toReversed', 'toSorted', 'toSpliced', 'with', 'toLocaleString', 'toString',
     ],
   }],
   [Node, {
@@ -66,27 +71,27 @@ const editorGroupsSingleton: EditorGroups = new Map<AnyConstructor, PropertyGrou
       'textContent',
     ],
     Input: [
-      'lang','translate','dir','inert','accessKey','draggable','writingSuggestions','spellcheck','autocapitalize','editContext',
-      'contentEditable','enterKeyHint','inputMode','virtualKeyboardPolicy',
+      'lang','translate','dir','inert','accessKey','draggable','writingSuggestions','spellcheck','autocapitalize',
+      'editContext', 'contentEditable','enterKeyHint','inputMode','virtualKeyboardPolicy',
     ],
     Hierarchy: [
-      'isConnected','ownerDocument','parentNode','parentElement','childNodes','firstChild','lastChild','previousSibling',
-      'nextSibling',
-      'children','firstElementChild','lastElementChild','childElementCount','previousElementSibling',
-      'nextElementSibling','elementTiming',
+      'isConnected','ownerDocument','parentNode','parentElement','childNodes','firstChild','lastChild',
+      'previousSibling','nextSibling','children','firstElementChild','lastElementChild','childElementCount',
+      'previousElementSibling','nextElementSibling','elementTiming',
     ],
     Layout: [
-      'scrollTop','scrollLeft','scrollWidth','scrollHeight','clientTop','clientLeft','clientWidth','clientHeight','currentCSSZoom',
-      'offsetParent','offsetTop','offsetLeft','offsetWidth','offsetHeight'
+      'scrollTop','scrollLeft','scrollWidth','scrollHeight','clientTop','clientLeft','clientWidth','clientHeight',
+      'currentCSSZoom','offsetParent','offsetTop','offsetLeft','offsetWidth','offsetHeight'
     ],
     Aria: [
-      'role','ariaAtomic','ariaAutoComplete','ariaBusy','ariaBrailleLabel','ariaBrailleRoleDescription','ariaChecked','ariaColCount',
-      'ariaColIndex','ariaColSpan','ariaCurrent','ariaDescription','ariaDisabled','ariaExpanded','ariaHasPopup','ariaHidden',
-      'ariaInvalid','ariaKeyShortcuts','ariaLabel','ariaLevel','ariaLive','ariaModal','ariaMultiLine','ariaMultiSelectable',
-      'ariaOrientation','ariaPlaceholder','ariaPosInSet','ariaPressed','ariaReadOnly','ariaRelevant','ariaRequired',
-      'ariaRoleDescription','ariaRowCount','ariaRowIndex','ariaRowSpan','ariaSelected','ariaSetSize','ariaSort','ariaValueMax',
-      'ariaValueMin','ariaValueNow','ariaValueText','ariaColIndexText','ariaRowIndexText','ariaActiveDescendantElement',
-      'ariaControlsElements','ariaDescribedByElements','ariaDetailsElements','ariaErrorMessageElements','ariaFlowToElements',
+      'role','ariaAtomic','ariaAutoComplete','ariaBusy','ariaBrailleLabel','ariaBrailleRoleDescription','ariaChecked',
+      'ariaColCount','ariaColIndex','ariaColSpan','ariaCurrent','ariaDescription','ariaDisabled','ariaExpanded',
+      'ariaHasPopup','ariaHidden','ariaInvalid','ariaKeyShortcuts','ariaLabel','ariaLevel','ariaLive','ariaModal',
+      'ariaMultiLine','ariaMultiSelectable','ariaOrientation','ariaPlaceholder','ariaPosInSet','ariaPressed',
+      'ariaReadOnly','ariaRelevant','ariaRequired','ariaRoleDescription','ariaRowCount','ariaRowIndex','ariaRowSpan',
+      'ariaSelected','ariaSetSize','ariaSort','ariaValueMax','ariaValueMin','ariaValueNow','ariaValueText',
+      'ariaColIndexText','ariaRowIndexText','ariaActiveDescendantElement','ariaControlsElements',
+      'ariaDescribedByElements','ariaDetailsElements','ariaErrorMessageElements','ariaFlowToElements',
       'ariaLabelledByElements',
     ],
     Hidden: [],
@@ -208,11 +213,13 @@ export function getEditorGroups(object: object, propertyGroups: PropertyGroups):
 
     for (const g of Object.keys(aggregatedGroups)) {
       for (const identifier of aggregatedGroups[g]) {
-        if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key) && !isFunction) {
-          groupsRecord[g].push(key)
-          includedProperties.add(key)
-          included = true
-          break
+        if (!isFunction) {
+          if (identifier instanceof RegExp && !allGroupedNonRegexPropertyNames.includes(key) && identifier.test(key)) {
+            groupsRecord[g].push(key)
+            includedProperties.add(key)
+            included = true
+            break
+          }
         }
       }
       if (included) break

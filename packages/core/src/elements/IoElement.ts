@@ -17,7 +17,20 @@ const resizeObserver = new ResizeObserver(entries => {
 })
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
+type AnyEventHandler = ((event: CustomEvent<any>) => void) |
+  ((event: PointerEvent) => void) |
+  ((event: KeyboardEvent) => void) |
+  ((event: MouseEvent) => void) |
+  ((event: TouchEvent) => void) |
+  ((event: WheelEvent) => void) |
+  ((event: InputEvent) => void) |
+  ((event: ClipboardEvent) => void) |
+  ((event: DragEvent) => void) |
+  ((event: FocusEvent) => void) |
+  ((event: TransitionEvent) => void) |
+  ((event: AnimationEvent) => void) |
+  ((event: ErrorEvent) => void) |
+  ((event: Event) => void)
 
 export type IoElementProps = NativeElementProps & {
   reactivity?: ReactivityType
@@ -26,7 +39,10 @@ export type IoElementProps = NativeElementProps & {
 
 @Register
 export class IoElement extends HTMLElement {
-  declare static vConstructor: (arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string) => VDOMElement
+  declare static vConstructor: (arg0?: IoElementProps |
+    Array<VDOMElement | null> |
+    string, arg1?: Array<VDOMElement | null> |
+    string) => VDOMElement
   static get Style() {
     return /* css */`
       :host {
@@ -358,7 +374,9 @@ export class IoElement extends HTMLElement {
     // TODO: Define all overloads with type guards.
     // TODO: Add runtime debug type checks.
     // TODO: Test thoroughly.
-    Object.defineProperty(ioNodeConstructor, 'vConstructor', {value: function(arg0?: IoElementProps | Array<VDOMElement | null> | string, arg1?: Array<VDOMElement | null> | string): VDOMElement {
+    Object.defineProperty(ioNodeConstructor, 'vConstructor', {
+        value: function(arg0?: IoElementProps | Array<VDOMElement | null> | string,
+        arg1?: Array<VDOMElement | null> | string): VDOMElement {
       const vDOMElement: VDOMElement = {tag: localName}
       if (arg0 !== undefined) {
         if (typeof arg0 === 'string') {
