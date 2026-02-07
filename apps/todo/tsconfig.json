@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@io-gui/core": ["../../packages/core"]
+    }
+  },
+  "include": ["./src"]
+}
