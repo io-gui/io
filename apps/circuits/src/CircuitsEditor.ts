@@ -1,19 +1,7 @@
 import { IoElement, Register } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import type { DrawMode } from './game/game.js'
-
-const TERMINAL_COLORS = [
-  'red',
-  'green',
-  'blue',
-  'pink',
-  'yellow',
-  'orange',
-  'purple',
-  'brown',
-  'grey',
-  'black',
-] as const
+import { TERMINAL_COLORS } from './game/items/terminal.js'
 
 @Register
 export class CircuitsEditor extends IoElement {
@@ -45,7 +33,7 @@ export class CircuitsEditor extends IoElement {
   changed() {
     this.render([
       ioButton({ label: 'Pad', action: () => this._select('pad', 'white') }),
-      ...TERMINAL_COLORS.map((c) =>
+      ...Object.keys(TERMINAL_COLORS).map((c) =>
         ioButton({ label: c, action: () => this._select('terminal', c) }),
       ),
       ioButton({

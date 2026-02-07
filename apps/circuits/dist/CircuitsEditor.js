@@ -6,18 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { IoElement, Register } from '@io-gui/core';
 import { ioButton } from '@io-gui/inputs';
-const TERMINAL_COLORS = [
-    'red',
-    'green',
-    'blue',
-    'pink',
-    'yellow',
-    'orange',
-    'purple',
-    'brown',
-    'grey',
-    'black',
-];
+import { TERMINAL_COLORS } from './game/items/terminal.js';
 let CircuitsEditor = class CircuitsEditor extends IoElement {
     static get Style() {
         return /* css */ `
@@ -45,7 +34,7 @@ let CircuitsEditor = class CircuitsEditor extends IoElement {
     changed() {
         this.render([
             ioButton({ label: 'Pad', action: () => this._select('pad', 'white') }),
-            ...TERMINAL_COLORS.map((c) => ioButton({ label: c, action: () => this._select('terminal', c) })),
+            ...Object.keys(TERMINAL_COLORS).map((c) => ioButton({ label: c, action: () => this._select('terminal', c) })),
             ioButton({
                 label: 'Line (top)',
                 action: () => this.dispatch('editor-select', { mode: 'line', layer: 0 }, true),

@@ -1,17 +1,48 @@
+import { TerminalColor } from './terminal.js'
+
 export interface LineData {
-  ID: number;
-  pos: [number, number][];
-  layer: number;
+  id: number
+  pos: [number, number][]
+  layer: number
 }
 
 export class Line {
-  ID: number;
-  pos: [number, number][];
-  layer: number;
-  constructor(ID: number, pos: [number, number], layer: number) {
-    this.ID = ID;
-    this.pos = [pos];
-    this.layer = layer;
+  id: number
+  pos: [number, number][]
+  layer: number
+  _color: TerminalColor = 'white'
+
+  get color(): TerminalColor {
+    return this._color
+  }
+
+  set color(color: TerminalColor) {
+    this._color = color
+  }
+
+  constructor(id: number, pos: [number, number], layer: number) {
+    this.id = id
+    this.pos = [pos]
+    this.layer = layer
+  }
+
+  hasDiagonalSegmentAt(mx: number, my: number): boolean {
+    const pos = this.pos
+    for (let i = 1; i < pos.length; i++) {
+      const ax = pos[i - 1][0]
+      const ay = pos[i - 1][1]
+      const bx = pos[i][0]
+      const by = pos[i][1]
+      if (
+        Math.abs(bx - ax) === 1 &&
+        Math.abs(by - ay) === 1 &&
+        (ax + bx) / 2 === mx &&
+        (ay + by) / 2 === my
+      ) {
+        return true
+      }
+    }
+    return false
   }
 
   /**
@@ -20,52 +51,61 @@ export class Line {
    * Return true if segment was added, false otherwise.
    */
   plotSegment(x: number, y: number): boolean {
-    if (!this._tryEraseLastSegment(x, y)) return false;
-    if (!this._tryAddNewSegment(x, y)) return false;
-    return true;
+    if (this._tryEraseLastSegment(x, y)) return true
+    if (this._tryAddNewSegment(x, y)) return true
+    return false
   }
 
   toJSON(): LineData {
     return {
-      ID: this.ID,
+      id: this.id,
       pos: this.pos,
       layer: this.layer,
-    };
+    }
   }
 
   static fromJSON(data: LineData): Line {
-    const line = new Line(data.ID, data.pos[0], data.layer);
+    const line = new Line(data.id, data.pos[0], data.layer)
     for (let j = 1; j < data.pos.length; j++) {
-      line.plotSegment(data.pos[j][0], data.pos[j][1]);
+      line.plotSegment(data.pos[j][0], data.pos[j][1])
     }
-    return line;
+    return line
   }
 
-  /** Prevent backtracking over more than one step. */
+  /**
+   * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.
+   * Returns true if nothing was done, false if path was updated.
+   */
   private _tryAddNewSegment(x: number, y: number): boolean {
-    const ln = this.pos.length;
+    const ln = this.pos.length
     if (ln > 1) {
-      if (y === this.pos[ln - 2][1] && Math.abs(x - this.pos[ln - 2][0]) === 1)
-        return false;
-      if (x === this.pos[ln - 2][0] && Math.abs(y - this.pos[ln - 2][1]) === 1)
-        return false;
+      if (y === this.pos[ln - 2][1] && Math.abs(x - this.pos[ln - 2][0]) === 1) {
+        this.pos.pop()
+        this.pos.push([x, y])
+        return false
+      }
+      if (x === this.pos[ln - 2][0] && Math.abs(y - this.pos[ln - 2][1]) === 1) {
+        this.pos.pop()
+        this.pos.push([x, y])
+        return false
+      }
     }
-    const last = this.pos[ln - 1];
-    if (Math.abs(last[0] - x) > 1) return false;
-    if (Math.abs(last[1] - y) > 1) return false;
+    const last = this.pos[ln - 1]
+    if (Math.abs(last[0] - x) > 1) return true
+    if (Math.abs(last[1] - y) > 1) return true
 
-    this.pos.push([x, y]);
-    return true;
+    this.pos.push([x, y])
+    return false
   }
 
   /** Erase last segment if user drags back to prev node. */
   private _tryEraseLastSegment(x: number, y: number): boolean {
-    const ln = this.pos.length;
-    if (ln < 2) return true;
+    const ln = this.pos.length
+    if (ln < 2) return false
     if (x === this.pos[ln - 2][0] && y === this.pos[ln - 2][1]) {
-      this.pos.pop();
-      return false;
+      this.pos.pop()
+      return true
     }
-    return true;
+    return false
   }
 }

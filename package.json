@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm clean && pnpm lint && pnpm -r build",
-    "bundle": "pnpm build && node bundle.js",
+    "build": "pnpm clean && pnpm -r build",
+    "bundle": "pnpm lint &&pnpm build && node bundle.js",
     "lint": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",

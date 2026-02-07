@@ -1,8 +1,8 @@
 import { IoElement, IoElementProps } from '@io-gui/core';
 import { Game } from './game/game.js';
-import type { Pad } from './game/pad.js';
-import type { Terminal } from './game/terminal.js';
-import type { Line } from './game/line.js';
+import { Pad } from './game/items/pad.js';
+import { Terminal } from './game/items/terminal.js';
+import { Line } from './game/items/line.js';
 /**
  * Scene — manages layered HTML5 canvases and renders the game state.
  *
@@ -31,7 +31,7 @@ export declare class Scene {
     /** Recalculate grid geometry and draw the static grid. */
     initGrid(gameWidth: number, gameHeight: number, containerWidth: number, containerHeight: number): void;
     /** Full re-render of lines, pads and terminals on the dynamic layers. */
-    render(pads: Pad[], terminals: Terminal[], lines: Line[], padColors?: Record<number, string>, terminalColors?: Record<number, string>, lineColors?: Record<number, string>): void;
+    render(pads: Pad[], terminals: Terminal[], lines: Line[]): void;
     private static readonly _layerToCanvas;
     private _lineParams;
     private _buildLinePath;
@@ -71,7 +71,8 @@ export declare class CircuitsBoard extends IoElement {
     onResized(): void;
     private _initScene;
     gameChanged(): void;
-    private _wireGameCallbacks;
+    onGameInitScene(): void;
+    onGameRender(): void;
     onPointerdown(event: PointerEvent): void;
     onPointermove(event: PointerEvent): void;
     onPointerup(event: PointerEvent): void;

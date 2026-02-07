@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 import { Game } from './game/game.js';
 type CircuitsGameProps = IoElementProps & {
     level: WithBinding<string>;
@@ -6,12 +6,16 @@ type CircuitsGameProps = IoElementProps & {
 };
 export declare class CircuitsGame extends IoElement {
     static get Style(): string;
+    static get Listeners(): ListenerDefinitions;
     level: string;
     game: Game;
-    saveFn: ((level: string, json: string) => void) | null;
     completeFn: ((level: string, completed: boolean) => void) | null;
     constructor(args: CircuitsGameProps);
     ready(): void;
+    onGameComplete(event: CustomEvent<{
+        level: string;
+        completed: boolean;
+    }>): void;
     changed(): void;
     levelChanged(): void;
     onUndo(): void;

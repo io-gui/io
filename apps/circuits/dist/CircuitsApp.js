@@ -12,7 +12,11 @@ import { circuitsEditor } from './CircuitsEditor.js';
 import { Game } from './game/game.js';
 $.permit();
 const $level = $({ key: 'level', storage: 'hash', value: '' });
-const $completed = $({ key: 'circuits-completed', storage: 'local', value: '[]' });
+const $completed = $({
+    key: 'circuits-completed',
+    storage: 'local',
+    value: '[]',
+});
 let CircuitsApp = class CircuitsApp extends IoElement {
     static get Style() {
         return /* css */ `

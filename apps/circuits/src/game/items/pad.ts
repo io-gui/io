@@ -1,22 +1,33 @@
+import { TerminalColor } from './terminal.js'
+
 export interface PadData {
-  ID: number
+  id: number
   pos: [number, number]
 }
 
 export class Pad {
-  ID: number
+  id: number
   pos: [number, number]
+  _color: TerminalColor = 'white'
 
-  constructor(ID: number, pos: [number, number]) {
-    this.ID = ID
+  get color(): TerminalColor {
+    return this._color
+  }
+
+  set color(color: TerminalColor) {
+    this._color = color
+  }
+
+  constructor(id: number, pos: [number, number]) {
+    this.id = id
     this.pos = pos
   }
 
   toJSON(): PadData {
-    return { pos: this.pos, ID: this.ID }
+    return { pos: this.pos, id: this.id }
   }
 
   static fromJSON(data: PadData): Pad {
-    return new Pad(data.ID, data.pos)
+    return new Pad(data.id, data.pos)
   }
 }

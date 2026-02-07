@@ -24,19 +24,19 @@ export class CircuitsGame extends IoElement {
       }
     `;
     }
-    saveFn = null;
+    static get Listeners() {
+        return {
+            'game-complete': 'onGameComplete',
+        };
+    }
     completeFn = null;
     constructor(args) { super(args); }
     ready() {
-        this.game.onSave = (level, json) => {
-            if (this.saveFn)
-                this.saveFn(level, json);
-        };
-        this.game.onComplete = (level, completed) => {
-            if (this.completeFn)
-                this.completeFn(level, completed);
-        };
         this.changed();
+    }
+    onGameComplete(event) {
+        if (this.completeFn)
+            this.completeFn(event.detail.level, event.detail.completed);
     }
     changed() {
         this.render([
@@ -51,12 +51,7 @@ export class CircuitsGame extends IoElement {
         ]);
     }
     levelChanged() {
-        if (!this.level) {
-            this.game.clear();
-            return;
-        }
-        const savedState = localStorage.getItem(this.level) || undefined;
-        this.game.load(this.level, savedState);
+        this.game.currentLevel = this.level;
         const board = this.querySelector('circuits-board');
         if (board)
             board.gameChanged();
@@ -68,7 +63,7 @@ export class CircuitsGame extends IoElement {
         this.game.redo();
     }
     onReset() {
-        void this.game.reset(this.level);
+        this.game.reload();
     }
     onEdit() {
         this.changed();

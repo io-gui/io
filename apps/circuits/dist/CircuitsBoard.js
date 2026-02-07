@@ -6,7 +6,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { IoElement, Register, ReactiveProperty, canvas, } from '@io-gui/core';
 import { Game } from './game/game.js';
-import { COLORS } from './game/colors.js';
+import { TERMINAL_COLORS as COLORS, } from './game/items/terminal.js';
 export class Scene {
     layers = {};
     canvasWidth = 0;
@@ -77,7 +77,7 @@ export class Scene {
     }
     // -- Rendering --
     /** Full re-render of lines, pads and terminals on the dynamic layers. */
-    render(pads, terminals, lines, padColors = {}, terminalColors = {}, lineColors = {}) {
+    render(pads, terminals, lines) {
         const ctx0 = this.layers.layer0?.ctx;
         const ctx1 = this.layers.layer1?.ctx;
         if (!ctx0 || !ctx1)
@@ -91,13 +91,12 @@ export class Scene {
         for (const term of terminals)
             this._drawTerminalStroke(term);
         for (const line of lines) {
-            const fillColor = lineColors[line.ID] ?? (line.layer === 0 ? 'white' : 'grey');
-            this._drawLineFill(line, fillColor);
+            this._drawLineFill(line, line._color);
         }
         for (const pad of pads)
-            this._drawPadFill(pad, padColors[pad.ID] ?? 'white');
+            this._drawPadFill(pad, pad._color);
         for (const term of terminals)
-            this._drawTerminalFill(term, terminalColors[term.ID] ?? term.color);
+            this._drawTerminalFill(term, term.color);
     }
     // -- Line drawing helpers --
     static _layerToCanvas = {
@@ -253,6 +252,8 @@ export class CircuitsBoard extends IoElement {
     static get Listeners() {
         return {
             pointerdown: 'onPointerdown',
+            'game-init-scene': 'onGameInitScene',
+            'game-render': 'onGameRender',
         };
     }
     // Plotter state
@@ -294,29 +295,25 @@ export class CircuitsBoard extends IoElement {
         if (rect.width === 0 || rect.height === 0)
             return;
         if (this.game) {
-            this._wireGameCallbacks();
             this.scene.initGrid(this.game.width, this.game.height, rect.width, rect.height);
-            this.scene.render(this.game.pads, this.game.terminals, this.game.lines, this.game.padColors, this.game.terminalColors, this.game.lineColors);
+            this.scene.render(this.game.pads, this.game.terminals, this.game.lines);
         }
     }
     gameChanged() {
-        this._wireGameCallbacks();
         this._initScene();
     }
-    _wireGameCallbacks() {
-        if (!this.game)
+    onGameInitScene() {
+        const rect = this.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0)
             return;
-        this.game.onInitScene = () => {
-            const rect = this.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0)
-                return;
-            this.scene.initGrid(this.game.width, this.game.height, rect.width, rect.height);
-            this.scene.render(this.game.pads, this.game.terminals, this.game.lines, this.game.padColors, this.game.terminalColors, this.game.lineColors);
-        };
-        this.game.onRender = () => {
-            this.scene.render(this.game.pads, this.game.terminals, this.game.lines, this.game.padColors, this.game.terminalColors, this.game.lineColors);
-        };
+        this.scene.initGrid(this.game.width, this.game.height, rect.width, rect.height);
+        this.scene.render(this.game.pads, this.game.terminals, this.game.lines);
     }
+    ;
+    onGameRender() {
+        this.scene.render(this.game.pads, this.game.terminals, this.game.lines);
+    }
+    ;
     onPointerdown(event) {
         event.preventDefault();
         this.setPointerCapture(event.pointerId);
@@ -329,30 +326,28 @@ export class CircuitsBoard extends IoElement {
         if (!this.game)
             return;
         if (this.game.drawMode === 'pad') {
-            this.game.addPad(this._randomID, this._gridX, this._gridY);
+            this.game.plotter.addPad(this._randomID, this._gridX, this._gridY);
         }
         if (this.game.drawMode === 'terminal') {
-            this.game.addTerminal(this._randomID, this._gridX, this._gridY, this.game.drawColor);
+            this.game.plotter.addTerminal(this._randomID, this._gridX, this._gridY, this.game.drawColor);
         }
         if (this.game.drawMode === 'line') {
-            this.game.addLine(this._randomID, this._gridX, this._gridY, this.game.drawLayer);
+            this.game.plotter.addLineSegment(this._randomID, this._gridX, this._gridY, this.game.drawLayer);
         }
         if (this.game.drawMode === 'delete') {
-            this.game.deletePad(this._gridX, this._gridY);
-            this.game.deleteTerminal(this._gridX, this._gridY);
-            this.game.deleteLine(this._gridX, this._gridY);
+            this.game.plotter.delete(this._gridX, this._gridY);
         }
     }
     onPointermove(event) {
         event.preventDefault();
         this._updatePosition(event);
-        this.scene.drawMarker(this._touchX, this._touchY);
+        this.scene.drawMarker(this._gridX, this._gridY);
         if (!this.game)
             return;
         if (this.game.drawMode === 'line' &&
             this._drag &&
             (this._gridX !== this._gridXOld || this._gridY !== this._gridYOld)) {
-            const endDrag = this.game.addLine(this._randomID, this._gridX, this._gridY, this.game.drawLayer);
+            const { endDrag } = this.game.plotter.addLineSegment(this._randomID, this._gridX, this._gridY, this.game.drawLayer);
             if (endDrag)
                 this._drag = false;
         }

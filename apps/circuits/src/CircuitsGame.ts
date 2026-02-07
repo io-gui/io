@@ -27,8 +27,8 @@ export class CircuitsGame extends IoElement {
 
   static get Listeners(): ListenerDefinitions {
     return {
-      "game-complete": "onGameComplete",
-    };
+      'game-complete': 'onGameComplete',
+    }
   }
 
   @ReactiveProperty({value: '', type: String})

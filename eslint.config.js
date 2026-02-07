@@ -75,7 +75,6 @@ export default tseslint.config(
       "@stylistic/semi": ["error", "never"],
       "@stylistic/quotes": ["error", "single"],
       "@stylistic/no-trailing-spaces": "error",
-      "@stylistic/max-len": ["warn", { code: 120 }],
 
       // Core ESLint rules
       "no-debugger": "error",
