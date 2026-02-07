@@ -16,8 +16,9 @@ import { EventDispatcher } from '../core/EventDispatcher.js';
 import { ChangeQueue } from '../core/ChangeQueue.js';
 import { throttle, debounce } from '../core/Queue.js';
 const resizeObserver = new ResizeObserver(entries => {
-    for (const entry of entries)
+    for (const entry of entries) {
         entry.target.onResized();
+    }
 });
 let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     static get Style() {

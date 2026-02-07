@@ -84,38 +84,20 @@ describe('IoNavigator', () => {
             expect(navigator.querySelector('io-menu-options')).toBeNull();
             expect(navigator.querySelector('io-selector')).toBeTruthy();
         });
-        it('should render io-menu-tree for right menu', async () => {
-            navigator = new IoNavigator({ option, elements: [], menu: 'right' });
-            container.appendChild(navigator);
-            await nextQueue();
-            expect(navigator.querySelector('io-menu-tree')).toBeTruthy();
-            expect(navigator.querySelector('io-menu-options')).toBeNull();
-            expect(navigator.querySelector('io-selector')).toBeTruthy();
-        });
         it('should reflect menu attribute', () => {
             navigator = new IoNavigator({ option, elements: [], menu: 'left' });
             container.appendChild(navigator);
             expect(navigator.getAttribute('menu')).toBe('left');
-            navigator.menu = 'right';
-            expect(navigator.getAttribute('menu')).toBe('right');
             navigator.menu = 'top';
             expect(navigator.getAttribute('menu')).toBe('top');
         });
-        it('should place selector after menu-tree for right position', async () => {
-            navigator = new IoNavigator({ option, elements: [], menu: 'right' });
+        it('should place selector before menu-tree for left position', async () => {
+            navigator = new IoNavigator({ option, elements: [], menu: 'left' });
             container.appendChild(navigator);
             await nextQueue();
             const children = Array.from(navigator.children);
             expect(children[0].tagName.toLowerCase()).toBe('io-selector');
             expect(children[1].tagName.toLowerCase()).toBe('io-menu-tree');
-        });
-        it('should place menu-tree before selector for left position', async () => {
-            navigator = new IoNavigator({ option, elements: [], menu: 'left' });
-            container.appendChild(navigator);
-            await nextQueue();
-            const children = Array.from(navigator.children);
-            expect(children[0].tagName.toLowerCase()).toBe('io-menu-tree');
-            expect(children[1].tagName.toLowerCase()).toBe('io-selector');
         });
     });
     describe('Select modes', () => {

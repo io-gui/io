@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@io-gui/markdown": ["./src/index.ts"],
+      "@io-gui/core": ["../core"]
+    }
+  },
+  "include": ["./src"]
+}

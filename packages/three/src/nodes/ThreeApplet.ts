@@ -43,7 +43,7 @@ export class ThreeApplet extends ReactiveNode {
 
   constructor(args?: ThreeAppletProps) {
     super(args)
-    this._timer.connect(document);
+    this._timer.connect(document)
     this.isPlayingChanged()
   }
 
@@ -57,7 +57,7 @@ export class ThreeApplet extends ReactiveNode {
 
   onRAF() {
     if (!this.isPlaying) return
-    this._timer.update();
+    this._timer.update()
     const delta = this._timer.getDelta()
     const time = this._timer.getElapsed()
     this.onAnimate(delta, time)

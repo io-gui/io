@@ -130,7 +130,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                 };
                 vChildren.push(widgetWithValue);
             }
-            if (this.properties.length) {
+            if (this.properties !== undefined) {
                 properties.push(...this.properties);
             }
             else {
@@ -185,7 +185,7 @@ let IoPropertyEditor = class IoPropertyEditor extends IoElement {
                     debug: console.warn(`IoPropertyEditor: property "${properties[i]}" not found in value`);
                 }
             }
-            if (!this.properties.length) {
+            if (this.properties === undefined) {
                 for (const group in groups) {
                     if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
                         vChildren.push(ioObject({
@@ -234,7 +234,7 @@ __decorate([
     ReactiveProperty()
 ], IoPropertyEditor.prototype, "value", void 0);
 __decorate([
-    ReactiveProperty({ type: Array, init: null })
+    ReactiveProperty({ type: Array })
 ], IoPropertyEditor.prototype, "properties", void 0);
 __decorate([
     ReactiveProperty({ type: String, value: '' })

@@ -18,6 +18,7 @@ export declare class IoMenuTree extends IoElement {
     $parent?: IoMenuItem;
     role: string;
     constructor(args?: IoMenuTreeProps);
+    onResized(): void;
     changed(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps) => VDOMElement;

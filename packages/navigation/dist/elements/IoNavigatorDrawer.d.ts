@@ -11,6 +11,12 @@ export declare class IoNavigatorDrawer extends IoElement {
     expanded: boolean;
     menuContent: VDOMElement;
     constructor(args: IoNavigatorDrawerProps);
+    static get Listeners(): {
+        'io-menu-option-clicked': string;
+        'io-menu-tree-resized': string;
+    };
+    onMenuOptionClicked(): void;
+    onMenuTreeResized(): void;
     onClick(event: MouseEvent): void;
     expandedChanged(): void;
     changed(): void;

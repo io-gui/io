@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "paths": {
+      "@io-gui/colors": ["./src/index.ts"],
+      "@io-gui/core": ["../core"],
+      "@io-gui/inputs": ["../inputs"],
+      "@io-gui/sliders": ["../sliders"]
+    }
+  },
+  "include": ["./src"]
+}

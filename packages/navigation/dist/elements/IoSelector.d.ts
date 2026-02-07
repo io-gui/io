@@ -1,4 +1,4 @@
-import { IoElement, VDOMElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { IoElement, VDOMElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type CachingType = 'proactive' | 'reactive' | 'none';
 export type IoSelectorProps = IoElementProps & {
     elements?: VDOMElement[];
@@ -19,9 +19,7 @@ export declare class IoSelector extends IoElement {
     private _preaching;
     private scrollToSuspended;
     private onScrollSuspended;
-    static get Listeners(): {
-        scroll: string;
-    };
+    static get Listeners(): ListenerDefinitions;
     constructor(args?: IoSelectorProps);
     init(): void;
     anchorChanged(): void;

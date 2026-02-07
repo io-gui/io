@@ -103,6 +103,7 @@ let IoMenuItem = class IoMenuItem extends IoField {
         if (this.hasmore) {
             if (!this.expanded)
                 this.expanded = true;
+            return;
         }
         else if (o.mode === 'toggle') {
             o.selected = !o.selected;

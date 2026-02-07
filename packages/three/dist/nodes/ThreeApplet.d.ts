@@ -14,7 +14,7 @@ export declare class ThreeApplet extends ReactiveNode {
     private _renderer;
     private _width;
     private _height;
-    private readonly _clock;
+    private readonly _timer;
     constructor(args?: ThreeAppletProps);
     isPlayingChanged(): void;
     onRAF(): void;
