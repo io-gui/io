@@ -96,7 +96,7 @@
   "lines": [
     {
       "ID": 27694,
-      "color": "grey",
+      "layer":-1,
       "pos": [
         [
           6,
@@ -122,7 +122,7 @@
     },
     {
       "ID": 52238,
-      "color": "white",
+      "layer":0,
       "pos": [
         [
           0,
@@ -148,7 +148,7 @@
     },
     {
       "ID": 70365,
-      "color": "white",
+      "layer":0,
       "pos": [
         [
           1,
@@ -178,7 +178,7 @@
     },
     {
       "ID": 97611,
-      "color": "white",
+      "layer":0,
       "pos": [
         [
           4,

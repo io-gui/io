@@ -68,7 +68,7 @@
   "lines": [
     {
       "ID": 39313,
-      "color": "grey",
+      "layer":-1,
       "pos": [
         [
           2,
@@ -102,7 +102,7 @@
     },
     {
       "ID": 83748,
-      "color": "grey",
+      "layer":-1,
       "pos": [
         [
           4,

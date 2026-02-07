@@ -55,9 +55,14 @@ let CircuitsApp = class CircuitsApp extends IoElement {
     }
     onEditorSelect(event) {
         event.stopPropagation();
-        const { mode, color } = event.detail;
+        const { mode, color, layer } = event.detail;
         this.game.drawMode = mode;
-        this.game.drawColor = color;
+        if (mode === 'line' && layer !== undefined) {
+            this.game.drawLayer = layer;
+        }
+        else if (color !== undefined) {
+            this.game.drawColor = color;
+        }
         this.changed();
     }
     onLevelSelect(event) {

@@ -1,19 +1,19 @@
 export interface LineData {
   ID: number
   pos: [number, number][]
-  color: string
+  layer: number
   readonly?: boolean
 }
 
 export class Line {
   ID: number
   pos: [number, number][]
-  color: string
+  layer: number
   readonly: boolean
-  constructor(ID: number, pos: [number, number], color: string) {
+  constructor(ID: number, pos: [number, number], layer: number) {
     this.ID = ID
     this.pos = [pos]
-    this.color = color
+    this.layer = layer
     this.readonly = false
   }
 
@@ -34,11 +34,11 @@ export class Line {
   }
 
   toJSON(): LineData {
-    return { ID: this.ID, pos: this.pos, color: this.color }
+    return { ID: this.ID, pos: this.pos, layer: this.layer }
   }
 
   static fromJSON(data: LineData): Line {
-    const line = new Line(data.ID, data.pos[0], data.color)
+    const line = new Line(data.ID, data.pos[0], data.layer)
     for (let j = 1; j < data.pos.length; j++) {
       line.addSegment(data.pos[j][0], data.pos[j][1])
     }

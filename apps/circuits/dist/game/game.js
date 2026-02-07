@@ -17,6 +17,7 @@ export class Game {
     lineColors = {};
     drawMode = 'line';
     drawColor = 'white';
+    drawLayer = 0;
     undoStack = [];
     redoStack = [];
     currentLevel = '';
@@ -36,6 +37,7 @@ export class Game {
         this.lines = {};
         this.drawMode = 'line';
         this.drawColor = 'white';
+        this.drawLayer = 0;
         this._renderScene();
     }
     // -- Level loading --
@@ -214,7 +216,7 @@ export class Game {
      * Add / extend a line.
      * Returns true if the line reached a destination pad or terminal (drag should stop).
      */
-    addLine(ID, x, y, color) {
+    addLine(ID, x, y, layer) {
         const point = this.getPointAt(x, y);
         const pointColor = point ? point.color : false;
         const lineCount = this.getLineCount(x, y);
@@ -228,8 +230,8 @@ export class Game {
                 this._renderScene();
                 return false;
             }
-            this.lines[ID] = new Line(ID, [x, y], color);
-            this.lineColors[ID] = pointColor;
+            this.lines[ID] = new Line(ID, [x, y], layer);
+            this.lineColors[ID] = layer === 0 ? pointColor : 'grey';
             this._renderScene();
             return false;
         }
@@ -237,9 +239,10 @@ export class Game {
             this._renderScene();
             return false;
         }
-        const lineColor = this.lineColors[ID] ?? this.lines[ID].color;
+        const lineColor = this.lineColors[ID] ??
+            (this.lines[ID].layer === 0 ? 'white' : 'grey');
         let endDrag = false;
-        if (!pointColor && (!lineCount || color === 'grey')) {
+        if (!pointColor && (!lineCount || layer === -1)) {
             this.lines[ID].addSegment(x, y);
         }
         else if (pointColor === 'white' ||
@@ -253,9 +256,10 @@ export class Game {
     }
     getLineColor(x, y) {
         for (const i in this.lines) {
-            for (const pos of this.lines[i].pos) {
+            const line = this.lines[i];
+            for (const pos of line.pos) {
                 if (pos[0] === x && pos[1] === y)
-                    return this.lines[i].color;
+                    return this.lineColors[line.ID] ?? (line.layer === 0 ? 'white' : 'grey');
             }
         }
         return false;
@@ -264,7 +268,7 @@ export class Game {
         let count = 0;
         for (const i in this.lines) {
             for (const pos of this.lines[i].pos) {
-                if (pos[0] === x && pos[1] === y && this.lines[i].color === 'white')
+                if (pos[0] === x && pos[1] === y && this.lines[i].layer === 0)
                     count++;
             }
         }
@@ -274,7 +278,7 @@ export class Game {
         let count = 0;
         for (const i in this.lines) {
             for (const pos of this.lines[i].pos) {
-                if (pos[0] === x && pos[1] === y && this.lines[i].color === 'grey')
+                if (pos[0] === x && pos[1] === y && this.lines[i].layer === -1)
                     count++;
             }
         }
@@ -305,14 +309,14 @@ export class Game {
             }
         }
     }
-    /** Prevent diagonal lines from crossing other diagonals (unless grey). */
+    /** Prevent diagonal lines from crossing other diagonals on the same layer. */
     _checkCrossing(line, x, y) {
         const last = line.pos[line.pos.length - 1];
         const mx = (x + last[0]) / 2;
         const my = (y + last[1]) / 2;
         for (const id in this.lines) {
             const other = this.lines[id];
-            if (line.color === 'grey' || other.color === 'grey')
+            if (other.layer !== line.layer)
                 continue;
             const pos = other.pos;
             for (let i = 1; i < pos.length; i++) {
@@ -329,8 +333,10 @@ export class Game {
     // -- Colour propagation --
     resetColors() {
         this.lineColors = {};
-        for (const i in this.lines)
-            this.lineColors[this.lines[i].ID] = this.lines[i].color;
+        for (const i in this.lines) {
+            const line = this.lines[i];
+            this.lineColors[line.ID] = line.layer === 0 ? 'white' : 'grey';
+        }
         this.padColors = {};
         for (const i in this.pads)
             this.padColors[this.pads[i].ID] = 'white';

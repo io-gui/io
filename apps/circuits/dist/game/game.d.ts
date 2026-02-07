@@ -18,6 +18,7 @@ export declare class Game {
     lineColors: Record<number, string>;
     drawMode: DrawMode;
     drawColor: string;
+    drawLayer: number;
     undoStack: string[];
     redoStack: string[];
     currentLevel: string;
@@ -55,13 +56,13 @@ export declare class Game {
      * Add / extend a line.
      * Returns true if the line reached a destination pad or terminal (drag should stop).
      */
-    addLine(ID: number, x: number, y: number, color: string): boolean;
+    addLine(ID: number, x: number, y: number, layer: number): boolean;
     getLineColor(x: number, y: number): string | false;
     getLineCount(x: number, y: number): number;
     getUnderlineCount(x: number, y: number): number;
     checkLine(ID: number): void;
     deleteLine(x: number, y: number): void;
-    /** Prevent diagonal lines from crossing other diagonals (unless grey). */
+    /** Prevent diagonal lines from crossing other diagonals on the same layer. */
     private _checkCrossing;
     resetColors(): void;
     propagateColors(): void;

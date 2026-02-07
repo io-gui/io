@@ -46,13 +46,16 @@ let CircuitsEditor = class CircuitsEditor extends IoElement {
         this.render([
             ioButton({ label: 'Pad', action: () => this._select('pad', 'white') }),
             ...TERMINAL_COLORS.map((c) => ioButton({ label: c, action: () => this._select('terminal', c) })),
-            this._modeButton('Line W', 'line', 'white'),
-            this._modeButton('Line G', 'line', 'grey'),
-            this._modeButton('Delete', 'delete', 'red'),
+            ioButton({
+                label: 'Line (top)',
+                action: () => this.dispatch('editor-select', { mode: 'line', layer: 0 }, true),
+            }),
+            ioButton({
+                label: 'Line (bottom)',
+                action: () => this.dispatch('editor-select', { mode: 'line', layer: -1 }, true),
+            }),
+            ioButton({ label: 'Delete', action: () => this._select('delete', 'red') }),
         ]);
-    }
-    _modeButton(label, mode, color) {
-        return ioButton({ label, action: () => this._select(mode, color) });
     }
     _select(mode, color) {
         this.dispatch('editor-select', { mode, color }, true);

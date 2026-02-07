@@ -1,15 +1,15 @@
 export interface LineData {
     ID: number;
     pos: [number, number][];
-    color: string;
+    layer: number;
     readonly?: boolean;
 }
 export declare class Line {
     ID: number;
     pos: [number, number][];
-    color: string;
+    layer: number;
     readonly: boolean;
-    constructor(ID: number, pos: [number, number], color: string);
+    constructor(ID: number, pos: [number, number], layer: number);
     /**
      * Add a grid segment.
      * Returns false if the segment was rejected.
@@ -17,7 +17,9 @@ export declare class Line {
     addSegment(x: number, y: number): boolean;
     removeLast(): void;
     toJSON(): LineData;
-    static fromJSON(data: LineData): Line;
+    static fromJSON(data: LineData & {
+        color?: string;
+    }): Line;
     /** Prevent backtracking over more than one step. */
     private _checkDirection;
     /** Erase last segment if user drags back to prev node. */

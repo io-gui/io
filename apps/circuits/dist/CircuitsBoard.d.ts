@@ -8,8 +8,8 @@ import type { Line } from './game/line.js';
  *
  * Layer stack (bottom -> top):
  *   grid   – static grid lines (redrawn on initGrid)
- *   layer0 – grey "underlines"
- *   layer1 – coloured lines + pads
+ *   layer0 – line.layer -1 (bottom, underlines)
+ *   layer1 – line.layer 0 (top) + pads + terminals
  *   top    – touch marker overlay
  */
 interface CanvasLayer {
@@ -32,6 +32,7 @@ export declare class Scene {
     initGrid(gameWidth: number, gameHeight: number, containerWidth: number, containerHeight: number): void;
     /** Full re-render of lines, pads and terminals on the dynamic layers. */
     render(pads: Record<number, Pad>, terminals: Record<number, Terminal>, lines: Record<number, Line>, padColors?: Record<number, string>, terminalColors?: Record<number, string>, lineColors?: Record<number, string>): void;
+    private static readonly _layerToCanvas;
     private _lineParams;
     private _buildLinePath;
     private _drawLineStroke;

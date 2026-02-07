@@ -29,17 +29,17 @@ Connection points sit on grid intersections. Two kinds:
 
 Lines are polylines connecting a sequence of adjacent grid intersections. Two layer types:
 
-| Layer      | Color value | Canvas layer   | Opacity | Player can draw?     | Visual style                 |
-| ---------- | ----------- | -------------- | ------- | -------------------- | ---------------------------- |
-| **Top**    | `"white"`   | layer1 (z:102) | 100%    | Yes                  | Thin line with black outline |
-| **Bottom** | `"grey"`    | layer0 (z:101) | 25%     | No — pre-placed only | Thick faded line             |
+| Layer      | `layer` value | Canvas layer   | Opacity | Player can draw?     | Visual style                 |
+| ---------- | ------------- | -------------- | ------- | -------------------- | ---------------------------- |
+| **Top**    | `0`           | layer1 (z:102) | 100%    | Yes                  | Thin line with black outline |
+| **Bottom** | `-1`          | layer0 (z:101) | 25%     | No — pre-placed only | Thick faded line             |
 
 **Line properties:**
 
 - `pos` — array of `[x, y]` coordinate pairs defining the polyline path
-- `c` — base color (`"white"` or `"grey"`)
-- `c2` — propagated color (computed at runtime)
+- `layer` — 0 (top) or -1 (bottom); display color is computed from game state (propagated from terminals)
 - `ID` — unique random integer identifier
+
 
 ## Game Rules
 
@@ -62,13 +62,13 @@ Lines are polylines connecting a sequence of adjacent grid intersections. Two la
 ### Intersection / Crossing Rules
 
 - **Diagonal lines cannot cross other diagonal lines** on the same layer. Crossing is detected via shared midpoints.
-- **Exception**: Grey (bottom-layer) lines can cross white (top-layer) diagonals freely — the crossing check is skipped when either line is grey.
+- Lines on different layers do not intersect for this check — only lines with the same `layer` are tested.
 
 ### Color Propagation
 
 After each move, colors propagate iteratively (up to 16 passes):
 
-1. All lines and pads reset to their base color (`c`).
+1. All lines and pads reset: line color by layer (top → white, bottom → grey); pads to white.
 2. For each line, look at the pads at its two endpoints.
 3. If one endpoint is a terminal or a pad with propagated color, push that color through the line and to the other endpoint (only pads get updated; terminals keep fixed color).
 4. If both endpoints are colored (same color), the line takes that color.
@@ -99,7 +99,7 @@ The level is complete when **every pad and terminal is properly connected**:
   "lines": [
     {
       "ID": 6174,
-      "color": "grey",
+      "layer": -1,
       "pos": [[4, 4], [5, 5]]
     }
   ]
@@ -108,12 +108,12 @@ The level is complete when **every pad and terminal is properly connected**:
 
 - **pads**: array of `{ pos: [x, y], ID }`. No color; pads are always white.
 - **terminals**: array of `{ pos: [x, y], color, ID }`. Color is one of the goal colors.
-- **lines**: array of `{ ID, color: "white"|"grey", pos: [[x,y], ...] }`.
+- **lines**: array of `{ ID, layer: 0|−1, pos: [[x,y], ...] }`.
 
 ## Available Colors
 
 ```
-white   #ffffff    — junction pads, top-layer lines
+white   #ffffff    — junction pads, top-layer (layer 0) lines
 red     #e52800    — goal pair color
 green   #005923    — goal pair color
 blue    #06afff    — goal pair color
@@ -122,7 +122,7 @@ yellow  #fec41a    — goal pair color
 orange  #ff6910    — goal pair color
 purple  #760281    — goal pair color
 brown   #820419    — goal pair color
-grey    #555555    — bottom-layer lines only
+grey    #555555    — bottom-layer (layer -1) lines only
 ```
 
 ## Level Design Patterns
@@ -141,19 +141,19 @@ grey    #555555    — bottom-layer lines only
 
 **Pad network**: Pads (white circles) form a dense network in the interior of the grid. They serve as waypoints that constrain where lines can travel — the player must route through these junctions.
 
-**Grey (bottom-layer) lines**: Form an infrastructure backbone. They create pre-existing connections that the player must account for. Grey lines can share grid points with white lines (they're on different layers). Common patterns:
+**Bottom-layer (layer -1) lines**: Form an infrastructure backbone. They create pre-existing connections that the player must account for. Bottom-layer lines can share grid points with top-layer lines (different layers). Common patterns:
 
 - Long backbone paths spanning most of the grid
 - Short connector segments linking key junctions
-- Paths that cross white-layer diagonals (allowed since grey lines bypass crossing rules)
+- Paths that cross top-layer diagonals (allowed since crossing is only checked within the same layer)
 
-**White (top-layer) pre-placed lines**: Partial solutions or constraints. They reduce the solution space and guide the player. The player must incorporate these into the final circuit.
+**Top-layer (layer 0) pre-placed lines**: Partial solutions or constraints. They reduce the solution space and guide the player. The player must incorporate these into the final circuit.
 
 ### Design Constraints for Valid Levels
 
 1. **Every terminal must have exactly one matching partner** of the same color.
 2. **A solution must exist**: there must be a set of drawable white lines that completes all circuits.
 3. **Pads on a solution path** must have exactly 2 total connections (white + grey).
-4. **No two white-layer diagonals may cross** in the solution.
+4. **No two top-layer (layer 0) diagonals may cross** in the solution.
 5. **Grid boundaries**: all pad and line coordinates must be within `0..width` and `0..height`.
 6. **IDs must be unique** integers across all pads, terminals, and lines.

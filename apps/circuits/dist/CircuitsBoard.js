@@ -90,28 +90,37 @@ export class Scene {
             this._drawPadStroke(pads[id]);
         for (const id in terminals)
             this._drawTerminalStroke(terminals[id]);
-        for (const id in lines)
-            this._drawLineFill(lines[id], lineColors[lines[id].ID] ?? lines[id].color);
+        for (const id in lines) {
+            const line = lines[id];
+            const fillColor = lineColors[line.ID] ?? (line.layer === 0 ? 'white' : 'grey');
+            this._drawLineFill(line, fillColor);
+        }
         for (const id in pads)
             this._drawPadFill(pads[id], padColors[pads[id].ID] ?? 'white');
         for (const id in terminals)
             this._drawTerminalFill(terminals[id], terminalColors[terminals[id].ID] ?? terminals[id].color);
     }
     // -- Line drawing helpers --
+    static _layerToCanvas = {
+        [-1]: 'layer0',
+        0: 'layer1',
+    };
     _lineParams(line) {
-        const isGrey = line.color === 'grey';
+        const isBottom = line.layer === -1;
+        const layerName = Scene._layerToCanvas[line.layer] ?? 'layer1';
+        const ctx = this.layers[layerName]?.ctx ?? this.layers.layer1.ctx;
         let radius = this.gridUnit / 4;
         let strokeW = 3;
         let strokeColor = 'rgba(0,0,0,1)';
         let opacity = 1;
-        if (isGrey) {
+        if (isBottom) {
             radius *= 1.4;
             strokeW *= 4;
             strokeColor = 'rgba(128,128,128,0.25)';
             opacity = 0.25;
         }
         return {
-            ctx: isGrey ? this.layers.layer0.ctx : this.layers.layer1.ctx,
+            ctx,
             radius,
             strokeW,
             strokeColor,
@@ -327,7 +336,7 @@ export class CircuitsBoard extends IoElement {
             this.game.addTerminal(this._randomID, this._gridX, this._gridY, this.game.drawColor);
         }
         if (this.game.drawMode === 'line') {
-            this.game.addLine(this._randomID, this._gridX, this._gridY, this.game.drawColor);
+            this.game.addLine(this._randomID, this._gridX, this._gridY, this.game.drawLayer);
         }
         if (this.game.drawMode === 'delete') {
             this.game.deletePad(this._gridX, this._gridY);
@@ -344,7 +353,7 @@ export class CircuitsBoard extends IoElement {
         if (this.game.drawMode === 'line' &&
             this._drag &&
             (this._gridX !== this._gridXOld || this._gridY !== this._gridYOld)) {
-            const endDrag = this.game.addLine(this._randomID, this._gridX, this._gridY, this.game.drawColor);
+            const endDrag = this.game.addLine(this._randomID, this._gridX, this._gridY, this.game.drawLayer);
             if (endDrag)
                 this._drag = false;
         }

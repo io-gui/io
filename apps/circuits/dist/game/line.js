@@ -1,12 +1,12 @@
 export class Line {
     ID;
     pos;
-    color;
+    layer;
     readonly;
-    constructor(ID, pos, color) {
+    constructor(ID, pos, layer) {
         this.ID = ID;
         this.pos = [pos];
-        this.color = color;
+        this.layer = layer;
         this.readonly = false;
     }
     /**
@@ -25,10 +25,15 @@ export class Line {
         this.pos.pop();
     }
     toJSON() {
-        return { ID: this.ID, pos: this.pos, color: this.color };
+        return { ID: this.ID, pos: this.pos, layer: this.layer };
     }
     static fromJSON(data) {
-        const line = new Line(data.ID, data.pos[0], data.color);
+        const layer = 'layer' in data && typeof data.layer === 'number'
+            ? data.layer
+            : data.color === 'grey'
+                ? -1
+                : 0;
+        const line = new Line(data.ID, data.pos[0], layer);
         for (let j = 1; j < data.pos.length; j++) {
             line.addSegment(data.pos[j][0], data.pos[j][1]);
         }
