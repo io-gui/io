@@ -14,10 +14,14 @@ import { Line } from './items/line.js';
  * No color, propagation, or completion.
  */
 let Plotter = class Plotter extends ReactiveNode {
+    width = 0;
+    height = 0;
     pads = [];
     terminals = [];
     lines = [];
-    connect(pads, terminals, lines) {
+    connect(pads, terminals, lines, width, height) {
+        this.width = width;
+        this.height = height;
         this.pads = pads;
         this.terminals = terminals;
         this.lines = lines;

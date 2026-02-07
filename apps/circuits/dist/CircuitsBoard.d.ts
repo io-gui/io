@@ -2,22 +2,12 @@ import { IoElement, IoElementProps } from '@io-gui/core';
 import { Game } from './game/game.js';
 import { Pad } from './game/items/pad.js';
 import { Terminal } from './game/items/terminal.js';
-import { Line } from './game/items/line.js';
+import { Line as GameLine } from './game/items/line.js';
 /**
- * Scene — manages layered HTML5 canvases and renders the game state.
- *
- * Layer stack (bottom -> top):
- *   grid   – static grid lines (redrawn on initGrid)
- *   layer0 – line.layer -1 (bottom, underlines)
- *   layer1 – line.layer 0 (top) + pads + terminals
- *   top    – touch marker overlay
+ * Scene — Three.js WebGL scene for the circuits board.
+ * Renders grid (GridHelper), lines (Line), pads (spheres), terminals (cubes), and touch marker.
  */
-interface CanvasLayer {
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-}
 export declare class Scene {
-    layers: Record<string, CanvasLayer>;
     canvasWidth: number;
     canvasHeight: number;
     gridWidth: number;
@@ -26,23 +16,22 @@ export declare class Scene {
     gridOffsetX: number;
     gridOffsetY: number;
     markerRadius: number;
-    /** Set up layers from externally provided canvases. */
-    init(canvases: Record<string, HTMLCanvasElement>): void;
-    /** Recalculate grid geometry and draw the static grid. */
+    private _renderer;
+    private _scene;
+    private _camera;
+    private _grid;
+    private _gameGroup;
+    private _marker;
+    /** Set up Three.js from a container; canvas is created and appended. */
+    init(container: HTMLElement): void;
+    /** Recalculate grid geometry, resize renderer, and build grid. */
     initGrid(gameWidth: number, gameHeight: number, containerWidth: number, containerHeight: number): void;
-    /** Full re-render of lines, pads and terminals on the dynamic layers. */
-    render(pads: Pad[], terminals: Terminal[], lines: Line[]): void;
-    private static readonly _layerToCanvas;
-    private _lineParams;
-    private _buildLinePath;
-    private _drawLineStroke;
-    private _drawLineFill;
-    private _drawPadStroke;
-    private _drawPadFill;
-    private _drawTerminalStroke;
-    private _drawTerminalFill;
+    private _gridToWorld;
+    /** Full re-render of lines, pads and terminals. */
+    render(pads: Pad[], terminals: Terminal[], lines: GameLine[]): void;
     drawMarker(touchX: number, touchY: number): void;
     hideMarker(): void;
+    private _renderFrame;
 }
 type CircuitsBoardProps = IoElementProps & {
     game?: Game;

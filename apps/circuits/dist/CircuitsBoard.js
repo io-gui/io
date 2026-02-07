@@ -4,11 +4,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { IoElement, Register, ReactiveProperty, canvas, } from '@io-gui/core';
+import { IoElement, Register, ReactiveProperty, div, } from '@io-gui/core';
+import { BoxGeometry, BufferGeometry, Color, GridHelper, Line, LineBasicMaterial, Mesh, MeshBasicMaterial, OrthographicCamera, Scene as ThreeScene, SphereGeometry, Vector3, WebGLRenderer, } from 'three';
 import { Game } from './game/game.js';
-import { TERMINAL_COLORS as COLORS, } from './game/items/terminal.js';
+import { TERMINAL_COLORS as COLORS } from './game/items/terminal.js';
+/**
+ * Scene — Three.js WebGL scene for the circuits board.
+ * Renders grid (GridHelper), lines (Line), pads (spheres), terminals (cubes), and touch marker.
+ */
 export class Scene {
-    layers = {};
     canvasWidth = 0;
     canvasHeight = 0;
     gridWidth = 0;
@@ -17,31 +21,32 @@ export class Scene {
     gridOffsetX = 0;
     gridOffsetY = 0;
     markerRadius = 0;
-    /** Set up layers from externally provided canvases. */
-    init(canvases) {
-        this.layers = {};
-        for (const name in canvases) {
-            const canvas = canvases[name];
-            const ctx = canvas.getContext('2d');
-            this.layers[name] = { canvas, ctx };
+    _renderer = null;
+    _scene = new ThreeScene();
+    _camera = null;
+    _grid = null;
+    _gameGroup = new ThreeScene();
+    _marker = null;
+    /** Set up Three.js from a container; canvas is created and appended. */
+    init(container) {
+        if (this._renderer) {
+            if (!container.contains(this._renderer.domElement))
+                container.appendChild(this._renderer.domElement);
+            return;
         }
+        this._scene.add(this._gameGroup);
+        const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio ?? 1);
+        renderer.setClearColor(0x000000, 0.8);
+        container.appendChild(renderer.domElement);
+        this._renderer = renderer;
     }
-    /** Recalculate grid geometry and draw the static grid. */
+    /** Recalculate grid geometry, resize renderer, and build grid. */
     initGrid(gameWidth, gameHeight, containerWidth, containerHeight) {
         this.canvasWidth = containerWidth;
         this.canvasHeight = containerHeight;
-        const dpr = window.devicePixelRatio || 1;
-        for (const name in this.layers) {
-            const { canvas } = this.layers[name];
-            canvas.width = this.canvasWidth * dpr;
-            canvas.height = this.canvasHeight * dpr;
-            canvas.style.width = this.canvasWidth + 'px';
-            canvas.style.height = this.canvasHeight + 'px';
-            this.layers[name].ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
         this.gridWidth = gameWidth;
         this.gridHeight = gameHeight;
-        // Calculate unit size so the grid fits with a half-unit margin
         if (this.canvasHeight / this.gridHeight >
             this.canvasWidth / this.gridWidth) {
             this.gridUnit = this.canvasWidth / (this.gridWidth + 1);
@@ -52,176 +57,114 @@ export class Scene {
         this.gridOffsetX = (this.canvasWidth - this.gridUnit * this.gridWidth) / 2;
         this.gridOffsetY =
             (this.canvasHeight - this.gridUnit * this.gridHeight) / 2;
-        // --- Draw static grid ---
-        const ctx = this.layers.grid.ctx;
-        ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
-        ctx.fillRect(this.gridOffsetX, this.gridOffsetY, this.gridWidth * this.gridUnit, this.gridHeight * this.gridUnit);
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= gameWidth; i++) {
-            const x = i * this.gridUnit + this.gridOffsetX;
-            ctx.beginPath();
-            ctx.moveTo(x, this.gridOffsetY);
-            ctx.lineTo(x, this.gridHeight * this.gridUnit + this.gridOffsetY);
-            ctx.stroke();
+        if (this._renderer) {
+            this._renderer.setSize(this.canvasWidth, this.canvasHeight);
         }
-        for (let j = 0; j <= gameHeight; j++) {
-            const y = j * this.gridUnit + this.gridOffsetY;
-            ctx.beginPath();
-            ctx.moveTo(this.gridOffsetX, y);
-            ctx.lineTo(this.gridWidth * this.gridUnit + this.gridOffsetX, y);
-            ctx.stroke();
-        }
+        this._camera = new OrthographicCamera(0, this.canvasWidth, 0, this.canvasHeight, 0.1, 1000);
+        this._camera.position.set(this.canvasWidth / 2, this.canvasHeight / 2, 500);
+        this._camera.lookAt(this.canvasWidth / 2, this.canvasHeight / 2, 0);
+        if (this._grid)
+            this._scene.remove(this._grid);
+        const size = Math.max(this.gridWidth, this.gridHeight) * this.gridUnit;
+        const divisions = Math.max(this.gridWidth, this.gridHeight);
+        this._grid = new GridHelper(size, divisions, 0xffffff, 0xffffff);
+        this._grid.rotation.x = -Math.PI / 2;
+        this._grid.position.set(this.gridOffsetX + (this.gridWidth * this.gridUnit) / 2, this.gridOffsetY + (this.gridHeight * this.gridUnit) / 2, 0);
+        this._scene.add(this._grid);
         this.markerRadius = this.canvasWidth * 0.1;
     }
-    // -- Rendering --
-    /** Full re-render of lines, pads and terminals on the dynamic layers. */
+    _gridToWorld(gx, gy, z) {
+        return new Vector3(this.gridOffsetX + gx * this.gridUnit, this.gridOffsetY + gy * this.gridUnit, z);
+    }
+    /** Full re-render of lines, pads and terminals. */
     render(pads, terminals, lines) {
-        const ctx0 = this.layers.layer0?.ctx;
-        const ctx1 = this.layers.layer1?.ctx;
-        if (!ctx0 || !ctx1)
-            return;
-        ctx0.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        ctx1.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        for (const line of lines)
-            this._drawLineStroke(line);
-        for (const pad of pads)
-            this._drawPadStroke(pad);
-        for (const term of terminals)
-            this._drawTerminalStroke(term);
+        while (this._gameGroup.children.length > 0) {
+            const obj = this._gameGroup.children[0];
+            this._gameGroup.remove(obj);
+            if (obj instanceof Line) {
+                obj.geometry.dispose();
+                if (obj.material instanceof LineBasicMaterial)
+                    obj.material.dispose();
+            }
+            else if (obj instanceof Mesh) {
+                obj.geometry.dispose();
+                const mat = obj.material;
+                if (Array.isArray(mat))
+                    for (const m of mat)
+                        m.dispose();
+                else if (mat)
+                    mat.dispose();
+            }
+        }
+        const padRadius = this.gridUnit / 3;
+        const termHalf = this.gridUnit / 3;
+        const lineZBottom = -0.5;
+        const lineZTop = 0.5;
         for (const line of lines) {
-            this._drawLineFill(line, line._color);
+            if (line.pos.length < 2)
+                continue;
+            const z = line.layer === -1 ? lineZBottom : lineZTop;
+            const points = line.pos.map((p) => this._gridToWorld(p[0], p[1], z));
+            const geometry = new BufferGeometry().setFromPoints(points);
+            const material = new LineBasicMaterial({
+                color: new Color(COLORS[line._color] ?? '#ffffff'),
+            });
+            const lineObj = new Line(geometry, material);
+            this._gameGroup.add(lineObj);
         }
-        for (const pad of pads)
-            this._drawPadFill(pad, pad._color);
-        for (const term of terminals)
-            this._drawTerminalFill(term, term.color);
-    }
-    // -- Line drawing helpers --
-    static _layerToCanvas = {
-        [-1]: 'layer0',
-        0: 'layer1',
-    };
-    _lineParams(line) {
-        const isBottom = line.layer === -1;
-        const layerName = Scene._layerToCanvas[line.layer] ?? 'layer1';
-        const ctx = this.layers[layerName]?.ctx ?? this.layers.layer1.ctx;
-        let radius = this.gridUnit / 4;
-        let strokeW = 3;
-        let strokeColor = 'rgba(0,0,0,1)';
-        let opacity = 1;
-        if (isBottom) {
-            radius *= 1.4;
-            strokeW *= 4;
-            strokeColor = 'rgba(128,128,128,0.25)';
-            opacity = 0.25;
+        for (const pad of pads) {
+            const geom = new SphereGeometry(padRadius, 12, 8);
+            const mat = new MeshBasicMaterial({
+                color: new Color(COLORS[pad._color] ?? '#ffffff'),
+            });
+            const mesh = new Mesh(geom, mat);
+            mesh.position.copy(this._gridToWorld(pad.pos[0], pad.pos[1], 0.5));
+            this._gameGroup.add(mesh);
         }
-        return {
-            ctx,
-            radius,
-            strokeW,
-            strokeColor,
-            opacity,
-        };
-    }
-    _buildLinePath(ctx, positions) {
-        ctx.beginPath();
-        for (let i = 0; i < positions.length; i++) {
-            const x = positions[i][0] * this.gridUnit + this.gridOffsetX;
-            const y = positions[i][1] * this.gridUnit + this.gridOffsetY;
-            if (i === 0)
-                ctx.moveTo(x, y);
-            else
-                ctx.lineTo(x, y);
+        for (const term of terminals) {
+            const geom = new BoxGeometry(termHalf * 2, termHalf * 2, termHalf * 2);
+            const mat = new MeshBasicMaterial({
+                color: new Color(COLORS[term.color] ?? '#ffffff'),
+            });
+            const mesh = new Mesh(geom, mat);
+            mesh.position.copy(this._gridToWorld(term.pos[0], term.pos[1], 0.5));
+            this._gameGroup.add(mesh);
         }
+        this._renderFrame();
     }
-    _drawLineStroke(line) {
-        if (line.pos.length < 2)
-            return;
-        const p = this._lineParams(line);
-        p.ctx.save();
-        p.ctx.globalAlpha = p.opacity;
-        p.ctx.lineCap = 'round';
-        p.ctx.lineJoin = 'round';
-        this._buildLinePath(p.ctx, line.pos);
-        p.ctx.strokeStyle = p.strokeColor;
-        p.ctx.lineWidth = p.radius + p.strokeW * 2;
-        p.ctx.stroke();
-        p.ctx.restore();
-    }
-    _drawLineFill(line, color) {
-        if (line.pos.length < 2)
-            return;
-        const p = this._lineParams(line);
-        p.ctx.save();
-        p.ctx.globalAlpha = p.opacity;
-        p.ctx.lineCap = 'round';
-        p.ctx.lineJoin = 'round';
-        this._buildLinePath(p.ctx, line.pos);
-        p.ctx.strokeStyle = COLORS[color] ?? '#fff';
-        p.ctx.lineWidth = p.radius;
-        p.ctx.stroke();
-        p.ctx.restore();
-    }
-    // -- Pad drawing helpers (pads are always white circles) --
-    _drawPadStroke(pad) {
-        const ctx = this.layers.layer1.ctx;
-        const xx = pad.pos[0] * this.gridUnit + this.gridOffsetX;
-        const yy = pad.pos[1] * this.gridUnit + this.gridOffsetY;
-        const r = this.gridUnit / 3;
-        const sw = 3;
-        ctx.beginPath();
-        ctx.arc(xx, yy, r + sw, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0,0,0,1)';
-        ctx.fill();
-    }
-    _drawPadFill(pad, color) {
-        const ctx = this.layers.layer1.ctx;
-        const xx = pad.pos[0] * this.gridUnit + this.gridOffsetX;
-        const yy = pad.pos[1] * this.gridUnit + this.gridOffsetY;
-        const r = this.gridUnit / 3;
-        ctx.beginPath();
-        ctx.arc(xx, yy, r, 0, Math.PI * 2);
-        ctx.fillStyle = COLORS[color] ?? '#fff';
-        ctx.fill();
-    }
-    // -- Terminal drawing helpers (terminals are colored squares) --
-    _drawTerminalStroke(terminal) {
-        const ctx = this.layers.layer1.ctx;
-        const xx = terminal.pos[0] * this.gridUnit + this.gridOffsetX;
-        const yy = terminal.pos[1] * this.gridUnit + this.gridOffsetY;
-        const r = this.gridUnit / 3;
-        const sw = 3;
-        ctx.fillStyle = 'rgba(0,0,0,1)';
-        ctx.fillRect(xx - r - sw, yy - r - sw, (r + sw) * 2, (r + sw) * 2);
-    }
-    _drawTerminalFill(terminal, color) {
-        const ctx = this.layers.layer1.ctx;
-        const xx = terminal.pos[0] * this.gridUnit + this.gridOffsetX;
-        const yy = terminal.pos[1] * this.gridUnit + this.gridOffsetY;
-        const r = this.gridUnit / 3;
-        ctx.fillStyle = COLORS[color] ?? '#fff';
-        ctx.fillRect(xx - r, yy - r, r * 2, r * 2);
-    }
-    // -- Touch marker --
     drawMarker(touchX, touchY) {
-        const ctx = this.layers.top?.ctx;
-        if (!ctx)
+        this.hideMarker();
+        if (!this._gameGroup)
             return;
-        ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        const xx = touchX * this.gridUnit + this.gridOffsetX;
-        const yy = touchY * this.gridUnit + this.gridOffsetY;
-        ctx.beginPath();
-        ctx.arc(xx, yy, this.markerRadius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.05)';
-        ctx.fill();
+        const geom = new SphereGeometry(this.markerRadius, 16, 12);
+        const mat = new MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.15,
+        });
+        this._marker = new Mesh(geom, mat);
+        this._marker.position.copy(this._gridToWorld(touchX, touchY, 1));
+        this._gameGroup.add(this._marker);
+        this._renderFrame();
     }
     hideMarker() {
-        const ctx = this.layers.top?.ctx;
-        if (!ctx)
-            return;
-        ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        if (this._marker && this._gameGroup) {
+            this._gameGroup.remove(this._marker);
+            this._marker.geometry.dispose();
+            const mat = this._marker.material;
+            if (Array.isArray(mat))
+                for (const m of mat)
+                    m.dispose();
+            else
+                mat.dispose();
+            this._marker = null;
+        }
+        this._renderFrame();
+    }
+    _renderFrame() {
+        if (this._renderer && this._camera) {
+            this._renderer.render(this._scene, this._camera);
+        }
     }
 }
 /**
@@ -242,10 +185,12 @@ export class CircuitsBoard extends IoElement {
         overflow: hidden;
         touch-action: none;
       }
-      :host > canvas {
+      :host > div {
         position: absolute;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
       }
     `;
     }
@@ -272,25 +217,19 @@ export class CircuitsBoard extends IoElement {
         this.changed();
     }
     changed() {
-        this.render([
-            canvas({ id: 'grid', style: { zIndex: '100' } }),
-            canvas({ id: 'layer0', style: { zIndex: '101' } }),
-            canvas({ id: 'layer1', style: { zIndex: '102' } }),
-            canvas({ id: 'top', style: { zIndex: '105' } }),
-        ]);
+        this.render([div({ id: 'scene-container' })]);
         this._initScene();
     }
     onResized() {
         this._initScene();
     }
     _initScene() {
-        const grid = this.querySelector('#grid');
-        const layer0 = this.querySelector('#layer0');
-        const layer1 = this.querySelector('#layer1');
-        const top = this.querySelector('#top');
-        if (!grid || !layer0 || !layer1 || !top)
+        const container = this.querySelector('#scene-container');
+        if (!container)
             return;
-        this.scene.init({ grid, layer0, layer1, top });
+        if (!this.scene)
+            this.scene = new Scene();
+        this.scene.init(container);
         const rect = this.getBoundingClientRect();
         if (rect.width === 0 || rect.height === 0)
             return;
@@ -387,8 +326,8 @@ export class CircuitsBoard extends IoElement {
         if (!this.game)
             return;
         if (distance < 0.5 &&
-            this._touchX <= this.game.width + 0.5 &&
-            this._touchY <= this.game.height + 0.5 &&
+            // this._touchX <= this.game.width + 0.5 &&
+            // this._touchY <= this.game.height + 0.5 &&
             this._touchX >= -0.5 &&
             this._touchY >= -0.5) {
             this._gridXOld = this._gridX;

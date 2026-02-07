@@ -12,10 +12,12 @@ export interface PointAt {
  * No color, propagation, or completion.
  */
 export declare class Plotter extends ReactiveNode {
+    width: number;
+    height: number;
     pads: Pad[];
     terminals: Terminal[];
     lines: Line[];
-    connect(pads: Pad[], terminals: Terminal[], lines: Line[]): void;
+    connect(pads: Pad[], terminals: Terminal[], lines: Line[], width: number, height: number): void;
     getPointAt(x: number, y: number): Pad | Terminal | undefined;
     getLinesAtPoint(x: number, y: number, filter?: (line: Line) => boolean): Line[];
     getLineById(id: number): Line | undefined;

@@ -31,7 +31,7 @@ let Game = class Game extends ReactiveNode {
         this.pads = [];
         this.terminals = [];
         this.lines = [];
-        this.plotter.connect(this.pads, this.terminals, this.lines);
+        this.plotter.connect(this.pads, this.terminals, this.lines, this.width, this.height);
         this.drawMode = 'line';
         this.drawColor = 'white';
         this.drawLayer = 0;
@@ -95,7 +95,7 @@ let Game = class Game extends ReactiveNode {
         this.pads = state.pads.map((p) => Pad.fromJSON(p));
         this.terminals = state.terminals.map((t) => Terminal.fromJSON(t));
         this.lines = state.lines.map((l) => Line.fromJSON(l));
-        this.plotter.connect(this.pads, this.terminals, this.lines);
+        this.plotter.connect(this.pads, this.terminals, this.lines, this.width, this.height);
     }
     toJSON() {
         return JSON.stringify({
@@ -184,6 +184,7 @@ let Game = class Game extends ReactiveNode {
             if (nConn !== 2 && pad._color !== 'white')
                 completed = false;
         }
+        console.log('game-complete', this.currentLevel, completed);
         this.dispatch('game-complete', { level: this.currentLevel, completed }, true);
     }
     finalizeMove(lineID) {
