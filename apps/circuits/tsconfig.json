@@ -8,7 +8,11 @@
       "@io-gui/inputs": ["../../packages/inputs"],
       "@io-gui/layout": ["../../packages/layout"],
       "@io-gui/menus": ["../../packages/menus"],
-      "@io-gui/navigation": ["../../packages/navigation"]
+      "@io-gui/navigation": ["../../packages/navigation"],
+      "@io-gui/three": ["../../packages/three"],
+      "three/webgpu": ["../node_modules/three/build/three.webgpu.js"],
+      "three/tsl": ["../node_modules/three/build/three.tsl.js"],
+      "three/addons": ["../node_modules/three/examples/jsm"]
     }
   },
   "include": ["./src"]

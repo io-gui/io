@@ -68,14 +68,14 @@ export class Plotter extends ReactiveNode {
   addPad(id: number, x: number, y: number): boolean {
     if (this.getPointAt(x, y)) return false
     this.pads.push(new Pad(id, [x, y]))
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
     return true
   }
 
   addTerminal(id: number, x: number, y: number, color: TerminalColor): boolean {
     if (this.getPointAt(x, y)) return false
     this.terminals.push(new Terminal(id, [x, y], color))
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
     return true
   }
 
@@ -96,7 +96,7 @@ export class Plotter extends ReactiveNode {
     if (lineIdx !== -1) {
       this.lines.splice(lineIdx, 1)
     }
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
   }
 
   verifyLineLegality(id: number): boolean {
@@ -144,11 +144,11 @@ export class Plotter extends ReactiveNode {
       }
 
       if (point) {
-        if (point.color !== 'white' && point.color !== line.color) {
+        if (point.color !== 'white' && line.color !== 'white' && point.color !== line.color) {
           return { added: false, endDrag: false }
         }
         added = line.plotSegment(x, y)
-        endDrag = added
+        endDrag = true
       }
 
     } else {
@@ -161,7 +161,7 @@ export class Plotter extends ReactiveNode {
 
     }
 
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
     return { added, endDrag }
   }
 }

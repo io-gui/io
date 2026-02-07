@@ -115,7 +115,7 @@ export class IoThreeViewport extends IoElement {
   onAppletNeedsRender(event: CustomEvent) {
     event.stopPropagation()
     if (!this.visible) return
-    this.renderViewport()
+    this.debounce(this.renderViewportDebounced)
   }
 
   onResized() {
@@ -139,7 +139,7 @@ export class IoThreeViewport extends IoElement {
 
   renderViewportDebounced() {
     if (this.renderer.initialized === false) {
-      this.debounce(this.renderViewportDebounced)
+      this.debounce(this.renderViewportDebounced, undefined, 2)
       return
     }
     this.applet.updateViewportSize(this.width, this.height)

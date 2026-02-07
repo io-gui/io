@@ -76,6 +76,9 @@ importers:
       '@io-gui/navigation':
         specifier: workspace:*
         version: link:../../packages/navigation
+      '@io-gui/three':
+        specifier: workspace:*
+        version: link:../../packages/three
       '@types/three':
         specifier: ^0.182.0
         version: 0.182.0

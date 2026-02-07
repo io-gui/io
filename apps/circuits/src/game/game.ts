@@ -77,7 +77,7 @@ export class Game extends ReactiveNode {
 
     this.undoStack = [this.toJSON()]
     this.redoStack = []
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
   }
 
   currentLevelChanged() {
@@ -149,7 +149,7 @@ export class Game extends ReactiveNode {
       this.redoStack.push(currentState)
       this.propagateColors()
       this.save()
-      this.dispatch('game-render', undefined, true)
+      this.dispatch('game-update', undefined, true)
     }
   }
 
@@ -160,7 +160,7 @@ export class Game extends ReactiveNode {
       this.undoStack.push(state)
       this.propagateColors()
       this.save()
-      this.dispatch('game-render', undefined, true)
+      this.dispatch('game-update', undefined, true)
     }
   }
 
@@ -200,7 +200,7 @@ export class Game extends ReactiveNode {
       }
     }
 
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
 
     let completed = true
 
@@ -226,6 +226,6 @@ export class Game extends ReactiveNode {
       this.propagateColors()
       this.save()
     }
-    this.dispatch('game-render', undefined, true)
+    this.dispatch('game-update', undefined, true)
   }
 }
