@@ -37,6 +37,7 @@ export class CircuitsBoard extends IoElement {
       'pointerdown': 'onPointerdown',
       'game-init-scene': 'onGameInit',
       'game-update': 'onGameUpdate',
+      'line-end-drag': 'onLineEndDrag',
     }
   }
 
@@ -54,6 +55,7 @@ export class CircuitsBoard extends IoElement {
   private _gridYOld = 0
   private _drag = false
   private _currentID = -1
+  private _pointerId = -1
 
   constructor(args: CircuitsBoardProps) {
     super(args)
@@ -78,6 +80,7 @@ export class CircuitsBoard extends IoElement {
 
   onPointerdown(event: PointerEvent) {
     event.preventDefault()
+    this._pointerId = event.pointerId
     this.setPointerCapture(event.pointerId)
     this.addEventListener('pointermove', this.onPointermove)
     this.addEventListener('pointerup', this.onPointerup)
@@ -113,14 +116,21 @@ export class CircuitsBoard extends IoElement {
       this._drag &&
       (this._gridX !== this._gridXOld || this._gridY !== this._gridYOld)
     ) {
-      const { endDrag } = this.game.plotter.addLineSegment(this._currentID, this._gridX, this._gridY, this.game.drawLayer)
-      if (endDrag) this._drag = false
+      this.game.plotter.addLineSegment(this._currentID, this._gridX, this._gridY, this.game.drawLayer)
     }
+  }
+
+  onLineEndDrag() {
+    this._endDrag()
   }
 
   onPointerup(event: PointerEvent) {
     event.preventDefault()
-    this.releasePointerCapture(event.pointerId)
+    this._endDrag()
+  }
+
+  private _endDrag() {
+    this.releasePointerCapture(this._pointerId)
     this.removeEventListener('pointermove', this.onPointermove)
     this.removeEventListener('pointerup', this.onPointerup)
     this.removeEventListener('pointercancel', this.onPointerup)

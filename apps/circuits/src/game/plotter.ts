@@ -161,6 +161,10 @@ export class Plotter extends ReactiveNode {
 
     }
 
+    if (endDrag) {
+      this.dispatch('line-end-drag', {id}, true)
+    }
+
     this.dispatch('game-update', undefined, true)
     return { added, endDrag }
   }

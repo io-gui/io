@@ -40,7 +40,7 @@ export class ThreeScene extends ThreeApplet {
 
   public camera: OrthographicCamera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 1000)
 
-  public grid: Grid = new Grid(0, 0)
+  public grid: Grid = new Grid()
   public pads: InstancedMesh
   public terminals: InstancedMesh
   public lines: InstancedMesh
@@ -64,7 +64,9 @@ export class ThreeScene extends ThreeApplet {
     this.camera.position.set(0, 0, 10)
     this.scene.add(this.camera)
 
-    this.updateGrid(0, 0)
+    this.grid.rotation.x = Math.PI / 2
+    this.scene.add(this.grid)
+
     this.pads = new InstancedMesh(ThreeScene.padGeometry, ThreeScene.padMaterial, 0)
     this.terminals = new InstancedMesh(ThreeScene.terminalGeometry, ThreeScene.terminalMaterial, 0)
     this.lines = new InstancedMesh(ThreeScene.lineGeometry, ThreeScene.lineMaterial, 0)
@@ -80,14 +82,7 @@ export class ThreeScene extends ThreeApplet {
   updateGrid(width: number, height: number) {
     this.gridWidth = width
     this.gridHeight = height
-    if (this.grid.parent) {
-      this.grid.parent.remove(this.grid)
-      this.grid.dispose()
-    }
-    this.grid = new Grid(width, height)
-
-    this.grid.rotation.x = Math.PI / 2
-    this.scene.add(this.grid)
+    this.grid.update(width, height)
 
     const size = Math.max(width, height) / 2
     this.camera.left = -size
