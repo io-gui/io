@@ -117,7 +117,7 @@ export class ViewCameras extends ReactiveNode {
 
     this.orbitControls.connect(this.viewport)
     this.orbitControls.addEventListener('change', () => {
-      this.applet.dispatchMutation()
+      this.dispatchMutation()
     })
 
     if (this.camera === undefined) this.camera = this.defaultCameras.perspective

@@ -1,11 +1,19 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding, Property } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
+import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Change, Property, WithBinding } from '@io-gui/core'
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping, PerspectiveCamera, Vector2, Vector3 } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
+import { ToolBase } from '../nodes/ToolBase.js'
 
 if ( WebGPU.isAvailable() === false ) {
   throw new Error( 'No WebGPU support' )
+}
+
+export interface Pointer3D {
+  screen: Vector2
+  origin: Vector3
+  direction: Vector3
+  event: PointerEvent
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -23,11 +31,13 @@ _renderer.shadowMap.enabled = true
 void _renderer.init()
 
 export type IoThreeViewportProps = IoElementProps & {
-  clearColor?: number | Binding
-  clearAlpha?: number | Binding
-  applet: ThreeApplet | Binding
-  cameraSelect?: string | Binding
+  overscan?: WithBinding<number>
+  clearColor?: WithBinding<number>
+  clearAlpha?: WithBinding<number>
+  applet: WithBinding<ThreeApplet>
+  cameraSelect?: WithBinding<string>
   renderer?: WebGPURenderer
+  tool?: WithBinding<ToolBase>
 }
 
 @Register
@@ -58,10 +68,15 @@ export class IoThreeViewport extends IoElement {
   @ReactiveProperty({type: WebGPURenderer, value: _renderer})
   declare renderer: WebGPURenderer
 
+  @ReactiveProperty({type: ViewCameras})
+  declare viewCameras: ViewCameras
+
+  @ReactiveProperty({type: ToolBase})
+  declare tool: ToolBase
+
   @Property(0)
   declare tabIndex: number
 
-  declare private readonly viewCameras: ViewCameras
   declare private readonly renderTarget: CanvasTarget
 
   static get Style() {
@@ -79,6 +94,7 @@ export class IoThreeViewport extends IoElement {
       }
       :host > canvas {
         position: absolute;
+        pointer-events: none;
       }
       :host:focus {
         border: var(--io_border);
@@ -115,6 +131,13 @@ export class IoThreeViewport extends IoElement {
     this.visible = false
   }
 
+  toolChanged(change: Change<ToolBase>) {
+    const newTool = change.value
+    const oldTool = change.oldValue
+    if (oldTool) oldTool.unregisterViewport(this)
+    if (newTool) newTool.registerViewport(this)
+  }
+
   onAppletNeedsRender(event: CustomEvent) {
     event.stopPropagation()
     if (!this.visible) return
@@ -134,6 +157,9 @@ export class IoThreeViewport extends IoElement {
     this.debounce(this.renderViewportDebounced)
   }
   appletMutated() {
+    this.debounce(this.renderViewportDebounced)
+  }
+  viewCamerasMutated() {
     this.debounce(this.renderViewportDebounced)
   }
   changed() {
@@ -176,10 +202,46 @@ export class IoThreeViewport extends IoElement {
     this.renderer.toneMappingExposure = toneMappingExposure
   }
 
+  pointerTo3D(event: PointerEvent): Pointer3D {
+    const rect = (event.target as IoThreeViewport).getBoundingClientRect()
+
+    const screen = new Vector2(
+      ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1,
+    )
+
+    this.viewCameras.setOverscan(this.width, this.height, this.overscan)
+    const camera = this.viewCameras.camera
+
+    const origin = new Vector3(screen.x, screen.y, -1).unproject(camera)
+    camera.updateMatrixWorld()
+    origin.applyMatrix4(camera.matrixWorld)
+
+    const direction = new Vector3()
+
+    if (camera instanceof PerspectiveCamera) {
+      direction.setFromMatrixPosition(camera.matrixWorld)
+      direction.subVectors(origin, direction).normalize()
+    } else {
+      direction.set(0, 0, -1).transformDirection(camera.matrixWorld)
+    }
+
+    this.viewCameras.resetOverscan()
+
+    return {
+      screen,
+      origin,
+      direction,
+      event,
+    }
+  }
+
+
   dispose() {
     delete (this as any).applet
     this.renderTarget.dispose()
     this.viewCameras.dispose()
+    this.tool.unregisterViewport(this)
     super.dispose()
   }
 }

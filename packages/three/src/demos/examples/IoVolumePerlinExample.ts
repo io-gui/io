@@ -88,7 +88,7 @@ export class VolumePerlinExample extends ThreeApplet {
 @Register
 export class IoVolumePerlinExample extends IoThreeExample {
 
-  @ReactiveProperty({type: VolumePerlinExample, init: {isPlaying: true}})
+  @ReactiveProperty({type: VolumePerlinExample, init: null})
   declare applet: VolumePerlinExample
 
   ready() {
