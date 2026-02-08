@@ -26,7 +26,7 @@ class Grid extends LineSegments {
 
     const hSegments = width * ( height + 1 )
 		const vSegments = height * ( width + 1 )
-		const dSegments = width * height * 4
+		const dSegments = width * height * 2
 		const totalSegments = hSegments + vSegments + dSegments
 		const totalVertices = totalSegments * 2
 
@@ -64,21 +64,14 @@ class Grid extends LineSegments {
 			}
 		}
 
-		// Diagonal segments (4 per cell: center to each corner)
+		// Diagonal segments (2 per cell: corner to corner)
 		for ( let cz = 0; cz < height; cz ++ ) {
 			for ( let cx = 0; cx < width; cx ++ ) {
-				const centerX = cx + 0.5
-				const centerZ = cz + 0.5
-				pushVertex( centerX, centerZ, color2 )
-				pushVertex( cx, cz, color )
-				pushVertex( centerX, centerZ, color2 )
-				pushVertex( cx + 1, cz, color )
-				pushVertex( centerX, centerZ, color2 )
-				pushVertex( cx, cz + 1, color )
-				pushVertex( centerX, centerZ, color2 )
-				pushVertex( cx + 1, cz + 1, color )
+				pushVertex( cx, cz, color2 )
+				pushVertex( cx + 1, cz + 1, color2 )
+				pushVertex( cx + 1, cz, color2 )
+				pushVertex( cx, cz + 1, color2 )
 			}
-
 		}
 
 		this.geometry.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) )
