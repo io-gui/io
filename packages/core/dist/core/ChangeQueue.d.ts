@@ -1,9 +1,9 @@
 import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-export interface Change {
+export interface Change<T = any> {
     property: string;
-    value: any;
-    oldValue: any;
+    value: T;
+    oldValue: T;
 }
 export interface Changes {
     [property: string]: Change;

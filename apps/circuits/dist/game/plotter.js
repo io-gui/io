@@ -64,14 +64,14 @@ let Plotter = class Plotter extends ReactiveNode {
         if (this.getPointAt(x, y))
             return false;
         this.pads.push(new Pad(id, [x, y]));
-        this.dispatch('game-render', undefined, true);
+        this.dispatch('game-update', undefined, true);
         return true;
     }
     addTerminal(id, x, y, color) {
         if (this.getPointAt(x, y))
             return false;
         this.terminals.push(new Terminal(id, [x, y], color));
-        this.dispatch('game-render', undefined, true);
+        this.dispatch('game-update', undefined, true);
         return true;
     }
     delete(x, y) {
@@ -87,7 +87,7 @@ let Plotter = class Plotter extends ReactiveNode {
         if (lineIdx !== -1) {
             this.lines.splice(lineIdx, 1);
         }
-        this.dispatch('game-render', undefined, true);
+        this.dispatch('game-update', undefined, true);
     }
     verifyLineLegality(id) {
         const line = this.getLineById(id);
@@ -126,11 +126,11 @@ let Plotter = class Plotter extends ReactiveNode {
                 added = line.plotSegment(x, y);
             }
             if (point) {
-                if (point.color !== 'white' && point.color !== line.color) {
+                if (point.color !== 'white' && line.color !== 'white' && point.color !== line.color) {
                     return { added: false, endDrag: false };
                 }
                 added = line.plotSegment(x, y);
-                endDrag = added;
+                endDrag = true;
             }
         }
         else {
@@ -141,7 +141,10 @@ let Plotter = class Plotter extends ReactiveNode {
             this.lines.push(newLine);
             added = true;
         }
-        this.dispatch('game-render', undefined, true);
+        if (endDrag) {
+            this.dispatch('line-end-drag', { id }, true);
+        }
+        this.dispatch('game-update', undefined, true);
         return { added, endDrag };
     }
 };

@@ -22,7 +22,6 @@ export declare class CircuitsGame extends IoElement {
     onRedo(): void;
     onReset(): void;
     onEdit(): void;
-    onBack(): void;
 }
 export declare const circuitsGame: (arg0: CircuitsGameProps) => import("@io-gui/core").VDOMElement;
 export {};

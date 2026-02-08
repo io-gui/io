@@ -34,5 +34,6 @@ export * from './elements/IoBuildGeometry.js';
 export * from './elements/IoThreeExample.js';
 export * from './elements/IoThreeViewport.js';
 export * from './nodes/ThreeApplet.js';
+export * from './nodes/ToolBase.js';
 import './configs/index.js';
 //# sourceMappingURL=index.d.ts.map

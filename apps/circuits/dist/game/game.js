@@ -53,7 +53,7 @@ let Game = class Game extends ReactiveNode {
         }
         this.undoStack = [this.toJSON()];
         this.redoStack = [];
-        this.dispatch('game-render', undefined, true);
+        this.dispatch('game-update', undefined, true);
     }
     currentLevelChanged() {
         void this.initialize().then(() => {
@@ -119,7 +119,7 @@ let Game = class Game extends ReactiveNode {
             this.redoStack.push(currentState);
             this.propagateColors();
             this.save();
-            this.dispatch('game-render', undefined, true);
+            this.dispatch('game-update', undefined, true);
         }
     }
     redo() {
@@ -129,7 +129,7 @@ let Game = class Game extends ReactiveNode {
             this.undoStack.push(state);
             this.propagateColors();
             this.save();
-            this.dispatch('game-render', undefined, true);
+            this.dispatch('game-update', undefined, true);
         }
     }
     resetColors() {
@@ -171,7 +171,7 @@ let Game = class Game extends ReactiveNode {
                 }
             }
         }
-        this.dispatch('game-render', undefined, true);
+        this.dispatch('game-update', undefined, true);
         let completed = true;
         // TODO: Check for completeness correctly
         for (const term of this.terminals) {
@@ -193,7 +193,7 @@ let Game = class Game extends ReactiveNode {
             this.propagateColors();
             this.save();
         }
-        this.dispatch('game-render', undefined, true);
+        this.dispatch('game-update', undefined, true);
     }
 };
 __decorate([

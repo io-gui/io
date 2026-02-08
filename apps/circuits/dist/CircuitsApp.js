@@ -4,11 +4,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, Storage as $, } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, Storage as $, div } from '@io-gui/core';
 import { ioSplit, Split } from '@io-gui/layout';
+import { ioButton } from '@io-gui/inputs';
+import { TERMINAL_COLORS } from './game/items/terminal.js';
 import { circuitsLevels } from './CircuitsLevels.js';
 import { circuitsGame } from './CircuitsGame.js';
-import { circuitsEditor } from './CircuitsEditor.js';
 import { Game } from './game/game.js';
 $.permit();
 const $level = $({ key: 'level', storage: 'hash', value: '' });
@@ -54,7 +55,19 @@ let CircuitsApp = class CircuitsApp extends IoElement {
                 elements: [
                     circuitsLevels({ id: 'levels', completedLevels: completedIds }),
                     circuitsGame({ id: 'game', level: $level, game: this.game }),
-                    circuitsEditor({ id: 'editor' }),
+                    div({ id: 'editor' }, [
+                        ioButton({ label: 'Pad', action: () => this._select('pad', '') }),
+                        ...Object.keys(TERMINAL_COLORS).map((c) => ioButton({ label: c, action: () => this._select('terminal', c) })),
+                        ioButton({
+                            label: 'Line (top)',
+                            action: () => this.dispatch('editor-select', { mode: 'line', layer: 0 }, true),
+                        }),
+                        ioButton({
+                            label: 'Line (bottom)',
+                            action: () => this.dispatch('editor-select', { mode: 'line', layer: -1 }, true),
+                        }),
+                        ioButton({ label: 'Delete', action: () => this._select('delete', 'red') }),
+                    ])
                 ],
             }),
         ]);
@@ -70,6 +83,9 @@ let CircuitsApp = class CircuitsApp extends IoElement {
         catch {
             return [];
         }
+    }
+    _select(mode, color) {
+        this.dispatch('editor-select', { mode, color }, true);
     }
     _setCompletedIds(ids) {
         $completed.value = JSON.stringify(ids);
@@ -89,6 +105,7 @@ let CircuitsApp = class CircuitsApp extends IoElement {
         event.stopPropagation();
         const { mode, color, layer } = event.detail;
         this.game.drawMode = mode;
+        console.log(mode);
         if (mode === 'line' && layer !== undefined) {
             this.game.drawLayer = layer;
         }

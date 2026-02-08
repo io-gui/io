@@ -81,7 +81,7 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
         super(args);
         this.orbitControls.connect(this.viewport);
         this.orbitControls.addEventListener('change', () => {
-            this.applet.dispatchMutation();
+            this.dispatchMutation();
         });
         if (this.camera === undefined)
             this.camera = this.defaultCameras.perspective;
@@ -140,6 +140,7 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
         }
     }
     appletChanged() {
+        this.cameraSelectChangedDebounced();
         this.frameObjectAll(this.applet.scene);
     }
     onFrameObject(event) {
@@ -158,7 +159,7 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
             this.frameObject(object, camera, overscan);
         }
         // TODO: Reconsider
-        this.debounce(this.cameraSelectChangedDebounced);
+        // this.debounce(this.cameraSelectChangedDebounced)
     }
     frameObject(object, camera, overscan = 1) {
         box.setFromObject(object);

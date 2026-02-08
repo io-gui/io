@@ -1,0 +1,1 @@
+{"version":3,"file":"pointerTool.d.ts","sourceRoot":"","sources":["../../src/tools/pointerTool.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,SAAS,EAAE,QAAQ,EAAE,MAAM,eAAe,CAAA;AAEnD,qBACa,WAAY,SAAQ,QAAQ;IACvC,eAAe,CAAC,QAAQ,EAAE,SAAS,EAAE;IAGrC,eAAe,CAAC,QAAQ,EAAE,SAAS,EAAE;IAGrC,aAAa,CAAC,QAAQ,EAAE,SAAS,EAAE;IAGnC,iBAAiB,CAAC,QAAQ,EAAE,SAAS,EAAE;CAGxC"}

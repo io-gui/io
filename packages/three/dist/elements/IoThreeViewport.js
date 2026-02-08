@@ -5,10 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping, PerspectiveCamera, Vector2, Vector3 } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
+import { ToolBase } from '../nodes/ToolBase.js';
 if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
@@ -43,6 +44,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
       }
       :host > canvas {
         position: absolute;
+        pointer-events: none;
       }
       :host:focus {
         border: var(--io_border);
@@ -72,11 +74,19 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         // TODO: Visibility observe
         this.visible = false;
     }
+    toolChanged(change) {
+        const newTool = change.value;
+        const oldTool = change.oldValue;
+        if (oldTool)
+            oldTool.unregisterViewport(this);
+        if (newTool)
+            newTool.registerViewport(this);
+    }
     onAppletNeedsRender(event) {
         event.stopPropagation();
         if (!this.visible)
             return;
-        this.renderViewport();
+        this.debounce(this.renderViewportDebounced);
     }
     onResized() {
         const rect = this.getBoundingClientRect();
@@ -92,12 +102,15 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     appletMutated() {
         this.debounce(this.renderViewportDebounced);
     }
+    viewCamerasMutated() {
+        this.debounce(this.renderViewportDebounced);
+    }
     changed() {
         this.debounce(this.renderViewportDebounced);
     }
     renderViewportDebounced() {
         if (this.renderer.initialized === false) {
-            this.debounce(this.renderViewportDebounced);
+            this.debounce(this.renderViewportDebounced, undefined, 2);
             return;
         }
         this.applet.updateViewportSize(this.width, this.height);
@@ -120,19 +133,47 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         const toneMappingExposure = this.renderer.toneMappingExposure;
         this.renderer.toneMapping = this.applet.toneMapping;
         this.renderer.toneMappingExposure = this.applet.toneMappingExposure;
-        this.viewCameras.setOverscan(this.width, this.height, 1.1);
+        this.viewCameras.setOverscan(this.width, this.height, this.overscan);
         this.renderer.render(this.applet.scene, this.viewCameras.camera);
         this.viewCameras.resetOverscan();
         this.renderer.toneMapping = toneMapping;
         this.renderer.toneMappingExposure = toneMappingExposure;
     }
+    pointerTo3D(event) {
+        const rect = event.target.getBoundingClientRect();
+        const screen = new Vector2(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
+        this.viewCameras.setOverscan(this.width, this.height, this.overscan);
+        const camera = this.viewCameras.camera;
+        const origin = new Vector3(screen.x, screen.y, -1).unproject(camera);
+        camera.updateMatrixWorld();
+        origin.applyMatrix4(camera.matrixWorld);
+        const direction = new Vector3();
+        if (camera instanceof PerspectiveCamera) {
+            direction.setFromMatrixPosition(camera.matrixWorld);
+            direction.subVectors(origin, direction).normalize();
+        }
+        else {
+            direction.set(0, 0, -1).transformDirection(camera.matrixWorld);
+        }
+        this.viewCameras.resetOverscan();
+        return {
+            screen,
+            origin,
+            direction,
+            event,
+        };
+    }
     dispose() {
         delete this.applet;
         this.renderTarget.dispose();
         this.viewCameras.dispose();
+        this.tool.unregisterViewport(this);
         super.dispose();
     }
 };
+__decorate([
+    ReactiveProperty({ type: Number, value: 1.1 })
+], IoThreeViewport.prototype, "overscan", void 0);
 __decorate([
     ReactiveProperty({ type: Number, value: 0x000000 })
 ], IoThreeViewport.prototype, "clearColor", void 0);
@@ -151,6 +192,12 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: WebGPURenderer, value: _renderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
+__decorate([
+    ReactiveProperty({ type: ViewCameras })
+], IoThreeViewport.prototype, "viewCameras", void 0);
+__decorate([
+    ReactiveProperty({ type: ToolBase })
+], IoThreeViewport.prototype, "tool", void 0);
 __decorate([
     Property(0)
 ], IoThreeViewport.prototype, "tabIndex", void 0);
