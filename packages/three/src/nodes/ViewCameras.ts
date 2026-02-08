@@ -176,6 +176,7 @@ export class ViewCameras extends ReactiveNode {
   }
 
   appletChanged() {
+    this.cameraSelectChangedDebounced()
     this.frameObjectAll(this.applet.scene)
   }
 
@@ -196,7 +197,7 @@ export class ViewCameras extends ReactiveNode {
       this.frameObject(object, camera, overscan)
     }
     // TODO: Reconsider
-    this.debounce(this.cameraSelectChangedDebounced)
+    // this.debounce(this.cameraSelectChangedDebounced)
   }
 
   frameObject(object: Object3D, camera: Camera, overscan: number = 1) {

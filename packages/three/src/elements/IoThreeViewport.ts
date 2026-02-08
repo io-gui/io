@@ -37,6 +37,9 @@ export class IoThreeViewport extends IoElement {
   public height: number = 0
   public visible: boolean = false
 
+  @ReactiveProperty({type: Number, value: 1.1})
+  declare public overscan: number
+
   @ReactiveProperty({type: Number, value: 0x000000})
   declare public clearColor: number
 
@@ -165,7 +168,7 @@ export class IoThreeViewport extends IoElement {
     this.renderer.toneMapping = this.applet.toneMapping
     this.renderer.toneMappingExposure = this.applet.toneMappingExposure
 
-    this.viewCameras.setOverscan(this.width, this.height, 1.1)
+    this.viewCameras.setOverscan(this.width, this.height, this.overscan)
     this.renderer.render(this.applet.scene, this.viewCameras.camera)
     this.viewCameras.resetOverscan()
 

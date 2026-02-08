@@ -46,8 +46,9 @@ export class IoField extends IoElement {
         border-color: var(--io_borderColorInset) !important;
         box-shadow: var(--io_shadowInset) !important;
       }
-      :host > span {
+      :host span {
         height: var(--io_lineHeight);
+        vertical-align: top;
       }
       :host[appearance=neutral] {
         color: var(--io_color);
