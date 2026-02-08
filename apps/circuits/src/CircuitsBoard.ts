@@ -4,9 +4,14 @@ import {
   IoElementProps,
   ReactiveProperty,
 } from '@io-gui/core'
+import { Vector2 } from 'three'
 import { Game } from './game/game.js'
 import { ThreeScene } from './scene/threeScene.js'
-import { IoThreeViewport, ioThreeViewport } from '@io-gui/three'
+import { ioThreeViewport, Pointer3D } from '@io-gui/three'
+import { PointerTool } from './tools/pointerTool.js'
+
+const _pos = new Vector2()
+const _posOld = new Vector2()
 
 type CircuitsBoardProps = IoElementProps & {
   game: Game
@@ -34,10 +39,13 @@ export class CircuitsBoard extends IoElement {
 
   static get Listeners(): Record<string, string> {
     return {
-      'pointerdown': 'onPointerdown',
+      '3dpointer-down': 'on3DPointerDown',
+      '3dpointer-move': 'on3DPointerMove',
+      '3dpointer-up': 'on3DPointerUp',
+
       'game-init-scene': 'onGameInit',
       'game-update': 'onGameUpdate',
-      'line-end-drag': 'onLineEndDrag',
+      'line-end-drag': 'onEndDrag',
     }
   }
 
@@ -47,15 +55,7 @@ export class CircuitsBoard extends IoElement {
   @ReactiveProperty({ type: Game })
   declare game: Game
 
-  private _pointerX = 0
-  private _pointerY = 0
-  private _gridX = 0
-  private _gridY = 0
-  private _gridXOld = 0
-  private _gridYOld = 0
-  private _drag = false
-  private _currentID = -1
-  private _pointerId = -1
+  private _currentID: number = 0
 
   constructor(args: CircuitsBoardProps) {
     super(args)
@@ -69,132 +69,59 @@ export class CircuitsBoard extends IoElement {
     this.applet.updatePads(this.game.pads)
     this.applet.updateTerminals(this.game.terminals)
     this.applet.updateLines(this.game.lines)
+    // TODO: hmm?
     this.applet.dispatch('three-applet-needs-render', undefined, true)
   };
 
   ready() {
     this.render([
-      ioThreeViewport({applet: this.applet, cameraSelect: 'scene'}),
+      ioThreeViewport({applet: this.applet, tool: new PointerTool({}), cameraSelect: 'scene', overscan: 1.2}),
     ])
   }
 
-  onPointerdown(event: PointerEvent) {
-    event.preventDefault()
-    this._pointerId = event.pointerId
-    this.setPointerCapture(event.pointerId)
-    this.addEventListener('pointermove', this.onPointermove)
-    this.addEventListener('pointerup', this.onPointerup)
-    this.addEventListener('pointercancel', this.onPointerup)
+  on3DPointerDown(event: CustomEvent<Pointer3D[]>) {
+    if (event.detail.length !== 1) return
+    _pos.set(
+      Math.round(event.detail[0].origin.x),
+      Math.round(event.detail[0].origin.y),
+    )
+    _posOld.copy(_pos)
 
-    const viewport = this.querySelector('io-three-viewport')! as IoThreeViewport
-    const rect = viewport.getBoundingClientRect()
     this._currentID = Math.floor(Math.random() * 100000)
-    this._drag = true
-    this._initPosition(event, rect)
 
     if (this.game.drawMode === 'pad') {
-      this.game.plotter.addPad(this._currentID, this._gridX, this._gridY)
+      console.log( _pos.x, _pos.y)
+      this.game.plotter.addPad(this._currentID, _pos.x, _pos.y)
     }
     if (this.game.drawMode === 'terminal') {
-      this.game.plotter.addTerminal(this._currentID, this._gridX, this._gridY, this.game.drawColor)
+      this.game.plotter.addTerminal(this._currentID, _pos.x, _pos.y, this.game.drawColor)
     }
     if (this.game.drawMode === 'line') {
-      this.game.plotter.addLineSegment(this._currentID, this._gridX, this._gridY, this.game.drawLayer)
+      this.game.plotter.addLineSegment(this._currentID, _pos.x, _pos.y, this.game.drawLayer)
     }
     if (this.game.drawMode === 'delete') {
-      this.game.plotter.delete(this._gridX, this._gridY)
+      this.game.plotter.delete(_pos.x, _pos.y)
     }
   }
 
-  onPointermove(event: PointerEvent) {
-    event.preventDefault()
-    const viewport = this.querySelector('io-three-viewport')! as IoThreeViewport
-    this._updatePosition(event, viewport.getBoundingClientRect())
-
-    if (
-      this.game.drawMode === 'line' &&
-      this._drag &&
-      (this._gridX !== this._gridXOld || this._gridY !== this._gridYOld)
-    ) {
-      this.game.plotter.addLineSegment(this._currentID, this._gridX, this._gridY, this.game.drawLayer)
+  on3DPointerMove(event: CustomEvent<Pointer3D[]>) {
+    if (event.detail.length !== 1) return
+    _pos.set(
+      Math.round(event.detail[0].origin.x),
+      Math.round(event.detail[0].origin.y),
+    )
+    if (this.game.drawMode === 'line' && _pos.distanceTo(_posOld) > 0) {
+      this.game.plotter.addLineSegment(this._currentID, _pos.x, _pos.y, this.game.drawLayer)
     }
   }
 
-  onLineEndDrag() {
-    this._endDrag()
-  }
-
-  onPointerup(event: PointerEvent) {
+  on3DPointerUp(event: PointerEvent) {
     event.preventDefault()
-    this._endDrag()
+    this.onEndDrag()
   }
 
-  private _endDrag() {
-    this.releasePointerCapture(this._pointerId)
-    this.removeEventListener('pointermove', this.onPointermove)
-    this.removeEventListener('pointerup', this.onPointerup)
-    this.removeEventListener('pointercancel', this.onPointerup)
-
-    this._drag = false
-
+  onEndDrag() {
     if (this.game) this.game.finalizeMove(this._currentID)
-  }
-
-  private _initPosition(event: PointerEvent, rect: DOMRect): void {
-    const { worldX, worldY, gridX, gridY } = this.applet.pointerToGrid(
-      event.clientX,
-      event.clientY,
-      rect.left,
-      rect.top,
-      rect.width,
-      rect.height
-    )
-    const halfW = this.game.width / 2
-    const halfH = this.game.height / 2
-    this._pointerX = worldX + halfW
-    this._pointerY = worldY + halfH
-    this._gridX = gridX
-    this._gridY = gridY
-    this._gridXOld = this._gridX
-    this._gridYOld = this._gridY
-  }
-
-  private _updatePosition(event: PointerEvent, rect: DOMRect): void {
-    const { worldX, worldY } = this.applet.pointerToGrid(
-      event.clientX,
-      event.clientY,
-      rect.left,
-      rect.top,
-      rect.width,
-      rect.height
-    )
-    const halfW = this.game.width / 2
-    const halfH = this.game.height / 2
-    this._pointerX = worldX + halfW
-    this._pointerY = worldY + halfH
-
-    const distance = Math.sqrt(
-      (this._pointerX - Math.round(this._pointerX)) ** 2 +
-      (this._pointerY - Math.round(this._pointerY)) ** 2
-    )
-    const inBounds =
-      this._pointerX <= this.game.width + 0.5 &&
-      this._pointerY <= this.game.height + 0.5 &&
-      this._pointerX >= -0.5 &&
-      this._pointerY >= -0.5
-
-    if (distance < 0.5 && inBounds) {
-      this._gridXOld = this._gridX
-      this._gridYOld = this._gridY
-
-      this._gridX = Math.round(this._pointerX)
-      this._gridY = Math.round(this._pointerY)
-
-      if (this._gridX > this._gridXOld) this._gridX = this._gridXOld + 1
-      if (this._gridX < this._gridXOld) this._gridX = this._gridXOld - 1
-      if (this._gridY > this._gridYOld) this._gridY = this._gridYOld + 1
-      if (this._gridY < this._gridYOld) this._gridY = this._gridYOld - 1
-    }
   }
 
   dispose() {

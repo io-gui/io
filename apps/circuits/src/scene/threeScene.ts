@@ -38,14 +38,11 @@ const _segmentPosition = new Vector3()
 @Register
 export class ThreeScene extends ThreeApplet {
 
-  public camera: OrthographicCamera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 1000)
-
+  public camera: OrthographicCamera
   public grid: Grid = new Grid()
   public pads: InstancedMesh
   public terminals: InstancedMesh
   public lines: InstancedMesh
-  private gridWidth = 0
-  private gridHeight = 0
 
   static padGeometry: SphereGeometry = new SphereGeometry(PAD_SPHERE_RADIUS, 16, 12)
   static padMaterial: MeshPhongMaterial = new MeshPhongMaterial({ vertexColors: true })
@@ -61,10 +58,9 @@ export class ThreeScene extends ThreeApplet {
   constructor(args: ThreeAppletProps) {
     super(args)
 
-    this.camera.position.set(0, 0, 10)
+    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 1000)
     this.scene.add(this.camera)
 
-    this.grid.rotation.x = Math.PI / 2
     this.scene.add(this.grid)
 
     this.pads = new InstancedMesh(ThreeScene.padGeometry, ThreeScene.padMaterial, 0)
@@ -80,15 +76,15 @@ export class ThreeScene extends ThreeApplet {
   }
 
   updateGrid(width: number, height: number) {
-    this.gridWidth = width
-    this.gridHeight = height
     this.grid.update(width, height)
 
-    const size = Math.max(width, height) / 2
-    this.camera.left = -size
-    this.camera.right = size
-    this.camera.top = size
-    this.camera.bottom = -size
+    const size = Math.max(width, height)
+    this.camera.left = -size / 2
+    this.camera.right = size / 2
+    this.camera.top = size / 2
+    this.camera.bottom = -size / 2
+    this.camera.position.set(width / 2, height / 2, 10)
+
     this.camera.updateProjectionMatrix()
   }
 
@@ -102,7 +98,7 @@ export class ThreeScene extends ThreeApplet {
     const matrix = new Matrix4()
     const padColor = new Color()
     for (let i = 0; i < pads.length; i++) {
-      matrix.makeTranslation(pads[i].pos[0] - this.gridWidth / 2, pads[i].pos[1] - this.gridHeight / 2, 0)
+      matrix.makeTranslation(pads[i].pos[0], pads[i].pos[1], 0)
       this.pads.setMatrixAt(i, matrix)
       padColor.copy(ThreeScene.instanceColor(pads[i].color))
       this.pads.setColorAt(i, padColor)
@@ -124,7 +120,7 @@ export class ThreeScene extends ThreeApplet {
     const matrix = new Matrix4()
     const terminalColor = new Color()
     for (let i = 0; i < terminals.length; i++) {
-      matrix.makeTranslation(terminals[i].pos[0] - this.gridWidth / 2, terminals[i].pos[1] - this.gridHeight / 2, 0)
+      matrix.makeTranslation(terminals[i].pos[0], terminals[i].pos[1], 0)
       this.terminals.setMatrixAt(i, matrix)
       terminalColor.copy(ThreeScene.instanceColor(terminals[i].color))
       this.terminals.setColorAt(i, terminalColor)
@@ -143,8 +139,6 @@ export class ThreeScene extends ThreeApplet {
       ThreeScene.lineMaterial,
       segmentCount
     )
-    const halfW = this.gridWidth / 2
-    const halfH = this.gridHeight / 2
     const matrix = new Matrix4()
     const lineColor = new Color()
     let idx = 0
@@ -158,10 +152,10 @@ export class ThreeScene extends ThreeApplet {
       const widthScale = isBehind ? LINE_LAYER_MINUS_ONE_WIDTH_FACTOR : 1
       const segmentZ = isBehind ? LINE_LAYER_BEHIND_Z : 0
       for (let j = 0; j < pos.length - 1; j++) {
-        const ax = pos[j][0] - halfW
-        const ay = pos[j][1] - halfH
-        const bx = pos[j + 1][0] - halfW
-        const by = pos[j + 1][1] - halfH
+        const ax = pos[j][0]
+        const ay = pos[j][1]
+        const bx = pos[j + 1][0]
+        const by = pos[j + 1][1]
         _segmentPosition.set((ax + bx) / 2, (ay + by) / 2, segmentZ)
         const dx = bx - ax
         const dy = by - ay
@@ -184,49 +178,8 @@ export class ThreeScene extends ThreeApplet {
     this.lines.instanceMatrix.needsUpdate = true
     if (this.lines.instanceColor) this.lines.instanceColor.needsUpdate = true
     this.scene.add(this.lines)
-    console.log('updateLines', this.lines.count)
   }
 
-  pointerToGrid(
-    clientX: number,
-    clientY: number,
-    viewportLeft: number,
-    viewportTop: number,
-    viewportWidth: number,
-    viewportHeight: number
-  ): { worldX: number; worldY: number; gridX: number; gridY: number } {
-    const overscan = 1.1
-    const aspect = viewportWidth / viewportHeight
-    let left = this.camera.left
-    let right = this.camera.right
-    let top = this.camera.top
-    let bottom = this.camera.bottom
-    const frustumHeight = top - bottom
-    const frustumWidth = right - left
-    const frustumAspect = frustumWidth / frustumHeight
-    if (frustumAspect > aspect) {
-      top = frustumWidth / 2 / aspect
-      bottom = -top
-    } else {
-      left = -(frustumHeight / 2) * aspect
-      right = -left
-    }
-    left *= overscan
-    right *= overscan
-    top *= overscan
-    bottom *= overscan
-    const ndcX = ((clientX - viewportLeft) / viewportWidth) * 2 - 1
-    const ndcY = 1 - ((clientY - viewportTop) / viewportHeight) * 2
-    const worldX = left + (ndcX + 1) * 0.5 * (right - left)
-    const worldY = bottom + (ndcY + 1) * 0.5 * (top - bottom)
-    const halfW = this.gridWidth / 2
-    const halfH = this.gridHeight / 2
-    const gridX = Math.round(worldX + halfW)
-    const gridY = Math.round(worldY + halfH)
-    return { worldX, worldY, gridX, gridY }
-  }
+  // onAnimate(delta: number, time: number) {}
 
-  onAnimate(delta: number, time: number) {
-
-  }
 }
