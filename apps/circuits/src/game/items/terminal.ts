@@ -7,9 +7,6 @@ export const TERMINAL_COLORS = {
   yellow: '#fec41a',
   orange: '#ff6910',
   purple: '#760281',
-  brown: '#820419',
-  grey: '#555555',
-  black: '#222222',
 }
 
 export type TerminalColor = keyof typeof TERMINAL_COLORS

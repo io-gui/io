@@ -6,9 +6,9 @@ export interface PadData {
 }
 
 export class Pad {
-  id: number
-  pos: [number, number]
-  _color: TerminalColor = 'white'
+  public id: number
+  public pos: [number, number]
+  private _color: TerminalColor = 'white'
 
   get color(): TerminalColor {
     return this._color

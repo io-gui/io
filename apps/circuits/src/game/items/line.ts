@@ -7,10 +7,10 @@ export interface LineData {
 }
 
 export class Line {
-  id: number
-  pos: [number, number][]
-  layer: number
-  _color: TerminalColor = 'white'
+  public id: number
+  public pos: [number, number][]
+  public layer: number
+  private _color: TerminalColor = 'white'
 
   get color(): TerminalColor {
     return this._color
@@ -20,10 +20,22 @@ export class Line {
     this._color = color
   }
 
-  constructor(id: number, pos: [number, number], layer: number) {
+  constructor(id: number, pos: [number, number][], layer: number) {
     this.id = id
-    this.pos = [pos]
+    this.pos = pos
     this.layer = layer
+  }
+
+  toJSON(): LineData {
+    return {
+      id: this.id,
+      pos: this.pos,
+      layer: this.layer,
+    }
+  }
+
+  static fromJSON(data: LineData): Line {
+    return new Line(data.id, data.pos, data.layer)
   }
 
   hasDiagonalSegmentAt(mx: number, my: number): boolean {
@@ -34,10 +46,8 @@ export class Line {
       const bx = pos[i][0]
       const by = pos[i][1]
       if (
-        Math.abs(bx - ax) === 1 &&
-        Math.abs(by - ay) === 1 &&
-        (ax + bx) / 2 === mx &&
-        (ay + by) / 2 === my
+        Math.abs(bx - ax) === 1 && Math.abs(by - ay) === 1 &&
+        (ax + bx) / 2 === mx && (ay + by) / 2 === my
       ) {
         return true
       }
@@ -54,22 +64,6 @@ export class Line {
     if (this._tryEraseLastSegment(x, y)) return true
     if (this._tryAddNewSegment(x, y)) return true
     return false
-  }
-
-  toJSON(): LineData {
-    return {
-      id: this.id,
-      pos: this.pos,
-      layer: this.layer,
-    }
-  }
-
-  static fromJSON(data: LineData): Line {
-    const line = new Line(data.id, data.pos[0], data.layer)
-    for (let j = 1; j < data.pos.length; j++) {
-      line.plotSegment(data.pos[j][0], data.pos[j][1])
-    }
-    return line
   }
 
   /**
