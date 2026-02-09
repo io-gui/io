@@ -117,14 +117,17 @@ export class Plotter extends ReactiveNode {
   }
 
   addLineSegment(id: number, x: number, y: number, layer: number): { added: boolean; endDrag: boolean } {
+    // Lookup what's at target cell
     const point = this.getPointAt(x, y)
     const linesAtPoint = this.getLinesAtPoint(x, y, (line) => (line.layer === 0))
     const underlineLinesAtPoint = this.getLinesAtPoint(x, y, (line) => line.layer === -1)
+    // Terminals accept 1 connection, pads accept 2, empty cells accept 0
     const connectionLimit = point ? (point instanceof Terminal ? 1 : 2) : 0
 
     let added = false
     let endDrag = false
 
+    // Reject if point is already at connection capacity
     if (point && (linesAtPoint.length + underlineLinesAtPoint.length) >= connectionLimit) {
       return { added, endDrag }
     }
@@ -132,17 +135,27 @@ export class Plotter extends ReactiveNode {
     const line = this.getLineById(id)
 
     if (line) {
+      // --- Extending existing line ---
 
+      // Reject if diagonal would cross another diagonal on same layer
       if (!this.checkDiagonalCrossing(line, x, y)) {
+        return { added, endDrag }
+      }
+
+      // Reject self-intersection (exclude last 2 points to preserve backtracking)
+      const posCount = line.pos.length
+      if (line.pos.some(([px, py], i) => px === x && py === y && i < posCount - 2)) {
         return { added, endDrag }
       }
 
       const sameLineAtPoint = this.getLinesAtPoint(x, y, (line) => (line.id === id && line.layer === 0))?.[0] || null
 
+      // Empty cell: allow if no foreign line occupies it (or underline layer bypasses)
       if (!point && ((!linesAtPoint.length || sameLineAtPoint) || layer === -1)) {
         added = line.plotSegment(x, y)
       }
 
+      // Reached a pad/terminal: snap to it and end drag (color must be compatible)
       if (point) {
         if (point.color !== 'white' && line.color !== 'white' && point.color !== line.color) {
           return { added: false, endDrag: false }
@@ -152,9 +165,10 @@ export class Plotter extends ReactiveNode {
       }
 
     } else {
+      // --- Starting new line: must begin on a pad or terminal ---
 
       if (!point) return { added: false, endDrag: false }
-      const newLine = new Line(id, [x, y], layer)
+      const newLine = new Line(id, [[x, y]], layer)
       newLine.color = point.color
       this.lines.push(newLine)
       added = true
