@@ -4,7 +4,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Register, IoElement, ReactiveProperty, } from '@io-gui/core';
+import { Register, IoElement, ReactiveProperty, div, } from '@io-gui/core';
+import { ioButton } from '@io-gui/inputs';
 import { Vector2 } from 'three/webgpu';
 import { Game } from './game/game.js';
 import { ThreeScene } from './scene/threeScene.js';
@@ -31,8 +32,27 @@ let CircuitsBoard = class CircuitsBoard extends IoElement {
         display: flex;
         flex: 1 1 auto;
         flex-direction: column;
+        height: 100%;
         max-width: 100%;
         max-height: 100%;
+      }
+      :host > .game-toolbar {
+        display: flex;
+        gap: 2px;
+        padding: 2px;
+        flex-shrink: 0;
+      }
+      :host > .game-toolbar > io-button {
+        flex: 1 1 auto;
+        height: calc(var(--io_fieldHeight) * 1.5);
+        display: flex;
+        align-items: center;
+      }
+      :host > .game-toolbar > io-button > io-icon {
+        margin-left: auto;
+      }
+      :host > .game-toolbar > io-button > span {
+        margin-right: auto;
       }
     `;
     }
@@ -57,19 +77,27 @@ let CircuitsBoard = class CircuitsBoard extends IoElement {
     }
     ;
     onGameUpdate() {
-        this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads, this.game.terminals);
+        this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads);
         this.applet.updatePads(this.game.pads);
-        this.applet.updateTerminals(this.game.terminals);
+        this.applet.updateTerminals(this.game.pads);
         this.applet.updateLines(this.game.lines);
         // TODO: hmm?
         this.applet.dispatch('three-applet-needs-render', undefined, true);
     }
     ;
+    gameChanged() {
+        this.onGameInit();
+    }
     ready() {
         this.onGameUpdate();
         this.applet.initGrid(this.game.width, this.game.height);
         this.render([
             ioThreeViewport({ applet: this.applet, tool: new PointerTool({}), cameraSelect: 'scene', overscan: 1.2 }),
+            div({ class: 'game-toolbar' }, [
+                ioButton({ label: 'Undo', icon: 'io:undo', action: this.onUndo }),
+                ioButton({ label: 'Reset', icon: 'io:reload', action: this.onReset }),
+                ioButton({ label: 'Redo', icon: 'io:redo', action: this.onRedo }),
+            ]),
         ]);
     }
     on3DPointerDown(event) {
@@ -82,16 +110,16 @@ let CircuitsBoard = class CircuitsBoard extends IoElement {
         this.applet.updateDrag(event.detail[0].screen, event.detail[0].screenStart);
         this._currentID = Math.floor(Math.random() * 100000);
         if (this.game.drawMode === 'pad') {
-            this.game.plotter.addPad(this._currentID, _posHit.x, _posHit.y);
+            this.game.plotter.addPad(this._currentID, [_posHit.x, _posHit.y]);
         }
         if (this.game.drawMode === 'terminal') {
-            this.game.plotter.addTerminal(this._currentID, _posHit.x, _posHit.y, this.game.drawColor);
+            this.game.plotter.addPad(this._currentID, [_posHit.x, _posHit.y], this.game.drawColor, true);
         }
         if (this.game.drawMode === 'line') {
-            this.game.plotter.addLineSegment(this._currentID, _posHit.x, _posHit.y, this.game.drawLayer);
+            this.game.plotter.addLineSegment(this._currentID, [_posHit.x, _posHit.y], this.game.drawLayer);
         }
         if (this.game.drawMode === 'delete') {
-            this.game.plotter.delete(_posHit.x, _posHit.y);
+            this.game.plotter.delete([_posHit.x, _posHit.y]);
         }
     }
     on3DPointerMove(event) {
@@ -105,7 +133,7 @@ let CircuitsBoard = class CircuitsBoard extends IoElement {
         }
         _posHitOld.copy(_posHit);
         if (this.game.drawMode === 'line' && _posRaw.distanceTo(_posHitOld) > 0) {
-            this.game.plotter.addLineSegment(this._currentID, _posHit.x, _posHit.y, this.game.drawLayer);
+            this.game.plotter.addLineSegment(this._currentID, [_posHit.x, _posHit.y], this.game.drawLayer);
         }
     }
     on3DPointerUp(event) {
@@ -117,7 +145,19 @@ let CircuitsBoard = class CircuitsBoard extends IoElement {
         this._dragging = false;
         if (this.game)
             this.game.finalizeMove(this._currentID);
-        this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads, this.game.terminals);
+        this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads);
+    }
+    onUndo() {
+        this.game.undo();
+    }
+    onRedo() {
+        this.game.redo();
+    }
+    onReset() {
+        this.game.reload();
+    }
+    onEdit() {
+        this.changed();
     }
     dispose() {
         this.applet.dispose();

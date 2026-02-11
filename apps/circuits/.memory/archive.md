@@ -33,3 +33,36 @@ Missing levels will fail fetch with console warning — acceptable behavior.
 - `index.html` now uses `<circuits-app>` with fullscreen body styles + viewport meta
 - Added `@io-gui/inputs`, `@io-gui/layout`, `@io-gui/navigation` as workspace deps
 - Registered in root `index.html` via `iframe()` helper + nav entry
+
+## 2026-02-11 — Terminal model removed
+
+### [decision] Remove terminal entity
+- Deleted `src/game/items/terminal.ts`.
+- Terminal behavior now represented by `Pad` with `isTerminal: true`.
+- Runtime JSON handling in `game.ts` now expects only `pads` + `lines` (no legacy `terminals` array).
+
+### [implementation] Refactor touchpoints
+- Updated `game.ts`, `plotter.ts`, `line.ts`, `CircuitsBoard.ts`, `threeScene.ts`, `grid.ts`, `index.ts`.
+- Plotter connection limits now use `pad.isTerminal` (1 for terminal pads, 2 for regular pads).
+- Grid visibility logic now derives terminal behavior from terminal pads.
+
+### [implementation] Level migration script
+- Added `tools/migrate-levels-to-terminal-pads.js`.
+- Script migrates `lvl_*.json`:
+  - merges `terminals[]` into `pads[]`
+  - normalizes `ID` -> `id`
+  - writes `isTerminal` + normalized `color`
+  - normalizes `lines[].ID` -> `lines[].id`
+- Script run completed for all 35 level files.
+
+## 2026-02-11 — renderColor propagation
+
+### [decision] Separate source color from propagated color
+- `Pad.color` remains static terminal source color (undefined for non-terminal pads).
+- `Pad.renderColor` is mutable runtime color used for propagation and rendering.
+
+### [implementation] Propagation/render refactor
+- `game.ts` propagation now reads/writes `pad.renderColor` only.
+- `plotter.ts` line start + color compatibility now use `point.renderColor`.
+- `threeScene.ts` pad and terminal mesh colors now bind to `renderColor`.
+- Non-terminal pad JSON remains colorless; no persistence of propagated color.

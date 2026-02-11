@@ -20,11 +20,16 @@ export declare class CircuitsBoard extends IoElement {
     constructor(args: CircuitsBoardProps);
     onGameInit(): void;
     onGameUpdate(): void;
+    gameChanged(): void;
     ready(): void;
     on3DPointerDown(event: CustomEvent<Pointer3D[]>): void;
     on3DPointerMove(event: CustomEvent<Pointer3D[]>): void;
     on3DPointerUp(event: PointerEvent): void;
     onEndDrag(): void;
+    onUndo(): void;
+    onRedo(): void;
+    onReset(): void;
+    onEdit(): void;
     dispose(): void;
 }
 export declare const circuitsBoard: (arg0: CircuitsBoardProps) => import("@io-gui/core").VDOMElement;

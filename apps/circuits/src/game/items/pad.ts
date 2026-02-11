@@ -1,35 +1,39 @@
-import { TerminalColor } from './terminal.js'
-
-type vec2 = [number, number]
+import { Color, Vector2 } from 'three/webgpu'
+import { COLORS, type ColorName } from './colors.js'
 
 export interface PadData {
-  id: number
-  pos: vec2
+  pos: [number, number]
+  isTerminal?: boolean
+  color?: ColorName
 }
 
 export class Pad {
-  public id: number
-  public pos: vec2
-  private _color: TerminalColor = 'white'
+  public pos: Vector2
+  public isTerminal: boolean
+  public color: ColorName | undefined
+  public renderColor: Color
 
-  get color(): TerminalColor {
-    return this._color
-  }
+  constructor(pos: Vector2, isTerminal: boolean = false, color?: ColorName) {
+    if (isTerminal && color === undefined) console.error('Terminal pad must have a color')
+    if (!isTerminal && color !== undefined) console.error('Non-terminal pad cannot have a color')
 
-  set color(color: TerminalColor) {
-    this._color = color
-  }
-
-  constructor(id: number, pos: vec2) {
-    this.id = id
     this.pos = pos
+    this.isTerminal = isTerminal
+    this.color = isTerminal ? (color ?? 'red') : undefined
+    this.renderColor = this.color ? COLORS[this.color] : COLORS.white
   }
 
   toJSON(): PadData {
-    return { pos: this.pos, id: this.id }
+    if (this.isTerminal) {
+      debug: if (this.color === undefined) console.error('Terminal pad must have a color')
+      return { pos: [this.pos.x, this.pos.y], isTerminal: this.isTerminal, color: this.color }
+    } else {
+      debug: if (this.color !== undefined) console.error('Non-terminal pad cannot have a color')
+      return { pos: [this.pos.x, this.pos.y] }
+    }
   }
 
   static fromJSON(data: PadData): Pad {
-    return new Pad(data.id, data.pos)
+    return new Pad(new Vector2(data.pos[0], data.pos[1]), data.isTerminal, data.color)
   }
 }

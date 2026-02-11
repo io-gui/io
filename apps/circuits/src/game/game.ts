@@ -1,12 +1,8 @@
 import { Register, ReactiveNode, ReactiveProperty, Property, Storage as $, Binding } from '@io-gui/core'
 import { Pad, type PadData } from './items/pad.js'
-import {
-  Terminal,
-  type TerminalData,
-  type TerminalColor,
-} from './items/terminal.js'
 import { Line, type LineData } from './items/line.js'
 import { Plotter } from './plotter.js'
+import { COLORS, type ColorName } from './items/colors.js'
 
 export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete'
 
@@ -14,7 +10,6 @@ interface LevelData {
   width: number
   height: number
   pads: PadData[]
-  terminals: TerminalData[]
   lines: LineData[]
 }
 
@@ -32,9 +27,6 @@ export class Game extends ReactiveNode {
   declare pads: Pad[]
   
   @ReactiveProperty({type: Array})
-  declare terminals: Terminal[]
-
-  @ReactiveProperty({type: Array})
   declare lines: Line[]
 
   @ReactiveProperty({type: Number})
@@ -44,7 +36,7 @@ export class Game extends ReactiveNode {
   declare height: number
 
   drawMode: DrawMode = 'line'
-  drawColor: TerminalColor = 'white'
+  drawColor: ColorName = 'white'
   drawLayer = 0
 
   undoStack: string[] = []
@@ -60,9 +52,8 @@ export class Game extends ReactiveNode {
     this.width = 4
     this.height = 5
     this.pads = []
-    this.terminals = []
     this.lines = []
-    this.plotter.connect(this.pads, this.terminals, this.lines, this.width, this.height)
+    this.plotter.connect(this.pads, this.lines, this.width, this.height)
     this.drawMode = 'line'
     this.drawColor = 'white'
     this.drawLayer = 0
@@ -119,7 +110,6 @@ export class Game extends ReactiveNode {
       width: this.width,
       height: this.height,
       pads: this.pads.map((p) => p.toJSON()),
-      terminals: this.terminals.map((t) => t.toJSON()),
       lines: this.lines.map((l) => l.toJSON()),
     }
   }
@@ -129,9 +119,8 @@ export class Game extends ReactiveNode {
     this.width = state.width
     this.height = state.height
     this.pads = state.pads.map((p) => Pad.fromJSON(p))
-    this.terminals = state.terminals.map((t) => Terminal.fromJSON(t))
     this.lines = state.lines.map((l) => Line.fromJSON(l as LineData))
-    this.plotter.connect(this.pads, this.terminals, this.lines, this.width, this.height)
+    this.plotter.connect(this.pads, this.lines, this.width, this.height)
   }
 
   toJSON(): string {
@@ -139,7 +128,6 @@ export class Game extends ReactiveNode {
       width: this.width,
       height: this.height,
       pads: this.pads.map((p) => p.toJSON()),
-      terminals: this.terminals.map((t) => t.toJSON()),
       lines: this.lines.map((l) => l.toJSON()),
     })
   }
@@ -174,8 +162,10 @@ export class Game extends ReactiveNode {
   }
 
   resetColors(): void {
-    for (const line of this.lines) line.color = 'white'
-    for (const pad of this.pads) pad.color = 'white'
+    for (const line of this.lines) line.renderColor = COLORS.white
+    for (const pad of this.pads) {
+      pad.renderColor = pad.isTerminal ? COLORS[pad.color!] : COLORS.white
+    }
   }
 
   propagateColors(): void {
@@ -190,20 +180,21 @@ export class Game extends ReactiveNode {
         const p2 = this.plotter.getPointAt(last)
         if (!p1 || !p2) continue
 
-        const c1 = p1.color
-        const c2 = p2.color
+        const c1 = p1.renderColor
+        const c2 = p2.renderColor
+        const w = COLORS.white
 
-        if (c1 !== 'white' && c2 !== 'white') {
-          if (c1 === c2) line.color = c1
-        } else if (c1 === 'white' && c2 === 'white') {
-          line.color = 'white'
+        if (c1 !== w && c2 !== w) {
+          if (c1 === c2) line.renderColor = c1
+        } else if (c1 === w && c2 === w) {
+          line.renderColor = w
         } else {
-          if (c1 !== 'white') {
-            line.color = c1
-            if (p2 instanceof Pad) p2.color = c1
-          } else if (c2 !== 'white') {
-            line.color = c2
-            if (p1 instanceof Pad) p1.color = c2
+          if (c1 !== w) {
+            line.renderColor = c1
+            if (p2 instanceof Pad) p2.renderColor = c1
+          } else if (c2 !== w) {
+            line.renderColor = c2
+            if (p1 instanceof Pad) p1.renderColor = c2
           }
         }
       }
@@ -215,14 +206,13 @@ export class Game extends ReactiveNode {
 
     // TODO: Check for completeness correctly
 
-    for (const term of this.terminals) {
-      const nConn = this.plotter.getLinesAtPoint(term.pos).length
-      if (nConn !== 1) completed = false
-    }
-
     for (const pad of this.pads) {
       const nConn = this.plotter.getLinesAtPoint(pad.pos).length
-      if (nConn !== 2 && pad.color !== 'white') completed = false
+      if (pad.isTerminal) {
+        if (nConn !== 1) completed = false
+      } else if (nConn !== 2 && pad.renderColor !== COLORS.white) {
+        completed = false
+      }
     }
 
     if (completed) console.log('game-complete', this.level, completed)

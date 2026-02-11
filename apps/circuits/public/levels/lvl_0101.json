@@ -1,23 +1,24 @@
 {
   "width": 4,
   "height": 5,
-  "pads": [],
-  "terminals": [
+  "pads": [
     {
+      "id": 44483,
       "pos": [
         2,
         1
       ],
       "color": "blue",
-      "ID": 44483
+      "isTerminal": true
     },
     {
+      "id": 62535,
       "pos": [
         2,
         4
       ],
       "color": "blue",
-      "ID": 62535
+      "isTerminal": true
     }
   ],
   "lines": []

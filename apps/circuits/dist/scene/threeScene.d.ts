@@ -2,7 +2,6 @@ import { BoxGeometry, CapsuleGeometry, Group, InstancedMesh, MeshPhongMaterial, 
 import { ThreeApplet, ThreeAppletProps } from '@io-gui/three';
 import { Pad } from '../game/items/pad';
 import { Line } from '../game/items/line';
-import { Terminal } from '../game/items/terminal';
 import { Grid } from '../objects/grid';
 export declare class ThreeScene extends ThreeApplet {
     camera: PerspectiveCamera;
@@ -23,9 +22,9 @@ export declare class ThreeScene extends ThreeApplet {
     constructor(args: ThreeAppletProps);
     updateDrag(screen: Vector2, screenStart: Vector2): void;
     initGrid(width: number, height: number): void;
-    updateGrid(width: number, height: number, lines: Line[], pads: Pad[], terminals: Terminal[]): void;
+    updateGrid(width: number, height: number, lines: Line[], pads: Pad[]): void;
     updatePads(pads: Pad[]): void;
-    updateTerminals(terminals: Terminal[]): void;
+    updateTerminals(pads: Pad[]): void;
     updateLines(lines: Line[]): void;
     onAnimate(delta: number, time: number): void;
 }

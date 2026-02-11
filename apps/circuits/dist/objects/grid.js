@@ -7,7 +7,7 @@ class Grid extends LineSegments {
         const material = new LineBasicMaterial({ transparent: true, vertexColors: true, toneMapped: false, blending: AdditiveBlending });
         super(geometry, material);
     }
-    update(width, height, lines, pads, terminals) {
+    update(width, height, lines, pads) {
         this.width = width;
         this.height = height;
         if (width === 0 || height === 0) {
@@ -30,9 +30,9 @@ class Grid extends LineSegments {
          *    If either vertex coincides with a pad that has 2 or more line
          *    connections (regardless of layer), the segment is hidden.
          *
-         * 3. Vertex on a connected terminal:
-         *    If either vertex coincides with a terminal that has at least 1 line
-         *    connection, the segment is hidden.
+         * 3. Vertex on a connected terminal pad:
+         *    If either vertex coincides with a terminal pad that has at least 1
+         *    line connection, the segment is hidden.
          *
          * 4. Perpendicular diagonal crossing:
          *    A diagonal grid segment is hidden if a layer-0 game line has a
@@ -43,7 +43,7 @@ class Grid extends LineSegments {
         const linePointsL0 = new Set();
         const padPositions = new Set();
         const padConnectionCounts = new Map();
-        const terminalConnectionCounts = new Map();
+        const terminalPadPositions = new Set();
         // Cells with layer-0 diagonal game lines: backslash "\" and slash "/"
         const cellDiagBackslash = new Set();
         const cellDiagSlash = new Set();
@@ -51,10 +51,8 @@ class Grid extends LineSegments {
             const key = pad.pos[0] + ',' + pad.pos[1];
             padPositions.add(key);
             padConnectionCounts.set(key, 0);
-        }
-        for (const terminal of terminals) {
-            const key = terminal.pos[0] + ',' + terminal.pos[1];
-            terminalConnectionCounts.set(key, 0);
+            if (pad.isTerminal)
+                terminalPadPositions.add(key);
         }
         for (const line of lines) {
             if (line.layer === 0) {
@@ -64,8 +62,8 @@ class Grid extends LineSegments {
                 for (let i = 0; i <= lastIdx; i++) {
                     const pos = line.pos[i];
                     const key = pos[0] + ',' + pos[1];
-                    // Skip dangling endpoints (first/last with no terminal)
-                    if ((i === 0 || i === lastIdx) && !terminalConnectionCounts.has(key))
+                    // Skip dangling endpoints (first/last with no terminal pad)
+                    if ((i === 0 || i === lastIdx) && !terminalPadPositions.has(key))
                         continue;
                     linePointsL0.add(key);
                 }
@@ -97,26 +95,23 @@ class Grid extends LineSegments {
             if (padConnectionCounts.has(lastKey)) {
                 padConnectionCounts.set(lastKey, padConnectionCounts.get(lastKey) + 1);
             }
-            if (terminalConnectionCounts.has(firstKey)) {
-                terminalConnectionCounts.set(firstKey, terminalConnectionCounts.get(firstKey) + 1);
-            }
-            if (terminalConnectionCounts.has(lastKey)) {
-                terminalConnectionCounts.set(lastKey, terminalConnectionCounts.get(lastKey) + 1);
-            }
         }
-        const isHidden = (x, y) => {
+        const isHidden = ([x, y]) => {
             const key = x + ',' + y;
             // Rule 1: On a layer-0 line and no pad at this position
             if (linePointsL0.has(key) && !padPositions.has(key))
                 return true;
             // Rule 2: Pad with 2+ line connections
             const padConns = padConnectionCounts.get(key);
-            if (padConns !== undefined && padConns >= 2)
-                return true;
-            // Rule 3: Terminal with 1+ line connections
-            const termConns = terminalConnectionCounts.get(key);
-            if (termConns !== undefined && termConns >= 1)
-                return true;
+            if (padConns !== undefined) {
+                if (terminalPadPositions.has(key)) {
+                    if (padConns >= 1)
+                        return true;
+                }
+                else if (padConns >= 2) {
+                    return true;
+                }
+            }
             return false;
         };
         const color = new Color(0x666666);
@@ -129,7 +124,7 @@ class Grid extends LineSegments {
         const positions = new Float32Array(totalVertices * 3);
         const colors = new Float32Array(totalVertices * 4);
         let vi = 0;
-        const pushVertex = (x, y, c, alpha) => {
+        const pushVertex = ([x, y], c, alpha) => {
             const pi = vi * 3;
             const ci = vi * 4;
             positions[pi] = x;
@@ -142,17 +137,17 @@ class Grid extends LineSegments {
         // Horizontal segments
         for (let iz = 0; iz <= height; iz++) {
             for (let ix = 0; ix < width; ix++) {
-                const alpha = (isHidden(ix, iz) || isHidden(ix + 1, iz)) ? 0 : 1;
-                pushVertex(ix, iz, color, alpha);
-                pushVertex(ix + 1, iz, color, alpha);
+                const alpha = (isHidden([ix, iz]) || isHidden([ix + 1, iz])) ? 0.15 : 1;
+                pushVertex([ix, iz], color, alpha);
+                pushVertex([ix + 1, iz], color, alpha);
             }
         }
         // Vertical segments
         for (let ix = 0; ix <= width; ix++) {
             for (let iz = 0; iz < height; iz++) {
-                const alpha = (isHidden(ix, iz) || isHidden(ix, iz + 1)) ? 0 : 1;
-                pushVertex(ix, iz, color, alpha);
-                pushVertex(ix, iz + 1, color, alpha);
+                const alpha = (isHidden([ix, iz]) || isHidden([ix, iz + 1])) ? 0.15 : 1;
+                pushVertex([ix, iz], color, alpha);
+                pushVertex([ix, iz + 1], color, alpha);
             }
         }
         // Diagonal segments (2 per cell: corner to corner)
@@ -160,13 +155,13 @@ class Grid extends LineSegments {
             for (let cx = 0; cx < width; cx++) {
                 const cellKey = cx + ',' + cz;
                 // "\" grid diagonal: hidden if perpendicular "/" game line crosses this cell
-                const a1 = (isHidden(cx, cz) || isHidden(cx + 1, cz + 1) || cellDiagSlash.has(cellKey)) ? 0 : 1;
-                pushVertex(cx, cz, color2, a1);
-                pushVertex(cx + 1, cz + 1, color2, a1);
+                const a1 = (isHidden([cx, cz]) || isHidden([cx + 1, cz + 1]) || cellDiagSlash.has(cellKey)) ? 0 : 1;
+                pushVertex([cx, cz], color2, a1);
+                pushVertex([cx + 1, cz + 1], color2, a1);
                 // "/" grid diagonal: hidden if perpendicular "\" game line crosses this cell
-                const a2 = (isHidden(cx + 1, cz) || isHidden(cx, cz + 1) || cellDiagBackslash.has(cellKey)) ? 0 : 1;
-                pushVertex(cx + 1, cz, color2, a2);
-                pushVertex(cx, cz + 1, color2, a2);
+                const a2 = (isHidden([cx + 1, cz]) || isHidden([cx, cz + 1]) || cellDiagBackslash.has(cellKey)) ? 0 : 1;
+                pushVertex([cx + 1, cz], color2, a2);
+                pushVertex([cx, cz + 1], color2, a2);
             }
         }
         this.geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));

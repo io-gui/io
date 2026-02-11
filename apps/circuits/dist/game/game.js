@@ -6,7 +6,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Register, ReactiveNode, ReactiveProperty, Property, Storage as $ } from '@io-gui/core';
 import { Pad } from './items/pad.js';
-import { Terminal, } from './items/terminal.js';
 import { Line } from './items/line.js';
 import { Plotter } from './plotter.js';
 /**
@@ -15,11 +14,6 @@ import { Plotter } from './plotter.js';
  * and completion checking.
  */
 let Game = class Game extends ReactiveNode {
-    width = 4;
-    height = 5;
-    pads = [];
-    terminals = [];
-    lines = [];
     drawMode = 'line';
     drawColor = 'white';
     drawLayer = 0;
@@ -29,9 +23,8 @@ let Game = class Game extends ReactiveNode {
         this.width = 4;
         this.height = 5;
         this.pads = [];
-        this.terminals = [];
         this.lines = [];
-        this.plotter.connect(this.pads, this.terminals, this.lines, this.width, this.height);
+        this.plotter.connect(this.pads, this.lines, this.width, this.height);
         this.drawMode = 'line';
         this.drawColor = 'white';
         this.drawLayer = 0;
@@ -40,10 +33,10 @@ let Game = class Game extends ReactiveNode {
     }
     async initialize() {
         this.clear();
-        this.storedState = $({ key: `${this.currentLevel}-level-state`, value: {}, storage: 'local' });
-        if (this.currentLevel) {
+        this.storedState = $({ key: `${this.level}-level-state`, value: {}, storage: 'local' });
+        if (this.level) {
             if (Object.keys(this.storedState.value).length === 0) {
-                await this.load(this.currentLevel);
+                await this.load(this.level);
             }
             else {
                 this.clear();
@@ -55,7 +48,7 @@ let Game = class Game extends ReactiveNode {
         this.redoStack = [];
         this.dispatch('game-update', undefined, true);
     }
-    currentLevelChanged() {
+    levelChanged() {
         void this.initialize().then(() => {
             this.dispatch('game-init-scene', undefined, true);
         });
@@ -84,7 +77,6 @@ let Game = class Game extends ReactiveNode {
             width: this.width,
             height: this.height,
             pads: this.pads.map((p) => p.toJSON()),
-            terminals: this.terminals.map((t) => t.toJSON()),
             lines: this.lines.map((l) => l.toJSON()),
         };
     }
@@ -93,16 +85,14 @@ let Game = class Game extends ReactiveNode {
         this.width = state.width;
         this.height = state.height;
         this.pads = state.pads.map((p) => Pad.fromJSON(p));
-        this.terminals = state.terminals.map((t) => Terminal.fromJSON(t));
         this.lines = state.lines.map((l) => Line.fromJSON(l));
-        this.plotter.connect(this.pads, this.terminals, this.lines, this.width, this.height);
+        this.plotter.connect(this.pads, this.lines, this.width, this.height);
     }
     toJSON() {
         return JSON.stringify({
             width: this.width,
             height: this.height,
             pads: this.pads.map((p) => p.toJSON()),
-            terminals: this.terminals.map((t) => t.toJSON()),
             lines: this.lines.map((l) => l.toJSON()),
         });
     }
@@ -135,8 +125,9 @@ let Game = class Game extends ReactiveNode {
     resetColors() {
         for (const line of this.lines)
             line.color = 'white';
-        for (const pad of this.pads)
-            pad.color = 'white';
+        for (const pad of this.pads) {
+            pad.renderColor = pad.isTerminal ? (pad.color ?? 'red') : 'white';
+        }
     }
     propagateColors() {
         this.resetColors();
@@ -144,12 +135,12 @@ let Game = class Game extends ReactiveNode {
             for (const line of this.lines) {
                 const first = line.pos[0];
                 const last = line.pos[line.pos.length - 1];
-                const p1 = this.plotter.getPointAt(first[0], first[1]);
-                const p2 = this.plotter.getPointAt(last[0], last[1]);
+                const p1 = this.plotter.getPointAt(first);
+                const p2 = this.plotter.getPointAt(last);
                 if (!p1 || !p2)
                     continue;
-                const c1 = p1.color;
-                const c2 = p2.color;
+                const c1 = p1.renderColor;
+                const c2 = p2.renderColor;
                 if (c1 !== 'white' && c2 !== 'white') {
                     if (c1 === c2)
                         line.color = c1;
@@ -161,12 +152,12 @@ let Game = class Game extends ReactiveNode {
                     if (c1 !== 'white') {
                         line.color = c1;
                         if (p2 instanceof Pad)
-                            p2.color = c1;
+                            p2.renderColor = c1;
                     }
                     else if (c2 !== 'white') {
                         line.color = c2;
                         if (p1 instanceof Pad)
-                            p1.color = c2;
+                            p1.renderColor = c2;
                     }
                 }
             }
@@ -174,21 +165,22 @@ let Game = class Game extends ReactiveNode {
         this.dispatch('game-update', undefined, true);
         let completed = true;
         // TODO: Check for completeness correctly
-        for (const term of this.terminals) {
-            const nConn = this.plotter.getLinesAtPoint(term.pos[0], term.pos[1]).length;
-            if (nConn !== 1)
-                completed = false;
-        }
         for (const pad of this.pads) {
-            const nConn = this.plotter.getLinesAtPoint(pad.pos[0], pad.pos[1]).length;
-            if (nConn !== 2 && pad.color !== 'white')
+            const nConn = this.plotter.getLinesAtPoint(pad.pos).length;
+            if (pad.isTerminal) {
+                if (nConn !== 1)
+                    completed = false;
+            }
+            else if (nConn !== 2 && pad.renderColor !== 'white') {
                 completed = false;
+            }
         }
-        console.log('game-complete', this.currentLevel, completed);
-        this.dispatch('game-complete', { level: this.currentLevel, completed }, true);
+        if (completed)
+            console.log('game-complete', this.level, completed);
+        this.dispatch('game-complete', { level: this.level, completed }, true);
     }
     finalizeMove(lineID) {
-        if (this.plotter.verifyLineLegality(lineID)) {
+        if (this.plotter.verifyLineComplete(lineID)) {
             this.updateUndoStack();
             this.propagateColors();
             this.save();
@@ -198,7 +190,19 @@ let Game = class Game extends ReactiveNode {
 };
 __decorate([
     ReactiveProperty({ value: '', type: String })
-], Game.prototype, "currentLevel", void 0);
+], Game.prototype, "level", void 0);
+__decorate([
+    ReactiveProperty({ type: Array })
+], Game.prototype, "pads", void 0);
+__decorate([
+    ReactiveProperty({ type: Array })
+], Game.prototype, "lines", void 0);
+__decorate([
+    ReactiveProperty({ type: Number })
+], Game.prototype, "width", void 0);
+__decorate([
+    ReactiveProperty({ type: Number })
+], Game.prototype, "height", void 0);
 __decorate([
     ReactiveProperty({ type: Plotter, init: null })
 ], Game.prototype, "plotter", void 0);

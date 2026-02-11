@@ -3,42 +3,41 @@
   "height": 5,
   "pads": [
     {
+      "id": 2941,
       "pos": [
         0,
         2
-      ],
-      "ID": 2941
+      ]
     },
     {
+      "id": 79452,
       "pos": [
         2,
         2
-      ],
-      "ID": 79452
-    }
-  ],
-  "terminals": [
+      ]
+    },
     {
+      "id": 24081,
       "pos": [
         0,
         1
       ],
       "color": "blue",
-      "ID": 24081
+      "isTerminal": true
     },
     {
+      "id": 28837,
       "pos": [
         0,
         4
       ],
       "color": "blue",
-      "ID": 28837
+      "isTerminal": true
     }
   ],
   "lines": [
     {
-      "ID": 84142,
-      "layer":0,
+      "id": 84142,
       "pos": [
         [
           0,
@@ -84,7 +83,8 @@
           2,
           2
         ]
-      ]
+      ],
+      "layer": 0
     }
   ]
 }

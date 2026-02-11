@@ -1,6 +1,5 @@
 import { ReactiveNode, Binding } from '@io-gui/core';
-import { Pad } from './items/pad.js';
-import { Terminal, type TerminalColor } from './items/terminal.js';
+import { Pad, type PadColor } from './items/pad.js';
 import { Line } from './items/line.js';
 import { Plotter } from './plotter.js';
 export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete';
@@ -10,22 +9,21 @@ export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete';
  * and completion checking.
  */
 export declare class Game extends ReactiveNode {
+    level: string;
+    pads: Pad[];
+    lines: Line[];
     width: number;
     height: number;
-    pads: Pad[];
-    terminals: Terminal[];
-    lines: Line[];
     drawMode: DrawMode;
-    drawColor: TerminalColor;
+    drawColor: PadColor;
     drawLayer: number;
     undoStack: string[];
     redoStack: string[];
-    currentLevel: string;
     plotter: Plotter;
     storedState: Binding;
     clear(): void;
     initialize(): Promise<void>;
-    currentLevelChanged(): void;
+    levelChanged(): void;
     reload(): void;
     load(level: string): Promise<void>;
     save(): void;

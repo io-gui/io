@@ -97,9 +97,9 @@ export class CircuitsBoard extends IoElement {
     this.applet.initGrid(this.game.width, this.game.height)
   };
   onGameUpdate() {
-    this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads, this.game.terminals)
+    this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads)
     this.applet.updatePads(this.game.pads)
-    this.applet.updateTerminals(this.game.terminals)
+    this.applet.updateTerminals(this.game.pads)
     this.applet.updateLines(this.game.lines)
     // TODO: hmm?
     this.applet.dispatch('three-applet-needs-render', undefined, true)
@@ -136,16 +136,16 @@ export class CircuitsBoard extends IoElement {
     this._currentID = Math.floor(Math.random() * 100000)
 
     if (this.game.drawMode === 'pad') {
-      this.game.plotter.addPad(this._currentID, [_posHit.x, _posHit.y])
+      this.game.plotter.addPad(_posHit.clone())
     }
     if (this.game.drawMode === 'terminal') {
-      this.game.plotter.addTerminal(this._currentID, [_posHit.x, _posHit.y], this.game.drawColor)
+      this.game.plotter.addPad(_posHit.clone(), this.game.drawColor, true)
     }
     if (this.game.drawMode === 'line') {
-      this.game.plotter.addLineSegment(this._currentID, [_posHit.x, _posHit.y], this.game.drawLayer)
+      this.game.plotter.addLineSegment(this._currentID, _posHit.clone(), this.game.drawLayer)
     }
     if (this.game.drawMode === 'delete') {
-      this.game.plotter.delete([_posHit.x, _posHit.y])
+      this.game.plotter.delete(_posHit.clone())
     }
   }
 
@@ -161,7 +161,7 @@ export class CircuitsBoard extends IoElement {
     _posHitOld.copy(_posHit)
 
     if (this.game.drawMode === 'line' && _posRaw.distanceTo(_posHitOld) > 0) {
-      this.game.plotter.addLineSegment(this._currentID, [_posHit.x, _posHit.y], this.game.drawLayer)
+      this.game.plotter.addLineSegment(this._currentID, _posHit.clone(), this.game.drawLayer)
     }
   }
 
@@ -174,7 +174,7 @@ export class CircuitsBoard extends IoElement {
   onEndDrag() {
     this._dragging = false
     if (this.game) this.game.finalizeMove(this._currentID)
-    this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads, this.game.terminals)
+    this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads)
   }
 
   onUndo() {

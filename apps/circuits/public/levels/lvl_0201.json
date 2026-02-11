@@ -3,88 +3,91 @@
   "height": 8,
   "pads": [
     {
+      "id": 12679,
       "pos": [
         0,
         8
-      ],
-      "ID": 12679
+      ]
     },
     {
+      "id": 25722,
       "pos": [
         6,
         8
-      ],
-      "ID": 25722
+      ]
     },
     {
+      "id": 53463,
       "pos": [
         6,
         0
-      ],
-      "ID": 53463
+      ]
     },
     {
+      "id": 89387,
       "pos": [
         0,
         0
-      ],
-      "ID": 89387
-    }
-  ],
-  "terminals": [
+      ]
+    },
     {
+      "id": 1823,
       "pos": [
         0,
         2
       ],
       "color": "red",
-      "ID": 1823
+      "isTerminal": true
     },
     {
+      "id": 21993,
       "pos": [
         6,
         4
       ],
       "color": "red",
-      "ID": 21993
+      "isTerminal": true
     },
     {
+      "id": 45137,
       "pos": [
         6,
         6
       ],
       "color": "blue",
-      "ID": 45137
+      "isTerminal": true
     },
     {
+      "id": 53695,
       "pos": [
         0,
         6
       ],
       "color": "green",
-      "ID": 53695
+      "isTerminal": true
     },
     {
+      "id": 68961,
       "pos": [
         0,
         4
       ],
       "color": "blue",
-      "ID": 68961
+      "isTerminal": true
     },
     {
+      "id": 72013,
       "pos": [
         6,
         2
       ],
       "color": "green",
-      "ID": 72013
+      "isTerminal": true
     }
   ],
   "lines": [
     {
-      "ID": 1558,
-      "layer":-1,
+      "id": 1558,
       "pos": [
         [
           0,
@@ -130,11 +133,11 @@
           0,
           8
         ]
-      ]
+      ],
+      "layer": -1
     },
     {
-      "ID": 53273,
-      "layer":-1,
+      "id": 53273,
       "pos": [
         [
           6,
@@ -180,7 +183,8 @@
           6,
           0
         ]
-      ]
+      ],
+      "layer": -1
     }
   ]
 }

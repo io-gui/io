@@ -1,21 +1,13 @@
 # NOW - Circuits App
 
-## Current State
-Port complete. Reference cleanup done, wired into main app. Untested in browser.
+## Current Task
+Remove `src/game/items/terminal.ts` and represent terminals as `Pad` with `isTerminal: true`.
 
-## Recent Changes (uncommitted on `dev`)
-- Deleted `src_reference/`, `index_reference.html`, `style_reference.css` (~1,769 lines removed)
-- `index.html` → `<circuits-app>` (was `<todo-app>`), added viewport meta + fullscreen styles
-- `package.json` — added `@io-gui/inputs`, `@io-gui/layout`, `@io-gui/navigation` deps
-- Registered in root `index.html` (nav entry + iframe)
+## Key Context
+- Runtime refactor completed: game state, plotter, scene, board, grid all operate on pads only.
+- Legacy level support intentionally removed in runtime `fromJSON`.
+- Migration script created at `tools/migrate-levels-to-terminal-pads.js`.
+- Script already executed across `public/levels/lvl_*.json`.
 
-## Next Steps
-- Run `pnpm dev`, navigate to `apps/circuits/index.html`
-- Verify levels page renders 96 buttons
-- Verify level loading, canvas drawing, pointer interaction
-- Verify undo/redo/reset/edit/back
-- Verify localStorage persistence + hash routing
-
-## Open Questions
-- Level fetch path `./public/levels/` — may need adjustment depending on vite serving behavior
-- Only 50 level JSON files exist on disk but 96 buttons are rendered (matching reference HTML)
+## Open Questions / Next Check
+- Quick browser pass: draw terminal pad, draw line to verify 1-connection limit and completion checks.

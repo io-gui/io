@@ -1,56 +1,48 @@
-import { TerminalColor } from './terminal.js'
+import { Color, Vector2 } from 'three/webgpu'
+import { COLORS } from './colors.js'
 
-type vec2 = [number, number]
+const SQRT_2 = Math.sqrt(2)
+const _vec2_1 = new Vector2()
+const _vec2_2 = new Vector2()
 
 export interface LineData {
   id: number
-  pos: vec2[]
+  pos: [number, number][]
   layer: number
 }
 
 export class Line {
   public id: number
-  public pos: [number, number][]
+  public pos: Vector2[]
   public layer: number
-  private _color: TerminalColor = 'white'
+  public renderColor: Color
 
-  get color(): TerminalColor {
-    return this._color
-  }
-
-  set color(color: TerminalColor) {
-    this._color = color
-  }
-
-  constructor(id: number, pos: vec2[], layer: number) {
+  constructor(id: number, pos: Vector2[], layer: number) {
     this.id = id
     this.pos = pos
     this.layer = layer
+    this.renderColor = COLORS.white
   }
 
   toJSON(): LineData {
     return {
       id: this.id,
-      pos: this.pos,
+      pos: this.pos.map((point) => [point.x, point.y]),
       layer: this.layer,
     }
   }
 
   static fromJSON(data: LineData): Line {
-    return new Line(data.id, data.pos, data.layer)
+    return new Line(
+      data.id,
+      data.pos.map((point) => new Vector2(point[0], point[1])),
+      data.layer,
+    )
   }
 
-  hasDiagonalSegmentAt([mx, my]: vec2): boolean {
-    const pos = this.pos
-    for (let i = 1; i < pos.length; i++) {
-      const ax = pos[i - 1][0]
-      const ay = pos[i - 1][1]
-      const bx = pos[i][0]
-      const by = pos[i][1]
-      if (
-        Math.abs(bx - ax) === 1 && Math.abs(by - ay) === 1 &&
-        (ax + bx) / 2 === mx && (ay + by) / 2 === my
-      ) {
+  hasSegmentAt(point: Vector2): boolean {
+    for (let i = 1; i < this.pos.length; i++) {
+      if (this.pos[i].distanceTo(point) === 0) {
         return true
       }
     }
@@ -62,43 +54,49 @@ export class Line {
    * Erase last segment if user drags back to prev node.
    * Return true if segment was added, false otherwise.
    */
-  plotSegment([x, y]: vec2): boolean {
-    if (this._tryEraseLastSegment([x, y])) return true
-    if (this._tryAddNewSegment([x, y])) return true
+  plotSegment(point: Vector2): boolean {
+    if (this._tryEraseLastSegment(point)) return true
+    if (this._tryAddNewSegment(point)) return true
     return false
   }
 
   /**
    * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.
-   * Returns true if nothing was done, false if path was updated.
+   * Returns false if nothing was done, true if segment was added.
    */
-  private _tryAddNewSegment([x, y]: vec2): boolean {
-    const ln = this.pos.length
-    if (ln > 1) {
-      if (y === this.pos[ln - 2][1] && Math.abs(x - this.pos[ln - 2][0]) === 1) {
+  private _tryAddNewSegment(point: Vector2): boolean {
+    const l = this.pos.length
+    const last = this.pos[l - 1]
+
+    // Reject if segment is too long
+    if (last.distanceTo(point) > SQRT_2) return false
+
+    // Reroute if user went 45° backwards
+    if (l > 1) {
+      const secondLast = this.pos[l - 2]
+      _vec2_1.copy(last).sub(secondLast)
+      _vec2_2.copy(point).sub(last)
+      if (_vec2_1.dot(_vec2_2) === -1) {
         this.pos.pop()
-        this.pos.push([x, y])
-        return false
-      }
-      if (x === this.pos[ln - 2][0] && Math.abs(y - this.pos[ln - 2][1]) === 1) {
-        this.pos.pop()
-        this.pos.push([x, y])
-        return false
+        this.pos.push(point.clone())
+        return true
       }
     }
-    const last = this.pos[ln - 1]
-    if (Math.abs(last[0] - x) > 1) return true
-    if (Math.abs(last[1] - y) > 1) return true
 
-    this.pos.push([x, y])
-    return false
+    // Add new segment
+    this.pos.push(point.clone())
+    return true
   }
 
-  /** Erase last segment if user drags back to prev node. */
-  private _tryEraseLastSegment([x, y]: vec2): boolean {
-    const ln = this.pos.length
-    if (ln < 2) return false
-    if (x === this.pos[ln - 2][0] && y === this.pos[ln - 2][1]) {
+  /** 
+   * Erase last segment if user drags back to prev node.
+   * Returns true if segment was erased, false otherwise.
+   */
+  private _tryEraseLastSegment(point: Vector2): boolean {
+    const l = this.pos.length
+    if (l < 2) return false
+    const secondLast = this.pos[l - 2]
+    if (secondLast.distanceTo(point) === 0) {
       this.pos.pop()
       return true
     }

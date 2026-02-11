@@ -3,72 +3,73 @@
   "height": 8,
   "pads": [
     {
+      "id": 21046,
       "pos": [
         4,
         6
-      ],
-      "ID": 21046
+      ]
     },
     {
+      "id": 31577,
       "pos": [
         4,
         2
-      ],
-      "ID": 31577
+      ]
     },
     {
+      "id": 34780,
       "pos": [
         2,
         6
-      ],
-      "ID": 34780
+      ]
     },
     {
+      "id": 38373,
       "pos": [
         2,
         2
-      ],
-      "ID": 38373
-    }
-  ],
-  "terminals": [
+      ]
+    },
     {
+      "id": 34558,
       "pos": [
         4,
         8
       ],
       "color": "blue",
-      "ID": 34558
+      "isTerminal": true
     },
     {
+      "id": 53863,
       "pos": [
         2,
         8
       ],
       "color": "green",
-      "ID": 53863
+      "isTerminal": true
     },
     {
+      "id": 66829,
       "pos": [
         2,
         0
       ],
       "color": "green",
-      "ID": 66829
+      "isTerminal": true
     },
     {
+      "id": 76365,
       "pos": [
         4,
         0
       ],
       "color": "blue",
-      "ID": 76365
+      "isTerminal": true
     }
   ],
   "lines": [
     {
-      "ID": 36262,
-      "layer":0,
+      "id": 36262,
       "pos": [
         [
           4,
@@ -90,11 +91,11 @@
           4,
           2
         ]
-      ]
+      ],
+      "layer": 0
     },
     {
-      "ID": 67804,
-      "layer":0,
+      "id": 67804,
       "pos": [
         [
           2,
@@ -116,7 +117,8 @@
           2,
           6
         ]
-      ]
+      ],
+      "layer": 0
     }
   ]
 }

@@ -1,7 +1,6 @@
 import { LineSegments, LineBasicMaterial, Float32BufferAttribute, BufferGeometry, Color, AdditiveBlending } from 'three/webgpu'
 import type { Line } from '../game/items/line.js'
 import type { Pad } from '../game/items/pad.js'
-import type { Terminal } from '../game/items/terminal.js'
 
 class Grid extends LineSegments {
 
@@ -19,7 +18,7 @@ class Grid extends LineSegments {
 
 	}
 
-	update( width: number, height: number, lines: Line[], pads: Pad[], terminals: Terminal[] ) {
+	update( width: number, height: number, lines: Line[], pads: Pad[] ) {
 
     this.width = width
     this.height = height
@@ -45,9 +44,9 @@ class Grid extends LineSegments {
 		 *    If either vertex coincides with a pad that has 2 or more line
 		 *    connections (regardless of layer), the segment is hidden.
 		 *
-		 * 3. Vertex on a connected terminal:
-		 *    If either vertex coincides with a terminal that has at least 1 line
-		 *    connection, the segment is hidden.
+		 * 3. Vertex on a connected terminal pad:
+		 *    If either vertex coincides with a terminal pad that has at least 1
+		 *    line connection, the segment is hidden.
 		 *
 		 * 4. Perpendicular diagonal crossing:
 		 *    A diagonal grid segment is hidden if a layer-0 game line has a
@@ -59,20 +58,16 @@ class Grid extends LineSegments {
 		const linePointsL0 = new Set<string>()
 		const padPositions = new Set<string>()
 		const padConnectionCounts = new Map<string, number>()
-		const terminalConnectionCounts = new Map<string, number>()
+		const terminalPadPositions = new Set<string>()
 		// Cells with layer-0 diagonal game lines: backslash "\" and slash "/"
 		const cellDiagBackslash = new Set<string>()
 		const cellDiagSlash = new Set<string>()
 
 		for ( const pad of pads ) {
-			const key = pad.pos[ 0 ] + ',' + pad.pos[ 1 ]
+			const key = pad.pos.x + ',' + pad.pos.y
 			padPositions.add( key )
 			padConnectionCounts.set( key, 0 )
-		}
-
-		for ( const terminal of terminals ) {
-			const key = terminal.pos[ 0 ] + ',' + terminal.pos[ 1 ]
-			terminalConnectionCounts.set( key, 0 )
+			if ( pad.isTerminal ) terminalPadPositions.add( key )
 		}
 
 		for ( const line of lines ) {
@@ -81,16 +76,16 @@ class Grid extends LineSegments {
         if ( line.pos.length === 1) continue
 				for ( let i = 0; i <= lastIdx; i ++ ) {
 					const pos = line.pos[ i ]
-					const key = pos[ 0 ] + ',' + pos[ 1 ]
-					// Skip dangling endpoints (first/last with no terminal)
-					if ( ( i === 0 || i === lastIdx ) && !terminalConnectionCounts.has( key ) ) continue
+					const key = pos.x + ',' + pos.y
+					// Skip dangling endpoints (first/last with no terminal pad)
+					if ( ( i === 0 || i === lastIdx ) && !terminalPadPositions.has( key ) ) continue
 					linePointsL0.add( key )
 				}
 				for ( let i = 1; i < line.pos.length; i ++ ) {
-					const ax = line.pos[ i - 1 ][ 0 ]
-					const ay = line.pos[ i - 1 ][ 1 ]
-					const bx = line.pos[ i ][ 0 ]
-					const by = line.pos[ i ][ 1 ]
+					const ax = line.pos[ i - 1 ].x
+					const ay = line.pos[ i - 1 ].y
+					const bx = line.pos[ i ].x
+					const by = line.pos[ i ].y
 					const dx = bx - ax
 					const dy = by - ay
 					if ( Math.abs( dx ) === 1 && Math.abs( dy ) === 1 ) {
@@ -105,19 +100,13 @@ class Grid extends LineSegments {
 			}
 			const first = line.pos[ 0 ]
 			const last = line.pos[ line.pos.length - 1 ]
-			const firstKey = first[ 0 ] + ',' + first[ 1 ]
-			const lastKey = last[ 0 ] + ',' + last[ 1 ]
+			const firstKey = first.x + ',' + first.y
+			const lastKey = last.x + ',' + last.y
 			if ( padConnectionCounts.has( firstKey ) ) {
 				padConnectionCounts.set( firstKey, padConnectionCounts.get( firstKey )! + 1 )
 			}
 			if ( padConnectionCounts.has( lastKey ) ) {
 				padConnectionCounts.set( lastKey, padConnectionCounts.get( lastKey )! + 1 )
-			}
-			if ( terminalConnectionCounts.has( firstKey ) ) {
-				terminalConnectionCounts.set( firstKey, terminalConnectionCounts.get( firstKey )! + 1 )
-			}
-			if ( terminalConnectionCounts.has( lastKey ) ) {
-				terminalConnectionCounts.set( lastKey, terminalConnectionCounts.get( lastKey )! + 1 )
 			}
 		}
 
@@ -127,10 +116,13 @@ class Grid extends LineSegments {
 			if ( linePointsL0.has( key ) && !padPositions.has( key ) ) return true
 			// Rule 2: Pad with 2+ line connections
 			const padConns = padConnectionCounts.get( key )
-			if ( padConns !== undefined && padConns >= 2 ) return true
-			// Rule 3: Terminal with 1+ line connections
-			const termConns = terminalConnectionCounts.get( key )
-			if ( termConns !== undefined && termConns >= 1 ) return true
+			if ( padConns !== undefined ) {
+				if ( terminalPadPositions.has( key ) ) {
+					if ( padConns >= 1 ) return true
+				} else if ( padConns >= 2 ) {
+					return true
+				}
+			}
 			return false
 		}
 

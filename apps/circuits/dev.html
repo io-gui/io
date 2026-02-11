@@ -25,7 +25,7 @@
   </head>
   <body>
     <script type="module">
-      import { circuitsBoard, Game, TERMINAL_COLORS } from "./dist/index.js";
+      import { circuitsBoard, Game, COLORS } from "./dist/index.js";
       import { Storage as $, div } from "@io-gui/core";
       import { ioSplit, Split } from "@io-gui/layout";
       import { ioButton } from "@io-gui/inputs";
@@ -68,7 +68,7 @@
           circuitsBoard({ id: "game", game: game }),
           div({ id: "editor" }, [
             ioButton({ label: "Pad", action: () => modeSelect("pad") }),
-            ...Object.keys(TERMINAL_COLORS).map((c) =>
+            ...Object.keys(COLORS).map((c) =>
               ioButton({
                 label: c,
                 action: () => modeSelect("terminal", c),

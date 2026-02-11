@@ -19,8 +19,6 @@ import { Register } from '@io-gui/core'
 import { ThreeApplet, ThreeAppletProps } from '@io-gui/three'
 import { Pad } from '../game/items/pad'
 import { Line } from '../game/items/line'
-import { Terminal, TERMINAL_COLORS } from '../game/items/terminal'
-import type { TerminalColor } from '../game/items/terminal'
 import { Grid } from '../objects/grid'
 
 const PAD_SPHERE_RADIUS = 0.25
@@ -59,10 +57,6 @@ export class ThreeScene extends ThreeApplet {
 
   public _drag: Vector3 = new Vector3()
 
-  private static instanceColor(terminalColor: TerminalColor): Color {
-    return new Color(TERMINAL_COLORS[terminalColor] ?? TERMINAL_COLORS.white)
-  }
-
   constructor(args: ThreeAppletProps) {
     super(args)
 
@@ -96,25 +90,26 @@ export class ThreeScene extends ThreeApplet {
     this.cameraRig.position.set(width / 2, height / 2, 0)
     this.camera.position.set(0, 0, gridDistance)
   }
-  updateGrid(width: number, height: number, lines: Line[], pads: Pad[], terminals: Terminal[]) {
-    this.grid.update(width, height, lines, pads, terminals)
+  updateGrid(width: number, height: number, lines: Line[], pads: Pad[]) {
+    this.grid.update(width, height, lines, pads)
   }
 
-  // TODO: Consider empty instanced arrays
+  // TODO: Fix empty instanced arrays
 
   updatePads(pads: Pad[]) {
+    const nonTerminalPads = pads.filter((pad) => !pad.isTerminal)
     if (this.pads.parent) {
       this.scene.remove(this.pads)
-      if (pads.length === 0) return
+      if (nonTerminalPads.length === 0) return
     }
 
-    this.pads = new InstancedMesh(ThreeScene.padGeometry, ThreeScene.padMaterial, pads.length)
+    this.pads = new InstancedMesh(ThreeScene.padGeometry, ThreeScene.padMaterial, nonTerminalPads.length)
     const matrix = new Matrix4()
     const padColor = new Color()
-    for (let i = 0; i < pads.length; i++) {
-      matrix.makeTranslation(pads[i].pos[0], pads[i].pos[1], 0)
+    for (let i = 0; i < nonTerminalPads.length; i++) {
+      matrix.makeTranslation(nonTerminalPads[i].pos.x, nonTerminalPads[i].pos.y, 0)
       this.pads.setMatrixAt(i, matrix)
-      padColor.copy(ThreeScene.instanceColor(pads[i].color))
+      padColor.copy(nonTerminalPads[i].renderColor)
       this.pads.setColorAt(i, padColor)
     }
     this.pads.instanceMatrix.needsUpdate = true
@@ -122,21 +117,22 @@ export class ThreeScene extends ThreeApplet {
     this.scene.add(this.pads)
   }
 
-  updateTerminals(terminals: Terminal[]) {
+  updateTerminals(pads: Pad[]) {
+    const terminalPads = pads.filter((pad) => pad.isTerminal)
     if (this.terminals.parent) {
       this.scene.remove(this.terminals)
     }
     this.terminals = new InstancedMesh(
       ThreeScene.terminalGeometry,
       ThreeScene.terminalMaterial,
-      terminals.length
+      terminalPads.length
     )
     const matrix = new Matrix4()
     const terminalColor = new Color()
-    for (let i = 0; i < terminals.length; i++) {
-      matrix.makeTranslation(terminals[i].pos[0], terminals[i].pos[1], 0)
+    for (let i = 0; i < terminalPads.length; i++) {
+      matrix.makeTranslation(terminalPads[i].pos.x, terminalPads[i].pos.y, 0)
       this.terminals.setMatrixAt(i, matrix)
-      terminalColor.copy(ThreeScene.instanceColor(terminals[i].color))
+      terminalColor.copy(terminalPads[i].renderColor)
       this.terminals.setColorAt(i, terminalColor)
     }
     this.terminals.instanceMatrix.needsUpdate = true
@@ -157,7 +153,7 @@ export class ThreeScene extends ThreeApplet {
     const lineColor = new Color()
     let idx = 0
     for (const line of lines) {
-      lineColor.copy(ThreeScene.instanceColor(line.color))
+      lineColor.copy(line.renderColor)
       if (line.layer === -1) {
         lineColor.multiplyScalar(LINE_LAYER_MINUS_ONE_COLOR_FACTOR)
       }
@@ -166,10 +162,10 @@ export class ThreeScene extends ThreeApplet {
       const widthScale = isBehind ? LINE_LAYER_MINUS_ONE_WIDTH_FACTOR : 1
       const segmentZ = isBehind ? LINE_LAYER_BEHIND_Z : 0
       for (let j = 0; j < pos.length - 1; j++) {
-        const ax = pos[j][0]
-        const ay = pos[j][1]
-        const bx = pos[j + 1][0]
-        const by = pos[j + 1][1]
+        const ax = pos[j].x
+        const ay = pos[j].y
+        const bx = pos[j + 1].x
+        const by = pos[j + 1].y
         _segmentPosition.set((ax + bx) / 2, (ay + by) / 2, segmentZ)
         const dx = bx - ax
         const dy = by - ay

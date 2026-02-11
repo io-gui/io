@@ -8,7 +8,7 @@ var ThreeScene_1;
 import { AmbientLight, BoxGeometry, CapsuleGeometry, Color, Group, InstancedMesh, Matrix4, MeshPhongMaterial, Object3D, PerspectiveCamera, PointLight, Quaternion, SphereGeometry, Vector3, } from 'three/webgpu';
 import { Register } from '@io-gui/core';
 import { ThreeApplet } from '@io-gui/three';
-import { TERMINAL_COLORS } from '../game/items/terminal';
+import { PAD_COLORS } from '../game/items/pad';
 import { Grid } from '../objects/grid';
 const PAD_SPHERE_RADIUS = 0.25;
 const TERMINAL_BOX_SIZE = 0.5;
@@ -40,8 +40,8 @@ let ThreeScene = class ThreeScene extends ThreeApplet {
     static lineGeometry = new CapsuleGeometry(LINE_CAPSULE_RADIUS, LINE_CAPSULE_AXIS_LENGTH, 4, 8);
     static lineMaterial = new MeshPhongMaterial({ vertexColors: true });
     _drag = new Vector3();
-    static instanceColor(terminalColor) {
-        return new Color(TERMINAL_COLORS[terminalColor] ?? TERMINAL_COLORS.white);
+    static instanceColor(padColor) {
+        return new Color(PAD_COLORS[padColor] ?? PAD_COLORS.white);
     }
     constructor(args) {
         super(args);
@@ -69,23 +69,24 @@ let ThreeScene = class ThreeScene extends ThreeApplet {
         this.cameraRig.position.set(width / 2, height / 2, 0);
         this.camera.position.set(0, 0, gridDistance);
     }
-    updateGrid(width, height, lines, pads, terminals) {
-        this.grid.update(width, height, lines, pads, terminals);
+    updateGrid(width, height, lines, pads) {
+        this.grid.update(width, height, lines, pads);
     }
-    // TODO: Consider empty instanced arrays
+    // TODO: Fix empty instanced arrays
     updatePads(pads) {
+        const nonTerminalPads = pads.filter((pad) => !pad.isTerminal);
         if (this.pads.parent) {
             this.scene.remove(this.pads);
-            if (pads.length === 0)
+            if (nonTerminalPads.length === 0)
                 return;
         }
-        this.pads = new InstancedMesh(ThreeScene_1.padGeometry, ThreeScene_1.padMaterial, pads.length);
+        this.pads = new InstancedMesh(ThreeScene_1.padGeometry, ThreeScene_1.padMaterial, nonTerminalPads.length);
         const matrix = new Matrix4();
         const padColor = new Color();
-        for (let i = 0; i < pads.length; i++) {
-            matrix.makeTranslation(pads[i].pos[0], pads[i].pos[1], 0);
+        for (let i = 0; i < nonTerminalPads.length; i++) {
+            matrix.makeTranslation(nonTerminalPads[i].pos[0], nonTerminalPads[i].pos[1], 0);
             this.pads.setMatrixAt(i, matrix);
-            padColor.copy(ThreeScene_1.instanceColor(pads[i].color));
+            padColor.copy(ThreeScene_1.instanceColor(nonTerminalPads[i].renderColor));
             this.pads.setColorAt(i, padColor);
         }
         this.pads.instanceMatrix.needsUpdate = true;
@@ -93,17 +94,18 @@ let ThreeScene = class ThreeScene extends ThreeApplet {
             this.pads.instanceColor.needsUpdate = true;
         this.scene.add(this.pads);
     }
-    updateTerminals(terminals) {
+    updateTerminals(pads) {
+        const terminalPads = pads.filter((pad) => pad.isTerminal);
         if (this.terminals.parent) {
             this.scene.remove(this.terminals);
         }
-        this.terminals = new InstancedMesh(ThreeScene_1.terminalGeometry, ThreeScene_1.terminalMaterial, terminals.length);
+        this.terminals = new InstancedMesh(ThreeScene_1.terminalGeometry, ThreeScene_1.terminalMaterial, terminalPads.length);
         const matrix = new Matrix4();
         const terminalColor = new Color();
-        for (let i = 0; i < terminals.length; i++) {
-            matrix.makeTranslation(terminals[i].pos[0], terminals[i].pos[1], 0);
+        for (let i = 0; i < terminalPads.length; i++) {
+            matrix.makeTranslation(terminalPads[i].pos[0], terminalPads[i].pos[1], 0);
             this.terminals.setMatrixAt(i, matrix);
-            terminalColor.copy(ThreeScene_1.instanceColor(terminals[i].color));
+            terminalColor.copy(ThreeScene_1.instanceColor(terminalPads[i].renderColor));
             this.terminals.setColorAt(i, terminalColor);
         }
         this.terminals.instanceMatrix.needsUpdate = true;
@@ -156,10 +158,10 @@ let ThreeScene = class ThreeScene extends ThreeApplet {
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onAnimate(delta, time) {
-        this.camera.position.x = ((this.camera.position.x * 9) + this._drag.x * 0.25 * this.grid.width) / 10;
-        this.camera.position.y = ((this.camera.position.y * 9) + this._drag.y * 0.25 * this.grid.height) / 10;
-        this.cameraTarget.position.x = ((this.cameraTarget.position.x * 9) + this._drag.x * 0.02 * this.grid.width) / 10;
-        this.cameraTarget.position.y = ((this.cameraTarget.position.y * 9) + this._drag.y * 0.02 * this.grid.height) / 10;
+        this.camera.position.x = ((this.camera.position.x * 9) - this._drag.x * 0.25 * this.grid.width) / 10;
+        this.camera.position.y = ((this.camera.position.y * 9) - this._drag.y * 0.25 * this.grid.height) / 10;
+        this.cameraTarget.position.x = ((this.cameraTarget.position.x * 9) - this._drag.x * 0.02 * this.grid.width) / 10;
+        this.cameraTarget.position.y = ((this.cameraTarget.position.y * 9) - this._drag.y * 0.02 * this.grid.height) / 10;
         this.camera.lookAt(_targetVector.setFromMatrixPosition(this.cameraTarget.matrixWorld));
     }
 };

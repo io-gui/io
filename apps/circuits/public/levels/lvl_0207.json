@@ -3,88 +3,91 @@
   "height": 8,
   "pads": [
     {
+      "id": 49618,
       "pos": [
         3,
         1
-      ],
-      "ID": 49618
+      ]
     },
     {
+      "id": 87366,
       "pos": [
         3,
         7
-      ],
-      "ID": 87366
+      ]
     },
     {
+      "id": 94452,
       "pos": [
         2,
         4
-      ],
-      "ID": 94452
+      ]
     },
     {
+      "id": 95749,
       "pos": [
         5,
         5
-      ],
-      "ID": 95749
-    }
-  ],
-  "terminals": [
+      ]
+    },
     {
+      "id": 6769,
       "pos": [
         6,
         8
       ],
       "color": "blue",
-      "ID": 6769
+      "isTerminal": true
     },
     {
+      "id": 10769,
       "pos": [
         0,
         0
       ],
       "color": "red",
-      "ID": 10769
+      "isTerminal": true
     },
     {
+      "id": 47949,
       "pos": [
         6,
         0
       ],
       "color": "green",
-      "ID": 47949
+      "isTerminal": true
     },
     {
+      "id": 59116,
       "pos": [
         4,
         6
       ],
       "color": "red",
-      "ID": 59116
+      "isTerminal": true
     },
     {
+      "id": 67355,
       "pos": [
         2,
         2
       ],
       "color": "blue",
-      "ID": 67355
+      "isTerminal": true
     },
     {
+      "id": 88865,
       "pos": [
         0,
         8
       ],
       "color": "green",
-      "ID": 88865
+      "isTerminal": true
     }
   ],
   "lines": [
     {
-      "ID": 32828,
-      "layer":0,
+      "id": 32828,
       "pos": [
         [
           3,
@@ -102,11 +105,11 @@
           5,
           5
         ]
-      ]
+      ],
+      "layer": 0
     },
     {
-      "ID": 96033,
-      "layer":0,
+      "id": 96033,
       "pos": [
         [
           3,
@@ -124,7 +127,8 @@
           2,
           4
         ]
-      ]
+      ],
+      "layer": 0
     }
   ]
 }

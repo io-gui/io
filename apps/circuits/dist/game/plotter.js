@@ -6,7 +6,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { ReactiveNode, Register } from '@io-gui/core';
 import { Pad } from './items/pad.js';
-import { Terminal } from './items/terminal.js';
 import { Line } from './items/line.js';
 /**
  * Plotter — position and geometry only.
@@ -17,26 +16,20 @@ let Plotter = class Plotter extends ReactiveNode {
     width = 0;
     height = 0;
     pads = [];
-    terminals = [];
     lines = [];
-    connect(pads, terminals, lines, width, height) {
+    connect(pads, lines, width, height) {
         this.width = width;
         this.height = height;
         this.pads = pads;
-        this.terminals = terminals;
         this.lines = lines;
     }
-    getPointAt(x, y) {
+    getPointAt([x, y]) {
         for (const pad of this.pads) {
             if (pad.pos[0] === x && pad.pos[1] === y)
                 return pad;
         }
-        for (const term of this.terminals) {
-            if (term.pos[0] === x && term.pos[1] === y)
-                return term;
-        }
     }
-    getLinesAtPoint(x, y, filter) {
+    getLinesAtPoint([x, y], filter) {
         const lines = [];
         for (const line of this.lines) {
             if (line.pos.some(([px, py]) => px === x && py === y) && (filter?.(line) ?? true)) {
@@ -48,40 +41,29 @@ let Plotter = class Plotter extends ReactiveNode {
     getLineById(id) {
         return this.lines.find((l) => l.id === id);
     }
-    checkDiagonalCrossing(line, x, y) {
+    checkDiagonalCrossing(line, [x, y]) {
         const last = line.pos[line.pos.length - 1];
         const mx = (x + last[0]) / 2;
         const my = (y + last[1]) / 2;
         for (const other of this.lines) {
             if (other.layer !== line.layer)
                 continue;
-            if (other.hasDiagonalSegmentAt(mx, my))
+            if (other.hasDiagonalSegmentAt([mx, my]))
                 return false;
         }
         return true;
     }
-    addPad(id, x, y) {
-        if (this.getPointAt(x, y))
+    addPad(id, [x, y], color, isTerminal = false) {
+        if (this.getPointAt([x, y]))
             return false;
-        this.pads.push(new Pad(id, [x, y]));
+        this.pads.push(new Pad(id, [x, y], isTerminal, color));
         this.dispatch('game-update', undefined, true);
         return true;
     }
-    addTerminal(id, x, y, color) {
-        if (this.getPointAt(x, y))
-            return false;
-        this.terminals.push(new Terminal(id, [x, y], color));
-        this.dispatch('game-update', undefined, true);
-        return true;
-    }
-    delete(x, y) {
+    delete([x, y]) {
         const padIdx = this.pads.findIndex((p) => p.pos[0] === x && p.pos[1] === y);
         if (padIdx !== -1) {
             this.pads.splice(padIdx, 1);
-        }
-        const termIdx = this.terminals.findIndex((t) => t.pos[0] === x && t.pos[1] === y);
-        if (termIdx !== -1) {
-            this.terminals.splice(termIdx, 1);
         }
         const lineIdx = this.lines.findIndex((l) => l.pos.some(([px, py]) => px === x && py === y));
         if (lineIdx !== -1) {
@@ -89,13 +71,13 @@ let Plotter = class Plotter extends ReactiveNode {
         }
         this.dispatch('game-update', undefined, true);
     }
-    verifyLineLegality(id) {
+    verifyLineComplete(id) {
         const line = this.getLineById(id);
         if (line) {
             const first = line.pos[0];
             const last = line.pos[line.pos.length - 1];
-            const p1 = this.getPointAt(first[0], first[1]);
-            const p2 = this.getPointAt(last[0], last[1]);
+            const p1 = this.getPointAt(first);
+            const p2 = this.getPointAt(last);
             if (!p1 || !p2 || (first[0] === last[0] && first[1] === last[1])) {
                 const idx = this.lines.findIndex((l) => l.id === id);
                 if (idx !== -1)
@@ -106,18 +88,18 @@ let Plotter = class Plotter extends ReactiveNode {
         }
         return false;
     }
-    isInBounds(x, y) {
+    isInBounds([x, y]) {
         return x >= 0 && x <= this.width && y >= 0 && y <= this.height;
     }
-    addLineSegment(id, x, y, layer) {
-        if (!this.isInBounds(x, y))
+    addLineSegment(id, [x, y], layer) {
+        if (!this.isInBounds([x, y]))
             return { added: false, endDrag: false };
         // Lookup what's at target cell
-        const point = this.getPointAt(x, y);
-        const linesAtPoint = this.getLinesAtPoint(x, y, (line) => (line.layer === 0));
-        const underlineLinesAtPoint = this.getLinesAtPoint(x, y, (line) => line.layer === -1);
-        // Terminals accept 1 connection, pads accept 2, empty cells accept 0
-        const connectionLimit = point ? (point instanceof Terminal ? 1 : 2) : 0;
+        const point = this.getPointAt([x, y]);
+        const linesAtPoint = this.getLinesAtPoint([x, y], (line) => (line.layer === 0));
+        const underlineLinesAtPoint = this.getLinesAtPoint([x, y], (line) => line.layer === -1);
+        // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
+        const connectionLimit = point ? (point.isTerminal ? 1 : 2) : 0;
         let added = false;
         let endDrag = false;
         // Reject if point is already at connection capacity
@@ -128,7 +110,7 @@ let Plotter = class Plotter extends ReactiveNode {
         if (line) {
             // --- Extending existing line ---
             // Reject if diagonal would cross another diagonal on same layer
-            if (!this.checkDiagonalCrossing(line, x, y)) {
+            if (!this.checkDiagonalCrossing(line, [x, y])) {
                 return { added, endDrag };
             }
             // Reject self-intersection (exclude last 2 points to preserve backtracking)
@@ -136,17 +118,17 @@ let Plotter = class Plotter extends ReactiveNode {
             if (line.pos.some(([px, py], i) => px === x && py === y && i < posCount - 2)) {
                 return { added, endDrag };
             }
-            const sameLineAtPoint = this.getLinesAtPoint(x, y, (line) => (line.id === id && line.layer === 0))?.[0] || null;
+            const sameLineAtPoint = this.getLinesAtPoint([x, y], (line) => (line.id === id && line.layer === 0))?.[0] || null;
             // Empty cell: allow if no foreign line occupies it (or underline layer bypasses)
             if (!point && ((!linesAtPoint.length || sameLineAtPoint) || layer === -1)) {
-                added = line.plotSegment(x, y);
+                added = line.plotSegment([x, y]);
             }
             // Reached a pad/terminal: snap to it and end drag (color must be compatible)
             if (point) {
-                if (point.color !== 'white' && line.color !== 'white' && point.color !== line.color) {
+                if (point.renderColor !== 'white' && line.color !== 'white' && point.renderColor !== line.color) {
                     return { added: false, endDrag: false };
                 }
-                added = line.plotSegment(x, y);
+                added = line.plotSegment([x, y]);
                 endDrag = true;
             }
         }
@@ -155,7 +137,7 @@ let Plotter = class Plotter extends ReactiveNode {
             if (!point)
                 return { added: false, endDrag: false };
             const newLine = new Line(id, [[x, y]], layer);
-            newLine.color = point.color;
+            newLine.color = point.renderColor;
             this.lines.push(newLine);
             added = true;
         }

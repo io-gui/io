@@ -24,7 +24,7 @@ export class Line {
     static fromJSON(data) {
         return new Line(data.id, data.pos, data.layer);
     }
-    hasDiagonalSegmentAt(mx, my) {
+    hasDiagonalSegmentAt([mx, my]) {
         const pos = this.pos;
         for (let i = 1; i < pos.length; i++) {
             const ax = pos[i - 1][0];
@@ -43,10 +43,10 @@ export class Line {
      * Erase last segment if user drags back to prev node.
      * Return true if segment was added, false otherwise.
      */
-    plotSegment(x, y) {
-        if (this._tryEraseLastSegment(x, y))
+    plotSegment([x, y]) {
+        if (this._tryEraseLastSegment([x, y]))
             return true;
-        if (this._tryAddNewSegment(x, y))
+        if (this._tryAddNewSegment([x, y]))
             return true;
         return false;
     }
@@ -54,7 +54,7 @@ export class Line {
      * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.
      * Returns true if nothing was done, false if path was updated.
      */
-    _tryAddNewSegment(x, y) {
+    _tryAddNewSegment([x, y]) {
         const ln = this.pos.length;
         if (ln > 1) {
             if (y === this.pos[ln - 2][1] && Math.abs(x - this.pos[ln - 2][0]) === 1) {
@@ -77,7 +77,7 @@ export class Line {
         return false;
     }
     /** Erase last segment if user drags back to prev node. */
-    _tryEraseLastSegment(x, y) {
+    _tryEraseLastSegment([x, y]) {
         const ln = this.pos.length;
         if (ln < 2)
             return false;
