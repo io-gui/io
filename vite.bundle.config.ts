@@ -40,11 +40,15 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       external: (id) => {
-        return externals.some((ext) =>
-          ext instanceof RegExp
-            ? ext.test(id)
-            : id === ext || id.startsWith(ext + '/'),
-        )
+        if (rootDir.includes('apps')) {
+          return false
+        } else {
+          return externals.some((ext) =>
+            ext instanceof RegExp
+              ? ext.test(id)
+              : id === ext || id.startsWith(ext + '/'),
+          )
+        }
       },
       output: {
         preserveModules: false,

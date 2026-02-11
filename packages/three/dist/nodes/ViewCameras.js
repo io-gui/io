@@ -224,22 +224,26 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
         const resetCamera = resetCameras.get(camera) || camera.clone(false);
         resetCamera.copy(camera, false);
         resetCameras.set(camera, resetCamera);
-        const aspect = width / height;
+        const viewportAspect = width / height;
         if (camera instanceof PerspectiveCamera) {
-            camera.aspect = aspect;
-            camera.fov *= overscan;
+            const originalAspect = camera.aspect;
+            camera.aspect = viewportAspect;
+            const halfFovRad = camera.fov * Math.PI / 360;
+            const aspectContain = Math.max(1, originalAspect / viewportAspect);
+            camera.fov = 2 * Math.atan(Math.tan(halfFovRad) * aspectContain) * 180 / Math.PI;
+            camera.zoom = 1 / overscan;
         }
         else if (camera instanceof OrthographicCamera) {
             const frustumHeight = camera.top - camera.bottom;
             const frustumWidth = camera.right - camera.left;
             const frustumAspect = frustumWidth / frustumHeight;
-            if (frustumAspect > aspect) {
-                camera.top = frustumWidth / 2 / aspect;
-                camera.bottom = -frustumWidth / 2 / aspect;
+            if (frustumAspect > viewportAspect) {
+                camera.top = frustumWidth / 2 / viewportAspect;
+                camera.bottom = -frustumWidth / 2 / viewportAspect;
             }
             else {
-                camera.left = -frustumHeight / 2 * aspect;
-                camera.right = frustumHeight / 2 * aspect;
+                camera.left = -frustumHeight / 2 * viewportAspect;
+                camera.right = frustumHeight / 2 * viewportAspect;
             }
             camera.top *= overscan;
             camera.bottom *= overscan;

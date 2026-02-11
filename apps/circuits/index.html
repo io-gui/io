@@ -7,7 +7,6 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <script type="module" src="./src/CircuitsApp.ts"></script>
     <style>
       html,
       body {
@@ -16,10 +15,24 @@
         padding: 0;
         overflow: hidden;
         font-family: sans-serif;
+        background-color: var(--io_bgColor);
       }
     </style>
   </head>
   <body>
-    <circuits-app></circuits-app>
+    <script type="module">
+      import { CircuitsBoard, Game } from "./dist/index.js";
+      import { Storage as $, div } from "@io-gui/core";
+
+      $.permit();
+
+      const circuitsBoard = new CircuitsBoard({
+        game: new Game({
+          level: $({ key: "level", storage: "hash", value: "lvl_0101" }),
+        }),
+      });
+
+      document.body.appendChild(circuitsBoard);
+    </script>
   </body>
 </html>

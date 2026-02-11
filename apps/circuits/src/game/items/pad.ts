@@ -1,13 +1,15 @@
 import { TerminalColor } from './terminal.js'
 
+type vec2 = [number, number]
+
 export interface PadData {
   id: number
-  pos: [number, number]
+  pos: vec2
 }
 
 export class Pad {
   public id: number
-  public pos: [number, number]
+  public pos: vec2
   private _color: TerminalColor = 'white'
 
   get color(): TerminalColor {
@@ -18,7 +20,7 @@ export class Pad {
     this._color = color
   }
 
-  constructor(id: number, pos: [number, number]) {
+  constructor(id: number, pos: vec2) {
     this.id = id
     this.pos = pos
   }

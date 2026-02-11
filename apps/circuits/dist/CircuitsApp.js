@@ -12,12 +12,7 @@ import { circuitsLevels } from './CircuitsLevels.js';
 import { circuitsGame } from './CircuitsGame.js';
 import { Game } from './game/game.js';
 $.permit();
-const $level = $({ key: 'level', storage: 'hash', value: '' });
-const $completed = $({
-    key: 'circuits-completed',
-    storage: 'local',
-    value: '[]',
-});
+const $level = $({ key: 'level', storage: 'hash', value: 'lvl_0101' });
 let CircuitsApp = class CircuitsApp extends IoElement {
     static get Style() {
         return /* css */ `
@@ -41,19 +36,18 @@ let CircuitsApp = class CircuitsApp extends IoElement {
         };
     }
     ready() {
-        const completedIds = this._getCompletedIds();
         this.render([
             ioSplit({
                 split: new Split({
                     type: 'split',
                     children: [
                         { type: 'panel', flex: '0 0 110px', tabs: [{ id: 'levels' }] },
-                        { type: 'panel', flex: '1 1 auto', tabs: [{ id: 'game' }] },
+                        { type: 'panel', flex: '1 1 800px', tabs: [{ id: 'game' }] },
                         { type: 'panel', flex: '0 0 120px', tabs: [{ id: 'editor' }] },
                     ],
                 }),
                 elements: [
-                    circuitsLevels({ id: 'levels', completedLevels: completedIds }),
+                    circuitsLevels({ id: 'levels' }),
                     circuitsGame({ id: 'game', level: $level, game: this.game }),
                     div({ id: 'editor' }, [
                         ioButton({ label: 'Pad', action: () => this._select('pad', '') }),
@@ -71,35 +65,9 @@ let CircuitsApp = class CircuitsApp extends IoElement {
                 ],
             }),
         ]);
-        const gameEl = this.querySelector('#game');
-        if (gameEl) {
-            gameEl.completeFn = (level, completed) => this.onLevelComplete(level, completed);
-        }
-    }
-    _getCompletedIds() {
-        try {
-            return JSON.parse($completed.value || '[]');
-        }
-        catch {
-            return [];
-        }
     }
     _select(mode, color) {
         this.dispatch('editor-select', { mode, color }, true);
-    }
-    _setCompletedIds(ids) {
-        $completed.value = JSON.stringify(ids);
-    }
-    onLevelComplete(level, completed) {
-        if (!completed)
-            return;
-        const ids = this._getCompletedIds();
-        if (ids.includes(level))
-            return;
-        this._setCompletedIds([...ids, level]);
-        const levelsEl = this.querySelector('#levels');
-        if (levelsEl?.refreshCompleted)
-            levelsEl.refreshCompleted(this._getCompletedIds());
     }
     onEditorSelect(event) {
         event.stopPropagation();
@@ -121,7 +89,7 @@ let CircuitsApp = class CircuitsApp extends IoElement {
     }
 };
 __decorate([
-    ReactiveProperty({ type: Game, init: null })
+    ReactiveProperty({ type: Game })
 ], CircuitsApp.prototype, "game", void 0);
 CircuitsApp = __decorate([
     Register

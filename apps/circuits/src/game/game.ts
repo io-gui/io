@@ -25,11 +25,23 @@ interface LevelData {
  */
 @Register
 export class Game extends ReactiveNode {
-  width = 4
-  height = 5
-  pads: Pad[] = []
-  terminals: Terminal[] = []
-  lines: Line[] = []
+  @ReactiveProperty({value: '', type: String})
+  declare level: string
+
+  @ReactiveProperty({type: Array})
+  declare pads: Pad[]
+  
+  @ReactiveProperty({type: Array})
+  declare terminals: Terminal[]
+
+  @ReactiveProperty({type: Array})
+  declare lines: Line[]
+
+  @ReactiveProperty({type: Number})
+  declare width: number
+
+  @ReactiveProperty({type: Number})
+  declare height: number
 
   drawMode: DrawMode = 'line'
   drawColor: TerminalColor = 'white'
@@ -37,9 +49,6 @@ export class Game extends ReactiveNode {
 
   undoStack: string[] = []
   redoStack: string[] = []
-
-  @ReactiveProperty({value: '', type: String})
-  declare currentLevel: string
 
   @ReactiveProperty({type: Plotter, init: null})
   declare plotter: Plotter
@@ -63,11 +72,11 @@ export class Game extends ReactiveNode {
 
   async initialize() {
     this.clear()
-    this.storedState = $({key: `${this.currentLevel}-level-state`, value: {}, storage: 'local'})
+    this.storedState = $({key: `${this.level}-level-state`, value: {}, storage: 'local'})
 
-    if (this.currentLevel) {
+    if (this.level) {
       if (Object.keys(this.storedState.value).length === 0) {
-        await this.load(this.currentLevel)
+        await this.load(this.level)
       } else {
         this.clear()
         this.fromJSON(JSON.stringify(this.storedState.value))
@@ -80,7 +89,7 @@ export class Game extends ReactiveNode {
     this.dispatch('game-update', undefined, true)
   }
 
-  currentLevelChanged() {
+  levelChanged() {
     void this.initialize().then(() => {
       this.dispatch('game-init-scene', undefined, true)
     })
@@ -177,8 +186,8 @@ export class Game extends ReactiveNode {
         const first = line.pos[0]
         const last = line.pos[line.pos.length - 1]
 
-        const p1 = this.plotter.getPointAt(first[0], first[1])
-        const p2 = this.plotter.getPointAt(last[0], last[1])
+        const p1 = this.plotter.getPointAt(first)
+        const p2 = this.plotter.getPointAt(last)
         if (!p1 || !p2) continue
 
         const c1 = p1.color
@@ -207,21 +216,21 @@ export class Game extends ReactiveNode {
     // TODO: Check for completeness correctly
 
     for (const term of this.terminals) {
-      const nConn = this.plotter.getLinesAtPoint(term.pos[0], term.pos[1]).length
+      const nConn = this.plotter.getLinesAtPoint(term.pos).length
       if (nConn !== 1) completed = false
     }
 
     for (const pad of this.pads) {
-      const nConn = this.plotter.getLinesAtPoint(pad.pos[0], pad.pos[1]).length
+      const nConn = this.plotter.getLinesAtPoint(pad.pos).length
       if (nConn !== 2 && pad.color !== 'white') completed = false
     }
 
-    console.log('game-complete', this.currentLevel, completed)
-    this.dispatch('game-complete', { level: this.currentLevel, completed }, true)
+    if (completed) console.log('game-complete', this.level, completed)
+    this.dispatch('game-complete', { level: this.level, completed }, true)
   }
 
   finalizeMove(lineID: number): void {
-    if (this.plotter.verifyLineLegality(lineID)) {
+    if (this.plotter.verifyLineComplete(lineID)) {
       this.updateUndoStack()
       this.propagateColors()
       this.save()

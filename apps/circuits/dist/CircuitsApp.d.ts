@@ -5,10 +5,7 @@ export declare class CircuitsApp extends IoElement {
     game: Game;
     static get Listeners(): ListenerDefinitions;
     ready(): void;
-    private _getCompletedIds;
     private _select;
-    private _setCompletedIds;
-    onLevelComplete(level: string, completed: boolean): void;
     onEditorSelect(event: CustomEvent): void;
     onLevelSelect(event: CustomEvent): void;
 }

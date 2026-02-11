@@ -7,9 +7,6 @@ export declare const TERMINAL_COLORS: {
     yellow: string;
     orange: string;
     purple: string;
-    brown: string;
-    grey: string;
-    black: string;
 };
 export type TerminalColor = keyof typeof TERMINAL_COLORS;
 export interface TerminalData {

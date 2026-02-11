@@ -11,18 +11,20 @@ export const TERMINAL_COLORS = {
 
 export type TerminalColor = keyof typeof TERMINAL_COLORS
 
+type vec2 = [number, number]
+
 export interface TerminalData {
   id: number
-  pos: [number, number]
+  pos: vec2
   color: TerminalColor
 }
 
 export class Terminal {
   id: number
-  pos: [number, number]
+  pos: vec2
   color: TerminalColor
 
-  constructor(id: number, pos: [number, number], color: TerminalColor) {
+  constructor(id: number, pos: vec2, color: TerminalColor) {
     this.id = id
     this.pos = pos
     this.color = color

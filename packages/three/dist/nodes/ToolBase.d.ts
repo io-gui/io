@@ -1,6 +1,16 @@
 import { ReactiveNode, ReactiveNodeProps } from '@io-gui/core';
-import { IoThreeViewport, Pointer3D } from '../elements/IoThreeViewport';
+import { IoThreeViewport } from '../elements/IoThreeViewport';
+import { Vector2, Ray } from 'three/webgpu';
 export type ToolBaseProps = ReactiveNodeProps & {};
+export interface Pointer3D {
+    event: PointerEvent;
+    screen: Vector2;
+    screenStart: Vector2;
+    screenMovement: Vector2;
+    ray: Ray;
+    rayStart: Ray;
+    rayMovement: Ray;
+}
 export declare class ToolBase extends ReactiveNode {
     private readonly viewports;
     constructor(args: ToolBaseProps);
@@ -15,5 +25,6 @@ export declare class ToolBase extends ReactiveNode {
     on3DPointerMove(pointers: Pointer3D[]): void;
     on3DPointerUp(pointers: Pointer3D[]): void;
     on3DPointerCancel(pointers: Pointer3D[]): void;
+    pointerTo3D(event: PointerEvent): Pointer3D;
 }
 //# sourceMappingURL=ToolBase.d.ts.map

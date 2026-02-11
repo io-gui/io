@@ -3,13 +3,16 @@ import {
   BoxGeometry,
   CapsuleGeometry,
   Color,
+  Group,
   InstancedMesh,
   Matrix4,
   MeshPhongMaterial,
-  OrthographicCamera,
+  Object3D,
+  PerspectiveCamera,
   PointLight,
   Quaternion,
   SphereGeometry,
+  Vector2,
   Vector3,
 } from 'three/webgpu'
 import { Register } from '@io-gui/core'
@@ -30,6 +33,7 @@ const LINE_LAYER_MINUS_ONE_WIDTH_FACTOR = 1.5
 const LINE_LAYER_MINUS_ONE_COLOR_FACTOR = 0.25
 
 const _yAxis = new Vector3(0, 1, 0)
+const _targetVector = new Vector3()
 const _segmentDir = new Vector3()
 const _segmentQuat = new Quaternion()
 const _segmentScale = new Vector3()
@@ -38,7 +42,9 @@ const _segmentPosition = new Vector3()
 @Register
 export class ThreeScene extends ThreeApplet {
 
-  public camera: OrthographicCamera
+  public camera: PerspectiveCamera = new PerspectiveCamera( 25, 1, 0.1, 1000 )
+  public cameraRig: Group = new Group()
+  public cameraTarget: Object3D = new Object3D()
   public grid: Grid = new Grid()
   public pads: InstancedMesh
   public terminals: InstancedMesh
@@ -51,6 +57,8 @@ export class ThreeScene extends ThreeApplet {
   static lineGeometry: CapsuleGeometry = new CapsuleGeometry(LINE_CAPSULE_RADIUS, LINE_CAPSULE_AXIS_LENGTH, 4, 8)
   static lineMaterial: MeshPhongMaterial = new MeshPhongMaterial({ vertexColors: true })
 
+  public _drag: Vector3 = new Vector3()
+
   private static instanceColor(terminalColor: TerminalColor): Color {
     return new Color(TERMINAL_COLORS[terminalColor] ?? TERMINAL_COLORS.white)
   }
@@ -58,8 +66,9 @@ export class ThreeScene extends ThreeApplet {
   constructor(args: ThreeAppletProps) {
     super(args)
 
-    this.camera = new OrthographicCamera(-1, 1, 1, -1, 0.1, 1000)
-    this.scene.add(this.camera)
+    this.scene.add(this.cameraRig)
+    this.cameraRig.add(this.camera)
+    this.cameraRig.add(this.cameraTarget)
 
     this.scene.add(this.grid)
 
@@ -75,18 +84,23 @@ export class ThreeScene extends ThreeApplet {
     this.scene.add( pointLight )
   }
 
-  updateGrid(width: number, height: number) {
-    this.grid.update(width, height)
-
-    const size = Math.max(width, height)
-    this.camera.left = -size / 2
-    this.camera.right = size / 2
-    this.camera.top = size / 2
-    this.camera.bottom = -size / 2
-    this.camera.position.set(width / 2, height / 2, 10)
-
-    this.camera.updateProjectionMatrix()
+  updateDrag(screen: Vector2, screenStart: Vector2) {
+    this._drag.set(screen.x - screenStart.x, screen.y - screenStart.y, 0)
   }
+
+  initGrid(width: number, height: number) {
+    this.camera.aspect = width / height
+    // calculate distance to contain grid in view
+    const halfFovRad = this.camera.fov * Math.PI / 360
+    const gridDistance = height / (2 * Math.tan(halfFovRad))
+    this.cameraRig.position.set(width / 2, height / 2, 0)
+    this.camera.position.set(0, 0, gridDistance)
+  }
+  updateGrid(width: number, height: number, lines: Line[], pads: Pad[], terminals: Terminal[]) {
+    this.grid.update(width, height, lines, pads, terminals)
+  }
+
+  // TODO: Consider empty instanced arrays
 
   updatePads(pads: Pad[]) {
     if (this.pads.parent) {
@@ -180,6 +194,15 @@ export class ThreeScene extends ThreeApplet {
     this.scene.add(this.lines)
   }
 
-  // onAnimate(delta: number, time: number) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onAnimate(delta: number, time: number) {
+    this.camera.position.x = ((this.camera.position.x * 9) - this._drag.x * 0.25 * this.grid.width) / 10
+    this.camera.position.y = ((this.camera.position.y * 9) - this._drag.y * 0.25 * this.grid.height) / 10
+
+    this.cameraTarget.position.x = ((this.cameraTarget.position.x * 9) - this._drag.x * 0.02 * this.grid.width) / 10
+    this.cameraTarget.position.y = ((this.cameraTarget.position.y * 9) - this._drag.y * 0.02 * this.grid.height) / 10
+
+    this.camera.lookAt(_targetVector.setFromMatrixPosition(this.cameraTarget.matrixWorld))
+  }
 
 }

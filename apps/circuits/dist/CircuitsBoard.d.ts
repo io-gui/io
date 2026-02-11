@@ -16,6 +16,7 @@ export declare class CircuitsBoard extends IoElement {
     applet: ThreeScene;
     game: Game;
     private _currentID;
+    private _dragging;
     constructor(args: CircuitsBoardProps);
     onGameInit(): void;
     onGameUpdate(): void;

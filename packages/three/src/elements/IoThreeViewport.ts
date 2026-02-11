@@ -1,5 +1,5 @@
 import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Change, Property, WithBinding } from '@io-gui/core'
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping, PerspectiveCamera, Vector2, Vector3 } from 'three/webgpu'
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
@@ -7,13 +7,6 @@ import { ToolBase } from '../nodes/ToolBase.js'
 
 if ( WebGPU.isAvailable() === false ) {
   throw new Error( 'No WebGPU support' )
-}
-
-export interface Pointer3D {
-  screen: Vector2
-  origin: Vector3
-  direction: Vector3
-  event: PointerEvent
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -77,7 +70,7 @@ export class IoThreeViewport extends IoElement {
   @Property(0)
   declare tabIndex: number
 
-  declare private readonly renderTarget: CanvasTarget
+  declare private renderTarget: CanvasTarget
 
   static get Style() {
     return /* css */`
@@ -111,13 +104,13 @@ export class IoThreeViewport extends IoElement {
 
   constructor(args: IoThreeViewportProps) {
     super(args)
+    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
+    this.debounce(this.renderViewportDebounced)
+  }
 
+  init() {
     this.renderTarget = new CanvasTarget(document.createElement('canvas'))
     this.appendChild(this.renderTarget.domElement)
-
-    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
-
-    this.debounce(this.renderViewportDebounced)
   }
 
   connectedCallback() {
@@ -201,41 +194,6 @@ export class IoThreeViewport extends IoElement {
     this.renderer.toneMapping = toneMapping
     this.renderer.toneMappingExposure = toneMappingExposure
   }
-
-  pointerTo3D(event: PointerEvent): Pointer3D {
-    const rect = (event.target as IoThreeViewport).getBoundingClientRect()
-
-    const screen = new Vector2(
-      ((event.clientX - rect.left) / rect.width) * 2 - 1,
-      -((event.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-
-    this.viewCameras.setOverscan(this.width, this.height, this.overscan)
-    const camera = this.viewCameras.camera
-
-    const origin = new Vector3(screen.x, screen.y, -1).unproject(camera)
-    camera.updateMatrixWorld()
-    origin.applyMatrix4(camera.matrixWorld)
-
-    const direction = new Vector3()
-
-    if (camera instanceof PerspectiveCamera) {
-      direction.setFromMatrixPosition(camera.matrixWorld)
-      direction.subVectors(origin, direction).normalize()
-    } else {
-      direction.set(0, 0, -1).transformDirection(camera.matrixWorld)
-    }
-
-    this.viewCameras.resetOverscan()
-
-    return {
-      screen,
-      origin,
-      direction,
-      event,
-    }
-  }
-
 
   dispose() {
     delete (this as any).applet

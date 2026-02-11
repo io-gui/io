@@ -26,6 +26,7 @@ export declare class Plotter extends ReactiveNode {
     addTerminal(id: number, x: number, y: number, color: TerminalColor): boolean;
     delete(x: number, y: number): void;
     verifyLineLegality(id: number): boolean;
+    isInBounds(x: number, y: number): boolean;
     addLineSegment(id: number, x: number, y: number, layer: number): {
         added: boolean;
         endDrag: boolean;

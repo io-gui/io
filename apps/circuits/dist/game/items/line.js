@@ -11,8 +11,18 @@ export class Line {
     }
     constructor(id, pos, layer) {
         this.id = id;
-        this.pos = [pos];
+        this.pos = pos;
         this.layer = layer;
+    }
+    toJSON() {
+        return {
+            id: this.id,
+            pos: this.pos,
+            layer: this.layer,
+        };
+    }
+    static fromJSON(data) {
+        return new Line(data.id, data.pos, data.layer);
     }
     hasDiagonalSegmentAt(mx, my) {
         const pos = this.pos;
@@ -21,10 +31,8 @@ export class Line {
             const ay = pos[i - 1][1];
             const bx = pos[i][0];
             const by = pos[i][1];
-            if (Math.abs(bx - ax) === 1 &&
-                Math.abs(by - ay) === 1 &&
-                (ax + bx) / 2 === mx &&
-                (ay + by) / 2 === my) {
+            if (Math.abs(bx - ax) === 1 && Math.abs(by - ay) === 1 &&
+                (ax + bx) / 2 === mx && (ay + by) / 2 === my) {
                 return true;
             }
         }
@@ -41,20 +49,6 @@ export class Line {
         if (this._tryAddNewSegment(x, y))
             return true;
         return false;
-    }
-    toJSON() {
-        return {
-            id: this.id,
-            pos: this.pos,
-            layer: this.layer,
-        };
-    }
-    static fromJSON(data) {
-        const line = new Line(data.id, data.pos[0], data.layer);
-        for (let j = 1; j < data.pos.length; j++) {
-            line.plotSegment(data.pos[j][0], data.pos[j][1]);
-        }
-        return line;
     }
     /**
      * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.

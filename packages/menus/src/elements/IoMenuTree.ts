@@ -98,6 +98,11 @@ export class IoMenuTree extends IoElement {
     this.dispatch('io-menu-tree-resized', {element: this}, true)
   }
 
+  // TODO: Test
+  optionMutated() {
+    this.changed();
+  }
+
   changed() {
     const vChildren: VDOMElement[] = this.widget ? [this.widget] : []
 

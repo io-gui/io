@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { Register, IoElement, ReactiveProperty, Property } from '@io-gui/core';
-import { WebGPURenderer, CanvasTarget, NeutralToneMapping, PerspectiveCamera, Vector2, Vector3 } from 'three/webgpu';
+import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
@@ -59,10 +59,12 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     }
     constructor(args) {
         super(args);
-        this.renderTarget = new CanvasTarget(document.createElement('canvas'));
-        this.appendChild(this.renderTarget.domElement);
         this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
         this.debounce(this.renderViewportDebounced);
+    }
+    init() {
+        this.renderTarget = new CanvasTarget(document.createElement('canvas'));
+        this.appendChild(this.renderTarget.domElement);
     }
     connectedCallback() {
         super.connectedCallback();
@@ -138,30 +140,6 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         this.viewCameras.resetOverscan();
         this.renderer.toneMapping = toneMapping;
         this.renderer.toneMappingExposure = toneMappingExposure;
-    }
-    pointerTo3D(event) {
-        const rect = event.target.getBoundingClientRect();
-        const screen = new Vector2(((event.clientX - rect.left) / rect.width) * 2 - 1, -((event.clientY - rect.top) / rect.height) * 2 + 1);
-        this.viewCameras.setOverscan(this.width, this.height, this.overscan);
-        const camera = this.viewCameras.camera;
-        const origin = new Vector3(screen.x, screen.y, -1).unproject(camera);
-        camera.updateMatrixWorld();
-        origin.applyMatrix4(camera.matrixWorld);
-        const direction = new Vector3();
-        if (camera instanceof PerspectiveCamera) {
-            direction.setFromMatrixPosition(camera.matrixWorld);
-            direction.subVectors(origin, direction).normalize();
-        }
-        else {
-            direction.set(0, 0, -1).transformDirection(camera.matrixWorld);
-        }
-        this.viewCameras.resetOverscan();
-        return {
-            screen,
-            origin,
-            direction,
-            event,
-        };
     }
     dispose() {
         delete this.applet;

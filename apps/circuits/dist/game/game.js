@@ -134,9 +134,9 @@ let Game = class Game extends ReactiveNode {
     }
     resetColors() {
         for (const line of this.lines)
-            line._color = 'white';
+            line.color = 'white';
         for (const pad of this.pads)
-            pad._color = 'white';
+            pad.color = 'white';
     }
     propagateColors() {
         this.resetColors();
@@ -152,19 +152,19 @@ let Game = class Game extends ReactiveNode {
                 const c2 = p2.color;
                 if (c1 !== 'white' && c2 !== 'white') {
                     if (c1 === c2)
-                        line._color = c1;
+                        line.color = c1;
                 }
                 else if (c1 === 'white' && c2 === 'white') {
-                    line._color = 'white';
+                    line.color = 'white';
                 }
                 else {
                     if (c1 !== 'white') {
-                        line._color = c1;
+                        line.color = c1;
                         if (p2 instanceof Pad)
                             p2.color = c1;
                     }
                     else if (c2 !== 'white') {
-                        line._color = c2;
+                        line.color = c2;
                         if (p1 instanceof Pad)
                             p1.color = c2;
                     }
@@ -181,7 +181,7 @@ let Game = class Game extends ReactiveNode {
         }
         for (const pad of this.pads) {
             const nConn = this.plotter.getLinesAtPoint(pad.pos[0], pad.pos[1]).length;
-            if (nConn !== 2 && pad._color !== 'white')
+            if (nConn !== 2 && pad.color !== 'white')
                 completed = false;
         }
         console.log('game-complete', this.currentLevel, completed);

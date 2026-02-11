@@ -1,8 +1,10 @@
 import { TerminalColor } from './terminal.js'
 
+type vec2 = [number, number]
+
 export interface LineData {
   id: number
-  pos: [number, number][]
+  pos: vec2[]
   layer: number
 }
 
@@ -20,7 +22,7 @@ export class Line {
     this._color = color
   }
 
-  constructor(id: number, pos: [number, number][], layer: number) {
+  constructor(id: number, pos: vec2[], layer: number) {
     this.id = id
     this.pos = pos
     this.layer = layer
@@ -38,7 +40,7 @@ export class Line {
     return new Line(data.id, data.pos, data.layer)
   }
 
-  hasDiagonalSegmentAt(mx: number, my: number): boolean {
+  hasDiagonalSegmentAt([mx, my]: vec2): boolean {
     const pos = this.pos
     for (let i = 1; i < pos.length; i++) {
       const ax = pos[i - 1][0]
@@ -60,9 +62,9 @@ export class Line {
    * Erase last segment if user drags back to prev node.
    * Return true if segment was added, false otherwise.
    */
-  plotSegment(x: number, y: number): boolean {
-    if (this._tryEraseLastSegment(x, y)) return true
-    if (this._tryAddNewSegment(x, y)) return true
+  plotSegment([x, y]: vec2): boolean {
+    if (this._tryEraseLastSegment([x, y])) return true
+    if (this._tryAddNewSegment([x, y])) return true
     return false
   }
 
@@ -70,7 +72,7 @@ export class Line {
    * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.
    * Returns true if nothing was done, false if path was updated.
    */
-  private _tryAddNewSegment(x: number, y: number): boolean {
+  private _tryAddNewSegment([x, y]: vec2): boolean {
     const ln = this.pos.length
     if (ln > 1) {
       if (y === this.pos[ln - 2][1] && Math.abs(x - this.pos[ln - 2][0]) === 1) {
@@ -93,7 +95,7 @@ export class Line {
   }
 
   /** Erase last segment if user drags back to prev node. */
-  private _tryEraseLastSegment(x: number, y: number): boolean {
+  private _tryEraseLastSegment([x, y]: vec2): boolean {
     const ln = this.pos.length
     if (ln < 2) return false
     if (x === this.pos[ln - 2][0] && y === this.pos[ln - 2][1]) {

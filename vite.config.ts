@@ -16,6 +16,10 @@ function packageAlias(packageName: string) {
         import.meta.url,
       ).pathname,
     },
+    {
+      find: './dist/index.js',
+      replacement: './src/index.ts',
+    },
   ]
 }
 

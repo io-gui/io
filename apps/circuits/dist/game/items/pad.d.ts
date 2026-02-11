@@ -6,7 +6,7 @@ export interface PadData {
 export declare class Pad {
     id: number;
     pos: [number, number];
-    _color: TerminalColor;
+    private _color;
     get color(): TerminalColor;
     set color(color: TerminalColor);
     constructor(id: number, pos: [number, number]);

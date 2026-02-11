@@ -78,6 +78,7 @@ class Grid extends LineSegments {
 		for ( const line of lines ) {
 			if ( line.layer === 0 ) {
 				const lastIdx = line.pos.length - 1
+        if ( line.pos.length === 1) continue
 				for ( let i = 0; i <= lastIdx; i ++ ) {
 					const pos = line.pos[ i ]
 					const key = pos[ 0 ] + ',' + pos[ 1 ]
@@ -120,7 +121,7 @@ class Grid extends LineSegments {
 			}
 		}
 
-		const isHidden = ( x: number, y: number ): boolean => {
+		const isHidden = ( [x, y]: [number, number] ): boolean => {
 			const key = x + ',' + y
 			// Rule 1: On a layer-0 line and no pad at this position
 			if ( linePointsL0.has( key ) && !padPositions.has( key ) ) return true
@@ -147,7 +148,7 @@ class Grid extends LineSegments {
 
 		let vi = 0
 
-		const pushVertex = ( x: number, y: number, c: Color, alpha: number ) => {
+		const pushVertex = ( [x, y]: [number, number], c: Color, alpha: number ) => {
 
 			const pi = vi * 3
 			const ci = vi * 4
@@ -163,18 +164,18 @@ class Grid extends LineSegments {
 		// Horizontal segments
 		for ( let iz = 0; iz <= height; iz ++ ) {
 			for ( let ix = 0; ix < width; ix ++ ) {
-				const alpha = ( isHidden( ix, iz ) || isHidden( ix + 1, iz ) ) ? 0 : 1
-				pushVertex( ix, iz, color, alpha )
-				pushVertex( ix + 1, iz, color, alpha )
+				const alpha = ( isHidden( [ix, iz] ) || isHidden( [ix + 1, iz] ) ) ? 0.15 : 1
+				pushVertex( [ix, iz], color, alpha )
+				pushVertex( [ix + 1, iz], color, alpha )
 			}
 		}
 
 		// Vertical segments
 		for ( let ix = 0; ix <= width; ix ++ ) {
 			for ( let iz = 0; iz < height; iz ++ ) {
-				const alpha = ( isHidden( ix, iz ) || isHidden( ix, iz + 1 ) ) ? 0 : 1
-				pushVertex( ix, iz, color, alpha )
-				pushVertex( ix, iz + 1, color, alpha )
+				const alpha = ( isHidden( [ix, iz] ) || isHidden( [ix, iz + 1] ) ) ? 0.15 : 1
+				pushVertex( [ix, iz], color, alpha )
+				pushVertex( [ix, iz + 1], color, alpha )
 			}
 		}
 
@@ -183,13 +184,13 @@ class Grid extends LineSegments {
 			for ( let cx = 0; cx < width; cx ++ ) {
 				const cellKey = cx + ',' + cz
 				// "\" grid diagonal: hidden if perpendicular "/" game line crosses this cell
-				const a1 = ( isHidden( cx, cz ) || isHidden( cx + 1, cz + 1 ) || cellDiagSlash.has( cellKey ) ) ? 0 : 1
-				pushVertex( cx, cz, color2, a1 )
-				pushVertex( cx + 1, cz + 1, color2, a1 )
+				const a1 = ( isHidden( [cx, cz] ) || isHidden( [cx + 1, cz + 1] ) || cellDiagSlash.has( cellKey ) ) ? 0 : 1
+				pushVertex( [cx, cz], color2, a1 )
+				pushVertex( [cx + 1, cz + 1], color2, a1 )
 				// "/" grid diagonal: hidden if perpendicular "\" game line crosses this cell
-				const a2 = ( isHidden( cx + 1, cz ) || isHidden( cx, cz + 1 ) || cellDiagBackslash.has( cellKey ) ) ? 0 : 1
-				pushVertex( cx + 1, cz, color2, a2 )
-				pushVertex( cx, cz + 1, color2, a2 )
+				const a2 = ( isHidden( [cx + 1, cz] ) || isHidden( [cx, cz + 1] ) || cellDiagBackslash.has( cellKey ) ) ? 0 : 1
+				pushVertex( [cx + 1, cz], color2, a2 )
+				pushVertex( [cx, cz + 1], color2, a2 )
 			}
 		}
 

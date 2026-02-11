@@ -36,19 +36,9 @@ export class CircuitsGame extends IoElement {
       }
     `;
     }
-    static get Listeners() {
-        return {
-            'game-complete': 'onGameComplete',
-        };
-    }
-    completeFn = null;
     constructor(args) { super(args); }
     ready() {
         this.changed();
-    }
-    onGameComplete(event) {
-        if (this.completeFn)
-            this.completeFn(event.detail.level, event.detail.completed);
     }
     changed() {
         this.render([
