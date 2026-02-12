@@ -5,6 +5,8 @@ import { COLORS, type ColorName } from './items/colors.js'
 import { Line } from './items/line.js'
 
 const SQRT_2 = Math.sqrt(2)
+const _vec2_1 = new Vector2()
+const _vec2_2 = new Vector2()
 
 export interface PointAt {
   id: number
@@ -51,10 +53,6 @@ export class Plotter extends ReactiveNode {
     return lines
   }
 
-  getLineById(id: number): Line | undefined {
-    return this.lines.find((l) => l.id === id)
-  }
-
   checkDiagonalCrossing(line: Line, point: Vector2, lastPoint: Vector2): boolean {
     for (const other of this.lines) {
       if (other.layer !== line.layer) continue
@@ -64,6 +62,54 @@ export class Plotter extends ReactiveNode {
       ) return false
     }
     return true
+  }
+
+  /**
+   * Plot a new segment on the line if direction is valid.
+   * Erase last segment if user drags back to prev node.
+   * Return true if segment was added, false otherwise.
+   */
+  private _plotSegment(line: Line, point: Vector2): boolean {
+    if (this._tryEraseLastSegment(line, point)) return true
+    if (this._tryAddNewSegment(line, point)) return true
+    return false
+  }
+
+  /**
+   * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.
+   * Returns false if nothing was done, true if segment was added.
+   */
+  private _tryAddNewSegment(line: Line, point: Vector2): boolean {
+    // Reject if segment is too long
+    if (line.last.distanceTo(point) > SQRT_2) return false
+
+    // Reroute if user went 45° backwards
+    if (line.secondLast) {
+      _vec2_1.copy(line.last).sub(line.secondLast)
+      _vec2_2.copy(point).sub(line.last)
+      if (_vec2_1.dot(_vec2_2) === -1) {
+        line.pos.pop()
+        line.pos.push(point.clone())
+        return true
+      }
+    }
+
+    // Add new segment
+    line.pos.push(point.clone())
+    return true
+  }
+
+  /**
+   * Erase last segment if user drags back to prev node.
+   * Returns true if segment was erased, false otherwise.
+   */
+  private _tryEraseLastSegment(line: Line, point: Vector2): boolean {
+    if (!line.secondLast) return false
+    if (line.secondLast.distanceTo(point) === 0) {
+      line.pos.pop()
+      return true
+    }
+    return false
   }
 
   addPad(point: Vector2, color?: ColorName, isTerminal: boolean = false): boolean {
@@ -91,16 +137,15 @@ export class Plotter extends ReactiveNode {
     this.dispatch('game-update', undefined, true)
   }
 
-  verifyLineComplete(id: number): boolean {
-    const line = this.getLineById(id)
+  verifyLineComplete(): boolean {
+    const line = this.lines[this.lines.length - 1]
     if (line) {
       const first = line.pos[0]
-      const last = line.pos[line.pos.length - 1]
+      const last = line.last
       const p1 = this.getPointAt(first)
       const p2 = this.getPointAt(last)
       if (!p1 || !p2 || (first.x === last.x && first.y === last.y)) {
-        const idx = this.lines.findIndex((l) => l.id === id)
-        if (idx !== -1) this.lines.splice(idx, 1)
+        this.lines.pop()
         return false
       }
       return true
@@ -114,7 +159,7 @@ export class Plotter extends ReactiveNode {
     return x >= 0 && x <= this.width && y >= 0 && y <= this.height
   }
 
-  addLineSegment(id: number, point: Vector2, layer: number): { added: boolean; endDrag: boolean } {
+  addLineSegment(point: Vector2, layer: number): { added: boolean; endDrag: boolean } {
     if (!this.isInBounds(point)) return { added: false, endDrag: false }
     const x = point.x
     const y = point.y
@@ -134,13 +179,13 @@ export class Plotter extends ReactiveNode {
       return { added, endDrag }
     }
 
-    const line = this.getLineById(id)
+    const line = this.lines[this.lines.length - 1]
 
     if (line) {
       // --- Extending existing line ---
 
       // Reject if diagonal would cross another diagonal on same layer
-      const lastPoint = line.pos[line.pos.length - 1]
+      const lastPoint = line.last
       if (point.distanceTo(lastPoint) === SQRT_2) {
         if (!this.checkDiagonalCrossing(line, point, lastPoint)) {
           return { added, endDrag }
@@ -148,16 +193,16 @@ export class Plotter extends ReactiveNode {
       }
 
       // Reject self-intersection (exclude last 2 points to preserve backtracking)
-      const posCount = line.pos.length
+      const posCount = line.length
       if (line.pos.some((linePoint, i) => linePoint.x === x && linePoint.y === y && i < posCount - 2)) {
         return { added, endDrag }
       }
 
-      const sameLineAtPoint = this.getLinesAtPoint(point, (line) => (line.id === id && line.layer === 0))?.[0] || null
+      const sameLineAtPoint = this.getLinesAtPoint(point, (otherline) => (otherline === line && line.layer === 0))?.[0] || null
 
       // Empty cell: allow if no foreign line occupies it (or underline layer bypasses)
       if (!padAtPoint && ((!linesAtPoint.length || sameLineAtPoint) || layer === -1)) {
-        added = line.plotSegment(point)
+        added = this._plotSegment(line, point)
       }
 
       // Reached a pad/terminal: snap to it and end drag (color must be compatible)
@@ -165,7 +210,7 @@ export class Plotter extends ReactiveNode {
         if (padAtPoint.renderColor !== COLORS.white && line.renderColor !== COLORS.white && padAtPoint.renderColor !== line.renderColor) {
           return { added: false, endDrag: false }
         }
-        added = line.plotSegment(point)
+        added = this._plotSegment(line, point)
         endDrag = true
       }
 
@@ -173,7 +218,7 @@ export class Plotter extends ReactiveNode {
       // --- Starting new line: must begin on a pad or terminal ---
 
       if (!padAtPoint) return { added: false, endDrag: false }
-      const newLine = new Line(id, [new Vector2(x, y)], layer)
+      const newLine = new Line([new Vector2(x, y)], layer)
       newLine.renderColor = padAtPoint.renderColor
       this.lines.push(newLine)
       added = true
@@ -181,7 +226,7 @@ export class Plotter extends ReactiveNode {
     }
 
     if (endDrag) {
-      this.dispatch('line-end-drag', {id}, true)
+      this.dispatch('line-end-drag', undefined, true)
     }
 
     this.dispatch('game-update', undefined, true)

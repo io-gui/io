@@ -85,7 +85,6 @@ export class CircuitsBoard extends IoElement {
   @ReactiveProperty({ type: Game })
   declare game: Game
 
-  private _currentID: number = 0
   private _dragging: boolean = false
 
   constructor(args: CircuitsBoardProps) {
@@ -142,7 +141,7 @@ export class CircuitsBoard extends IoElement {
       this.game.plotter.addPad(_posHit.clone(), this.game.drawColor, true)
     }
     if (this.game.drawMode === 'line') {
-      this.game.plotter.addLineSegment(this._currentID, _posHit.clone(), this.game.drawLayer)
+      this.game.plotter.addLineSegment(_posHit.clone(), this.game.drawLayer)
     }
     if (this.game.drawMode === 'delete') {
       this.game.plotter.delete(_posHit.clone())
@@ -161,7 +160,7 @@ export class CircuitsBoard extends IoElement {
     _posHitOld.copy(_posHit)
 
     if (this.game.drawMode === 'line' && _posRaw.distanceTo(_posHitOld) > 0) {
-      this.game.plotter.addLineSegment(this._currentID, _posHit.clone(), this.game.drawLayer)
+      this.game.plotter.addLineSegment(_posHit.clone(), this.game.drawLayer)
     }
   }
 
@@ -173,7 +172,7 @@ export class CircuitsBoard extends IoElement {
 
   onEndDrag() {
     this._dragging = false
-    if (this.game) this.game.finalizeMove(this._currentID)
+    if (this.game) this.game.finalizeMove()
     this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads)
   }
 

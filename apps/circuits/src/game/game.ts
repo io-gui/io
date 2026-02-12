@@ -219,8 +219,8 @@ export class Game extends ReactiveNode {
     this.dispatch('game-complete', { level: this.level, completed }, true)
   }
 
-  finalizeMove(lineID: number): void {
-    if (this.plotter.verifyLineComplete(lineID)) {
+  finalizeMove(): void {
+    if (this.plotter.verifyLineComplete()) {
       this.updateUndoStack()
       this.propagateColors()
       this.save()
