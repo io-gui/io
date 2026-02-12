@@ -17,8 +17,8 @@ export class Pads {
   clear(width: number, height: number) {
     this._width = width
     this._height = height
-    this._stride = width + 1
-    this._cells = new Array((width + 1) * (height + 1))
+    this._stride = width
+    this._cells = new Array(width * height)
   }
 
   load(data: PadsData = {}) {
@@ -36,8 +36,8 @@ export class Pads {
   }
 
   forEach(callback: (pad: Pad, x: number, y: number) => void) {
-    for (let y = 0; y <= this._height; y++) {
-      for (let x = 0; x <= this._width; x++) {
+    for (let y = 0; y < this._height; y++) {
+      for (let x = 0; x < this._width; x++) {
         const pad = this._cells[this._index(x, y)]
         if (pad) callback(pad, x, y)
       }
@@ -93,6 +93,6 @@ export class Pads {
   }
 
   private _inBounds(x: number, y: number) {
-    return x >= 0 && x <= this._width && y >= 0 && y <= this._height
+    return x >= 0 && x < this._width && y >= 0 && y < this._height
   }
 }

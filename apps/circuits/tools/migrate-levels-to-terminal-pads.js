@@ -50,8 +50,8 @@ for (const file of files) {
   }))
 
   const migrated = {
-    width: level.width,
-    height: level.height,
+    width: typeof level.width === 'number' ? level.width + 1 : level.width,
+    height: typeof level.height === 'number' ? level.height + 1 : level.height,
     pads,
     lines,
   }

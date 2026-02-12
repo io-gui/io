@@ -128,7 +128,7 @@ export class Plotter extends ReactiveNode {
   isInBounds(point: Vector2): boolean {
     const x = point.x
     const y = point.y
-    return x >= 0 && x <= this.width && y >= 0 && y <= this.height
+    return x >= 0 && x < this.width && y >= 0 && y < this.height
   }
 
   addLineSegment(point: Vector2, layer: number): { added: boolean; endDrag: boolean } {

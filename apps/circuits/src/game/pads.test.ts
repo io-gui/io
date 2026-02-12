@@ -1,13 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
-import { Vector2 } from 'three/webgpu'
 import { Pads } from './pads.js'
 import { Pad } from './items/pad.js'
-import { Line } from './items/line.js'
-import { Plotter } from './plotter.js'
 
 describe('Pads', () => {
   it('stores and retrieves pads by stride index', () => {
-    const pads = new Pads(4, 5)
+    const pads = new Pads(5, 6)
 
     expect(pads.addAt(2, 3)).toBe(true)
     const pad = pads.getAt(2, 3)
@@ -16,7 +13,7 @@ describe('Pads', () => {
   })
 
   it('rejects collisions and out-of-bounds writes', () => {
-    const pads = new Pads(4, 5)
+    const pads = new Pads(5, 6)
     const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
     expect(pads.addAt(1, 1)).toBe(true)
@@ -29,7 +26,7 @@ describe('Pads', () => {
   })
 
   it('deletes pads from index and value list', () => {
-    const pads = new Pads(4, 5)
+    const pads = new Pads(5, 6)
     pads.addAt(3, 2, 'red', true)
 
     expect(pads.getAt(3, 2)).toBeTruthy()
@@ -42,7 +39,7 @@ describe('Pads', () => {
       '0': {isTerminal: false},
       '29': {isTerminal: true, color: 'blue' as const},
     }
-    const pads = Pads.fromJSON(4, 5, source)
+    const pads = Pads.fromJSON(5, 6, source)
 
     expect(pads.getAt(0, 0)).toBeInstanceOf(Pad)
     expect(pads.getAt(4, 5)?.isTerminal).toBe(true)

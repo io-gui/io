@@ -50,8 +50,8 @@ export class Game extends ReactiveNode {
   declare storedState: Binding
 
   clear() {
-    this.width = 4
-    this.height = 5
+    this.width = 2;
+    this.height = 2
     this.pads = new Pads(this.width, this.height)
     this.lines = []
     this.plotter.connect(this.pads, this.lines, this.width, this.height)
@@ -116,9 +116,11 @@ export class Game extends ReactiveNode {
     const state: LevelData = JSON.parse(jsonText)
     this.width = state.width
     this.height = state.height
-    this.lines = state.lines.map((l) => Line.fromJSON(l as LineData))
     this.pads = Pads.fromJSON(this.width, this.height, state.pads)
+    this.lines = state.lines.map((l) => Line.fromJSON(l as LineData))
     this.plotter.connect(this.pads, this.lines, this.width, this.height)
+    this.undoStack = []
+    this.redoStack = []
   }
 
   toJSON(): string {

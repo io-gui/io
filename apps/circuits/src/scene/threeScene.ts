@@ -84,11 +84,13 @@ export class ThreeScene extends ThreeApplet {
   }
 
   initGrid(width: number, height: number) {
-    this.camera.aspect = width / height
+    const segmentWidth = Math.max(width - 1, 1)
+    const segmentHeight = Math.max(height - 1, 1)
+    this.camera.aspect = segmentWidth / segmentHeight
     // calculate distance to contain grid in view
     const halfFovRad = this.camera.fov * Math.PI / 360
-    const gridDistance = height / (2 * Math.tan(halfFovRad))
-    this.cameraRig.position.set(width / 2, height / 2, 0)
+    const gridDistance = segmentHeight / (2 * Math.tan(halfFovRad))
+    this.cameraRig.position.set(segmentWidth / 2, segmentHeight / 2, 0)
     this.camera.position.set(0, 0, gridDistance)
   }
   updateGrid(width: number, height: number, lines: Line[], pads: Pads) {
@@ -199,11 +201,13 @@ export class ThreeScene extends ThreeApplet {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onAnimate(delta: number, time: number) {
-    this.camera.position.x = ((this.camera.position.x * 9) - this._drag.x * 0.25 * this.grid.width) / 10
-    this.camera.position.y = ((this.camera.position.y * 9) - this._drag.y * 0.25 * this.grid.height) / 10
+    const segmentWidth = Math.max(this.grid.width - 1, 0)
+    const segmentHeight = Math.max(this.grid.height - 1, 0)
+    this.camera.position.x = ((this.camera.position.x * 9) - this._drag.x * 0.25 * segmentWidth) / 10
+    this.camera.position.y = ((this.camera.position.y * 9) - this._drag.y * 0.25 * segmentHeight) / 10
 
-    this.cameraTarget.position.x = ((this.cameraTarget.position.x * 9) - this._drag.x * 0.02 * this.grid.width) / 10
-    this.cameraTarget.position.y = ((this.cameraTarget.position.y * 9) - this._drag.y * 0.02 * this.grid.height) / 10
+    this.cameraTarget.position.x = ((this.cameraTarget.position.x * 9) - this._drag.x * 0.02 * segmentWidth) / 10
+    this.cameraTarget.position.y = ((this.cameraTarget.position.y * 9) - this._drag.y * 0.02 * segmentHeight) / 10
 
     this.camera.lookAt(_targetVector.setFromMatrixPosition(this.cameraTarget.matrixWorld))
   }

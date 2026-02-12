@@ -66,3 +66,25 @@ Missing levels will fail fetch with console warning — acceptable behavior.
 - `plotter.ts` line start + color compatibility now use `point.renderColor`.
 - `threeScene.ts` pad and terminal mesh colors now bind to `renderColor`.
 - Non-terminal pad JSON remains colorless; no persistence of propagated color.
+
+## 2026-02-12 — Grid width/height line-count semantics
+
+### [decision] Canonical dimensions represent line counts
+- In circuits runtime and level JSON, `width`/`height` now represent grid line counts (pad columns/rows), not segment counts.
+- Segment extents are derived as `width - 1` / `height - 1` in geometry/camera code.
+
+### [implementation] Runtime migration
+- `game.ts`: default grid moved from `(4, 5)` to `(5, 6)` and dimension normalization helper added.
+- `pads.ts`: storage changed from `(width + 1) * (height + 1)` to `width * height`; bounds changed to `< width`/`< height`.
+- `plotter.ts`: bounds changed to `< width`/`< height`.
+- `grid.ts`: segment formulas/loops updated to use derived segment extents from line counts.
+- `threeScene.ts`: camera framing/drag scale updated to keep previous visual behavior using segment extents.
+
+### [implementation] Data + tests
+- Migrated 35 level files in `public/levels/lvl_*.json` by incrementing `width` and `height`.
+- Updated `tools/migrate-levels-to-terminal-pads.js` to emit incremented dimensions during migration.
+- Updated `pads.test.ts` constructor/fromJSON dimensions to line-count semantics and verified passing.
+
+### [verification]
+- `pnpm exec vitest run apps/circuits/src/game/pads.test.ts` passes.
+- Running full `pnpm test -- apps/circuits/src/game/pads.test.ts` executes full repo suite and still shows unrelated existing failures in `packages/editors/src/elements/IoObject.test.ts`.

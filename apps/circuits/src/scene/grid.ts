@@ -23,11 +23,14 @@ class Grid extends LineSegments {
     this.width = width
     this.height = height
 
-    if ( width === 0 || height === 0 ) {
+    if ( width < 2 || height < 2 ) {
 			this.geometry.setAttribute( 'position', new Float32BufferAttribute( [], 3 ) )
 			this.geometry.setAttribute( 'color', new Float32BufferAttribute( [], 4 ) )
 			return
 		}
+
+    const segmentWidth = width - 1
+    const segmentHeight = height - 1
 
 		/*
 		 * Grid segment visibility algorithm
@@ -129,9 +132,9 @@ class Grid extends LineSegments {
 		const color = new Color( 0x666666 )
 		const color2 = new Color( 0x666666 )
 
-    const hSegments = width * ( height + 1 )
-		const vSegments = height * ( width + 1 )
-		const dSegments = width * height * 2
+    const hSegments = segmentWidth * height
+		const vSegments = segmentHeight * width
+		const dSegments = segmentWidth * segmentHeight * 2
 		const totalSegments = hSegments + vSegments + dSegments
 		const totalVertices = totalSegments * 2
 
@@ -154,8 +157,8 @@ class Grid extends LineSegments {
 		}
 
 		// Horizontal segments
-		for ( let iz = 0; iz <= height; iz ++ ) {
-			for ( let ix = 0; ix < width; ix ++ ) {
+		for ( let iz = 0; iz < height; iz ++ ) {
+			for ( let ix = 0; ix < segmentWidth; ix ++ ) {
 				const alpha = ( isHidden( [ix, iz] ) || isHidden( [ix + 1, iz] ) ) ? 0.15 : 1
 				pushVertex( [ix, iz], color, alpha )
 				pushVertex( [ix + 1, iz], color, alpha )
@@ -163,8 +166,8 @@ class Grid extends LineSegments {
 		}
 
 		// Vertical segments
-		for ( let ix = 0; ix <= width; ix ++ ) {
-			for ( let iz = 0; iz < height; iz ++ ) {
+		for ( let ix = 0; ix < width; ix ++ ) {
+			for ( let iz = 0; iz < segmentHeight; iz ++ ) {
 				const alpha = ( isHidden( [ix, iz] ) || isHidden( [ix, iz + 1] ) ) ? 0.15 : 1
 				pushVertex( [ix, iz], color, alpha )
 				pushVertex( [ix, iz + 1], color, alpha )
@@ -172,8 +175,8 @@ class Grid extends LineSegments {
 		}
 
 		// Diagonal segments (2 per cell: corner to corner)
-		for ( let cz = 0; cz < height; cz ++ ) {
-			for ( let cx = 0; cx < width; cx ++ ) {
+		for ( let cz = 0; cz < segmentHeight; cz ++ ) {
+			for ( let cx = 0; cx < segmentWidth; cx ++ ) {
 				const cellKey = cx + ',' + cz
 				// "\" grid diagonal: hidden if perpendicular "/" game line crosses this cell
 				const a1 = ( isHidden( [cx, cz] ) || isHidden( [cx + 1, cz + 1] ) || cellDiagSlash.has( cellKey ) ) ? 0 : 1
