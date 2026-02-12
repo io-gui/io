@@ -10,6 +10,10 @@ export class Layer {
   private _cells: (Line | undefined)[] = []
   private _lines: Line[] = []
 
+  get lines() {
+    return this._lines
+  }
+
   constructor(width: number = 2, height: number = 2, data: LayerData = []) {
     this.clear(width, height)
     this.load(data)
@@ -32,15 +36,6 @@ export class Layer {
     })
   }
 
-  // forEach(callback: (pad: Pad, x: number, y: number) => void) {
-  //   for (let y = 0; y < this._height; y++) {
-  //     for (let x = 0; x < this._width; x++) {
-  //       const pad = this._cells[this._index(x, y)]
-  //       if (pad) callback(pad, x, y)
-  //     }
-  //   }
-  // }
-
   getAt(x: number, y: number) {
     if (!this._inBounds(x, y)) return
     return this._cells[this._index(x, y)]
@@ -54,7 +49,7 @@ export class Layer {
       return false
     }
     const index = this._index(x, y)
-    const line = new Line([new Vector2(x, y)], 0)
+    const line = new Line([new Vector2(x, y)])
     this._lines.push(line)
     this._cells[index] = line
     return true
@@ -90,9 +85,10 @@ export class Layer {
   deleteAt(x: number, y: number) {
     if (!this._inBounds(x, y)) return false
     const index = this._index(x, y)
-    const line = this._lines[index]
+    const line = this._cells[index]
     if (!line) return false
-    this._lines.splice(index, 1)
+    const lineIndex = this._lines.indexOf(line)
+    if (lineIndex !== -1) this._lines.splice(lineIndex, 1)
     line.pos.forEach((point) => {
       this._cells[this._index(point.x, point.y)] = undefined
     })

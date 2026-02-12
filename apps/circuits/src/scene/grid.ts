@@ -18,7 +18,9 @@ class Grid extends LineSegments {
 
 	}
 
-	update( width: number, height: number, lines: Line[], pads: Pads ) {
+	update( width: number, height: number, layer0Lines: Line[], layer1Lines: Line[], pads: Pads ) {
+
+    const lines = [...layer0Lines, ...layer1Lines]
 
     this.width = width
     this.height = height
@@ -74,7 +76,8 @@ class Grid extends LineSegments {
 		})
 
 		for ( const line of lines ) {
-			if ( line.layer === 1 ) {
+      const layer = layer0Lines.includes(line) ? 0 : 1
+			if ( layer === 1 ) {
 				const lastIdx = line.pos.length - 1
         if ( line.pos.length === 1) continue
 				for ( let i = 0; i <= lastIdx; i ++ ) {

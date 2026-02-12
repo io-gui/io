@@ -1,9 +1,10 @@
 import { Register, ReactiveNode, ReactiveProperty, Property, Storage as $, Binding } from '@io-gui/core'
 import { Vector2 } from 'three/webgpu'
-import { Line, type LineData } from './items/line.js'
+import { type Line } from './items/line.js'
 import { Plotter } from './plotter.js'
 import { COLORS } from './items/colors.js'
 import { Pads, type PadsData } from './pads.js'
+import { Layer, type LayerData } from './layer.js'
 
 export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete'
 
@@ -11,7 +12,8 @@ interface LevelData {
   width: number
   height: number
   pads: PadsData
-  lines: LineData[]
+  layer0: LayerData
+  layer1: LayerData
 }
 
 /**
@@ -21,7 +23,7 @@ interface LevelData {
  */
 @Register
 export class Game extends ReactiveNode {
-  
+
   @ReactiveProperty({type: Vector2, init: null})
   declare completionPoint: Vector2
 
@@ -30,9 +32,12 @@ export class Game extends ReactiveNode {
 
   @ReactiveProperty({type: Pads, init: null})
   declare pads: Pads
-  
-  @ReactiveProperty({type: Array})
-  declare lines: Line[]
+
+  @ReactiveProperty({type: Layer, init: null})
+  declare layer0: Layer
+
+  @ReactiveProperty({type: Layer, init: null})
+  declare layer1: Layer
 
   @ReactiveProperty({type: Number})
   declare width: number
@@ -49,12 +54,17 @@ export class Game extends ReactiveNode {
   @Property($({key: 'null-level-state', value: {}, storage: 'local'}))
   declare storedState: Binding
 
+  get lines(): Line[] {
+    return [...this.layer0.lines, ...this.layer1.lines]
+  }
+
   clear() {
-    this.width = 2;
+    this.width = 2
     this.height = 2
     this.pads = new Pads(this.width, this.height)
-    this.lines = []
-    this.plotter.connect(this.pads, this.lines, this.width, this.height)
+    this.layer0 = new Layer(this.width, this.height)
+    this.layer1 = new Layer(this.width, this.height)
+    this.plotter.connect(this.pads, this.layer0.lines, this.layer1.lines, this.width, this.height)
     this.redoStack = []
     this.undoStack = []
   }
@@ -108,7 +118,8 @@ export class Game extends ReactiveNode {
       width: this.width,
       height: this.height,
       pads: this.pads.toJSON(),
-      lines: this.lines.map((l) => l.toJSON()),
+      layer0: this.layer0.toJSON(),
+      layer1: this.layer1.toJSON(),
     }
   }
 
@@ -117,8 +128,9 @@ export class Game extends ReactiveNode {
     this.width = state.width
     this.height = state.height
     this.pads = Pads.fromJSON(this.width, this.height, state.pads)
-    this.lines = state.lines.map((l) => Line.fromJSON(l as LineData))
-    this.plotter.connect(this.pads, this.lines, this.width, this.height)
+    this.layer0 = Layer.fromJSON(this.width, this.height, state.layer0)
+    this.layer1 = Layer.fromJSON(this.width, this.height, state.layer1)
+    this.plotter.connect(this.pads, this.layer0.lines, this.layer1.lines, this.width, this.height)
     this.undoStack = []
     this.redoStack = []
   }
@@ -128,7 +140,8 @@ export class Game extends ReactiveNode {
       width: this.width,
       height: this.height,
       pads: this.pads.toJSON(),
-      lines: this.lines.map((l) => l.toJSON()),
+      layer0: this.layer0.toJSON(),
+      layer1: this.layer1.toJSON(),
     })
   }
 
@@ -162,8 +175,8 @@ export class Game extends ReactiveNode {
   }
 
   resetColors(): void {
-    this.lines.forEach((line) => line.resetColor)
-    this.pads.forEach((pad) => pad.resetColor)
+    this.lines.forEach((line) => line.resetColor())
+    this.pads.forEach((pad) => pad.resetColor())
   }
 
   propagateColors(): void {

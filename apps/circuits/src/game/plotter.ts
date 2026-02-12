@@ -18,13 +18,20 @@ export class Plotter extends ReactiveNode {
   width = 0
   height = 0
   pads: Pads = new Pads(0, 0)
-  lines: Line[] = []
+  layer0Lines: Line[] = []
+  layer1Lines: Line[] = []
+  activeLayer = 0
 
-  connect(pads: Pads, lines: Line[], width: number, height: number) {
+  get lines(): Line[] {
+    return [...this.layer0Lines, ...this.layer1Lines]
+  }
+
+  connect(pads: Pads, layer0Lines: Line[], layer1Lines: Line[], width: number, height: number) {
     this.width = width
     this.height = height
     this.pads = pads
-    this.lines = lines
+    this.layer0Lines = layer0Lines
+    this.layer1Lines = layer1Lines
   }
 
   getLinesAtPoint(point: Vector2, filter?: (line: Line) => boolean): Line[] {
@@ -41,7 +48,9 @@ export class Plotter extends ReactiveNode {
 
   checkDiagonalCrossing(line: Line, point: Vector2, lastPoint: Vector2): boolean {
     for (const other of this.lines) {
-      if (other.layer !== line.layer) continue
+      const layer = this.layer0Lines.includes(line) ? 0 : 1
+      const otherLayer = this.layer0Lines.includes(other) ? 0 : 1
+      if (layer !== otherLayer) continue
       if (
         other.hasSegmentAt(new Vector2(point.x, lastPoint.y)) &&
         other.hasSegmentAt(new Vector2(lastPoint.x, point.y))
@@ -101,19 +110,27 @@ export class Plotter extends ReactiveNode {
   delete(point: Vector2) {
     const x = point.x
     const y = point.y
-    const lineIdx = this.lines.findIndex((l) =>
-      l.pos.some((linePoint) => linePoint.x === x && linePoint.y === y),
+    const layer0Index = this.layer0Lines.findIndex((line) =>
+      line.pos.some((linePoint) => linePoint.x === x && linePoint.y === y),
     )
-    if (lineIdx !== -1) {
-      this.lines.splice(lineIdx, 1)
+    if (layer0Index !== -1) {
+      this.layer0Lines.splice(layer0Index, 1)
+    }
+    const layer1Index = this.layer1Lines.findIndex((line) =>
+      line.pos.some((linePoint) => linePoint.x === x && linePoint.y === y),
+    )
+    if (layer1Index !== -1) {
+      this.layer1Lines.splice(layer1Index, 1)
     }
     this.dispatch('game-update', undefined, true)
   }
 
   finalizeLine(): boolean {
-    const line = this.lines[this.lines.length - 1]
+    const activeLines = this.activeLayer === 0 ? this.layer0Lines : this.layer1Lines
+    const line = activeLines[activeLines.length - 1]
+    if (!line) return false
     const complete = this.isLineComplete(line)
-    if (!complete) this.lines.pop()
+    if (!complete) activeLines.pop()
     return complete
   }
 
@@ -133,13 +150,21 @@ export class Plotter extends ReactiveNode {
 
   addLineSegment(point: Vector2, layer: number): { added: boolean; endDrag: boolean } {
     if (!this.isInBounds(point)) return { added: false, endDrag: false }
+    this.activeLayer = layer
     const x = point.x
     const y = point.y
+    const activeLines = layer === 0 ? this.layer0Lines : this.layer1Lines
+    const topLayerLines = this.layer1Lines
+    const underLayerLines = this.layer0Lines
 
     // Lookup what's at target cell
     const padAtPoint = this.pads.getAt(point.x, point.y)
-    const linesAtPoint = this.getLinesAtPoint(point, (line) => (line.layer === 1))
-    const underlineLinesAtPoint = this.getLinesAtPoint(point, (line) => line.layer === 0)
+    const linesAtPoint = topLayerLines.filter((line) =>
+      line.pos.some((linePoint) => linePoint.x === x && linePoint.y === y),
+    )
+    const underlineLinesAtPoint = underLayerLines.filter((line) =>
+      line.pos.some((linePoint) => linePoint.x === x && linePoint.y === y),
+    )
     // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
     const connectionLimit = padAtPoint ? (padAtPoint.isTerminal ? 1 : 2) : 0
 
@@ -151,7 +176,7 @@ export class Plotter extends ReactiveNode {
       return { added, endDrag }
     }
 
-    const lastLine = this.lines[this.lines.length - 1]
+    const lastLine = activeLines[activeLines.length - 1]
     const line = lastLine && !this.isLineComplete(lastLine) ? lastLine : undefined
 
     if (line) {
@@ -171,7 +196,7 @@ export class Plotter extends ReactiveNode {
         return { added, endDrag }
       }
 
-      const sameLineAtPoint = this.getLinesAtPoint(point, (otherline) => (otherline === line && line.layer === 1))?.[0] || null
+      const sameLineAtPoint = linesAtPoint.find((otherline) => otherline === line) || null
 
       // Empty cell: allow if no foreign line occupies it (or underline layer bypasses)
       if (!padAtPoint && ((!linesAtPoint.length || sameLineAtPoint) || layer === 0)) {
@@ -191,9 +216,9 @@ export class Plotter extends ReactiveNode {
       // --- Starting new line: must begin on a pad or terminal ---
 
       if (!padAtPoint) return { added: false, endDrag: false }
-      const newLine = new Line([new Vector2(x, y)], layer)
+      const newLine = new Line([new Vector2(x, y)])
       newLine.renderColor = padAtPoint.renderColor
-      this.lines.push(newLine)
+      activeLines.push(newLine)
       added = true
 
     }

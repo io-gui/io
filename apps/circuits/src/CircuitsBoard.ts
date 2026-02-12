@@ -89,7 +89,7 @@ export class CircuitsBoard extends IoElement {
   private _dragging: boolean = false
   drawMode: DrawMode = 'line'
   drawColor: ColorName = 'white'
-  drawLayer = 0
+  drawLayer = 1
 
 
   constructor(args: CircuitsBoardProps) {
@@ -105,10 +105,10 @@ export class CircuitsBoard extends IoElement {
     this.drawLayer = 0
   };
   onGameUpdate() {
-    this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads)
+    this.applet.updateGrid(this.game.width, this.game.height, this.game.layer0.lines, this.game.layer1.lines, this.game.pads)
     this.applet.updatePads(this.game.pads)
     this.applet.updateTerminals(this.game.pads)
-    this.applet.updateLines(this.game.lines)
+    this.applet.updateLines(this.game.layer0.lines, this.game.layer1.lines)
     // TODO: hmm?
     this.applet.dispatch('three-applet-needs-render', undefined, true)
   };
@@ -181,7 +181,7 @@ export class CircuitsBoard extends IoElement {
   onEndDrag() {
     this._dragging = false
     if (this.game) this.game.finalizeMove()
-    this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads)
+    this.applet.updateGrid(this.game.width, this.game.height, this.game.layer0.lines, this.game.layer1.lines, this.game.pads)
   }
 
   onUndo() {

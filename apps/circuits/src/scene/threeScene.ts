@@ -93,8 +93,8 @@ export class ThreeScene extends ThreeApplet {
     this.cameraRig.position.set(segmentWidth / 2, segmentHeight / 2, 0)
     this.camera.position.set(0, 0, gridDistance)
   }
-  updateGrid(width: number, height: number, lines: Line[], pads: Pads) {
-    this.grid.update(width, height, lines, pads)
+  updateGrid(width: number, height: number, layer0Lines: Line[], layer1Lines: Line[], pads: Pads) {
+    this.grid.update(width, height, layer0Lines, layer1Lines, pads)
   }
 
   // TODO: Fix empty instanced arrays
@@ -148,7 +148,8 @@ export class ThreeScene extends ThreeApplet {
     if (this.terminals.instanceColor) this.terminals.instanceColor.needsUpdate = true
     this.scene.add(this.terminals)
   }
-  updateLines(lines: Line[]) {
+  updateLines(layer0Lines: Line[], layer1Lines: Line[]) {
+    const lines = [...layer0Lines, ...layer1Lines]
     if (this.lines.parent) {
       this.scene.remove(this.lines)
     }
@@ -163,11 +164,12 @@ export class ThreeScene extends ThreeApplet {
     let idx = 0
     for (const line of lines) {
       lineColor.copy(line.renderColor)
-      if (line.layer === 0) {
+      const layer = layer0Lines.includes(line) ? 0 : 1
+      if (layer === 0) {
         lineColor.multiplyScalar(LINE_LAYER_MINUS_ONE_COLOR_FACTOR)
       }
       const pos = line.pos
-      const isBehind = line.layer === 0
+      const isBehind = layer === 0
       const widthScale = isBehind ? LINE_LAYER_MINUS_ONE_WIDTH_FACTOR : 1
       const segmentZ = isBehind ? LINE_LAYER_BEHIND_Z : 0
       for (let j = 0; j < pos.length - 1; j++) {

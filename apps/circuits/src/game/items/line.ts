@@ -1,35 +1,26 @@
 import { Color, Vector2 } from 'three/webgpu'
 import { COLORS } from './colors.js'
 
-export interface LineData {
-  pos: [number, number][]
-  layer: number
-}
+export type LineData = [number, number][]
 
 export class Line {
   public pos: Vector2[]
-  public layer: number
   public renderColor: Color
   public isFinalized: boolean
 
-  constructor(pos: Vector2[], layer: number, isFinalized: boolean = false) {
+  constructor(pos: Vector2[], isFinalized: boolean = false) {
     this.pos = pos
-    this.layer = layer
     this.renderColor = COLORS.white
     this.isFinalized = isFinalized
   }
 
   toJSON(): LineData {
-    return {
-      pos: this.pos.map((point) => [point.x, point.y]),
-      layer: this.layer,
-    }
+    return this.pos.map((point) => [point.x, point.y])
   }
 
   static fromJSON(data: LineData): Line {
     return new Line(
-      data.pos.map((point) => new Vector2(point[0], point[1])),
-      data.layer,
+      data.map((point) => new Vector2(point[0], point[1])),
       true
     )
   }
