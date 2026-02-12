@@ -153,6 +153,14 @@ export class Plotter extends ReactiveNode {
     return false
   }
 
+  private _isLineComplete(line: Line): boolean {
+    const first = line.pos[0]
+    const last = line.last
+    const p1 = this.getPointAt(first)
+    const p2 = this.getPointAt(last)
+    return Boolean(p1 && p2 && (first.x !== last.x || first.y !== last.y))
+  }
+
   isInBounds(point: Vector2): boolean {
     const x = point.x
     const y = point.y
@@ -179,7 +187,8 @@ export class Plotter extends ReactiveNode {
       return { added, endDrag }
     }
 
-    const line = this.lines[this.lines.length - 1]
+    const lastLine = this.lines[this.lines.length - 1]
+    const line = lastLine && !this._isLineComplete(lastLine) ? lastLine : undefined
 
     if (line) {
       // --- Extending existing line ---
