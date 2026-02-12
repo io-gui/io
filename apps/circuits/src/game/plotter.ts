@@ -67,12 +67,12 @@ export class Plotter extends ReactiveNode {
    */
   private _tryAddNewSegment(line: Line, point: Vector2): boolean {
     // Reject if segment is too long
-    if (line.last.distanceTo(point) > SQRT_2) return false
+    if (line.lastPt.distanceTo(point) > SQRT_2) return false
 
     // Reroute if user went 45° backwards
-    if (line.secondLast) {
-      _vec2_1.copy(line.last).sub(line.secondLast)
-      _vec2_2.copy(point).sub(line.last)
+    if (line.secondLastPt) {
+      _vec2_1.copy(line.lastPt).sub(line.secondLastPt)
+      _vec2_2.copy(point).sub(line.lastPt)
       if (_vec2_1.dot(_vec2_2) === -1) {
         line.pos.pop()
         line.pos.push(point.clone())
@@ -90,8 +90,8 @@ export class Plotter extends ReactiveNode {
    * Returns true if segment was erased, false otherwise.
    */
   private _tryEraseLastSegment(line: Line, point: Vector2): boolean {
-    if (!line.secondLast) return false
-    if (line.secondLast.distanceTo(point) === 0) {
+    if (!line.secondLastPt) return false
+    if (line.secondLastPt.distanceTo(point) === 0) {
       line.pos.pop()
       return true
     }
@@ -119,7 +119,7 @@ export class Plotter extends ReactiveNode {
 
   private isLineComplete(line: Line): boolean {
     const first = line.pos[0]
-    const last = line.last
+    const last = line.lastPt
     const p1 = this.pads.getAt(first.x, first.y)
     const p2 = this.pads.getAt(last.x, last.y)
     return Boolean(p1 && p2 && (first.x !== last.x || first.y !== last.y))
@@ -138,8 +138,8 @@ export class Plotter extends ReactiveNode {
 
     // Lookup what's at target cell
     const padAtPoint = this.pads.getAt(point.x, point.y)
-    const linesAtPoint = this.getLinesAtPoint(point, (line) => (line.layer === 0))
-    const underlineLinesAtPoint = this.getLinesAtPoint(point, (line) => line.layer === -1)
+    const linesAtPoint = this.getLinesAtPoint(point, (line) => (line.layer === 1))
+    const underlineLinesAtPoint = this.getLinesAtPoint(point, (line) => line.layer === 0)
     // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
     const connectionLimit = padAtPoint ? (padAtPoint.isTerminal ? 1 : 2) : 0
 
@@ -158,7 +158,7 @@ export class Plotter extends ReactiveNode {
       // --- Extending existing line ---
 
       // Reject if diagonal would cross another diagonal on same layer
-      const lastPoint = line.last
+      const lastPoint = line.lastPt
       if (point.distanceTo(lastPoint) === SQRT_2) {
         if (!this.checkDiagonalCrossing(line, point, lastPoint)) {
           return { added, endDrag }
@@ -171,10 +171,10 @@ export class Plotter extends ReactiveNode {
         return { added, endDrag }
       }
 
-      const sameLineAtPoint = this.getLinesAtPoint(point, (otherline) => (otherline === line && line.layer === 0))?.[0] || null
+      const sameLineAtPoint = this.getLinesAtPoint(point, (otherline) => (otherline === line && line.layer === 1))?.[0] || null
 
       // Empty cell: allow if no foreign line occupies it (or underline layer bypasses)
-      if (!padAtPoint && ((!linesAtPoint.length || sameLineAtPoint) || layer === -1)) {
+      if (!padAtPoint && ((!linesAtPoint.length || sameLineAtPoint) || layer === 0)) {
         added = this._plotSegment(line, point)
       }
 

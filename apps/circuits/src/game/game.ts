@@ -28,7 +28,7 @@ export class Game extends ReactiveNode {
   @ReactiveProperty({value: '', type: String})
   declare level: string
 
-  @ReactiveProperty({type: Pads, init: [0, 0]})
+  @ReactiveProperty({type: Pads, init: null})
   declare pads: Pads
   
   @ReactiveProperty({type: Array})

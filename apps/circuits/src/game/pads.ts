@@ -9,7 +9,7 @@ export class Pads {
   private _stride = 0
   private _cells: (Pad | undefined)[] = []
 
-  constructor(width: number, height: number, data: PadsData = {}) {
+  constructor(width: number = 2, height: number = 2, data: PadsData = {}) {
     this.clear(width, height)
     this.load(data)
   }
@@ -50,27 +50,21 @@ export class Pads {
   }
 
   addAt(x: number, y: number, color?: ColorName, isTerminal: boolean = false) {
-    debug: {
-      if (!Number.isInteger(x) || !Number.isInteger(y)) {
-        console.error('Pad position must be integer', x, y)
-      }
-      if (!this._inBounds(x, y)) {
-        console.error('Pad out of bounds', x, y)
-      }
-    }
+    if (!this._areIntegers(x, y)) return false
     if (!this._inBounds(x, y)) return false
     const index = this._index(x, y)
-    if (this._cells[index]) return false
-    const pad = new Pad(isTerminal, color)
-    this._cells[index] = pad
+    if (this._cells[index]) {
+      console.log('Pad already exists', x, y)
+      return false
+    }
+    this._cells[index] = new Pad(isTerminal, color)
     return true
   }
 
   deleteAt(x: number, y: number) {
     if (!this._inBounds(x, y)) return false
     const index = this._index(x, y)
-    const pad = this._cells[index]
-    if (!pad) return false
+    if (!this._cells[index]) return false
     this._cells[index] = undefined
     return true
   }
@@ -93,6 +87,16 @@ export class Pads {
   }
 
   private _inBounds(x: number, y: number) {
-    return x >= 0 && x < this._width && y >= 0 && y < this._height
+    const inBounds = x >= 0 && x < this._width && y >= 0 && y < this._height
+    if (!inBounds) console.log('Pad out of bounds', x, y)
+    return inBounds
+  }
+
+  private _areIntegers(x: number, y: number) {
+    if (!Number.isInteger(x) || !Number.isInteger(y)) {
+      console.log('Pad position must be integer', x, y)
+      return false
+    }
+    return true
   }
 }

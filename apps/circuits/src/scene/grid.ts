@@ -74,7 +74,7 @@ class Grid extends LineSegments {
 		})
 
 		for ( const line of lines ) {
-			if ( line.layer === 0 ) {
+			if ( line.layer === 1 ) {
 				const lastIdx = line.pos.length - 1
         if ( line.pos.length === 1) continue
 				for ( let i = 0; i <= lastIdx; i ++ ) {

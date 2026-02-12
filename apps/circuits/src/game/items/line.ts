@@ -10,11 +10,13 @@ export class Line {
   public pos: Vector2[]
   public layer: number
   public renderColor: Color
+  public isFinalized: boolean
 
-  constructor(pos: Vector2[], layer: number) {
+  constructor(pos: Vector2[], layer: number, isFinalized: boolean = false) {
     this.pos = pos
     this.layer = layer
     this.renderColor = COLORS.white
+    this.isFinalized = isFinalized
   }
 
   toJSON(): LineData {
@@ -28,6 +30,7 @@ export class Line {
     return new Line(
       data.pos.map((point) => new Vector2(point[0], point[1])),
       data.layer,
+      true
     )
   }
 
@@ -35,11 +38,15 @@ export class Line {
     return this.pos.length
   }
 
-  get last(): Vector2 {
+  get firstPt(): Vector2 {
+    return this.pos[0]
+  }
+
+  get lastPt(): Vector2 {
     return this.pos[this.length - 1]
   }
 
-  get secondLast(): Vector2 {
+  get secondLastPt(): Vector2 {
     return this.pos[this.length - 2]
   }
 
@@ -54,5 +61,9 @@ export class Line {
 
   resetColor() {
     this.renderColor = COLORS.white
+  }
+
+  finalize() {
+    this.isFinalized = true
   }
 }

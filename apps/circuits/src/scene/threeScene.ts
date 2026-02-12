@@ -163,11 +163,11 @@ export class ThreeScene extends ThreeApplet {
     let idx = 0
     for (const line of lines) {
       lineColor.copy(line.renderColor)
-      if (line.layer === -1) {
+      if (line.layer === 0) {
         lineColor.multiplyScalar(LINE_LAYER_MINUS_ONE_COLOR_FACTOR)
       }
       const pos = line.pos
-      const isBehind = line.layer === -1
+      const isBehind = line.layer === 0
       const widthScale = isBehind ? LINE_LAYER_MINUS_ONE_WIDTH_FACTOR : 1
       const segmentZ = isBehind ? LINE_LAYER_BEHIND_Z : 0
       for (let j = 0; j < pos.length - 1; j++) {
