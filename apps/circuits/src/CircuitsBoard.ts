@@ -7,10 +7,11 @@ import {
 } from '@io-gui/core'
 import { ioButton } from '@io-gui/inputs'
 import { Vector2 } from 'three/webgpu'
-import { Game } from './game/game.js'
+import { DrawMode, Game } from './game/game.js'
 import { ThreeScene } from './scene/threeScene.js'
 import { ioThreeViewport, Pointer3D } from '@io-gui/three'
 import { PointerTool } from './tools/pointerTool.js'
+import { ColorName } from './game/items/colors.js'
 
 let _posRaw = new Vector2()
 const _posHitOld = new Vector2()
@@ -79,13 +80,17 @@ export class CircuitsBoard extends IoElement {
   }
 
   // TODO: Move applet to CircuitsApp
-  @ReactiveProperty({type: ThreeScene, init: {isPlaying: true}})
+  @ReactiveProperty({type: ThreeScene, init: null})
   declare applet: ThreeScene
 
   @ReactiveProperty({ type: Game })
   declare game: Game
 
   private _dragging: boolean = false
+  drawMode: DrawMode = 'line'
+  drawColor: ColorName = 'white'
+  drawLayer = 0
+
 
   constructor(args: CircuitsBoardProps) {
     super(args)
@@ -94,6 +99,10 @@ export class CircuitsBoard extends IoElement {
   onGameInit() {
     this.onGameUpdate()
     this.applet.initGrid(this.game.width, this.game.height)
+
+    this.drawMode = 'line'
+    this.drawColor = 'white'
+    this.drawLayer = 0
   };
   onGameUpdate() {
     this.applet.updateGrid(this.game.width, this.game.height, this.game.lines, this.game.pads)
@@ -132,19 +141,18 @@ export class CircuitsBoard extends IoElement {
 
     this.applet.updateDrag(event.detail[0].screen, event.detail[0].screenStart)
 
-    this._currentID = Math.floor(Math.random() * 100000)
-
-    if (this.game.drawMode === 'pad') {
-      this.game.plotter.addPad(_posHit.clone())
+    if (this.drawMode === 'pad') {
+      this.game.pads.addAt(_posHit.x, _posHit.y, undefined, false)
     }
-    if (this.game.drawMode === 'terminal') {
-      this.game.plotter.addPad(_posHit.clone(), this.game.drawColor, true)
+    if (this.drawMode === 'terminal') {
+      this.game.pads.addAt(_posHit.x, _posHit.y, this.drawColor, true)
     }
-    if (this.game.drawMode === 'line') {
-      this.game.plotter.addLineSegment(_posHit.clone(), this.game.drawLayer)
+    if (this.drawMode === 'line') {
+      this.game.plotter.addLineSegment(_posHit.clone(), this.drawLayer)
     }
-    if (this.game.drawMode === 'delete') {
+    if (this.drawMode === 'delete') {
       this.game.plotter.delete(_posHit.clone())
+      this.game.pads.deleteAt(_posHit.x, _posHit.y)
     }
   }
 
@@ -159,8 +167,8 @@ export class CircuitsBoard extends IoElement {
     }
     _posHitOld.copy(_posHit)
 
-    if (this.game.drawMode === 'line' && _posRaw.distanceTo(_posHitOld) > 0) {
-      this.game.plotter.addLineSegment(_posHit.clone(), this.game.drawLayer)
+    if (this.drawMode === 'line' && _posRaw.distanceTo(_posHitOld) > 0) {
+      this.game.plotter.addLineSegment(_posHit.clone(), this.drawLayer)
     }
   }
 

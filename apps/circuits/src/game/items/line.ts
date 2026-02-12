@@ -51,4 +51,8 @@ export class Line {
     }
     return false
   }
+
+  resetColor() {
+    this.renderColor = COLORS.white
+  }
 }

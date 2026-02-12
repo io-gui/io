@@ -1,6 +1,6 @@
 import { LineSegments, LineBasicMaterial, Float32BufferAttribute, BufferGeometry, Color, AdditiveBlending } from 'three/webgpu'
 import type { Line } from '../game/items/line.js'
-import type { Pad } from '../game/items/pad.js'
+import type { Pads } from '../game/pads.js'
 
 class Grid extends LineSegments {
 
@@ -18,7 +18,7 @@ class Grid extends LineSegments {
 
 	}
 
-	update( width: number, height: number, lines: Line[], pads: Pad[] ) {
+	update( width: number, height: number, lines: Line[], pads: Pads ) {
 
     this.width = width
     this.height = height
@@ -63,12 +63,12 @@ class Grid extends LineSegments {
 		const cellDiagBackslash = new Set<string>()
 		const cellDiagSlash = new Set<string>()
 
-		for ( const pad of pads ) {
-			const key = pad.pos.x + ',' + pad.pos.y
+		pads.forEach((pad, x, y) => {
+			const key = x + ',' + y
 			padPositions.add( key )
 			padConnectionCounts.set( key, 0 )
 			if ( pad.isTerminal ) terminalPadPositions.add( key )
-		}
+		})
 
 		for ( const line of lines ) {
 			if ( line.layer === 0 ) {

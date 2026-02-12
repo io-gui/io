@@ -1,25 +1,15 @@
 {
   "width": 4,
   "height": 5,
-  "pads": [
-    {
-      "id": 44483,
-      "pos": [
-        2,
-        1
-      ],
-      "color": "blue",
-      "isTerminal": true
+  "pads": {
+    "7": {
+      "isTerminal": true,
+      "color": "blue"
     },
-    {
-      "id": 62535,
-      "pos": [
-        2,
-        4
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "22": {
+      "isTerminal": true,
+      "color": "blue"
     }
-  ],
+  },
   "lines": []
 }

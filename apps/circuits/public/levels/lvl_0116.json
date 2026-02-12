@@ -1,117 +1,56 @@
 {
   "width": 6,
   "height": 8,
-  "pads": [
-    {
-      "id": 8541,
-      "pos": [
-        1,
-        8
-      ]
+  "pads": {
+    "0": {
+      "isTerminal": false
     },
-    {
-      "id": 24285,
-      "pos": [
-        1,
-        4
-      ]
+    "3": {
+      "isTerminal": false
     },
-    {
-      "id": 68841,
-      "pos": [
-        1,
-        6
-      ]
+    "6": {
+      "isTerminal": true,
+      "color": "green"
     },
-    {
-      "id": 68985,
-      "pos": [
-        4,
-        4
-      ]
+    "8": {
+      "isTerminal": true,
+      "color": "blue"
     },
-    {
-      "id": 76781,
-      "pos": [
-        0,
-        6
-      ]
+    "19": {
+      "isTerminal": false
     },
-    {
-      "id": 76906,
-      "pos": [
-        6,
-        6
-      ]
+    "20": {
+      "isTerminal": false
     },
-    {
-      "id": 82123,
-      "pos": [
-        6,
-        2
-      ]
+    "29": {
+      "isTerminal": false
     },
-    {
-      "id": 82346,
-      "pos": [
-        0,
-        0
-      ]
+    "32": {
+      "isTerminal": false
     },
-    {
-      "id": 83112,
-      "pos": [
-        5,
-        2
-      ]
+    "42": {
+      "isTerminal": false
     },
-    {
-      "id": 92257,
-      "pos": [
-        3,
-        0
-      ]
+    "43": {
+      "isTerminal": false
     },
-    {
-      "id": 10778,
-      "pos": [
-        6,
-        0
-      ],
-      "color": "green",
-      "isTerminal": true
+    "48": {
+      "isTerminal": false
     },
-    {
-      "id": 19312,
-      "pos": [
-        4,
-        8
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "57": {
+      "isTerminal": false
     },
-    {
-      "id": 43908,
-      "pos": [
-        3,
-        8
-      ],
-      "color": "green",
-      "isTerminal": true
+    "59": {
+      "isTerminal": true,
+      "color": "green"
     },
-    {
-      "id": 60654,
-      "pos": [
-        1,
-        1
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "60": {
+      "isTerminal": true,
+      "color": "blue"
     }
-  ],
+  },
   "lines": [
     {
-      "id": 26118,
       "pos": [
         [
           4,
@@ -137,7 +76,6 @@
       "layer": -1
     },
     {
-      "id": 34025,
       "pos": [
         [
           3,
@@ -187,7 +125,6 @@
       "layer": -1
     },
     {
-      "id": 59653,
       "pos": [
         [
           5,
@@ -241,7 +178,6 @@
       "layer": 0
     },
     {
-      "id": 77822,
       "pos": [
         [
           0,
@@ -291,7 +227,6 @@
       "layer": 0
     },
     {
-      "id": 95036,
       "pos": [
         [
           1,

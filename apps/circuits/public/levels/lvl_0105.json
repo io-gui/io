@@ -1,57 +1,30 @@
 {
   "width": 4,
   "height": 5,
-  "pads": [
-    {
-      "id": 3147,
-      "pos": [
-        3,
-        2
-      ]
+  "pads": {
+    "2": {
+      "isTerminal": true,
+      "color": "blue"
     },
-    {
-      "id": 65576,
-      "pos": [
-        2,
-        1
-      ]
+    "7": {
+      "isTerminal": false
     },
-    {
-      "id": 88122,
-      "pos": [
-        3,
-        4
-      ]
+    "10": {
+      "isTerminal": false
     },
-    {
-      "id": 95763,
-      "pos": [
-        0,
-        2
-      ]
+    "13": {
+      "isTerminal": false
     },
-    {
-      "id": 27979,
-      "pos": [
-        2,
-        5
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "23": {
+      "isTerminal": false
     },
-    {
-      "id": 52153,
-      "pos": [
-        2,
-        0
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "27": {
+      "isTerminal": true,
+      "color": "blue"
     }
-  ],
+  },
   "lines": [
     {
-      "id": 9633,
       "pos": [
         [
           2,
@@ -97,7 +70,6 @@
       "layer": 0
     },
     {
-      "id": 31321,
       "pos": [
         [
           3,

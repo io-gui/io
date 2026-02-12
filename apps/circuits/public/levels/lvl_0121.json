@@ -1,103 +1,50 @@
 {
   "width": 4,
   "height": 6,
-  "pads": [
-    {
-      "id": 13901,
-      "pos": [
-        2,
-        0
-      ]
+  "pads": {
+    "2": {
+      "isTerminal": false
     },
-    {
-      "id": 18589,
-      "pos": [
-        4,
-        6
-      ]
+    "5": {
+      "isTerminal": true,
+      "color": "green"
     },
-    {
-      "id": 30633,
-      "pos": [
-        2,
-        3
-      ]
+    "9": {
+      "isTerminal": false
     },
-    {
-      "id": 55408,
-      "pos": [
-        3,
-        2
-      ]
+    "13": {
+      "isTerminal": false
     },
-    {
-      "id": 59168,
-      "pos": [
-        2,
-        5
-      ]
+    "15": {
+      "isTerminal": true,
+      "color": "blue"
     },
-    {
-      "id": 78608,
-      "pos": [
-        4,
-        1
-      ]
+    "17": {
+      "isTerminal": false
     },
-    {
-      "id": 79176,
-      "pos": [
-        2,
-        4
-      ]
+    "19": {
+      "isTerminal": true,
+      "color": "blue"
     },
-    {
-      "id": 99313,
-      "pos": [
-        1,
-        4
-      ]
+    "21": {
+      "isTerminal": false
     },
-    {
-      "id": 2936,
-      "pos": [
-        4,
-        3
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "22": {
+      "isTerminal": false
     },
-    {
-      "id": 19264,
-      "pos": [
-        0,
-        3
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "25": {
+      "isTerminal": true,
+      "color": "green"
     },
-    {
-      "id": 37497,
-      "pos": [
-        0,
-        5
-      ],
-      "color": "green",
-      "isTerminal": true
+    "27": {
+      "isTerminal": false
     },
-    {
-      "id": 96494,
-      "pos": [
-        0,
-        1
-      ],
-      "color": "green",
-      "isTerminal": true
+    "34": {
+      "isTerminal": false
     }
-  ],
+  },
   "lines": [
     {
-      "id": 2147,
       "pos": [
         [
           3,
@@ -123,7 +70,6 @@
       "layer": 0
     },
     {
-      "id": 6674,
       "pos": [
         [
           2,
@@ -149,7 +95,6 @@
       "layer": 0
     },
     {
-      "id": 57736,
       "pos": [
         [
           2,
@@ -175,7 +120,6 @@
       "layer": -1
     },
     {
-      "id": 78879,
       "pos": [
         [
           2,

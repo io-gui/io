@@ -19,6 +19,7 @@ import { Register } from '@io-gui/core'
 import { ThreeApplet, ThreeAppletProps } from '@io-gui/three'
 import { Pad } from '../game/items/pad'
 import { Line } from '../game/items/line'
+import { Pads } from '../game/pads'
 import { Grid } from './grid'
 
 const PAD_SPHERE_RADIUS = 0.25
@@ -90,14 +91,17 @@ export class ThreeScene extends ThreeApplet {
     this.cameraRig.position.set(width / 2, height / 2, 0)
     this.camera.position.set(0, 0, gridDistance)
   }
-  updateGrid(width: number, height: number, lines: Line[], pads: Pad[]) {
+  updateGrid(width: number, height: number, lines: Line[], pads: Pads) {
     this.grid.update(width, height, lines, pads)
   }
 
   // TODO: Fix empty instanced arrays
 
-  updatePads(pads: Pad[]) {
-    const nonTerminalPads = pads.filter((pad) => !pad.isTerminal)
+  updatePads(pads: Pads) {
+    const nonTerminalPads: [Pad, number, number][] = []
+    pads.forEach((pad, x, y) => {
+      if (!pad.isTerminal) nonTerminalPads.push([pad, x, y])
+    })
     if (this.pads.parent) {
       this.scene.remove(this.pads)
       if (nonTerminalPads.length === 0) return
@@ -107,9 +111,9 @@ export class ThreeScene extends ThreeApplet {
     const matrix = new Matrix4()
     const padColor = new Color()
     for (let i = 0; i < nonTerminalPads.length; i++) {
-      matrix.makeTranslation(nonTerminalPads[i].pos.x, nonTerminalPads[i].pos.y, 0)
+      matrix.makeTranslation(nonTerminalPads[i][1], nonTerminalPads[i][2], 0)
       this.pads.setMatrixAt(i, matrix)
-      padColor.copy(nonTerminalPads[i].renderColor)
+      padColor.copy(nonTerminalPads[i][0].renderColor)
       this.pads.setColorAt(i, padColor)
     }
     this.pads.instanceMatrix.needsUpdate = true
@@ -117,8 +121,11 @@ export class ThreeScene extends ThreeApplet {
     this.scene.add(this.pads)
   }
 
-  updateTerminals(pads: Pad[]) {
-    const terminalPads = pads.filter((pad) => pad.isTerminal)
+  updateTerminals(pads: Pads) {
+    const terminalPads: [Pad, number, number][] = []
+    pads.forEach((pad, x, y) => {
+      if (pad.isTerminal) terminalPads.push([pad, x, y])
+    })
     if (this.terminals.parent) {
       this.scene.remove(this.terminals)
     }
@@ -130,9 +137,9 @@ export class ThreeScene extends ThreeApplet {
     const matrix = new Matrix4()
     const terminalColor = new Color()
     for (let i = 0; i < terminalPads.length; i++) {
-      matrix.makeTranslation(terminalPads[i].pos.x, terminalPads[i].pos.y, 0)
+      matrix.makeTranslation(terminalPads[i][1], terminalPads[i][2], 0)
       this.terminals.setMatrixAt(i, matrix)
-      terminalColor.copy(terminalPads[i].renderColor)
+      terminalColor.copy(terminalPads[i][0].renderColor)
       this.terminals.setColorAt(i, terminalColor)
     }
     this.terminals.instanceMatrix.needsUpdate = true

@@ -1,121 +1,58 @@
 {
   "width": 6,
   "height": 8,
-  "pads": [
-    {
-      "id": 9963,
-      "pos": [
-        2,
-        3
-      ]
+  "pads": {
+    "0": {
+      "isTerminal": true,
+      "color": "red"
     },
-    {
-      "id": 10709,
-      "pos": [
-        2,
-        5
-      ]
+    "1": {
+      "isTerminal": true,
+      "color": "blue"
     },
-    {
-      "id": 22864,
-      "pos": [
-        1,
-        5
-      ]
+    "7": {
+      "isTerminal": true,
+      "color": "green"
     },
-    {
-      "id": 32046,
-      "pos": [
-        5,
-        3
-      ]
+    "23": {
+      "isTerminal": false
     },
-    {
-      "id": 56680,
-      "pos": [
-        4,
-        6
-      ]
+    "24": {
+      "isTerminal": false
     },
-    {
-      "id": 57075,
-      "pos": [
-        4,
-        5
-      ]
+    "26": {
+      "isTerminal": false
     },
-    {
-      "id": 73459,
-      "pos": [
-        1,
-        8
-      ]
+    "36": {
+      "isTerminal": false
     },
-    {
-      "id": 76359,
-      "pos": [
-        3,
-        3
-      ]
+    "37": {
+      "isTerminal": false
     },
-    {
-      "id": 10713,
-      "pos": [
-        5,
-        8
-      ],
-      "color": "green",
-      "isTerminal": true
+    "39": {
+      "isTerminal": false
     },
-    {
-      "id": 11018,
-      "pos": [
-        6,
-        8
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "46": {
+      "isTerminal": false
     },
-    {
-      "id": 51543,
-      "pos": [
-        1,
-        0
-      ],
-      "color": "blue",
-      "isTerminal": true
+    "55": {
+      "isTerminal": true,
+      "color": "red"
     },
-    {
-      "id": 61432,
-      "pos": [
-        6,
-        7
-      ],
-      "color": "red",
-      "isTerminal": true
+    "57": {
+      "isTerminal": false
     },
-    {
-      "id": 90372,
-      "pos": [
-        0,
-        1
-      ],
-      "color": "green",
-      "isTerminal": true
+    "61": {
+      "isTerminal": true,
+      "color": "green"
     },
-    {
-      "id": 96463,
-      "pos": [
-        0,
-        0
-      ],
-      "color": "red",
-      "isTerminal": true
+    "62": {
+      "isTerminal": true,
+      "color": "blue"
     }
-  ],
+  },
   "lines": [
     {
-      "id": 38678,
       "pos": [
         [
           1,
@@ -141,7 +78,6 @@
       "layer": -1
     },
     {
-      "id": 39125,
       "pos": [
         [
           3,
@@ -159,7 +95,6 @@
       "layer": 0
     },
     {
-      "id": 41962,
       "pos": [
         [
           4,
@@ -185,7 +120,6 @@
       "layer": -1
     },
     {
-      "id": 51381,
       "pos": [
         [
           2,

@@ -47,11 +47,11 @@
         $level.value = levelOptions.selectedID;
       });
 
-      function modeSelect(mode, layer) {
-        game.drawMode = mode;
-        if (mode === "line" && layer !== undefined) {
-          game.drawLayer = layer;
-        }
+      function modeSelect(mode, layer, color) {
+        const board = document.querySelector("#game");
+        board.drawMode = mode;
+        board.drawLayer = layer;
+        board.drawColor = mode === "terminal" ? color : "white";
       }
 
       const split = new IoSplit({
@@ -71,7 +71,7 @@
             ...Object.keys(COLORS).map((c) =>
               ioButton({
                 label: c,
-                action: () => modeSelect("terminal", c),
+                action: () => modeSelect("terminal", 0, c),
               }),
             ),
             ioButton({

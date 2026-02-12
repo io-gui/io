@@ -1,17 +1,12 @@
 import { ReactiveNode, Register } from '@io-gui/core'
 import { Vector2 } from 'three/webgpu'
-import { Pad } from './items/pad.js'
-import { COLORS, type ColorName } from './items/colors.js'
+import { COLORS } from './items/colors.js'
 import { Line } from './items/line.js'
+import { Pads } from './pads.js'
 
 const SQRT_2 = Math.sqrt(2)
 const _vec2_1 = new Vector2()
 const _vec2_2 = new Vector2()
-
-export interface PointAt {
-  id: number
-  isTerminal: boolean
-}
 
 /**
  * Plotter — position and geometry only.
@@ -22,23 +17,14 @@ export interface PointAt {
 export class Plotter extends ReactiveNode {
   width = 0
   height = 0
-  pads: Pad[] = []
+  pads: Pads = new Pads(0, 0)
   lines: Line[] = []
 
-  connect(pads: Pad[], lines: Line[], width: number, height: number) {
+  connect(pads: Pads, lines: Line[], width: number, height: number) {
     this.width = width
     this.height = height
     this.pads = pads
     this.lines = lines
-  }
-
-  getPointAt(point: Vector2): Pad | undefined {
-    const x = point.x
-    const y = point.y
-    for (const pad of this.pads) {
-      if (pad.pos.x === x && pad.pos.y === y)
-        return pad
-    }
   }
 
   getLinesAtPoint(point: Vector2, filter?: (line: Line) => boolean): Line[] {
@@ -112,22 +98,9 @@ export class Plotter extends ReactiveNode {
     return false
   }
 
-  addPad(point: Vector2, color?: ColorName, isTerminal: boolean = false): boolean {
-    if (this.getPointAt(point)) return false
-    this.pads.push(
-      new Pad(new Vector2(point.x, point.y), isTerminal, color)
-    )
-    this.dispatch('game-update', undefined, true)
-    return true
-  }
-
   delete(point: Vector2) {
     const x = point.x
     const y = point.y
-    const padIdx = this.pads.findIndex((p) => p.pos.x === x && p.pos.y === y)
-    if (padIdx !== -1) {
-      this.pads.splice(padIdx, 1)
-    }
     const lineIdx = this.lines.findIndex((l) =>
       l.pos.some((linePoint) => linePoint.x === x && linePoint.y === y),
     )
@@ -137,27 +110,18 @@ export class Plotter extends ReactiveNode {
     this.dispatch('game-update', undefined, true)
   }
 
-  verifyLineComplete(): boolean {
+  finalizeLine(): boolean {
     const line = this.lines[this.lines.length - 1]
-    if (line) {
-      const first = line.pos[0]
-      const last = line.last
-      const p1 = this.getPointAt(first)
-      const p2 = this.getPointAt(last)
-      if (!p1 || !p2 || (first.x === last.x && first.y === last.y)) {
-        this.lines.pop()
-        return false
-      }
-      return true
-    }
-    return false
+    const complete = this.isLineComplete(line)
+    if (!complete) this.lines.pop()
+    return complete
   }
 
-  private _isLineComplete(line: Line): boolean {
+  private isLineComplete(line: Line): boolean {
     const first = line.pos[0]
     const last = line.last
-    const p1 = this.getPointAt(first)
-    const p2 = this.getPointAt(last)
+    const p1 = this.pads.getAt(first.x, first.y)
+    const p2 = this.pads.getAt(last.x, last.y)
     return Boolean(p1 && p2 && (first.x !== last.x || first.y !== last.y))
   }
 
@@ -173,7 +137,7 @@ export class Plotter extends ReactiveNode {
     const y = point.y
 
     // Lookup what's at target cell
-    const padAtPoint = this.getPointAt(point)
+    const padAtPoint = this.pads.getAt(point.x, point.y)
     const linesAtPoint = this.getLinesAtPoint(point, (line) => (line.layer === 0))
     const underlineLinesAtPoint = this.getLinesAtPoint(point, (line) => line.layer === -1)
     // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
@@ -188,7 +152,7 @@ export class Plotter extends ReactiveNode {
     }
 
     const lastLine = this.lines[this.lines.length - 1]
-    const line = lastLine && !this._isLineComplete(lastLine) ? lastLine : undefined
+    const line = lastLine && !this.isLineComplete(lastLine) ? lastLine : undefined
 
     if (line) {
       // --- Extending existing line ---
