@@ -1,15 +1,18 @@
 import { Pad, type PadData } from './items/pad.js'
 import { type ColorName } from './items/colors.js'
+import { Register, ReactiveNode } from '@io-gui/core'
 
 export type PadsData = Record<string, PadData>
 
-export class Pads {
+@Register
+export class Pads extends ReactiveNode {
   private _width = 0
   private _height = 0
   private _stride = 0
   private _cells: (Pad | undefined)[] = []
 
   constructor(width: number = 2, height: number = 2, data: PadsData = {}) {
+    super()
     this.clear(width, height)
     this.load(data)
   }
@@ -19,6 +22,7 @@ export class Pads {
     this._height = height
     this._stride = width
     this._cells = new Array(width * height)
+    this.dispatch('game-update', undefined, true)
   }
 
   load(data: PadsData = {}) {
@@ -33,6 +37,7 @@ export class Pads {
       const item = data[key]
       this.addAt(x, y, item.color, item.isTerminal)
     }
+    this.dispatch('game-update', undefined, true)
   }
 
   forEach(callback: (pad: Pad, x: number, y: number) => void) {
@@ -58,6 +63,7 @@ export class Pads {
       return false
     }
     this._cells[index] = new Pad(isTerminal, color)
+    this.dispatch('game-update', undefined, true)
     return true
   }
 
@@ -66,6 +72,7 @@ export class Pads {
     const index = this._index(x, y)
     if (!this._cells[index]) return false
     this._cells[index] = undefined
+    this.dispatch('game-update', undefined, true)
     return true
   }
 

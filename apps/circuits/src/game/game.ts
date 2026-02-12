@@ -1,12 +1,13 @@
 import { Register, ReactiveNode, ReactiveProperty, Property, Storage as $, Binding } from '@io-gui/core'
 import { Vector2 } from 'three/webgpu'
-import { type Line } from './items/line.js'
 import { Plotter } from './plotter.js'
 import { COLORS } from './items/colors.js'
 import { Pads, type PadsData } from './pads.js'
 import { Layer, type LayerData } from './layer.js'
 
 export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete'
+
+const _vec2 = new Vector2()
 
 interface LevelData {
   width: number
@@ -23,9 +24,6 @@ interface LevelData {
  */
 @Register
 export class Game extends ReactiveNode {
-
-  @ReactiveProperty({type: Vector2, init: null})
-  declare completionPoint: Vector2
 
   @ReactiveProperty({value: '', type: String})
   declare level: string
@@ -54,19 +52,29 @@ export class Game extends ReactiveNode {
   @Property($({key: 'null-level-state', value: {}, storage: 'local'}))
   declare storedState: Binding
 
-  get lines(): Line[] {
-    return [...this.layer0.lines, ...this.layer1.lines]
-  }
-
   clear() {
     this.width = 2
     this.height = 2
     this.pads = new Pads(this.width, this.height)
     this.layer0 = new Layer(this.width, this.height)
     this.layer1 = new Layer(this.width, this.height)
-    this.plotter.connect(this.pads, this.layer0.lines, this.layer1.lines, this.width, this.height)
+    this.plotter.connect(this.pads, this.layer0, this.layer1, this.width, this.height)
     this.redoStack = []
     this.undoStack = []
+  }
+
+  async load(level: string): Promise<void> {
+    try {
+      const resp = await fetch('./public/levels/' + level + '.json')
+      if (!resp.ok) console.error('Level not found')
+      const text = await resp.text()
+      this.clear()
+      this.fromJSON(text)
+      this.propagateColors()
+      // this.save()
+    } catch (e) {
+      console.warn('Could not load level:', level, e)
+    }
   }
 
   async initialize() {
@@ -99,20 +107,6 @@ export class Game extends ReactiveNode {
     void this.initialize()
   }
 
-  async load(level: string): Promise<void> {
-    try {
-      const resp = await fetch('./public/levels/' + level + '.json')
-      if (!resp.ok) console.error('Level not found')
-      const text = await resp.text()
-      this.clear()
-      this.fromJSON(text)
-      this.propagateColors()
-      this.save()
-    } catch (e) {
-      console.warn('Could not load level:', level, e)
-    }
-  }
-
   save(): void {
     this.storedState.value = {
       width: this.width,
@@ -127,10 +121,10 @@ export class Game extends ReactiveNode {
     const state: LevelData = JSON.parse(jsonText)
     this.width = state.width
     this.height = state.height
-    this.pads = Pads.fromJSON(this.width, this.height, state.pads)
-    this.layer0 = Layer.fromJSON(this.width, this.height, state.layer0)
-    this.layer1 = Layer.fromJSON(this.width, this.height, state.layer1)
-    this.plotter.connect(this.pads, this.layer0.lines, this.layer1.lines, this.width, this.height)
+    this.pads = new Pads(this.width, this.height, state.pads)
+    this.layer0 = new Layer(this.width, this.height, state.layer0)
+    this.layer1 = new Layer(this.width, this.height, state.layer1)
+    this.plotter.connect(this.pads, this.layer0, this.layer1, this.width, this.height)
     this.undoStack = []
     this.redoStack = []
   }
@@ -158,7 +152,7 @@ export class Game extends ReactiveNode {
       this.fromJSON(this.undoStack[this.undoStack.length - 1])
       this.redoStack.push(currentState)
       this.propagateColors()
-      this.save()
+      // this.save()
       this.dispatch('game-update', undefined, true)
     }
   }
@@ -169,21 +163,24 @@ export class Game extends ReactiveNode {
       this.fromJSON(state)
       this.undoStack.push(state)
       this.propagateColors()
-      this.save()
+      // this.save()
       this.dispatch('game-update', undefined, true)
     }
   }
 
   resetColors(): void {
-    this.lines.forEach((line) => line.resetColor())
+    this.layer0.forEach((line) => line.resetColor())
+    this.layer1.forEach((line) => line.resetColor())
     this.pads.forEach((pad) => pad.resetColor())
   }
 
   propagateColors(): void {
     this.resetColors()
 
+    const lines = [...this.layer0.lines, ...this.layer1.lines];
+
     for (let iter = 0; iter < 16; iter++) {
-      for (const line of this.lines) {
+      for (const line of lines) {
         const first = line.pos[0]
         const last = line.pos[line.pos.length - 1]
 
@@ -218,7 +215,7 @@ export class Game extends ReactiveNode {
     // TODO: Check for completeness correctly
 
     this.pads.forEach((pad, x, y) => {
-      const nConn = this.plotter.getLinesAtPoint(this.completionPoint.set(x, y)).length
+      const nConn = this.plotter.getLinesAtPoint(_vec2.set(x, y)).length
       if (pad.isTerminal) {
         if (nConn !== 1) completed = false
       } else if (nConn !== 2 && pad.renderColor !== COLORS.white) {
@@ -234,7 +231,7 @@ export class Game extends ReactiveNode {
     if (this.plotter.finalizeLine()) {
       this.updateUndoStack()
       this.propagateColors()
-      this.save()
+      // this.save()
     }
     this.dispatch('game-update', undefined, true)
   }

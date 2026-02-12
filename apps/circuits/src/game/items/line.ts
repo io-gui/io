@@ -1,6 +1,10 @@
 import { Color, Vector2 } from 'three/webgpu'
 import { COLORS } from './colors.js'
 
+const SQRT_2 = Math.sqrt(2)
+const _vec2_1 = new Vector2()
+const _vec2_2 = new Vector2()
+
 export type LineData = [number, number][]
 
 export class Line {
@@ -8,9 +12,9 @@ export class Line {
   public renderColor: Color
   public isFinalized: boolean
 
-  constructor(pos: Vector2[], isFinalized: boolean = false) {
+  constructor(pos: Vector2[], isFinalized: boolean = false, renderColor: Color = COLORS.white) {
     this.pos = pos
-    this.renderColor = COLORS.white
+    this.renderColor = renderColor
     this.isFinalized = isFinalized
   }
 
@@ -39,6 +43,54 @@ export class Line {
 
   get secondLastPt(): Vector2 {
     return this.pos[this.length - 2]
+  }
+
+  /**
+   * Plot a new segment on the line if direction is valid.
+   * Erase last segment if user drags back to prev node.
+   * Return true if segment was added, false otherwise.
+   */
+  plotSegment(point: Vector2): boolean {
+    if (this.tryEraseLastSegment(point)) return true
+    if (this.tryAddNewSegment(point)) return true
+    return false
+  }
+
+  /**
+   * Add segment or, if user went 45° backwards, remove one segment and add a 90° turn.
+   * Returns false if nothing was done, true if segment was added.
+   */
+  tryAddNewSegment(point: Vector2): boolean {
+    // Reject if segment is too long
+    if (this.lastPt.distanceTo(point) > SQRT_2) return false
+
+    // Reroute if user went 45° backwards
+    if (this.secondLastPt) {
+      _vec2_1.copy(this.lastPt).sub(this.secondLastPt)
+      _vec2_2.copy(point).sub(this.lastPt)
+      if (_vec2_1.dot(_vec2_2) === -1) {
+        this.pos.pop()
+        this.pos.push(point.clone())
+        return true
+      }
+    }
+
+    // Add new segment
+    this.pos.push(point.clone())
+    return true
+  }
+
+  /**
+   * Erase last segment if user drags back to prev node.
+   * Returns true if segment was erased, false otherwise.
+   */
+  tryEraseLastSegment(point: Vector2): boolean {
+    if (!this.secondLastPt) return false
+    if (this.secondLastPt.distanceTo(point) === 0) {
+      this.pos.pop()
+      return true
+    }
+    return false
   }
 
   hasSegmentAt(point: Vector2): boolean {

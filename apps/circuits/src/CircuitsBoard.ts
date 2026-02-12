@@ -87,10 +87,10 @@ export class CircuitsBoard extends IoElement {
   declare game: Game
 
   private _dragging: boolean = false
+
   drawMode: DrawMode = 'line'
   drawColor: ColorName = 'white'
   drawLayer = 1
-
 
   constructor(args: CircuitsBoardProps) {
     super(args)
@@ -102,7 +102,7 @@ export class CircuitsBoard extends IoElement {
 
     this.drawMode = 'line'
     this.drawColor = 'white'
-    this.drawLayer = 0
+    this.drawLayer = 1
   };
   onGameUpdate() {
     this.applet.updateGrid(this.game.width, this.game.height, this.game.layer0.lines, this.game.layer1.lines, this.game.pads)
@@ -139,8 +139,9 @@ export class CircuitsBoard extends IoElement {
     _posHit.copy(_posRaw).round()
     _posHitOld.copy(_posHit)
 
+    
     this.applet.updateDrag(event.detail[0].screen, event.detail[0].screenStart)
-
+    
     if (this.drawMode === 'pad') {
       this.game.pads.addAt(_posHit.x, _posHit.y, undefined, false)
     }
@@ -148,11 +149,13 @@ export class CircuitsBoard extends IoElement {
       this.game.pads.addAt(_posHit.x, _posHit.y, this.drawColor, true)
     }
     if (this.drawMode === 'line') {
+      console.log('on3DPointerDown', _posHit)
       this.game.plotter.addLineSegment(_posHit.clone(), this.drawLayer)
     }
     if (this.drawMode === 'delete') {
-      this.game.plotter.delete(_posHit.clone())
       this.game.pads.deleteAt(_posHit.x, _posHit.y)
+      this.game.layer0.deleteAt(_posHit.x, _posHit.y)
+      this.game.layer1.deleteAt(_posHit.x, _posHit.y)
     }
   }
 
@@ -180,7 +183,10 @@ export class CircuitsBoard extends IoElement {
 
   onEndDrag() {
     this._dragging = false
-    if (this.game) this.game.finalizeMove()
+    // TODO
+    if (this.drawMode === 'line') {
+      if (this.game) this.game.finalizeMove()
+    }
     this.applet.updateGrid(this.game.width, this.game.height, this.game.layer0.lines, this.game.layer1.lines, this.game.pads)
   }
 

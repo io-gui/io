@@ -15,7 +15,33 @@ const cameraForward = new Vector3()
 const corner = new Vector3()
 let radius = 0
 
-const resetCameras = new WeakMap<Camera, Camera>()
+const resetCameras = new WeakMap<PerspectiveCamera | OrthographicCamera, PerspectiveCamera | OrthographicCamera>()
+
+function copyProjection(source: PerspectiveCamera | OrthographicCamera, target: PerspectiveCamera | OrthographicCamera) {
+  if (target instanceof PerspectiveCamera && source instanceof PerspectiveCamera) {
+    target.fov = source.fov
+    target.aspect = source.aspect
+    target.near = source.near
+    target.far = source.far
+    target.zoom = source.zoom
+    target.focus = source.focus
+    target.filmGauge = source.filmGauge
+    target.filmOffset = source.filmOffset
+    if (source.view) target.view = {...source.view}
+    else target.clearViewOffset()
+  } else if (target instanceof OrthographicCamera && source instanceof OrthographicCamera) {
+    target.left = source.left
+    target.right = source.right
+    target.top = source.top
+    target.bottom = source.bottom
+    target.near = source.near
+    target.far = source.far
+    target.zoom = source.zoom
+    if (source.view) target.view = {...source.view}
+    else target.clearViewOffset()
+  }
+  target.updateProjectionMatrix()
+}
 
 class DefaultCameras {
   public perspective: PerspectiveCamera
@@ -283,7 +309,7 @@ export class ViewCameras extends ReactiveNode {
 
     const camera = this.camera
     const resetCamera = resetCameras.get(camera) || camera.clone(false)
-    resetCamera.copy(camera, false)
+    copyProjection(camera, resetCamera)
     resetCameras.set(camera, resetCamera)
 
     const viewportAspect = width / height
@@ -320,8 +346,9 @@ export class ViewCameras extends ReactiveNode {
     const camera = this.camera
     const resetCamera = resetCameras.get(camera)
     if (resetCamera) {
-      camera.copy(resetCamera, false)
+      copyProjection(resetCamera, camera)
     }
+    camera.updateProjectionMatrix()
   }
 
   dispose() {
