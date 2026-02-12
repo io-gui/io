@@ -19,7 +19,7 @@ import { Register } from '@io-gui/core'
 import { ThreeApplet, ThreeAppletProps } from '@io-gui/three'
 import { Pad } from '../game/items/pad'
 import { Line } from '../game/items/line'
-import { Grid } from '../objects/grid'
+import { Grid } from './grid'
 
 const PAD_SPHERE_RADIUS = 0.25
 const TERMINAL_BOX_SIZE = 0.5
