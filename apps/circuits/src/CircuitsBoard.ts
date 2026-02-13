@@ -146,10 +146,10 @@ export class CircuitsBoard extends IoElement {
     this.applet.updateDrag(event.detail[0].screen, event.detail[0].screenStart)
     
     if (this.drawMode === 'pad') {
-      this.game.pads.addAt(_posHit.x, _posHit.y, undefined, false)
+      this.game.pads.addAt(_posHit.x, _posHit.y)
     }
     if (this.drawMode === 'terminal') {
-      this.game.pads.addAt(_posHit.x, _posHit.y, this.drawColor, true)
+      this.game.pads.addAt(_posHit.x, _posHit.y, this.drawColor)
     }
     if (this.drawMode === 'line') {
       this.game.plotter.startLineAt(_posHit.clone(), this.drawLayer)

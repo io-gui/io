@@ -2,18 +2,12 @@
   "width": 5,
   "height": 6,
   "pads": {
-    "5": {
-      "isTerminal": false
-    },
+    "5": {},
     "8": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "19": {
-      "isTerminal": false
-    },
+    "19": {},
     "21": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

@@ -3,109 +3,55 @@
   "height": 11,
   "pads": {
     "0": {
-      "isTerminal": true,
       "color": "red"
     },
     "2": {
-      "isTerminal": true,
       "color": "blue"
     },
     "4": {
-      "isTerminal": true,
       "color": "yellow"
     },
     "6": {
-      "isTerminal": true,
       "color": "green"
     },
     "8": {
-      "isTerminal": true,
       "color": "purple"
     },
-    "21": {
-      "isTerminal": false
-    },
-    "23": {
-      "isTerminal": false
-    },
-    "27": {
-      "isTerminal": false
-    },
-    "37": {
-      "isTerminal": false
-    },
-    "40": {
-      "isTerminal": false
-    },
-    "41": {
-      "isTerminal": false
-    },
-    "43": {
-      "isTerminal": false
-    },
-    "45": {
-      "isTerminal": false
-    },
-    "47": {
-      "isTerminal": false
-    },
-    "49": {
-      "isTerminal": false
-    },
-    "50": {
-      "isTerminal": false
-    },
-    "51": {
-      "isTerminal": false
-    },
-    "61": {
-      "isTerminal": false
-    },
-    "64": {
-      "isTerminal": false
-    },
-    "66": {
-      "isTerminal": false
-    },
-    "67": {
-      "isTerminal": false
-    },
-    "68": {
-      "isTerminal": false
-    },
-    "71": {
-      "isTerminal": false
-    },
-    "74": {
-      "isTerminal": false
-    },
-    "76": {
-      "isTerminal": false
-    },
-    "77": {
-      "isTerminal": false
-    },
-    "81": {
-      "isTerminal": false
-    },
+    "21": {},
+    "23": {},
+    "27": {},
+    "37": {},
+    "40": {},
+    "41": {},
+    "43": {},
+    "45": {},
+    "47": {},
+    "49": {},
+    "50": {},
+    "51": {},
+    "61": {},
+    "64": {},
+    "66": {},
+    "67": {},
+    "68": {},
+    "71": {},
+    "74": {},
+    "76": {},
+    "77": {},
+    "81": {},
     "90": {
-      "isTerminal": true,
       "color": "green"
     },
     "92": {
-      "isTerminal": true,
       "color": "purple"
     },
     "94": {
-      "isTerminal": true,
       "color": "yellow"
     },
     "96": {
-      "isTerminal": true,
       "color": "red"
     },
     "98": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

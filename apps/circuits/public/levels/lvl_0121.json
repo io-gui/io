@@ -2,46 +2,26 @@
   "width": 5,
   "height": 7,
   "pads": {
-    "2": {
-      "isTerminal": false
-    },
+    "2": {},
     "5": {
-      "isTerminal": true,
       "color": "green"
     },
-    "9": {
-      "isTerminal": false
-    },
-    "13": {
-      "isTerminal": false
-    },
+    "9": {},
+    "13": {},
     "15": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "17": {
-      "isTerminal": false
-    },
+    "17": {},
     "19": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "21": {
-      "isTerminal": false
-    },
-    "22": {
-      "isTerminal": false
-    },
+    "21": {},
+    "22": {},
     "25": {
-      "isTerminal": true,
       "color": "green"
     },
-    "27": {
-      "isTerminal": false
-    },
-    "34": {
-      "isTerminal": false
-    }
+    "27": {},
+    "34": {}
   },
   "layer0": [
     [

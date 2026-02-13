@@ -3,31 +3,19 @@
   "height": 9,
   "pads": {
     "2": {
-      "isTerminal": true,
       "color": "green"
     },
     "4": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "16": {
-      "isTerminal": false
-    },
-    "18": {
-      "isTerminal": false
-    },
-    "44": {
-      "isTerminal": false
-    },
-    "46": {
-      "isTerminal": false
-    },
+    "16": {},
+    "18": {},
+    "44": {},
+    "46": {},
     "58": {
-      "isTerminal": true,
       "color": "green"
     },
     "60": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

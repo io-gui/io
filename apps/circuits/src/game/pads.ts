@@ -35,7 +35,7 @@ export class Pads extends ReactiveNode {
       const y = Math.floor(index / this._stride)
       const x = index - y * this._stride
       const item = data[key]
-      this.addAt(x, y, item.color, item.isTerminal)
+      this.addAt(x, y, item.color)
     }
     this.dispatch('game-update', undefined, true)
   }
@@ -54,7 +54,7 @@ export class Pads extends ReactiveNode {
     return this._cells[this._index(x, y)]
   }
 
-  addAt(x: number, y: number, color?: ColorName, isTerminal: boolean = false) {
+  addAt(x: number, y: number, color?: ColorName) {
     if (!this._areIntegers(x, y)) return false
     if (!this._inBounds(x, y)) return false
     const index = this._index(x, y)
@@ -62,7 +62,7 @@ export class Pads extends ReactiveNode {
       console.log('Pad already exists', x, y)
       return false
     }
-    this._cells[index] = new Pad(isTerminal, color)
+    this._cells[index] = new Pad(color)
     this.dispatch('game-update', undefined, true)
     return true
   }

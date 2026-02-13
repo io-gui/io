@@ -3,23 +3,13 @@
   "height": 6,
   "pads": {
     "2": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "7": {
-      "isTerminal": false
-    },
-    "10": {
-      "isTerminal": false
-    },
-    "13": {
-      "isTerminal": false
-    },
-    "23": {
-      "isTerminal": false
-    },
+    "7": {},
+    "10": {},
+    "13": {},
+    "23": {},
     "27": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

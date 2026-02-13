@@ -3,121 +3,59 @@
   "height": 11,
   "pads": {
     "1": {
-      "isTerminal": true,
       "color": "purple"
     },
     "4": {
-      "isTerminal": true,
       "color": "yellow"
     },
     "5": {
-      "isTerminal": true,
       "color": "blue"
     },
     "6": {
-      "isTerminal": true,
       "color": "green"
     },
     "7": {
-      "isTerminal": true,
       "color": "red"
     },
-    "9": {
-      "isTerminal": false
-    },
-    "17": {
-      "isTerminal": false
-    },
-    "18": {
-      "isTerminal": false
-    },
-    "20": {
-      "isTerminal": false
-    },
-    "26": {
-      "isTerminal": false
-    },
-    "27": {
-      "isTerminal": false
-    },
-    "31": {
-      "isTerminal": false
-    },
-    "32": {
-      "isTerminal": false
-    },
-    "35": {
-      "isTerminal": false
-    },
-    "36": {
-      "isTerminal": false
-    },
-    "37": {
-      "isTerminal": false
-    },
-    "38": {
-      "isTerminal": false
-    },
-    "40": {
-      "isTerminal": false
-    },
-    "41": {
-      "isTerminal": false
-    },
-    "48": {
-      "isTerminal": false
-    },
-    "49": {
-      "isTerminal": false
-    },
-    "54": {
-      "isTerminal": false
-    },
-    "56": {
-      "isTerminal": false
-    },
-    "67": {
-      "isTerminal": false
-    },
-    "68": {
-      "isTerminal": false
-    },
-    "69": {
-      "isTerminal": false
-    },
-    "72": {
-      "isTerminal": false
-    },
-    "83": {
-      "isTerminal": false
-    },
-    "85": {
-      "isTerminal": false
-    },
-    "86": {
-      "isTerminal": false
-    },
+    "9": {},
+    "17": {},
+    "18": {},
+    "20": {},
+    "26": {},
+    "27": {},
+    "31": {},
+    "32": {},
+    "35": {},
+    "36": {},
+    "37": {},
+    "38": {},
+    "40": {},
+    "41": {},
+    "48": {},
+    "49": {},
+    "54": {},
+    "56": {},
+    "67": {},
+    "68": {},
+    "69": {},
+    "72": {},
+    "83": {},
+    "85": {},
+    "86": {},
     "90": {
-      "isTerminal": true,
       "color": "green"
     },
     "91": {
-      "isTerminal": true,
       "color": "red"
     },
-    "93": {
-      "isTerminal": false
-    },
+    "93": {},
     "96": {
-      "isTerminal": true,
       "color": "purple"
     },
     "97": {
-      "isTerminal": true,
       "color": "yellow"
     },
     "98": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

@@ -3,11 +3,9 @@
   "height": 6,
   "pads": {
     "7": {
-      "isTerminal": true,
       "color": "blue"
     },
     "22": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

@@ -2,50 +2,26 @@
   "width": 7,
   "height": 9,
   "pads": {
-    "0": {
-      "isTerminal": false
-    },
-    "3": {
-      "isTerminal": false
-    },
+    "0": {},
+    "3": {},
     "6": {
-      "isTerminal": true,
       "color": "green"
     },
     "8": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "19": {
-      "isTerminal": false
-    },
-    "20": {
-      "isTerminal": false
-    },
-    "29": {
-      "isTerminal": false
-    },
-    "32": {
-      "isTerminal": false
-    },
-    "42": {
-      "isTerminal": false
-    },
-    "43": {
-      "isTerminal": false
-    },
-    "48": {
-      "isTerminal": false
-    },
-    "57": {
-      "isTerminal": false
-    },
+    "19": {},
+    "20": {},
+    "29": {},
+    "32": {},
+    "42": {},
+    "43": {},
+    "48": {},
+    "57": {},
     "59": {
-      "isTerminal": true,
       "color": "green"
     },
     "60": {
-      "isTerminal": true,
       "color": "blue"
     }
   },

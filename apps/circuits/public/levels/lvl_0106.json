@@ -3,25 +3,15 @@
   "height": 6,
   "pads": {
     "0": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "4": {
-      "isTerminal": false
-    },
-    "10": {
-      "isTerminal": false
-    },
-    "15": {
-      "isTerminal": false
-    },
+    "4": {},
+    "10": {},
+    "15": {},
     "25": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "29": {
-      "isTerminal": false
-    }
+    "29": {}
   },
   "layer0": [],
   "layer1": [

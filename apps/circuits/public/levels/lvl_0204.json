@@ -3,51 +3,29 @@
   "height": 9,
   "pads": {
     "0": {
-      "isTerminal": true,
       "color": "blue"
     },
     "2": {
-      "isTerminal": true,
       "color": "red"
     },
     "4": {
-      "isTerminal": true,
       "color": "green"
     },
     "6": {
-      "isTerminal": true,
       "color": "blue"
     },
-    "24": {
-      "isTerminal": false
-    },
-    "28": {
-      "isTerminal": false
-    },
-    "33": {
-      "isTerminal": false
-    },
-    "35": {
-      "isTerminal": false
-    },
-    "45": {
-      "isTerminal": false
-    },
-    "48": {
-      "isTerminal": false
-    },
-    "51": {
-      "isTerminal": false
-    },
-    "53": {
-      "isTerminal": false
-    },
+    "24": {},
+    "28": {},
+    "33": {},
+    "35": {},
+    "45": {},
+    "48": {},
+    "51": {},
+    "53": {},
     "56": {
-      "isTerminal": true,
       "color": "green"
     },
     "62": {
-      "isTerminal": true,
       "color": "red"
     }
   },
