@@ -43,9 +43,9 @@ export class Layer extends ReactiveNode {
     this._lines.forEach((line) => { callback(line) })
   }
 
-  getAt(x: number, y: number) {
-    if (!this.inBounds(x, y)) return
-    return this._lines.find((line) => line.pos.some((point) => point.x === x && point.y === y))
+  getLinesAt(x: number, y: number): Line[] {
+    if (!this.inBounds(x, y)) return []
+    return this._lines.filter((line) => line.pos.some((point) => point.x === x && point.y === y))
   }
 
   addAt(x: number, y: number, renderColor: Color = COLORS.white) {
@@ -60,7 +60,7 @@ export class Layer extends ReactiveNode {
     if (!this._areIntegers(x, y)) return false
     if (!this.inBounds(x, y)) return false
 
-    const line = this._lines[this._lines.length - 1]
+    const line = this.lastLine
     if (!line) {
       console.log('No line to extend', x, y)
       return false
@@ -77,10 +77,11 @@ export class Layer extends ReactiveNode {
 
   deleteAt(x: number, y: number) {
     if (!this.inBounds(x, y)) return false
-    const line = this.getAt(x, y)
-    if (!line) return false
-    const lineIndex = this._lines.indexOf(line)
-    if (lineIndex !== -1) this._lines.splice(lineIndex, 1)
+    const lines = this.getLinesAt(x, y)
+    if (lines.length === 0) return false
+    for (const line of lines) {
+      this.delete(line)
+    }
     this.dispatch('game-update', undefined, true)
     return true
   }

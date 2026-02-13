@@ -66,12 +66,14 @@ export class Plotter extends ReactiveNode {
 
     // Lookup what's at target cell
     const padAtPoint = this.pads.getAt(x, y)
-    const lineAtPointLayer0 = this.layer0.getAt(x, y)
-    const lineAtPointLayer1 = this.layer1.getAt(x, y)
+    const lineAtPointLayer0 = this.layer0.getLinesAt(x, y)
+    const lineAtPointLayer1 = this.layer1.getLinesAt(x, y)
+    const lineCountAtPointLayer0 = lineAtPointLayer0.length
+    const lineCountAtPointLayer1 = lineAtPointLayer1.length
 
     if (!padAtPoint) return false
 
-    const  lineCountAtPoint = (lineAtPointLayer1 ? 1 : 0) + (lineAtPointLayer0 ? 1 : 0)
+    const  lineCountAtPoint = lineCountAtPointLayer1 + lineCountAtPointLayer0
 
     // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
     const connectionLimit = padAtPoint ? (padAtPoint.isTerminal ? 1 : 2) : 0
@@ -91,11 +93,13 @@ export class Plotter extends ReactiveNode {
     
     // Lookup what's at target cell
     const padAtPoint = this.pads.getAt(x, y)
-    const lineAtPointLayer0 = this.layer0.getAt(x, y)
-    const lineAtPointLayer1 = this.layer1.getAt(x, y)
-    const lineAtPoint = layer === 0 ? lineAtPointLayer0 : lineAtPointLayer1
+    const lineAtPointLayer0 = this.layer0.getLinesAt(x, y)
+    const lineAtPointLayer1 = this.layer1.getLinesAt(x, y)
+    const lineCountAtPointLayer0 = lineAtPointLayer0.length
+    const lineCountAtPointLayer1 = lineAtPointLayer1.length
+    const lineAtPoint = layer === 0 ? lineAtPointLayer0[0] : lineAtPointLayer1[0]
     
-    const  lineCountAtPoint = (lineAtPointLayer1 ? 1 : 0) + (lineAtPointLayer0 ? 1 : 0)
+    const  lineCountAtPoint = lineCountAtPointLayer1 + lineCountAtPointLayer0
 
     // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
     const connectionLimit = padAtPoint ? (padAtPoint.isTerminal ? 1 : 2) : 0
@@ -133,8 +137,13 @@ export class Plotter extends ReactiveNode {
         console.log('color mismatch rejected')
         return false
       }
-      this.dispatch('line-end-drag', undefined, true)
-      return this._activeLayer.extendAt(x, y)
+      const added = this._activeLayer.extendAt(x, y)
+      if (added) {
+        this.dispatch('line-end-drag', undefined, true)
+        return true
+      } else {
+        return false
+      }
     }
 
     return false

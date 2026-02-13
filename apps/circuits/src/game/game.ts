@@ -195,9 +195,9 @@ export class Game extends ReactiveNode {
     // TODO: Check for completeness correctly
 
     this.pads.forEach((pad, x, y) => {
-      const line0 = this.layer0.getAt(x, y)
-      const line1 = this.layer1.getAt(x, y)
-      const nConn = (line0 ? 1 : 0) + (line1 ? 1 : 0)
+      const line0 = this.layer0.getLinesAt(x, y)
+      const line1 = this.layer1.getLinesAt(x, y)
+      const nConn = line0.length + line1.length
       if (pad.isTerminal) {
         if (nConn !== 1) completed = false
       } else if (nConn !== 2 && pad.renderColor !== COLORS.white) {
