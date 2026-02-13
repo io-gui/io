@@ -1,13 +1,10 @@
 import { Register, ReactiveNode, ReactiveProperty, Property, Storage as $, Binding } from '@io-gui/core'
-import { Vector2 } from 'three/webgpu'
 import { Plotter } from './plotter.js'
 import { COLORS } from './items/colors.js'
 import { Pads, type PadsData } from './pads.js'
 import { Layer, type LayerData } from './layer.js'
 
 export type DrawMode = 'pad' | 'terminal' | 'line' | 'delete'
-
-const _vec2 = new Vector2()
 
 interface LevelData {
   width: number

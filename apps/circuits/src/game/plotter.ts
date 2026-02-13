@@ -47,10 +47,6 @@ export class Plotter extends ReactiveNode {
     return Boolean(p1 && p2 && (first.x !== last.x || first.y !== last.y))
   }
 
-  findPath(start: Vector2, end: Vector2): Vector2[] {
-    return []
-  }
-
   plotLineTo(point: Vector2, layer: number) {
     this._activeLayer = layer === 0 ? this.layer0 : this.layer1
     const lastLine = this._activeLayer.lastLine
@@ -58,26 +54,9 @@ export class Plotter extends ReactiveNode {
     if (lastLine.isFinalized)return false
 
     if (lastLine.lastPt.distanceTo(point) > SQRT_2) {
-      console.log('line too long', lastLine.lastPt.distanceTo(point))
-      const path = this.findPath(lastLine.lastPt, point)
-      if (path) {
-        for (const segment of path) {
-          this.extendLineTo(segment, layer)
-        }
-      }
       return false
     }
     return this.extendLineTo(point, layer)
-  }
-
-  isSegmentValid(start: Vector2, target: Vector2): boolean {
-    if (start.distanceTo(target) > SQRT_2) return false
-    if (start.distanceTo(target) === SQRT_2) {
-      if (this._activeLayer.hasDiagonalCrossing(start.x, start.y, target.x, target.y)) {
-        return false
-      }
-    }
-    return true
   }
 
   startLineAt(point: Vector2, layer: number): boolean {

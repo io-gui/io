@@ -10,8 +10,6 @@ export type LayerData = Array<LineData>
 export class Layer extends ReactiveNode {
   private _width = 0
   private _height = 0
-  private _stride = 0
-  private _cells: (Line | undefined)[] = []
   private _lines: Line[] = []
 
   get lines() {
@@ -30,8 +28,6 @@ export class Layer extends ReactiveNode {
   clear(width: number, height: number) {
     this._width = width
     this._height = height
-    this._stride = width
-    this._cells = new Array(width * height)
     this._lines = []
     this.dispatch('game-update', undefined, true)
   }
@@ -39,15 +35,7 @@ export class Layer extends ReactiveNode {
   load(width: number, height: number, data: LayerData = []) {
     this._width = width
     this._height = height
-    this._stride = width
-    this._cells = new Array(width * height)
-    this._lines = []
     this._lines = data.map((lineData) => Line.fromJSON(lineData))
-    this._lines.forEach((line) => {
-      line.pos.forEach((point) => {
-        this._cells[this.getIndex(point.x, point.y)] = line
-      })
-    })
     this.dispatch('game-update', undefined, true)
   }
 
@@ -57,16 +45,14 @@ export class Layer extends ReactiveNode {
 
   getAt(x: number, y: number) {
     if (!this.inBounds(x, y)) return
-    return this._cells[this.getIndex(x, y)]
+    return this._lines.find((line) => line.pos.some((point) => point.x === x && point.y === y))
   }
 
   addAt(x: number, y: number, renderColor: Color = COLORS.white) {
     if (!this._areIntegers(x, y)) return false
     if (!this.inBounds(x, y)) return false
-    const index = this.getIndex(x, y)
     const line = new Line([new Vector2(x, y)], false, renderColor)
     this._lines.push(line)
-    this._cells[index] = line
     this.dispatch('game-update', undefined, true)
     return true
   }
@@ -74,7 +60,6 @@ export class Layer extends ReactiveNode {
     if (!this._areIntegers(x, y)) return false
     if (!this.inBounds(x, y)) return false
 
-    const index = this.getIndex(x, y)
     const line = this._lines[this._lines.length - 1]
     if (!line) {
       console.log('No line to extend', x, y)
@@ -86,32 +71,23 @@ export class Layer extends ReactiveNode {
     }
     const added = line.addSegment(new Vector2(x, y))
     if (!added) return false
-    this._cells[index] = line
     this.dispatch('game-update', undefined, true)
     return added
   }
 
   deleteAt(x: number, y: number) {
     if (!this.inBounds(x, y)) return false
-    const cellIndex = this.getIndex(x, y)
-    const line = this._cells[cellIndex]
+    const line = this.getAt(x, y)
     if (!line) return false
     const lineIndex = this._lines.indexOf(line)
     if (lineIndex !== -1) this._lines.splice(lineIndex, 1)
-    line.pos.forEach((point) => {
-      this._cells[this.getIndex(point.x, point.y)] = undefined
-    })
     this.dispatch('game-update', undefined, true)
     return true
   }
 
   delete(line: Line) {
-    console.log('delete', line)
     const index = this._lines.indexOf(line)
     if (index !== -1) this._lines.splice(index, 1)
-    line.pos.forEach((point) => {
-      this._cells[this.getIndex(point.x, point.y)] = undefined
-    })
     this.dispatch('game-update', undefined, true)
     return true
   }
@@ -122,10 +98,6 @@ export class Layer extends ReactiveNode {
 
   static fromJSON(width: number, height: number, data: LayerData) {
     return new Layer(width, height, data)
-  }
-
-  getIndex(x: number, y: number) {
-    return x + y * this._stride
   }
 
   inBounds(x: number, y: number) {
