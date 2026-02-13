@@ -6,6 +6,7 @@ import {
   Group,
   InstancedMesh,
   Matrix4,
+  Mesh,
   MeshPhongMaterial,
   Object3D,
   PerspectiveCamera,
@@ -49,6 +50,10 @@ export class ThreeScene extends ThreeApplet {
   public terminals: InstancedMesh
   public lines: InstancedMesh
 
+  public hitMarker: Mesh = new Mesh(new SphereGeometry(0.1, 16, 12), new MeshPhongMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 }))
+  public oldHitMarker: Mesh = new Mesh(new SphereGeometry(0.12, 16, 12), new MeshPhongMaterial({ color: 0x0000ff, transparent: true, opacity: 0.5 }))
+  public rawHitMarker: Mesh = new Mesh(new SphereGeometry(0.13, 16, 12), new MeshPhongMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 }))
+
   static padGeometry: SphereGeometry = new SphereGeometry(PAD_SPHERE_RADIUS, 16, 12)
   static padMaterial: MeshPhongMaterial = new MeshPhongMaterial({ vertexColors: true })
   static terminalGeometry: BoxGeometry = new BoxGeometry(TERMINAL_BOX_SIZE, TERMINAL_BOX_SIZE, TERMINAL_BOX_SIZE * 0.6)
@@ -71,6 +76,10 @@ export class ThreeScene extends ThreeApplet {
     this.terminals = new InstancedMesh(ThreeScene.terminalGeometry, ThreeScene.terminalMaterial, 0)
     this.lines = new InstancedMesh(ThreeScene.lineGeometry, ThreeScene.lineMaterial, 0)
 
+    this.scene.add(this.hitMarker)
+    this.scene.add(this.oldHitMarker)
+    this.scene.add(this.rawHitMarker)
+
     const ambientLight = new AmbientLight( 0xcccccc, 1.5 )
     this.scene.add( ambientLight )
 
@@ -79,6 +88,12 @@ export class ThreeScene extends ThreeApplet {
     this.scene.add( pointLight )
   }
 
+  updateMarkers(hit: Vector2, oldHit: Vector2, rawHit: Vector2) {
+    this.hitMarker.position.set(hit.x, hit.y, 0)
+    this.oldHitMarker.position.set(oldHit.x, oldHit.y, 0)
+    this.rawHitMarker.position.set(rawHit.x, rawHit.y, 0)
+  }
+  
   updateDrag(screen: Vector2, screenStart: Vector2) {
     this._drag.set(screen.x - screenStart.x, screen.y - screenStart.y, 0)
   }

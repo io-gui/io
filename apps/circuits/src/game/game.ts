@@ -42,57 +42,40 @@ export class Game extends ReactiveNode {
 
   @ReactiveProperty({type: Number})
   declare height: number
-
-  undoStack: string[] = []
-  redoStack: string[] = []
-
+  
   @ReactiveProperty({type: Plotter, init: null})
   declare plotter: Plotter
-
+  
   @Property($({key: 'null-level-state', value: {}, storage: 'local'}))
   declare storedState: Binding
 
-  clear() {
-    this.width = 2
-    this.height = 2
-    this.pads = new Pads(this.width, this.height)
-    this.layer0 = new Layer(this.width, this.height)
-    this.layer1 = new Layer(this.width, this.height)
-    this.plotter.connect(this.pads, this.layer0, this.layer1, this.width, this.height)
-    this.redoStack = []
-    this.undoStack = []
-  }
+  undoStack: string[] = []
+  redoStack: string[] = []
 
   async load(level: string): Promise<void> {
     try {
       const resp = await fetch('./public/levels/' + level + '.json')
       if (!resp.ok) console.error('Level not found')
       const text = await resp.text()
-      this.clear()
-      this.fromJSON(text)
-      this.propagateColors()
-      // this.save()
+      this.storedState.value = JSON.parse(text)
     } catch (e) {
       console.warn('Could not load level:', level, e)
     }
   }
 
   async initialize() {
-    this.clear()
     this.storedState = $({key: `${this.level}-level-state`, value: {}, storage: 'local'})
 
-    if (this.level) {
-      if (Object.keys(this.storedState.value).length === 0) {
-        await this.load(this.level)
-      } else {
-        this.clear()
-        this.fromJSON(JSON.stringify(this.storedState.value))
-        this.propagateColors()
-      }
+    if (Object.keys(this.storedState.value).length === 0) {
+      await this.load(this.level)
     }
+    
+    this.fromJSON(JSON.stringify(this.storedState.value))
+    this.propagateColors()
 
     this.undoStack = [this.toJSON()]
     this.redoStack = []
+
     this.dispatch('game-update', undefined, true)
   }
 
@@ -124,7 +107,7 @@ export class Game extends ReactiveNode {
     this.pads = new Pads(this.width, this.height, state.pads)
     this.layer0 = new Layer(this.width, this.height, state.layer0)
     this.layer1 = new Layer(this.width, this.height, state.layer1)
-    this.plotter.connect(this.pads, this.layer0, this.layer1, this.width, this.height)
+    this.plotter.connect(this.pads, this.layer0, this.layer1)
     this.undoStack = []
     this.redoStack = []
   }
@@ -152,7 +135,7 @@ export class Game extends ReactiveNode {
       this.fromJSON(this.undoStack[this.undoStack.length - 1])
       this.redoStack.push(currentState)
       this.propagateColors()
-      // this.save()
+      this.save()
       this.dispatch('game-update', undefined, true)
     }
   }
@@ -163,7 +146,7 @@ export class Game extends ReactiveNode {
       this.fromJSON(state)
       this.undoStack.push(state)
       this.propagateColors()
-      // this.save()
+      this.save()
       this.dispatch('game-update', undefined, true)
     }
   }
@@ -215,7 +198,9 @@ export class Game extends ReactiveNode {
     // TODO: Check for completeness correctly
 
     this.pads.forEach((pad, x, y) => {
-      const nConn = this.plotter.getLinesAtPoint(_vec2.set(x, y)).length
+      const line0 = this.layer0.getAt(x, y)
+      const line1 = this.layer1.getAt(x, y)
+      const nConn = (line0 ? 1 : 0) + (line1 ? 1 : 0)
       if (pad.isTerminal) {
         if (nConn !== 1) completed = false
       } else if (nConn !== 2 && pad.renderColor !== COLORS.white) {
@@ -231,7 +216,7 @@ export class Game extends ReactiveNode {
     if (this.plotter.finalizeLine()) {
       this.updateUndoStack()
       this.propagateColors()
-      // this.save()
+      this.save()
     }
     this.dispatch('game-update', undefined, true)
   }

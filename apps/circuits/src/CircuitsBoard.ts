@@ -13,9 +13,10 @@ import { ioThreeViewport, Pointer3D } from '@io-gui/three'
 import { PointerTool } from './tools/pointerTool.js'
 import { ColorName } from './game/items/colors.js'
 
-let _posRaw = new Vector2()
+const _posRaw = new Vector2()
 const _posHitOld = new Vector2()
 const _posHit = new Vector2()
+let _posChanged = false
 
 /** Intersect pointer ray with the z=0 game plane, write rounded grid coords into `out`. */
 function pointerToGrid(pointer: Pointer3D): Vector2 {
@@ -79,8 +80,7 @@ export class CircuitsBoard extends IoElement {
     }
   }
 
-  // TODO: Move applet to CircuitsApp
-  @ReactiveProperty({type: ThreeScene, init: null})
+  @ReactiveProperty({type: ThreeScene, init: {isPlaying: true}})
   declare applet: ThreeScene
 
   @ReactiveProperty({ type: Game })
@@ -91,6 +91,8 @@ export class CircuitsBoard extends IoElement {
   drawMode: DrawMode = 'line'
   drawColor: ColorName = 'white'
   drawLayer = 1
+
+  _rAF = -1
 
   constructor(args: CircuitsBoardProps) {
     super(args)
@@ -134,11 +136,12 @@ export class CircuitsBoard extends IoElement {
     if (event.detail.length !== 1) return
 
     this._dragging = true
-    _posRaw = pointerToGrid(event.detail[0])
+    _posRaw.copy(pointerToGrid(event.detail[0]))
 
     _posHit.copy(_posRaw).round()
     _posHitOld.copy(_posHit)
 
+    this.applet.updateMarkers(_posHit, _posHitOld, _posRaw)
     
     this.applet.updateDrag(event.detail[0].screen, event.detail[0].screenStart)
     
@@ -149,8 +152,10 @@ export class CircuitsBoard extends IoElement {
       this.game.pads.addAt(_posHit.x, _posHit.y, this.drawColor, true)
     }
     if (this.drawMode === 'line') {
-      console.log('on3DPointerDown', _posHit)
-      this.game.plotter.addLineSegment(_posHit.clone(), this.drawLayer)
+      this.game.plotter.startLineAt(_posHit.clone(), this.drawLayer)
+      _posChanged = false
+      cancelAnimationFrame(this._rAF)
+      this._rAF = requestAnimationFrame(this.onLinePlot)
     }
     if (this.drawMode === 'delete') {
       this.game.pads.deleteAt(_posHit.x, _posHit.y)
@@ -163,16 +168,17 @@ export class CircuitsBoard extends IoElement {
     if (event.detail.length !== 1 || !this._dragging) return
     this.applet.updateDrag(event.detail[0].screen, event.detail[0].screenStart)
 
-    _posRaw = pointerToGrid(event.detail[0])
+    _posRaw.copy(pointerToGrid(event.detail[0]))
     _posHit.copy(_posRaw).round()
-    if (_posRaw.distanceTo(_posHitOld) < .95) {
+    this.applet.updateMarkers(_posHit, _posHitOld, _posRaw)
+
+    if (_posRaw.distanceTo(_posHitOld) < 0.95) {
       return
     }
+    _posChanged = true
     _posHitOld.copy(_posHit)
 
-    if (this.drawMode === 'line' && _posRaw.distanceTo(_posHitOld) > 0) {
-      this.game.plotter.addLineSegment(_posHit.clone(), this.drawLayer)
-    }
+    this.applet.updateMarkers(_posHit, _posHitOld, _posRaw)
   }
 
   on3DPointerUp(event: PointerEvent) {
@@ -185,9 +191,18 @@ export class CircuitsBoard extends IoElement {
     this._dragging = false
     // TODO
     if (this.drawMode === 'line') {
-      if (this.game) this.game.finalizeMove()
+      this.game.finalizeMove()
     }
+    cancelAnimationFrame(this._rAF)
     this.applet.updateGrid(this.game.width, this.game.height, this.game.layer0.lines, this.game.layer1.lines, this.game.pads)
+  }
+
+  onLinePlot() {
+    if (this.drawMode === 'line' && _posChanged) {
+      this.game.plotter.plotLineTo(_posHit.clone(), this.drawLayer)
+      _posChanged = false
+    }
+    this._rAF = requestAnimationFrame(this.onLinePlot)
   }
 
   onUndo() {

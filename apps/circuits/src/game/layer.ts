@@ -63,10 +63,6 @@ export class Layer extends ReactiveNode {
   addAt(x: number, y: number, renderColor: Color = COLORS.white) {
     if (!this._areIntegers(x, y)) return false
     if (!this.inBounds(x, y)) return false
-    if (this.getAt(x, y)) {
-      console.log('Line already exists', x, y)
-      return false
-    }
     const index = this.getIndex(x, y)
     const line = new Line([new Vector2(x, y)], false, renderColor)
     this._lines.push(line)
@@ -88,16 +84,17 @@ export class Layer extends ReactiveNode {
       console.log('Line is already finalized', x, y)
       return false
     }
-    line.plotSegment(new Vector2(x, y))
+    const added = line.addSegment(new Vector2(x, y))
+    if (!added) return false
     this._cells[index] = line
     this.dispatch('game-update', undefined, true)
-    return true
+    return added
   }
 
   deleteAt(x: number, y: number) {
     if (!this.inBounds(x, y)) return false
-    const index = this.getIndex(x, y)
-    const line = this._cells[index]
+    const cellIndex = this.getIndex(x, y)
+    const line = this._cells[cellIndex]
     if (!line) return false
     const lineIndex = this._lines.indexOf(line)
     if (lineIndex !== -1) this._lines.splice(lineIndex, 1)
@@ -108,15 +105,15 @@ export class Layer extends ReactiveNode {
     return true
   }
 
-  delete(index: number) {
-    const line = this._lines[index]
-    if (!line) return false
-    const lineIndex = this._lines.indexOf(line)
-    if (lineIndex !== -1) this._lines.splice(lineIndex, 1)
+  delete(line: Line) {
+    console.log('delete', line)
+    const index = this._lines.indexOf(line)
+    if (index !== -1) this._lines.splice(index, 1)
     line.pos.forEach((point) => {
       this._cells[this.getIndex(point.x, point.y)] = undefined
     })
     this.dispatch('game-update', undefined, true)
+    return true
   }
 
   toJSON(): LayerData {
@@ -135,6 +132,15 @@ export class Layer extends ReactiveNode {
     const inBounds = x >= 0 && x < this._width && y >= 0 && y < this._height
     if (!inBounds) console.log('Pad out of bounds', x, y)
     return inBounds
+  }
+
+  hasDiagonalCrossing(x1: number, y1: number, x2: number, y2: number): boolean {
+    for (const line of this._lines) {
+      if (line.hasSegmentAt(new Vector2(x1, y2), new Vector2(x2, y1))) {
+        return true
+      }
+    }
+    return false
   }
 
   private _areIntegers(x: number, y: number) {

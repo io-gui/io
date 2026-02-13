@@ -50,7 +50,7 @@ export class Line {
    * Erase last segment if user drags back to prev node.
    * Return true if segment was added, false otherwise.
    */
-  plotSegment(point: Vector2): boolean {
+  addSegment(point: Vector2): boolean {
     if (this.tryEraseLastSegment(point)) return true
     if (this.tryAddNewSegment(point)) return true
     return false
@@ -75,6 +75,10 @@ export class Line {
       }
     }
 
+    if (point.equals(this.lastPt)) {
+      return false
+    }
+
     // Add new segment
     this.pos.push(point.clone())
     return true
@@ -93,13 +97,15 @@ export class Line {
     return false
   }
 
-  hasSegmentAt(point: Vector2): boolean {
-    for (let i = 1; i < this.length; i++) {
-      if (this.pos[i].distanceTo(point) === 0) {
+  hasSegmentAt(point1: Vector2, point2: Vector2): boolean {
+    for (let i = 0; i < this.pos.length - 2; i++) {
+      if (this.pos[i].equals(point1) && this.pos[i + 1].equals(point2)) {
+        return true
+      } else if (this.pos[i].equals(point2) && this.pos[i + 1].equals(point1)) {
         return true
       }
     }
-    return false
+    return false;
   }
 
   resetColor() {

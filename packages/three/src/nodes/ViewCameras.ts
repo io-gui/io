@@ -21,25 +21,20 @@ function copyProjection(source: PerspectiveCamera | OrthographicCamera, target: 
   if (target instanceof PerspectiveCamera && source instanceof PerspectiveCamera) {
     target.fov = source.fov
     target.aspect = source.aspect
-    target.near = source.near
-    target.far = source.far
-    target.zoom = source.zoom
     target.focus = source.focus
     target.filmGauge = source.filmGauge
     target.filmOffset = source.filmOffset
-    if (source.view) target.view = {...source.view}
-    else target.clearViewOffset()
   } else if (target instanceof OrthographicCamera && source instanceof OrthographicCamera) {
     target.left = source.left
     target.right = source.right
     target.top = source.top
     target.bottom = source.bottom
-    target.near = source.near
-    target.far = source.far
-    target.zoom = source.zoom
-    if (source.view) target.view = {...source.view}
-    else target.clearViewOffset()
   }
+  target.zoom = source.zoom
+  target.near = source.near
+  target.far = source.far
+  if (source.view) target.view = {...source.view}
+  else target.clearViewOffset()
   target.updateProjectionMatrix()
 }
 
