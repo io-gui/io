@@ -111,8 +111,8 @@ export class CircuitsBoard extends IoElement {
     this.applet.updatePads(this.game.pads)
     this.applet.updateTerminals(this.game.pads)
     this.applet.updateLines(this.game.layer0.lines, this.game.layer1.lines)
-    // TODO: hmm?
-    this.applet.dispatch('three-applet-needs-render', undefined, true)
+    // Note: This is needed whern isPlaying: false
+    // this.applet.dispatch('three-applet-needs-render', undefined, true)
   };
 
   gameChanged() {

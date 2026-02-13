@@ -49,14 +49,28 @@ export class Plotter extends ReactiveNode {
 
   plotLineTo(point: Vector2, layer: number) {
     this._activeLayer = layer === 0 ? this.layer0 : this.layer1
-    const lastLine = this._activeLayer.lastLine
-    if (!lastLine) return false
-    if (lastLine.isFinalized)return false
+    let line = this._activeLayer.lastLine
+    if (!line) return false
+    if (line.isFinalized)return false
 
-    if (lastLine.lastPt.distanceTo(point) > SQRT_2) {
-      return false
+    let extended = false
+
+    while (!line.lastPt.equals(point) && !line.isFinalized) {
+      const nextPoint = this.getNextStepToward(line.lastPt, point)
+      const added = this.extendLineTo(nextPoint, layer)
+      if (!added) break
+      extended = true
+      line = this._activeLayer.lastLine
+      if (!line) break
     }
-    return this.extendLineTo(point, layer)
+
+    return extended
+  }
+
+  private getNextStepToward(from: Vector2, target: Vector2): Vector2 {
+    const dx = Math.sign(target.x - from.x)
+    const dy = Math.sign(target.y - from.y)
+    return new Vector2(from.x + dx, from.y + dy)
   }
 
   startLineAt(point: Vector2, layer: number): boolean {
@@ -121,7 +135,6 @@ export class Plotter extends ReactiveNode {
     if (!padAtPoint) {
       if (lineAtPoint) {
         if (lineAtPoint !== line) {
-          console.log('intersection rejected', this._activeLayer)
           return false
         } else {
           return this._activeLayer.extendAt(x, y)
