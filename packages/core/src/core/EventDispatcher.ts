@@ -53,6 +53,26 @@ export const hardenListenerDefinition = (listenerDefinition: ListenerDefinitionL
 const LISTENER_OPTIONS = ['capture', 'passive']
 
 /**
+ * Detects whether native bubbling from `node` would reach a DOM ancestor
+ * that was already visited by the current synthetic bubbling dispatch.
+ *
+ * Edge case:
+ * A single logical event can traverse one branch via synthetic ReactiveNode
+ * parents, then get converted into a native CustomEvent at an IoElement
+ * boundary and bubble through DOM again. Without this guard, shared ancestors
+ * can receive the same event twice.
+ */
+const hasVisitedDomAncestor = (node: ReactiveNode | IoElement | EventTarget, visited: Set<ReactiveNode | IoElement | EventTarget>) => {
+  if (!(node instanceof Node)) return false
+  let current: Node | null = node.parentNode
+  while (current) {
+    if (visited.has(current as unknown as ReactiveNode | IoElement | EventTarget)) return true
+    current = current.parentNode
+  }
+  return false
+}
+
+/**
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
@@ -291,7 +311,8 @@ export class EventDispatcher {
     path = [...path, node]
 
     if ((node instanceof EventTarget)) {
-      EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}))
+      const bubblesNative = bubbles && !hasVisitedDomAncestor(node, visited)
+      EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubblesNative, composed: true, cancelable: true}))
     } else {
       const payload = {detail: detail, target: node, path: path}
       if (this.protoListeners[name]) {
