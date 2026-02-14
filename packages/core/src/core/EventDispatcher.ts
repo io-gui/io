@@ -283,8 +283,10 @@ export class EventDispatcher {
    * @param {boolean} [bubbles] - Makes event bubble
    * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = []) {
+  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set()) {
     if ((this.node as ReactiveNode)._disposed) return
+    if (visited.has(node)) return
+    visited.add(node)
 
     path = [...path, node]
 
@@ -313,10 +315,9 @@ export class EventDispatcher {
       }
       if (bubbles) {
         for (const parent of node._parents) {
-          if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed) {
-            // TODO: prevent event multiplication when children contain multiple instances of the same node.
+          if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed && !visited.has(parent)) {
             // TODO: implement stopPropagation() and stopImmediatePropagation()
-            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path)
+            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited)
           }
         }
       }

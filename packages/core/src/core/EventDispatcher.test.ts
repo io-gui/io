@@ -387,4 +387,23 @@ describe('EventDispatcher', () => {
     parent.dispose()
     child.dispose()
   })
+  it('Should not dispatch duplicate bubbling events through shared ancestors', () => {
+    const root = new MockNode1()
+    const branchA = new MockNode1()
+    const branchB = new MockNode1()
+    const child = new MockNode1()
+
+    branchA.addParent(root)
+    branchB.addParent(root)
+    child.addParent(branchA)
+    child.addParent(branchB)
+
+    let rootHits = 0
+    root._eventDispatcher.addEventListener('dedupe-event', () => {
+      rootHits++
+    })
+
+    child._eventDispatcher.dispatchEvent('dedupe-event', 1, true)
+    expect(rootHits).toEqual(1)
+  })
 })
