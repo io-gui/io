@@ -100,7 +100,7 @@ export class IoMenuTree extends IoElement {
 
   // TODO: Test
   optionMutated() {
-    this.changed();
+    this.changed()
   }
 
   changed() {

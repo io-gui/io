@@ -19,6 +19,7 @@ export declare class IoMenuTree extends IoElement {
     role: string;
     constructor(args?: IoMenuTreeProps);
     onResized(): void;
+    optionMutated(): void;
     changed(): void;
 }
 export declare const ioMenuTree: (arg0?: IoMenuTreeProps) => VDOMElement;
