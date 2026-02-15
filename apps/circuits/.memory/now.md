@@ -1,13 +1,12 @@
 # NOW - Circuits App
 
 ## Current Task
-Refactor circuits grid dimensions so `width`/`height` mean line counts, then migrate level JSON dimensions.
+Darken layer-0 line rendering in scene materials.
 
 ## Key Context
-- Runtime updated: `Game`, `Pads`, `Plotter`, `Grid`, and `ThreeScene` now consume line-count dimensions.
-- Segment extents are derived as `width - 1` and `height - 1` where needed.
-- Level files in `public/levels/lvl_*.json` were migrated by incrementing width/height by 1.
-- `pads.test.ts` updated for line-count constructor semantics (`new Pads(5, 6)` baseline).
+- `Layer0LinesStateMaterial` and `Layer1LinesStateMaterial` both extend `StateTextureMaterialBase`.
+- `StateTextureMaterialBase` builds `outputNode` for all instanced state-texture meshes.
+- A brightness multiplier can tint only selected materials without changing texture data.
 
 ## Open Questions / Next Check
-- Browser smoke-check still pending for camera framing and drag feel on migrated levels.
+- Verify layer-0 lines are visibly darker than layer-1 lines in browser.

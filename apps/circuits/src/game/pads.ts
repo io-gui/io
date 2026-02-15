@@ -1,6 +1,7 @@
 import { Pad, type PadData } from './items/pad.js'
 import { type ColorName } from './items/colors.js'
 import { Register, ReactiveNode } from '@io-gui/core'
+import { DataTexture, NearestFilter, RGBAFormat, UnsignedByteType } from 'three'
 
 export type PadsData = Record<string, PadData>
 
@@ -11,10 +12,52 @@ export class Pads extends ReactiveNode {
   private _stride = 0
   private _cells: (Pad | undefined)[] = []
 
+  private _texture: DataTexture
+
+  get texture() {
+    return this._texture
+  }
+
   constructor(width: number = 2, height: number = 2, data: PadsData = {}) {
     super()
     this.clear(width, height)
     this.load(data)
+
+    this._texture = this._createTexture(new Uint8Array(width * height * 4), width, height)
+  }
+
+  private _createTexture(data: Uint8Array, width: number, height: number) {
+    const texture = new DataTexture(data, width, height, RGBAFormat, UnsignedByteType)
+    texture.magFilter = NearestFilter
+    texture.minFilter = NearestFilter
+    texture.generateMipmaps = false
+    texture.needsUpdate = true
+    return texture
+  }
+
+  updateTexture(width: number, height: number) {
+
+    let data = this._texture.image!.data!
+    const textureSize = width * height * 4
+    if (this._texture.image!.data!.length !== textureSize) {
+      this._texture.dispose()
+      this._texture = this._createTexture(new Uint8Array(textureSize), width, height)
+    }
+
+    data = this._texture.image!.data!
+    data.fill(0)
+
+    this.forEach((pad, x, y) => {
+      if (x < 0 || x >= width || y < 0 || y >= height) return
+      const color = pad.renderColor
+      const index = (x + y * width) * 4
+      data[index] = Math.max(0, Math.min(255, Math.round(color.r * 255)))
+      data[index + 1] = Math.max(0, Math.min(255, Math.round(color.g * 255)))
+      data[index + 2] = Math.max(0, Math.min(255, Math.round(color.b * 255)))
+      data[index + 3] = pad.isTerminal ? 255 : 0
+    })
+
+    this._texture.needsUpdate = true
   }
 
   clear(width: number, height: number) {

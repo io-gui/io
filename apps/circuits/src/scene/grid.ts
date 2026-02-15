@@ -1,4 +1,11 @@
-import { LineSegments, LineBasicMaterial, Float32BufferAttribute, BufferGeometry, Color, AdditiveBlending } from 'three/webgpu'
+import {
+  LineSegments,
+  LineBasicMaterial,
+  Float32BufferAttribute,
+  BufferGeometry,
+  Color,
+  AdditiveBlending,
+} from 'three/webgpu'
 import type { Line } from '../game/items/line.js'
 import type { Pads } from '../game/pads.js'
 
@@ -11,11 +18,9 @@ class Grid extends LineSegments {
   public height: number = 0
 
   constructor() {
-
 		const geometry = new BufferGeometry()
 		const material = new LineBasicMaterial( { transparent: true, vertexColors: true, toneMapped: false, blending: AdditiveBlending } )
 		super( geometry, material )
-
 	}
 
 	update( width: number, height: number, layer0Lines: Line[], layer1Lines: Line[], pads: Pads ) {

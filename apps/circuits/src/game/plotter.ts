@@ -102,9 +102,9 @@ export class Plotter extends ReactiveNode {
     const line = this._activeLayer.lastLine
     if (!line) return false
     if (line.isFinalized) return false
-    
+
     const {x, y} = point
-    
+
     // Lookup what's at target cell
     const padAtPoint = this.pads.getAt(x, y)
     const lineAtPointLayer0 = this.layer0.getLinesAt(x, y)
@@ -112,7 +112,7 @@ export class Plotter extends ReactiveNode {
     const lineCountAtPointLayer0 = lineAtPointLayer0.length
     const lineCountAtPointLayer1 = lineAtPointLayer1.length
     const lineAtPoint = layer === 0 ? lineAtPointLayer0[0] : lineAtPointLayer1[0]
-    
+
     const  lineCountAtPoint = lineCountAtPointLayer1 + lineCountAtPointLayer0
 
     // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
@@ -120,8 +120,8 @@ export class Plotter extends ReactiveNode {
 
     // Reject if point is already at connection capacity
     if (padAtPoint && lineCountAtPoint >= connectionLimit) return false
-    
-    
+
+
     // Reject if diagonal would cross another diagonal on same layer
     const lastPoint = line.lastPt
     if (point.distanceTo(lastPoint) === SQRT_2) {
@@ -130,7 +130,7 @@ export class Plotter extends ReactiveNode {
         return false
       }
     }
-    
+
     // Reject intersection with other line
     if (!padAtPoint) {
       if (lineAtPoint) {
@@ -143,7 +143,7 @@ export class Plotter extends ReactiveNode {
         return this._activeLayer.extendAt(x, y)
       }
     }
-    
+
     // Reached a pad/terminal: snap to it and end drag (color must be compatible)
     if (padAtPoint) {
       if (padAtPoint.renderColor !== COLORS.white && line.renderColor !== COLORS.white && padAtPoint.renderColor !== line.renderColor) {

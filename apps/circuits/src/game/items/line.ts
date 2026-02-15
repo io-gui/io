@@ -105,7 +105,7 @@ export class Line {
         return true
       }
     }
-    return false;
+    return false
   }
 
   resetColor() {

@@ -5,8 +5,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { ReactiveNode, Register } from '@io-gui/core';
-import { Pad } from './items/pad.js';
-import { Line } from './items/line.js';
+import { Vector2 } from 'three/webgpu';
+import { COLORS } from './items/colors.js';
+import { Pads } from './pads.js';
+import { Layer } from './layer.js';
+const SQRT_2 = Math.sqrt(2);
 /**
  * Plotter — position and geometry only.
  * Intersection checks, adding/removing pads, terminals, and lines.
@@ -15,137 +18,136 @@ import { Line } from './items/line.js';
 let Plotter = class Plotter extends ReactiveNode {
     width = 0;
     height = 0;
-    pads = [];
-    lines = [];
-    connect(pads, lines, width, height) {
-        this.width = width;
-        this.height = height;
+    pads = new Pads();
+    layer0 = new Layer();
+    layer1 = new Layer();
+    connect(pads, layer0, layer1) {
         this.pads = pads;
-        this.lines = lines;
+        this.layer0 = layer0;
+        this.layer1 = layer1;
     }
-    getPointAt([x, y]) {
-        for (const pad of this.pads) {
-            if (pad.pos[0] === x && pad.pos[1] === y)
-                return pad;
-        }
-    }
-    getLinesAtPoint([x, y], filter) {
-        const lines = [];
-        for (const line of this.lines) {
-            if (line.pos.some(([px, py]) => px === x && py === y) && (filter?.(line) ?? true)) {
-                lines.push(line);
-            }
-        }
-        return lines;
-    }
-    getLineById(id) {
-        return this.lines.find((l) => l.id === id);
-    }
-    checkDiagonalCrossing(line, [x, y]) {
-        const last = line.pos[line.pos.length - 1];
-        const mx = (x + last[0]) / 2;
-        const my = (y + last[1]) / 2;
-        for (const other of this.lines) {
-            if (other.layer !== line.layer)
-                continue;
-            if (other.hasDiagonalSegmentAt([mx, my]))
-                return false;
-        }
-        return true;
-    }
-    addPad(id, [x, y], color, isTerminal = false) {
-        if (this.getPointAt([x, y]))
+    finalizeLine() {
+        const lastLine = this._activeLayer.lastLine;
+        if (!lastLine)
             return false;
-        this.pads.push(new Pad(id, [x, y], isTerminal, color));
-        this.dispatch('game-update', undefined, true);
-        return true;
+        if (lastLine.isFinalized)
+            return false;
+        const connected = this.isLineCompleated(lastLine);
+        if (!connected)
+            this._activeLayer.delete(lastLine);
+        else
+            lastLine.finalize();
+        return connected;
     }
-    delete([x, y]) {
-        const padIdx = this.pads.findIndex((p) => p.pos[0] === x && p.pos[1] === y);
-        if (padIdx !== -1) {
-            this.pads.splice(padIdx, 1);
-        }
-        const lineIdx = this.lines.findIndex((l) => l.pos.some(([px, py]) => px === x && py === y));
-        if (lineIdx !== -1) {
-            this.lines.splice(lineIdx, 1);
-        }
-        this.dispatch('game-update', undefined, true);
+    isLineCompleated(line) {
+        const first = line.pos[0];
+        const last = line.lastPt;
+        const p1 = this.pads.getAt(first.x, first.y);
+        const p2 = this.pads.getAt(last.x, last.y);
+        return Boolean(p1 && p2 && (first.x !== last.x || first.y !== last.y));
     }
-    verifyLineComplete(id) {
-        const line = this.getLineById(id);
-        if (line) {
-            const first = line.pos[0];
-            const last = line.pos[line.pos.length - 1];
-            const p1 = this.getPointAt(first);
-            const p2 = this.getPointAt(last);
-            if (!p1 || !p2 || (first[0] === last[0] && first[1] === last[1])) {
-                const idx = this.lines.findIndex((l) => l.id === id);
-                if (idx !== -1)
-                    this.lines.splice(idx, 1);
+    plotLineTo(point, layer) {
+        this._activeLayer = layer === 0 ? this.layer0 : this.layer1;
+        let line = this._activeLayer.lastLine;
+        if (!line)
+            return false;
+        if (line.isFinalized)
+            return false;
+        let extended = false;
+        while (!line.lastPt.equals(point) && !line.isFinalized) {
+            const nextPoint = this.getNextStepToward(line.lastPt, point);
+            const added = this.extendLineTo(nextPoint, layer);
+            if (!added)
+                break;
+            extended = true;
+            line = this._activeLayer.lastLine;
+            if (!line)
+                break;
+        }
+        return extended;
+    }
+    getNextStepToward(from, target) {
+        const dx = Math.sign(target.x - from.x);
+        const dy = Math.sign(target.y - from.y);
+        return new Vector2(from.x + dx, from.y + dy);
+    }
+    startLineAt(point, layer) {
+        this._activeLayer = layer === 0 ? this.layer0 : this.layer1;
+        const { x, y } = point;
+        // Lookup what's at target cell
+        const padAtPoint = this.pads.getAt(x, y);
+        const lineAtPointLayer0 = this.layer0.getLinesAt(x, y);
+        const lineAtPointLayer1 = this.layer1.getLinesAt(x, y);
+        const lineCountAtPointLayer0 = lineAtPointLayer0.length;
+        const lineCountAtPointLayer1 = lineAtPointLayer1.length;
+        if (!padAtPoint)
+            return false;
+        const lineCountAtPoint = lineCountAtPointLayer1 + lineCountAtPointLayer0;
+        // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
+        const connectionLimit = padAtPoint ? (padAtPoint.isTerminal ? 1 : 2) : 0;
+        if (lineCountAtPoint >= connectionLimit)
+            return false;
+        return this._activeLayer.addAt(x, y, padAtPoint.renderColor);
+    }
+    extendLineTo(point, layer) {
+        this._activeLayer = layer === 0 ? this.layer0 : this.layer1;
+        const line = this._activeLayer.lastLine;
+        if (!line)
+            return false;
+        if (line.isFinalized)
+            return false;
+        const { x, y } = point;
+        // Lookup what's at target cell
+        const padAtPoint = this.pads.getAt(x, y);
+        const lineAtPointLayer0 = this.layer0.getLinesAt(x, y);
+        const lineAtPointLayer1 = this.layer1.getLinesAt(x, y);
+        const lineCountAtPointLayer0 = lineAtPointLayer0.length;
+        const lineCountAtPointLayer1 = lineAtPointLayer1.length;
+        const lineAtPoint = layer === 0 ? lineAtPointLayer0[0] : lineAtPointLayer1[0];
+        const lineCountAtPoint = lineCountAtPointLayer1 + lineCountAtPointLayer0;
+        // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
+        const connectionLimit = padAtPoint ? (padAtPoint.isTerminal ? 1 : 2) : 0;
+        // Reject if point is already at connection capacity
+        if (padAtPoint && lineCountAtPoint >= connectionLimit)
+            return false;
+        // Reject if diagonal would cross another diagonal on same layer
+        const lastPoint = line.lastPt;
+        if (point.distanceTo(lastPoint) === SQRT_2) {
+            if (this._activeLayer.hasDiagonalCrossing(x, y, lastPoint.x, lastPoint.y)) {
+                console.log('diagonal crossing rejected');
                 return false;
             }
-            return true;
+        }
+        // Reject intersection with other line
+        if (!padAtPoint) {
+            if (lineAtPoint) {
+                if (lineAtPoint !== line) {
+                    return false;
+                }
+                else {
+                    return this._activeLayer.extendAt(x, y);
+                }
+            }
+            else {
+                return this._activeLayer.extendAt(x, y);
+            }
+        }
+        // Reached a pad/terminal: snap to it and end drag (color must be compatible)
+        if (padAtPoint) {
+            if (padAtPoint.renderColor !== COLORS.white && line.renderColor !== COLORS.white && padAtPoint.renderColor !== line.renderColor) {
+                console.log('color mismatch rejected');
+                return false;
+            }
+            const added = this._activeLayer.extendAt(x, y);
+            if (added) {
+                this.dispatch('line-end-drag', undefined, true);
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         return false;
-    }
-    isInBounds([x, y]) {
-        return x >= 0 && x <= this.width && y >= 0 && y <= this.height;
-    }
-    addLineSegment(id, [x, y], layer) {
-        if (!this.isInBounds([x, y]))
-            return { added: false, endDrag: false };
-        // Lookup what's at target cell
-        const point = this.getPointAt([x, y]);
-        const linesAtPoint = this.getLinesAtPoint([x, y], (line) => (line.layer === 0));
-        const underlineLinesAtPoint = this.getLinesAtPoint([x, y], (line) => line.layer === -1);
-        // Terminal pads accept 1 connection, normal pads accept 2, empty cells accept 0
-        const connectionLimit = point ? (point.isTerminal ? 1 : 2) : 0;
-        let added = false;
-        let endDrag = false;
-        // Reject if point is already at connection capacity
-        if (point && (linesAtPoint.length + underlineLinesAtPoint.length) >= connectionLimit) {
-            return { added, endDrag };
-        }
-        const line = this.getLineById(id);
-        if (line) {
-            // --- Extending existing line ---
-            // Reject if diagonal would cross another diagonal on same layer
-            if (!this.checkDiagonalCrossing(line, [x, y])) {
-                return { added, endDrag };
-            }
-            // Reject self-intersection (exclude last 2 points to preserve backtracking)
-            const posCount = line.pos.length;
-            if (line.pos.some(([px, py], i) => px === x && py === y && i < posCount - 2)) {
-                return { added, endDrag };
-            }
-            const sameLineAtPoint = this.getLinesAtPoint([x, y], (line) => (line.id === id && line.layer === 0))?.[0] || null;
-            // Empty cell: allow if no foreign line occupies it (or underline layer bypasses)
-            if (!point && ((!linesAtPoint.length || sameLineAtPoint) || layer === -1)) {
-                added = line.plotSegment([x, y]);
-            }
-            // Reached a pad/terminal: snap to it and end drag (color must be compatible)
-            if (point) {
-                if (point.renderColor !== 'white' && line.color !== 'white' && point.renderColor !== line.color) {
-                    return { added: false, endDrag: false };
-                }
-                added = line.plotSegment([x, y]);
-                endDrag = true;
-            }
-        }
-        else {
-            // --- Starting new line: must begin on a pad or terminal ---
-            if (!point)
-                return { added: false, endDrag: false };
-            const newLine = new Line(id, [[x, y]], layer);
-            newLine.color = point.renderColor;
-            this.lines.push(newLine);
-            added = true;
-        }
-        if (endDrag) {
-            this.dispatch('line-end-drag', { id }, true);
-        }
-        this.dispatch('game-update', undefined, true);
-        return { added, endDrag };
     }
 };
 Plotter = __decorate([

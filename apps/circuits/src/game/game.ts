@@ -25,6 +25,12 @@ export class Game extends ReactiveNode {
   @ReactiveProperty({value: '', type: String})
   declare level: string
 
+  @ReactiveProperty({type: Number})
+  declare width: number
+
+  @ReactiveProperty({type: Number})
+  declare height: number
+
   @ReactiveProperty({type: Pads, init: null})
   declare pads: Pads
 
@@ -34,20 +40,24 @@ export class Game extends ReactiveNode {
   @ReactiveProperty({type: Layer, init: null})
   declare layer1: Layer
 
-  @ReactiveProperty({type: Number})
-  declare width: number
-
-  @ReactiveProperty({type: Number})
-  declare height: number
-  
   @ReactiveProperty({type: Plotter, init: null})
   declare plotter: Plotter
-  
+
   @Property($({key: 'null-level-state', value: {}, storage: 'local'}))
   declare storedState: Binding
 
-  undoStack: string[] = []
+  @Property(Array)
+  declare undoStack: string[]
+
+  @Property(Array)
   redoStack: string[] = []
+
+  static get Listeners() {
+    return {
+      'game-init': 'onGameInit',
+      'game-update': 'onGameUpdate',
+    }
+  }
 
   async load(level: string): Promise<void> {
     try {
@@ -66,20 +76,25 @@ export class Game extends ReactiveNode {
     if (Object.keys(this.storedState.value).length === 0) {
       await this.load(this.level)
     }
-    
+
     this.fromJSON(JSON.stringify(this.storedState.value))
     this.propagateColors()
 
     this.undoStack = [this.toJSON()]
     this.redoStack = []
 
-    this.dispatch('game-update', undefined, true)
+    this.dispatch('game-init', undefined, true)
   }
 
+  onGameInit() {
+    this.onGameUpdate()
+  };
+  onGameUpdate() {
+    this.updateTextures()
+  };
+
   levelChanged() {
-    void this.initialize().then(() => {
-      this.dispatch('game-init-scene', undefined, true)
-    })
+    void this.initialize()
   }
 
   reload() {
@@ -105,8 +120,6 @@ export class Game extends ReactiveNode {
     this.layer0 = new Layer(this.width, this.height, state.layer0)
     this.layer1 = new Layer(this.width, this.height, state.layer1)
     this.plotter.connect(this.pads, this.layer0, this.layer1)
-    this.undoStack = []
-    this.redoStack = []
   }
 
   toJSON(): string {
@@ -123,6 +136,7 @@ export class Game extends ReactiveNode {
     const state = this.toJSON()
     if (state !== this.undoStack[this.undoStack.length - 1]) {
       this.undoStack.push(state)
+      this.redoStack = []
     }
   }
 
@@ -157,7 +171,7 @@ export class Game extends ReactiveNode {
   propagateColors(): void {
     this.resetColors()
 
-    const lines = [...this.layer0.lines, ...this.layer1.lines];
+    const lines = [...this.layer0.lines, ...this.layer1.lines]
 
     for (let iter = 0; iter < 16; iter++) {
       for (const line of lines) {
@@ -207,6 +221,12 @@ export class Game extends ReactiveNode {
 
     if (completed) console.log('game-complete', this.level, completed)
     this.dispatch('game-complete', { level: this.level, completed }, true)
+  }
+
+  updateTextures() {
+    this.pads.updateTexture(this.width, this.height)
+    this.layer0.updateTexture(this.width, this.height)
+    this.layer1.updateTexture(this.width, this.height)
   }
 
   finalizeMove(): void {

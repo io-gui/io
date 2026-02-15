@@ -15,13 +15,20 @@ import {
   SphereGeometry,
   Vector2,
   Vector3,
+  Texture,
 } from 'three/webgpu'
-import { Register } from '@io-gui/core'
+import { ReactiveProperty, Register } from '@io-gui/core'
 import { ThreeApplet, ThreeAppletProps } from '@io-gui/three'
 import { Pad } from '../game/items/pad'
 import { Line } from '../game/items/line'
 import { Pads } from '../game/pads'
 import { Grid } from './grid'
+import { DebugPlanes } from './debugPlanes.js'
+import { PadsStateMaterial } from './materials/PadsStateMaterial.js'
+import { TerminalsStateMaterial } from './materials/TerminalsStateMaterial.js'
+import { Layer0LinesStateMaterial } from './materials/Layer0LinesStateMaterial.js'
+import { Layer1LinesStateMaterial } from './materials/Layer1LinesStateMaterial.js'
+import { Game } from '../game/game'
 
 const PAD_SPHERE_RADIUS = 0.25
 const TERMINAL_BOX_SIZE = 0.5
@@ -30,7 +37,6 @@ const LINE_CAPSULE_AXIS_LENGTH = 1
 const LINE_DIAGONAL_INSET = 0.035
 const LINE_LAYER_BEHIND_Z = -0.25
 const LINE_LAYER_MINUS_ONE_WIDTH_FACTOR = 1.5
-const LINE_LAYER_MINUS_ONE_COLOR_FACTOR = 0.25
 
 const _yAxis = new Vector3(0, 1, 0)
 const _targetVector = new Vector3()
@@ -38,32 +44,53 @@ const _segmentDir = new Vector3()
 const _segmentQuat = new Quaternion()
 const _segmentScale = new Vector3()
 const _segmentPosition = new Vector3()
+const _instanceUVColor = new Color()
+
+const tempTexture = new Texture()
+
+type ThreeSceneProps = ThreeAppletProps & {
+  game: Game
+}
 
 @Register
 export class ThreeScene extends ThreeApplet {
 
+  @ReactiveProperty({ type: Game, init: null })
+  declare game: Game
+
   public camera: PerspectiveCamera = new PerspectiveCamera( 25, 1, 0.1, 1000 )
   public cameraRig: Group = new Group()
   public cameraTarget: Object3D = new Object3D()
+
   public grid: Grid = new Grid()
+  public debugPlanes: DebugPlanes = new DebugPlanes()
   public pads: InstancedMesh
   public terminals: InstancedMesh
-  public lines: InstancedMesh
+  public layer0Lines: InstancedMesh
+  public layer1Lines: InstancedMesh
+  public padsMaterial: PadsStateMaterial
+  public terminalsMaterial: TerminalsStateMaterial
+  public layer0LinesMaterial: Layer0LinesStateMaterial
+  public layer1LinesMaterial: Layer1LinesStateMaterial
 
   public hitMarker: Mesh = new Mesh(new SphereGeometry(0.1, 16, 12), new MeshPhongMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 }))
   public oldHitMarker: Mesh = new Mesh(new SphereGeometry(0.12, 16, 12), new MeshPhongMaterial({ color: 0x0000ff, transparent: true, opacity: 0.5 }))
   public rawHitMarker: Mesh = new Mesh(new SphereGeometry(0.13, 16, 12), new MeshPhongMaterial({ color: 0xffffff, transparent: true, opacity: 0.5 }))
 
   static padGeometry: SphereGeometry = new SphereGeometry(PAD_SPHERE_RADIUS, 16, 12)
-  static padMaterial: MeshPhongMaterial = new MeshPhongMaterial({ vertexColors: true })
   static terminalGeometry: BoxGeometry = new BoxGeometry(TERMINAL_BOX_SIZE, TERMINAL_BOX_SIZE, TERMINAL_BOX_SIZE * 0.6)
-  static terminalMaterial: MeshPhongMaterial = new MeshPhongMaterial({ vertexColors: true })
   static lineGeometry: CapsuleGeometry = new CapsuleGeometry(LINE_CAPSULE_RADIUS, LINE_CAPSULE_AXIS_LENGTH, 4, 8)
-  static lineMaterial: MeshPhongMaterial = new MeshPhongMaterial({ vertexColors: true })
 
   public _drag: Vector3 = new Vector3()
 
-  constructor(args: ThreeAppletProps) {
+  static get Listeners() {
+    return {
+      'game-update': 'onGameUpdate',
+      'game-init': 'onGameInit',
+    }
+  }
+
+  constructor(args: ThreeSceneProps) {
     super(args)
 
     this.scene.add(this.cameraRig)
@@ -71,10 +98,25 @@ export class ThreeScene extends ThreeApplet {
     this.cameraRig.add(this.cameraTarget)
 
     this.scene.add(this.grid)
+    this.scene.add(this.debugPlanes)
 
-    this.pads = new InstancedMesh(ThreeScene.padGeometry, ThreeScene.padMaterial, 0)
-    this.terminals = new InstancedMesh(ThreeScene.terminalGeometry, ThreeScene.terminalMaterial, 0)
-    this.lines = new InstancedMesh(ThreeScene.lineGeometry, ThreeScene.lineMaterial, 0)
+    this.padsMaterial = new PadsStateMaterial(tempTexture, tempTexture, tempTexture)
+    this.terminalsMaterial = new TerminalsStateMaterial(tempTexture, tempTexture, tempTexture)
+    this.layer0LinesMaterial = new Layer0LinesStateMaterial(tempTexture, tempTexture, tempTexture)
+    this.layer1LinesMaterial = new Layer1LinesStateMaterial(tempTexture, tempTexture, tempTexture)
+
+    this.pads = new InstancedMesh(ThreeScene.padGeometry.clone(), this.padsMaterial, 1)
+    this.terminals = new InstancedMesh(ThreeScene.terminalGeometry.clone(), this.terminalsMaterial, 1)
+    this.layer0Lines = new InstancedMesh(ThreeScene.lineGeometry.clone(), this.layer0LinesMaterial, 1)
+    this.layer1Lines = new InstancedMesh(ThreeScene.lineGeometry.clone(), this.layer1LinesMaterial, 1)
+    this.pads.count = 0
+    this.terminals.count = 0
+    this.layer0Lines.count = 0
+    this.layer1Lines.count = 0
+    this.scene.add(this.pads)
+    this.scene.add(this.terminals)
+    this.scene.add(this.layer0Lines)
+    this.scene.add(this.layer1Lines)
 
     this.scene.add(this.hitMarker)
     this.scene.add(this.oldHitMarker)
@@ -88,19 +130,36 @@ export class ThreeScene extends ThreeApplet {
     this.scene.add( pointLight )
   }
 
+  ready() {
+    this.debounce(() => {
+      this.onGameInit()
+    })
+  }
+
+  onGameInit() {
+    this.initGrid(this.game)
+    this.onGameUpdate()
+  };
+  onGameUpdate() {
+    this.updateGrid(this.game)
+    this.updatePads(this.game.pads)
+    this.updateTerminals(this.game.pads)
+    this.updateLines(this.game.layer0.lines, this.game.layer1.lines)
+  };
+
   updateMarkers(hit: Vector2, oldHit: Vector2, rawHit: Vector2) {
     this.hitMarker.position.set(hit.x, hit.y, 0)
     this.oldHitMarker.position.set(oldHit.x, oldHit.y, 0)
     this.rawHitMarker.position.set(rawHit.x, rawHit.y, 0)
   }
-  
+
   updateDrag(screen: Vector2, screenStart: Vector2) {
     this._drag.set(screen.x - screenStart.x, screen.y - screenStart.y, 0)
   }
 
-  initGrid(width: number, height: number) {
-    const segmentWidth = Math.max(width - 1, 1)
-    const segmentHeight = Math.max(height - 1, 1)
+  initGrid(game: Game) {
+    const segmentWidth = Math.max(game.width - 1, 1)
+    const segmentHeight = Math.max(game.height - 1, 1)
     this.camera.aspect = segmentWidth / segmentHeight
     // calculate distance to contain grid in view
     const halfFovRad = this.camera.fov * Math.PI / 360
@@ -108,34 +167,42 @@ export class ThreeScene extends ThreeApplet {
     this.cameraRig.position.set(segmentWidth / 2, segmentHeight / 2, 0)
     this.camera.position.set(0, 0, gridDistance)
   }
-  updateGrid(width: number, height: number, layer0Lines: Line[], layer1Lines: Line[], pads: Pads) {
-    this.grid.update(width, height, layer0Lines, layer1Lines, pads)
+  updateGrid(game: Game) {
+    this.grid.update(game.width, game.height, game.layer0.lines, game.layer1.lines, game.pads)
+    this.debugPlanes.update(game.width, game.height, game.pads.texture, game.layer0.texture, game.layer1.texture)
+    this.padsMaterial.setTextures(game.pads.texture, game.layer0.texture, game.layer1.texture)
+    this.terminalsMaterial.setTextures(game.pads.texture, game.layer0.texture, game.layer1.texture)
+    this.layer0LinesMaterial.setTextures(game.pads.texture, game.layer0.texture, game.layer1.texture)
+    this.layer1LinesMaterial.setTextures(game.pads.texture, game.layer0.texture, game.layer1.texture)
   }
 
   // TODO: Fix empty instanced arrays
-
   updatePads(pads: Pads) {
     const nonTerminalPads: [Pad, number, number][] = []
     pads.forEach((pad, x, y) => {
       if (!pad.isTerminal) nonTerminalPads.push([pad, x, y])
     })
-    if (this.pads.parent) {
-      this.scene.remove(this.pads)
-      if (nonTerminalPads.length === 0) return
-    }
-
-    this.pads = new InstancedMesh(ThreeScene.padGeometry, ThreeScene.padMaterial, nonTerminalPads.length)
+    const count = nonTerminalPads.length
+    this.pads = this._ensureMeshCapacity(this.pads, this.padsMaterial, () => ThreeScene.padGeometry.clone(), count)
+    const width = this.grid.width
+    const height = this.grid.height
     const matrix = new Matrix4()
-    const padColor = new Color()
-    for (let i = 0; i < nonTerminalPads.length; i++) {
+    for (let i = 0; i < count; i++) {
       matrix.makeTranslation(nonTerminalPads[i][1], nonTerminalPads[i][2], 0)
       this.pads.setMatrixAt(i, matrix)
-      padColor.copy(nonTerminalPads[i][0].renderColor)
-      this.pads.setColorAt(i, padColor)
+      _instanceUVColor.setRGB(
+        this._coordToTextureU(nonTerminalPads[i][1], width),
+        this._coordToTextureV(nonTerminalPads[i][2], height),
+        0
+      )
+      this.pads.setColorAt(i, _instanceUVColor)
     }
+    this.pads.count = count
     this.pads.instanceMatrix.needsUpdate = true
-    if (this.pads.instanceColor) this.pads.instanceColor.needsUpdate = true
-    this.scene.add(this.pads)
+    if (this.pads.instanceColor) {
+      this.pads.instanceColor.needsUpdate = true
+      this.padsMaterial.setInstanceUVAttribute(this.pads.instanceColor)
+    }
   }
 
   updateTerminals(pads: Pads) {
@@ -143,48 +210,46 @@ export class ThreeScene extends ThreeApplet {
     pads.forEach((pad, x, y) => {
       if (pad.isTerminal) terminalPads.push([pad, x, y])
     })
-    if (this.terminals.parent) {
-      this.scene.remove(this.terminals)
-    }
-    this.terminals = new InstancedMesh(
-      ThreeScene.terminalGeometry,
-      ThreeScene.terminalMaterial,
-      terminalPads.length
-    )
+    const count = terminalPads.length
+    this.terminals = this._ensureMeshCapacity(this.terminals, this.terminalsMaterial, () => ThreeScene.terminalGeometry.clone(), count)
+    const width = this.grid.width
+    const height = this.grid.height
     const matrix = new Matrix4()
-    const terminalColor = new Color()
-    for (let i = 0; i < terminalPads.length; i++) {
+    for (let i = 0; i < count; i++) {
       matrix.makeTranslation(terminalPads[i][1], terminalPads[i][2], 0)
       this.terminals.setMatrixAt(i, matrix)
-      terminalColor.copy(terminalPads[i][0].renderColor)
-      this.terminals.setColorAt(i, terminalColor)
+      _instanceUVColor.setRGB(
+        this._coordToTextureU(terminalPads[i][1], width),
+        this._coordToTextureV(terminalPads[i][2], height),
+        0
+      )
+      this.terminals.setColorAt(i, _instanceUVColor)
     }
+    this.terminals.count = count
     this.terminals.instanceMatrix.needsUpdate = true
-    if (this.terminals.instanceColor) this.terminals.instanceColor.needsUpdate = true
-    this.scene.add(this.terminals)
+    if (this.terminals.instanceColor) {
+      this.terminals.instanceColor.needsUpdate = true
+      this.terminalsMaterial.setInstanceUVAttribute(this.terminals.instanceColor)
+    }
   }
   updateLines(layer0Lines: Line[], layer1Lines: Line[]) {
-    const lines = [...layer0Lines, ...layer1Lines]
-    if (this.lines.parent) {
-      this.scene.remove(this.lines)
-    }
+    this._updateLayerLines(layer0Lines, true)
+    this._updateLayerLines(layer1Lines, false)
+  }
+
+  private _updateLayerLines(lines: Line[], isLayer0: boolean) {
     const segmentCount = lines.reduce((n, line) => n + Math.max(0, line.pos.length - 1), 0)
-    this.lines = new InstancedMesh(
-      ThreeScene.lineGeometry,
-      ThreeScene.lineMaterial,
-      segmentCount
-    )
+    const mesh = isLayer0
+      ? this.layer0Lines = this._ensureMeshCapacity(this.layer0Lines, this.layer0LinesMaterial, () => ThreeScene.lineGeometry.clone(), segmentCount)
+      : this.layer1Lines = this._ensureMeshCapacity(this.layer1Lines, this.layer1LinesMaterial, () => ThreeScene.lineGeometry.clone(), segmentCount)
+    const material = isLayer0 ? this.layer0LinesMaterial : this.layer1LinesMaterial
+    const width = this.grid.width
+    const height = this.grid.height
     const matrix = new Matrix4()
-    const lineColor = new Color()
     let idx = 0
     for (const line of lines) {
-      lineColor.copy(line.renderColor)
-      const layer = layer0Lines.includes(line) ? 0 : 1
-      if (layer === 0) {
-        lineColor.multiplyScalar(LINE_LAYER_MINUS_ONE_COLOR_FACTOR)
-      }
       const pos = line.pos
-      const isBehind = layer === 0
+      const isBehind = isLayer0
       const widthScale = isBehind ? LINE_LAYER_MINUS_ONE_WIDTH_FACTOR : 1
       const segmentZ = isBehind ? LINE_LAYER_BEHIND_Z : 0
       for (let j = 0; j < pos.length - 1; j++) {
@@ -206,14 +271,46 @@ export class ThreeScene extends ThreeApplet {
           _segmentQuat,
           _segmentScale
         )
-        this.lines.setMatrixAt(idx, matrix)
-        this.lines.setColorAt(idx, lineColor)
+        mesh.setMatrixAt(idx, matrix)
+        _instanceUVColor.setRGB(
+          this._coordToTextureU(ax, width),
+          this._coordToTextureV(ay, height),
+          0
+        )
+        mesh.setColorAt(idx, _instanceUVColor)
         idx++
       }
     }
-    this.lines.instanceMatrix.needsUpdate = true
-    if (this.lines.instanceColor) this.lines.instanceColor.needsUpdate = true
-    this.scene.add(this.lines)
+    mesh.count = segmentCount
+    mesh.instanceMatrix.needsUpdate = true
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true
+      material.setInstanceUVAttribute(mesh.instanceColor)
+    }
+  }
+
+  private _coordToTextureU(x: number, width: number) {
+    return (x + 0.5) / Math.max(width, 1)
+  }
+
+  private _coordToTextureV(y: number, height: number) {
+    return (y + 0.5) / Math.max(height, 1)
+  }
+
+  private _ensureMeshCapacity(
+    mesh: InstancedMesh,
+    material: PadsStateMaterial | TerminalsStateMaterial | Layer0LinesStateMaterial | Layer1LinesStateMaterial,
+    createGeometry: () => SphereGeometry | BoxGeometry | CapsuleGeometry,
+    count: number,
+  ) {
+    const required = Math.max(count, 1)
+    if (mesh.instanceMatrix.count >= required) return mesh
+    this.scene.remove(mesh)
+    mesh.geometry.dispose()
+    const nextMesh = new InstancedMesh(createGeometry(), material, required)
+    nextMesh.count = 0
+    this.scene.add(nextMesh)
+    return nextMesh
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -227,6 +324,12 @@ export class ThreeScene extends ThreeApplet {
     this.cameraTarget.position.y = ((this.cameraTarget.position.y * 9) - this._drag.y * 0.02 * segmentHeight) / 10
 
     this.camera.lookAt(_targetVector.setFromMatrixPosition(this.cameraTarget.matrixWorld))
+  }
+
+  dispose() {
+    this.debugPlanes.dispose()
+    this.grid.dispose()
+    super.dispose()
   }
 
 }

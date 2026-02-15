@@ -1,5 +1,5 @@
 import { Register, ReactiveNode } from '@io-gui/core'
-import { Color } from 'three/webgpu'
+import { Color, DataTexture, NearestFilter, RGBAFormat, UnsignedByteType } from 'three/webgpu'
 import { Line, type LineData } from './items/line.js'
 import { Vector2 } from 'three/webgpu'
 import { COLORS } from './items/colors.js'
@@ -11,6 +11,11 @@ export class Layer extends ReactiveNode {
   private _width = 0
   private _height = 0
   private _lines: Line[] = []
+  private _texture: DataTexture
+
+  get texture() {
+    return this._texture
+  }
 
   get lines() {
     return this._lines
@@ -23,6 +28,56 @@ export class Layer extends ReactiveNode {
   constructor(width: number = 2, height: number = 2, data: LayerData = []) {
     super()
     this.load(width, height, data)
+
+    this._texture = this._createTexture(new Uint8Array(width * height * 4), width, height)
+  }
+
+  private _createTexture(data: Uint8Array, width: number, height: number) {
+    const texture = new DataTexture(data, width, height, RGBAFormat, UnsignedByteType)
+    texture.magFilter = NearestFilter
+    texture.minFilter = NearestFilter
+    texture.generateMipmaps = false
+    texture.needsUpdate = true
+    return texture
+  }
+
+  updateTexture(width: number, height: number) {
+    let data = this._texture.image!.data!
+    const textureSize = width * height * 4
+    if (this._texture.image!.data!.length !== textureSize) {
+      this._texture.dispose()
+      this._texture = this._createTexture(new Uint8Array(textureSize), width, height)
+    }
+
+    data = this._texture.image!.data!
+    data.fill(0)
+
+    const cellLineCount = new Uint8Array(width * height)
+
+    for (const line of this._lines) {
+      const touchedCells = new Set<number>()
+      for (const pos of line.pos) {
+        if (pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height) continue
+        touchedCells.add(pos.x + pos.y * width)
+      }
+      for (const cellIndex of touchedCells) {
+        const prevCount = cellLineCount[cellIndex]
+        if (prevCount === 0) {
+          const dataIndex = cellIndex * 4
+          data[dataIndex] = Math.max(0, Math.min(255, Math.round(line.renderColor.r * 255)))
+          data[dataIndex + 1] = Math.max(0, Math.min(255, Math.round(line.renderColor.g * 255)))
+          data[dataIndex + 2] = Math.max(0, Math.min(255, Math.round(line.renderColor.b * 255)))
+        }
+        cellLineCount[cellIndex] = Math.min(prevCount + 1, 2)
+      }
+    }
+
+    for (let cellIndex = 0; cellIndex < cellLineCount.length; cellIndex++) {
+      const count = cellLineCount[cellIndex]
+      data[cellIndex * 4 + 3] = count === 0 ? 0 : (count === 1 ? 128 : 255)
+    }
+
+    this._texture.needsUpdate = true
   }
 
   clear(width: number, height: number) {

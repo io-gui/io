@@ -67,3 +67,13 @@ Only project-wide patterns (like app integration via iframe) belong in root work
 ### [pattern] Io events: bubbling + Listeners, not listener wrangling
 
 User refactored Game event consumer code: use `dispatch(..., true)` from source node; consumers declare `static get Listeners()` mapping event names to handler methods. Avoid manual addEventListener in ready(), \_gameForListeners, \_wireGameCallbacks, and add/remove when game instance changes. Promoted to working memory.
+
+## 2026-02-14
+
+### [fix] Core synthetic bubbling dedupe for shared ancestors
+
+Patched `packages/core/src/core/EventDispatcher.ts` to prevent duplicate event delivery when one bubbling dispatch reaches the same ancestor through multiple parent branches (diamond graph / cross-tree links). Added a per-dispatch `visited` set in `dispatchEvent()` and skipped recursion to parents already visited. Added regression test in `packages/core/src/core/EventDispatcher.test.ts` that asserts a shared root only receives one bubbling event hit.
+
+### [fix] Core dedupe for synthetic+DOM overlap on EventTarget boundary
+
+Extended `EventDispatcher` dedupe so a synthetic dispatch converted to native `CustomEvent` on an `IoElement` does not re-hit ancestors already reached via the synthetic graph in the same dispatch. Added `hasVisitedDomAncestor()` and set native event `bubbles` to false when a visited DOM ancestor exists. Added regression test covering overlap case (`ReactiveNode` bubbling via direct parent + child `IoElement` DOM bubble) to ensure one delivery.

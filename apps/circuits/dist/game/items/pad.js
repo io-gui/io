@@ -1,44 +1,27 @@
-export const PAD_COLORS = {
-    white: '#ffffff',
-    red: '#e52800',
-    green: '#005923',
-    blue: '#06afff',
-    pink: '#ef47cc',
-    yellow: '#fec41a',
-    orange: '#ff6910',
-    purple: '#760281',
-};
+import { COLORS } from './colors.js';
 export class Pad {
-    id;
-    pos;
-    isTerminal;
     color;
+    isTerminal;
     renderColor;
-    constructor(id, pos, isTerminal = false, color) {
-        if (isTerminal && !color)
-            console.error('Terminal pad must have a color');
-        if (!isTerminal && color !== undefined)
-            console.error('Non-terminal pad cannot have a color');
-        this.id = id;
-        this.pos = pos;
-        this.isTerminal = isTerminal;
-        this.color = isTerminal ? (color ?? 'red') : undefined;
-        this.renderColor = this.color ?? 'white';
+    constructor(color) {
+        this.color = color;
+        this.isTerminal = color !== undefined;
+        this.renderColor = this.color ? COLORS[this.color] : COLORS.white;
     }
     toJSON() {
         if (this.isTerminal) {
-            debug: if (!this.color)
+            debug: if (this.color === undefined)
                 console.error('Terminal pad must have a color');
-            return { pos: this.pos, id: this.id, isTerminal: this.isTerminal, color: this.color };
+            return { color: this.color };
         }
         else {
-            debug: if (this.color)
+            debug: if (this.color !== undefined)
                 console.error('Non-terminal pad cannot have a color');
-            return { pos: this.pos, id: this.id };
+            return {};
         }
     }
-    static fromJSON(data) {
-        return new Pad(data.id, data.pos, data.isTerminal, data.color);
+    resetColor() {
+        this.renderColor = this.color ? COLORS[this.color] : COLORS.white;
     }
 }
 //# sourceMappingURL=pad.js.map
