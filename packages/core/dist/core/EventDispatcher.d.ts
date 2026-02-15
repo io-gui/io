@@ -117,7 +117,7 @@ export declare class EventDispatcher {
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>): void;
+    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>, visited?: Set<ReactiveNode | IoElement | EventTarget>): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.
