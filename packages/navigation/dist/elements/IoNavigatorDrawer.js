@@ -94,6 +94,18 @@ let IoNavigatorDrawer = class IoNavigatorDrawer extends IoElement {
     constructor(args) {
         super(args);
     }
+    static get Listeners() {
+        return {
+            'io-menu-option-clicked': 'onMenuOptionClicked',
+            'io-menu-tree-resized': 'onMenuTreeResized',
+        };
+    }
+    onMenuOptionClicked() {
+        this.expanded = false;
+    }
+    onMenuTreeResized() {
+        this.throttle(this.updateDrawerSizeThrottled);
+    }
     onClick(event) {
         event.preventDefault();
         event.stopPropagation();

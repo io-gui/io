@@ -368,5 +368,59 @@ describe('EventDispatcher', () => {
         parent.dispose();
         child.dispose();
     });
+    it('Should not dispatch duplicate bubbling events through shared ancestors', () => {
+        const root = new MockNode1();
+        const branchA = new MockNode1();
+        const branchB = new MockNode1();
+        const child = new MockNode1();
+        branchA.addParent(root);
+        branchB.addParent(root);
+        child.addParent(branchA);
+        child.addParent(branchB);
+        let rootHits = 0;
+        root._eventDispatcher.addEventListener('dedupe-event', () => {
+            rootHits++;
+        });
+        child._eventDispatcher.dispatchEvent('dedupe-event', 1, true);
+        expect(rootHits).toEqual(1);
+    });
+    it('Should avoid duplicate delivery when synthetic and DOM bubbling overlap', () => {
+        let OverlapChildNode = class OverlapChildNode extends ReactiveNode {
+        };
+        OverlapChildNode = __decorate([
+            Register
+        ], OverlapChildNode);
+        let OverlapChildElement = class OverlapChildElement extends IoElement {
+        };
+        __decorate([
+            ReactiveProperty({ type: OverlapChildNode, init: null })
+        ], OverlapChildElement.prototype, "childNode", void 0);
+        OverlapChildElement = __decorate([
+            Register
+        ], OverlapChildElement);
+        let OverlapParentElement = class OverlapParentElement extends IoElement {
+        };
+        __decorate([
+            ReactiveProperty({ type: OverlapChildNode, init: null })
+        ], OverlapParentElement.prototype, "childNode", void 0);
+        OverlapParentElement = __decorate([
+            Register
+        ], OverlapParentElement);
+        const parent = new OverlapParentElement();
+        const childElement = new OverlapChildElement();
+        const childNode = new OverlapChildNode();
+        parent.appendChild(childElement);
+        parent.childNode = childNode;
+        childElement.childNode = childNode;
+        let parentHits = 0;
+        parent.addEventListener('overlap-event', () => {
+            parentHits++;
+        });
+        childNode.dispatch('overlap-event', undefined, true);
+        expect(parentHits).toEqual(1);
+        parent.dispose();
+        childElement.dispose();
+        childNode.dispose();
+    });
 });
 //# sourceMappingURL=EventDispatcher.test.js.map

@@ -19,6 +19,29 @@ const cameraForward = new Vector3();
 const corner = new Vector3();
 let radius = 0;
 const resetCameras = new WeakMap();
+function copyProjection(source, target) {
+    if (target instanceof PerspectiveCamera && source instanceof PerspectiveCamera) {
+        target.fov = source.fov;
+        target.aspect = source.aspect;
+        target.focus = source.focus;
+        target.filmGauge = source.filmGauge;
+        target.filmOffset = source.filmOffset;
+    }
+    else if (target instanceof OrthographicCamera && source instanceof OrthographicCamera) {
+        target.left = source.left;
+        target.right = source.right;
+        target.top = source.top;
+        target.bottom = source.bottom;
+    }
+    target.zoom = source.zoom;
+    target.near = source.near;
+    target.far = source.far;
+    if (source.view)
+        target.view = { ...source.view };
+    else
+        target.clearViewOffset();
+    target.updateProjectionMatrix();
+}
 class DefaultCameras {
     perspective;
     top;
@@ -81,7 +104,7 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
         super(args);
         this.orbitControls.connect(this.viewport);
         this.orbitControls.addEventListener('change', () => {
-            this.applet.dispatchMutation();
+            this.dispatchMutation();
         });
         if (this.camera === undefined)
             this.camera = this.defaultCameras.perspective;
@@ -140,6 +163,7 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
         }
     }
     appletChanged() {
+        this.cameraSelectChangedDebounced();
         this.frameObjectAll(this.applet.scene);
     }
     onFrameObject(event) {
@@ -158,7 +182,7 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
             this.frameObject(object, camera, overscan);
         }
         // TODO: Reconsider
-        this.debounce(this.cameraSelectChangedDebounced);
+        // this.debounce(this.cameraSelectChangedDebounced)
     }
     frameObject(object, camera, overscan = 1) {
         box.setFromObject(object);
@@ -221,24 +245,28 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
     setOverscan(width, height, overscan) {
         const camera = this.camera;
         const resetCamera = resetCameras.get(camera) || camera.clone(false);
-        resetCamera.copy(camera, false);
+        copyProjection(camera, resetCamera);
         resetCameras.set(camera, resetCamera);
-        const aspect = width / height;
+        const viewportAspect = width / height;
         if (camera instanceof PerspectiveCamera) {
-            camera.aspect = aspect;
-            camera.fov *= overscan;
+            const originalAspect = camera.aspect;
+            camera.aspect = viewportAspect;
+            const halfFovRad = camera.fov * Math.PI / 360;
+            const aspectContain = Math.max(1, originalAspect / viewportAspect);
+            camera.fov = 2 * Math.atan(Math.tan(halfFovRad) * aspectContain) * 180 / Math.PI;
+            camera.zoom = 1 / overscan;
         }
         else if (camera instanceof OrthographicCamera) {
             const frustumHeight = camera.top - camera.bottom;
             const frustumWidth = camera.right - camera.left;
             const frustumAspect = frustumWidth / frustumHeight;
-            if (frustumAspect > aspect) {
-                camera.top = frustumWidth / 2 / aspect;
-                camera.bottom = -frustumWidth / 2 / aspect;
+            if (frustumAspect > viewportAspect) {
+                camera.top = frustumWidth / 2 / viewportAspect;
+                camera.bottom = -frustumWidth / 2 / viewportAspect;
             }
             else {
-                camera.left = -frustumHeight / 2 * aspect;
-                camera.right = frustumHeight / 2 * aspect;
+                camera.left = -frustumHeight / 2 * viewportAspect;
+                camera.right = frustumHeight / 2 * viewportAspect;
             }
             camera.top *= overscan;
             camera.bottom *= overscan;
@@ -251,8 +279,9 @@ let ViewCameras = class ViewCameras extends ReactiveNode {
         const camera = this.camera;
         const resetCamera = resetCameras.get(camera);
         if (resetCamera) {
-            camera.copy(resetCamera, false);
+            copyProjection(resetCamera, camera);
         }
+        camera.updateProjectionMatrix();
     }
     dispose() {
         this.orbitControls.dispose();

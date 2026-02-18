@@ -16,8 +16,9 @@ import { EventDispatcher } from '../core/EventDispatcher.js';
 import { ChangeQueue } from '../core/ChangeQueue.js';
 import { throttle, debounce } from '../core/Queue.js';
 const resizeObserver = new ResizeObserver(entries => {
-    for (const entry of entries)
+    for (const entry of entries) {
         entry.target.onResized();
+    }
 });
 let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     static get Style() {
@@ -339,7 +340,8 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         // TODO: Define all overloads with type guards.
         // TODO: Add runtime debug type checks.
         // TODO: Test thoroughly.
-        Object.defineProperty(ioNodeConstructor, 'vConstructor', { value: function (arg0, arg1) {
+        Object.defineProperty(ioNodeConstructor, 'vConstructor', {
+            value: function (arg0, arg1) {
                 const vDOMElement = { tag: localName };
                 if (arg0 !== undefined) {
                     if (typeof arg0 === 'string') {
@@ -361,7 +363,8 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                     }
                 }
                 return vDOMElement;
-            } });
+            }
+        });
     }
 };
 __decorate([

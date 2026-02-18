@@ -67,6 +67,13 @@ let IoMenuTree = class IoMenuTree extends IoElement {
     `;
     }
     constructor(args = {}) { super(args); }
+    onResized() {
+        this.dispatch('io-menu-tree-resized', { element: this }, true);
+    }
+    // TODO: Test
+    optionMutated() {
+        this.changed();
+    }
     changed() {
         const vChildren = this.widget ? [this.widget] : [];
         if (this.searchable) {

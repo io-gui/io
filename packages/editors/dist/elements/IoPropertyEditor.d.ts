@@ -17,7 +17,7 @@ export type IoPropertyEditorProps = IoElementProps & {
 export declare class IoPropertyEditor extends IoElement {
     static get Style(): string;
     value: object | Array<unknown>;
-    properties: string[];
+    properties: string[] | undefined;
     label: string;
     labeled: boolean;
     labelWidth: string;

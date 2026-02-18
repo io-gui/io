@@ -10,7 +10,9 @@ export type IoInspectorProps = IoElementProps & {
     widget?: VDOMElement;
 };
 /**
- * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties. Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
+ * Object property editor. It displays a set of labeled property editors for the `value` object inside multiple
+ * `io-collapsible` elements. It can be configured to use custom property editors and display only specified properties.
+ * Properties of type `Object` are displayed as clickable links which can also be navigated in the `io-breadcrumbs` element.
  **/
 export declare class IoInspector extends IoElement {
     static get Style(): string;

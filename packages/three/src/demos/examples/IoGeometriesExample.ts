@@ -174,7 +174,7 @@ export class IoGeometriesExample extends IoThreeExample {
           ioThreeViewport({id: 'Top', applet: this.applet, cameraSelect: 'top'}),
           ioPropertyEditor({id: 'PropertyEditor', value: this.applet, properties: ['material', 'geometries'], config: [
             ['geometries', ioPropertyEditor({label: '_hidden_'})],
-            [BufferGeometry, ioObject({properties: ['']})],
+            [BufferGeometry, ioObject({properties: []})],
             [MeshPhongMaterial, ioPropertyEditor({label: '_hidden_', properties: ['wireframe']})],
           ]})
         ],

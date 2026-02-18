@@ -35,7 +35,21 @@ export type ReactivityType = 'immediate' | 'throttled' | 'debounced'
 export type WithBinding<T> = T | Binding
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
+type AnyEventHandler = (
+  (event: CustomEvent<any>) => void) |
+  ((event: PointerEvent) => void) |
+  ((event: KeyboardEvent) => void) |
+  ((event: MouseEvent) => void) |
+  ((event: TouchEvent) => void) |
+  ((event: WheelEvent) => void) |
+  ((event: InputEvent) => void) |
+  ((event: ClipboardEvent) => void) |
+  ((event: DragEvent) => void) |
+  ((event: FocusEvent) => void) |
+  ((event: TransitionEvent) => void) |
+  ((event: AnimationEvent) => void) |
+  ((event: ErrorEvent) => void) |
+  ((event: Event) => void)
 
 export type ReactiveNodeProps = {
   reactivity?: ReactivityType
@@ -366,7 +380,8 @@ export function dispatchQueue(node: ReactiveNode | IoElement, debounce = false) 
     node._changeQueue.dispatch()
   }
   debug: if (['immediate', 'throttled', 'debounced'].indexOf(node.reactivity) === -1) {
-    console.warn(`ReactiveNode.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}". Expected one of: "immediate", "throttled", "debounced".`)
+    console.warn(`ReactiveNode.dispatchQueue(): Invalid reactivity property value: "${node.reactivity}".
+      Expected one of: "immediate", "throttled", "debounced".`)
   }
 }
 

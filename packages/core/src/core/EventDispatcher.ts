@@ -53,6 +53,26 @@ export const hardenListenerDefinition = (listenerDefinition: ListenerDefinitionL
 const LISTENER_OPTIONS = ['capture', 'passive']
 
 /**
+ * Detects whether native bubbling from `node` would reach a DOM ancestor
+ * that was already visited by the current synthetic bubbling dispatch.
+ *
+ * Edge case:
+ * A single logical event can traverse one branch via synthetic ReactiveNode
+ * parents, then get converted into a native CustomEvent at an IoElement
+ * boundary and bubble through DOM again. Without this guard, shared ancestors
+ * can receive the same event twice.
+ */
+const hasVisitedDomAncestor = (node: ReactiveNode | IoElement | EventTarget, visited: Set<ReactiveNode | IoElement | EventTarget>) => {
+  if (!(node instanceof Node)) return false
+  let current: Node | null = node.parentNode
+  while (current) {
+    if (visited.has(current as unknown as ReactiveNode | IoElement | EventTarget)) return true
+    current = current.parentNode
+  }
+  return false
+}
+
+/**
  * Converts a listener definition into a normalized Listener tuple.
  * If the first item is a string, it looks up the method on the node.
  *
@@ -283,13 +303,16 @@ export class EventDispatcher {
    * @param {boolean} [bubbles] - Makes event bubble
    * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = []) {
+  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set()) {
     if ((this.node as ReactiveNode)._disposed) return
+    if (visited.has(node)) return
+    visited.add(node)
 
     path = [...path, node]
 
     if ((node instanceof EventTarget)) {
-      EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubbles, composed: true, cancelable: true}))
+      const bubblesNative = bubbles && !hasVisitedDomAncestor(node, visited)
+      EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubblesNative, composed: true, cancelable: true}))
     } else {
       const payload = {detail: detail, target: node, path: path}
       if (this.protoListeners[name]) {
@@ -313,10 +336,9 @@ export class EventDispatcher {
       }
       if (bubbles) {
         for (const parent of node._parents) {
-          if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed) {
-            // TODO: prevent event multiplication when children contain multiple instances of the same node.
+          if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed && !visited.has(parent)) {
             // TODO: implement stopPropagation() and stopImmediatePropagation()
-            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path)
+            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited)
           }
         }
       }

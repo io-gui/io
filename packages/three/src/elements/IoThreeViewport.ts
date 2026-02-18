@@ -1,8 +1,9 @@
-import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Binding, Property } from '@io-gui/core'
+import { Register, IoElement, IoElementProps, ReactiveProperty, ReactivityType, Change, Property, WithBinding } from '@io-gui/core'
 import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu'
 import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
+import { ToolBase } from '../nodes/ToolBase.js'
 
 if ( WebGPU.isAvailable() === false ) {
   throw new Error( 'No WebGPU support' )
@@ -23,11 +24,13 @@ _renderer.shadowMap.enabled = true
 void _renderer.init()
 
 export type IoThreeViewportProps = IoElementProps & {
-  clearColor?: number | Binding
-  clearAlpha?: number | Binding
-  applet: ThreeApplet | Binding
-  cameraSelect?: string | Binding
+  overscan?: WithBinding<number>
+  clearColor?: WithBinding<number>
+  clearAlpha?: WithBinding<number>
+  applet: WithBinding<ThreeApplet>
+  cameraSelect?: WithBinding<string>
   renderer?: WebGPURenderer
+  tool?: WithBinding<ToolBase>
 }
 
 @Register
@@ -36,6 +39,9 @@ export class IoThreeViewport extends IoElement {
   public width: number = 0
   public height: number = 0
   public visible: boolean = false
+
+  @ReactiveProperty({type: Number, value: 1.1})
+  declare public overscan: number
 
   @ReactiveProperty({type: Number, value: 0x000000})
   declare public clearColor: number
@@ -55,11 +61,16 @@ export class IoThreeViewport extends IoElement {
   @ReactiveProperty({type: WebGPURenderer, value: _renderer})
   declare renderer: WebGPURenderer
 
+  @ReactiveProperty({type: ViewCameras})
+  declare viewCameras: ViewCameras
+
+  @ReactiveProperty({type: ToolBase})
+  declare tool: ToolBase
+
   @Property(0)
   declare tabIndex: number
 
-  declare private readonly viewCameras: ViewCameras
-  declare private readonly renderTarget: CanvasTarget
+  declare private renderTarget: CanvasTarget
 
   static get Style() {
     return /* css */`
@@ -76,6 +87,7 @@ export class IoThreeViewport extends IoElement {
       }
       :host > canvas {
         position: absolute;
+        pointer-events: none;
       }
       :host:focus {
         border: var(--io_border);
@@ -92,13 +104,13 @@ export class IoThreeViewport extends IoElement {
 
   constructor(args: IoThreeViewportProps) {
     super(args)
+    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
+    this.debounce(this.renderViewportDebounced)
+  }
 
+  init() {
     this.renderTarget = new CanvasTarget(document.createElement('canvas'))
     this.appendChild(this.renderTarget.domElement)
-
-    this.viewCameras = new ViewCameras({viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect')})
-
-    this.debounce(this.renderViewportDebounced)
   }
 
   connectedCallback() {
@@ -112,10 +124,17 @@ export class IoThreeViewport extends IoElement {
     this.visible = false
   }
 
+  toolChanged(change: Change<ToolBase>) {
+    const newTool = change.value
+    const oldTool = change.oldValue
+    if (oldTool) oldTool.unregisterViewport(this)
+    if (newTool) newTool.registerViewport(this)
+  }
+
   onAppletNeedsRender(event: CustomEvent) {
     event.stopPropagation()
     if (!this.visible) return
-    this.renderViewport()
+    this.debounce(this.renderViewportDebounced)
   }
 
   onResized() {
@@ -133,13 +152,16 @@ export class IoThreeViewport extends IoElement {
   appletMutated() {
     this.debounce(this.renderViewportDebounced)
   }
+  viewCamerasMutated() {
+    this.debounce(this.renderViewportDebounced)
+  }
   changed() {
     this.debounce(this.renderViewportDebounced)
   }
 
   renderViewportDebounced() {
     if (this.renderer.initialized === false) {
-      this.debounce(this.renderViewportDebounced)
+      this.debounce(this.renderViewportDebounced, undefined, 2)
       return
     }
     this.applet.updateViewportSize(this.width, this.height)
@@ -165,7 +187,7 @@ export class IoThreeViewport extends IoElement {
     this.renderer.toneMapping = this.applet.toneMapping
     this.renderer.toneMappingExposure = this.applet.toneMappingExposure
 
-    this.viewCameras.setOverscan(this.width, this.height, 1.1)
+    this.viewCameras.setOverscan(this.width, this.height, this.overscan)
     this.renderer.render(this.applet.scene, this.viewCameras.camera)
     this.viewCameras.resetOverscan()
 
@@ -177,6 +199,7 @@ export class IoThreeViewport extends IoElement {
     delete (this as any).applet
     this.renderTarget.dispose()
     this.viewCameras.dispose()
+    this.tool.unregisterViewport(this)
     super.dispose()
   }
 }

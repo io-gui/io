@@ -1,13 +1,26 @@
 {
   "name": "@io-gui/three",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "Three.js UI elements built with io-gui",
   "sideEffects": true,
-  "repository": {"type": "git","url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["ui","io","gui","iogui","md","three","io-three"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "ui",
+    "io",
+    "gui",
+    "iogui",
+    "md",
+    "three",
+    "io-three"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {"url": "https://github.com/io-gui/io/issues"},
+  "bugs": {
+    "url": "https://github.com/io-gui/io/issues"
+  },
   "homepage": "https://iogui.dev",
   "publishConfig": {
     "access": "public"

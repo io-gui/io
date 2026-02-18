@@ -3,10 +3,10 @@ import { IoElement } from '../elements/IoElement.js'
 
 // TODO: Improve types!
 
-export interface Change {
+export interface Change<T = any> {
   property: string
-  value: any
-  oldValue: any
+  value: T
+  oldValue: T
 }
 
 export interface Changes {

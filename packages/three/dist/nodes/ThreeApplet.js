@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Register, ReactiveNode, ReactiveProperty } from '@io-gui/core';
 import { ioNumberSlider } from '@io-gui/sliders';
 import { ioPropertyEditor, registerEditorConfig, registerEditorGroups } from '@io-gui/editors';
-import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Clock, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
+import { ACESFilmicToneMapping, AgXToneMapping, CineonToneMapping, Timer, LinearToneMapping, NeutralToneMapping, NoToneMapping, ReinhardToneMapping, Scene } from 'three/webgpu';
 import { ioOptionSelect, MenuOption } from '@io-gui/menus';
 const _playingApplets = [];
 function rAFLoop() {
@@ -21,9 +21,10 @@ let ThreeApplet = class ThreeApplet extends ReactiveNode {
     _renderer = null;
     _width = 0;
     _height = 0;
-    _clock = new Clock();
+    _timer = new Timer();
     constructor(args) {
         super(args);
+        this._timer.connect(document);
         this.isPlayingChanged();
     }
     isPlayingChanged() {
@@ -37,8 +38,9 @@ let ThreeApplet = class ThreeApplet extends ReactiveNode {
     onRAF() {
         if (!this.isPlaying)
             return;
-        const delta = this._clock.getDelta();
-        const time = this._clock.getElapsedTime();
+        this._timer.update();
+        const delta = this._timer.getDelta();
+        const time = this._timer.getElapsed();
         this.onAnimate(delta, time);
         this.dispatch('three-applet-needs-render', undefined, true);
     }
@@ -64,6 +66,7 @@ let ThreeApplet = class ThreeApplet extends ReactiveNode {
     dispose() {
         this.isPlaying = false;
         super.dispose();
+        // this._timer.disconnect();
     }
 };
 __decorate([
@@ -106,7 +109,7 @@ registerEditorGroups(ThreeApplet, {
         '_renderer',
         '_width',
         '_height',
-        '_clock',
+        '_timer',
     ],
 });
 //# sourceMappingURL=ThreeApplet.js.map

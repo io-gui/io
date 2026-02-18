@@ -8,5 +8,5 @@
       "@io-gui/core": ["../core"]
     }
   },
-  "include": ["./src"],
+  "include": ["./src"]
 }

@@ -9,6 +9,7 @@ import { WebGPURenderer, CanvasTarget, NeutralToneMapping } from 'three/webgpu';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
+import { ToolBase } from '../nodes/ToolBase.js';
 if (WebGPU.isAvailable() === false) {
     throw new Error('No WebGPU support');
 }
@@ -43,6 +44,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
       }
       :host > canvas {
         position: absolute;
+        pointer-events: none;
       }
       :host:focus {
         border: var(--io_border);
@@ -57,10 +59,12 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     }
     constructor(args) {
         super(args);
-        this.renderTarget = new CanvasTarget(document.createElement('canvas'));
-        this.appendChild(this.renderTarget.domElement);
         this.viewCameras = new ViewCameras({ viewport: this, applet: this.bind('applet'), cameraSelect: this.bind('cameraSelect') });
         this.debounce(this.renderViewportDebounced);
+    }
+    init() {
+        this.renderTarget = new CanvasTarget(document.createElement('canvas'));
+        this.appendChild(this.renderTarget.domElement);
     }
     connectedCallback() {
         super.connectedCallback();
@@ -72,11 +76,19 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         // TODO: Visibility observe
         this.visible = false;
     }
+    toolChanged(change) {
+        const newTool = change.value;
+        const oldTool = change.oldValue;
+        if (oldTool)
+            oldTool.unregisterViewport(this);
+        if (newTool)
+            newTool.registerViewport(this);
+    }
     onAppletNeedsRender(event) {
         event.stopPropagation();
         if (!this.visible)
             return;
-        this.renderViewport();
+        this.debounce(this.renderViewportDebounced);
     }
     onResized() {
         const rect = this.getBoundingClientRect();
@@ -92,12 +104,15 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
     appletMutated() {
         this.debounce(this.renderViewportDebounced);
     }
+    viewCamerasMutated() {
+        this.debounce(this.renderViewportDebounced);
+    }
     changed() {
         this.debounce(this.renderViewportDebounced);
     }
     renderViewportDebounced() {
         if (this.renderer.initialized === false) {
-            this.debounce(this.renderViewportDebounced);
+            this.debounce(this.renderViewportDebounced, undefined, 2);
             return;
         }
         this.applet.updateViewportSize(this.width, this.height);
@@ -120,7 +135,7 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         const toneMappingExposure = this.renderer.toneMappingExposure;
         this.renderer.toneMapping = this.applet.toneMapping;
         this.renderer.toneMappingExposure = this.applet.toneMappingExposure;
-        this.viewCameras.setOverscan(this.width, this.height, 1.1);
+        this.viewCameras.setOverscan(this.width, this.height, this.overscan);
         this.renderer.render(this.applet.scene, this.viewCameras.camera);
         this.viewCameras.resetOverscan();
         this.renderer.toneMapping = toneMapping;
@@ -130,9 +145,13 @@ let IoThreeViewport = class IoThreeViewport extends IoElement {
         delete this.applet;
         this.renderTarget.dispose();
         this.viewCameras.dispose();
+        this.tool.unregisterViewport(this);
         super.dispose();
     }
 };
+__decorate([
+    ReactiveProperty({ type: Number, value: 1.1 })
+], IoThreeViewport.prototype, "overscan", void 0);
 __decorate([
     ReactiveProperty({ type: Number, value: 0x000000 })
 ], IoThreeViewport.prototype, "clearColor", void 0);
@@ -151,6 +170,12 @@ __decorate([
 __decorate([
     ReactiveProperty({ type: WebGPURenderer, value: _renderer })
 ], IoThreeViewport.prototype, "renderer", void 0);
+__decorate([
+    ReactiveProperty({ type: ViewCameras })
+], IoThreeViewport.prototype, "viewCameras", void 0);
+__decorate([
+    ReactiveProperty({ type: ToolBase })
+], IoThreeViewport.prototype, "tool", void 0);
 __decorate([
     Property(0)
 ], IoThreeViewport.prototype, "tabIndex", void 0);

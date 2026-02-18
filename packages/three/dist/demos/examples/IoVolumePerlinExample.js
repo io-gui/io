@@ -119,7 +119,7 @@ let IoVolumePerlinExample = class IoVolumePerlinExample extends IoThreeExample {
     }
 };
 __decorate([
-    ReactiveProperty({ type: VolumePerlinExample, init: { isPlaying: true } })
+    ReactiveProperty({ type: VolumePerlinExample, init: null })
 ], IoVolumePerlinExample.prototype, "applet", void 0);
 IoVolumePerlinExample = __decorate([
     Register

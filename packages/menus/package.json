@@ -1,13 +1,23 @@
 {
   "name": "@io-gui/menus",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A set of menus for Io-Gui.",
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["io","gui","iogui","io-menus"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "io",
+    "gui",
+    "iogui",
+    "io-menus"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {"url": "https://github.com/io-gui/io/issues"},
+  "bugs": {
+    "url": "https://github.com/io-gui/io/issues"
+  },
   "homepage": "https://iogui.dev",
   "publishConfig": {
     "access": "public"

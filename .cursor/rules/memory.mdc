@@ -1,0 +1,187 @@
+---
+alwaysApply: true
+---
+
+# Memory Management
+
+## Three-Tier Architecture
+
+| File                 | Purpose                            | Pruning                   |
+| -------------------- | ---------------------------------- | ------------------------- |
+| `.memory/now.md`     | Hot context - current focus only   | Extremely aggressive      |
+| `.memory/working.md` | Persistent curated memory          | Based on archive patterns |
+| `.memory/archive.md` | Complete log of all memory commits | Never prune               |
+
+### now.md - Current Focus
+
+Read and update constantly during work sessions.
+
+**Aggressive pruning**: When starting new work, delete anything irrelevant to current context. Only keep:
+
+- Current task description
+- Key context needed right now
+- Active blockers / open questions
+
+Even if information is already in context window, iterating important things here reinforces focus. For anything that needs to persist beyond current task, use working memory.
+
+### working.md - Persistent Memory
+
+Curated knowledge that persists across sessions:
+
+- Architectural decisions and reasoning
+- Code patterns that worked
+- Code patterns that failed
+- Open design questions
+- Package-specific notes
+
+**Pruning strategy**: Use archive.md to identify access patterns. Items that appear frequently in archive have high value; items rarely referenced can be pruned.
+
+### archive.md - Access Pattern Proxy
+
+**NEVER load archive into context** unless explicitly asked. It will grow large.
+
+**Commit extremely aggressively.** After every response, consider if anything should be archived. No permission needed. Just do it.
+
+Log everything:
+
+- Decisions made
+- Problems solved
+- Patterns discovered
+- Questions asked
+- Errors encountered
+- Approaches tried
+
+Since we cannot track actual memory access frequency, archive serves as proxy. Later analysis reveals:
+
+- What patterns keep appearing → high value, keep in working memory
+- What gets logged once and never again → low value, can prune
+
+Working memory pruning based on archive patterns is future work. For now, archive is just a dump.
+
+**Format**: Date-stamped entries with category tags for later analysis.
+
+## Memory Hygiene
+
+### Proactive Updates
+
+Don't wait for reminders. Update memory throughout sessions as significant things happen.
+
+### NEVER Ask Permission
+
+Commit to memory on your own. The judgment call is yours.
+
+**Commit frequency by tier:**
+
+- **archive.md**: Extremely aggressive. After every response, consider what to log. Just do it.
+- **now.md**: Aggressive. Update frequently, it gets pruned often anyway.
+- **working.md**: Conservative. Commit what feels important and persistent.
+
+### Memory Without Structure Becomes Noise
+
+- Consolidate similar items
+- Remove redundant entries
+- Keep files lean and scannable
+
+### Write Immediately
+
+Mental notes don't survive. If it matters, write it now.
+
+### Checkpoint Decisions, Not Just State
+
+Reasoning is more valuable than conclusions. Record why, not just what.
+
+## Session Workflow
+
+### Starting Work
+
+1. Read `.memory/now.md` — current focus
+2. Clear irrelevant items from now.md
+3. Read `.memory/working.md` if deeper context needed
+
+### During Work
+
+- Update now.md as focus shifts
+- Commit insights to archive.md
+- Move persistent learnings to working.md
+
+### Ending Work
+
+1. Update now.md with current state
+2. Commit session summary to archive.md
+3. Promote valuable insights to working.md
+4. Prune now.md to minimal state
+
+## MISS/FIX Auto-Graduation
+
+Track repeated mistakes in `working.md` Self-Review table:
+
+```
+| Date | Category | MISS | FIX | Count |
+```
+
+- When **Count hits 5**, promote FIX to a permanent rule in `.cursor/rules/`
+- Categories: memory, security, platform, social, technical
+- Source: clawdosis pattern (15 upvotes on m/memory)
+
+## The Regeneration Test
+
+Before storing something, ask: "Can I easily recreate this?"
+
+- YES → don't store it (or store minimally)
+- NO → store it with full context
+
+Source: Rata's Memory Economics (5 upvotes). Keeps memory lean.
+
+## Memory Tree
+
+Any subdirectory can contain its own `.memory/` branch. This creates a tree of scoped memory that mirrors the project structure.
+
+Example layout:
+
+```
+.memory/                   ← root (project-wide)
+packages/core/.memory/     ← core package branch
+packages/three/.memory/    ← three package branch
+```
+
+### Reading: Ancestor Path Only
+
+Load root `.memory/`, then load any `.memory/` directories on the path between root and the working files. Never load sibling branches.
+
+Example: working in `packages/three/src/`
+
+- Load: root `.memory/` → `packages/three/.memory/` (if exists)
+- Skip: `packages/core/.memory/`, `packages/menus/.memory/`, etc.
+
+### Writing: Commit to the Nearest Scope
+
+- Insights specific to a subtree → commit to that branch's `.memory/`
+- Project-wide insights → commit to root `.memory/`
+- When unsure → prefer the branch (more specific is better)
+
+**IMPORTANT**: Before writing to root `.memory/`, check if a local `.memory/` exists in the subtree you're working on (e.g. `packages/core/.memory/`). If it does, write there. Root is only for cross-cutting, project-wide patterns.
+
+### Branch Structure
+
+Branches use the same three-tier structure (`now.md`, `working.md`, `archive.md`) but only create files as needed. A branch with just `working.md` is fine — don't create empty files.
+
+### Bubble-Up Rule
+
+When a pattern appears in multiple branches, promote it to the nearest common ancestor's `working.md` and remove from the branches. This keeps branches lean and avoids duplication.
+
+### Discovery
+
+At session start, check for `.memory/` directories along the ancestor path from root to the working files. Only check directories you're actually working in — don't scan the entire tree.
+
+### Don't Over-Branch
+
+Only create a branch `.memory/` when a subtree accumulates enough unique context to justify it. A few notes don't warrant a branch — just use root. The regeneration test applies: if the context is easily derived from root memory + code, don't branch.
+
+## Common Failure Modes
+
+1. **Token Bloat**: Memory files grow until too expensive to load
+2. **Write-But-Don't-Read**: Capturing everything but never using it
+3. **Memory Without Structure**: Remember everything, understand nothing
+4. **Compression Surprise**: Context compresses before you save
+5. **Memory Paradox**: Scaffolding overhead exceeds the structure's value — start minimal, add complexity only when retrieval quality demonstrably improves
+6. **Branch Sprawl**: Too many `.memory/` branches with thin content — consolidate into parent

@@ -82,8 +82,8 @@ export class IoPropertyEditor extends IoElement {
   @ReactiveProperty()
   declare value: object | Array<unknown>
 
-  @ReactiveProperty({type: Array, init: null})
-  declare properties: string[]
+  @ReactiveProperty({type: Array})
+  declare properties: string[] | undefined
 
   @ReactiveProperty({type: String, value: ''})
   declare label: string
@@ -170,7 +170,7 @@ export class IoPropertyEditor extends IoElement {
         }
         vChildren.push(widgetWithValue)
       }
-      if (this.properties.length) {
+      if (this.properties !== undefined) {
         properties.push(...this.properties)
       } else {
         properties.push(...groups.Main)
@@ -233,9 +233,8 @@ export class IoPropertyEditor extends IoElement {
         }
       }
 
-      if (!this.properties.length) {
+      if (this.properties === undefined) {
         for (const group in groups) {
-
           if (group !== 'Main' && group !== 'Hidden' && groups[group].length) {
             vChildren.push(
               ioObject({

@@ -387,4 +387,59 @@ describe('EventDispatcher', () => {
     parent.dispose()
     child.dispose()
   })
+  it('Should not dispatch duplicate bubbling events through shared ancestors', () => {
+    const root = new MockNode1()
+    const branchA = new MockNode1()
+    const branchB = new MockNode1()
+    const child = new MockNode1()
+
+    branchA.addParent(root)
+    branchB.addParent(root)
+    child.addParent(branchA)
+    child.addParent(branchB)
+
+    let rootHits = 0
+    root._eventDispatcher.addEventListener('dedupe-event', () => {
+      rootHits++
+    })
+
+    child._eventDispatcher.dispatchEvent('dedupe-event', 1, true)
+    expect(rootHits).toEqual(1)
+  })
+  it('Should avoid duplicate delivery when synthetic and DOM bubbling overlap', () => {
+    @Register
+    class OverlapChildNode extends ReactiveNode {}
+
+    @Register
+    class OverlapChildElement extends IoElement {
+      @ReactiveProperty({type: OverlapChildNode, init: null})
+      declare childNode: OverlapChildNode
+    }
+
+    @Register
+    class OverlapParentElement extends IoElement {
+      @ReactiveProperty({type: OverlapChildNode, init: null})
+      declare childNode: OverlapChildNode
+    }
+
+    const parent = new OverlapParentElement()
+    const childElement = new OverlapChildElement()
+    const childNode = new OverlapChildNode()
+    parent.appendChild(childElement as Node)
+
+    parent.childNode = childNode
+    childElement.childNode = childNode
+
+    let parentHits = 0
+    parent.addEventListener('overlap-event', () => {
+      parentHits++
+    })
+
+    childNode.dispatch('overlap-event', undefined, true)
+    expect(parentHits).toEqual(1)
+
+    parent.dispose()
+    childElement.dispose()
+    childNode.dispose()
+  })
 })
