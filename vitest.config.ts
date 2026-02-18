@@ -20,6 +20,6 @@ export default defineConfig({
       instances: [{ browser: 'chromium' }],
       screenshotFailures: false,
     },
-    include: ['packages/*/src/**/*.test.ts', 'apps/*/src/**/*.test.ts'],
+    include: ['packages/*/src/**/*.test.ts'],
   },
 })

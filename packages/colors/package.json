@@ -1,6 +1,6 @@
 {
   "name": "@io-gui/colors",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A set of color pickers and editors for Io-Gui.",
   "sideEffects": true,
   "repository": {

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "pnpm clean && pnpm -r build",
-    "bundle": "pnpm lint &&pnpm build && node bundle.js",
+    "bundle": "pnpm lint && pnpm build && node bundle.js",
     "lint": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -21,7 +21,9 @@
     "test:navigation": "vitest run packages/navigation",
     "test:sliders": "vitest run packages/sliders",
     "test:three": "vitest run packages/three",
-    "clean": "rm -rf packages/**/dist apps/**/dist"
+    "clean": "rm -rf packages/**/dist",
+    "publish": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish",
+    "publish:dry": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish --dry-run"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -37,8 +39,5 @@
     "typescript-eslint": "^8.50.1",
     "vite": "^7.3.0",
     "vitest": "^4.0.16"
-  },
-  "peerDependencies": {
-    "three": ">=0.182.0"
   }
 }

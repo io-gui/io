@@ -18,8 +18,6 @@ const bundleRoots = [
   "packages/layout",
   "packages/markdown",
   "packages/three",
-  "apps/circuits",
-  "apps/todo",
 ];
 
 async function bundle(bundleRoot) {

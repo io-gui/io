@@ -6,17 +6,18 @@ alwaysApply: true
 
 ## Three-Tier Architecture
 
-| File | Purpose | Pruning |
-|------|---------|---------|
-| `.memory/now.md` | Hot context - current focus only | Extremely aggressive |
-| `.memory/working.md` | Persistent curated memory | Based on archive patterns |
-| `.memory/archive.md` | Complete log of all memory commits | Never prune |
+| File                 | Purpose                            | Pruning                   |
+| -------------------- | ---------------------------------- | ------------------------- |
+| `.memory/now.md`     | Hot context - current focus only   | Extremely aggressive      |
+| `.memory/working.md` | Persistent curated memory          | Based on archive patterns |
+| `.memory/archive.md` | Complete log of all memory commits | Never prune               |
 
 ### now.md - Current Focus
 
 Read and update constantly during work sessions.
 
 **Aggressive pruning**: When starting new work, delete anything irrelevant to current context. Only keep:
+
 - Current task description
 - Key context needed right now
 - Active blockers / open questions
@@ -26,6 +27,7 @@ Even if information is already in context window, iterating important things her
 ### working.md - Persistent Memory
 
 Curated knowledge that persists across sessions:
+
 - Architectural decisions and reasoning
 - Code patterns that worked
 - Code patterns that failed
@@ -41,14 +43,16 @@ Curated knowledge that persists across sessions:
 **Commit extremely aggressively.** After every response, consider if anything should be archived. No permission needed. Just do it.
 
 Log everything:
+
 - Decisions made
-- Problems solved  
+- Problems solved
 - Patterns discovered
 - Questions asked
 - Errors encountered
 - Approaches tried
 
 Since we cannot track actual memory access frequency, archive serves as proxy. Later analysis reveals:
+
 - What patterns keep appearing → high value, keep in working memory
 - What gets logged once and never again → low value, can prune
 
@@ -59,40 +63,49 @@ Working memory pruning based on archive patterns is future work. For now, archiv
 ## Memory Hygiene
 
 ### Proactive Updates
+
 Don't wait for reminders. Update memory throughout sessions as significant things happen.
 
 ### NEVER Ask Permission
+
 Commit to memory on your own. The judgment call is yours.
 
 **Commit frequency by tier:**
+
 - **archive.md**: Extremely aggressive. After every response, consider what to log. Just do it.
 - **now.md**: Aggressive. Update frequently, it gets pruned often anyway.
 - **working.md**: Conservative. Commit what feels important and persistent.
 
 ### Memory Without Structure Becomes Noise
+
 - Consolidate similar items
 - Remove redundant entries
 - Keep files lean and scannable
 
 ### Write Immediately
+
 Mental notes don't survive. If it matters, write it now.
 
 ### Checkpoint Decisions, Not Just State
+
 Reasoning is more valuable than conclusions. Record why, not just what.
 
 ## Session Workflow
 
 ### Starting Work
+
 1. Read `.memory/now.md` — current focus
 2. Clear irrelevant items from now.md
 3. Read `.memory/working.md` if deeper context needed
 
 ### During Work
+
 - Update now.md as focus shifts
 - Commit insights to archive.md
 - Move persistent learnings to working.md
 
 ### Ending Work
+
 1. Update now.md with current state
 2. Commit session summary to archive.md
 3. Promote valuable insights to working.md
@@ -113,6 +126,7 @@ Track repeated mistakes in `working.md` Self-Review table:
 ## The Regeneration Test
 
 Before storing something, ask: "Can I easily recreate this?"
+
 - YES → don't store it (or store minimally)
 - NO → store it with full context
 
@@ -123,6 +137,7 @@ Source: Rata's Memory Economics (5 upvotes). Keeps memory lean.
 Any subdirectory can contain its own `.memory/` branch. This creates a tree of scoped memory that mirrors the project structure.
 
 Example layout:
+
 ```
 .memory/                   ← root (project-wide)
 packages/core/.memory/     ← core package branch
@@ -134,6 +149,7 @@ packages/three/.memory/    ← three package branch
 Load root `.memory/`, then load any `.memory/` directories on the path between root and the working files. Never load sibling branches.
 
 Example: working in `packages/three/src/`
+
 - Load: root `.memory/` → `packages/three/.memory/` (if exists)
 - Skip: `packages/core/.memory/`, `packages/menus/.memory/`, etc.
 
@@ -143,7 +159,7 @@ Example: working in `packages/three/src/`
 - Project-wide insights → commit to root `.memory/`
 - When unsure → prefer the branch (more specific is better)
 
-**IMPORTANT**: Before writing to root `.memory/`, check if a local `.memory/` exists in the subtree you're working on (e.g. `apps/circuits/.memory/`). If it does, write there. Root is only for cross-cutting, project-wide patterns.
+**IMPORTANT**: Before writing to root `.memory/`, check if a local `.memory/` exists in the subtree you're working on (e.g. `packages/core/.memory/`). If it does, write there. Root is only for cross-cutting, project-wide patterns.
 
 ### Branch Structure
 

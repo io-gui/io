@@ -1,13 +1,24 @@
 {
   "name": "@io-gui/core",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "description": "A lightweight library that provides core features for Io-Gui components (nodes and elements).",
   "sideEffects": true,
-  "repository": {"type": "git", "url": "git+https://github.com/io-gui/io.git"},
-  "keywords": ["ui","io","gui","iogui","io-core"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/io-gui/io.git"
+  },
+  "keywords": [
+    "ui",
+    "io",
+    "gui",
+    "iogui",
+    "io-core"
+  ],
   "author": "Aleksandar (Aki) Rodic",
   "license": "MIT",
-  "bugs": {"url": "https://github.com/io-gui/io/issues"},
+  "bugs": {
+    "url": "https://github.com/io-gui/io/issues"
+  },
   "homepage": "https://iogui.dev",
   "publishConfig": {
     "access": "public"
