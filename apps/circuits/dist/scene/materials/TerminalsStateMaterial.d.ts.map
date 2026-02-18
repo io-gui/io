@@ -1,1 +1,0 @@
-{"version":3,"file":"TerminalsStateMaterial.d.ts","sourceRoot":"","sources":["../../../src/scene/materials/TerminalsStateMaterial.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,cAAc,CAAA;AAC3C,OAAO,EAAE,wBAAwB,EAAE,MAAM,+BAA+B,CAAA;AAExE,qBAAa,sBAAuB,SAAQ,wBAAwB;gBACtD,WAAW,EAAE,OAAO,EAAE,aAAa,EAAE,OAAO,EAAE,aAAa,EAAE,OAAO;CAGjF"}

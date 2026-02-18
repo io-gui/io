@@ -1,1 +1,0 @@
-{"version":3,"file":"Layer1LinesStateMaterial.d.ts","sourceRoot":"","sources":["../../../src/scene/materials/Layer1LinesStateMaterial.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,cAAc,CAAA;AAC3C,OAAO,EAAE,wBAAwB,EAAE,MAAM,+BAA+B,CAAA;AAExE,qBAAa,wBAAyB,SAAQ,wBAAwB;gBACxD,WAAW,EAAE,OAAO,EAAE,aAAa,EAAE,OAAO,EAAE,aAAa,EAAE,OAAO;CAGjF"}
