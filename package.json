@@ -1,6 +1,6 @@
 {
-  "name": "@io-gui",
-  "version": "2.0.0-alpha.1",
+  "name": "io-gui-workspace",
+  "version": "2.0.0-alpha.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -22,8 +22,8 @@
     "test:sliders": "vitest run packages/sliders",
     "test:three": "vitest run packages/three",
     "clean": "rm -rf packages/**/dist",
-    "publish": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish",
-    "publish:dry": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish --dry-run"
+    "publish": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish --tag alpha",
+    "publish:dry": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish --tag alpha --dry-run"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
