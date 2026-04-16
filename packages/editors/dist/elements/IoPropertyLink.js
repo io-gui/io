@@ -27,7 +27,7 @@ let IoPropertyLink = class IoPropertyLink extends IoButton {
         this.changed();
     }
     changed() {
-        let label = '';
+        let label;
         if (this.value instanceof Array) {
             label = `${this.value.constructor.name} (${this.value.length})`;
         }

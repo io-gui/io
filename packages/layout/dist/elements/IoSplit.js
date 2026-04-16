@@ -98,7 +98,7 @@ let IoSplit = IoSplit_1 = class IoSplit extends IoElement {
         const split = this.split;
         const children = split.children;
         const orientation = split.orientation;
-        let size = Infinity;
+        let size;
         let minSize = 0;
         const sizes = [];
         if (orientation === 'horizontal') {

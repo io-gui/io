@@ -14,7 +14,7 @@ const dummyElement = document.createElement('div');
 const IMPORTED_PATHS = {};
 function importModule(path) {
     const importPath = new URL(path, String(window.location)).pathname;
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         if (!path || IMPORTED_PATHS[importPath]) {
             resolve(importPath);
         }
@@ -23,6 +23,10 @@ function importModule(path) {
                 .then(() => {
                 IMPORTED_PATHS[importPath] = true;
                 resolve(importPath);
+            })
+                .catch((error) => {
+                console.error(`Failed to import module "${importPath}"`, error);
+                reject(error);
             });
         }
     });

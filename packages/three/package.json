@@ -56,12 +56,12 @@
     "@types/three": "^0.182.0"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.1",
-    "@io-gui/layout": "^2.0.0-alpha.1",
-    "@io-gui/menus": "^2.0.0-alpha.1",
-    "@io-gui/editors": "^2.0.0-alpha.1",
-    "@io-gui/sliders": "^2.0.0-alpha.1",
-    "@io-gui/colors": "^2.0.0-alpha.1",
+    "@io-gui/core": "^2.0.0-alpha.2",
+    "@io-gui/layout": "^2.0.0-alpha.2",
+    "@io-gui/menus": "^2.0.0-alpha.2",
+    "@io-gui/editors": "^2.0.0-alpha.2",
+    "@io-gui/sliders": "^2.0.0-alpha.2",
+    "@io-gui/colors": "^2.0.0-alpha.2",
     "three": ">=0.182.0"
   }
 }

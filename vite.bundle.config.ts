@@ -10,6 +10,9 @@ const externals = [/^@io-gui\//, /^three/]
 
 export default defineConfig({
   root: rootDir,
+  esbuild: {
+    legalComments: 'inline',
+  },
   plugins: [
     strip({
       functions: [],
@@ -34,7 +37,8 @@ export default defineConfig({
         keep_infinity: true,
       },
       format: {
-        comments: /^\s*!|Copyright|@license|@License|@preserve|@copyright/i,
+        comments:
+          /^\s*!|Copyright|@license|@License|@preserve|@copyright|SPDX-License-Identifier/i,
       },
     },
     sourcemap: true,

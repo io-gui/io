@@ -50,6 +50,6 @@
     "@io-gui/core": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.1"
+    "@io-gui/core": "^2.0.0-alpha.2"
   }
 }

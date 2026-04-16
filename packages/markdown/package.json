@@ -48,11 +48,11 @@
   },
   "devDependencies": {
     "@io-gui/core": "workspace:*",
-    "dompurify": "3.3.1",
-    "marked": "17.0.1",
-    "marked-highlight": "2.2.3"
+    "dompurify": "3.4.0",
+    "marked": "18.0.0",
+    "marked-highlight": "2.2.4"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.1"
+    "@io-gui/core": "^2.0.0-alpha.2"
   }
 }
