@@ -53,11 +53,11 @@
     "@io-gui/navigation": "workspace:*"
   },
   "peerDependencies": {
-    "@io-gui/core": "^2.0.0-alpha.1",
-    "@io-gui/inputs": "^2.0.0-alpha.1",
-    "@io-gui/menus": "^2.0.0-alpha.1",
-    "@io-gui/colors": "^2.0.0-alpha.1",
-    "@io-gui/sliders": "^2.0.0-alpha.1",
-    "@io-gui/navigation": "^2.0.0-alpha.1"
+    "@io-gui/core": "^2.0.0-alpha.2",
+    "@io-gui/inputs": "^2.0.0-alpha.2",
+    "@io-gui/menus": "^2.0.0-alpha.2",
+    "@io-gui/colors": "^2.0.0-alpha.2",
+    "@io-gui/sliders": "^2.0.0-alpha.2",
+    "@io-gui/navigation": "^2.0.0-alpha.2"
   }
 }
