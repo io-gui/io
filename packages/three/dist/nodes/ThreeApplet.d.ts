@@ -1,5 +1,5 @@
 import { ReactiveNode, ReactiveNodeProps } from '@io-gui/core';
-import { Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
+import { Timer, Scene, ToneMapping, WebGPURenderer } from 'three/webgpu';
 export type ThreeAppletProps = ReactiveNodeProps & {
     scene?: Scene;
     toneMappingExposure?: number;
@@ -11,10 +11,10 @@ export declare class ThreeApplet extends ReactiveNode {
     toneMappingExposure: number;
     toneMapping: ToneMapping;
     isPlaying: boolean;
-    private _renderer;
-    private _width;
-    private _height;
-    private readonly _timer;
+    _renderer: WebGPURenderer | null;
+    _width: number;
+    _height: number;
+    readonly _timer: Timer;
     constructor(args?: ThreeAppletProps);
     isPlayingChanged(): void;
     onRAF(): void;

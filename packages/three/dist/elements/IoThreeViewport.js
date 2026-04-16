@@ -11,6 +11,7 @@ import { ThreeApplet } from '../nodes/ThreeApplet.js';
 import { ViewCameras } from '../nodes/ViewCameras.js';
 import { ToolBase } from '../nodes/ToolBase.js';
 if (WebGPU.isAvailable() === false) {
+    console.error('No WebGPU support!');
     throw new Error('No WebGPU support');
 }
 const observer = new IntersectionObserver((entries) => {
