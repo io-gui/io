@@ -39,7 +39,7 @@ export class IoPropertyLink extends IoButton {
   }
 
   changed() {
-    let label = ''
+    let label: string | undefined
     if (this.value instanceof Array) {
       label = `${this.value.constructor.name} (${this.value.length})`
     } else {

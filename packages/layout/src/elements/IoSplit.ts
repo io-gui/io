@@ -133,7 +133,7 @@ export class IoSplit extends IoElement {
     const split = this.split
     const children = split.children
     const orientation = split.orientation
-    let size: number = Infinity
+    let size: number | undefined
     let minSize = 0
     const sizes: Array<number> = []
 
