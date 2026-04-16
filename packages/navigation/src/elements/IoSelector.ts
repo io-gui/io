@@ -11,7 +11,7 @@ const dummyElement = document.createElement('div')
 const IMPORTED_PATHS: Record<string, any> = {}
 function importModule(path: string) {
   const importPath = new URL(path, String(window.location)).pathname
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     if (!path || IMPORTED_PATHS[importPath]) {
       resolve(importPath)
     } else {
@@ -19,6 +19,10 @@ function importModule(path: string) {
       .then(() => {
         IMPORTED_PATHS[importPath] = true
         resolve(importPath)
+      })
+      .catch((error) => {
+        console.error(`Failed to import module "${importPath}"`, error)
+        reject(error)
       })
     }
   })
