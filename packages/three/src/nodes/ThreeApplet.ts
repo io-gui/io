@@ -35,11 +35,11 @@ export class ThreeApplet extends ReactiveNode {
   @ReactiveProperty({type: Boolean, value: false})
   declare isPlaying: boolean
 
-  private _renderer: WebGPURenderer | null = null
-  private _width: number = 0
-  private _height: number = 0
+  public _renderer: WebGPURenderer | null = null
+  public _width: number = 0
+  public _height: number = 0
 
-  private readonly _timer: Timer = new Timer()
+  readonly _timer: Timer = new Timer()
 
   constructor(args?: ThreeAppletProps) {
     super(args)
