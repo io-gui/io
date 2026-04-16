@@ -35,7 +35,7 @@
 
 ### io-three
 
-(none)
+- `ToolBase` stores hover and active pointers per `IoThreeViewport` in viewport-keyed `WeakMap`s. Pointer events should resolve the source viewport from `event.currentTarget` so hover/move/down/up payloads stay isolated to the viewport that emitted the event.
 
 ### io-layout
 

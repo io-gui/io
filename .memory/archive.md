@@ -69,3 +69,15 @@ Patched `packages/core/src/core/EventDispatcher.ts` to prevent duplicate event d
 ### [fix] Core dedupe for synthetic+DOM overlap on EventTarget boundary
 
 Extended `EventDispatcher` dedupe so a synthetic dispatch converted to native `CustomEvent` on an `IoElement` does not re-hit ancestors already reached via the synthetic graph in the same dispatch. Added `hasVisitedDomAncestor()` and set native event `bubbles` to false when a visited DOM ancestor exists. Added regression test covering overlap case (`ReactiveNode` bubbling via direct parent + child `IoElement` DOM bubble) to ensure one delivery.
+
+## 2026-03-29
+
+### [fix] io-three ToolBase hover pointer bookkeeping
+
+Updated `packages/three/src/nodes/ToolBase.ts` so hover pointers accumulate by `pointerId` and `on3DPointerHover()` receives the full hover set instead of a single pointer. Pressed pointers now move from `_hoverPointers` to `_activePointers` on `pointerdown`, and hover state is cleaned up through `pointerleave`, `pointerout`, `pointercancel`, `pointerup`, and `lostpointercapture`.
+
+Build verification: `pnpm build` in `packages/three` passed. Targeted tests via `pnpm test:three` reported no matching test files in that package.
+
+### [fix] io-three ToolBase pointer state isolated per viewport
+
+Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer records are no longer global to the tool instance. They now live in viewport-keyed `WeakMap`s and each pointer event resolves its source viewport from `event.currentTarget`, which keeps hover/move/down/up payloads isolated to the viewport that emitted the event.
