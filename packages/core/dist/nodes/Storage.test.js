@@ -83,6 +83,25 @@ describe('Storage.test.ts', () => {
         expect(localStorage.getItem('Storage:test5')).toBe(null);
         node.dispose();
     });
+    it('Should update localStorage for boolean values and hydrate booleans', async () => {
+        localStorage.removeItem('Storage:test-local-bool');
+        localStorage.removeItem('Storage:test-local-bool-hydrate');
+        const node = new StorageNode({ key: 'test-local-bool', value: false, storage: 'local' });
+        expect(localStorage.getItem('Storage:test-local-bool')).toBe(null);
+        node.value = true;
+        expect(localStorage.getItem('Storage:test-local-bool')).toBe('true');
+        node.value = false;
+        expect(localStorage.getItem('Storage:test-local-bool')).toBe(null);
+        node.dispose();
+        localStorage.setItem('Storage:test-local-bool-hydrate', 'true');
+        const hydrated = new StorageNode({
+            key: 'test-local-bool-hydrate',
+            value: false,
+            storage: 'local',
+        });
+        expect(hydrated.value).toBe(true);
+        hydrated.dispose();
+    });
     it('Should update location.hash store when value changes to non-default', async () => {
         const node = new StorageNode({ key: 'test6', value: 'one', storage: 'hash' });
         node.value = 'two';

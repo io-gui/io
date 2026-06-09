@@ -198,6 +198,9 @@ let StorageNode = class StorageNode extends ReactiveNode {
                         else if (typeof this.value === 'number') {
                             localStorage.setItem('Storage:' + this.key, this.value);
                         }
+                        else if (typeof this.value === 'boolean') {
+                            localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value));
+                        }
                     }
                     else {
                         localStorage.setItem('Storage:' + this.key, JSON.stringify(this.value));

@@ -24,6 +24,7 @@ export declare class IoOptionSelect extends IoElement {
     onOptionSelected(event: CustomEvent): void;
     inputValue(value: any): void;
     optionChanged(change: Change): void;
+    optionMutated(): void;
     changed(): void;
 }
 export declare const ioOptionSelect: (arg0: IoOptionSelectProps) => import("@io-gui/core").VDOMElement;

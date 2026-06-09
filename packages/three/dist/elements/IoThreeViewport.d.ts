@@ -32,7 +32,7 @@ export declare class IoThreeViewport extends IoElement {
         'three-applet-needs-render': string;
     };
     constructor(args: IoThreeViewportProps);
-    init(): void;
+    ready(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;
     toolChanged(change: Change<ToolBase>): void;

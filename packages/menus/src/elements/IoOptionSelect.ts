@@ -100,6 +100,9 @@ export class IoOptionSelect extends IoElement {
       }
     }
   }
+  optionMutated() {
+    this.changed()
+  }
   changed() {
     let selectedItem
     let label = this.label

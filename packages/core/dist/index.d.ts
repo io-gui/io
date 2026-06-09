@@ -41,6 +41,7 @@ export * from './elements/IoGL.js';
 export * from './elements/IoGL.glsl.js';
 export * from './elements/IoNative.js';
 export * from './elements/IoOverlay.js';
+export * from './elements/IoSpan.js';
 export * from './utils/Focus.js';
 export * from './utils/Nudge.js';
 declare const LICENSE = "MIT";

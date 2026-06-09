@@ -5,9 +5,9 @@ export type MenuOptionMode = 'select' | 'toggle' | 'none'
 export type MenuOptionProps = {
   id?: string
   value?: any
-  label?: string
+  label?: WithBinding<string>
   icon?: string
-  hint?: string
+  hint?: WithBinding<string>
   action?: (value?: any) => void
   mode?: MenuOptionMode
   disabled?: boolean

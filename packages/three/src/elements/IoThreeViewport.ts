@@ -4,9 +4,10 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js'
 import { ThreeApplet } from '../nodes/ThreeApplet.js'
 import { ViewCameras } from '../nodes/ViewCameras.js'
 import { ToolBase } from '../nodes/ToolBase.js'
+import WebGPUBackend from 'three/src/renderers/webgpu/WebGPUBackend.js'
 
 if ( WebGPU.isAvailable() === false ) {
-  throw new Error( 'No WebGPU support' )
+  console.error( 'No WebGPU support!' )
 }
 
 const observer = new IntersectionObserver((entries) => {
@@ -108,9 +109,15 @@ export class IoThreeViewport extends IoElement {
     this.debounce(this.renderViewportDebounced)
   }
 
-  init() {
-    this.renderTarget = new CanvasTarget(document.createElement('canvas'))
-    this.appendChild(this.renderTarget.domElement)
+  ready() {
+    // TODO: This is a hack to enable rendering with WebGL fallback
+    if (this.renderer.backend instanceof WebGPUBackend) {
+      this.renderTarget = new CanvasTarget(document.createElement('canvas'))
+      this.appendChild(this.renderTarget.domElement)
+    } else {
+      console.log('WebGL fallback enabled')
+      this.appendChild(this.renderer.domElement)
+    }
   }
 
   connectedCallback() {
@@ -141,8 +148,10 @@ export class IoThreeViewport extends IoElement {
     const rect = this.getBoundingClientRect()
     this.width = Math.floor(rect.width)
     this.height = Math.floor(rect.height)
-    this.renderTarget.setSize(this.width, this.height)
-    this.renderTarget.setPixelRatio(window.devicePixelRatio)
+    if (this.renderer.backend instanceof WebGPUBackend) {
+      this.renderTarget.setSize(this.width, this.height)
+      this.renderTarget.setPixelRatio(window.devicePixelRatio)
+    }
     this.renderViewportDebounced()
   }
 
@@ -174,7 +183,10 @@ export class IoThreeViewport extends IoElement {
     }
     if (!this.width || !this.height) return
 
-    this.renderer.setCanvasTarget(this.renderTarget)
+    if (this.renderer.backend instanceof WebGPUBackend) {
+      this.renderer.setCanvasTarget(this.renderTarget)
+    }
+
     this.renderer.setClearColor(this.clearColor, this.clearAlpha)
     this.renderer.setSize(this.width, this.height)
     this.renderer.clear()
