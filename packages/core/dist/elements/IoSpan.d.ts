@@ -1,7 +1,7 @@
-import { Binding } from '../core/Binding.js';
+import { WithBinding } from '../nodes/ReactiveNode.js';
 import { IoElement, IoElementProps } from './IoElement.js';
 type IoSpanProps = IoElementProps & {
-    value?: string | Binding;
+    value?: WithBinding<string>;
 };
 export declare class IoSpan extends IoElement {
     constructor(props: IoSpanProps);

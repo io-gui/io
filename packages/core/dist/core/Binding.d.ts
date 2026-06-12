@@ -18,7 +18,7 @@ type TargetProperties = WeakMap<ReactiveNode | IoElement, Properties>;
  * const binding = new Binding(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export declare class Binding {
+export declare class Binding<T = unknown> {
     readonly node: ReactiveNode | IoElement;
     readonly property: string;
     readonly targets: Set<ReactiveNode | IoElement>;
@@ -30,8 +30,8 @@ export declare class Binding {
      * @param {string} property - Name of the sourceproperty
      */
     constructor(node: ReactiveNode | IoElement, property: string);
-    set value(value: any);
-    get value(): any;
+    set value(value: T);
+    get value(): T;
     /**
      * Adds a target node and property.
      * Sets itself as the binding reference on the target `ReactivePropertyInstance`.

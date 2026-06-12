@@ -32,7 +32,7 @@ export const NODES = {
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced'
 
 // Utility type to add Binding to all properties of a type
-export type WithBinding<T> = T | Binding
+export type WithBinding<T> = T | Binding<T>
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
 type AnyEventHandler = (
@@ -89,7 +89,7 @@ export class ReactiveNode extends Object {
 
   declare readonly _protochain: ProtoChain
   declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
-  declare readonly _bindings: Map<string, Binding>
+  declare readonly _bindings: Map<string, Binding<unknown>>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare readonly _parents: Array<ReactiveNode | IoElement>
@@ -168,9 +168,13 @@ export class ReactiveNode extends Object {
   dispatchMutation(object: object | ReactiveNode = this, properties: string[] = []) {
     dispatchMutation(this, object, properties)
   }
-  bind(name: string): Binding {
+  bind<K extends keyof this & string>(name: K): Binding<this[K]>
+  bind(name: string): Binding<unknown>
+  bind(name: string): Binding<unknown> {
     return bind(this, name)
   }
+  unbind<K extends keyof this & string>(name: K): void
+  unbind(name: string): void
   unbind(name: string): void {
     unbind(this, name)
   }
@@ -408,16 +412,20 @@ export function onPropertyMutated(node: ReactiveNode | IoElement, event: CustomE
   })
   return hasMutated
 }
-export function bind(node: ReactiveNode | IoElement, name: string) {
+export function bind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): Binding<TNode[K]>
+export function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown>
+export function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown> {
   debug: if (!node._reactiveProperties.has(name)) {
     console.warn(`IoGUI Node: cannot bind to ${name} property. Does not exist!`)
   }
   if (!node._bindings.has(name)) {
     node._bindings.set(name, new Binding(node, name))
   }
-  return node._bindings.get(name)! as Binding
+  return node._bindings.get(name)! as Binding<unknown>
 }
-export function unbind(node: ReactiveNode | IoElement, name: string) {
+export function unbind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): void
+export function unbind(node: ReactiveNode | IoElement, name: string): void
+export function unbind(node: ReactiveNode | IoElement, name: string): void {
   const binding = node._bindings.get(name)
   if (binding) {
     binding.dispose()

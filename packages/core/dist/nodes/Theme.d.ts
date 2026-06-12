@@ -1,12 +1,5 @@
 import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js';
-export declare class Color {
-    r: number;
-    g: number;
-    b: number;
-    a: number;
-    constructor(r: number, g: number, b: number, a: number);
-    toCss(): string;
-}
+import { Color } from '../core/Color.js';
 export type ThemeVars = {
     spacing: number;
     spacing2: number;

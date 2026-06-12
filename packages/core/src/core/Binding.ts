@@ -35,7 +35,7 @@ const isTypeCompatible = (type1: any, type2: any) => {
  * const binding = new Binding(nodeA, 'value');
  * binding.addTarget(nodeB, 'value');
  */
-export class Binding {
+export class Binding<T = unknown> {
   readonly node: ReactiveNode | IoElement
   readonly property: string
   readonly targets: Set<ReactiveNode | IoElement> = new Set()
@@ -57,11 +57,11 @@ export class Binding {
     this.onTargetChanged = this.onTargetChanged.bind(this)
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged)
   }
-  set value(value: any) {
+  set value(value: T) {
     (this.node as any)[this.property] = value
   }
-  get value(): any {
-    return (this.node as any)[this.property]
+  get value(): T {
+    return (this.node as any)[this.property] as T
   }
   /**
    * Adds a target node and property.

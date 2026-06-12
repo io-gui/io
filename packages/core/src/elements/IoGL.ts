@@ -2,9 +2,10 @@ import { Register } from '../decorators/Register.js'
 import { ReactiveProperty } from '../decorators/Property.js'
 import { ReactivePropertyInstance, ReactivePropertyDefinition } from '../core/ReactiveProperty.js'
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
-import { ThemeSingleton, Color } from '../nodes/Theme.js'
+import { ThemeSingleton } from '../nodes/Theme.js'
 import { IoElement, IoElementProps } from './IoElement.js'
 import { glsl } from './IoGL.glsl.js'
+import { Color } from '../core/Color.js'
 
 const canvas = document.createElement('canvas')
 const gl = canvas.getContext('webgl', {antialias: false, premultipliedAlpha: false}) as WebGLRenderingContext

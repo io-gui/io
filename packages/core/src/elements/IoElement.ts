@@ -71,7 +71,7 @@ export class IoElement extends HTMLElement {
 
   declare readonly _protochain: ProtoChain
   declare readonly _reactiveProperties: Map<string, ReactivePropertyInstance>
-  declare readonly _bindings: Map<string, Binding>
+  declare readonly _bindings: Map<string, Binding<unknown>>
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare _hasWindowMutationListener: boolean
@@ -171,9 +171,13 @@ export class IoElement extends HTMLElement {
   dispatchMutation(object: object | ReactiveNode = this, properties: string[] = []) {
     dispatchMutation(this, object, properties)
   }
-  bind(name: string): Binding {
+  bind<K extends keyof this & string>(name: K): Binding<this[K]>
+  bind(name: string): Binding<unknown>
+  bind(name: string): Binding<unknown> {
     return bind(this, name)
   }
+  unbind<K extends keyof this & string>(name: K): void
+  unbind(name: string): void
   unbind(name: string): void {
     unbind(this, name)
   }

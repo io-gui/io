@@ -108,9 +108,6 @@ export class IoThemeEditor extends IoElement {
 
       ioField('gradientColorEnd'),
       ioColorRgba({value: ThemeSingleton.bind('gradientColorEnd')}),
-
-      ioField('shadowColor'),
-      ioColorRgba({value: ThemeSingleton.bind('shadowColor')}),
     ])
   }
 }

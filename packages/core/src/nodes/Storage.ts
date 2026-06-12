@@ -116,7 +116,7 @@ export class StorageNode extends ReactiveNode {
   @ReactiveProperty({value: 'local', type: String})
   declare storage: 'hash' | 'local' | 'none'
 
-  declare binding: Binding
+  declare binding: Binding<StorageNode['value']>
 
   declare default: any
 
@@ -286,7 +286,7 @@ export class StorageNode extends ReactiveNode {
 
 
 export const Storage = Object.assign(
-  (props: StorageProps) => {
+  (props: StorageProps): Binding<StorageNode['value']> => {
     const storageNode = new StorageNode(props)
     return storageNode.binding
   }, {

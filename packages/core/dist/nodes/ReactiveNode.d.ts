@@ -23,7 +23,7 @@ export declare const NODES: {
     disposed: WeakSet<ReactiveNode>;
 };
 export type ReactivityType = 'immediate' | 'throttled' | 'debounced';
-export type WithBinding<T> = T | Binding;
+export type WithBinding<T> = T | Binding<T>;
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type ReactiveNodeProps = {
@@ -37,7 +37,7 @@ export declare class ReactiveNode extends Object {
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
     readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
-    readonly _bindings: Map<string, Binding>;
+    readonly _bindings: Map<string, Binding<unknown>>;
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
     readonly _parents: Array<ReactiveNode | IoElement>;
@@ -58,7 +58,9 @@ export declare class ReactiveNode extends Object {
     debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
     dispatchMutation(object?: object | ReactiveNode, properties?: string[]): void;
-    bind(name: string): Binding;
+    bind<K extends keyof this & string>(name: K): Binding<this[K]>;
+    bind(name: string): Binding<unknown>;
+    unbind<K extends keyof this & string>(name: K): void;
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
@@ -75,7 +77,9 @@ export declare function setProperty(node: ReactiveNode | IoElement, name: string
 export declare function dispatchQueue(node: ReactiveNode | IoElement, debounce?: boolean): void;
 export declare function dispatchMutation(node: ReactiveNode | IoElement, object: object | ReactiveNode, properties: string[]): void;
 export declare function onPropertyMutated(node: ReactiveNode | IoElement, event: CustomEvent): boolean;
-export declare function bind(node: ReactiveNode | IoElement, name: string): Binding;
+export declare function bind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): Binding<TNode[K]>;
+export declare function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown>;
+export declare function unbind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): void;
 export declare function unbind(node: ReactiveNode | IoElement, name: string): void;
 export declare function dispose(node: ReactiveNode | IoElement): void;
 export {};

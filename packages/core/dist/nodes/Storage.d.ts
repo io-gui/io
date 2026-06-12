@@ -10,7 +10,7 @@ export declare class StorageNode extends ReactiveNode {
     key: string;
     value: any;
     storage: 'hash' | 'local' | 'none';
-    binding: Binding;
+    binding: Binding<StorageNode['value']>;
     default: any;
     constructor(props: StorageProps);
     dispose(): void;
@@ -21,7 +21,7 @@ export declare class StorageNode extends ReactiveNode {
     removeValueToHash(): void;
     saveValueToHash(): void;
 }
-export declare const Storage: ((props: StorageProps) => Binding) & {
+export declare const Storage: ((props: StorageProps) => Binding<StorageNode["value"]>) & {
     permit(): void;
     unpermit(): void;
 };

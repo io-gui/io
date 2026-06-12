@@ -8,33 +8,11 @@ import { Register } from '../decorators/Register.js';
 import { ReactiveProperty } from '../decorators/Property.js';
 import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { Storage as $ } from '../nodes/Storage.js';
-const THEME_VERSION = 'v0.11';
+import { Color } from '../core/Color.js';
+const THEME_VERSION = 'v0.14';
 const styleElement = document.createElement('style');
 styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION);
 document.head.appendChild(styleElement);
-export class Color {
-    r;
-    g;
-    b;
-    a;
-    constructor(r, g, b, a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
-    }
-    toCss() {
-        const r = Math.floor(this.r * 255);
-        const g = Math.floor(this.g * 255);
-        const b = Math.floor(this.b * 255);
-        if (this.a !== undefined && this.a !== 1) {
-            return `rgba(${r}, ${g}, ${b}, ${this.a})`;
-        }
-        else {
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-    }
-}
 export const LIGHT_THEME = {
     spacing: 2,
     spacing2: 0,
@@ -46,29 +24,29 @@ export const LIGHT_THEME = {
     fieldHeight: 0,
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: new Color(0.2, 0.2, 0.2, 1),
-    borderColorLight: new Color(0.3, 0.3, 0.3, 1),
-    borderColorStrong: new Color(0.6, 0.6, 0.6, 1),
-    borderColorRed: new Color(1, 0.35, 0.15, 1),
-    borderColorGreen: new Color(0.1, 0.7, 0.2, 1),
-    borderColorBlue: new Color(0.2, 0.4, 0.95, 1),
-    bgColor: new Color(0.85, 0.85, 0.85, 1),
-    bgColorStrong: new Color(0.9, 0.9, 0.9, 1),
-    bgColorLight: new Color(0.8, 0.8, 0.8, 1),
-    bgColorRed: new Color(1, 0.5, 0.3, 1),
-    bgColorGreen: new Color(0.2, 0.9, 0.3, 1),
-    bgColorBlue: new Color(0.2, 0.5, 0.9, 1),
-    bgColorInput: new Color(0.95, 0.96, 0.95, 1),
-    color: new Color(0.25, 0.25, 0.2, 1),
-    colorStrong: new Color(0, 0, 0, 1),
-    colorLight: new Color(0.6, 0.6, 0.6, 1),
-    colorRed: new Color(1, 0.2, 0.0, 1),
-    colorGreen: new Color(0, 0.6, 0.1, 1),
-    colorBlue: new Color(0.2, 0.3, 1, 1),
-    colorWhite: new Color(1, 1, 1, 1),
-    colorInput: new Color(0, 0.05, 0.02, 1),
-    gradientColorStart: new Color(0.9, 0.9, 0.9, 1),
-    gradientColorEnd: new Color(0.75, 0.75, 0.75, 1),
+    borderColor: new Color(0.2, 0.2, 0.2),
+    borderColorLight: new Color(0.3, 0.3, 0.3),
+    borderColorStrong: new Color(0.6, 0.6, 0.6),
+    borderColorRed: new Color(1, 0.35, 0.15),
+    borderColorGreen: new Color(0.1, 0.7, 0.2),
+    borderColorBlue: new Color(0.2, 0.4, 0.95),
+    bgColor: new Color(0.85, 0.85, 0.85),
+    bgColorStrong: new Color(0.9, 0.9, 0.9),
+    bgColorLight: new Color(0.8, 0.8, 0.8),
+    bgColorRed: new Color(1, 0.5, 0.3),
+    bgColorGreen: new Color(0.2, 0.9, 0.3),
+    bgColorBlue: new Color(0.2, 0.5, 0.9),
+    bgColorInput: new Color(0.95, 0.96, 0.95),
+    color: new Color(0.25, 0.25, 0.2),
+    colorStrong: new Color(0, 0, 0),
+    colorLight: new Color(0.6, 0.6, 0.6),
+    colorRed: new Color(1, 0.2, 0.0),
+    colorGreen: new Color(0, 0.6, 0.1),
+    colorBlue: new Color(0.2, 0.3, 1),
+    colorWhite: new Color(1, 1, 1),
+    colorInput: new Color(0, 0.05, 0.02),
+    gradientColorStart: new Color(0.9, 0.9, 0.9),
+    gradientColorEnd: new Color(0.75, 0.75, 0.75),
     shadowColor: new Color(0, 0, 0, 0.2),
 };
 export const DARK_THEME = {
@@ -82,29 +60,29 @@ export const DARK_THEME = {
     fieldHeight: 0,
     borderRadius: 2,
     borderWidth: 1,
-    borderColor: new Color(0.5, 0.5, 0.5, 1),
-    borderColorLight: new Color(0.3, 0.3, 0.3, 1),
-    borderColorStrong: new Color(0, 0, 0, 1),
-    borderColorRed: new Color(1, 0.2, 0.0, 1),
-    borderColorBlue: new Color(0.4, 0.5, 0.9, 1),
-    borderColorGreen: new Color(0, 0.6, 0.1, 1),
-    bgColor: new Color(0.2, 0.2, 0.2, 1),
-    bgColorStrong: new Color(0.15, 0.15, 0.15, 1),
-    bgColorLight: new Color(0.25, 0.25, 0.25, 1),
-    bgColorRed: new Color(0.7, 0.2, 0.1, 1),
-    bgColorGreen: new Color(0.1, 0.5, 0.2, 1),
-    bgColorBlue: new Color(0.2, 0.4, 0.8, 1),
-    bgColorInput: new Color(0.02, 0.02, 0.02, 1),
-    color: new Color(0.6, 0.6, 0.6, 1),
-    colorStrong: new Color(0.86, 0.86, 0.86, 1),
-    colorLight: new Color(0.3, 0.3, 0.3, 1),
-    colorRed: new Color(1, 0.4, 0.4, 1),
-    colorGreen: new Color(0.4, 0.95, 0.3, 1),
-    colorBlue: new Color(0.6, 0.9, 1, 1),
-    colorWhite: new Color(1, 1, 1, 1),
-    colorInput: new Color(0.65, 0.7, 0.68, 1),
-    gradientColorStart: new Color(0.45, 0.45, 0.45, 1),
-    gradientColorEnd: new Color(0.2, 0.2, 0.2, 1),
+    borderColor: new Color(0.5, 0.5, 0.5),
+    borderColorLight: new Color(0.3, 0.3, 0.3),
+    borderColorStrong: new Color(0, 0, 0),
+    borderColorRed: new Color(1, 0.2, 0.0),
+    borderColorBlue: new Color(0.4, 0.5, 0.9),
+    borderColorGreen: new Color(0, 0.6, 0.1),
+    bgColor: new Color(0.2, 0.2, 0.2),
+    bgColorStrong: new Color(0.15, 0.15, 0.15),
+    bgColorLight: new Color(0.25, 0.25, 0.25),
+    bgColorRed: new Color(0.7, 0.2, 0.1),
+    bgColorGreen: new Color(0.1, 0.5, 0.2),
+    bgColorBlue: new Color(0.2, 0.4, 0.8),
+    bgColorInput: new Color(0.02, 0.02, 0.02),
+    color: new Color(0.6, 0.6, 0.6),
+    colorStrong: new Color(0.86, 0.86, 0.86),
+    colorLight: new Color(0.3, 0.3, 0.3),
+    colorRed: new Color(1, 0.4, 0.4),
+    colorGreen: new Color(0.4, 0.95, 0.3),
+    colorBlue: new Color(0.6, 0.9, 1),
+    colorWhite: new Color(1, 1, 1),
+    colorInput: new Color(0.65, 0.7, 0.68),
+    gradientColorStart: new Color(0.45, 0.45, 0.45),
+    gradientColorEnd: new Color(0.2, 0.2, 0.2),
     shadowColor: new Color(0, 0, 0, 0.2),
 };
 const $ThemeID = $({

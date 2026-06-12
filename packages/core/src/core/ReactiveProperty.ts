@@ -15,7 +15,7 @@ import { NodeArray } from '../core/NodeArray.js'
 export type ReactivePropertyDefinition= {
   value?: any
   type?: AnyConstructor
-  binding?: Binding
+  binding?: Binding<unknown>
   reflect?: boolean
   init?: any
 }
@@ -24,7 +24,7 @@ export type ReactivePropertyDefinition= {
  * Allows loose definition of properties by specifying only partial definitions, such as default value, type or a binding object.
  * @typedef {(string|number|boolean|Array<*>|null|undefined|AnyConstructor|Binding|ReactivePropertyDefinition)} ReactivePropertyDefinitionLoose
  */
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding | ReactivePropertyDefinition
+export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition
 
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
@@ -39,7 +39,7 @@ export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<
 export class ReactiveProtoProperty {
   declare value?: any
   declare type?: AnyConstructor
-  declare binding?: Binding
+  declare binding?: Binding<unknown>
   declare reflect?: boolean
   declare init?: any
   /**
@@ -217,7 +217,7 @@ export class ReactivePropertyInstance {
   // Constructor of the property value.
   type?: AnyConstructor
   // Binding object.
-  binding?: Binding
+  binding?: Binding<unknown>
   // Reflects to HTML attribute.
   reflect = false
   // Initialize property with provided constructor arguments. `null` prevents initialization.

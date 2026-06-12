@@ -6,7 +6,7 @@ import strip from '@rollup/plugin-strip'
 const bundleRoot = process.env.BUNDLE_ROOT as string
 const rootDir = path.resolve(bundleRoot)
 
-const externals = [/^@io-gui\//, /^three/]
+const externals = [/^@io-gui\//, /^three\/webgpu/]
 
 export default defineConfig({
   root: rootDir,
