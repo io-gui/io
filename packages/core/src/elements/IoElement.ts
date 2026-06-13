@@ -1,7 +1,7 @@
 import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
-import { applyNativeElementProps, constructElement, disposeChildren, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
+import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
 import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
@@ -216,63 +216,20 @@ export class IoElement extends HTMLElement {
    */
   render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
     host = (host || this) as any
-    const vDOMElementsOnly = vDOMElements.filter(item => item !== null)
-    this.$ = {}
+    const vDOMElementsOnly = filterVDOMElements(vDOMElements)
+    for (const id in this.$) delete this.$[id]
     this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose)
   }
   /**
    * Recurively traverses virtual DOM elements.
-   * TODO: test element.traverse() function!
+   * Uses keyed reconciliation when any vDOM child specifies a `key` prop, positional reconciliation otherwise.
    * @param {Array} vDOMElements - Array of VDOMElements elements.
    * @param {HTMLElement} [host] - Optional template target.
    * @param {boolean} [noDispose] - Skip disposal of existing elements.
    */
   traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
+    this._reconcileChildren(vChildren, host, noDispose)
     const children = host.children
-    // remove trailing elements
-    while (children.length > vChildren.length) {
-      const child = children[children.length - 1]
-      host.removeChild(child)
-      if (!noDispose) disposeChildren(child as IoElement)
-    }
-    // replace elements
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i] as HTMLElement | IoElement
-      // replace existing elements
-      if (child.localName !== vChildren[i].tag || noDispose) {
-        const oldElement = child as HTMLElement
-        const element = constructElement(vChildren[i])
-        host.insertBefore(element, oldElement)
-        host.removeChild(oldElement)
-        if (!noDispose) disposeChildren(oldElement as IoElement)
-      // update existing elements
-      } else {
-        // TODO: improve setting/removal/cleanup of native element properties/attributes.
-        child.removeAttribute('className')
-        child.removeAttribute('style')
-        if (vChildren[i].props) {
-          if ((child as IoElement)._isIoElement) {
-            // Set IoElement element properties
-            (child as IoElement).applyProperties(vChildren[i].props as Record<keyof this, any>)
-          } else {
-            // Set native HTML element properties
-            applyNativeElementProps(child as HTMLElement, vChildren[i].props!)
-          }
-        }
-      }
-    }
-    // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
-    // TODO: rename nodispose to dispose.
-    // TODO: test
-    // create new elements after existing
-    if (children.length < vChildren.length) {
-      const frag = document.createDocumentFragment()
-      for (let i = children.length; i < vChildren.length; i++) {
-        const element = constructElement(vChildren[i])
-        frag.appendChild(element)
-      }
-      host.appendChild(frag)
-    }
     for (let i = 0; i < vChildren.length; i++) {
       const vChild = vChildren[i]
       const child = children[i] as HTMLElement | IoElement
@@ -292,7 +249,7 @@ export class IoElement extends HTMLElement {
           (child as IoElement)._textNode.nodeValue = String(vChild.children)
         } else if (vChild.children instanceof Array) {
           if (!(child as IoElement)._isIoElement) {
-            const vDOMElementsOnly = (vChild.children as Array<VDOMElement | null>).filter(item => item !== null)
+            const vDOMElementsOnly = filterVDOMElements(vChild.children)
             this.traverse(vDOMElementsOnly, child as HTMLElement, noDispose)
           }
         }
@@ -302,7 +259,66 @@ export class IoElement extends HTMLElement {
       }
     }
   }
-
+  /**
+   * Reconciles host children with vDOM children by position and tag name.
+   * @param {Array} vChildren - Array of VDOMElements elements.
+   * @param {HTMLElement} host - Template target.
+   * @param {boolean} [noDispose] - Skip disposal of existing elements.
+   */
+  _reconcileChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {
+    const children = host.children
+    // remove trailing elements
+    while (children.length > vChildren.length) {
+      const child = children[children.length - 1]
+      host.removeChild(child)
+      if (!noDispose) disposeChildren(child as IoElement)
+    }
+    // replace elements
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLElement | IoElement
+      // replace existing elements
+      if (child.localName !== vChildren[i].tag || noDispose) {
+        const oldElement = child as HTMLElement
+        const element = constructElement(vChildren[i])
+        host.insertBefore(element, oldElement)
+        host.removeChild(oldElement)
+        if (!noDispose) disposeChildren(oldElement as IoElement)
+      // update existing elements
+      } else {
+        this._updateElementProps(child, vChildren[i])
+      }
+    }
+    // TODO: doing this before "replace elements" cached (noDispose) elements to be created twice.
+    // TODO: rename nodispose to dispose.
+    // create new elements after existing
+    if (children.length < vChildren.length) {
+      const frag = document.createDocumentFragment()
+      for (let i = children.length; i < vChildren.length; i++) {
+        const element = constructElement(vChildren[i])
+        frag.appendChild(element)
+      }
+      host.appendChild(frag)
+    }
+  }
+  /**
+   * Updates props of an existing element matched during reconciliation.
+   * @param {HTMLElement | IoElement} child - Element to update.
+   * @param {VDOMElement} vChild - Virtual DOM element to apply props from.
+   */
+  _updateElementProps(child: HTMLElement | IoElement, vChild: VDOMElement) {
+    // TODO: improve setting/removal/cleanup of native element properties/attributes.
+    child.removeAttribute('className')
+    child.removeAttribute('style')
+    if (vChild.props) {
+      if ((child as IoElement)._isIoElement) {
+        // Set IoElement element properties
+        (child as IoElement).applyProperties(vChild.props)
+      } else {
+        // Set native HTML element properties
+        applyNativeElementProps(child as HTMLElement, vChild.props)
+      }
+    }
+  }
   /**
   * Helper function to flatten textContent into a single TextNode.
   * Update textContent via TextNode is better for layout performance.

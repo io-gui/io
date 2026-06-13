@@ -16,6 +16,8 @@ export const applyNativeElementProps = function (element, props) {
     for (const _p in props) {
         const p = _p;
         const prop = props[p];
+        if (p === 'key')
+            continue;
         debug: if (prop instanceof Binding) {
             console.warn(`VDOM: Cannot set binding on "${element.localName}.${_p}"`);
         }
@@ -66,21 +68,49 @@ export const applyNativeElementProps = function (element, props) {
     element._eventDispatcher.applyPropListeners(props);
 };
 /**
+ * Returns the reconciliation key of an element assigned during construction.
+ * @param {Element} element - Element to get the key of.
+ * @return {string | number | undefined} - Reconciliation key.
+ */
+export const getElementKey = function (element) {
+    return element._vdomKey;
+};
+/**
  * Creates an element from a virtual DOM object.
  * @param {VDOMElement} vDOMElement - Virtual DOM object.
  * @return {HTMLElement} - Created element.
  */
 export const constructElement = function (vDOMElement) {
     const props = vDOMElement.props || {};
+    let element;
     // IoElement classes constructed with constructor.
     const ConstructorClass = window.customElements ? window.customElements.get(vDOMElement.tag) : null;
     if (ConstructorClass && ConstructorClass.prototype?._isIoElement) {
-        return new ConstructorClass(props);
+        element = new ConstructorClass(props);
     }
-    // Other element classes constructed with document.createElement.
-    const element = document.createElement(vDOMElement.tag);
-    applyNativeElementProps(element, props);
+    else {
+        // Other element classes constructed with document.createElement.
+        element = document.createElement(vDOMElement.tag);
+        applyNativeElementProps(element, props);
+    }
+    if (props.key !== undefined) {
+        Object.defineProperty(element, '_vdomKey', { enumerable: false, configurable: true, value: props.key });
+    }
     return element;
+};
+/**
+ * Filters out null items from a virtual DOM children array.
+ * Returns the same array instance when no null items are present to avoid allocation.
+ * @param {Array} vChildren - Array of VDOMElement children with possible null items.
+ * @return {Array} - Array of VDOMElement children without null items.
+ */
+export const filterVDOMElements = function (vChildren) {
+    for (let i = 0; i < vChildren.length; i++) {
+        if (vChildren[i] === null) {
+            return vChildren.filter(item => item !== null);
+        }
+    }
+    return vChildren;
 };
 /**
  * Disposes the element's children.

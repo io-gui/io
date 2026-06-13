@@ -63,12 +63,34 @@ export declare class IoElement extends HTMLElement {
     render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean): void;
     /**
      * Recurively traverses virtual DOM elements.
-     * TODO: test element.traverse() function!
+     * Uses keyed reconciliation when any vDOM child specifies a `key` prop, positional reconciliation otherwise.
      * @param {Array} vDOMElements - Array of VDOMElements elements.
      * @param {HTMLElement} [host] - Optional template target.
      * @param {boolean} [noDispose] - Skip disposal of existing elements.
      */
     traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
+    /**
+     * Reconciles host children with vDOM children by position and tag name.
+     * @param {Array} vChildren - Array of VDOMElements elements.
+     * @param {HTMLElement} host - Template target.
+     * @param {boolean} [noDispose] - Skip disposal of existing elements.
+     */
+    _reconcilePositionalChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
+    /**
+     * Reconciles host children with vDOM children using `key` props.
+     * Keyed elements are matched by key and moved in place instead of being destroyed and recreated.
+     * Unkeyed elements fall back to positional tag matching.
+     * @param {Array} vChildren - Array of VDOMElements elements.
+     * @param {HTMLElement} host - Template target.
+     * @param {boolean} [noDispose] - Skip disposal of existing elements.
+     */
+    _reconcileKeyedChildren(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean): void;
+    /**
+     * Updates props of an existing element matched during reconciliation.
+     * @param {HTMLElement | IoElement} child - Element to update.
+     * @param {VDOMElement} vChild - Virtual DOM element to apply props from.
+     */
+    _updateElementProps(child: HTMLElement | IoElement, vChild: VDOMElement): void;
     /**
     * Helper function to flatten textContent into a single TextNode.
     * Update textContent via TextNode is better for layout performance.

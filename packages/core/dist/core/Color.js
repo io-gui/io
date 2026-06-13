@@ -1,4 +1,3 @@
-// import { Color as ThreeColor } from 'three/src/Three.js'
 export class Color {
     r;
     g;

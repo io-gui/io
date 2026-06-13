@@ -246,6 +246,7 @@ type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${T
 type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type NativeElementProps = AriaProps & PropsWithUndefined<{
     [key: prefix<string, '@'>]: string | AnyEventHandler;
+    key?: string | number;
     title?: string;
     lang?: Lang;
     translate?: any;
@@ -286,11 +287,24 @@ export type NativeElementProps = AriaProps & PropsWithUndefined<{
  */
 export declare const applyNativeElementProps: (element: HTMLElement, props: NativeElementProps) => void;
 /**
+ * Returns the reconciliation key of an element assigned during construction.
+ * @param {Element} element - Element to get the key of.
+ * @return {string | number | undefined} - Reconciliation key.
+ */
+export declare const getElementKey: (element: Element) => string | number | undefined;
+/**
  * Creates an element from a virtual DOM object.
  * @param {VDOMElement} vDOMElement - Virtual DOM object.
  * @return {HTMLElement} - Created element.
  */
 export declare const constructElement: (vDOMElement: VDOMElement) => HTMLElement;
+/**
+ * Filters out null items from a virtual DOM children array.
+ * Returns the same array instance when no null items are present to avoid allocation.
+ * @param {Array} vChildren - Array of VDOMElement children with possible null items.
+ * @return {Array} - Array of VDOMElement children without null items.
+ */
+export declare const filterVDOMElements: (vChildren: Array<VDOMElement | null>) => VDOMElement[];
 /**
  * Disposes the element's children.
  * @param {IoElement} element - Element to dispose children of.

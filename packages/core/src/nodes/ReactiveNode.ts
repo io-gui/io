@@ -94,7 +94,6 @@ export class ReactiveNode extends Object {
   declare readonly _eventDispatcher: EventDispatcher
   declare readonly _parents: Array<ReactiveNode | IoElement>
   declare readonly _isNode: boolean
-  declare readonly _isIoElement: boolean
   declare _disposed: boolean
 
   constructor(args?: any) {
@@ -210,7 +209,6 @@ export class ReactiveNode extends Object {
   }
   Register(ioNodeConstructor: typeof ReactiveNode) {
     Object.defineProperty(ioNodeConstructor.prototype, '_isNode', {enumerable: false, value: true, writable: false})
-    Object.defineProperty(ioNodeConstructor.prototype, '_isIoElement', {enumerable: false, value: false, writable: false})
     Object.defineProperty(ioNodeConstructor.prototype, '_protochain', {value: new ProtoChain(ioNodeConstructor)})
   }
 }

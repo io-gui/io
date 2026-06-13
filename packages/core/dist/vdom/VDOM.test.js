@@ -5,7 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { describe, it, expect } from 'vitest';
-import { Register, IoElement, applyNativeElementProps, constructElement, div, span } from '@io-gui/core';
+import { Register, IoElement, applyNativeElementProps, constructElement, filterVDOMElements, getElementKey, div, span } from '@io-gui/core';
 describe('VDOM', () => {
     it('Should construct an native DIV element', () => {
         const element = constructElement(div());
@@ -764,6 +764,203 @@ describe('VDOM Element Reuse', () => {
         expect(widget.children[1].className).toBe('widget-child-b');
         expect(widget.children[2].className).toBe('widget-child-c');
         parent.remove();
+    });
+});
+describe('VDOM Keyed Reconciliation', () => {
+    let TestKeyedHost = class TestKeyedHost extends IoElement {
+        renderWithVdom(vdom) {
+            this.render(vdom);
+        }
+    };
+    TestKeyedHost = __decorate([
+        Register
+    ], TestKeyedHost);
+    it('Should store the key on constructed elements and skip applying it as property/attribute', () => {
+        const nativeElement = constructElement(span({ key: 'a', class: 'keyed' }));
+        expect(getElementKey(nativeElement)).toBe('a');
+        expect(nativeElement.key).toBe(undefined);
+        expect(nativeElement.getAttribute('key')).toBe(null);
+        const element = new TestKeyedHost();
+        element.applyProperties({ key: 'b' });
+        expect(element.key).toBe(undefined);
+    });
+    it('Should reuse keyed native elements when the list is reordered', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            span({ key: 'a', class: 'a' }, 'A'),
+            span({ key: 'b', class: 'b' }, 'B'),
+            span({ key: 'c', class: 'c' }, 'C'),
+        ]);
+        const childA = element.children[0];
+        const childB = element.children[1];
+        const childC = element.children[2];
+        element.renderWithVdom([
+            span({ key: 'c', class: 'c' }, 'C'),
+            span({ key: 'a', class: 'a' }, 'A'),
+            span({ key: 'b', class: 'b' }, 'B'),
+        ]);
+        expect(element.children.length).toBe(3);
+        expect(element.children[0]).toBe(childC);
+        expect(element.children[1]).toBe(childA);
+        expect(element.children[2]).toBe(childB);
+        expect(element.children[0].textContent).toBe('C');
+        expect(element.children[1].textContent).toBe('A');
+        expect(element.children[2].textContent).toBe('B');
+        element.remove();
+    });
+    it('Should reuse keyed IoElement instances on reorder and update their props', () => {
+        let TestKeyedItem = class TestKeyedItem extends IoElement {
+            static get ReactiveProperties() {
+                return {
+                    label: '',
+                };
+            }
+            instanceId = Math.random();
+        };
+        TestKeyedItem = __decorate([
+            Register
+        ], TestKeyedItem);
+        const testKeyedItem = (props) => TestKeyedItem.vConstructor(props);
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            testKeyedItem({ key: 'first', label: 'one' }),
+            testKeyedItem({ key: 'second', label: 'two' }),
+        ]);
+        const first = element.children[0];
+        const second = element.children[1];
+        expect(first.label).toBe('one');
+        expect(second.label).toBe('two');
+        element.renderWithVdom([
+            testKeyedItem({ key: 'second', label: 'two-updated' }),
+            testKeyedItem({ key: 'first', label: 'one-updated' }),
+        ]);
+        expect(element.children.length).toBe(2);
+        expect(element.children[0].instanceId).toBe(second.instanceId);
+        expect(element.children[1].instanceId).toBe(first.instanceId);
+        expect(element.children[0].label).toBe('two-updated');
+        expect(element.children[1].label).toBe('one-updated');
+        element.remove();
+    });
+    it('Should preserve keyed siblings when an item is removed from the middle of the list', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            span({ key: 'a' }, 'A'),
+            span({ key: 'b' }, 'B'),
+            span({ key: 'c' }, 'C'),
+        ]);
+        const childA = element.children[0];
+        const childC = element.children[2];
+        element.renderWithVdom([
+            span({ key: 'a' }, 'A'),
+            span({ key: 'c' }, 'C'),
+        ]);
+        expect(element.children.length).toBe(2);
+        expect(element.children[0]).toBe(childA);
+        expect(element.children[1]).toBe(childC);
+        element.remove();
+    });
+    it('Should preserve keyed siblings when an item is inserted into the middle of the list', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            span({ key: 'a' }, 'A'),
+            span({ key: 'c' }, 'C'),
+        ]);
+        const childA = element.children[0];
+        const childC = element.children[1];
+        element.renderWithVdom([
+            span({ key: 'a' }, 'A'),
+            span({ key: 'b' }, 'B'),
+            span({ key: 'c' }, 'C'),
+        ]);
+        expect(element.children.length).toBe(3);
+        expect(element.children[0]).toBe(childA);
+        expect(element.children[1].textContent).toBe('B');
+        expect(element.children[2]).toBe(childC);
+        element.remove();
+    });
+    it('Should reuse unkeyed elements positionally within a keyed list', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            div({ class: 'header' }, 'Header'),
+            span({ key: 'a' }, 'A'),
+            span({ key: 'b' }, 'B'),
+        ]);
+        const header = element.children[0];
+        const childA = element.children[1];
+        const childB = element.children[2];
+        element.renderWithVdom([
+            div({ class: 'header' }, 'Header'),
+            span({ key: 'b' }, 'B'),
+            span({ key: 'a' }, 'A'),
+        ]);
+        expect(element.children.length).toBe(3);
+        expect(element.children[0]).toBe(header);
+        expect(element.children[1]).toBe(childB);
+        expect(element.children[2]).toBe(childA);
+        element.remove();
+    });
+    it('Should recreate keyed element when its tag changes', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([span({ key: 'a' }, 'A')]);
+        const spanChild = element.children[0];
+        expect(spanChild.localName).toBe('span');
+        element.renderWithVdom([div({ key: 'a' }, 'A')]);
+        expect(element.children.length).toBe(1);
+        expect(element.children[0]).not.toBe(spanChild);
+        expect(element.children[0].localName).toBe('div');
+        expect(element.children[0].textContent).toBe('A');
+        element.remove();
+    });
+    it('Should update this.$ id map correctly across keyed re-renders', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            span({ key: 'a', id: 'alpha' }, 'A'),
+            span({ key: 'b', id: 'beta' }, 'B'),
+        ]);
+        expect(element.$.alpha).toBe(element.children[0]);
+        expect(element.$.beta).toBe(element.children[1]);
+        element.renderWithVdom([
+            span({ key: 'b', id: 'beta' }, 'B'),
+        ]);
+        expect(element.$.beta).toBe(element.children[0]);
+        expect(element.$.alpha).toBe(undefined);
+        element.remove();
+    });
+    it('Should handle null children in keyed lists', () => {
+        const element = new TestKeyedHost();
+        document.body.appendChild(element);
+        element.renderWithVdom([
+            span({ key: 'a' }, 'A'),
+            null,
+            span({ key: 'b' }, 'B'),
+        ]);
+        expect(element.children.length).toBe(2);
+        const childA = element.children[0];
+        const childB = element.children[1];
+        element.renderWithVdom([
+            null,
+            span({ key: 'b' }, 'B'),
+            span({ key: 'a' }, 'A'),
+        ]);
+        expect(element.children.length).toBe(2);
+        expect(element.children[0]).toBe(childB);
+        expect(element.children[1]).toBe(childA);
+        element.remove();
+    });
+    it('filterVDOMElements should return the same array instance when no nulls are present', () => {
+        const vChildren = [span({ key: 'a' }), span({ key: 'b' })];
+        expect(filterVDOMElements(vChildren)).toBe(vChildren);
+        const withNull = [span({ key: 'a' }), null, span({ key: 'b' })];
+        const filtered = filterVDOMElements(withNull);
+        expect(filtered).not.toBe(withNull);
+        expect(filtered.length).toBe(2);
     });
 });
 //# sourceMappingURL=VDOM.test.js.map

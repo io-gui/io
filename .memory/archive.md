@@ -81,3 +81,12 @@ Build verification: `pnpm build` in `packages/three` passed. Targeted tests via 
 ### [fix] io-three ToolBase pointer state isolated per viewport
 
 Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer records are no longer global to the tool instance. They now live in viewport-keyed `WeakMap`s and each pointer event resolves its source viewport from `event.currentTarget`, which keeps hover/move/down/up payloads isolated to the viewport that emitted the event.
+
+## 2026-06-12 [technical] Roadmap C2: VDOM keyed diffing + render allocation reduction
+- Split `IoElement.traverse` into `_reconcileKeyedChildren` / `_reconcilePositionalChildren` + shared `_updateElementProps`; common second pass ($ ids, children recursion) unchanged.
+- Keyed path: map existing children by `_vdomKey`, match by key+tag, `insertBefore` to move; unkeyed children in keyed lists fall back to positional tag match guarded by `getElementKey(candidate) === undefined`; leftovers guaranteed past vChildren.length, removed+disposed at end.
+- Decision on roadmap open question: minimal `key` opt-in (per-child, props.key), not full keyed reconciliation by default — zero behavior change for existing templates.
+- `key` skipped in both `applyProperties` and `applyNativeElementProps` so it never leaks as expando/attribute; stored in `constructElement` via defineProperty.
+- Allocation reduction: `filterVDOMElements` returns same array if no nulls; `this.$` cleared in place (delete loop) instead of `this.$ = {}`.
+- 9 new tests in VDOM.test.ts (reorder reuse native+IoElement, mid-list insert/remove, mixed keyed/unkeyed, tag change recreate, $ map across keyed renders, null children, filter identity). Full suite 773 pass; core build + lint clean.
+- Gotcha: `tsc` caught test type errors vitest didn't (vitest uses esbuild, no typecheck) — always build after adding typed tests.
