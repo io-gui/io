@@ -37,7 +37,7 @@ export class IoElement extends HTMLElement {
       :host[hidden] {
         display: none;
       }
-      --unselectable: {
+      --io-unselectable: {
         user-select: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
@@ -90,7 +90,6 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
     Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
     Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    // Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []});
 
     this.init()
 

@@ -22,7 +22,7 @@ todos:
     status: completed
   - id: theme-stylesheet
     content: Theme via CSSStyleSheet, drop JSON clones (C3)
-    status: pending
+    status: completed
   - id: package-layer
     content: "Package layer: layout→editors decouple (B1), pointer-drag helper (B2), IoSlider base fix (B3), composite re-render reduction (C4), tab-drag cache (C5)"
     status: pending

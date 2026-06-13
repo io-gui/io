@@ -3,13 +3,13 @@
 > Prune aggressively. Only what's relevant to current work stays here.
 
 ## Current Task
-Roadmap C2 done: VDOM keyed diffing + render allocation reduction in `packages/core`
+Style mixin polyfill tests added in `packages/core/src/core/Style.test.ts`
 
 ## Key Context
-- `IoElement.traverse` now dispatches to `_reconcileKeyedChildren` (when any vChild has `props.key`) or `_reconcilePositionalChildren` (previous behavior)
-- Keys are opt-in per child; stored as non-enumerable `_vdomKey` on elements in `constructElement`; never applied as property/attribute (`key` skipped in `applyProperties` and `applyNativeElementProps`)
-- `filterVDOMElements` helper returns same array when no nulls (no per-render filter allocation); `this.$` cleared in place instead of reallocated
-- `pnpm test` all green (773 tests), `pnpm --filter @io-gui/core build` and `pnpm lint` clean
+- Extracted `processElementStyle()` from `applyElementStyleToDocument()` for testability
+- Mixin `--name` declarations become `.name` class rules; `@apply --name` inlines mixin body
+- Global `mixinRecord` shares mixins across subsequent style processing calls
+- Removed stray `console.log` from mixin apply loop
 
 ## Blockers / Open Questions
 - None

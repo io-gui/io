@@ -30,7 +30,7 @@ export class IoField extends IoElement {
         font-size: var(--io_fontSize);
         text-size-adjust: 100%;
         overflow: hidden;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host:focus {
         text-overflow: inherit;

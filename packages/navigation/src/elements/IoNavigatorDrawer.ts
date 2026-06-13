@@ -61,7 +61,7 @@ export class IoNavigatorDrawer extends IoElement {
         cursor: pointer;
         flex: 0 0 auto;
         width: var(--io_fieldHeight);
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[direction="left"][expanded] > .io-drawer-content > .io-drawer-handle {
         border-left: var(--io_border);

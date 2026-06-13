@@ -28,7 +28,7 @@ class IoOverlay extends IoElement {
         pointer-events: none;
         touch-action: none;
         background: transparent;
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[expanded] {
         background: rgba(0, 0, 0, 0.25);

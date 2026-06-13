@@ -3,11 +3,9 @@ import { ReactiveProperty } from '../decorators/Property.js'
 import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js'
 import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
+import { adoptDocumentStylesheet } from '../core/Style.js'
 
 const THEME_VERSION = 'v0.14'
-const styleElement = document.createElement('style')
-styleElement.setAttribute('id', 'io-theme-variables-' + THEME_VERSION)
-document.head.appendChild(styleElement)
 
 export type ThemeVars = {
   spacing: number
@@ -150,18 +148,88 @@ const $Themes = $({
   key: 'io-themes-' + THEME_VERSION
 })
 
-const compositeVariables = /* css */`
-  body {
-    --io_border: var(--io_borderWidth) solid var(--io_borderColor);
-    --io_borderColorInset: var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong);
-    --io_borderColorOutset: var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight);
-    --io_gradientOutset: linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%);
-    --io_gradientInset: linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%);
-    --io_shadow: 2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor);
-    --io_shadowInset: 0.75px 0.75px 2px inset var(--io_shadowColor);
-    --io_shadowOutset: 1px 1px 2px var(--io_shadowColor);
+type ThemeStore = Record<string, ThemeVars>
+type ThemePartialStore = Record<string, Partial<Record<keyof ThemeVars, unknown>>>
+
+type SerializedColor = {
+  r: number
+  g: number
+  b: number
+  a?: number
+}
+
+const themeProperties = Object.keys(LIGHT_THEME) as Array<keyof ThemeVars>
+const colorPropertySet = new Set<keyof ThemeVars>(themeProperties.filter((property) => LIGHT_THEME[property] instanceof Color))
+
+const compositeVariables = {
+  '--io_border': 'var(--io_borderWidth) solid var(--io_borderColor)',
+  '--io_borderColorInset': 'var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong)',
+  '--io_borderColorOutset': 'var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight)',
+  '--io_gradientOutset': 'linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%)',
+  '--io_gradientInset': 'linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%)',
+  '--io_shadow': '2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor)',
+  '--io_shadowInset': '0.75px 0.75px 2px inset var(--io_shadowColor)',
+  '--io_shadowOutset': '1px 1px 2px var(--io_shadowColor)',
+} as const
+
+const themeStyleDeclaration = createThemeStyleDeclaration()
+
+function cloneColor(color: Color): Color {
+  return new Color(color.r, color.g, color.b, color.a)
+}
+
+function isSerializedColor(value: unknown): value is SerializedColor {
+  if (typeof value !== 'object' || value === null) return false
+  const candidate = value as Record<string, unknown>
+  return typeof candidate.r === 'number' &&
+    typeof candidate.g === 'number' &&
+    typeof candidate.b === 'number' &&
+    (candidate.a === undefined || typeof candidate.a === 'number')
+}
+
+function normalizeThemeValues(source: unknown, defaults: ThemeVars): ThemeVars {
+  const sourceValues = (typeof source === 'object' && source !== null) ? source as Partial<Record<keyof ThemeVars, unknown>> : {}
+  const normalized = {} as ThemeVars
+  const normalizedValues = normalized as Record<keyof ThemeVars, number | Color>
+  const defaultValues = defaults as Record<keyof ThemeVars, number | Color>
+
+  for (const property of themeProperties) {
+    const value = sourceValues[property]
+    const defaultValue = defaultValues[property]
+    if (colorPropertySet.has(property)) {
+      if (value instanceof Color) {
+        normalizedValues[property] = value
+      } else if (isSerializedColor(value)) {
+        normalizedValues[property] = new Color(value.r, value.g, value.b, value.a ?? 1)
+      } else {
+        normalizedValues[property] = cloneColor(defaultValue as Color)
+      }
+    } else {
+      normalizedValues[property] = (typeof value === 'number') ? value : defaultValue
+    }
   }
-`
+  return normalized
+}
+function cloneThemeValues(theme: ThemeVars): ThemeVars {
+  return normalizeThemeValues(theme, theme)
+}
+function createThemeStyleDeclaration(): CSSStyleDeclaration {
+  const styleSheet = createThemeStylesheet()
+
+  for (let i = styleSheet.cssRules.length - 1; i >= 0; i--) {
+    styleSheet.deleteRule(i)
+  }
+  styleSheet.insertRule('body {}', 0)
+
+  const bodyRule = styleSheet.cssRules[0] as CSSStyleRule
+  for (const name in compositeVariables) {
+    bodyRule.style.setProperty(name, compositeVariables[name as keyof typeof compositeVariables])
+  }
+  return bodyRule.style
+}
+function createThemeStylesheet(): CSSStyleSheet {
+  return adoptDocumentStylesheet('body {}')
+}
 
 /**
  * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
@@ -239,25 +307,28 @@ export class Theme extends ReactiveNode {
     this.themeIDChanged()
   }
   registerTheme(themeID: string, theme: ThemeVars) {
-    // Save default theme
-    this.themeDefaults[themeID] = theme
-    this.setProperty('themeDefaults', JSON.parse(JSON.stringify(this.themeDefaults)), true)
-    // Save persistant theme
-    $Themes.value[themeID] = $Themes.value[themeID] || theme
-    $Themes.value = JSON.parse(JSON.stringify($Themes.value))
+    const defaultTheme = cloneThemeValues(theme)
+    const storedThemes = $Themes.value as ThemePartialStore
+    const persistedTheme = normalizeThemeValues(storedThemes[themeID], defaultTheme)
+
+    this.setProperty('themeDefaults', {...this.themeDefaults, [themeID]: defaultTheme}, true)
+    $Themes.value = {...storedThemes, [themeID]: persistedTheme} as ThemeStore
   }
   reset() {
-    // Load persistant themes from default themes
-    $Themes.value = JSON.parse(JSON.stringify(this.themeDefaults))
+    const defaultThemes = this.themeDefaults as ThemeStore
+    const resetThemes = {} as ThemeStore
+    for (const themeID in defaultThemes) {
+      resetThemes[themeID] = cloneThemeValues(defaultThemes[themeID])
+    }
+    $Themes.value = resetThemes
     this.themeIDChanged()
   }
   themeIDChanged() {
-    const values = $Themes.value[this.themeID]
-    for (const p in values) {
-      if (values[p] instanceof Object && JSON.stringify(Object.keys(values[p])) === '["r","g","b","a"]') {
-         values[p] = new Color(values[p].r, values[p].g, values[p].b, values[p].a)
-      }
-    }
+    const defaultThemes = this.themeDefaults as ThemeStore
+    const defaultTheme = defaultThemes[this.themeID] || LIGHT_THEME
+    const storedThemes = $Themes.value as ThemePartialStore
+    const values = normalizeThemeValues(storedThemes[this.themeID], defaultTheme)
+    $Themes.value = {...storedThemes, [this.themeID]: values} as ThemeStore
     this.setProperties(values)
   }
 
@@ -285,21 +356,22 @@ export class Theme extends ReactiveNode {
     this.spacing5 = this.spacing * 5
     this.spacing8 = this.spacing * 8
 
-    const propertyVariables = Array.from(Object.keys(LIGHT_THEME) as Array<keyof ThemeVars>).reduce(
-      (result, prop) => {
-        $Themes.value[this.themeID][prop] = this[prop]
-        if (typeof this[prop] === 'object') {
-          return `${result}--io_${prop}: ${this[prop].toCss()};\n    `
-        } else {
-          return `${result}--io_${prop}: ${this[prop]}px;\n    `
-        }
-      }, '')
+    const storedThemes = $Themes.value as ThemeStore
+    const fallbackTheme = (this.themeDefaults as ThemeStore)[this.themeID] || LIGHT_THEME
+    const activeTheme = storedThemes[this.themeID] || cloneThemeValues(fallbackTheme)
+    const activeThemeValues = activeTheme as Record<keyof ThemeVars, number | Color>
 
-      styleElement.innerHTML = /* css */`body {\n  ${propertyVariables}\n}\n${compositeVariables}`
-      this.debounce(this.onSaveTheme, undefined, 60)
+    for (const property of themeProperties) {
+      const value = this[property] as number | Color
+      activeThemeValues[property] = value
+      const cssValue = (value instanceof Color) ? value.toCss() : `${value}px`
+      themeStyleDeclaration.setProperty(`--io_${property}`, cssValue)
+    }
+    storedThemes[this.themeID] = activeTheme
+    this.debounce(this.onSaveTheme, undefined, 60)
   }
   onSaveTheme() {
-    $Themes.value = JSON.parse(JSON.stringify($Themes.value))
+    $Themes.value = {...$Themes.value} as ThemeStore
   }
 }
 
