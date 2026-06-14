@@ -97,9 +97,9 @@ export declare class EventDispatcher {
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
-     * @param {Record<string, any>} properties - Inline properties
+     * @param {Record<string, unknown>} properties - Inline properties
      */
-    applyPropListeners(properties: Record<string, any>): void;
+    applyPropListeners(properties: Record<string, unknown>): void;
     /**
      * Proxy for `addEventListener` method.
      * Adds an event listener to the node's `addedListeners` collection.
@@ -121,11 +121,11 @@ export declare class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      * @param {string} name - Name of the event
-     * @param {any} detail - Event detail data
+     * @param {unknown} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>, visited?: Set<ReactiveNode | IoElement | EventTarget>, propagation?: DispatchPropagationState): void;
+    dispatchEvent(name: string, detail?: unknown, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>, visited?: Set<ReactiveNode | IoElement | EventTarget>, propagation?: DispatchPropagationState): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.

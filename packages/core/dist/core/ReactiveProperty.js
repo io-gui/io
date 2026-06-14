@@ -1,6 +1,5 @@
 import { Binding } from './Binding.js';
 import { isIoValue } from './ReactiveCore.js';
-import { constructType } from '../nodes/ReactiveNode.js';
 import { NodeArray } from '../core/NodeArray.js';
 /** Normalized reactive property definition merged from decorators and static getters. */
 export class ReactiveProtoProperty {
@@ -236,21 +235,21 @@ export class ReactivePropertyInstance {
                 if (this.init !== undefined) {
                     if (this.init instanceof Array) {
                         const args = this.init.map(item => decodeInitArgument(item, node));
-                        this.value = constructType(this.type, ...args);
+                        this.value = new this.type(...args);
                     }
                     else if (this.init instanceof Object) {
                         const args = {};
                         Object.keys(this.init).forEach(key => {
                             args[key] = decodeInitArgument(this.init[key], node);
                         });
-                        this.value = constructType(this.type, args);
+                        this.value = new this.type(args);
                     }
                     else if (this.init === null) {
-                        this.value = constructType(this.type);
+                        this.value = new this.type();
                     }
                     else {
                         const argument = decodeInitArgument(this.init, node);
-                        this.value = constructType(this.type, argument);
+                        this.value = new this.type(argument);
                     }
                 }
             }

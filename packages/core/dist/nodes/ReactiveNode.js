@@ -280,8 +280,8 @@ function applyPropertyBinding(node, name, prop, value) {
     // NOTE: Remedy for batch-set via change() > template() > setProperties() with existing bindings.
     return true;
 }
-function applyNodeArrayAssignment(node, name, prop, value) {
-    if (prop.type !== NodeArray || !Array.isArray(value))
+function applyNodeArrayAssignment(name, prop, value) {
+    if (prop.type !== NodeArray || !Array.isArray(value) || value instanceof NodeArray)
         return false;
     const nodeArray = prop.value;
     debug: if (value.some(item => !isIoValue(item))) {
@@ -368,7 +368,7 @@ export function setProperty(node, name, value, debounce = false) {
         return;
     if (applyPropertyBinding(node, name, prop, value))
         return;
-    if (applyNodeArrayAssignment(node, name, prop, value))
+    if (applyNodeArrayAssignment(name, prop, value))
         return;
     disconnectPropertyValue(node, prop, oldValue);
     prop.value = value;

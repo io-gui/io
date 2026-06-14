@@ -166,16 +166,16 @@ export class EventDispatcher {
   /**
    * Sets `propListeners` specified as inline properties prefixed with "@".
    * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
-   * @param {Record<string, any>} properties - Inline properties
+   * @param {Record<string, unknown>} properties - Inline properties
    */
-  applyPropListeners(properties: Record<string, any>) {
+  applyPropListeners(properties: Record<string, unknown>) {
     // Create and object with new listeners
     const newPropListeners: Listeners = {}
     for (const prop in properties) {
       if (!prop.startsWith('@')) continue
 
       const name = prop.slice(1)
-      const definition = hardenListenerDefinition(properties[prop])
+      const definition = hardenListenerDefinition(properties[prop] as ListenerDefinitionLoose)
       const listener = listenerFromDefinition(this.node, definition)
       newPropListeners[name] = [listener]
     }
@@ -312,11 +312,11 @@ export class EventDispatcher {
   /**
    * Shorthand for custom event dispatch.
    * @param {string} name - Name of the event
-   * @param {any} detail - Event detail data
+   * @param {unknown} detail - Event detail data
    * @param {boolean} [bubbles] - Makes event bubble
    * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set(), propagation: DispatchPropagationState = {stopped: false, immediateStopped: false}) {
+  dispatchEvent(name: string, detail?: unknown, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set(), propagation: DispatchPropagationState = {stopped: false, immediateStopped: false}) {
     if ((this.node as ReactiveNode)._disposed) return
     if (visited.has(node)) return
     visited.add(node)
@@ -404,9 +404,10 @@ export class EventDispatcher {
       this.addedListeners[name].length = 0
       delete this.addedListeners[name]
     }
-    delete (this as any).node
-    delete (this as any).protoListeners
-    delete (this as any).propListeners
-    delete (this as any).addedListeners
+    const disposable = this as Record<string, unknown>
+    delete disposable.node
+    delete disposable.protoListeners
+    delete disposable.propListeners
+    delete disposable.addedListeners
   }
 }

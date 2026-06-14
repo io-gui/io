@@ -108,7 +108,7 @@ export class EventDispatcher {
     /**
      * Sets `propListeners` specified as inline properties prefixed with "@".
      * It removes existing `propListeners` that are no longer specified and it replaces the ones that changed.
-     * @param {Record<string, any>} properties - Inline properties
+     * @param {Record<string, unknown>} properties - Inline properties
      */
     applyPropListeners(properties) {
         // Create and object with new listeners
@@ -247,7 +247,7 @@ export class EventDispatcher {
     /**
      * Shorthand for custom event dispatch.
      * @param {string} name - Name of the event
-     * @param {any} detail - Event detail data
+     * @param {unknown} detail - Event detail data
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
@@ -342,10 +342,11 @@ export class EventDispatcher {
             this.addedListeners[name].length = 0;
             delete this.addedListeners[name];
         }
-        delete this.node;
-        delete this.protoListeners;
-        delete this.propListeners;
-        delete this.addedListeners;
+        const disposable = this;
+        delete disposable.node;
+        delete disposable.protoListeners;
+        delete disposable.propListeners;
+        delete disposable.addedListeners;
     }
 }
 //# sourceMappingURL=EventDispatcher.js.map
