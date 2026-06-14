@@ -6,8 +6,7 @@
 None
 
 ## Key Context
-- CI split into lint/build/test jobs; bundle only on main push
-- TypeDoc generates @io-gui/core API docs to docs/generated/api
+- Quick wins completed: GL uniform cache, dev loop (parallel tsc -w + vite), three override removed, docs updated, ChangeQueue index map
 
 ## Blockers / Open Questions
 - None

@@ -4,7 +4,7 @@ overview: Prioritized roadmap of architectural, performance, tooling, testing, a
 todos:
   - id: quick-wins
     content: "Quick wins: GL uniform cache (C1), dev loop fix (D1), three override fix (D2), stale docs (F1), ChangeQueue map (C6)"
-    status: pending
+    status: completed
   - id: test-safety-net
     content: "Test safety net: coverage config (E3), three package smoke tests (E1)"
     status: pending

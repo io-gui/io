@@ -124,10 +124,10 @@ The project is organized as a monorepo with packages in `/packages/`:
 - **io-three** - Three js components
 
 ### Essential Commands
-- `pnpm dev` - Start watch mode for all packages (tsc)
+- `pnpm dev` - Start Vite dev server and TypeScript watch mode in parallel
 - `pnpm build` - Build all packages
 - `pnpm lint` - Lint all packages (auto-fixes)
-- `pnpm test` - Run tests with web-test-runner
+- `pnpm test` - Run tests with Vitest
 - `pnpm test:watch` - Run tests in watch mode
 - `pnpm clean` - Clean all build directories
 - Installing new npm packages is not allowed

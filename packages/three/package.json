@@ -59,7 +59,8 @@
     "@io-gui/inputs": "workspace:*",
     "@io-gui/sliders": "workspace:*",
     "@io-gui/colors": "workspace:*",
-    "@types/three": "^0.182.0"
+    "@types/three": "^0.182.0",
+    "three": "^0.182.0"
   },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.2",

@@ -34,7 +34,20 @@ gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff)
 
 const shadersCache = new WeakMap()
+const uniformLocationsCache = new WeakMap<WebGLProgram, Map<string, WebGLUniformLocation | null>>()
 let currentProgram: WebGLProgram | null
+
+function getUniformLocation(program: WebGLProgram, name: string) {
+  let locations = uniformLocationsCache.get(program)
+  if (!locations) {
+    locations = new Map()
+    uniformLocationsCache.set(program, locations)
+  }
+  if (!locations.has(name)) {
+    locations.set(name, gl.getUniformLocation(program, name))
+  }
+  return locations.get(name) ?? null
+}
 
 @Register
 export class IoGl extends IoElement {
@@ -307,7 +320,7 @@ export class IoGl extends IoElement {
     })
   }
   setUniform(name: string, value: any) {
-    const uniform = gl.getUniformLocation(this.#shader, name)
+    const uniform = getUniformLocation(this.#shader, name)
     if (uniform === null) return
     let type: string = typeof value
     if (value instanceof Array) type = 'array'

@@ -135,6 +135,11 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - TSDoc on ReactiveNode, IoElement, StorageNode, Color
 - TypeDoc config + docs:api script; docs/api-reference.md guide
 
-## 2026-06-14 [releases] Changesets removed
 
-User deferred release tooling decision. Removed @changesets/cli, .changeset/, release workflow, and related scripts. Existing `publish` / `publish:dry` scripts unchanged.
+## 2026-06-14 [quick-wins] Roadmap quick wins implemented
+
+- **C1**: IoGL caches `gl.getUniformLocation` per program via `uniformLocationsCache` WeakMap
+- **C6**: ChangeQueue uses `#changeIndex` Map for O(1) property lookup instead of `findIndex`
+- **D1**: `pnpm dev` runs `build:watch` (tsc -b -w) and `dev:server` (vite) in parallel
+- **D2**: Removed machine-specific `three` pnpm override; added `three` devDependency to @io-gui/three; fixed index.html three import paths to node_modules
+- **F1**: Updated CONTRIBUTING.md, io-gui.mdc, README.md (Vitest, ReactiveNode, dist/, @io-gui/core npm badge)

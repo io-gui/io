@@ -5,7 +5,8 @@
   "type": "module",
   "packageManager": "pnpm@9.5.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "pnpm run --parallel build:watch dev:server",
+    "dev:server": "vite",
     "build": "pnpm clean && tsc -b",
     "build:ci": "tsc -b",
     "build:watch": "tsc -b -w",

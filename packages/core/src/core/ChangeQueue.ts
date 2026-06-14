@@ -44,6 +44,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
 export class ChangeQueue {
   declare readonly node: ReactiveNode | IoElement
   declare changes: Change[]
+  #changeIndex = new Map<string, number>()
   dispatchedChange = false
   dispatching = false
   /**
@@ -72,13 +73,22 @@ export class ChangeQueue {
     debug: if (value === oldValue) {
       console.warn('ChangeQueue: queuing change with same value and oldValue!')
     }
-    const i = this.changes.findIndex(change => change.property === property)
-    if (i === -1) {
+    const i = this.#changeIndex.get(property)
+    if (i === undefined) {
+      this.#changeIndex.set(property, this.changes.length)
       this.changes.push({property, value, oldValue})
     } else if (value === this.changes[i].oldValue) {
-      this.changes.splice(i, 1)
+      this.#removeAt(i)
     } else {
       this.changes[i].value = value
+    }
+  }
+  #removeAt(i: number) {
+    const removed = this.changes[i]
+    this.changes.splice(i, 1)
+    this.#changeIndex.delete(removed.property)
+    for (let j = i; j < this.changes.length; j++) {
+      this.#changeIndex.set(this.changes[j].property, j)
     }
   }
   /**
@@ -115,6 +125,7 @@ export class ChangeQueue {
       i++
     }
     this.changes.length = 0
+    this.#changeIndex.clear()
     if (this.dispatchedChange) {
       try {
         this.node.changed()
@@ -134,6 +145,7 @@ export class ChangeQueue {
    */
   dispose() {
     this.changes.length = 0
+    this.#changeIndex.clear()
     delete (this as any).node
     delete (this as any).changes
   }
