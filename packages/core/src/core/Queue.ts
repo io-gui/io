@@ -112,6 +112,19 @@ export function debounce(func: CallbackFunction, arg?: any, node?: ReactiveNode 
   queue.set(key, { arg, frame: currentFrame + delay })
 }
 
+/**
+ * Removes pending queue and throttle state for a disposed node.
+ */
+export function clearNodeQueue(node: ReactiveNode | IoElement) {
+  for (const activeQueue of [queue0, queue1]) {
+    for (const [key] of activeQueue) {
+      if (key.node === node) activeQueue.delete(key)
+    }
+  }
+  keysByNode.delete(node)
+  throttleNextFrame.delete(node)
+}
+
 function executeQueue() {
   currentFrame++
 

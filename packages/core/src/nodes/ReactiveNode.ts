@@ -5,7 +5,7 @@ import { ChangeQueue } from '../core/ChangeQueue.js'
 import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js'
 import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js'
 import { NodeArray } from '../core/NodeArray.js'
-import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
+import { throttle, debounce, clearNodeQueue, CallbackFunction } from '../core/Queue.js'
 import { ReactiveProperty } from '../decorators/Property.js'
 import { IoElement } from '../elements/IoElement.js'
 
@@ -97,6 +97,7 @@ export class ReactiveNode extends Object {
   declare readonly _changeQueue: ChangeQueue
   declare readonly _eventDispatcher: EventDispatcher
   declare readonly _parents: Array<ReactiveNode | IoElement>
+  declare readonly _children: Array<ReactiveNode | IoElement>
   declare readonly _isNode: boolean
   declare _disposed: boolean
 
@@ -109,6 +110,7 @@ export class ReactiveNode extends Object {
     Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
     Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []})
+    Object.defineProperty(this, '_children', {enumerable: false, configurable: true, value: []})
 
     this.init()
 
@@ -246,7 +248,11 @@ export class ReactiveNode extends Object {
   }
   addParent(parent: ReactiveNode | IoElement) {
     if ((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) {
-      this._parents.push(parent)
+      if (!this._parents.includes(parent)) {
+        this._parents.push(parent)
+        const children = (parent as ReactiveNode | IoElement)._children
+        if (!children.includes(this)) children.push(this)
+      }
     }
   }
   removeParent(parent: ReactiveNode | IoElement) {
@@ -255,6 +261,8 @@ export class ReactiveNode extends Object {
       const index = this._parents.indexOf(parent)
       if (index !== -1) {
         this._parents.splice(index, 1)
+        const childIndex = parent._children.indexOf(this)
+        if (childIndex !== -1) parent._children.splice(childIndex, 1)
       } else {
         debug: console.warn('ReactiveNode.removeParent(): Parent not found!', this, parent)
       }
@@ -490,12 +498,23 @@ export function unbind(node: ReactiveNode | IoElement, name: string): void {
   const property = node._reactiveProperties.get(name)
   property?.binding?.removeTarget(node, name)
 }
+export function detachChildParents(node: ReactiveNode | IoElement) {
+  for (let i = node._children.length; i--;) {
+    const child = node._children[i]
+    if ((child as ReactiveNode)._isNode && !child._disposed) {
+      (child as ReactiveNode).removeParent(node)
+    }
+  }
+}
 export function dispose(node: ReactiveNode | IoElement) {
   debug: if (node._disposed) {
     console.warn('ReactiveNode.dispose(): Already disposed!', node.constructor.name)
   }
 
   if (node._disposed) return
+
+  detachChildParents(node)
+  clearNodeQueue(node)
 
   node._bindings.forEach((binding, name) => {
     binding.dispose()
@@ -525,6 +544,10 @@ export function dispose(node: ReactiveNode | IoElement) {
   if ((node as any)._parents) {
     (node as any)._parents.length = 0
     delete (node as any)._parents
+  }
+  if ((node as any)._children) {
+    (node as any)._children.length = 0
+    delete (node as any)._children
   }
 
   Object.defineProperty(node, '_disposed', {value: true})

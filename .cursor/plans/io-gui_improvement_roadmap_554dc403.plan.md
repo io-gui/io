@@ -13,7 +13,7 @@ todos:
     status: pending
   - id: leak-fixes
     content: Leak/cleanup fixes across core + menus/colors (A4)
-    status: pending
+    status: completed
   - id: node-element-unify
     content: Unify ReactiveNode/IoElement + parent graph (A1)
     status: pending

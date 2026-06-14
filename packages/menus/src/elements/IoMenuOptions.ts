@@ -140,6 +140,10 @@ export class IoMenuOptions extends IoElement {
       this.setAttribute('inoverlay', 'true')
     }
   }
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    if (this.expanded) this.collapse()
+  }
   onIoFocusTo(event: CustomEvent) {
     const source = event.detail.source
     const cmd = event.detail.command

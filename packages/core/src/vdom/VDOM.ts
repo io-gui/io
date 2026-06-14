@@ -428,6 +428,40 @@ export const filterVDOMElements = function(vChildren: Array<VDOMElement | null>)
 }
 
 /**
+ * Disposes EventDispatcher on a native VDOM element.
+ */
+export const releaseEventDispatcher = function(element: HTMLElement | IoElement) {
+  if ((element as IoElement)._eventDispatcher) {
+    (element as IoElement)._eventDispatcher.dispose()
+    delete (element as any)._eventDispatcher
+  }
+}
+
+/**
+ * Disposes EventDispatchers on element and all element descendants.
+ */
+export const releaseSubtreeEventDispatchers = function(root: HTMLElement) {
+  const elements = root.querySelectorAll('*')
+  for (let i = elements.length; i--;) {
+    releaseEventDispatcher(elements[i] as HTMLElement)
+  }
+  releaseEventDispatcher(root)
+}
+
+/**
+ * Clears native element children after releasing orphaned EventDispatchers.
+ */
+export const clearNativeElementChildren = function(element: HTMLElement) {
+  for (let i = element.childNodes.length; i--;) {
+    const child = element.childNodes[i]
+    if (child.nodeType === Node.ELEMENT_NODE) {
+      releaseSubtreeEventDispatchers(child as HTMLElement)
+    }
+  }
+  element.textContent = ''
+}
+
+/**
  * Disposes the element's children.
  * @param {IoElement} element - Element to dispose children of.
  */
@@ -438,9 +472,8 @@ export const disposeChildren = function(element: IoElement) {
     for (let i = elements.length; i--;) {
       if (typeof elements[i].dispose === 'function') {
         elements[i].dispose()
-      } else if (elements[i]._eventDispatcher) {
-        elements[i]._eventDispatcher.dispose()
-        delete (elements[i] as any)._eventDispatcher
+      } else {
+        releaseEventDispatcher(elements[i])
       }
     }
   })

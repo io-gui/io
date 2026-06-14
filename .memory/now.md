@@ -3,13 +3,13 @@
 > Prune aggressively. Only what's relevant to current work stays here.
 
 ## Current Task
-Style mixin polyfill tests added in `packages/core/src/core/Style.test.ts`
+Completed A4 leak/cleanup fixes (leak-fixes todo)
 
 ## Key Context
-- Extracted `processElementStyle()` from `applyElementStyleToDocument()` for testability
-- Mixin `--name` declarations become `.name` class rules; `@apply --name` inlines mixin body
-- Global `mixinRecord` shares mixins across subsequent style processing calls
-- Removed stray `console.log` from mixin apply loop
+- `_children` inverse index on ReactiveNode/IoElement; dispose detaches via `detachChildParents`
+- `clearNodeQueue` clears throttle/queue WeakMap entries on dispose
+- VDOM: `clearNativeElementChildren` / `releaseSubtreeEventDispatchers` for orphaned native EventDispatchers
+- Menus/colors: disconnect mid-gesture listener cleanup in IoContextMenu, IoColorPicker, IoMenuOptions
 
 ## Blockers / Open Questions
 - None

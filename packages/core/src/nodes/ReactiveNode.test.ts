@@ -49,6 +49,35 @@ describe('ReactiveNode', () => {
     expect(typeof node.dispose).toBe('function')
     node.dispose()
   })
+  it('Should detach child parent references on dispose', () => {
+    @Register
+    class ParentNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          child: { type: ReactiveNode, init: null },
+          children: { type: NodeArray, init: 'this' },
+        }
+      }
+      declare child: ReactiveNode
+      declare children: NodeArray<ReactiveNode>
+    }
+
+    const parent = new ParentNode()
+    const child = new ReactiveNode()
+    const arrayChild = new ReactiveNode()
+    parent.child = child
+    parent.children.push(arrayChild)
+
+    expect(child._parents.includes(parent)).toBe(true)
+    expect(arrayChild._parents.includes(parent)).toBe(true)
+
+    parent.dispose()
+
+    expect(child._parents.includes(parent)).toBe(false)
+    expect(arrayChild._parents.includes(parent)).toBe(false)
+    child.dispose()
+    arrayChild.dispose()
+  })
   it('Should register reactive property definitions with correct defaults', () => {
     @Register
     class TestNode extends ReactiveNode {

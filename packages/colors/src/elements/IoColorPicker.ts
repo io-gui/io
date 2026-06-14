@@ -77,9 +77,12 @@ export class IoColorPicker extends IoElement {
   onPanelCollapse() {
     // TODO: Reconsider this.
     if (!this.expanded) {
-      Panel.removeEventListener('value-input', this.onValueSet)
-      Panel.removeEventListener('expanded-changed', this.onPanelCollapse)
+      this.removePanelListeners()
     }
+  }
+  removePanelListeners() {
+    Panel.removeEventListener('value-input', this.onValueSet)
+    Panel.removeEventListener('expanded-changed', this.onPanelCollapse)
   }
   expand() {
     Panel.value = this.value
@@ -92,6 +95,12 @@ export class IoColorPicker extends IoElement {
   collapse() {
     Panel.expanded = false
     Panel.value = {r: 1, g: 1, b: 1, a: 1}
+    this.removePanelListeners()
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    this.removePanelListeners()
+    if (this.expanded) this.collapse()
   }
   valueChanged() {
     this.render([

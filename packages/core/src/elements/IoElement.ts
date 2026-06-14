@@ -1,7 +1,7 @@
 import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
-import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, toVDOM, NativeElementProps } from '../vdom/VDOM.js'
+import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers } from '../vdom/VDOM.js'
 import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
@@ -79,6 +79,7 @@ export class IoElement extends HTMLElement {
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
+  declare readonly _children: Array<ReactiveNode | IoElement>
 
   constructor(args: IoElementProps = {}) {
     super()
@@ -90,6 +91,7 @@ export class IoElement extends HTMLElement {
     Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
     Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
     Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
+    Object.defineProperty(this, '_children', {enumerable: false, configurable: true, value: []})
 
     this.init()
 
@@ -254,7 +256,7 @@ export class IoElement extends HTMLElement {
         }
       } else if (!(child as IoElement)._isIoElement) {
         // Clear children for native elements. IoElements manage their own children by design
-        child.textContent = ''
+        clearNativeElementChildren(child)
       }
     }
   }
@@ -329,14 +331,20 @@ export class IoElement extends HTMLElement {
       element.appendChild(document.createTextNode(''))
     }
     if (element.childNodes[0].nodeName !== '#text') {
-      element.innerHTML = ''
+      clearNativeElementChildren(element)
       element.appendChild(document.createTextNode(''))
     }
     (element as IoElement)._textNode = element.childNodes[0] as Text
     if (element.childNodes.length > 1) {
       const textContent = element.textContent
       for (let i = element.childNodes.length; i--;) {
-        if (i !== 0) element.removeChild(element.childNodes[i])
+        if (i !== 0) {
+          const node = element.childNodes[i]
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            releaseSubtreeEventDispatchers(node as HTMLElement)
+          }
+          element.removeChild(node)
+        }
       }
       (element as IoElement)._textNode.nodeValue = textContent
     }

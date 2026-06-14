@@ -283,7 +283,9 @@ describe('EventDispatcher', () => {
     // Dispose the parent (simulates parent being removed from layout)
     parent.dispose()
 
-    // Child still has parent in _parents array but parent is disposed
+    // Child should no longer reference disposed parent
+    expect(child._parents.includes(parent)).toBe(false)
+
     // Dispatch bubbling event - should not error and should not reach disposed parent
     child._eventDispatcher.dispatchEvent('test-event', 2, true)
     expect(child.eventStack).toEqual(['childHandler 2'])

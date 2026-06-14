@@ -90,3 +90,11 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - Allocation reduction: `filterVDOMElements` returns same array if no nulls; `this.$` cleared in place (delete loop) instead of `this.$ = {}`.
 - 9 new tests in VDOM.test.ts (reorder reuse native+IoElement, mid-list insert/remove, mixed keyed/unkeyed, tag change recreate, $ map across keyed renders, null children, filter identity). Full suite 773 pass; core build + lint clean.
 - Gotcha: `tsc` caught test type errors vitest didn't (vitest uses esbuild, no typecheck) — always build after adding typed tests.
+
+## 2026-06-14 [technical] A4 leak/cleanup fixes (leak-fixes)
+
+- Parent graph: `_children` inverse index on ReactiveNode/IoElement; `addParent`/`removeParent` maintain both sides; `detachChildParents` on dispose clears stale child `_parents` refs.
+- Queue: `clearNodeQueue(node)` removes pending queue entries + `keysByNode`/`throttleNextFrame` WeakMap entries on dispose.
+- VDOM: `releaseEventDispatcher`, `releaseSubtreeEventDispatchers`, `clearNativeElementChildren` — native VDOM subtrees cleared via `textContent`/flatten no longer orphan EventDispatchers.
+- IoContextMenu: `_listenerParent` + `releasePointerListeners` for disconnect mid-gesture; IoColorPicker: `removePanelListeners` + disconnectedCallback; IoMenuOptions: collapse on disconnect.
+- Tests: ReactiveNode dispose parent detach, VDOM EventDispatcher release, EventDispatcher test updated for cleaned `_parents`.
