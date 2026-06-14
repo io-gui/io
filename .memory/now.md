@@ -3,12 +3,12 @@
 > Prune aggressively. Only what's relevant to current work stays here.
 
 ## Current Task
-None — core refactors (A2, A3, A5) completed
+None — A1 node/element unification completed
 
 ## Key Context
-- `setProperty` split into binding / NodeArray / disconnect / connect / queue helpers
-- Object mutation observation: one window + one self listener per node via `ensure/remove*MutationListener`
-- EventDispatcher: all proto listeners registered, `stopPropagation`/`stopImmediatePropagation`, path push/pop
+- `ReactiveCore.ts`: shared internals init, `isReactiveOwner`/`isIoValue`, parent graph (`addParent`/`removeParent`/`detachChildParents`)
+- IoElement now has `_parents`; both node and element property values wire parent graph
+- ChangeQueue invokes `dispatchMutation` for all reactive owners (not just `_isNode`)
 
 ## Blockers / Open Questions
 - None

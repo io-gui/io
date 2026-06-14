@@ -22,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+export * from './core/ReactiveCore.js';
 export * from './core/Binding.js';
 export * from './core/ChangeQueue.js';
 export * from './core/EventDispatcher.js';

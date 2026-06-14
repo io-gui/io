@@ -168,3 +168,11 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **A3**: Consolidated object/NodeArray mutation listeners to node level (`ensureWindowMutationListener`, `ensureSelfMutationListener`); removed per-Observer window/self flags; cleanup in `dispose()`
 - **A5**: `setProtoListeners` registers last-wins per event (subclass replaces parent); synthetic events expose `stopPropagation`/`stopImmediatePropagation`; bubbling uses shared `visited` Set and path push/pop
 - Tests updated/added in EventDispatcher.test.ts and ReactiveNode.test.ts; all 185 core tests pass
+
+## 2026-06-14 — A1 ReactiveNode/IoElement unification
+
+- **category:technical** Created `ReactiveCore.ts` with `initReactiveOwnerInternals`, `isReactiveOwner`/`isIoValue`, shared parent graph (`addParent`, `removeParent`, `detachChildParents`)
+- **category:technical** IoElement now initializes `_parents` and exposes `addParent`/`removeParent`; constructor internals deduplicated via `initReactiveOwnerInternals`
+- **category:technical** Parent wiring uses `isIoValue` everywhere (setProperty connect/disconnect, initReactiveProperties, NodeArray, Storage) — IoElement children get `addParent()` like ReactiveNode
+- **category:technical** ChangeQueue `#invokeMutation` now runs for all reactive owners (elements included)
+- Tests added for IoElement parent graph; 186 core tests pass

@@ -78,6 +78,43 @@ describe('ReactiveNode', () => {
     child.dispose()
     arrayChild.dispose()
   })
+  it('Should wire parent graph for IoElement property values', () => {
+    @Register
+    class ChildElement extends IoElement {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          label: String,
+        }
+      }
+      declare label: string
+    }
+
+    @Register
+    class ParentNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          child: { type: ChildElement, init: null },
+        }
+      }
+      declare child: ChildElement | null
+    }
+
+    const parent = new ParentNode()
+    const child = new ChildElement()
+
+    parent.child = child
+
+    expect((child as IoElement)._parents.includes(parent)).toBe(true)
+    expect(parent._children.includes(child)).toBe(true)
+
+    parent.child = null
+
+    expect((child as IoElement)._parents.includes(parent)).toBe(false)
+    expect(parent._children.includes(child)).toBe(false)
+
+    parent.dispose()
+    child.dispose()
+  })
   it('Should register reactive property definitions with correct defaults', () => {
     @Register
     class TestNode extends ReactiveNode {

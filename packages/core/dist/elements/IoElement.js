@@ -10,10 +10,9 @@ import { Register } from '../decorators/Register.js';
 import { ProtoChain } from '../core/ProtoChain.js';
 import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, toVDOM, clearNativeElementChildren, releaseSubtreeEventDispatchers } from '../vdom/VDOM.js';
 import { dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties } from '../nodes/ReactiveNode.js';
+import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js';
 import { Binding } from '../core/Binding.js';
 import { applyElementStyleToDocument } from '../core/Style.js';
-import { EventDispatcher } from '../core/EventDispatcher.js';
-import { ChangeQueue } from '../core/ChangeQueue.js';
 import { throttle, debounce } from '../core/Queue.js';
 const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
@@ -64,19 +63,18 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
     static get Properties() {
         return {};
     }
+    /**
+     * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
+     * Subclass definitions replace parent handlers for the same event name (last wins).
+     * Use {@link addEventListener} for additional listeners at runtime.
+     */
     static get Listeners() {
         return {};
     }
     constructor(args = {}) {
         super();
         this._protochain.init(this);
-        Object.defineProperty(this, '_changeQueue', { enumerable: false, configurable: true, value: new ChangeQueue(this) });
-        Object.defineProperty(this, '_reactiveProperties', { enumerable: false, configurable: true, value: new Map() });
-        Object.defineProperty(this, '_bindings', { enumerable: false, configurable: true, value: new Map() });
-        Object.defineProperty(this, '_eventDispatcher', { enumerable: false, configurable: true, value: new EventDispatcher(this) });
-        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
-        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
-        Object.defineProperty(this, '_children', { enumerable: false, configurable: true, value: [] });
+        initReactiveOwnerInternals(this);
         this.init();
         initReactiveProperties(this);
         initProperties(this);
@@ -182,6 +180,12 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         if (this._disposed)
             return;
         this._eventDispatcher.dispatchEvent(type, detail, bubbles, src);
+    }
+    addParent(parent) {
+        addParent(this, parent);
+    }
+    removeParent(parent) {
+        removeParent(this, parent);
     }
     dispose() {
         dispose(this);

@@ -23,6 +23,7 @@
  * THE SOFTWARE.
  */
 
+export * from './core/ReactiveCore.js'
 export * from './core/Binding.js'
 export * from './core/ChangeQueue.js'
 export * from './core/EventDispatcher.js'

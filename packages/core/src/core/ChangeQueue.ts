@@ -1,5 +1,6 @@
-import { ReactiveNode } from '../nodes/ReactiveNode.js'
-import { IoElement } from '../elements/IoElement.js'
+import { isReactiveOwner } from './ReactiveCore.js'
+import type { ReactiveNode } from '../nodes/ReactiveNode.js'
+import type { IoElement } from '../elements/IoElement.js'
 
 export interface Change<T = unknown> {
   property: string
@@ -145,8 +146,8 @@ export class ChangeQueue {
     }
   }
   #invokeMutation(properties: string[]) {
-    if ((this.node as ReactiveNode)._isNode) {
-      (this.node as ReactiveNode).dispatchMutation(this.node, properties)
+    if (isReactiveOwner(this.node)) {
+      this.node.dispatchMutation(this.node, properties)
     }
   }
   /**

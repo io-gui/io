@@ -1,10 +1,11 @@
 import { ProtoChain } from '../core/ProtoChain.js';
 import { Binding } from '../core/Binding.js';
-import { ChangeQueue } from '../core/ChangeQueue.js';
+import type { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js';
-import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
+import type { EventDispatcher } from '../core/EventDispatcher.js';
 import { CallbackFunction } from '../core/Queue.js';
 import { IoElement } from '../elements/IoElement.js';
+import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js';
 export type AnyConstructor = new (...args: any[]) => unknown;
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>;
 export type ListenerDefinitions = {
@@ -51,6 +52,11 @@ export declare class ReactiveNode extends Object {
     reactivity: ReactivityType;
     static get ReactiveProperties(): ReactivePropertyDefinitions;
     static get Properties(): Record<string, any>;
+    /**
+     * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
+     * Subclass definitions replace parent handlers for the same event name (last wins).
+     * Use {@link addEventListener} for additional listeners at runtime.
+     */
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
     readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
@@ -59,6 +65,8 @@ export declare class ReactiveNode extends Object {
     readonly _eventDispatcher: EventDispatcher;
     readonly _parents: Array<ReactiveNode | IoElement>;
     readonly _children: Array<ReactiveNode | IoElement>;
+    _hasWindowMutationListener: boolean;
+    _hasSelfMutationListener: boolean;
     readonly _isNode: boolean;
     _disposed: boolean;
     constructor(args?: any);
@@ -101,7 +109,6 @@ export declare function bind<TNode extends ReactiveNode | IoElement, K extends k
 export declare function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown>;
 export declare function unbind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): void;
 export declare function unbind(node: ReactiveNode | IoElement, name: string): void;
-export declare function detachChildParents(node: ReactiveNode | IoElement): void;
+export { detachChildParents } from '../core/ReactiveCore.js';
 export declare function dispose(node: ReactiveNode | IoElement): void;
-export {};
 //# sourceMappingURL=ReactiveNode.d.ts.map

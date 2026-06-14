@@ -28,6 +28,10 @@ describe('IoElement', () => {
     expect(typeof element.traverse).toBe('function')
     expect(typeof element.setAttribute).toBe('function')
     expect(typeof element.$).toBe('object')
+    expect(typeof element.addParent).toBe('function')
+    expect(typeof element.removeParent).toBe('function')
+    expect(Array.isArray(element._parents)).toBe(true)
+    expect(Array.isArray(element._children)).toBe(true)
   })
   it('Should initialize properties correctly', () => {
     // Default properties

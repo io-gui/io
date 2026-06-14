@@ -1,13 +1,15 @@
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { Binding } from '../core/Binding.js'
-import { ChangeQueue } from '../core/ChangeQueue.js'
+import type { ChangeQueue } from '../core/ChangeQueue.js'
 import { ReactivePropertyInstance, ReactivePropertyDefinitionLoose, removeSelfMutationListener, removeWindowMutationListener } from '../core/ReactiveProperty.js'
-import { EventDispatcher, ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js'
+import type { EventDispatcher } from '../core/EventDispatcher.js'
 import { NodeArray } from '../core/NodeArray.js'
 import { throttle, debounce, clearNodeQueue, CallbackFunction } from '../core/Queue.js'
+import { addParent, detachChildParents, initReactiveOwnerInternals, isIoValue, removeParent } from '../core/ReactiveCore.js'
 import { ReactiveProperty } from '../decorators/Property.js'
 import { IoElement } from '../elements/IoElement.js'
+import type { ListenerDefinitionLoose, AnyEventListener } from '../core/EventDispatcher.js'
 
 export type AnyConstructor = new (...args: any[]) => unknown
 export type ReactivePropertyDefinitions = Record<string, ReactivePropertyDefinitionLoose>
@@ -60,10 +62,6 @@ export type ReactiveNodeProps = {
   [key: prefix<string, '@'>]: string | AnyEventHandler
 }
 
-
-function isIoObject(value: any) {
-  return (typeof value === 'object' && value !== null && (value._isNode || value._isIoElement))
-}
 
 function hasValueAtOtherProperty(node: ReactiveNode | IoElement, prop: ReactivePropertyInstance, value: any): boolean {
   let found = false
@@ -126,14 +124,7 @@ export class ReactiveNode extends Object {
     super()
     this._protochain.init(this)
 
-    Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)})
-    Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
-    Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
-    Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
-    Object.defineProperty(this, '_parents', {enumerable: false, configurable: true, value: []})
-    Object.defineProperty(this, '_children', {enumerable: false, configurable: true, value: []})
-    Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
+    initReactiveOwnerInternals(this)
 
     this.init()
 
@@ -156,7 +147,7 @@ export class ReactiveNode extends Object {
         if (!name.startsWith('@')) {
           this[name as keyof this] = props[name]
           debug: if (props[name] instanceof Binding) {
-            console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on "${this.constructor.name}"`)
+            console.warn(`ReactiveNode: Not a ReactiveProperty! Cannot set binding to "${name}" property on "${this.constructor.name}"`)
           }
         }
       }
@@ -176,7 +167,7 @@ export class ReactiveNode extends Object {
     const primitiveProps: Record<string, any> = {}
     for (const name in node._reactiveProperties) {
       const prop = node._reactiveProperties.get(name)!.value
-      if (prop._isNode) {
+      if (isIoValue(prop)) {
         primitiveProps[name].copy(prop)
       } else {
         primitiveProps[name] = prop
@@ -270,26 +261,10 @@ export class ReactiveNode extends Object {
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
   addParent(parent: ReactiveNode | IoElement) {
-    if ((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) {
-      if (!this._parents.includes(parent)) {
-        this._parents.push(parent)
-        const children = (parent as ReactiveNode | IoElement)._children
-        if (!children.includes(this)) children.push(this)
-      }
-    }
+    addParent(this, parent)
   }
   removeParent(parent: ReactiveNode | IoElement) {
-    if (this._disposed) return
-    if ((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) {
-      const index = this._parents.indexOf(parent)
-      if (index !== -1) {
-        this._parents.splice(index, 1)
-        const childIndex = parent._children.indexOf(this)
-        if (childIndex !== -1) parent._children.splice(childIndex, 1)
-      } else {
-        debug: console.warn('ReactiveNode.removeParent(): Parent not found!', this, parent)
-      }
-    }
+    removeParent(this, parent)
   }
   dispose() {
     dispose(this)
@@ -319,8 +294,8 @@ export function initReactiveProperties(node: ReactiveNode | IoElement) {
     if (property.binding) property.binding.addTarget(node, name)
 
     property.observer.start(property.value)
-    if (property.value?._isNode) {
-      property.value.addParent(node)
+    if (isIoValue(property.value)) {
+      (property.value as ReactiveNode | IoElement).addParent(node)
     }
 
     if (node instanceof IoElement) {
@@ -376,7 +351,7 @@ function applyNodeArrayAssignment(node: ReactiveNode | IoElement, name: string, 
 
   const nodeArray = prop.value as NodeArray<ReactiveNode>
 
-  debug: if ((value as Array<any>).some(item => !item._isNode)) {
+  debug: if ((value as Array<any>).some(item => !isIoValue(item))) {
     console.error(`Node: Property "${name}" should be assigned as an Array of nodes!`, value)
   }
   debug: if (nodeArray.constructor !== NodeArray) {
@@ -396,8 +371,8 @@ function applyNodeArrayAssignment(node: ReactiveNode | IoElement, name: string, 
 function disconnectPropertyValue(node: ReactiveNode | IoElement, prop: ReactivePropertyInstance, oldValue: any) {
   if (!hasValueAtOtherProperty(node, prop, oldValue)) {
     prop.observer.stop(oldValue)
-    if (oldValue?._isNode && !oldValue._disposed) {
-      oldValue.removeParent(node)
+    if (isIoValue(oldValue) && !oldValue._disposed) {
+      (oldValue as ReactiveNode | IoElement).removeParent(node)
     }
   } else {
     prop.observer.observing = false
@@ -407,8 +382,8 @@ function disconnectPropertyValue(node: ReactiveNode | IoElement, prop: ReactiveP
 function connectPropertyValue(node: ReactiveNode | IoElement, prop: ReactivePropertyInstance, value: any) {
   if (!hasValueAtOtherProperty(node, prop, value)) {
     prop.observer.start(value)
-    if (value?._isNode) {
-      value.addParent(node)
+    if (isIoValue(value)) {
+      (value as ReactiveNode | IoElement).addParent(node)
     }
   }
 }
@@ -439,7 +414,7 @@ function debugPropertyType(node: ReactiveNode | IoElement, name: string, prop: R
       if (!(value instanceof NodeArray)) {
         console.error(`Wrong type of property "${name}". Value: "${value}". Expected type: ${prop.type.name}`, node)
       }
-      if ((value as Array<any>).some(item => !item._isNode)) {
+      if ((value as Array<any>).some(item => !isIoValue(item))) {
         console.error(`Wrong type of property "${name}". NodeArray items should be nodes!`, value)
       }
     } else if (typeof prop.type === 'function') {
@@ -483,7 +458,7 @@ export function dispatchQueue(node: ReactiveNode | IoElement, debounce = false) 
 
 // TODO: Consider using global event bus for all mutation events!
 export function dispatchMutation(node: ReactiveNode | IoElement, object: object | ReactiveNode, properties: string[]) {
-  if (isIoObject(object)) {
+  if (isIoValue(object)) {
     node.dispatch('io-object-mutation', {object, properties})
   } else {
     node.dispatch('io-object-mutation', {object, properties}, false, window)
@@ -526,14 +501,7 @@ export function unbind(node: ReactiveNode | IoElement, name: string): void {
   const property = node._reactiveProperties.get(name)
   property?.binding?.removeTarget(node, name)
 }
-export function detachChildParents(node: ReactiveNode | IoElement) {
-  for (let i = node._children.length; i--;) {
-    const child = node._children[i]
-    if ((child as ReactiveNode)._isNode && !child._disposed) {
-      (child as ReactiveNode).removeParent(node)
-    }
-  }
-}
+export { detachChildParents } from '../core/ReactiveCore.js'
 export function dispose(node: ReactiveNode | IoElement) {
   debug: if (node._disposed) {
     console.warn('ReactiveNode.dispose(): Already disposed!', node.constructor.name)

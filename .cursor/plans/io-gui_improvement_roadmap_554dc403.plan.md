@@ -16,7 +16,7 @@ todos:
     status: completed
   - id: node-element-unify
     content: Unify ReactiveNode/IoElement + parent graph (A1)
-    status: pending
+    status: completed
   - id: vdom-keys
     content: VDOM keyed diffing + render allocation reduction (C2)
     status: completed

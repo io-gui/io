@@ -69,6 +69,10 @@ export declare class ReactiveProtoProperty {
     toJSON(): any;
 }
 export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
+export declare function ensureWindowMutationListener(node: ReactiveNode | IoElement): void;
+export declare function removeWindowMutationListener(node: ReactiveNode | IoElement): void;
+export declare function ensureSelfMutationListener(node: ReactiveNode | IoElement): void;
+export declare function removeSelfMutationListener(node: ReactiveNode | IoElement): void;
 /**
  * Manages mutation observation state for a reactive property.
  * - 'none': Primitives (String, Number, Boolean) - no mutation observation
@@ -78,8 +82,6 @@ export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
  */
 export declare class Observer {
     private readonly node;
-    private _hasSelfMutationListener;
-    private _hasWindowMutationListener;
     type: ObservationType;
     observing: boolean;
     constructor(node: ReactiveNode | IoElement);

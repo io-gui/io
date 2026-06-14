@@ -1,4 +1,5 @@
 import { Binding } from './Binding.js';
+import { isIoValue } from './ReactiveCore.js';
 import { NodeArray } from '../core/NodeArray.js';
 /**
  * Instantiates a property definition object from a loosely or strongly typed property definition.
@@ -113,8 +114,33 @@ function decodeInitArgument(item, node) {
     else
         return item;
 }
-function isIoValue(value) {
-    return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement);
+export function ensureWindowMutationListener(node) {
+    const target = node;
+    if (target._hasWindowMutationListener)
+        return;
+    target._hasWindowMutationListener = true;
+    window.addEventListener('io-object-mutation', node.onPropertyMutated);
+}
+export function removeWindowMutationListener(node) {
+    const target = node;
+    if (!target._hasWindowMutationListener)
+        return;
+    target._hasWindowMutationListener = false;
+    window.removeEventListener('io-object-mutation', node.onPropertyMutated);
+}
+export function ensureSelfMutationListener(node) {
+    const target = node;
+    if (target._hasSelfMutationListener)
+        return;
+    target._hasSelfMutationListener = true;
+    node.addEventListener('io-object-mutation', node.onPropertyMutated);
+}
+export function removeSelfMutationListener(node) {
+    const target = node;
+    if (!target._hasSelfMutationListener)
+        return;
+    target._hasSelfMutationListener = false;
+    node.removeEventListener('io-object-mutation', node.onPropertyMutated);
 }
 /**
  * Manages mutation observation state for a reactive property.
@@ -128,8 +154,6 @@ export class Observer {
     observing = false;
     constructor(node) {
         Object.defineProperty(this, 'node', { enumerable: false, configurable: false, writable: false, value: node });
-        Object.defineProperty(this, '_hasSelfMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
-        Object.defineProperty(this, '_hasWindowMutationListener', { enumerable: false, configurable: true, writable: true, value: false });
     }
     start(value) {
         if (this.observing)
@@ -144,27 +168,16 @@ export class Observer {
         else if (value instanceof NodeArray) {
             this.type = 'nodearray';
             this.observing = true;
-            // Register this node as an observer of the NodeArray
             value.addObserver(this.node);
-            // Also need self-listener to handle the dispatched events
-            if (!this._hasSelfMutationListener) {
-                this._hasSelfMutationListener = true;
-                this.node.addEventListener('io-object-mutation', this.node.onPropertyMutated);
-            }
+            ensureSelfMutationListener(this.node);
         }
         else {
             this.type = 'object';
             this.observing = true;
-            if (!this._hasWindowMutationListener) {
-                this._hasWindowMutationListener = true;
-                window.addEventListener('io-object-mutation', this.node.onPropertyMutated);
-            }
+            ensureWindowMutationListener(this.node);
         }
     }
     stop(value) {
-        // TODO: Reconsider
-        // if (!this.observing) return
-        // if (this.type === 'io' && !value._disposed) {
         if (isIoValue(value) && !value._disposed) {
             value.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
         }
@@ -172,18 +185,8 @@ export class Observer {
             value.removeObserver(this.node);
         }
         this.observing = false;
-        // Note: Window and self listeners are removed at dispose time, not here
     }
-    dispose() {
-        if (this._hasSelfMutationListener) {
-            this.node.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
-            this._hasSelfMutationListener = false;
-        }
-        if (this._hasWindowMutationListener) {
-            window.removeEventListener('io-object-mutation', this.node.onPropertyMutated);
-            this._hasWindowMutationListener = false;
-        }
-    }
+    dispose() { }
 }
 /**
  * ReactivePropertyInstance object constructed from `ReactiveProtoProperty`.

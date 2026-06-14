@@ -1,5 +1,5 @@
-import { ReactiveNode } from '../nodes/ReactiveNode.js';
-import { IoElement } from '../elements/IoElement.js';
+import type { ReactiveNode } from '../nodes/ReactiveNode.js';
+import type { IoElement } from '../elements/IoElement.js';
 export interface Change<T = unknown> {
     property: string;
     value: T;

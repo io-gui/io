@@ -1,3 +1,4 @@
+import { isReactiveOwner } from './ReactiveCore.js';
 /**
  * This class is used internally by the framework to manage property changes in `ReactiveNode` and `IoElement` nodes.
  *
@@ -128,7 +129,7 @@ export class ChangeQueue {
         }
     }
     #invokeMutation(properties) {
-        if (this.node._isNode) {
+        if (isReactiveOwner(this.node)) {
             this.node.dispatchMutation(this.node, properties);
         }
     }

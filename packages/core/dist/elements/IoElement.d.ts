@@ -2,8 +2,8 @@ import { ProtoChain } from '../core/ProtoChain.js';
 import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
 import { ReactiveNode, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js';
 import { Binding } from '../core/Binding.js';
-import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
-import { ChangeQueue } from '../core/ChangeQueue.js';
+import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
+import type { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
 import { CallbackFunction } from '../core/Queue.js';
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
@@ -33,6 +33,11 @@ export declare class IoElement extends HTMLElement {
     $: Record<string, HTMLElement | IoElement>;
     static get ReactiveProperties(): ReactivePropertyDefinitions;
     static get Properties(): Record<string, any>;
+    /**
+     * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
+     * Subclass definitions replace parent handlers for the same event name (last wins).
+     * Use {@link addEventListener} for additional listeners at runtime.
+     */
     static get Listeners(): ListenerDefinitions;
     readonly _protochain: ProtoChain;
     readonly _reactiveProperties: Map<string, ReactivePropertyInstance>;
@@ -41,6 +46,7 @@ export declare class IoElement extends HTMLElement {
     readonly _eventDispatcher: EventDispatcher;
     _hasWindowMutationListener: boolean;
     _hasSelfMutationListener: boolean;
+    readonly _parents: Array<ReactiveNode | IoElement>;
     readonly _isIoElement: boolean;
     _disposed: boolean;
     _textNode: Text;
@@ -66,6 +72,8 @@ export declare class IoElement extends HTMLElement {
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
     dispatch(type: string, detail?: any, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
+    addParent(parent: ReactiveNode | IoElement): void;
+    removeParent(parent: ReactiveNode | IoElement): void;
     dispose(): void;
     connectedCallback(): void;
     disconnectedCallback(): void;

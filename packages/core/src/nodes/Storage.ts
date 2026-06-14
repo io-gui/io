@@ -1,6 +1,7 @@
 import { ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { Binding } from '../core/Binding.js'
+import { isIoValue } from '../core/ReactiveCore.js'
 import { ReactiveNode, ReactiveNodeProps, AnyConstructor } from '../nodes/ReactiveNode.js'
 
 class EmulatedLocalStorage {
@@ -178,7 +179,7 @@ export class StorageNode extends ReactiveNode {
       if (storedValue !== null) {
         try {
           const parsed = JSON.parse(storedValue)
-          if (props.value._isNode) {
+          if (isIoValue(props.value)) {
             (props.value as ReactiveNode).applyJSON(parsed)
           } else {
             const constructed = constructor ? new constructor(parsed) : parsed

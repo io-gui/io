@@ -1,4 +1,5 @@
 import { Binding } from './Binding.js'
+import { isIoValue } from './ReactiveCore.js'
 import { AnyConstructor, ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 import { NodeArray } from '../core/NodeArray.js'
@@ -130,10 +131,6 @@ function decodeInitArgument(item: any, node: ReactiveNode | IoElement) {
 }
 
 export type ObservationType = 'none' | 'io' | 'object' | 'nodearray'
-
-function isIoValue(value: any): boolean {
-  return typeof value === 'object' && value !== null && (value._isNode || value._isIoElement)
-}
 
 type MutationListenerNode = ReactiveNode | IoElement & {
   _hasWindowMutationListener?: boolean

@@ -3,10 +3,11 @@ import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers } from '../vdom/VDOM.js'
 import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js'
+import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
-import { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
-import { ChangeQueue } from '../core/ChangeQueue.js'
+import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js'
+import type { ChangeQueue } from '../core/ChangeQueue.js'
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js'
 import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
 
@@ -95,6 +96,7 @@ export class IoElement extends HTMLElement {
   declare readonly _eventDispatcher: EventDispatcher
   declare _hasWindowMutationListener: boolean
   declare _hasSelfMutationListener: boolean
+  declare readonly _parents: Array<ReactiveNode | IoElement>
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
@@ -104,13 +106,7 @@ export class IoElement extends HTMLElement {
     super()
     this._protochain.init(this)
 
-    Object.defineProperty(this, '_changeQueue', {enumerable: false, configurable: true, value: new ChangeQueue(this)})
-    Object.defineProperty(this, '_reactiveProperties', {enumerable: false, configurable: true, value: new Map()})
-    Object.defineProperty(this, '_bindings', {enumerable: false, configurable: true, value: new Map()})
-    Object.defineProperty(this, '_eventDispatcher', {enumerable: false, configurable: true, value: new EventDispatcher(this)})
-    Object.defineProperty(this, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    Object.defineProperty(this, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
-    Object.defineProperty(this, '_children', {enumerable: false, configurable: true, value: []})
+    initReactiveOwnerInternals(this)
 
     this.init()
 
@@ -212,6 +208,12 @@ export class IoElement extends HTMLElement {
   dispatch(type: string, detail: any = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
     if (this._disposed) return
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
+  }
+  addParent(parent: ReactiveNode | IoElement) {
+    addParent(this, parent)
+  }
+  removeParent(parent: ReactiveNode | IoElement) {
+    removeParent(this, parent)
   }
   dispose() {
     dispose(this)

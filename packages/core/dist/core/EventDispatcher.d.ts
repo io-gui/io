@@ -22,12 +22,15 @@ export interface TouchEventListener {
 export interface ChangeEventListener {
     (event: ChangeEvent): void;
 }
+export type IoSyntheticEvent = {
+    detail: any;
+    target: ReactiveNode | IoElement | EventTarget;
+    path: Array<ReactiveNode | IoElement | EventTarget>;
+    stopPropagation(): void;
+    stopImmediatePropagation(): void;
+};
 export interface IoEventListener {
-    (event: {
-        detail: any;
-        target: ReactiveNode | IoElement | EventTarget;
-        path: Array<ReactiveNode | IoElement | EventTarget>;
-    }): void;
+    (event: IoSyntheticEvent): void;
 }
 export type AnyEventListener = EventListener | KeyboardEventListener | PointerEventListener | CustomEventListener | FocusEventListener | TouchEventListener | ChangeEventListener | IoEventListener | EventListenerOrEventListenerObject;
 /**
@@ -43,6 +46,10 @@ export type ListenerDefinition = [string | AnyEventListener, AddEventListenerOpt
 export type ListenerDefinitionLoose = string | AnyEventListener | ListenerDefinition;
 export type Listener = [AnyEventListener, AddEventListenerOptions?];
 export type Listeners = Record<string, Listener[]>;
+type DispatchPropagationState = {
+    stopped: boolean;
+    immediateStopped: boolean;
+};
 /**
  * Converts a loose listener definition into a strongly typed ListenerDefinition array format.
  * This ensures consistent handling of listeners regardless of how they were initially defined.
@@ -81,9 +88,14 @@ export declare class EventDispatcher {
      */
     constructor(node: ReactiveNode | IoElement | EventTarget);
     /**
-     * Sets `protoListeners` specified as `get Listeners()` class definitions.
-     * Definitions from subclass replace the ones from parent class.
-     * @param {ReactiveNode | IoElement} node owner ReactiveNode
+     * Sets `protoListeners` from `static get Listeners()` definitions aggregated on {@link ProtoChain}.
+     *
+     * For each event name, only the **last** definition in the protochain list is registered.
+     * Subclass `Listeners` entries replace parent handlers for the same event (last wins).
+     * This differs from {@link ProtoChain.addListeners}, which merges the full inheritance chain
+     * for introspection — runtime dispatch uses a single handler per event name here.
+     *
+     * @param node owner ReactiveNode
      */
     setProtoListeners(node: ReactiveNode | IoElement): void;
     /**
@@ -117,11 +129,12 @@ export declare class EventDispatcher {
      * @param {boolean} [bubbles] - Makes event bubble
      * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
      */
-    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>, visited?: Set<ReactiveNode | IoElement | EventTarget>): void;
+    dispatchEvent(name: string, detail?: any, bubbles?: boolean, node?: ReactiveNode | IoElement | EventTarget, path?: Array<ReactiveNode | IoElement | EventTarget>, visited?: Set<ReactiveNode | IoElement | EventTarget>, propagation?: DispatchPropagationState): void;
     /**
      * Disconnects all event listeners and removes all references for garbage collection.
      * Use this when node is discarded.
      */
     dispose(): void;
 }
+export {};
 //# sourceMappingURL=EventDispatcher.d.ts.map
