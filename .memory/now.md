@@ -3,11 +3,12 @@
 > Prune aggressively. Only what's relevant to current work stays here.
 
 ## Current Task
-None — test safety net (E3 + E1) completed
+None — core refactors (A2, A3, A5) completed
 
 ## Key Context
-- `pnpm test:coverage` runs core coverage with v8 thresholds (lines 74%, statements 73%, functions 78%, branches 58%)
-- `@io-gui/three` has smoke tests: ToolBase, ViewCameras, IoThreeViewport
+- `setProperty` split into binding / NodeArray / disconnect / connect / queue helpers
+- Object mutation observation: one window + one self listener per node via `ensure/remove*MutationListener`
+- EventDispatcher: all proto listeners registered, `stopPropagation`/`stopImmediatePropagation`, path push/pop
 
 ## Blockers / Open Questions
 - None

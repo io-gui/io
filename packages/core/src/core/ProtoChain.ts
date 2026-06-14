@@ -38,7 +38,9 @@ export class ProtoChain {
    */
   reactiveProperties: ReactiveProtoProperties = {}
   /**
-   * Aggregated listener definition declared in `static get Listeners()`
+   * Aggregated listener definitions from `static get Listeners()` across the prototype chain.
+   * Multiple entries may exist per event name (merged inheritance). At runtime,
+   * {@link EventDispatcher.setProtoListeners} registers only the **last** entry per name.
    */
   listeners: ProtoListeners = {}
   /**
@@ -162,8 +164,10 @@ export class ProtoChain {
     return prevHash
   }
   /**
-   * Merges or appends a listener definitions to the existing listeners array.
-   * @param {ListenerDefinitions} listenerDefs - Listener definitions to add
+   * Merges listener definitions from each class in the prototype chain into {@link listeners}.
+   * Duplicate handler names update options; distinct handler names append to the array.
+   * Runtime registration is handled separately: {@link EventDispatcher} uses last-wins per event name.
+   * @param listenerDefs Listener definitions to add
    */
   addListeners(listenerDefs?: ListenerDefinitions) {
     for (const name in listenerDefs) {

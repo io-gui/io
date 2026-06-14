@@ -161,3 +161,10 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **E3**: Added `@vitest/coverage-v8`, dedicated `coverage` vitest project for core, `pnpm test:coverage` script with thresholds (lines 74%, statements 73%, functions 78%, branches 58%)
 - **E1**: Added `@io-gui/three` smoke tests — ToolBase (viewport registration + pointerTo3D NDC math), ViewCameras (camera select, overscan, frameObject, scene cameras), IoThreeViewport (tool swap via change queue)
 - Added `coverage/` to `.gitignore`
+
+## 2026-06-14 [technical] Core refactors A2/A3/A5
+
+- **A2**: Decomposed `setProperty` into `applyPropertyBinding`, `applyNodeArrayAssignment`, `disconnectPropertyValue`, `connectPropertyValue`, `debugPropertyType`
+- **A3**: Consolidated object/NodeArray mutation listeners to node level (`ensureWindowMutationListener`, `ensureSelfMutationListener`); removed per-Observer window/self flags; cleanup in `dispose()`
+- **A5**: `setProtoListeners` registers last-wins per event (subclass replaces parent); synthetic events expose `stopPropagation`/`stopImmediatePropagation`; bubbling uses shared `visited` Set and path push/pop
+- Tests updated/added in EventDispatcher.test.ts and ReactiveNode.test.ts; all 185 core tests pass

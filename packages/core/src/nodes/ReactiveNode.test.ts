@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue, Color, NodeArray } from '@io-gui/core'
 
 @Register
@@ -1157,6 +1157,30 @@ describe('ReactiveNode', () => {
 
     ioObject1.dispose()
     ioObject2.dispose()
+  })
+  it('Should use one window mutation listener per node for multiple object properties', () => {
+    @Register
+    class TestNode extends ReactiveNode {
+      static get ReactiveProperties(): ReactivePropertyDefinitions {
+        return {
+          propA: {type: Object, init: null},
+          propB: {type: Object, init: null},
+        }
+      }
+    }
+
+    const addSpy = vi.spyOn(window, 'addEventListener')
+    const node = new TestNode() as any
+
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+
+    node.propA = {label: 'a'}
+    node.propB = {label: 'b'}
+
+    expect(addSpy.mock.calls.filter(([type]) => type === 'io-object-mutation').length).toBe(1)
+
+    addSpy.mockRestore()
+    node.dispose()
   })
 
   describe('toJSON and applyJSON', () => {

@@ -10,7 +10,7 @@ todos:
     status: completed
   - id: core-refactors-small
     content: "Core: setProperty decomposition (A2), object-mutation observer consolidation (A3), event system fixes (A5)"
-    status: pending
+    status: completed
   - id: leak-fixes
     content: Leak/cleanup fixes across core + menus/colors (A4)
     status: completed

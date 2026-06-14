@@ -172,6 +172,8 @@ itemsMutated() {
 
 ### Listener Definition
 
+Subclass `Listeners` replace parent handlers for the same event name (last wins). Only one proto listener is registered per event at runtime.
+
 ```typescript
 static get Listeners() {
   return {

@@ -13,7 +13,14 @@ export interface CustomEventListener { (event: CustomEvent): void }
 export interface FocusEventListener { (event: FocusEvent): void }
 export interface TouchEventListener { (event: TouchEvent): void }
 export interface ChangeEventListener { (event: ChangeEvent): void }
-export interface IoEventListener { (event: {detail: any; target: ReactiveNode | IoElement | EventTarget; path: Array<ReactiveNode | IoElement | EventTarget>}): void }
+export type IoSyntheticEvent = {
+  detail: any
+  target: ReactiveNode | IoElement | EventTarget
+  path: Array<ReactiveNode | IoElement | EventTarget>
+  stopPropagation(): void
+  stopImmediatePropagation(): void
+}
+export interface IoEventListener { (event: IoSyntheticEvent): void }
 export type AnyEventListener = EventListener |
                                KeyboardEventListener |
                                PointerEventListener |
@@ -38,6 +45,11 @@ export type ListenerDefinitionLoose = string | AnyEventListener | ListenerDefini
 
 export type Listener = [AnyEventListener, AddEventListenerOptions?]
 export type Listeners = Record<string, Listener[]>
+
+type DispatchPropagationState = {
+  stopped: boolean
+  immediateStopped: boolean
+}
 
 /**
  * Converts a loose listener definition into a strongly typed ListenerDefinition array format.
@@ -134,9 +146,14 @@ export class EventDispatcher {
   }
 
   /**
-   * Sets `protoListeners` specified as `get Listeners()` class definitions.
-   * Definitions from subclass replace the ones from parent class.
-   * @param {ReactiveNode | IoElement} node owner ReactiveNode
+   * Sets `protoListeners` from `static get Listeners()` definitions aggregated on {@link ProtoChain}.
+   *
+   * For each event name, only the **last** definition in the protochain list is registered.
+   * Subclass `Listeners` entries replace parent handlers for the same event (last wins).
+   * This differs from {@link ProtoChain.addListeners}, which merges the full inheritance chain
+   * for introspection — runtime dispatch uses a single handler per event name here.
+   *
+   * @param node owner ReactiveNode
    */
   setProtoListeners(node: ReactiveNode | IoElement) {
     for (const name in node._protochain?.listeners) {
@@ -303,20 +320,30 @@ export class EventDispatcher {
    * @param {boolean} [bubbles] - Makes event bubble
    * @param {ReactiveNode | IoElement | EventTarget} [node] - Event target override to dispatch the event from
    */
-  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set()) {
+  dispatchEvent(name: string, detail?: any, bubbles = true, node: ReactiveNode | IoElement | EventTarget = this.node, path: Array<ReactiveNode | IoElement | EventTarget> = [], visited: Set<ReactiveNode | IoElement | EventTarget> = new Set(), propagation: DispatchPropagationState = {stopped: false, immediateStopped: false}) {
     if ((this.node as ReactiveNode)._disposed) return
     if (visited.has(node)) return
     visited.add(node)
-
-    path = [...path, node]
+    path.push(node)
 
     if ((node instanceof EventTarget)) {
-      const bubblesNative = bubbles && !hasVisitedDomAncestor(node, visited)
+      const bubblesNative = bubbles && !propagation.stopped && !hasVisitedDomAncestor(node, visited)
       EventTarget.prototype.dispatchEvent.call(node, new CustomEvent(name, {detail: detail, bubbles: bubblesNative, composed: true, cancelable: true}))
     } else {
-      const payload = {detail: detail, target: node, path: path}
+      const payload: IoSyntheticEvent = {
+        detail: detail,
+        target: node,
+        path: path,
+        stopPropagation() {
+          propagation.stopped = true
+        },
+        stopImmediatePropagation() {
+          propagation.immediateStopped = true
+        },
+      }
       if (this.protoListeners[name]) {
         for (let i = 0; i < this.protoListeners[name].length; i ++) {
+          if (propagation.immediateStopped) break
           const handler = this.protoListeners[name][i][0] as IoEventListener
           handler.call(node, payload)
         }
@@ -325,24 +352,28 @@ export class EventDispatcher {
         debug: if (this.propListeners[name].length > 1) {
           console.error(`EventDispatcher.dispathEvent: PropListeners[${name}] array too long!`)
         }
-        const handler = this.propListeners[name][0][0] as IoEventListener
-        handler.call(node, payload)
+        if (!propagation.immediateStopped) {
+          const handler = this.propListeners[name][0][0] as IoEventListener
+          handler.call(node, payload)
+        }
       }
       if (this.addedListeners[name]) {
         for (let i = 0; i < this.addedListeners[name].length; i ++) {
+          if (propagation.immediateStopped) break
           const handler = this.addedListeners[name][i][0] as IoEventListener
           handler.call(node, payload)
         }
       }
-      if (bubbles) {
+      if (bubbles && !propagation.stopped) {
         for (const parent of node._parents) {
           if (((parent as ReactiveNode)._isNode || (parent as IoElement)._isIoElement) && !parent._disposed && !visited.has(parent)) {
-            // TODO: implement stopPropagation() and stopImmediatePropagation()
-            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited)
+            parent._eventDispatcher.dispatchEvent(name, detail, bubbles, parent, path, visited, propagation)
           }
         }
       }
     }
+
+    path.pop()
   }
   /**
    * Disconnects all event listeners and removes all references for garbage collection.

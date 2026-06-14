@@ -79,6 +79,11 @@ export class IoElement extends HTMLElement {
     return {}
   }
 
+  /**
+   * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
+   * Subclass definitions replace parent handlers for the same event name (last wins).
+   * Use {@link addEventListener} for additional listeners at runtime.
+   */
   static get Listeners(): ListenerDefinitions {
     return {}
   }
