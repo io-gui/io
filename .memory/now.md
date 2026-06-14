@@ -1,3 +1,3 @@
 # Current Focus
 
-Fixed IoColorPicker panel listener lifecycle — `_panelListening` guard prevents removeEventListener errors on navigation/disconnect.
+Simplified IoColorPicker ↔ IoColorPanelSingleton via `src` ownership (IoNumber ladder pattern). No cross-element event listeners.

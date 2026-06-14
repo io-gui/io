@@ -1,6 +1,10 @@
-import { Register, ReactiveProperty, IoOverlaySingleton } from '@io-gui/core'
+import { Register, ReactiveProperty, IoOverlaySingleton, Property, IoElement } from '@io-gui/core'
 import { IoColorBase } from './IoColorBase.js'
 import { ioColorSlider } from './IoColorSliders.js'
+
+type IoColorPanelSource = IoElement & {
+  onPanelValueInput(): void
+}
 
 /**
  * Input element for color displayed as a set of sliders.
@@ -31,6 +35,9 @@ class IoColorPanel extends IoColorBase {
   @ReactiveProperty({value: false, reflect: true})
   declare expanded: boolean
 
+  @ReactiveProperty({value: null})
+  declare src: IoColorPanelSource | null
+
   static override get Listeners() {
     return {
       'keydown': 'onKeydown',
@@ -38,6 +45,11 @@ class IoColorPanel extends IoColorBase {
     }
   }
 
+  expandedChanged() {
+    if (!this.expanded) {
+      this.src = null
+    }
+  }
   onKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -58,7 +70,7 @@ class IoColorPanel extends IoColorBase {
     }
   }
   onValueInput() {
-    this.dispatch('value-input', {property: 'value', value: this.value}, true)
+    this.src?.onPanelValueInput()
   }
   override changed() {
     this.render([

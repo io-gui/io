@@ -3,12 +3,12 @@
 > Commit aggressively. This log serves as proxy for memory access frequency.
 > Later analysis of patterns here informs working memory pruning.
 
-## 2026-06-14 [colors] IoColorPicker panel listener lifecycle fix
+## 2026-06-14 [colors] IoColorPicker panel ownership refactor
 
-- **bug**: navigating away from Colors demo logged `EventDispatcher.removeEventListener: Listener value-input not found!`
-- **cause**: `removePanelListeners()` called unconditionally on disconnect/collapse, but listeners only added in `expand()`; double-remove when disconnect called collapse too
-- **fix**: `_panelListening` flag guards add/remove; `disconnectedCallback` resets panel state directly instead of calling `collapse()` (which also removed listeners)
-- **tests**: IoColorPicker.test.ts — disconnect without expand, after expand, after collapse
+- **pattern**: IoNumberLadderSingleton `src` — panel owns picker reference, no addEventListener/removeEventListener between picker and panel
+- **IoColorPanel**: `src` property, `expandedChanged` clears src, `onValueInput` calls `src.onPanelValueInput()`
+- **IoColorPicker**: `expanded` = `Panel.src === this && Panel.expanded`; collapse/disconnect clear src synchronously
+- **removed**: `_panelListening`, `removePanelListeners`, `onPanelExpandedChanged`, value reset to white on collapse
 
 ## Log Format
 
