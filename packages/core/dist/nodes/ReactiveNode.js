@@ -113,7 +113,7 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
             if (key === 'reactivity')
                 continue;
             const value = this._reactiveProperties.get(key).value;
-            if (value instanceof Object && typeof value.toJSON === 'function') {
+            if (typeof value === 'object' && value !== null && typeof value.toJSON === 'function') {
                 out[key] = value.toJSON();
             }
             else if (typeof value === 'number') {
@@ -128,7 +128,7 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
             const propDef = this._reactiveProperties.get(name);
             const value = propDef.value;
             const type = propDef.type;
-            if (value instanceof Object) {
+            if (typeof value === 'object' && value !== null) {
                 if (typeof value.applyJSON === 'function') {
                     value.applyJSON(json[name]);
                 }

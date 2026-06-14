@@ -132,15 +132,17 @@ export class IoGl extends IoElement {
       }\n\n`
   }
   initPropertyUniform(name: string, property: ReactivePropertyDefinition) {
-    const type = property.value.constructor
+    const value = property.value
+    if (value === undefined || value === null) return ''
+    const type = (value as object).constructor
     switch (type) {
       case Boolean:
         return 'uniform int ' + name + ';\n'
       case Number:
         return 'uniform float ' + name + ';\n'
       case Array:
-        this.#vecLengths[name] = property.value.length
-        return 'uniform vec' + property.value.length + ' ' + name + ';\n'
+        this.#vecLengths[name] = (value as unknown[]).length
+        return 'uniform vec' + (value as unknown[]).length + ' ' + name + ';\n'
       case Color:
         this.#vecLengths[name] = 4
         return 'uniform vec4 ' + name + ';\n'
@@ -214,7 +216,7 @@ export class IoGl extends IoElement {
 
     this._reactiveProperties.forEach((property, name) => {
       const uname = 'u' + name.charAt(0).toUpperCase() + name.slice(1)
-      if (property.type === Array) {
+      if (property.type === Array && Array.isArray(property.value)) {
         this.#vecLengths[uname] = property.value.length
       }
     })

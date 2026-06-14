@@ -5,22 +5,22 @@ import { IoElement } from '../elements/IoElement.js'
 import { NodeArray } from '../core/NodeArray.js'
 
 export type ReactivePropertyDefinition= {
-  value?: any
+  value?: unknown
   type?: AnyConstructor
   binding?: Binding<unknown>
   reflect?: boolean
-  init?: any
+  init?: unknown
 }
 
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition
+export type ReactivePropertyDefinitionLoose = string | number | boolean | unknown[] | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition
 
 /** Normalized reactive property definition merged from decorators and static getters. */
 export class ReactiveProtoProperty {
-  declare value?: any
+  declare value?: unknown
   declare type?: AnyConstructor
   declare binding?: Binding<unknown>
   declare reflect?: boolean
-  declare init?: any
+  declare init?: unknown
   /**
    * Creates a property definition from various input types.
    * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
@@ -77,7 +77,13 @@ export class ReactiveProtoProperty {
    * @returns {object} A plain object suitable for JSON serialization
    */
   toJSON() {
-    const json: any = {
+    const json: {
+      value?: unknown
+      type?: AnyConstructor | string
+      reflect?: boolean
+      init?: unknown
+      binding?: Binding<unknown>
+    } = {
       value: this.value,
       type: this.type,
       reflect: this.reflect,
@@ -85,7 +91,7 @@ export class ReactiveProtoProperty {
       binding: this.binding,
     }
     if (json.value && typeof json.value === 'object') {
-      json.value = json.value.constructor.name
+      json.value = (json.value as object).constructor.name
     }
     if (json.type && typeof json.type === 'function') {
       json.type = json.type.name
@@ -94,14 +100,19 @@ export class ReactiveProtoProperty {
   }
 }
 
-function decodeInitArgument(item: any, node: ReactiveNode | IoElement) {
+function decodeInitArgument(item: unknown, node: ReactiveNode | IoElement): unknown {
   if (item === 'this') {
     return node
   } else if (typeof item === 'string' && item.startsWith('this.')) {
     const keys = item.split('.')
-    let target: any = node
+    let target: unknown = node
     for (let i = 1; i < keys.length; i++) {
-      target = target[keys[i]]
+      if (typeof target === 'object' && target !== null) {
+        target = (target as Record<string, unknown>)[keys[i]]
+      } else {
+        target = undefined
+        break
+      }
     }
     if (target) return target
     console.error(`ReactivePropertyInstance: Invalid path ${item}`)
@@ -156,7 +167,7 @@ export class Observer {
     Object.defineProperty(this, 'node', {enumerable: false, configurable: false, writable: false, value: node})
   }
 
-  start(value: any) {
+  start(value: unknown) {
     if (this.observing) return
     if (!value || typeof value !== 'object') return
 
@@ -176,7 +187,7 @@ export class Observer {
     }
   }
 
-  stop(value: any) {
+  stop(value: unknown) {
     if (isIoValue(value) && !value._disposed) {
       value.removeEventListener('io-object-mutation', this.node.onPropertyMutated)
     } else if (value instanceof NodeArray) {
@@ -191,7 +202,7 @@ export class Observer {
 /** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
 export class ReactivePropertyInstance {
   // Property value.
-  value?: any
+  value?: unknown
   // Constructor of the property value.
   type?: AnyConstructor
   // Binding object.
@@ -199,7 +210,7 @@ export class ReactivePropertyInstance {
   // Reflects to HTML attribute.
   reflect = false
   // Initialize property with provided constructor arguments. `null` prevents initialization.
-  init?: any = undefined
+  init?: unknown = undefined
   // Mutation observation state for this property.
   readonly observer: Observer
   /**
@@ -242,9 +253,10 @@ export class ReactivePropertyInstance {
             const args = this.init.map(item => decodeInitArgument(item, node))
             this.value = new (this.type as new (...args: unknown[]) => object)(...args)
           } else if (this.init instanceof Object) {
+            const initObj = this.init as Record<string, unknown>
             const args: Record<string, unknown> = {}
-            Object.keys(this.init).forEach(key => {
-              args[key] = decodeInitArgument(this.init[key], node)
+            Object.keys(initObj).forEach(key => {
+              args[key] = decodeInitArgument(initObj[key], node)
             })
             this.value = new (this.type as new (args: Record<string, unknown>) => object)(args)
           } else if (this.init === null) {
@@ -262,7 +274,7 @@ export class ReactivePropertyInstance {
 
     debug: {
       if (this.value !== undefined && this.init !== undefined) {
-        if ([String, Number, Boolean].indexOf(this.type as any) !== -1) {
+        if (this.type === String || this.type === Number || this.type === Boolean) {
           if (this.type === Boolean && typeof this.value !== 'boolean' ||
               this.type === Number && typeof this.value !== 'number' ||
               this.type === String && typeof this.value !== 'string') {

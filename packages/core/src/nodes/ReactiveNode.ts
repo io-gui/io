@@ -181,8 +181,8 @@ export class ReactiveNode extends Object {
     for (const key of this._reactiveProperties.keys()) {
       if (key === 'reactivity') continue
       const value = this._reactiveProperties.get(key as string)!.value
-      if (value instanceof Object && typeof value.toJSON === 'function') {
-        out[key] = value.toJSON()
+      if (typeof value === 'object' && value !== null && typeof (value as { toJSON?: () => Json }).toJSON === 'function') {
+        out[key] = (value as { toJSON: () => Json }).toJSON()
       } else if (typeof value === 'number') {
         out[key] = value
       }
@@ -196,9 +196,9 @@ export class ReactiveNode extends Object {
       const propDef = this._reactiveProperties.get(name as string)!
       const value = propDef.value
       const type = propDef.type
-      if (value instanceof Object) {
-        if (typeof value.applyJSON === 'function') {
-          value.applyJSON(json[name])
+      if (typeof value === 'object' && value !== null) {
+        if (typeof (value as { applyJSON?: (json: unknown) => void }).applyJSON === 'function') {
+          (value as { applyJSON: (json: unknown) => void }).applyJSON(json[name])
         } else {
           console.warn(`ReactiveNode.applyJSON(): Property "${name}" does not have applyJSON() method implemented!`)
           continue
@@ -300,7 +300,7 @@ export function initReactiveProperties(node: ReactiveNode | IoElement) {
 
     if (node instanceof IoElement) {
       if (property.reflect && property.value !== undefined && property.value !== null) {
-        node.setAttribute(name, property.value)
+        node.setAttribute(name, property.value as string | number | boolean)
       }
     }
   }

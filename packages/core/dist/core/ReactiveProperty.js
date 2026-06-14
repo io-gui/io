@@ -96,7 +96,13 @@ function decodeInitArgument(item, node) {
         const keys = item.split('.');
         let target = node;
         for (let i = 1; i < keys.length; i++) {
-            target = target[keys[i]];
+            if (typeof target === 'object' && target !== null) {
+                target = target[keys[i]];
+            }
+            else {
+                target = undefined;
+                break;
+            }
         }
         if (target)
             return target;
@@ -238,9 +244,10 @@ export class ReactivePropertyInstance {
                         this.value = new this.type(...args);
                     }
                     else if (this.init instanceof Object) {
+                        const initObj = this.init;
                         const args = {};
-                        Object.keys(this.init).forEach(key => {
-                            args[key] = decodeInitArgument(this.init[key], node);
+                        Object.keys(initObj).forEach(key => {
+                            args[key] = decodeInitArgument(initObj[key], node);
                         });
                         this.value = new this.type(args);
                     }
@@ -258,7 +265,7 @@ export class ReactivePropertyInstance {
         this.observer.start(this.value);
         debug: {
             if (this.value !== undefined && this.init !== undefined) {
-                if ([String, Number, Boolean].indexOf(this.type) !== -1) {
+                if (this.type === String || this.type === Number || this.type === Boolean) {
                     if (this.type === Boolean && typeof this.value !== 'boolean' ||
                         this.type === Number && typeof this.value !== 'number' ||
                         this.type === String && typeof this.value !== 'string') {

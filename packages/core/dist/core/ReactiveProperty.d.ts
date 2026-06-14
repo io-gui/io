@@ -2,20 +2,20 @@ import { Binding } from './Binding.js';
 import { AnyConstructor, ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
 export type ReactivePropertyDefinition = {
-    value?: any;
+    value?: unknown;
     type?: AnyConstructor;
     binding?: Binding<unknown>;
     reflect?: boolean;
-    init?: any;
+    init?: unknown;
 };
-export type ReactivePropertyDefinitionLoose = string | number | boolean | Array<any> | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition;
+export type ReactivePropertyDefinitionLoose = string | number | boolean | unknown[] | null | undefined | AnyConstructor | Binding<unknown> | ReactivePropertyDefinition;
 /** Normalized reactive property definition merged from decorators and static getters. */
 export declare class ReactiveProtoProperty {
-    value?: any;
+    value?: unknown;
     type?: AnyConstructor;
     binding?: Binding<unknown>;
     reflect?: boolean;
-    init?: any;
+    init?: unknown;
     /**
      * Creates a property definition from various input types.
      * @param {ReactivePropertyDefinitionLoose} def Input definition which can be:
@@ -44,7 +44,13 @@ export declare class ReactiveProtoProperty {
      * - Only includes defined fields
      * @returns {object} A plain object suitable for JSON serialization
      */
-    toJSON(): any;
+    toJSON(): {
+        value?: unknown;
+        type?: AnyConstructor | string;
+        reflect?: boolean;
+        init?: unknown;
+        binding?: Binding<unknown>;
+    };
 }
 export type ObservationType = 'none' | 'io' | 'object' | 'nodearray';
 export declare function ensureWindowMutationListener(node: ReactiveNode | IoElement): void;
@@ -60,17 +66,17 @@ export declare class Observer {
     type: ObservationType;
     observing: boolean;
     constructor(node: ReactiveNode | IoElement);
-    start(value: any): void;
-    stop(value: any): void;
+    start(value: unknown): void;
+    stop(value: unknown): void;
     dispose(): void;
 }
 /** Runtime reactive property: value, type, binding, reflect, and mutation observer. */
 export declare class ReactivePropertyInstance {
-    value?: any;
+    value?: unknown;
     type?: AnyConstructor;
     binding?: Binding<unknown>;
     reflect: boolean;
-    init?: any;
+    init?: unknown;
     readonly observer: Observer;
     /**
      * Creates the property configuration object and copies values from `ReactiveProtoProperty`.
