@@ -1,9 +1,7 @@
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
-// TODO: Improve types!
-
-export interface Change<T = any> {
+export interface Change<T = unknown> {
   property: string
   value: T
   oldValue: T
@@ -18,6 +16,8 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
   readonly detail: Change
   readonly path: ReactiveNode[]
 }
+
+type ChangeHandler = (change: Change) => void
 
 /**
  * This class is used internally by the framework to manage property changes in `ReactiveNode` and `IoElement` nodes.
@@ -43,8 +43,7 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  */
 export class ChangeQueue {
   declare readonly node: ReactiveNode | IoElement
-  declare changes: Change[]
-  #changeIndex = new Map<string, number>()
+  #changes = new Map<string, Change>()
   dispatchedChange = false
   dispatching = false
   /**
@@ -52,7 +51,6 @@ export class ChangeQueue {
    * @param {ReactiveNode} node - Owner node.
    */
   constructor(node: ReactiveNode | IoElement) {
-    this.changes = []
     this.node = node
     Object.defineProperty(this, 'dispatch', {
       value: this.dispatch.bind(this),
@@ -61,34 +59,28 @@ export class ChangeQueue {
       configurable: false,
     })
   }
+  get changes(): Change[] {
+    return [...this.#changes.values()]
+  }
   /**
    * Adds property change payload to the queue by specifying property name, previous and the new value.
    * If the change is already in the queue, the new value is updated in-queue.
    * If the new value is the same as the original value, the change is removed from the queue.
    * @param {string} property - Property name.
-   * @param {any} value Property value.
-   * @param {any} oldValue Old property value.
+   * @param {unknown} value Property value.
+   * @param {unknown} oldValue Old property value.
    */
-  queue(property: string, value: any, oldValue: any) {
+  queue(property: string, value: unknown, oldValue: unknown) {
     debug: if (value === oldValue) {
       console.warn('ChangeQueue: queuing change with same value and oldValue!')
     }
-    const i = this.#changeIndex.get(property)
-    if (i === undefined) {
-      this.#changeIndex.set(property, this.changes.length)
-      this.changes.push({property, value, oldValue})
-    } else if (value === this.changes[i].oldValue) {
-      this.#removeAt(i)
+    const existing = this.#changes.get(property)
+    if (!existing) {
+      this.#changes.set(property, {property, value, oldValue})
+    } else if (value === existing.oldValue) {
+      this.#changes.delete(property)
     } else {
-      this.changes[i].value = value
-    }
-  }
-  #removeAt(i: number) {
-    const removed = this.changes[i]
-    this.changes.splice(i, 1)
-    this.#changeIndex.delete(removed.property)
-    for (let j = i; j < this.changes.length; j++) {
-      this.#changeIndex.set(this.changes[j].property, j)
+      existing.value = value
     }
   }
   /**
@@ -104,49 +96,66 @@ export class ChangeQueue {
       return
     }
     this.dispatching = true
-    const properties = []
-    let i = 0
-    while (i < this.changes.length) {
-      const change = this.changes[i]
-      const property = change.property
-      if (change.value !== change.oldValue) {
-        this.dispatchedChange = true
-        const handlerName = property + 'Changed'
-        if ((this.node as any)[handlerName]) {
-          try {
-            (this.node as any)[handlerName](change)
-          } catch (error) {
-            console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error)
-          }
-        }
-        this.node.dispatch(property + '-changed' as any, change)
-        properties.push(property)
-      }
-      i++
-    }
-    this.changes.length = 0
-    this.#changeIndex.clear()
+    const properties = this.#dispatchQueuedChanges()
+    this.#changes.clear()
     if (this.dispatchedChange) {
-      try {
-        this.node.changed()
-      } catch (error) {
-        console.error(`Error in ${this.node.constructor.name}.changed():`, error)
-      }
-      if ((this.node as ReactiveNode)._isNode) {
-        (this.node as ReactiveNode).dispatchMutation(this.node, properties)
-      }
+      this.#invokeChanged()
+      this.#invokeMutation(properties)
     }
     this.dispatchedChange = false
     this.dispatching = false
+  }
+  #dispatchQueuedChanges(): string[] {
+    const properties: string[] = []
+    let i = 0
+    let order = [...this.#changes.keys()]
+    while (i < order.length) {
+      const change = this.#changes.get(order[i])
+      if (change) {
+        this.#processChange(change, properties)
+      }
+      i++
+      if (this.#changes.size > order.length) {
+        order = [...this.#changes.keys()]
+      }
+    }
+    return properties
+  }
+  #processChange(change: Change, properties: string[]) {
+    const property = change.property
+    if (change.value === change.oldValue) return
+    this.dispatchedChange = true
+    const handlerName = property + 'Changed'
+    const handler = (this.node as unknown as Record<string, ChangeHandler | undefined>)[handlerName]
+    if (handler) {
+      try {
+        handler(change)
+      } catch (error) {
+        console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error)
+      }
+    }
+    this.node.dispatch(property + '-changed' as any, change)
+    properties.push(property)
+  }
+  #invokeChanged() {
+    try {
+      this.node.changed()
+    } catch (error) {
+      console.error(`Error in ${this.node.constructor.name}.changed():`, error)
+    }
+  }
+  #invokeMutation(properties: string[]) {
+    if ((this.node as ReactiveNode)._isNode) {
+      (this.node as ReactiveNode).dispatchMutation(this.node, properties)
+    }
   }
   /**
    * Clears the queue and removes the node reference for garbage collection.
    * Use this when node queue is no longer needed.
    */
   dispose() {
-    this.changes.length = 0
-    this.#changeIndex.clear()
-    delete (this as any).node
-    delete (this as any).changes
+    this.#changes.clear()
+    Object.defineProperty(this, 'changes', {value: undefined, configurable: true})
+    delete (this as {node?: ReactiveNode | IoElement}).node
   }
 }

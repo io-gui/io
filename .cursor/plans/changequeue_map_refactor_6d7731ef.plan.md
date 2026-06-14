@@ -4,19 +4,19 @@ overview: Refactor ChangeQueue internals to a single insertion-ordered Map, tigh
 todos:
   - id: map-storage
     content: "Replace changes[] + #changeIndex with private #changes Map and changes getter"
-    status: pending
+    status: completed
   - id: dispatch-phases
     content: "Extract #processChange, #invokeChanged, #invokeMutation; use growing-snapshot dispatch loop"
-    status: pending
+    status: completed
   - id: types
     content: Tighten ChangeQueue types (unknown over any, typed handler lookup)
-    status: pending
+    status: completed
   - id: dispose-compat
     content: "Preserve dispose() contract: changes and node become undefined"
-    status: pending
+    status: completed
   - id: tests
     content: Run pnpm test:core; add cancellation + cascading growth tests
-    status: pending
+    status: completed
 isProject: false
 ---
 

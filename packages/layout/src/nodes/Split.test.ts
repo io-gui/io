@@ -414,7 +414,7 @@ describe('Split', () => {
 
   })
 
-  describe('Deserialization - fromJSON', () => {
+  describe('Deserialization - applyJSON', () => {
 
     it('should restore split from JSON', () => {
       const split = new Split({
@@ -422,7 +422,7 @@ describe('Split', () => {
         children: [{ type: 'panel', tabs: [{ id: 'placeholder' }] }]
       })
 
-      split.fromJSON({
+      split.applyJSON({
         type: 'split',
         orientation: 'vertical',
         flex: '0 0 500px',
@@ -445,7 +445,7 @@ describe('Split', () => {
         children: [{ type: 'panel', tabs: [{ id: 'placeholder' }] }]
       })
 
-      split.fromJSON({
+      split.applyJSON({
         type: 'split',
         children: [
           { type: 'panel', tabs: [{ id: 'p1' }] },
@@ -472,7 +472,7 @@ describe('Split', () => {
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
-      split.fromJSON({
+      split.applyJSON({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'restored' }] }]
       } as SplitProps)
@@ -487,7 +487,7 @@ describe('Split', () => {
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
-      split.fromJSON({
+      split.applyJSON({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'restored' }] }]
       } as SplitProps)
@@ -501,7 +501,7 @@ describe('Split', () => {
         children: [{ type: 'panel', tabs: [{ id: 'test' }] }]
       })
 
-      const result = split.fromJSON({
+      const result = split.applyJSON({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'chained' }] }]
       })
@@ -509,14 +509,14 @@ describe('Split', () => {
       expect(result).toBe(split)
     })
 
-    it('should consolidate single-child splits in fromJSON', () => {
+    it('should consolidate single-child splits in applyJSON', () => {
       const split = new Split({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'original' }] }]
       })
 
       // JSON has a nested structure that should be consolidated
-      split.fromJSON({
+      split.applyJSON({
         type: 'split',
         children: [
           {
@@ -537,14 +537,14 @@ describe('Split', () => {
       expect(split.orientation).toBe('vertical')
     })
 
-    it('should consolidate multiple levels of nesting in fromJSON', () => {
+    it('should consolidate multiple levels of nesting in applyJSON', () => {
       const split = new Split({
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'original' }] }]
       })
 
       // Deeply nested structure
-      split.fromJSON({
+      split.applyJSON({
         type: 'split',
         children: [
           {
@@ -589,7 +589,7 @@ describe('Split', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'temp' }] }]
       })
-      restored.fromJSON(json)
+      restored.applyJSON(json)
 
       expect(restored.orientation).toBe(original.orientation)
       expect(restored.flex).toBe(original.flex)
@@ -619,7 +619,7 @@ describe('Split', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'temp' }] }]
       })
-      restored.fromJSON(json)
+      restored.applyJSON(json)
 
       // Verify structure
       expect(restored.children.length).toBe(3)
@@ -647,7 +647,7 @@ describe('Split', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'temp' }] }]
       })
-      restored.fromJSON(json1)
+      restored.applyJSON(json1)
       const json2 = restored.toJSON()
 
       expect(json2).toEqual(json1)
@@ -906,7 +906,7 @@ describe('Split', () => {
         type: 'split',
         children: [{ type: 'panel', tabs: [{ id: 'temp' }] }]
       })
-      restored.fromJSON(json)
+      restored.applyJSON(json)
 
       // Navigate to deepest panel
       const level1 = restored.children[1] as Split

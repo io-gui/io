@@ -150,3 +150,8 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **D1**: `pnpm dev` runs `build:watch` (tsc -b -w) and `dev:server` (vite) in parallel
 - **D2**: Removed machine-specific `three` pnpm override; added `three` devDependency to @io-gui/three; fixed index.html three import paths to node_modules
 - **F1**: Updated CONTRIBUTING.md, io-gui.mdc, README.md (Vitest, ReactiveNode, dist/, @io-gui/core npm badge)
+
+## 2026-06-14 [technical] layout tests fromJSON → applyJSON
+- **Problem**: 26 tests failed with `fromJSON is not a function` in Tab/Panel/Split tests
+- **Cause**: Serialization refactor renamed `fromJSON` to `applyJSON` on ReactiveNode subclasses; tests not updated
+- **Fix**: Updated layout test files to call `applyJSON` instead of `fromJSON`
