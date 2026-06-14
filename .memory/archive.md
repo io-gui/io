@@ -155,3 +155,9 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **Problem**: 26 tests failed with `fromJSON is not a function` in Tab/Panel/Split tests
 - **Cause**: Serialization refactor renamed `fromJSON` to `applyJSON` on ReactiveNode subclasses; tests not updated
 - **Fix**: Updated layout test files to call `applyJSON` instead of `fromJSON`
+
+## 2026-06-14 [testing] Test safety net E3 + E1
+
+- **E3**: Added `@vitest/coverage-v8`, dedicated `coverage` vitest project for core, `pnpm test:coverage` script with thresholds (lines 74%, statements 73%, functions 78%, branches 58%)
+- **E1**: Added `@io-gui/three` smoke tests — ToolBase (viewport registration + pointerTo3D NDC math), ViewCameras (camera select, overscan, frameObject, scene cameras), IoThreeViewport (tool swap via change queue)
+- Added `coverage/` to `.gitignore`

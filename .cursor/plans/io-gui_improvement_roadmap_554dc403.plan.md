@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: test-safety-net
     content: "Test safety net: coverage config (E3), three package smoke tests (E1)"
-    status: pending
+    status: completed
   - id: core-refactors-small
     content: "Core: setProperty decomposition (A2), object-mutation observer consolidation (A3), event system fixes (A5)"
     status: pending
