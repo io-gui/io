@@ -37,6 +37,11 @@ const shadersCache = new WeakMap()
 const uniformLocationsCache = new WeakMap<WebGLProgram, Map<string, WebGLUniformLocation | null>>()
 let currentProgram: WebGLProgram | null
 
+function linkShaderProgram(program: WebGLProgram) {
+  gl.linkProgram(program)
+  uniformLocationsCache.delete(program)
+}
+
 function getUniformLocation(program: WebGLProgram, name: string) {
   let locations = uniformLocationsCache.get(program)
   if (!locations) {
@@ -217,10 +222,9 @@ export class IoGl extends IoElement {
       this.#shader = shadersCache.get(this.constructor)
     } else {
       this.#shader = this.initShader()
+      linkShaderProgram(this.#shader)
       shadersCache.set(this.constructor, this.#shader)
     }
-
-    gl.linkProgram(this.#shader)
 
     const position = gl.getAttribLocation(this.#shader, 'position')
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuff)

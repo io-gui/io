@@ -21,6 +21,7 @@
  * changeQueue.dispatch();
  */
 export class ChangeQueue {
+    #changes = new Map();
     dispatchedChange = false;
     dispatching = false;
     /**
@@ -28,7 +29,6 @@ export class ChangeQueue {
      * @param {ReactiveNode} node - Owner node.
      */
     constructor(node) {
-        this.changes = [];
         this.node = node;
         Object.defineProperty(this, 'dispatch', {
             value: this.dispatch.bind(this),
@@ -37,27 +37,30 @@ export class ChangeQueue {
             configurable: false,
         });
     }
+    get changes() {
+        return [...this.#changes.values()];
+    }
     /**
      * Adds property change payload to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.
      * If the new value is the same as the original value, the change is removed from the queue.
      * @param {string} property - Property name.
-     * @param {any} value Property value.
-     * @param {any} oldValue Old property value.
+     * @param {unknown} value Property value.
+     * @param {unknown} oldValue Old property value.
      */
     queue(property, value, oldValue) {
         debug: if (value === oldValue) {
             console.warn('ChangeQueue: queuing change with same value and oldValue!');
         }
-        const i = this.changes.findIndex(change => change.property === property);
-        if (i === -1) {
-            this.changes.push({ property, value, oldValue });
+        const existing = this.#changes.get(property);
+        if (!existing) {
+            this.#changes.set(property, { property, value, oldValue });
         }
-        else if (value === this.changes[i].oldValue) {
-            this.changes.splice(i, 1);
+        else if (value === existing.oldValue) {
+            this.#changes.delete(property);
         }
         else {
-            this.changes[i].value = value;
+            existing.value = value;
         }
     }
     /**
@@ -73,50 +76,70 @@ export class ChangeQueue {
             return;
         }
         this.dispatching = true;
-        const properties = [];
-        let i = 0;
-        while (i < this.changes.length) {
-            const change = this.changes[i];
-            const property = change.property;
-            if (change.value !== change.oldValue) {
-                this.dispatchedChange = true;
-                const handlerName = property + 'Changed';
-                if (this.node[handlerName]) {
-                    try {
-                        this.node[handlerName](change);
-                    }
-                    catch (error) {
-                        console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error);
-                    }
-                }
-                this.node.dispatch(property + '-changed', change);
-                properties.push(property);
-            }
-            i++;
-        }
-        this.changes.length = 0;
+        const properties = this.#dispatchQueuedChanges();
+        this.#changes.clear();
         if (this.dispatchedChange) {
-            try {
-                this.node.changed();
-            }
-            catch (error) {
-                console.error(`Error in ${this.node.constructor.name}.changed():`, error);
-            }
-            if (this.node._isNode) {
-                this.node.dispatchMutation(this.node, properties);
-            }
+            this.#invokeChanged();
+            this.#invokeMutation(properties);
         }
         this.dispatchedChange = false;
         this.dispatching = false;
+    }
+    #dispatchQueuedChanges() {
+        const properties = [];
+        let i = 0;
+        let order = [...this.#changes.keys()];
+        while (i < order.length) {
+            const change = this.#changes.get(order[i]);
+            if (change) {
+                this.#processChange(change, properties);
+            }
+            i++;
+            if (this.#changes.size > order.length) {
+                order = [...this.#changes.keys()];
+            }
+        }
+        return properties;
+    }
+    #processChange(change, properties) {
+        const property = change.property;
+        if (change.value === change.oldValue)
+            return;
+        this.dispatchedChange = true;
+        const handlerName = property + 'Changed';
+        const handler = this.node[handlerName];
+        if (handler) {
+            try {
+                handler(change);
+            }
+            catch (error) {
+                console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error);
+            }
+        }
+        this.node.dispatch(property + '-changed', change);
+        properties.push(property);
+    }
+    #invokeChanged() {
+        try {
+            this.node.changed();
+        }
+        catch (error) {
+            console.error(`Error in ${this.node.constructor.name}.changed():`, error);
+        }
+    }
+    #invokeMutation(properties) {
+        if (this.node._isNode) {
+            this.node.dispatchMutation(this.node, properties);
+        }
     }
     /**
      * Clears the queue and removes the node reference for garbage collection.
      * Use this when node queue is no longer needed.
      */
     dispose() {
-        this.changes.length = 0;
+        this.#changes.clear();
+        Object.defineProperty(this, 'changes', { value: undefined, configurable: true });
         delete this.node;
-        delete this.changes;
     }
 }
 //# sourceMappingURL=ChangeQueue.js.map

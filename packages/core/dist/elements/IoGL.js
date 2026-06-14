@@ -32,7 +32,23 @@ gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([3, 2, 1, 3, 1, 0]), gl.S
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuff);
 const shadersCache = new WeakMap();
+const uniformLocationsCache = new WeakMap();
 let currentProgram;
+function linkShaderProgram(program) {
+    gl.linkProgram(program);
+    uniformLocationsCache.delete(program);
+}
+function getUniformLocation(program, name) {
+    let locations = uniformLocationsCache.get(program);
+    if (!locations) {
+        locations = new Map();
+        uniformLocationsCache.set(program, locations);
+    }
+    if (!locations.has(name)) {
+        locations.set(name, gl.getUniformLocation(program, name));
+    }
+    return locations.get(name) ?? null;
+}
 let IoGl = IoGl_1 = class IoGl extends IoElement {
     static get Style() {
         return /* css */ `
@@ -174,9 +190,9 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         }
         else {
             this.#shader = this.initShader();
+            linkShaderProgram(this.#shader);
             shadersCache.set(this.constructor, this.#shader);
         }
-        gl.linkProgram(this.#shader);
         const position = gl.getAttribLocation(this.#shader, 'position');
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuff);
         gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0);
@@ -261,7 +277,7 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         });
     }
     setUniform(name, value) {
-        const uniform = gl.getUniformLocation(this.#shader, name);
+        const uniform = getUniformLocation(this.#shader, name);
         if (uniform === null)
             return;
         let type = typeof value;

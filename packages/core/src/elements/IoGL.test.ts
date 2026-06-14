@@ -92,4 +92,20 @@ describe('IoGL', () => {
     color = (element as IoGl).ctx.getImageData(0, 0, 1, 1).data
     expect(color).toEqual(new Uint8ClampedArray([128, 32, 64, 64]))
   })
+  it('should render when a second instance shares the cached shader program', () => {
+    const second = new IoGlTest()
+    second.size = [32, 32]
+    second.pxRatio = 1
+    second.style.visibility = 'hidden'
+    second.style.position = 'fixed'
+    second.style.width = '32px'
+    second.style.height = '32px'
+    document.body.appendChild(second as HTMLElement)
+
+    second.color = [0, 1, 0, 1]
+    second.onRender()
+
+    const color = second.ctx.getImageData(0, 0, 1, 1).data
+    expect(color).toEqual(new Uint8ClampedArray([0, 255, 0, 255]))
+  })
 })

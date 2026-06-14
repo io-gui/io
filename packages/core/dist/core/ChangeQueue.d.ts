@@ -1,6 +1,6 @@
 import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-export interface Change<T = any> {
+export interface Change<T = unknown> {
     property: string;
     value: T;
     oldValue: T;
@@ -36,8 +36,8 @@ export interface ChangeEvent extends Omit<CustomEvent<Change>, 'target'> {
  * changeQueue.dispatch();
  */
 export declare class ChangeQueue {
+    #private;
     readonly node: ReactiveNode | IoElement;
-    changes: Change[];
     dispatchedChange: boolean;
     dispatching: boolean;
     /**
@@ -45,15 +45,16 @@ export declare class ChangeQueue {
      * @param {ReactiveNode} node - Owner node.
      */
     constructor(node: ReactiveNode | IoElement);
+    get changes(): Change[];
     /**
      * Adds property change payload to the queue by specifying property name, previous and the new value.
      * If the change is already in the queue, the new value is updated in-queue.
      * If the new value is the same as the original value, the change is removed from the queue.
      * @param {string} property - Property name.
-     * @param {any} value Property value.
-     * @param {any} oldValue Old property value.
+     * @param {unknown} value Property value.
+     * @param {unknown} oldValue Old property value.
      */
-    queue(property: string, value: any, oldValue: any): void;
+    queue(property: string, value: unknown, oldValue: unknown): void;
     /**
      * Dispatches and clears the queue.
      * For each property change in the queue:
