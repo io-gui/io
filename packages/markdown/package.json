@@ -2,7 +2,10 @@
   "name": "@io-gui/markdown",
   "version": "2.0.0-alpha.2",
   "description": "Markdown viewer for Io-Gui.",
-  "sideEffects": true,
+  "sideEffects": [
+    "**/elements/**",
+    "**/nodes/**"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/io-gui/io.git"
@@ -38,19 +41,22 @@
   ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "pnpm run clean && tsc"
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "build": "tsc -b"
   },
-  "devDependencies": {
-    "@io-gui/core": "workspace:*",
+  "dependencies": {
     "dompurify": "3.4.0",
     "marked": "18.0.0",
     "marked-highlight": "2.2.4"
+  },
+  "devDependencies": {
+    "@io-gui/core": "workspace:*"
   },
   "peerDependencies": {
     "@io-gui/core": "^2.0.0-alpha.2"

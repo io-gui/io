@@ -12,6 +12,6 @@ export declare class Tab extends ReactiveNode {
     selected: boolean;
     constructor(args: TabProps);
     toJSON(): TabProps;
-    fromJSON(json: TabProps): this;
+    applyJSON(json: TabProps): this;
 }
 //# sourceMappingURL=Tab.d.ts.map

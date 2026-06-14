@@ -33,14 +33,14 @@ export class Tab extends ReactiveNode {
       label: args.label ? args.label : args.id,
     })
   }
-  toJSON(): TabProps {
+  override toJSON(): TabProps {
     const json: TabProps = { id: this.id }
     if (this.label !== this.id) json.label = this.label
     if (this.icon) json.icon = this.icon
     if (this.selected) json.selected = this.selected
     return json
   }
-  fromJSON(json: TabProps) {
+  override applyJSON(json: TabProps) {
     this.setProperties({
       id: json.id,
       label: json.label ? json.label : json.id,

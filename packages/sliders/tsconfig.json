@@ -1,13 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "composite": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "paths": {
-      "@io-gui/sliders": ["./src/index.ts"],
-      "@io-gui/core": ["../core"],
-      "@io-gui/inputs": ["../inputs"]
-    }
+    "rootDir": "./src"
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./src/**/*.test.ts"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../inputs" }
+  ]
 }

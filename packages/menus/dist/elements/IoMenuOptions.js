@@ -26,7 +26,7 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
       background-color: var(--io_bgColorLight);
       padding: calc(var(--io_spacing) + var(--io_borderWidth));
       transition: opacity 0.3s ease-in-out;
-      @apply --unselectable;
+      @apply --io-unselectable;
     }
     :host[horizontal] {
       padding: var(--io_spacing) 0;
@@ -91,6 +91,11 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
         if (this.inoverlay) {
             this.setAttribute('inoverlay', 'true');
         }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.expanded)
+            this.collapse();
     }
     onIoFocusTo(event) {
         const source = event.detail.source;

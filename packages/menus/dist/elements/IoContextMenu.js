@@ -39,16 +39,30 @@ let IoContextMenu = class IoContextMenu extends IoElement {
     connectedCallback() {
         super.connectedCallback();
         Overlay.appendChild(this.$options);
-        this.parentElement.addEventListener('pointerdown', this.onPointerdown);
-        this.parentElement.addEventListener('click', this.onClick);
-        this.parentElement.addEventListener('contextmenu', this.onContextmenu);
+        this._listenerParent = this.parentElement;
+        this._listenerParent.addEventListener('pointerdown', this.onPointerdown);
+        this._listenerParent.addEventListener('click', this.onClick);
+        this._listenerParent.addEventListener('contextmenu', this.onContextmenu);
     }
     disconnectedCallback() {
         super.disconnectedCallback();
+        this.releasePointerListeners();
+        clearTimeout(this._contextTimeout);
         Overlay.removeChild(this.$options);
-        this.parentElement.removeEventListener('pointerdown', this.onPointerdown);
-        this.parentElement.removeEventListener('click', this.onClick);
-        this.parentElement.removeEventListener('contextmenu', this.onContextmenu);
+        if (this._listenerParent) {
+            this._listenerParent.removeEventListener('pointerdown', this.onPointerdown);
+            this._listenerParent.removeEventListener('click', this.onClick);
+            this._listenerParent.removeEventListener('contextmenu', this.onContextmenu);
+            this._listenerParent = null;
+        }
+    }
+    releasePointerListeners() {
+        const parent = this._listenerParent;
+        if (!parent)
+            return;
+        parent.removeEventListener('pointermove', this.onPointermove);
+        parent.removeEventListener('pointerleave', this.onPointerleave);
+        parent.removeEventListener('pointerup', this.onPointerup);
     }
     getBoundingClientRect() {
         return this.parentElement.getBoundingClientRect();
@@ -61,9 +75,10 @@ let IoContextMenu = class IoContextMenu extends IoElement {
         event.stopPropagation();
         this.$options.style.left = `${event.clientX}px`;
         this.$options.style.top = `${event.clientY}px`;
-        this.parentElement.addEventListener('pointermove', this.onPointermove);
-        this.parentElement.addEventListener('pointerleave', this.onPointerleave);
-        this.parentElement.addEventListener('pointerup', this.onPointerup);
+        const parent = this._listenerParent;
+        parent.addEventListener('pointermove', this.onPointermove);
+        parent.addEventListener('pointerleave', this.onPointerleave);
+        parent.addEventListener('pointerup', this.onPointerup);
         clearTimeout(this._contextTimeout);
         if (event.pointerType !== 'touch') {
             if (event.button === this.button) {
@@ -96,16 +111,12 @@ let IoContextMenu = class IoContextMenu extends IoElement {
     onPointerup(event) {
         clearTimeout(this._contextTimeout);
         this.releasePointerCapture(event.pointerId);
-        this.parentElement.removeEventListener('pointermove', this.onPointermove);
-        this.parentElement.removeEventListener('pointerleave', this.onPointerleave);
-        this.parentElement.removeEventListener('pointerup', this.onPointerup);
+        this.releasePointerListeners();
         onOverlayPointeup.call(this, event);
     }
     onPointerleave(event) {
         this.releasePointerCapture(event.pointerId);
-        this.parentElement.removeEventListener('pointermove', this.onPointermove);
-        this.parentElement.removeEventListener('pointerleave', this.onPointerleave);
-        this.parentElement.removeEventListener('pointerup', this.onPointerup);
+        this.releasePointerListeners();
     }
     collapse() {
         Overlay.collapse();

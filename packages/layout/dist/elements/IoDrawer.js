@@ -87,7 +87,7 @@ let IoDrawer = class IoDrawer extends IoElement {
         background-color: var(--io_bgColorLight);
         border: var(--io_border);
         border-color: var(--io_borderColorStrong);
-        @apply --unselectable;
+        @apply --io-unselectable;
       }
       :host[orientation="horizontal"] > .io-drawer-content > .io-drawer-handle {
         border-top: 0;

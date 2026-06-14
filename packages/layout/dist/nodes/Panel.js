@@ -85,7 +85,7 @@ let Panel = class Panel extends ReactiveNode {
             json.flex = this.flex;
         return json;
     }
-    fromJSON(json) {
+    applyJSON(json) {
         debug: {
             if (json.type !== 'panel') {
                 console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`);

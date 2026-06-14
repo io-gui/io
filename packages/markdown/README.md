@@ -183,3 +183,7 @@ Theme changes are handled via event listener on `ThemeSingleton`. The highlight 
 
 ### Raw HTML in Markdown
 With `sanitize: true`, raw HTML in markdown is filtered through DOMPurify. Some advanced HTML may be stripped. Set `sanitize: false` only for trusted content.
+
+## Packaging
+
+Published `dist/index.js` is a bundled ES module. `@io-gui/core` is a peer dependency and stays external. `marked`, `marked-highlight`, and `dompurify` are runtime dependencies — install them alongside this package. The bundle does not inline those libraries.

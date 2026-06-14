@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, ThemeSingleton, IoElementProps, WithBinding, Property } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Property, $ThemeID } from '@io-gui/core'
 import { Marked } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import purify from 'dompurify'
@@ -43,7 +43,7 @@ export type IoMarkdownProps = IoElementProps & {
  */
 @Register
 export class IoMarkdown extends IoElement {
-  static get Style() {
+  static override get Style() {
     return /* css */`
       :host {
         display: flex;
@@ -218,11 +218,11 @@ styleElement.id = 'io-highlight-theme'
 document.head.appendChild(styleElement)
 
 function setTheme() {
-  if (ThemeSingleton.themeID === 'dark') {
+  if ($ThemeID.value === 'dark') {
     styleElement.innerHTML = MD_DARK_THEME
   } else {
     styleElement.innerHTML = MD_LIGHT_THEME
   }
 }
 setTheme()
-ThemeSingleton.addEventListener('themeID-changed', setTheme)
+$ThemeID.node.addEventListener('value-changed', setTheme)

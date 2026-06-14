@@ -16,8 +16,21 @@
     "isolatedModules": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noImplicitOverride": true
   },
-  "exclude": ["node_modules", "dist", "three.js"]
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/icons" },
+    { "path": "./packages/inputs" },
+    { "path": "./packages/sliders" },
+    { "path": "./packages/colors" },
+    { "path": "./packages/menus" },
+    { "path": "./packages/navigation" },
+    { "path": "./packages/editors" },
+    { "path": "./packages/layout" },
+    { "path": "./packages/markdown" },
+    { "path": "./packages/three" }
+  ]
 }
-

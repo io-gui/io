@@ -2,7 +2,11 @@
   "name": "@io-gui/three",
   "version": "2.0.0-alpha.2",
   "description": "Three.js UI elements built with io-gui",
-  "sideEffects": true,
+  "sideEffects": [
+    "**/elements/**",
+    "**/nodes/**",
+    "**/configs/**"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/io-gui/io.git"
@@ -38,19 +42,21 @@
   ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "pnpm run clean && tsc"
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "build": "tsc -b"
   },
   "devDependencies": {
     "@io-gui/core": "workspace:*",
     "@io-gui/layout": "workspace:*",
     "@io-gui/menus": "workspace:*",
     "@io-gui/editors": "workspace:*",
+    "@io-gui/inputs": "workspace:*",
     "@io-gui/sliders": "workspace:*",
     "@io-gui/colors": "workspace:*",
     "@types/three": "^0.182.0"
@@ -60,6 +66,7 @@
     "@io-gui/layout": "^2.0.0-alpha.2",
     "@io-gui/menus": "^2.0.0-alpha.2",
     "@io-gui/editors": "^2.0.0-alpha.2",
+    "@io-gui/inputs": "^2.0.0-alpha.2",
     "@io-gui/sliders": "^2.0.0-alpha.2",
     "@io-gui/colors": "^2.0.0-alpha.2",
     "three": ">=0.182.0"

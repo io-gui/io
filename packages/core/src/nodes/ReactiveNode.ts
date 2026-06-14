@@ -24,7 +24,7 @@ export interface ReactiveNodeConstructor {
   prototype: ReactiveNodeConstructor | object | HTMLElement
 }
 
-interface Json {
+export interface Json {
   [key: string]: string | number | boolean | Json | Json[];
 }
 

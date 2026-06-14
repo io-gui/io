@@ -23,8 +23,10 @@ export declare class IoColorPicker extends IoElement {
     onKeydown(event: KeyboardEvent): void;
     onValueSet(): void;
     onPanelCollapse(): void;
+    removePanelListeners(): void;
     expand(): void;
     collapse(): void;
+    disconnectedCallback(): void;
     valueChanged(): void;
 }
 export declare const ioColorPicker: (arg0: IoColorPickerProps) => import("@io-gui/core").VDOMElement;

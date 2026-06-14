@@ -37,6 +37,7 @@ export declare class IoMenuOptions extends IoElement {
     constructor(args?: IoMenuOptionsProps);
     stopPropagation(event: TouchEvent): void;
     connectedCallback(): void;
+    disconnectedCallback(): void;
     onIoFocusTo(event: CustomEvent): void;
     collapse(): void;
     expandedChanged(): void;

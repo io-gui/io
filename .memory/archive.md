@@ -98,3 +98,13 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - VDOM: `releaseEventDispatcher`, `releaseSubtreeEventDispatchers`, `clearNativeElementChildren` — native VDOM subtrees cleared via `textContent`/flatten no longer orphan EventDispatchers.
 - IoContextMenu: `_listenerParent` + `releasePointerListeners` for disconnect mid-gesture; IoColorPicker: `removePanelListeners` + disconnectedCallback; IoMenuOptions: collapse on disconnect.
 - Tests: ReactiveNode dispose parent detach, VDOM EventDispatcher release, EventDispatcher test updated for cleaned `_parents`.
+
+## 2026-06-14 [packaging-builds] D3+D4 packaging metadata + incremental builds
+
+- **exports**: all packages now resolve to `dist/index.js` + `dist/index.d.ts` (was inconsistent src/dist)
+- **sideEffects**: narrowed from `true` to elements/nodes/configs globs for tree-shaking
+- **incremental**: `composite: true` per package, root `tsc -b` with project references, `build:watch` script
+- **clean**: removes `tsconfig.tsbuildinfo` alongside dist (stale buildinfo caused false "up to date")
+- **bundle externals**: markdown keeps marked/dompurify external (moved to dependencies); three externalizes all `three/*`
+- **type fixes exposed by composite**: exported `Json` from ReactiveNode; MenuOption `override toJSON(): Json`; IoMarkdown uses `$ThemeID.value` not `ThemeSingleton.themeID`
+- **three**: added missing `@io-gui/inputs` dev+peer dep and tsconfig reference

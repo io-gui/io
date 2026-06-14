@@ -18,6 +18,9 @@ export interface ReactiveNodeConstructor {
     name?: string;
     prototype: ReactiveNodeConstructor | object | HTMLElement;
 }
+export interface Json {
+    [key: string]: string | number | boolean | Json | Json[];
+}
 export declare const NODES: {
     active: Set<ReactiveNode>;
     disposed: WeakSet<ReactiveNode>;
@@ -41,13 +44,16 @@ export declare class ReactiveNode extends Object {
     readonly _changeQueue: ChangeQueue;
     readonly _eventDispatcher: EventDispatcher;
     readonly _parents: Array<ReactiveNode | IoElement>;
+    readonly _children: Array<ReactiveNode | IoElement>;
     readonly _isNode: boolean;
-    readonly _isIoElement: boolean;
     _disposed: boolean;
     constructor(args?: any);
     applyProperties(props: any, skipDispatch?: boolean): void;
     setProperties(props: any): void;
     setProperty(name: string, value: any, debounce?: boolean): void;
+    copy(node: ReactiveNode): void;
+    toJSON(): Json;
+    applyJSON(json: Json): this;
     init(): void;
     ready(): void;
     changed(): void;
@@ -81,6 +87,7 @@ export declare function bind<TNode extends ReactiveNode | IoElement, K extends k
 export declare function bind(node: ReactiveNode | IoElement, name: string): Binding<unknown>;
 export declare function unbind<TNode extends ReactiveNode | IoElement, K extends keyof TNode & string>(node: TNode, name: K): void;
 export declare function unbind(node: ReactiveNode | IoElement, name: string): void;
+export declare function detachChildParents(node: ReactiveNode | IoElement): void;
 export declare function dispose(node: ReactiveNode | IoElement): void;
 export {};
 //# sourceMappingURL=ReactiveNode.d.ts.map

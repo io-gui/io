@@ -3,13 +3,13 @@
 > Prune aggressively. Only what's relevant to current work stays here.
 
 ## Current Task
-Completed A4 leak/cleanup fixes (leak-fixes todo)
+Completed packaging-builds (D3, D4)
 
 ## Key Context
-- `_children` inverse index on ReactiveNode/IoElement; dispose detaches via `detachChildParents`
-- `clearNodeQueue` clears throttle/queue WeakMap entries on dispose
-- VDOM: `clearNativeElementChildren` / `releaseSubtreeEventDispatchers` for orphaned native EventDispatchers
-- Menus/colors: disconnect mid-gesture listener cleanup in IoContextMenu, IoColorPicker, IoMenuOptions
+- Package exports now point to dist; sideEffects narrowed to elements/nodes/configs
+- Root build uses `tsc -b` with composite project references; clean also removes tsbuildinfo
+- Package builds use `tsc -b` without clean; `build:watch` at root for incremental dev
+- markdown/three publish bundles externalize marked/dompurify and three respectively
 
 ## Blockers / Open Questions
 - None

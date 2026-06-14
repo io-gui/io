@@ -32,7 +32,7 @@ export class IoContextMenu extends IoElement {
   declare _contextTimeout: ReturnType<typeof setTimeout>
   declare _listenerParent: HTMLElement | null
 
-  static get ReactiveProperties(): any {
+  static override get ReactiveProperties(): any {
     return {
       $options: null,
     }
@@ -47,14 +47,14 @@ export class IoContextMenu extends IoElement {
     })
   }
 
-  init() {
+  override init() {
     this.collapse = this.collapse.bind(this)
   }
 
   optionChanged() {
     if (this.$options) this.$options.option = this.option
   }
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback()
     Overlay.appendChild(this.$options as HTMLElement)
     this._listenerParent = this.parentElement
@@ -62,7 +62,7 @@ export class IoContextMenu extends IoElement {
     this._listenerParent!.addEventListener('click', (this as any).onClick)
     this._listenerParent!.addEventListener('contextmenu', this.onContextmenu)
   }
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback()
     this.releasePointerListeners()
     clearTimeout(this._contextTimeout)
@@ -81,7 +81,7 @@ export class IoContextMenu extends IoElement {
     parent.removeEventListener('pointerleave', this.onPointerleave)
     parent.removeEventListener('pointerup', this.onPointerup)
   }
-  getBoundingClientRect() {
+  override getBoundingClientRect() {
     return this.parentElement!.getBoundingClientRect()
   }
   onContextmenu(event: MouseEvent) {

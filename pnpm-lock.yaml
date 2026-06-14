@@ -63,15 +63,7 @@ importers:
         specifier: workspace:*
         version: link:../sliders
 
-  packages/core:
-    dependencies:
-      three:
-        specifier: link:../../../../Library/pnpm/global/5/node_modules/three
-        version: link:../../../../Library/pnpm/global/5/node_modules/three
-    devDependencies:
-      '@types/three':
-        specifier: ^0.182.0
-        version: 0.182.0
+  packages/core: {}
 
   packages/editors:
     devDependencies:
@@ -131,10 +123,7 @@ importers:
         version: link:../navigation
 
   packages/markdown:
-    devDependencies:
-      '@io-gui/core':
-        specifier: workspace:*
-        version: link:../core
+    dependencies:
       dompurify:
         specifier: 3.4.0
         version: 3.4.0
@@ -144,6 +133,10 @@ importers:
       marked-highlight:
         specifier: 2.2.4
         version: 2.2.4(marked@18.0.0)
+    devDependencies:
+      '@io-gui/core':
+        specifier: workspace:*
+        version: link:../core
 
   packages/menus:
     devDependencies:
@@ -196,6 +189,9 @@ importers:
       '@io-gui/editors':
         specifier: workspace:*
         version: link:../editors
+      '@io-gui/inputs':
+        specifier: workspace:*
+        version: link:../inputs
       '@io-gui/layout':
         specifier: workspace:*
         version: link:../layout

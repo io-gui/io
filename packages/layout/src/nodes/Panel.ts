@@ -85,7 +85,7 @@ export class Panel extends ReactiveNode {
       this.flex = '0 1 auto'
     }
   }
-  toJSON(): PanelProps {
+  override toJSON(): PanelProps {
     const json: PanelProps = {
       type: 'panel',
       tabs: this.tabs.map(tab => tab.toJSON()),
@@ -93,7 +93,7 @@ export class Panel extends ReactiveNode {
     if (this.flex !== '1 1 auto') json.flex = this.flex
     return json
   }
-  fromJSON(json: PanelProps) {
+  override applyJSON(json: PanelProps) {
     debug: {
       if (json.type !== 'panel') {
         console.error(`Panel.fromJSON: Invalid type "${json.type}". Expected "panel".`)

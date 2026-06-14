@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm clean && pnpm -r build",
+    "build": "pnpm clean && tsc -b",
+    "build:watch": "tsc -b -w",
     "bundle": "pnpm lint && pnpm build && node bundle.js",
     "lint": "eslint . --fix",
     "test": "vitest run",
@@ -21,7 +22,7 @@
     "test:navigation": "vitest run packages/navigation",
     "test:sliders": "vitest run packages/sliders",
     "test:three": "vitest run packages/three",
-    "clean": "rm -rf packages/**/dist",
+    "clean": "rm -rf packages/**/dist packages/**/tsconfig.tsbuildinfo",
     "publish": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish --tag alpha",
     "publish:dry": "pnpm bundle && pnpm --filter \"./packages/*\" -r publish --tag alpha --dry-run"
   },

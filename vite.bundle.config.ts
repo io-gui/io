@@ -6,7 +6,21 @@ import strip from '@rollup/plugin-strip'
 const bundleRoot = process.env.BUNDLE_ROOT as string
 const rootDir = path.resolve(bundleRoot)
 
-const externals = [/^@io-gui\//, /^three\/webgpu/]
+function getExternals(bundleRoot: string): RegExp[] {
+  const common = [/^@io-gui\//]
+
+  if (bundleRoot.endsWith('three')) {
+    return [...common, /^three/]
+  }
+
+  if (bundleRoot.endsWith('markdown')) {
+    return [...common, /^marked/, /^dompurify/, /^marked-highlight/]
+  }
+
+  return common
+}
+
+const externals = getExternals(bundleRoot)
 
 export default defineConfig({
   root: rootDir,
