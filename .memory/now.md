@@ -3,12 +3,11 @@
 > Prune aggressively. Only what's relevant to current work stays here.
 
 ## Current Task
-None — A1 node/element unification completed
+Core package docs/tests/bench plan created — `.cursor/plans/core_docs_tests_bench.plan.md` (20 class todos)
 
 ## Key Context
-- `ReactiveCore.ts`: shared internals init, `isReactiveOwner`/`isIoValue`, parent graph (`addParent`/`removeParent`/`detachChildParents`)
-- IoElement now has `_parents`; both node and element property values wire parent graph
-- ChangeQueue invokes `dispatchMutation` for all reactive owners (not just `_isNode`)
+- 23 classes audited in @io-gui/core; 177 existing tests, 1 bench file
+- Principles: concise TSDoc, smoke+unit expansion, bench hot paths only
 
 ## Blockers / Open Questions
-- None
+- See plan unresolved questions (test file split, demo CI, Theme console.log, bench baseline)

@@ -176,3 +176,20 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **category:technical** Parent wiring uses `isIoValue` everywhere (setProperty connect/disconnect, initReactiveProperties, NodeArray, Storage) — IoElement children get `addParent()` like ReactiveNode
 - **category:technical** ChangeQueue `#invokeMutation` now runs for all reactive owners (elements included)
 - Tests added for IoElement parent graph; 186 core tests pass
+
+## 2026-06-14 — Package layer plan decomposition
+
+- **category:technical** Created `.cursor/plans/package_layer.plan.md` decomposing roadmap B1–B3, C4–C5 into 15 itemized todos with codebase context
+- **category:technical** B1: IoTab imports IoContextEditorSingleton from editors — propose `io-context-editor-expand` event + app-level handler
+- **category:technical** B2: 8+ elements duplicate pointer capture/move/up; clamp duplicated in IoSlider/IoSliderBase
+- **category:technical** B3: IoSlider extends IoGl not IoSliderBase (~200 lines dup); IoSliderRange/2d already extend Base
+- **category:technical** C4: IoNumberSlider/Split/TabDragIcon/PropertyEditor full re-render on changed()
+- **category:technical** C5: IoTabDragIcon detectDropTargets querySelectorAll+getBoundingClientRect per pointermove
+
+## 2026-06-14 — Core package docs/tests/bench plan
+
+- **category:technical** Created `.cursor/plans/core_docs_tests_bench.plan.md` — 20 todos (one per class in packages/core)
+- **category:technical** Audit: 23 classes, 16 test files ~177 cases, 1 bench (ChangeQueue)
+- **category:technical** Principles: concise TSDoc (code is documentation), smoke+unit expansion, bench hot paths only
+- **category:technical** Largest gaps: IoSpan (no tests), IoElement (6 tests), IoOverlay (1 test), Observer/RPI (indirect only)
+- **category:technical** Bench targets: ReactiveNode, NodeArray, EventDispatcher, IoElement, Binding; optional VDOM module bench
