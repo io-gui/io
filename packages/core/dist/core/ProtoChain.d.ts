@@ -15,7 +15,7 @@ type ProtoListeners = {
  */
 export declare class ProtoChain {
     constructors: ProtoConstructors;
-    properties: Record<string, any>;
+    properties: Record<string, unknown>;
     reactiveProperties: ReactiveProtoProperties;
     listeners: ProtoListeners;
     style: string;
@@ -36,7 +36,7 @@ export declare class ProtoChain {
      * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.
      */
     addPropertiesFromDecorators(ioNodeConstructor: ReactiveNodeConstructor): void;
-    addProperties(properties?: Record<string, any>, prevHash?: string): string;
+    addProperties(properties?: Record<string, unknown>, prevHash?: string): string;
     /**
      * Adds reactive properties defined in decorators to the properties array.
      * @param {ReactiveNodeConstructor} ioNodeConstructor - Owner `ReactiveNode` constructor.

@@ -60,8 +60,10 @@ export class ProtoChain {
             throw new Error(`${node.constructor.name} not registered! Use @Register decorator before using ${node.constructor.name} class.`);
         }
         for (let i = this.handlers.length; i--;) {
-            Object.defineProperty(node, this.handlers[i], {
-                value: node[this.handlers[i]].bind(node),
+            const handlerName = this.handlers[i];
+            const handler = node[handlerName];
+            Object.defineProperty(node, handlerName, {
+                value: handler.bind(node),
                 writable: true,
                 configurable: true
             });
@@ -200,7 +202,7 @@ export class ProtoChain {
     validateReactiveProperties() {
         for (const name in this.reactiveProperties) {
             const prop = this.reactiveProperties[name];
-            if ([String, Number, Boolean].indexOf(prop.type) !== -1) {
+            if (prop.type === String || prop.type === Number || prop.type === Boolean) {
                 if (prop.type === Boolean && prop.value !== undefined && typeof prop.value !== 'boolean' ||
                     prop.type === Number && prop.value !== undefined && typeof prop.value !== 'number' ||
                     prop.type === String && prop.value !== undefined && typeof prop.value !== 'string') {

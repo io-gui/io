@@ -1,3 +1,3 @@
 # Current Focus
 
-Removed all `any` from IoElement.ts — aligned with ReactiveNode types (PropertyValues, unknown).
+Removed all `any` from ProtoChain.ts — Record<string, unknown>, unknown casts for dynamic handler access.

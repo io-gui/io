@@ -243,7 +243,7 @@ export function initProperties(node) {
     for (const name in node._protochain.properties) {
         let initialValue = node._protochain.properties[name];
         if (typeof initialValue === 'function') {
-            initialValue = new initialValue();
+            initialValue = constructType(initialValue);
         }
         else if (initialValue instanceof Array) {
             initialValue = initialValue.slice();
