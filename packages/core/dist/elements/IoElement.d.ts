@@ -46,11 +46,11 @@ export declare class IoElement extends HTMLElement {
     readonly _eventDispatcher: EventDispatcher;
     _hasWindowMutationListener: boolean;
     _hasSelfMutationListener: boolean;
+    readonly _children: Array<ReactiveNode | IoElement>;
     readonly _parents: Array<ReactiveNode | IoElement>;
     readonly _isIoElement: boolean;
     _disposed: boolean;
     _textNode: Text;
-    readonly _children: Array<ReactiveNode | IoElement>;
     constructor(args?: IoElementProps);
     /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
     applyProperties(props: any, skipDispatch?: boolean): void;

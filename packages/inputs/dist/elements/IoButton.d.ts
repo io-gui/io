@@ -1,6 +1,6 @@
 import { IoField, IoFieldProps } from './IoField.js';
 export type IoButtonProps = IoFieldProps & {
-    action?: (value: any) => void;
+    action?: (value: unknown) => void;
 };
 /**
  * Button element.
@@ -8,8 +8,8 @@ export type IoButtonProps = IoFieldProps & {
  **/
 export declare class IoButton extends IoField {
     static get Style(): string;
-    value: any;
-    action?: (value: any) => void;
+    value: unknown;
+    action?: (value: unknown) => void;
     appearance: 'inset' | 'outset' | 'neutral';
     role: string;
     constructor(args?: IoButtonProps);

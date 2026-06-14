@@ -37,7 +37,8 @@ function getKey(func, node) {
  */
 export async function nextQueue() {
     return new Promise((resolve) => {
-        const key = getKey(resolve, undefined);
+        const callback = () => resolve();
+        const key = getKey(callback, undefined);
         queue.set(key, { arg: undefined, frame: currentFrame + 1 });
     });
 }

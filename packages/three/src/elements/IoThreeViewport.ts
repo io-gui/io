@@ -208,7 +208,7 @@ export class IoThreeViewport extends IoElement {
   }
 
   override dispose() {
-    delete (this as any).applet
+    delete (this as Record<string, unknown>).applet
     this.renderTarget.dispose()
     this.viewCameras.dispose()
     this.tool.unregisterViewport(this)

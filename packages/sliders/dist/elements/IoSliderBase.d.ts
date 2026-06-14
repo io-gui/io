@@ -48,7 +48,7 @@ export declare class IoSliderBase extends IoGl {
     _getValueFromCoord(coord: [number, number]): [number, number];
     onPointermoveThrottled(event: PointerEvent): void;
     _inputValue(value: [number, number]): void;
-    inputValue(value: any): void;
+    inputValue(value: number | [number, number]): void;
     onKeydown(event: KeyboardEvent): void;
     _setIncrease(): void;
     _setDecrease(): void;

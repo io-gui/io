@@ -1,4 +1,4 @@
-import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition } from '@io-gui/core'
+import { ReactiveProperty, IoGl, IoElementProps, WithBinding, Property, ListenerDefinition, CallbackFunction } from '@io-gui/core'
 
 const clamp = (num: number, min: number, max: number) => {
   return max > min ? Math.min(Math.max(num, min), max) : Math.min(Math.max(num, max), min)
@@ -181,7 +181,7 @@ export class IoSliderBase extends IoGl {
   }
   onPointermove(event: PointerEvent) {
     if (event.pointerType !== 'touch') this._active = 1
-    this.throttle(this.onPointermoveThrottled, event)
+    this.throttle(this.onPointermoveThrottled as CallbackFunction, event)
   }
   onPointerup(event: PointerEvent) {
     this.releasePointerCapture(event.pointerId)
@@ -246,7 +246,7 @@ export class IoSliderBase extends IoGl {
       this.dispatchMutation(this.value)
     }
   }
-  inputValue(value: any) {
+  inputValue(value: number | [number, number]) {
     if (this.value !== value || typeof this.value === 'object') {
       const oldValue = this.value
       this.setProperty('value', value)

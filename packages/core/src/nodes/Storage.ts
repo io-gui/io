@@ -2,7 +2,7 @@ import { ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { Binding } from '../core/Binding.js'
 import { isIoValue } from '../core/ReactiveCore.js'
-import { ReactiveNode, ReactiveNodeProps, AnyConstructor } from '../nodes/ReactiveNode.js'
+import { ReactiveNode, ReactiveNodeProps, AnyConstructor, constructType } from '../nodes/ReactiveNode.js'
 
 class EmulatedLocalStorage {
   declare store: Map<string, unknown>
@@ -96,12 +96,12 @@ const nodes: StorageNodes = {
   none: new Map(),
 }
 
-let hashValues: Record<string, any> = {}
+let hashValues: Record<string, string> = {}
 
-export type StorageProps = ReactiveNodeProps & {
+export type StorageProps<T = unknown> = ReactiveNodeProps & {
   key: string
-  value: any
-  default?: any
+  value: T
+  default?: T
   storage?: 'hash' | 'local' | 'none'
 }
 
@@ -126,14 +126,14 @@ export class StorageNode extends ReactiveNode {
   declare key: string
 
   @ReactiveProperty()
-  declare value: any
+  declare value: unknown
 
   @ReactiveProperty({value: 'local', type: String})
   declare storage: 'hash' | 'local' | 'none'
 
   declare binding: Binding<StorageNode['value']>
 
-  declare default: any
+  declare default: unknown
 
   constructor(props: StorageProps) {
     debug: {
@@ -151,7 +151,7 @@ export class StorageNode extends ReactiveNode {
     if (nodes[props.storage].has(props.key)) {
       return nodes[props.storage].get(props.key)!
     } else {
-      let def: any
+      let def: unknown
       // TODO: test!
       let constructor: AnyConstructor | undefined
       if (typeof props.value === 'object' && props.value !== null) {
@@ -178,7 +178,7 @@ export class StorageNode extends ReactiveNode {
           if (isIoValue(props.value)) {
             (props.value as ReactiveNode).applyJSON(parsed)
           } else {
-            const constructed = constructor ? new constructor(parsed) : parsed
+            const constructed = constructor ? constructType(constructor, parsed) : parsed
             props.value = constructed
           }
         } catch {
@@ -303,9 +303,9 @@ export class StorageNode extends ReactiveNode {
 
 /** Factory that returns a binding to a persisted value. See {@link StorageNode}. */
 export const Storage = Object.assign(
-  (props: StorageProps): Binding<StorageNode['value']> => {
-    const storageNode = new StorageNode(props)
-    return storageNode.binding
+  <T = unknown>(props: StorageProps<T>): Binding<T> => {
+    const storageNode = new StorageNode(props as StorageProps)
+    return storageNode.binding as Binding<T>
   }, {
     permit() {
       localStorage.permitted = true

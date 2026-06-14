@@ -142,7 +142,7 @@ function onIoFocusTo(event: CustomEvent) {
       }
     }
     if (closestElement !== src) {
-      (closestElement as any).focus()
+      (closestElement as HTMLElement).focus()
       setFocusBacktrack(closestElement, cmd, src)
     }
   }

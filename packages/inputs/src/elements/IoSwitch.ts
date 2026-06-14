@@ -1,6 +1,6 @@
 import { span, Register } from '@io-gui/core'
 import { ioIcon } from '@io-gui/icons'
-import { IoBoolean } from './IoBoolean.js'
+import { IoBoolean, IoBooleanProps } from './IoBoolean.js'
 
 /**
  * Input element for `Boolean` data type displayed as switch.
@@ -76,6 +76,6 @@ export class IoSwitch extends IoBoolean {
     ])
   }
 }
-export const ioSwitch = function(arg0?: any) {
+export const ioSwitch = function(arg0?: IoBooleanProps) {
   return IoSwitch.vConstructor(arg0)
 }

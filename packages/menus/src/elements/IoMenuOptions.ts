@@ -1,4 +1,4 @@
-import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span } from '@io-gui/core'
+import { Register, IoElement, ReactiveProperty, VDOMElement, IoOverlaySingleton as Overlay, NudgeDirection, IoElementProps, WithBinding, Property, nudge, ListenerDefinition, span, IoExpandable } from '@io-gui/core'
 import { ioField, ioString } from '@io-gui/inputs'
 import { MenuOption } from '../nodes/MenuOption.js'
 import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
@@ -196,7 +196,9 @@ export class IoMenuOptions extends IoElement {
     const optionWasFocused = this.contains(document.activeElement)
     const searchHadInput = this.searchable && !!this.search
     getMenuDescendants(this).forEach(descendant => {
-      (descendant as any).expanded = false
+      if (Object.prototype.hasOwnProperty.call(descendant, 'expanded')) {
+        (descendant as IoExpandable).expanded = false
+      }
     })
     this.expanded = false
     if (searchHadInput && optionWasFocused && !this.inoverlay) {

@@ -212,3 +212,43 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **category:technical** IoElementInspectorDemo constructor fails in ready() — demo smoke uses class prototype check only
 - **category:technical** 2026-06-14: build/build:ci now run lint:check before tsc; bundle simplified to build + bundle:packages
 - **category:technical** ESLint ignores **/*.bench.ts and **/bench-setup.ts (match tsconfig exclude); fixed 3 unused-var errors in tests
+
+## 2026-06-14 — Phase 1 no-explicit-any fixes
+
+- **category:technical** Implemented reduce_explicit_any plan Phase 1: 14 files, 15 one-line type fixes
+- **category:technical** Patterns: remove stray `as any`, `ListenerDefinitions` return types, `HTMLElement`/`IoOverlay`/`IoNumberLadderStep` casts, `Record<string, unknown>`, marked token shape
+- **category:technical** Lint warnings 338→329; core/menus/inputs tests pass
+
+- **category:technical** Implemented reduce_explicit_any plan Phase 2: Property, Queue, Binding helpers, IoGL, sliders, IoSwitch
+- **category:technical** Patterns: `unknown` at boundaries; `CallbackFunction` wrapper for nextQueue; IoGL vec narrowing via `Record<string|number, number>`; slider `inputValue` typed to reactive value
+- **category:technical** Lint warnings 329→315; core/inputs/sliders tests pass
+
+## 2026-06-14 — Phase 3 MenuDOMUtils no-explicit-any
+
+- **category:technical** Added `MenuDOMNode` interface (depth, disabled, expanded, $options, $parent) in MenuDOMUtils.ts
+- **category:technical** Replaced all 18 `as any` casts; removed TODO; explicit undefined guard in depth sort; IoMenuElementType casts for querySelectorAll results
+- **category:technical** menus tests pass (31)
+
+## 2026-06-14 — Phase 4 component/editor no-explicit-any
+
+- **category:technical** IoButton/IoField: `unknown` for value, action callback, inputValue, WithBinding
+- **category:technical** IoPropertyLink: `NamedValue` interface for name/title/id lookup
+- **category:technical** EditorConfig: `makeSelect` typed with `MenuOptionProps` wire array type
+- **category:technical** NodeArray: `N[]` constructor args, `unknown` proxy set value, `Reflect.get/set`, `target.length = newLength`
+- **category:technical** Storage: `unknown` for value/default/def; `Record<string, string>` for hashValues
+- **category:technical** core (225), inputs (51), editors (49) tests pass
+
+## 2026-06-14 — Phase 5 Binding/EventDispatcher no-explicit-any
+
+- **category:technical** Binding: `Record<string, T>` for get/set/onTargetChanged/onSourceChanged; `Record<string, unknown>` for dispose deletes — zero `any` left in file
+- **category:technical** EventDispatcher: `IoSyntheticEvent.detail: unknown`; no call-site changes needed (compile-clean)
+- **category:technical** core tests pass (225)
+
+## 2026-06-14
+
+- **category:technical** Verified no-explicit-any pass: 338→259 warnings (−79); production 225→146 (−79); tests/demos unchanged (91/22)
+- **category:technical** pnpm lint clean (0 errors, 265 total warnings incl 6 max-len); all targeted tests pass: core 225, menus 31, inputs 51, editors 49, sliders 25
+- **category:technical** ESLint: `@typescript-eslint/no-explicit-any: off` for `**/*.test.ts`, `**/*.bench.ts`, `**/bench-setup.ts` — lint 265→174 total warnings
+- **category:technical** ReactiveNode.ts: removed all `any`; added PropertyValues, DisposableInternals, constructType(); AnyConstructor → `new (...args: never[]) => object`; fixed copy() io-value branch; minimal ReactiveProperty/Storage updates for constructType
+- **category:technical** Fixed ProtoChain TDZ runtime error from "Improved types" commit: ReactiveProperty importing constructType from ReactiveNode created circular module init (IoElement→ReactiveProperty→ReactiveNode→IoElement). Reverted to local constructor casts in ReactiveProperty; ReactiveCore DisposableInternals deps changed to import type only.
+- **category:technical** Fixed duplicate io-object-mutation listener warnings: applyNodeArrayAssignment changed `value.constructor !== Array` to `Array.isArray(value)`, causing NodeArray→NodeArray assignments (e.g. IoTabs.tabs = panel.tabs) to copy via push inside withInternalOperation — length=0 skipped listener removal, push re-added itemMutated. Fix: skip copy path when `value instanceof NodeArray`, restore reference assignment via setProperty.

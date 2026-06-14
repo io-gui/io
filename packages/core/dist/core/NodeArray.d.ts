@@ -28,7 +28,7 @@ export declare class NodeArray<N extends ReactiveNode> extends Array<N> {
     private _observers;
     static get [Symbol.species](): ArrayConstructor;
     /** @param node Owner that receives mutation events for this collection. */
-    constructor(node: ReactiveNode, ...args: any[]);
+    constructor(node: ReactiveNode, ...args: N[]);
     /** Run array mutations without dispatching `io-object-mutation` until complete. */
     withInternalOperation<T>(operation: () => T): T;
     splice(start: number, deleteCount: number, ...items: N[]): N[];

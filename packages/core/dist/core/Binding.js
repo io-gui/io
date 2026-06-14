@@ -35,10 +35,10 @@ export class Binding {
         this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged);
     }
     set value(value) {
-        this.node[this.property] = value;
+        this.node.setProperty(this.property, value);
     }
     get value() {
-        return this.node[this.property];
+        return this.node._reactiveProperties.get(this.property).value;
     }
     /**
      * Adds a target node and property.
@@ -135,7 +135,7 @@ export class Binding {
         if (oldValue !== value) {
             if (bothAreNaNs(value, oldValue))
                 return;
-            this.node[this.property] = value;
+            this.node.setProperty(this.property, value);
         }
     }
     /**
@@ -151,11 +151,11 @@ export class Binding {
             const targetProperties = this.getTargetProperties(target);
             for (let j = targetProperties.length; j--;) {
                 const propName = targetProperties[j];
-                const oldValue = target[propName];
+                const oldValue = target._reactiveProperties.get(propName).value;
                 if (oldValue !== value) {
                     if (bothAreNaNs(value, oldValue))
                         continue;
-                    target[propName] = value;
+                    target.setProperty(propName, value);
                 }
             }
         }

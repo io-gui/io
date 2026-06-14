@@ -1,4 +1,4 @@
-import { WithBinding, NudgeDirection } from '@io-gui/core';
+import { WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core';
 import { IoField, IoFieldProps } from '@io-gui/inputs';
 import { MenuOption } from '../nodes/MenuOption.js';
 import { IoMenuOptions } from './IoMenuOptions.js';
@@ -30,7 +30,7 @@ export declare class IoMenuItem extends IoField {
     contentEditable: string;
     $parent?: IoMenuOptions | IoMenuTree;
     $options?: IoMenuOptions;
-    static get Listeners(): any;
+    static get Listeners(): ListenerDefinitions;
     constructor(args?: IoMenuItemProps);
     preventDefault(event: Event): void;
     get hasmore(): boolean | 0;

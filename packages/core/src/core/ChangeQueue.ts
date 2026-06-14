@@ -106,7 +106,7 @@ export class ChangeQueue {
         console.error(`Error in ${this.node.constructor.name}.${handlerName}():`, error)
       }
     }
-    this.node.dispatch(property + '-changed' as any, change)
+    this.node.dispatch(property + '-changed', change)
     properties.push(property)
   }
   #invokeChanged() {

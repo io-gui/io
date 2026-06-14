@@ -96,11 +96,11 @@ export class IoElement extends HTMLElement {
   declare readonly _eventDispatcher: EventDispatcher
   declare _hasWindowMutationListener: boolean
   declare _hasSelfMutationListener: boolean
+  declare readonly _children: Array<ReactiveNode | IoElement>
   declare readonly _parents: Array<ReactiveNode | IoElement>
   declare readonly _isIoElement: boolean
   declare _disposed: boolean
   declare _textNode: Text
-  declare readonly _children: Array<ReactiveNode | IoElement>
 
   constructor(args: IoElementProps = {}) {
     super()

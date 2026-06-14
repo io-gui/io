@@ -5,7 +5,7 @@ import { ioMenuItem, IoMenuItem } from './IoMenuItem.js'
 import { ioMenuTreeBranch } from './IoMenuTreeBranch.js'
 import { searchMenuOption } from '../utils/MenuNodeUtils.js'
 
-function genObjectStorageID(object: Record<string, any>) {
+function genObjectStorageID(object: MenuOption) {
   const string = JSON.stringify(object)
   let hash = 0
   for (let i = 0; i < string.length; i++) {

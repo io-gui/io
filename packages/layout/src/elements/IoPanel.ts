@@ -1,4 +1,4 @@
-import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property } from '@io-gui/core'
+import { Register, IoElement, VDOMElement, IoElementProps, ReactiveProperty, Property, CallbackFunction } from '@io-gui/core'
 import { ioSelector } from '@io-gui/navigation'
 import { IoMenuItem, MenuOption } from '@io-gui/menus'
 import { ioTabs } from './IoTabs.js'
@@ -81,12 +81,12 @@ export class IoPanel extends IoElement {
   selectIndex(index: number) {
     index = Math.min(index, this.panel.tabs.length - 1)
     this.panel.setSelected(this.panel.tabs[index].id)
-    this.debounce(this.focusTabDebounced, index)
+    this.debounce(this.focusTabDebounced as CallbackFunction, index)
   }
   selectTab(tab: Tab) {
     const index = this.panel.tabs.indexOf(tab)
     this.panel.setSelected(tab.id)
-    this.debounce(this.focusTabDebounced, index)
+    this.debounce(this.focusTabDebounced as CallbackFunction, index)
   }
   moveTabToSplit(sourcePanel: IoPanel, tab: Tab, direction: SplitDirection) {
     const parentSplit = this.parentElement as IoSplit

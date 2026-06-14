@@ -53,7 +53,7 @@ export function processElementStyle(localName: string, style: string): string {
     styleStripped = styleStripped.replace(mediaQueryRegex, '')
     const match = styleStripped.match(cssRegex)
     if (match) {
-      match.forEach((selector: any) => {
+      match.forEach((selector: string) => {
         selector = selector.trim()
         if (!selector.startsWith(':host')) {
           console.warn(localName + ': CSS Selector not prefixed with ":host"! This will cause style leakage!')

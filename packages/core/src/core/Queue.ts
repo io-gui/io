@@ -1,10 +1,10 @@
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
-export type CallbackFunction = (arg?: any) => void
+export type CallbackFunction = (arg?: unknown) => void
 
 interface QueueOptions {
-  arg: any
+  arg: unknown
   frame: number
 }
 
@@ -53,7 +53,8 @@ function getKey(func: CallbackFunction, node?: ReactiveNode | IoElement): QueueK
  */
 export async function nextQueue(): Promise<void> {
   return new Promise((resolve) => {
-    const key = getKey(resolve, undefined)
+    const callback: CallbackFunction = () => resolve()
+    const key = getKey(callback, undefined)
     queue.set(key, { arg: undefined, frame: currentFrame + 1 })
   })
 }
@@ -64,7 +65,7 @@ export async function nextQueue(): Promise<void> {
  * - Queues trailing call with latest argument
  * - Respects delay between executions
  */
-export function throttle(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay = 1) {
+export function throttle(func: CallbackFunction, arg?: unknown, node?: ReactiveNode | IoElement, delay = 1) {
   if (node?._disposed) return
 
   const key = getKey(func, node)
@@ -107,7 +108,7 @@ export function throttle(func: CallbackFunction, arg?: any, node?: ReactiveNode 
   }
 }
 
-export function debounce(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay = 1) {
+export function debounce(func: CallbackFunction, arg?: unknown, node?: ReactiveNode | IoElement, delay = 1) {
   const key = getKey(func, node)
   queue.set(key, { arg, frame: currentFrame + delay })
 }

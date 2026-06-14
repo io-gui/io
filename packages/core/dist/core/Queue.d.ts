@@ -1,6 +1,6 @@
 import { ReactiveNode } from '../nodes/ReactiveNode.js';
 import { IoElement } from '../elements/IoElement.js';
-export type CallbackFunction = (arg?: any) => void;
+export type CallbackFunction = (arg?: unknown) => void;
 /**
  * Returns a promise that resolves when the next frame is rendered.
  * @returns {Promise<void>}
@@ -12,8 +12,8 @@ export declare function nextQueue(): Promise<void>;
  * - Queues trailing call with latest argument
  * - Respects delay between executions
  */
-export declare function throttle(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay?: number): void;
-export declare function debounce(func: CallbackFunction, arg?: any, node?: ReactiveNode | IoElement, delay?: number): void;
+export declare function throttle(func: CallbackFunction, arg?: unknown, node?: ReactiveNode | IoElement, delay?: number): void;
+export declare function debounce(func: CallbackFunction, arg?: unknown, node?: ReactiveNode | IoElement, delay?: number): void;
 /**
  * Removes pending queue and throttle state for a disposed node.
  */

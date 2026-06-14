@@ -18,8 +18,7 @@ const marked = new Marked(markedHighlight({
     }
 }));
 const renderer = new marked.Renderer();
-renderer.heading = function ({ tokens, depth }) {
-    const text = tokens.map(token => token.text).join('');
+renderer.heading = function ({ text, depth }) {
     return `<h${depth} data-heading="${text}">${text}</h${depth}>`;
 };
 marked.setOptions({ renderer });

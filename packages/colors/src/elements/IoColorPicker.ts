@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, IoElement, IoElementProps, Property, WithBinding, nudge } from '@io-gui/core'
+import { Register, ReactiveProperty, IoElement, IoElementProps, Property, WithBinding, nudge, ListenerDefinitions } from '@io-gui/core'
 import { IoColorPanelSingleton as Panel } from './IoColorPanelSingleton.js'
 import { ioColorSwatch } from './IoColorSwatch.js'
 
@@ -35,7 +35,7 @@ export class IoColorPicker extends IoElement {
   @ReactiveProperty({value: {r: 1, g: 1, b: 1, a: 1}})
   declare value: {r: number; g: number; b: number; a?: number}
 
-  static override get Listeners(): any {
+  static override get Listeners(): ListenerDefinitions {
     return {
       'click': 'onClick',
       'keydown': 'onKeydown',

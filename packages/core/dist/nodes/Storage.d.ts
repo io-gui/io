@@ -1,9 +1,9 @@
 import { Binding } from '../core/Binding.js';
 import { ReactiveNode, ReactiveNodeProps } from '../nodes/ReactiveNode.js';
-export type StorageProps = ReactiveNodeProps & {
+export type StorageProps<T = unknown> = ReactiveNodeProps & {
     key: string;
-    value: any;
-    default?: any;
+    value: T;
+    default?: T;
     storage?: 'hash' | 'local' | 'none';
 };
 /**
@@ -22,10 +22,10 @@ export type StorageProps = ReactiveNodeProps & {
  */
 export declare class StorageNode extends ReactiveNode {
     key: string;
-    value: any;
+    value: unknown;
     storage: 'hash' | 'local' | 'none';
     binding: Binding<StorageNode['value']>;
-    default: any;
+    default: unknown;
     constructor(props: StorageProps);
     dispose(): void;
     clearStorage(): void;
@@ -35,7 +35,7 @@ export declare class StorageNode extends ReactiveNode {
     saveValueToHash(): void;
 }
 /** Factory that returns a binding to a persisted value. See {@link StorageNode}. */
-export declare const Storage: ((props: StorageProps) => Binding<StorageNode["value"]>) & {
+export declare const Storage: (<T = unknown>(props: StorageProps<T>) => Binding<T>) & {
     permit(): void;
     unpermit(): void;
 };

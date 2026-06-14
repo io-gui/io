@@ -1,4 +1,4 @@
-import { IoElement, IoElementProps, WithBinding } from '@io-gui/core';
+import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type IoColorPickerProps = IoElementProps & {
     value: WithBinding<{
         r: number;
@@ -15,7 +15,7 @@ export declare class IoColorPicker extends IoElement {
         b: number;
         a?: number;
     };
-    static get Listeners(): any;
+    static get Listeners(): ListenerDefinitions;
     tabIndex: number;
     get expanded(): boolean;
     ready(): void;

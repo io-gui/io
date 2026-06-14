@@ -23,7 +23,7 @@ export interface ChangeEventListener {
     (event: ChangeEvent): void;
 }
 export type IoSyntheticEvent = {
-    detail: any;
+    detail: unknown;
     target: ReactiveNode | IoElement | EventTarget;
     path: Array<ReactiveNode | IoElement | EventTarget>;
     stopPropagation(): void;

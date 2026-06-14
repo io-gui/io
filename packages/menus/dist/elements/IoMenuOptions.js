@@ -156,7 +156,9 @@ let IoMenuOptions = class IoMenuOptions extends IoElement {
         const optionWasFocused = this.contains(document.activeElement);
         const searchHadInput = this.searchable && !!this.search;
         getMenuDescendants(this).forEach(descendant => {
-            descendant.expanded = false;
+            if (Object.prototype.hasOwnProperty.call(descendant, 'expanded')) {
+                descendant.expanded = false;
+            }
         });
         this.expanded = false;
         if (searchHadInput && optionWasFocused && !this.inoverlay) {

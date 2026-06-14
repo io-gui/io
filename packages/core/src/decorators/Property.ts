@@ -2,7 +2,7 @@ import { ReactivePropertyDefinitionLoose } from '../core/ReactiveProperty.js'
 import { ReactiveNode, AnyConstructor, ReactivePropertyDefinitions } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
-export const propertyDecorators: WeakMap<AnyConstructor, Record<string, any>> = new WeakMap()
+export const propertyDecorators: WeakMap<AnyConstructor, Record<string, unknown>> = new WeakMap()
 export const reactivePropertyDecorators: WeakMap<AnyConstructor, ReactivePropertyDefinitions> = new WeakMap()
 
 const RESERVED_ELEMENT_PROPERTIES = [
@@ -23,7 +23,7 @@ const RESERVED_ELEMENT_PROPERTIES = [
  *   declare title: string;
  * }
  */
-export function Property(initialValue: any = undefined) {
+export function Property(initialValue: unknown = undefined) {
   return (target: typeof IoElement.prototype | typeof ReactiveNode.prototype, propertyName: string) => {
     if (RESERVED_ELEMENT_PROPERTIES.includes(propertyName) && (target as typeof IoElement.prototype)._isIoElement) {
       console.error(`Property ${propertyName} is reserved and cannot be used as a property name.`)

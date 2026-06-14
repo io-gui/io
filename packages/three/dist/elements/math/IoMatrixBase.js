@@ -38,7 +38,7 @@ let IoMatrixBase = class IoMatrixBase extends IoElement {
     }
     _onNumberValueInput(event) {
         const item = event.composedPath()[0];
-        this.value[item.id] = event.detail.value;
+        this.value[Number(item.id)] = event.detail.value;
         if (!this.value._isNode) {
             this.dispatchMutation(this.value);
         }

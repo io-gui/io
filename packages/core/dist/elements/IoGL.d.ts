@@ -22,7 +22,7 @@ export declare class IoGl extends IoElement {
     setShaderProgram(): void;
     updatePropertyUniform(name: string, property: ReactivePropertyInstance): void;
     updateThemeUniforms(): void;
-    setUniform(name: string, value: any): void;
+    setUniform(name: string, value: unknown): void;
     Register(ioNodeConstructor: typeof IoElement): void;
 }
 //# sourceMappingURL=IoGL.d.ts.map

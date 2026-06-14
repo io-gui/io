@@ -1,6 +1,6 @@
 import { IoElement, IoGl, Theme, AnyConstructor, VDOMElement, ReactiveNode, Color } from '@io-gui/core'
 import { ioString, ioNumber, ioSwitch, ioField, ioButton } from '@io-gui/inputs'
-import { MenuOption, ioOptionSelect } from '@io-gui/menus'
+import { MenuOption, MenuOptionProps, ioOptionSelect } from '@io-gui/menus'
 import { ioNumberSlider } from '@io-gui/sliders'
 import { ioColorRgba } from '@io-gui/colors'
 import { ioObject } from '../elements/IoObject.js'
@@ -12,7 +12,7 @@ export type PropertyConfigMap = Map<PropertyIdentifier, VDOMElement>
 export type PropertyConfigRecord = Record<string, VDOMElement>
 export type EditorConfig = Map<AnyConstructor, PropertyConfig[]>
 
-function makeSelect(options: any[]) {
+function makeSelect(options: Array<string | number | boolean | null | undefined | MenuOptionProps>) {
   for (let i = 0; i < options.length; i++) {
     if (options[i] === null) {
       options[i] = {value: null, id: 'Null'}

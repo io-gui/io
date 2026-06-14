@@ -1,6 +1,6 @@
 import { IoElement, IoElementProps, WithBinding, ListenerDefinitions } from '@io-gui/core';
 export type IoFieldProps = IoElementProps & {
-    value?: WithBinding<any>;
+    value?: WithBinding<unknown>;
     icon?: WithBinding<string>;
     label?: WithBinding<string>;
     selected?: WithBinding<boolean>;
@@ -10,7 +10,7 @@ export type IoFieldProps = IoElementProps & {
 };
 export declare class IoField extends IoElement {
     static get Style(): string;
-    value: any;
+    value: unknown;
     icon: string;
     label: string;
     selected: boolean;
@@ -33,7 +33,7 @@ export declare class IoField extends IoElement {
     onTouchstart(event: TouchEvent): void;
     onTouchmove(event: TouchEvent): void;
     onTouchend(event: TouchEvent): void;
-    inputValue(value: any): void;
+    inputValue(value: unknown): void;
     onClick(event?: MouseEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onKeyup(event: KeyboardEvent): void;

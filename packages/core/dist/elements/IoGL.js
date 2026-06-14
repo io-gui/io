@@ -285,6 +285,7 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
         if (value instanceof Array)
             type = 'array';
         let _c;
+        let indexed;
         switch (type) {
             case 'boolean':
                 gl.uniform1i(uniform, value ? 1 : 0);
@@ -295,37 +296,39 @@ let IoGl = IoGl_1 = class IoGl extends IoElement {
             case 'object':
             case 'array':
                 _c = [0, 1, 2, 3];
-                if (typeof value === 'object') {
-                    if (value.x !== undefined)
+                if (typeof value === 'object' && value !== null) {
+                    const vec = value;
+                    if (vec.x !== undefined)
                         _c = ['x', 'y', 'z', 'w'];
-                    else if (value.r !== undefined)
+                    else if (vec.r !== undefined)
                         _c = ['r', 'g', 'b', 'a'];
-                    else if (value.h !== undefined)
+                    else if (vec.h !== undefined)
                         _c = ['h', 's', 'v', 'a'];
-                    else if (value.c !== undefined)
+                    else if (vec.c !== undefined)
                         _c = ['c', 'm', 'y', 'k'];
                 }
+                indexed = value;
                 switch (this.#vecLengths[name]) {
                     case 2:
                         if (value === undefined) {
                             gl.uniform2f(uniform, 0, 0);
                             break;
                         }
-                        gl.uniform2f(uniform, value[_c[0]] ?? 1, value[_c[1]] ?? 1);
+                        gl.uniform2f(uniform, indexed[_c[0]] ?? 1, indexed[_c[1]] ?? 1);
                         break;
                     case 3:
                         if (value === undefined) {
                             gl.uniform3f(uniform, 0, 0, 0);
                             break;
                         }
-                        gl.uniform3f(uniform, value[_c[0]] ?? 1, value[_c[1]] ?? 1, value[_c[2]] ?? 1);
+                        gl.uniform3f(uniform, indexed[_c[0]] ?? 1, indexed[_c[1]] ?? 1, indexed[_c[2]] ?? 1);
                         break;
                     case 4:
                         if (value === undefined) {
                             gl.uniform4f(uniform, 0, 0, 0, 0);
                             break;
                         }
-                        gl.uniform4f(uniform, value[_c[0]] ?? 1, value[_c[1]] ?? 1, value[_c[2]] ?? 1, value[_c[3]] ?? 1);
+                        gl.uniform4f(uniform, indexed[_c[0]] ?? 1, indexed[_c[1]] ?? 1, indexed[_c[2]] ?? 1, indexed[_c[3]] ?? 1);
                         break;
                     default:
                 }

@@ -3,7 +3,7 @@ import { ioIcon } from '@io-gui/icons'
 import { IoField, IoFieldProps } from './IoField.js'
 
 export type IoButtonProps = IoFieldProps & {
-  action?: (value: any) => void
+  action?: (value: unknown) => void
 }
 
 /**
@@ -27,10 +27,10 @@ export class IoButton extends IoField {
     `
   }
   @ReactiveProperty({value: undefined})
-  declare value: any
+  declare value: unknown
 
   @ReactiveProperty()
-  declare action?: (value: any) => void
+  declare action?: (value: unknown) => void
 
   @ReactiveProperty({value: 'outset', type: String, reflect: true})
   declare appearance: 'inset' | 'outset' | 'neutral'

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { ReactiveProperty } from '../decorators/Property.js';
 import { Register } from '../decorators/Register.js';
 import { isIoValue } from '../core/ReactiveCore.js';
-import { ReactiveNode } from '../nodes/ReactiveNode.js';
+import { ReactiveNode, constructType } from '../nodes/ReactiveNode.js';
 class EmulatedLocalStorage {
     constructor() {
         Object.defineProperty(this, 'store', { value: new Map() });
@@ -157,7 +157,7 @@ let StorageNode = class StorageNode extends ReactiveNode {
                         props.value.applyJSON(parsed);
                     }
                     else {
-                        const constructed = constructor ? new constructor(parsed) : parsed;
+                        const constructed = constructor ? constructType(constructor, parsed) : parsed;
                         props.value = constructed;
                     }
                 }

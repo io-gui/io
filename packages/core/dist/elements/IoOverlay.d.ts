@@ -1,5 +1,8 @@
 import { ListenerDefinitions } from '../nodes/ReactiveNode.js';
 import { IoElement, IoElementProps } from './IoElement.js';
+export type IoExpandable = {
+    expanded: boolean;
+};
 /**
  * Singleton full-window overlay; blocks pointer events when {@link expanded} and collapses children on backdrop click.
  */

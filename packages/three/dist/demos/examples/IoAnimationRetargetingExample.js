@@ -11,6 +11,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioSplit, Split } from '@io-gui/layout';
+const loadGltf = (url) => new Promise((resolve, reject) => {
+    new GLTFLoader().load(url, resolve, undefined, reject);
+});
 const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
     // forked from https://www.shadertoy.com/view/7ly3D1
     const suv = vec2(suv_immutable);
@@ -76,12 +79,8 @@ let AnimationRetargetingExample = class AnimationRetargetingExample extends Thre
     }
     async loadModels() {
         const [sourceModel, targetModel] = await Promise.all([
-            new Promise((resolve, reject) => {
-                new GLTFLoader().load('https://threejs.org/examples/models/gltf/Michelle.glb', resolve, undefined, reject);
-            }),
-            new Promise((resolve, reject) => {
-                new GLTFLoader().load('https://threejs.org/examples/models/gltf/Soldier.glb', resolve, undefined, reject);
-            })
+            loadGltf('https://threejs.org/examples/models/gltf/Michelle.glb'),
+            loadGltf('https://threejs.org/examples/models/gltf/Soldier.glb'),
         ]);
         // Add models to group
         this.group.add(sourceModel.scene);

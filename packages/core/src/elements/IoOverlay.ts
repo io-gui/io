@@ -3,6 +3,10 @@ import { Register } from '../decorators/Register.js'
 import { ListenerDefinitions } from '../nodes/ReactiveNode.js'
 import { IoElement, IoElementProps } from './IoElement.js'
 
+export type IoExpandable = {
+  expanded: boolean
+}
+
 let focusRestoreTarget: Element | null = null
 
 /**
@@ -109,7 +113,7 @@ class IoOverlay extends IoElement {
   }
   expandAsChildren() {
     for (let i = this.children.length; i--;) {
-      if ((this.children[i] as any).expanded) {
+      if ((this.children[i] as unknown as IoExpandable).expanded) {
         this.expanded = true
         return
       }
@@ -119,7 +123,7 @@ class IoOverlay extends IoElement {
   expandedChanged() {
     if (!this.expanded) {
       for (let i = this.children.length; i--;) {
-        (this.children[i] as any).expanded = false
+        (this.children[i] as unknown as IoExpandable).expanded = false
       }
       if (focusRestoreTarget) (focusRestoreTarget as HTMLElement).focus()
     }

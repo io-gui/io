@@ -1,4 +1,4 @@
-import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection } from '@io-gui/core'
+import { Register, ReactiveProperty, Property, IoOverlaySingleton as Overlay, span, WithBinding, NudgeDirection, ListenerDefinitions } from '@io-gui/core'
 import { IoField, IoFieldProps } from '@io-gui/inputs'
 import { ioIcon } from '@io-gui/icons'
 import { IoMenuElementType, getMenuRoot, getMenuAncestors, getMenuDescendants, getMenuSiblings, getHoveredMenuItem } from '../utils/MenuDOMUtils.js'
@@ -106,7 +106,7 @@ export class IoMenuItem extends IoField {
 
   declare $options?: IoMenuOptions
 
-  static override get Listeners(): any {
+  static override get Listeners(): ListenerDefinitions {
     return {
       'click': 'preventDefault',
       'focus': 'onFocus',

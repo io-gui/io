@@ -14,6 +14,10 @@ import { throttle, debounce, clearNodeQueue } from '../core/Queue.js';
 import { addParent, detachChildParents, initReactiveOwnerInternals, isIoValue, removeParent } from '../core/ReactiveCore.js';
 import { ReactiveProperty } from '../decorators/Property.js';
 import { IoElement } from '../elements/IoElement.js';
+/** Instantiates a property type constructor with runtime constructor arguments. */
+export function constructType(ctor, ...args) {
+    return new ctor(...args);
+}
 export const NODES = {
     active: new Set(),
     disposed: new WeakSet(),
@@ -58,12 +62,11 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
         this.init();
         initReactiveProperties(this);
         initProperties(this);
-        this.applyProperties(typeof args === 'object' ? args : {}, true);
+        this.applyProperties((typeof args === 'object' && args !== null ? args : {}), true);
         NODES.active.add(this);
         this.ready();
         this.dispatchQueue();
     }
-    // TODO: add types
     applyProperties(props, skipDispatch = false) {
         for (const name in props) {
             if (this._reactiveProperties.has(name)) {
@@ -82,7 +85,6 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
         if (!skipDispatch)
             this.dispatchQueue();
     }
-    // TODO: add types
     setProperties(props) {
         setProperties(this, props);
     }
@@ -95,8 +97,9 @@ let ReactiveNode = ReactiveNode_1 = class ReactiveNode extends Object {
         const primitiveProps = {};
         for (const name in node._reactiveProperties) {
             const prop = node._reactiveProperties.get(name).value;
-            if (isIoValue(prop)) {
-                primitiveProps[name].copy(prop);
+            const ownValue = this._reactiveProperties.get(name).value;
+            if (isIoValue(prop) && ownValue instanceof ReactiveNode_1) {
+                ownValue.copy(prop);
             }
             else {
                 primitiveProps[name] = prop;
@@ -278,7 +281,7 @@ function applyPropertyBinding(node, name, prop, value) {
     return true;
 }
 function applyNodeArrayAssignment(node, name, prop, value) {
-    if (prop.type !== NodeArray || value.constructor !== Array)
+    if (prop.type !== NodeArray || !Array.isArray(value))
         return false;
     const nodeArray = prop.value;
     debug: if (value.some(item => !isIoValue(item))) {
@@ -404,8 +407,9 @@ export function onPropertyMutated(node, event) {
     node._reactiveProperties.forEach((prop, name) => {
         if (prop.observer.observing && prop.value === object) {
             const handlerName = name + 'Mutated';
-            if (typeof node[handlerName] === 'function') {
-                node[handlerName](event);
+            const handler = node[handlerName];
+            if (typeof handler === 'function') {
+                handler(event);
             }
             hasMutated = true;
         }
@@ -440,13 +444,14 @@ export function dispose(node) {
         return;
     detachChildParents(node);
     clearNodeQueue(node);
+    const mutable = node;
     node._bindings.forEach((binding, name) => {
         binding.dispose();
         node._bindings.delete(name);
     });
-    delete node._bindings;
+    delete mutable._bindings;
     node._changeQueue.dispose();
-    delete node._changeQueue;
+    delete mutable._changeQueue;
     node._reactiveProperties.forEach((property, name) => {
         property.binding?.removeTarget(node, name);
         property.observer.stop(property.value);
@@ -457,18 +462,18 @@ export function dispose(node) {
     for (const name in node._protochain.properties) {
         delete node[name];
     }
-    delete node._protochain;
+    delete mutable._protochain;
     // NOTE: _eventDispatcher.dispose must happen AFTER disposal of bindings!
     node._eventDispatcher.dispose();
-    delete node._eventDispatcher;
-    delete node._reactiveProperties;
-    if (node._parents) {
-        node._parents.length = 0;
-        delete node._parents;
+    delete mutable._eventDispatcher;
+    delete mutable._reactiveProperties;
+    if (mutable._parents) {
+        mutable._parents.length = 0;
+        delete mutable._parents;
     }
-    if (node._children) {
-        node._children.length = 0;
-        delete node._children;
+    if (mutable._children) {
+        mutable._children.length = 0;
+        delete mutable._children;
     }
     Object.defineProperty(node, '_disposed', { value: true });
 }

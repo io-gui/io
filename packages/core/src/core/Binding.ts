@@ -7,11 +7,11 @@ type Properties = string[]
 type TargetProperties = WeakMap<ReactiveNode | IoElement, Properties>
 
 // This helper checks if both values are NaN because NaN === NaN is false.
-const bothAreNaNs = function(value: any, oldValue: any) {
+const bothAreNaNs = function(value: unknown, oldValue: unknown) {
   return typeof value === 'number' && isNaN(value) && typeof oldValue === 'number' && isNaN(oldValue)
 }
 
-const isTypeCompatible = (type1: any, type2: any) => {
+const isTypeCompatible = (type1: unknown, type2: unknown) => {
   // Handle primitive types
   if (type1 === type2) return true
   // Handle class inheritance
@@ -41,10 +41,10 @@ export class Binding<T = unknown> {
     this.node.addEventListener(`${this.property}-changed`, this.onSourceChanged)
   }
   set value(value: T) {
-    (this.node as any)[this.property] = value
+    this.node.setProperty(this.property, value)
   }
   get value(): T {
-    return (this.node as any)[this.property] as T
+    return this.node._reactiveProperties.get(this.property)!.value as T
   }
   /**
    * Adds a target node and property.
@@ -145,8 +145,8 @@ export class Binding<T = unknown> {
     const oldValue = this.value
     const value = event.detail.value
     if (oldValue !== value) {
-      if (bothAreNaNs(value, oldValue)) return;
-      (this.node as any)[this.property] = value
+      if (bothAreNaNs(value, oldValue)) return
+      this.node.setProperty(this.property, value)
     }
   }
   /**
@@ -162,10 +162,10 @@ export class Binding<T = unknown> {
       const targetProperties = this.getTargetProperties(target)
       for (let j = targetProperties.length; j--;) {
         const propName = targetProperties[j]
-        const oldValue = (target as any)[propName]
+        const oldValue = target._reactiveProperties.get(propName)!.value
         if (oldValue !== value) {
-          if (bothAreNaNs(value, oldValue)) continue;
-          (target as any)[propName] = value
+          if (bothAreNaNs(value, oldValue)) continue
+          target.setProperty(propName, value)
         }
       }
     }
@@ -207,9 +207,9 @@ export class Binding<T = unknown> {
       this.removeTarget(target)
     }
     this.targets.clear()
-    delete (this as any).node
-    delete (this as any).property
-    delete (this as any).targets
-    delete (this as any).targetProperties
+    delete (this as Record<string, unknown>).node
+    delete (this as Record<string, unknown>).property
+    delete (this as Record<string, unknown>).targets
+    delete (this as Record<string, unknown>).targetProperties
   }
 }

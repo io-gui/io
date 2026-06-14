@@ -1,6 +1,6 @@
 import { ReactivePropertyDefinitions, ReactiveNode, ReactivityType } from '../nodes/ReactiveNode.js';
 import { Color } from '../core/Color.js';
-export declare const $ThemeID: import("../index.js").Binding<any>;
+export declare const $ThemeID: import("../index.js").Binding<string>;
 export type ThemeJSON = Record<string, number>;
 export declare const THEMES: Record<string, ThemeJSON>;
 /**
@@ -50,6 +50,6 @@ export declare class Theme extends ReactiveNode {
     changed(): void;
 }
 declare const ThemeSingleton: Theme;
-export declare const $Theme: import("../index.js").Binding<any>;
+export declare const $Theme: import("../index.js").Binding<Theme>;
 export { ThemeSingleton };
 //# sourceMappingURL=Theme.d.ts.map

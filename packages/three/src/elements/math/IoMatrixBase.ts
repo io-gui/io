@@ -49,7 +49,7 @@ export class IoMatrixBase extends IoElement {
 
   _onNumberValueInput(event: CustomEvent) {
     const item = event.composedPath()[0] as HTMLElement
-    this.value[item.id as any] = event.detail.value
+    this.value[Number(item.id)] = event.detail.value
     if (!(this.value as unknown as ReactiveNode)._isNode) {
       this.dispatchMutation(this.value)
     }

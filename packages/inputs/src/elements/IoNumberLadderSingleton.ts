@@ -1,6 +1,6 @@
 import { Register, ReactiveProperty, IoElement, IoElementProps, IoOverlaySingleton, ThemeSingleton, span, WithBinding, Property } from '@io-gui/core'
 import { IoNumber } from './IoNumber.js'
-import { ioNumberLadderStep } from './IoNumberLadderStep.js'
+import { ioNumberLadderStep, IoNumberLadderStep } from './IoNumberLadderStep.js'
 
 export type IoNumberLadderProps = IoElementProps & {
   src?: IoNumber
@@ -203,7 +203,7 @@ class IoNumberLadder extends IoElement {
       steps[i].setAttribute('aria-valuemin', String(this.min))
       steps[i].setAttribute('aria-valuemax', String(this.max))
       steps[i].setAttribute('aria-valuenow', String(this.value));
-      (steps[i] as any).changed()
+      (steps[i] as IoNumberLadderStep).changed()
     }
   }
 }

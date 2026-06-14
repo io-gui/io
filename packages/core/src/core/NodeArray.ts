@@ -32,7 +32,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
   static override get [Symbol.species]() { return Array }
 
   /** @param node Owner that receives mutation events for this collection. */
-  constructor(public node: ReactiveNode, ...args: any[]) {
+  constructor(public node: ReactiveNode, ...args: N[]) {
     super(...args)
     // TODO: Avoid creating empty NodeArrays in models!
     // TODO: Test thoroughly! Check initializations with items!
@@ -52,19 +52,19 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
     const proxy = new Proxy(this, {
       get(target: NodeArray<N>, property: string | symbol) {
         if (typeof property === 'symbol') {
-          return target[property as any]
+          return Reflect.get(target, property)
         }
         const index = Number(property)
         if (!isNaN(index) && index >= 0) {
           return target[index]
         }
-        return target[property as any]
+        return Reflect.get(target, property)
       },
-      set(target: NodeArray<N>, property: string | symbol, value: any) {
+      set(target: NodeArray<N>, property: string | symbol, value: unknown) {
         if (property === 'length') {
+          const newLength = Number(value)
           if (!self._isInternalOperation) {
             const oldLength = target.length
-            const newLength = Number(value)
             if (newLength < oldLength) {
               for (let i = newLength; i < oldLength; i++) {
                 const item = target[i]
@@ -78,7 +78,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
               return true
             }
           }
-          target[property] = value
+          target.length = newLength
           if (!self._isInternalOperation) self.dispatchMutation()
           return true
         }
@@ -90,7 +90,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
             oldValue.removeEventListener('io-object-mutation', self.itemMutated)
             oldValue.removeParent(self.node)
           }
-          target[property as any] = value
+          target[index] = value as N
           if (isReactiveOwner(value) && !self._isInternalOperation) {
             value.addEventListener('io-object-mutation', self.itemMutated)
             value.addParent(self.node)
@@ -98,7 +98,7 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
           if (!self._isInternalOperation) self.dispatchMutation()
           return true
         }
-        target[property as any] = value
+        Reflect.set(target, property, value)
         return true
       }
     })

@@ -1,5 +1,8 @@
 import type { ReactiveNode } from '../nodes/ReactiveNode.js'
 import type { IoElement } from '../elements/IoElement.js'
+import type { ProtoChain } from './ProtoChain.js'
+import type { Binding } from './Binding.js'
+import type { ReactivePropertyInstance } from './ReactiveProperty.js'
 import { ChangeQueue } from './ChangeQueue.js'
 import { EventDispatcher } from './EventDispatcher.js'
 
@@ -22,6 +25,16 @@ export function initReactiveOwnerInternals(owner: ReactiveOwner) {
   Object.defineProperty(owner, '_children', {enumerable: false, configurable: true, value: []})
   Object.defineProperty(owner, '_hasWindowMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
   Object.defineProperty(owner, '_hasSelfMutationListener', {enumerable: false, configurable: true, writable: true, value: false})
+}
+
+export type DisposableInternals = {
+  _bindings?: Map<string, Binding<unknown>>
+  _changeQueue?: ChangeQueue
+  _protochain?: ProtoChain
+  _eventDispatcher?: EventDispatcher
+  _reactiveProperties?: Map<string, ReactivePropertyInstance>
+  _parents?: Array<ReactiveNode | IoElement>
+  _children?: Array<ReactiveNode | IoElement>
 }
 
 export function addParent(child: ReactiveOwner, parent: ReactiveOwner) {

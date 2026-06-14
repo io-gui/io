@@ -240,18 +240,18 @@ export class ReactivePropertyInstance {
         if (this.init !== undefined) {
           if (this.init instanceof Array) {
             const args = this.init.map(item => decodeInitArgument(item, node))
-            this.value = new this.type(...args)
+            this.value = new (this.type as new (...args: unknown[]) => object)(...args)
           } else if (this.init instanceof Object) {
-            const args: any = {}
+            const args: Record<string, unknown> = {}
             Object.keys(this.init).forEach(key => {
               args[key] = decodeInitArgument(this.init[key], node)
             })
-            this.value = new this.type(args)
+            this.value = new (this.type as new (args: Record<string, unknown>) => object)(args)
           } else if (this.init === null) {
-            this.value = new this.type()
+            this.value = new (this.type as new () => object)()
           } else {
             const argument = decodeInitArgument(this.init, node)
-            this.value = new this.type(argument)
+            this.value = new (this.type as new (arg: unknown) => object)(argument)
           }
         }
       }

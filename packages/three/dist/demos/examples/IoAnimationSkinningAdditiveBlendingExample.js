@@ -11,6 +11,9 @@ import { ThreeApplet, IoThreeExample, ioThreeViewport } from '@io-gui/three';
 import { ioSplit, Split } from '@io-gui/layout';
 import { ioObject, ioPropertyEditor } from '@io-gui/editors';
 const loader = new GLTFLoader();
+const loadGltf = (url) => new Promise((resolve, reject) => {
+    loader.load(url, resolve, undefined, reject);
+});
 let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
     mixer = new AnimationMixer(new Group());
     currentBaseAction = 'idle';
@@ -51,44 +54,43 @@ let AnimationSkinningAdditiveBlendingExample = class AnimationSkinningAdditiveBl
         void this.loadModel();
     }
     async loadModel() {
-        loader.load('https://threejs.org/examples/models/gltf/Xbot.glb', (gltf) => {
-            const model = gltf.scene;
-            this.scene.add(model);
-            model.traverse((object) => {
-                if (object.isMesh) {
-                    object.castShadow = true;
-                }
-            });
-            this.mixer = new AnimationMixer(model);
-            const animations = gltf.animations;
-            for (let i = 0; i < animations.length; i++) {
-                let clip = animations[i];
-                const name = clip.name;
-                if (name in this.baseActions) {
-                    const action = this.mixer.clipAction(clip);
-                    this.setWeight(action, name === 'idle' ? 1 : 0);
-                    action.play();
-                    this.baseActions[name] = action;
-                }
-                else if (name in this.additiveActions) {
-                    // Make the clip additive and remove the reference frame
-                    AnimationUtils.makeClipAdditive(clip);
-                    if (clip.name.endsWith('_pose')) {
-                        clip = AnimationUtils.subclip(clip, clip.name, 2, 3, 30);
-                    }
-                    const action = this.mixer.clipAction(clip);
-                    this.setWeight(action, 0);
-                    action.play();
-                    this.additiveActions[name] = action;
-                }
-                this.additiveActions = Object.assign({}, this.additiveActions);
-                this.dispatchMutation(this.additiveActions);
+        const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Xbot.glb');
+        const model = gltf.scene;
+        this.scene.add(model);
+        model.traverse((object) => {
+            if (object.isMesh) {
+                object.castShadow = true;
             }
-            this.setProperties({
-                isLoaded: true,
-            });
-            this.dispatch('frame-object', { object: model }, true);
         });
+        this.mixer = new AnimationMixer(model);
+        const animations = gltf.animations;
+        for (let i = 0; i < animations.length; i++) {
+            let clip = animations[i];
+            const name = clip.name;
+            if (name in this.baseActions) {
+                const action = this.mixer.clipAction(clip);
+                this.setWeight(action, name === 'idle' ? 1 : 0);
+                action.play();
+                this.baseActions[name] = action;
+            }
+            else if (name in this.additiveActions) {
+                // Make the clip additive and remove the reference frame
+                AnimationUtils.makeClipAdditive(clip);
+                if (clip.name.endsWith('_pose')) {
+                    clip = AnimationUtils.subclip(clip, clip.name, 2, 3, 30);
+                }
+                const action = this.mixer.clipAction(clip);
+                this.setWeight(action, 0);
+                action.play();
+                this.additiveActions[name] = action;
+            }
+            this.additiveActions = Object.assign({}, this.additiveActions);
+            this.dispatchMutation(this.additiveActions);
+        }
+        this.setProperties({
+            isLoaded: true,
+        });
+        this.dispatch('frame-object', { object: model }, true);
     }
     setWeight(action, weight) {
         action.enabled = true;

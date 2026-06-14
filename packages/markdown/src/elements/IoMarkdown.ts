@@ -1,5 +1,5 @@
 import { Register, IoElement, ReactiveProperty, IoElementProps, WithBinding, Property, $ThemeID } from '@io-gui/core'
-import { Marked } from 'marked'
+import { Marked, type Tokens } from 'marked'
 import { markedHighlight } from 'marked-highlight'
 import purify from 'dompurify'
 import { MD_DARK_THEME, MD_LIGHT_THEME } from './IoMarkdownTheme.js'
@@ -16,8 +16,8 @@ const marked = new Marked(
 )
 
 const renderer = new marked.Renderer()
-renderer.heading = function({ tokens, depth }: { tokens: any[]; depth: number }) {
-  const text = tokens.map(token => token.text).join('')
+
+renderer.heading = function({ text, depth }: Tokens.Heading) {
   return `<h${depth} data-heading="${text}">${text}</h${depth}>`
 }
 

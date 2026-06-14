@@ -41,19 +41,19 @@ export class NodeArray extends Array {
         const proxy = new Proxy(this, {
             get(target, property) {
                 if (typeof property === 'symbol') {
-                    return target[property];
+                    return Reflect.get(target, property);
                 }
                 const index = Number(property);
                 if (!isNaN(index) && index >= 0) {
                     return target[index];
                 }
-                return target[property];
+                return Reflect.get(target, property);
             },
             set(target, property, value) {
                 if (property === 'length') {
+                    const newLength = Number(value);
                     if (!self._isInternalOperation) {
                         const oldLength = target.length;
-                        const newLength = Number(value);
                         if (newLength < oldLength) {
                             for (let i = newLength; i < oldLength; i++) {
                                 const item = target[i];
@@ -68,7 +68,7 @@ export class NodeArray extends Array {
                             return true;
                         }
                     }
-                    target[property] = value;
+                    target.length = newLength;
                     if (!self._isInternalOperation)
                         self.dispatchMutation();
                     return true;
@@ -81,7 +81,7 @@ export class NodeArray extends Array {
                         oldValue.removeEventListener('io-object-mutation', self.itemMutated);
                         oldValue.removeParent(self.node);
                     }
-                    target[property] = value;
+                    target[index] = value;
                     if (isReactiveOwner(value) && !self._isInternalOperation) {
                         value.addEventListener('io-object-mutation', self.itemMutated);
                         value.addParent(self.node);
@@ -90,7 +90,7 @@ export class NodeArray extends Array {
                         self.dispatchMutation();
                     return true;
                 }
-                target[property] = value;
+                Reflect.set(target, property, value);
                 return true;
             }
         });

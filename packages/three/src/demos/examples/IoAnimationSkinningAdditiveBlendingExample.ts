@@ -1,6 +1,7 @@
 import { ReactiveProperty, Register } from '@io-gui/core'
 import {
   AnimationAction,
+  AnimationClip,
   AnimationMixer,
   AnimationUtils,
   Color,
@@ -17,7 +18,22 @@ import { ThreeApplet, IoThreeExample, ThreeAppletProps, ioThreeViewport } from '
 import { ioSplit, Split } from '@io-gui/layout'
 import { ioObject, ioPropertyEditor } from '@io-gui/editors'
 
+type GltfModel = {
+  scene: Group
+  animations: AnimationClip[]
+}
+
+type AnimationLoopEvent = {
+  type: 'loop'
+  action: AnimationAction
+  loopDelta: number
+}
+
 const loader = new GLTFLoader()
+
+const loadGltf = (url: string) => new Promise<GltfModel>((resolve, reject) => {
+  loader.load(url, resolve, undefined, reject)
+})
 
 @Register
 export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
@@ -77,51 +93,50 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
   }
 
   private async loadModel() {
-    loader.load('https://threejs.org/examples/models/gltf/Xbot.glb', (gltf) => {
-      const model = gltf.scene as Group
-      this.scene.add(model)
+    const gltf = await loadGltf('https://threejs.org/examples/models/gltf/Xbot.glb')
+    const model = gltf.scene
+    this.scene.add(model)
 
-      model.traverse((object) => {
-        if ((object as Mesh).isMesh) {
-          object.castShadow = true
-        }
-      })
-
-      this.mixer = new AnimationMixer(model)
-      const animations = gltf.animations
-
-      for (let i = 0; i < animations.length; i++) {
-        let clip = animations[i]
-        const name = clip.name
-
-        if (name in this.baseActions) {
-          const action = this.mixer.clipAction(clip)
-          this.setWeight(action, name === 'idle' ? 1 : 0)
-          action.play()
-          this.baseActions[name] = action
-        } else if (name in this.additiveActions) {
-          // Make the clip additive and remove the reference frame
-          AnimationUtils.makeClipAdditive(clip)
-
-          if (clip.name.endsWith('_pose')) {
-            clip = AnimationUtils.subclip(clip, clip.name, 2, 3, 30)
-          }
-
-          const action = this.mixer.clipAction(clip)
-          this.setWeight(action, 0)
-          action.play()
-          this.additiveActions[name] = action
-        }
-        this.additiveActions = Object.assign({}, this.additiveActions)
-        this.dispatchMutation(this.additiveActions)
+    model.traverse((object) => {
+      if ((object as Mesh).isMesh) {
+        object.castShadow = true
       }
-
-      this.setProperties({
-        isLoaded: true,
-      })
-
-      this.dispatch('frame-object', {object: model}, true)
     })
+
+    this.mixer = new AnimationMixer(model)
+    const animations = gltf.animations
+
+    for (let i = 0; i < animations.length; i++) {
+      let clip = animations[i]
+      const name = clip.name
+
+      if (name in this.baseActions) {
+        const action = this.mixer.clipAction(clip)
+        this.setWeight(action, name === 'idle' ? 1 : 0)
+        action.play()
+        this.baseActions[name] = action
+      } else if (name in this.additiveActions) {
+        // Make the clip additive and remove the reference frame
+        AnimationUtils.makeClipAdditive(clip)
+
+        if (clip.name.endsWith('_pose')) {
+          clip = AnimationUtils.subclip(clip, clip.name, 2, 3, 30)
+        }
+
+        const action = this.mixer.clipAction(clip)
+        this.setWeight(action, 0)
+        action.play()
+        this.additiveActions[name] = action
+      }
+      this.additiveActions = Object.assign({}, this.additiveActions)
+      this.dispatchMutation(this.additiveActions)
+    }
+
+    this.setProperties({
+      isLoaded: true,
+    })
+
+    this.dispatch('frame-object', {object: model}, true)
   }
 
   private setWeight(action: AnimationAction, weight: number) {
@@ -154,14 +169,14 @@ export class AnimationSkinningAdditiveBlendingExample extends ThreeApplet {
   }
 
   private synchronizeCrossFade(startAction: AnimationAction, endAction: AnimationAction, duration: number) {
-    const onLoopFinished = (event: {action: AnimationAction}) => {
+    const onLoopFinished = (event: AnimationLoopEvent) => {
       if (event.action === startAction) {
-        this.mixer.removeEventListener('loop', onLoopFinished as any)
+        this.mixer.removeEventListener('loop', onLoopFinished)
         this.executeCrossFade(startAction, endAction, duration)
       }
     }
 
-    this.mixer.addEventListener('loop', onLoopFinished as any)
+    this.mixer.addEventListener('loop', onLoopFinished)
   }
 
   private executeCrossFade(startAction: AnimationAction | null, endAction: AnimationAction | null, duration: number) {

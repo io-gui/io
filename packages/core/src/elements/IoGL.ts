@@ -324,28 +324,31 @@ export class IoGl extends IoElement {
       this.updatePropertyUniform('io_' + name, property)
     })
   }
-  setUniform(name: string, value: any) {
+  setUniform(name: string, value: unknown) {
     const uniform = getUniformLocation(this.#shader, name)
     if (uniform === null) return
     let type: string = typeof value
     if (value instanceof Array) type = 'array'
     let _c
+    let indexed: Record<string | number, number>
     switch (type) {
       case 'boolean':
         gl.uniform1i(uniform, value ? 1 : 0)
         break
       case 'number':
-        gl.uniform1f(uniform, value ?? 1)
+        gl.uniform1f(uniform, (value as number) ?? 1)
         break
       case 'object':
       case 'array':
         _c = [0, 1, 2, 3]
-        if (typeof value === 'object') {
-          if (value.x !== undefined) _c = ['x', 'y', 'z', 'w']
-          else if (value.r !== undefined) _c = ['r', 'g', 'b', 'a']
-          else if (value.h !== undefined) _c = ['h', 's', 'v', 'a']
-          else if (value.c !== undefined) _c = ['c', 'm', 'y', 'k']
+        if (typeof value === 'object' && value !== null) {
+          const vec = value as Record<string, number>
+          if (vec.x !== undefined) _c = ['x', 'y', 'z', 'w']
+          else if (vec.r !== undefined) _c = ['r', 'g', 'b', 'a']
+          else if (vec.h !== undefined) _c = ['h', 's', 'v', 'a']
+          else if (vec.c !== undefined) _c = ['c', 'm', 'y', 'k']
         }
+        indexed = value as Record<string | number, number>
         switch (this.#vecLengths[name]) {
           case 2:
             if (value === undefined) {
@@ -353,8 +356,8 @@ export class IoGl extends IoElement {
               break
             }
             gl.uniform2f(uniform,
-                value[_c[0]] ?? 1,
-                value[_c[1]] ?? 1)
+                indexed[_c[0]] ?? 1,
+                indexed[_c[1]] ?? 1)
             break
           case 3:
             if (value === undefined) {
@@ -362,9 +365,9 @@ export class IoGl extends IoElement {
               break
             }
             gl.uniform3f(uniform,
-                value[_c[0]] ?? 1,
-                value[_c[1]] ?? 1,
-                value[_c[2]] ?? 1)
+                indexed[_c[0]] ?? 1,
+                indexed[_c[1]] ?? 1,
+                indexed[_c[2]] ?? 1)
             break
           case 4:
             if (value === undefined) {
@@ -372,10 +375,10 @@ export class IoGl extends IoElement {
               break
             }
             gl.uniform4f(uniform,
-                value[_c[0]] ?? 1,
-                value[_c[1]] ?? 1,
-                value[_c[2]] ?? 1,
-                value[_c[3]] ?? 1)
+                indexed[_c[0]] ?? 1,
+                indexed[_c[1]] ?? 1,
+                indexed[_c[2]] ?? 1,
+                indexed[_c[3]] ?? 1)
                 break
           default:
         }
