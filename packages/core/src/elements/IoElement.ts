@@ -2,7 +2,7 @@ import { Property, ReactiveProperty } from '../decorators/Property.js'
 import { Register } from '../decorators/Register.js'
 import { ProtoChain } from '../core/ProtoChain.js'
 import { applyNativeElementProps, constructElement, disposeChildren, filterVDOMElements, VDOMElement, toVDOM, NativeElementProps, clearNativeElementChildren, releaseSubtreeEventDispatchers } from '../vdom/VDOM.js'
-import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js'
+import { ReactiveNode, ReactivityType, dispose, bind, unbind, dispatchMutation, onPropertyMutated, setProperty, dispatchQueue, setProperties, initReactiveProperties, initProperties, ReactivePropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveNode.js'
 import { addParent, initReactiveOwnerInternals, removeParent } from '../core/ReactiveCore.js'
 import { Binding } from '../core/Binding.js'
 import { applyElementStyleToDocument } from '../core/Style.js'
@@ -11,14 +11,32 @@ import type { ChangeQueue } from '../core/ChangeQueue.js'
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js'
 import { throttle, debounce, CallbackFunction } from '../core/Queue.js'
 
+interface ResizeObservable extends Element {
+  onResized(): void
+}
+
 const resizeObserver = new ResizeObserver(entries => {
   for (const entry of entries) {
-    (entry.target as any).onResized()
+    (entry.target as ResizeObservable).onResized()
   }
 })
 
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void)
+type AnyEventHandler = (
+  (event: CustomEvent) => void) |
+  ((event: PointerEvent) => void) |
+  ((event: KeyboardEvent) => void) |
+  ((event: MouseEvent) => void) |
+  ((event: TouchEvent) => void) |
+  ((event: WheelEvent) => void) |
+  ((event: InputEvent) => void) |
+  ((event: ClipboardEvent) => void) |
+  ((event: DragEvent) => void) |
+  ((event: FocusEvent) => void) |
+  ((event: TransitionEvent) => void) |
+  ((event: AnimationEvent) => void) |
+  ((event: ErrorEvent) => void) |
+  ((event: Event) => void)
 
 export type IoElementProps = NativeElementProps & {
   reactivity?: ReactivityType
@@ -76,7 +94,7 @@ export class IoElement extends HTMLElement {
     return {}
   }
 
-  static get Properties(): Record<string, any> {
+  static get Properties(): Record<string, unknown> {
     return {}
   }
 
@@ -119,30 +137,31 @@ export class IoElement extends HTMLElement {
     this.dispatchQueue()
   }
   /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
-  applyProperties(props: any, skipDispatch = false) {
+  applyProperties(props: PropertyValues, skipDispatch = false) {
     for (const name in props) {
       if (this._reactiveProperties.has(name)) {
         this.setProperty(name, props[name], true)
       } else {
         if (name === 'class') {
-          this.className = props[name]
+          this.className = props[name] as string
         } else if (name === 'style') {
-          for (const s in props[name]) {
+          const styleProps = props[name] as Record<string, string>
+          for (const s in styleProps) {
             // TODO: Consider supporting importance
-            this.style[s as any] = props[name][s]
+            this.style.setProperty(s, styleProps[s])
           }
         } else if (name.startsWith('data-')) {
           // TODO: Test this!
           if (props[name] === undefined) {
             this.removeAttribute(name)
           } else {
-            this.setAttribute(name, props[name])
+            this.setAttribute(name, props[name] as string | number | boolean)
           }
         } else if (!name.startsWith('@')) {
-          debug: if (props[name] as any instanceof Binding) {
+          debug: if (props[name] instanceof Binding) {
             console.warn(`IoElement: Not a ReactiveProperty! Cannot set binding to "${name}" property on element "${this.localName}"`)
           }
-          this[name as keyof this] = props[name]
+          (this as Record<string, unknown>)[name] = props[name]
           // TODO: test and check if type can be attribute.
           if (props[name] === undefined && this.hasAttribute(name)) {
             this.removeAttribute(name)
@@ -154,14 +173,14 @@ export class IoElement extends HTMLElement {
     if (!skipDispatch) this.dispatchQueue()
   }
   // TODO: add types
-  setProperties(props: any) {
+  setProperties(props: PropertyValues) {
     setProperties(this, props)
   }
-  setProperty(name: string, value: any, debounce = false) {
+  setProperty(name: string, value: unknown, debounce = false) {
     if (this._disposed) return
     setProperty(this, name, value, debounce)
     const prop = this._reactiveProperties.get(name)!
-    if (prop.reflect) this.setAttribute(name.toLowerCase(), value)
+    if (prop.reflect) this.setAttribute(name.toLowerCase(), value as string | number | boolean)
   }
   init() {}
   ready() {}
@@ -169,16 +188,16 @@ export class IoElement extends HTMLElement {
   get [Symbol.toStringTag]() {
     return this.constructor.name
   }
-  queue(name: string, value: any, oldValue: any) {
+  queue(name: string, value: unknown, oldValue: unknown) {
     this._changeQueue.queue(name, value, oldValue)
   }
   dispatchQueue(debounce = false) {
     dispatchQueue(this, debounce)
   }
-  throttle(func: CallbackFunction, arg?: any, timeout = 1) {
+  throttle(func: CallbackFunction, arg?: unknown, timeout = 1) {
     throttle(func, arg, this, timeout)
   }
-  debounce(func: CallbackFunction, arg?: any, timeout = 1) {
+  debounce(func: CallbackFunction, arg?: unknown, timeout = 1) {
     debounce(func, arg, this, timeout)
   }
   onPropertyMutated(event: CustomEvent) {
@@ -205,7 +224,7 @@ export class IoElement extends HTMLElement {
     if (this._disposed) return
     this._eventDispatcher.removeEventListener(type, listener as EventListener, options)
   }
-  dispatch(type: string, detail: any = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
+  dispatch(type: string, detail: unknown = undefined, bubbles = false, src?: ReactiveNode | HTMLElement | Document | Window) {
     if (this._disposed) return
     this._eventDispatcher.dispatchEvent(type, detail, bubbles, src)
   }
@@ -221,22 +240,22 @@ export class IoElement extends HTMLElement {
   }
 
   connectedCallback() {
-    if (typeof (this as any).onResized === 'function') {
+    if ('onResized' in this && typeof (this as ResizeObservable).onResized === 'function') {
       resizeObserver.observe(this)
     }
   }
   disconnectedCallback() {
-    if (typeof (this as any).onResized === 'function') {
+    if ('onResized' in this && typeof (this as ResizeObservable).onResized === 'function') {
       resizeObserver.unobserve(this)
     }
   }
 
   /** Renders VDOM children into this element or optional host. */
   render(vDOMElements: Array<VDOMElement | null>, host?: HTMLElement | IoElement, noDispose?: boolean) {
-    host = (host || this) as any
+    const renderHost = host ?? this
     const vDOMElementsOnly = filterVDOMElements(vDOMElements)
     for (const id in this.$) delete this.$[id]
-    this.traverse(vDOMElementsOnly, host as HTMLElement, noDispose)
+    this.traverse(vDOMElementsOnly, renderHost, noDispose)
   }
   /** Reconciles VDOM tree into host; keyed when children specify `key`. */
   traverse(vChildren: VDOMElement[], host: HTMLElement | IoElement, noDispose?: boolean) {

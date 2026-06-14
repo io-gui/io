@@ -1,3 +1,3 @@
 # Current Focus
 
-Fixed duplicate io-object-mutation listener warnings from applyNodeArrayAssignment NodeArray handling.
+Removed all `any` from IoElement.ts — aligned with ReactiveNode types (PropertyValues, unknown).

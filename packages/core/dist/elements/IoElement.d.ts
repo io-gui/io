@@ -1,13 +1,13 @@
 import { ProtoChain } from '../core/ProtoChain.js';
 import { VDOMElement, NativeElementProps } from '../vdom/VDOM.js';
-import { ReactiveNode, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions } from '../nodes/ReactiveNode.js';
+import { ReactiveNode, ReactivityType, ReactivePropertyDefinitions, ListenerDefinitions, PropertyValues } from '../nodes/ReactiveNode.js';
 import { Binding } from '../core/Binding.js';
 import type { EventDispatcher, AnyEventListener } from '../core/EventDispatcher.js';
 import type { ChangeQueue } from '../core/ChangeQueue.js';
 import { ReactivePropertyInstance } from '../core/ReactiveProperty.js';
 import { CallbackFunction } from '../core/Queue.js';
 type prefix<TKey, TPrefix extends string> = TKey extends string ? `${TPrefix}${TKey}` : never;
-type AnyEventHandler = ((event: CustomEvent<any>) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
+type AnyEventHandler = ((event: CustomEvent) => void) | ((event: PointerEvent) => void) | ((event: KeyboardEvent) => void) | ((event: MouseEvent) => void) | ((event: TouchEvent) => void) | ((event: WheelEvent) => void) | ((event: InputEvent) => void) | ((event: ClipboardEvent) => void) | ((event: DragEvent) => void) | ((event: FocusEvent) => void) | ((event: TransitionEvent) => void) | ((event: AnimationEvent) => void) | ((event: ErrorEvent) => void) | ((event: Event) => void);
 export type IoElementProps = NativeElementProps & {
     reactivity?: ReactivityType;
     [key: prefix<string, '@'>]: string | AnyEventHandler;
@@ -32,7 +32,7 @@ export declare class IoElement extends HTMLElement {
     reactivity: ReactivityType;
     $: Record<string, HTMLElement | IoElement>;
     static get ReactiveProperties(): ReactivePropertyDefinitions;
-    static get Properties(): Record<string, any>;
+    static get Properties(): Record<string, unknown>;
     /**
      * Declares class-level event listeners wired at construction via {@link EventDispatcher}.
      * Subclass definitions replace parent handlers for the same event name (last wins).
@@ -53,17 +53,17 @@ export declare class IoElement extends HTMLElement {
     _textNode: Text;
     constructor(args?: IoElementProps);
     /** Applies constructor/render props; defers dispatch when `skipDispatch` is true. */
-    applyProperties(props: any, skipDispatch?: boolean): void;
-    setProperties(props: any): void;
-    setProperty(name: string, value: any, debounce?: boolean): void;
+    applyProperties(props: PropertyValues, skipDispatch?: boolean): void;
+    setProperties(props: PropertyValues): void;
+    setProperty(name: string, value: unknown, debounce?: boolean): void;
     init(): void;
     ready(): void;
     changed(): void;
     get [Symbol.toStringTag](): string;
-    queue(name: string, value: any, oldValue: any): void;
+    queue(name: string, value: unknown, oldValue: unknown): void;
     dispatchQueue(debounce?: boolean): void;
-    throttle(func: CallbackFunction, arg?: any, timeout?: number): void;
-    debounce(func: CallbackFunction, arg?: any, timeout?: number): void;
+    throttle(func: CallbackFunction, arg?: unknown, timeout?: number): void;
+    debounce(func: CallbackFunction, arg?: unknown, timeout?: number): void;
     onPropertyMutated(event: CustomEvent): boolean;
     dispatchMutation(object?: object | ReactiveNode, properties?: string[]): void;
     bind<K extends keyof this & string>(name: K): Binding<this[K]>;
@@ -72,7 +72,7 @@ export declare class IoElement extends HTMLElement {
     unbind(name: string): void;
     addEventListener(type: string, listener: AnyEventListener, options?: AddEventListenerOptions): void;
     removeEventListener(type: string, listener?: AnyEventListener, options?: AddEventListenerOptions): void;
-    dispatch(type: string, detail?: any, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
+    dispatch(type: string, detail?: unknown, bubbles?: boolean, src?: ReactiveNode | HTMLElement | Document | Window): void;
     addParent(parent: ReactiveNode | IoElement): void;
     removeParent(parent: ReactiveNode | IoElement): void;
     /** Releases bindings, listeners, queues, and child elements. */

@@ -93,9 +93,10 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
                     this.className = props[name];
                 }
                 else if (name === 'style') {
-                    for (const s in props[name]) {
+                    const styleProps = props[name];
+                    for (const s in styleProps) {
                         // TODO: Consider supporting importance
-                        this.style[s] = props[name][s];
+                        this.style.setProperty(s, styleProps[s]);
                     }
                 }
                 else if (name.startsWith('data-')) {
@@ -192,22 +193,22 @@ let IoElement = IoElement_1 = class IoElement extends HTMLElement {
         dispose(this);
     }
     connectedCallback() {
-        if (typeof this.onResized === 'function') {
+        if ('onResized' in this && typeof this.onResized === 'function') {
             resizeObserver.observe(this);
         }
     }
     disconnectedCallback() {
-        if (typeof this.onResized === 'function') {
+        if ('onResized' in this && typeof this.onResized === 'function') {
             resizeObserver.unobserve(this);
         }
     }
     /** Renders VDOM children into this element or optional host. */
     render(vDOMElements, host, noDispose) {
-        host = (host || this);
+        const renderHost = host ?? this;
         const vDOMElementsOnly = filterVDOMElements(vDOMElements);
         for (const id in this.$)
             delete this.$[id];
-        this.traverse(vDOMElementsOnly, host, noDispose);
+        this.traverse(vDOMElementsOnly, renderHost, noDispose);
     }
     /** Reconciles VDOM tree into host; keyed when children specify `key`. */
     traverse(vChildren, host, noDispose) {
