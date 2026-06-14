@@ -48,5 +48,3 @@ Follow these rules when you generate/modify code:
 - Don't solve problems by removing debug statements/checks
 - Follow the same code style as the rest of the project
 - Come up with clear, descriptive and easy to read variable/property names.
-
-We should follow an invariant-driven, readability-first style: validate uncertain inputs at system boundaries (I/O, parsing, external data), then assume those invariants hold inside core app logic so internal code stays small, clear, and fast. In hot or frequently read paths (rendering, animation, per-frame math), avoid defensive runtime guards unless they protect against a known real failure mode. Prefer clean, direct transformations over repetitive safety checks, and keep diagnostics in targeted debug-only checks when needed. The goal is to optimize for signal over noise: less boilerplate, fewer branches, easier reasoning.

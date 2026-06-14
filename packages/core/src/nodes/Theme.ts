@@ -5,239 +5,101 @@ import { Storage as $ } from '../nodes/Storage.js'
 import { Color } from '../core/Color.js'
 import { adoptDocumentStylesheet } from '../core/Style.js'
 
-const THEME_VERSION = 'v0.14'
+const THEME_VERSION = 'v0.17'
 
-export type ThemeVars = {
-  spacing: number
-  spacing2: number
-  spacing3: number
-  spacing5: number
-  spacing8: number
-
-  fontSize: number
-  lineHeight: number
-  fieldHeight: number
-
-  borderRadius: number
-  borderWidth: number
-  borderColor: Color
-  borderColorLight: Color
-  borderColorStrong: Color
-  borderColorRed: Color
-  borderColorBlue: Color
-  borderColorGreen: Color
-
-  bgColor: Color
-  bgColorStrong: Color
-  bgColorLight: Color
-  bgColorRed: Color
-  bgColorGreen: Color
-  bgColorBlue: Color
-  bgColorInput: Color
-
-  color: Color
-  colorStrong: Color
-  colorLight: Color
-  colorRed: Color
-  colorGreen: Color
-  colorBlue: Color
-  colorWhite: Color
-  colorInput: Color
-
-  gradientColorStart: Color
-  gradientColorEnd: Color
-
-  shadowColor: Color
-}
-
-export const LIGHT_THEME: ThemeVars = {
-  spacing: 2,
-  spacing2: 0,
-  spacing3: 0,
-  spacing5: 0,
-  spacing8: 0,
-
-  lineHeight: 20,
-  fontSize: 14,
-  fieldHeight: 0,
-
-  borderRadius: 2,
-  borderWidth: 1,
-  borderColor: new Color(0.2, 0.2, 0.2),
-  borderColorLight: new Color(0.3, 0.3, 0.3),
-  borderColorStrong: new Color(0.6, 0.6, 0.6),
-  borderColorRed: new Color(1, 0.35, 0.15),
-  borderColorGreen: new Color(0.1, 0.7, 0.2),
-  borderColorBlue: new Color(0.2, 0.4, 0.95),
-
-  bgColor: new Color(0.85, 0.85, 0.85),
-  bgColorStrong: new Color(0.9, 0.9, 0.9),
-  bgColorLight: new Color(0.8, 0.8, 0.8),
-  bgColorRed: new Color(1, 0.5, 0.3),
-  bgColorGreen: new Color(0.2, 0.9, 0.3),
-  bgColorBlue: new Color(0.2, 0.5, 0.9),
-  bgColorInput: new Color(0.95, 0.96, 0.95),
-
-  color: new Color(0.25, 0.25, 0.2),
-  colorStrong: new Color(0, 0, 0),
-  colorLight: new Color(0.6, 0.6, 0.6),
-  colorRed: new Color(1, 0.2, 0.0),
-  colorGreen: new Color(0, 0.6, 0.1),
-  colorBlue: new Color(0.2, 0.3, 1),
-  colorWhite: new Color(1, 1, 1),
-  colorInput: new Color(0, 0.05, 0.02),
-
-  gradientColorStart: new Color(0.9, 0.9, 0.9),
-  gradientColorEnd: new Color(0.75, 0.75, 0.75),
-
-  shadowColor: new Color(0, 0, 0, 0.2),
-}
-
-export const DARK_THEME: ThemeVars = {
-  spacing: 2,
-  spacing2: 0,
-  spacing3: 0,
-  spacing5: 0,
-  spacing8: 0,
-
-  lineHeight: 20,
-  fontSize: 14,
-  fieldHeight: 0,
-
-  borderRadius: 2,
-  borderWidth: 1,
-  borderColor: new Color(0.5, 0.5, 0.5),
-  borderColorLight: new Color(0.3, 0.3, 0.3),
-  borderColorStrong: new Color(0, 0, 0),
-  borderColorRed: new Color(1, 0.2, 0.0),
-  borderColorBlue: new Color(0.4, 0.5, 0.9),
-  borderColorGreen: new Color(0, 0.6, 0.1),
-
-  bgColor: new Color(0.2, 0.2, 0.2),
-  bgColorStrong: new Color(0.15, 0.15, 0.15),
-  bgColorLight: new Color(0.25, 0.25, 0.25),
-  bgColorRed: new Color(0.7, 0.2, 0.1),
-  bgColorGreen: new Color(0.1, 0.5, 0.2),
-  bgColorBlue: new Color(0.2, 0.4, 0.8),
-  bgColorInput: new Color(0.02, 0.02, 0.02),
-
-  color: new Color(0.6, 0.6, 0.6),
-  colorStrong: new Color(0.86, 0.86, 0.86),
-  colorLight: new Color(0.3, 0.3, 0.3),
-  colorRed: new Color(1, 0.4, 0.4),
-  colorGreen: new Color(0.4, 0.95, 0.3),
-  colorBlue: new Color(0.6, 0.9, 1),
-  colorWhite: new Color(1, 1, 1),
-  colorInput: new Color(0.65, 0.7, 0.68),
-
-  gradientColorStart: new Color(0.45, 0.45, 0.45),
-  gradientColorEnd: new Color(0.2, 0.2, 0.2),
-
-  shadowColor: new Color(0, 0, 0, 0.2),
-}
-
-const $ThemeID = $({
+export const $ThemeID = $({
   value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
   storage: 'local',
   key: 'theme-' + THEME_VERSION
 })
 
-const $Themes = $({
-  value: {},
-  storage: 'local',
-  key: 'io-themes-' + THEME_VERSION
-})
+console.log('theme id', $ThemeID.value)
 
-type ThemeStore = Record<string, ThemeVars>
-type ThemePartialStore = Record<string, Partial<Record<keyof ThemeVars, unknown>>>
+export type ThemeJSON = Record<string, number>
 
-type SerializedColor = {
-  r: number
-  g: number
-  b: number
-  a?: number
+export const THEMES: Record<string, ThemeJSON> = {
+  light: {
+    spacing: 2,
+    spacing2: 0,
+    spacing3: 0,
+    spacing5: 0,
+    spacing8: 0,
+    lineHeight: 20,
+    fontSize: 14,
+    fieldHeight: 0,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: Color.toHex(0.2, 0.2, 0.2),
+    borderColorLight: Color.toHex(0.3, 0.3, 0.3),
+    borderColorStrong: Color.toHex(0.6, 0.6, 0.6),
+    borderColorRed: Color.toHex(1, 0.35, 0.15),
+    borderColorGreen: Color.toHex(0.1, 0.7, 0.2),
+    borderColorBlue: Color.toHex(0.2, 0.4, 0.95),
+    bgColor: Color.toHex(0.85, 0.85, 0.85),
+    bgColorStrong: Color.toHex(0.9, 0.9, 0.9),
+    bgColorLight: Color.toHex(0.8, 0.8, 0.8),
+    bgColorRed: Color.toHex(1, 0.5, 0.3),
+    bgColorGreen: Color.toHex(0.2, 0.9, 0.3),
+    bgColorBlue: Color.toHex(0.2, 0.5, 0.9),
+    bgColorInput: Color.toHex(0.95, 0.96, 0.95),
+    color: Color.toHex(0.25, 0.25, 0.2),
+    colorStrong: Color.toHex(0, 0, 0),
+    colorLight: Color.toHex(0.6, 0.6, 0.6),
+    colorRed: Color.toHex(1, 0.2, 0),
+    colorGreen: Color.toHex(0, 0.6, 0.1),
+    colorBlue: Color.toHex(0.2, 0.3, 1),
+    colorWhite: Color.toHex(1, 1, 1),
+    colorInput: Color.toHex(0, 0.05, 0.02),
+    gradientColorStart: Color.toHex(0.9, 0.9, 0.9),
+    gradientColorEnd: Color.toHex(0.75, 0.75, 0.75),
+    shadowColor: Color.toHex(0, 0, 0, 0.2),
+  },
+  dark: {
+    spacing: 2,
+    spacing2: 0,
+    spacing3: 0,
+    spacing5: 0,
+    spacing8: 0,
+    lineHeight: 20,
+    fontSize: 14,
+    fieldHeight: 0,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: Color.toHex(0.5, 0.5, 0.5),
+    borderColorLight: Color.toHex(0.3, 0.3, 0.3),
+    borderColorStrong: Color.toHex(0, 0, 0),
+    borderColorRed: Color.toHex(1, 0.2, 0),
+    borderColorBlue: Color.toHex(0.4, 0.5, 0.9),
+    borderColorGreen: Color.toHex(0, 0.6, 0.1),
+    bgColor: Color.toHex(0.2, 0.2, 0.2),
+    bgColorStrong: Color.toHex(0.15, 0.15, 0.15),
+    bgColorLight: Color.toHex(0.25, 0.25, 0.25),
+    bgColorRed: Color.toHex(0.7, 0.2, 0.1),
+    bgColorGreen: Color.toHex(0.1, 0.5, 0.2),
+    bgColorBlue: Color.toHex(0.2, 0.4, 0.8),
+    bgColorInput: Color.toHex(0.02, 0.02, 0.02),
+    color: Color.toHex(0.6, 0.6, 0.6),
+    colorStrong: Color.toHex(0.86, 0.86, 0.86),
+    colorLight: Color.toHex(0.3, 0.3, 0.3),
+    colorRed: Color.toHex(1, 0.4, 0.4),
+    colorGreen: Color.toHex(0.4, 0.95, 0.3),
+    colorBlue: Color.toHex(0.6, 0.9, 1),
+    colorWhite: Color.toHex(1, 1, 1),
+    colorInput: Color.toHex(0.65, 0.7, 0.68),
+    gradientColorStart: Color.toHex(0.45, 0.45, 0.45),
+    gradientColorEnd: Color.toHex(0.2, 0.2, 0.2),
+    shadowColor: Color.toHex(0, 0, 0, 0.2),
+  },
 }
 
-const themeProperties = Object.keys(LIGHT_THEME) as Array<keyof ThemeVars>
-const colorPropertySet = new Set<keyof ThemeVars>(themeProperties.filter((property) => LIGHT_THEME[property] instanceof Color))
+const themeKeys = Object.keys(THEMES.light) as Array<keyof typeof THEMES.light>
 
-const compositeVariables = {
-  '--io_border': 'var(--io_borderWidth) solid var(--io_borderColor)',
-  '--io_borderColorInset': 'var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong)',
-  '--io_borderColorOutset': 'var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight)',
-  '--io_gradientOutset': 'linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%)',
-  '--io_gradientInset': 'linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%)',
-  '--io_shadow': '2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor)',
-  '--io_shadowInset': '0.75px 0.75px 2px inset var(--io_shadowColor)',
-  '--io_shadowOutset': '1px 1px 2px var(--io_shadowColor)',
-} as const
-
-const themeStyleDeclaration = createThemeStyleDeclaration()
-
-function cloneColor(color: Color): Color {
-  return new Color(color.r, color.g, color.b, color.a)
-}
-
-function isSerializedColor(value: unknown): value is SerializedColor {
-  if (typeof value !== 'object' || value === null) return false
-  const candidate = value as Record<string, unknown>
-  return typeof candidate.r === 'number' &&
-    typeof candidate.g === 'number' &&
-    typeof candidate.b === 'number' &&
-    (candidate.a === undefined || typeof candidate.a === 'number')
-}
-
-function normalizeThemeValues(source: unknown, defaults: ThemeVars): ThemeVars {
-  const sourceValues = (typeof source === 'object' && source !== null) ? source as Partial<Record<keyof ThemeVars, unknown>> : {}
-  const normalized = {} as ThemeVars
-  const normalizedValues = normalized as Record<keyof ThemeVars, number | Color>
-  const defaultValues = defaults as Record<keyof ThemeVars, number | Color>
-
-  for (const property of themeProperties) {
-    const value = sourceValues[property]
-    const defaultValue = defaultValues[property]
-    if (colorPropertySet.has(property)) {
-      if (value instanceof Color) {
-        normalizedValues[property] = value
-      } else if (isSerializedColor(value)) {
-        normalizedValues[property] = new Color(value.r, value.g, value.b, value.a ?? 1)
-      } else {
-        normalizedValues[property] = cloneColor(defaultValue as Color)
-      }
-    } else {
-      normalizedValues[property] = (typeof value === 'number') ? value : defaultValue
-    }
-  }
-  return normalized
-}
-function cloneThemeValues(theme: ThemeVars): ThemeVars {
-  return normalizeThemeValues(theme, theme)
-}
-function createThemeStyleDeclaration(): CSSStyleDeclaration {
-  const styleSheet = createThemeStylesheet()
-
-  for (let i = styleSheet.cssRules.length - 1; i >= 0; i--) {
-    styleSheet.deleteRule(i)
-  }
-  styleSheet.insertRule('body {}', 0)
-
-  const bodyRule = styleSheet.cssRules[0] as CSSStyleRule
-  for (const name in compositeVariables) {
-    bodyRule.style.setProperty(name, compositeVariables[name as keyof typeof compositeVariables])
-  }
-  return bodyRule.style
-}
-function createThemeStylesheet(): CSSStyleSheet {
-  return adoptDocumentStylesheet('body {}')
+function isThemeColorKey(key: string): boolean {
+  return key.includes('Color') || key.startsWith('color') || key.startsWith('gradient')
 }
 
 /**
  * `Theme` is designed to be used as `ThemeSingleton`. It holds top-level CSS variables for Io-Gui design system.
- * CSS Variables are grouped in different themes and can be collectively switched by changing `theme` property.
- *
- * ```javascript
- * ThemeSingleton.themeID = 'dark';
- * ```
  *
  * CSS color variables such as `'--io_color'` and `'--io_bgColor'` are mapped to numeric properties `io_color` and `io_bgColor`.
  */
@@ -245,12 +107,11 @@ function createThemeStylesheet(): CSSStyleSheet {
 export class Theme extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     const props: ReactivePropertyDefinitions = {}
-    for (const p in LIGHT_THEME) {
-      const prop = LIGHT_THEME[p as keyof typeof LIGHT_THEME]
-      if (prop instanceof Object) {
-        props[p] = {value: prop, type: Color, init: null}
+    for (const key of themeKeys) {
+      if (isThemeColorKey(key)) {
+        props[key] = {type: Color, init: [0, 0, 0, 1]}
       } else {
-        props[p] = prop
+        props[key] = {type: Number}
       }
     }
     return props
@@ -291,49 +152,10 @@ export class Theme extends ReactiveNode {
   declare gradientColorEnd: Color
   declare shadowColor: Color
 
-  // Default theme values
-  @ReactiveProperty({type: Object, init: null})
-  declare themeDefaults: Record<string, ThemeVars>
-
-  @ReactiveProperty({type: String, binding: $ThemeID})
-  declare themeID: string
-
   @ReactiveProperty('debounced')
   declare reactivity: ReactivityType
 
-  ready() {
-    this.registerTheme('light', LIGHT_THEME)
-    this.registerTheme('dark', DARK_THEME)
-    this.themeIDChanged()
-  }
-  registerTheme(themeID: string, theme: ThemeVars) {
-    const defaultTheme = cloneThemeValues(theme)
-    const storedThemes = $Themes.value as ThemePartialStore
-    const persistedTheme = normalizeThemeValues(storedThemes[themeID], defaultTheme)
-
-    this.setProperty('themeDefaults', {...this.themeDefaults, [themeID]: defaultTheme}, true)
-    $Themes.value = {...storedThemes, [themeID]: persistedTheme} as ThemeStore
-  }
-  reset() {
-    const defaultThemes = this.themeDefaults as ThemeStore
-    const resetThemes = {} as ThemeStore
-    for (const themeID in defaultThemes) {
-      resetThemes[themeID] = cloneThemeValues(defaultThemes[themeID])
-    }
-    $Themes.value = resetThemes
-    this.themeIDChanged()
-  }
-  themeIDChanged() {
-    const defaultThemes = this.themeDefaults as ThemeStore
-    const defaultTheme = defaultThemes[this.themeID] || LIGHT_THEME
-    const storedThemes = $Themes.value as ThemePartialStore
-    const values = normalizeThemeValues(storedThemes[this.themeID], defaultTheme)
-    $Themes.value = {...storedThemes, [this.themeID]: values} as ThemeStore
-    this.setProperties(values)
-  }
-
   onPropertyMutated(event: CustomEvent) {
-    // TODO: Add properties to mutation handler.
     const mutated = super.onPropertyMutated(event)
     if (mutated) {
       this.changed()
@@ -342,38 +164,62 @@ export class Theme extends ReactiveNode {
     }
     return false
   }
+
   fontSizeChanged() {
     this.lineHeight = Math.max(this.fontSize, this.lineHeight)
   }
+
   lineHeightChanged() {
     this.fontSize = Math.min(this.lineHeight, this.fontSize)
   }
+
   changed() {
     this.fieldHeight = this.lineHeight + 2 * (this.spacing + this.borderWidth)
-
     this.spacing2 = this.spacing * 2
     this.spacing3 = this.spacing * 3
     this.spacing5 = this.spacing * 5
     this.spacing8 = this.spacing * 8
 
-    const storedThemes = $Themes.value as ThemeStore
-    const fallbackTheme = (this.themeDefaults as ThemeStore)[this.themeID] || LIGHT_THEME
-    const activeTheme = storedThemes[this.themeID] || cloneThemeValues(fallbackTheme)
-    const activeThemeValues = activeTheme as Record<keyof ThemeVars, number | Color>
-
-    for (const property of themeProperties) {
-      const value = this[property] as number | Color
-      activeThemeValues[property] = value
+    for (const key of themeKeys) {
+      const value = this[key as keyof this]
       const cssValue = (value instanceof Color) ? value.toCss() : `${value}px`
-      themeStyleDeclaration.setProperty(`--io_${property}`, cssValue)
+      themeStyleDeclaration.setProperty(`--io_${key}`, cssValue)
     }
-    storedThemes[this.themeID] = activeTheme
-    this.debounce(this.onSaveTheme, undefined, 60)
-  }
-  onSaveTheme() {
-    $Themes.value = {...$Themes.value} as ThemeStore
   }
 }
 
-const ThemeSingleton = new Theme()
+const compositeVariables = {
+  '--io_border': 'var(--io_borderWidth) solid var(--io_borderColor)',
+  '--io_borderColorInset': 'var(--io_borderColorStrong) var(--io_borderColorLight) var(--io_borderColorLight) var(--io_borderColorStrong)',
+  '--io_borderColorOutset': 'var(--io_borderColorLight) var(--io_borderColorStrong) var(--io_borderColorStrong) var(--io_borderColorLight)',
+  '--io_gradientOutset': 'linear-gradient(180deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 100%)',
+  '--io_gradientInset': 'linear-gradient(0deg, var(--io_gradientColorStart), var(--io_gradientColorEnd) 150%)',
+  '--io_shadow': '2px 2px 6px var(--io_shadowColor), 1px 1px 1px var(--io_shadowColor)',
+  '--io_shadowInset': '0.75px 0.75px 2px inset var(--io_shadowColor)',
+  '--io_shadowOutset': '1px 1px 2px var(--io_shadowColor)',
+} as const
+
+const themeStyleDeclaration = createThemeStyleDeclaration()
+
+function createThemeStyleDeclaration(): CSSStyleDeclaration {
+  const styleSheet = adoptDocumentStylesheet('body {}')
+  const bodyRule = styleSheet.cssRules[0] as CSSStyleRule
+  for (const name in compositeVariables) {
+    bodyRule.style.setProperty(name, compositeVariables[name as keyof typeof compositeVariables])
+  }
+  return bodyRule.style
+}
+
+const ThemeSingleton = new Theme().applyJSON(THEMES[$ThemeID.value as keyof typeof THEMES])
+
+export const $Theme = $({
+  value: ThemeSingleton,
+  storage: 'local',
+  key: 'io-theme-' + THEME_VERSION
+})
+
+$ThemeID.node.addEventListener('value-changed', (event: CustomEvent) => {
+  ThemeSingleton.applyJSON(THEMES[event.detail.value as keyof typeof THEMES])
+})
+
 export { ThemeSingleton }

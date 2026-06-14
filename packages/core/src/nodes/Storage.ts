@@ -159,8 +159,13 @@ export class StorageNode extends ReactiveNode {
       }
       if (storedValue !== null) {
         try {
-          const value = JSON.parse(storedValue)
-          props.value = constructor ? new constructor(value) : value
+          const parsed = JSON.parse(storedValue)
+          if (props.value._isNode) {
+            (props.value as ReactiveNode).applyJSON(parsed)
+          } else {
+            const constructed = constructor ? new constructor(parsed) : parsed
+            props.value = constructed
+          }
         } catch {
           props.value = storedValue
         }
@@ -199,11 +204,7 @@ export class StorageNode extends ReactiveNode {
     nodes[s].delete(this.key)
   }
   valueMutated() {
-    this.debounce(this.changed)
-    // this.changed()
-  }
-  valueChanged() {
-    this.changed()
+    this.debounce(this.changed, undefined, 1)
   }
   changed() {
     switch (this.storage) {

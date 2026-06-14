@@ -1,6 +1,10 @@
 import { ReactiveNode } from '../nodes/ReactiveNode.js'
 import { IoElement } from '../elements/IoElement.js'
 
+interface Json {
+  [key: string]: string | number | boolean | Json | Json[];
+}
+
 // TODO: test!!!
 export class NodeArray<N extends ReactiveNode> extends Array<N> {
   declare private proxy: typeof Proxy
@@ -264,6 +268,14 @@ export class NodeArray<N extends ReactiveNode> extends Array<N> {
   dispatchMutation() {
     for (const observer of this._observers) {
       observer.dispatch('io-object-mutation', {object: this.proxy})
+    }
+  }
+  toJSON(): Json[] {
+    return this.map((item: N) => item.toJSON())
+  }
+  applyJSON(json: Json[]) {
+    for (let i = 0; i < json.length; i++) {
+      this[i].applyJSON(json[i])
     }
   }
 }

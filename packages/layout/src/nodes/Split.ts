@@ -80,7 +80,7 @@ export class Split extends ReactiveNode {
     if (this.flex !== '1 1 auto') json.flex = this.flex
     return json
   }
-  fromJSON(json: SplitProps) {
+  applyJSON(json: SplitProps) {
     debug: {
       if (json.type !== 'split') {
         console.error(`Split.fromJSON: Invalid type "${json.type}". Expected "split".`)

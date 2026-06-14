@@ -1,5 +1,31 @@
 import { describe, it, expect } from 'vitest'
-import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue } from '@io-gui/core'
+import { Change, Binding, ReactiveNode, Register, ReactivePropertyDefinitions, IoElement, ListenerDefinitions, nextQueue, Color, NodeArray } from '@io-gui/core'
+
+@Register
+class JsonChildNode extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      count: { type: Number, value: 3 },
+    }
+  }
+  declare count: number
+}
+
+@Register
+class JsonNode extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      count: { type: Number, value: 5 },
+      color: { type: Color, init: [0, 0, 0, 1] },
+      label: { type: String, value: 'hello' },
+      children: { type: NodeArray, init: 'this' },
+    }
+  }
+  declare count: number
+  declare color: Color
+  declare label: string
+  declare children: NodeArray<JsonChildNode>
+}
 
 describe('ReactiveNode', () => {
   it('Should have all core API functions defined', () => {
@@ -7,6 +33,8 @@ describe('ReactiveNode', () => {
     expect(typeof node.setProperty).toBe('function')
     expect(typeof node.applyProperties).toBe('function')
     expect(typeof node.setProperties).toBe('function')
+    expect(typeof node.toJSON).toBe('function')
+    expect(typeof node.applyJSON).toBe('function')
     expect(typeof node.changed).toBe('function')
     expect(typeof node.queue).toBe('function')
     expect(typeof node.dispatchQueue).toBe('function')
@@ -1100,5 +1128,61 @@ describe('ReactiveNode', () => {
 
     ioObject1.dispose()
     ioObject2.dispose()
+  })
+
+  describe('toJSON and applyJSON', () => {
+    it('serializes numbers and nested toJSON values, skips reactivity and strings', () => {
+      const node = new JsonNode()
+      node.count = 9
+      node.color.applyJSON(Color.toHex(1, 0.2, 0))
+      node.label = 'ignored'
+      node.children.push(new JsonChildNode())
+
+      const json = node.toJSON()
+      expect(json.count).toBe(9)
+      expect(json.color).toBe(0xffff3300)
+      expect(json.label).toBeUndefined()
+      expect(json.reactivity).toBeUndefined()
+      expect(json.children).toEqual([{ count: 3 }])
+    })
+
+    it('round-trips through applyJSON on the same instance', () => {
+      const node = new JsonNode()
+      node.children.push(new JsonChildNode())
+      node.count = 11
+      node.color.applyJSON(Color.toHex(0, 0, 0, 0.5))
+
+      const json = node.toJSON()
+      node.applyJSON(json)
+
+      expect(node.count).toBe(11)
+      expect(node.color.toJSON()).toBe(json.color)
+      expect(node.color.a).toBeCloseTo(0.5)
+      expect(node.children[0].count).toBe(3)
+    })
+
+    it('applyJSON updates primitive properties from JSON', () => {
+      const node = new JsonNode()
+      node.applyJSON({ count: 42 })
+      expect(node.count).toBe(42)
+      node.dispose()
+    })
+
+    it('applyJSON delegates to nested applyJSON implementations', () => {
+      const node = new JsonNode()
+      const shadowHex = Color.toHex(0, 0, 0, 0.2)
+      node.applyJSON({ color: shadowHex })
+      expect(node.color.a).toBeCloseTo(0.2)
+      expect(node.color.toJSON()).toBe(shadowHex)
+      node.dispose()
+    })
+
+    it('JSON.stringify uses toJSON', () => {
+      const node = new JsonNode()
+      node.count = 7
+      const parsed = JSON.parse(JSON.stringify(node))
+      expect(parsed.count).toBe(7)
+      node.dispose()
+    })
   })
 })

@@ -24,6 +24,10 @@ export interface ReactiveNodeConstructor {
   prototype: ReactiveNodeConstructor | object | HTMLElement
 }
 
+interface Json {
+  [key: string]: string | number | boolean | Json | Json[];
+}
+
 export const NODES = {
   active: new Set<ReactiveNode>(),
   disposed: new WeakSet<ReactiveNode>(),
@@ -143,6 +147,60 @@ export class ReactiveNode extends Object {
     if (this._disposed) return
     setProperty(this, name, value, debounce)
   }
+  copy(node: ReactiveNode) {
+    const primitiveProps: Record<string, any> = {}
+    for (const name in node._reactiveProperties) {
+      const prop = node._reactiveProperties.get(name)!.value
+      if (prop._isNode) {
+        primitiveProps[name].copy(prop)
+      } else {
+        primitiveProps[name] = prop
+      }
+    }
+    this.setProperties(primitiveProps)
+  }
+
+  toJSON(): Json {
+    const out: Json = {}
+    for (const key of this._reactiveProperties.keys()) {
+      if (key === 'reactivity') continue
+      const value = this._reactiveProperties.get(key as string)!.value
+      if (value instanceof Object && typeof value.toJSON === 'function') {
+        out[key] = value.toJSON()
+      } else if (typeof value === 'number') {
+        out[key] = value
+      }
+    }
+    return out
+  }
+
+  applyJSON(json: Json) {
+    const primitiveProps: Json = {}
+    for (const name in json) {
+      const propDef = this._reactiveProperties.get(name as string)!
+      const value = propDef.value
+      const type = propDef.type
+      if (value instanceof Object) {
+        if (typeof value.applyJSON === 'function') {
+          value.applyJSON(json[name])
+        } else {
+          console.warn(`ReactiveNode.applyJSON(): Property "${name}" does not have applyJSON() method implemented!`)
+          continue
+        }
+      } else {
+        debug: {
+          if (type === json.constructor) {
+            console.warn(`ReactiveNode.applyJSON(): Property "${name}" is not a ${type.name}!`, json)
+            continue
+          }
+        }
+        primitiveProps[name] = json[name]
+      }
+    }
+    this.setProperties(primitiveProps)
+    return this
+  }
+
   init() {}
   ready() {}
   changed() {}

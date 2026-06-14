@@ -14,6 +14,17 @@ class TestNode extends ReactiveNode {
 }
 
 @Register
+class ScoreNode extends ReactiveNode {
+  static get ReactiveProperties(): ReactivePropertyDefinitions {
+    return {
+      score: { type: Number, value: 0 },
+    }
+  }
+  declare score: number
+  constructor(args?: { score?: number }) { super(args) }
+}
+
+@Register
 class ParentNode extends ReactiveNode {
   static get ReactiveProperties(): ReactivePropertyDefinitions {
     return {
@@ -419,6 +430,62 @@ describe('NodeArray', () => {
       expect(handler).toHaveBeenCalled()
 
       parent.removeEventListener('io-object-mutation', handler)
+      parent.dispose()
+    })
+  })
+
+  describe('toJSON and applyJSON', () => {
+    it('serializes each item via toJSON', () => {
+      const parent = new ParentNode()
+      const array = new NodeArray<ScoreNode>(parent)
+      const item1 = new ScoreNode({ score: 1 })
+      const item2 = new ScoreNode({ score: 2 })
+      array.push(item1, item2)
+
+      expect(array.toJSON()).toEqual([
+        { score: 1 },
+        { score: 2 },
+      ])
+
+      parent.dispose()
+    })
+
+    it('applyJSON updates existing items in place', () => {
+      const parent = new ParentNode()
+      const array = new NodeArray<ScoreNode>(parent)
+      const item1 = new ScoreNode({ score: 1 })
+      const item2 = new ScoreNode({ score: 2 })
+      array.push(item1, item2)
+
+      array.applyJSON([{ score: 10 }, { score: 20 }])
+
+      expect(array[0].score).toBe(10)
+      expect(array[1].score).toBe(20)
+      expect(array[0]).toBe(item1)
+      expect(array[1]).toBe(item2)
+
+      parent.dispose()
+    })
+
+    it('round-trips through parent node applyJSON', () => {
+      @Register
+      class ItemsNode extends ReactiveNode {
+        static get ReactiveProperties(): ReactivePropertyDefinitions {
+          return {
+            items: { type: NodeArray, init: 'this' },
+          }
+        }
+        declare items: NodeArray<ScoreNode>
+      }
+
+      const parent = new ItemsNode()
+      parent.items.push(new ScoreNode({ score: 1 }), new ScoreNode({ score: 2 }))
+
+      const json = parent.toJSON()
+      parent.applyJSON(json)
+
+      expect(parent.items[0].score).toBe(1)
+      expect(parent.items[1].score).toBe(2)
       parent.dispose()
     })
   })
