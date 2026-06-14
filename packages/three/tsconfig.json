@@ -11,7 +11,10 @@
     }
   },
   "include": ["./src"],
-  "exclude": ["./src/**/*.test.ts"],
+  "exclude": [
+    "./src/**/*.test.ts",
+    "./src/**/*.bench.ts"
+  ],
   "references": [
     { "path": "../core" },
     { "path": "../inputs" },

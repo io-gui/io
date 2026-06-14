@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "pnpm run --parallel build:watch dev:server",
     "dev:server": "vite",
-    "build": "pnpm clean && tsc -b",
-    "build:ci": "tsc -b",
+    "build": "pnpm lint:check && pnpm clean && tsc -b",
+    "build:ci": "pnpm lint:check && tsc -b",
     "build:watch": "tsc -b -w",
-    "bundle": "pnpm lint:check && pnpm build && pnpm bundle:packages",
+    "bundle": "pnpm build && pnpm bundle:packages",
     "bundle:packages": "node bundle.js",
     "docs:api": "typedoc",
     "lint": "eslint . --fix",

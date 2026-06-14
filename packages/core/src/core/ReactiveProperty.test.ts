@@ -651,7 +651,6 @@ describe('ReactiveProperty', () => {
 
     it('start and stop are idempotent', () => {
       const node = new TestNode()
-      const prop = node._reactiveProperties.get('label')!
       const observer = new Observer(node)
       const value = {x: 1}
 

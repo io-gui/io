@@ -210,3 +210,5 @@ Refined `packages/three/src/nodes/ToolBase.ts` so hover and active pointer recor
 - **category:technical** IoSyntheticEvent.path accumulates per bubble target — copy path in handlers (shared array popped after dispatch)
 - **category:technical** Double Register on same class throws (Cannot redefine _protochain) — test uses fresh class instead
 - **category:technical** IoElementInspectorDemo constructor fails in ready() — demo smoke uses class prototype check only
+- **category:technical** 2026-06-14: build/build:ci now run lint:check before tsc; bundle simplified to build + bundle:packages
+- **category:technical** ESLint ignores **/*.bench.ts and **/bench-setup.ts (match tsconfig exclude); fixed 3 unused-var errors in tests

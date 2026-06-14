@@ -34,7 +34,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm lint:check && pnpm build:ci && pnpm bundle:packages
+        run: pnpm build:ci && pnpm bundle:packages
 
       - name: Replace paths in index.html for production
         run: |

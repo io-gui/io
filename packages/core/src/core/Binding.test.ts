@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Binding, ReactiveNode, Register, ReactiveProperty, ReactivePropertyDefinitions } from '@io-gui/core'
+import { Binding, ReactiveNode, Register, ReactivePropertyDefinitions } from '@io-gui/core'
 
 @Register
 class TestNode extends ReactiveNode {

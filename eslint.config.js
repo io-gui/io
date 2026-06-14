@@ -100,7 +100,7 @@ export default tseslint.config(
       "@stylistic/semi": ["error", "never"],
       "@stylistic/quotes": ["error", "single"],
       "@stylistic/no-trailing-spaces": "error",
-      "@stylistic/max-len": ["warn", { code: 320 }],
+      "@stylistic/max-len": ["warn", { code: 360 }],
 
       "no-debugger": "error",
       "no-unused-labels": "off",
@@ -111,7 +111,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/*.test.ts"],
+    files: ["**/*.test.ts", "**/*.bench.ts", "**/bench-setup.ts"],
     extends: [tseslint.configs.disableTypeChecked],
     rules: {
       "@typescript-eslint/no-empty-function": "off",

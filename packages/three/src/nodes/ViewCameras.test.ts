@@ -24,13 +24,12 @@ function createViewCameras(cameraSelect = 'perspective') {
 
 describe('ViewCameras', () => {
   let viewCameras: ViewCameras
-  let viewport: IoThreeViewport
   let applet: ThreeApplet
   let scene: Scene
   let element: HTMLElement
 
   beforeEach(() => {
-    ({ viewCameras, viewport, applet, scene, element } = createViewCameras())
+    ({ viewCameras, applet, scene, element } = createViewCameras())
   })
 
   afterEach(() => {
